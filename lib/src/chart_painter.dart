@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 import 'models/tick.dart';
-import 'logic/convertion.dart';
+import 'logic/conversion.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({

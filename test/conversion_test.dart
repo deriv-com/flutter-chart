@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:deriv_flutter_chart/src/logic/convertion.dart';
+import 'package:deriv_flutter_chart/src/logic/conversion.dart';
 
 void main() {
   group('msToPx should return', () {

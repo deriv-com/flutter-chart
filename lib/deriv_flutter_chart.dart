@@ -7,7 +7,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import './src/logic/convertion.dart';
+import './src/logic/conversion.dart';
 import './src/chart_painter.dart';
 import './src/models/tick.dart';
 import './src/scale_and_pan_gesture_detector.dart';
