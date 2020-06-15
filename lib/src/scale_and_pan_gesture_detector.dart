@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 /// Widget to track pan and scale gestures on one area.
 ///
-/// GestureDetector doesn't allow to use both Pan and Scale gesture.
-/// Scale is treated as a super set of Pan. Scale is called even when only 1 finger is touching.
-/// Therefore it is possible to keep track of both Pan and Scale, by treating Scale events with 1 finger as Pan.
+/// GestureDetector doesn't allow to track both Pan and Scale gestures at the same time.
+/// a. Scale is treated as a super set of Pan.
+/// b. Scale is triggered even when there is only one finger in contact with the screen.
+///
+/// Because of (a) and (b) it is possible to keep track of both Pan and Scale by treating ScaleUpdate with 1 finger as PanUpdate.
 class ScaleAndPanGestureDetector extends StatefulWidget {
   const ScaleAndPanGestureDetector({
     Key key,
