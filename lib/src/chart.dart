@@ -237,37 +237,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     return Stack(
       children: <Widget>[
         ScaleAndPanGestureDetector(
-          onScaleAndPanStart: (details) {
-            prevMsPerPx = msPerPx;
-          },
-          onPanUpdate: (details) {
-            setState(() {
-              rightBoundEpoch -= _pxToMs(details.delta.dx);
-              final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-              rightBoundEpoch = rightBoundEpoch.clamp(0, upperLimit);
-
-              if (rightBoundEpoch > nowEpoch) {
-                currentTickOffset = _msToPx(rightBoundEpoch - nowEpoch);
-              }
-
-              if (details.localPosition.dx >
-                  canvasSize.width - quoteLabelsAreaWidth) {
-                verticalPaddingFraction =
-                    ((_verticalPadding + details.delta.dy) /
-                            (canvasSize.height - timeLabelsAreaHeight))
-                        .clamp(0.05, 0.49);
-              }
-            });
-          },
-          onScaleUpdate: (details) {
-            setState(() {
-              msPerPx = (prevMsPerPx / details.scale).clamp(20.0, 400.0);
-
-              if (rightBoundEpoch > nowEpoch) {
-                rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
-              }
-            });
-          },
+          onScaleAndPanStart: _handleScaleStart,
+          onPanUpdate: _handlePanUpdate,
+          onScaleUpdate: _handleScaleUpdate,
           child: LayoutBuilder(builder: (context, constraints) {
             canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
@@ -299,6 +271,38 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           )
       ],
     );
+  }
+
+  void _handleScaleUpdate(details) {
+    setState(() {
+      msPerPx = (prevMsPerPx / details.scale).clamp(20.0, 400.0);
+
+      if (rightBoundEpoch > nowEpoch) {
+        rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
+      }
+    });
+  }
+
+  void _handlePanUpdate(details) {
+    setState(() {
+      rightBoundEpoch -= _pxToMs(details.delta.dx);
+      final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
+      rightBoundEpoch = rightBoundEpoch.clamp(0, upperLimit);
+
+      if (rightBoundEpoch > nowEpoch) {
+        currentTickOffset = _msToPx(rightBoundEpoch - nowEpoch);
+      }
+
+      if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
+        verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
+                (canvasSize.height - timeLabelsAreaHeight))
+            .clamp(0.05, 0.49);
+      }
+    });
+  }
+
+  void _handleScaleStart(details) {
+    prevMsPerPx = msPerPx;
   }
 
   IconButton _buildScrollToNowButton() {
