@@ -28,7 +28,6 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
     with TickerProviderStateMixin {
   Ticker ticker;
 
-  final int intervalDuration = 1000;
   final double maxCurrentTickOffset = 150;
 
   final double quoteLabelsAreaWidth = 60;
@@ -38,8 +37,10 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
 
   int nowEpoch;
   int rightBoundEpoch; // for panning
-  double intervalWidth = 25; // for scaling
-  double _prevIntervalWidth;
+
+  double msPerPx = 40; // for scaling
+  double prevMsPerPx;
+
   double currentTickOffset = 100;
   int panToCurrentAnimationStartEpoch;
   double verticalPaddingFraction = 0.1;
@@ -182,11 +183,11 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
   }
 
   int _pxToMs(double px) {
-    return pxToMs(px, msPerPx: intervalDuration / intervalWidth);
+    return pxToMs(px, msPerPx: msPerPx);
   }
 
   double _msToPx(int ms) {
-    return msToPx(ms, msPerPx: intervalDuration / intervalWidth);
+    return msToPx(ms, msPerPx: msPerPx);
   }
 
   Tick _getAnimatedCurrentTick() {
@@ -221,7 +222,7 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
       children: <Widget>[
         ScaleAndPanGestureDetector(
           onScaleAndPanStart: (details) {
-            _prevIntervalWidth = intervalWidth;
+            prevMsPerPx = msPerPx;
           },
           onPanUpdate: (details) {
             setState(() {
@@ -244,8 +245,7 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
           },
           onScaleUpdate: (details) {
             setState(() {
-              intervalWidth =
-                  (_prevIntervalWidth * details.scale).clamp(3.0, 30.0);
+              msPerPx = (prevMsPerPx / details.scale).clamp(20.0, 400.0);
 
               if (rightBoundEpoch > nowEpoch) {
                 rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
@@ -262,12 +262,12 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
                 animatedCurrentTick: _getAnimatedCurrentTick(),
                 endsWithCurrentTick: visibleTicks.isNotEmpty &&
                     visibleTicks.last == widget.data.last,
-                msPerPx: intervalDuration / intervalWidth,
+                msPerPx: msPerPx,
                 rightBoundEpoch: rightBoundEpoch,
                 topBoundQuote: _topBoundQuoteAnimationController.value,
                 bottomBoundQuote: _bottomBoundQuoteAnimationController.value,
                 quoteGridInterval: quoteGridInterval,
-                timeGridInterval: intervalDuration * 30,
+                timeGridInterval: 30000,
                 topPadding: _topPadding,
                 bottomPadding: _bottomPadding,
                 quoteLabelsAreaWidth: quoteLabelsAreaWidth,
