@@ -76,7 +76,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     return Material(
       color: Color(0xFF0E0E0E),
       child: SizedBox.expand(
-        child: DerivFlutterChart(
+        child: Chart(
           data: ticks,
         ),
       ),
