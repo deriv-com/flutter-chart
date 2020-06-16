@@ -1,7 +1,5 @@
 library deriv_flutter_chart;
 
-import 'dart:convert' show json;
-import 'dart:io' show WebSocket;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -12,10 +10,15 @@ import './src/chart_painter.dart';
 import './src/models/tick.dart';
 import './src/scale_and_pan_gesture_detector.dart';
 
+export './src/models/tick.dart';
+
 class Chart extends StatefulWidget {
   const Chart({
     Key key,
+    @required this.data,
   }) : super(key: key);
+
+  final List<Tick> data;
 
   @override
   _ChartState createState() => _ChartState();
@@ -30,7 +33,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   final double quoteLabelsAreaWidth = 60;
   final double timeLabelsAreaHeight = 20;
 
-  List<Tick> ticks = [];
   List<Tick> visibleTicks = [];
 
   int nowEpoch;
@@ -56,7 +58,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _initTickStream();
 
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
@@ -67,39 +68,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _setupAnimations();
   }
 
-  void _initTickStream() async {
-    WebSocket ws;
-    try {
-      ws = await WebSocket.connect(
-          'wss://ws.binaryws.com/websockets/v3?app_id=1089');
-
-      if (ws?.readyState == WebSocket.open) {
-        ws.listen(
-          (response) {
-            final data = Map<String, dynamic>.from(json.decode(response));
-            final epoch = data['tick']['epoch'] * 1000;
-            final quote = data['tick']['quote'];
-            _onNewTick(epoch, quote.toDouble());
-          },
-          onDone: () => print('Done!'),
-          onError: (e) => throw new Exception(e),
-        );
-        ws.add(json.encode({'ticks': 'R_50'}));
-      }
-    } catch (e) {
-      ws?.close();
-      print('Error: $e');
+  @override
+  void didUpdateWidget(Chart oldChart) {
+    if (oldChart.data.last != widget.data.last) {
+      _onNewTick();
     }
+
+    super.didUpdateWidget(oldChart);
   }
 
-  void _onNewTick(int epoch, double quote) {
-    setState(() {
-      ticks.add(Tick(
-        epoch: epoch,
-        quote: quote,
-      ));
-    });
-
+  void _onNewTick() {
     _currentTickAnimationController.reset();
     _currentTickAnimationController.forward();
   }
@@ -149,6 +127,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _updateVisibleTicks() {
+    final ticks = widget.data;
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
 
     var start = ticks.indexWhere((tick) => leftBoundEpoch < tick.epoch);
@@ -211,6 +190,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   Tick _getAnimatedCurrentTick() {
+    final ticks = widget.data;
     if (ticks.length < 2) return null;
 
     final lastTick = ticks[ticks.length - 1];
@@ -280,8 +260,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
               painter: ChartPainter(
                 ticks: visibleTicks,
                 animatedCurrentTick: _getAnimatedCurrentTick(),
-                endsWithCurrentTick:
-                    visibleTicks.isNotEmpty && visibleTicks.last == ticks.last,
+                endsWithCurrentTick: visibleTicks.isNotEmpty &&
+                    visibleTicks.last == widget.data.last,
                 msPerPx: intervalDuration / intervalWidth,
                 rightBoundEpoch: rightBoundEpoch,
                 topBoundQuote: _topBoundQuoteAnimationController.value,
