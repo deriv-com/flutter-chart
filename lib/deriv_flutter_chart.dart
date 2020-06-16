@@ -71,7 +71,7 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
 
   @override
   void didUpdateWidget(DerivFlutterChart oldChart) {
-    if (oldChart.data.last != widget.data.last) {
+    if (oldChart.data.isNotEmpty && oldChart.data.last != widget.data.last) {
       _onNewTick();
     }
     super.didUpdateWidget(oldChart);
