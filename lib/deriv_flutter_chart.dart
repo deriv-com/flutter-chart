@@ -12,8 +12,8 @@ import './src/scale_and_pan_gesture_detector.dart';
 
 export './src/models/tick.dart';
 
-class Chart extends StatefulWidget {
-  const Chart({
+class DerivFlutterChart extends StatefulWidget {
+  const DerivFlutterChart({
     Key key,
     @required this.data,
   }) : super(key: key);
@@ -21,10 +21,11 @@ class Chart extends StatefulWidget {
   final List<Tick> data;
 
   @override
-  _ChartState createState() => _ChartState();
+  _DerivFlutterChartState createState() => _DerivFlutterChartState();
 }
 
-class _ChartState extends State<Chart> with TickerProviderStateMixin {
+class _DerivFlutterChartState extends State<DerivFlutterChart>
+    with TickerProviderStateMixin {
   Ticker ticker;
 
   final int intervalDuration = 1000;
@@ -69,11 +70,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(Chart oldChart) {
+  void didUpdateWidget(DerivFlutterChart oldChart) {
     if (oldChart.data.last != widget.data.last) {
       _onNewTick();
     }
-
     super.didUpdateWidget(oldChart);
   }
 
