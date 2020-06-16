@@ -28,34 +28,55 @@ class _DerivFlutterChartState extends State<DerivFlutterChart>
     with TickerProviderStateMixin {
   Ticker ticker;
 
+  /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
   final double maxCurrentTickOffset = 150;
 
+  /// Current distance between [rightBoundEpoch] and [nowEpoch] in pixels.
+  /// Used to preserve this distance during scaling.
+  double currentTickOffset = 100;
+
+  /// Width of the area with quote labels on the right.
   final double quoteLabelsAreaWidth = 60;
+
+  /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
 
   List<Tick> visibleTicks = [];
 
   int nowEpoch;
-  int rightBoundEpoch; // for panning
+  Size canvasSize;
 
-  double msPerPx = 40; // for scaling
+  /// Epoch value of the rightmost chart's edge. Including quote labels area.
+  /// Horizontal panning is controlled by this variable.
+  int rightBoundEpoch;
+
+  /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
+  /// Scaling is controlled by this variable.
+  double msPerPx = 40;
+
+  /// Previous value of [msPerPx]. Used for scaling computation.
   double prevMsPerPx;
 
-  double currentTickOffset = 100;
-  int panToCurrentAnimationStartEpoch;
+  /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
+  /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
+
+  /// Difference between two consecutive quote labels.
   double quoteGridInterval = 1;
 
-  AnimationController _currentTickAnimationController;
-  Animation _currentTickAnimation;
-
-  /// Quote range animation.
-  Size canvasSize; // to determine the range of visible ticks
-  double topBoundQuoteTarget = 60;
-  double bottomBoundQuoteTarget = 30;
+  /// Duration of quote bounds animated transition.
   final quoteBoundsAnimationDuration = const Duration(milliseconds: 300);
+
+  /// Top quote bound target for animated transition.
+  double topBoundQuoteTarget = 60;
+
+  /// Bottom quote bound target for animated transition.
+  double bottomBoundQuoteTarget = 30;
+
+  AnimationController _currentTickAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
+  Animation _currentTickAnimation;
 
   @override
   void initState() {
