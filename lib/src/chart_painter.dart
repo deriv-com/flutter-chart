@@ -109,19 +109,20 @@ class ChartPainter extends CustomPainter {
       topPadding: topPadding,
       bottomPadding: bottomPadding,
     );
+    final leftBoundEpoch =
+        rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx);
     final gridLineEpochs = gridEpochs(
       timeGridInterval: timeGridInterval,
+      leftBoundEpoch: leftBoundEpoch,
       rightBoundEpoch: rightBoundEpoch,
-      canvasWidth: size.width,
-      msPerPx: msPerPx,
     );
     _paintTimeGridLines(gridLineEpochs);
     _paintQuoteGridLines(gridLineQuotes);
+    _paintTimestamps(gridLineEpochs);
+    _paintQuotes(gridLineQuotes);
 
     _paintLine();
 
-    _paintTimestamps(gridLineEpochs);
-    _paintQuotes(gridLineQuotes);
     _paintArrow(currentTick: animatedCurrentTick);
   }
 

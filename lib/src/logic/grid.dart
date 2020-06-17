@@ -1,7 +1,5 @@
 import 'package:meta/meta.dart';
 
-import 'conversion.dart';
-
 List<double> gridQuotes({
   @required double quoteGridInterval,
   @required double topBoundQuote,
@@ -25,17 +23,11 @@ List<double> gridQuotes({
 
 List<int> gridEpochs({
   @required int timeGridInterval,
+  @required int leftBoundEpoch,
   @required int rightBoundEpoch,
-  @required double canvasWidth,
-  @required double msPerPx,
 }) {
   final firstRight =
       (rightBoundEpoch - rightBoundEpoch % timeGridInterval).toInt();
-  final leftBoundEpoch = rightBoundEpoch -
-      pxToMs(
-        canvasWidth,
-        msPerPx: msPerPx,
-      );
   final epochs = <int>[];
   for (int epoch = firstRight;
       epoch >= leftBoundEpoch;

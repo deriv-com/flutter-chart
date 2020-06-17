@@ -98,9 +98,8 @@ void main() {
       expect(
         gridEpochs(
           timeGridInterval: 1000,
+          leftBoundEpoch: 9000,
           rightBoundEpoch: 10000,
-          canvasWidth: 100,
-          msPerPx: 10,
         ),
         contains(10000),
       );
@@ -109,9 +108,8 @@ void main() {
       expect(
         gridEpochs(
           timeGridInterval: 100,
+          leftBoundEpoch: 900,
           rightBoundEpoch: 1000,
-          canvasWidth: 100,
-          msPerPx: 1,
         ),
         contains(900),
       );
@@ -120,18 +118,16 @@ void main() {
       expect(
         gridEpochs(
           timeGridInterval: 100,
+          leftBoundEpoch: 700,
           rightBoundEpoch: 1000,
-          canvasWidth: 300,
-          msPerPx: 1,
         ),
         equals([1000, 900, 800, 700]),
       );
       expect(
         gridEpochs(
           timeGridInterval: 100,
+          leftBoundEpoch: 699,
           rightBoundEpoch: 999,
-          canvasWidth: 300,
-          msPerPx: 1,
         ),
         equals([900, 800, 700]),
       );
