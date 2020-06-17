@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' show DateFormat;
 
 import 'models/tick.dart';
 import 'logic/conversion.dart';
+import 'logic/grid.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
@@ -100,7 +101,14 @@ class ChartPainter extends CustomPainter {
       ticks.add(animatedCurrentTick);
     }
 
-    final gridLineQuotes = _calcGridLineQuotes();
+    final gridLineQuotes = calcGridLineQuotes(
+      quoteGridInterval: quoteGridInterval,
+      topBoundQuote: topBoundQuote,
+      bottomBoundQuote: bottomBoundQuote,
+      canvasHeight: size.height,
+      topPadding: topPadding,
+      bottomPadding: bottomPadding,
+    );
     final gridLineEpochs = _calcGridLineEpochs();
     _paintTimeGridLines(gridLineEpochs);
     _paintQuoteGridLines(gridLineQuotes);
@@ -148,20 +156,10 @@ class ChartPainter extends CustomPainter {
     );
   }
 
-  List<double> _calcGridLineQuotes() {
-    final pixelToQuote = (topBoundQuote - bottomBoundQuote) /
-        (size.height - topPadding - bottomPadding);
-    final topEdgeQuote = topBoundQuote + topPadding * pixelToQuote;
-    final bottomEdgeQuote = bottomBoundQuote - bottomPadding * pixelToQuote;
-    final gridLineQuotes = <double>[];
-    for (var q = topEdgeQuote - topEdgeQuote % quoteGridInterval;
-        q > bottomEdgeQuote;
-        q -= quoteGridInterval) {
-      if (q < topEdgeQuote) gridLineQuotes.add(q);
-    }
-    return gridLineQuotes;
-  }
-
+  // rightBoundEpoch
+  // timeGridInterval
+  // size.width
+  // msPerPx
   List<int> _calcGridLineEpochs() {
     final firstRight =
         (rightBoundEpoch - rightBoundEpoch % timeGridInterval).toInt();
