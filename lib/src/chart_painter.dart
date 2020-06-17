@@ -109,7 +109,12 @@ class ChartPainter extends CustomPainter {
       topPadding: topPadding,
       bottomPadding: bottomPadding,
     );
-    final gridLineEpochs = _calcGridLineEpochs();
+    final gridLineEpochs = calcGridLineEpochs(
+      timeGridInterval: timeGridInterval,
+      rightBoundEpoch: rightBoundEpoch,
+      canvasWidth: size.width,
+      msPerPx: msPerPx,
+    );
     _paintTimeGridLines(gridLineEpochs);
     _paintQuoteGridLines(gridLineQuotes);
 
@@ -154,24 +159,6 @@ class ChartPainter extends CustomPainter {
           ],
         ),
     );
-  }
-
-  // rightBoundEpoch
-  // timeGridInterval
-  // size.width
-  // msPerPx
-  List<int> _calcGridLineEpochs() {
-    final firstRight =
-        (rightBoundEpoch - rightBoundEpoch % timeGridInterval).toInt();
-    final leftBoundEpoch =
-        rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx);
-    final epochs = <int>[];
-    for (int epoch = firstRight;
-        epoch > leftBoundEpoch;
-        epoch -= timeGridInterval) {
-      epochs.add(epoch);
-    }
-    return epochs;
   }
 
   void _paintQuoteGridLines(List<double> gridLineQuotes) {

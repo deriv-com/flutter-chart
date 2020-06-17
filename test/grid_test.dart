@@ -92,4 +92,49 @@ void main() {
       );
     });
   });
+
+  group('calcGridLineEpochs should', () {
+    test('include epoch on the right edge', () {
+      expect(
+        calcGridLineEpochs(
+          timeGridInterval: 1000,
+          rightBoundEpoch: 10000,
+          canvasWidth: 100,
+          msPerPx: 10,
+        ),
+        contains(10000),
+      );
+    });
+    test('include epoch on the left edge', () {
+      expect(
+        calcGridLineEpochs(
+          timeGridInterval: 100,
+          rightBoundEpoch: 1000,
+          canvasWidth: 100,
+          msPerPx: 1,
+        ),
+        contains(900),
+      );
+    });
+    test('return epochs within canvas, divisible by [timeGridInterval]', () {
+      expect(
+        calcGridLineEpochs(
+          timeGridInterval: 100,
+          rightBoundEpoch: 1000,
+          canvasWidth: 300,
+          msPerPx: 1,
+        ),
+        equals([1000, 900, 800, 700]),
+      );
+      expect(
+        calcGridLineEpochs(
+          timeGridInterval: 100,
+          rightBoundEpoch: 999,
+          canvasWidth: 300,
+          msPerPx: 1,
+        ),
+        equals([900, 800, 700]),
+      );
+    });
+  });
 }
