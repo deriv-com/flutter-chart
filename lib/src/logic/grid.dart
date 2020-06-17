@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import 'conversion.dart';
 
-List<double> calcGridLineQuotes({
+List<double> gridQuotes({
   @required double quoteGridInterval,
   @required double topBoundQuote,
   @required double bottomBoundQuote,
@@ -23,7 +23,7 @@ List<double> calcGridLineQuotes({
   return gridLineQuotes;
 }
 
-List<int> calcGridLineEpochs({
+List<int> gridEpochs({
   @required int timeGridInterval,
   @required int rightBoundEpoch,
   @required double canvasWidth,

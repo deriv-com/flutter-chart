@@ -101,7 +101,7 @@ class ChartPainter extends CustomPainter {
       ticks.add(animatedCurrentTick);
     }
 
-    final gridLineQuotes = calcGridLineQuotes(
+    final gridLineQuotes = gridQuotes(
       quoteGridInterval: quoteGridInterval,
       topBoundQuote: topBoundQuote,
       bottomBoundQuote: bottomBoundQuote,
@@ -109,7 +109,7 @@ class ChartPainter extends CustomPainter {
       topPadding: topPadding,
       bottomPadding: bottomPadding,
     );
-    final gridLineEpochs = calcGridLineEpochs(
+    final gridLineEpochs = gridEpochs(
       timeGridInterval: timeGridInterval,
       rightBoundEpoch: rightBoundEpoch,
       canvasWidth: size.width,

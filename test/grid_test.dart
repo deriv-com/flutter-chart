@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_flutter_chart/src/logic/grid.dart';
 
 void main() {
-  group('calcGridLineQuotes should', () {
+  group('gridQuotes should', () {
     test('exclude quote on the top edge of canvas (y == 0)', () {
       expect(
-        calcGridLineQuotes(
+        gridQuotes(
           quoteGridInterval: 1,
           topBoundQuote: 10,
           bottomBoundQuote: 8,
@@ -19,7 +19,7 @@ void main() {
     });
     test('exclude quote on the bottom edge of canvas (y == canvasHeight)', () {
       expect(
-        calcGridLineQuotes(
+        gridQuotes(
           quoteGridInterval: 1,
           topBoundQuote: 10,
           bottomBoundQuote: 8,
@@ -34,7 +34,7 @@ void main() {
         'return quotes within canvas excluding edges (y >= 0 and y <= canvasHeight)',
         () {
       expect(
-        calcGridLineQuotes(
+        gridQuotes(
           quoteGridInterval: 1,
           topBoundQuote: 10,
           bottomBoundQuote: 8,
@@ -45,7 +45,7 @@ void main() {
         equals([9]),
       );
       expect(
-        calcGridLineQuotes(
+        gridQuotes(
           quoteGridInterval: 1,
           topBoundQuote: 8,
           bottomBoundQuote: 5,
@@ -58,7 +58,7 @@ void main() {
     });
     test('return quotes divisible by [quoteGridInterval]', () {
       expect(
-        calcGridLineQuotes(
+        gridQuotes(
           quoteGridInterval: 2,
           topBoundQuote: 11,
           bottomBoundQuote: 5,
@@ -69,7 +69,7 @@ void main() {
         equals([10, 8, 6]),
       );
       expect(
-        calcGridLineQuotes(
+        gridQuotes(
           quoteGridInterval: 0.5,
           topBoundQuote: 182.32,
           bottomBoundQuote: 179.99,
@@ -80,7 +80,7 @@ void main() {
         equals([182, 181.5, 181, 180.5, 180]),
       );
       expect(
-        calcGridLineQuotes(
+        gridQuotes(
           quoteGridInterval: 0.25,
           topBoundQuote: 100.5,
           bottomBoundQuote: 100,
@@ -93,10 +93,10 @@ void main() {
     });
   });
 
-  group('calcGridLineEpochs should', () {
+  group('gridEpochs should', () {
     test('include epoch on the right edge', () {
       expect(
-        calcGridLineEpochs(
+        gridEpochs(
           timeGridInterval: 1000,
           rightBoundEpoch: 10000,
           canvasWidth: 100,
@@ -107,7 +107,7 @@ void main() {
     });
     test('include epoch on the left edge', () {
       expect(
-        calcGridLineEpochs(
+        gridEpochs(
           timeGridInterval: 100,
           rightBoundEpoch: 1000,
           canvasWidth: 100,
@@ -118,7 +118,7 @@ void main() {
     });
     test('return epochs within canvas, divisible by [timeGridInterval]', () {
       expect(
-        calcGridLineEpochs(
+        gridEpochs(
           timeGridInterval: 100,
           rightBoundEpoch: 1000,
           canvasWidth: 300,
@@ -127,7 +127,7 @@ void main() {
         equals([1000, 900, 800, 700]),
       );
       expect(
-        calcGridLineEpochs(
+        gridEpochs(
           timeGridInterval: 100,
           rightBoundEpoch: 999,
           canvasWidth: 300,
