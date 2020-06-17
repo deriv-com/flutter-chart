@@ -13,7 +13,7 @@ void paintGrid(
   assert(quoteLabels.length == yCoords.length);
 
   _paintTimeGridLines(canvas, size, xCoords);
-  _paintQuoteGridLines(canvas, size, yCoords);
+  _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth);
 
   _paintQuoteLabels(
     canvas,
@@ -34,17 +34,22 @@ void _paintTimeGridLines(Canvas canvas, Size size, List<double> xCoords) {
   xCoords.forEach((x) {
     canvas.drawLine(
       Offset(x, 0),
-      Offset(x, size.height),
+      Offset(x, size.height - 20),
       Paint()..color = Colors.white12,
     );
   });
 }
 
-void _paintQuoteGridLines(Canvas canvas, Size size, List<double> yCoords) {
+void _paintQuoteGridLines(
+  Canvas canvas,
+  Size size,
+  List<double> yCoords,
+  double quoteLabelsAreaWidth,
+) {
   yCoords.forEach((y) {
     canvas.drawLine(
       Offset(0, y),
-      Offset(size.width, y),
+      Offset(size.width - quoteLabelsAreaWidth, y),
       Paint()..color = Colors.white12,
     );
   });
