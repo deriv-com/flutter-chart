@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
@@ -8,8 +6,9 @@ import 'models/tick.dart';
 import 'logic/conversion.dart';
 import 'logic/grid.dart';
 
-import 'paint/paint_grid.dart';
 import 'paint/paint_arrow.dart';
+import 'paint/paint_grid.dart';
+import 'paint/paint_line.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
@@ -26,12 +25,6 @@ class ChartPainter extends CustomPainter {
     this.topPadding,
     this.bottomPadding,
   });
-
-  final lineColor = Paint()
-    ..color = Colors.white.withOpacity(0.8)
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 1;
-  final coralColor = Color(0xFFFF444F);
 
   final List<Tick> ticks;
   final Tick animatedCurrentTick;
@@ -143,44 +136,17 @@ class ChartPainter extends CustomPainter {
   }
 
   void _paintLine() {
-    Path path = Path();
-    final firstPoint = _toCanvasOffset(ticks.first);
-    path.moveTo(firstPoint.dx, firstPoint.dy);
-
-    ticks.skip(1).forEach((tick) {
-      final point = _toCanvasOffset(tick);
-      path.lineTo(point.dx, point.dy);
-    });
-
-    canvas.drawPath(path, lineColor);
-
-    _paintLineArea(linePath: path);
-  }
-
-  void _paintLineArea({Path linePath}) {
-    linePath.lineTo(
-      _epochToX(ticks.last.epoch),
-      size.height,
-    );
-    linePath.lineTo(0, size.height);
-    canvas.drawPath(
-      linePath,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..shader = ui.Gradient.linear(
-          Offset(0, 0),
-          Offset(0, size.height),
-          [
-            Colors.white.withOpacity(0.2),
-            Colors.white.withOpacity(0.01),
-          ],
-        ),
+    paintLine(
+      canvas,
+      size,
+      xCoords: ticks.map((tick) => _epochToX(tick.epoch)).toList(),
+      yCoords: ticks.map((tick) => _quoteToY(tick.quote)).toList(),
     );
   }
 
   void _paintCurrentTickDot() {
     final offset = _toCanvasOffset(animatedCurrentTick);
-    canvas.drawCircle(offset, 3, Paint()..color = coralColor);
+    canvas.drawCircle(offset, 3, Paint()..color = Color(0xFFFF444F));
   }
 
   void _paintArrow() {
