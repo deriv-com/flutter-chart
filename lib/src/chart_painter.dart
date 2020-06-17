@@ -6,6 +6,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'models/tick.dart';
 import 'logic/conversion.dart';
 import 'logic/grid.dart';
+import 'paint/paint_grid.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
@@ -116,10 +117,19 @@ class ChartPainter extends CustomPainter {
       leftBoundEpoch: leftBoundEpoch,
       rightBoundEpoch: rightBoundEpoch,
     );
-    _paintTimeGridLines(gridLineEpochs);
-    _paintQuoteGridLines(gridLineQuotes);
-    _paintTimestamps(gridLineEpochs);
-    _paintQuotes(gridLineQuotes);
+    paintGrid(
+      canvas,
+      size,
+      timeLabels: gridLineEpochs.map((epoch) {
+        final time = DateTime.fromMillisecondsSinceEpoch(epoch);
+        return DateFormat('Hms').format(time);
+      }).toList(),
+      quoteLabels:
+          gridLineQuotes.map((quote) => quote.toStringAsFixed(2)).toList(),
+      xCoords: gridLineEpochs.map((epoch) => _epochToX(epoch)).toList(),
+      yCoords: gridLineQuotes.map((quote) => _quoteToY(quote)).toList(),
+      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+    );
 
     _paintLine();
 
@@ -160,80 +170,6 @@ class ChartPainter extends CustomPainter {
           ],
         ),
     );
-  }
-
-  void _paintQuoteGridLines(List<double> gridLineQuotes) {
-    gridLineQuotes.forEach((quote) {
-      final y = _quoteToY(quote);
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        Paint()..color = Colors.white12,
-      );
-    });
-  }
-
-  void _paintTimeGridLines(List<int> gridLineEpochs) {
-    gridLineEpochs.forEach((epoch) {
-      final x = _epochToX(epoch);
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        Paint()..color = Colors.white12,
-      );
-    });
-  }
-
-  void _paintQuotes(List<double> gridLineQuotes) {
-    gridLineQuotes.forEach((quote) {
-      _paintQuote(quote);
-    });
-  }
-
-  void _paintTimestamps(List<int> gridLineEpochs) {
-    gridLineEpochs.forEach((epoch) {
-      _paintTimestamp(epoch);
-    });
-  }
-
-  void _paintTimestamp(int epoch) {
-    final time = DateTime.fromMillisecondsSinceEpoch(epoch);
-    final label = DateFormat('Hms').format(time);
-    TextSpan span = TextSpan(
-      style: TextStyle(
-        color: Colors.white30,
-        fontSize: 12,
-      ),
-      text: label,
-    );
-    TextPainter tp = TextPainter(
-      text: span,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    tp.layout();
-    tp.paint(
-      canvas,
-      Offset(_epochToX(epoch) - tp.width / 2, size.height - tp.height - 4),
-    );
-  }
-
-  void _paintQuote(double quote) {
-    TextSpan span = TextSpan(
-      style: TextStyle(
-        color: Colors.white30,
-        fontSize: 12,
-      ),
-      text: '${quote.toStringAsFixed(2)}',
-    );
-    TextPainter tp = TextPainter(
-      text: span,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    tp.layout(minWidth: quoteLabelsAreaWidth, maxWidth: quoteLabelsAreaWidth);
-    final y = _quoteToY(quote);
-    tp.paint(canvas, Offset(size.width - quoteLabelsAreaWidth, y - 6));
   }
 
   void _paintArrow({Tick currentTick}) {
