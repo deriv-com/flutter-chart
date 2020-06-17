@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 import 'models/tick.dart';
+
 import 'logic/conversion.dart';
 import 'logic/grid.dart';
+
 import 'paint/paint_grid.dart';
+import 'paint/paint_arrow.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
@@ -104,8 +107,8 @@ class ChartPainter extends CustomPainter {
 
     _painGrid();
     _paintLine();
-
-    _paintArrow(currentTick: animatedCurrentTick);
+    _paintCurrentTickDot();
+    _paintArrow();
   }
 
   void _painGrid() {
@@ -175,54 +178,18 @@ class ChartPainter extends CustomPainter {
     );
   }
 
-  void _paintArrow({Tick currentTick}) {
-    final offset = _toCanvasOffset(currentTick);
+  void _paintCurrentTickDot() {
+    final offset = _toCanvasOffset(animatedCurrentTick);
     canvas.drawCircle(offset, 3, Paint()..color = coralColor);
-    canvas.drawLine(
-      Offset(0, offset.dy),
-      Offset(size.width, offset.dy),
-      Paint()
-        ..color = Colors.white24
-        ..strokeWidth = 1,
-    );
-    _paintArrowHead(y: offset.dy, quote: currentTick.quote);
   }
 
-  void _paintArrowHead({double y, double quote}) {
-    final triangleWidth = 8;
-    final height = 24;
-
-    final path = Path();
-    path.moveTo(size.width - quoteLabelsAreaWidth - triangleWidth, y);
-    path.lineTo(size.width - quoteLabelsAreaWidth, y - height / 2);
-    path.lineTo(size.width, y - height / 2);
-    path.lineTo(size.width, y + height / 2);
-    path.lineTo(size.width - quoteLabelsAreaWidth, y + height / 2);
-    path.lineTo(size.width - quoteLabelsAreaWidth - triangleWidth, y);
-    canvas.drawPath(
-      path,
-      Paint()
-        ..color = coralColor
-        ..style = PaintingStyle.fill,
-    );
-
-    TextSpan span = TextSpan(
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-      ),
-      text: '${quote.toStringAsFixed(2)}',
-    );
-    TextPainter tp = TextPainter(
-      text: span,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    tp.layout(minWidth: quoteLabelsAreaWidth, maxWidth: quoteLabelsAreaWidth);
-    tp.paint(
+  void _paintArrow() {
+    paintArrow(
       canvas,
-      Offset(size.width - quoteLabelsAreaWidth, y - 6),
+      size,
+      centerY: _quoteToY(animatedCurrentTick.quote),
+      quoteLabel: animatedCurrentTick.quote.toStringAsFixed(2),
+      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     );
   }
 
