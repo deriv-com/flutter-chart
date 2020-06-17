@@ -102,6 +102,13 @@ class ChartPainter extends CustomPainter {
       ticks.add(animatedCurrentTick);
     }
 
+    _painGrid();
+    _paintLine();
+
+    _paintArrow(currentTick: animatedCurrentTick);
+  }
+
+  void _painGrid() {
     final gridLineQuotes = gridQuotes(
       quoteGridInterval: quoteGridInterval,
       topBoundQuote: topBoundQuote,
@@ -130,10 +137,6 @@ class ChartPainter extends CustomPainter {
       yCoords: gridLineQuotes.map((quote) => _quoteToY(quote)).toList(),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     );
-
-    _paintLine();
-
-    _paintArrow(currentTick: animatedCurrentTick);
   }
 
   void _paintLine() {
