@@ -94,7 +94,11 @@ class ChartPainter extends CustomPainter {
 
     _painGrid();
     _paintLine();
-    _paintCurrentTickDot();
+
+    if (animatedCurrentTick.epoch <= rightBoundEpoch) {
+      _paintCurrentTickDot();
+    }
+
     _paintArrow();
   }
 
