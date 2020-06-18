@@ -51,6 +51,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
           (response) {
             final data = Map<String, dynamic>.from(json.decode(response));
 
+            if (data['candles'] != null) {
+              setState(() {
+                candles = data['candles'].map<Candle>((json) {
+                  return Candle(
+                    epoch: json['epoch'] * 1000,
+                    high: json['high'],
+                    low: json['low'],
+                    open: json['open'],
+                    close: json['close'],
+                  );
+                }).toList();
+              });
+            }
+
             if (data['tick'] != null) {
               final epoch = data['tick']['epoch'] * 1000;
               final quote = data['tick']['quote'].toDouble();
@@ -74,7 +88,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ws.add(json.encode({
           'ticks_history': 'R_50',
           'end': 'latest',
-          'count': 1,
+          'count': 1000,
           'style': 'candles',
           'granularity': 60,
           'subscribe': 1,
