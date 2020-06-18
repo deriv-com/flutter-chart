@@ -4,6 +4,7 @@ import 'package:intl/intl.dart' show DateFormat;
 
 import 'models/tick.dart';
 import 'models/candle.dart';
+import 'models/chart_style.dart';
 
 import 'logic/conversion.dart';
 import 'logic/grid.dart';
@@ -18,6 +19,7 @@ class ChartPainter extends CustomPainter {
     this.candles,
     this.animatedCurrentTick,
     this.pipSize,
+    this.style,
     this.msPerPx,
     this.rightBoundEpoch,
     this.topBoundQuote,
@@ -32,6 +34,7 @@ class ChartPainter extends CustomPainter {
   final List<Candle> candles;
   final Tick animatedCurrentTick;
   final int pipSize;
+  final ChartStyle style;
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   final double msPerPx;
@@ -98,17 +101,23 @@ class ChartPainter extends CustomPainter {
     this.size = size;
 
     _painGrid();
-    // _paintLine();
-    _paintCandles();
 
-    final currentTickVisible = animatedCurrentTick.epoch <= rightBoundEpoch;
-    if (currentTickVisible) {
-      _paintCurrentTickDot();
+    if (style == ChartStyle.candles) {
+      _paintCandles();
+    } else {
+      _paintLine();
     }
 
-    _paintArrow();
+    if (animatedCurrentTick != null) {
+      final currentTickVisible = animatedCurrentTick.epoch <= rightBoundEpoch;
+      if (currentTickVisible) {
+        _paintCurrentTickDot();
+      }
 
-    _paintNow(); // for testing
+      _paintArrow();
+    }
+
+    // _paintNow(); // for testing
   }
 
   void _paintNow() {
@@ -163,7 +172,7 @@ class ChartPainter extends CustomPainter {
 
   void _paintCandles() {
     final granularity = candles[1].epoch - candles[0].epoch;
-    final candleWidth = msToPx(granularity, msPerPx: msPerPx) * 0.7;
+    final candleWidth = msToPx(granularity, msPerPx: msPerPx) * 0.6;
 
     final candlePaintings = candles.map((candle) {
       return CandlePainting(

@@ -13,7 +13,7 @@ void _paintCandle(Canvas canvas, Size size, CandlePainting cp) {
   canvas.drawLine(
     Offset(cp.xCenter, cp.yHigh),
     Offset(cp.xCenter, cp.yLow),
-    Paint()..color = Colors.white60,
+    Paint()..color = Colors.white70,
   );
 
   if (cp.yOpen > cp.yClose) {
@@ -24,7 +24,7 @@ void _paintCandle(Canvas canvas, Size size, CandlePainting cp) {
         cp.xCenter + cp.width / 2,
         cp.yOpen,
       ),
-      Paint()..color = Colors.green,
+      Paint()..color = Color(0xFF00A79E),
     );
   } else {
     canvas.drawRect(
@@ -34,7 +34,7 @@ void _paintCandle(Canvas canvas, Size size, CandlePainting cp) {
         cp.xCenter + cp.width / 2,
         cp.yClose,
       ),
-      Paint()..color = Colors.red,
+      Paint()..color = Color(0xFFCC2E3D),
     );
   }
 }

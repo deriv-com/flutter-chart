@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 
 import './logic/conversion.dart';
 import './chart_painter.dart';
+import './models/chart_style.dart';
 import './models/tick.dart';
 import './models/candle.dart';
 import './scale_and_pan_gesture_detector.dart';
@@ -14,10 +15,12 @@ class Chart extends StatefulWidget {
     Key key,
     @required this.candles,
     @required this.pipSize,
+    this.style = ChartStyle.candles,
   }) : super(key: key);
 
   final List<Candle> candles;
   final int pipSize;
+  final ChartStyle style;
 
   @override
   _ChartState createState() => _ChartState();
@@ -51,7 +54,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
-  double msPerPx = 40;
+  double msPerPx = 1000;
 
   /// Previous value of [msPerPx]. Used for scaling computation.
   double prevMsPerPx;
@@ -299,6 +302,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 candles: _getChartTicks(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
                 pipSize: widget.pipSize,
+                style: widget.style,
                 msPerPx: msPerPx,
                 rightBoundEpoch: rightBoundEpoch,
                 topBoundQuote: _topBoundQuoteAnimationController.value,

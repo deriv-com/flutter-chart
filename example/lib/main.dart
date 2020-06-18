@@ -33,6 +33,7 @@ class FullscreenChart extends StatefulWidget {
 
 class _FullscreenChartState extends State<FullscreenChart> {
   List<Candle> candles = [];
+  ChartStyle style = ChartStyle.candles;
 
   @override
   void initState() {
@@ -129,9 +130,29 @@ class _FullscreenChartState extends State<FullscreenChart> {
     return Material(
       color: Color(0xFF0E0E0E),
       child: SizedBox.expand(
-        child: Chart(
-          candles: candles,
-          pipSize: 4,
+        child: Stack(
+          children: <Widget>[
+            Chart(
+              candles: candles,
+              pipSize: 4,
+              style: style,
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.insert_chart,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  if (style == ChartStyle.candles) {
+                    style = ChartStyle.line;
+                  } else {
+                    style = ChartStyle.candles;
+                  }
+                });
+              },
+            )
+          ],
         ),
       ),
     );
