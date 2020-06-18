@@ -50,14 +50,23 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ws.listen(
           (response) {
             final data = Map<String, dynamic>.from(json.decode(response));
-            final epoch = data['tick']['epoch'] * 1000;
-            final quote = data['tick']['quote'];
-            _onNewTick(epoch, quote.toDouble());
+
+            if (data['tick'] != null) {
+              final epoch = data['tick']['epoch'] * 1000;
+              final quote = data['tick']['quote'];
+              _onNewTick(epoch, quote.toDouble());
+            }
           },
           onDone: () => print('Done!'),
           onError: (e) => throw new Exception(e),
         );
-        ws.add(json.encode({'ticks': 'R_50'}));
+        ws.add(json.encode({
+          'ticks_history': 'R_50',
+          'end': 'latest',
+          'count': 1,
+          'style': 'ticks',
+          'subscribe': 1,
+        }));
       }
     } catch (e) {
       ws?.close();
