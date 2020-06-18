@@ -13,9 +13,11 @@ class Chart extends StatefulWidget {
   const Chart({
     Key key,
     @required this.candles,
+    @required this.pipSize,
   }) : super(key: key);
 
   final List<Candle> candles;
+  final int pipSize;
 
   @override
   _ChartState createState() => _ChartState();
@@ -32,7 +34,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   double currentTickOffset = 100;
 
   /// Width of the area with quote labels on the right.
-  final double quoteLabelsAreaWidth = 60;
+  final double quoteLabelsAreaWidth = 70;
 
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
@@ -296,6 +298,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
               painter: ChartPainter(
                 candles: _getChartTicks(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
+                pipSize: widget.pipSize,
                 msPerPx: msPerPx,
                 rightBoundEpoch: rightBoundEpoch,
                 topBoundQuote: _topBoundQuoteAnimationController.value,

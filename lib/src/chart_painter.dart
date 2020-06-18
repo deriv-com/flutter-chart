@@ -15,6 +15,7 @@ class ChartPainter extends CustomPainter {
   ChartPainter({
     this.candles,
     this.animatedCurrentTick,
+    this.pipSize,
     this.msPerPx,
     this.rightBoundEpoch,
     this.topBoundQuote,
@@ -28,6 +29,7 @@ class ChartPainter extends CustomPainter {
 
   final List<Candle> candles;
   final Tick animatedCurrentTick;
+  final int pipSize;
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   final double msPerPx;
@@ -138,8 +140,9 @@ class ChartPainter extends CustomPainter {
         final time = DateTime.fromMillisecondsSinceEpoch(epoch);
         return DateFormat('Hms').format(time);
       }).toList(),
-      quoteLabels:
-          gridLineQuotes.map((quote) => quote.toStringAsFixed(2)).toList(),
+      quoteLabels: gridLineQuotes
+          .map((quote) => quote.toStringAsFixed(pipSize))
+          .toList(),
       xCoords: gridLineEpochs.map((epoch) => _epochToX(epoch)).toList(),
       yCoords: gridLineQuotes.map((quote) => _quoteToY(quote)).toList(),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
@@ -165,7 +168,7 @@ class ChartPainter extends CustomPainter {
       canvas,
       size,
       centerY: _quoteToY(animatedCurrentTick.quote),
-      quoteLabel: animatedCurrentTick.quote.toStringAsFixed(2),
+      quoteLabel: animatedCurrentTick.quote.toStringAsFixed(pipSize),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     );
   }

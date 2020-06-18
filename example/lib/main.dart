@@ -117,6 +117,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       child: SizedBox.expand(
         child: Chart(
           candles: candles,
+          pipSize: 4,
         ),
       ),
     );
