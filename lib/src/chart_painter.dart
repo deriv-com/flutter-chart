@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 import 'models/tick.dart';
+import 'models/candle.dart';
 
 import 'logic/conversion.dart';
 import 'logic/grid.dart';
@@ -12,7 +13,7 @@ import 'paint/paint_line.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
-    this.ticks,
+    this.candles,
     this.animatedCurrentTick,
     this.msPerPx,
     this.rightBoundEpoch,
@@ -25,7 +26,7 @@ class ChartPainter extends CustomPainter {
     this.bottomPadding,
   });
 
-  final List<Tick> ticks;
+  final List<Candle> candles;
   final Tick animatedCurrentTick;
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
@@ -87,7 +88,7 @@ class ChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (ticks.length < 2) return;
+    if (candles.length < 2) return;
 
     this.canvas = canvas;
     this.size = size;
@@ -138,8 +139,8 @@ class ChartPainter extends CustomPainter {
     paintLine(
       canvas,
       size,
-      xCoords: ticks.map((tick) => _epochToX(tick.epoch)).toList(),
-      yCoords: ticks.map((tick) => _quoteToY(tick.quote)).toList(),
+      xCoords: candles.map((candle) => _epochToX(candle.epoch)).toList(),
+      yCoords: candles.map((candle) => _quoteToY(candle.close)).toList(),
     );
   }
 

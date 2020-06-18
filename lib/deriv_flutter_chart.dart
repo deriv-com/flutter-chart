@@ -1,4 +1,4 @@
 library deriv_flutter_chart;
 
-export './src/models/tick.dart';
+export './src/models/candle.dart';
 export './src/chart.dart';

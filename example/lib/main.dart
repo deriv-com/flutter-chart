@@ -32,7 +32,7 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
-  List<Tick> ticks = [];
+  List<Candle> candles = [];
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _onNewTick(int epoch, double quote) {
     setState(() {
-      ticks = ticks + [Tick(epoch: epoch, quote: quote)];
+      candles = candles + [Candle.tick(epoch: epoch, quote: quote)];
     });
   }
 
@@ -77,7 +77,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       color: Color(0xFF0E0E0E),
       child: SizedBox.expand(
         child: Chart(
-          data: ticks,
+          candles: candles,
         ),
       ),
     );

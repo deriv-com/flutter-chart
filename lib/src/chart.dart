@@ -6,15 +6,16 @@ import 'package:flutter/scheduler.dart';
 import './logic/conversion.dart';
 import './chart_painter.dart';
 import './models/tick.dart';
+import './models/candle.dart';
 import './scale_and_pan_gesture_detector.dart';
 
 class Chart extends StatefulWidget {
   const Chart({
     Key key,
-    @required this.data,
+    @required this.candles,
   }) : super(key: key);
 
-  final List<Tick> data;
+  final List<Candle> candles;
 
   @override
   _ChartState createState() => _ChartState();
@@ -36,7 +37,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
 
-  List<Tick> visibleTicks = [];
+  List<Candle> visibleCandles = [];
 
   int nowEpoch;
   Size canvasSize;
@@ -88,7 +89,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   @override
   void didUpdateWidget(Chart oldChart) {
-    if (oldChart.data.isNotEmpty && oldChart.data.last != widget.data.last) {
+    if (oldChart.candles.isNotEmpty &&
+        oldChart.candles.last != widget.candles.last) {
       _onNewTick();
     }
     super.didUpdateWidget(oldChart);
@@ -144,27 +146,26 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _updateVisibleTicks() {
-    final ticks = widget.data;
+    final candles = widget.candles;
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
 
-    var start = ticks.indexWhere((tick) => leftBoundEpoch < tick.epoch);
-    var end = ticks.lastIndexWhere((tick) => tick.epoch < rightBoundEpoch);
+    var start = candles.indexWhere((candle) => leftBoundEpoch < candle.epoch);
+    var end =
+        candles.lastIndexWhere((candle) => candle.epoch < rightBoundEpoch);
 
     if (start == -1 || end == -1) return;
 
     if (start > 0) start -= 1;
-    if (end < ticks.length - 1) end += 1;
+    if (end < candles.length - 1) end += 1;
 
-    visibleTicks = ticks.sublist(start, end + 1);
+    visibleCandles = candles.sublist(start, end + 1);
   }
 
   void _recalculateQuoteBoundTargets() {
-    if (visibleTicks.isEmpty) return;
+    if (visibleCandles.isEmpty) return;
 
-    final visibleTickQuotes = visibleTicks.map((tick) => tick.quote);
-
-    final minQuote = visibleTickQuotes.reduce(min);
-    final maxQuote = visibleTickQuotes.reduce(max);
+    final minQuote = visibleCandles.map((candle) => candle.low).reduce(min);
+    final maxQuote = visibleCandles.map((candle) => candle.high).reduce(max);
 
     if (minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
@@ -206,36 +207,41 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     return msToPx(ms, msPerPx: msPerPx);
   }
 
-  List<Tick> _getChartTicks() {
-    if (visibleTicks.isEmpty) return [];
+  List<Candle> _getChartTicks() {
+    if (visibleCandles.isEmpty) return [];
 
-    final currentTickVisible = visibleTicks.last == widget.data.last;
+    final currentTickVisible = visibleCandles.last == widget.candles.last;
     final animatedCurrentTick = _getAnimatedCurrentTick();
 
     if (currentTickVisible && animatedCurrentTick != null) {
-      final excludeLast = visibleTicks.take(visibleTicks.length - 1).toList();
-      return excludeLast + [animatedCurrentTick];
+      final excludeLast =
+          visibleCandles.take(visibleCandles.length - 1).toList();
+      final animatedLast = visibleCandles.last.copyWith(
+        epoch: animatedCurrentTick.epoch,
+        close: animatedCurrentTick.quote,
+      );
+      return excludeLast + [animatedLast];
     } else {
-      return visibleTicks;
+      return visibleCandles;
     }
   }
 
   Tick _getAnimatedCurrentTick() {
-    final ticks = widget.data;
-    if (ticks.length < 2) return null;
+    final candles = widget.candles;
+    if (candles.length < 2) return null;
 
-    final lastTick = ticks[ticks.length - 1];
-    final secondLastTick = ticks[ticks.length - 2];
+    final lastCandle = candles[candles.length - 1];
+    final secondLastCandle = candles[candles.length - 2];
 
-    final epochDiff = lastTick.epoch - secondLastTick.epoch;
-    final quoteDiff = lastTick.quote - secondLastTick.quote;
+    final epochDiff = lastCandle.epoch - secondLastCandle.epoch;
+    final quoteDiff = lastCandle.close - secondLastCandle.close;
 
     final animatedEpochDiff = (epochDiff * _currentTickAnimation.value).toInt();
     final animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
 
     return Tick(
-      epoch: secondLastTick.epoch + animatedEpochDiff,
-      quote: secondLastTick.quote + animatedQuoteDiff,
+      epoch: secondLastCandle.epoch + animatedEpochDiff,
+      quote: secondLastCandle.close + animatedQuoteDiff,
     );
   }
 
@@ -260,7 +266,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             return CustomPaint(
               size: Size.infinite,
               painter: ChartPainter(
-                ticks: _getChartTicks(),
+                candles: _getChartTicks(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
                 msPerPx: msPerPx,
                 rightBoundEpoch: rightBoundEpoch,
