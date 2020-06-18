@@ -1,3 +1,4 @@
+import 'package:deriv_flutter_chart/src/models/candle_painting.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
@@ -8,6 +9,7 @@ import 'logic/conversion.dart';
 import 'logic/grid.dart';
 
 import 'paint/paint_arrow.dart';
+import 'paint/paint_candles.dart';
 import 'paint/paint_grid.dart';
 import 'paint/paint_line.dart';
 
@@ -96,7 +98,8 @@ class ChartPainter extends CustomPainter {
     this.size = size;
 
     _painGrid();
-    _paintLine();
+    // _paintLine();
+    _paintCandles();
 
     final currentTickVisible = animatedCurrentTick.epoch <= rightBoundEpoch;
     if (currentTickVisible) {
@@ -156,6 +159,24 @@ class ChartPainter extends CustomPainter {
       xCoords: candles.map((candle) => _epochToX(candle.epoch)).toList(),
       yCoords: candles.map((candle) => _quoteToY(candle.close)).toList(),
     );
+  }
+
+  void _paintCandles() {
+    final granularity = candles[1].epoch - candles[0].epoch;
+    final candleWidth = msToPx(granularity, msPerPx: msPerPx) * 0.7;
+
+    final candlePaintings = candles.map((candle) {
+      return CandlePainting(
+        width: candleWidth,
+        xCenter: _epochToX(candle.epoch),
+        yHigh: _quoteToY(candle.high),
+        yLow: _quoteToY(candle.low),
+        yOpen: _quoteToY(candle.open),
+        yClose: _quoteToY(candle.close),
+      );
+    }).toList();
+
+    paintCandles(canvas, size, candlePaintings);
   }
 
   void _paintCurrentTickDot() {
