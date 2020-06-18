@@ -206,6 +206,20 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     return msToPx(ms, msPerPx: msPerPx);
   }
 
+  List<Tick> _getChartTicks() {
+    if (visibleTicks.isEmpty) return [];
+
+    final currentTickVisible = visibleTicks.last == widget.data.last;
+    final animatedCurrentTick = _getAnimatedCurrentTick();
+
+    if (currentTickVisible && animatedCurrentTick != null) {
+      final excludeLast = visibleTicks.take(visibleTicks.length - 1).toList();
+      return excludeLast + [animatedCurrentTick];
+    } else {
+      return visibleTicks;
+    }
+  }
+
   Tick _getAnimatedCurrentTick() {
     final ticks = widget.data;
     if (ticks.length < 2) return null;
@@ -246,10 +260,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             return CustomPaint(
               size: Size.infinite,
               painter: ChartPainter(
-                ticks: visibleTicks,
+                ticks: _getChartTicks(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
-                endsWithCurrentTick: visibleTicks.isNotEmpty &&
-                    visibleTicks.last == widget.data.last,
                 msPerPx: msPerPx,
                 rightBoundEpoch: rightBoundEpoch,
                 topBoundQuote: _topBoundQuoteAnimationController.value,

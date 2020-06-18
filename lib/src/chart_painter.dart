@@ -14,7 +14,6 @@ class ChartPainter extends CustomPainter {
   ChartPainter({
     this.ticks,
     this.animatedCurrentTick,
-    this.endsWithCurrentTick,
     this.msPerPx,
     this.rightBoundEpoch,
     this.topBoundQuote,
@@ -28,7 +27,6 @@ class ChartPainter extends CustomPainter {
 
   final List<Tick> ticks;
   final Tick animatedCurrentTick;
-  final bool endsWithCurrentTick;
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   final double msPerPx;
@@ -90,13 +88,9 @@ class ChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (ticks.length < 2) return;
+
     this.canvas = canvas;
     this.size = size;
-
-    if (endsWithCurrentTick) {
-      ticks.removeLast();
-      ticks.add(animatedCurrentTick);
-    }
 
     _painGrid();
     _paintLine();
