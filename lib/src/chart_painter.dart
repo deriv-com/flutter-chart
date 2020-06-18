@@ -102,6 +102,17 @@ class ChartPainter extends CustomPainter {
     }
 
     _paintArrow();
+
+    _paintNow(); // for testing
+  }
+
+  void _paintNow() {
+    final x = _epochToX(DateTime.now().millisecondsSinceEpoch);
+    canvas.drawLine(
+      Offset(x, 0),
+      Offset(x, size.height),
+      Paint()..color = Colors.yellow,
+    );
   }
 
   void _painGrid() {

@@ -53,8 +53,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
             if (data['tick'] != null) {
               final epoch = data['tick']['epoch'] * 1000;
-              final quote = data['tick']['quote'];
-              _onNewTick(epoch, quote.toDouble());
+              final quote = data['tick']['quote'].toDouble();
+              _onNewTick(epoch, quote);
+            }
+
+            if (data['ohlc'] != null) {
+              final newCandle = Candle(
+                epoch: data['ohlc']['open_time'] * 1000,
+                high: double.parse(data['ohlc']['high']),
+                low: double.parse(data['ohlc']['low']),
+                open: double.parse(data['ohlc']['open']),
+                close: double.parse(data['ohlc']['close']),
+              );
+              _onNewCandle(newCandle);
             }
           },
           onDone: () => print('Done!'),
@@ -64,7 +75,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
           'ticks_history': 'R_50',
           'end': 'latest',
           'count': 1,
-          'style': 'ticks',
+          'style': 'candles',
+          'granularity': 60,
           'subscribe': 1,
         }));
       }
@@ -78,6 +90,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
     setState(() {
       candles = candles + [Candle.tick(epoch: epoch, quote: quote)];
     });
+  }
+
+  void _onNewCandle(Candle newCandle) {
+    if (candles.isEmpty || candles.last.epoch != newCandle.epoch) {
+      setState(() {
+        candles = candles + [newCandle];
+      });
+    } else {
+      final excludeLast = candles.take(candles.length - 1).toList();
+      final updatedLast = candles.last.copyWith(
+        high: newCandle.high,
+        low: newCandle.low,
+        close: newCandle.close,
+      );
+      setState(() {
+        candles = excludeLast + [updatedLast];
+      });
+    }
   }
 
   @override

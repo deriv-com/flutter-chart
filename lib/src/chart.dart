@@ -41,6 +41,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   int nowEpoch;
   Size canvasSize;
+  Tick prevTick;
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   /// Horizontal panning is controlled by this variable.
@@ -91,6 +92,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void didUpdateWidget(Chart oldChart) {
     if (oldChart.candles.isNotEmpty &&
         oldChart.candles.last != widget.candles.last) {
+      prevTick = _candleToTick(oldChart.candles.last);
       _onNewTick();
     }
     super.didUpdateWidget(oldChart);
@@ -226,22 +228,27 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     }
   }
 
+  Tick _candleToTick(Candle candle) {
+    return Tick(
+      epoch: candle.epoch,
+      quote: candle.close,
+    );
+  }
+
   Tick _getAnimatedCurrentTick() {
-    final candles = widget.candles;
-    if (candles.length < 2) return null;
+    if (prevTick == null) return null;
 
-    final lastCandle = candles[candles.length - 1];
-    final secondLastCandle = candles[candles.length - 2];
+    final currentTick = _candleToTick(widget.candles.last);
 
-    final epochDiff = lastCandle.epoch - secondLastCandle.epoch;
-    final quoteDiff = lastCandle.close - secondLastCandle.close;
+    final epochDiff = currentTick.epoch - prevTick.epoch;
+    final quoteDiff = currentTick.quote - prevTick.quote;
 
     final animatedEpochDiff = (epochDiff * _currentTickAnimation.value).toInt();
     final animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
 
     return Tick(
-      epoch: secondLastCandle.epoch + animatedEpochDiff,
-      quote: secondLastCandle.close + animatedQuoteDiff,
+      epoch: prevTick.epoch + animatedEpochDiff,
+      quote: prevTick.quote + animatedQuoteDiff,
     );
   }
 
@@ -273,7 +280,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 topBoundQuote: _topBoundQuoteAnimationController.value,
                 bottomBoundQuote: _bottomBoundQuoteAnimationController.value,
                 quoteGridInterval: quoteGridInterval,
-                timeGridInterval: 30000,
+                timeGridInterval: 60 * 1000,
                 topPadding: _topPadding,
                 bottomPadding: _bottomPadding,
                 quoteLabelsAreaWidth: quoteLabelsAreaWidth,
@@ -293,7 +300,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _handleScaleUpdate(details) {
     setState(() {
-      msPerPx = (prevMsPerPx / details.scale).clamp(20.0, 400.0);
+      msPerPx = (prevMsPerPx / details.scale); //.clamp(20.0, 400.0);
 
       if (rightBoundEpoch > nowEpoch) {
         rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
