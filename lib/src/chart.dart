@@ -252,6 +252,27 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
+  int _getTimeGridInterval() {
+    final minDistanceBetweenLines = 100;
+    final min = 60 * 1000;
+    final fiveMin = 5 * min;
+    final tenMin = 10 * min;
+    final thirtyMin = 30 * min;
+    final hour = 60 * min;
+
+    if (min / msPerPx >= minDistanceBetweenLines) {
+      return min;
+    } else if (fiveMin / msPerPx >= minDistanceBetweenLines) {
+      return fiveMin;
+    } else if (tenMin / msPerPx >= minDistanceBetweenLines) {
+      return tenMin;
+    } else if (thirtyMin / msPerPx >= minDistanceBetweenLines) {
+      return thirtyMin;
+    } else {
+      return hour;
+    }
+  }
+
   double get _verticalPadding =>
       verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
 
@@ -280,7 +301,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 topBoundQuote: _topBoundQuoteAnimationController.value,
                 bottomBoundQuote: _bottomBoundQuoteAnimationController.value,
                 quoteGridInterval: quoteGridInterval,
-                timeGridInterval: 60 * 1000,
+                timeGridInterval: _getTimeGridInterval(),
                 topPadding: _topPadding,
                 bottomPadding: _bottomPadding,
                 quoteLabelsAreaWidth: quoteLabelsAreaWidth,
