@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import './logic/conversion.dart';
-import './chart_painter.dart';
-import './models/chart_style.dart';
-import './models/tick.dart';
-import './models/candle.dart';
-import './scale_and_pan_gesture_detector.dart';
+import 'logic/conversion.dart';
+import 'chart_painter.dart';
+import 'models/chart_style.dart';
+import 'models/tick.dart';
+import 'models/candle.dart';
+import 'scale_and_pan_gesture_detector.dart';
 
 class Chart extends StatefulWidget {
   const Chart({
@@ -244,6 +244,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     if (prevTick == null) return null;
 
     final currentTick = _candleToTick(widget.candles.last);
+
+    if (widget.style == ChartStyle.candles &&
+        currentTick.epoch != prevTick.epoch) {
+      return currentTick;
+    }
 
     final epochDiff = currentTick.epoch - prevTick.epoch;
     final quoteDiff = currentTick.quote - prevTick.quote;
