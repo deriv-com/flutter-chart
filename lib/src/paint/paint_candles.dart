@@ -16,7 +16,13 @@ void _paintCandle(Canvas canvas, Size size, CandlePainting cp) {
     Paint()..color = Colors.white70,
   );
 
-  if (cp.yOpen > cp.yClose) {
+  if (cp.yOpen == cp.yClose) {
+    canvas.drawLine(
+      Offset(cp.xCenter - cp.width / 2, cp.yOpen),
+      Offset(cp.xCenter + cp.width / 2, cp.yOpen),
+      Paint()..color = Colors.white70,
+    );
+  } else if (cp.yOpen > cp.yClose) {
     canvas.drawRect(
       Rect.fromLTRB(
         cp.xCenter - cp.width / 2,
