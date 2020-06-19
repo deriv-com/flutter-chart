@@ -191,6 +191,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     }
   }
 
+  // canvasHeight
+  // topPadding
+  // bottomPadding
+  // topBoundQuoteTarget
+  // bottomBoundQuoteTarget
   void _recalculateQuoteGridInterval() {
     final chartAreaHeight = canvasSize.height - _topPadding - _bottomPadding;
     final quoteRange = topBoundQuoteTarget - bottomBoundQuoteTarget;

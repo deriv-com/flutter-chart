@@ -92,4 +92,29 @@ void main() {
       );
     });
   });
+
+  group('quotePerPx should', () {
+    test('calculate correct ratio with round parameters', () {
+      expect(
+        quotePerPx(
+          topBoundQuote: 100,
+          bottomBoundQuote: 0,
+          yTopBound: 0,
+          yBottomBound: 100,
+        ),
+        equals(1),
+      );
+    });
+    test('calculate correct ratio with fractional parameters', () {
+      expect(
+        quotePerPx(
+          topBoundQuote: 123.4823,
+          bottomBoundQuote: 103.9823,
+          yTopBound: 783,
+          yBottomBound: 978,
+        ),
+        equals(0.1),
+      );
+    });
+  });
 }
