@@ -186,7 +186,7 @@ class ChartPainter extends CustomPainter {
       );
     }).toList();
 
-    paintCandles(canvas, size, candlePaintings);
+    paintCandles(canvas, candlePaintings);
   }
 
   void _paintCurrentTickDot() {

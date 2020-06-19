@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 
 import '../models/candle_painting.dart';
 
-void paintCandles(
-    Canvas canvas, Size size, List<CandlePainting> candlePaintings) {
+void paintCandles(Canvas canvas, List<CandlePainting> candlePaintings) {
   candlePaintings.forEach((candlePaiting) {
-    _paintCandle(canvas, size, candlePaiting);
+    _paintCandle(canvas, candlePaiting);
   });
 }
 
-void _paintCandle(Canvas canvas, Size size, CandlePainting cp) {
+void _paintCandle(Canvas canvas, CandlePainting cp) {
+  final linePaint = Paint()
+    ..color = Color(0xFF6E6E6E)
+    ..strokeWidth = 1.2;
+
   canvas.drawLine(
     Offset(cp.xCenter, cp.yHigh),
     Offset(cp.xCenter, cp.yLow),
-    Paint()..color = Colors.white70,
+    linePaint,
   );
 
   if (cp.yOpen == cp.yClose) {
     canvas.drawLine(
       Offset(cp.xCenter - cp.width / 2, cp.yOpen),
       Offset(cp.xCenter + cp.width / 2, cp.yOpen),
-      Paint()..color = Colors.white70,
+      linePaint,
     );
   } else if (cp.yOpen > cp.yClose) {
     canvas.drawRect(
