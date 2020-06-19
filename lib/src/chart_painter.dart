@@ -7,7 +7,8 @@ import 'models/candle.dart';
 import 'models/chart_style.dart';
 
 import 'logic/conversion.dart';
-import 'logic/grid.dart';
+import 'logic/time_grid.dart';
+import 'logic/quote_grid.dart';
 
 import 'paint/paint_arrow.dart';
 import 'paint/paint_candles.dart';
