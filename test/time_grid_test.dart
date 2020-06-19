@@ -62,7 +62,7 @@ void main() {
       );
     });
     test(
-        'return smallest given interval that has length of at least [minDistanceBetweenLines]',
+        'return smallest given interval that has px width of at least [minDistanceBetweenLines]',
         () {
       expect(
         timeGridIntervalInSeconds(
