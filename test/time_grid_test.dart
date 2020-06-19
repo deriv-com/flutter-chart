@@ -43,4 +43,51 @@ void main() {
       );
     });
   });
+
+  group('timeGridInterval should', () {
+    test('return given interval if only one is given', () {
+      expect(
+        timeGridIntervalInSeconds(
+          10000000,
+          intervalsInSeconds: [10],
+        ),
+        equals(10),
+      );
+      expect(
+        timeGridIntervalInSeconds(
+          0.000001,
+          intervalsInSeconds: [42],
+        ),
+        equals(42),
+      );
+    });
+    test(
+        'return smallest given interval that has length of at least [minDistanceBetweenLines]',
+        () {
+      expect(
+        timeGridIntervalInSeconds(
+          1000,
+          minDistanceBetweenLines: 100,
+          intervalsInSeconds: [10, 99, 120, 200, 1000],
+        ),
+        equals(120),
+      );
+      expect(
+        timeGridIntervalInSeconds(
+          1000,
+          minDistanceBetweenLines: 100,
+          intervalsInSeconds: [10, 100, 120, 200],
+        ),
+        equals(100),
+      );
+      expect(
+        timeGridIntervalInSeconds(
+          1000,
+          minDistanceBetweenLines: 42,
+          intervalsInSeconds: [39, 40, 41, 45, 50],
+        ),
+        equals(45),
+      );
+    });
+  });
 }

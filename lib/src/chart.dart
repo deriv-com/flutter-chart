@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'logic/conversion.dart';
+import 'logic/time_grid.dart' show timeGridIntervalInSeconds;
 import 'chart_painter.dart';
 import 'models/chart_style.dart';
 import 'models/tick.dart';
@@ -262,27 +263,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
-  int _getTimeGridInterval() {
-    final minDistanceBetweenLines = 100;
-    final min = 60 * 1000;
-    final fiveMin = 5 * min;
-    final tenMin = 10 * min;
-    final thirtyMin = 30 * min;
-    final hour = 60 * min;
-
-    if (min / msPerPx >= minDistanceBetweenLines) {
-      return min;
-    } else if (fiveMin / msPerPx >= minDistanceBetweenLines) {
-      return fiveMin;
-    } else if (tenMin / msPerPx >= minDistanceBetweenLines) {
-      return tenMin;
-    } else if (thirtyMin / msPerPx >= minDistanceBetweenLines) {
-      return thirtyMin;
-    } else {
-      return hour;
-    }
-  }
-
   double get _verticalPadding =>
       verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
 
@@ -313,7 +293,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 topBoundQuote: _topBoundQuoteAnimationController.value,
                 bottomBoundQuote: _bottomBoundQuoteAnimationController.value,
                 quoteGridInterval: quoteGridInterval,
-                timeGridInterval: _getTimeGridInterval(),
+                timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
                 topPadding: _topPadding,
                 bottomPadding: _bottomPadding,
                 quoteLabelsAreaWidth: quoteLabelsAreaWidth,

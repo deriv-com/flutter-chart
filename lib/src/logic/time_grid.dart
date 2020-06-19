@@ -15,3 +15,23 @@ List<int> gridEpochs({
   }
   return epochs;
 }
+
+int timeGridIntervalInSeconds(
+  double msPerPx, {
+  double minDistanceBetweenLines = 100,
+  List<int> intervalsInSeconds = const [
+    60,
+    300,
+    600,
+    1800,
+    3600,
+  ],
+}) {
+  return intervalsInSeconds.firstWhere(
+    (intervalInSeconds) {
+      final distanceBetweenLines = intervalInSeconds * 1000 / msPerPx;
+      return distanceBetweenLines >= minDistanceBetweenLines;
+    },
+    orElse: () => intervalsInSeconds.last,
+  );
+}
