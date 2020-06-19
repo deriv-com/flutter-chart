@@ -246,11 +246,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
     final currentTick = _candleToTick(widget.candles.last);
 
-    if (widget.style == ChartStyle.candles &&
-        currentTick.epoch != prevTick.epoch) {
-      return currentTick;
-    }
-
     final epochDiff = currentTick.epoch - prevTick.epoch;
     final quoteDiff = currentTick.quote - prevTick.quote;
 
