@@ -32,3 +32,31 @@ double quotePerPx({
 
   return quoteDiff / pxDiff;
 }
+
+double quoteGridInterval(
+  double quotePerPx, {
+  double minDistanceBetweenLines = 60,
+  List<double> intervals = const [
+    0.1,
+    0.25,
+    0.5,
+    1,
+    2.5,
+    5,
+    10,
+    25,
+    50,
+    100,
+    250,
+  ],
+}) {
+  bool hasEnoughDistanceBetweenLines(double quoteInterval) {
+    final distanceBetweenLines = quoteInterval / quotePerPx;
+    return distanceBetweenLines >= minDistanceBetweenLines;
+  }
+
+  return intervals.firstWhere(
+    hasEnoughDistanceBetweenLines,
+    orElse: () => intervals.last,
+  );
+}

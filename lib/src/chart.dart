@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_flutter_chart/src/logic/quote_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -64,9 +65,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
 
-  /// Difference between two consecutive quote labels.
-  double quoteGridInterval = 1;
-
   /// Duration of quote bounds animated transition.
   final quoteBoundsAnimationDuration = const Duration(milliseconds: 300);
 
@@ -120,7 +118,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       if (canvasSize != null) {
         _updateVisibleTicks();
         _recalculateQuoteBoundTargets();
-        _recalculateQuoteGridInterval();
       }
     });
   }
@@ -191,27 +188,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     }
   }
 
-  // canvasHeight
-  // topPadding
-  // bottomPadding
-  // topBoundQuoteTarget
-  // bottomBoundQuoteTarget
-  void _recalculateQuoteGridInterval() {
-    final chartAreaHeight = canvasSize.height - _topPadding - _bottomPadding;
-    final quoteRange = topBoundQuoteTarget - bottomBoundQuoteTarget;
-    if (quoteRange <= 0) return;
-
-    final k = chartAreaHeight / quoteRange;
-
-    double _distanceBetweenLines() => k * quoteGridInterval;
-
-    if (_distanceBetweenLines() < 100) {
-      quoteGridInterval *= 2;
-    } else if (_distanceBetweenLines() / 2 >= 100) {
-      quoteGridInterval /= 2;
-    }
-  }
-
   int _pxToMs(double px) {
     return pxToMs(px, msPerPx: msPerPx);
   }
@@ -263,12 +239,32 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
+  double get _topBoundQuote => _topBoundQuoteAnimationController.value;
+
+  double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
+
   double get _verticalPadding =>
       verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
 
   double get _topPadding => _verticalPadding;
 
   double get _bottomPadding => _verticalPadding + timeLabelsAreaHeight;
+
+  double get _quotePerPx => quotePerPx(
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        yTopBound: _quoteToCanvasY(_topBoundQuote),
+        yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
+      );
+
+  double _quoteToCanvasY(double quote) => quoteToCanvasY(
+        quote: quote,
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize.height,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -290,9 +286,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 style: widget.style,
                 msPerPx: msPerPx,
                 rightBoundEpoch: rightBoundEpoch,
-                topBoundQuote: _topBoundQuoteAnimationController.value,
-                bottomBoundQuote: _bottomBoundQuoteAnimationController.value,
-                quoteGridInterval: quoteGridInterval,
+                topBoundQuote: _topBoundQuote,
+                bottomBoundQuote: _bottomBoundQuote,
+                quoteGridInterval: quoteGridInterval(_quotePerPx),
                 timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
                 topPadding: _topPadding,
                 bottomPadding: _bottomPadding,
