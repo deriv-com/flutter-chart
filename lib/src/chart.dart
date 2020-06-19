@@ -313,7 +313,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _handleScaleUpdate(details) {
     setState(() {
-      msPerPx = (prevMsPerPx / details.scale); //.clamp(20.0, 400.0);
+      msPerPx = (prevMsPerPx / details.scale).clamp(1000.0, 10000.0);
 
       if (rightBoundEpoch > nowEpoch) {
         rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
