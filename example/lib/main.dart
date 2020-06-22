@@ -139,7 +139,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
             ),
             IconButton(
               icon: Icon(
-                Icons.insert_chart,
+                style == ChartStyle.line
+                    ? Icons.show_chart
+                    : Icons.insert_chart,
                 color: Colors.white,
               ),
               onPressed: () {
