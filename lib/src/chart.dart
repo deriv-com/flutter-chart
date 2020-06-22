@@ -71,9 +71,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   double bottomBoundQuoteTarget = 30;
 
   AnimationController _currentTickAnimationController;
+  AnimationController _currentTickBlinkingController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
   Animation _currentTickAnimation;
+  Animation _currentTickBlinkAnimation;
 
   bool get _shouldAutoPan => rightBoundEpoch > nowEpoch;
 
@@ -149,6 +151,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       curve: Curves.easeOut,
     );
 
+    _currentTickBlinkingController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    _currentTickBlinkingController.repeat(reverse: true);
+    _currentTickBlinkAnimation = CurvedAnimation(
+      parent: _currentTickBlinkingController,
+      curve: Curves.easeInOut,
+    );
+
     _topBoundQuoteAnimationController = AnimationController.unbounded(
       value: topBoundQuoteTarget,
       vsync: this,
@@ -164,6 +176,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   @override
   void dispose() {
     _currentTickAnimationController.dispose();
+    _currentTickBlinkingController.dispose();
+    _topBoundQuoteAnimationController.dispose();
+    _bottomBoundQuoteAnimationController.dispose();
     super.dispose();
   }
 
@@ -281,6 +296,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
               painter: ChartPainter(
                 candles: _getChartTicks(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
+                blinkAnimationProgress: _currentTickBlinkAnimation.value,
                 pipSize: widget.pipSize,
                 style: widget.style,
                 msPerPx: msPerPx,

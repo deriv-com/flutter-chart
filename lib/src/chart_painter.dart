@@ -19,6 +19,7 @@ class ChartPainter extends CustomPainter {
   ChartPainter({
     this.candles,
     this.animatedCurrentTick,
+    this.blinkAnimationProgress,
     this.pipSize,
     this.style,
     this.msPerPx,
@@ -34,6 +35,7 @@ class ChartPainter extends CustomPainter {
 
   final List<Candle> candles;
   final Tick animatedCurrentTick;
+  final double blinkAnimationProgress;
   final int pipSize;
   final ChartStyle style;
 
@@ -191,7 +193,16 @@ class ChartPainter extends CustomPainter {
 
   void _paintCurrentTickDot() {
     final offset = _toCanvasOffset(animatedCurrentTick);
-    canvas.drawCircle(offset, 3, Paint()..color = Color(0xFFFF444F));
+    canvas.drawCircle(
+      offset,
+      12 * blinkAnimationProgress,
+      Paint()..color = Color(0x50FF444F),
+    );
+    canvas.drawCircle(
+      offset,
+      3,
+      Paint()..color = Color(0xFFFF444F),
+    );
   }
 
   void _paintArrow() {
