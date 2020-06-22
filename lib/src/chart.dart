@@ -34,10 +34,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
   final double maxCurrentTickOffset = 150;
 
-  /// Current distance between [rightBoundEpoch] and [nowEpoch] in pixels.
-  /// Used to preserve this distance during scaling.
-  double currentTickOffset = 100;
-
   /// Width of the area with quote labels on the right.
   final double quoteLabelsAreaWidth = 70;
 
@@ -104,7 +100,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     super.initState();
 
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
+    rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
 
     ticker = this.createTicker(_onNewFrame);
     ticker.start();
@@ -316,16 +312,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _handleScaleUpdate(ScaleUpdateDetails details) {
     if (_shouldAutoPan) {
-      _scaleWithCurrentTickFixed(details);
+      _scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);
     }
   }
 
-  void _scaleWithCurrentTickFixed(ScaleUpdateDetails details) {
+  void _scaleWithNowFixed(ScaleUpdateDetails details) {
+    final nowToRightBound = _msToPx(rightBoundEpoch - nowEpoch);
     _scaleChart(details);
     setState(() {
-      rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
+      rightBoundEpoch = nowEpoch + _pxToMs(nowToRightBound);
     });
   }
 
@@ -348,10 +345,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
       rightBoundEpoch = rightBoundEpoch.clamp(0, upperLimit);
 
-      if (rightBoundEpoch > nowEpoch) {
-        currentTickOffset = _msToPx(rightBoundEpoch - nowEpoch);
-      }
-
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
                 (canvasSize.height - timeLabelsAreaHeight))
@@ -369,6 +362,5 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _scrollToNow() {
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
-    currentTickOffset = maxCurrentTickOffset;
   }
 }
