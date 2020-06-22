@@ -142,6 +142,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _setupAnimations() {
+    _setupCurrentTickAnimation();
+    _setupBlinkingAnimation();
+    _setupBoundsAnimation();
+  }
+
+  void _setupCurrentTickAnimation() {
     _currentTickAnimationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -150,7 +156,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       parent: _currentTickAnimationController,
       curve: Curves.easeOut,
     );
+  }
 
+  void _setupBlinkingAnimation() {
     _currentTickBlinkingController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -160,7 +168,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       parent: _currentTickBlinkingController,
       curve: Curves.easeInOut,
     );
+  }
 
+  void _setupBoundsAnimation() {
     _topBoundQuoteAnimationController = AnimationController.unbounded(
       value: topBoundQuoteTarget,
       vsync: this,
