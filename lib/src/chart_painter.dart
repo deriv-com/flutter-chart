@@ -1,4 +1,5 @@
 import 'package:deriv_flutter_chart/src/models/candle_painting.dart';
+import 'package:deriv_flutter_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
@@ -192,16 +193,10 @@ class ChartPainter extends CustomPainter {
   }
 
   void _paintCurrentTickDot() {
-    final offset = _toCanvasOffset(animatedCurrentTick);
-    canvas.drawCircle(
-      offset,
-      12 * blinkAnimationProgress,
-      Paint()..color = Color(0x50FF444F),
-    );
-    canvas.drawCircle(
-      offset,
-      3,
-      Paint()..color = Color(0xFFFF444F),
+    paintCurrentTickDot(
+      canvas,
+      center: _toCanvasOffset(animatedCurrentTick),
+      animationProgress: blinkAnimationProgress,
     );
   }
 
