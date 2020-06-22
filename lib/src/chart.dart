@@ -79,6 +79,26 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   AnimationController _bottomBoundQuoteAnimationController;
   Animation _currentTickAnimation;
 
+  bool get _shouldAutoPan => rightBoundEpoch > nowEpoch;
+
+  double get _topBoundQuote => _topBoundQuoteAnimationController.value;
+
+  double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
+
+  double get _verticalPadding =>
+      verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
+
+  double get _topPadding => _verticalPadding;
+
+  double get _bottomPadding => _verticalPadding + timeLabelsAreaHeight;
+
+  double get _quotePerPx => quotePerPx(
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        yTopBound: _quoteToCanvasY(_topBoundQuote),
+        yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
+      );
+
   @override
   void initState() {
     super.initState();
@@ -112,8 +132,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       final prevEpoch = nowEpoch;
       nowEpoch = DateTime.now().millisecondsSinceEpoch;
       final elapsedMs = nowEpoch - prevEpoch;
-      if (rightBoundEpoch > prevEpoch) {
-        rightBoundEpoch += elapsedMs; // autopanning
+
+      if (_shouldAutoPan) {
+        rightBoundEpoch += elapsedMs;
       }
       if (canvasSize != null) {
         _updateVisibleTicks();
@@ -239,24 +260,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
-  double get _topBoundQuote => _topBoundQuoteAnimationController.value;
-
-  double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
-
-  double get _verticalPadding =>
-      verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
-
-  double get _topPadding => _verticalPadding;
-
-  double get _bottomPadding => _verticalPadding + timeLabelsAreaHeight;
-
-  double get _quotePerPx => quotePerPx(
-        topBoundQuote: _topBoundQuote,
-        bottomBoundQuote: _bottomBoundQuote,
-        yTopBound: _quoteToCanvasY(_topBoundQuote),
-        yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
-      );
-
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
         quote: quote,
         topBoundQuote: _topBoundQuote,
@@ -312,13 +315,31 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _handleScaleUpdate(ScaleUpdateDetails details) {
-    setState(() {
-      msPerPx = (prevMsPerPx / details.scale).clamp(1000.0, 10000.0);
+    if (_shouldAutoPan) {
+      _scaleWithCurrentTickFixed(details);
+    } else {
+      _scaleWithFocalPointFixed(details);
+    }
+  }
 
-      if (rightBoundEpoch > nowEpoch) {
-        rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
-      }
+  void _scaleWithCurrentTickFixed(ScaleUpdateDetails details) {
+    _scaleChart(details);
+    setState(() {
+      rightBoundEpoch = nowEpoch + _pxToMs(currentTickOffset);
     });
+  }
+
+  void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
+    final focalToRightBound = canvasSize.width - details.focalPoint.dx;
+    final focalEpoch = rightBoundEpoch - _pxToMs(focalToRightBound);
+    _scaleChart(details);
+    setState(() {
+      rightBoundEpoch = focalEpoch + _pxToMs(focalToRightBound);
+    });
+  }
+
+  void _scaleChart(ScaleUpdateDetails details) {
+    msPerPx = (prevMsPerPx / details.scale).clamp(1000.0, 10000.0);
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
