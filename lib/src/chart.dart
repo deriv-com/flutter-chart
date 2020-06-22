@@ -307,7 +307,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
-  void _handleScaleUpdate(details) {
+  void _handleScaleStart(ScaleStartDetails details) {
+    prevMsPerPx = msPerPx;
+  }
+
+  void _handleScaleUpdate(ScaleUpdateDetails details) {
     setState(() {
       msPerPx = (prevMsPerPx / details.scale).clamp(1000.0, 10000.0);
 
@@ -317,7 +321,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     });
   }
 
-  void _handlePanUpdate(details) {
+  void _handlePanUpdate(DragUpdateDetails details) {
     setState(() {
       rightBoundEpoch -= _pxToMs(details.delta.dx);
       final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
@@ -333,10 +337,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             .clamp(0.05, 0.49);
       }
     });
-  }
-
-  void _handleScaleStart(details) {
-    prevMsPerPx = msPerPx;
   }
 
   IconButton _buildScrollToNowButton() {
