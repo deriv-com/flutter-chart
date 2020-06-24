@@ -1,15 +1,21 @@
 PODS:
   - Flutter (1.0.0)
+  - vibration (1.4.0):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - vibration (from `.symlinks/plugins/vibration/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  vibration:
+    :path: ".symlinks/plugins/vibration/ios"
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  vibration: 2275f5e3ab5da73de1d948dc96c026799e08ff6d
 
 PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
 

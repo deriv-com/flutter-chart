@@ -52,7 +52,7 @@ class _ScaleAndPanGestureDetectorState
       child: GestureDetector(
         onScaleStart: _handleScaleStart,
         onScaleUpdate: _handleScaleUpdate,
-        onScaleEnd: _handleScaleEnd,
+        onScaleEnd: widget.onScaleAndPanEnd,
         child: widget.child,
       ),
     );
@@ -82,9 +82,5 @@ class _ScaleAndPanGestureDetectorState
     _lastContactPoint = details.focalPoint;
 
     widget.onPanUpdate?.call(dragUpdateDetails);
-  }
-
-  void _handleScaleEnd(ScaleEndDetails details) {
-    widget.onScaleAndPanEnd?.call(details);
   }
 }

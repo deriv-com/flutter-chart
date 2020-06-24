@@ -58,10 +58,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 candles = data['candles'].map<Candle>((json) {
                   return Candle(
                     epoch: json['epoch'] * 1000,
-                    high: json['high'],
-                    low: json['low'],
-                    open: json['open'],
-                    close: json['close'],
+                    high: json['high'].toDouble(),
+                    low: json['low'].toDouble(),
+                    open: json['open'].toDouble(),
+                    close: json['close'].toDouble(),
                   );
                 }).toList();
               });
