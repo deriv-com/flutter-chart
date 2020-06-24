@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:deriv_flutter_chart/deriv_flutter_chart.dart';
+import 'package:vibration/vibration.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -145,6 +146,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 color: Colors.white,
               ),
               onPressed: () {
+                Vibration.vibrate(duration: 50);
                 setState(() {
                   if (style == ChartStyle.candles) {
                     style = ChartStyle.line;
