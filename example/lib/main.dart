@@ -132,27 +132,29 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
             ),
-            IconButton(
-              icon: Icon(
-                style == ChartStyle.line
-                    ? Icons.show_chart
-                    : Icons.insert_chart,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Vibration.vibrate(duration: 50);
-                setState(() {
-                  if (style == ChartStyle.candles) {
-                    style = ChartStyle.line;
-                  } else {
-                    style = ChartStyle.candles;
-                  }
-                });
-              },
-            )
+            _buildChartTypeButton()
           ],
         ),
       ),
+    );
+  }
+
+  IconButton _buildChartTypeButton() {
+    return IconButton(
+      icon: Icon(
+        style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
+        color: Colors.white,
+      ),
+      onPressed: () {
+        Vibration.vibrate(duration: 50);
+        setState(() {
+          if (style == ChartStyle.candles) {
+            style = ChartStyle.line;
+          } else {
+            style = ChartStyle.candles;
+          }
+        });
+      },
     );
   }
 }
