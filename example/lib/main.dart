@@ -109,21 +109,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _onNewCandle(Candle newCandle) {
-    if (candles.isEmpty || candles.last.epoch != newCandle.epoch) {
-      setState(() {
-        candles = candles + [newCandle];
-      });
-    } else {
-      final excludeLast = candles.take(candles.length - 1).toList();
-      final updatedLast = candles.last.copyWith(
-        high: newCandle.high,
-        low: newCandle.low,
-        close: newCandle.close,
-      );
-      setState(() {
-        candles = excludeLast + [updatedLast];
-      });
-    }
+    final previousCandles =
+        candles.isNotEmpty && candles.last.epoch == newCandle.epoch
+            ? candles.sublist(0, candles.length - 1)
+            : candles;
+
+    setState(() {
+      // Don't modify candles in place, othewise Chart's didUpdateWidget won't see the difference.
+      candles = previousCandles + [newCandle];
+    });
   }
 
   @override

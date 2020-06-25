@@ -112,8 +112,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   @override
   void didUpdateWidget(Chart oldChart) {
-    if (oldChart.candles.isNotEmpty &&
-        oldChart.candles.last != widget.candles.last) {
+    if (oldChart.candles.isNotEmpty && oldChart.candles != widget.candles) {
       prevTick = _candleToTick(oldChart.candles.last);
       _onNewTick();
     }
