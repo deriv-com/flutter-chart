@@ -135,7 +135,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         rightBoundEpoch += elapsedMs;
       }
       if (canvasSize != null) {
-        _updateVisibleTicks();
+        _updateVisibleCandles();
         _recalculateQuoteBoundTargets();
       }
     });
@@ -192,7 +192,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _updateVisibleTicks() {
+  void _updateVisibleCandles() {
     final candles = widget.candles;
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
 
@@ -238,7 +238,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     return msToPx(ms, msPerPx: msPerPx);
   }
 
-  List<Candle> _getChartTicks() {
+  List<Candle> _getChartCandles() {
     if (visibleCandles.isEmpty) return [];
 
     final currentTickVisible = visibleCandles.last == widget.candles.last;
@@ -304,7 +304,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             return CustomPaint(
               size: Size.infinite,
               painter: ChartPainter(
-                candles: _getChartTicks(),
+                candles: _getChartCandles(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
                 blinkAnimationProgress: _currentTickBlinkAnimation.value,
                 pipSize: widget.pipSize,
