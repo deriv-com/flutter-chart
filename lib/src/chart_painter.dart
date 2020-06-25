@@ -11,7 +11,7 @@ import 'logic/conversion.dart';
 import 'logic/time_grid.dart';
 import 'logic/quote_grid.dart';
 
-import 'paint/paint_arrow.dart';
+import 'paint/paint_current_tick_label.dart';
 import 'paint/paint_candles.dart';
 import 'paint/paint_grid.dart';
 import 'paint/paint_line.dart';
@@ -201,7 +201,7 @@ class ChartPainter extends CustomPainter {
   }
 
   void _paintArrow() {
-    paintArrow(
+    paintCurrentTickLabel(
       canvas,
       size,
       centerY: _quoteToY(animatedCurrentTick.quote),

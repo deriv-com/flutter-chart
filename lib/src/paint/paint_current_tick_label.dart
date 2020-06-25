@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void paintArrow(
+void paintCurrentTickLabel(
   Canvas canvas,
   Size size, {
   @required double centerY,
@@ -14,7 +14,7 @@ void paintArrow(
       ..color = Colors.white24
       ..strokeWidth = 1,
   );
-  _paintArrowHead(
+  _paintLabel(
     canvas,
     size,
     centerY: centerY,
@@ -23,7 +23,7 @@ void paintArrow(
   );
 }
 
-void _paintArrowHead(
+void _paintLabel(
   Canvas canvas,
   Size size, {
   @required double centerY,
