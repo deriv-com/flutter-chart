@@ -321,7 +321,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             );
           }),
         ),
-        if (rightBoundEpoch < nowEpoch)
+        if (!_shouldAutoPan)
           Positioned(
             bottom: 30 + timeLabelsAreaHeight,
             right: 30 + quoteLabelsAreaWidth,
