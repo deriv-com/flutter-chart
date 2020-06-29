@@ -33,9 +33,11 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
+  WebSocket ws;
+
   List<Candle> candles = [];
-  ChartStyle style = ChartStyle.candles;
-  int granularity = 60;
+  ChartStyle style = ChartStyle.line;
+  int granularity = 0;
 
   @override
   void initState() {
@@ -44,7 +46,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _initTickStream() async {
-    WebSocket ws;
     try {
       ws = await WebSocket.connect(
           'wss://ws.binaryws.com/websockets/v3?app_id=1089');
@@ -53,6 +54,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ws.listen(
           (response) {
             final data = Map<String, dynamic>.from(json.decode(response));
+
+            if (data['history'] != null) {
+              final history = <Candle>[];
+              final count = data['history']['prices'].length;
+              for (var i = 0; i < count; i++) {
+                history.add(Candle.tick(
+                  epoch: data['history']['times'][i] * 1000,
+                  quote: data['history']['prices'][i].toDouble(),
+                ));
+              }
+              setState(() {
+                candles = history;
+              });
+            }
 
             if (data['candles'] != null) {
               setState(() {
@@ -88,19 +103,23 @@ class _FullscreenChartState extends State<FullscreenChart> {
           onDone: () => print('Done!'),
           onError: (e) => throw new Exception(e),
         );
-        ws.add(json.encode({
-          'ticks_history': 'R_50',
-          'end': 'latest',
-          'count': 1000,
-          'style': 'candles',
-          'granularity': 60,
-          'subscribe': 1,
-        }));
+        _requestData();
       }
     } catch (e) {
       ws?.close();
       print('Error: $e');
     }
+  }
+
+  void _requestData() {
+    ws.add(json.encode({
+      'ticks_history': 'R_50',
+      'end': 'latest',
+      'count': 1000,
+      'style': granularity == 0 ? 'ticks' : 'candles',
+      if (granularity > 0) 'granularity': granularity,
+      'subscribe': 1,
+    }));
   }
 
   void _onNewTick(int epoch, double quote) {
@@ -168,16 +187,34 @@ class _FullscreenChartState extends State<FullscreenChart> {
       data: ThemeData.dark(),
       child: DropdownButton<int>(
         value: granularity,
-        items: <int>[0, 60, 120]
+        items: <int>[
+          0,
+          60,
+          120,
+          180,
+          300,
+          600,
+          900,
+          1800,
+          3600,
+          7200,
+          14400,
+          28800,
+          86400,
+        ]
             .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
                   value: granularity,
                   child: Text('$granularity'),
                 ))
             .toList(),
         onChanged: (value) {
+          ws.add(
+            json.encode({'forget_all': granularity == 0 ? 'ticks' : 'candles'}),
+          );
           setState(() {
             granularity = value;
           });
+          _requestData();
         },
       ),
     );
