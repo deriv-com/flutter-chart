@@ -35,6 +35,7 @@ class FullscreenChart extends StatefulWidget {
 class _FullscreenChartState extends State<FullscreenChart> {
   List<Candle> candles = [];
   ChartStyle style = ChartStyle.candles;
+  int granularity = 60;
 
   @override
   void initState() {
@@ -132,7 +133,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
             ),
-            _buildChartTypeButton()
+            _buildChartTypeButton(),
+            Positioned(
+              left: 60,
+              child: _buildIntervalSelector(),
+            )
           ],
         ),
       ),
@@ -155,6 +160,26 @@ class _FullscreenChartState extends State<FullscreenChart> {
           }
         });
       },
+    );
+  }
+
+  Widget _buildIntervalSelector() {
+    return Theme(
+      data: ThemeData.dark(),
+      child: DropdownButton<int>(
+        value: granularity,
+        items: <int>[0, 60, 120]
+            .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
+                  value: granularity,
+                  child: Text('$granularity'),
+                ))
+            .toList(),
+        onChanged: (value) {
+          setState(() {
+            granularity = value;
+          });
+        },
+      ),
     );
   }
 }
