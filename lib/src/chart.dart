@@ -361,7 +361,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scaleChart(ScaleUpdateDetails details) {
-    msPerPx = (prevMsPerPx / details.scale).clamp(1000.0, 10000.0);
+    msPerPx = (prevMsPerPx / details.scale);
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
