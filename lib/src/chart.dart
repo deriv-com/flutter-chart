@@ -112,11 +112,20 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   @override
   void didUpdateWidget(Chart oldChart) {
-    if (oldChart.candles.isNotEmpty && oldChart.candles != widget.candles) {
-      prevTick = _candleToTick(oldChart.candles.last);
+    super.didUpdateWidget(oldChart);
+    if (oldChart.candles == widget.candles) return;
+
+    prevTick = _candleToTick(oldChart.candles.last);
+
+    final oldGranularity = _getGranularity(oldChart.candles);
+    final newGranularity = _getGranularity(widget.candles);
+
+    if (oldGranularity != newGranularity) {
+      msPerPx = _getDefaultScale(newGranularity);
+      _scrollToNow();
+    } else {
       _onNewTick();
     }
-    super.didUpdateWidget(oldChart);
   }
 
   @override
@@ -126,6 +135,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _topBoundQuoteAnimationController.dispose();
     _bottomBoundQuoteAnimationController.dispose();
     super.dispose();
+  }
+
+  void _onNewTick() {
+    _currentTickAnimationController.reset();
+    _currentTickAnimationController.forward();
   }
 
   void _onNewFrame(_) {
@@ -142,11 +156,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         _recalculateQuoteBoundTargets();
       }
     });
-  }
-
-  void _onNewTick() {
-    _currentTickAnimationController.reset();
-    _currentTickAnimationController.forward();
   }
 
   void _setupAnimations() {
@@ -241,46 +250,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     return msToPx(ms, msPerPx: msPerPx);
   }
 
-  List<Candle> _getChartCandles() {
-    if (visibleCandles.isEmpty) return [];
-
-    final currentTickVisible = visibleCandles.last == widget.candles.last;
-    final animatedCurrentTick = _getAnimatedCurrentTick();
-
-    if (currentTickVisible && animatedCurrentTick != null) {
-      final excludeLast =
-          visibleCandles.take(visibleCandles.length - 1).toList();
-      final animatedLast = visibleCandles.last.copyWith(
-        epoch: animatedCurrentTick.epoch,
-        close: animatedCurrentTick.quote,
-      );
-      return excludeLast + [animatedLast];
-    } else {
-      return visibleCandles;
-    }
-  }
-
   Tick _candleToTick(Candle candle) {
     return Tick(
       epoch: candle.epoch,
       quote: candle.close,
-    );
-  }
-
-  Tick _getAnimatedCurrentTick() {
-    if (prevTick == null) return null;
-
-    final currentTick = _candleToTick(widget.candles.last);
-
-    final epochDiff = currentTick.epoch - prevTick.epoch;
-    final quoteDiff = currentTick.quote - prevTick.quote;
-
-    final animatedEpochDiff = (epochDiff * _currentTickAnimation.value).toInt();
-    final animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
-
-    return Tick(
-      epoch: prevTick.epoch + animatedEpochDiff,
-      quote: prevTick.quote + animatedQuoteDiff,
     );
   }
 
@@ -292,6 +265,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         topPadding: _topPadding,
         bottomPadding: _bottomPadding,
       );
+
+  int _getGranularity(List<Candle> candles) {
+    if (candles.length < 2) return -1;
+    return candles[1].epoch - candles[0].epoch;
+  }
+
+  double _getDefaultScale(int granularity) {
+    return granularity / 20;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -332,6 +314,42 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             child: _buildScrollToNowButton(),
           )
       ],
+    );
+  }
+
+  List<Candle> _getChartCandles() {
+    if (visibleCandles.isEmpty) return [];
+
+    final currentTickVisible = visibleCandles.last == widget.candles.last;
+    final animatedCurrentTick = _getAnimatedCurrentTick();
+
+    if (currentTickVisible && animatedCurrentTick != null) {
+      final excludeLast =
+          visibleCandles.take(visibleCandles.length - 1).toList();
+      final animatedLast = visibleCandles.last.copyWith(
+        epoch: animatedCurrentTick.epoch,
+        close: animatedCurrentTick.quote,
+      );
+      return excludeLast + [animatedLast];
+    } else {
+      return visibleCandles;
+    }
+  }
+
+  Tick _getAnimatedCurrentTick() {
+    if (prevTick == null) return null;
+
+    final currentTick = _candleToTick(widget.candles.last);
+
+    final epochDiff = currentTick.epoch - prevTick.epoch;
+    final quoteDiff = currentTick.quote - prevTick.quote;
+
+    final animatedEpochDiff = (epochDiff * _currentTickAnimation.value).toInt();
+    final animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
+
+    return Tick(
+      epoch: prevTick.epoch + animatedEpochDiff,
+      quote: prevTick.quote + animatedQuoteDiff,
     );
   }
 
