@@ -119,9 +119,13 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     super.didUpdateWidget(oldChart);
   }
 
-  void _onNewTick() {
-    _currentTickAnimationController.reset();
-    _currentTickAnimationController.forward();
+  @override
+  void dispose() {
+    _currentTickAnimationController.dispose();
+    _currentTickBlinkingController.dispose();
+    _topBoundQuoteAnimationController.dispose();
+    _bottomBoundQuoteAnimationController.dispose();
+    super.dispose();
   }
 
   void _onNewFrame(_) {
@@ -138,6 +142,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         _recalculateQuoteBoundTargets();
       }
     });
+  }
+
+  void _onNewTick() {
+    _currentTickAnimationController.reset();
+    _currentTickAnimationController.forward();
   }
 
   void _setupAnimations() {
@@ -180,15 +189,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       vsync: this,
       duration: quoteBoundsAnimationDuration,
     );
-  }
-
-  @override
-  void dispose() {
-    _currentTickAnimationController.dispose();
-    _currentTickBlinkingController.dispose();
-    _topBoundQuoteAnimationController.dispose();
-    _bottomBoundQuoteAnimationController.dispose();
-    super.dispose();
   }
 
   void _updateVisibleCandles() {
