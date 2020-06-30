@@ -113,9 +113,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(Chart oldChart) {
     super.didUpdateWidget(oldChart);
-    if (oldChart.candles == widget.candles) return;
+    if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
-    prevTick = _candleToTick(oldChart.candles.last);
+    if (oldChart.candles.isNotEmpty)
+      prevTick = _candleToTick(oldChart.candles.last);
 
     final oldGranularity = _getGranularity(oldChart.candles);
     final newGranularity = _getGranularity(widget.candles);
@@ -275,6 +276,14 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     return granularity / 20;
   }
 
+  double _getMinScale(int granularity) {
+    return granularity / 80;
+  }
+
+  double _getMaxScale(int granularity) {
+    return granularity / 4;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -383,7 +392,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scaleChart(ScaleUpdateDetails details) {
-    msPerPx = (prevMsPerPx / details.scale);
+    final granularity = _getGranularity(widget.candles);
+    msPerPx = (prevMsPerPx / details.scale).clamp(
+      _getMinScale(granularity),
+      _getMaxScale(granularity),
+    );
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
