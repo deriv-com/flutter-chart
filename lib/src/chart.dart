@@ -199,8 +199,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     var end =
         candles.lastIndexWhere((candle) => candle.epoch < rightBoundEpoch);
 
-    if (start == -1 || end == -1) return;
+    if (start == -1 || end == -1) {
+      visibleCandles = [];
+      return;
+    }
 
+    // Include nearby points outside the viewport, so the line extends beyond the side edges.
     if (start > 0) start -= 1;
     if (end < candles.length - 1) end += 1;
 
