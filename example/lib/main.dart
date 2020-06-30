@@ -207,17 +207,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   child: Text('${_granularityLabel(granularity)}'),
                 ))
             .toList(),
-        onChanged: (value) {
-          ws.add(
-            json.encode({'forget_all': granularity == 0 ? 'ticks' : 'candles'}),
-          );
-          setState(() {
-            granularity = value;
-          });
-          _requestData();
-        },
+        onChanged: _onIntervalSelected,
       ),
     );
+  }
+
+  void _onIntervalSelected(value) {
+    ws.add(
+      json.encode({'forget_all': granularity == 0 ? 'ticks' : 'candles'}),
+    );
+    setState(() {
+      granularity = value;
+    });
+    _requestData();
   }
 
   String _granularityLabel(int granularity) {
