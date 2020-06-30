@@ -3,6 +3,8 @@
 .packages
 build/
 pubspec.lock
+.flutter-plugins
+.flutter-plugins-dependencies
 
 # Mac
 .DS_Store
