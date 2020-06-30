@@ -40,6 +40,7 @@ int timeGridIntervalInSeconds(
     172800, // 2 days
     259200, // 3 days
     604800, // 1 week
+    2419200, // 4 weeks
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(int intervalInSeconds) {
