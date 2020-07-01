@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:deriv_flutter_chart/src/logic/time_grid.dart';
+import 'package:deriv_chart/src/logic/time_grid.dart';
 
 void main() {
   group('gridEpochs should', () {

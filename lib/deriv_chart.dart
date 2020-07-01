@@ -1,4 +1,4 @@
-library deriv_flutter_chart;
+library deriv_chart;
 
 export './src/models/candle.dart';
 export './src/models/chart_style.dart';

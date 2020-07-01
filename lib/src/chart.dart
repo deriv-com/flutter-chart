@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:deriv_flutter_chart/src/logic/quote_grid.dart';
+import 'package:deriv_chart/src/logic/quote_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 

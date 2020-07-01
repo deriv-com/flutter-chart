@@ -1,5 +1,5 @@
-import 'package:deriv_flutter_chart/src/models/candle_painting.dart';
-import 'package:deriv_flutter_chart/src/paint/paint_current_tick_dot.dart';
+import 'package:deriv_chart/src/models/candle_painting.dart';
+import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 

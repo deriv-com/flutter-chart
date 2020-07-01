@@ -4,7 +4,7 @@ import 'dart:io' show WebSocket;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:deriv_flutter_chart/deriv_flutter_chart.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:vibration/vibration.dart';
 
 void main() {

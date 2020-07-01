@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  deriv_flutter_chart:
+  deriv_chart:
     path: ../
   vibration: ^1.4.0
 
