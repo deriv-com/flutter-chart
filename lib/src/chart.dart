@@ -132,10 +132,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _currentTickAnimationController.dispose();
-    _currentTickBlinkingController.dispose();
-    _topBoundQuoteAnimationController.dispose();
-    _bottomBoundQuoteAnimationController.dispose();
+    _currentTickAnimationController?.dispose();
+    _currentTickBlinkingController?.dispose();
+    _topBoundQuoteAnimationController?.dispose();
+    _bottomBoundQuoteAnimationController?.dispose();
+    _rightEpochAnimationController?.dispose();
     super.dispose();
   }
 
@@ -431,7 +432,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     if (upperBound > loweBound) {
       _rightEpochAnimationController = AnimationController(
           vsync: this,
-          duration: Duration(seconds: 1),
+          duration: Duration(milliseconds: (upperBound - loweBound)~/(msPerPx * 2)),
           lowerBound: loweBound, upperBound: upperBound)
         ..addListener(() {
           setState(() {
