@@ -74,6 +74,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   AnimationController _currentTickBlinkingController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
+  AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
@@ -424,6 +425,21 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scrollToNow() {
-    rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
+    final loweBound = rightBoundEpoch.toDouble();
+    final upperBound = nowEpoch + _pxToMs(maxCurrentTickOffset).toDouble();
+
+    if (upperBound > loweBound) {
+      _rightEpochAnimationController = AnimationController(
+          vsync: this,
+          duration: Duration(seconds: 1),
+          lowerBound: loweBound, upperBound: upperBound)
+        ..addListener(() {
+          setState(() {
+            rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+          });
+        })..forward();
+    } else {
+      rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
+    }
   }
 }
