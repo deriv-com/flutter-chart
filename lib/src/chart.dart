@@ -273,15 +273,18 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   double _getDefaultScale(int granularity) {
-    return granularity / 20;
+    final defaultIntervalWidth = 20;
+    return granularity / defaultIntervalWidth;
   }
 
   double _getMinScale(int granularity) {
-    return granularity / 80;
+    final maxIntervalWidth = 80;
+    return granularity / maxIntervalWidth;
   }
 
   double _getMaxScale(int granularity) {
-    return granularity / 4;
+    final minIntervalWidth = 4;
+    return granularity / minIntervalWidth;
   }
 
   @override
