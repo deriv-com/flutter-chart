@@ -75,6 +75,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
   AnimationController _rightEpochAnimationController;
+  Animation _rightEpochAnimation;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
@@ -165,6 +166,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _setupCurrentTickAnimation();
     _setupBlinkingAnimation();
     _setupBoundsAnimation();
+    _setupRightEpochAnimation();
+  }
+
+  void _setupRightEpochAnimation() {
+    _rightEpochAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 800))
+          ..addListener(() {
+            if (_rightEpochAnimation != null) {
+              rightBoundEpoch = _rightEpochAnimation.value.toInt();
+            }
+          });
   }
 
   void _setupCurrentTickAnimation() {
@@ -426,19 +438,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scrollToNow() {
-    final loweBound = rightBoundEpoch.toDouble();
+    final lowerBound = rightBoundEpoch.toDouble();
     final upperBound = nowEpoch + _pxToMs(maxCurrentTickOffset).toDouble();
 
-    if (upperBound > loweBound) {
-      _rightEpochAnimationController = AnimationController(
-          vsync: this,
-          duration: Duration(milliseconds: (upperBound - loweBound)~/(msPerPx * 2)),
-          lowerBound: loweBound, upperBound: upperBound)
-        ..addListener(() {
-          setState(() {
-            rightBoundEpoch = _rightEpochAnimationController.value.toInt();
-          });
-        })..forward();
+    if (upperBound > lowerBound) {
+      _rightEpochAnimationController.reset();
+      _rightEpochAnimation = Tween<double>(begin: lowerBound, end: upperBound)
+          .animate(CurvedAnimation(
+              parent: _rightEpochAnimationController, curve: Curves.easeOut));
+      _rightEpochAnimationController.forward();
     } else {
       rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
     }
