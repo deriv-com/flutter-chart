@@ -78,7 +78,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
-  bool get _shouldAutoPan => rightBoundEpoch > nowEpoch;
+  bool get _shouldAutoPan =>
+      rightBoundEpoch > nowEpoch ||
+      (_rightEpochAnimationController?.isAnimating ?? false);
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
@@ -124,7 +126,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
     if (oldGranularity != newGranularity) {
       msPerPx = _getDefaultScale(newGranularity);
-      _scrollToNow();
+      rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
     } else {
       _onNewTick();
     }
@@ -446,8 +448,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         upperBound,
         curve: Curves.easeOut,
       );
-    } else {
-      rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
     }
   }
 }
