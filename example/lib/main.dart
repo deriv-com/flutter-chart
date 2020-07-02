@@ -1,10 +1,19 @@
 import 'dart:convert' show json;
-import 'dart:io' show WebSocket;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
+import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
+import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
+import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
+import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
+import 'package:flutter_deriv_api/basic_api/generated/api.dart';
+import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
+import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
+import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
+import 'package:flutter_deriv_api/services/dependency_injector/module_container.dart';
 import 'package:vibration/vibration.dart';
 
 void main() {
@@ -33,8 +42,6 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
-  WebSocket ws;
-
   List<Candle> candles = [];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
@@ -42,84 +49,94 @@ class _FullscreenChartState extends State<FullscreenChart> {
   @override
   void initState() {
     super.initState();
+    _connectToAPI();
+  }
+
+  Future<void> _connectToAPI() async {
+    ModuleContainer().initialize(Injector.getInjector());
+    await Injector.getInjector().get<BaseAPI>().connect(ConnectionInformation(
+        appId: '1089', brand: 'binary', endpoint: 'frontend.binaryws.com'));
+
     _initTickStream();
   }
 
   void _initTickStream() async {
     try {
-      ws = await WebSocket.connect(
-          'wss://ws.binaryws.com/websockets/v3?app_id=1089');
+      final historySubscription = await _requestData();
 
-      if (ws?.readyState == WebSocket.open) {
-        ws.listen(
-          (response) {
-            final data = Map<String, dynamic>.from(json.decode(response));
+      historySubscription.tickStream.listen((tickBase) {
+        if (tickBase != null) {
+          _lastTick = tickBase;
+          if (tickBase is api_tick.Tick) {
+            _onNewTick(tickBase.epoch.millisecondsSinceEpoch, tickBase.quote);
+          }
 
-            if (data['history'] != null) {
-              final history = <Candle>[];
-              final count = data['history']['prices'].length;
-              for (var i = 0; i < count; i++) {
-                history.add(Candle.tick(
-                  epoch: data['history']['times'][i] * 1000,
-                  quote: data['history']['prices'][i].toDouble(),
-                ));
-              }
-              setState(() {
-                candles = history;
-              });
-            }
+          if (tickBase is OHLC) {
+            final newCandle = Candle(
+              epoch: tickBase.openTime.millisecondsSinceEpoch,
+              high: tickBase.high,
+              low: tickBase.low,
+              open: tickBase.open,
+              close: tickBase.close,
+            );
+            _onNewCandle(newCandle);
+          }
+        }
+      });
 
-            if (data['candles'] != null) {
-              setState(() {
-                candles = data['candles'].map<Candle>((json) {
-                  return Candle(
-                    epoch: json['epoch'] * 1000,
-                    high: json['high'].toDouble(),
-                    low: json['low'].toDouble(),
-                    open: json['open'].toDouble(),
-                    close: json['close'].toDouble(),
-                  );
-                }).toList();
-              });
-            }
-
-            if (data['tick'] != null) {
-              final epoch = data['tick']['epoch'] * 1000;
-              final quote = data['tick']['quote'].toDouble();
-              _onNewTick(epoch, quote);
-            }
-
-            if (data['ohlc'] != null) {
-              final newCandle = Candle(
-                epoch: data['ohlc']['open_time'] * 1000,
-                high: double.parse(data['ohlc']['high']),
-                low: double.parse(data['ohlc']['low']),
-                open: double.parse(data['ohlc']['open']),
-                close: double.parse(data['ohlc']['close']),
-              );
-              _onNewCandle(newCandle);
-            }
-          },
-          onDone: () => print('Done!'),
-          onError: (e) => throw new Exception(e),
-        );
-        _requestData();
-      }
-    } catch (e) {
-      ws?.close();
-      print('Error: $e');
+      setState(() {});
+    } on Exception catch (e) {
+      print(e);
     }
   }
 
-  void _requestData() {
-    ws.add(json.encode({
-      'ticks_history': 'R_50',
-      'end': 'latest',
-      'count': 60,
-      'style': granularity == 0 ? 'ticks' : 'candles',
-      if (granularity > 0) 'granularity': granularity,
-      'subscribe': 1,
-    }));
+  TickBase _lastTick;
+
+  Future<TickHistorySubscription> _requestData() async {
+    try {
+      final history = await TickHistory.fetchTicksAndSubscribe(
+        TicksHistoryRequest(
+          ticksHistory: 'R_50',
+          end: 'latest',
+          adjustStartTime: 1,
+          start: DateTime.now()
+                  .subtract(Duration(days: 15))
+                  .millisecondsSinceEpoch ~/
+              1000,
+          count: 1000,
+          style: granularity == 0 ? 'ticks' : 'candles',
+          granularity: granularity > 0 ? granularity : null,
+        ),
+      );
+
+      candles.clear();
+      if (history.tickHistory.history != null) {
+        final count = history.tickHistory.history.prices.length;
+        for (var i = 0; i < count; i++) {
+          candles.add(Candle.tick(
+            epoch: history.tickHistory.history.times[i].millisecondsSinceEpoch,
+            quote: history.tickHistory.history.prices[i],
+          ));
+        }
+      }
+
+      if (history.tickHistory.candles != null) {
+        candles = history.tickHistory.candles.map<Candle>((ohlc) {
+          return Candle(
+            epoch: ohlc.epoch.millisecondsSinceEpoch,
+            high: ohlc.high,
+            low: ohlc.low,
+            open: ohlc.open,
+            close: ohlc.close,
+          );
+        }).toList();
+      }
+
+      return history;
+    } on Exception catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   void _onNewTick(int epoch, double quote) {
@@ -166,9 +183,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _loadMore(int startEpoch, int endEpoch) {
-
-  }
+  void _loadMore(int startEpoch, int endEpoch) {}
 
   IconButton _buildChartTypeButton() {
     return IconButton(
@@ -219,14 +234,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _onIntervalSelected(value) {
-    ws.add(
-      json.encode({'forget_all': granularity == 0 ? 'ticks' : 'candles'}),
-    );
-    setState(() {
-      granularity = value;
-    });
-    _requestData();
+  void _onIntervalSelected(value) async {
+    try {
+      if (granularity == 0) {
+        await _lastTick?.unsubscribe();
+      } else {
+        await _lastTick?.unsubscribe();
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
+    granularity = value;
+    _initTickStream();
   }
 
   String _granularityLabel(int granularity) {

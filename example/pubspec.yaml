@@ -11,6 +11,10 @@ dependencies:
   deriv_chart:
     path: ../
   vibration: ^1.4.0
+  flutter_deriv_api:
+    git:
+      url: git@github.com:regentmarkets/flutter-deriv-api.git
+      ref: dev
 
 dev_dependencies:
 
