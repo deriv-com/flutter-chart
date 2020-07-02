@@ -121,6 +121,8 @@ class ChartPainter extends CustomPainter {
       _paintArrow();
     }
 
+    _paintLoading();
+
     // _paintNow(); // for testing
   }
 
@@ -208,6 +210,21 @@ class ChartPainter extends CustomPainter {
       quoteLabel: animatedCurrentTick.quote.toStringAsFixed(pipSize),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     );
+  }
+
+  final _loadingPaint = Paint()
+    ..color = Colors.blueGrey
+    ..style = PaintingStyle.fill;
+
+  void _paintLoading() {
+    print(candles.length);
+    if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
+        candles.first.epoch || candles.length <= 2) {
+      canvas.drawRect(
+        Rect.fromLTRB(0, 0, _epochToX(candles.first.epoch), size.height),
+        _loadingPaint,
+      );
+    }
   }
 
   @override

@@ -151,6 +151,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
               candles: candles,
               pipSize: 4,
               style: style,
+              onLoadMore: (startEpoch, endEpoch) {
+                //print('On Load more from $startEpoch to $endEpoch');
+              },
             ),
             _buildChartTypeButton(),
             Positioned(

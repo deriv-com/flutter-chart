@@ -12,17 +12,21 @@ import 'models/tick.dart';
 import 'models/candle.dart';
 import 'scale_and_pan_gesture_detector.dart';
 
+typedef OnLoadMore = Function(int startEpoch, int endEpoch);
+
 class Chart extends StatefulWidget {
   const Chart({
     Key key,
     @required this.candles,
     @required this.pipSize,
+    this.onLoadMore,
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
   final List<Candle> candles;
   final int pipSize;
   final ChartStyle style;
+  final OnLoadMore onLoadMore;
 
   @override
   _ChartState createState() => _ChartState();
@@ -212,6 +216,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     if (start == -1 || end == -1) {
       visibleCandles = [];
       return;
+    }
+
+    if (leftBoundEpoch < candles.first.epoch) {
+      widget.onLoadMore?.call(leftBoundEpoch, candles.first.epoch);
     }
 
     // Include nearby points outside the viewport, so the line extends beyond the side edges.
