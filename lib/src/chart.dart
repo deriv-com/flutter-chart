@@ -78,9 +78,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
-  bool get _shouldAutoPan =>
-      rightBoundEpoch > nowEpoch ||
-      (_rightEpochAnimationController?.isAnimating ?? false);
+  bool get _shouldAutoPan => rightBoundEpoch > nowEpoch;
+
+  bool get _arrowButtonBeVisible => !(_shouldAutoPan ||
+      (_rightEpochAnimationController?.isAnimating ?? false));
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
@@ -333,7 +334,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             );
           }),
         ),
-        if (!_shouldAutoPan)
+        if (_arrowButtonBeVisible)
           Positioned(
             bottom: 30 + timeLabelsAreaHeight,
             right: 30 + quoteLabelsAreaWidth,
