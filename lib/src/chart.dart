@@ -174,7 +174,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _rightEpochAnimationController = AnimationController.unbounded(
       vsync: this,
       value: rightBoundEpoch.toDouble(),
-      duration: const Duration(milliseconds: 600),
     )..addListener(() {
         rightBoundEpoch = _rightEpochAnimationController.value.toInt();
       });
@@ -439,14 +438,18 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scrollToNow() {
+    final animationMsDuration = 600;
     final lowerBound = rightBoundEpoch.toDouble();
-    final upperBound = nowEpoch + _pxToMs(maxCurrentTickOffset).toDouble();
+    final upperBound = nowEpoch +
+        _pxToMs(maxCurrentTickOffset).toDouble() +
+        animationMsDuration;
 
     if (upperBound > lowerBound) {
       _rightEpochAnimationController.value = lowerBound;
       _rightEpochAnimationController.animateTo(
         upperBound,
         curve: Curves.easeOut,
+        duration: Duration(milliseconds: animationMsDuration),
       );
     }
   }
