@@ -445,9 +445,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       _rightEpochAnimationController.animateTo(
         upperBound,
         curve: Curves.easeOut,
-        duration: Duration(
-          milliseconds: (upperBound - lowerBound) ~/ (msPerPx * 2),
-        ),
       );
     } else {
       rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
