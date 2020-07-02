@@ -217,7 +217,6 @@ class ChartPainter extends CustomPainter {
     ..style = PaintingStyle.fill;
 
   void _paintLoading() {
-    print(candles.length);
     if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
         candles.first.epoch || candles.length <= 2) {
       canvas.drawRect(

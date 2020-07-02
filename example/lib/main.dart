@@ -115,7 +115,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     ws.add(json.encode({
       'ticks_history': 'R_50',
       'end': 'latest',
-      'count': 1000,
+      'count': 60,
       'style': granularity == 0 ? 'ticks' : 'candles',
       if (granularity > 0) 'granularity': granularity,
       'subscribe': 1,

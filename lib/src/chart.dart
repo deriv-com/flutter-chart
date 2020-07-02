@@ -414,7 +414,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     setState(() {
       rightBoundEpoch -= _pxToMs(details.delta.dx);
       final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-      rightBoundEpoch = rightBoundEpoch.clamp(0, upperLimit);
+      rightBoundEpoch = rightBoundEpoch.clamp(
+          widget.candles.first.epoch + _pxToMs(canvasSize.width / 2), upperLimit);
+
+      print(rightBoundEpoch);
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
