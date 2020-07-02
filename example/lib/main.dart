@@ -62,7 +62,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _initTickStream() async {
     try {
-      final historySubscription = await _requestData();
+      final historySubscription = await _getHistoryAndSubscribe();
 
       historySubscription.tickStream.listen((tickBase) {
         if (tickBase != null) {
@@ -92,7 +92,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   TickBase _lastTick;
 
-  Future<TickHistorySubscription> _requestData() async {
+  Future<TickHistorySubscription> _getHistoryAndSubscribe() async {
     try {
       final history = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
@@ -110,27 +110,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
       candles.clear();
-      if (history.tickHistory.history != null) {
-        final count = history.tickHistory.history.prices.length;
-        for (var i = 0; i < count; i++) {
-          candles.add(Candle.tick(
-            epoch: history.tickHistory.history.times[i].millisecondsSinceEpoch,
-            quote: history.tickHistory.history.prices[i],
-          ));
-        }
-      }
-
-      if (history.tickHistory.candles != null) {
-        candles = history.tickHistory.candles.map<Candle>((ohlc) {
-          return Candle(
-            epoch: ohlc.epoch.millisecondsSinceEpoch,
-            high: ohlc.high,
-            low: ohlc.low,
-            open: ohlc.open,
-            close: ohlc.close,
-          );
-        }).toList();
-      }
+      candles = _getCandlesFromResponse(history.tickHistory);
 
       return history;
     } on Exception catch (e) {
@@ -152,7 +132,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             : candles;
 
     setState(() {
-      // Don't modify candles in place, othewise Chart's didUpdateWidget won't see the difference.
+      // Don't modify candles in place, otherwise Chart's didUpdateWidget won't see the difference.
       candles = previousCandles + [newCandle];
     });
   }
@@ -169,7 +149,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
               onLoadMore: (startEpoch, endEpoch) {
-                print('On Load more from $startEpoch to $endEpoch');
+                _loadMore(startEpoch, endEpoch);
               },
             ),
             _buildChartTypeButton(),
@@ -183,7 +163,21 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _loadMore(int startEpoch, int endEpoch) {}
+  void _loadMore(int startEpoch, int endEpoch) async {
+    final TickHistory moreData = await TickHistory.fetchTickHistory(
+      TicksHistoryRequest(
+        ticksHistory: 'R_50',
+        end: (endEpoch ~/ 1000).toString(),
+        adjustStartTime: 1,
+        start: startEpoch ~/
+            1000,
+        style: granularity == 0 ? 'ticks' : 'candles',
+        granularity: granularity > 0 ? granularity : null,
+      ),
+    );
+
+
+  }
 
   IconButton _buildChartTypeButton() {
     return IconButton(
@@ -279,5 +273,31 @@ class _FullscreenChartState extends State<FullscreenChart> {
       default:
         return '???';
     }
+  }
+  
+  List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
+    List<Candle> candles = [];
+    if (tickHistory.history != null) {
+      final count = tickHistory.history.prices.length;
+      for (var i = 0; i < count; i++) {
+        candles.add(Candle.tick(
+          epoch: tickHistory.history.times[i].millisecondsSinceEpoch,
+          quote: tickHistory.history.prices[i],
+        ));
+      }
+    }
+
+    if (tickHistory.candles != null) {
+      candles = tickHistory.candles.map<Candle>((ohlc) {
+        return Candle(
+          epoch: ohlc.epoch.millisecondsSinceEpoch,
+          high: ohlc.high,
+          low: ohlc.low,
+          open: ohlc.open,
+          close: ohlc.close,
+        );
+      }).toList();
+    }
+    return candles;
   }
 }
