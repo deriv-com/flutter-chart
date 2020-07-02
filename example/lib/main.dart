@@ -103,7 +103,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   .subtract(Duration(days: 15))
                   .millisecondsSinceEpoch ~/
               1000,
-          count: 1000,
+          count: 100,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
         ),
@@ -167,7 +167,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     final TickHistory moreData = await TickHistory.fetchTickHistory(
       TicksHistoryRequest(
         ticksHistory: 'R_50',
-        end: (endEpoch ~/ 1000).toString(),
+        end: ((endEpoch - 1) ~/ 1000).toString(),
         adjustStartTime: 1,
         start: startEpoch ~/
             1000,
@@ -176,7 +176,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       ),
     );
 
-
+    candles.insertAll(0, _getCandlesFromResponse(moreData));
   }
 
   IconButton _buildChartTypeButton() {
