@@ -152,7 +152,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
               onLoadMore: (startEpoch, endEpoch) {
-                //print('On Load more from $startEpoch to $endEpoch');
+                print('On Load more from $startEpoch to $endEpoch');
               },
             ),
             _buildChartTypeButton(),
@@ -164,6 +164,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       ),
     );
+  }
+
+  void _loadMore(int startEpoch, int endEpoch) {
+
   }
 
   IconButton _buildChartTypeButton() {

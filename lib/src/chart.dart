@@ -218,10 +218,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       return;
     }
 
-    if (leftBoundEpoch < candles.first.epoch) {
-      widget.onLoadMore?.call(leftBoundEpoch, candles.first.epoch);
-    }
-
     // Include nearby points outside the viewport, so the line extends beyond the side edges.
     if (start > 0) start -= 1;
     if (end < candles.length - 1) end += 1;
@@ -414,10 +410,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     setState(() {
       rightBoundEpoch -= _pxToMs(details.delta.dx);
       final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-      rightBoundEpoch = rightBoundEpoch.clamp(
-          widget.candles.first.epoch + _pxToMs(canvasSize.width / 2), upperLimit);
+      final lowerLimit =
+          widget.candles.first.epoch + _pxToMs(canvasSize.width / 2);
+      rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
 
-      print(rightBoundEpoch);
+      if (rightBoundEpoch <= lowerLimit) {
+        widget.onLoadMore?.call(
+            rightBoundEpoch -
+                _pxToMs(canvasSize.width) -
+                _pxToMs(canvasSize.width / 2),
+            widget.candles.first.epoch);
+      }
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
