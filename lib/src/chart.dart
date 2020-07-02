@@ -80,8 +80,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   bool get _shouldAutoPan => rightBoundEpoch > nowEpoch;
 
-  bool get _arrowButtonBeVisible => !(_shouldAutoPan ||
-      (_rightEpochAnimationController?.isAnimating ?? false));
+  bool get _arrowButtonBeVisible =>
+      !_shouldAutoPan &&
+      !(_rightEpochAnimationController?.isAnimating ?? false);
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
