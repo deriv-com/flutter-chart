@@ -75,7 +75,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
   AnimationController _rightEpochAnimationController;
-  Animation _rightEpochAnimation;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
@@ -170,13 +169,13 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _setupRightEpochAnimation() {
-    _rightEpochAnimationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 800))
-          ..addListener(() {
-            if (_rightEpochAnimation != null) {
-              rightBoundEpoch = _rightEpochAnimation.value.toInt();
-            }
-          });
+    _rightEpochAnimationController = AnimationController.unbounded(
+      vsync: this,
+      value: rightBoundEpoch.toDouble(),
+      duration: const Duration(milliseconds: 600),
+    )..addListener(() {
+        rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+      });
   }
 
   void _setupCurrentTickAnimation() {
@@ -442,11 +441,14 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     final upperBound = nowEpoch + _pxToMs(maxCurrentTickOffset).toDouble();
 
     if (upperBound > lowerBound) {
-      _rightEpochAnimationController.reset();
-      _rightEpochAnimation = Tween<double>(begin: lowerBound, end: upperBound)
-          .animate(CurvedAnimation(
-              parent: _rightEpochAnimationController, curve: Curves.easeOut));
-      _rightEpochAnimationController.forward();
+      _rightEpochAnimationController.value = lowerBound;
+      _rightEpochAnimationController.animateTo(
+        upperBound,
+        curve: Curves.easeOut,
+        duration: Duration(
+          milliseconds: (upperBound - lowerBound) ~/ (msPerPx * 2),
+        ),
+      );
     } else {
       rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
     }
