@@ -38,5 +38,20 @@ void main() {
         equals(candle300),
       );
     });
+    test('return candle with closest epoch if exact isn\'t present', () {
+      final candle100 = Candle.tick(epoch: 100, quote: 0);
+      final candle110 = Candle.tick(epoch: 110, quote: 0);
+      final candle120 = Candle.tick(epoch: 120, quote: 0);
+      final candle130 = Candle.tick(epoch: 130, quote: 0);
+      final candle140 = Candle.tick(epoch: 140, quote: 0);
+
+      expect(
+        findClosestToEpoch(
+          101,
+          [candle100, candle110, candle120, candle130, candle140],
+        ),
+        equals(candle100),
+      );
+    });
   });
 }
