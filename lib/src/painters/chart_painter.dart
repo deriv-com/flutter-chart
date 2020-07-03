@@ -3,18 +3,18 @@ import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
-import 'models/tick.dart';
-import 'models/candle.dart';
-import 'models/chart_style.dart';
+import '../models/tick.dart';
+import '../models/candle.dart';
+import '../models/chart_style.dart';
 
-import 'logic/conversion.dart';
-import 'logic/time_grid.dart';
-import 'logic/quote_grid.dart';
+import '../logic/conversion.dart';
+import '../logic/time_grid.dart';
+import '../logic/quote_grid.dart';
 
-import 'paint/paint_current_tick_label.dart';
-import 'paint/paint_candles.dart';
-import 'paint/paint_grid.dart';
-import 'paint/paint_line.dart';
+import '../paint/paint_current_tick_label.dart';
+import '../paint/paint_candles.dart';
+import '../paint/paint_grid.dart';
+import '../paint/paint_line.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({

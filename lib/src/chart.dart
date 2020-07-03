@@ -6,7 +6,7 @@ import 'package:flutter/scheduler.dart';
 
 import 'logic/conversion.dart';
 import 'logic/time_grid.dart' show timeGridIntervalInSeconds;
-import 'chart_painter.dart';
+import 'painters/chart_painter.dart';
 import 'models/chart_style.dart';
 import 'models/tick.dart';
 import 'models/candle.dart';
@@ -298,24 +298,28 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           child: LayoutBuilder(builder: (context, constraints) {
             canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
-            return CustomPaint(
-              size: Size.infinite,
-              painter: ChartPainter(
-                candles: _getChartCandles(),
-                animatedCurrentTick: _getAnimatedCurrentTick(),
-                blinkAnimationProgress: _currentTickBlinkAnimation.value,
-                pipSize: widget.pipSize,
-                style: widget.style,
-                msPerPx: msPerPx,
-                rightBoundEpoch: rightBoundEpoch,
-                topBoundQuote: _topBoundQuote,
-                bottomBoundQuote: _bottomBoundQuote,
-                quoteGridInterval: quoteGridInterval(_quotePerPx),
-                timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
-                topPadding: _topPadding,
-                bottomPadding: _bottomPadding,
-                quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              ),
+            return Stack(
+              children: <Widget>[
+                CustomPaint(
+                  size: canvasSize,
+                  painter: ChartPainter(
+                    candles: _getChartCandles(),
+                    animatedCurrentTick: _getAnimatedCurrentTick(),
+                    blinkAnimationProgress: _currentTickBlinkAnimation.value,
+                    pipSize: widget.pipSize,
+                    style: widget.style,
+                    msPerPx: msPerPx,
+                    rightBoundEpoch: rightBoundEpoch,
+                    topBoundQuote: _topBoundQuote,
+                    bottomBoundQuote: _bottomBoundQuote,
+                    quoteGridInterval: quoteGridInterval(_quotePerPx),
+                    timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
+                    topPadding: _topPadding,
+                    bottomPadding: _bottomPadding,
+                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                  ),
+                ),
+              ],
             );
           }),
         ),
