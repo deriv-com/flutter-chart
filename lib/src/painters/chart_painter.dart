@@ -1,17 +1,14 @@
-import 'package:deriv_chart/src/models/candle_painting.dart';
-import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
-import '../models/tick.dart';
 import '../models/candle.dart';
+import '../models/candle_painting.dart';
 import '../models/chart_style.dart';
 
 import '../logic/conversion.dart';
 import '../logic/time_grid.dart';
 import '../logic/quote_grid.dart';
 
-import '../paint/paint_current_tick_label.dart';
 import '../paint/paint_candles.dart';
 import '../paint/paint_grid.dart';
 import '../paint/paint_line.dart';
@@ -19,8 +16,6 @@ import '../paint/paint_line.dart';
 class ChartPainter extends CustomPainter {
   ChartPainter({
     this.candles,
-    this.animatedCurrentTick,
-    this.blinkAnimationProgress,
     this.pipSize,
     this.style,
     this.msPerPx,
@@ -35,8 +30,6 @@ class ChartPainter extends CustomPainter {
   });
 
   final List<Candle> candles;
-  final Tick animatedCurrentTick;
-  final double blinkAnimationProgress;
   final int pipSize;
   final ChartStyle style;
 
@@ -69,13 +62,6 @@ class ChartPainter extends CustomPainter {
 
   Canvas canvas;
   Size size;
-
-  Offset _toCanvasOffset(Tick tick) {
-    return Offset(
-      _epochToX(tick.epoch),
-      _quoteToY(tick.quote),
-    );
-  }
 
   double _epochToX(int epoch) {
     return epochToCanvasX(
@@ -110,15 +96,6 @@ class ChartPainter extends CustomPainter {
       _paintCandles();
     } else {
       _paintLine();
-    }
-
-    if (animatedCurrentTick != null) {
-      final currentTickVisible = animatedCurrentTick.epoch <= rightBoundEpoch;
-      if (currentTickVisible) {
-        _paintCurrentTickDot();
-      }
-
-      _paintArrow();
     }
 
     // _paintNow(); // for testing
@@ -190,24 +167,6 @@ class ChartPainter extends CustomPainter {
     }).toList();
 
     paintCandles(canvas, candlePaintings);
-  }
-
-  void _paintCurrentTickDot() {
-    paintCurrentTickDot(
-      canvas,
-      center: _toCanvasOffset(animatedCurrentTick),
-      animationProgress: blinkAnimationProgress,
-    );
-  }
-
-  void _paintArrow() {
-    paintCurrentTickLabel(
-      canvas,
-      size,
-      centerY: _quoteToY(animatedCurrentTick.quote),
-      quoteLabel: animatedCurrentTick.quote.toStringAsFixed(pipSize),
-      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-    );
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/quote_grid.dart';
+import 'package:deriv_chart/src/painters/current_tick_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -258,6 +259,13 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
+  double _epochToCanvasX(int epoch) => epochToCanvasX(
+        epoch: epoch,
+        rightBoundEpoch: rightBoundEpoch,
+        canvasWidth: canvasSize.width,
+        msPerPx: msPerPx,
+      );
+
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
         quote: quote,
         topBoundQuote: _topBoundQuote,
@@ -304,8 +312,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                   size: canvasSize,
                   painter: ChartPainter(
                     candles: _getChartCandles(),
-                    animatedCurrentTick: _getAnimatedCurrentTick(),
-                    blinkAnimationProgress: _currentTickBlinkAnimation.value,
                     pipSize: widget.pipSize,
                     style: widget.style,
                     msPerPx: msPerPx,
@@ -317,6 +323,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     topPadding: _topPadding,
                     bottomPadding: _bottomPadding,
                     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                  ),
+                ),
+                CustomPaint(
+                  size: canvasSize,
+                  painter: CurrentTickPainter(
+                    animatedCurrentTick: _getAnimatedCurrentTick(),
+                    blinkAnimationProgress: _currentTickBlinkAnimation.value,
+                    pipSize: widget.pipSize,
+                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                    epochToCanvasX: _epochToCanvasX,
+                    quoteToCanvasY: _quoteToCanvasY,
                   ),
                 ),
               ],
