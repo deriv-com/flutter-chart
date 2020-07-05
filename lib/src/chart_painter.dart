@@ -104,6 +104,7 @@ class ChartPainter extends CustomPainter {
     this.canvas = canvas;
     this.size = size;
 
+    _paintLoading();
     _painGrid();
 
     if (style == ChartStyle.candles) {
@@ -121,7 +122,6 @@ class ChartPainter extends CustomPainter {
       _paintArrow();
     }
 
-    _paintLoading();
 
     // _paintNow(); // for testing
   }
@@ -213,16 +213,29 @@ class ChartPainter extends CustomPainter {
   }
 
   final _loadingPaint = Paint()
-    ..color = Colors.blueGrey
+    ..color = Colors.white30
     ..style = PaintingStyle.fill;
 
   void _paintLoading() {
     if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
-        candles.first.epoch || candles.length <= 2) {
-      canvas.drawRect(
-        Rect.fromLTRB(0, 0, _epochToX(candles.first.epoch), size.height),
-        _loadingPaint,
-      );
+            candles.first.epoch ||
+        candles.length <= 2) {
+      final firstEpochX = _epochToX(candles.first.epoch);
+
+      final barWidth = size.height * 0.01;
+      _loadingPaint.strokeWidth = barWidth;
+
+      int numberOfBars = size.height ~/ (2 * barWidth);
+
+      double barX = 0 - (size.height - firstEpochX);
+      for (int i = 0; i < numberOfBars; i++) {
+        canvas.drawLine(
+            Offset(barX, size.height),
+            Offset(firstEpochX, size.height - (firstEpochX - barX)),
+            _loadingPaint);
+
+        barX += 3 * barWidth;
+      }
     }
   }
 

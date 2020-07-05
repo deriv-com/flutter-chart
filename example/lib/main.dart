@@ -150,7 +150,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
               onLoadMore: (startEpoch, endEpoch) {
-                _loadMore(startEpoch, endEpoch);
+                //_loadMore(startEpoch, endEpoch);
               },
             ),
             _buildChartTypeButton(),
