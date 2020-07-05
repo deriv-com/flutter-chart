@@ -189,7 +189,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
     _loadingAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 6),
     );
     _currentTickBlinkingController.repeat(reverse: true);
     _loadingAnimationController.repeat();

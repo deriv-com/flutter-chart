@@ -214,32 +214,36 @@ class ChartPainter extends CustomPainter {
   }
 
   final _loadingPaint = Paint()
-    ..color = Colors.white30
+    ..color = Colors.white12
     ..style = PaintingStyle.fill;
 
   void _paintLoading() {
-    final _loadingAnimationProgress = 0.5;
-
     if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
             candles.first.epoch ||
         candles.length <= 2) {
       final firstEpochX = _epochToX(candles.first.epoch);
+      final invisibleRectWidth = size.height - firstEpochX;
 
-      double xPosConvert(double x) => x - (size.height - firstEpochX);
+      double xPosConvert(double x) => x - invisibleRectWidth;
 
       final barWidth = size.height * 0.01;
       _loadingPaint.strokeWidth = barWidth;
 
-      int numberOfBars = (size.height ~/ (2 * barWidth) + 1);
+      int numberOfBars = (size.height ~/ (2 * barWidth));
 
       double barX = 0;
       for (int i = 0; i < numberOfBars; i++) {
-        final drawX = xPosConvert(
-            (barX + (loadingAnimationProgress * size.height)) % size.height);
+        final xBeforeConversion =
+            (barX + (loadingAnimationProgress * size.height)) % size.height;
+
+        final xPos = xPosConvert(xBeforeConversion);
         canvas.drawLine(
-            Offset(drawX, size.height),
-            Offset(firstEpochX, size.height - (firstEpochX - drawX)),
+            Offset(xPos, size.height),
+            Offset(firstEpochX, size.height - (firstEpochX - xPos)),
             _loadingPaint);
+
+        final mirrorX = xPosConvert(firstEpochX - xPos);
+        canvas.drawLine(Offset(0, mirrorX), Offset(mirrorX, 0), _loadingPaint);
         barX += 2 * barWidth;
       }
     }

@@ -30,6 +30,7 @@ void paintLine(
     canvas,
     size,
     linePath: path,
+    lineStartX: xCoords[0],
     lineEndX: xCoords.last,
   );
 }
@@ -38,6 +39,7 @@ void _paintLineArea(
   Canvas canvas,
   Size size, {
   Path linePath,
+  double lineStartX,
   double lineEndX,
 }) {
   final areaPaint = Paint()
@@ -55,7 +57,7 @@ void _paintLineArea(
     lineEndX,
     size.height,
   );
-  linePath.lineTo(0, size.height);
+  linePath.lineTo(lineStartX, size.height);
 
   canvas.drawPath(
     linePath,
