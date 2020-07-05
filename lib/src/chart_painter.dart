@@ -124,7 +124,6 @@ class ChartPainter extends CustomPainter {
       _paintArrow();
     }
 
-
     // _paintNow(); // for testing
   }
 
@@ -219,7 +218,6 @@ class ChartPainter extends CustomPainter {
     ..style = PaintingStyle.fill;
 
   void _paintLoading() {
-
     final _loadingAnimationProgress = 0.5;
 
     if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
@@ -227,20 +225,22 @@ class ChartPainter extends CustomPainter {
         candles.length <= 2) {
       final firstEpochX = _epochToX(candles.first.epoch);
 
+      double xPosConvert(double x) => x - (size.height - firstEpochX);
+
       final barWidth = size.height * 0.01;
       _loadingPaint.strokeWidth = barWidth;
 
-      int numberOfBars = size.height ~/ (2 * barWidth);
+      int numberOfBars = (size.height ~/ (2 * barWidth) + 1);
 
-      double barX = 0 - (size.height - firstEpochX);
+      double barX = 0;
       for (int i = 0; i < numberOfBars; i++) {
-        final drawX = barX + (loadingAnimationProgress * size.height) % size.height;
+        final drawX = xPosConvert(
+            (barX + (loadingAnimationProgress * size.height)) % size.height);
         canvas.drawLine(
             Offset(drawX, size.height),
             Offset(firstEpochX, size.height - (firstEpochX - drawX)),
             _loadingPaint);
         barX += 2 * barWidth;
-
       }
     }
   }
