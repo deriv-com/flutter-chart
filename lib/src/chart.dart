@@ -76,6 +76,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
+  AnimationController _loadingAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
   Animation _currentTickAnimation;
@@ -137,6 +138,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void dispose() {
     _currentTickAnimationController.dispose();
     _currentTickBlinkingController.dispose();
+    _loadingAnimationController.dispose();
     _topBoundQuoteAnimationController.dispose();
     _bottomBoundQuoteAnimationController.dispose();
     super.dispose();
@@ -185,7 +187,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
+    _loadingAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
+    );
     _currentTickBlinkingController.repeat(reverse: true);
+    _loadingAnimationController.repeat();
     _currentTickBlinkAnimation = CurvedAnimation(
       parent: _currentTickBlinkingController,
       curve: Curves.easeInOut,
@@ -308,6 +315,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 candles: _getChartCandles(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
                 blinkAnimationProgress: _currentTickBlinkAnimation.value,
+                loadingAnimationProgress: _loadingAnimationController.value,
                 pipSize: widget.pipSize,
                 style: widget.style,
                 msPerPx: msPerPx,

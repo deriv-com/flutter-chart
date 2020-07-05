@@ -21,6 +21,7 @@ class ChartPainter extends CustomPainter {
     this.candles,
     this.animatedCurrentTick,
     this.blinkAnimationProgress,
+    this.loadingAnimationProgress,
     this.pipSize,
     this.style,
     this.msPerPx,
@@ -37,6 +38,7 @@ class ChartPainter extends CustomPainter {
   final List<Candle> candles;
   final Tick animatedCurrentTick;
   final double blinkAnimationProgress;
+  final double loadingAnimationProgress;
   final int pipSize;
   final ChartStyle style;
 
@@ -217,6 +219,9 @@ class ChartPainter extends CustomPainter {
     ..style = PaintingStyle.fill;
 
   void _paintLoading() {
+
+    final _loadingAnimationProgress = 0.5;
+
     if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
             candles.first.epoch ||
         candles.length <= 2) {
@@ -229,12 +234,13 @@ class ChartPainter extends CustomPainter {
 
       double barX = 0 - (size.height - firstEpochX);
       for (int i = 0; i < numberOfBars; i++) {
+        final drawX = barX + (loadingAnimationProgress * size.height) % size.height;
         canvas.drawLine(
-            Offset(barX, size.height),
-            Offset(firstEpochX, size.height - (firstEpochX - barX)),
+            Offset(drawX, size.height),
+            Offset(firstEpochX, size.height - (firstEpochX - drawX)),
             _loadingPaint);
+        barX += 2 * barWidth;
 
-        barX += 3 * barWidth;
       }
     }
   }
