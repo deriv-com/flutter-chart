@@ -64,6 +64,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
     try {
       final historySubscription = await _getHistoryAndSubscribe();
 
+      _leftMostEpoch = candles.first.epoch;
+
       historySubscription.tickStream.listen((tickBase) {
         if (tickBase != null) {
           _lastTick = tickBase;
@@ -100,10 +102,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
           end: 'latest',
           adjustStartTime: 1,
           start: DateTime.now()
-                  .subtract(Duration(days: 15))
+                  .subtract(Duration(minutes: 3))
                   .millisecondsSinceEpoch ~/
               1000,
-          count: 100,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
         ),
@@ -163,20 +164,33 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _loadMore(int startEpoch, int endEpoch) async {
-    final TickHistory moreData = await TickHistory.fetchTickHistory(
-      TicksHistoryRequest(
-        ticksHistory: 'R_50',
-        end: ((endEpoch - 1) ~/ 1000).toString(),
-        adjustStartTime: 1,
-        start: startEpoch ~/
-            1000,
-        style: granularity == 0 ? 'ticks' : 'candles',
-        granularity: granularity > 0 ? granularity : null,
-      ),
-    );
+  int _leftMostEpoch;
 
-    candles.insertAll(0, _getCandlesFromResponse(moreData));
+  void _loadMore(int startEpoch, int endEpoch) async {
+    // So we don't request for a history range more than once
+    if (startEpoch < _leftMostEpoch) {
+      _leftMostEpoch = startEpoch;
+      final TickHistory moreData = await TickHistory.fetchTickHistory(
+        TicksHistoryRequest(
+          ticksHistory: 'R_50',
+          end: ((endEpoch) ~/ 1000).toString(),
+          adjustStartTime: 1,
+          start: startEpoch ~/ 1000,
+          style: granularity == 0 ? 'ticks' : 'candles',
+          granularity: granularity > 0 ? granularity : null,
+        ),
+      );
+
+      final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
+
+      while (loadedCandles.isNotEmpty &&
+          loadedCandles.last.epoch >= candles.first.epoch) {
+        print('removed last');
+        loadedCandles.removeLast();
+      }
+
+      candles.insertAll(0, loadedCandles);
+    }
   }
 
   IconButton _buildChartTypeButton() {
@@ -274,7 +288,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         return '???';
     }
   }
-  
+
   List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
     List<Candle> candles = [];
     if (tickHistory.history != null) {
