@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/find.dart';
+import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -83,7 +85,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
-  bool get _shouldAutoPan => rightBoundEpoch > nowEpoch;
+  bool get _shouldAutoPan =>
+      rightBoundEpoch > nowEpoch && crosshairCandle == null;
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
@@ -308,9 +311,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,
-          onLongPressStart: (LongPressStartDetails details) {
-            final canvasX = details.localPosition.dx;
-          },
+          onLongPressStart: _handleLongPressUpdate,
+          onLongPressMoveUpdate: _handleLongPressUpdate,
+          onLongPressEnd: _handleLongPressEnd,
           child: LayoutBuilder(builder: (context, constraints) {
             canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
@@ -344,6 +347,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     blinkAnimationProgress: _currentTickBlinkAnimation.value,
                     pipSize: widget.pipSize,
                     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                    epochToCanvasX: _epochToCanvasX,
+                    quoteToCanvasY: _quoteToCanvasY,
+                  ),
+                ),
+                CustomPaint(
+                  size: canvasSize,
+                  painter: CrosshairPainter(
+                    crosshairCandle: crosshairCandle,
+                    pipSize: widget.pipSize,
                     epochToCanvasX: _epochToCanvasX,
                     quoteToCanvasY: _quoteToCanvasY,
                   ),
@@ -466,6 +478,25 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 (canvasSize.height - timeLabelsAreaHeight))
             .clamp(0.05, 0.49);
       }
+    });
+  }
+
+  void _handleLongPressUpdate(dynamic details) {
+    final canvasX = details.localPosition.dx;
+    final epoch = canvasXToEpoch(
+      x: canvasX,
+      rightBoundEpoch: rightBoundEpoch,
+      canvasWidth: canvasSize.width,
+      msPerPx: msPerPx,
+    );
+    setState(() {
+      crosshairCandle = findClosestToEpoch(epoch, visibleCandles);
+    });
+  }
+
+  void _handleLongPressEnd(LongPressEndDetails details) {
+    setState(() {
+      crosshairCandle = null;
     });
   }
 
