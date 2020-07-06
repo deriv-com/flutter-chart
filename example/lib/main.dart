@@ -244,11 +244,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _onIntervalSelected(value) async {
     try {
-      if (granularity == 0) {
-        await _currentTick?.unsubscribe();
-      } else {
-        await _currentTick?.unsubscribe();
-      }
+      await _currentTick?.unsubscribe();
     } on Exception catch (e) {
       print(e);
     }

@@ -14,7 +14,7 @@ void paintLoadingAnimation({
 
   final invisibleRectWidth = size.height - loadingRightBoundEpoch;
 
-  double xPosConvert(double x) => x - invisibleRectWidth;
+  double convertToLoadingRange(double x) => x - invisibleRectWidth;
 
   final barWidthAndSpace = 8.0;
   _loadingPaint.strokeWidth = barWidthAndSpace / 2;
@@ -24,7 +24,7 @@ void paintLoadingAnimation({
     final xBeforeConversion =
         (barX + (loadingAnimationProgress * size.height)) % size.height;
 
-    final xPos = xPosConvert(xBeforeConversion);
+    final xPos = convertToLoadingRange(xBeforeConversion);
 
     canvas.drawLine(
       Offset(xPos, size.height),
