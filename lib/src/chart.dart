@@ -324,14 +324,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                   size: canvasSize,
                   painter: ChartPainter(
                     candles: _getChartCandles(),
-                    pipSize: widget.pipSize,
                     style: widget.style,
-                    msPerPx: msPerPx,
-                    rightBoundEpoch: rightBoundEpoch,
-                    topBoundQuote: _topBoundQuote,
-                    bottomBoundQuote: _bottomBoundQuote,
-                    topPadding: _topPadding,
-                    bottomPadding: _bottomPadding,
+                    pipSize: widget.pipSize,
+                    epochToCanvasX: _epochToCanvasX,
+                    quoteToCanvasY: _quoteToCanvasY,
                   ),
                 ),
                 CustomPaint(
