@@ -15,6 +15,9 @@ class CustomeGestureDetector extends StatefulWidget {
     this.onScaleUpdate,
     this.onPanUpdate,
     this.onScaleAndPanEnd,
+    this.onLongPressStart,
+    this.onLongPressMoveUpdate,
+    this.onLongPressEnd,
   }) : super(key: key);
 
   final Widget child;
@@ -26,6 +29,12 @@ class CustomeGestureDetector extends StatefulWidget {
   final GestureDragUpdateCallback onPanUpdate;
 
   final GestureScaleEndCallback onScaleAndPanEnd;
+
+  final GestureLongPressStartCallback onLongPressStart;
+
+  final GestureLongPressMoveUpdateCallback onLongPressMoveUpdate;
+
+  final GestureLongPressEndCallback onLongPressEnd;
 
   @override
   _CustomeGestureDetectorState createState() => _CustomeGestureDetectorState();
@@ -51,6 +60,9 @@ class _CustomeGestureDetectorState extends State<CustomeGestureDetector> {
         onScaleStart: _handleScaleStart,
         onScaleUpdate: _handleScaleUpdate,
         onScaleEnd: widget.onScaleAndPanEnd,
+        onLongPressStart: widget.onLongPressStart,
+        onLongPressMoveUpdate: widget.onLongPressMoveUpdate,
+        onLongPressEnd: widget.onLongPressEnd,
         child: widget.child,
       ),
     );
