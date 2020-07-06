@@ -242,8 +242,7 @@ class ChartPainter extends CustomPainter {
             Offset(firstEpochX, size.height - (firstEpochX - xPos)),
             _loadingPaint);
 
-        final mirrorX = xPosConvert(firstEpochX - xPos);
-        canvas.drawLine(Offset(0, mirrorX), Offset(mirrorX, 0), _loadingPaint);
+        canvas.drawLine(Offset(0, xPos), Offset(xPos, 0), _loadingPaint);
         barX += 2 * barWidth;
       }
     }
