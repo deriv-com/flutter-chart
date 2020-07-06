@@ -50,6 +50,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   int nowEpoch;
   Size canvasSize;
   Tick prevTick;
+  Candle crosshairCandle;
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   /// Horizontal panning is controlled by this variable.
@@ -307,6 +308,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,
+          onLongPressStart: (LongPressStartDetails details) {
+            final canvasX = details.localPosition.dx;
+          },
           child: LayoutBuilder(builder: (context, constraints) {
             canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
