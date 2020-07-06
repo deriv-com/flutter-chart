@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 /// b. Scale is triggered even when there is only one finger in contact with the screen.
 ///
 /// Because of (a) and (b) it is possible to keep track of both Pan and Scale by treating ScaleUpdate with 1 finger as PanUpdate.
-class ScaleAndPanGestureDetector extends StatefulWidget {
-  const ScaleAndPanGestureDetector({
+class CustomeGestureDetector extends StatefulWidget {
+  const CustomeGestureDetector({
     Key key,
     this.child,
     this.onScaleAndPanStart,
@@ -28,12 +28,10 @@ class ScaleAndPanGestureDetector extends StatefulWidget {
   final GestureScaleEndCallback onScaleAndPanEnd;
 
   @override
-  _ScaleAndPanGestureDetectorState createState() =>
-      _ScaleAndPanGestureDetectorState();
+  _CustomeGestureDetectorState createState() => _CustomeGestureDetectorState();
 }
 
-class _ScaleAndPanGestureDetectorState
-    extends State<ScaleAndPanGestureDetector> {
+class _CustomeGestureDetectorState extends State<CustomeGestureDetector> {
   int _fingersOnScreen = 0;
   Offset _lastContactPoint;
 

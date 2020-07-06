@@ -15,7 +15,7 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 
-import 'scale_and_pan_gesture_detector.dart';
+import 'custom_gesture_detector.dart';
 
 class Chart extends StatefulWidget {
   const Chart({
@@ -303,7 +303,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        ScaleAndPanGestureDetector(
+        CustomeGestureDetector(
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,
