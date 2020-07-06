@@ -64,7 +64,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     try {
       final historySubscription = await _getHistoryAndSubscribe();
 
-      _leftMostEpoch = candles.first.epoch;
+      _startEpoch = candles.first.epoch;
 
       historySubscription.tickStream.listen((tickBase) {
         if (tickBase != null) {
@@ -100,11 +100,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         TicksHistoryRequest(
           ticksHistory: 'R_50',
           end: 'latest',
-          adjustStartTime: 1,
-          start: DateTime.now()
-                  .subtract(Duration(minutes: 3))
-                  .millisecondsSinceEpoch ~/
-              1000,
+          count: 50,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
         ),
@@ -149,9 +145,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
               candles: candles,
               pipSize: 4,
               style: style,
-              onLoadMore: (startEpoch, endEpoch) {
-                _loadMore(startEpoch, endEpoch);
-              },
+              onLoadMore: (fromEpoch, toEpoch, count) =>
+                  _loadMore(fromEpoch, toEpoch, count),
             ),
             _buildChartTypeButton(),
             Positioned(
@@ -164,18 +159,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  int _leftMostEpoch;
+  int _startEpoch;
 
-  void _loadMore(int startEpoch, int endEpoch) async {
+  void _loadMore(int fromEpoch, int toEpoch, int count) async {
     // So we don't request for a history range more than once
-    if (startEpoch < _leftMostEpoch) {
-      _leftMostEpoch = startEpoch;
+    if (fromEpoch < _startEpoch) {
+      _startEpoch = fromEpoch;
       final TickHistory moreData = await TickHistory.fetchTickHistory(
         TicksHistoryRequest(
           ticksHistory: 'R_50',
-          end: ((endEpoch) ~/ 1000).toString(),
-          adjustStartTime: 1,
-          start: startEpoch ~/ 1000,
+          end: ((toEpoch) ~/ 1000).toString(),
+          count: count,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
         ),
@@ -183,6 +177,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
 
+      loadedCandles.removeLast();
       while (loadedCandles.isNotEmpty &&
           loadedCandles.last.epoch >= candles.first.epoch) {
         print('removed last');

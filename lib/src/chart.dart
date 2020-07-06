@@ -12,7 +12,7 @@ import 'models/tick.dart';
 import 'models/candle.dart';
 import 'scale_and_pan_gesture_detector.dart';
 
-typedef OnLoadMore = Function(int startEpoch, int endEpoch);
+typedef OnLoadMore = Function(int fromEpoch, int toEpoch, int count);
 
 class Chart extends StatefulWidget {
   const Chart({
@@ -423,11 +423,14 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
 
       if (rightBoundEpoch <= lowerLimit) {
+        int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+        int widthInMs = _pxToMs(canvasSize.width);
+        int leftBoundEpoch = rightBoundEpoch - widthInMs;
         widget.onLoadMore?.call(
-            rightBoundEpoch -
-                _pxToMs(canvasSize.width) -
-                _pxToMs(canvasSize.width / 2),
-            widget.candles.first.epoch);
+          leftBoundEpoch - (widthInMs ~/ 2),
+          widget.candles.first.epoch,
+          widthInMs ~/ granularity,
+        );
       }
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
