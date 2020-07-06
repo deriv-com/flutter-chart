@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/models/candle_painting.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
+import 'package:deriv_chart/src/paint/paint_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
@@ -213,38 +214,16 @@ class ChartPainter extends CustomPainter {
     );
   }
 
-  final _loadingPaint = Paint()
-    ..color = Colors.white12
-    ..style = PaintingStyle.fill;
-
   void _paintLoading() {
     if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
             candles.first.epoch ||
         candles.length <= 2) {
-      final firstEpochX = _epochToX(candles.first.epoch);
-      final invisibleRectWidth = size.height - firstEpochX;
-
-      double xPosConvert(double x) => x - invisibleRectWidth;
-
-      final barWidth = size.height * 0.01;
-      _loadingPaint.strokeWidth = barWidth;
-
-      int numberOfBars = (size.height ~/ (2 * barWidth));
-
-      double barX = 0;
-      for (int i = 0; i < numberOfBars; i++) {
-        final xBeforeConversion =
-            (barX + (loadingAnimationProgress * size.height)) % size.height;
-
-        final xPos = xPosConvert(xBeforeConversion);
-        canvas.drawLine(
-            Offset(xPos, size.height),
-            Offset(firstEpochX, size.height - (firstEpochX - xPos)),
-            _loadingPaint);
-
-        canvas.drawLine(Offset(0, xPos), Offset(xPos, 0), _loadingPaint);
-        barX += 2 * barWidth;
-      }
+      paintLoadingAnimation(
+        canvas: canvas,
+        size: size,
+        loadingAnimationProgress: loadingAnimationProgress,
+        loadingRightBoundEpoch: _epochToX(candles.first.epoch),
+      );
     }
   }
 
