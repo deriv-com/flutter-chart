@@ -1,17 +1,20 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/logic/quote_grid.dart';
-import 'package:deriv_chart/src/painters/current_tick_painter.dart';
-import 'package:deriv_chart/src/painters/grid_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'logic/conversion.dart';
-import 'logic/time_grid.dart' show gridEpochs, timeGridIntervalInSeconds;
-import 'painters/chart_painter.dart';
+import 'logic/quote_grid.dart';
+import 'logic/time_grid.dart';
+
 import 'models/chart_style.dart';
 import 'models/tick.dart';
 import 'models/candle.dart';
+
+import 'painters/chart_painter.dart';
+import 'painters/current_tick_painter.dart';
+import 'painters/grid_painter.dart';
+
 import 'scale_and_pan_gesture_detector.dart';
 
 class Chart extends StatefulWidget {
