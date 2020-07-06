@@ -215,9 +215,10 @@ class ChartPainter extends CustomPainter {
   }
 
   void _paintLoading() {
-    if (rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
-            candles.first.epoch ||
-        candles.length <= 2) {
+    final int leftBoundEpoch =
+        rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx);
+
+    if (leftBoundEpoch < candles.first.epoch || candles.length <= 2) {
       paintLoadingAnimation(
         canvas: canvas,
         size: size,

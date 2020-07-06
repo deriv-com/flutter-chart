@@ -1,5 +1,3 @@
-import 'dart:convert' show json;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -45,6 +43,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Candle> candles = [];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
+  TickBase _currentTick;
+
+  // We keep track of the candles start epoch to not make more than one API call to get a history
+  int _startEpoch;
 
   @override
   void initState() {
@@ -54,8 +56,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<void> _connectToAPI() async {
     ModuleContainer().initialize(Injector.getInjector());
-    await Injector.getInjector().get<BaseAPI>().connect(ConnectionInformation(
-        appId: '1089', brand: 'binary', endpoint: 'frontend.binaryws.com'));
+    await Injector.getInjector().get<BaseAPI>().connect(
+          ConnectionInformation(
+            appId: '1089',
+            brand: 'binary',
+            endpoint: 'frontend.binaryws.com',
+          ),
+        );
 
     _initTickStream();
   }
@@ -68,7 +75,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       historySubscription.tickStream.listen((tickBase) {
         if (tickBase != null) {
-          _lastTick = tickBase;
+          _currentTick = tickBase;
+
           if (tickBase is api_tick.Tick) {
             _onNewTick(tickBase.epoch.millisecondsSinceEpoch, tickBase.quote);
           }
@@ -91,8 +99,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
       print(e);
     }
   }
-
-  TickBase _lastTick;
 
   Future<TickHistorySubscription> _getHistoryAndSubscribe() async {
     try {
@@ -159,16 +165,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  int _startEpoch;
-
   void _loadMore(int fromEpoch, int toEpoch, int count) async {
-    // So we don't request for a history range more than once
     if (fromEpoch < _startEpoch) {
+      // So we don't request for a history range more than once
       _startEpoch = fromEpoch;
       final TickHistory moreData = await TickHistory.fetchTickHistory(
         TicksHistoryRequest(
           ticksHistory: 'R_50',
-          end: ((toEpoch) ~/ 1000).toString(),
+          end: '${toEpoch ~/ 1000}',
           count: count,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
@@ -178,9 +182,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
       final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
 
       loadedCandles.removeLast();
+
+      // Unlikely to happen, just to ensure we don't have two candles with the same epoch
       while (loadedCandles.isNotEmpty &&
           loadedCandles.last.epoch >= candles.first.epoch) {
-        print('removed last');
         loadedCandles.removeLast();
       }
 
@@ -240,9 +245,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _onIntervalSelected(value) async {
     try {
       if (granularity == 0) {
-        await _lastTick?.unsubscribe();
+        await _currentTick?.unsubscribe();
       } else {
-        await _lastTick?.unsubscribe();
+        await _currentTick?.unsubscribe();
       }
     } on Exception catch (e) {
       print(e);
