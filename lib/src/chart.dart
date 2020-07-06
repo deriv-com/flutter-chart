@@ -417,10 +417,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void _handlePanUpdate(DragUpdateDetails details) {
     setState(() {
       rightBoundEpoch -= _pxToMs(details.delta.dx);
-      final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-      final lowerLimit =
+      final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
+      final int lowerLimit =
           widget.candles.first.epoch + _pxToMs(canvasSize.width * 0.75);
-      rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
+      rightBoundEpoch = upperLimit > lowerLimit
+          ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
+          : lowerLimit;
 
       if (rightBoundEpoch <= lowerLimit) {
         int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
