@@ -19,11 +19,13 @@ class CurrentTickPainter extends CustomPainter {
   final double blinkAnimationProgress;
   final double quoteLabelsAreaWidth;
   final int pipSize;
-  final Function epochToCanvasX;
-  final Function quoteToCanvasY;
+  final double Function(int) epochToCanvasX;
+  final double Function(double) quoteToCanvasY;
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (animatedCurrentTick == null) return;
+
     paintCurrentTickDot(
       canvas,
       center: Offset(

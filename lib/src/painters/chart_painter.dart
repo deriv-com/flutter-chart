@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 import '../models/candle.dart';
 import '../models/candle_painting.dart';
 import '../models/chart_style.dart';
 
 import '../logic/conversion.dart';
-import '../logic/time_grid.dart';
-import '../logic/quote_grid.dart';
 
 import '../paint/paint_candles.dart';
-import '../paint/paint_grid.dart';
 import '../paint/paint_line.dart';
 
 class ChartPainter extends CustomPainter {
@@ -22,9 +18,6 @@ class ChartPainter extends CustomPainter {
     this.rightBoundEpoch,
     this.topBoundQuote,
     this.bottomBoundQuote,
-    this.quoteGridInterval,
-    this.timeGridInterval,
-    this.quoteLabelsAreaWidth,
     this.topPadding,
     this.bottomPadding,
   });
@@ -44,15 +37,6 @@ class ChartPainter extends CustomPainter {
 
   /// Quote at y = size.height - [bottomPadding].
   final double bottomBoundQuote;
-
-  /// Difference between two consecutive quote labels.
-  final double quoteGridInterval;
-
-  /// Difference between two consecutive time labels in milliseconds.
-  final int timeGridInterval;
-
-  /// Width of the area where quote labels and current tick arrow are painted.
-  final double quoteLabelsAreaWidth;
 
   /// Distance between top edge and [topBoundQuote] in pixels.
   final double topPadding;
@@ -90,8 +74,6 @@ class ChartPainter extends CustomPainter {
     this.canvas = canvas;
     this.size = size;
 
-    _painGrid();
-
     if (style == ChartStyle.candles) {
       _paintCandles();
     } else {
@@ -107,38 +89,6 @@ class ChartPainter extends CustomPainter {
       Offset(x, 0),
       Offset(x, size.height),
       Paint()..color = Colors.yellow,
-    );
-  }
-
-  void _painGrid() {
-    final gridLineQuotes = gridQuotes(
-      quoteGridInterval: quoteGridInterval,
-      topBoundQuote: topBoundQuote,
-      bottomBoundQuote: bottomBoundQuote,
-      canvasHeight: size.height,
-      topPadding: topPadding,
-      bottomPadding: bottomPadding,
-    );
-    final leftBoundEpoch =
-        rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx);
-    final gridLineEpochs = gridEpochs(
-      timeGridInterval: timeGridInterval,
-      leftBoundEpoch: leftBoundEpoch,
-      rightBoundEpoch: rightBoundEpoch,
-    );
-    paintGrid(
-      canvas,
-      size,
-      timeLabels: gridLineEpochs.map((epoch) {
-        final time = DateTime.fromMillisecondsSinceEpoch(epoch);
-        return DateFormat('Hms').format(time);
-      }).toList(),
-      quoteLabels: gridLineQuotes
-          .map((quote) => quote.toStringAsFixed(pipSize))
-          .toList(),
-      xCoords: gridLineEpochs.map((epoch) => _epochToX(epoch)).toList(),
-      yCoords: gridLineQuotes.map((quote) => _quoteToY(quote)).toList(),
-      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     );
   }
 

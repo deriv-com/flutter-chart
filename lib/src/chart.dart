@@ -2,11 +2,12 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/logic/quote_grid.dart';
 import 'package:deriv_chart/src/painters/current_tick_painter.dart';
+import 'package:deriv_chart/src/painters/grid_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'logic/conversion.dart';
-import 'logic/time_grid.dart' show timeGridIntervalInSeconds;
+import 'logic/time_grid.dart' show gridEpochs, timeGridIntervalInSeconds;
 import 'painters/chart_painter.dart';
 import 'models/chart_style.dart';
 import 'models/tick.dart';
@@ -310,6 +311,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
               children: <Widget>[
                 CustomPaint(
                   size: canvasSize,
+                  painter: GridPainter(
+                    gridLineEpochs: _getGridLineEpochs(),
+                    gridLineQuotes: _getGridLineQuotes(),
+                    pipSize: widget.pipSize,
+                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                    epochToCanvasX: _epochToCanvasX,
+                    quoteToCanvasY: _quoteToCanvasY,
+                  ),
+                ),
+                CustomPaint(
+                  size: canvasSize,
                   painter: ChartPainter(
                     candles: _getChartCandles(),
                     pipSize: widget.pipSize,
@@ -318,11 +330,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     rightBoundEpoch: rightBoundEpoch,
                     topBoundQuote: _topBoundQuote,
                     bottomBoundQuote: _bottomBoundQuote,
-                    quoteGridInterval: quoteGridInterval(_quotePerPx),
-                    timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
                     topPadding: _topPadding,
                     bottomPadding: _bottomPadding,
-                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
                   ),
                 ),
                 CustomPaint(
@@ -347,6 +356,26 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             child: _buildScrollToNowButton(),
           )
       ],
+    );
+  }
+
+  List<double> _getGridLineQuotes() {
+    return gridQuotes(
+      quoteGridInterval: quoteGridInterval(_quotePerPx),
+      topBoundQuote: _topBoundQuote,
+      bottomBoundQuote: _bottomBoundQuote,
+      canvasHeight: canvasSize.height,
+      topPadding: _topPadding,
+      bottomPadding: _bottomPadding,
+    );
+  }
+
+  List<int> _getGridLineEpochs() {
+    return gridEpochs(
+      timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
+      leftBoundEpoch:
+          rightBoundEpoch - pxToMs(canvasSize.width, msPerPx: msPerPx),
+      rightBoundEpoch: rightBoundEpoch,
     );
   }
 
