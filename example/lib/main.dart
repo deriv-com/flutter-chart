@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: FullscreenChart(),
     );
@@ -156,6 +157,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
             Positioned(
               left: 60,
               child: _buildIntervalSelector(),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                icon: Icon(
+                  Icons.money_off,
+                  color: Colors.white70,
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    isDismissible: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (BuildContext context) => MarketSelector(),
+                  );
+                },
+              ),
             )
           ],
         ),
