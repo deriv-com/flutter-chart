@@ -12,14 +12,14 @@ import 'models/tick.dart';
 import 'models/candle.dart';
 import 'scale_and_pan_gesture_detector.dart';
 
-typedef OnLoadMore = Function(int fromEpoch, int toEpoch, int count);
+typedef OnLoadHistory = Function(int fromEpoch, int toEpoch, int count);
 
 class Chart extends StatefulWidget {
   const Chart({
     Key key,
     @required this.candles,
     @required this.pipSize,
-    this.onLoadMore,
+    this.onLoadHistory,
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
@@ -28,7 +28,7 @@ class Chart extends StatefulWidget {
   final ChartStyle style;
 
   /// Pagination callback. will get called when chart reaches its leftmost limit
-  final OnLoadMore onLoadMore;
+  final OnLoadHistory onLoadHistory;
 
   @override
   _ChartState createState() => _ChartState();
@@ -429,7 +429,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       if (rightBoundEpoch <= lowerLimit) {
         int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
         int widthInMs = _pxToMs(canvasSize.width);
-        widget.onLoadMore?.call(
+        widget.onLoadHistory?.call(
           widget.candles.first.epoch - widthInMs,
           widget.candles.first.epoch,
           widthInMs ~/ granularity,

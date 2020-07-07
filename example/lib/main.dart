@@ -151,8 +151,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
               candles: candles,
               pipSize: 4,
               style: style,
-              onLoadMore: (fromEpoch, toEpoch, count) =>
-                  _loadMore(fromEpoch, toEpoch, count),
+              onLoadHistory: (fromEpoch, toEpoch, count) =>
+                  _loadHistory(fromEpoch, toEpoch, count),
             ),
             _buildChartTypeButton(),
             Positioned(
@@ -165,7 +165,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _loadMore(int fromEpoch, int toEpoch, int count) async {
+  void _loadHistory(int fromEpoch, int toEpoch, int count) async {
     if (fromEpoch < _startEpoch) {
       // So we don't request for a history range more than once
       _startEpoch = fromEpoch;
