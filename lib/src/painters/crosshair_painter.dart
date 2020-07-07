@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/candle.dart';
 
@@ -19,12 +20,23 @@ class CrosshairPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (crosshairCandle == null) return;
 
+    final crosshairPaint = Paint()..color = Colors.white;
+
     final x = epochToCanvasX(crosshairCandle.epoch);
     canvas.drawLine(
       Offset(x, 0),
       Offset(x, size.height),
-      Paint()..color = Colors.white,
+      crosshairPaint,
     );
+
+    canvas.drawCircle(
+      Offset(x, quoteToCanvasY(crosshairCandle.close)),
+      3,
+      crosshairPaint,
+    );
+
+    final time = DateTime.fromMillisecondsSinceEpoch(crosshairCandle.epoch);
+    final timeLabel = DateFormat('Hms').format(time);
   }
 
   @override
