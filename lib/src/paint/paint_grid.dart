@@ -65,7 +65,7 @@ void _paintQuoteLabels(
   @required double quoteLabelsAreaWidth,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
-    paintText(
+    paintTextFromCenter(
       canvas,
       text: quoteLabel,
       centerX: size.width - quoteLabelsAreaWidth / 2,
@@ -86,7 +86,7 @@ void _paintTimeLabels(
   @required List<double> xCoords,
 }) {
   timeLabels.asMap().forEach((index, timeLabel) {
-    paintText(
+    paintTextFromCenter(
       canvas,
       text: timeLabel,
       centerX: xCoords[index],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void paintText(
+void paintTextFromCenter(
   Canvas canvas, {
   @required String text,
   @required double centerX,

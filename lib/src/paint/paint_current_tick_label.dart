@@ -49,7 +49,7 @@ void _paintLabel(
       ..style = PaintingStyle.fill,
   );
 
-  paintText(
+  paintTextFromCenter(
     canvas,
     text: quoteLabel,
     centerX: size.width - quoteLabelsAreaWidth / 2,

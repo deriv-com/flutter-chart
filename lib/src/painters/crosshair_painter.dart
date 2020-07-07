@@ -36,7 +36,7 @@ class CrosshairPainter extends CustomPainter {
       crosshairPaint,
     );
 
-    paintText(
+    paintTextFromCenter(
       canvas,
       text: crosshairCandle.close.toStringAsFixed(pipSize),
       centerX: x,
@@ -51,7 +51,7 @@ class CrosshairPainter extends CustomPainter {
     final time = DateTime.fromMillisecondsSinceEpoch(crosshairCandle.epoch);
     final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
 
-    paintText(
+    paintTextFromCenter(
       canvas,
       text: timeLabel,
       centerX: x,
