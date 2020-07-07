@@ -144,21 +144,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Widget build(BuildContext context) {
     return Material(
       color: Color(0xFF0E0E0E),
-      child: SizedBox.expand(
-        child: Stack(
-          children: <Widget>[
-            Chart(
-              candles: candles,
-              pipSize: 4,
-              style: style,
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              _buildChartTypeButton(),
+              _buildIntervalSelector(),
+            ],
+          ),
+          Expanded(
+            child: ClipRect(
+              child: Chart(
+                candles: candles,
+                pipSize: 4,
+                style: style,
+              ),
             ),
-            _buildChartTypeButton(),
-            Positioned(
-              left: 60,
-              child: _buildIntervalSelector(),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
