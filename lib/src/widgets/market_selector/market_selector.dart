@@ -25,6 +25,8 @@ class _MarketSelectorState extends State<MarketSelector> {
 
   List<Market> _markets;
 
+  String filterText = "";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,7 +56,7 @@ class _MarketSelectorState extends State<MarketSelector> {
               ),
               ListTile(
                 title: TextFormField(
-                  onChanged: (String text) {},
+                  onChanged: (String text) => setState(() => filterText = text),
                   cursorColor: Colors.white70,
                   textAlign: TextAlign.center,
                   decoration: new InputDecoration(
@@ -78,7 +80,10 @@ class _MarketSelectorState extends State<MarketSelector> {
                       child: ListView.builder(
                         itemCount: _markets.length,
                         itemBuilder: (BuildContext context, int index) =>
-                            MarketItem(market: _markets[index]),
+                            MarketItem(
+                          filterText: filterText.toLowerCase(),
+                          market: _markets[index],
+                        ),
                       ),
                     ),
             ],
@@ -111,9 +116,10 @@ class _MarketSelectorState extends State<MarketSelector> {
         marketTitles.add(symbol.market);
         _markets.add(
           Market.fromSymbols(
-            name:symbol.market,
-            displayName:symbol.marketDisplayName,
-            symbols: activeSymbols.where((e) => e.market == symbol.market).toList(),
+            name: symbol.market,
+            displayName: symbol.marketDisplayName,
+            symbols:
+                activeSymbols.where((e) => e.market == symbol.market).toList(),
           ),
         );
       }

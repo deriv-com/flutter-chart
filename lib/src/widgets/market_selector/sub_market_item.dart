@@ -3,9 +3,14 @@ import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
 
 class SubMarketItem extends StatelessWidget {
-  const SubMarketItem({Key key, this.subMarket}) : super(key: key);
+  const SubMarketItem({
+    Key key,
+    this.subMarket,
+    this.filterText,
+  }) : super(key: key);
 
   final SubMarket subMarket;
+  final String filterText;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -20,7 +25,14 @@ class SubMarketItem extends StatelessWidget {
                 style: TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
               ),
             ),
-            ...subMarket.assets.map((e) => AssetItem(asset: e)).toList()
+            if (filterText == null || filterText.isEmpty)
+              ...subMarket.assets.map((e) => AssetItem(asset: e)).toList()
+            else
+              ...subMarket.assets
+                  .where(
+                      (a) => a.displayName.toLowerCase().contains(filterText))
+                  .map((e) => AssetItem(asset: e))
+                  .toList()
           ],
         ),
       );
