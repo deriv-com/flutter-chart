@@ -13,27 +13,30 @@ class SubMarketItem extends StatelessWidget {
   final String filterText;
 
   @override
-  Widget build(BuildContext context) => Material(
-        color: const Color(0xFF151717),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(top: 16, left: 8),
-              child: Text(
-                subMarket.displayName,
-                style: TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
-              ),
+  Widget build(BuildContext context) {
+    final List<Asset> assets = (filterText == null || filterText.isEmpty)
+        ? subMarket.assets
+        : subMarket.assets
+            .where((a) => a.displayName.toLowerCase().contains(filterText))
+            .toList();
+    return assets.isEmpty
+        ? Container()
+        : Material(
+            color: const Color(0xFF151717),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(top: 16, left: 8),
+                  child: Text(
+                    subMarket.displayName,
+                    style:
+                        TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
+                  ),
+                ),
+                ...assets.map((e) => AssetItem(asset: e)).toList()
+              ],
             ),
-            if (filterText == null || filterText.isEmpty)
-              ...subMarket.assets.map((e) => AssetItem(asset: e)).toList()
-            else
-              ...subMarket.assets
-                  .where(
-                      (a) => a.displayName.toLowerCase().contains(filterText))
-                  .map((e) => AssetItem(asset: e))
-                  .toList()
-          ],
-        ),
-      );
+          );
+  }
 }
