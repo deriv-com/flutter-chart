@@ -535,34 +535,35 @@ class CrosshairCandleDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      color: Color(0xFF0E0E0E),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          _buildLabelValue('O', crosshairCandle.open, pipSize),
+          _buildLabelValue('H', crosshairCandle.high, pipSize),
+          _buildLabelValue('L', crosshairCandle.low, pipSize),
+          _buildLabelValue('C', crosshairCandle.close, pipSize),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLabelValue(String label, double value, int pipSize) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Text(
-          'O ' + crosshairCandle.open.toStringAsFixed(pipSize),
+          label,
           style: TextStyle(
             color: Colors.white30,
             fontFeatures: [FontFeature.tabularFigures()],
           ),
         ),
+        SizedBox(width: 4),
         Text(
-          'H ' + crosshairCandle.high.toStringAsFixed(pipSize),
+          value.toStringAsFixed(pipSize),
           style: TextStyle(
-            color: Colors.white30,
-            fontFeatures: [FontFeature.tabularFigures()],
-          ),
-        ),
-        Text(
-          'L ' + crosshairCandle.low.toStringAsFixed(pipSize),
-          style: TextStyle(
-            color: Colors.white30,
-            fontFeatures: [FontFeature.tabularFigures()],
-          ),
-        ),
-        Text(
-          'C ' + crosshairCandle.close.toStringAsFixed(pipSize),
-          style: TextStyle(
-            color: Colors.white30,
+            color: Colors.white,
             fontFeatures: [FontFeature.tabularFigures()],
           ),
         ),

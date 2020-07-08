@@ -59,6 +59,7 @@ class CrosshairPainter extends CustomPainter {
       style: TextStyle(
         fontSize: 12,
         color: Colors.white70,
+        backgroundColor: Color(0xFF0E0E0E),
       ),
     );
   }
