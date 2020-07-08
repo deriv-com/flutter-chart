@@ -1,18 +1,24 @@
-import 'package:deriv_chart/src/paint/paint_text.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/candle.dart';
+import '../models/chart_style.dart';
+
+import '../paint/paint_text.dart';
 
 class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
     @required this.crosshairCandle,
+    @required this.style,
     @required this.pipSize,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
   });
 
   final Candle crosshairCandle;
+  final ChartStyle style;
   final int pipSize;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
@@ -36,17 +42,21 @@ class CrosshairPainter extends CustomPainter {
       crosshairPaint,
     );
 
-    // paintTextFromCenter(
-    //   canvas,
-    //   text: crosshairCandle.close.toStringAsFixed(pipSize),
-    //   centerX: x,
-    //   centerY: 10,
-    //   style: TextStyle(
-    //     fontSize: 14,
-    //     color: Colors.white,
-    //     fontWeight: FontWeight.bold,
-    //   ),
-    // );
+    if (style == ChartStyle.line) {
+      paintTextFromCenter(
+        canvas,
+        text: crosshairCandle.close.toStringAsFixed(pipSize),
+        centerX: x,
+        centerY: 10,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontFeatures: [FontFeature.tabularFigures()],
+          backgroundColor: Color(0xFF0E0E0E),
+        ),
+      );
+    }
 
     final time = DateTime.fromMillisecondsSinceEpoch(crosshairCandle.epoch);
     final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);

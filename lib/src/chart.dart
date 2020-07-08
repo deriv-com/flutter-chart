@@ -356,12 +356,14 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                   size: canvasSize,
                   painter: CrosshairPainter(
                     crosshairCandle: crosshairCandle,
+                    style: widget.style,
                     pipSize: widget.pipSize,
                     epochToCanvasX: _epochToCanvasX,
                     quoteToCanvasY: _quoteToCanvasY,
                   ),
                 ),
-                if (crosshairCandle != null)
+                if (crosshairCandle != null &&
+                    widget.style == ChartStyle.candles)
                   Positioned(
                     top: 0,
                     left: 0,
@@ -555,6 +557,7 @@ class CrosshairCandleDetails extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
+            fontSize: 14,
             color: Colors.white30,
             fontFeatures: [FontFeature.tabularFigures()],
           ),
@@ -563,8 +566,10 @@ class CrosshairCandleDetails extends StatelessWidget {
         Text(
           value.toStringAsFixed(pipSize),
           style: TextStyle(
+            fontSize: 14,
             color: Colors.white,
             fontFeatures: [FontFeature.tabularFigures()],
+            fontWeight: FontWeight.bold,
           ),
         ),
       ],
