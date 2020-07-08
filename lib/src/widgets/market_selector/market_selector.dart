@@ -1,5 +1,6 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
-import 'package:deriv_chart/src/widgets/market_selector/symbol_item.dart';
+import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 import 'package:flutter_deriv_api/basic_api/generated/active_symbols_send.dart';
@@ -21,6 +22,8 @@ class _MarketSelectorState extends State<MarketSelector> {
     super.initState();
     _categorizeSymbols();
   }
+
+  List<Market> _markets;
 
   @override
   Widget build(BuildContext context) {
@@ -69,18 +72,15 @@ class _MarketSelectorState extends State<MarketSelector> {
                 ),
                 onTap: () {},
               ),
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    SymbolItem(),
-                    SymbolItem(),
-                    SymbolItem(),
-                    SymbolItem(),
-                    SymbolItem(),
-                  ],
-                ),
-              ),
+              _markets == null
+                  ? Container()
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: _markets.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            MarketItem(market: _markets[index]),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -104,19 +104,21 @@ class _MarketSelectorState extends State<MarketSelector> {
 
     final List<String> marketTitles = [];
 
-    final List<Market> markets = [];
+    _markets = List<Market>();
 
     for (final symbol in activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
-        markets.add(
+        _markets.add(
           Market.fromSymbols(
-            symbol.market,
-            activeSymbols.where((e) => e.market == symbol.market).toList(),
+            name:symbol.market,
+            displayName:symbol.marketDisplayName,
+            symbols: activeSymbols.where((e) => e.market == symbol.market).toList(),
           ),
         );
       }
     }
-      print('');
+
+    setState(() {});
   }
 }

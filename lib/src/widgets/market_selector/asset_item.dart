@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
-class SymbolItem extends StatelessWidget {
+import 'models.dart';
+
+class AssetItem extends StatelessWidget {
+  const AssetItem({Key key, this.asset}) : super(key: key);
+
+  final Asset asset;
+
   @override
   Widget build(BuildContext context) => ListTile(
         leading: Icon(Icons.money_off),
         title: Text(
-          'Volatility Index 25',
+          asset.displayName,
           style: TextStyle(color: Color(0xFFC2C2C2)),
         ),
         trailing: Icon(Icons.star_border),

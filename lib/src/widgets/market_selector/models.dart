@@ -1,20 +1,20 @@
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 
 class Market {
-  Market({this.title});
-
-  Market.fromSymbols(
-    this.title,
+  Market.fromSymbols({
+    this.name,
+    this.displayName,
     List<ActiveSymbol> symbols,
-  ) {
+  }) {
     final List<String> subMarketTitles = [];
     for (final symbol in symbols) {
       if (!subMarketTitles.contains(symbol.submarket)) {
         subMarketTitles.add(symbol.submarket);
         subMarkets.add(
           SubMarket.fromSymbols(
-            symbol.submarket,
-            symbols
+            name: symbol.submarket,
+            displayName: symbol.submarketDisplayName,
+            symbols: symbols
                 .where((element) => element.submarket == symbol.submarket)
                 .toList(),
           ),
@@ -23,25 +23,30 @@ class Market {
     }
   }
 
-  final String title;
+  final String name;
+  final String displayName;
   final List<SubMarket> subMarkets = [];
 }
 
 class SubMarket {
-  SubMarket({this.title});
-
-  SubMarket.fromSymbols(this.title, List<ActiveSymbol> symbols) {
+  SubMarket.fromSymbols({
+    this.name,
+    this.displayName,
+    List<ActiveSymbol> symbols,
+  }) {
     for (final symbol in symbols) {
-      assets.add(Asset(symbol.symbol));
+      assets.add(Asset(name: symbol.symbol, displayName: symbol.displayName));
     }
   }
 
-  final String title;
+  final String name;
+  final String displayName;
   final List<Asset> assets = [];
 }
 
 class Asset {
-  Asset(this.title);
+  Asset({this.name, this.displayName});
 
-  final String title;
+  final String name;
+  final String displayName;
 }
