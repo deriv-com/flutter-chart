@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/painters/crosshair_painter.dart';
@@ -360,6 +361,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     quoteToCanvasY: _quoteToCanvasY,
                   ),
                 ),
+                if (crosshairCandle != null)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: CrosshairCandleDetails(
+                      crosshairCandle: crosshairCandle,
+                      pipSize: widget.pipSize,
+                    ),
+                  )
               ],
             );
           }),
@@ -509,5 +520,53 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _scrollToNow() {
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
+  }
+}
+
+class CrosshairCandleDetails extends StatelessWidget {
+  const CrosshairCandleDetails({
+    Key key,
+    @required this.crosshairCandle,
+    @required this.pipSize,
+  }) : super(key: key);
+
+  final Candle crosshairCandle;
+  final int pipSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Text(
+          'O ' + crosshairCandle.open.toStringAsFixed(pipSize),
+          style: TextStyle(
+            color: Colors.white30,
+            fontFeatures: [FontFeature.tabularFigures()],
+          ),
+        ),
+        Text(
+          'H ' + crosshairCandle.high.toStringAsFixed(pipSize),
+          style: TextStyle(
+            color: Colors.white30,
+            fontFeatures: [FontFeature.tabularFigures()],
+          ),
+        ),
+        Text(
+          'L ' + crosshairCandle.low.toStringAsFixed(pipSize),
+          style: TextStyle(
+            color: Colors.white30,
+            fontFeatures: [FontFeature.tabularFigures()],
+          ),
+        ),
+        Text(
+          'C ' + crosshairCandle.close.toStringAsFixed(pipSize),
+          style: TextStyle(
+            color: Colors.white30,
+            fontFeatures: [FontFeature.tabularFigures()],
+          ),
+        ),
+      ],
+    );
   }
 }
