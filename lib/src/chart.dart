@@ -452,6 +452,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _onScaleAndPanEnd(ScaleEndDetails details) {
     _limitRightBoundEpoch();
+    _onLoadHistory();
+  }
+
+  void _onLoadHistory() {
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
     if (leftBoundEpoch < widget.candles.first.epoch) {
       int granularity = widget.candles[1].epoch - widget.candles[0].epoch;

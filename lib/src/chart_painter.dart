@@ -102,7 +102,7 @@ class ChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (candles.length < 2) return;
+    //if (candles.length < 2) return;
 
     this.canvas = canvas;
     this.size = size;
@@ -218,12 +218,12 @@ class ChartPainter extends CustomPainter {
     final int leftBoundEpoch =
         rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx);
 
-    if (leftBoundEpoch < candles.first.epoch || candles.length <= 2) {
+    if (candles.isEmpty || leftBoundEpoch < candles.first.epoch || candles.length <= 2) {
       paintLoadingAnimation(
         canvas: canvas,
         size: size,
         loadingAnimationProgress: loadingAnimationProgress,
-        loadingRightBoundX: _epochToX(candles.first.epoch),
+        loadingRightBoundX: candles.isEmpty ? size.width : _epochToX(candles.first.epoch),
       );
     }
   }
