@@ -110,6 +110,8 @@ class ChartPainter extends CustomPainter {
     _paintLoading();
     _painGrid();
 
+    if (candles.isEmpty) return;
+
     if (style == ChartStyle.candles) {
       _paintCandles();
     } else {
