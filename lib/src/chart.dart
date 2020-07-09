@@ -308,6 +308,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,
+          onScaleAndPanEnd: _onScaleAndPanEnd,
           child: LayoutBuilder(builder: (context, constraints) {
             canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
@@ -419,22 +420,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void _handlePanUpdate(DragUpdateDetails details) {
     setState(() {
       rightBoundEpoch -= _pxToMs(details.delta.dx);
-      final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-      final int lowerLimit =
-          widget.candles.first.epoch + _pxToMs(canvasSize.width * 0.75);
-      rightBoundEpoch = upperLimit > lowerLimit
-          ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
-          : lowerLimit;
-
-      if (rightBoundEpoch <= lowerLimit) {
-        int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-        int widthInMs = _pxToMs(canvasSize.width);
-        widget.onLoadHistory?.call(
-          widget.candles.first.epoch - widthInMs,
-          widget.candles.first.epoch,
-          widthInMs ~/ granularity,
-        );
-      }
+      _limitRightBoundEpoch();
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
@@ -442,6 +428,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             .clamp(0.05, 0.49);
       }
     });
+  }
+
+  void _limitRightBoundEpoch() {
+    final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
+    final int lowerLimit =
+        widget.candles.first.epoch + _pxToMs(canvasSize.width * 0.75);
+    rightBoundEpoch = upperLimit > lowerLimit
+        ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
+        : lowerLimit;
   }
 
   IconButton _buildScrollToNowButton() {
@@ -453,5 +448,19 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _scrollToNow() {
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
+  }
+
+  void _onScaleAndPanEnd(ScaleEndDetails details) {
+    _limitRightBoundEpoch();
+    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    if (leftBoundEpoch < widget.candles.first.epoch) {
+      int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+      int widthInMs = _pxToMs(canvasSize.width);
+      widget.onLoadHistory?.call(
+        widget.candles.first.epoch - widthInMs,
+        widget.candles.first.epoch,
+        widthInMs ~/ granularity,
+      );
+    }
   }
 }
