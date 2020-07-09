@@ -110,6 +110,7 @@ class _CustomeGestureDetectorState extends State<CustomeGestureDetector> {
   }
 
   void _handleLongPressEnd() {
+    _longPressTimer?.cancel();
     _longPressed = false;
     widget.onLongPressEnd?.call(null);
   }
