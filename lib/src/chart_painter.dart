@@ -223,7 +223,7 @@ class ChartPainter extends CustomPainter {
         canvas: canvas,
         size: size,
         loadingAnimationProgress: loadingAnimationProgress,
-        loadingRightBoundEpoch: _epochToX(candles.first.epoch),
+        loadingRightBoundX: _epochToX(candles.first.epoch),
       );
     }
   }

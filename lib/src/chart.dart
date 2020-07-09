@@ -431,12 +431,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _limitRightBoundEpoch() {
-    final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-    final int lowerLimit =
-        widget.candles.first.epoch + _pxToMs(canvasSize.width * 0.75);
-    rightBoundEpoch = upperLimit > lowerLimit
-        ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
-        : lowerLimit;
+//    final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
+//    final int lowerLimit =
+//        widget.candles.first.epoch + _pxToMs(canvasSize.width * 0.75);
+//    rightBoundEpoch = upperLimit > lowerLimit
+//        ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
+//        : lowerLimit;
   }
 
   IconButton _buildScrollToNowButton() {
@@ -454,13 +454,13 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _limitRightBoundEpoch();
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
     if (leftBoundEpoch < widget.candles.first.epoch) {
-      int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-      int widthInMs = _pxToMs(canvasSize.width);
-      widget.onLoadHistory?.call(
-        widget.candles.first.epoch - widthInMs,
-        widget.candles.first.epoch,
-        widthInMs ~/ granularity,
-      );
+//      int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+//      int widthInMs = _pxToMs(canvasSize.width);
+//      widget.onLoadHistory?.call(
+//        widget.candles.first.epoch - widthInMs,
+//        widget.candles.first.epoch,
+//        widthInMs ~/ granularity,
+//      );
     }
   }
 }
