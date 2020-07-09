@@ -27,16 +27,18 @@ void paintLoadingAnimation({
   double barX = 0;
 
   for (int i = 0; i < numberOfBars; i++) {
-    final xBeforeConversion =
-        (barX + (loadingAnimationProgress * rectWidth)) % rectWidth;
+    final barPosition = convertToLoadingRange(
+        (barX + (loadingAnimationProgress * rectWidth)) % rectWidth);
 
-    final xPos = convertToLoadingRange(xBeforeConversion);
-
-    canvas.drawLine(Offset(0, xPos), Offset(xPos, 0), loadingPaint);
-
+    // Top-left triangle
     canvas.drawLine(
-      Offset(xPos, rectWidth),
-      Offset(loadingRightBoundX, rectWidth - (loadingRightBoundX - xPos)),
+        Offset(0, barPosition), Offset(barPosition, 0), loadingPaint);
+
+    // Bottom-right triangle
+    canvas.drawLine(
+      Offset(barPosition, rectWidth),
+      Offset(
+          loadingRightBoundX, rectWidth - (loadingRightBoundX - barPosition)),
       loadingPaint,
     );
 
