@@ -27,7 +27,7 @@ class Chart extends StatefulWidget {
   final int pipSize;
   final ChartStyle style;
 
-  /// Pagination callback. will get called when chart reaches its leftmost limit
+  /// Pagination callback. will be called when scrolled to first [candles].
   final OnLoadHistory onLoadHistory;
 
   @override
