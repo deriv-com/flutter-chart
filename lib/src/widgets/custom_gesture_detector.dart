@@ -69,15 +69,15 @@ class _CustomeGestureDetectorState extends State<CustomeGestureDetector> {
     return Listener(
       onPointerDown: (event) {
         _fingersOnScreen += 1;
-        _updateLongPress();
+        _afterNumberOfFingersOnScreenChanged();
       },
       onPointerCancel: (event) {
         _fingersOnScreen -= 1;
-        _updateLongPress();
+        _afterNumberOfFingersOnScreenChanged();
       },
       onPointerUp: (event) {
         _fingersOnScreen -= 1;
-        _updateLongPress();
+        _afterNumberOfFingersOnScreenChanged();
       },
       child: GestureDetector(
         onScaleStart: _handleScaleStart,
@@ -88,16 +88,21 @@ class _CustomeGestureDetectorState extends State<CustomeGestureDetector> {
     );
   }
 
-  void _updateLongPress() {
-    if (_fingersOnScreen == 1) {
-      _longPressTimer = Timer(
-        LONG_PRESS_HOLD_DURATION,
-        _handleLongPressStart,
-      );
-    } else if (_fingersOnScreen == 0 && _longPressed) {
-      _handleLongPressEnd();
-    } else {
-      _longPressTimer?.cancel();
+  void _afterNumberOfFingersOnScreenChanged() {
+    switch (_fingersOnScreen) {
+      case 0:
+        _longPressTimer?.cancel();
+        if (_longPressed) _handleLongPressEnd();
+        break;
+      case 1:
+        if (!_longPressed)
+          _longPressTimer = Timer(
+            LONG_PRESS_HOLD_DURATION,
+            _handleLongPressStart,
+          );
+        break;
+      default:
+        _longPressTimer?.cancel();
     }
   }
 
@@ -110,7 +115,6 @@ class _CustomeGestureDetectorState extends State<CustomeGestureDetector> {
   }
 
   void _handleLongPressEnd() {
-    _longPressTimer?.cancel();
     _longPressed = false;
     widget.onLongPressEnd?.call(null);
   }
