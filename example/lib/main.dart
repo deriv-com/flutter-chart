@@ -158,6 +158,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 candles: candles,
                 pipSize: 4,
                 style: style,
+                onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
               ),
             ),
           ),

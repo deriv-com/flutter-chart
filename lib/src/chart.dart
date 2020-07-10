@@ -26,12 +26,15 @@ class Chart extends StatefulWidget {
     Key key,
     @required this.candles,
     @required this.pipSize,
+    this.onCrosshairAppeared,
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
   final List<Candle> candles;
   final int pipSize;
   final ChartStyle style;
+
+  final Function onCrosshairAppeared;
 
   @override
   _ChartState createState() => _ChartState();
@@ -313,7 +316,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,
-          onLongPressStart: _handleLongPressUpdate,
+          onLongPressStart: (details) {
+            widget.onCrosshairAppeared?.call();
+            _handleLongPressUpdate(details);
+          },
           onLongPressMoveUpdate: _handleLongPressUpdate,
           onLongPressEnd: _handleLongPressEnd,
           child: LayoutBuilder(builder: (context, constraints) {
