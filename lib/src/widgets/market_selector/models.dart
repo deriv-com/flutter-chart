@@ -29,13 +29,11 @@ class Market {
   final String displayName;
   final List<SubMarket> subMarkets = [];
 
-  bool containsAssetWithText(String filterText) {
-    final subMarket = subMarkets.firstWhere(
-        (subMarket) => subMarket.containsAssetWithText(filterText),
-        orElse: () => null);
-    print('For $name found $subMarket');
-    return subMarket != null;
-  }
+  bool containsAssetWithText(String filterText) =>
+      subMarkets.firstWhere(
+          (subMarket) => subMarket.containsAssetWithText(filterText),
+          orElse: () => null) !=
+      null;
 }
 
 class SubMarket {
@@ -53,15 +51,11 @@ class SubMarket {
   final String displayName;
   final List<Asset> assets = [];
 
-  @override
-  String toString() => '$name';
-
-  bool containsAssetWithText(String filterText) {
-    final asset = assets.firstWhere(
-        (asset) => asset.displayName.toLowerCase().contains(filterText),
-        orElse: () => null);
-    return asset != null;
-  }
+  bool containsAssetWithText(String filterText) =>
+      assets.firstWhere(
+          (asset) => asset.displayName.toLowerCase().contains(filterText),
+          orElse: () => null) !=
+      null;
 }
 
 class Asset {
