@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+/// Paints loading animation from screen left edge to [loadingRightBoundX]
 void paintLoadingAnimation({
   @required Canvas canvas,
   @required Size size,
@@ -11,16 +12,19 @@ void paintLoadingAnimation({
 }) {
   final loadingPaint = Paint()
     ..color = Colors.white12
+    ..strokeWidth = 1
     ..style = PaintingStyle.fill;
 
-  final numberOfBars = 48;
+  final numberOfBars = 32;
   final rectWidth = max(size.width, size.height);
   final barWidthAndSpace = rectWidth / numberOfBars;
-
-  loadingPaint.strokeWidth = barWidthAndSpace / 2;
+  final barWidth = barWidthAndSpace / 2;
 
   double convertToLoadingRange(double x) =>
       x - (rectWidth - loadingRightBoundX);
+
+  final topLeftPath = Path();
+  final bottomRightPath = Path();
 
   double barX = 0;
 
@@ -29,22 +33,32 @@ void paintLoadingAnimation({
       (barX + (loadingAnimationProgress * rectWidth)) % rectWidth,
     );
 
-    // A line in top-left triangle
-    canvas.drawLine(
-      Offset(0, barPosition),
-      Offset(barPosition, 0),
-      loadingPaint,
-    );
+    topLeftPath.reset();
+    bottomRightPath.reset();
 
-    // A line in bottom-right triangle
-    canvas.drawLine(
-      Offset(barPosition, rectWidth),
-      Offset(
-        loadingRightBoundX,
-        rectWidth - (loadingRightBoundX - barPosition),
-      ),
-      loadingPaint,
-    );
+    // A bar in top-left triangle
+    topLeftPath.moveTo(0, barPosition);
+    topLeftPath.lineTo(barPosition, 0);
+    if (barPosition + barWidth < loadingRightBoundX) {
+      topLeftPath.lineTo(barPosition + barWidth, 0);
+    } else {
+      final barEndJutOut = barPosition + barWidth - loadingRightBoundX;
+      topLeftPath.lineTo(barPosition + barWidth - barEndJutOut, 0);
+      topLeftPath.lineTo(barPosition + barWidth - barEndJutOut, barEndJutOut);
+    }
+    topLeftPath.lineTo(0, barPosition + barWidth);
+
+    canvas.drawPath(topLeftPath, loadingPaint);
+
+    // A bar in bottom-right triangle
+    bottomRightPath.moveTo(barPosition, rectWidth);
+    bottomRightPath.lineTo(
+        loadingRightBoundX, rectWidth - (loadingRightBoundX - barPosition));
+    bottomRightPath.lineTo(loadingRightBoundX,
+        rectWidth - (loadingRightBoundX - barPosition) + barWidth);
+    bottomRightPath.lineTo(barPosition, rectWidth + barWidth);
+
+    canvas.drawPath(bottomRightPath, loadingPaint);
 
     barX += barWidthAndSpace;
   }

@@ -27,7 +27,7 @@ class Chart extends StatefulWidget {
   final int pipSize;
   final ChartStyle style;
 
-  /// Pagination callback. will be called when scrolled to first [candles].
+  /// Pagination callback. will be called when scrolled to left and there is empty space before first [candles]
   final OnLoadHistory onLoadHistory;
 
   @override
@@ -462,7 +462,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       widget.onLoadHistory?.call(
         widget.candles.first.epoch - (2 * widthInMs),
         widget.candles.first.epoch,
-        2 * widthInMs ~/ granularity,
+        (2 * widthInMs) ~/ granularity,
       );
     }
   }
