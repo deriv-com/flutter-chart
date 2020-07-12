@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 
 class Market {
@@ -26,6 +28,14 @@ class Market {
   final String name;
   final String displayName;
   final List<SubMarket> subMarkets = [];
+
+  bool containsAssetWithText(String filterText) {
+    final subMarket = subMarkets.firstWhere(
+        (subMarket) => subMarket.containsAssetWithText(filterText),
+        orElse: () => null);
+    print('For $name found $subMarket');
+    return subMarket != null;
+  }
 }
 
 class SubMarket {
@@ -42,6 +52,16 @@ class SubMarket {
   final String name;
   final String displayName;
   final List<Asset> assets = [];
+
+  @override
+  String toString() => '$name';
+
+  bool containsAssetWithText(String filterText) {
+    final asset = assets.firstWhere(
+        (asset) => asset.displayName.toLowerCase().contains(filterText),
+        orElse: () => null);
+    return asset != null;
+  }
 }
 
 class Asset {

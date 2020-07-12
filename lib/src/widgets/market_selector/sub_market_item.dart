@@ -20,7 +20,7 @@ class SubMarketItem extends StatelessWidget {
             .where((a) => a.displayName.toLowerCase().contains(filterText))
             .toList();
     return assets.isEmpty
-        ? Container()
+        ? SizedBox.shrink()
         : Material(
             color: const Color(0xFF151717),
             child: Column(

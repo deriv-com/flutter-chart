@@ -24,11 +24,19 @@ class _MarketSelectorState extends State<MarketSelector> {
   }
 
   List<Market> _markets;
+  List<Market> _marketsToDisplay;
 
   String filterText = "";
 
   @override
   Widget build(BuildContext context) {
+    _marketsToDisplay = filterText.isEmpty
+        ? _markets
+        : _markets
+            .where((market) =>
+                market.containsAssetWithText(filterText.toLowerCase()))
+            .toList();
+
     return SafeArea(
       child: ClipRRect(
         borderRadius: BorderRadius.only(
@@ -74,15 +82,15 @@ class _MarketSelectorState extends State<MarketSelector> {
                 ),
                 onTap: () {},
               ),
-              _markets == null
+              _marketsToDisplay == null
                   ? Container()
                   : Expanded(
                       child: ListView.builder(
-                        itemCount: _markets.length,
+                        itemCount: _marketsToDisplay.length,
                         itemBuilder: (BuildContext context, int index) =>
                             MarketItem(
                           filterText: filterText.toLowerCase(),
-                          market: _markets[index],
+                          market: _marketsToDisplay[index],
                         ),
                       ),
                     ),
