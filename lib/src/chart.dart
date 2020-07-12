@@ -431,8 +431,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _limitRightBoundEpoch() {
+    if (widget.candles.isEmpty) return;
     final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-    final int lowerLimit = widget.candles.first.epoch - _pxToMs(canvasSize.width);
+    final int lowerLimit =
+        widget.candles.first.epoch - _pxToMs(canvasSize.width);
     rightBoundEpoch = upperLimit > lowerLimit
         ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
         : lowerLimit;
@@ -455,6 +457,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _onLoadHistory() {
+    if (widget.candles.isEmpty) return;
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
     if (leftBoundEpoch < widget.candles.first.epoch) {
       int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
