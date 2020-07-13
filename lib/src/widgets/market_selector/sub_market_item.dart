@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,12 @@ class SubMarketItem extends StatelessWidget {
     Key key,
     this.subMarket,
     this.filterText,
+    this.onAssetClicked,
   }) : super(key: key);
 
   final SubMarket subMarket;
   final String filterText;
+  final OnAssetClicked onAssetClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,12 @@ class SubMarketItem extends StatelessWidget {
                         TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
                   ),
                 ),
-                ...assets.map((e) => AssetItem(asset: e)).toList()
+                ...assets
+                    .map((e) => InkWell(
+                          onTap: () => onAssetClicked?.call(e),
+                          child: AssetItem(asset: e),
+                        ))
+                    .toList()
               ],
             ),
           );

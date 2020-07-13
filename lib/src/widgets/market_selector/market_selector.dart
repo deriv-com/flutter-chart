@@ -9,8 +9,13 @@ import 'package:flutter_deriv_api/services/connection/api_manager/connection_inf
 import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
 import 'package:flutter_deriv_api/services/dependency_injector/module_container.dart';
 
+/// Clicked on [Asset] in market selector callback
+typedef OnAssetClicked = Function(Asset asset);
+
 class MarketSelector extends StatefulWidget {
-  const MarketSelector({Key key}) : super(key: key);
+  const MarketSelector({Key key, this.onAssetClicked}) : super(key: key);
+
+  final OnAssetClicked onAssetClicked;
 
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
@@ -91,6 +96,7 @@ class _MarketSelectorState extends State<MarketSelector> {
                             MarketItem(
                           filterText: filterText.toLowerCase(),
                           market: _marketsToDisplay[index],
+                          onAssetClicked: widget.onAssetClicked,
                         ),
                       ),
                     ),

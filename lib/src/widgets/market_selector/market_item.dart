@@ -1,16 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/sub_market_item.dart';
-import 'package:flutter/material.dart';
+import 'market_selector.dart';
 
 class MarketItem extends StatelessWidget {
   const MarketItem({
     Key key,
     this.market,
     this.filterText,
+    this.onAssetClicked,
   }) : super(key: key);
 
   final Market market;
   final String filterText;
+  final OnAssetClicked onAssetClicked;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -29,6 +32,7 @@ class MarketItem extends StatelessWidget {
                 .map((e) => SubMarketItem(
                       subMarket: e,
                       filterText: filterText,
+                      onAssetClicked: onAssetClicked,
                     ))
                 .toList(),
           ],

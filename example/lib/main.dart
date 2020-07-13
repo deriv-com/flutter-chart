@@ -171,7 +171,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     isDismissible: true,
                     isScrollControlled: true,
                     context: context,
-                    builder: (BuildContext context) => MarketSelector(),
+                    builder: (BuildContext context) => MarketSelector(
+                      onAssetClicked: (asset) => print(
+                          '(${asset.name}): ${asset.displayName} clicked!'),
+                    ),
                   );
                 },
               ),

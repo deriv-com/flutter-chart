@@ -15,6 +15,5 @@ class AssetItem extends StatelessWidget {
           style: TextStyle(color: Color(0xFFC2C2C2)),
         ),
         trailing: Icon(Icons.star_border),
-        onTap: () {},
       );
 }

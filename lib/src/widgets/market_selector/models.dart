@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 
 class Market {
