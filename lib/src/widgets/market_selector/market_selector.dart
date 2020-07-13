@@ -67,25 +67,33 @@ class _MarketSelectorState extends State<MarketSelector> {
                   ),
                 ),
               ),
-              ListTile(
-                title: TextFormField(
-                  onChanged: (String text) => setState(() => filterText = text),
-                  cursorColor: Colors.white70,
-                  textAlign: TextAlign.center,
-                  decoration: new InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    hintText: 'Asset',
+              Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      onChanged: (String text) =>
+                          setState(() => filterText = text),
+                      cursorColor: Colors.white70,
+                      textAlign: TextAlign.center,
+                      decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: 'Asset',
+                      ),
+                    ),
                   ),
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {},
-                ),
-                onTap: () {},
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
               ),
               _marketsToDisplay == null
                   ? Container()
