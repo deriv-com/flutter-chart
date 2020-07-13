@@ -369,26 +369,23 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     quoteToCanvasY: _quoteToCanvasY,
                   ),
                 ),
-                if (crosshairCandle != null &&
-                    widget.style == ChartStyle.candles)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: CrosshairCandleDetails(
-                      crosshairCandle: crosshairCandle,
-                      pipSize: widget.pipSize,
-                    ),
-                  )
               ],
             );
           }),
         ),
-        if (!_shouldAutoPan)
+        if (crosshairCandle != null)
           Positioned(
-            bottom: 30 + timeLabelsAreaHeight,
-            right: 30 + quoteLabelsAreaWidth,
-            child: _buildScrollToNowButton(),
+            top: 0,
+            bottom: 0,
+            width: canvasSize.width,
+            left: _epochToCanvasX(crosshairCandle.epoch) - canvasSize.width / 2,
+            child: Align(
+              alignment: Alignment.center,
+              child: CrosshairCandleDetails(
+                crosshairCandle: crosshairCandle,
+                pipSize: widget.pipSize,
+              ),
+            ),
           )
       ],
     );

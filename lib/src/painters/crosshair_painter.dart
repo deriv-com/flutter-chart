@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../models/candle.dart';
 import '../models/chart_style.dart';
@@ -57,21 +56,6 @@ class CrosshairPainter extends CustomPainter {
         ),
       );
     }
-
-    final time = DateTime.fromMillisecondsSinceEpoch(crosshairCandle.epoch);
-    final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
-
-    paintTextFromCenter(
-      canvas,
-      text: timeLabel,
-      centerX: x,
-      centerY: 28,
-      style: TextStyle(
-        fontSize: 12,
-        color: Colors.white70,
-        backgroundColor: Color(0xFF0E0E0E),
-      ),
-    );
   }
 
   @override
