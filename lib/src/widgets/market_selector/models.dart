@@ -57,8 +57,9 @@ class SubMarket {
 }
 
 class Asset {
-  Asset({this.name, this.displayName});
+  Asset({this.name, this.displayName, this.isFavorite = false});
 
   final String name;
   final String displayName;
+  final bool isFavorite;
 }

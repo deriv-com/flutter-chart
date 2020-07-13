@@ -11,7 +11,7 @@ import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
 import 'package:flutter_deriv_api/services/dependency_injector/module_container.dart';
 
 /// Clicked on [Asset] in market selector callback
-typedef OnAssetClicked = Function(Asset asset);
+typedef OnAssetClicked = Function(Asset asset, bool favoriteClicked);
 
 class MarketSelector extends StatefulWidget {
   const MarketSelector({Key key, this.onAssetClicked}) : super(key: key);

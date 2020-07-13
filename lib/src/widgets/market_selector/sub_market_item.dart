@@ -38,9 +38,9 @@ class SubMarketItem extends StatelessWidget {
                   ),
                 ),
                 ...assets
-                    .map((e) => InkWell(
-                          onTap: () => onAssetClicked?.call(e),
-                          child: AssetItem(asset: e),
+                    .map((Asset asset) => AssetItem(
+                          asset: asset,
+                          onAssetClicked: onAssetClicked,
                         ))
                     .toList()
               ],
