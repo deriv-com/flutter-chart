@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/widgets/market_selector/assets_search_bar.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
@@ -67,33 +68,10 @@ class _MarketSelectorState extends State<MarketSelector> {
                   ),
                 ),
               ),
-              Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: TextFormField(
-                      onChanged: (String text) =>
-                          setState(() => filterText = text),
-                      cursorColor: Colors.white70,
-                      textAlign: TextAlign.center,
-                      decoration: new InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        hintText: 'Asset',
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {},
-                    ),
-                  ),
-                ],
+              AssetsSearchBar(
+                onSearchTextChanged: (String text) => setState(
+                  () => filterText = text,
+                ),
               ),
               _marketsToDisplay == null
                   ? Container()
