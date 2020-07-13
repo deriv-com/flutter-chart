@@ -9,7 +9,7 @@ import 'package:vibration/vibration.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([]);
+  //SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 
@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: FullscreenChart(),
+      home: Scaffold(
+        body: FullscreenChart(),
+      ),
     );
   }
 }
@@ -166,10 +168,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   color: Colors.white70,
                 ),
                 onPressed: () {
-                  showModalBottomSheet(
+                  showBottomSheet(
                     backgroundColor: Colors.transparent,
-                    isDismissible: true,
-                    isScrollControlled: true,
                     context: context,
                     builder: (BuildContext context) => MarketSelector(
                       onAssetClicked: (asset) => print(
