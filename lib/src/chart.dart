@@ -316,10 +316,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,
-          onLongPressStart: (details) {
-            widget.onCrosshairAppeared?.call();
-            _handleLongPressUpdate(details);
-          },
+          onLongPressStart: _handleLongPressStart,
           onLongPressMoveUpdate: _handleLongPressUpdate,
           onLongPressEnd: _handleLongPressEnd,
           child: LayoutBuilder(builder: (context, constraints) {
@@ -505,17 +502,27 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     });
   }
 
-  void _handleLongPressUpdate(dynamic details) {
-    final canvasX = details.localPosition.dx;
+  void _handleLongPressStart(LongPressStartDetails details) {
+    widget.onCrosshairAppeared?.call();
+    setState(() {
+      crosshairCandle = _getClosestCandle(details.localPosition.dx);
+    });
+  }
+
+  void _handleLongPressUpdate(LongPressMoveUpdateDetails details) {
+    setState(() {
+      crosshairCandle = _getClosestCandle(details.localPosition.dx);
+    });
+  }
+
+  Candle _getClosestCandle(double canvasX) {
     final epoch = canvasXToEpoch(
       x: canvasX,
       rightBoundEpoch: rightBoundEpoch,
       canvasWidth: canvasSize.width,
       msPerPx: msPerPx,
     );
-    setState(() {
-      crosshairCandle = findClosestToEpoch(epoch, visibleCandles);
-    });
+    return findClosestToEpoch(epoch, visibleCandles);
   }
 
   void _handleLongPressEnd(LongPressEndDetails details) {
