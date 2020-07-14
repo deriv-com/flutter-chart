@@ -21,10 +21,11 @@ class CrosshairDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints.expand(),
       decoration: BoxDecoration(
         gradient: RadialGradient(
           center: Alignment.topCenter,
-          radius: 0.3,
+          radius: 0.35,
           colors: [Color(0xFF0E0E0E), Colors.transparent],
         ),
       ),
