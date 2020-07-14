@@ -40,6 +40,7 @@ class SubMarketItem extends StatelessWidget {
                 ...assets
                     .map((Asset asset) => AssetItem(
                           asset: asset,
+                          filterText: filterText,
                           onAssetClicked: onAssetClicked,
                         ))
                     .toList()

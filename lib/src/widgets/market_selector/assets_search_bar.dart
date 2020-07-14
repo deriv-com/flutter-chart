@@ -57,6 +57,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
                   icon: Icon(Icons.close),
                   onPressed: () => setState(() {
                     FocusScope.of(context).requestFocus(FocusNode());
+                    widget.onSearchTextChanged?.call('');
                     _isSearching = false;
                   }),
                 )

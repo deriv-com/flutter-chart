@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/widgets/market_selector/highlighted_text.dart';
 import 'package:flutter/material.dart';
 
 import 'models.dart';
@@ -8,10 +9,12 @@ class AssetItem extends StatelessWidget {
     Key key,
     this.asset,
     this.onAssetClicked,
+    this.filterText,
   }) : super(key: key);
 
   final Asset asset;
   final OnAssetClicked onAssetClicked;
+  final String filterText;
 
   @override
   Widget build(BuildContext context) => ListTile(
@@ -23,9 +26,9 @@ class AssetItem extends StatelessWidget {
             package: 'deriv_chart',
           ),
         ),
-        title: Text(
+        title: HighLightedText(
           '${asset.displayName}',
-          style: TextStyle(fontSize: 14, color: Color(0xFFC2C2C2)),
+          highlightText: filterText,
         ),
         onTap: () => onAssetClicked?.call(asset, false),
         trailing: IconButton(
