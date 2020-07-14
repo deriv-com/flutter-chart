@@ -87,8 +87,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   AnimationController _currentTickBlinkingController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
+  AnimationController _crosshairZoomOutAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
+  Animation _crosshairZoomOutAnimation;
 
   bool get _shouldAutoPan =>
       rightBoundEpoch > nowEpoch && crosshairCandle == null;
@@ -97,8 +99,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
 
-  double get _verticalPadding =>
-      verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
+  double get _verticalPadding {
+    final px =
+        verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
+    final minCrosshairVerticalPadding = 80;
+    if (px < minCrosshairVerticalPadding)
+      return px +
+          (minCrosshairVerticalPadding - px) * _crosshairZoomOutAnimation.value;
+    else
+      return px;
+  }
 
   double get _topPadding => _verticalPadding;
 
@@ -177,6 +187,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _setupCurrentTickAnimation();
     _setupBlinkingAnimation();
     _setupBoundsAnimation();
+    _setupCrosshairZoomOutAnimation();
   }
 
   void _setupCurrentTickAnimation() {
@@ -212,6 +223,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       value: bottomBoundQuoteTarget,
       vsync: this,
       duration: quoteBoundsAnimationDuration,
+    );
+  }
+
+  void _setupCrosshairZoomOutAnimation() {
+    _crosshairZoomOutAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
+    _crosshairZoomOutAnimation = CurvedAnimation(
+      parent: _crosshairZoomOutAnimationController,
+      curve: Curves.easeOut,
     );
   }
 
@@ -507,6 +529,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _handleLongPressStart(LongPressStartDetails details) {
     widget.onCrosshairAppeared?.call();
+    _crosshairZoomOutAnimationController.forward();
     setState(() {
       crosshairCandle = _getClosestCandle(details.localPosition.dx);
     });
@@ -529,6 +552,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _handleLongPressEnd(LongPressEndDetails details) {
+    _crosshairZoomOutAnimationController.reverse();
     setState(() {
       crosshairCandle = null;
     });
