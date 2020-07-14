@@ -370,12 +370,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             );
           }),
         ),
-        if (!_shouldAutoPan && crosshairCandle == null)
-          Positioned(
-            bottom: 30 + timeLabelsAreaHeight,
-            right: 30 + quoteLabelsAreaWidth,
+        Positioned(
+          bottom: 30 + timeLabelsAreaHeight,
+          right: 30 + quoteLabelsAreaWidth,
+          child: AnimatedOpacity(
+            opacity: !_shouldAutoPan && crosshairCandle == null ? 1 : 0,
+            duration: Duration(milliseconds: 200),
             child: _buildScrollToNowButton(),
           ),
+        ),
         if (crosshairCandle != null)
           Positioned(
             top: 0,
