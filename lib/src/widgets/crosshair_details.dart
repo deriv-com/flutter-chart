@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import '../models/candle.dart';
 import '../models/chart_style.dart';
 
-class CrosshairCandleDetails extends StatelessWidget {
-  const CrosshairCandleDetails({
+class CrosshairDetails extends StatelessWidget {
+  const CrosshairDetails({
     Key key,
     @required this.crosshairCandle,
     @required this.style,
@@ -33,7 +33,7 @@ class CrosshairCandleDetails extends StatelessWidget {
           style == ChartStyle.candles
               ? _buildCandleStyleDetails()
               : _buildLineStyleDetails(),
-          SizedBox(height: 8),
+          SizedBox(height: 4),
           _buildTimeLabel(),
         ],
       ),
@@ -62,7 +62,7 @@ class CrosshairCandleDetails extends StatelessWidget {
   }
 
   Widget _buildLineStyleDetails() {
-    return Text('');
+    return _buildValue(crosshairCandle.close, fontSize: 16);
   }
 
   Widget _buildLabelValue(String label, double value) {
@@ -95,11 +95,11 @@ class CrosshairCandleDetails extends StatelessWidget {
     );
   }
 
-  Text _buildValue(double value) {
+  Text _buildValue(double value, {double fontSize = 12}) {
     return Text(
       value.toStringAsFixed(pipSize),
       style: TextStyle(
-        fontSize: 12,
+        fontSize: fontSize,
         color: Colors.white,
         fontFeatures: [FontFeature.tabularFigures()],
       ),

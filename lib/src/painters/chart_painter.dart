@@ -38,17 +38,6 @@ class ChartPainter extends CustomPainter {
     } else {
       _paintLine();
     }
-
-    // _paintNow(); // for testing
-  }
-
-  void _paintNow() {
-    final x = epochToCanvasX(DateTime.now().millisecondsSinceEpoch);
-    canvas.drawLine(
-      Offset(x, 0),
-      Offset(x, size.height),
-      Paint()..color = Colors.yellow,
-    );
   }
 
   void _paintLine() {

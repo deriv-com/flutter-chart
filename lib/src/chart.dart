@@ -19,7 +19,7 @@ import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 
 import 'widgets/custom_gesture_detector.dart';
-import 'widgets/crosshair_candle_details.dart';
+import 'widgets/crosshair_details.dart';
 
 class Chart extends StatefulWidget {
   const Chart({
@@ -373,6 +373,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             );
           }),
         ),
+        if (!_shouldAutoPan && crosshairCandle == null)
+          Positioned(
+            bottom: 30 + timeLabelsAreaHeight,
+            right: 30 + quoteLabelsAreaWidth,
+            child: _buildScrollToNowButton(),
+          ),
         if (crosshairCandle != null)
           Positioned(
             top: 0,
@@ -381,7 +387,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             left: _epochToCanvasX(crosshairCandle.epoch) - canvasSize.width / 2,
             child: Align(
               alignment: Alignment.center,
-              child: CrosshairCandleDetails(
+              child: CrosshairDetails(
                 style: widget.style,
                 crosshairCandle: crosshairCandle,
                 pipSize: widget.pipSize,
