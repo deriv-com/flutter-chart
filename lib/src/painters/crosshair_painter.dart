@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import '../models/candle.dart';
 import '../models/chart_style.dart';
 
-import '../paint/paint_text.dart';
-
 class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
     @required this.crosshairCandle,
@@ -40,22 +38,6 @@ class CrosshairPainter extends CustomPainter {
       3,
       crosshairPaint,
     );
-
-    if (style == ChartStyle.line) {
-      paintTextFromCenter(
-        canvas,
-        text: crosshairCandle.close.toStringAsFixed(pipSize),
-        centerX: x,
-        centerY: 10,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontFeatures: [FontFeature.tabularFigures()],
-          backgroundColor: Color(0xFF0E0E0E),
-        ),
-      );
-    }
   }
 
   @override

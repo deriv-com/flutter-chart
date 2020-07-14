@@ -382,6 +382,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             child: Align(
               alignment: Alignment.center,
               child: CrosshairCandleDetails(
+                style: widget.style,
                 crosshairCandle: crosshairCandle,
                 pipSize: widget.pipSize,
               ),

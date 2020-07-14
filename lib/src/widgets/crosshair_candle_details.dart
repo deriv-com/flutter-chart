@@ -4,15 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/candle.dart';
+import '../models/chart_style.dart';
 
 class CrosshairCandleDetails extends StatelessWidget {
   const CrosshairCandleDetails({
     Key key,
     @required this.crosshairCandle,
+    @required this.style,
     @required this.pipSize,
   }) : super(key: key);
 
   final Candle crosshairCandle;
+  final ChartStyle style;
   final int pipSize;
 
   @override
@@ -21,35 +24,45 @@ class CrosshairCandleDetails extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: RadialGradient(
           center: Alignment.topCenter,
-          radius: 0.5,
+          radius: 0.3,
           colors: [Color(0xFF0E0E0E), Colors.transparent],
         ),
       ),
       child: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  _buildLabelValue('O', crosshairCandle.open),
-                  _buildLabelValue('C', crosshairCandle.close),
-                ],
-              ),
-              SizedBox(width: 16),
-              Column(
-                children: <Widget>[
-                  _buildLabelValue('H', crosshairCandle.high),
-                  _buildLabelValue('L', crosshairCandle.low),
-                ],
-              ),
-            ],
-          ),
+          style == ChartStyle.candles
+              ? _buildCandleStyleDetails()
+              : _buildLineStyleDetails(),
           SizedBox(height: 8),
           _buildTimeLabel(),
         ],
       ),
     );
+  }
+
+  Widget _buildCandleStyleDetails() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            _buildLabelValue('O', crosshairCandle.open),
+            _buildLabelValue('C', crosshairCandle.close),
+          ],
+        ),
+        SizedBox(width: 16),
+        Column(
+          children: <Widget>[
+            _buildLabelValue('H', crosshairCandle.high),
+            _buildLabelValue('L', crosshairCandle.low),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLineStyleDetails() {
+    return Text('');
   }
 
   Widget _buildLabelValue(String label, double value) {
