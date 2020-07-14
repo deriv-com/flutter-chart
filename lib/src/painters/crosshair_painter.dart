@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
@@ -24,20 +24,37 @@ class CrosshairPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (crosshairCandle == null) return;
 
-    final crosshairPaint = Paint()..color = Colors.white;
     final x = epochToCanvasX(crosshairCandle.epoch);
+    final y = quoteToCanvasY(crosshairCandle.close);
 
     canvas.drawLine(
-      Offset(x, 40),
+      Offset(x, 0),
       Offset(x, size.height),
-      crosshairPaint,
+      Paint()
+        ..strokeWidth = 2
+        ..style = PaintingStyle.fill
+        ..shader = ui.Gradient.linear(
+          Offset(0, 0),
+          Offset(0, size.height),
+          [
+            Colors.white.withOpacity(0.1),
+            Colors.white.withOpacity(0.3),
+            Colors.white.withOpacity(0.1),
+          ],
+          [
+            0,
+            0.5,
+            1,
+          ],
+        ),
     );
 
-    canvas.drawCircle(
-      Offset(x, quoteToCanvasY(crosshairCandle.close)),
-      3,
-      crosshairPaint,
-    );
+    if (style == ChartStyle.line)
+      canvas.drawCircle(
+        Offset(x, y),
+        5,
+        Paint()..color = Colors.white,
+      );
   }
 
   @override
