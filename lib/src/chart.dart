@@ -163,6 +163,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _onNewTick() {
+    if (crosshairCandle != null &&
+        crosshairCandle.epoch == widget.candles.last.epoch) {
+      crosshairCandle = widget.candles.last;
+    }
     _currentTickAnimationController.reset();
     _currentTickAnimationController.forward();
   }
