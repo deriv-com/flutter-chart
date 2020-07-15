@@ -338,7 +338,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        CustomeGestureDetector(
+        CustomGestureDetector(
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,

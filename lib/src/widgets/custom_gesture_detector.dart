@@ -23,8 +23,8 @@ const LONG_PRESS_HOLD_RADIUS = 5;
 ///
 /// Because of (a) and (b) it is possible to keep track of both Pan and Scale by
 /// treating ScaleUpdate with 1 finger as PanUpdate.
-class CustomeGestureDetector extends StatefulWidget {
-  const CustomeGestureDetector({
+class CustomGestureDetector extends StatefulWidget {
+  const CustomGestureDetector({
     Key key,
     this.child,
     this.onScaleAndPanStart,
@@ -53,10 +53,10 @@ class CustomeGestureDetector extends StatefulWidget {
   final GestureLongPressEndCallback onLongPressEnd;
 
   @override
-  _CustomeGestureDetectorState createState() => _CustomeGestureDetectorState();
+  _CustomGestureDetectorState createState() => _CustomGestureDetectorState();
 }
 
-class _CustomeGestureDetectorState extends State<CustomeGestureDetector> {
+class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   int _fingersOnScreen = 0;
   Offset _lastContactPoint;
 
