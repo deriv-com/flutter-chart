@@ -10,21 +10,29 @@ class AssetItem extends StatelessWidget {
     this.asset,
     this.onAssetClicked,
     this.filterText,
+    this.iconFadeInDuration = const Duration(milliseconds: 50),
   }) : super(key: key);
 
   final Asset asset;
   final OnAssetClicked onAssetClicked;
   final String filterText;
+  final Duration iconFadeInDuration;
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: Image(
+        leading: FadeInImage(
           width: 24,
           height: 24,
+          placeholder: AssetImage(
+            'assets/icons/icon_placeholder.png',
+            package: 'deriv_chart',
+          ),
           image: AssetImage(
             'assets/icons/${asset.name}.png',
             package: 'deriv_chart',
           ),
+          fadeInDuration: iconFadeInDuration,
+          fadeOutDuration: iconFadeInDuration,
         ),
         title: HighLightedText(
           '${asset.displayName}',
