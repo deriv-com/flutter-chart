@@ -25,7 +25,7 @@ class CrosshairDetails extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: RadialGradient(
           center: Alignment.topCenter,
-          radius: 0.3,
+          radius: 0.4,
           colors: [Color(0xFF0E0E0E), Colors.transparent],
         ),
       ),
@@ -34,7 +34,7 @@ class CrosshairDetails extends StatelessWidget {
           style == ChartStyle.candles
               ? _buildCandleStyleDetails()
               : _buildLineStyleDetails(),
-          SizedBox(height: 4),
+          SizedBox(height: 2),
           _buildTimeLabel(),
         ],
       ),
@@ -68,7 +68,7 @@ class CrosshairDetails extends StatelessWidget {
 
   Widget _buildLabelValue(String label, double value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 2),
+      padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: <Widget>[
           _buildLabel(label),
