@@ -1,7 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/market_selector/assets_search_bar.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
-import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 import 'package:flutter_deriv_api/basic_api/generated/active_symbols_send.dart';
@@ -55,7 +54,7 @@ class _MarketSelectorState extends State<MarketSelector> {
           child: Column(
             children: <Widget>[
               Container(
-                height: 32,
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 width: double.infinity,
                 child: Center(
                   child: Container(

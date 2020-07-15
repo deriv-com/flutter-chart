@@ -54,7 +54,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
           alignment: Alignment.centerRight,
           child: _isSearching
               ? IconButton(
-                  icon: Icon(Icons.close),
+                  icon: Icon(Icons.close, size: 20),
                   onPressed: () => setState(() {
                     FocusScope.of(context).requestFocus(FocusNode());
                     widget.onSearchTextChanged?.call('');
@@ -62,7 +62,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
                   }),
                 )
               : IconButton(
-                  icon: Icon(Icons.search),
+                  icon: Icon(Icons.search, size: 20),
                   onPressed: () => _setToSearchMode(),
                 ),
         ),
