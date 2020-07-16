@@ -233,9 +233,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Widget _buildMarketSelectorButton(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: FlatButton(
-          padding: const EdgeInsets.all(0),
+          padding: const EdgeInsets.all(4),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[

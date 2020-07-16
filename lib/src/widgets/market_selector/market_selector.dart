@@ -3,7 +3,9 @@ import 'package:deriv_chart/src/widgets/market_selector/assets_search_bar.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:flutter/material.dart';
 
-/// Clicked on [Asset] in market selector callback
+/// Clicked on [Asset] in market selector callback.
+///
+/// [favoriteClicked] is true when user has clicked on favorite icon of the item.
 typedef OnAssetClicked = Function(Asset asset, bool favoriteClicked);
 
 class MarketSelector extends StatefulWidget {
@@ -13,6 +15,7 @@ class MarketSelector extends StatefulWidget {
     this.markets,
   }) : super(key: key);
 
+  /// Will be called when a symbol item [Asset] is clicked.
   final OnAssetClicked onAssetClicked;
   final List<Market> markets;
 
@@ -21,18 +24,18 @@ class MarketSelector extends StatefulWidget {
 }
 
 class _MarketSelectorState extends State<MarketSelector> {
-
+  /// List of markets after applying the [_filterText].
   List<Market> _marketsToDisplay;
 
-  String filterText = "";
+  String _filterText = "";
 
   @override
   Widget build(BuildContext context) {
-    _marketsToDisplay = filterText.isEmpty
+    _marketsToDisplay = _filterText.isEmpty
         ? widget.markets
         : widget.markets
             .where((market) =>
-                market.containsAssetWithText(filterText.toLowerCase()))
+                market.containsAssetWithText(_filterText.toLowerCase()))
             .toList();
 
     return SafeArea(
@@ -62,7 +65,7 @@ class _MarketSelectorState extends State<MarketSelector> {
               ),
               AssetsSearchBar(
                 onSearchTextChanged: (String text) => setState(
-                  () => filterText = text,
+                  () => _filterText = text,
                 ),
               ),
               _marketsToDisplay == null
@@ -72,7 +75,7 @@ class _MarketSelectorState extends State<MarketSelector> {
                         itemCount: _marketsToDisplay.length,
                         itemBuilder: (BuildContext context, int index) =>
                             MarketItem(
-                          filterText: filterText.toLowerCase(),
+                          filterText: _filterText.toLowerCase(),
                           market: _marketsToDisplay[index],
                           onAssetClicked: widget.onAssetClicked,
                         ),

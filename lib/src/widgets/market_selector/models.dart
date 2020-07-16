@@ -1,3 +1,4 @@
+/// Symbol item representing a symbol has gotten from the API.
 class Symbol {
   Symbol({
     this.market,
@@ -41,6 +42,7 @@ class Market {
   final String displayName;
   final List<SubMarket> subMarkets = [];
 
+  /// Returns true if any asset under this market contains the [filterText]
   bool containsAssetWithText(String filterText) =>
       subMarkets.firstWhere(
           (subMarket) => subMarket.containsAssetWithText(filterText),
@@ -63,6 +65,7 @@ class SubMarket {
   final String displayName;
   final List<Asset> assets = [];
 
+  /// Returns true if any asset under this SubMarket contains the [filterText]
   bool containsAssetWithText(String filterText) =>
       assets.firstWhere(
           (asset) => asset.displayName.toLowerCase().contains(filterText),
@@ -70,6 +73,7 @@ class SubMarket {
       null;
 }
 
+/// A symbol item
 class Asset {
   Asset({this.name, this.displayName, this.isFavorite = false});
 
