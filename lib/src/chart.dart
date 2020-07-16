@@ -159,6 +159,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _currentTickBlinkingController.dispose();
     _topBoundQuoteAnimationController.dispose();
     _bottomBoundQuoteAnimationController.dispose();
+    _crosshairZoomOutAnimationController.dispose();
     super.dispose();
   }
 

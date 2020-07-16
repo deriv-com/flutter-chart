@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 /// Duration for which you have to hold one finger without moving until
 /// long press is triggered.
-/// (small deviation is allowed, see [LONG_PRESS_HOLD_RADIUS])
-const LONG_PRESS_HOLD_DURATION = Duration(milliseconds: 200);
+/// (small deviation is allowed, see [longPressHoldRadius])
+const longPressHoldDuration = Duration(milliseconds: 200);
 
-/// If contact point is moved by more than [LONG_PRESS_HOLD_RADIUS] from
-/// its original place and [LONG_PRESS_HOLD_DURATION] hasn't elapsed yet,
+/// If contact point is moved by more than [longPressHoldRadius] from
+/// its original place and [longPressHoldDuration] hasn't elapsed yet,
 /// long press is cancelled.
-const LONG_PRESS_HOLD_RADIUS = 5;
+const longPressHoldRadius = 5;
 
 /// Widget to track pan and scale gestures on one area.
 ///
@@ -97,7 +97,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
       case 1:
         if (!_longPressed)
           _longPressTimer = Timer(
-            LONG_PRESS_HOLD_DURATION,
+            longPressHoldDuration,
             _handleLongPressStart,
           );
         break;
@@ -149,7 +149,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     final distanceFromStartPosition =
         (_longPressStartPosition - contactPoint).distance;
 
-    if (distanceFromStartPosition > LONG_PRESS_HOLD_RADIUS)
+    if (distanceFromStartPosition > longPressHoldRadius)
       _longPressTimer?.cancel();
   }
 

@@ -49,12 +49,13 @@ class CrosshairPainter extends CustomPainter {
         ),
     );
 
-    if (style == ChartStyle.line)
+    if (style == ChartStyle.line) {
       canvas.drawCircle(
         Offset(x, y),
         5,
         Paint()..color = Colors.white,
       );
+    }
   }
 
   @override
