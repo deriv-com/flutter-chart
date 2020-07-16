@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/quote_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'callbacks.dart';
 import 'logic/conversion.dart';
 import 'logic/time_grid.dart' show timeGridIntervalInSeconds;
 import 'chart_painter.dart';
@@ -11,8 +12,6 @@ import 'models/chart_style.dart';
 import 'models/tick.dart';
 import 'models/candle.dart';
 import 'scale_and_pan_gesture_detector.dart';
-
-typedef OnLoadHistory = Function(int fromEpoch, int toEpoch, int count);
 
 class Chart extends StatefulWidget {
   const Chart({
