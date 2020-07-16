@@ -5,6 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
+import 'package:flutter_deriv_api/basic_api/generated/api.dart';
+import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
+import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
+import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
+import 'package:flutter_deriv_api/services/dependency_injector/module_container.dart';
 import 'package:vibration/vibration.dart';
 
 void main() {
@@ -42,10 +48,47 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
+  List<Market> _markets;
+
   @override
   void initState() {
     super.initState();
     _initTickStream();
+    _getActiveSymbols();
+  }
+
+  Future<void> _getActiveSymbols() async {
+    ModuleContainer().initialize(Injector.getInjector());
+    await Injector.getInjector().get<BaseAPI>().connect(
+          ConnectionInformation(
+            appId: '1089',
+            brand: 'binary',
+            endpoint: 'frontend.binaryws.com',
+          ),
+        );
+
+    final List<ActiveSymbol> activeSymbols =
+        await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
+            activeSymbols: 'brief', productType: 'basic'));
+
+    final List<String> marketTitles = [];
+
+    _markets = List<Market>();
+
+    for (final symbol in activeSymbols) {
+      if (!marketTitles.contains(symbol.market)) {
+        marketTitles.add(symbol.market);
+        _markets.add(
+          Market.fromSymbols(
+            name: symbol.market,
+            displayName: symbol.marketDisplayName,
+            symbols:
+                activeSymbols.where((e) => e.market == symbol.market).toList(),
+          ),
+        );
+      }
+    }
+    setState(() {});
   }
 
   void _initTickStream() async {
@@ -162,23 +205,28 @@ class _FullscreenChartState extends State<FullscreenChart> {
             ),
             Align(
               alignment: Alignment.topRight,
-              child: IconButton(
-                icon: Icon(
-                  Icons.money_off,
-                  color: Colors.white70,
-                ),
-                onPressed: () {
-                  showBottomSheet(
-                    backgroundColor: Colors.transparent,
-                    context: context,
-                    builder: (BuildContext context) => MarketSelector(
-                      onAssetClicked: (asset, favoriteClicked) => print(
-                        '(${asset.name}): ${asset.displayName} clicked, $favoriteClicked!',
+              child: _markets == null
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      icon: Icon(
+                        Icons.money_off,
+                        color: Colors.white70,
                       ),
+                      onPressed: () {
+                        showBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (BuildContext context) => MarketSelector(
+                            markets: _markets,
+                            onAssetClicked: (asset, favoriteClicked) {
+                              print(
+                                '(${asset.name}): ${asset.displayName} clicked, $favoriteClicked!',
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             )
           ],
         ),
