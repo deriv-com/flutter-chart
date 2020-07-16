@@ -48,6 +48,11 @@ double quoteGridInterval(
     50,
     100,
     250,
+    500,
+    1000,
+    5000,
+    10000,
+    100000,
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(double quoteInterval) {

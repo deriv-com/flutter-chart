@@ -21,10 +21,6 @@ class MarketSelector extends StatefulWidget {
 }
 
 class _MarketSelectorState extends State<MarketSelector> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   List<Market> _marketsToDisplay;
 

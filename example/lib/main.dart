@@ -49,6 +49,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int granularity = 0;
 
   List<Market> _markets;
+  Asset symbol = Asset(name: 'R_50', displayName: 'Volatility Index 50');
 
   @override
   void initState() {
@@ -167,7 +168,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _requestData() {
     ws.add(json.encode({
-      'ticks_history': 'R_50',
+      'ticks_history': symbol.name,
       'end': 'latest',
       'count': 1000,
       'style': granularity == 0 ? 'ticks' : 'candles',
@@ -206,41 +207,76 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
             ),
-            _buildChartTypeButton(),
-            Positioned(
-              left: 60,
-              child: _buildIntervalSelector(),
-            ),
             Align(
               alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _buildChartTypeButton(),
+                    _buildIntervalSelector(),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
               child: _markets == null
                   ? SizedBox.shrink()
-                  : IconButton(
-                      icon: Icon(
-                        Icons.money_off,
-                        color: Colors.white70,
-                      ),
-                      onPressed: () {
-                        showBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (BuildContext context) => MarketSelector(
-                            markets: _markets,
-                            onAssetClicked: (asset, favoriteClicked) {
-                              print(
-                                '(${asset.name}): ${asset.displayName} clicked, $favoriteClicked!',
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                  : _buildMarketSelectorButton(context),
             )
           ],
         ),
       ),
     );
   }
+
+  Widget _buildMarketSelectorButton(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: FlatButton(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              FadeInImage(
+                width: 32,
+                height: 32,
+                placeholder: AssetImage(
+                  'assets/icons/icon_placeholder.png',
+                  package: 'deriv_chart',
+                ),
+                image: AssetImage(
+                  'assets/icons/${symbol.name}.png',
+                  package: 'deriv_chart',
+                ),
+              ),
+              SizedBox(width: 16),
+              Text(
+                symbol.displayName,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          onPressed: () {
+            showBottomSheet(
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (BuildContext context) => MarketSelector(
+                markets: _markets,
+                onAssetClicked: (asset, favoriteClicked) {
+                  Navigator.of(context).pop();
+                  symbol = asset;
+                  _onIntervalSelected(granularity);
+                },
+              ),
+            );
+          },
+        ),
+      );
 
   IconButton _buildChartTypeButton() {
     return IconButton(
