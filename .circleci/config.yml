@@ -61,11 +61,15 @@ commands:
       buildNumber:
         type: string
         default: ""
+      working_directory:
+        type: string
+        default: ~/project
     steps:
       - run:
           name: Check that we can build for all Android platforms
           command: |
               flutter build -v << parameters.file_type >>  << parameters.buildNumber >> --<< parameters.mode >> << parameters.target >>
+          working_directory: <<parameters.working_directory>>
 
   save_env_cache:
     description: Save the caches 
@@ -96,19 +100,15 @@ jobs:
     steps:
       - prepare_enviroment
       - code_coverage
-      - run:
-          name: Change to the example directory
-          command: cd example
       - build_app:
           target: "--target-platform android-arm,android-arm64,android-x86,android-x64"
           buildNumber: "--build-number $CIRCLE_BUILD_NUM"
+          working_directory: ~/project/example
       - run:
           name: Copy APK
           command: |
               sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/apk/app.apk /artifacts/p2p-cashier.apk
-      - run:
-          name: Change to the project directory
-          command: cd ..
+          working_directory: ~/project/example
 
       - store_artifacts:
           path: /artifacts
