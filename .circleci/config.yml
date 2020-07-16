@@ -1,0 +1,139 @@
+version: 2.1
+executors:
+  flutter_executor:
+    docker:
+      - image: cirrusci/flutter:stable
+    environment:
+      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+
+commands:
+  prepare_enviroment:
+    description: Fetch the repo, do flutter doctor and install deps
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+          - 26:72:b1:08:0f:c1:3b:2b:2d:ea:61:7d:d6:11:63:fb
+      - checkout
+      - run:
+          name: Run Flutter doctor
+          command: flutter doctor
+      - restore_cache:
+          keys:
+              - android-sdk-licenses
+              - gradle
+              - pub-cache
+              - bin
+      - run:
+          name: pub get
+          command: flutter pub get
+
+  code_coverage:
+    description: Do prebuild stuff
+    parameters:
+      upload:
+        type: string
+        default: "debug"
+    steps:
+      - run:
+          name: Run the application tests
+          command: flutter test --coverage
+
+      - run:
+          name: Upload coverage
+          command: |
+            if [ << parameters.upload >> = "debug" ]; then
+                sudo gem install coveralls-lcov
+                coveralls-lcov -t $COVERALLS_REPO_TOKEN coverage/lcov.info
+            fi
+
+  build_app:
+    description: Build the app
+    parameters:
+      mode:
+        type: string
+        default: "debug"
+      file_type:
+        type: string
+        default: "apk"
+      target:
+        type: string
+        default: ""
+      buildNumber:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Check that we can build for all Android platforms
+          command: |
+              flutter build -v << parameters.file_type >>  << parameters.buildNumber >> --<< parameters.mode >> << parameters.target >>
+
+  save_env_cache:
+    description: Save the caches 
+    steps:
+      - save_cache:
+          key: android-sdk-licenses
+          paths:
+              - /opt/android-sdk-linux/licenses
+
+      - save_cache:
+          key: pub-cache
+          paths:
+              - /home/cirrus/.pub-cache
+
+      - save_cache:
+          key: gradle
+          paths:
+              - ~/.gradle
+
+      - save_cache:
+          key: bin
+          paths:
+              - /usr/local/bin
+
+jobs:
+  build_pr:
+    executor: flutter_executor
+    steps:
+      - prepare_enviroment
+      - code_coverage
+      - run:
+          name: Change to the example directory
+          command: cd example
+      - build_app:
+          target: "--target-platform android-arm,android-arm64,android-x86,android-x64"
+          buildNumber: "--build-number $CIRCLE_BUILD_NUM"
+      - run:
+          name: Copy APK
+          command: |
+              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/apk/app.apk /artifacts/p2p-cashier.apk
+      - run:
+          name: Change to the project directory
+          command: cd ..
+
+      - store_artifacts:
+          path: /artifacts
+      - run:
+          name: Upload to Slack
+          command: |
+              export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
+              echo $CIRCLE_BUILD_URL
+              # If we wanted to upload the APK rather than providing a link, we can do that via
+              # something like this, but it requires an API token:
+              # curl -F file=@/artifacts/otc-cashier.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="${CIRCLE_PROJECT_REPONAME} | branch -> ${CIRCLE_BRANCH} | commit -> ${GIT_COMMIT_DESC}"  https://slack.com/api/files.upload
+              # See https://medium.com/major-league/delivering-builds-through-slack-with-circle-ci-3d9e685e08f2 for an example
+              if [ "$CIRCLE_BRANCH" = "master" ]; then
+                  # That 221348483 magic number is the internal CircleCI repository ID.
+                  # Since it's not easily accessible from the environment or API, it's hardcoded for now.
+                  curl -X POST --data-urlencode "payload={\"channel\": \"#project_p2p_cashier\", \"username\": \"CircleCI\", \"text\": \"Latest Android build for P2P cashier:\\nhttps://${CIRCLE_BUILD_NUM}-221348483-gh.circle-artifacts.com/0/artifacts/p2p-cashier.apk\\n> $GIT_COMMIT_DESC\", \"icon_emoji\": \":autobot:\"}" $SLACK_URL
+              fi
+      - save_env_cache
+
+workflows:
+  version: 2.1
+  build-workflow:
+    jobs:
+      - build_pr:
+          context: perl
+          filters:
+            branches:
+              ignore: master
