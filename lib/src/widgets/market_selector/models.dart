@@ -1,10 +1,24 @@
-import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
+class Symbol {
+  Symbol({
+    this.market,
+    this.submarket,
+    this.symbol,
+    this.displayName,
+    this.submarketDisplayName,
+  });
+
+  final String market;
+  final String submarket;
+  final String symbol;
+  final String displayName;
+  final String submarketDisplayName;
+}
 
 class Market {
   Market.fromSymbols({
     this.name,
     this.displayName,
-    List<ActiveSymbol> symbols,
+    List<Symbol> symbols,
   }) {
     final List<String> subMarketTitles = [];
     for (final symbol in symbols) {
@@ -38,7 +52,7 @@ class SubMarket {
   SubMarket.fromSymbols({
     this.name,
     this.displayName,
-    List<ActiveSymbol> symbols,
+    List<Symbol> symbols,
   }) {
     for (final symbol in symbols) {
       assets.add(Asset(name: symbol.symbol, displayName: symbol.displayName));

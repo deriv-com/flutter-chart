@@ -82,8 +82,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
           Market.fromSymbols(
             name: symbol.market,
             displayName: symbol.marketDisplayName,
-            symbols:
-                activeSymbols.where((e) => e.market == symbol.market).toList(),
+            symbols: activeSymbols
+                .where((activeSymbol) => activeSymbol.market == symbol.market)
+                .map<Symbol>((activeSymbol) => Symbol(
+                      market: activeSymbol.market,
+                      submarket: activeSymbol.submarket,
+                      symbol: activeSymbol.symbol,
+                      displayName: activeSymbol.displayName,
+                      submarketDisplayName: activeSymbol.submarketDisplayName,
+                    ))
+                .toList(),
           ),
         );
       }
