@@ -29,10 +29,6 @@ commands:
 
   code_coverage:
     description: Do prebuild stuff
-    parameters:
-      upload:
-        type: string
-        default: "debug"
     steps:
       - run:
           name: Run the application tests
@@ -41,10 +37,8 @@ commands:
       - run:
           name: Upload coverage
           command: |
-            if [ << parameters.upload >> = "debug" ]; then
                 sudo gem install coveralls-lcov
                 coveralls-lcov -t $COVERALLS_REPO_TOKEN coverage/lcov.info
-            fi
 
   build_app:
     description: Build the app
