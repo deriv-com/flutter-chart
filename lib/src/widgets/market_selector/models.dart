@@ -1,4 +1,4 @@
-/// Symbol item representing a symbol has gotten from the API.
+/// Symbol item representing an active symbol has gotten from the API.
 class Symbol {
   Symbol({
     this.market,

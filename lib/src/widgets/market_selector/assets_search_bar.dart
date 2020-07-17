@@ -47,7 +47,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
                       'Assets',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
-                    onTap: () => _setToSearchMode(),
+                    onTap: () => _switchToSearchMode(),
                   ),
           ),
           Align(
@@ -63,13 +63,13 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
                   )
                 : IconButton(
                     icon: Icon(Icons.search, size: 20),
-                    onPressed: () => _setToSearchMode(),
+                    onPressed: () => _switchToSearchMode(),
                   ),
           ),
         ],
       );
 
-  void _setToSearchMode() {
+  void _switchToSearchMode() {
     _searchFieldFocusNode.requestFocus();
     setState(() => _isSearching = true);
   }

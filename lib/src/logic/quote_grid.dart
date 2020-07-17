@@ -37,6 +37,17 @@ double quoteGridInterval(
   double quotePerPx, {
   double minDistanceBetweenLines = 60,
   List<double> intervals = const [
+    0.000000025,
+    0.00000005,
+    0.0000001,
+    0.0000025,
+    0.000005,
+    0.00001,
+    0.00025,
+    0.0005,
+    0.001,
+    0.025,
+    0.05,
     0.1,
     0.25,
     0.5,

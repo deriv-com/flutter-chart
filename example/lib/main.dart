@@ -2,7 +2,6 @@ import 'dart:convert' show json;
 import 'dart:io' show WebSocket;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
@@ -15,7 +14,6 @@ import 'package:vibration/vibration.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  //SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 
@@ -224,7 +222,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               alignment: Alignment.topLeft,
               child: _markets == null
                   ? SizedBox.shrink()
-                  : _buildMarketSelectorButton(context),
+                  : _buildMarketSelectorButton(),
             )
           ],
         ),
@@ -232,7 +230,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  Widget _buildMarketSelectorButton(BuildContext context) => Padding(
+  Widget _buildMarketSelectorButton() => Padding(
         padding: const EdgeInsets.all(12),
         child: FlatButton(
           padding: const EdgeInsets.all(4),
@@ -250,6 +248,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   'assets/icons/${symbol.name}.png',
                   package: 'deriv_chart',
                 ),
+                fadeInDuration: const Duration(milliseconds: 100),
+                fadeOutDuration: const Duration(milliseconds: 100),
               ),
               SizedBox(width: 16),
               Text(

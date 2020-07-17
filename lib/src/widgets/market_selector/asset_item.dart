@@ -30,10 +30,10 @@ class AssetItem extends StatelessWidget {
       );
 
   IconButton _buildFavoriteIcon() => IconButton(
-        iconSize: 20,
         icon: Icon(
           asset.isFavorite ? Icons.star : Icons.star_border,
           color: const Color(0xFF6E6E6E),
+          size: 20,
         ),
         onPressed: () => onAssetClicked?.call(asset, true),
       );
