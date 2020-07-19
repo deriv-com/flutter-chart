@@ -104,7 +104,7 @@ class ChartPainter extends CustomPainter {
     this.canvas = canvas;
     this.size = size;
 
-    _painGrid();
+    _paintGrid();
 
     if (style == ChartStyle.candles) {
       _paintCandles();
@@ -133,7 +133,7 @@ class ChartPainter extends CustomPainter {
     );
   }
 
-  void _painGrid() {
+  void _paintGrid() {
     final gridLineQuotes = gridQuotes(
       quoteGridInterval: quoteGridInterval,
       topBoundQuote: topBoundQuote,

@@ -67,10 +67,7 @@ void _paintQuoteLabels(
     final fontSize = 12.0;
 
     TextSpan span = TextSpan(
-      style: TextStyle(
-        color: Colors.white30,
-        fontSize: fontSize,
-      ),
+      style: TextStyle(color: Colors.white30, fontSize: fontSize),
       text: quoteLabel,
     );
     TextPainter tp = TextPainter(
@@ -78,10 +75,7 @@ void _paintQuoteLabels(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     );
-    tp.layout(
-      minWidth: quoteLabelsAreaWidth,
-      maxWidth: quoteLabelsAreaWidth,
-    );
+    tp.layout(minWidth: quoteLabelsAreaWidth, maxWidth: quoteLabelsAreaWidth);
     tp.paint(
       canvas,
       Offset(size.width - quoteLabelsAreaWidth, y - fontSize / 2),
@@ -99,10 +93,7 @@ void _paintTimeLabels(
     final x = xCoords[index];
 
     TextSpan span = TextSpan(
-      style: TextStyle(
-        color: Colors.white30,
-        fontSize: 12,
-      ),
+      style: TextStyle(color: Colors.white30, fontSize: 12),
       text: timeLabel,
     );
     TextPainter tp = TextPainter(

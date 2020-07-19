@@ -47,7 +47,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int granularity = 0;
 
   List<Market> _markets;
-  Asset symbol = Asset(name: 'R_50', displayName: 'Volatility Index 50');
+  Asset symbol = Asset(name: 'R_50', displayName: 'Volatility 50 Index');
 
   @override
   void initState() {
