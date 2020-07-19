@@ -55,11 +55,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
             child: _isSearching
                 ? IconButton(
                     icon: Icon(Icons.close, size: 20),
-                    onPressed: () => setState(() {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      widget.onSearchTextChanged?.call('');
-                      _isSearching = false;
-                    }),
+                    onPressed: () => _switchToNormalMode(),
                   )
                 : IconButton(
                     icon: Icon(Icons.search, size: 20),
@@ -68,6 +64,12 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
           ),
         ],
       );
+
+  void _switchToNormalMode() {
+    FocusScope.of(context).requestFocus(FocusNode());
+    widget.onSearchTextChanged?.call('');
+    setState(() => _isSearching = false);
+  }
 
   void _switchToSearchMode() {
     _searchFieldFocusNode.requestFocus();
