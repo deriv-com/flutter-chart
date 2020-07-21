@@ -101,25 +101,25 @@ jobs:
       - run:
           name: Copy APK
           command: |
-              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/apk/app.apk /artifacts/p2p-cashier.apk
+              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/apk/app.apk /artifacts/deriv-chart.apk
           working_directory: ~/project/example
 
       - store_artifacts:
           path: /artifacts
-      - run:
-          name: Upload to Slack
-          command: |
-              export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
-              echo $CIRCLE_BUILD_URL
-              # If we wanted to upload the APK rather than providing a link, we can do that via
-              # something like this, but it requires an API token:
-              # curl -F file=@/artifacts/otc-cashier.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="${CIRCLE_PROJECT_REPONAME} | branch -> ${CIRCLE_BRANCH} | commit -> ${GIT_COMMIT_DESC}"  https://slack.com/api/files.upload
-              # See https://medium.com/major-league/delivering-builds-through-slack-with-circle-ci-3d9e685e08f2 for an example
-              if [ "$CIRCLE_BRANCH" = "master" ]; then
-                  # That 221348483 magic number is the internal CircleCI repository ID.
-                  # Since it's not easily accessible from the environment or API, it's hardcoded for now.
-                  curl -X POST --data-urlencode "payload={\"channel\": \"#project_p2p_cashier\", \"username\": \"CircleCI\", \"text\": \"Latest Android build for P2P cashier:\\nhttps://${CIRCLE_BUILD_NUM}-221348483-gh.circle-artifacts.com/0/artifacts/p2p-cashier.apk\\n> $GIT_COMMIT_DESC\", \"icon_emoji\": \":autobot:\"}" $SLACK_URL
-              fi
+      # - run:
+      #     name: Upload to Slack
+      #     command: |
+      #         export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
+      #         echo $CIRCLE_BUILD_URL
+      #         # If we wanted to upload the APK rather than providing a link, we can do that via
+      #         # something like this, but it requires an API token:
+      #         # curl -F file=@/artifacts/otc-cashier.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="${CIRCLE_PROJECT_REPONAME} | branch -> ${CIRCLE_BRANCH} | commit -> ${GIT_COMMIT_DESC}"  https://slack.com/api/files.upload
+      #         # See https://medium.com/major-league/delivering-builds-through-slack-with-circle-ci-3d9e685e08f2 for an example
+      #         if [ "$CIRCLE_BRANCH" = "master" ]; then
+      #             # That 221348483 magic number is the internal CircleCI repository ID.
+      #             # Since it's not easily accessible from the environment or API, it's hardcoded for now.
+      #             curl -X POST --data-urlencode "payload={\"channel\": \"#mobile_flutter_chart\", \"username\": \"CircleCI\", \"text\": \"Latest Android build for Deriv Chart:\\nhttps://${CIRCLE_BUILD_NUM}-221348483-gh.circle-artifacts.com/0/artifacts/deriv-chart.apk\\n> $GIT_COMMIT_DESC\", \"icon_emoji\": \":autobot:\"}" $SLACK_URL
+      #         fi
       - save_env_cache
 
 workflows:
