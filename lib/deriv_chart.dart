@@ -6,3 +6,4 @@ export './src/chart.dart';
 export './src/widgets/market_selector/market_selector.dart';
 export './src/widgets/market_selector/market_item.dart';
 export './src/widgets/market_selector/models.dart';
+export './src/widgets/market_selector/market_selector_button.dart';

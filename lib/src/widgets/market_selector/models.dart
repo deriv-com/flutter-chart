@@ -1,36 +1,19 @@
-/// Symbol item representing an active symbol has gotten from the API.
-class Symbol {
-  Symbol({
-    this.market,
-    this.submarket,
-    this.symbol,
-    this.displayName,
-    this.submarketDisplayName,
-  });
-
-  final String market;
-  final String submarket;
-  final String symbol;
-  final String displayName;
-  final String submarketDisplayName;
-}
-
 class Market {
-  Market.fromSymbols({
+  Market.fromAssets({
     this.name,
     this.displayName,
-    List<Symbol> symbols,
+    List<Asset> assets,
   }) {
     final List<String> subMarketTitles = [];
-    for (final symbol in symbols) {
-      if (!subMarketTitles.contains(symbol.submarket)) {
-        subMarketTitles.add(symbol.submarket);
+    for (final asset in assets) {
+      if (!subMarketTitles.contains(asset.subMarket)) {
+        subMarketTitles.add(asset.subMarket);
         subMarkets.add(
-          SubMarket.fromSymbols(
-            name: symbol.submarket,
-            displayName: symbol.submarketDisplayName,
-            symbols: symbols
-                .where((element) => element.submarket == symbol.submarket)
+          SubMarket(
+            name: asset.subMarket,
+            displayName: asset.subMarketDisplayName,
+            assets: assets
+                .where((element) => element.subMarket == asset.subMarket)
                 .toList(),
           ),
         );
@@ -51,19 +34,15 @@ class Market {
 }
 
 class SubMarket {
-  SubMarket.fromSymbols({
+  SubMarket({
     this.name,
     this.displayName,
-    List<Symbol> symbols,
-  }) {
-    for (final symbol in symbols) {
-      assets.add(Asset(name: symbol.symbol, displayName: symbol.displayName));
-    }
-  }
+    this.assets,
+  });
 
   final String name;
   final String displayName;
-  final List<Asset> assets = [];
+  final List<Asset> assets;
 
   /// Returns true if any asset under this SubMarket contains the [filterText]
   bool containsAssetWithText(String filterText) =>
@@ -75,9 +54,21 @@ class SubMarket {
 
 /// A symbol item
 class Asset {
-  Asset({this.name, this.displayName, this.isFavorite = false});
+  Asset({
+    this.name,
+    this.displayName,
+    this.isFavorite = false,
+    this.market,
+    this.marketDisplayName,
+    this.subMarket,
+    this.subMarketDisplayName,
+  });
 
   final String name;
   final String displayName;
   final bool isFavorite;
+  final String market;
+  final String marketDisplayName;
+  final String subMarket;
+  final String subMarketDisplayName;
 }

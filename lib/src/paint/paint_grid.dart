@@ -66,7 +66,7 @@ void _paintQuoteLabels(
     final y = yCoords[index];
     final fontSize = 12.0;
 
-    TextSpan span = TextSpan(
+    TextSpan span = TextSpan(// TODO(Ramin): Use theme's color when it's ready
       style: TextStyle(color: Colors.white30, fontSize: fontSize),
       text: quoteLabel,
     );

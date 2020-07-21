@@ -24,7 +24,7 @@ class SubMarketItem extends StatelessWidget {
             .toList();
     return assets.isEmpty
         ? SizedBox.shrink()
-        : Material(
+        : Material(// TODO(Ramin): Use Chart's theme color when its ready
             color: const Color(0xFF151717),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +33,7 @@ class SubMarketItem extends StatelessWidget {
                   margin: const EdgeInsets.only(top: 16, left: 8),
                   child: Text(
                     subMarket.displayName,
-                    style:
+                    style:// TODO(Ramin): Use Chart's theme color when its ready
                         TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
                   ),
                 ),

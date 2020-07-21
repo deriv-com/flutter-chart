@@ -17,14 +17,14 @@ class MarketItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        color: const Color(0xFF0E0E0E),
+        color: const Color(0xFF0E0E0E),// TODO(Ramin): Use Chart's theme when its ready
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
               margin: const EdgeInsets.only(top: 24, left: 8, bottom: 8),
               child: Text(
-                market.displayName,
+                market.displayName,// TODO(Ramin): Use Chart's theme when its ready
                 style: TextStyle(fontSize: 14, color: Colors.white),
               ),
             ),

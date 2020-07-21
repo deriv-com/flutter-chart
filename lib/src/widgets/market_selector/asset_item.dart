@@ -32,7 +32,7 @@ class AssetItem extends StatelessWidget {
   IconButton _buildFavoriteIcon() => IconButton(
         icon: Icon(
           asset.isFavorite ? Icons.star : Icons.star_border,
-          color: const Color(0xFF6E6E6E),
+          color: const Color(0xFF6E6E6E),// TODO(Ramin): Use Chart's theme when its ready
           size: 20,
         ),
         onPressed: () => onAssetClicked?.call(asset, true),

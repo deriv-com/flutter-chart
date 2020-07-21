@@ -78,17 +78,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
         _markets.add(
-          Market.fromSymbols(
+          Market.fromAssets(
             name: symbol.market,
             displayName: symbol.marketDisplayName,
-            symbols: activeSymbols
+            assets: activeSymbols
                 .where((activeSymbol) => activeSymbol.market == symbol.market)
-                .map<Symbol>((activeSymbol) => Symbol(
+                .map<Asset>((activeSymbol) => Asset(
                       market: activeSymbol.market,
-                      submarket: activeSymbol.submarket,
-                      symbol: activeSymbol.symbol,
+                      marketDisplayName: activeSymbol.marketDisplayName,
+                      subMarket: activeSymbol.submarket,
+                      name: activeSymbol.symbol,
                       displayName: activeSymbol.displayName,
-                      submarketDisplayName: activeSymbol.submarketDisplayName,
+                      subMarketDisplayName: activeSymbol.submarketDisplayName,
                     ))
                 .toList(),
           ),
@@ -232,49 +233,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Widget _buildMarketSelectorButton() => Padding(
         padding: const EdgeInsets.all(12),
-        child: FlatButton(
-          padding: const EdgeInsets.all(4),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              FadeInImage(
-                width: 32,
-                height: 32,
-                placeholder: AssetImage(
-                  'assets/icons/icon_placeholder.png',
-                  package: 'deriv_chart',
-                ),
-                image: AssetImage(
-                  'assets/icons/${symbol.name}.png',
-                  package: 'deriv_chart',
-                ),
-                fadeInDuration: const Duration(milliseconds: 100),
-                fadeOutDuration: const Duration(milliseconds: 100),
-              ),
-              SizedBox(width: 16),
-              Text(
-                symbol.displayName,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+        child: MarketSelectorButton(
+          asset: symbol,
+          onTap: () => showBottomSheet(
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext context) => MarketSelector(
+              markets: _markets,
+              onAssetClicked: (asset, favoriteClicked) {
+                Navigator.of(context).pop();
+                symbol = asset;
+                _onIntervalSelected(granularity);
+              },
+            ),
           ),
-          onPressed: () {
-            showBottomSheet(
-              backgroundColor: Colors.transparent,
-              context: context,
-              builder: (BuildContext context) => MarketSelector(
-                markets: _markets,
-                onAssetClicked: (asset, favoriteClicked) {
-                  Navigator.of(context).pop();
-                  symbol = asset;
-                  _onIntervalSelected(granularity);
-                },
-              ),
-            );
-          },
         ),
       );
 
