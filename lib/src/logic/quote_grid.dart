@@ -36,7 +36,7 @@ double quotePerPx({
 double quoteGridInterval(
   double quotePerPx, {
   double minDistanceBetweenLines = 60,
-  // Options for quote labels value distance in Y-Axis. One of these intervals will be selected in the frame ti be the distance between Y-Axis labels
+  // Options for quote labels value distance in Y-Axis. One of these intervals will be selected to be the distance between Y-Axis labels
   List<double> intervals = const [
     0.000000025,
     0.00000005,
