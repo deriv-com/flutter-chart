@@ -162,7 +162,10 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       nowEpoch = DateTime.now().millisecondsSinceEpoch;
       final elapsedMs = nowEpoch - prevEpoch;
 
-      if (_shouldAutoPan) {
+      if (_shouldAutoPan &&
+          (widget.candles.isEmpty ||
+              nowEpoch - widget.candles.last.epoch <
+                  _pxToMs(canvasSize.width * 0.2))) {
         rightBoundEpoch += elapsedMs;
       }
       if (canvasSize != null) {
@@ -379,7 +382,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   Tick _getAnimatedCurrentTick() {
-    if (prevTick == null) return null;
+    if (prevTick == null || widget.candles.isEmpty) return null;
 
     final currentTick = _candleToTick(widget.candles.last);
 

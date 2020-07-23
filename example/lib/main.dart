@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,10 +10,8 @@ import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
-import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
-import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
-import 'package:flutter_deriv_api/services/dependency_injector/module_container.dart';
+import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
 import 'package:vibration/vibration.dart';
 
 void main() {
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
       home: FullscreenChart(),
     );
   }
@@ -45,26 +46,39 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int granularity = 0;
   TickBase _currentTick;
 
+  StreamSubscription _tickSubscription;
+
+  ConnectionBloc _connectionBloc;
+
   // We keep track of the candles start epoch to not make more than one API call to get a history
   int _startEpoch;
 
   @override
   void initState() {
     super.initState();
+
     _connectToAPI();
   }
 
-  Future<void> _connectToAPI() async {
-    ModuleContainer().initialize(Injector.getInjector());
-    await Injector.getInjector().get<BaseAPI>().connect(
-          ConnectionInformation(
-            appId: '1089',
-            brand: 'binary',
-            endpoint: 'frontend.binaryws.com',
-          ),
-        );
+  @override
+  void dispose() {
+    _tickSubscription?.cancel();
+    super.dispose();
+  }
 
-    _initTickStream();
+  Future<void> _connectToAPI() async {
+    _connectionBloc = ConnectionBloc(ConnectionInformation(
+      appId: '1089',
+      brand: 'binary',
+      endpoint: 'frontend.binaryws.com',
+    ));
+
+    _connectionBloc.listen((connectionState) async {
+      setState(() {});
+      if (connectionState is Connected) {
+        _initTickStream();
+      }
+    });
   }
 
   void _initTickStream() async {
@@ -73,7 +87,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _startEpoch = candles.first.epoch;
 
-      historySubscription.tickStream.listen((tickBase) {
+      _tickSubscription = historySubscription.tickStream.listen((tickBase) {
         if (tickBase != null) {
           _currentTick = tickBase;
 
@@ -158,7 +172,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
             Positioned(
               left: 60,
               child: _buildIntervalSelector(),
-            )
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: _connectionBloc == null
+                  ? Text('Connecting...')
+                  : _connectionBloc.state is Disconnected
+                      ? Text('Internet is down, trying to reconnect...')
+                      : SizedBox.shrink(),
+            ),
           ],
         ),
       ),
