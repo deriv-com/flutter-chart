@@ -74,6 +74,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
+  TickBase _currentTick;
+
+  // We keep track of the candles start epoch to not make more than one API call to get a history
+  int _startEpoch;
 
   final List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier? _slBarrier, _tpBarrier;
