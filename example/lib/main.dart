@@ -12,6 +12,7 @@ import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:flutter_deriv_api/state/internet/connection_service.dart';
 import 'package:vibration/vibration.dart';
 
 void main() {
@@ -67,6 +68,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
+    await ConnectionService().initialize();
     _connectionBloc = ConnectionBloc(ConnectionInformation(
       appId: '1089',
       brand: 'binary',
@@ -175,7 +177,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
             ),
             Align(
               alignment: Alignment.center,
-              child: _connectionBloc == null
+              child: _connectionBloc == null ||
+                      _connectionBloc.state is Reconnecting
                   ? Text('Connecting...')
                   : _connectionBloc.state is Disconnected
                       ? Text('Internet is down, trying to reconnect...')
