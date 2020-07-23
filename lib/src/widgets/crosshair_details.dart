@@ -25,7 +25,7 @@ class CrosshairDetails extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: RadialGradient(
           center: Alignment.topCenter,
-          radius: 0.4,
+          radius: 0.35,
           colors: [Color(0xFF0E0E0E), Colors.transparent],
         ),
       ),
