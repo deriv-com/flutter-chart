@@ -441,15 +441,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             );
           }),
         ),
-        Positioned(
-          bottom: 30 + timeLabelsAreaHeight,
-          right: 30 + quoteLabelsAreaWidth,
-          child: AnimatedOpacity(
-            opacity: _isScrollToNowAvailable ? 1 : 0,
-            duration: Duration(milliseconds: 200),
+        if (_isScrollToNowAvailable)
+          Positioned(
+            bottom: 30 + timeLabelsAreaHeight,
+            right: 30 + quoteLabelsAreaWidth,
             child: _buildScrollToNowButton(),
           ),
-        ),
         if (_isCrosshairMode)
           Positioned(
             top: 0,
