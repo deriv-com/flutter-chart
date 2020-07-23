@@ -490,9 +490,11 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   Tick _getAnimatedCurrentTick() {
-    if (prevTick == null) return null;
+    if (widget.candles.isEmpty) return null;
 
     final currentTick = _candleToTick(widget.candles.last);
+
+    if (prevTick == null) return currentTick;
 
     final epochDiff = currentTick.epoch - prevTick.epoch;
     final quoteDiff = currentTick.quote - prevTick.quote;
