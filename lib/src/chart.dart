@@ -95,12 +95,20 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
   AnimationController _crosshairZoomOutAnimationController;
+  AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
   Animation _crosshairZoomOutAnimation;
 
-  bool get _shouldAutoPan =>
-      rightBoundEpoch > nowEpoch && crosshairCandle == null;
+  bool get _isCrosshairMode => crosshairCandle != null;
+
+  bool get _isAutoPanning => rightBoundEpoch > nowEpoch && !_isCrosshairMode;
+
+  bool get _isScrollingToNow =>
+      _rightEpochAnimationController?.isAnimating ?? false;
+
+  bool get _isScrollToNowAvailable =>
+      !_isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
@@ -154,7 +162,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
     if (oldGranularity != newGranularity) {
       msPerPx = _getDefaultScale(newGranularity);
-      _scrollToNow();
+      rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
     } else {
       _onNewTick();
     }
@@ -162,12 +170,13 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _currentTickAnimationController.dispose();
-    _currentTickBlinkingController.dispose();
-    _loadingAnimationController.dispose();
-    _topBoundQuoteAnimationController.dispose();
-    _bottomBoundQuoteAnimationController.dispose();
-    _crosshairZoomOutAnimationController.dispose();
+    _rightEpochAnimationController?.dispose();
+    _currentTickAnimationController?.dispose();
+    _currentTickBlinkingController?.dispose();
+    _loadingAnimationController?.dispose();
+    _topBoundQuoteAnimationController?.dispose();
+    _bottomBoundQuoteAnimationController?.dispose();
+    _crosshairZoomOutAnimationController?.dispose();
     super.dispose();
   }
 
@@ -186,7 +195,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       nowEpoch = DateTime.now().millisecondsSinceEpoch;
       final elapsedMs = nowEpoch - prevEpoch;
 
-      if (_shouldAutoPan) {
+      if (_isAutoPanning) {
         rightBoundEpoch += elapsedMs;
       }
       if (canvasSize != null) {
@@ -201,6 +210,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _setupBlinkingAnimation();
     _setupBoundsAnimation();
     _setupCrosshairZoomOutAnimation();
+    _setupRightEpochAnimation();
+  }
+
+  void _setupRightEpochAnimation() {
+    _rightEpochAnimationController = AnimationController.unbounded(
+      vsync: this,
+      value: rightBoundEpoch.toDouble(),
+    )..addListener(() {
+        rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+      });
   }
 
   void _setupCurrentTickAnimation() {
@@ -426,12 +445,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           bottom: 30 + timeLabelsAreaHeight,
           right: 30 + quoteLabelsAreaWidth,
           child: AnimatedOpacity(
-            opacity: !_shouldAutoPan && crosshairCandle == null ? 1 : 0,
+            opacity: _isScrollToNowAvailable ? 1 : 0,
             duration: Duration(milliseconds: 200),
             child: _buildScrollToNowButton(),
           ),
         ),
-        if (crosshairCandle != null)
+        if (_isCrosshairMode)
           Positioned(
             top: 0,
             bottom: 0,
@@ -513,7 +532,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _handleScaleUpdate(ScaleUpdateDetails details) {
-    if (_shouldAutoPan) {
+    if (_isAutoPanning) {
       _scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);
@@ -597,7 +616,20 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scrollToNow() {
-    rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
+    final animationMsDuration = 600;
+    final lowerBound = rightBoundEpoch.toDouble();
+    final upperBound = nowEpoch +
+        _pxToMs(maxCurrentTickOffset).toDouble() +
+        animationMsDuration;
+
+    if (upperBound > lowerBound) {
+      _rightEpochAnimationController.value = lowerBound;
+      _rightEpochAnimationController.animateTo(
+        upperBound,
+        curve: Curves.easeOut,
+        duration: Duration(milliseconds: animationMsDuration),
+      );
+    }
   }
 
   void _onScaleAndPanEnd(ScaleEndDetails details) {
