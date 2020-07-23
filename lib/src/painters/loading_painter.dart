@@ -16,9 +16,11 @@ class LoadingPainter extends CustomPainter {
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
 
+  bool get _isVisible => loadingRightBoundX > 0;
+
   @override
   void paint(Canvas canvas, Size size) {
-    if (loadingRightBoundX > 0) {
+    if (_isVisible) {
       paintLoadingAnimation(
         canvas: canvas,
         size: size,
@@ -29,7 +31,7 @@ class LoadingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(LoadingPainter oldDelegate) => true;
+  bool shouldRepaint(LoadingPainter oldDelegate) => _isVisible;
 
   @override
   bool shouldRebuildSemantics(LoadingPainter oldDelegate) => false;
