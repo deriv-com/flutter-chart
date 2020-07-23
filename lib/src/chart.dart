@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/quote_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'callbacks.dart';
 import 'logic/conversion.dart';
 import 'logic/time_grid.dart' show timeGridIntervalInSeconds;
 import 'chart_painter.dart';
@@ -17,12 +18,16 @@ class Chart extends StatefulWidget {
     Key key,
     @required this.candles,
     @required this.pipSize,
+    this.onLoadHistory,
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
   final List<Candle> candles;
   final int pipSize;
   final ChartStyle style;
+
+  /// Pagination callback. will be called when scrolled to left and there is empty space before first [candles]
+  final OnLoadHistory onLoadHistory;
 
   @override
   _ChartState createState() => _ChartState();
@@ -72,6 +77,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
+  AnimationController _loadingAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
   AnimationController _rightEpochAnimationController;
@@ -136,11 +142,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _rightEpochAnimationController?.dispose();
     _currentTickAnimationController?.dispose();
     _currentTickBlinkingController?.dispose();
+    _loadingAnimationController?.dispose();
     _topBoundQuoteAnimationController?.dispose();
     _bottomBoundQuoteAnimationController?.dispose();
-    _rightEpochAnimationController?.dispose();
     super.dispose();
   }
 
@@ -197,7 +204,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
+    _loadingAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 6),
+    );
     _currentTickBlinkingController.repeat(reverse: true);
+    _loadingAnimationController.repeat();
     _currentTickBlinkAnimation = CurvedAnimation(
       parent: _currentTickBlinkingController,
       curve: Curves.easeInOut,
@@ -311,6 +323,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           onScaleAndPanStart: _handleScaleStart,
           onPanUpdate: _handlePanUpdate,
           onScaleUpdate: _handleScaleUpdate,
+          onScaleAndPanEnd: _onScaleAndPanEnd,
           child: LayoutBuilder(builder: (context, constraints) {
             canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
@@ -320,6 +333,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 candles: _getChartCandles(),
                 animatedCurrentTick: _getAnimatedCurrentTick(),
                 blinkAnimationProgress: _currentTickBlinkAnimation.value,
+                loadingAnimationProgress: _loadingAnimationController.value,
                 pipSize: widget.pipSize,
                 style: widget.style,
                 msPerPx: msPerPx,
@@ -421,8 +435,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void _handlePanUpdate(DragUpdateDetails details) {
     setState(() {
       rightBoundEpoch -= _pxToMs(details.delta.dx);
-      final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-      rightBoundEpoch = rightBoundEpoch.clamp(0, upperLimit);
+      _limitRightBoundEpoch();
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
@@ -430,6 +443,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             .clamp(0.05, 0.49);
       }
     });
+  }
+
+  void _limitRightBoundEpoch() {
+    if (widget.candles.isEmpty) return;
+    final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
+    final int lowerLimit =
+        widget.candles.first.epoch - _pxToMs(canvasSize.width);
+    rightBoundEpoch = upperLimit > lowerLimit
+        ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
+        : lowerLimit;
   }
 
   IconButton _buildScrollToNowButton() {
@@ -452,6 +475,25 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         upperBound,
         curve: Curves.easeOut,
         duration: Duration(milliseconds: animationMsDuration),
+      );
+    }
+  }
+
+  void _onScaleAndPanEnd(ScaleEndDetails details) {
+    _limitRightBoundEpoch();
+    _onLoadHistory();
+  }
+
+  void _onLoadHistory() {
+    if (widget.candles.isEmpty) return;
+    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    if (leftBoundEpoch < widget.candles.first.epoch) {
+      int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+      int widthInMs = _pxToMs(canvasSize.width);
+      widget.onLoadHistory?.call(
+        widget.candles.first.epoch - (2 * widthInMs),
+        widget.candles.first.epoch,
+        (2 * widthInMs) ~/ granularity,
       );
     }
   }

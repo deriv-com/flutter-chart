@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/models/candle_painting.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
+import 'package:deriv_chart/src/paint/paint_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
@@ -21,6 +22,7 @@ class ChartPainter extends CustomPainter {
     this.candles,
     this.animatedCurrentTick,
     this.blinkAnimationProgress,
+    this.loadingAnimationProgress,
     this.pipSize,
     this.style,
     this.msPerPx,
@@ -37,6 +39,7 @@ class ChartPainter extends CustomPainter {
   final List<Candle> candles;
   final Tick animatedCurrentTick;
   final double blinkAnimationProgress;
+  final double loadingAnimationProgress;
   final int pipSize;
   final ChartStyle style;
 
@@ -99,12 +102,13 @@ class ChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (candles.length < 2) return;
-
     this.canvas = canvas;
     this.size = size;
 
+    _paintLoading();
     _painGrid();
+
+    if (candles.isEmpty) return;
 
     if (style == ChartStyle.candles) {
       _paintCandles();
@@ -208,6 +212,20 @@ class ChartPainter extends CustomPainter {
       quoteLabel: animatedCurrentTick.quote.toStringAsFixed(pipSize),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     );
+  }
+
+  void _paintLoading() {
+    if (candles.isEmpty ||
+        rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx) <
+            candles.first.epoch) {
+      paintLoadingAnimation(
+        canvas: canvas,
+        size: size,
+        loadingAnimationProgress: loadingAnimationProgress,
+        loadingRightBoundX:
+            candles.isEmpty ? size.width : _epochToX(candles.first.epoch),
+      );
+    }
   }
 
   @override
