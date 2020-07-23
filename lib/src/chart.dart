@@ -225,7 +225,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void _setupCurrentTickAnimation() {
     _currentTickAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
     _currentTickAnimation = CurvedAnimation(
       parent: _currentTickAnimationController,
@@ -236,7 +236,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void _setupBlinkingAnimation() {
     _currentTickBlinkingController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _loadingAnimationController = AnimationController(
       vsync: this,
@@ -266,7 +266,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void _setupCrosshairZoomOutAnimation() {
     _crosshairZoomOutAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 100),
     );
     _crosshairZoomOutAnimation = CurvedAnimation(
       parent: _crosshairZoomOutAnimationController,
