@@ -7,7 +7,7 @@ void main() {
     test('include epoch on the right edge', () {
       expect(
         gridEpochs(
-          timeGridInterval: 1000,
+          timeGridInterval: Duration(seconds: 1000),
           leftBoundEpoch: 9000,
           rightBoundEpoch: 10000,
         ),
@@ -17,7 +17,7 @@ void main() {
     test('include epoch on the left edge', () {
       expect(
         gridEpochs(
-          timeGridInterval: 100,
+          timeGridInterval: Duration(seconds: 100),
           leftBoundEpoch: 900,
           rightBoundEpoch: 1000,
         ),
@@ -25,7 +25,7 @@ void main() {
       );
       expect(
         gridEpochs(
-          timeGridInterval: Duration(days: 1).inMilliseconds,
+          timeGridInterval: Duration(days: 1),
           leftBoundEpoch:
               DateTime.parse('2020-07-24 00:00:00').millisecondsSinceEpoch,
           rightBoundEpoch:
@@ -40,7 +40,7 @@ void main() {
     test('return epochs within canvas, divisible by [timeGridInterval]', () {
       expect(
         gridEpochs(
-          timeGridInterval: 100,
+          timeGridInterval: Duration(seconds: 100),
           leftBoundEpoch: 700,
           rightBoundEpoch: 1000,
         ),
@@ -48,7 +48,7 @@ void main() {
       );
       expect(
         gridEpochs(
-          timeGridInterval: 100,
+          timeGridInterval: Duration(seconds: 100),
           leftBoundEpoch: 699,
           rightBoundEpoch: 999,
         ),
@@ -58,7 +58,7 @@ void main() {
     test('return correct epochs for 24h interval', () {
       expect(
         gridEpochs(
-          timeGridInterval: Duration(days: 1).inMilliseconds,
+          timeGridInterval: Duration(days: 1),
           leftBoundEpoch:
               DateTime.parse('2020-07-24 15:00:00').millisecondsSinceEpoch,
           rightBoundEpoch:
@@ -72,46 +72,63 @@ void main() {
   group('timeGridInterval should', () {
     test('return given interval if only one is given', () {
       expect(
-        timeGridIntervalInSeconds(
+        timeGridInterval(
           10000000,
-          intervalsInSeconds: [10],
+          intervals: [Duration(seconds: 10)],
         ),
-        equals(10),
+        equals(Duration(seconds: 10)),
       );
       expect(
-        timeGridIntervalInSeconds(
+        timeGridInterval(
           0.000001,
-          intervalsInSeconds: [42],
+          intervals: [Duration(seconds: 42)],
         ),
-        equals(42),
+        equals(Duration(seconds: 42)),
       );
     });
     test(
         'return smallest given interval that has px width of at least [minDistanceBetweenLines]',
         () {
       expect(
-        timeGridIntervalInSeconds(
+        timeGridInterval(
           1000,
           minDistanceBetweenLines: 100,
-          intervalsInSeconds: [10, 99, 120, 200, 1000],
+          intervals: [
+            Duration(seconds: 10),
+            Duration(seconds: 99),
+            Duration(seconds: 120),
+            Duration(seconds: 200),
+            Duration(seconds: 1000),
+          ],
         ),
-        equals(120),
+        equals(Duration(seconds: 120)),
       );
       expect(
-        timeGridIntervalInSeconds(
+        timeGridInterval(
           1000,
           minDistanceBetweenLines: 100,
-          intervalsInSeconds: [10, 100, 120, 200],
+          intervals: [
+            Duration(seconds: 10),
+            Duration(seconds: 100),
+            Duration(seconds: 120),
+            Duration(seconds: 200),
+          ],
         ),
-        equals(100),
+        equals(Duration(seconds: 100)),
       );
       expect(
-        timeGridIntervalInSeconds(
+        timeGridInterval(
           1000,
           minDistanceBetweenLines: 42,
-          intervalsInSeconds: [39, 40, 41, 45, 50],
+          intervals: [
+            Duration(seconds: 39),
+            Duration(seconds: 40),
+            Duration(seconds: 41),
+            Duration(seconds: 45),
+            Duration(seconds: 50),
+          ],
         ),
-        equals(45),
+        equals(Duration(seconds: 45)),
       );
     });
   });

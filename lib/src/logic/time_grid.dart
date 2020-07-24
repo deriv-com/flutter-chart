@@ -3,11 +3,11 @@ import 'package:meta/meta.dart';
 import 'conversion.dart';
 
 List<int> gridEpochs({
-  @required int timeGridInterval,
+  @required Duration timeGridInterval,
   @required int leftBoundEpoch,
   @required int rightBoundEpoch,
 }) {
-  if (timeGridInterval == Duration(days: 1).inMilliseconds) {
+  if (timeGridInterval == Duration(days: 1)) {
     final epochs = <int>[];
     final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
     final right = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
@@ -20,51 +20,51 @@ List<int> gridEpochs({
     return epochs;
   }
   final firstRight =
-      (rightBoundEpoch - rightBoundEpoch % timeGridInterval).toInt();
+      (rightBoundEpoch - rightBoundEpoch % timeGridInterval.inMilliseconds)
+          .toInt();
   final epochs = <int>[];
   for (int epoch = firstRight;
       epoch >= leftBoundEpoch;
-      epoch -= timeGridInterval) {
+      epoch -= timeGridInterval.inMilliseconds) {
     epochs.add(epoch);
   }
   return epochs;
 }
 
-int timeGridIntervalInSeconds(
+Duration timeGridInterval(
   double msPerPx, {
   double minDistanceBetweenLines = 100,
-  List<int> intervalsInSeconds = const [
-    5, // 5 sec
-    10, // 10 sec
-    30, // 30 sec
-    60, // 1 min
-    120, // 2 min
-    180, // 3 min
-    300, // 5 min
-    600, // 10 min
-    900, // 15 min
-    1800, // 30 min
-    3600, // 1 hour
-    7200, // 2 hours
-    14400, // 4 hours
-    28800, // 8 hours
-    86400, // 24 hours
-    172800, // 2 days
-    259200, // 3 days
-    604800, // 1 week
-    2419200, // 4 weeks
+  List<Duration> intervals = const [
+    Duration(seconds: 5),
+    Duration(seconds: 10),
+    Duration(seconds: 30),
+    Duration(minutes: 1),
+    Duration(minutes: 2),
+    Duration(minutes: 3),
+    Duration(minutes: 5),
+    Duration(minutes: 10),
+    Duration(minutes: 15),
+    Duration(minutes: 30),
+    Duration(hours: 1),
+    Duration(hours: 2),
+    Duration(hours: 4),
+    Duration(hours: 8),
+    Duration(days: 1),
+    Duration(days: 2),
+    Duration(days: 3),
+    Duration(days: 7),
   ],
 }) {
-  bool hasEnoughDistanceBetweenLines(int intervalInSeconds) {
+  bool hasEnoughDistanceBetweenLines(Duration interval) {
     final distanceBetweenLines = msToPx(
-      intervalInSeconds * 1000,
+      interval.inMilliseconds,
       msPerPx: msPerPx,
     );
     return distanceBetweenLines >= minDistanceBetweenLines;
   }
 
-  return intervalsInSeconds.firstWhere(
+  return intervals.firstWhere(
     hasEnoughDistanceBetweenLines,
-    orElse: () => intervalsInSeconds.last,
+    orElse: () => intervals.last,
   );
 }

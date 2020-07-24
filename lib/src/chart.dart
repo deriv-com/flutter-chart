@@ -6,7 +6,7 @@ import 'package:flutter/scheduler.dart';
 
 import 'callbacks.dart';
 import 'logic/conversion.dart';
-import 'logic/time_grid.dart' show timeGridIntervalInSeconds;
+import 'logic/time_grid.dart' show timeGridInterval;
 import 'chart_painter.dart';
 import 'models/chart_style.dart';
 import 'models/tick.dart';
@@ -341,7 +341,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 topBoundQuote: _topBoundQuote,
                 bottomBoundQuote: _bottomBoundQuote,
                 quoteGridInterval: quoteGridInterval(_quotePerPx),
-                timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
+                timeGridInterval: timeGridInterval(msPerPx),
                 topPadding: _topPadding,
                 bottomPadding: _bottomPadding,
                 quoteLabelsAreaWidth: quoteLabelsAreaWidth,
