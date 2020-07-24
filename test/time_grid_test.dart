@@ -7,7 +7,7 @@ void main() {
     test('include epoch on the right edge', () {
       expect(
         gridEpochs(
-          timeGridInterval: Duration(seconds: 1000),
+          timeGridInterval: Duration(milliseconds: 1000),
           leftBoundEpoch: 9000,
           rightBoundEpoch: 10000,
         ),
@@ -17,7 +17,7 @@ void main() {
     test('include epoch on the left edge', () {
       expect(
         gridEpochs(
-          timeGridInterval: Duration(seconds: 100),
+          timeGridInterval: Duration(milliseconds: 100),
           leftBoundEpoch: 900,
           rightBoundEpoch: 1000,
         ),
@@ -40,7 +40,7 @@ void main() {
     test('return epochs within canvas, divisible by [timeGridInterval]', () {
       expect(
         gridEpochs(
-          timeGridInterval: Duration(seconds: 100),
+          timeGridInterval: Duration(milliseconds: 100),
           leftBoundEpoch: 700,
           rightBoundEpoch: 1000,
         ),
@@ -48,7 +48,7 @@ void main() {
       );
       expect(
         gridEpochs(
-          timeGridInterval: Duration(seconds: 100),
+          timeGridInterval: Duration(milliseconds: 100),
           leftBoundEpoch: 699,
           rightBoundEpoch: 999,
         ),
