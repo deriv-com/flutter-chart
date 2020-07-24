@@ -58,7 +58,7 @@ class ChartPainter extends CustomPainter {
   /// Difference between two consecutive quote labels.
   final double quoteGridInterval;
 
-  /// Difference between two consecutive time labels in milliseconds.
+  /// Difference between two consecutive time labels.
   final Duration timeGridInterval;
 
   /// Width of the area where quote labels and current tick arrow are painted.
