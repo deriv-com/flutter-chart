@@ -23,6 +23,19 @@ void main() {
         ),
         contains(900),
       );
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(days: 1).inMilliseconds,
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 00:00:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 15:00:00').millisecondsSinceEpoch,
+        ),
+        equals([
+          DateTime.parse('2020-07-24 00:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
+        ]),
+      );
     });
     test('return epochs within canvas, divisible by [timeGridInterval]', () {
       expect(

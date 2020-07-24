@@ -11,7 +11,8 @@ List<int> gridEpochs({
     final epochs = <int>[];
     final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
     final right = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
-    var d = DateTime(left.year, left.month, left.day + 1);
+    var d = DateTime(left.year, left.month, left.day);
+    if (d.isBefore(left)) d = d.add(Duration(days: 1));
     while (d.isBefore(right)) {
       epochs.add(d.millisecondsSinceEpoch);
       d = d.add(Duration(days: 1));
