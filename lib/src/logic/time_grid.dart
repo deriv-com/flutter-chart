@@ -7,6 +7,17 @@ List<int> gridEpochs({
   @required int leftBoundEpoch,
   @required int rightBoundEpoch,
 }) {
+  if (timeGridInterval == Duration(days: 1).inMilliseconds) {
+    final epochs = <int>[];
+    final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
+    final right = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
+    var d = DateTime(left.year, left.month, left.day + 1);
+    while (d.isBefore(right)) {
+      epochs.add(d.millisecondsSinceEpoch);
+      d = d.add(Duration(days: 1));
+    }
+    return epochs;
+  }
   final firstRight =
       (rightBoundEpoch - rightBoundEpoch % timeGridInterval).toInt();
   final epochs = <int>[];

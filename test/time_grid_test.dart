@@ -42,6 +42,18 @@ void main() {
         equals([900, 800, 700]),
       );
     });
+    test('return correct epochs for 24h interval', () {
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(days: 1).inMilliseconds,
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 15:00:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 15:00:00').millisecondsSinceEpoch,
+        ),
+        equals([DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch]),
+      );
+    });
   });
 
   group('timeGridInterval should', () {
