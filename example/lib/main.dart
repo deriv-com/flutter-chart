@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,8 +13,10 @@ import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
-import 'package:flutter_deriv_api/state/internet/connection_service.dart';
+import 'package:flutter_deriv_api/services/connection/connection_service.dart';
 import 'package:vibration/vibration.dart';
+
+import 'utils/misc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,7 +104,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-      candles.addAll(_getCandlesFromResponse(missedTicksHistory.tickHistory));
+      final missedCandles =
+          _getCandlesFromResponse(missedTicksHistory.tickHistory);
+
+      if (candles.last.epoch == missedCandles.first.epoch) {
+        candles.removeLast();
+      }
+
+      candles.addAll(missedCandles);
 
       missedTicksHistory.tickStream.listen(_handleTickStream);
 
@@ -132,7 +142,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         TicksHistoryRequest(
           ticksHistory: 'R_50',
           end: 'latest',
-          count: 50,
+          count: 500,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
         ),
@@ -206,15 +216,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
               left: 60,
               child: _buildIntervalSelector(),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: _connectionBloc == null ||
-                      _connectionBloc.state is Reconnecting
-                  ? Text('Connecting...')
-                  : _connectionBloc.state is Disconnected
-                      ? Text('Internet is down, trying to reconnect...')
-                      : SizedBox.shrink(),
-            ),
+            if (_connectionBloc != null && _connectionBloc.state is! Connected)
+              Align(
+                alignment: Alignment.center,
+                child: ConnectionStatusLabel(
+                  text: _connectionBloc.state is ConnectionError
+                      ? '${(_connectionBloc.state as ConnectionError).error}'
+                      : _connectionBloc.state is Disconnected
+                          ? 'Internet is down, trying to reconnect...'
+                          : 'Connecting...',
+                ),
+              ),
           ],
         ),
       ),
@@ -290,7 +302,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ]
             .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
                   value: granularity,
-                  child: Text('${_granularityLabel(granularity)}'),
+                  child: Text('${granularityLabel(granularity)}'),
                 ))
             .toList(),
         onChanged: _onIntervalSelected,
@@ -306,39 +318,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
     granularity = value;
     _initTickStream();
-  }
-
-  String _granularityLabel(int granularity) {
-    switch (granularity) {
-      case 0:
-        return '1 tick';
-      case 60:
-        return '1 min';
-      case 120:
-        return '2 min';
-      case 180:
-        return '3 min';
-      case 300:
-        return '5 min';
-      case 600:
-        return '10 min';
-      case 900:
-        return '15 min';
-      case 1800:
-        return '30 min';
-      case 3600:
-        return '1 hour';
-      case 7200:
-        return '2 hours';
-      case 14400:
-        return '4 hours';
-      case 28800:
-        return '8 hours';
-      case 86400:
-        return '1 day';
-      default:
-        return '???';
-    }
   }
 
   List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
