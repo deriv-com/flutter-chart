@@ -60,14 +60,11 @@ void main() {
         gridEpochs(
           timeGridInterval: Duration(hours: 1),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 19:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 22:00:00').millisecondsSinceEpoch,
           rightBoundEpoch:
               DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-24 19:00:00').millisecondsSinceEpoch,
-          DateTime.parse('2020-07-24 20:00:00').millisecondsSinceEpoch,
-          DateTime.parse('2020-07-24 21:00:00').millisecondsSinceEpoch,
           DateTime.parse('2020-07-24 22:00:00').millisecondsSinceEpoch,
           DateTime.parse('2020-07-24 23:00:00').millisecondsSinceEpoch,
           DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
@@ -89,6 +86,34 @@ void main() {
         ]),
       );
     });
+    test('return correct epochs for 2h interval', () {
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(hours: 2),
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 22:00:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
+        ),
+        equals([
+          DateTime.parse('2020-07-24 22:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
+        ]),
+      );
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(hours: 2),
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 22:20:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 02:10:00').millisecondsSinceEpoch,
+        ),
+        equals([
+          DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 02:00:00').millisecondsSinceEpoch,
+        ]),
+      );
+    });
     test('return correct epochs for 8h interval', () {
       expect(
         gridEpochs(
@@ -105,7 +130,7 @@ void main() {
         ]),
       );
     });
-    test('return correct epochs for 24h interval', () {
+    test('return correct epochs for 1 day interval', () {
       expect(
         gridEpochs(
           timeGridInterval: Duration(days: 1),
