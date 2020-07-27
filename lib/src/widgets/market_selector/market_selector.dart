@@ -45,7 +45,7 @@ class _MarketSelectorState extends State<MarketSelector> {
           topRight: Radius.circular(24),
         ),
         child: Material(
-          elevation: 8,// TODO(Ramin): Use Chart's theme when its ready
+          elevation: 8, // TODO(Ramin): Use Chart's theme when its ready
           color: Color(0xFF151717),
           child: Column(
             children: <Widget>[
@@ -56,7 +56,8 @@ class _MarketSelectorState extends State<MarketSelector> {
                   child: Container(
                     width: 40,
                     height: 4,
-                    decoration: BoxDecoration(// TODO(Ramin): Use Chart's theme when its ready
+                    decoration: BoxDecoration(
+                      // TODO(Ramin): Use Chart's theme when its ready
                       color: const Color(0xFF3E3E3E),
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -77,7 +78,18 @@ class _MarketSelectorState extends State<MarketSelector> {
                             MarketItem(
                           filterText: _filterText.toLowerCase(),
                           market: _marketsToDisplay[index],
-                          onAssetClicked: widget.onAssetClicked,
+                          onAssetClicked: (asset, isFavoriteClicked) {
+                            widget.onAssetClicked?.call(
+                              asset,
+                              isFavoriteClicked,
+                            );
+
+                            if (isFavoriteClicked) {
+                              setState(() {
+                                asset.toggleFavorite();
+                              });
+                            }
+                          },
                         ),
                       ),
                     ),

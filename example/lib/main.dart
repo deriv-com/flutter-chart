@@ -227,9 +227,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
             builder: (BuildContext context) => MarketSelector(
               markets: _markets,
               onAssetClicked: (asset, favoriteClicked) {
-                Navigator.of(context).pop();
-                symbol = asset;
-                _onIntervalSelected(granularity);
+                if (!favoriteClicked) {
+                  Navigator.of(context).pop();
+                  symbol = asset;
+                  _onIntervalSelected(granularity);
+                }
               },
             ),
           ),

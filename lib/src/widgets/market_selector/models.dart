@@ -57,18 +57,20 @@ class Asset {
   Asset({
     this.name,
     this.displayName,
-    this.isFavorite = false,
     this.market,
     this.marketDisplayName,
     this.subMarket,
     this.subMarketDisplayName,
+    this.isFavorite = false,
   });
 
   final String name;
   final String displayName;
-  final bool isFavorite;
   final String market;
   final String marketDisplayName;
   final String subMarket;
   final String subMarketDisplayName;
+  bool isFavorite;
+
+  void toggleFavorite() => isFavorite = !isFavorite;
 }
