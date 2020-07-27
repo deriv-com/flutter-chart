@@ -70,7 +70,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    await ConnectionService().initialize();
     _connectionBloc = ConnectionBloc(ConnectionInformation(
       appId: '1089',
       brand: 'binary',
@@ -112,7 +111,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       candles.addAll(missedCandles);
 
-      missedTicksHistory.tickStream.listen(_handleTickStream);
+      _tickSubscription = missedTicksHistory.tickStream.listen(_handleTickStream);
 
       setState(() {});
     } on Exception catch (e) {
