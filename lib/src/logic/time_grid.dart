@@ -52,7 +52,7 @@ Duration timeGridInterval(
     Duration(days: 1),
     Duration(days: 2),
     Duration(days: 3),
-    Duration(days: 7),
+    Duration(days: DateTime.daysPerWeek),
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(Duration interval) {
