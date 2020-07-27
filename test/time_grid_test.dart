@@ -114,6 +114,36 @@ void main() {
         ]),
       );
     });
+    test('return correct epochs for 4h interval', () {
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(hours: 4),
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 05:00:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
+        ),
+        equals([
+          DateTime.parse('2020-07-24 08:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-24 12:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-24 16:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-24 20:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
+        ]),
+      );
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(hours: 4),
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 22:20:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 02:10:00').millisecondsSinceEpoch,
+        ),
+        equals([
+          DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
+        ]),
+      );
+    });
     test('return correct epochs for 8h interval', () {
       expect(
         gridEpochs(
