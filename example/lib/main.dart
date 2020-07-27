@@ -9,7 +9,6 @@ import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
-import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
@@ -123,22 +122,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _initTickStream() async {
     try {
-      final historySubscription = await _getHistoryAndSubscribe();
-
-      _startEpoch = candles.first.epoch;
-
-      _tickSubscription =
-          historySubscription.tickStream.listen(_handleTickStream);
-
-      setState(() {});
-    } on Exception catch (e) {
-      print(e);
-    }
-  }
-
-  Future<TickHistorySubscription> _getHistoryAndSubscribe() async {
-    try {
-      final history = await TickHistory.fetchTicksAndSubscribe(
+      final historySubscription = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
           ticksHistory: 'R_50',
           end: 'latest',
@@ -149,12 +133,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
       candles.clear();
-      candles = _getCandlesFromResponse(history.tickHistory);
+      candles = _getCandlesFromResponse(historySubscription.tickHistory);
 
-      return history;
+      _startEpoch = candles.first.epoch;
+
+      _tickSubscription =
+          historySubscription.tickStream.listen(_handleTickStream);
+
+      setState(() {});
     } on Exception catch (e) {
       print(e);
-      return null;
     }
   }
 
@@ -209,7 +197,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
               onLoadHistory: (fromEpoch, toEpoch, count) =>
-                  _loadHistory(fromEpoch, toEpoch, count),
+                  _onLoadHistory(fromEpoch, toEpoch, count),
             ),
             _buildChartTypeButton(),
             Positioned(
@@ -233,7 +221,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _loadHistory(int fromEpoch, int toEpoch, int count) async {
+  void _onLoadHistory(int fromEpoch, int toEpoch, int count) async {
     if (fromEpoch < _startEpoch) {
       // So we don't request for a history range more than once
       _startEpoch = fromEpoch;
