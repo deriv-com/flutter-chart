@@ -160,7 +160,7 @@ void main() {
         ]),
       );
     });
-    test('return correct epochs for 1 day interval', () {
+    test('return 00:00:00 of each day for 1 day interval', () {
       expect(
         gridEpochs(
           timeGridInterval: Duration(days: 1),
@@ -170,6 +170,18 @@ void main() {
               DateTime.parse('2020-07-25 15:00:00').millisecondsSinceEpoch,
         ),
         equals([DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch]),
+      );
+    });
+    test('return 00:00:00 of each Monday for 1 week interval', () {
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(days: DateTime.daysPerWeek),
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 15:00:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-29 15:00:00').millisecondsSinceEpoch,
+        ),
+        equals([DateTime.parse('2020-07-27 00:00:00').millisecondsSinceEpoch]),
       );
     });
   });

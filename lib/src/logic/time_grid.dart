@@ -7,8 +7,20 @@ List<int> gridEpochs({
   @required int leftBoundEpoch,
   @required int rightBoundEpoch,
 }) {
+  final epochs = <int>[];
+  if (timeGridInterval == Duration(days: DateTime.daysPerWeek)) {
+    final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
+    final right = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
+    var d = DateTime(left.year, left.month, left.day);
+    if (d.isBefore(left)) d = d.add(Duration(days: 1));
+    while (d.weekday != DateTime.monday) d = d.add(Duration(days: 1));
+    while (d.isBefore(right)) {
+      epochs.add(d.millisecondsSinceEpoch);
+      d = d.add(Duration(days: DateTime.daysPerWeek));
+    }
+    return epochs;
+  }
   if (timeGridInterval == Duration(days: 1)) {
-    final epochs = <int>[];
     final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
     final right = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
     var d = DateTime(left.year, left.month, left.day);
@@ -19,19 +31,17 @@ List<int> gridEpochs({
     }
     return epochs;
   }
-  final firstRight =
-      (rightBoundEpoch - rightBoundEpoch % timeGridInterval.inMilliseconds)
-          .toInt();
-  final epochs = <int>[];
-  for (int epoch = firstRight;
-      epoch >= leftBoundEpoch;
-      epoch -= timeGridInterval.inMilliseconds) {
+  final diff = timeGridInterval.inMilliseconds;
+  final remainder = leftBoundEpoch % diff;
+  final leftToInterval = remainder > 0 ? diff - remainder : 0;
+  final firstLeft = leftBoundEpoch + leftToInterval;
+  for (int epoch = firstLeft; epoch <= rightBoundEpoch; epoch += diff) {
     epochs.add(epoch);
   }
   // print('left ${DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch)}');
   // print('right ${DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch)}');
   // for (var e in epochs) print(DateTime.fromMillisecondsSinceEpoch(e));
-  return epochs.reversed.toList();
+  return epochs;
 }
 
 Duration timeGridInterval(
