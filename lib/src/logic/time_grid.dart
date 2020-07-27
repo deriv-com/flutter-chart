@@ -16,7 +16,7 @@ List<int> gridEpochs({
     while (d.weekday != DateTime.monday) d = d.add(Duration(days: 1));
     while (d.isBefore(right)) {
       epochs.add(d.millisecondsSinceEpoch);
-      d = d.add(Duration(days: DateTime.daysPerWeek));
+      d = d.add(timeGridInterval);
     }
     return epochs;
   }
@@ -27,7 +27,7 @@ List<int> gridEpochs({
     if (d.isBefore(left)) d = d.add(Duration(days: 1));
     while (d.isBefore(right)) {
       epochs.add(d.millisecondsSinceEpoch);
-      d = d.add(Duration(days: 1));
+      d = d.add(timeGridInterval);
     }
     return epochs;
   }
