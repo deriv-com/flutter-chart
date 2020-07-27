@@ -78,9 +78,37 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _connectionBloc.listen((connectionState) async {
       setState(() {});
       if (connectionState is Connected) {
-        _initTickStream();
+        if (candles.isEmpty) {
+          _initTickStream();
+        } else {
+          _resumeTickStream();
+        }
       }
     });
+  }
+
+  void _resumeTickStream() async {
+    try {
+      _tickSubscription?.cancel();
+
+      final missedTicksHistory = await TickHistory.fetchTicksAndSubscribe(
+        TicksHistoryRequest(
+          ticksHistory: 'R_50',
+          end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
+          start: candles.last.epoch ~/ 1000,
+          style: granularity == 0 ? 'ticks' : 'candles',
+          granularity: granularity > 0 ? granularity : null,
+        ),
+      );
+
+      candles.addAll(_getCandlesFromResponse(missedTicksHistory.tickHistory));
+
+      missedTicksHistory.tickStream.listen(_handleTickStream);
+
+      setState(() {});
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   void _initTickStream() async {
@@ -89,26 +117,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _startEpoch = candles.first.epoch;
 
-      _tickSubscription = historySubscription.tickStream.listen((tickBase) {
-        if (tickBase != null) {
-          _currentTick = tickBase;
-
-          if (tickBase is api_tick.Tick) {
-            _onNewTick(tickBase.epoch.millisecondsSinceEpoch, tickBase.quote);
-          }
-
-          if (tickBase is OHLC) {
-            final newCandle = Candle(
-              epoch: tickBase.openTime.millisecondsSinceEpoch,
-              high: tickBase.high,
-              low: tickBase.low,
-              open: tickBase.open,
-              close: tickBase.close,
-            );
-            _onNewCandle(newCandle);
-          }
-        }
-      });
+      _tickSubscription =
+          historySubscription.tickStream.listen(_handleTickStream);
 
       setState(() {});
     } on Exception catch (e) {
@@ -135,6 +145,27 @@ class _FullscreenChartState extends State<FullscreenChart> {
     } on Exception catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  void _handleTickStream(TickBase tickBase) {
+    if (tickBase != null) {
+      _currentTick = tickBase;
+
+      if (tickBase is api_tick.Tick) {
+        _onNewTick(tickBase.epoch.millisecondsSinceEpoch, tickBase.quote);
+      }
+
+      if (tickBase is OHLC) {
+        final newCandle = Candle(
+          epoch: tickBase.openTime.millisecondsSinceEpoch,
+          high: tickBase.high,
+          low: tickBase.low,
+          open: tickBase.open,
+          close: tickBase.close,
+        );
+        _onNewCandle(newCandle);
+      }
     }
   }
 
