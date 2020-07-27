@@ -28,7 +28,10 @@ List<int> gridEpochs({
       epoch -= timeGridInterval.inMilliseconds) {
     epochs.add(epoch);
   }
-  return epochs;
+  // print('left ${DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch)}');
+  // print('right ${DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch)}');
+  // for (var e in epochs) print(DateTime.fromMillisecondsSinceEpoch(e));
+  return epochs.reversed.toList();
 }
 
 Duration timeGridInterval(
