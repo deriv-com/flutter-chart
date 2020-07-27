@@ -20,6 +20,7 @@ class AssetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
+    contentPadding: const EdgeInsets.only(left: 12),
         leading: _buildAssetIcon(),
         title: HighLightedText(
           '${asset.displayName}',

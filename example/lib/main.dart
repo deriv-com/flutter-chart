@@ -23,9 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: FullscreenChart(),
-      ),
+      home: SafeArea(child: Scaffold(body: FullscreenChart())),
     );
   }
 }
