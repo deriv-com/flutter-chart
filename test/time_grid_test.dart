@@ -74,6 +74,36 @@ void main() {
           DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
         ]),
       );
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(hours: 1),
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 22:20:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 01:10:00').millisecondsSinceEpoch,
+        ),
+        equals([
+          DateTime.parse('2020-07-24 23:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
+        ]),
+      );
+    });
+    test('return correct epochs for 8h interval', () {
+      expect(
+        gridEpochs(
+          timeGridInterval: Duration(hours: 8),
+          leftBoundEpoch:
+              DateTime.parse('2020-07-24 19:00:00').millisecondsSinceEpoch,
+          rightBoundEpoch:
+              DateTime.parse('2020-07-25 19:00:00').millisecondsSinceEpoch,
+        ),
+        equals([
+          DateTime.parse('2020-07-25 00:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 08:00:00').millisecondsSinceEpoch,
+          DateTime.parse('2020-07-25 16:00:00').millisecondsSinceEpoch,
+        ]),
+      );
     });
     test('return correct epochs for 24h interval', () {
       expect(
