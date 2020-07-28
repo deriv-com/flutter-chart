@@ -144,7 +144,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         TicksHistoryRequest(
           ticksHistory: symbol.name,
           end: 'latest',
-          count: 50,
+          count: 500,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
         ),
