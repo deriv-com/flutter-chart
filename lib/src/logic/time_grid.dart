@@ -2,46 +2,44 @@ import 'package:meta/meta.dart';
 
 import 'conversion.dart';
 
+const _day = const Duration(days: 1);
+const _week = const Duration(days: DateTime.daysPerWeek);
+
 List<int> gridEpochs({
   @required Duration timeGridInterval,
   @required int leftBoundEpoch,
   @required int rightBoundEpoch,
 }) {
   final epochs = <int>[];
-  if (timeGridInterval == Duration(days: DateTime.daysPerWeek)) {
-    final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
-    final right = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
-    var d = DateTime(left.year, left.month, left.day);
-    if (d.isBefore(left)) d = d.add(Duration(days: 1));
-    while (d.weekday != DateTime.monday) d = d.add(Duration(days: 1));
-    while (d.isBefore(right)) {
-      epochs.add(d.millisecondsSinceEpoch);
-      d = d.add(timeGridInterval);
-    }
-    return epochs;
+  final rightBoundTime = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
+
+  var t = _gridEpochStart(timeGridInterval, leftBoundEpoch);
+
+  while (t.compareTo(rightBoundTime) <= 0) {
+    epochs.add(t.millisecondsSinceEpoch);
+    t = t.add(timeGridInterval);
   }
-  if (timeGridInterval == Duration(days: 1)) {
-    final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
-    final right = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
-    var d = DateTime(left.year, left.month, left.day);
-    if (d.isBefore(left)) d = d.add(Duration(days: 1));
-    while (d.isBefore(right)) {
-      epochs.add(d.millisecondsSinceEpoch);
-      d = d.add(timeGridInterval);
-    }
-    return epochs;
-  }
-  final diff = timeGridInterval.inMilliseconds;
-  final remainder = leftBoundEpoch % diff;
-  final leftToInterval = remainder > 0 ? diff - remainder : 0;
-  final firstLeft = leftBoundEpoch + leftToInterval;
-  for (int epoch = firstLeft; epoch <= rightBoundEpoch; epoch += diff) {
-    epochs.add(epoch);
-  }
-  // print('left ${DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch)}');
-  // print('right ${DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch)}');
-  // for (var e in epochs) print(DateTime.fromMillisecondsSinceEpoch(e));
   return epochs;
+}
+
+DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
+  if (timeGridInterval == _week) {
+    var t = _nextDayStart(leftBoundEpoch);
+    while (t.weekday != DateTime.monday) t = t.add(_day);
+    return t;
+  } else if (timeGridInterval == _day) {
+    return _nextDayStart(leftBoundEpoch);
+  } else {
+    final diff = timeGridInterval.inMilliseconds;
+    final firstLeft = (leftBoundEpoch / diff).ceil() * diff;
+    return DateTime.fromMillisecondsSinceEpoch(firstLeft);
+  }
+}
+
+DateTime _nextDayStart(int leftBoundEpoch) {
+  final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
+  var t = DateTime(left.year, left.month, left.day); // time set to 00:00:00
+  return t.isBefore(left) ? t.add(_day) : t;
 }
 
 Duration timeGridInterval(
@@ -62,10 +60,8 @@ Duration timeGridInterval(
     Duration(hours: 2),
     Duration(hours: 4),
     Duration(hours: 8),
-    Duration(days: 1),
-    Duration(days: 2),
-    Duration(days: 3),
-    Duration(days: DateTime.daysPerWeek),
+    _day,
+    _week,
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(Duration interval) {
