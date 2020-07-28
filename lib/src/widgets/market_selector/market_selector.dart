@@ -60,88 +60,75 @@ class _MarketSelectorState extends State<MarketSelector> {
                 market.containsAssetWithText(_filterText.toLowerCase()))
             .toList();
 
-    return SafeArea(
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        child: Material(
-          elevation: 8, // TODO(Ramin): Use Chart's theme when its ready
-          color: Color(0xFF151717),
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                width: double.infinity,
-                child: Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      // TODO(Ramin): Use Chart's theme when its ready
-                      color: const Color(0xFF3E3E3E),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-              ),
-              AssetsSearchBar(
-                onSearchTextChanged: (String text) => setState(
-                  () => _filterText = text,
-                ),
-              ),
-              _marketsToDisplay == null
-                  ? Container()
-                  : Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            ..._marketsToDisplay
-                                .map((Market market) => MarketItem(
-                                      selectedItemKey: _selectedItemKey,
-                                      filterText: _filterText.toLowerCase(),
-                                      market: market,
-                                      onAssetClicked:
-                                          (asset, isFavoriteClicked) {
-                                        widget.onAssetClicked?.call(
-                                          asset,
-                                          isFavoriteClicked,
-                                        );
-                                        if (isFavoriteClicked) {
-                                          setState(() {
-                                            asset.toggleFavorite();
-                                          });
-                                        }
-                                      },
-                                    ))
-                          ],
+    return DraggableScrollableSheet(
+      initialChildSize: 1,
+      builder: (context, controller) {
+        return SafeArea(
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+            child: Material(
+              elevation: 8, // TODO(Ramin): Use Chart's theme when its ready
+              color: Color(0xFF151717),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    width: double.infinity,
+                    child: Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          // TODO(Ramin): Use Chart's theme when its ready
+                          color: const Color(0xFF3E3E3E),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
-            ],
+                  ),
+                  AssetsSearchBar(
+                    onSearchTextChanged: (String text) => setState(
+                          () => _filterText = text,
+                    ),
+                  ),
+                  _marketsToDisplay == null
+                      ? Container()
+                      : Expanded(
+                    child: SingleChildScrollView(
+                      controller: controller,
+                      child: Column(
+                        children: <Widget>[
+                          ..._marketsToDisplay
+                              .map((Market market) => MarketItem(
+                            selectedItemKey: _selectedItemKey,
+                            filterText: _filterText.toLowerCase(),
+                            market: market,
+                            onAssetClicked:
+                                (asset, isFavoriteClicked) {
+                              widget.onAssetClicked?.call(
+                                asset,
+                                isFavoriteClicked,
+                              );
+                              if (isFavoriteClicked) {
+                                setState(() {
+                                  asset.toggleFavorite();
+                                });
+                              }
+                            },
+                          ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
-
-/*
-MarketItem(
-                          filterText: _filterText.toLowerCase(),
-                          market: _marketsToDisplay[index],
-                          onAssetClicked: (asset, isFavoriteClicked) {
-                            widget.onAssetClicked?.call(
-                              asset,
-                              isFavoriteClicked,
-                            );
-
-                            if (isFavoriteClicked) {
-                              setState(() {
-                                asset.toggleFavorite();
-                              });
-                            }
-                          },
-                        )
- */
