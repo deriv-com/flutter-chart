@@ -142,7 +142,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     try {
       final history = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
-          ticksHistory: 'R_50',
+          ticksHistory: symbol.name,
           end: 'latest',
           count: 50,
           style: granularity == 0 ? 'ticks' : 'candles',
@@ -245,7 +245,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _startEpoch = fromEpoch;
       final TickHistory moreData = await TickHistory.fetchTickHistory(
         TicksHistoryRequest(
-          ticksHistory: 'R_50',
+          ticksHistory: symbol.name,
           end: '${toEpoch ~/ 1000}',
           count: count,
           style: granularity == 0 ? 'ticks' : 'candles',
