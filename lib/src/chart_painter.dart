@@ -148,7 +148,7 @@ class ChartPainter extends CustomPainter {
     );
     final leftBoundEpoch =
         rightBoundEpoch - pxToMs(size.width, msPerPx: msPerPx);
-    final gridLineEpochs = gridEpochs(
+    final _gridTimestamps = gridTimestamps(
       timeGridInterval: timeGridInterval,
       leftBoundEpoch: leftBoundEpoch,
       rightBoundEpoch: rightBoundEpoch,
@@ -156,14 +156,15 @@ class ChartPainter extends CustomPainter {
     paintGrid(
       canvas,
       size,
-      timeLabels: gridLineEpochs.map((epoch) {
-        final time = DateTime.fromMillisecondsSinceEpoch(epoch);
-        return DateFormat('Hms').format(time);
-      }).toList(),
+      timeLabels: _gridTimestamps
+          .map((time) => DateFormat('Hms').format(time))
+          .toList(),
       quoteLabels: gridLineQuotes
           .map((quote) => quote.toStringAsFixed(pipSize))
           .toList(),
-      xCoords: gridLineEpochs.map((epoch) => _epochToX(epoch)).toList(),
+      xCoords: _gridTimestamps
+          .map((time) => _epochToX(time.millisecondsSinceEpoch))
+          .toList(),
       yCoords: gridLineQuotes.map((quote) => _quoteToY(quote)).toList(),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     );

@@ -5,21 +5,21 @@ import 'conversion.dart';
 const _day = const Duration(days: 1);
 const _week = const Duration(days: DateTime.daysPerWeek);
 
-List<int> gridEpochs({
+List<DateTime> gridTimestamps({
   @required Duration timeGridInterval,
   @required int leftBoundEpoch,
   @required int rightBoundEpoch,
 }) {
-  final epochs = <int>[];
+  final timestamps = <DateTime>[];
   final rightBoundTime = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
 
   var t = _gridEpochStart(timeGridInterval, leftBoundEpoch);
 
   while (t.compareTo(rightBoundTime) <= 0) {
-    epochs.add(t.millisecondsSinceEpoch);
+    timestamps.add(t);
     t = t.add(timeGridInterval);
   }
-  return epochs;
+  return timestamps;
 }
 
 DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
