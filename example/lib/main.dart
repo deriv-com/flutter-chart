@@ -225,6 +225,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             backgroundColor: Colors.transparent,
             context: context,
             builder: (BuildContext context) => MarketSelector(
+              selectedItem: symbol,
               markets: _markets,
               onAssetClicked: (asset, favoriteClicked) {
                 if (!favoriteClicked) {

@@ -9,27 +9,32 @@ class MarketItem extends StatelessWidget {
     this.market,
     this.filterText,
     this.onAssetClicked,
+    this.selectedItemKey,
   }) : super(key: key);
 
   final Market market;
   final String filterText;
+  final GlobalObjectKey selectedItemKey;
   final OnAssetClicked onAssetClicked;
 
   @override
   Widget build(BuildContext context) => Container(
-        color: const Color(0xFF0E0E0E),// TODO(Ramin): Use Chart's theme when its ready
+        color: const Color(0xFF0E0E0E),
+        // TODO(Ramin): Use Chart's theme when its ready
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
               margin: const EdgeInsets.only(top: 24, left: 8, bottom: 8),
               child: Text(
-                market.displayName,// TODO(Ramin): Use Chart's theme when its ready
+                market.displayName,
+                // TODO(Ramin): Use Chart's theme when its ready
                 style: TextStyle(fontSize: 14, color: Colors.white),
               ),
             ),
             ...market.subMarkets
                 .map((e) => SubMarketItem(
+                      selectedItemKey: selectedItemKey,
                       subMarket: e,
                       filterText: filterText,
                       onAssetClicked: onAssetClicked,

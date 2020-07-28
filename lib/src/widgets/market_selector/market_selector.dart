@@ -13,11 +13,13 @@ class MarketSelector extends StatefulWidget {
     Key key,
     this.onAssetClicked,
     this.markets,
+    this.selectedItem,
   }) : super(key: key);
 
   /// Will be called when a symbol item [Asset] is clicked.
   final OnAssetClicked onAssetClicked;
   final List<Market> markets;
+  final Asset selectedItem;
 
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
@@ -28,6 +30,23 @@ class _MarketSelectorState extends State<MarketSelector> {
   List<Market> _marketsToDisplay;
 
   String _filterText = "";
+
+  GlobalObjectKey _selectedItemKey;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedItemKey = GlobalObjectKey(widget.selectedItem.name);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Scrollable.ensureVisible(
+        _selectedItemKey.currentContext,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeOut,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +91,41 @@ class _MarketSelectorState extends State<MarketSelector> {
               _marketsToDisplay == null
                   ? Container()
                   : Expanded(
-                      child: ListView.builder(
-                        itemCount: _marketsToDisplay.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            MarketItem(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            ..._marketsToDisplay
+                                .map((Market market) => MarketItem(
+                                      selectedItemKey: _selectedItemKey,
+                                      filterText: _filterText.toLowerCase(),
+                                      market: market,
+                                      onAssetClicked:
+                                          (asset, isFavoriteClicked) {
+                                        widget.onAssetClicked?.call(
+                                          asset,
+                                          isFavoriteClicked,
+                                        );
+                                        if (isFavoriteClicked) {
+                                          setState(() {
+                                            asset.toggleFavorite();
+                                          });
+                                        }
+                                      },
+                                    ))
+                          ],
+                        ),
+                      ),
+                    ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+MarketItem(
                           filterText: _filterText.toLowerCase(),
                           market: _marketsToDisplay[index],
                           onAssetClicked: (asset, isFavoriteClicked) {
@@ -90,13 +140,5 @@ class _MarketSelectorState extends State<MarketSelector> {
                               });
                             }
                           },
-                        ),
-                      ),
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+                        )
+ */

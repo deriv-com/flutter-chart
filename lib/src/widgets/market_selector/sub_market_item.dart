@@ -8,11 +8,13 @@ class SubMarketItem extends StatelessWidget {
     Key key,
     this.subMarket,
     this.filterText,
+    this.selectedItemKey,
     this.onAssetClicked,
   }) : super(key: key);
 
   final SubMarket subMarket;
   final String filterText;
+  final GlobalObjectKey selectedItemKey;
   final OnAssetClicked onAssetClicked;
 
   @override
@@ -24,7 +26,8 @@ class SubMarketItem extends StatelessWidget {
             .toList();
     return assets.isEmpty
         ? SizedBox.shrink()
-        : Material(// TODO(Ramin): Use Chart's theme color when its ready
+        : Material(
+            // TODO(Ramin): Use Chart's theme color when its ready
             color: const Color(0xFF151717),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,12 +36,15 @@ class SubMarketItem extends StatelessWidget {
                   margin: const EdgeInsets.only(top: 16, left: 8),
                   child: Text(
                     subMarket.displayName,
-                    style:// TODO(Ramin): Use Chart's theme color when its ready
+                    style: // TODO(Ramin): Use Chart's theme color when its ready
                         TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
                   ),
                 ),
                 ...assets
                     .map((Asset asset) => AssetItem(
+                          key: selectedItemKey.value == asset.name
+                              ? selectedItemKey
+                              : null,
                           asset: asset,
                           filterText: filterText,
                           onAssetClicked: onAssetClicked,
