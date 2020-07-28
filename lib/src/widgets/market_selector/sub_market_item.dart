@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
@@ -40,16 +41,24 @@ class SubMarketItem extends StatelessWidget {
                         TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
                   ),
                 ),
-                ...assets
-                    .map((Asset asset) => AssetItem(
-                          key: selectedItemKey.value == asset.name
-                              ? selectedItemKey
-                              : null,
-                          asset: asset,
-                          filterText: filterText,
-                          onAssetClicked: onAssetClicked,
-                        ))
-                    .toList()
+                ...assets.map((Asset asset) {
+                  if (selectedItemKey.value == asset.name) {
+                    return AnimatedHighlight(
+                      playAfter: scrollToSelectedDuration,
+                      key: selectedItemKey,
+                      child: AssetItem(
+                        asset: asset,
+                        filterText: filterText,
+                        onAssetClicked: onAssetClicked,
+                      ),
+                    );
+                  }
+                  return AssetItem(
+                    asset: asset,
+                    filterText: filterText,
+                    onAssetClicked: onAssetClicked,
+                  );
+                }).toList()
               ],
             ),
           );

@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 /// [favoriteClicked] is true when user has clicked on favorite icon of the item.
 typedef OnAssetClicked = Function(Asset asset, bool favoriteClicked);
 
+/// The animation duration which will take to scroll to selected item in MarketSelector
+const scrollToSelectedDuration = Duration(milliseconds: 600);
+
 class MarketSelector extends StatefulWidget {
   const MarketSelector({
     Key key,
@@ -42,7 +45,7 @@ class _MarketSelectorState extends State<MarketSelector> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Scrollable.ensureVisible(
         _selectedItemKey.currentContext,
-        duration: const Duration(seconds: 1),
+        duration: scrollToSelectedDuration,
         curve: Curves.easeOut,
       );
     });
