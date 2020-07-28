@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:flutter_deriv_api/api/api_initializer.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
@@ -11,7 +12,6 @@ import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
-import 'package:flutter_deriv_api/services/dependency_injector/module_container.dart';
 import 'package:vibration/vibration.dart';
 
 void main() {
@@ -58,7 +58,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    ModuleContainer().initialize(Injector.getInjector());
+    APIInitializer().initialize();
     await Injector.getInjector().get<BaseAPI>().connect(
           ConnectionInformation(
             appId: '1089',
