@@ -111,7 +111,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _startEpoch = candles.first.epoch;
 
-      historySubscription.tickStream.listen((tickBase) {
+      historySubscription?.tickStream?.listen((tickBase) {
         if (tickBase != null) {
           _currentTick = tickBase;
 
@@ -321,9 +321,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
       await _currentTick?.unsubscribe();
     } on Exception catch (e) {
       print(e);
+    } finally {
+      granularity = value;
+      _initTickStream();
     }
-    granularity = value;
-    _initTickStream();
   }
 
   String _granularityLabel(int granularity) {
