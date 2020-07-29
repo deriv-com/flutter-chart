@@ -275,7 +275,7 @@ void main() {
   });
 
   group('timeLabel should', () {
-    test('return date for 00:00:00', () {
+    test('return date in the format `2 Jul` for 00:00:00', () {
       expect(
         timeLabel(DateTime.parse('2020-07-02 00:00:00')),
         '2 Jul',
