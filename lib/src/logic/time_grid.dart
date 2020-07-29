@@ -27,9 +27,9 @@ DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
   if (timeGridInterval == month) {
     return _closestFutureMonthStart(leftBoundEpoch);
   } else if (timeGridInterval == _week) {
-    var t = _closestFutureDayStart(leftBoundEpoch);
-    while (t.weekday != DateTime.monday) t = t.add(_day);
-    return t;
+    final t = _closestFutureDayStart(leftBoundEpoch);
+    final daysUntilMonday = (8 - t.weekday) % 7;
+    return t.add(Duration(days: daysUntilMonday));
   } else if (timeGridInterval == _day) {
     return _closestFutureDayStart(leftBoundEpoch);
   } else {
