@@ -273,4 +273,25 @@ void main() {
       );
     });
   });
+
+  group('timeLabel should', () {
+    test('return date for 00:00:00', () {
+      expect(
+        timeLabel(DateTime.parse('2020-07-02 00:00:00')),
+        '2 Jul',
+      );
+    });
+    test('return month name for 00:00:00 of the first day of the month', () {
+      expect(
+        timeLabel(DateTime.parse('2020-07-01 00:00:00')),
+        'July',
+      );
+    });
+    test('return year for 00:00:00 of the first day of the year', () {
+      expect(
+        timeLabel(DateTime.parse('2020-01-01 00:00:00')),
+        '2020',
+      );
+    });
+  });
 }

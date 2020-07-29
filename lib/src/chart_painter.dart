@@ -2,7 +2,6 @@ import 'package:deriv_chart/src/models/candle_painting.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_loading.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 import 'models/tick.dart';
 import 'models/candle.dart';
@@ -156,9 +155,7 @@ class ChartPainter extends CustomPainter {
     paintGrid(
       canvas,
       size,
-      timeLabels: _gridTimestamps
-          .map((time) => DateFormat('Hms').format(time))
-          .toList(),
+      timeLabels: _gridTimestamps.map((time) => timeLabel(time)).toList(),
       quoteLabels: gridLineQuotes
           .map((quote) => quote.toStringAsFixed(pipSize))
           .toList(),
