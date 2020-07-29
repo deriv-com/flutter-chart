@@ -196,7 +196,7 @@ void main() {
     test('return 00:00:00 of each month\'s first day for 1 month interval', () {
       expect(
         gridTimestamps(
-          timeGridInterval: Duration(days: DateTime.daysPerWeek),
+          timeGridInterval: month,
           leftBoundEpoch:
               DateTime.parse('2020-06-24 08:00:00').millisecondsSinceEpoch,
           rightBoundEpoch:

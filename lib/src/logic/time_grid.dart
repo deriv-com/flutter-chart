@@ -4,6 +4,7 @@ import 'conversion.dart';
 
 const _day = const Duration(days: 1);
 const _week = const Duration(days: DateTime.daysPerWeek);
+const month = const Duration(days: 30);
 
 List<DateTime> gridTimestamps({
   @required Duration timeGridInterval,
@@ -17,18 +18,20 @@ List<DateTime> gridTimestamps({
 
   while (t.compareTo(rightBoundTime) <= 0) {
     timestamps.add(t);
-    t = t.add(timeGridInterval);
+    t = timeGridInterval == month ? _addMonth(t) : t.add(timeGridInterval);
   }
   return timestamps;
 }
 
 DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
-  if (timeGridInterval == _week) {
-    var t = _nextDayStart(leftBoundEpoch);
+  if (timeGridInterval == month) {
+    return _closestFutureMonthStart(leftBoundEpoch);
+  } else if (timeGridInterval == _week) {
+    var t = _closestFutureDayStart(leftBoundEpoch);
     while (t.weekday != DateTime.monday) t = t.add(_day);
     return t;
   } else if (timeGridInterval == _day) {
-    return _nextDayStart(leftBoundEpoch);
+    return _closestFutureDayStart(leftBoundEpoch);
   } else {
     final diff = timeGridInterval.inMilliseconds;
     final firstLeft = (leftBoundEpoch / diff).ceil() * diff;
@@ -36,10 +39,24 @@ DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
   }
 }
 
-DateTime _nextDayStart(int leftBoundEpoch) {
+DateTime _closestFutureDayStart(int leftBoundEpoch) {
   final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
-  var t = DateTime(left.year, left.month, left.day); // time set to 00:00:00
+  var t = DateTime(left.year, left.month, left.day); // time 00:00:00
   return t.isBefore(left) ? t.add(_day) : t;
+}
+
+DateTime _closestFutureMonthStart(int leftBoundEpoch) {
+  final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
+  var t = DateTime(left.year, left.month); // day 1, time 00:00:00
+  return t.isBefore(left) ? _addMonth(t) : t;
+}
+
+DateTime _addMonth(DateTime t) {
+  if (t.month == DateTime.december) {
+    return DateTime(t.year + 1);
+  } else {
+    return DateTime(t.year, t.month + 1);
+  }
 }
 
 Duration timeGridInterval(
@@ -62,6 +79,7 @@ Duration timeGridInterval(
     Duration(hours: 8),
     _day,
     _week,
+    month,
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(Duration interval) {
