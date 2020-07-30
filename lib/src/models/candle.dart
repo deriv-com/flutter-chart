@@ -38,4 +38,8 @@ class Candle {
       close: close ?? this.close,
     );
   }
+
+  @override
+  String toString() =>
+      'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 }
