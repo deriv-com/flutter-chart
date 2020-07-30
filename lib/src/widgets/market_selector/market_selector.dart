@@ -31,7 +31,8 @@ class MarketSelector extends StatefulWidget {
   _MarketSelectorState createState() => _MarketSelectorState();
 }
 
-class _MarketSelectorState extends State<MarketSelector> {
+class _MarketSelectorState extends State<MarketSelector>
+    with SingleTickerProviderStateMixin {
   /// List of markets after applying the [_filterText].
   List<Market> _marketsToDisplay = <Market>[];
 
@@ -98,7 +99,10 @@ class _MarketSelectorState extends State<MarketSelector> {
     widget.markets.forEach((market) {
       market.subMarkets.forEach((subMarket) {
         subMarket.assets.forEach((asset) {
-          if (asset.isFavorite) {
+          if (asset.isFavorite &&
+              asset.displayName
+                  .toLowerCase()
+                  .contains(_filterText.toLowerCase())) {
             favoritesList.add(asset);
           }
         });
@@ -132,15 +136,23 @@ class _MarketSelectorState extends State<MarketSelector> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  if (favoritesList.isNotEmpty)
-                    _buildMarketItem(
-                      Market.fromSingleSubMarket(
-                        name: 'favorites',
-                        displayName: 'Favorites',
-                        assets: favoritesList,
-                      ),
-                      isCategorized: false,
-                    ),
+                  AnimatedSize(
+                    vsync: this,
+                    curve: Curves.easeOut,
+                    duration: const Duration(milliseconds: 300),
+                    child: favoritesList.isEmpty
+                        ? SizedBox(
+                            width: double.infinity,
+                          )
+                        : _buildMarketItem(
+                            Market.fromSingleSubMarket(
+                              name: 'favorites',
+                              displayName: 'Favorites',
+                              assets: favoritesList,
+                            ),
+                            isCategorized: false,
+                          ),
+                  ),
                   ..._marketsToDisplay
                       .map((Market market) => _buildMarketItem(market))
                 ],
