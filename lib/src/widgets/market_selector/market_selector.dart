@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/widgets/custom_draggable_sheet.dart';
 import 'package:deriv_chart/src/widgets/market_selector/assets_search_bar.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,7 @@ class MarketSelector extends StatefulWidget {
   _MarketSelectorState createState() => _MarketSelectorState();
 }
 
-class _MarketSelectorState extends State<MarketSelector>
-    with SingleTickerProviderStateMixin {
+class _MarketSelectorState extends State<MarketSelector> {
   List<Market> _markets;
 
   /// List of markets after applying the [_filterText].
@@ -42,51 +42,21 @@ class _MarketSelectorState extends State<MarketSelector>
   /// Is used to scroll to the selected symbol(Asset).
   GlobalObjectKey _selectedItemKey;
 
-  AnimationController _animationController;
-
-  GlobalKey _sheetKey = GlobalKey();
-
-  Size _sheetSize;
-
-  bool didPopped = false;
-
   @override
   void initState() {
     super.initState();
 
     _markets = widget.markets;
 
-    _animationController = AnimationController.unbounded(vsync: this, value: 0)
-      ..addStatusListener((status) {
-        print(status);
-        if (status == AnimationStatus.completed &&
-            _animationController.value > 0.9) {
-          Navigator.of(context).pop();
-        }
-      });
-
     _selectedItemKey = GlobalObjectKey(widget.selectedItem.name);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _sheetSize = _initSizes();
       Scrollable.ensureVisible(
         _selectedItemKey.currentContext,
         duration: scrollToSelectedDuration,
         curve: Curves.easeOut,
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _animationController?.dispose();
-
-    super.dispose();
-  }
-
-  Size _initSizes() {
-    final RenderBox chartBox = _sheetKey.currentContext.findRenderObject();
-    return chartBox.size;
   }
 
   @override
@@ -98,16 +68,8 @@ class _MarketSelectorState extends State<MarketSelector>
                 market.containsAssetWithText(_filterText.toLowerCase()))
             .toList();
 
-    return AnimatedBuilder(
-      key: _sheetKey,
-      animation: _animationController,
-      builder: (context, child) {
-        return FractionalTranslation(
-          translation: Offset(0, _animationController.value),
-          child: child,
-        );
-      },
-      child: ClipRRect(
+    return CustomDraggableSheet(
+      sheet: ClipRRect(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -149,53 +111,27 @@ class _MarketSelectorState extends State<MarketSelector>
   Widget _buildMarketsList() => _marketsToDisplay == null
       ? Container()
       : Expanded(
-          child: NotificationListener(
-            onNotification: _handleScrollNotification,
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  ..._marketsToDisplay.map((Market market) => MarketItem(
-                        selectedItemKey: _selectedItemKey,
-                        filterText: _filterText.toLowerCase(),
-                        market: market,
-                        onAssetClicked: (asset, isFavoriteClicked) {
-                          widget.onAssetClicked?.call(
-                            asset,
-                            isFavoriteClicked,
-                          );
-                          if (isFavoriteClicked) {
-                            setState(() {
-                              asset.toggleFavorite();
-                            });
-                          }
-                        },
-                      ))
-                ],
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                ..._marketsToDisplay.map((Market market) => MarketItem(
+                      selectedItemKey: _selectedItemKey,
+                      filterText: _filterText.toLowerCase(),
+                      market: market,
+                      onAssetClicked: (asset, isFavoriteClicked) {
+                        widget.onAssetClicked?.call(
+                          asset,
+                          isFavoriteClicked,
+                        );
+                        if (isFavoriteClicked) {
+                          setState(() {
+                            asset.toggleFavorite();
+                          });
+                        }
+                      },
+                    ))
+              ],
             ),
           ),
         );
-
-  bool _handleScrollNotification(Notification notification) {
-    if (_sheetSize != null && notification is OverscrollNotification) {
-      final deltaPercent = notification.overscroll / _sheetSize.height;
-
-      if (deltaPercent < 0) {
-        _animationController.value -= deltaPercent;
-      }
-    }
-
-    if (!_animationController.isAnimating &&
-        notification is ScrollEndNotification) {
-      if (_animationController.value > 0.5) {
-        _animationController.animateTo(1,
-            duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
-      } else {
-        _animationController.animateTo(0,
-            duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
-      }
-    }
-
-    return true;
-  }
 }
