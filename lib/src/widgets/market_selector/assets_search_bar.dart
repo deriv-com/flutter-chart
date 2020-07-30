@@ -14,11 +14,14 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
   bool _isSearching = false;
   FocusNode _searchFieldFocusNode;
 
+  TextEditingController _textEditingController;
+
   @override
   void initState() {
     super.initState();
 
     _searchFieldFocusNode = FocusNode();
+    _textEditingController = TextEditingController();
   }
 
   @override
@@ -29,6 +32,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
             alignment: Alignment.center,
             child: _isSearching
                 ? TextFormField(
+                    controller: _textEditingController,
                     focusNode: _searchFieldFocusNode,
                     onChanged: (String text) =>
                         widget.onSearchTextChanged?.call(text),
@@ -40,7 +44,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
                         enabledBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        hintText: 'Search in assets'),
+                        hintText: 'Search assets'),
                   )
                 : InkWell(
                     child: Text(
@@ -55,13 +59,26 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
             child: _isSearching
                 ? IconButton(
                     icon: Icon(Icons.close, size: 20),
-                    onPressed: () => _switchToNormalMode(),
+                    onPressed: _textEditingController.value.text.isEmpty
+                        ? null
+                        : () {
+                            _textEditingController.clear();
+                            widget.onSearchTextChanged?.call('');
+                          },
                   )
                 : IconButton(
                     icon: Icon(Icons.search, size: 20),
                     onPressed: () => _switchToSearchMode(),
                   ),
           ),
+          if (_isSearching)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, size: 20),
+                onPressed: () => _switchToNormalMode(),
+              ),
+            ),
         ],
       );
 
