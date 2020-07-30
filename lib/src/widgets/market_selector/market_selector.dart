@@ -69,7 +69,7 @@ class _MarketSelectorState extends State<MarketSelector> {
             .toList();
 
     return CustomDraggableSheet(
-      sheet: ClipRRect(
+      child: ClipRRect(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
