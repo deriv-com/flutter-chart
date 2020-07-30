@@ -53,11 +53,7 @@ DateTime _closestFutureMonthStart(int epoch) {
 }
 
 DateTime _addMonth(DateTime time) {
-  if (time.month == DateTime.december) {
-    return DateTime(time.year + 1);
-  } else {
-    return DateTime(time.year, time.month + 1);
-  }
+  return DateTime(time.year, time.month + 1);
 }
 
 Duration timeGridInterval(
