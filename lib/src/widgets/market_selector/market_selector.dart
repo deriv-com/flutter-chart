@@ -18,6 +18,7 @@ class MarketSelector extends StatefulWidget {
     this.onAssetClicked,
     this.markets,
     this.selectedItem,
+    this.favoriteAssets,
   }) : super(key: key);
 
   /// Will be called when a symbol item [Asset] is clicked.
@@ -26,6 +27,10 @@ class MarketSelector extends StatefulWidget {
   final List<Market> markets;
 
   final Asset selectedItem;
+
+  /// [Optional] if not set the list of favorites will be filled with assets that
+  /// their [Asset.isFavorite] is true
+  final List<Asset> favoriteAssets;
 
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
@@ -94,15 +99,20 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   List<Asset> _getFavoritesList() {
+    if (widget.favoriteAssets != null) {
+      return _filterText.isEmpty
+          ? widget.favoriteAssets
+          : widget.favoriteAssets
+              .map((Asset asset) => _assetContainsFilterText(asset))
+              .toList();
+    }
+
     final List<Asset> favoritesList = [];
 
     widget.markets.forEach((market) {
       market.subMarkets.forEach((subMarket) {
         subMarket.assets.forEach((asset) {
-          if (asset.isFavorite &&
-              asset.displayName
-                  .toLowerCase()
-                  .contains(_filterText.toLowerCase())) {
+          if (asset.isFavorite && _assetContainsFilterText(asset)) {
             favoritesList.add(asset);
           }
         });
@@ -110,6 +120,9 @@ class _MarketSelectorState extends State<MarketSelector>
     });
     return favoritesList;
   }
+
+  bool _assetContainsFilterText(Asset asset) =>
+      asset.displayName.toLowerCase().contains(_filterText.toLowerCase());
 
   Widget _buildTopHandle() => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
