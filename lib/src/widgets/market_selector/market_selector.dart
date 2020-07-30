@@ -32,10 +32,8 @@ class MarketSelector extends StatefulWidget {
 }
 
 class _MarketSelectorState extends State<MarketSelector> {
-  List<Market> _markets;
-
   /// List of markets after applying the [_filterText].
-  List<Market> _marketsToDisplay;
+  List<Market> _marketsToDisplay = <Market>[];
 
   String _filterText = "";
 
@@ -45,8 +43,6 @@ class _MarketSelectorState extends State<MarketSelector> {
   @override
   void initState() {
     super.initState();
-
-    _markets = widget.markets;
 
     _selectedItemKey = GlobalObjectKey(widget.selectedItem.name);
 
@@ -61,12 +57,7 @@ class _MarketSelectorState extends State<MarketSelector> {
 
   @override
   Widget build(BuildContext context) {
-    _marketsToDisplay = _filterText.isEmpty
-        ? _markets
-        : _markets
-            .where((market) =>
-                market.containsAssetWithText(_filterText.toLowerCase()))
-            .toList();
+    _fillMarketsList();
 
     return CustomDraggableSheet(
       child: ClipRRect(
@@ -92,7 +83,31 @@ class _MarketSelectorState extends State<MarketSelector> {
     );
   }
 
-  Container _buildTopHandle() => Container(
+  void _fillMarketsList() {
+    _marketsToDisplay = _filterText.isEmpty
+        ? widget.markets
+        : widget.markets
+            .where((market) =>
+                market.containsAssetWithText(_filterText.toLowerCase()))
+            .toList();
+  }
+
+  List<Asset> _getFavoritesList() {
+    final List<Asset> favoritesList = [];
+
+    widget.markets.forEach((market) {
+      market.subMarkets.forEach((subMarket) {
+        subMarket.assets.forEach((asset) {
+          if (asset.isFavorite) {
+            favoritesList.add(asset);
+          }
+        });
+      });
+    });
+    return favoritesList;
+  }
+
+  Widget _buildTopHandle() => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         width: double.infinity,
         child: Center(
@@ -108,30 +123,48 @@ class _MarketSelectorState extends State<MarketSelector> {
         ),
       );
 
-  Widget _buildMarketsList() => _marketsToDisplay == null
-      ? Container()
-      : Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                ..._marketsToDisplay.map((Market market) => MarketItem(
-                      selectedItemKey: _selectedItemKey,
-                      filterText: _filterText.toLowerCase(),
-                      market: market,
-                      onAssetClicked: (asset, isFavoriteClicked) {
-                        widget.onAssetClicked?.call(
-                          asset,
-                          isFavoriteClicked,
-                        );
-                        if (isFavoriteClicked) {
-                          setState(() {
-                            asset.toggleFavorite();
-                          });
-                        }
-                      },
-                    ))
-              ],
+  Widget _buildMarketsList() {
+    final List<Asset> favoritesList = _getFavoritesList();
+
+    return _marketsToDisplay == null
+        ? Container()
+        : Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  if (favoritesList.isNotEmpty)
+                    _buildMarketItem(
+                      Market.fromSingleSubMarket(
+                        name: 'favorites',
+                        displayName: 'Favorites',
+                        assets: favoritesList,
+                      ),
+                      isCategorized: false,
+                    ),
+                  ..._marketsToDisplay
+                      .map((Market market) => _buildMarketItem(market))
+                ],
+              ),
             ),
-          ),
-        );
+          );
+  }
+
+  Widget _buildMarketItem(Market market, {bool isCategorized = true}) =>
+      MarketItem(
+        isSubMarketsCategorized: isCategorized,
+        selectedItemKey: _selectedItemKey,
+        filterText: _filterText.toLowerCase(),
+        market: market,
+        onAssetClicked: (asset, isFavoriteClicked) {
+          widget.onAssetClicked?.call(
+            asset,
+            isFavoriteClicked,
+          );
+          if (isFavoriteClicked) {
+            setState(() {
+              asset.toggleFavorite();
+            });
+          }
+        },
+      );
 }

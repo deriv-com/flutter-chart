@@ -10,12 +10,14 @@ class MarketItem extends StatelessWidget {
     this.filterText,
     this.onAssetClicked,
     this.selectedItemKey,
+    this.isSubMarketsCategorized = true,
   }) : super(key: key);
 
   final Market market;
   final String filterText;
   final GlobalObjectKey selectedItemKey;
   final OnAssetClicked onAssetClicked;
+  final bool isSubMarketsCategorized;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -34,6 +36,7 @@ class MarketItem extends StatelessWidget {
             ),
             ...market.subMarkets
                 .map((e) => SubMarketItem(
+                      isCategorized: isSubMarketsCategorized,
                       selectedItemKey: selectedItemKey,
                       subMarket: e,
                       filterText: filterText,

@@ -11,12 +11,14 @@ class SubMarketItem extends StatelessWidget {
     this.filterText,
     this.selectedItemKey,
     this.onAssetClicked,
+    this.isCategorized = true,
   }) : super(key: key);
 
   final SubMarket subMarket;
   final String filterText;
   final GlobalObjectKey selectedItemKey;
   final OnAssetClicked onAssetClicked;
+  final bool isCategorized;
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +35,18 @@ class SubMarketItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(top: 16, left: 8),
-                  child: Text(
-                    subMarket.displayName,
-                    style: // TODO(Ramin): Use Chart's theme color when its ready
-                        TextStyle(fontSize: 14, color: const Color(0xFF6E6E6E)),
+                if (isCategorized)
+                  Container(
+                    margin: const EdgeInsets.only(top: 16, left: 8),
+                    child: Text(
+                      subMarket.displayName,
+                      style: // TODO(Ramin): Use Chart's theme color when its ready
+                          TextStyle(
+                              fontSize: 14, color: const Color(0xFF6E6E6E)),
+                    ),
                   ),
-                ),
                 ...assets.map((Asset asset) {
-                  if (selectedItemKey.value == asset.name) {
+                  if (selectedItemKey.value == asset.name && isCategorized) {
                     return AnimatedHighlight(
                       playAfter: scrollToSelectedDuration,
                       key: selectedItemKey,

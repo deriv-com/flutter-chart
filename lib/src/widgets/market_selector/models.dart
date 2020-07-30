@@ -21,6 +21,14 @@ class Market {
     }
   }
 
+  Market.fromSingleSubMarket({
+    this.name,
+    this.displayName,
+    List<Asset> assets,
+  }) {
+    subMarkets.add(SubMarket(name: '', displayName: '', assets: assets));
+  }
+
   final String name;
   final String displayName;
   final List<SubMarket> subMarkets = [];
