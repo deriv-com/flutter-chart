@@ -20,7 +20,7 @@ class AssetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    contentPadding: const EdgeInsets.only(left: 12),
+        contentPadding: const EdgeInsets.only(left: 12),
         leading: _buildAssetIcon(),
         title: HighLightedText(
           '${asset.displayName}',
@@ -33,7 +33,9 @@ class AssetItem extends StatelessWidget {
   IconButton _buildFavoriteIcon() => IconButton(
         icon: Icon(
           asset.isFavorite ? Icons.star : Icons.star_border,
-          color: const Color(0xFF6E6E6E),// TODO(Ramin): Use Chart's theme when its ready
+          color: asset.isFavorite
+              ? const Color(0xFFFFAD3A)// TODO(Ramin): Use Chart's theme when its ready
+              : const Color(0xFF6E6E6E),
           size: 20,
         ),
         onPressed: () => onAssetClicked?.call(asset, true),
