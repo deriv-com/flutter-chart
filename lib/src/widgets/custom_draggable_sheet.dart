@@ -11,6 +11,7 @@ class CustomDraggableSheet extends StatefulWidget {
     Key key,
     @required this.child,
     this.animationDuration = const Duration(milliseconds: 100),
+    this.introAnimationDuration = const Duration(milliseconds: 200),
   }) : super(key: key);
 
   /// The sheet that was popped-up inside a [BottomSheet] throw calling [showBottomSheet()]
@@ -18,6 +19,8 @@ class CustomDraggableSheet extends StatefulWidget {
 
   /// The duration of animation whether sheet will fling back to top or dismiss
   final Duration animationDuration;
+
+  final Duration introAnimationDuration;
 
   @override
   _CustomDraggableSheetState createState() => _CustomDraggableSheetState();
@@ -35,7 +38,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   void initState() {
     super.initState();
 
-    _animationController = AnimationController.unbounded(vsync: this, value: 0)
+    _animationController = AnimationController.unbounded(vsync: this, value: 1)
       ..addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed &&
             _animationController.value > 0.9) {
@@ -43,8 +46,14 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
         }
       });
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((timeStamp) => _sheetSize = _initSizes());
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _sheetSize = _initSizes();
+      _animationController.animateTo(
+        0,
+        duration: widget.introAnimationDuration,
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   Size _initSizes() {
