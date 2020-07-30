@@ -3,9 +3,9 @@ import 'package:meta/meta.dart';
 
 import 'conversion.dart';
 
-const _day = const Duration(days: 1);
-const _week = const Duration(days: DateTime.daysPerWeek);
-const month = const Duration(days: 30);
+const _day = Duration(days: 1);
+const _week = Duration(days: DateTime.daysPerWeek);
+const month = Duration(days: 30);
 
 List<DateTime> gridTimestamps({
   @required Duration timeGridInterval,
@@ -40,23 +40,23 @@ DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
   }
 }
 
-DateTime _closestFutureDayStart(int leftBoundEpoch) {
-  final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
-  var t = DateTime(left.year, left.month, left.day); // time 00:00:00
-  return t.isBefore(left) ? t.add(_day) : t;
+DateTime _closestFutureDayStart(int epoch) {
+  final time = DateTime.fromMillisecondsSinceEpoch(epoch);
+  final dayStart = DateTime(time.year, time.month, time.day); // time 00:00:00
+  return dayStart.isBefore(time) ? dayStart.add(_day) : dayStart;
 }
 
-DateTime _closestFutureMonthStart(int leftBoundEpoch) {
-  final left = DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch);
-  var t = DateTime(left.year, left.month); // day 1, time 00:00:00
-  return t.isBefore(left) ? _addMonth(t) : t;
+DateTime _closestFutureMonthStart(int epoch) {
+  final time = DateTime.fromMillisecondsSinceEpoch(epoch);
+  final monthStart = DateTime(time.year, time.month); // day 1, time 00:00:00
+  return monthStart.isBefore(time) ? _addMonth(monthStart) : monthStart;
 }
 
-DateTime _addMonth(DateTime t) {
-  if (t.month == DateTime.december) {
-    return DateTime(t.year + 1);
+DateTime _addMonth(DateTime time) {
+  if (time.month == DateTime.december) {
+    return DateTime(time.year + 1);
   } else {
-    return DateTime(t.year, t.month + 1);
+    return DateTime(time.year, time.month + 1);
   }
 }
 
