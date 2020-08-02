@@ -25,6 +25,13 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
   }
 
   @override
+  void dispose() {
+    _textEditingController?.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => _isSearching
       ? Row(
           children: <Widget>[
