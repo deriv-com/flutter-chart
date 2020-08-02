@@ -11,7 +11,7 @@ class CustomDraggableSheet extends StatefulWidget {
     Key key,
     @required this.child,
     this.animationDuration = const Duration(milliseconds: 100),
-    this.introAnimationDuration = const Duration(milliseconds: 200),
+    this.introAnimationDuration = const Duration(milliseconds: 300),
   }) : super(key: key);
 
   /// The sheet that was popped-up inside a [BottomSheet] throw calling [showBottomSheet()]
@@ -33,6 +33,8 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   final _sheetKey = GlobalKey();
 
   Size _sheetSize;
+
+  bool _overScrolled = false;
 
   @override
   void initState() {
@@ -84,11 +86,14 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
 
   bool _handleScrollNotification(Notification notification) {
     if (_sheetSize != null && notification is OverscrollNotification) {
+      _overScrolled = true;
       _panToBottom(notification);
-    } else if (notification is ScrollUpdateNotification) {
+    } else if (notification is ScrollUpdateNotification && _overScrolled) {
       _panToTop(notification);
     } else if (!_animationController.isAnimating &&
-        notification is ScrollEndNotification) {
+        notification is ScrollEndNotification &&
+        _overScrolled) {
+      _overScrolled = false;
       _flingToTopOrBottom();
     }
 
