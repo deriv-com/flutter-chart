@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A widget to play a pulse highlight animation on its child
 class AnimatedHighlight extends StatefulWidget {
   const AnimatedHighlight({
     Key key,
@@ -9,9 +10,10 @@ class AnimatedHighlight extends StatefulWidget {
   }) : super(key: key);
 
   final Widget child;
+
   final Duration duration;
 
-  /// Play the highlight animation after this duration
+  /// Play the pulse animation after this duration
   final Duration playAfter;
 
   @override
