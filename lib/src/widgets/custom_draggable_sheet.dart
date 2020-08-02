@@ -84,30 +84,55 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
 
   bool _handleScrollNotification(Notification notification) {
     if (_sheetSize != null && notification is OverscrollNotification) {
-      final deltaPercent = notification.overscroll / _sheetSize.height;
-
-      if (deltaPercent < 0) {
-        _animationController.value -= deltaPercent;
-      }
-    }
-
-    if (!_animationController.isAnimating &&
+      _panToBottom(notification);
+    } else if (notification is ScrollUpdateNotification) {
+      _panToTop(notification);
+    } else if (!_animationController.isAnimating &&
         notification is ScrollEndNotification) {
-      if (_animationController.value > 0.5) {
-        _animationController.animateTo(
-          1,
-          duration: widget.animationDuration,
-          curve: Curves.easeOut,
-        );
-      } else {
-        _animationController.animateTo(
-          0,
-          duration: widget.animationDuration,
-          curve: Curves.easeOut,
-        );
-      }
+      _flingToTopOrBottom();
     }
 
     return true;
+  }
+
+  void _panToTop(ScrollUpdateNotification notification) {
+    final deltaPercent = notification.scrollDelta / _sheetSize.height;
+
+    if (deltaPercent > 0) {
+      _updateSheetHeightBy(deltaPercent);
+    }
+  }
+
+  void _panToBottom(OverscrollNotification notification) {
+    final deltaPercent = notification.overscroll / _sheetSize.height;
+
+    if (deltaPercent < 0) {
+      _updateSheetHeightBy(deltaPercent);
+    }
+  }
+
+  void _updateSheetHeightBy(double deltaPercent) {
+    _animationController.value -= deltaPercent;
+    _clampAnimationValue();
+  }
+
+  void _flingToTopOrBottom() {
+    if (_animationController.value > 0.5) {
+      _animationController.animateTo(
+        1,
+        duration: widget.animationDuration,
+        curve: Curves.easeOut,
+      );
+    } else {
+      _animationController.animateTo(
+        0,
+        duration: widget.animationDuration,
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  void _clampAnimationValue() {
+    _animationController.value = _animationController.value.clamp(0.0, 1.0);
   }
 }
