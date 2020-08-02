@@ -1,9 +1,15 @@
 class Market {
+  Market({
+    this.name,
+    this.displayName,
+    this.subMarkets,
+  });
+
   Market.fromAssets({
     this.name,
     this.displayName,
     List<Asset> assets,
-  }) {
+  }) : subMarkets = List<SubMarket>() {
     final List<String> subMarketTitles = [];
     for (final asset in assets) {
       if (!subMarketTitles.contains(asset.subMarket)) {
@@ -21,17 +27,17 @@ class Market {
     }
   }
 
-  Market.fromSingleSubMarket({
+  Market.fromASubMarketAssets({
     this.name,
     this.displayName,
     List<Asset> assets,
-  }) {
+  }) : subMarkets = List<SubMarket>() {
     subMarkets.add(SubMarket(name: '', displayName: '', assets: assets));
   }
 
   final String name;
   final String displayName;
-  final List<SubMarket> subMarkets = [];
+  final List<SubMarket> subMarkets;
 
   /// Returns true if any asset under this market contains the [filterText]
   bool containsAssetWithText(String filterText) =>

@@ -29,7 +29,7 @@ class MarketItem extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 24, left: 8, bottom: 8),
               child: Text(
-                market.displayName,
+                market.displayName ?? '',
                 // TODO(Ramin): Use Chart's theme when its ready
                 style: TextStyle(fontSize: 14, color: Colors.white),
               ),

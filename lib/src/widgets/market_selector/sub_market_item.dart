@@ -46,7 +46,8 @@ class SubMarketItem extends StatelessWidget {
                     ),
                   ),
                 ...assets.map((Asset asset) {
-                  if (selectedItemKey.value == asset.name && isCategorized) {
+                  if ((selectedItemKey?.value == asset.name || false) &&
+                      isCategorized) {
                     return AnimatedHighlight(
                       playAfter: scrollToSelectedDuration,
                       key: selectedItemKey,

@@ -31,6 +31,7 @@ class AssetItem extends StatelessWidget {
       );
 
   IconButton _buildFavoriteIcon() => IconButton(
+        key: ValueKey<String>('${asset.name}-fav-icon'),
         icon: Icon(
           asset.isFavorite ? Icons.star : Icons.star_border,
           color: asset.isFavorite

@@ -50,14 +50,19 @@ class _MarketSelectorState extends State<MarketSelector>
   void initState() {
     super.initState();
 
-    _selectedItemKey = GlobalObjectKey(widget.selectedItem.name);
+    if (widget.selectedItem != null) {
+      _selectedItemKey = GlobalObjectKey(widget.selectedItem.name);
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Scrollable.ensureVisible(
-        _selectedItemKey.currentContext,
-        duration: scrollToSelectedDuration,
-        curve: Curves.easeOut,
-      );
+      if (widget.selectedItem != null &&
+          _selectedItemKey.currentState != null) {
+        Scrollable.ensureVisible(
+          _selectedItemKey.currentContext,
+          duration: scrollToSelectedDuration,
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -158,7 +163,7 @@ class _MarketSelectorState extends State<MarketSelector>
                             width: double.infinity,
                           )
                         : _buildMarketItem(
-                            Market.fromSingleSubMarket(
+                            Market.fromASubMarketAssets(
                               name: 'favorites',
                               displayName: 'Favorites',
                               assets: favoritesList,
