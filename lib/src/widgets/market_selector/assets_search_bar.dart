@@ -74,6 +74,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
       );
 
   Widget _buildTextField() => TextFormField(
+        key: ValueKey<String>('search-bar-text-field'),
         controller: _textEditingController,
         focusNode: _searchFieldFocusNode,
         onChanged: (String text) => widget.onSearchTextChanged?.call(text),

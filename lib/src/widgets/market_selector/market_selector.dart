@@ -114,7 +114,7 @@ class _MarketSelectorState extends State<MarketSelector>
 
     final List<Asset> favoritesList = [];
 
-    widget.markets.forEach((market) {
+    widget.markets?.forEach((market) {
       market.subMarkets.forEach((subMarket) {
         subMarket.assets.forEach((asset) {
           if (asset.isFavorite && _assetContainsFilterText(asset)) {
