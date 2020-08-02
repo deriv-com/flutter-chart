@@ -97,7 +97,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
       _flingToTopOrBottom();
     }
 
-    return true;
+    return false;
   }
 
   void _panToTop(ScrollUpdateNotification notification) {
