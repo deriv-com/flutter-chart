@@ -5,7 +5,7 @@ double msToPx(int ms, {@required double msPerPx}) {
 }
 
 int pxToMs(double px, {@required double msPerPx}) {
-  return (px * msPerPx).toInt();
+  return (px * msPerPx).round();
 }
 
 double epochToCanvasX({
@@ -37,4 +37,13 @@ double quoteToCanvasY({
   final pxFromTopBound = quoteToTopBoundFraction * drawingRange;
 
   return topPadding + pxFromTopBound;
+}
+
+int canvasXToEpoch({
+  @required double x,
+  @required int rightBoundEpoch,
+  @required double canvasWidth,
+  @required double msPerPx,
+}) {
+  return rightBoundEpoch - pxToMs(canvasWidth - x, msPerPx: msPerPx);
 }
