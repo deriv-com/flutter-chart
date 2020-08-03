@@ -21,7 +21,7 @@ void main() {
           name: 'smart2', displayName: 'Smart2', assets: <Asset>[r25Favorite]);
     });
 
-    testWidgets('Selected asset not exist among assets works OK',
+    testWidgets('SelectedItem is ignored when it is not present in markets',
         (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
@@ -91,7 +91,7 @@ void main() {
       expect(find.text('Volatility 50 Index'), findsNWidgets(1));
     });
 
-    testWidgets('Add to favorites works OK', (tester) async {
+    testWidgets('Add to favorites by clicking favorite icon', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           onAssetClicked: (asset, isFavoriteClicked) {},
@@ -164,7 +164,7 @@ void main() {
       expect(find.byKey(textFieldKey), findsNothing);
     });
 
-    testWidgets('Clearing search bar TextField works', (tester) async {
+    testWidgets('Clearing search bar TextField', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           markets: [
