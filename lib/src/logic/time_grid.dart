@@ -42,14 +42,14 @@ DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
 }
 
 DateTime _closestFutureDayStart(int epoch) {
-  final time = DateTime.fromMillisecondsSinceEpoch(epoch);
+  final time = DateTime.fromMillisecondsSinceEpoch(epoch, isUtc: true);
   final dayStart =
       DateTime.utc(time.year, time.month, time.day); // time 00:00:00
   return dayStart.isBefore(time) ? dayStart.add(_day) : dayStart;
 }
 
 DateTime _closestFutureMonthStart(int epoch) {
-  final time = DateTime.fromMillisecondsSinceEpoch(epoch);
+  final time = DateTime.fromMillisecondsSinceEpoch(epoch, isUtc: true);
   final monthStart =
       DateTime.utc(time.year, time.month); // day 1, time 00:00:00
   return monthStart.isBefore(time) ? _addMonth(monthStart) : monthStart;
