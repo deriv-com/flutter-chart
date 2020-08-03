@@ -182,37 +182,41 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Widget build(BuildContext context) {
     return Material(
       color: Color(0xFF0E0E0E),
-      child: SizedBox.expand(
-        child: Stack(
-          children: <Widget>[
-            Chart(
+      child: Column(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: _markets == null
+                    ? SizedBox.shrink()
+                    : _buildMarketSelectorButton(),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      _buildChartTypeButton(),
+                      _buildIntervalSelector(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Chart(
               candles: candles,
               pipSize: 4,
               style: style,
               onLoadHistory: (fromEpoch, toEpoch, count) =>
                   _loadHistory(fromEpoch, toEpoch, count),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    _buildChartTypeButton(),
-                    _buildIntervalSelector(),
-                  ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: _markets == null
-                  ? SizedBox.shrink()
-                  : _buildMarketSelectorButton(),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

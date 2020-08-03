@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 typedef OnAssetClicked = Function(Asset asset, bool favoriteClicked);
 
 /// The animation duration which will take to scroll to selected item in MarketSelector
-const scrollToSelectedDuration = Duration(milliseconds: 600);
+const scrollToSelectedDuration = Duration.zero;
 
 class MarketSelector extends StatefulWidget {
   const MarketSelector({
