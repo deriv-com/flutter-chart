@@ -27,6 +27,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
   @override
   void dispose() {
     _textEditingController?.dispose();
+    _searchFieldFocusNode?.dispose();
 
     super.dispose();
   }
