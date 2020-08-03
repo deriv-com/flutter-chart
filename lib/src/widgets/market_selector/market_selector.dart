@@ -152,6 +152,7 @@ class _MarketSelectorState extends State<MarketSelector>
         ? Container()
         : Expanded(
             child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
               child: Column(
                 children: <Widget>[
                   AnimatedSize(
