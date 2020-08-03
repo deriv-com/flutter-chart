@@ -56,9 +56,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
   // We keep track of the candles start epoch to not make more than one API call to get a history
   int _startEpoch;
 
+  Completer _requestCompleter;
+
   @override
   void initState() {
     super.initState();
+
+    _requestCompleter = Completer();
 
     _connectToAPI();
   }
@@ -139,6 +143,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _tickSubscription =
           historySubscription.tickStream.listen(_handleTickStream);
+
+      _requestCompleter.complete(null);
 
       setState(() {});
     } on Exception catch (e) {
@@ -309,13 +315,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _onIntervalSelected(value) async {
-    try {
-      await _currentTick?.unsubscribe();
-    } on Exception catch (e) {
-      print(e);
+    if (_requestCompleter.isCompleted) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      _requestCompleter = Completer();
+      try {
+        await _currentTick?.unsubscribe();
+      } on Exception catch (e) {
+        print(e);
+      }
+      granularity = value;
+      _initTickStream();
+    } else {
+      print('** Tried granularity $value pre was not completed');
     }
-    granularity = value;
-    _initTickStream();
   }
 
   List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
