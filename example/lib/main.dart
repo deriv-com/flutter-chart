@@ -111,7 +111,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       candles.addAll(missedCandles);
 
-      _tickSubscription = missedTicksHistory.tickStream.listen(_handleTickStream);
+      _tickSubscription =
+          missedTicksHistory.tickStream.listen(_handleTickStream);
 
       setState(() {});
     } on Exception catch (e) {
@@ -188,37 +189,47 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Widget build(BuildContext context) {
     return Material(
       color: Color(0xFF0E0E0E),
-      child: SizedBox.expand(
-        child: Stack(
-          children: <Widget>[
-            Chart(
-              candles: candles,
-              pipSize: 4,
-              style: style,
-              onLoadHistory: (fromEpoch, toEpoch, count) =>
-                  _onLoadHistory(fromEpoch, toEpoch, count),
-            ),
-            _buildChartTypeButton(),
-            Positioned(
-              left: 60,
-              child: _buildIntervalSelector(),
-            ),
-            if (_connectionBloc != null && _connectionBloc.state is! Connected)
-              Align(
-                alignment: Alignment.center,
-                child: ConnectionStatusLabel(
-                  text: _connectionBloc.state is ConnectionError
-                      ? '${(_connectionBloc.state as ConnectionError).error}'
-                      : _connectionBloc.state is Disconnected
-                          ? 'Internet is down, trying to reconnect...'
-                          : 'Connecting...',
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              _buildChartTypeButton(),
+              _buildIntervalSelector(),
+            ],
+          ),
+          Expanded(
+            child: Stack(
+              children: <Widget>[
+                ClipRect(
+                  child: Chart(
+                    candles: candles,
+                    pipSize: 4,
+                    style: style,
+                    onLoadHistory: (fromEpoch, toEpoch, count) =>
+                        _onLoadHistory(fromEpoch, toEpoch, count),
+                  ),
                 ),
-              ),
-          ],
-        ),
+                if (_connectionBloc != null &&
+                    _connectionBloc.state is! Connected)
+                  Align(
+                    alignment: Alignment.center,
+                    child: _buildConnectionStatus(),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildConnectionStatus() => ConnectionStatusLabel(
+        text: _connectionBloc.state is ConnectionError
+            ? '${(_connectionBloc.state as ConnectionError).error}'
+            : _connectionBloc.state is Disconnected
+                ? 'Internet is down, trying to reconnect...'
+                : 'Connecting...',
+      );
 
   void _onLoadHistory(int fromEpoch, int toEpoch, int count) async {
     if (fromEpoch < _startEpoch) {

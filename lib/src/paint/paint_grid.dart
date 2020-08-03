@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../paint/paint_text.dart';
+
 void paintGrid(
   Canvas canvas,
   Size size, {
@@ -63,28 +65,16 @@ void _paintQuoteLabels(
   @required double quoteLabelsAreaWidth,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
-    final y = yCoords[index];
-    final fontSize = 12.0;
-
-    TextSpan span = TextSpan(
+    paintTextFromCenter(
+      canvas,
+      text: quoteLabel,
+      centerX: size.width - quoteLabelsAreaWidth / 2,
+      centerY: yCoords[index],
       style: TextStyle(
         color: Colors.white30,
-        fontSize: fontSize,
+        fontSize: 12,
+        height: 1,
       ),
-      text: quoteLabel,
-    );
-    TextPainter tp = TextPainter(
-      text: span,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    tp.layout(
-      minWidth: quoteLabelsAreaWidth,
-      maxWidth: quoteLabelsAreaWidth,
-    );
-    tp.paint(
-      canvas,
-      Offset(size.width - quoteLabelsAreaWidth, y - fontSize / 2),
     );
   });
 }
@@ -96,24 +86,16 @@ void _paintTimeLabels(
   @required List<double> xCoords,
 }) {
   timeLabels.asMap().forEach((index, timeLabel) {
-    final x = xCoords[index];
-
-    TextSpan span = TextSpan(
+    paintTextFromCenter(
+      canvas,
+      text: timeLabel,
+      centerX: xCoords[index],
+      centerY: size.height - 10,
       style: TextStyle(
         color: Colors.white30,
         fontSize: 12,
+        height: 1,
       ),
-      text: timeLabel,
-    );
-    TextPainter tp = TextPainter(
-      text: span,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    tp.layout();
-    tp.paint(
-      canvas,
-      Offset(x - tp.width / 2, size.height - tp.height - 4),
     );
   });
 }

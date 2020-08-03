@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../paint/paint_text.dart';
+
 void paintCurrentTickLabel(
   Canvas canvas,
   Size size, {
@@ -47,22 +49,16 @@ void _paintLabel(
       ..style = PaintingStyle.fill,
   );
 
-  TextSpan span = TextSpan(
+  paintTextFromCenter(
+    canvas,
+    text: quoteLabel,
+    centerX: size.width - quoteLabelsAreaWidth / 2,
+    centerY: centerY,
     style: TextStyle(
       color: Colors.white,
       fontSize: 12,
       fontWeight: FontWeight.bold,
+      height: 1,
     ),
-    text: quoteLabel,
-  );
-  TextPainter tp = TextPainter(
-    text: span,
-    textAlign: TextAlign.center,
-    textDirection: TextDirection.ltr,
-  );
-  tp.layout(minWidth: quoteLabelsAreaWidth, maxWidth: quoteLabelsAreaWidth);
-  tp.paint(
-    canvas,
-    Offset(size.width - quoteLabelsAreaWidth, centerY - 6),
   );
 }
