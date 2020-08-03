@@ -13,7 +13,8 @@ List<DateTime> gridTimestamps({
   @required int rightBoundEpoch,
 }) {
   final timestamps = <DateTime>[];
-  final rightBoundTime = DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch);
+  final rightBoundTime =
+      DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch, isUtc: true);
 
   var t = _gridEpochStart(timeGridInterval, leftBoundEpoch);
 
@@ -36,24 +37,26 @@ DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
   } else {
     final diff = timeGridInterval.inMilliseconds;
     final firstLeft = (leftBoundEpoch / diff).ceil() * diff;
-    return DateTime.fromMillisecondsSinceEpoch(firstLeft);
+    return DateTime.fromMillisecondsSinceEpoch(firstLeft, isUtc: true);
   }
 }
 
 DateTime _closestFutureDayStart(int epoch) {
   final time = DateTime.fromMillisecondsSinceEpoch(epoch);
-  final dayStart = DateTime(time.year, time.month, time.day); // time 00:00:00
+  final dayStart =
+      DateTime.utc(time.year, time.month, time.day); // time 00:00:00
   return dayStart.isBefore(time) ? dayStart.add(_day) : dayStart;
 }
 
 DateTime _closestFutureMonthStart(int epoch) {
   final time = DateTime.fromMillisecondsSinceEpoch(epoch);
-  final monthStart = DateTime(time.year, time.month); // day 1, time 00:00:00
+  final monthStart =
+      DateTime.utc(time.year, time.month); // day 1, time 00:00:00
   return monthStart.isBefore(time) ? _addMonth(monthStart) : monthStart;
 }
 
 DateTime _addMonth(DateTime time) {
-  return DateTime(time.year, time.month + 1);
+  return DateTime.utc(time.year, time.month + 1);
 }
 
 Duration timeGridInterval(

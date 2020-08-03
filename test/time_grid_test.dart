@@ -11,7 +11,7 @@ void main() {
           leftBoundEpoch: 9000,
           rightBoundEpoch: 10000,
         ),
-        contains(DateTime.fromMillisecondsSinceEpoch(10000)),
+        contains(DateTime.fromMillisecondsSinceEpoch(10000, isUtc: true)),
       );
     });
     test('include epoch on the left edge', () {
@@ -21,7 +21,7 @@ void main() {
           leftBoundEpoch: 900,
           rightBoundEpoch: 1000,
         ),
-        contains(DateTime.fromMillisecondsSinceEpoch(900)),
+        contains(DateTime.fromMillisecondsSinceEpoch(900, isUtc: true)),
       );
     });
     test('return epochs within canvas, divisible by [timeGridInterval]', () {
@@ -32,10 +32,10 @@ void main() {
           rightBoundEpoch: 1000,
         ),
         equals([
-          DateTime.fromMillisecondsSinceEpoch(700),
-          DateTime.fromMillisecondsSinceEpoch(800),
-          DateTime.fromMillisecondsSinceEpoch(900),
-          DateTime.fromMillisecondsSinceEpoch(1000),
+          DateTime.fromMillisecondsSinceEpoch(700, isUtc: true),
+          DateTime.fromMillisecondsSinceEpoch(800, isUtc: true),
+          DateTime.fromMillisecondsSinceEpoch(900, isUtc: true),
+          DateTime.fromMillisecondsSinceEpoch(1000, isUtc: true),
         ]),
       );
       expect(
@@ -45,9 +45,9 @@ void main() {
           rightBoundEpoch: 999,
         ),
         equals([
-          DateTime.fromMillisecondsSinceEpoch(700),
-          DateTime.fromMillisecondsSinceEpoch(800),
-          DateTime.fromMillisecondsSinceEpoch(900),
+          DateTime.fromMillisecondsSinceEpoch(700, isUtc: true),
+          DateTime.fromMillisecondsSinceEpoch(800, isUtc: true),
+          DateTime.fromMillisecondsSinceEpoch(900, isUtc: true),
         ]),
       );
     });
@@ -56,29 +56,29 @@ void main() {
         gridTimestamps(
           timeGridInterval: Duration(hours: 1),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 22:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 22:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-24 22:00:00'),
-          DateTime.parse('2020-07-24 23:00:00'),
-          DateTime.parse('2020-07-25 00:00:00'),
-          DateTime.parse('2020-07-25 01:00:00'),
+          DateTime.parse('2020-07-24 22:00:00Z'),
+          DateTime.parse('2020-07-24 23:00:00Z'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
+          DateTime.parse('2020-07-25 01:00:00Z'),
         ]),
       );
       expect(
         gridTimestamps(
           timeGridInterval: Duration(hours: 1),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 22:20:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 01:10:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 01:10:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-24 23:00:00'),
-          DateTime.parse('2020-07-25 00:00:00'),
-          DateTime.parse('2020-07-25 01:00:00'),
+          DateTime.parse('2020-07-24 23:00:00Z'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
+          DateTime.parse('2020-07-25 01:00:00Z'),
         ]),
       );
     });
@@ -87,26 +87,26 @@ void main() {
         gridTimestamps(
           timeGridInterval: Duration(hours: 2),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 22:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 22:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-24 22:00:00'),
-          DateTime.parse('2020-07-25 00:00:00'),
+          DateTime.parse('2020-07-24 22:00:00Z'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
         ]),
       );
       expect(
         gridTimestamps(
           timeGridInterval: Duration(hours: 2),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 22:20:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 02:10:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 02:10:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-25 00:00:00'),
-          DateTime.parse('2020-07-25 02:00:00'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
+          DateTime.parse('2020-07-25 02:00:00Z'),
         ]),
       );
     });
@@ -115,28 +115,28 @@ void main() {
         gridTimestamps(
           timeGridInterval: Duration(hours: 4),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 05:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 05:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 01:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-24 08:00:00'),
-          DateTime.parse('2020-07-24 12:00:00'),
-          DateTime.parse('2020-07-24 16:00:00'),
-          DateTime.parse('2020-07-24 20:00:00'),
-          DateTime.parse('2020-07-25 00:00:00'),
+          DateTime.parse('2020-07-24 08:00:00Z'),
+          DateTime.parse('2020-07-24 12:00:00Z'),
+          DateTime.parse('2020-07-24 16:00:00Z'),
+          DateTime.parse('2020-07-24 20:00:00Z'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
         ]),
       );
       expect(
         gridTimestamps(
           timeGridInterval: Duration(hours: 4),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 22:20:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 02:10:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 02:10:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-25 00:00:00'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
         ]),
       );
     });
@@ -145,14 +145,14 @@ void main() {
         gridTimestamps(
           timeGridInterval: Duration(hours: 8),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 19:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 19:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 19:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 19:00:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-25 00:00:00'),
-          DateTime.parse('2020-07-25 08:00:00'),
-          DateTime.parse('2020-07-25 16:00:00'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
+          DateTime.parse('2020-07-25 08:00:00Z'),
+          DateTime.parse('2020-07-25 16:00:00Z'),
         ]),
       );
     });
@@ -161,23 +161,23 @@ void main() {
         gridTimestamps(
           timeGridInterval: Duration(days: 1),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 15:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 15:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 15:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 15:00:00Z').millisecondsSinceEpoch,
         ),
-        equals([DateTime.parse('2020-07-25 00:00:00')]),
+        equals([DateTime.parse('2020-07-25 00:00:00Z')]),
       );
       expect(
         gridTimestamps(
           timeGridInterval: Duration(days: 1),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 00:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 00:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-25 15:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-25 15:00:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-24 00:00:00'),
-          DateTime.parse('2020-07-25 00:00:00'),
+          DateTime.parse('2020-07-24 00:00:00Z'),
+          DateTime.parse('2020-07-25 00:00:00Z'),
         ]),
       );
     });
@@ -186,11 +186,11 @@ void main() {
         gridTimestamps(
           timeGridInterval: Duration(days: DateTime.daysPerWeek),
           leftBoundEpoch:
-              DateTime.parse('2020-07-24 15:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-24 15:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-07-29 15:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-07-29 15:00:00Z').millisecondsSinceEpoch,
         ),
-        equals([DateTime.parse('2020-07-27 00:00:00')]),
+        equals([DateTime.parse('2020-07-27 00:00:00Z')]),
       );
     });
     test('return 00:00:00 of each month\'s first day for 1 month interval', () {
@@ -198,13 +198,13 @@ void main() {
         gridTimestamps(
           timeGridInterval: month,
           leftBoundEpoch:
-              DateTime.parse('2020-06-24 08:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-06-24 08:00:00Z').millisecondsSinceEpoch,
           rightBoundEpoch:
-              DateTime.parse('2020-08-29 12:00:00').millisecondsSinceEpoch,
+              DateTime.parse('2020-08-29 12:00:00Z').millisecondsSinceEpoch,
         ),
         equals([
-          DateTime.parse('2020-07-01 00:00:00'),
-          DateTime.parse('2020-08-01 00:00:00'),
+          DateTime.parse('2020-07-01 00:00:00Z'),
+          DateTime.parse('2020-08-01 00:00:00Z'),
         ]),
       );
     });
@@ -275,21 +275,21 @@ void main() {
   });
 
   group('timeLabel should', () {
-    test('return date in the format `2 Jul` for 00:00:00', () {
+    test('return date in the format `2 Jul` for 00:00:00Z', () {
       expect(
-        timeLabel(DateTime.parse('2020-07-02 00:00:00')),
+        timeLabel(DateTime.parse('2020-07-02 00:00:00Z')),
         '2 Jul',
       );
     });
     test('return month name for 00:00:00 of the first day of the month', () {
       expect(
-        timeLabel(DateTime.parse('2020-07-01 00:00:00')),
+        timeLabel(DateTime.parse('2020-07-01 00:00:00Z')),
         'July',
       );
     });
     test('return year for 00:00:00 of the first day of the year', () {
       expect(
-        timeLabel(DateTime.parse('2020-01-01 00:00:00')),
+        timeLabel(DateTime.parse('2020-01-01 00:00:00Z')),
         '2020',
       );
     });
