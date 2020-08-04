@@ -2,6 +2,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/custom_draggable_sheet.dart';
 import 'package:deriv_chart/src/widgets/market_selector/assets_search_bar.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
+import 'package:deriv_chart/src/widgets/market_selector/no_result_page.dart';
 import 'package:flutter/material.dart';
 
 /// Clicked on [Asset] in market selector callback.
@@ -84,7 +85,7 @@ class _MarketSelectorState extends State<MarketSelector>
               _buildTopHandle(),
               AssetsSearchBar(
                 onSearchTextChanged: (String text) =>
-                    setState(() => _filterText = text.toLowerCase()),
+                    setState(() => _filterText = text),
               ),
               _buildMarketsList(),
             ],
@@ -98,7 +99,8 @@ class _MarketSelectorState extends State<MarketSelector>
     _marketsToDisplay = _filterText.isEmpty
         ? widget.markets
         : widget.markets
-            .where((market) => market.containsAssetWithText(_filterText))
+            .where(
+                (market) => market.containsAssetWithText(lowerCaseFilterText))
             .toList();
   }
 
@@ -107,7 +109,7 @@ class _MarketSelectorState extends State<MarketSelector>
       return _filterText.isEmpty
           ? widget.favoriteAssets
           : widget.favoriteAssets
-              .map((Asset asset) => asset.containsText(_filterText))
+              .map((Asset asset) => asset.containsText(lowerCaseFilterText))
               .toList();
     }
 
@@ -116,7 +118,7 @@ class _MarketSelectorState extends State<MarketSelector>
     widget.markets?.forEach((market) {
       market.subMarkets.forEach((subMarket) {
         subMarket.assets.forEach((asset) {
-          if (asset.isFavorite && asset.containsText(_filterText)) {
+          if (asset.isFavorite && asset.containsText(lowerCaseFilterText)) {
             favoritesList.add(asset);
           }
         });
@@ -147,15 +149,20 @@ class _MarketSelectorState extends State<MarketSelector>
     return _marketsToDisplay == null
         ? Container()
         : Expanded(
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                children: <Widget>[
-                  _buildFavoriteSection(favoritesList),
-                  ..._marketsToDisplay
-                      .map((Market market) => _buildMarketItem(market))
-                ],
-              ),
+            child: Stack(
+              children: <Widget>[
+                SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    children: <Widget>[
+                      _buildFavoriteSection(favoritesList),
+                      ..._marketsToDisplay
+                          .map((Market market) => _buildMarketItem(market))
+                    ],
+                  ),
+                ),
+                if (_marketsToDisplay.isEmpty) NoResultPage(text: _filterText),
+              ],
             ),
           );
   }
@@ -180,7 +187,8 @@ class _MarketSelectorState extends State<MarketSelector>
       MarketItem(
         isSubMarketsCategorized: isCategorized,
         selectedItemKey: _selectedItemKey,
-        filterText: market.containsText(_filterText) ? '' : _filterText,
+        filterText:
+            market.containsText(lowerCaseFilterText) ? '' : lowerCaseFilterText,
         market: market,
         onAssetClicked: (asset, isFavoriteClicked) {
           widget.onAssetClicked?.call(asset, isFavoriteClicked);
@@ -192,4 +200,6 @@ class _MarketSelectorState extends State<MarketSelector>
           }
         },
       );
+
+  String get lowerCaseFilterText => _filterText.toLowerCase();
 }

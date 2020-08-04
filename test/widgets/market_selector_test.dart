@@ -233,6 +233,10 @@ void main() {
       await tester.pump();
 
       expect(find.byType(AssetItem), findsNothing);
+      expect(
+        find.text('No results for \"A non-relevant text\"'),
+        findsOneWidget,
+      );
     });
   });
 }

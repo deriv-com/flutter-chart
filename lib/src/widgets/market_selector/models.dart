@@ -45,7 +45,8 @@ class Market {
   final String displayName;
   final List<SubMarket> subMarkets;
 
-  bool containsText(String text) => displayName.toLowerCase().contains(text);
+  bool containsText(String text) =>
+      displayName?.toLowerCase()?.contains(text) ?? false;
 
   /// Returns true if any asset under this market contains the [text]
   bool containsAssetWithText(String text) =>
@@ -67,7 +68,8 @@ class SubMarket {
   final String displayName;
   final List<Asset> assets;
 
-  bool containsText(String text) => displayName.toLowerCase().contains(text);
+  bool containsText(String text) =>
+      displayName?.toLowerCase()?.contains(text) ?? false;
 
   /// Returns true if any asset under this SubMarket contains the [text]
   bool containsAssetWithText(String text) =>
@@ -98,7 +100,8 @@ class Asset {
   final String subMarketDisplayName;
   bool isFavorite;
 
-  bool containsText(String text) => displayName.toLowerCase().contains(text);
+  bool containsText(String text) =>
+      displayName?.toLowerCase()?.contains(text) ?? false;
 
   void toggleFavorite() => isFavorite = !isFavorite;
 }
