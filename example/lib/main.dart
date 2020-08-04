@@ -83,7 +83,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
             activeSymbols: 'brief', productType: 'basic'));
 
-    final HashSet<String> marketTitles = HashSet<String>();
+    final marketTitles = <String>{};
 
     final markets = <Market>[];
 
