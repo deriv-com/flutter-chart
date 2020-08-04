@@ -16,10 +16,10 @@ class NoResultPage extends StatelessWidget {
             children: <Widget>[
               Icon(
                 Icons.search,
-                size: 68,
+                size: 96,
                 color: const Color(0xFF3e3e3e),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 16),
               Text(
                 'No results for \"$text\"',
                 style: TextStyle(fontSize: 14, color: const Color(0xFFC2C2C2)),
