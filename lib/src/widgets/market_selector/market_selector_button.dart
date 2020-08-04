@@ -5,8 +5,8 @@ import 'models.dart';
 class MarketSelectorButton extends StatelessWidget {
   const MarketSelectorButton({
     Key key,
+    @required this.asset,
     this.onTap,
-    this.asset,
   }) : super(key: key);
 
   final VoidCallback onTap;

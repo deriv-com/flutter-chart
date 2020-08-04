@@ -12,13 +12,25 @@ void main() {
 
     setUp(() {
       r50 = Asset(
-          name: 'R_50', displayName: 'Volatility 50 Index', isFavorite: false);
+        name: 'R_50',
+        displayName: 'Volatility 50 Index',
+        isFavorite: false,
+      );
       r25Favorite = Asset(
-          name: 'R_25', displayName: 'Volatility 25 Index', isFavorite: true);
-      r50SubMarket =
-          SubMarket(name: 'smart', displayName: 'Smart', assets: <Asset>[r50]);
+        name: 'R_25',
+        displayName: 'Volatility 25 Index',
+        isFavorite: true,
+      );
+      r50SubMarket = SubMarket(
+        name: 'smart',
+        displayName: 'Smart',
+        assets: <Asset>[r50],
+      );
       r25SubMarket = SubMarket(
-          name: 'smart2', displayName: 'Smart2', assets: <Asset>[r25Favorite]);
+        name: 'smart2',
+        displayName: 'Smart2',
+        assets: <Asset>[r25Favorite],
+      );
     });
 
     testWidgets('SelectedItem is ignored when it is not present in markets',

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -76,14 +78,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
         await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
             activeSymbols: 'brief', productType: 'basic'));
 
-    final List<String> marketTitles = [];
+    final HashSet<String> marketTitles = HashSet<String>();
 
-    _markets = List<Market>();
+    final markets = List<Market>();
 
     for (final symbol in activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
-        _markets.add(
+        markets.add(
           Market.fromAssets(
             name: symbol.market,
             displayName: symbol.marketDisplayName,
@@ -102,7 +104,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         );
       }
     }
-    setState(() {});
+    setState(() => _markets = markets);
   }
 
   void _initTickStream() async {
@@ -184,18 +186,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
       color: Color(0xFF0E0E0E),
       child: Column(
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: _markets == null
-                    ? SizedBox.shrink()
-                    : _buildMarketSelectorButton(),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Stack(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: _markets == null
+                      ? SizedBox.shrink()
+                      : _buildMarketSelectorButton(),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -204,14 +206,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Expanded(
             child: Chart(
               candles: candles,
               pipSize: 4,
               style: style,
+              onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
               onLoadHistory: (fromEpoch, toEpoch, count) =>
                   _loadHistory(fromEpoch, toEpoch, count),
             ),
@@ -221,24 +224,21 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  Widget _buildMarketSelectorButton() => Padding(
-        padding: const EdgeInsets.all(12),
-        child: MarketSelectorButton(
-          asset: symbol,
-          onTap: () => showBottomSheet(
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (BuildContext context) => MarketSelector(
-              selectedItem: symbol,
-              markets: _markets,
-              onAssetClicked: (asset, favoriteClicked) {
-                if (!favoriteClicked) {
-                  Navigator.of(context).pop();
-                  symbol = asset;
-                  _onIntervalSelected(granularity);
-                }
-              },
-            ),
+  Widget _buildMarketSelectorButton() => MarketSelectorButton(
+        asset: symbol,
+        onTap: () => showBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (BuildContext context) => MarketSelector(
+            selectedItem: symbol,
+            markets: _markets,
+            onAssetClicked: (asset, favoriteClicked) {
+              if (!favoriteClicked) {
+                Navigator.of(context).pop();
+                symbol = asset;
+                _onIntervalSelected(granularity);
+              }
+            },
           ),
         ),
       );

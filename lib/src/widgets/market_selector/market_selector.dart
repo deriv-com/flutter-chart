@@ -155,23 +155,7 @@ class _MarketSelectorState extends State<MarketSelector>
               physics: ClampingScrollPhysics(),
               child: Column(
                 children: <Widget>[
-                  AnimatedSize(
-                    vsync: this,
-                    curve: Curves.easeOut,
-                    duration: const Duration(milliseconds: 300),
-                    child: favoritesList.isEmpty
-                        ? SizedBox(
-                            width: double.infinity,
-                          )
-                        : _buildMarketItem(
-                            Market.fromASubMarketAssets(
-                              name: 'favorites',
-                              displayName: 'Favorites',
-                              assets: favoritesList,
-                            ),
-                            isCategorized: false,
-                          ),
-                  ),
+                  _buildFavoriteSection(favoritesList),
                   ..._marketsToDisplay
                       .map((Market market) => _buildMarketItem(market))
                 ],
@@ -180,6 +164,22 @@ class _MarketSelectorState extends State<MarketSelector>
           );
   }
 
+  Widget _buildFavoriteSection(List<Asset> favoritesList) => AnimatedSize(
+        vsync: this,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 300),
+        child: favoritesList.isEmpty
+            ? SizedBox(width: double.infinity)
+            : _buildMarketItem(
+                Market.fromSubMarketAssets(
+                  name: 'favorites',
+                  displayName: 'Favorites',
+                  assets: favoritesList,
+                ),
+                isCategorized: false,
+              ),
+      );
+
   Widget _buildMarketItem(Market market, {bool isCategorized = true}) =>
       MarketItem(
         isSubMarketsCategorized: isCategorized,
@@ -187,10 +187,8 @@ class _MarketSelectorState extends State<MarketSelector>
         filterText: _filterText.toLowerCase(),
         market: market,
         onAssetClicked: (asset, isFavoriteClicked) {
-          widget.onAssetClicked?.call(
-            asset,
-            isFavoriteClicked,
-          );
+          widget.onAssetClicked?.call(asset, isFavoriteClicked);
+
           if (isFavoriteClicked) {
             setState(() {
               asset.toggleFavorite();

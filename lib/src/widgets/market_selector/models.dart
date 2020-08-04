@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 class Market {
   Market({
     this.name,
@@ -10,7 +12,7 @@ class Market {
     this.displayName,
     List<Asset> assets,
   }) : subMarkets = List<SubMarket>() {
-    final List<String> subMarketTitles = [];
+    final HashSet<String> subMarketTitles = HashSet<String>();
     for (final asset in assets) {
       if (!subMarketTitles.contains(asset.subMarket)) {
         subMarketTitles.add(asset.subMarket);
@@ -27,12 +29,16 @@ class Market {
     }
   }
 
-  Market.fromASubMarketAssets({
+  Market.fromSubMarketAssets({
     this.name,
     this.displayName,
     List<Asset> assets,
   }) : subMarkets = List<SubMarket>() {
-    subMarkets.add(SubMarket(name: '', displayName: '', assets: assets));
+    subMarkets.add(SubMarket(
+      name: name,
+      displayName: displayName,
+      assets: assets,
+    ));
   }
 
   final String name;

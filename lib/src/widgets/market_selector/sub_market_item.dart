@@ -45,27 +45,27 @@ class SubMarketItem extends StatelessWidget {
                               fontSize: 14, color: const Color(0xFF6E6E6E)),
                     ),
                   ),
-                ...assets.map((Asset asset) {
-                  if ((selectedItemKey?.value == asset.name || false) &&
-                      isCategorized) {
-                    return AnimatedHighlight(
-                      playAfter: scrollToSelectedDuration,
-                      key: selectedItemKey,
-                      child: AssetItem(
-                        asset: asset,
-                        filterText: filterText,
-                        onAssetClicked: onAssetClicked,
-                      ),
-                    );
-                  }
-                  return AssetItem(
-                    asset: asset,
-                    filterText: filterText,
-                    onAssetClicked: onAssetClicked,
-                  );
-                }).toList()
+                ..._buildAssetsList(assets)
               ],
             ),
           );
   }
+
+  List<Widget> _buildAssetsList(List<Asset> assets) =>
+      assets.map((Asset asset) {
+        final assetItem = AssetItem(
+          asset: asset,
+          filterText: filterText,
+          onAssetClicked: onAssetClicked,
+        );
+
+        if ((selectedItemKey?.value == asset.name || false) && isCategorized) {
+          return AnimatedHighlight(
+            playAfter: scrollToSelectedDuration,
+            key: selectedItemKey,
+            child: assetItem,
+          );
+        }
+        return assetItem;
+      }).toList();
 }
