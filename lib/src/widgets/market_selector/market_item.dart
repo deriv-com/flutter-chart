@@ -39,10 +39,7 @@ class MarketItem extends StatelessWidget {
                       isCategorized: isSubMarketsCategorized,
                       selectedItemKey: selectedItemKey,
                       subMarket: e,
-                      filterText:
-                          e.displayName.toLowerCase().contains(filterText)
-                              ? ''
-                              : filterText,
+                      filterText: e.containsText(filterText) ? '' : filterText,
                       onAssetClicked: onAssetClicked,
                     ))
                 .toList(),

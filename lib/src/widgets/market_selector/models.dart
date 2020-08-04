@@ -45,11 +45,13 @@ class Market {
   final String displayName;
   final List<SubMarket> subMarkets;
 
-  /// Returns true if any asset under this market contains the [filterText]
-  bool containsAssetWithText(String filterText) =>
-      displayName.toLowerCase().contains(filterText) ||
+  bool containsText(String text) => displayName.toLowerCase().contains(text);
+
+  /// Returns true if any asset under this market contains the [text]
+  bool containsAssetWithText(String text) =>
+      containsText(text) ||
       subMarkets.firstWhere(
-              (subMarket) => subMarket.containsAssetWithText(filterText),
+              (subMarket) => subMarket.containsAssetWithText(text),
               orElse: () => null) !=
           null;
 }
@@ -65,11 +67,13 @@ class SubMarket {
   final String displayName;
   final List<Asset> assets;
 
-  /// Returns true if any asset under this SubMarket contains the [filterText]
-  bool containsAssetWithText(String filterText) =>
-      displayName.toLowerCase().contains(filterText) ||
+  bool containsText(String text) => displayName.toLowerCase().contains(text);
+
+  /// Returns true if any asset under this SubMarket contains the [text]
+  bool containsAssetWithText(String text) =>
+      containsText(text) ||
       assets.firstWhere(
-              (asset) => asset.displayName.toLowerCase().contains(filterText),
+              (asset) => asset.displayName.toLowerCase().contains(text),
               orElse: () => null) !=
           null;
 }
@@ -93,6 +97,8 @@ class Asset {
   final String subMarket;
   final String subMarketDisplayName;
   bool isFavorite;
+
+  bool containsText(String text) => displayName.toLowerCase().contains(text);
 
   void toggleFavorite() => isFavorite = !isFavorite;
 }

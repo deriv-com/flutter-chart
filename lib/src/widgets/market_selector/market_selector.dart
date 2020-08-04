@@ -107,7 +107,7 @@ class _MarketSelectorState extends State<MarketSelector>
       return _filterText.isEmpty
           ? widget.favoriteAssets
           : widget.favoriteAssets
-              .map((Asset asset) => _assetContainsFilterText(asset))
+              .map((Asset asset) => asset.containsText(_filterText))
               .toList();
     }
 
@@ -116,7 +116,7 @@ class _MarketSelectorState extends State<MarketSelector>
     widget.markets?.forEach((market) {
       market.subMarkets.forEach((subMarket) {
         subMarket.assets.forEach((asset) {
-          if (asset.isFavorite && _assetContainsFilterText(asset)) {
+          if (asset.isFavorite && asset.containsText(_filterText)) {
             favoritesList.add(asset);
           }
         });
@@ -124,9 +124,6 @@ class _MarketSelectorState extends State<MarketSelector>
     });
     return favoritesList;
   }
-
-  bool _assetContainsFilterText(Asset asset) =>
-      asset.displayName.toLowerCase().contains(_filterText);
 
   Widget _buildTopHandle() => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -183,9 +180,7 @@ class _MarketSelectorState extends State<MarketSelector>
       MarketItem(
         isSubMarketsCategorized: isCategorized,
         selectedItemKey: _selectedItemKey,
-        filterText: market.displayName.toLowerCase().contains(_filterText)
-            ? ''
-            : _filterText,
+        filterText: market.containsText(_filterText) ? '' : _filterText,
         market: market,
         onAssetClicked: (asset, isFavoriteClicked) {
           widget.onAssetClicked?.call(asset, isFavoriteClicked);
