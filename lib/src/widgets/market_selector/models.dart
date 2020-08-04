@@ -47,10 +47,11 @@ class Market {
 
   /// Returns true if any asset under this market contains the [filterText]
   bool containsAssetWithText(String filterText) =>
+      displayName.toLowerCase().contains(filterText) ||
       subMarkets.firstWhere(
-          (subMarket) => subMarket.containsAssetWithText(filterText),
-          orElse: () => null) !=
-      null;
+              (subMarket) => subMarket.containsAssetWithText(filterText),
+              orElse: () => null) !=
+          null;
 }
 
 class SubMarket {
@@ -66,10 +67,11 @@ class SubMarket {
 
   /// Returns true if any asset under this SubMarket contains the [filterText]
   bool containsAssetWithText(String filterText) =>
+      displayName.toLowerCase().contains(filterText) ||
       assets.firstWhere(
-          (asset) => asset.displayName.toLowerCase().contains(filterText),
-          orElse: () => null) !=
-      null;
+              (asset) => asset.displayName.toLowerCase().contains(filterText),
+              orElse: () => null) !=
+          null;
 }
 
 /// A symbol item

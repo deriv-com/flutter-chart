@@ -41,7 +41,7 @@ class _MarketSelectorState extends State<MarketSelector>
   /// List of markets after applying the [_filterText].
   List<Market> _marketsToDisplay = <Market>[];
 
-  String _filterText = "";
+  String _filterText = '';
 
   /// Is used to scroll to the selected symbol(Asset).
   GlobalObjectKey _selectedItemKey;
@@ -84,7 +84,7 @@ class _MarketSelectorState extends State<MarketSelector>
               _buildTopHandle(),
               AssetsSearchBar(
                 onSearchTextChanged: (String text) =>
-                    setState(() => _filterText = text),
+                    setState(() => _filterText = text.toLowerCase()),
               ),
               _buildMarketsList(),
             ],
@@ -98,8 +98,7 @@ class _MarketSelectorState extends State<MarketSelector>
     _marketsToDisplay = _filterText.isEmpty
         ? widget.markets
         : widget.markets
-            .where((market) =>
-                market.containsAssetWithText(_filterText.toLowerCase()))
+            .where((market) => market.containsAssetWithText(_filterText))
             .toList();
   }
 
@@ -127,7 +126,7 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   bool _assetContainsFilterText(Asset asset) =>
-      asset.displayName.toLowerCase().contains(_filterText.toLowerCase());
+      asset.displayName.toLowerCase().contains(_filterText);
 
   Widget _buildTopHandle() => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -184,7 +183,9 @@ class _MarketSelectorState extends State<MarketSelector>
       MarketItem(
         isSubMarketsCategorized: isCategorized,
         selectedItemKey: _selectedItemKey,
-        filterText: _filterText.toLowerCase(),
+        filterText: market.displayName.toLowerCase().contains(_filterText)
+            ? ''
+            : _filterText,
         market: market,
         onAssetClicked: (asset, isFavoriteClicked) {
           widget.onAssetClicked?.call(asset, isFavoriteClicked);
