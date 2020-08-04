@@ -85,7 +85,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     final HashSet<String> marketTitles = HashSet<String>();
 
-    final markets = List<Market>();
+    final markets = <Market>[];
 
     for (final symbol in activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {

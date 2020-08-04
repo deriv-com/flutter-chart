@@ -80,7 +80,7 @@ class SubMarket {
           null;
 }
 
-/// A symbol item
+/// Representing an active symbol object retrieved from the API
 class Asset {
   Asset({
     this.name,
