@@ -12,10 +12,9 @@ dependencies:
     path: ../
   vibration: ^1.4.0
   flutter_deriv_api:
-    path: ../../../deriv_api/flutter-deriv-api
-#    git:
-#      url: git@github.com:regentmarkets/flutter-deriv-api.git
-#      ref: dev
+    git:
+      url: git@github.com:raminvakili-fs/flutter-deriv-api.git
+      ref: ramin/fix_subscription_manager
 
 dev_dependencies:
 

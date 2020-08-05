@@ -144,11 +144,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _tickSubscription =
           historySubscription.tickStream.listen(_handleTickStream);
 
-      _requestCompleter.complete(null);
-
       setState(() {});
     } on Exception catch (e) {
       print(e);
+    } finally {
+      _completeRequest();
+    }
+  }
+
+  void _completeRequest() {
+    if (!_requestCompleter.isCompleted) {
+      _requestCompleter.complete(null);
     }
   }
 
@@ -201,6 +207,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
             children: <Widget>[
               _buildChartTypeButton(),
               _buildIntervalSelector(),
+              IconButton(
+                icon: Icon(Icons.print),
+                onPressed: () async {
+                  _onIntervalSelected(120);
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.event),
+                onPressed: () async {
+                  _onIntervalSelected(0);
+                },
+              ),
             ],
           ),
           Expanded(
@@ -316,17 +334,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _onIntervalSelected(value) async {
     if (_requestCompleter.isCompleted) {
-      await Future<void>.delayed(const Duration(milliseconds: 100));
       _requestCompleter = Completer();
       try {
         await _currentTick?.unsubscribe();
+        granularity = value;
+        _initTickStream();
       } on Exception catch (e) {
+        _completeRequest();
         print(e);
       }
-      granularity = value;
-      _initTickStream();
-    } else {
-      print('** Tried granularity $value pre was not completed');
     }
   }
 
