@@ -630,8 +630,33 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _onScaleAndPanEnd(ScaleEndDetails details) {
+    _triggerScrollMomentum(details.velocity);
     _limitRightBoundEpoch();
     _onLoadHistory();
+  }
+
+  Ticker _scrollTicker;
+
+  void _triggerScrollMomentum(Velocity velocity) {
+    final simulation = ClampingScrollSimulation(
+      position: 0,
+      velocity: velocity.pixelsPerSecond.dx,
+    );
+    final start = rightBoundEpoch;
+    _scrollTicker?.dispose();
+    _scrollTicker = this.createTicker((elapsed) {
+      final secElapsed = elapsed.inMilliseconds.toDouble() / 1000;
+      if (simulation.isDone(secElapsed)) {
+        _scrollTicker?.dispose();
+        _scrollTicker = null;
+        _onLoadHistory();
+      }
+      final newPos = simulation.x(secElapsed);
+      print('*$secElapsed $newPos');
+      rightBoundEpoch = start - _pxToMs(newPos);
+      _limitRightBoundEpoch();
+    });
+    _scrollTicker.start();
   }
 
   void _limitRightBoundEpoch() {
