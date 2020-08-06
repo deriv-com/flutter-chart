@@ -319,16 +319,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _onIntervalSelected(value) async {
-    if (_requestCompleter.isCompleted) {
-      _requestCompleter = Completer();
-      try {
-        await _currentTick?.unsubscribe();
-        granularity = value;
-        _initTickStream();
-      } on Exception catch (e) {
-        _completeRequest();
-        print(e);
-      }
+    await _requestCompleter.future;
+    _requestCompleter = Completer();
+
+    try {
+      await _currentTick?.unsubscribe();
+      granularity = value;
+      _initTickStream();
+    } on Exception catch (e) {
+      _completeRequest();
+      print(e);
     }
   }
 
