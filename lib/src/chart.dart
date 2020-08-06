@@ -402,9 +402,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                   size: canvasSize,
                   painter: LoadingPainter(
                     loadingAnimationProgress: _loadingAnimationController.value,
-                    loadingRightBoundX: widget.candles.isEmpty
+                    loadingRightBoundX: visibleCandles?.isEmpty ?? false
                         ? canvasSize.width
-                        : _epochToCanvasX(widget.candles.first.epoch),
+                        : _epochToCanvasX(visibleCandles.first.epoch),
                     epochToCanvasX: _epochToCanvasX,
                     quoteToCanvasY: _quoteToCanvasY,
                   ),
