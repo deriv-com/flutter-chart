@@ -12,7 +12,6 @@ import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
-import 'package:flutter_deriv_api/services/connection/connection_service.dart';
 import 'package:vibration/vibration.dart';
 
 import 'utils/misc.dart';
@@ -63,7 +62,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
     super.initState();
 
     _requestCompleter = Completer();
-
     _connectToAPI();
   }
 
@@ -113,12 +111,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
         candles.removeLast();
       }
 
-      candles.addAll(missedCandles);
+      setState(() => candles.addAll(missedCandles));
 
       _tickSubscription =
           missedTicksHistory.tickStream.listen(_handleTickStream);
-
-      setState(() {});
     } on Exception catch (e) {
       print(e);
     } finally {
@@ -138,15 +134,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-      candles.clear();
-      candles = _getCandlesFromResponse(historySubscription.tickHistory);
+      setState(() {
+        candles.clear();
+        candles = _getCandlesFromResponse(historySubscription.tickHistory);
 
-      _startEpoch = candles.first.epoch;
+        _startEpoch = candles.first.epoch;
+      });
 
       _tickSubscription =
           historySubscription.tickStream.listen(_handleTickStream);
-
-      setState(() {});
     } on Exception catch (e) {
       print(e);
     } finally {
