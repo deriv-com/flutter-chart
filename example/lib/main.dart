@@ -121,6 +121,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
       setState(() {});
     } on Exception catch (e) {
       print(e);
+    } finally {
+      _completeRequest();
     }
   }
 
@@ -207,18 +209,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
             children: <Widget>[
               _buildChartTypeButton(),
               _buildIntervalSelector(),
-              IconButton(
-                icon: Icon(Icons.print),
-                onPressed: () async {
-                  _onIntervalSelected(120);
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.event),
-                onPressed: () async {
-                  _onIntervalSelected(0);
-                },
-              ),
             ],
           ),
           Expanded(
