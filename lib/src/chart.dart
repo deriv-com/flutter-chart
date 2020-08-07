@@ -1,11 +1,13 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 import 'callbacks.dart';
 import 'logic/conversion.dart';
@@ -20,7 +22,7 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 
-import 'widgets/custom_gesture_detector.dart';
+import 'gestures/custom_gesture_detector.dart';
 import 'widgets/crosshair_details.dart';
 
 class Chart extends StatelessWidget {
@@ -44,12 +46,14 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _ChartImplementation(
-      candles: candles,
-      pipSize: pipSize,
-      onCrosshairAppeared: onCrosshairAppeared,
-      onLoadHistory: onLoadHistory,
-      style: style,
+    return GestureManager(
+      child: _ChartImplementation(
+        candles: candles,
+        pipSize: pipSize,
+        onCrosshairAppeared: onCrosshairAppeared,
+        onLoadHistory: onLoadHistory,
+        style: style,
+      ),
     );
   }
 }
@@ -176,6 +180,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     ticker.start();
 
     _setupAnimations();
+    _setupGestures();
   }
 
   @override
@@ -303,6 +308,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
+  void _setupGestures() {
+    final gm = context.read<GestureManagerState>();
+    gm.registerCallback(_handleScaleStart);
+    gm.registerCallback(_handlePanUpdate);
+    gm.registerCallback(_handleScaleUpdate);
+    gm.registerCallback(_onScaleAndPanEnd);
+    gm.registerCallback(_handleLongPressStart);
+    gm.registerCallback(_handleLongPressUpdate);
+    gm.registerCallback(_handleLongPressEnd);
+  }
+
   void _updateVisibleCandles() {
     final candles = widget.candles;
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
@@ -398,98 +414,89 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   @override
   Widget build(BuildContext context) {
-    return CustomGestureDetector(
-      onScaleAndPanStart: _handleScaleStart,
-      onPanUpdate: _handlePanUpdate,
-      onScaleUpdate: _handleScaleUpdate,
-      onScaleAndPanEnd: _onScaleAndPanEnd,
-      onLongPressStart: _handleLongPressStart,
-      onLongPressMoveUpdate: _handleLongPressUpdate,
-      onLongPressEnd: _handleLongPressEnd,
-      child: LayoutBuilder(builder: (context, constraints) {
-        canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+    return LayoutBuilder(builder: (context, constraints) {
+      canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
-        return Stack(
-          children: <Widget>[
-            CustomPaint(
-              size: canvasSize,
-              painter: GridPainter(
-                gridLineEpochs: _getGridLineEpochs(),
-                gridLineQuotes: _getGridLineQuotes(),
-                pipSize: widget.pipSize,
-                quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
+      return Stack(
+        children: <Widget>[
+          CustomPaint(
+            size: canvasSize,
+            painter: GridPainter(
+              gridLineEpochs: _getGridLineEpochs(),
+              gridLineQuotes: _getGridLineQuotes(),
+              pipSize: widget.pipSize,
+              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
-            CustomPaint(
-              size: canvasSize,
-              painter: LoadingPainter(
-                loadingAnimationProgress: _loadingAnimationController.value,
-                loadingRightBoundX: widget.candles.isEmpty
-                    ? canvasSize.width
-                    : _epochToCanvasX(widget.candles.first.epoch),
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: LoadingPainter(
+              loadingAnimationProgress: _loadingAnimationController.value,
+              loadingRightBoundX: widget.candles.isEmpty
+                  ? canvasSize.width
+                  : _epochToCanvasX(widget.candles.first.epoch),
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
-            CustomPaint(
-              size: canvasSize,
-              painter: ChartPainter(
-                candles: _getChartCandles(),
-                style: widget.style,
-                pipSize: widget.pipSize,
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: ChartPainter(
+              candles: _getChartCandles(),
+              style: widget.style,
+              pipSize: widget.pipSize,
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
-            CustomPaint(
-              size: canvasSize,
-              painter: CurrentTickPainter(
-                animatedCurrentTick: _getAnimatedCurrentTick(),
-                blinkAnimationProgress: _currentTickBlinkAnimation.value,
-                pipSize: widget.pipSize,
-                quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: CurrentTickPainter(
+              animatedCurrentTick: _getAnimatedCurrentTick(),
+              blinkAnimationProgress: _currentTickBlinkAnimation.value,
+              pipSize: widget.pipSize,
+              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
-            CustomPaint(
-              size: canvasSize,
-              painter: CrosshairPainter(
-                crosshairCandle: crosshairCandle,
-                style: widget.style,
-                pipSize: widget.pipSize,
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: CrosshairPainter(
+              crosshairCandle: crosshairCandle,
+              style: widget.style,
+              pipSize: widget.pipSize,
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
-            if (_isScrollToNowAvailable)
-              Positioned(
-                bottom: 30 + timeLabelsAreaHeight,
-                right: 30 + quoteLabelsAreaWidth,
-                child: _buildScrollToNowButton(),
-              ),
-            if (_isCrosshairMode)
-              Positioned(
-                top: 0,
-                bottom: 0,
-                width: canvasSize.width,
-                left: _epochToCanvasX(crosshairCandle.epoch) -
-                    canvasSize.width / 2,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: CrosshairDetails(
-                    style: widget.style,
-                    crosshairCandle: crosshairCandle,
-                    pipSize: widget.pipSize,
-                  ),
+          ),
+          if (_isScrollToNowAvailable)
+            Positioned(
+              bottom: 30 + timeLabelsAreaHeight,
+              right: 30 + quoteLabelsAreaWidth,
+              child: _buildScrollToNowButton(),
+            ),
+          if (_isCrosshairMode)
+            Positioned(
+              top: 0,
+              bottom: 0,
+              width: canvasSize.width,
+              left:
+                  _epochToCanvasX(crosshairCandle.epoch) - canvasSize.width / 2,
+              child: Align(
+                alignment: Alignment.center,
+                child: CrosshairDetails(
+                  style: widget.style,
+                  crosshairCandle: crosshairCandle,
+                  pipSize: widget.pipSize,
                 ),
-              )
-          ],
-        );
-      }),
-    );
+              ),
+            )
+        ],
+      );
+    });
   }
 
   List<double> _getGridLineQuotes() {
