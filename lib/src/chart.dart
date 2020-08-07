@@ -23,7 +23,7 @@ import 'painters/grid_painter.dart';
 import 'widgets/custom_gesture_detector.dart';
 import 'widgets/crosshair_details.dart';
 
-class Chart extends StatefulWidget {
+class Chart extends StatelessWidget {
   const Chart({
     Key key,
     @required this.candles,
@@ -43,10 +43,39 @@ class Chart extends StatefulWidget {
   final OnLoadHistory onLoadHistory;
 
   @override
-  _ChartState createState() => _ChartState();
+  Widget build(BuildContext context) {
+    return _ChartImplementation(
+      candles: candles,
+      pipSize: pipSize,
+      onCrosshairAppeared: onCrosshairAppeared,
+      onLoadHistory: onLoadHistory,
+      style: style,
+    );
+  }
 }
 
-class _ChartState extends State<Chart> with TickerProviderStateMixin {
+class _ChartImplementation extends StatefulWidget {
+  const _ChartImplementation({
+    Key key,
+    @required this.candles,
+    @required this.pipSize,
+    this.onCrosshairAppeared,
+    this.onLoadHistory,
+    this.style = ChartStyle.candles,
+  }) : super(key: key);
+
+  final List<Candle> candles;
+  final int pipSize;
+  final ChartStyle style;
+  final Function onCrosshairAppeared;
+  final OnLoadHistory onLoadHistory;
+
+  @override
+  _ChartImplementationState createState() => _ChartImplementationState();
+}
+
+class _ChartImplementationState extends State<_ChartImplementation>
+    with TickerProviderStateMixin {
   Ticker ticker;
 
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
@@ -150,7 +179,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(Chart oldChart) {
+  void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
