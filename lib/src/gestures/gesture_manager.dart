@@ -21,31 +21,21 @@ class GestureManagerState extends State<GestureManager> {
     callbackPool.add(callback);
   }
 
+  void _callAll<T extends Function>(dynamic details) {
+    callbackPool.whereType<T>().forEach((f) => f.call(details));
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomGestureDetector(
-      onScaleAndPanStart: (ScaleStartDetails details) => callbackPool
-          .whereType<GestureScaleStartCallback>()
-          .forEach((f) => f.call(details)),
-      onPanUpdate: (DragUpdateDetails details) => callbackPool
-          .whereType<GestureDragUpdateCallback>()
-          .forEach((f) => f.call(details)),
-      onScaleUpdate: (ScaleUpdateDetails details) => callbackPool
-          .whereType<GestureScaleUpdateCallback>()
-          .forEach((f) => f.call(details)),
-      onScaleAndPanEnd: (ScaleEndDetails details) => callbackPool
-          .whereType<GestureScaleEndCallback>()
-          .forEach((f) => f.call(details)),
-      onLongPressStart: (LongPressStartDetails details) => callbackPool
-          .whereType<GestureLongPressStartCallback>()
-          .forEach((f) => f.call(details)),
-      onLongPressMoveUpdate: (LongPressMoveUpdateDetails details) =>
-          callbackPool
-              .whereType<GestureLongPressMoveUpdateCallback>()
-              .forEach((f) => f.call(details)),
-      onLongPressEnd: (LongPressEndDetails details) => callbackPool
-          .whereType<GestureLongPressEndCallback>()
-          .forEach((f) => f.call(details)),
+      onScaleAndPanStart: (d) => _callAll<GestureScaleStartCallback>(d),
+      onPanUpdate: (d) => _callAll<GestureDragUpdateCallback>(d),
+      onScaleUpdate: (d) => _callAll<GestureScaleUpdateCallback>(d),
+      onScaleAndPanEnd: (d) => _callAll<GestureScaleEndCallback>(d),
+      onLongPressStart: (d) => _callAll<GestureLongPressStartCallback>(d),
+      onLongPressMoveUpdate: (d) =>
+          _callAll<GestureLongPressMoveUpdateCallback>(d),
+      onLongPressEnd: (d) => _callAll<GestureLongPressEndCallback>(d),
       child: Provider.value(
         value: this,
         child: widget.child,
