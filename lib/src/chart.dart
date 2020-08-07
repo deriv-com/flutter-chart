@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/find.dart';
-import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -21,8 +21,6 @@ import 'models/candle.dart';
 import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
-
-import 'widgets/crosshair_details.dart';
 
 class Chart extends StatelessWidget {
   const Chart({
@@ -95,7 +93,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   int nowEpoch;
   Size canvasSize;
   Tick prevTick;
-  Candle crosshairCandle;
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   /// Horizontal panning is controlled by this variable.
@@ -132,7 +129,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Animation _currentTickBlinkAnimation;
   Animation _crosshairZoomOutAnimation;
 
-  bool get _isCrosshairMode => crosshairCandle != null;
+  bool _isCrosshairMode = false;
 
   bool get _isAutoPanning => rightBoundEpoch > nowEpoch && !_isCrosshairMode;
 
@@ -218,10 +215,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onNewTick() {
-    if (crosshairCandle != null &&
-        crosshairCandle.epoch == widget.candles.last.epoch) {
-      crosshairCandle = widget.candles.last;
-    }
+    // TODO(Rustem): move to CrosshairArea
+    // if (crosshairCandle != null &&
+    //     crosshairCandle.epoch == widget.candles.last.epoch) {
+    //   crosshairCandle = widget.candles.last;
+    // }
     _currentTickAnimationController.reset();
     _currentTickAnimationController.forward();
   }
@@ -316,9 +314,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager.registerCallback(_handlePanUpdate);
     _gestureManager.registerCallback(_handleScaleUpdate);
     _gestureManager.registerCallback(_onScaleAndPanEnd);
-    _gestureManager.registerCallback(_handleLongPressStart);
-    _gestureManager.registerCallback(_handleLongPressUpdate);
-    _gestureManager.registerCallback(_handleLongPressEnd);
   }
 
   void _clearGestures() {
@@ -326,9 +321,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager.removeCallback(_handlePanUpdate);
     _gestureManager.removeCallback(_handleScaleUpdate);
     _gestureManager.removeCallback(_onScaleAndPanEnd);
-    _gestureManager.removeCallback(_handleLongPressStart);
-    _gestureManager.removeCallback(_handleLongPressUpdate);
-    _gestureManager.removeCallback(_handleLongPressEnd);
   }
 
   void _updateVisibleCandles() {
@@ -390,6 +382,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   double _epochToCanvasX(int epoch) => epochToCanvasX(
         epoch: epoch,
+        rightBoundEpoch: rightBoundEpoch,
+        canvasWidth: canvasSize.width,
+        msPerPx: msPerPx,
+      );
+
+  int _canvasXToEpoch(double x) => canvasXToEpoch(
+        x: x,
         rightBoundEpoch: rightBoundEpoch,
         canvasWidth: canvasSize.width,
         msPerPx: msPerPx,
@@ -474,15 +473,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
-          CustomPaint(
-            size: canvasSize,
-            painter: CrosshairPainter(
-              crosshairCandle: crosshairCandle,
-              style: widget.style,
-              pipSize: widget.pipSize,
-              epochToCanvasX: _epochToCanvasX,
-              quoteToCanvasY: _quoteToCanvasY,
-            ),
+          CrosshairArea(
+            visibleCandles: visibleCandles,
+            style: widget.style,
+            pipSize: widget.pipSize,
+            epochToCanvasX: _epochToCanvasX,
+            canvasXToEpoch: _canvasXToEpoch,
+            quoteToCanvasY: _quoteToCanvasY,
           ),
           if (_isScrollToNowAvailable)
             Positioned(
@@ -490,22 +487,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
               right: 30 + quoteLabelsAreaWidth,
               child: _buildScrollToNowButton(),
             ),
-          if (_isCrosshairMode)
-            Positioned(
-              top: 0,
-              bottom: 0,
-              width: canvasSize.width,
-              left:
-                  _epochToCanvasX(crosshairCandle.epoch) - canvasSize.width / 2,
-              child: Align(
-                alignment: Alignment.center,
-                child: CrosshairDetails(
-                  style: widget.style,
-                  crosshairCandle: crosshairCandle,
-                  pipSize: widget.pipSize,
-                ),
-              ),
-            )
         ],
       );
     });
@@ -616,37 +597,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 (canvasSize.height - timeLabelsAreaHeight))
             .clamp(0.05, 0.49);
       }
-    });
-  }
-
-  void _handleLongPressStart(LongPressStartDetails details) {
-    widget.onCrosshairAppeared?.call();
-    _crosshairZoomOutAnimationController.forward();
-    setState(() {
-      crosshairCandle = _getClosestCandle(details.localPosition.dx);
-    });
-  }
-
-  void _handleLongPressUpdate(LongPressMoveUpdateDetails details) {
-    setState(() {
-      crosshairCandle = _getClosestCandle(details.localPosition.dx);
-    });
-  }
-
-  Candle _getClosestCandle(double canvasX) {
-    final epoch = canvasXToEpoch(
-      x: canvasX,
-      rightBoundEpoch: rightBoundEpoch,
-      canvasWidth: canvasSize.width,
-      msPerPx: msPerPx,
-    );
-    return findClosestToEpoch(epoch, visibleCandles);
-  }
-
-  void _handleLongPressEnd(LongPressEndDetails details) {
-    _crosshairZoomOutAnimationController.reverse();
-    setState(() {
-      crosshairCandle = null;
     });
   }
 

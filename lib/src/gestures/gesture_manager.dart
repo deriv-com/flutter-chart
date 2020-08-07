@@ -15,18 +15,18 @@ class GestureManager extends StatefulWidget {
 }
 
 class GestureManagerState extends State<GestureManager> {
-  final callbackPool = <Function>{};
+  final _callbackPool = <Function>{};
 
   void registerCallback(Function callback) {
-    callbackPool.add(callback);
+    _callbackPool.add(callback);
   }
 
   void removeCallback(Function callback) {
-    callbackPool.remove(callback);
+    _callbackPool.remove(callback);
   }
 
   void _callAll<T extends Function>(dynamic details) {
-    callbackPool.whereType<T>().forEach((f) => f.call(details));
+    _callbackPool.whereType<T>().forEach((f) => f.call(details));
   }
 
   @override
