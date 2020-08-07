@@ -22,7 +22,6 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 
-import 'gestures/custom_gesture_detector.dart';
 import 'widgets/crosshair_details.dart';
 
 class Chart extends StatelessWidget {
@@ -169,6 +168,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
         yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
       );
 
+  GestureManagerState get _gestureManager =>
+      context.read<GestureManagerState>();
+
   @override
   void initState() {
     super.initState();
@@ -211,6 +213,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _topBoundQuoteAnimationController?.dispose();
     _bottomBoundQuoteAnimationController?.dispose();
     _crosshairZoomOutAnimationController?.dispose();
+    _clearGestures();
     super.dispose();
   }
 
@@ -309,14 +312,23 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    final gm = context.read<GestureManagerState>();
-    gm.registerCallback(_handleScaleStart);
-    gm.registerCallback(_handlePanUpdate);
-    gm.registerCallback(_handleScaleUpdate);
-    gm.registerCallback(_onScaleAndPanEnd);
-    gm.registerCallback(_handleLongPressStart);
-    gm.registerCallback(_handleLongPressUpdate);
-    gm.registerCallback(_handleLongPressEnd);
+    _gestureManager.registerCallback(_handleScaleStart);
+    _gestureManager.registerCallback(_handlePanUpdate);
+    _gestureManager.registerCallback(_handleScaleUpdate);
+    _gestureManager.registerCallback(_onScaleAndPanEnd);
+    _gestureManager.registerCallback(_handleLongPressStart);
+    _gestureManager.registerCallback(_handleLongPressUpdate);
+    _gestureManager.registerCallback(_handleLongPressEnd);
+  }
+
+  void _clearGestures() {
+    _gestureManager.removeCallback(_handleScaleStart);
+    _gestureManager.removeCallback(_handlePanUpdate);
+    _gestureManager.removeCallback(_handleScaleUpdate);
+    _gestureManager.removeCallback(_onScaleAndPanEnd);
+    _gestureManager.removeCallback(_handleLongPressStart);
+    _gestureManager.removeCallback(_handleLongPressUpdate);
+    _gestureManager.removeCallback(_handleLongPressEnd);
   }
 
   void _updateVisibleCandles() {

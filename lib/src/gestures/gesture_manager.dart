@@ -21,6 +21,10 @@ class GestureManagerState extends State<GestureManager> {
     callbackPool.add(callback);
   }
 
+  void removeCallback(Function callback) {
+    callbackPool.remove(callback);
+  }
+
   void _callAll<T extends Function>(dynamic details) {
     callbackPool.whereType<T>().forEach((f) => f.call(details));
   }
