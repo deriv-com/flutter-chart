@@ -369,100 +369,97 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CustomGestureDetector(
-          onScaleAndPanStart: _handleScaleStart,
-          onPanUpdate: _handlePanUpdate,
-          onScaleUpdate: _handleScaleUpdate,
-          onScaleAndPanEnd: _onScaleAndPanEnd,
-          onLongPressStart: _handleLongPressStart,
-          onLongPressMoveUpdate: _handleLongPressUpdate,
-          onLongPressEnd: _handleLongPressEnd,
-          child: LayoutBuilder(builder: (context, constraints) {
-            canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+    return CustomGestureDetector(
+      onScaleAndPanStart: _handleScaleStart,
+      onPanUpdate: _handlePanUpdate,
+      onScaleUpdate: _handleScaleUpdate,
+      onScaleAndPanEnd: _onScaleAndPanEnd,
+      onLongPressStart: _handleLongPressStart,
+      onLongPressMoveUpdate: _handleLongPressUpdate,
+      onLongPressEnd: _handleLongPressEnd,
+      child: LayoutBuilder(builder: (context, constraints) {
+        canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
-            return Stack(
-              children: <Widget>[
-                CustomPaint(
-                  size: canvasSize,
-                  painter: GridPainter(
-                    gridLineEpochs: _getGridLineEpochs(),
-                    gridLineQuotes: _getGridLineQuotes(),
-                    pipSize: widget.pipSize,
-                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: LoadingPainter(
-                    loadingAnimationProgress: _loadingAnimationController.value,
-                    loadingRightBoundX: widget.candles.isEmpty
-                        ? canvasSize.width
-                        : _epochToCanvasX(widget.candles.first.epoch),
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: ChartPainter(
-                    candles: _getChartCandles(),
-                    style: widget.style,
-                    pipSize: widget.pipSize,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: CurrentTickPainter(
-                    animatedCurrentTick: _getAnimatedCurrentTick(),
-                    blinkAnimationProgress: _currentTickBlinkAnimation.value,
-                    pipSize: widget.pipSize,
-                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: CrosshairPainter(
-                    crosshairCandle: crosshairCandle,
-                    style: widget.style,
-                    pipSize: widget.pipSize,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
-              ],
-            );
-          }),
-        ),
-        if (_isScrollToNowAvailable)
-          Positioned(
-            bottom: 30 + timeLabelsAreaHeight,
-            right: 30 + quoteLabelsAreaWidth,
-            child: _buildScrollToNowButton(),
-          ),
-        if (_isCrosshairMode)
-          Positioned(
-            top: 0,
-            bottom: 0,
-            width: canvasSize.width,
-            left: _epochToCanvasX(crosshairCandle.epoch) - canvasSize.width / 2,
-            child: Align(
-              alignment: Alignment.center,
-              child: CrosshairDetails(
-                style: widget.style,
-                crosshairCandle: crosshairCandle,
+        return Stack(
+          children: <Widget>[
+            CustomPaint(
+              size: canvasSize,
+              painter: GridPainter(
+                gridLineEpochs: _getGridLineEpochs(),
+                gridLineQuotes: _getGridLineQuotes(),
                 pipSize: widget.pipSize,
+                quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                epochToCanvasX: _epochToCanvasX,
+                quoteToCanvasY: _quoteToCanvasY,
               ),
             ),
-          )
-      ],
+            CustomPaint(
+              size: canvasSize,
+              painter: LoadingPainter(
+                loadingAnimationProgress: _loadingAnimationController.value,
+                loadingRightBoundX: widget.candles.isEmpty
+                    ? canvasSize.width
+                    : _epochToCanvasX(widget.candles.first.epoch),
+                epochToCanvasX: _epochToCanvasX,
+                quoteToCanvasY: _quoteToCanvasY,
+              ),
+            ),
+            CustomPaint(
+              size: canvasSize,
+              painter: ChartPainter(
+                candles: _getChartCandles(),
+                style: widget.style,
+                pipSize: widget.pipSize,
+                epochToCanvasX: _epochToCanvasX,
+                quoteToCanvasY: _quoteToCanvasY,
+              ),
+            ),
+            CustomPaint(
+              size: canvasSize,
+              painter: CurrentTickPainter(
+                animatedCurrentTick: _getAnimatedCurrentTick(),
+                blinkAnimationProgress: _currentTickBlinkAnimation.value,
+                pipSize: widget.pipSize,
+                quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                epochToCanvasX: _epochToCanvasX,
+                quoteToCanvasY: _quoteToCanvasY,
+              ),
+            ),
+            CustomPaint(
+              size: canvasSize,
+              painter: CrosshairPainter(
+                crosshairCandle: crosshairCandle,
+                style: widget.style,
+                pipSize: widget.pipSize,
+                epochToCanvasX: _epochToCanvasX,
+                quoteToCanvasY: _quoteToCanvasY,
+              ),
+            ),
+            if (_isScrollToNowAvailable)
+              Positioned(
+                bottom: 30 + timeLabelsAreaHeight,
+                right: 30 + quoteLabelsAreaWidth,
+                child: _buildScrollToNowButton(),
+              ),
+            if (_isCrosshairMode)
+              Positioned(
+                top: 0,
+                bottom: 0,
+                width: canvasSize.width,
+                left: _epochToCanvasX(crosshairCandle.epoch) -
+                    canvasSize.width / 2,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: CrosshairDetails(
+                    style: widget.style,
+                    crosshairCandle: crosshairCandle,
+                    pipSize: widget.pipSize,
+                  ),
+                ),
+              )
+          ],
+        );
+      }),
     );
   }
 
