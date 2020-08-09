@@ -12,31 +12,39 @@ import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
 import 'logic/time_grid.dart';
 
+import 'models/candle.dart';
 import 'models/chart_style.dart';
 import 'models/tick.dart';
-import 'models/candle.dart';
 
 import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 
-import 'widgets/custom_gesture_detector.dart';
 import 'widgets/crosshair_details.dart';
+import 'widgets/custom_gesture_detector.dart';
 
+/// The chart widget.
 class Chart extends StatefulWidget {
+  /// Initializes
   const Chart({
-    Key key,
     @required this.candles,
     @required this.pipSize,
+    Key key,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
+  /// List of chart's candles
   final List<Candle> candles;
+
+  /// Number of decimal digits
   final int pipSize;
+
+  /// Indicates charts type (line, candle-stick,...)
   final ChartStyle style;
 
+  /// Will be called whenever the chart is in cross-hair mode
   final Function onCrosshairAppeared;
 
   /// Pagination callback. will be called when scrolled to left and there is empty space before first [candles]
@@ -58,7 +66,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
 
-  List<Candle> visibleCandles = [];
+  List<Candle> visibleCandles = <Candle>[];
 
   int nowEpoch;
   Size canvasSize;
@@ -81,7 +89,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   double verticalPaddingFraction = 0.1;
 
   /// Duration of quote bounds animated transition.
-  final quoteBoundsAnimationDuration = const Duration(milliseconds: 300);
+  final Duration quoteBoundsAnimationDuration =
+      const Duration(milliseconds: 300);
 
   /// Top quote bound target for animated transition.
   double topBoundQuoteTarget = 60;
@@ -96,9 +105,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   AnimationController _bottomBoundQuoteAnimationController;
   AnimationController _crosshairZoomOutAnimationController;
   AnimationController _rightEpochAnimationController;
-  Animation _currentTickAnimation;
-  Animation _currentTickBlinkAnimation;
-  Animation _crosshairZoomOutAnimation;
+  Animation<double> _currentTickAnimation;
+  Animation<double> _currentTickBlinkAnimation;
+  Animation<double> _crosshairZoomOutAnimation;
 
   bool get _isCrosshairMode => crosshairCandle != null;
 
@@ -115,14 +124,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
 
   double get _verticalPadding {
-    final px =
+    final double px =
         verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
-    final minCrosshairVerticalPadding = 80;
-    if (px < minCrosshairVerticalPadding)
+    const double minCrosshairVerticalPadding = 80;
+    if (px < minCrosshairVerticalPadding) {
       return px +
           (minCrosshairVerticalPadding - px) * _crosshairZoomOutAnimation.value;
-    else
+    } else {
       return px;
+    }
   }
 
   double get _topPadding => _verticalPadding;
@@ -143,8 +153,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
 
-    ticker = this.createTicker(_onNewFrame);
-    ticker.start();
+    ticker = createTicker(_onNewFrame)..start();
 
     _setupAnimations();
   }
@@ -152,13 +161,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(Chart oldChart) {
     super.didUpdateWidget(oldChart);
-    if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
+    if (widget.candles.isEmpty || oldChart.candles == widget.candles) {
+      return;
+    }
 
-    if (oldChart.candles.isNotEmpty)
+    if (oldChart.candles.isNotEmpty) {
       prevTick = _candleToTick(oldChart.candles.last);
+    }
 
-    final oldGranularity = _getGranularity(oldChart.candles);
-    final newGranularity = _getGranularity(widget.candles);
+    final int oldGranularity = _getGranularity(oldChart.candles);
+    final int newGranularity = _getGranularity(widget.candles);
 
     if (oldGranularity != newGranularity) {
       msPerPx = _getDefaultScale(newGranularity);
@@ -185,15 +197,16 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         crosshairCandle.epoch == widget.candles.last.epoch) {
       crosshairCandle = widget.candles.last;
     }
-    _currentTickAnimationController.reset();
-    _currentTickAnimationController.forward();
+    _currentTickAnimationController
+      ..reset()
+      ..forward();
   }
 
   void _onNewFrame(_) {
     setState(() {
-      final prevEpoch = nowEpoch;
+      final int prevEpoch = nowEpoch;
       nowEpoch = DateTime.now().millisecondsSinceEpoch;
-      final elapsedMs = nowEpoch - prevEpoch;
+      final int elapsedMs = nowEpoch - prevEpoch;
 
       if (_isAutoPanning) {
         rightBoundEpoch += elapsedMs;
@@ -209,7 +222,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _setupCurrentTickAnimation();
     _setupBlinkingAnimation();
     _setupBoundsAnimation();
-    _setupCrosshairZoomOutAnimation();
+    _setupCrossHairZoomOutAnimation();
     _setupRightEpochAnimation();
   }
 
@@ -263,7 +276,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
-  void _setupCrosshairZoomOutAnimation() {
+  void _setupCrossHairZoomOutAnimation() {
     _crosshairZoomOutAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
@@ -275,30 +288,39 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _updateVisibleCandles() {
-    final candles = widget.candles;
-    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    final List<Candle> candles = widget.candles;
+    final int leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
 
-    var start = candles.indexWhere((candle) => leftBoundEpoch < candle.epoch);
-    var end =
-        candles.lastIndexWhere((candle) => candle.epoch < rightBoundEpoch);
+    int start =
+        candles.indexWhere((Candle candle) => leftBoundEpoch < candle.epoch);
+    int end = candles
+        .lastIndexWhere((Candle candle) => candle.epoch < rightBoundEpoch);
 
     if (start == -1 || end == -1) {
-      visibleCandles = [];
+      visibleCandles = <Candle>[];
       return;
     }
 
     // Include nearby points outside the viewport, so the line extends beyond the side edges.
-    if (start > 0) start -= 1;
-    if (end < candles.length - 1) end += 1;
+    if (start > 0) {
+      start -= 1;
+    }
+    if (end < candles.length - 1) {
+      end += 1;
+    }
 
     visibleCandles = candles.sublist(start, end + 1);
   }
 
   void _recalculateQuoteBoundTargets() {
-    if (visibleCandles.isEmpty) return;
+    if (visibleCandles.isEmpty) {
+      return;
+    }
 
-    final minQuote = visibleCandles.map((candle) => candle.low).reduce(min);
-    final maxQuote = visibleCandles.map((candle) => candle.high).reduce(max);
+    final double minQuote =
+        visibleCandles.map((Candle candle) => candle.low).reduce(min);
+    final double maxQuote =
+        visibleCandles.map((Candle candle) => candle.high).reduce(max);
 
     if (minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
@@ -316,20 +338,14 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     }
   }
 
-  int _pxToMs(double px) {
-    return pxToMs(px, msPerPx: msPerPx);
-  }
+  int _pxToMs(double px) => pxToMs(px, msPerPx: msPerPx);
 
-  double _msToPx(int ms) {
-    return msToPx(ms, msPerPx: msPerPx);
-  }
+  double _msToPx(int ms) => msToPx(ms, msPerPx: msPerPx);
 
-  Tick _candleToTick(Candle candle) {
-    return Tick(
-      epoch: candle.epoch,
-      quote: candle.close,
-    );
-  }
+  Tick _candleToTick(Candle candle) => Tick(
+        epoch: candle.epoch,
+        quote: candle.close,
+      );
 
   double _epochToCanvasX(int epoch) => epochToCanvasX(
         epoch: epoch,
@@ -348,154 +364,157 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       );
 
   int _getGranularity(List<Candle> candles) {
-    if (candles.length < 2) return -1;
+    if (candles.length < 2) {
+      return -1;
+    }
     return candles[1].epoch - candles[0].epoch;
   }
 
   double _getDefaultScale(int granularity) {
-    final defaultIntervalWidth = 20;
+    const int defaultIntervalWidth = 20;
     return granularity / defaultIntervalWidth;
   }
 
   double _getMinScale(int granularity) {
-    final maxIntervalWidth = 80;
+    const double maxIntervalWidth = 80;
     return granularity / maxIntervalWidth;
   }
 
   double _getMaxScale(int granularity) {
-    final minIntervalWidth = 4;
+    const double minIntervalWidth = 4;
     return granularity / minIntervalWidth;
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CustomGestureDetector(
-          onScaleAndPanStart: _handleScaleStart,
-          onPanUpdate: _handlePanUpdate,
-          onScaleUpdate: _handleScaleUpdate,
-          onScaleAndPanEnd: _onScaleAndPanEnd,
-          onLongPressStart: _handleLongPressStart,
-          onLongPressMoveUpdate: _handleLongPressUpdate,
-          onLongPressEnd: _handleLongPressEnd,
-          child: LayoutBuilder(builder: (context, constraints) {
-            canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+  Widget build(BuildContext context) => Stack(
+        children: <Widget>[
+          CustomGestureDetector(
+            onScaleAndPanStart: _handleScaleStart,
+            onPanUpdate: _handlePanUpdate,
+            onScaleUpdate: _handleScaleUpdate,
+            onScaleAndPanEnd: _onScaleAndPanEnd,
+            onLongPressStart: _handleLongPressStart,
+            onLongPressMoveUpdate: _handleLongPressUpdate,
+            onLongPressEnd: _handleLongPressEnd,
+            child: LayoutBuilder(builder: (
+              BuildContext context,
+              BoxConstraints constraints,
+            ) {
+              canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
-            return Stack(
-              children: <Widget>[
-                CustomPaint(
-                  size: canvasSize,
-                  painter: GridPainter(
-                    gridLineEpochs: _getGridLineEpochs(),
-                    gridLineQuotes: _getGridLineQuotes(),
-                    pipSize: widget.pipSize,
-                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
+              return Stack(
+                children: <Widget>[
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: GridPainter(
+                      gridLineEpochs: _getGridLineEpochs(),
+                      gridLineQuotes: _getGridLineQuotes(),
+                      pipSize: widget.pipSize,
+                      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
                   ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: LoadingPainter(
-                    loadingAnimationProgress: _loadingAnimationController.value,
-                    loadingRightBoundX: widget.candles.isEmpty
-                        ? canvasSize.width
-                        : _epochToCanvasX(widget.candles.first.epoch),
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: LoadingPainter(
+                      loadingAnimationProgress:
+                          _loadingAnimationController.value,
+                      loadingRightBoundX: widget.candles.isEmpty
+                          ? canvasSize.width
+                          : _epochToCanvasX(widget.candles.first.epoch),
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
                   ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: ChartPainter(
-                    candles: _getChartCandles(),
-                    style: widget.style,
-                    pipSize: widget.pipSize,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: ChartPainter(
+                      candles: _getChartCandles(),
+                      style: widget.style,
+                      pipSize: widget.pipSize,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
                   ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: CurrentTickPainter(
-                    animatedCurrentTick: _getAnimatedCurrentTick(),
-                    blinkAnimationProgress: _currentTickBlinkAnimation.value,
-                    pipSize: widget.pipSize,
-                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: CurrentTickPainter(
+                      animatedCurrentTick: _getAnimatedCurrentTick(),
+                      blinkAnimationProgress: _currentTickBlinkAnimation.value,
+                      pipSize: widget.pipSize,
+                      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
                   ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: CrosshairPainter(
-                    crosshairCandle: crosshairCandle,
-                    style: widget.style,
-                    pipSize: widget.pipSize,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: CrosshairPainter(
+                      crosshairCandle: crosshairCandle,
+                      style: widget.style,
+                      pipSize: widget.pipSize,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
                   ),
-                ),
-              ],
-            );
-          }),
-        ),
-        if (_isScrollToNowAvailable)
-          Positioned(
-            bottom: 30 + timeLabelsAreaHeight,
-            right: 30 + quoteLabelsAreaWidth,
-            child: _buildScrollToNowButton(),
+                ],
+              );
+            }),
           ),
-        if (_isCrosshairMode)
-          Positioned(
-            top: 0,
-            bottom: 0,
-            width: canvasSize.width,
-            left: _epochToCanvasX(crosshairCandle.epoch) - canvasSize.width / 2,
-            child: Align(
-              alignment: Alignment.center,
-              child: CrosshairDetails(
-                style: widget.style,
-                crosshairCandle: crosshairCandle,
-                pipSize: widget.pipSize,
-              ),
+          if (_isScrollToNowAvailable)
+            Positioned(
+              bottom: 30 + timeLabelsAreaHeight,
+              right: 30 + quoteLabelsAreaWidth,
+              child: _buildScrollToNowButton(),
             ),
-          )
-      ],
-    );
-  }
+          if (_isCrosshairMode)
+            Positioned(
+              top: 0,
+              bottom: 0,
+              width: canvasSize.width,
+              left:
+                  _epochToCanvasX(crosshairCandle.epoch) - canvasSize.width / 2,
+              child: Align(
+                alignment: Alignment.center,
+                child: CrosshairDetails(
+                  style: widget.style,
+                  crosshairCandle: crosshairCandle,
+                  pipSize: widget.pipSize,
+                ),
+              ),
+            )
+        ],
+      );
 
-  List<double> _getGridLineQuotes() {
-    return gridQuotes(
-      quoteGridInterval: quoteGridInterval(_quotePerPx),
-      topBoundQuote: _topBoundQuote,
-      bottomBoundQuote: _bottomBoundQuote,
-      canvasHeight: canvasSize.height,
-      topPadding: _topPadding,
-      bottomPadding: _bottomPadding,
-    );
-  }
+  List<double> _getGridLineQuotes() => gridQuotes(
+        quoteGridInterval: quoteGridInterval(_quotePerPx),
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize.height,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
 
-  List<int> _getGridLineEpochs() {
-    return gridEpochs(
-      timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
-      leftBoundEpoch:
-          rightBoundEpoch - pxToMs(canvasSize.width, msPerPx: msPerPx),
-      rightBoundEpoch: rightBoundEpoch,
-    );
-  }
+  List<int> _getGridLineEpochs() => gridEpochs(
+        timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
+        leftBoundEpoch:
+            rightBoundEpoch - pxToMs(canvasSize.width, msPerPx: msPerPx),
+        rightBoundEpoch: rightBoundEpoch,
+      );
 
   List<Candle> _getChartCandles() {
-    if (visibleCandles.isEmpty) return [];
+    if (visibleCandles.isEmpty) {
+      return <Candle>[];
+    }
 
-    final currentTickVisible = visibleCandles.last == widget.candles.last;
-    final animatedCurrentTick = _getAnimatedCurrentTick();
+    final bool currentTickVisible = visibleCandles.last == widget.candles.last;
+    final Tick animatedCurrentTick = _getAnimatedCurrentTick();
 
     if (currentTickVisible && animatedCurrentTick != null) {
-      final excludeLast =
+      final List<Candle> excludeLast =
           visibleCandles.take(visibleCandles.length - 1).toList();
-      final animatedLast = visibleCandles.last.copyWith(
+      final Candle animatedLast = visibleCandles.last.copyWith(
         epoch: animatedCurrentTick.epoch,
         close: animatedCurrentTick.quote,
       );
@@ -506,11 +525,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   Tick _getAnimatedCurrentTick() {
-    if (widget.candles.isEmpty) return null;
+    if (widget.candles.isEmpty) {
+      return null;
+    }
 
-    final currentTick = _candleToTick(widget.candles.last);
+    final Tick currentTick = _candleToTick(widget.candles.last);
 
-    if (prevTick == null) return currentTick;
+    if (prevTick == null) {
+      return currentTick;
+    }
 
     final epochDiff = currentTick.epoch - prevTick.epoch;
     final quoteDiff = currentTick.quote - prevTick.quote;
