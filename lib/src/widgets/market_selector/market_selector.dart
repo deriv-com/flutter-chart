@@ -5,12 +5,12 @@ import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/no_result_page.dart';
 import 'package:flutter/material.dart';
 
-/// Clicked on [Asset] in market selector callback.
+/// Handles the tap on [Asset] in market selector.
 ///
-/// [favoriteClicked] is true when user has clicked on favorite icon of the item.
+/// [favoriteClicked] is true when the user has tapped on the favorite icon of the item.
 typedef OnAssetClicked = Function(Asset asset, bool favoriteClicked);
 
-/// The animation duration which will take to scroll to selected item in MarketSelector
+/// The duration of animating the scroll to the selected item in the [MarketSelector] widget.
 const scrollToSelectedDuration = Duration.zero;
 
 class MarketSelector extends StatefulWidget {
@@ -22,15 +22,14 @@ class MarketSelector extends StatefulWidget {
     this.favoriteAssets,
   }) : super(key: key);
 
-  /// Will be called when a symbol item [Asset] is clicked.
+  /// It will be called when a symbol item [Asset] is tapped.
   final OnAssetClicked onAssetClicked;
 
   final List<Market> markets;
 
   final Asset selectedItem;
 
-  /// [Optional] if not set the list of favorites will be filled with assets that
-  /// their [Asset.isFavorite] is true
+  /// [Optional] whenever it is null, it will be substituted with a list of assets that their [Asset.isFavorite] is true.
   final List<Asset> favoriteAssets;
 
   @override

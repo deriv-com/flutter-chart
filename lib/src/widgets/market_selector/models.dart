@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+/// A class to keep the a market's information.
 class Market {
   Market({
     this.name,
@@ -57,6 +58,7 @@ class Market {
           null;
 }
 
+/// A class to keep a sub-market's information
 class SubMarket {
   SubMarket({
     this.name,

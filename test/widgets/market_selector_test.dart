@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Group 1', () {
+  group('Test different scenarios that might break the [MarketSelector] widget', () {
     Asset r50;
     Asset r25Favorite;
     SubMarket r50SubMarket;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'models.dart';
 
+/// A Button to open the market selector. The selected [Asset] should be passed as [asset]
 class MarketSelectorButton extends StatelessWidget {
   const MarketSelectorButton({
     Key key,
@@ -12,6 +13,8 @@ class MarketSelectorButton extends StatelessWidget {
   final VoidCallback onTap;
 
   final Asset asset;
+
+  static const iconFadeDuration = Duration(milliseconds: 100);
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +34,8 @@ class MarketSelectorButton extends StatelessWidget {
               'assets/icons/${asset.name}.png',
               package: 'deriv_chart',
             ),
-            fadeInDuration: const Duration(milliseconds: 100),
-            fadeOutDuration: const Duration(milliseconds: 100),
+            fadeInDuration: iconFadeDuration,
+            fadeOutDuration: iconFadeDuration,
           ),
           SizedBox(width: 16),
           Text(

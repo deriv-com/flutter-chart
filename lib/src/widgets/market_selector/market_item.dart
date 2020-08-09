@@ -3,20 +3,28 @@ import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/sub_market_item.dart';
 import 'market_selector.dart';
 
+/// A widget to show a market item in market selector
 class MarketItem extends StatelessWidget {
   const MarketItem({
     Key key,
-    this.market,
-    this.filterText,
+    @required this.market,
+    this.filterText = '',
     this.onAssetClicked,
     this.selectedItemKey,
     this.isSubMarketsCategorized = true,
   }) : super(key: key);
 
   final Market market;
+
   final String filterText;
+
+  /// Is used to scroll to the selected Asset item
   final GlobalObjectKey selectedItemKey;
+
   final OnAssetClicked onAssetClicked;
+
+  /// If true sub-markets will be shown with title on top of them,
+  /// Otherwise under [market], will be only the list of its assets. (Suitable for favorites list)
   final bool isSubMarketsCategorized;
 
   @override
@@ -35,11 +43,12 @@ class MarketItem extends StatelessWidget {
               ),
             ),
             ...market.subMarkets
-                .map((e) => SubMarketItem(
+                .map((SubMarket subMarket) => SubMarketItem(
                       isCategorized: isSubMarketsCategorized,
                       selectedItemKey: selectedItemKey,
-                      subMarket: e,
-                      filterText: e.containsText(filterText) ? '' : filterText,
+                      subMarket: subMarket,
+                      filterText:
+                          subMarket.containsText(filterText) ? '' : filterText,
                       onAssetClicked: onAssetClicked,
                     ))
                 .toList(),
