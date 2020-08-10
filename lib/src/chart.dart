@@ -202,7 +202,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       ..forward();
   }
 
-  void _onNewFrame(_) {
+  void _onNewFrame(Duration elapsed) {
     setState(() {
       final int prevEpoch = nowEpoch;
       nowEpoch = DateTime.now().millisecondsSinceEpoch;
@@ -518,7 +518,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
         epoch: animatedCurrentTick.epoch,
         close: animatedCurrentTick.quote,
       );
-      return excludeLast + [animatedLast];
+      return excludeLast + <Candle>[animatedLast];
     } else {
       return visibleCandles;
     }
@@ -535,11 +535,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       return currentTick;
     }
 
-    final epochDiff = currentTick.epoch - prevTick.epoch;
-    final quoteDiff = currentTick.quote - prevTick.quote;
+    final int epochDiff = currentTick.epoch - prevTick.epoch;
+    final double quoteDiff = currentTick.quote - prevTick.quote;
 
-    final animatedEpochDiff = (epochDiff * _currentTickAnimation.value).toInt();
-    final animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
+    final int animatedEpochDiff =
+        (epochDiff * _currentTickAnimation.value).toInt();
+    final double animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
 
     return Tick(
       epoch: prevTick.epoch + animatedEpochDiff,
@@ -560,7 +561,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = _msToPx(rightBoundEpoch - nowEpoch);
+    final double nowToRightBound = _msToPx(rightBoundEpoch - nowEpoch);
     _scaleChart(details);
     setState(() {
       rightBoundEpoch = nowEpoch + _pxToMs(nowToRightBound);
@@ -568,8 +569,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = canvasSize.width - details.focalPoint.dx;
-    final focalEpoch = rightBoundEpoch - _pxToMs(focalToRightBound);
+    final double focalToRightBound = canvasSize.width - details.focalPoint.dx;
+    final int focalEpoch = rightBoundEpoch - _pxToMs(focalToRightBound);
     _scaleChart(details);
     setState(() {
       rightBoundEpoch = focalEpoch + _pxToMs(focalToRightBound);
@@ -577,7 +578,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _scaleChart(ScaleUpdateDetails details) {
-    final granularity = _getGranularity(widget.candles);
+    final int granularity = _getGranularity(widget.candles);
     msPerPx = (prevMsPerPx / details.scale).clamp(
       _getMinScale(granularity),
       _getMaxScale(granularity),
@@ -612,7 +613,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   Candle _getClosestCandle(double canvasX) {
-    final epoch = canvasXToEpoch(
+    final int epoch = canvasXToEpoch(
       x: canvasX,
       rightBoundEpoch: rightBoundEpoch,
       canvasWidth: canvasSize.width,
@@ -628,27 +629,26 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     });
   }
 
-  IconButton _buildScrollToNowButton() {
-    return IconButton(
-      icon: Icon(Icons.arrow_forward, color: Colors.white),
-      onPressed: _scrollToNow,
-    );
-  }
+  IconButton _buildScrollToNowButton() => IconButton(
+        icon: Icon(Icons.arrow_forward, color: Colors.white),
+        onPressed: _scrollToNow,
+      );
 
   void _scrollToNow() {
-    final animationMsDuration = 600;
-    final lowerBound = rightBoundEpoch.toDouble();
-    final upperBound = nowEpoch +
+    const int animationMsDuration = 600;
+    final double lowerBound = rightBoundEpoch.toDouble();
+    final double upperBound = nowEpoch +
         _pxToMs(maxCurrentTickOffset).toDouble() +
         animationMsDuration;
 
     if (upperBound > lowerBound) {
-      _rightEpochAnimationController.value = lowerBound;
-      _rightEpochAnimationController.animateTo(
-        upperBound,
-        curve: Curves.easeOut,
-        duration: Duration(milliseconds: animationMsDuration),
-      );
+      _rightEpochAnimationController
+        ..value = lowerBound
+        ..animateTo(
+          upperBound,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: animationMsDuration),
+        );
     }
   }
 
@@ -658,7 +658,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _limitRightBoundEpoch() {
-    if (widget.candles.isEmpty) return;
+    if (widget.candles.isEmpty) {
+      return;
+    }
     final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
     final int lowerLimit =
         widget.candles.first.epoch - _pxToMs(canvasSize.width);
@@ -668,11 +670,13 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   }
 
   void _onLoadHistory() {
-    if (widget.candles.isEmpty) return;
-    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    if (widget.candles.isEmpty) {
+      return;
+    }
+    final int leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
     if (leftBoundEpoch < widget.candles.first.epoch) {
-      int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-      int widthInMs = _pxToMs(canvasSize.width);
+      final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+      final int widthInMs = _pxToMs(canvasSize.width);
       widget.onLoadHistory?.call(
         widget.candles.first.epoch - (2 * widthInMs),
         widget.candles.first.epoch,

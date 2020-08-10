@@ -1,8 +1,11 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter_deriv_api/api/api_initializer.dart';
+import 'package:flutter_deriv_api/api/common/models/candle_model.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
@@ -16,21 +19,22 @@ import 'package:vibration/vibration.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([]);
+  SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
   runApp(MyApp());
 }
 
+/// App widget
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FullscreenChart(),
-    );
-  }
+  Widget build(BuildContext context) => const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: FullscreenChart(),
+      );
 }
 
+/// Chart screen widget
 class FullscreenChart extends StatefulWidget {
+  /// Creates the chart screen
   const FullscreenChart({
     Key key,
   }) : super(key: key);
@@ -40,7 +44,7 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
-  List<Candle> candles = [];
+  List<Candle> candles = <Candle>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
   TickBase _currentTick;
@@ -64,16 +68,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
           ),
         );
 
-    _initTickStream();
+    await _initTickStream();
   }
 
-  void _initTickStream() async {
+  Future<void> _initTickStream() async {
     try {
-      final historySubscription = await _getHistoryAndSubscribe();
+      final TickHistorySubscription historySubscription =
+          await _getHistoryAndSubscribe();
 
       _startEpoch = candles.first.epoch;
 
-      historySubscription.tickStream.listen((tickBase) {
+      historySubscription.tickStream.listen((TickBase tickBase) {
         if (tickBase != null) {
           _currentTick = tickBase;
 
@@ -82,7 +87,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           }
 
           if (tickBase is OHLC) {
-            final newCandle = Candle(
+            final Candle newCandle = Candle(
               epoch: tickBase.openTime.millisecondsSinceEpoch,
               high: tickBase.high,
               low: tickBase.low,
@@ -96,13 +101,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       setState(() {});
     } on Exception catch (e) {
-      print(e);
+      dev.log(e.toString(), error: e);
     }
   }
 
   Future<TickHistorySubscription> _getHistoryAndSubscribe() async {
     try {
-      final history = await TickHistory.fetchTicksAndSubscribe(
+      final TickHistorySubscription history =
+          await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
           ticksHistory: 'R_50',
           end: 'latest',
@@ -117,59 +123,57 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       return history;
     } on Exception catch (e) {
-      print(e);
+      dev.log(e.toString(), error: e);
       return null;
     }
   }
 
   void _onNewTick(int epoch, double quote) {
     setState(() {
-      candles = candles + [Candle.tick(epoch: epoch, quote: quote)];
+      candles = candles + <Candle>[Candle.tick(epoch: epoch, quote: quote)];
     });
   }
 
   void _onNewCandle(Candle newCandle) {
-    final previousCandles =
+    final List<Candle> previousCandles =
         candles.isNotEmpty && candles.last.epoch == newCandle.epoch
             ? candles.sublist(0, candles.length - 1)
             : candles;
 
     setState(() {
       // Don't modify candles in place, otherwise Chart's didUpdateWidget won't see the difference.
-      candles = previousCandles + [newCandle];
+      candles = previousCandles + <Candle>[newCandle];
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Color(0xFF0E0E0E),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              _buildChartTypeButton(),
-              _buildIntervalSelector(),
-            ],
-          ),
-          Expanded(
-            child: ClipRect(
-              child: Chart(
-                candles: candles,
-                pipSize: 4,
-                style: style,
-                onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                onLoadHistory: (fromEpoch, toEpoch, count) =>
-                    _loadHistory(fromEpoch, toEpoch, count),
+  Widget build(BuildContext context) => Material(
+        color: const Color(0xFF0E0E0E),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                _buildChartTypeButton(),
+                _buildIntervalSelector(),
+              ],
+            ),
+            Expanded(
+              child: ClipRect(
+                child: Chart(
+                  candles: candles,
+                  pipSize: 4,
+                  style: style,
+                  onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+                  onLoadHistory: (int fromEpoch, int toEpoch, int count) =>
+                      _loadHistory(fromEpoch, toEpoch, count),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
-  void _loadHistory(int fromEpoch, int toEpoch, int count) async {
+  Future<void> _loadHistory(int fromEpoch, int toEpoch, int count) async {
     if (fromEpoch < _startEpoch) {
       // So we don't request for a history range more than once
       _startEpoch = fromEpoch;
@@ -183,9 +187,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-      final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
-
-      loadedCandles.removeLast();
+      final List<Candle> loadedCandles = _getCandlesFromResponse(moreData)
+        ..removeLast();
 
       // Unlikely to happen, just to ensure we don't have two candles with the same epoch
       while (loadedCandles.isNotEmpty &&
@@ -197,63 +200,60 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
   }
 
-  IconButton _buildChartTypeButton() {
-    return IconButton(
-      icon: Icon(
-        style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
-        color: Colors.white,
-      ),
-      onPressed: () {
-        Vibration.vibrate(duration: 50);
-        setState(() {
-          if (style == ChartStyle.candles) {
-            style = ChartStyle.line;
-          } else {
-            style = ChartStyle.candles;
-          }
-        });
-      },
-    );
-  }
+  IconButton _buildChartTypeButton() => IconButton(
+        icon: Icon(
+          style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Vibration.vibrate(duration: 50);
+          setState(() {
+            if (style == ChartStyle.candles) {
+              style = ChartStyle.line;
+            } else {
+              style = ChartStyle.candles;
+            }
+          });
+        },
+      );
 
-  Widget _buildIntervalSelector() {
-    return Theme(
-      data: ThemeData.dark(),
-      child: DropdownButton<int>(
-        value: granularity,
-        items: <int>[
-          0,
-          60,
-          120,
-          180,
-          300,
-          600,
-          900,
-          1800,
-          3600,
-          7200,
-          14400,
-          28800,
-          86400,
-        ]
-            .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
-                  value: granularity,
-                  child: Text('${_granularityLabel(granularity)}'),
-                ))
-            .toList(),
-        onChanged: _onIntervalSelected,
-      ),
-    );
-  }
+  Widget _buildIntervalSelector() => Theme(
+        data: ThemeData.dark(),
+        child: DropdownButton<int>(
+          value: granularity,
+          items: <int>[
+            0,
+            60,
+            120,
+            180,
+            300,
+            600,
+            900,
+            1800,
+            3600,
+            7200,
+            14400,
+            28800,
+            86400,
+          ]
+              .map<DropdownMenuItem<int>>(
+                  (int granularity) => DropdownMenuItem<int>(
+                        value: granularity,
+                        child: Text('${_granularityLabel(granularity)}'),
+                      ))
+              .toList(),
+          onChanged: _onIntervalSelected,
+        ),
+      );
 
-  void _onIntervalSelected(value) async {
+  Future<void> _onIntervalSelected(int value) async {
     try {
       await _currentTick?.unsubscribe();
     } on Exception catch (e) {
-      print(e);
+      dev.log(e.toString(), error: e);
     }
     granularity = value;
-    _initTickStream();
+    await _initTickStream();
   }
 
   String _granularityLabel(int granularity) {
@@ -290,10 +290,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
-    List<Candle> candles = [];
+    List<Candle> candles = <Candle>[];
     if (tickHistory.history != null) {
-      final count = tickHistory.history.prices.length;
-      for (var i = 0; i < count; i++) {
+      final int count = tickHistory.history.prices.length;
+      for (int i = 0; i < count; i++) {
         candles.add(Candle.tick(
           epoch: tickHistory.history.times[i].millisecondsSinceEpoch,
           quote: tickHistory.history.prices[i],
@@ -302,15 +302,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
 
     if (tickHistory.candles != null) {
-      candles = tickHistory.candles.map<Candle>((ohlc) {
-        return Candle(
-          epoch: ohlc.epoch.millisecondsSinceEpoch,
-          high: ohlc.high,
-          low: ohlc.low,
-          open: ohlc.open,
-          close: ohlc.close,
-        );
-      }).toList();
+      candles = tickHistory.candles
+          .map<Candle>((CandleModel ohlc) => Candle(
+                epoch: ohlc.epoch.millisecondsSinceEpoch,
+                high: ohlc.high,
+                low: ohlc.low,
+                open: ohlc.open,
+                close: ohlc.close,
+              ))
+          .toList();
     }
     return candles;
   }
