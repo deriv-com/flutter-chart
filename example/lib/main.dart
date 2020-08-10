@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter_deriv_api/api/api_initializer.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
+import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
@@ -326,8 +327,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _onIntervalSelected(value) async {
     try {
       await _currentTick?.unsubscribe();
-    } on Exception catch (e) {
-      print(e);
+    } on TickException catch (e) {
+      print(e.message); // TODO(Ramin): Handle the case when unsubscribe fails
     } finally {
       granularity = value;
       _initTickStream();

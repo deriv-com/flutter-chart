@@ -5,7 +5,7 @@ class AnimatedHighlight extends StatefulWidget {
   const AnimatedHighlight({
     @required this.child,
     Key key,
-    this.duration = const Duration(milliseconds: 500),
+    this.duration = const Duration(milliseconds: 400),
     this.playAfter = const Duration(seconds: 1),
   }) : super(key: key);
 
@@ -32,6 +32,8 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
     _animationController = AnimationController(
       vsync: this,
       duration: widget.duration,
+      lowerBound: 0.1,
+      upperBound: 0.3,
     );
 
     _animation = CurvedAnimation(
@@ -42,7 +44,7 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
     _playAnimation();
   }
 
-  void _playAnimation() async {
+  Future<void> _playAnimation() async {
     await Future<void>.delayed(widget.playAfter);
     await _animationController.forward();
     _animationController.reverse();
@@ -59,9 +61,7 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
     return AnimatedBuilder(
       animation: _animation,
       builder: (BuildContext context, Widget child) => Ink(
-        color: Colors.grey.withOpacity(
-          0.08 + (0.2 * _animationController.value),
-        ),
+        color: Colors.grey.withOpacity(_animation.value),
         child: child,
       ),
       child: widget.child,
