@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// A widget to play a pulse highlight animation on its child
+/// A widget to play a pulse highlight animation on its child.
 class AnimatedHighlight extends StatefulWidget {
   const AnimatedHighlight({
+    @required this.child,
     Key key,
-    this.child,
     this.duration = const Duration(milliseconds: 500),
     this.playAfter = const Duration(seconds: 1),
   }) : super(key: key);
@@ -27,6 +27,8 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
 
   @override
   void initState() {
+    super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: widget.duration,
@@ -38,7 +40,6 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
     );
 
     _playAnimation();
-    super.initState();
   }
 
   void _playAnimation() async {
@@ -50,7 +51,6 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
   @override
   void dispose() {
     _animationController?.dispose();
-
     super.dispose();
   }
 

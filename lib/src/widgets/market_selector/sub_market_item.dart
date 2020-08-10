@@ -4,11 +4,12 @@ import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
 
+/// A widget to show a sub-market item under a market.
 class SubMarketItem extends StatelessWidget {
   const SubMarketItem({
+    @required this.subMarket,
     Key key,
-    this.subMarket,
-    this.filterText,
+    this.filterText = '',
     this.selectedItemKey,
     this.onAssetClicked,
     this.isCategorized = true,

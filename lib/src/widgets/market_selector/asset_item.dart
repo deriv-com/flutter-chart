@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'models.dart';
 
+/// A widget to show an asset (active symbol) item in the market selector.
 class AssetItem extends StatelessWidget {
   const AssetItem({
+    @required this.asset,
     Key key,
-    this.asset,
+    this.filterText = '',
     this.onAssetClicked,
-    this.filterText,
     this.iconFadeInDuration = const Duration(milliseconds: 50),
   }) : super(key: key);
 

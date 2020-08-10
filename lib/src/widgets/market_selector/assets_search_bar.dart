@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// A widget to handle search interaction and its TextFiled.
 class AssetsSearchBar extends StatefulWidget {
+  /// Creates a search bar
+  /// [onSearchTextChanged] will get called when the search query changes
   const AssetsSearchBar({Key key, this.onSearchTextChanged}) : super(key: key);
 
   /// Will be called whenever the text in search bar has changed.
@@ -28,7 +31,6 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
   void dispose() {
     _textEditingController?.dispose();
     _searchFieldFocusNode?.dispose();
-
     super.dispose();
   }
 

@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-/// A class to keep the a market's information.
+/// A class to keep a market's information.
 class Market {
   Market({
     this.name,
@@ -73,7 +73,7 @@ class SubMarket {
   bool containsText(String text) =>
       displayName?.toLowerCase()?.contains(text) ?? false;
 
-  /// Returns true if any asset under this SubMarket contains the [text]
+  /// Returns true if any asset under this sub-market contains the [text]
   bool containsAssetWithText(String text) =>
       containsText(text) ||
       assets.firstWhere(
@@ -82,7 +82,7 @@ class SubMarket {
           null;
 }
 
-/// Representing an active symbol object retrieved from the API
+/// Representing an active symbol retrieved from the API
 class Asset {
   Asset({
     this.name,
