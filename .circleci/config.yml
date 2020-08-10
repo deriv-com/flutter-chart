@@ -102,6 +102,7 @@ jobs:
     steps:
       - prepare_enviroment
       - code_coverage
+      - analyze_code
       - build_app:
           target: "--target-platform android-arm,android-arm64,android-x86,android-x64"
           buildNumber: "--build-number $CIRCLE_BUILD_NUM"
