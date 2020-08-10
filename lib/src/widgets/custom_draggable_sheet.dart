@@ -80,7 +80,6 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   @override
   void dispose() {
     _animationController?.dispose();
-
     super.dispose();
   }
 
@@ -118,7 +117,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
 
   void _updateSheetHeightBy(double deltaPercent) {
     _animationController.value -= deltaPercent;
-    _clampAnimationValue();
+    _animationController.value = _animationController.value.clamp(0.0, 1.0);
   }
 
   void _flingToTopOrBottom() {
@@ -135,9 +134,5 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
         curve: Curves.easeOut,
       );
     }
-  }
-
-  void _clampAnimationValue() {
-    _animationController.value = _animationController.value.clamp(0.0, 1.0);
   }
 }

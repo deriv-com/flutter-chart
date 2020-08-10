@@ -1,10 +1,12 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Test different scenarios that might break the [MarketSelector] widget', () {
+  group('Test different scenarios that might break the [MarketSelector] widget',
+      () {
     Asset r50;
     Asset r25Favorite;
     SubMarket r50SubMarket;
@@ -43,6 +45,26 @@ void main() {
           selectedItem: r25Favorite,
         ),
       ));
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AnimatedHighlight), findsNothing);
+    });
+
+    testWidgets('Selected asset is highlighted',
+        (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: MarketSelector(
+          markets: [
+            Market(subMarkets: [r25SubMarket, r50SubMarket])
+          ],
+          selectedItem: r25Favorite,
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AnimatedHighlight), findsOneWidget);
     });
 
     testWidgets('1 asset that is favorite', (tester) async {

@@ -57,14 +57,12 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (BuildContext context, Widget child) => Ink(
-        color: Colors.grey.withOpacity(_animation.value),
-        child: child,
-      ),
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _animation,
+        builder: (BuildContext context, Widget child) => Ink(
+          color: Colors.grey.withOpacity(_animation.value),
+          child: child,
+        ),
+        child: widget.child,
+      );
 }
