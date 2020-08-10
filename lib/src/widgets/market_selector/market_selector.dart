@@ -80,20 +80,14 @@ class _MarketSelectorState extends State<MarketSelector>
         child: Material(
           elevation: 8, // TODO(Ramin): Use Chart's theme when its ready
           color: Color(0xFF151717),
-          child: Stack(
+          child: Column(
             children: <Widget>[
-              if (_marketsToDisplay?.isEmpty ?? false)
-                NoResultPage(text: _filterText),
-              Column(
-                children: <Widget>[
-                  _buildTopHandle(),
-                  AssetsSearchBar(
-                    onSearchTextChanged: (String text) =>
-                        setState(() => _filterText = text),
-                  ),
-                  _buildMarketsList(),
-                ],
+              _buildTopHandle(),
+              AssetsSearchBar(
+                onSearchTextChanged: (String text) =>
+                    setState(() => _filterText = text),
               ),
+              _buildMarketsList(),
             ],
           ),
         ),
@@ -155,15 +149,20 @@ class _MarketSelectorState extends State<MarketSelector>
     return _marketsToDisplay == null
         ? Container()
         : Expanded(
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                children: <Widget>[
-                  _buildFavoriteSection(favoritesList),
-                  ..._marketsToDisplay
-                      .map((Market market) => _buildMarketItem(market))
-                ],
-              ),
+            child: Stack(
+              children: <Widget>[
+                SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    children: <Widget>[
+                      _buildFavoriteSection(favoritesList),
+                      ..._marketsToDisplay
+                          .map((Market market) => _buildMarketItem(market))
+                    ],
+                  ),
+                ),
+                if (_marketsToDisplay.isEmpty) NoResultPage(text: _filterText),
+              ],
             ),
           );
   }
