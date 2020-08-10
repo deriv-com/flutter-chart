@@ -40,6 +40,14 @@ commands:
                 sudo gem install coveralls-lcov
                 coveralls-lcov -t $COVERALLS_REPO_TOKEN coverage/lcov.info
 
+  analyze_code:
+    description: Do flutter analyze
+    steps:
+      - run:
+          name: Code analysis
+          command: |
+            flutter analyze --no-pub
+
   build_app:
     description: Build the app
     parameters:
