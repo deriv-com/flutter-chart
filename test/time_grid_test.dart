@@ -3,91 +3,290 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/logic/time_grid.dart';
 
 void main() {
-  group('gridEpochs should', () {
-    test('include epoch on the right edge', () {
-      expect(
-        gridEpochs(
-          timeGridInterval: 1000,
-          leftBoundEpoch: 9000,
-          rightBoundEpoch: 10000,
-        ),
-        contains(10000),
-      );
-    });
-    test('include epoch on the left edge', () {
-      expect(
-        gridEpochs(
-          timeGridInterval: 100,
-          leftBoundEpoch: 900,
-          rightBoundEpoch: 1000,
-        ),
-        contains(900),
-      );
-    });
-    test('return epochs within canvas, divisible by [timeGridInterval]', () {
-      expect(
-        gridEpochs(
-          timeGridInterval: 100,
-          leftBoundEpoch: 700,
-          rightBoundEpoch: 1000,
-        ),
-        equals([1000, 900, 800, 700]),
-      );
-      expect(
-        gridEpochs(
-          timeGridInterval: 100,
-          leftBoundEpoch: 699,
-          rightBoundEpoch: 999,
-        ),
-        equals([900, 800, 700]),
-      );
-    });
+  // Timestamps.
+  test('include timestamp on the right edge', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(milliseconds: 1000),
+        leftBoundEpoch: 9000,
+        rightBoundEpoch: 10000,
+      ),
+      contains(DateTime.fromMillisecondsSinceEpoch(10000, isUtc: true)),
+    );
+  });
+  test('include timestamp on the left edge', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(milliseconds: 100),
+        leftBoundEpoch: 900,
+        rightBoundEpoch: 1000,
+      ),
+      contains(DateTime.fromMillisecondsSinceEpoch(900, isUtc: true)),
+    );
+  });
+  test('timestamps for small intervals', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(milliseconds: 100),
+        leftBoundEpoch: 700,
+        rightBoundEpoch: 1000,
+      ),
+      equals([
+        DateTime.fromMillisecondsSinceEpoch(700, isUtc: true),
+        DateTime.fromMillisecondsSinceEpoch(800, isUtc: true),
+        DateTime.fromMillisecondsSinceEpoch(900, isUtc: true),
+        DateTime.fromMillisecondsSinceEpoch(1000, isUtc: true),
+      ]),
+    );
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(milliseconds: 100),
+        leftBoundEpoch: 699,
+        rightBoundEpoch: 999,
+      ),
+      equals([
+        DateTime.fromMillisecondsSinceEpoch(700, isUtc: true),
+        DateTime.fromMillisecondsSinceEpoch(800, isUtc: true),
+        DateTime.fromMillisecondsSinceEpoch(900, isUtc: true),
+      ]),
+    );
+  });
+  test('timestamps for 1h interval', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(hours: 1),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 22:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-24 22:00:00Z'),
+        DateTime.parse('2020-07-24 23:00:00Z'),
+        DateTime.parse('2020-07-25 00:00:00Z'),
+        DateTime.parse('2020-07-25 01:00:00Z'),
+      ]),
+    );
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(hours: 1),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 01:10:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-24 23:00:00Z'),
+        DateTime.parse('2020-07-25 00:00:00Z'),
+        DateTime.parse('2020-07-25 01:00:00Z'),
+      ]),
+    );
+  });
+  test('timestamps for 2h interval', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(hours: 2),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 22:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-24 22:00:00Z'),
+        DateTime.parse('2020-07-25 00:00:00Z'),
+      ]),
+    );
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(hours: 2),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 02:10:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-25 00:00:00Z'),
+        DateTime.parse('2020-07-25 02:00:00Z'),
+      ]),
+    );
+  });
+  test('timestamps for 4h interval', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(hours: 4),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 05:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-24 08:00:00Z'),
+        DateTime.parse('2020-07-24 12:00:00Z'),
+        DateTime.parse('2020-07-24 16:00:00Z'),
+        DateTime.parse('2020-07-24 20:00:00Z'),
+        DateTime.parse('2020-07-25 00:00:00Z'),
+      ]),
+    );
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(hours: 4),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 02:10:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-25 00:00:00Z'),
+      ]),
+    );
+  });
+  test('timestamps for 8h interval', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(hours: 8),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 19:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 19:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-25 00:00:00Z'),
+        DateTime.parse('2020-07-25 08:00:00Z'),
+        DateTime.parse('2020-07-25 16:00:00Z'),
+      ]),
+    );
+  });
+  test('timestamps for 1 day interval', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(days: 1),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 15:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 15:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([DateTime.parse('2020-07-25 00:00:00Z')]),
+    );
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(days: 1),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 00:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-25 15:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-24 00:00:00Z'),
+        DateTime.parse('2020-07-25 00:00:00Z'),
+      ]),
+    );
+  });
+  test('timestamps for 1 week interval', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: Duration(days: DateTime.daysPerWeek),
+        leftBoundEpoch:
+            DateTime.parse('2020-07-24 15:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-07-29 15:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([DateTime.parse('2020-07-27 00:00:00Z')]),
+    );
+  });
+  test('timestamps for 1 month interval', () {
+    expect(
+      gridTimestamps(
+        timeGridInterval: month,
+        leftBoundEpoch:
+            DateTime.parse('2020-06-24 08:00:00Z').millisecondsSinceEpoch,
+        rightBoundEpoch:
+            DateTime.parse('2020-08-29 12:00:00Z').millisecondsSinceEpoch,
+      ),
+      equals([
+        DateTime.parse('2020-07-01 00:00:00Z'),
+        DateTime.parse('2020-08-01 00:00:00Z'),
+      ]),
+    );
   });
 
-  group('timeGridInterval should', () {
-    test('return given interval if only one is given', () {
-      expect(
-        timeGridIntervalInSeconds(
-          10000000,
-          intervalsInSeconds: [10],
-        ),
-        equals(10),
-      );
-      expect(
-        timeGridIntervalInSeconds(
-          0.000001,
-          intervalsInSeconds: [42],
-        ),
-        equals(42),
-      );
-    });
-    test(
-        'return smallest given interval that has px width of at least [minDistanceBetweenLines]',
-        () {
-      expect(
-        timeGridIntervalInSeconds(
-          1000,
-          minDistanceBetweenLines: 100,
-          intervalsInSeconds: [10, 99, 120, 200, 1000],
-        ),
-        equals(120),
-      );
-      expect(
-        timeGridIntervalInSeconds(
-          1000,
-          minDistanceBetweenLines: 100,
-          intervalsInSeconds: [10, 100, 120, 200],
-        ),
-        equals(100),
-      );
-      expect(
-        timeGridIntervalInSeconds(
-          1000,
-          minDistanceBetweenLines: 42,
-          intervalsInSeconds: [39, 40, 41, 45, 50],
-        ),
-        equals(45),
-      );
-    });
+  // Interval.
+  test('given interval if only one is given', () {
+    expect(
+      timeGridInterval(
+        10000000,
+        intervals: [Duration(seconds: 10)],
+      ),
+      equals(Duration(seconds: 10)),
+    );
+    expect(
+      timeGridInterval(
+        0.000001,
+        intervals: [Duration(seconds: 42)],
+      ),
+      equals(Duration(seconds: 42)),
+    );
+  });
+  test('smallest given interval that satisfies [minDistanceBetweenLines]', () {
+    expect(
+      timeGridInterval(
+        1000,
+        minDistanceBetweenLines: 100,
+        intervals: [
+          Duration(seconds: 10),
+          Duration(seconds: 99),
+          Duration(seconds: 120),
+          Duration(seconds: 200),
+          Duration(seconds: 1000),
+        ],
+      ),
+      equals(Duration(seconds: 120)),
+    );
+    expect(
+      timeGridInterval(
+        1000,
+        minDistanceBetweenLines: 100,
+        intervals: [
+          Duration(seconds: 10),
+          Duration(seconds: 100),
+          Duration(seconds: 120),
+          Duration(seconds: 200),
+        ],
+      ),
+      equals(Duration(seconds: 100)),
+    );
+    expect(
+      timeGridInterval(
+        1000,
+        minDistanceBetweenLines: 42,
+        intervals: [
+          Duration(seconds: 39),
+          Duration(seconds: 40),
+          Duration(seconds: 41),
+          Duration(seconds: 45),
+          Duration(seconds: 50),
+        ],
+      ),
+      equals(Duration(seconds: 45)),
+    );
+  });
+
+  // Time label.
+  test('start of day -> date in format `2 Jul`', () {
+    expect(
+      timeLabel(DateTime.parse('2020-07-02 00:00:00Z')),
+      '2 Jul',
+    );
+  });
+  test('start of the month -> full month name', () {
+    expect(
+      timeLabel(DateTime.parse('2020-07-01 00:00:00Z')),
+      'July',
+    );
+  });
+  test('start of the year -> year', () {
+    expect(
+      timeLabel(DateTime.parse('2020-01-01 00:00:00Z')),
+      '2020',
+    );
   });
 }

@@ -404,7 +404,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                 CustomPaint(
                   size: canvasSize,
                   painter: GridPainter(
-                    gridLineEpochs: _getGridLineEpochs(),
+                    gridTimestamps: _getGridLineTimestamps(),
                     gridLineQuotes: _getGridLineQuotes(),
                     pipSize: widget.pipSize,
                     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
@@ -494,9 +494,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     );
   }
 
-  List<int> _getGridLineEpochs() {
-    return gridEpochs(
-      timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
+  List<DateTime> _getGridLineTimestamps() {
+    return gridTimestamps(
+      timeGridInterval: timeGridInterval(msPerPx),
       leftBoundEpoch:
           rightBoundEpoch - pxToMs(canvasSize.width, msPerPx: msPerPx),
       rightBoundEpoch: rightBoundEpoch,
