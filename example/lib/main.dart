@@ -10,7 +10,6 @@ import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
-import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
@@ -158,22 +157,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
   }
 
-  void _handleTickStream(TickBase tickBase) {
-    if (tickBase != null) {
-      _currentTick = tickBase;
+  void _handleTickStream(TickBase newTick) {
+    if (newTick != null) {
+      _currentTick = newTick;
 
-      if (tickBase is api_tick.Tick) {
+      if (newTick is api_tick.Tick) {
         _onNewTick(Candle.tick(
-          epoch: tickBase.epoch.millisecondsSinceEpoch,
-          quote: tickBase.quote,
+          epoch: newTick.epoch.millisecondsSinceEpoch,
+          quote: newTick.quote,
         ));
-      } else if (tickBase is OHLC) {
+      } else if (newTick is OHLC) {
         _onNewCandle(Candle(
-          epoch: tickBase.openTime.millisecondsSinceEpoch,
-          high: tickBase.high,
-          low: tickBase.low,
-          open: tickBase.open,
-          close: tickBase.close,
+          epoch: newTick.openTime.millisecondsSinceEpoch,
+          high: newTick.high,
+          low: newTick.low,
+          open: newTick.open,
+          close: newTick.close,
         ));
       }
     }
