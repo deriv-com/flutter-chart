@@ -2,11 +2,11 @@ import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/chart_style.dart';
-import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'crosshair_details.dart';
+import 'crosshair_painter.dart';
 
 class CrosshairArea extends StatefulWidget {
   CrosshairArea({
