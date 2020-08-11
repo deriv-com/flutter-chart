@@ -32,8 +32,7 @@ commands:
     steps:
       - run:
           name: Code analysis
-          command: |
-            flutter analyze --no-pub
+          command: flutter analyze --no-pub
 
   code_coverage:
     description: Do prebuild stuff
