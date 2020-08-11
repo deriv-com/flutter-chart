@@ -101,7 +101,7 @@ jobs:
       - run:
           name: Copy APK
           command: |
-              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/apk/app.apk /artifacts/deriv-chart.apk
+              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/flutter-apk/app-debug.apk /artifacts/deriv-chart.apk
           working_directory: ~/project/example
 
       - store_artifacts:
