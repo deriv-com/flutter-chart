@@ -212,11 +212,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onNewTick() {
-    // TODO(Rustem): move to CrosshairArea
-    // if (crosshairCandle != null &&
-    //     crosshairCandle.epoch == widget.candles.last.epoch) {
-    //   crosshairCandle = widget.candles.last;
-    // }
     _currentTickAnimationController.reset();
     _currentTickAnimationController.forward();
   }

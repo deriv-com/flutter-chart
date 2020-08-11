@@ -46,6 +46,23 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   @override
+  void didUpdateWidget(CrosshairArea oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateCrosshairCandle();
+  }
+
+  void _updateCrosshairCandle() {
+    if (crosshairCandle == null ||
+        widget.visibleCandles == null ||
+        widget.visibleCandles.isEmpty) return;
+
+    final lastCandle = widget.visibleCandles.last;
+    if (crosshairCandle.epoch == lastCandle.epoch) {
+      crosshairCandle = lastCandle;
+    }
+  }
+
+  @override
   void dispose() {
     gestureManager.removeCallback(_handleLongPressStart);
     gestureManager.removeCallback(_handleLongPressUpdate);
