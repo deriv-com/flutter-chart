@@ -1,14 +1,16 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
+import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
@@ -46,6 +48,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Candle> candles = [];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
+
   TickBase _currentTick;
 
   StreamSubscription _tickSubscription;
@@ -60,7 +63,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   @override
   void initState() {
     super.initState();
-
     _requestCompleter = Completer();
     _connectToAPI();
   }
@@ -68,6 +70,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   @override
   void dispose() {
     _tickSubscription?.cancel();
+    _connectionBloc?.close();
     super.dispose();
   }
 
@@ -76,18 +79,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
       appId: '1089',
       brand: 'binary',
       endpoint: 'frontend.binaryws.com',
-    ));
-
-    _connectionBloc.listen((connectionState) async {
-      setState(() {});
-      if (connectionState is Connected) {
-        if (candles.isEmpty) {
-          _initTickStream();
-        } else {
-          _resumeTickStream();
+    ))
+      ..listen((connectionState) async {
+        setState(() {});
+        if (connectionState is Connected) {
+          if (candles.isEmpty) {
+            _initTickStream();
+          } else {
+            _resumeTickStream();
+          }
         }
-      }
-    });
+      });
   }
 
   void _resumeTickStream() async {
@@ -115,8 +117,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _tickSubscription =
           missedTicksHistory.tickStream.listen(_handleTickStream);
-    } on Exception catch (e) {
-      print(e);
+    } on TickException catch (e) {
+      dev.log(e.message, error: e);
     } finally {
       _completeRequest();
     }
@@ -143,8 +145,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _tickSubscription =
           historySubscription.tickStream.listen(_handleTickStream);
-    } on Exception catch (e) {
-      print(e);
+    } on TickException catch (e) {
+      dev.log(e.message, error: e);
     } finally {
       _completeRequest();
     }
@@ -161,26 +163,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _currentTick = tickBase;
 
       if (tickBase is api_tick.Tick) {
-        _onNewTick(tickBase.epoch.millisecondsSinceEpoch, tickBase.quote);
-      }
-
-      if (tickBase is OHLC) {
-        final newCandle = Candle(
+        _onNewTick(Candle.tick(
+          epoch: tickBase.epoch.millisecondsSinceEpoch,
+          quote: tickBase.quote,
+        ));
+      } else if (tickBase is OHLC) {
+        _onNewCandle(Candle(
           epoch: tickBase.openTime.millisecondsSinceEpoch,
           high: tickBase.high,
           low: tickBase.low,
           open: tickBase.open,
           close: tickBase.close,
-        );
-        _onNewCandle(newCandle);
+        ));
       }
     }
   }
 
-  void _onNewTick(int epoch, double quote) {
-    setState(() {
-      candles = candles + [Candle.tick(epoch: epoch, quote: quote)];
-    });
+  void _onNewTick(Candle newTick) {
+    setState(() => candles = candles + [newTick]);
   }
 
   void _onNewCandle(Candle newCandle) {
