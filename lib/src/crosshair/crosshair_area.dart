@@ -19,6 +19,8 @@ class CrosshairArea extends StatefulWidget {
     @required this.canvasXToEpoch,
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
+    // TODO(Rustem): remove when chart params are provided
+    this.onCrosshairAppeared,
   }) : super(key: key);
 
   final List<Candle> visibleCandles;
@@ -27,6 +29,7 @@ class CrosshairArea extends StatefulWidget {
   final double Function(int) epochToCanvasX;
   final int Function(double) canvasXToEpoch;
   final double Function(double) quoteToCanvasY;
+  final VoidCallback onCrosshairAppeared;
 
   @override
   _CrosshairAreaState createState() => _CrosshairAreaState();
@@ -71,8 +74,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _handleLongPressStart(LongPressStartDetails details) {
-    // TODO(Rustem): call this callback when provided
-    // widget.onCrosshairAppeared?.call();
+    widget.onCrosshairAppeared?.call();
     // TODO(Rustem): ask yAxisModel to zoom out
     // _crosshairZoomOutAnimationController.forward();
     setState(() {

@@ -33,7 +33,7 @@ class Chart extends StatelessWidget {
   final int pipSize;
   final ChartStyle style;
 
-  final Function onCrosshairAppeared;
+  final VoidCallback onCrosshairAppeared;
 
   /// Pagination callback. will be called when scrolled to left and there is empty space before first [candles]
   final OnLoadHistory onLoadHistory;
@@ -65,7 +65,7 @@ class _ChartImplementation extends StatefulWidget {
   final List<Candle> candles;
   final int pipSize;
   final ChartStyle style;
-  final Function onCrosshairAppeared;
+  final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
 
   @override
@@ -472,6 +472,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             epochToCanvasX: _epochToCanvasX,
             canvasXToEpoch: _canvasXToEpoch,
             quoteToCanvasY: _quoteToCanvasY,
+            onCrosshairAppeared: widget.onCrosshairAppeared,
           ),
           if (_isScrollToNowAvailable)
             Positioned(
