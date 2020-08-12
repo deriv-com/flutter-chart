@@ -317,7 +317,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _onIntervalSelected(value) async {
+  Future<void> _onIntervalSelected(value) async {
     await _requestCompleter.future;
     _requestCompleter = Completer();
 

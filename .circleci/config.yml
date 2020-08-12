@@ -27,6 +27,13 @@ commands:
           name: pub get
           command: flutter pub get
 
+  analyze_code:
+    description: Do flutter analyze
+    steps:
+      - run:
+          name: Code analysis
+          command: flutter analyze --no-pub
+
   code_coverage:
     description: Do prebuild stuff
     steps:
@@ -93,6 +100,7 @@ jobs:
     executor: flutter_executor
     steps:
       - prepare_enviroment
+      - analyze_code
       - code_coverage
       - build_app:
           target: "--target-platform android-arm,android-arm64,android-x86,android-x64"
