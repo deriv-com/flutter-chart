@@ -12,14 +12,14 @@ class CrosshairArea extends StatefulWidget {
   CrosshairArea({
     Key key,
     @required this.visibleCandles,
-    @required this.style,
-    @required this.pipSize,
     // TODO(Rustem): remove when xAxisModel is provided
     @required this.epochToCanvasX,
     @required this.canvasXToEpoch,
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     // TODO(Rustem): remove when chart params are provided
+    @required this.style,
+    @required this.pipSize,
     this.onCrosshairAppeared,
   }) : super(key: key);
 
