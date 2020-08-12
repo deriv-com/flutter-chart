@@ -27,6 +27,13 @@ commands:
           name: pub get
           command: flutter pub get
 
+  analyze_code:
+    description: Do flutter analyze
+    steps:
+      - run:
+          name: Code analysis
+          command: flutter analyze --no-pub
+
   code_coverage:
     description: Do prebuild stuff
     steps:
@@ -93,6 +100,7 @@ jobs:
     executor: flutter_executor
     steps:
       - prepare_enviroment
+      - analyze_code
       - code_coverage
       - build_app:
           target: "--target-platform android-arm,android-arm64,android-x86,android-x64"
@@ -101,7 +109,7 @@ jobs:
       - run:
           name: Copy APK
           command: |
-              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/apk/app.apk /artifacts/deriv-chart.apk
+              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/flutter-apk/app-debug.apk /artifacts/deriv-chart.apk
           working_directory: ~/project/example
 
       - store_artifacts:

@@ -218,7 +218,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _currentTickAnimationController.forward();
   }
 
-  void _onNewFrame(_) {
+  void _onNewFrame(Duration elapsed) {
     setState(() {
       final prevEpoch = nowEpoch;
       nowEpoch = DateTime.now().millisecondsSinceEpoch;
@@ -427,7 +427,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: GridPainter(
-              gridLineEpochs: _getGridLineEpochs(),
+              gridTimestamps: _getGridLineTimestamps(),
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
@@ -504,9 +504,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  List<int> _getGridLineEpochs() {
-    return gridEpochs(
-      timeGridInterval: timeGridIntervalInSeconds(msPerPx) * 1000,
+  List<DateTime> _getGridLineTimestamps() {
+    return gridTimestamps(
+      timeGridInterval: timeGridInterval(msPerPx),
       leftBoundEpoch:
           rightBoundEpoch - pxToMs(canvasSize.width, msPerPx: msPerPx),
       rightBoundEpoch: rightBoundEpoch,
