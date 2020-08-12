@@ -33,9 +33,10 @@ class Chart extends StatelessWidget {
   final int pipSize;
   final ChartStyle style;
 
+  /// Called when crosshair details appear after long press.
   final VoidCallback onCrosshairAppeared;
 
-  /// Pagination callback. will be called when scrolled to left and there is empty space before first [candles]
+  /// Called when chart is scrolled back and missing data is visible.
   final OnLoadHistory onLoadHistory;
 
   @override
