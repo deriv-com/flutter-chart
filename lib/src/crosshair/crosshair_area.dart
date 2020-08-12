@@ -71,7 +71,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _handleLongPressStart(LongPressStartDetails details) {
+    // TODO(Rustem): call this callback when provided
     // widget.onCrosshairAppeared?.call();
+    // TODO(Rustem): ask yAxisModel to zoom out
     // _crosshairZoomOutAnimationController.forward();
     setState(() {
       crosshairCandle = _getClosestCandle(details.localPosition.dx);
@@ -90,6 +92,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _handleLongPressEnd(LongPressEndDetails details) {
+    // TODO(Rustem): ask yAxisModel to zoom in
     // _crosshairZoomOutAnimationController.reverse();
     setState(() {
       crosshairCandle = null;
