@@ -304,17 +304,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager.registerCallback(_onScaleAndPanStart);
-    _gestureManager.registerCallback(_onPanUpdate);
-    _gestureManager.registerCallback(_onScaleUpdate);
-    _gestureManager.registerCallback(_onScaleAndPanEnd);
+    _gestureManager
+      ..registerCallback(_onScaleAndPanStart)
+      ..registerCallback(_onPanUpdate)
+      ..registerCallback(_onScaleUpdate)
+      ..registerCallback(_onScaleAndPanEnd);
   }
 
   void _clearGestures() {
-    _gestureManager.removeCallback(_onScaleAndPanStart);
-    _gestureManager.removeCallback(_onPanUpdate);
-    _gestureManager.removeCallback(_onScaleUpdate);
-    _gestureManager.removeCallback(_onScaleAndPanEnd);
+    _gestureManager
+      ..removeCallback(_onScaleAndPanStart)
+      ..removeCallback(_onPanUpdate)
+      ..removeCallback(_onScaleUpdate)
+      ..removeCallback(_onScaleAndPanEnd);
   }
 
   void _updateVisibleCandles() {
