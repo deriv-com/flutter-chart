@@ -21,6 +21,7 @@ class CrosshairArea extends StatefulWidget {
     @required this.style,
     @required this.pipSize,
     this.onCrosshairAppeared,
+    this.onCrosshairDisappeared,
   }) : super(key: key);
 
   final List<Candle> visibleCandles;
@@ -30,6 +31,7 @@ class CrosshairArea extends StatefulWidget {
   final int Function(double) canvasXToEpoch;
   final double Function(double) quoteToCanvasY;
   final VoidCallback onCrosshairAppeared;
+  final VoidCallback onCrosshairDisappeared;
 
   @override
   _CrosshairAreaState createState() => _CrosshairAreaState();
@@ -74,9 +76,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _handleLongPressStart(LongPressStartDetails details) {
-    widget.onCrosshairAppeared?.call();
     // TODO(Rustem): ask yAxisModel to zoom out
-    // _crosshairZoomOutAnimationController.forward();
+    // TODO(Rustem): call callback that was passed to chart
+    widget.onCrosshairAppeared?.call();
     setState(() {
       crosshairCandle = _getClosestCandle(details.localPosition.dx);
     });
@@ -95,7 +97,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
   void _handleLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
-    // _crosshairZoomOutAnimationController.reverse();
+    widget.onCrosshairDisappeared?.call();
     setState(() {
       crosshairCandle = null;
     });

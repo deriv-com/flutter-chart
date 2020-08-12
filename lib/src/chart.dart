@@ -472,7 +472,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
             epochToCanvasX: _epochToCanvasX,
             canvasXToEpoch: _canvasXToEpoch,
             quoteToCanvasY: _quoteToCanvasY,
-            onCrosshairAppeared: widget.onCrosshairAppeared,
+            onCrosshairAppeared: () {
+              widget.onCrosshairAppeared?.call();
+              _crosshairZoomOutAnimationController.forward();
+            },
+            onCrosshairDisappeared: () {
+              _crosshairZoomOutAnimationController.reverse();
+            },
           ),
           if (_isScrollToNowAvailable)
             Positioned(
