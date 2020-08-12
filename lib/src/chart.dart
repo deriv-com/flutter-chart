@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
+import 'package:deriv_chart/src/theme/chart_example_theme.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -28,6 +30,7 @@ class Chart extends StatefulWidget {
     Key key,
     @required this.candles,
     @required this.pipSize,
+    @required this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
@@ -41,6 +44,9 @@ class Chart extends StatefulWidget {
 
   /// Pagination callback. will be called when scrolled to left and there is empty space before first [candles]
   final OnLoadHistory onLoadHistory;
+
+  /// Chart's theme
+  final ChartTheme theme;
 
   @override
   _ChartState createState() => _ChartState();
