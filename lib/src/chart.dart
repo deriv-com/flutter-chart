@@ -206,7 +206,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     _currentTickAnimationController.forward();
   }
 
-  void _onNewFrame(_) {
+  void _onNewFrame(Duration elapsed) {
     setState(() {
       final prevEpoch = nowEpoch;
       nowEpoch = DateTime.now().millisecondsSinceEpoch;

@@ -324,7 +324,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _onIntervalSelected(value) async {
+  void _onIntervalSelected(int value) async {
     try {
       await _currentTick?.unsubscribe();
     } on TickException catch (e) {
