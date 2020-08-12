@@ -76,6 +76,7 @@ class _ChartImplementation extends StatefulWidget {
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
+  Ticker _scrollMomentumTicker;
 
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
   final double maxCurrentTickOffset = 150;
@@ -303,16 +304,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager.registerCallback(_handleScaleStart);
-    _gestureManager.registerCallback(_handlePanUpdate);
-    _gestureManager.registerCallback(_handleScaleUpdate);
+    _gestureManager.registerCallback(_onScaleAndPanStart);
+    _gestureManager.registerCallback(_onPanUpdate);
+    _gestureManager.registerCallback(_onScaleUpdate);
     _gestureManager.registerCallback(_onScaleAndPanEnd);
   }
 
   void _clearGestures() {
-    _gestureManager.removeCallback(_handleScaleStart);
-    _gestureManager.removeCallback(_handlePanUpdate);
-    _gestureManager.removeCallback(_handleScaleUpdate);
+    _gestureManager.removeCallback(_onScaleAndPanStart);
+    _gestureManager.removeCallback(_onPanUpdate);
+    _gestureManager.removeCallback(_onScaleUpdate);
     _gestureManager.removeCallback(_onScaleAndPanEnd);
   }
 
@@ -550,11 +551,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  void _handleScaleStart(ScaleStartDetails details) {
+  void _onScaleAndPanStart(ScaleStartDetails details) {
+    _stopScrollMomentum();
     prevMsPerPx = msPerPx;
   }
 
-  void _handleScaleUpdate(ScaleUpdateDetails details) {
+  void _onScaleUpdate(ScaleUpdateDetails details) {
     if (_isAutoPanning) {
       _scaleWithNowFixed(details);
     } else {
@@ -587,7 +589,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  void _handlePanUpdate(DragUpdateDetails details) {
+  void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       rightBoundEpoch -= _pxToMs(details.delta.dx);
       _limitRightBoundEpoch();
@@ -630,28 +632,29 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _onLoadHistory();
   }
 
-  Ticker _scrollTicker;
-
   void _triggerScrollMomentum(Velocity velocity) {
     final simulation = ClampingScrollSimulation(
       position: 0,
       velocity: velocity.pixelsPerSecond.dx,
     );
     final start = rightBoundEpoch;
-    _scrollTicker?.dispose();
-    _scrollTicker = this.createTicker((elapsed) {
+    _stopScrollMomentum();
+    _scrollMomentumTicker = this.createTicker((elapsed) {
       final secElapsed = elapsed.inMilliseconds.toDouble() / 1000;
       if (simulation.isDone(secElapsed)) {
-        _scrollTicker?.dispose();
-        _scrollTicker = null;
+        _stopScrollMomentum();
         _onLoadHistory();
       }
       final newPos = simulation.x(secElapsed);
-      print('*$secElapsed $newPos');
       rightBoundEpoch = start - _pxToMs(newPos);
       _limitRightBoundEpoch();
     });
-    _scrollTicker.start();
+    _scrollMomentumTicker.start();
+  }
+
+  void _stopScrollMomentum() {
+    _scrollMomentumTicker?.dispose();
+    _scrollMomentumTicker = null;
   }
 
   void _limitRightBoundEpoch() {
