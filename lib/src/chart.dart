@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
+import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -29,7 +30,7 @@ class Chart extends StatefulWidget {
     Key key,
     @required this.candles,
     @required this.pipSize,
-    @required this.theme,
+    this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
@@ -94,6 +95,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
 
+  ChartTheme _chartTheme;
+
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
   AnimationController _loadingAnimationController;
@@ -144,6 +147,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    _chartTheme = widget.theme ?? ChartDefaultTheme();
 
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
