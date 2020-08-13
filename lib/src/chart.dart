@@ -685,10 +685,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onLoadHistory() {
     if (widget.candles.isEmpty) return;
-    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    final int leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
     if (leftBoundEpoch < widget.candles.first.epoch) {
-      int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-      int widthInMs = _pxToMs(canvasSize.width);
+      final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+      final int widthInMs = _pxToMs(canvasSize.width);
       widget.onLoadHistory?.call(
         widget.candles.first.epoch - (2 * widthInMs),
         widget.candles.first.epoch,
