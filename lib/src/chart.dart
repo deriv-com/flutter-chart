@@ -678,6 +678,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final int upperLimit = nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
     rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
+    if (rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit) {
+      _stopScrollMomentum();
+    }
   }
 
   void _onLoadHistory() {
