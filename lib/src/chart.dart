@@ -77,6 +77,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
 
+  // TODO(Rustem): move to XAxisModel
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
   final double maxCurrentTickOffset = 150;
 
@@ -92,14 +93,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Size canvasSize;
   Tick prevTick;
 
+  // TODO(Rustem): move to XAxisModel
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   /// Horizontal panning is controlled by this variable.
   int rightBoundEpoch;
 
+  // TODO(Rustem): move to XAxisModel
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
   double msPerPx = 1000;
 
+  // TODO(Rustem): move to XAxisModel
   /// Previous value of [msPerPx]. Used for scaling computation.
   double prevMsPerPx;
 
@@ -116,6 +120,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
 
+  // TODO(Rustem): move to XAxisModel
   /// Scroll momentum simulation state.
   Simulation _momentumSimulation;
   int _momentumStartEpoch;
@@ -126,19 +131,26 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _loadingAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
+  // TODO(Rustem): move to XAxisModel
   AnimationController _crosshairZoomOutAnimationController;
+  // TODO(Rustem): move to XAxisModel
   AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
+  // TODO(Rustem): move to XAxisModel
   Animation _crosshairZoomOutAnimation;
 
+  // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
+  // TODO(Rustem): move to XAxisModel
   bool get _isAutoPanning => rightBoundEpoch > nowEpoch && !_isCrosshairMode;
 
+  // TODO(Rustem): move to XAxisModel
   bool get _isScrollingToNow =>
       _rightEpochAnimationController?.isAnimating ?? false;
 
+  // TODO(Rustem): move to XAxisModel
   bool get _isScrollToNowAvailable =>
       !_isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
 
@@ -483,11 +495,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
             epochToCanvasX: _epochToCanvasX,
             canvasXToEpoch: _canvasXToEpoch,
             quoteToCanvasY: _quoteToCanvasY,
+            // TODO(Rustem): remove callbacks when axis models are provided
             onCrosshairAppeared: () {
+              _isCrosshairMode = true;
               widget.onCrosshairAppeared?.call();
               _crosshairZoomOutAnimationController.forward();
             },
             onCrosshairDisappeared: () {
+              _isCrosshairMode = false;
               _crosshairZoomOutAnimationController.reverse();
             },
           ),
