@@ -76,7 +76,6 @@ class _ChartImplementation extends StatefulWidget {
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
-  Ticker _scrollMomentumTicker;
 
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
   final double maxCurrentTickOffset = 150;
@@ -116,6 +115,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
+
+  /// Scroll momentum simulation state.
+  Simulation _momentumSimulation;
+  int _momentumStartEpoch;
+  int _rightBoundEpochAtMomentumStart;
 
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
@@ -227,9 +231,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
       if (_isAutoPanning) {
         rightBoundEpoch += elapsedMs;
       }
+
+      _applyScrollMomentum();
+
       if (canvasSize != null) {
         _updateVisibleCandles();
-        _recalculateQuoteBoundTargets();
+        _updateQuoteBoundTargets();
       }
     });
   }
@@ -339,7 +346,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     visibleCandles = candles.sublist(start, end + 1);
   }
 
-  void _recalculateQuoteBoundTargets() {
+  void _updateQuoteBoundTargets() {
     if (visibleCandles.isEmpty) return;
 
     final minQuote = visibleCandles.map((candle) => candle.low).reduce(min);
@@ -635,28 +642,34 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _triggerScrollMomentum(Velocity velocity) {
-    final simulation = ClampingScrollSimulation(
+    _momentumSimulation = ClampingScrollSimulation(
       position: 0,
       velocity: velocity.pixelsPerSecond.dx,
     );
-    final start = rightBoundEpoch;
-    _stopScrollMomentum();
-    _scrollMomentumTicker = this.createTicker((elapsed) {
-      final secElapsed = elapsed.inMilliseconds.toDouble() / 1000;
-      if (simulation.isDone(secElapsed)) {
-        _stopScrollMomentum();
-        _onLoadHistory();
-      }
-      final newPos = simulation.x(secElapsed);
-      rightBoundEpoch = start - _pxToMs(newPos);
-      _limitRightBoundEpoch();
-    });
-    _scrollMomentumTicker.start();
+    _momentumStartEpoch = nowEpoch;
+    _rightBoundEpochAtMomentumStart = rightBoundEpoch;
+  }
+
+  void _applyScrollMomentum() {
+    if (_momentumSimulation == null ||
+        _momentumStartEpoch == null ||
+        _rightBoundEpochAtMomentumStart == null) return;
+
+    final double secElapsed = (nowEpoch - _momentumStartEpoch) / 1000;
+    if (_momentumSimulation.isDone(secElapsed)) {
+      _stopScrollMomentum();
+      _onLoadHistory();
+      return;
+    }
+    final double movedByPx = _momentumSimulation.x(secElapsed);
+    rightBoundEpoch = _rightBoundEpochAtMomentumStart - _pxToMs(movedByPx);
+    _limitRightBoundEpoch();
   }
 
   void _stopScrollMomentum() {
-    _scrollMomentumTicker?.dispose();
-    _scrollMomentumTicker = null;
+    _momentumSimulation = null;
+    _momentumStartEpoch = null;
+    _rightBoundEpochAtMomentumStart = null;
   }
 
   void _limitRightBoundEpoch() {
