@@ -674,9 +674,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _limitRightBoundEpoch() {
     if (widget.candles.isEmpty) return;
-    final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-    final int lowerLimit =
-        widget.candles.first.epoch - _pxToMs(canvasSize.width);
+    final int offset = _pxToMs(maxCurrentTickOffset);
+    final int upperLimit = nowEpoch + offset;
+    final int lowerLimit = widget.candles.first.epoch + offset;
     rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
   }
 
