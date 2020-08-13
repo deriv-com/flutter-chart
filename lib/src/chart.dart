@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
-import 'package:deriv_chart/src/theme/chart_example_theme.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
