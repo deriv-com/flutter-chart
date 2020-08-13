@@ -405,17 +405,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   double _getDefaultScale(int granularity) {
-    final defaultIntervalWidth = 20;
+    const int defaultIntervalWidth = 20;
     return granularity / defaultIntervalWidth;
   }
 
   double _getMinScale(int granularity) {
-    final maxIntervalWidth = 80;
+    const int maxIntervalWidth = 80;
     return granularity / maxIntervalWidth;
   }
 
   double _getMaxScale(int granularity) {
-    final minIntervalWidth = 4;
+    const int minIntervalWidth = 4;
     return granularity / minIntervalWidth;
   }
 
