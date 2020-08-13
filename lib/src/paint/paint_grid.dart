@@ -16,8 +16,8 @@ void paintGrid(
   assert(timeLabels.length == xCoords.length);
   assert(quoteLabels.length == yCoords.length);
 
-  _paintTimeGridLines(canvas, size, xCoords);
-  _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth);
+  _paintTimeGridLines(canvas, size, xCoords, style);
+  _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth, style);
 
   _paintQuoteLabels(
     canvas,
@@ -34,12 +34,20 @@ void paintGrid(
   );
 }
 
-void _paintTimeGridLines(Canvas canvas, Size size, List<double> xCoords) {
+void _paintTimeGridLines(
+  Canvas canvas,
+  Size size,
+  List<double> xCoords,
+  GridStyle style,
+) {
   xCoords.forEach((x) {
     canvas.drawLine(
       Offset(x, 0),
       Offset(x, size.height - 20),
-      Paint()..color = Colors.white12,
+      Paint()
+        ..color = style.gridLineColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = style.gridLineWidth,
     );
   });
 }
@@ -49,12 +57,16 @@ void _paintQuoteGridLines(
   Size size,
   List<double> yCoords,
   double quoteLabelsAreaWidth,
+  GridStyle style,
 ) {
   yCoords.forEach((y) {
     canvas.drawLine(
       Offset(0, y),
       Offset(size.width - quoteLabelsAreaWidth, y),
-      Paint()..color = Colors.white12,
+      Paint()
+        ..color = style.gridLineColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = style.gridLineWidth,
     );
   });
 }

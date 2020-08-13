@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
 import '../models/tick.dart';
@@ -13,6 +14,7 @@ class CurrentTickPainter extends CustomPainter {
     @required this.pipSize,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
+    @required this.currentTickStyle,
   });
 
   final Tick animatedCurrentTick;
@@ -21,6 +23,8 @@ class CurrentTickPainter extends CustomPainter {
   final int pipSize;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
+
+  final CurrentTickStyle currentTickStyle;
 
   @override
   void paint(Canvas canvas, Size size) {

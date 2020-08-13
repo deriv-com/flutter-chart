@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
 import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -403,6 +404,13 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
                     epochToCanvasX: _epochToCanvasX,
                     quoteToCanvasY: _quoteToCanvasY,
+                    style: GridStyle(
+                      _chartTheme.base07Color,
+                      _chartTheme.textStyle(
+                        textStyle: TextStyle(fontSize: 13),
+                        color: _chartTheme.base03Color,
+                      ),
+                    ),
                   ),
                 ),
                 CustomPaint(
