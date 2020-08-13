@@ -619,6 +619,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _scrollToNow() {
+    _stopScrollMomentum();
     final animationMsDuration = 600;
     final lowerBound = rightBoundEpoch.toDouble();
     final upperBound = nowEpoch +
