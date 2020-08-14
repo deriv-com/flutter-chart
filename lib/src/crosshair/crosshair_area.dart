@@ -45,9 +45,10 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   @override
   void initState() {
     super.initState();
-    gestureManager.registerCallback(_handleLongPressStart);
-    gestureManager.registerCallback(_handleLongPressUpdate);
-    gestureManager.registerCallback(_handleLongPressEnd);
+    gestureManager
+      ..registerCallback(_handleLongPressStart)
+      ..registerCallback(_handleLongPressUpdate)
+      ..registerCallback(_handleLongPressEnd);
   }
 
   @override
@@ -69,9 +70,10 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
   @override
   void dispose() {
-    gestureManager.removeCallback(_handleLongPressStart);
-    gestureManager.removeCallback(_handleLongPressUpdate);
-    gestureManager.removeCallback(_handleLongPressEnd);
+    gestureManager
+      ..removeCallback(_handleLongPressStart)
+      ..removeCallback(_handleLongPressUpdate)
+      ..removeCallback(_handleLongPressEnd);
     super.dispose();
   }
 
