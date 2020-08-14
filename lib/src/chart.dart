@@ -18,6 +18,7 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 import 'painters/loading_painter.dart';
+import 'x_axis_model.dart';
 
 class Chart extends StatelessWidget {
   const Chart({
@@ -76,10 +77,6 @@ class _ChartImplementation extends StatefulWidget {
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
-
-  // TODO(Rustem): move to XAxisModel
-  /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
-  final double maxCurrentTickOffset = 150;
 
   /// Width of the area with quote labels on the right.
   final double quoteLabelsAreaWidth = 70;
@@ -188,7 +185,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.initState();
 
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
+    rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
 
     ticker = this.createTicker(_onNewFrame);
     ticker.start();
@@ -210,7 +207,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     if (oldGranularity != newGranularity) {
       msPerPx = _getDefaultScale(newGranularity);
-      rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
+      rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
     }
@@ -638,7 +635,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final animationMsDuration = 600;
     final lowerBound = rightBoundEpoch.toDouble();
     final upperBound = nowEpoch +
-        _pxToMs(maxCurrentTickOffset).toDouble() +
+        _pxToMs(XAxisModel.maxCurrentTickOffset).toDouble() +
         animationMsDuration;
 
     if (upperBound > lowerBound) {
@@ -690,7 +687,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _limitRightBoundEpoch() {
     if (widget.candles.isEmpty) return;
-    final int offset = _pxToMs(maxCurrentTickOffset);
+    final int offset = _pxToMs(XAxisModel.maxCurrentTickOffset);
     final int upperLimit = nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
     rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
