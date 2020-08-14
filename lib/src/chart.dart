@@ -128,13 +128,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _loadingAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
-  // TODO(Rustem): move to XAxisModel
+  // TODO(Rustem): move to YAxisModel
   AnimationController _crosshairZoomOutAnimationController;
   // TODO(Rustem): move to XAxisModel
   AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
-  // TODO(Rustem): move to XAxisModel
+  // TODO(Rustem): move to YAxisModel
   Animation _crosshairZoomOutAnimation;
 
   // TODO(Rustem): remove crosshair related state
