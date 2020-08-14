@@ -421,18 +421,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   double _getDefaultScale(int granularity) {
-    const int defaultIntervalWidth = 20;
-    return granularity / defaultIntervalWidth;
+    return granularity / XAxisModel.defaultIntervalWidth;
   }
 
   double _getMinScale(int granularity) {
-    const int maxIntervalWidth = 80;
-    return granularity / maxIntervalWidth;
+    return granularity / XAxisModel.maxIntervalWidth;
   }
 
   double _getMaxScale(int granularity) {
-    const int minIntervalWidth = 4;
-    return granularity / minIntervalWidth;
+    return granularity / XAxisModel.minIntervalWidth;
   }
 
   @override
