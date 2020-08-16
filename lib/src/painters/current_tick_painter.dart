@@ -14,7 +14,7 @@ class CurrentTickPainter extends CustomPainter {
     @required this.pipSize,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
-    @required this.currentTickStyle,
+    @required this.style,
   });
 
   final Tick animatedCurrentTick;
@@ -24,7 +24,7 @@ class CurrentTickPainter extends CustomPainter {
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
 
-  final CurrentTickStyle currentTickStyle;
+  final CurrentTickStyle style;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -37,6 +37,7 @@ class CurrentTickPainter extends CustomPainter {
         quoteToCanvasY(animatedCurrentTick.quote),
       ),
       animationProgress: blinkAnimationProgress,
+      style: style,
     );
 
     paintCurrentTickLabel(
@@ -45,6 +46,7 @@ class CurrentTickPainter extends CustomPainter {
       centerY: quoteToCanvasY(animatedCurrentTick.quote),
       quoteLabel: animatedCurrentTick.quote.toStringAsFixed(pipSize),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+      style: style
     );
   }
 

@@ -25,12 +25,14 @@ void paintGrid(
     yCoords: yCoords,
     quoteLabels: quoteLabels,
     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+    style: style,
   );
   _paintTimeLabels(
     canvas,
     size,
     xCoords: xCoords,
     timeLabels: timeLabels,
+    style: style,
   );
 }
 
@@ -77,6 +79,7 @@ void _paintQuoteLabels(
   @required List<double> yCoords,
   @required List<String> quoteLabels,
   @required double quoteLabelsAreaWidth,
+  @required GridStyle style,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
     paintTextFromCenter(
@@ -84,11 +87,7 @@ void _paintQuoteLabels(
       text: quoteLabel,
       centerX: size.width - quoteLabelsAreaWidth / 2,
       centerY: yCoords[index],
-      style: TextStyle(
-        color: Colors.white30,
-        fontSize: 12,
-        height: 1,
-      ),
+      style: style.labelStyle,
     );
   });
 }
@@ -98,6 +97,7 @@ void _paintTimeLabels(
   Size size, {
   @required List<String> timeLabels,
   @required List<double> xCoords,
+  @required GridStyle style,
 }) {
   timeLabels.asMap().forEach((index, timeLabel) {
     paintTextFromCenter(
@@ -105,11 +105,7 @@ void _paintTimeLabels(
       text: timeLabel,
       centerX: xCoords[index],
       centerY: size.height - 10,
-      style: TextStyle(
-        color: Colors.white30,
-        fontSize: 12,
-        height: 1,
-      ),
+      style: style.labelStyle,
     );
   });
 }

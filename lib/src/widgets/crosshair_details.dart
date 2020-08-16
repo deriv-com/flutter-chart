@@ -1,10 +1,11 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/candle.dart';
-import '../models/chart_style.dart';
 
 class CrosshairDetails extends StatelessWidget {
   const CrosshairDetails({
@@ -15,7 +16,7 @@ class CrosshairDetails extends StatelessWidget {
   }) : super(key: key);
 
   final Candle crosshairCandle;
-  final ChartStyle style;
+  final ChartPaintingStyle style;
   final int pipSize;
 
   @override
@@ -31,7 +32,7 @@ class CrosshairDetails extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          style == ChartStyle.candles
+          style is CandleStyle
               ? _buildCandleStyleDetails()
               : _buildLineStyleDetails(),
           SizedBox(height: 2),

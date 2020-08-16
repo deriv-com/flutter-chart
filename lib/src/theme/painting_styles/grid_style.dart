@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class GridStyle {
-  GridStyle(
+  const GridStyle(
     this.gridLineColor,
-    this.labelTextStyle, {
+    this.labelStyle, {
     this.gridLineWidth = 1,
   });
 
   final Color gridLineColor;
-  final TextStyle labelTextStyle;
+  final TextStyle labelStyle;
   final double gridLineWidth;
 }

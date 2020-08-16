@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
 import '../paint/paint_text.dart';
@@ -8,13 +9,14 @@ void paintCurrentTickLabel(
   @required double centerY,
   @required String quoteLabel,
   @required double quoteLabelsAreaWidth,
+  @required CurrentTickStyle style,
 }) {
   canvas.drawLine(
     Offset(0, centerY),
     Offset(size.width, centerY),
     Paint()
-      ..color = Colors.white24
-      ..strokeWidth = 1,
+      ..color = style.color
+      ..strokeWidth = style.lineThickness,
   );
   _paintLabel(
     canvas,
@@ -22,6 +24,7 @@ void paintCurrentTickLabel(
     centerY: centerY,
     quoteLabel: quoteLabel,
     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+    style: style,
   );
 }
 
@@ -31,6 +34,7 @@ void _paintLabel(
   @required double centerY,
   @required String quoteLabel,
   @required double quoteLabelsAreaWidth,
+  @required CurrentTickStyle style,
 }) {
   final triangleWidth = 8;
   final height = 24;
@@ -45,7 +49,7 @@ void _paintLabel(
   canvas.drawPath(
     path,
     Paint()
-      ..color = Color(0xFFFF444F)
+      ..color = style.color
       ..style = PaintingStyle.fill,
   );
 
@@ -54,11 +58,6 @@ void _paintLabel(
     text: quoteLabel,
     centerX: size.width - quoteLabelsAreaWidth / 2,
     centerY: centerY,
-    style: TextStyle(
-      color: Colors.white,
-      fontSize: 12,
-      fontWeight: FontWeight.bold,
-      height: 1,
-    ),
+    style: style.labelStyle,
   );
 }

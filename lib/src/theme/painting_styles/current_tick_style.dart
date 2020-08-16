@@ -1,19 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class CurrentTickStyle {
-  CurrentTickStyle({
-    this.labelColor,
-    this.dotFillColor,
-    this.dotOpaqueColor,
-    this.lineColor,
-    this.dashedLine,
-    this.dotCircle,
+  const CurrentTickStyle({
+    this.color,
+    this.labelStyle,
+    this.lineThickness = 1,
   });
 
-  final Color labelColor;
-  final Color dotFillColor;
-  final Color dotOpaqueColor;
-  final Color lineColor;
-  final bool dashedLine;
-  final double dotCircle;
+  final Color color;
+  final TextStyle labelStyle;
+  final double lineThickness;
 }

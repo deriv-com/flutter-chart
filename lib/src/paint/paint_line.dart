@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 void paintLine(
@@ -7,6 +8,7 @@ void paintLine(
   Size size, {
   @required List<double> xCoords,
   @required List<double> yCoords,
+  @required LineStyle style,
 }) {
   assert(xCoords.isNotEmpty);
   assert(yCoords.isNotEmpty);
@@ -20,9 +22,9 @@ void paintLine(
   }
 
   final linePaint = Paint()
-    ..color = Colors.white.withOpacity(0.8)
+    ..color = style.color
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 1;
+    ..strokeWidth = style.thickness;
 
   canvas.drawPath(path, linePaint);
 
@@ -32,6 +34,7 @@ void paintLine(
     linePath: path,
     lineStartX: xCoords[0],
     lineEndX: xCoords.last,
+    style: style,
   );
 }
 
@@ -41,6 +44,7 @@ void _paintLineArea(
   Path linePath,
   double lineStartX,
   double lineEndX,
+  @required LineStyle style,
 }) {
   final areaPaint = Paint()
     ..style = PaintingStyle.fill
@@ -48,8 +52,8 @@ void _paintLineArea(
       Offset(0, 0),
       Offset(0, size.height),
       [
-        Colors.white.withOpacity(0.2),
-        Colors.white.withOpacity(0.01),
+        style.areaColor.withOpacity(0.2),
+        style.areaColor.withOpacity(0.01),
       ],
     );
 

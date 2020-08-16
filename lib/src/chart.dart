@@ -6,7 +6,10 @@ import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
 import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -23,6 +26,7 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 
+import 'theme/painting_styles/candle_style.dart';
 import 'widgets/custom_gesture_detector.dart';
 import 'widgets/crosshair_details.dart';
 
@@ -55,6 +59,8 @@ class Chart extends StatefulWidget {
 
 class _ChartState extends State<Chart> with TickerProviderStateMixin {
   Ticker ticker;
+
+  ChartPaintingStyle _chartPaintingStyle;
 
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
   final double maxCurrentTickOffset = 150;
@@ -163,6 +169,14 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(Chart oldChart) {
     super.didUpdateWidget(oldChart);
+
+    _chartPaintingStyle = widget.style == ChartStyle.candles
+        ? CandleStyle()
+        : LineStyle(
+      color: _chartTheme.brandGreenishColor,
+      areaColor: _chartTheme.brandGreenishColor,
+    );
+
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
     if (oldChart.candles.isNotEmpty)
@@ -428,7 +442,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                   size: canvasSize,
                   painter: ChartPainter(
                     candles: _getChartCandles(),
-                    style: widget.style,
+                    style: _chartPaintingStyle,
                     pipSize: widget.pipSize,
                     epochToCanvasX: _epochToCanvasX,
                     quoteToCanvasY: _quoteToCanvasY,
@@ -443,13 +457,22 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
                     epochToCanvasX: _epochToCanvasX,
                     quoteToCanvasY: _quoteToCanvasY,
+                    style: CurrentTickStyle(
+                      color: _chartTheme.brandCoralColor,
+                      labelStyle: _chartTheme.textStyle(
+                        textStyle: TextStyle(
+                          color: _chartTheme.base01Color,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 CustomPaint(
                   size: canvasSize,
                   painter: CrosshairPainter(
                     crosshairCandle: crosshairCandle,
-                    style: widget.style,
+                    style: _chartPaintingStyle,
                     pipSize: widget.pipSize,
                     epochToCanvasX: _epochToCanvasX,
                     quoteToCanvasY: _quoteToCanvasY,
@@ -474,7 +497,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             child: Align(
               alignment: Alignment.center,
               child: CrosshairDetails(
-                style: widget.style,
+                style: _chartPaintingStyle,
                 crosshairCandle: crosshairCandle,
                 pipSize: widget.pipSize,
               ),

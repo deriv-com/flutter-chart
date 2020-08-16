@@ -1,9 +1,10 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../models/candle.dart';
-import '../models/chart_style.dart';
 
 class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
@@ -15,7 +16,7 @@ class CrosshairPainter extends CustomPainter {
   });
 
   final Candle crosshairCandle;
-  final ChartStyle style;
+  final ChartPaintingStyle style;
   final int pipSize;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
@@ -49,7 +50,7 @@ class CrosshairPainter extends CustomPainter {
         ),
     );
 
-    if (style == ChartStyle.line) {
+    if (style is LineStyle) {
       canvas.drawCircle(
         Offset(x, y),
         5,
