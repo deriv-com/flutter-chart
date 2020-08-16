@@ -49,7 +49,7 @@ void _paintTimeGridLines(
       Paint()
         ..color = style.gridLineColor
         ..style = PaintingStyle.stroke
-        ..strokeWidth = style.gridLineWidth,
+        ..strokeWidth = style.lineThickness,
     );
   });
 }
@@ -68,7 +68,7 @@ void _paintQuoteGridLines(
       Paint()
         ..color = style.gridLineColor
         ..style = PaintingStyle.stroke
-        ..strokeWidth = style.gridLineWidth,
+        ..strokeWidth = style.lineThickness,
     );
   });
 }

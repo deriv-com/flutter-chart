@@ -4,10 +4,10 @@ class GridStyle {
   const GridStyle(
     this.gridLineColor,
     this.labelStyle, {
-    this.gridLineWidth = 1,
+    this.lineThickness = 2,
   });
 
   final Color gridLineColor;
   final TextStyle labelStyle;
-  final double gridLineWidth;
+  final double lineThickness;
 }

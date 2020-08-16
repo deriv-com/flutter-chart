@@ -171,11 +171,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     super.didUpdateWidget(oldChart);
 
     _chartPaintingStyle = widget.style == ChartStyle.candles
-        ? CandleStyle()
+        ? CandleStyle(
+            positiveColor: _chartTheme.accentGreenColor,
+            negativeColor: _chartTheme.accentRedColor,
+            lineColor: _chartTheme.base04Color,
+          )
         : LineStyle(
-      color: _chartTheme.brandGreenishColor,
-      areaColor: _chartTheme.brandGreenishColor,
-    );
+            color: _chartTheme.brandGreenishColor,
+            areaColor: _chartTheme.brandGreenishColor,
+          );
 
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
@@ -421,7 +425,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                     style: GridStyle(
                       _chartTheme.base07Color,
                       _chartTheme.textStyle(
-                        textStyle: TextStyle(fontSize: 13),
+                        textStyle: TextStyle(fontSize: 10),
                         color: _chartTheme.base03Color,
                       ),
                     ),

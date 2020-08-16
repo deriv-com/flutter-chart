@@ -68,7 +68,7 @@ class ChartPainter extends CustomPainter {
       );
     }).toList();
 
-    paintCandles(canvas, candlePaintings);
+    paintCandles(canvas, candlePaintings, candleStyle);
   }
 
   @override
