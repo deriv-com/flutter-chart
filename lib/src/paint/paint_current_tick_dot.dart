@@ -10,7 +10,7 @@ void paintCurrentTickDot(
   canvas.drawCircle(
     center,
     12 * animationProgress,
-    Paint()..color = style.color.withOpacity(0.5),
+    Paint()..color = style.color.withAlpha(50),
   );
   canvas.drawCircle(
     center,

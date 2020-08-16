@@ -9,15 +9,11 @@ void paintCurrentTickLabel(
   @required double centerY,
   @required String quoteLabel,
   @required double quoteLabelsAreaWidth,
+  @required double currentTickX,
   @required CurrentTickStyle style,
 }) {
-  canvas.drawLine(
-    Offset(0, centerY),
-    Offset(size.width, centerY),
-    Paint()
-      ..color = style.color
-      ..strokeWidth = style.lineThickness,
-  );
+  _paintDashedLine(canvas, size, currentTickX, centerY, style);
+
   _paintLabel(
     canvas,
     size,
@@ -60,4 +56,25 @@ void _paintLabel(
     centerY: centerY,
     style: style.labelStyle,
   );
+}
+
+void _paintDashedLine(
+  Canvas canvas,
+  Size size,
+  double currentTickX,
+  double y,
+  CurrentTickStyle style,
+) {
+  double startX = currentTickX;
+  const double dashWidth = 4;
+  const double dashSpace = 4;
+
+  final paint = Paint()
+    ..color = style.color
+    ..strokeWidth = style.lineThickness;
+
+  while (startX <= size.width) {
+    canvas.drawLine(Offset(startX, y), Offset(startX + dashWidth, y), paint);
+    startX += (dashSpace + dashWidth);
+  }
 }
