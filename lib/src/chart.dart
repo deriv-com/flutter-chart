@@ -411,78 +411,81 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           child: LayoutBuilder(builder: (context, constraints) {
             canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
 
-            return Stack(
-              children: <Widget>[
-                CustomPaint(
-                  size: canvasSize,
-                  painter: GridPainter(
-                    gridTimestamps: _getGridLineTimestamps(),
-                    gridLineQuotes: _getGridLineQuotes(),
-                    pipSize: widget.pipSize,
-                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                    style: GridStyle(
-                      _chartTheme.base07Color,
-                      _chartTheme.textStyle(
-                        textStyle: TextStyle(fontSize: 10),
-                        color: _chartTheme.base03Color,
-                      ),
-                    ),
-                  ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: LoadingPainter(
-                    loadingAnimationProgress: _loadingAnimationController.value,
-                    loadingRightBoundX: widget.candles.isEmpty
-                        ? canvasSize.width
-                        : _epochToCanvasX(widget.candles.first.epoch),
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: ChartPainter(
-                    candles: _getChartCandles(),
-                    style: _chartPaintingStyle,
-                    pipSize: widget.pipSize,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: CurrentTickPainter(
-                    animatedCurrentTick: _getAnimatedCurrentTick(),
-                    blinkAnimationProgress: _currentTickBlinkAnimation.value,
-                    pipSize: widget.pipSize,
-                    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
-                    style: CurrentTickStyle(
-                      color: _chartTheme.brandCoralColor,
-                      labelStyle: _chartTheme.textStyle(
-                        textStyle: TextStyle(
-                          color: _chartTheme.base01Color,
-                          fontSize: 10,
+            return Ink(
+              color: _chartTheme.base08Color,
+              child: Stack(
+                children: <Widget>[
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: GridPainter(
+                      gridTimestamps: _getGridLineTimestamps(),
+                      gridLineQuotes: _getGridLineQuotes(),
+                      pipSize: widget.pipSize,
+                      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                      style: GridStyle(
+                        _chartTheme.base07Color,
+                        _chartTheme.textStyle(
+                          textStyle: _chartTheme.caption2,
+                          color: _chartTheme.base03Color,
                         ),
                       ),
                     ),
                   ),
-                ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: CrosshairPainter(
-                    crosshairCandle: crosshairCandle,
-                    style: _chartPaintingStyle,
-                    pipSize: widget.pipSize,
-                    epochToCanvasX: _epochToCanvasX,
-                    quoteToCanvasY: _quoteToCanvasY,
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: LoadingPainter(
+                      loadingAnimationProgress: _loadingAnimationController.value,
+                      loadingRightBoundX: widget.candles.isEmpty
+                          ? canvasSize.width
+                          : _epochToCanvasX(widget.candles.first.epoch),
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
                   ),
-                ),
-              ],
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: ChartPainter(
+                      candles: _getChartCandles(),
+                      style: _chartPaintingStyle,
+                      pipSize: widget.pipSize,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
+                  ),
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: CurrentTickPainter(
+                      animatedCurrentTick: _getAnimatedCurrentTick(),
+                      blinkAnimationProgress: _currentTickBlinkAnimation.value,
+                      pipSize: widget.pipSize,
+                      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                      style: CurrentTickStyle(
+                        color: _chartTheme.brandCoralColor,
+                        labelStyle: _chartTheme.textStyle(
+                          textStyle: TextStyle(
+                            color: _chartTheme.base01Color,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  CustomPaint(
+                    size: canvasSize,
+                    painter: CrosshairPainter(
+                      crosshairCandle: crosshairCandle,
+                      style: _chartPaintingStyle,
+                      pipSize: widget.pipSize,
+                      epochToCanvasX: _epochToCanvasX,
+                      quoteToCanvasY: _quoteToCanvasY,
+                    ),
+                  ),
+                ],
+              ),
             );
           }),
         ),

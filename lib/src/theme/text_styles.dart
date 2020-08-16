@@ -60,6 +60,12 @@ class TextStyles {
       height: 1.3,
       fontWeight: FontWeight.normal);
 
+  static TextStyle caption2 = const TextStyle(
+      fontFamily: appFontFamily,
+      fontSize: 10,
+      height: 1.3,
+      fontWeight: FontWeight.normal);
+
   static TextStyle captionBold = const TextStyle(
       fontFamily: appFontFamily,
       fontSize: 12,

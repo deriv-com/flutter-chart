@@ -82,6 +82,9 @@ class ChartDefaultTheme extends ChartTheme {
   Color get base08Color =>
       _isDarkTheme ? DarkThemeColors.base08 : LightThemeColors.base08;
 
+  @override
+  TextStyle get caption2 => TextStyles.caption2;
+
   TextStyle _getStyle({
     @required TextStyle textStyle,
     @required Color color,
