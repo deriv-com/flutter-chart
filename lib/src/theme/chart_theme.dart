@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 ///
 /// Any app which wants to define the chart's theme should pass an implementation of this interface.
 abstract class ChartTheme {
+  bool get isDarkTheme;
+
   String get fontFamily;
 
   Color get brandCoralColor;

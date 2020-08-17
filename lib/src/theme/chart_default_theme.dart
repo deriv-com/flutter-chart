@@ -23,6 +23,7 @@ class ChartDefaultTheme extends ChartTheme {
   bool _isDarkTheme =
       SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
 
+  @override
   bool get isDarkTheme => _isDarkTheme;
 
   @override

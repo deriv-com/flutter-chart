@@ -436,7 +436,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                   CustomPaint(
                     size: canvasSize,
                     painter: LoadingPainter(
-                      loadingAnimationProgress: _loadingAnimationController.value,
+                      loadingAnimationProgress:
+                          _loadingAnimationController.value,
                       loadingRightBoundX: widget.candles.isEmpty
                           ? canvasSize.width
                           : _epochToCanvasX(widget.candles.first.epoch),
@@ -466,10 +467,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                       style: CurrentTickStyle(
                         color: _chartTheme.brandCoralColor,
                         labelStyle: _chartTheme.textStyle(
-                          textStyle: TextStyle(
-                            color: _chartTheme.base01Color,
-                            fontSize: 10,
-                          ),
+                          textStyle: _chartTheme.caption2,
+                          color: _chartTheme.base01Color,
                         ),
                       ),
                     ),
