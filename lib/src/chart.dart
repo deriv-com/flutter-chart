@@ -679,7 +679,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
     final double movedByPx = _momentumSimulation.x(secElapsed);
     rightBoundEpoch = _rightBoundEpochAtMomentumStart - _pxToMs(movedByPx);
-    _limitRightBoundEpoch();
+    final bool hitLimit = _limitRightBoundEpoch();
+    if (hitLimit) {
+      _stopScrollMomentum();
+      _onLoadHistory();
+    }
   }
 
   void _stopScrollMomentum() {
@@ -688,15 +692,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _rightBoundEpochAtMomentumStart = null;
   }
 
-  void _limitRightBoundEpoch() {
-    if (widget.candles.isEmpty) return;
+  /// Clamps [rightBoundEpoch] and returns true if hits the limit.
+  bool _limitRightBoundEpoch() {
+    if (widget.candles.isEmpty) return false;
     final int offset = _pxToMs(maxCurrentTickOffset);
     final int upperLimit = nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
     rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
-    if (rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit) {
-      _stopScrollMomentum();
-    }
+    return rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit;
   }
 
   void _onLoadHistory() {
