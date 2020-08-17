@@ -80,8 +80,8 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
         _afterNumberOfFingersOnScreenChanged();
       },
       child: GestureDetector(
-        onScaleStart: _handleScaleStart,
-        onScaleUpdate: _handleScaleUpdate,
+        onScaleStart: _onScaleStart,
+        onScaleUpdate: _onScaleUpdate,
         onScaleEnd: widget.onScaleAndPanEnd,
         child: widget.child,
       ),
@@ -92,13 +92,13 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     switch (_fingersOnScreen) {
       case 0:
         _longPressTimer?.cancel();
-        if (_longPressed) _handleLongPressEnd();
+        if (_longPressed) _onLongPressEnd();
         break;
       case 1:
         if (!_longPressed)
           _longPressTimer = Timer(
             longPressHoldDuration,
-            _handleLongPressStart,
+            _onLongPressStart,
           );
         break;
       default:
@@ -106,7 +106,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     }
   }
 
-  void _handleLongPressStart() {
+  void _onLongPressStart() {
     _longPressed = true;
     widget.onLongPressStart?.call(LongPressStartDetails(
       globalPosition: _lastContactPoint,
@@ -114,30 +114,30 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     ));
   }
 
-  void _handleLongPressEnd() {
+  void _onLongPressEnd() {
     _longPressed = false;
     widget.onLongPressEnd?.call(null);
   }
 
-  void _handleScaleStart(ScaleStartDetails details) {
+  void _onScaleStart(ScaleStartDetails details) {
     _lastContactPoint = details.focalPoint;
     _longPressStartPosition = details.focalPoint;
 
     widget.onScaleAndPanStart?.call(details);
   }
 
-  void _handleScaleUpdate(ScaleUpdateDetails details) {
+  void _onScaleUpdate(ScaleUpdateDetails details) {
     if (_longPressed) {
-      _handleLongPressMoveUpdate(details);
+      _onLongPressMoveUpdate(details);
     } else if (_fingersOnScreen == 1) {
       _cancelLongPressIfMovedTooFar(details.focalPoint);
-      _handlePanUpdate(details);
+      _onPanUpdate(details);
     } else {
       widget.onScaleUpdate?.call(details);
     }
   }
 
-  void _handleLongPressMoveUpdate(ScaleUpdateDetails details) {
+  void _onLongPressMoveUpdate(ScaleUpdateDetails details) {
     widget.onLongPressMoveUpdate?.call(LongPressMoveUpdateDetails(
       localPosition: details.localFocalPoint,
     ));
@@ -153,7 +153,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
       _longPressTimer?.cancel();
   }
 
-  void _handlePanUpdate(ScaleUpdateDetails details) {
+  void _onPanUpdate(ScaleUpdateDetails details) {
     final currentContactPoint = details.focalPoint;
     final dragUpdateDetails = DragUpdateDetails(
       delta: currentContactPoint - _lastContactPoint,

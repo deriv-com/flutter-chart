@@ -46,9 +46,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   void initState() {
     super.initState();
     gestureManager
-      ..registerCallback(_handleLongPressStart)
-      ..registerCallback(_handleLongPressUpdate)
-      ..registerCallback(_handleLongPressEnd);
+      ..registerCallback(_onLongPressStart)
+      ..registerCallback(_onLongPressUpdate)
+      ..registerCallback(_onLongPressEnd);
   }
 
   @override
@@ -71,13 +71,13 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   @override
   void dispose() {
     gestureManager
-      ..removeCallback(_handleLongPressStart)
-      ..removeCallback(_handleLongPressUpdate)
-      ..removeCallback(_handleLongPressEnd);
+      ..removeCallback(_onLongPressStart)
+      ..removeCallback(_onLongPressUpdate)
+      ..removeCallback(_onLongPressEnd);
     super.dispose();
   }
 
-  void _handleLongPressStart(LongPressStartDetails details) {
+  void _onLongPressStart(LongPressStartDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom out
     // TODO(Rustem): call callback that was passed to chart
     widget.onCrosshairAppeared?.call();
@@ -86,7 +86,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     });
   }
 
-  void _handleLongPressUpdate(LongPressMoveUpdateDetails details) {
+  void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     setState(() {
       crosshairCandle = _getClosestCandle(details.localPosition.dx);
     });
@@ -97,7 +97,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     return findClosestToEpoch(epoch, widget.visibleCandles);
   }
 
-  void _handleLongPressEnd(LongPressEndDetails details) {
+  void _onLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
     setState(() {
