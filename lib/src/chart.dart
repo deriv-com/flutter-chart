@@ -98,11 +98,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Horizontal panning is controlled by this variable.
   int rightBoundEpoch;
 
-  // TODO(Rustem): move to XAxisModel
-  /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
-  /// Scaling is controlled by this variable.
-  double msPerPx = 1000;
-
   /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
@@ -205,7 +200,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final newGranularity = _getGranularity(widget.candles);
 
     if (oldGranularity != newGranularity) {
-      msPerPx = _getDefaultScale(newGranularity);
+      context.read<XAxisModel>().msPerPx = _getDefaultScale(newGranularity);
       rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
@@ -377,11 +372,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   int _pxToMs(double px) {
-    return pxToMs(px, msPerPx: msPerPx);
+    return pxToMs(px, msPerPx: context.read<XAxisModel>().msPerPx);
   }
 
   double _msToPx(int ms) {
-    return msToPx(ms, msPerPx: msPerPx);
+    return msToPx(ms, msPerPx: context.read<XAxisModel>().msPerPx);
   }
 
   Tick _candleToTick(Candle candle) {
@@ -395,14 +390,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
         epoch: epoch,
         rightBoundEpoch: rightBoundEpoch,
         canvasWidth: canvasSize.width,
-        msPerPx: msPerPx,
+        msPerPx: context.read<XAxisModel>().msPerPx,
       );
 
   int _canvasXToEpoch(double x) => canvasXToEpoch(
         x: x,
         rightBoundEpoch: rightBoundEpoch,
         canvasWidth: canvasSize.width,
-        msPerPx: msPerPx,
+        msPerPx: context.read<XAxisModel>().msPerPx,
       );
 
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
@@ -523,9 +518,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   List<DateTime> _getGridLineTimestamps() {
     return gridTimestamps(
-      timeGridInterval: timeGridInterval(msPerPx),
-      leftBoundEpoch:
-          rightBoundEpoch - pxToMs(canvasSize.width, msPerPx: msPerPx),
+      timeGridInterval: timeGridInterval(context.read<XAxisModel>().msPerPx),
+      leftBoundEpoch: rightBoundEpoch -
+          pxToMs(
+            canvasSize.width,
+            msPerPx: context.read<XAxisModel>().msPerPx,
+          ),
       rightBoundEpoch: rightBoundEpoch,
     );
   }
@@ -570,7 +568,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
     _stopScrollMomentum();
-    context.read<XAxisModel>().prevMsPerPx = msPerPx;
+    context.read<XAxisModel>().prevMsPerPx = context.read<XAxisModel>().msPerPx;
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
@@ -601,7 +599,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _scaleChart(ScaleUpdateDetails details) {
     final granularity = _getGranularity(widget.candles);
     final prevMsPerPx = context.read<XAxisModel>().prevMsPerPx;
-    msPerPx = (prevMsPerPx / details.scale).clamp(
+    context.read<XAxisModel>().msPerPx = (prevMsPerPx / details.scale).clamp(
       _getMinScale(granularity),
       _getMaxScale(granularity),
     );
