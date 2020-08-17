@@ -13,9 +13,9 @@ class LineStyle extends ChartPaintingStyle {
   /// Line color
   final Color color;
 
-  /// Starting color of the gradient area under line chart.
+  /// Starting color of the gradient area under the line chart.
   ///
-  /// If null, line chart won't have area.
+  /// If null, line chart won't have a gradient color area.
   final Color areaColor;
 
   /// Line thickness

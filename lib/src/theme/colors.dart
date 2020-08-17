@@ -27,7 +27,7 @@ class DarkThemeColors {
 }
 
 /// These colors suits the light theme of Deriv
-//todo: replace values based on light theme when available
+// TODO(Ramin): replace values based on light theme when available
 class LightThemeColors {
   static const Color base01 = Color(0xFFFFFFFF);
   static const Color base02 = Color(0xFFEAECED);
