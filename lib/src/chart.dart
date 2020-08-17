@@ -672,15 +672,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _rightBoundEpochAtMomentumStart == null) return;
 
     final double secElapsed = (nowEpoch - _momentumStartEpoch) / 1000;
-    if (_momentumSimulation.isDone(secElapsed)) {
-      _stopScrollMomentum();
-      _onLoadHistory();
-      return;
+    final bool isDone = _momentumSimulation.isDone(secElapsed);
+    bool hasHitLimit = false;
+
+    if (!isDone) {
+      final double movedByPx = _momentumSimulation.x(secElapsed);
+      rightBoundEpoch = _rightBoundEpochAtMomentumStart - _pxToMs(movedByPx);
+      hasHitLimit = _limitRightBoundEpoch();
     }
-    final double movedByPx = _momentumSimulation.x(secElapsed);
-    rightBoundEpoch = _rightBoundEpochAtMomentumStart - _pxToMs(movedByPx);
-    final bool hitLimit = _limitRightBoundEpoch();
-    if (hitLimit) {
+
+    if (isDone || hasHitLimit) {
       _stopScrollMomentum();
       _onLoadHistory();
     }
