@@ -43,12 +43,15 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureManager(
-      child: _ChartImplementation(
-        candles: candles,
-        pipSize: pipSize,
-        onCrosshairAppeared: onCrosshairAppeared,
-        onLoadHistory: onLoadHistory,
-        style: style,
+      child: ChangeNotifierProvider<XAxisModel>(
+        create: (BuildContext context) => XAxisModel(),
+        child: _ChartImplementation(
+          candles: candles,
+          pipSize: pipSize,
+          onCrosshairAppeared: onCrosshairAppeared,
+          onLoadHistory: onLoadHistory,
+          style: style,
+        ),
       ),
     );
   }
@@ -99,10 +102,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
   double msPerPx = 1000;
-
-  // TODO(Rustem): move to XAxisModel
-  /// Previous value of [msPerPx]. Used for scaling computation.
-  double prevMsPerPx;
 
   /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
@@ -571,7 +570,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
     _stopScrollMomentum();
-    prevMsPerPx = msPerPx;
+    context.read<XAxisModel>().prevMsPerPx = msPerPx;
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
@@ -601,6 +600,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _scaleChart(ScaleUpdateDetails details) {
     final granularity = _getGranularity(widget.candles);
+    final prevMsPerPx = context.read<XAxisModel>().prevMsPerPx;
     msPerPx = (prevMsPerPx / details.scale).clamp(
       _getMinScale(granularity),
       _getMaxScale(granularity),

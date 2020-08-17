@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// Keep in mind these 2 use cases:
+// 1) live chart
+// 2) closed contract
 class XAxisModel extends ChangeNotifier {
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels.
   /// Limits panning to the right.
@@ -10,4 +13,7 @@ class XAxisModel extends ChangeNotifier {
   static const int defaultIntervalWidth = 20;
 
   static const int minIntervalWidth = 4;
+
+  /// Previous value of [msPerPx]. Used for scaling computation.
+  double prevMsPerPx;
 }
