@@ -60,6 +60,8 @@ class Chart extends StatefulWidget {
 class _ChartState extends State<Chart> with TickerProviderStateMixin {
   Ticker ticker;
 
+  ChartTheme _chartTheme;
+
   ChartPaintingStyle _chartPaintingStyle;
 
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
@@ -101,8 +103,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
-
-  ChartTheme _chartTheme;
 
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;

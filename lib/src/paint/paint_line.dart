@@ -28,23 +28,25 @@ void paintLine(
 
   canvas.drawPath(path, linePaint);
 
-  _paintLineArea(
-    canvas,
-    size,
-    linePath: path,
-    lineStartX: xCoords[0],
-    lineEndX: xCoords.last,
-    style: style,
-  );
+  if (style.areaColor != null) {
+    _paintLineArea(
+      canvas,
+      size,
+      linePath: path,
+      lineStartX: xCoords[0],
+      lineEndX: xCoords.last,
+      style: style,
+    );
+  }
 }
 
 void _paintLineArea(
   Canvas canvas,
   Size size, {
+  @required LineStyle style,
   Path linePath,
   double lineStartX,
   double lineEndX,
-  @required LineStyle style,
 }) {
   final areaPaint = Paint()
     ..style = PaintingStyle.fill
