@@ -676,8 +676,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
     bool hasHitLimit = false;
 
     if (!isDone) {
-      final double movedByPx = _momentumSimulation.x(secElapsed);
-      rightBoundEpoch = _rightBoundEpochAtMomentumStart - _pxToMs(movedByPx);
+      final double totalDistance = _momentumSimulation.x(secElapsed);
+      rightBoundEpoch =
+          _rightBoundEpochAtMomentumStart - _pxToMs(totalDistance);
       hasHitLimit = _limitRightBoundEpoch();
     }
 
