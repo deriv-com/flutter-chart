@@ -3,6 +3,11 @@ import 'package:provider/provider.dart';
 
 import 'custom_gesture_detector.dart';
 
+/// Top level gesture detector that allows all descendants to register/remove gesture callbacks.
+///
+/// It is needed because there must be one instance of [CustomGestureDetector].
+/// This manager allows extracting features that depend on touch gestures into
+/// separate modules.
 class GestureManager extends StatefulWidget {
   GestureManager({Key key, @required this.child})
       : assert(child != null),

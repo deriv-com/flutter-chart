@@ -23,6 +23,14 @@ const longPressHoldRadius = 5;
 ///
 /// Because of (a) and (b) it is possible to keep track of both Pan and Scale by
 /// treating ScaleUpdate with 1 finger as PanUpdate.
+///
+/// Custom long press detection, because adding `onLongPress` callback to
+/// GestureDetector will result in a scale/pan delay. It happens because having
+/// two gesture callbacks (e.g. "longpress" and "scale") will result in a
+/// few moments of delay while GestureDetector is figuring out which gesture is
+/// being performed. This delay is quite noticable.
+///
+/// This widget adds longpress detection without adding delay to scale/pan.
 class CustomGestureDetector extends StatefulWidget {
   const CustomGestureDetector({
     Key key,
