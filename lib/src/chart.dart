@@ -695,12 +695,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.candles.isEmpty) return;
     final int leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
     if (leftBoundEpoch < widget.candles.first.epoch) {
-      final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
       final int widthInMs = _pxToMs(canvasSize.width);
       widget.onLoadHistory?.call(
         widget.candles.first.epoch - (2 * widthInMs),
         widget.candles.first.epoch,
-        (2 * widthInMs) ~/ granularity,
+        (2 * widthInMs) ~/ _getGranularity(widget.candles),
       );
     }
   }
