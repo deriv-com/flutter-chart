@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'crosshair_details.dart';
 import 'crosshair_painter.dart';
 
+/// Place this area on top of the chart to display candle/point details on longpress.
 class CrosshairArea extends StatefulWidget {
   CrosshairArea({
     Key key,
