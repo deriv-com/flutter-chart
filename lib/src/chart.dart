@@ -176,10 +176,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
             negativeColor: _chartTheme.accentRedColor,
             lineColor: _chartTheme.base04Color,
           )
-        : LineStyle(
-            color: _chartTheme.brandGreenishColor,
-            areaColor: _chartTheme.brandGreenishColor,
-          );
+        : LineStyle(color: _chartTheme.brandGreenishColor);
 
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
@@ -425,8 +422,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                       epochToCanvasX: _epochToCanvasX,
                       quoteToCanvasY: _quoteToCanvasY,
                       style: GridStyle(
-                        _chartTheme.base07Color,
-                        _chartTheme.textStyle(
+                        gridLineColor: _chartTheme.base07Color,
+                        labelStyle: _chartTheme.textStyle(
                           textStyle: _chartTheme.caption2,
                           color: _chartTheme.base03Color,
                         ),

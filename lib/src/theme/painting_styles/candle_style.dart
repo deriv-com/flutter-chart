@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 class CandleStyle extends ChartPaintingStyle {
   /// Initializes
   const CandleStyle({
-    this.positiveColor,
-    this.negativeColor,
-    this.lineColor,
+    this.positiveColor = const Color(0xFF00A79E),
+    this.negativeColor = const Color(0xFFCC2E3D),
+    this.lineColor = const Color(0xFF6E6E6E),
   });
 
   /// Color of candles in which the price moved HIGHER during their period

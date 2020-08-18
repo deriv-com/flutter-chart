@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class LineStyle extends ChartPaintingStyle {
   /// Initializes
   const LineStyle({
-    this.color,
-    this.areaColor,
+    this.color = const Color(0xFF85ACB0),
+    this.hasArea = true,
     this.thickness = 1,
   });
 
@@ -16,7 +16,7 @@ class LineStyle extends ChartPaintingStyle {
   /// Starting color of the gradient area under the line chart.
   ///
   /// If null, line chart won't have a gradient color area.
-  final Color areaColor;
+  final bool hasArea;
 
   /// Line thickness
   final double thickness;

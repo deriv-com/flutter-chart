@@ -28,7 +28,7 @@ void paintLine(
 
   canvas.drawPath(path, linePaint);
 
-  if (style.areaColor != null) {
+  if (style.hasArea) {
     _paintLineArea(
       canvas,
       size,
@@ -54,8 +54,8 @@ void _paintLineArea(
       Offset(0, 0),
       Offset(0, size.height),
       [
-        style.areaColor.withOpacity(0.2),
-        style.areaColor.withOpacity(0.01),
+        style.color.withOpacity(0.2),
+        style.color.withOpacity(0.01),
       ],
     );
 
