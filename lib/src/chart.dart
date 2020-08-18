@@ -120,12 +120,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
 
-  // TODO(Rustem): move to XAxisModel
-  /// Scroll momentum simulation state.
-  Simulation _momentumSimulation;
-  int _momentumStartEpoch;
-  int _rightBoundEpochAtMomentumStart;
-
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
   AnimationController _loadingAnimationController;
@@ -243,8 +237,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       if (_isAutoPanning) {
         rightBoundEpoch += elapsedMs;
       }
-
-      _applyScrollMomentum();
 
       if (canvasSize != null) {
         _updateVisibleCandles();
@@ -576,7 +568,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
-    _stopScrollMomentum();
     prevMsPerPx = msPerPx;
   }
 
@@ -634,7 +625,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _scrollToNow() {
-    _stopScrollMomentum();
     final animationMsDuration = 600;
     final lowerBound = rightBoundEpoch.toDouble();
     final upperBound = nowEpoch +
@@ -658,40 +648,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _triggerScrollMomentum(Velocity velocity) {
-    _momentumSimulation = ClampingScrollSimulation(
-      position: 0,
-      velocity: velocity.pixelsPerSecond.dx,
+    final Simulation simulation = ClampingScrollSimulation(
+      position: rightBoundEpoch.toDouble(),
+      velocity: -velocity.pixelsPerSecond.dx * msPerPx,
+      friction: 0.015 * msPerPx,
     );
-    _momentumStartEpoch = nowEpoch;
-    _rightBoundEpochAtMomentumStart = rightBoundEpoch;
-  }
-
-  void _applyScrollMomentum() {
-    if (_momentumSimulation == null ||
-        _momentumStartEpoch == null ||
-        _rightBoundEpochAtMomentumStart == null) return;
-
-    final double secElapsed = (nowEpoch - _momentumStartEpoch) / 1000;
-    final bool isDone = _momentumSimulation.isDone(secElapsed);
-    bool hasHitLimit = false;
-
-    if (!isDone) {
-      final double totalDistance = _momentumSimulation.x(secElapsed);
-      rightBoundEpoch =
-          _rightBoundEpochAtMomentumStart - _pxToMs(totalDistance);
-      hasHitLimit = _limitRightBoundEpoch();
-    }
-
-    if (isDone || hasHitLimit) {
-      _stopScrollMomentum();
-      _onLoadHistory();
-    }
-  }
-
-  void _stopScrollMomentum() {
-    _momentumSimulation = null;
-    _momentumStartEpoch = null;
-    _rightBoundEpochAtMomentumStart = null;
+    _rightEpochAnimationController
+      ..value = rightBoundEpoch.toDouble()
+      ..animateWith(simulation);
   }
 
   /// Clamps [rightBoundEpoch] and returns true if hits the limit.
