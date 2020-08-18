@@ -86,6 +86,7 @@ class CrosshairDetails extends StatelessWidget {
     return _buildLabel(timeLabel);
   }
 
+  // TODO(Ramin): Add style for cross-hair when design updated
   Text _buildLabel(String label) {
     return Text(
       label,
@@ -97,6 +98,7 @@ class CrosshairDetails extends StatelessWidget {
     );
   }
 
+  // TODO(Ramin): Add style for cross-hair when design updated
   Text _buildValue(double value, {double fontSize = 12}) {
     return Text(
       value.toStringAsFixed(pipSize),
