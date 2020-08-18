@@ -259,6 +259,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
       value: rightBoundEpoch.toDouble(),
     )..addListener(() {
         rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+        final bool hitLimit = _limitRightBoundEpoch();
+        if (hitLimit) _rightEpochAnimationController.stop();
       });
   }
 
