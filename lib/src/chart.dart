@@ -237,11 +237,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       if (_isAutoPanning) {
         rightBoundEpoch += elapsedMs;
       }
-
-      if (canvasSize != null) {
-        _updateVisibleCandles();
-        _updateQuoteBoundTargets();
-      }
     });
   }
 
@@ -436,6 +431,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+      _updateVisibleCandles();
+      _updateQuoteBoundTargets();
 
       return Stack(
         children: <Widget>[
