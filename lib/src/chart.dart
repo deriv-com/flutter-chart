@@ -153,10 +153,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.candles.isEmpty) return false;
 
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
-    final waitingForResponse =
+    final waitingForHistory =
         requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
 
-    return !waitingForResponse && leftBoundEpoch < widget.candles.first.epoch;
+    return !waitingForHistory && leftBoundEpoch < widget.candles.first.epoch;
   }
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
