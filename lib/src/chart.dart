@@ -149,6 +149,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool get _isScrollToNowAvailable =>
       !_isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
 
+  bool get _shouldLoadMoreHistory {
+    if (widget.candles.isEmpty) return false;
+
+    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    final waitingForResponse =
+        requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
+
+    return !waitingForResponse && leftBoundEpoch < widget.candles.first.epoch;
+  }
+
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
@@ -239,7 +249,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         rightBoundEpoch += elapsedMs;
       }
 
-      _tryLoadHistory();
+      if (_shouldLoadMoreHistory) _loadMoreHistory();
     });
   }
 
@@ -670,23 +680,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
     return rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit;
   }
 
-  void _tryLoadHistory() {
-    if (widget.candles.isEmpty) return;
-    final int leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
-    final bool waitingForResponse =
-        requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
+  void _loadMoreHistory() {
+    final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+    final int widthInMs = _pxToMs(canvasSize.width);
 
-    if (leftBoundEpoch < widget.candles.first.epoch && !waitingForResponse) {
-      final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-      final int widthInMs = _pxToMs(canvasSize.width);
+    requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
 
-      requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
-
-      widget.onLoadHistory?.call(
-        requestedLeftEpoch,
-        widget.candles.first.epoch,
-        (2 * widthInMs) ~/ granularity,
-      );
-    }
+    widget.onLoadHistory?.call(
+      requestedLeftEpoch,
+      widget.candles.first.epoch,
+      (2 * widthInMs) ~/ granularity,
+    );
   }
 }
