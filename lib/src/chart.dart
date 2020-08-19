@@ -90,6 +90,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   List<Candle> visibleCandles = [];
 
   int nowEpoch;
+  int requestedLeftEpoch;
   Size canvasSize;
   Tick prevTick;
 
@@ -237,6 +238,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
       if (_isAutoPanning) {
         rightBoundEpoch += elapsedMs;
       }
+
+      _tryLoadHistory();
     });
   }
 
@@ -644,7 +647,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _onScaleAndPanEnd(ScaleEndDetails details) {
     _triggerScrollMomentum(details.velocity);
     _limitRightBoundEpoch();
-    _onLoadHistory();
   }
 
   void _triggerScrollMomentum(Velocity velocity) {
@@ -668,14 +670,20 @@ class _ChartImplementationState extends State<_ChartImplementation>
     return rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit;
   }
 
-  void _onLoadHistory() {
+  void _tryLoadHistory() {
     if (widget.candles.isEmpty) return;
     final int leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
-    if (leftBoundEpoch < widget.candles.first.epoch) {
+    final bool waitingForResponse =
+        requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
+
+    if (leftBoundEpoch < widget.candles.first.epoch && !waitingForResponse) {
       final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
       final int widthInMs = _pxToMs(canvasSize.width);
+
+      requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
+
       widget.onLoadHistory?.call(
-        widget.candles.first.epoch - (2 * widthInMs),
+        requestedLeftEpoch,
         widget.candles.first.epoch,
         (2 * widthInMs) ~/ granularity,
       );
