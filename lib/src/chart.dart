@@ -567,6 +567,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
+    _rightEpochAnimationController.stop();
     prevMsPerPx = msPerPx;
   }
 
