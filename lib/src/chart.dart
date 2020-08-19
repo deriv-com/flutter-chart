@@ -656,7 +656,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleAndPanEnd(ScaleEndDetails details) {
     _triggerScrollMomentum(details.velocity);
-    _limitRightBoundEpoch();
   }
 
   void _triggerScrollMomentum(Velocity velocity) {
