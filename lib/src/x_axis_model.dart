@@ -30,6 +30,7 @@ class XAxisModel extends ChangeNotifier {
       _getMinScale(granularity),
       _getMaxScale(granularity),
     );
+    notifyListeners();
   }
 
   double _getMinScale(int granularity) {
