@@ -90,6 +90,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   List<Candle> visibleCandles = [];
 
   int nowEpoch;
+  int requestedLeftEpoch;
   Size canvasSize;
   Tick prevTick;
 
@@ -110,12 +111,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
-
-  // TODO(Rustem): move to XAxisModel
-  /// Scroll momentum simulation state.
-  Simulation _momentumSimulation;
-  int _momentumStartEpoch;
-  int _rightBoundEpochAtMomentumStart;
 
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
@@ -144,6 +139,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // TODO(Rustem): move to XAxisModel
   bool get _isScrollToNowAvailable =>
       !_isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
+
+  bool get _shouldLoadMoreHistory {
+    if (widget.candles.isEmpty) return false;
+
+    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    final waitingForHistory =
+        requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
+
+    return !waitingForHistory && leftBoundEpoch < widget.candles.first.epoch;
+  }
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
@@ -235,12 +240,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         rightBoundEpoch += elapsedMs;
       }
 
-      _applyScrollMomentum();
-
-      if (canvasSize != null) {
-        _updateVisibleCandles();
-        _updateQuoteBoundTargets();
-      }
+      if (_shouldLoadMoreHistory) _loadMoreHistory();
     });
   }
 
@@ -258,6 +258,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
       value: rightBoundEpoch.toDouble(),
     )..addListener(() {
         rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+        final bool hitLimit = _limitRightBoundEpoch();
+        if (hitLimit) _rightEpochAnimationController.stop();
       });
   }
 
@@ -430,6 +432,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+      _updateVisibleCandles();
+      _updateQuoteBoundTargets();
 
       return Stack(
         children: <Widget>[
@@ -567,7 +571,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
-    _stopScrollMomentum();
+    _rightEpochAnimationController.stop();
     context.read<XAxisModel>().prevMsPerPx = context.read<XAxisModel>().msPerPx;
   }
 
@@ -626,7 +630,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _scrollToNow() {
-    _stopScrollMomentum();
     final animationMsDuration = 600;
     final lowerBound = rightBoundEpoch.toDouble();
     final upperBound = nowEpoch +
@@ -645,62 +648,40 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleAndPanEnd(ScaleEndDetails details) {
     _triggerScrollMomentum(details.velocity);
-    _limitRightBoundEpoch();
-    _onLoadHistory();
   }
 
   void _triggerScrollMomentum(Velocity velocity) {
-    _momentumSimulation = ClampingScrollSimulation(
-      position: 0,
-      velocity: velocity.pixelsPerSecond.dx,
+    final Simulation simulation = ClampingScrollSimulation(
+      position: rightBoundEpoch.toDouble(),
+      velocity:
+          -velocity.pixelsPerSecond.dx * context.read<XAxisModel>().msPerPx,
+      friction: 0.015 * context.read<XAxisModel>().msPerPx,
     );
-    _momentumStartEpoch = nowEpoch;
-    _rightBoundEpochAtMomentumStart = rightBoundEpoch;
+    _rightEpochAnimationController
+      ..value = rightBoundEpoch.toDouble()
+      ..animateWith(simulation);
   }
 
-  void _applyScrollMomentum() {
-    if (_momentumSimulation == null ||
-        _momentumStartEpoch == null ||
-        _rightBoundEpochAtMomentumStart == null) return;
-
-    final double secElapsed = (nowEpoch - _momentumStartEpoch) / 1000;
-    if (_momentumSimulation.isDone(secElapsed)) {
-      _stopScrollMomentum();
-      _onLoadHistory();
-      return;
-    }
-    final double movedByPx = _momentumSimulation.x(secElapsed);
-    rightBoundEpoch = _rightBoundEpochAtMomentumStart - _pxToMs(movedByPx);
-    _limitRightBoundEpoch();
-  }
-
-  void _stopScrollMomentum() {
-    _momentumSimulation = null;
-    _momentumStartEpoch = null;
-    _rightBoundEpochAtMomentumStart = null;
-  }
-
-  void _limitRightBoundEpoch() {
-    if (widget.candles.isEmpty) return;
+  /// Clamps [rightBoundEpoch] and returns true if hits the limit.
+  bool _limitRightBoundEpoch() {
+    if (widget.candles.isEmpty) return false;
     final int offset = _pxToMs(XAxisModel.maxCurrentTickOffset);
     final int upperLimit = nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
     rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
-    if (rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit) {
-      _stopScrollMomentum();
-    }
+    return rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit;
   }
 
-  void _onLoadHistory() {
-    if (widget.candles.isEmpty) return;
-    final int leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
-    if (leftBoundEpoch < widget.candles.first.epoch) {
-      final int widthInMs = _pxToMs(canvasSize.width);
-      widget.onLoadHistory?.call(
-        widget.candles.first.epoch - (2 * widthInMs),
-        widget.candles.first.epoch,
-        (2 * widthInMs) ~/ _getGranularity(widget.candles),
-      );
-    }
+  void _loadMoreHistory() {
+    final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+    final int widthInMs = _pxToMs(canvasSize.width);
+
+    requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
+
+    widget.onLoadHistory?.call(
+      requestedLeftEpoch,
+      widget.candles.first.epoch,
+      (2 * widthInMs) ~/ granularity,
+    );
   }
 }
