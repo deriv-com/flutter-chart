@@ -24,4 +24,19 @@ class XAxisModel extends ChangeNotifier {
   void onScaleStart(ScaleStartDetails details) {
     prevMsPerPx = msPerPx;
   }
+
+  void onScaleUpdate(ScaleUpdateDetails details, int granularity) {
+    msPerPx = (prevMsPerPx / details.scale).clamp(
+      _getMinScale(granularity),
+      _getMaxScale(granularity),
+    );
+  }
+
+  double _getMinScale(int granularity) {
+    return granularity / XAxisModel.maxIntervalWidth;
+  }
+
+  double _getMaxScale(int granularity) {
+    return granularity / XAxisModel.minIntervalWidth;
+  }
 }

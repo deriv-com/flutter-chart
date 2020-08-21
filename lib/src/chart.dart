@@ -420,14 +420,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     return granularity / XAxisModel.defaultIntervalWidth;
   }
 
-  double _getMinScale(int granularity) {
-    return granularity / XAxisModel.maxIntervalWidth;
-  }
-
-  double _getMaxScale(int granularity) {
-    return granularity / XAxisModel.minIntervalWidth;
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -602,11 +594,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _scaleChart(ScaleUpdateDetails details) {
     final granularity = _getGranularity(widget.candles);
-    final prevMsPerPx = context.read<XAxisModel>().prevMsPerPx;
-    context.read<XAxisModel>().msPerPx = (prevMsPerPx / details.scale).clamp(
-      _getMinScale(granularity),
-      _getMaxScale(granularity),
-    );
+    context.read<XAxisModel>().onScaleUpdate(details, granularity);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
