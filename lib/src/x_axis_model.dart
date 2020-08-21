@@ -21,7 +21,7 @@ class XAxisModel extends ChangeNotifier {
   /// Previous value of [msPerPx]. Used for scaling computation.
   double prevMsPerPx;
 
-  void onScaleStart() {
+  void onScaleStart(ScaleStartDetails details) {
     prevMsPerPx = msPerPx;
   }
 }

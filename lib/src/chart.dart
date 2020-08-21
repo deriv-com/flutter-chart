@@ -572,7 +572,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
     _rightEpochAnimationController.stop();
-    context.read<XAxisModel>().onScaleStart();
+    context.read<XAxisModel>().onScaleStart(details);
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
