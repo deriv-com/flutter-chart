@@ -8,7 +8,7 @@ void main() {
   group('Test different scenarios that might break the [MarketSelector] widget',
       () {
     Asset r50;
-    Asset r25Favorite;
+    Asset r25Favourite;
     SubMarket r50SubMarket;
     SubMarket r25SubMarket;
 
@@ -16,12 +16,12 @@ void main() {
       r50 = Asset(
         name: 'R_50',
         displayName: 'Volatility 50 Index',
-        isFavorite: false,
+        isFavourite: false,
       );
-      r25Favorite = Asset(
+      r25Favourite = Asset(
         name: 'R_25',
         displayName: 'Volatility 25 Index',
-        isFavorite: true,
+        isFavourite: true,
       );
       r50SubMarket = SubMarket(
         name: 'smart',
@@ -31,7 +31,7 @@ void main() {
       r25SubMarket = SubMarket(
         name: 'smart2',
         displayName: 'Smart2',
-        assets: <Asset>[r25Favorite],
+        assets: <Asset>[r25Favourite],
       );
     });
 
@@ -42,7 +42,7 @@ void main() {
           markets: [
             Market(subMarkets: [r50SubMarket])
           ],
-          selectedItem: r25Favorite,
+          selectedItem: r25Favourite,
         ),
       ));
 
@@ -58,7 +58,7 @@ void main() {
           markets: [
             Market(subMarkets: [r25SubMarket, r50SubMarket])
           ],
-          selectedItem: r25Favorite,
+          selectedItem: r25Favourite,
         ),
       ));
 
@@ -67,7 +67,7 @@ void main() {
       expect(find.byType(AnimatedHighlight), findsOneWidget);
     });
 
-    testWidgets('1 asset that is favorite', (tester) async {
+    testWidgets('1 asset that is favourite', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           markets: [
@@ -77,11 +77,11 @@ void main() {
       ));
 
       expect(find.byType(AssetItem), findsNWidgets(2));
-      expect(find.text('Favorites'), findsOneWidget);
+      expect(find.text('Favourites'), findsOneWidget);
       expect(find.text('Volatility 25 Index'), findsNWidgets(2));
     });
 
-    testWidgets('1 asset that is NOT favorite', (tester) async {
+    testWidgets('1 asset that is NOT favourite', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           markets: [
@@ -91,44 +91,44 @@ void main() {
       ));
 
       expect(find.byType(AssetItem), findsNWidgets(1));
-      expect(find.text('Favorites'), findsNothing);
+      expect(find.text('Favourites'), findsNothing);
       expect(find.text('Volatility 50 Index'), findsNWidgets(1));
     });
 
-    testWidgets('Favorite asset passed from outside', (tester) async {
+    testWidgets('Favourite asset passed from outside', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           markets: [
             Market(subMarkets: [r50SubMarket])
           ],
-          favoriteAssets: [r50],
+          favouriteAssets: [r50],
         ),
       ));
 
       expect(find.byType(AssetItem), findsNWidgets(2));
-      expect(find.text('Favorites'), findsOneWidget);
+      expect(find.text('Favourites'), findsOneWidget);
       expect(find.text('Volatility 50 Index'), findsNWidgets(2));
     });
 
-    testWidgets('Favorite asset passed from outside NOT exist', (tester) async {
+    testWidgets('Favourite asset passed from outside NOT exist', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           markets: [
             Market(subMarkets: [r50SubMarket])
           ],
-          favoriteAssets: [r25Favorite],
+          favouriteAssets: [r25Favourite],
         ),
       ));
 
       expect(find.byType(AssetItem), findsNWidgets(2));
-      expect(find.text('Favorites'), findsOneWidget);
+      expect(find.text('Favourites'), findsOneWidget);
       expect(find.text('Volatility 50 Index'), findsNWidgets(1));
     });
 
-    testWidgets('Add to favorites by clicking favorite icon', (tester) async {
+    testWidgets('Add to favourites by clicking star icon', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          onAssetClicked: (asset, isFavoriteClicked) {},
+          onAssetClicked: (asset, isFavouriteClicked) {},
           markets: [
             Market(subMarkets: [r50SubMarket])
           ],
@@ -136,26 +136,26 @@ void main() {
       ));
 
       expect(find.byType(AssetItem), findsNWidgets(1));
-      expect(find.text('Favorites'), findsNothing);
+      expect(find.text('Favourites'), findsNothing);
       expect(find.text('Volatility 50 Index'), findsNWidgets(1));
 
       await tester.pumpAndSettle();
 
-      final favoriteIconFinder = find.byKey(ValueKey<String>('R_50-fav-icon'));
-      await tester.tap(favoriteIconFinder);
+      final favouriteIconFinder = find.byKey(ValueKey<String>('R_50-fav-icon'));
+      await tester.tap(favouriteIconFinder);
 
       await tester.pump();
 
       expect(find.byType(AssetItem), findsNWidgets(2));
-      expect(find.text('Favorites'), findsOneWidget);
+      expect(find.text('Favourites'), findsOneWidget);
       expect(find.text('Volatility 50 Index'), findsNWidgets(2));
     });
 
-    testWidgets('No Favorites section when we remove the only favorite item',
+    testWidgets('No Favourites section when we remove the only favourite item',
         (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          onAssetClicked: (asset, isFavoriteClicked) {},
+          onAssetClicked: (asset, isFavouriteClicked) {},
           markets: [
             Market(subMarkets: [r25SubMarket])
           ],
@@ -166,13 +166,13 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      final favoriteIconFinder = find.byKey(ValueKey<String>('R_25-fav-icon'));
-      // There are two AssetItems for R_25, one in Favorites list and one in the assets list, We tap the first
-      await tester.tap(favoriteIconFinder.first);
+      final favouriteIconFinder = find.byKey(ValueKey<String>('R_25-fav-icon'));
+      // There are two AssetItems for R_25, one in Favourites list and one in the assets list, We tap the first
+      await tester.tap(favouriteIconFinder.first);
       await tester.pump();
 
       expect(find.byType(AssetItem), findsNWidgets(1));
-      expect(find.text('Favorites'), findsNothing);
+      expect(find.text('Favourites'), findsNothing);
       expect(find.byIcon(Icons.star), findsNothing);
     });
 

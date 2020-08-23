@@ -91,7 +91,7 @@ class Asset {
     this.marketDisplayName,
     this.subMarket,
     this.subMarketDisplayName,
-    this.isFavorite = false,
+    this.isFavourite = false,
   });
 
   final String name;
@@ -100,10 +100,10 @@ class Asset {
   final String marketDisplayName;
   final String subMarket;
   final String subMarketDisplayName;
-  bool isFavorite;
+  bool isFavourite;
 
   bool containsText(String text) =>
       displayName?.toLowerCase()?.contains(text) ?? false;
 
-  void toggleFavorite() => isFavorite = !isFavorite;
+  void toggleFavourite() => isFavourite = !isFavourite;
 }

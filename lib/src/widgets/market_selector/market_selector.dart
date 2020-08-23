@@ -8,8 +8,8 @@ import 'market_item.dart';
 
 /// Handles the tap on [Asset] in market selector.
 ///
-/// [favoriteClicked] is true when the user has tapped on the favorite icon of the item.
-typedef OnAssetClicked = Function(Asset asset, bool favoriteClicked);
+/// [favouriteClicked] is true when the user has tapped on the favourite icon of the item.
+typedef OnAssetClicked = Function(Asset asset, bool favouriteClicked);
 
 /// The duration of animating the scroll to the selected item in the [MarketSelector] widget.
 const scrollToSelectedDuration = Duration.zero;
@@ -20,7 +20,7 @@ class MarketSelector extends StatefulWidget {
     this.onAssetClicked,
     this.markets,
     this.selectedItem,
-    this.favoriteAssets,
+    this.favouriteAssets,
   }) : super(key: key);
 
   /// It will be called when a symbol item [Asset] is tapped.
@@ -30,8 +30,8 @@ class MarketSelector extends StatefulWidget {
 
   final Asset selectedItem;
 
-  /// [Optional] whenever it is null, it will be substituted with a list of assets that their [Asset.isFavorite] is true.
-  final List<Asset> favoriteAssets;
+  /// [Optional] whenever it is null, it will be substituted with a list of assets that their [Asset.isFavourite] is true.
+  final List<Asset> favouriteAssets;
 
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
@@ -104,27 +104,27 @@ class _MarketSelectorState extends State<MarketSelector>
             .toList();
   }
 
-  List<Asset> _getFavoritesList() {
-    if (widget.favoriteAssets != null) {
+  List<Asset> _getFavouritesList() {
+    if (widget.favouriteAssets != null) {
       return _filterText.isEmpty
-          ? widget.favoriteAssets
-          : widget.favoriteAssets
+          ? widget.favouriteAssets
+          : widget.favouriteAssets
               .map((Asset asset) => asset.containsText(lowerCaseFilterText))
               .toList();
     }
 
-    final List<Asset> favoritesList = [];
+    final List<Asset> favouritesList = [];
 
     widget.markets?.forEach((market) {
       market.subMarkets.forEach((subMarket) {
         subMarket.assets.forEach((asset) {
-          if (asset.isFavorite && asset.containsText(lowerCaseFilterText)) {
-            favoritesList.add(asset);
+          if (asset.isFavourite && asset.containsText(lowerCaseFilterText)) {
+            favouritesList.add(asset);
           }
         });
       });
     });
-    return favoritesList;
+    return favouritesList;
   }
 
   Widget _buildTopHandle() => Container(
@@ -144,7 +144,7 @@ class _MarketSelectorState extends State<MarketSelector>
       );
 
   Widget _buildMarketsList() {
-    final List<Asset> favoritesList = _getFavoritesList();
+    final List<Asset> favouritesList = _getFavouritesList();
 
     return _marketsToDisplay == null
         ? Container()
@@ -155,7 +155,7 @@ class _MarketSelectorState extends State<MarketSelector>
                   physics: ClampingScrollPhysics(),
                   child: Column(
                     children: <Widget>[
-                      _buildFavoriteSection(favoritesList),
+                      _buildFavouriteSection(favouritesList),
                       ..._marketsToDisplay
                           .map((Market market) => _buildMarketItem(market))
                     ],
@@ -167,17 +167,17 @@ class _MarketSelectorState extends State<MarketSelector>
           );
   }
 
-  Widget _buildFavoriteSection(List<Asset> favoritesList) => AnimatedSize(
+  Widget _buildFavouriteSection(List<Asset> favouritesList) => AnimatedSize(
         vsync: this,
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 300),
-        child: favoritesList.isEmpty
+        child: favouritesList.isEmpty
             ? SizedBox(width: double.infinity)
             : _buildMarketItem(
                 Market.fromSubMarketAssets(
                   name: 'favourites',
                   displayName: 'Favourites',
-                  assets: favoritesList,
+                  assets: favouritesList,
                 ),
                 isCategorized: false,
               ),
@@ -190,12 +190,12 @@ class _MarketSelectorState extends State<MarketSelector>
         filterText:
             market.containsText(lowerCaseFilterText) ? '' : lowerCaseFilterText,
         market: market,
-        onAssetClicked: (asset, isFavoriteClicked) {
-          widget.onAssetClicked?.call(asset, isFavoriteClicked);
+        onAssetClicked: (asset, isFavouriteClicked) {
+          widget.onAssetClicked?.call(asset, isFavouriteClicked);
 
-          if (isFavoriteClicked) {
+          if (isFavouriteClicked) {
             setState(() {
-              asset.toggleFavorite();
+              asset.toggleFavourite();
             });
           }
         },

@@ -24,7 +24,7 @@ class MarketItem extends StatelessWidget {
   final OnAssetClicked onAssetClicked;
 
   /// If true sub-markets will be shown with title on top of them,
-  /// Otherwise under [market], will be only the list of its assets. (Suitable for favorites list)
+  /// Otherwise under [market], will be only the list of its assets. (Suitable for favourites list)
   final bool isSubMarketsCategorized;
 
   @override

@@ -28,14 +28,14 @@ class AssetItem extends StatelessWidget {
           highlightText: filterText,
         ),
         onTap: () => onAssetClicked?.call(asset, false),
-        trailing: _buildFavoriteIcon(),
+        trailing: _buildFavouriteIcon(),
       );
 
-  IconButton _buildFavoriteIcon() => IconButton(
+  IconButton _buildFavouriteIcon() => IconButton(
         key: ValueKey<String>('${asset.name}-fav-icon'),
         icon: Icon(
-          asset.isFavorite ? Icons.star : Icons.star_border,
-          color: asset.isFavorite
+          asset.isFavourite ? Icons.star : Icons.star_border,
+          color: asset.isFavourite
               ? const Color(0xFFFFAD3A)// TODO(Ramin): Use Chart's theme when its ready
               : const Color(0xFF6E6E6E),
           size: 20,
