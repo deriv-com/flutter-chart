@@ -175,8 +175,8 @@ class _MarketSelectorState extends State<MarketSelector>
             ? SizedBox(width: double.infinity)
             : _buildMarketItem(
                 Market.fromSubMarketAssets(
-                  name: 'favorites',
-                  displayName: 'Favorites',
+                  name: 'favourites',
+                  displayName: 'Favourites',
                   assets: favoritesList,
                 ),
                 isCategorized: false,
