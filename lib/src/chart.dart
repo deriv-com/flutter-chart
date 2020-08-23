@@ -4,12 +4,6 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
-import 'package:deriv_chart/src/theme/chart_default_theme.dart';
-import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -26,7 +20,14 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 
+import 'theme/chart_default_theme.dart';
+import 'theme/chart_theme.dart';
 import 'theme/painting_styles/candle_style.dart';
+import 'theme/painting_styles/chart_paiting_style.dart';
+import 'theme/painting_styles/current_tick_style.dart';
+import 'theme/painting_styles/grid_style.dart';
+import 'theme/painting_styles/line_style.dart';
+
 import 'widgets/custom_gesture_detector.dart';
 import 'widgets/crosshair_details.dart';
 
@@ -164,19 +165,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     ticker.start();
 
     _setupAnimations();
+
+    _setChartPaintingStyle();
   }
 
   @override
   void didUpdateWidget(Chart oldChart) {
     super.didUpdateWidget(oldChart);
 
-    _chartPaintingStyle = widget.style == ChartStyle.candles
-        ? CandleStyle(
-            positiveColor: _chartTheme.accentGreenColor,
-            negativeColor: _chartTheme.accentRedColor,
-            lineColor: _chartTheme.base04Color,
-          )
-        : LineStyle(color: _chartTheme.brandGreenishColor);
+    if (oldChart == null || widget.style != oldChart.style) {
+      _setChartPaintingStyle();
+    }
 
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
@@ -193,6 +192,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
       _onNewTick();
     }
   }
+
+  void _setChartPaintingStyle() =>
+      _chartPaintingStyle = widget.style == ChartStyle.candles
+          ? CandleStyle(
+              positiveColor: _chartTheme.accentGreenColor,
+              negativeColor: _chartTheme.accentRedColor,
+              lineColor: _chartTheme.base04Color,
+            )
+          : LineStyle(color: _chartTheme.brandGreenishColor);
 
   @override
   void dispose() {

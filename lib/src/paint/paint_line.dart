@@ -28,16 +28,14 @@ void paintLine(
 
   canvas.drawPath(path, linePaint);
 
-  if (style.hasArea) {
-    _paintLineArea(
-      canvas,
-      size,
-      linePath: path,
-      lineStartX: xCoords[0],
-      lineEndX: xCoords.last,
-      style: style,
-    );
-  }
+  _paintLineArea(
+    canvas,
+    size,
+    linePath: path,
+    lineStartX: xCoords[0],
+    lineEndX: xCoords.last,
+    style: style,
+  );
 }
 
 void _paintLineArea(
