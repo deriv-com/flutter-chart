@@ -70,6 +70,13 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void scaleWithNowFixed(ScaleUpdateDetails details) {
+    final nowToRightBound = convertMsToPx(rightBoundEpoch - nowEpoch);
+    onScaleUpdate(details);
+    rightBoundEpoch = nowEpoch + convertPxToMs(nowToRightBound);
+    notifyListeners();
+  }
+
   void onPanUpdate(DragUpdateDetails details) {
     rightBoundEpoch -= convertPxToMs(details.delta.dx);
     notifyListeners();

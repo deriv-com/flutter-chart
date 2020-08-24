@@ -555,22 +555,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
     if (_isAutoPanning) {
-      _scaleWithNowFixed(details);
+      _xAxis.scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);
     }
-  }
-
-  void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound =
-        _xAxis.convertMsToPx(_xAxis.rightBoundEpoch - _xAxis.nowEpoch);
-
-    _xAxis.onScaleUpdate(details);
-
-    setState(() {
-      _xAxis.rightBoundEpoch =
-          _xAxis.nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
-    });
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
