@@ -22,7 +22,7 @@ class XAxisModel extends ChangeNotifier {
   double msPerPx = 1000;
 
   /// Previous value of [msPerPx]. Used for scaling computation.
-  double prevMsPerPx;
+  double _prevMsPerPx;
 
   int _granularity;
 
@@ -40,11 +40,11 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void onScaleStart(ScaleStartDetails details) {
-    prevMsPerPx = msPerPx;
+    _prevMsPerPx = msPerPx;
   }
 
   void onScaleUpdate(ScaleUpdateDetails details, int granularity) {
-    msPerPx = (prevMsPerPx / details.scale).clamp(_minScale, _maxScale);
+    msPerPx = (_prevMsPerPx / details.scale).clamp(_minScale, _maxScale);
     notifyListeners();
   }
 }
