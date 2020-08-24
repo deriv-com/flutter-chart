@@ -569,7 +569,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound = _xAxis.convertMsToPx(rightBoundEpoch - nowEpoch);
-    _scaleChart(details);
+
+    _xAxis.onScaleUpdate(details);
+
     setState(() {
       rightBoundEpoch = nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
     });
@@ -579,14 +581,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final focalToRightBound = canvasSize.width - details.focalPoint.dx;
     final focalEpoch =
         rightBoundEpoch - _xAxis.convertPxToMs(focalToRightBound);
-    _scaleChart(details);
+
+    _xAxis.onScaleUpdate(details);
+
     setState(() {
       rightBoundEpoch = focalEpoch + _xAxis.convertPxToMs(focalToRightBound);
     });
-  }
-
-  void _scaleChart(ScaleUpdateDetails details) {
-    _xAxis.onScaleUpdate(details);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
