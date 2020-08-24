@@ -143,7 +143,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool get _shouldLoadMoreHistory {
     if (widget.candles.isEmpty) return false;
 
-    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    final leftBoundEpoch =
+        rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
     final waitingForHistory =
         requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
 
@@ -186,7 +187,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.initState();
 
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
+    rightBoundEpoch =
+        nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     _xAxis.updateGranularity(_getGranularity(widget.candles));
 
     ticker = this.createTicker(_onNewFrame);
@@ -210,7 +212,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _xAxis.updateGranularity(newGranularity);
 
       // TODO(Rustem): Move to `updateGranularity` method on xAxisModel
-      rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
+      rightBoundEpoch =
+          nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
     }
@@ -337,7 +340,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _updateVisibleCandles() {
     final candles = widget.candles;
-    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
+    final leftBoundEpoch =
+        rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
 
     var start = candles.indexWhere((candle) => leftBoundEpoch < candle.epoch);
     var end =
@@ -375,10 +379,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
         curve: Curves.easeOut,
       );
     }
-  }
-
-  int _pxToMs(double px) {
-    return _xAxis.convertPxToMs(px);
   }
 
   double _msToPx(int ms) {
@@ -579,16 +579,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final nowToRightBound = _msToPx(rightBoundEpoch - nowEpoch);
     _scaleChart(details);
     setState(() {
-      rightBoundEpoch = nowEpoch + _pxToMs(nowToRightBound);
+      rightBoundEpoch = nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
     });
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = canvasSize.width - details.focalPoint.dx;
-    final focalEpoch = rightBoundEpoch - _pxToMs(focalToRightBound);
+    final focalEpoch =
+        rightBoundEpoch - _xAxis.convertPxToMs(focalToRightBound);
     _scaleChart(details);
     setState(() {
-      rightBoundEpoch = focalEpoch + _pxToMs(focalToRightBound);
+      rightBoundEpoch = focalEpoch + _xAxis.convertPxToMs(focalToRightBound);
     });
   }
 
@@ -599,7 +600,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      rightBoundEpoch -= _pxToMs(details.delta.dx);
+      rightBoundEpoch -= _xAxis.convertPxToMs(details.delta.dx);
       _limitRightBoundEpoch();
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
@@ -621,7 +622,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final animationMsDuration = 600;
     final lowerBound = rightBoundEpoch.toDouble();
     final upperBound = nowEpoch +
-        _pxToMs(XAxisModel.maxCurrentTickOffset).toDouble() +
+        _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset).toDouble() +
         animationMsDuration;
 
     if (upperBound > lowerBound) {
@@ -652,7 +653,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Clamps [rightBoundEpoch] and returns true if hits the limit.
   bool _limitRightBoundEpoch() {
     if (widget.candles.isEmpty) return false;
-    final int offset = _pxToMs(XAxisModel.maxCurrentTickOffset);
+    final int offset = _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     final int upperLimit = nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
     rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
@@ -661,7 +662,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _loadMoreHistory() {
     final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-    final int widthInMs = _pxToMs(canvasSize.width);
+    final int widthInMs = _xAxis.convertPxToMs(canvasSize.width);
 
     requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
 
