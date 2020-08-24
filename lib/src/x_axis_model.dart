@@ -62,4 +62,9 @@ class XAxisModel extends ChangeNotifier {
     msPerPx = (_prevMsPerPx / details.scale).clamp(_minScale, _maxScale);
     notifyListeners();
   }
+
+  void onPanUpdate(DragUpdateDetails details) {
+    rightBoundEpoch -= convertPxToMs(details.delta.dx);
+    notifyListeners();
+  }
 }

@@ -589,8 +589,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
+    _xAxis.onPanUpdate(details);
     setState(() {
-      _xAxis.rightBoundEpoch -= _xAxis.convertPxToMs(details.delta.dx);
       _limitRightBoundEpoch();
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
