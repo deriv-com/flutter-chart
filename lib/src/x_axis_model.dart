@@ -26,9 +26,14 @@ class XAxisModel extends ChangeNotifier {
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
 
+  /// Bounds and default for [msPerPx].
+  double get _minScale => granularity / XAxisModel.maxIntervalWidth;
+  double get _maxScale => granularity / XAxisModel.minIntervalWidth;
+  double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
+
   void updateGranularity(int newGranularity) {
     _granularity = newGranularity;
-    msPerPx = _getDefaultScale(granularity);
+    msPerPx = _defaultScale;
   }
 
   void onScaleStart(ScaleStartDetails details) {
@@ -36,22 +41,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void onScaleUpdate(ScaleUpdateDetails details, int granularity) {
-    msPerPx = (prevMsPerPx / details.scale).clamp(
-      _getMinScale(granularity),
-      _getMaxScale(granularity),
-    );
+    msPerPx = (prevMsPerPx / details.scale).clamp(_minScale, _maxScale);
     notifyListeners();
-  }
-
-  double _getMinScale(int granularity) {
-    return granularity / XAxisModel.maxIntervalWidth;
-  }
-
-  double _getDefaultScale(int granularity) {
-    return granularity / XAxisModel.defaultIntervalWidth;
-  }
-
-  double _getMaxScale(int granularity) {
-    return granularity / XAxisModel.minIntervalWidth;
   }
 }
