@@ -381,10 +381,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
   }
 
-  double _msToPx(int ms) {
-    return _xAxis.convertMsToPx(ms);
-  }
-
   Tick _candleToTick(Candle candle) {
     return Tick(
       epoch: candle.epoch,
@@ -576,7 +572,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = _msToPx(rightBoundEpoch - nowEpoch);
+    final nowToRightBound = _xAxis.convertMsToPx(rightBoundEpoch - nowEpoch);
     _scaleChart(details);
     setState(() {
       rightBoundEpoch = nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
