@@ -10,6 +10,7 @@ import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
+import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
@@ -48,7 +49,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
-  TickBase _currentTick;
+  TickHistorySubscription _tickHistorySubscription;
 
   StreamSubscription _tickSubscription;
 
@@ -95,7 +96,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     try {
       _tickSubscription?.cancel();
 
-      final missedTicksHistory = await TickHistory.fetchTicksAndSubscribe(
+      _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
           ticksHistory: 'R_50',
           end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
@@ -106,7 +107,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
       final missedCandles =
-          _getCandlesFromResponse(missedTicksHistory.tickHistory);
+          _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
 
       if (candles.last.epoch == missedCandles.first.epoch) {
         candles.removeLast();
@@ -115,7 +116,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       setState(() => candles.addAll(missedCandles));
 
       _tickSubscription =
-          missedTicksHistory.tickStream.listen(_handleTickStream);
+          _tickHistorySubscription.tickStream.listen(_handleTickStream);
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {
@@ -125,7 +126,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _initTickStream() async {
     try {
-      final historySubscription = await TickHistory.fetchTicksAndSubscribe(
+      _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
           ticksHistory: 'R_50',
           end: 'latest',
@@ -137,13 +138,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       setState(() {
         candles.clear();
-        candles = _getCandlesFromResponse(historySubscription.tickHistory);
+        candles = _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
 
         _startEpoch = candles.first.epoch;
       });
 
       _tickSubscription =
-          historySubscription.tickStream.listen(_handleTickStream);
+          _tickHistorySubscription.tickStream.listen(_handleTickStream);
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {
@@ -159,8 +160,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _handleTickStream(TickBase newTick) {
     if (newTick != null) {
-      _currentTick = newTick;
-
       if (newTick is api_tick.Tick) {
         _onNewTick(Candle.tick(
           epoch: newTick.epoch.millisecondsSinceEpoch,
@@ -322,7 +321,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _requestCompleter = Completer();
 
     try {
-      await _currentTick?.unsubscribe();
+      await _tickHistorySubscription?.unsubscribe();
       granularity = value;
       _initTickStream();
     } on Exception catch (e) {
