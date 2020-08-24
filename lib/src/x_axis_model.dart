@@ -24,6 +24,8 @@ class XAxisModel extends ChangeNotifier {
 
   int nowEpoch;
 
+  double canvasWidth;
+
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
   double msPerPx = 1000;

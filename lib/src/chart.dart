@@ -139,7 +139,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.candles.isEmpty) return false;
 
     final leftBoundEpoch =
-        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
+        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(_xAxis.canvasWidth);
     final waitingForHistory =
         requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
 
@@ -336,7 +336,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _updateVisibleCandles() {
     final candles = widget.candles;
     final leftBoundEpoch =
-        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
+        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(_xAxis.canvasWidth);
 
     var start = candles.indexWhere((candle) => leftBoundEpoch < candle.epoch);
     var end = candles
@@ -386,14 +386,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double _epochToCanvasX(int epoch) => epochToCanvasX(
         epoch: epoch,
         rightBoundEpoch: _xAxis.rightBoundEpoch,
-        canvasWidth: canvasSize.width,
+        canvasWidth: _xAxis.canvasWidth,
         msPerPx: _xAxis.msPerPx,
       );
 
   int _canvasXToEpoch(double x) => canvasXToEpoch(
         x: x,
         rightBoundEpoch: _xAxis.rightBoundEpoch,
-        canvasWidth: canvasSize.width,
+        canvasWidth: _xAxis.canvasWidth,
         msPerPx: _xAxis.msPerPx,
       );
 
@@ -415,6 +415,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+      _xAxis.canvasWidth = constraints.maxWidth;
       _updateVisibleCandles();
       _updateQuoteBoundTargets();
 
@@ -436,7 +437,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
               loadingRightBoundX: widget.candles.isEmpty
-                  ? canvasSize.width
+                  ? _xAxis.canvasWidth
                   : _epochToCanvasX(widget.candles.first.epoch),
               epochToCanvasX: _epochToCanvasX,
               quoteToCanvasY: _quoteToCanvasY,
@@ -507,7 +508,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     return gridTimestamps(
       timeGridInterval: timeGridInterval(_xAxis.msPerPx),
       leftBoundEpoch:
-          _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width),
+          _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(_xAxis.canvasWidth),
       rightBoundEpoch: _xAxis.rightBoundEpoch,
     );
   }
@@ -576,7 +577,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = canvasSize.width - details.focalPoint.dx;
+    final focalToRightBound = _xAxis.canvasWidth - details.focalPoint.dx;
     final focalEpoch =
         _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(focalToRightBound);
 
@@ -593,7 +594,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     setState(() {
       _limitRightBoundEpoch();
 
-      if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
+      if (details.localPosition.dx >
+          _xAxis.canvasWidth - quoteLabelsAreaWidth) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
                 (canvasSize.height - timeLabelsAreaHeight))
             .clamp(0.05, 0.49);
@@ -653,7 +655,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _loadMoreHistory() {
-    final int widthInMs = _xAxis.convertPxToMs(canvasSize.width);
+    final int widthInMs = _xAxis.convertPxToMs(_xAxis.canvasWidth);
 
     requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
 
