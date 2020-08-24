@@ -21,11 +21,13 @@ class XAxisModel extends ChangeNotifier {
   /// Previous value of [msPerPx]. Used for scaling computation.
   double prevMsPerPx;
 
+  int _granularity;
+
   /// Difference in milliseconds between two consecutive candles/points.
-  int granularity;
+  int get granularity => _granularity;
 
   void updateGranularity(int newGranularity) {
-    granularity = newGranularity;
+    _granularity = newGranularity;
     msPerPx = _getDefaultScale(granularity);
   }
 
