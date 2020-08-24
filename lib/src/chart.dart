@@ -124,16 +124,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool _isCrosshairMode = false;
 
   // TODO(Rustem): move to XAxisModel
-  bool get _isAutoPanning =>
-      _xAxis.rightBoundEpoch > _xAxis.nowEpoch && !_isCrosshairMode;
-
-  // TODO(Rustem): move to XAxisModel
   bool get _isScrollingToNow =>
       _rightEpochAnimationController?.isAnimating ?? false;
 
   // TODO(Rustem): move to XAxisModel
   bool get _isScrollToNowAvailable =>
-      !_isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
+      !_xAxis.isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
 
   bool get _shouldLoadMoreHistory {
     if (widget.candles.isEmpty) return false;
@@ -237,7 +233,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _xAxis.nowEpoch = DateTime.now().millisecondsSinceEpoch;
       final elapsedMs = _xAxis.nowEpoch - prevEpoch;
 
-      if (_isAutoPanning) {
+      if (_xAxis.isAutoPanning) {
         _xAxis.rightBoundEpoch += elapsedMs;
       }
 
@@ -474,10 +470,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
               _isCrosshairMode = true;
               widget.onCrosshairAppeared?.call();
               _crosshairZoomOutAnimationController.forward();
+              _xAxis.disableAutoPan();
             },
             onCrosshairDisappeared: () {
               _isCrosshairMode = false;
               _crosshairZoomOutAnimationController.reverse();
+              _xAxis.enableAutoPan();
             },
           ),
           if (_isScrollToNowAvailable)
@@ -554,7 +552,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    if (_isAutoPanning) {
+    if (_xAxis.isAutoPanning) {
       _xAxis.scaleWithNowFixed(details);
     } else {
       _xAxis.scaleWithFocalPointFixed(details);

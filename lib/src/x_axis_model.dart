@@ -35,11 +35,15 @@ class XAxisModel extends ChangeNotifier {
 
   int _granularity;
 
+  bool _autoPanEnabled = true;
+
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
   int get leftBoundEpoch => rightBoundEpoch - convertPxToMs(canvasWidth);
+
+  bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > nowEpoch;
 
   /// Bounds and default for [msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
@@ -49,6 +53,16 @@ class XAxisModel extends ChangeNotifier {
   void updateGranularity(int newGranularity) {
     _granularity = newGranularity;
     msPerPx = _defaultScale;
+  }
+
+  void enableAutoPan() {
+    _autoPanEnabled = true;
+    notifyListeners();
+  }
+
+  void disableAutoPan() {
+    _autoPanEnabled = false;
+    notifyListeners();
   }
 
   /// Convert px to ms using current scale.
