@@ -187,6 +187,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
+    _xAxis.granularity = _getGranularity(widget.candles);
 
     ticker = this.createTicker(_onNewFrame);
     ticker.start();
@@ -203,10 +204,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (oldChart.candles.isNotEmpty)
       prevTick = _candleToTick(oldChart.candles.last);
 
-    final oldGranularity = _getGranularity(oldChart.candles);
     final newGranularity = _getGranularity(widget.candles);
 
-    if (oldGranularity != newGranularity) {
+    if (newGranularity != _xAxis.granularity) {
+      _xAxis.granularity = newGranularity;
       _xAxis.msPerPx = _getDefaultScale(newGranularity);
       rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
