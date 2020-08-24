@@ -94,11 +94,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Size canvasSize;
   Tick prevTick;
 
-  // TODO(Rustem): move to XAxisModel
-  /// Epoch value of the rightmost chart's edge. Including quote labels area.
-  /// Horizontal panning is controlled by this variable.
-  int rightBoundEpoch;
-
   /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
@@ -130,7 +125,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool _isCrosshairMode = false;
 
   // TODO(Rustem): move to XAxisModel
-  bool get _isAutoPanning => rightBoundEpoch > nowEpoch && !_isCrosshairMode;
+  bool get _isAutoPanning =>
+      _xAxis.rightBoundEpoch > nowEpoch && !_isCrosshairMode;
 
   // TODO(Rustem): move to XAxisModel
   bool get _isScrollingToNow =>
@@ -144,7 +140,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.candles.isEmpty) return false;
 
     final leftBoundEpoch =
-        rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
+        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
     final waitingForHistory =
         requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
 
@@ -187,7 +183,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.initState();
 
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    rightBoundEpoch =
+    _xAxis.rightBoundEpoch =
         nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     _xAxis.updateGranularity(_getGranularity(widget.candles));
 
@@ -212,7 +208,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _xAxis.updateGranularity(newGranularity);
 
       // TODO(Rustem): Move to `updateGranularity` method on xAxisModel
-      rightBoundEpoch =
+      _xAxis.rightBoundEpoch =
           nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
@@ -244,7 +240,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       final elapsedMs = nowEpoch - prevEpoch;
 
       if (_isAutoPanning) {
-        rightBoundEpoch += elapsedMs;
+        _xAxis.rightBoundEpoch += elapsedMs;
       }
 
       if (_shouldLoadMoreHistory) _loadMoreHistory();
@@ -262,9 +258,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupRightEpochAnimation() {
     _rightEpochAnimationController = AnimationController.unbounded(
       vsync: this,
-      value: rightBoundEpoch.toDouble(),
+      value: _xAxis.rightBoundEpoch.toDouble(),
     )..addListener(() {
-        rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+        _xAxis.rightBoundEpoch = _rightEpochAnimationController.value.toInt();
         final bool hitLimit = _limitRightBoundEpoch();
         if (hitLimit) _rightEpochAnimationController.stop();
       });
@@ -341,11 +337,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _updateVisibleCandles() {
     final candles = widget.candles;
     final leftBoundEpoch =
-        rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
+        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width);
 
     var start = candles.indexWhere((candle) => leftBoundEpoch < candle.epoch);
-    var end =
-        candles.lastIndexWhere((candle) => candle.epoch < rightBoundEpoch);
+    var end = candles
+        .lastIndexWhere((candle) => candle.epoch < _xAxis.rightBoundEpoch);
 
     if (start == -1 || end == -1) {
       visibleCandles = [];
@@ -390,14 +386,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   double _epochToCanvasX(int epoch) => epochToCanvasX(
         epoch: epoch,
-        rightBoundEpoch: rightBoundEpoch,
+        rightBoundEpoch: _xAxis.rightBoundEpoch,
         canvasWidth: canvasSize.width,
         msPerPx: _xAxis.msPerPx,
       );
 
   int _canvasXToEpoch(double x) => canvasXToEpoch(
         x: x,
-        rightBoundEpoch: rightBoundEpoch,
+        rightBoundEpoch: _xAxis.rightBoundEpoch,
         canvasWidth: canvasSize.width,
         msPerPx: _xAxis.msPerPx,
       );
@@ -511,8 +507,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   List<DateTime> _getGridLineTimestamps() {
     return gridTimestamps(
       timeGridInterval: timeGridInterval(_xAxis.msPerPx),
-      leftBoundEpoch: rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width),
-      rightBoundEpoch: rightBoundEpoch,
+      leftBoundEpoch:
+          _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(canvasSize.width),
+      rightBoundEpoch: _xAxis.rightBoundEpoch,
     );
   }
 
@@ -568,30 +565,32 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = _xAxis.convertMsToPx(rightBoundEpoch - nowEpoch);
+    final nowToRightBound =
+        _xAxis.convertMsToPx(_xAxis.rightBoundEpoch - nowEpoch);
 
     _xAxis.onScaleUpdate(details);
 
     setState(() {
-      rightBoundEpoch = nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
+      _xAxis.rightBoundEpoch = nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
     });
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = canvasSize.width - details.focalPoint.dx;
     final focalEpoch =
-        rightBoundEpoch - _xAxis.convertPxToMs(focalToRightBound);
+        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(focalToRightBound);
 
     _xAxis.onScaleUpdate(details);
 
     setState(() {
-      rightBoundEpoch = focalEpoch + _xAxis.convertPxToMs(focalToRightBound);
+      _xAxis.rightBoundEpoch =
+          focalEpoch + _xAxis.convertPxToMs(focalToRightBound);
     });
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      rightBoundEpoch -= _xAxis.convertPxToMs(details.delta.dx);
+      _xAxis.rightBoundEpoch -= _xAxis.convertPxToMs(details.delta.dx);
       _limitRightBoundEpoch();
 
       if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
@@ -611,7 +610,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _scrollToNow() {
     final animationMsDuration = 600;
-    final lowerBound = rightBoundEpoch.toDouble();
+    final lowerBound = _xAxis.rightBoundEpoch.toDouble();
     final upperBound = nowEpoch +
         _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset).toDouble() +
         animationMsDuration;
@@ -632,12 +631,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _triggerScrollMomentum(Velocity velocity) {
     final Simulation simulation = ClampingScrollSimulation(
-      position: rightBoundEpoch.toDouble(),
+      position: _xAxis.rightBoundEpoch.toDouble(),
       velocity: -velocity.pixelsPerSecond.dx * _xAxis.msPerPx,
       friction: 0.015 * _xAxis.msPerPx,
     );
     _rightEpochAnimationController
-      ..value = rightBoundEpoch.toDouble()
+      ..value = _xAxis.rightBoundEpoch.toDouble()
       ..animateWith(simulation);
   }
 
@@ -647,8 +646,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final int offset = _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     final int upperLimit = nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
-    rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
-    return rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit;
+    _xAxis.rightBoundEpoch =
+        _xAxis.rightBoundEpoch.clamp(lowerLimit, upperLimit);
+    return _xAxis.rightBoundEpoch == upperLimit ||
+        _xAxis.rightBoundEpoch == lowerLimit;
   }
 
   void _loadMoreHistory() {

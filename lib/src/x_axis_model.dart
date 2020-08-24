@@ -18,6 +18,10 @@ class XAxisModel extends ChangeNotifier {
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
 
+  /// Epoch value of the rightmost chart's edge. Including quote labels area.
+  /// Horizontal panning is controlled by this variable.
+  int rightBoundEpoch;
+
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
   double msPerPx = 1000;
