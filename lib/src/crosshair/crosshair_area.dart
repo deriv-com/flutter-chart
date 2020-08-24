@@ -85,6 +85,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     // TODO(Rustem): call callback that was passed to chart
     widget.onCrosshairAppeared?.call();
 
+    // Stop auto-panning to make it easier to select candle or tick.
     xAxis.disableAutoPan();
 
     setState(() {
