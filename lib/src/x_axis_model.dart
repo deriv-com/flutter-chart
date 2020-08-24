@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:flutter/material.dart';
 
 // Keep in mind these 2 use cases:
@@ -37,6 +38,16 @@ class XAxisModel extends ChangeNotifier {
   void updateGranularity(int newGranularity) {
     _granularity = newGranularity;
     msPerPx = _defaultScale;
+  }
+
+  /// Convert px to ms using current scale.
+  int convertPxToMs(double px) {
+    return pxToMs(px, msPerPx: msPerPx);
+  }
+
+  /// Convert ms to px using current scale.
+  double convertMsToPx(int ms) {
+    return msToPx(ms, msPerPx: msPerPx);
   }
 
   void onScaleStart(ScaleStartDetails details) {

@@ -378,11 +378,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   int _pxToMs(double px) {
-    return pxToMs(px, msPerPx: _xAxis.msPerPx);
+    return _xAxis.convertPxToMs(px);
   }
 
   double _msToPx(int ms) {
-    return msToPx(ms, msPerPx: _xAxis.msPerPx);
+    return _xAxis.convertMsToPx(ms);
   }
 
   Tick _candleToTick(Candle candle) {
