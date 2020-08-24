@@ -8,11 +8,14 @@ class XAxisModel extends ChangeNotifier {
   /// Limits panning to the right.
   static const double maxCurrentTickOffset = 150;
 
+  /// Scaling will not resize intervals to be smaller than this.
+  static const int minIntervalWidth = 4;
+
+  /// Scaling will not resize intervals to be bigger than this.
   static const int maxIntervalWidth = 80;
 
+  /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
-
-  static const int minIntervalWidth = 4;
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
