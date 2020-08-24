@@ -54,7 +54,7 @@ class XAxisModel extends ChangeNotifier {
     _prevMsPerPx = msPerPx;
   }
 
-  void onScaleUpdate(ScaleUpdateDetails details, int granularity) {
+  void onScaleUpdate(ScaleUpdateDetails details) {
     msPerPx = (_prevMsPerPx / details.scale).clamp(_minScale, _maxScale);
     notifyListeners();
   }

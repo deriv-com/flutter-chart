@@ -586,8 +586,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _scaleChart(ScaleUpdateDetails details) {
-    final granularity = _getGranularity(widget.candles);
-    _xAxis.onScaleUpdate(details, granularity);
+    _xAxis.onScaleUpdate(details);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
