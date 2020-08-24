@@ -36,7 +36,7 @@ class LightThemeColors {
   static const Color base05 = Color(0xFF3E3E3E);
   static const Color base06 = Color(0xFF323738);
   static const Color base07 = Color(0xFF151717);
-  static const Color base08 = Color(0xFF0E0E0E);
+  static const Color base08 = Color(0xFFFFFFFF);
   static const Color accentGreen = Color(0xFF00A79E);
   static const Color accentYellow = Color(0xFFFFAD3A);
   static const Color accentRed = Color(0xFFCC2E3D);

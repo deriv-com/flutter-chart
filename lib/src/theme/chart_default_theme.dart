@@ -4,6 +4,10 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
+import 'painting_styles/candle_style.dart';
+import 'painting_styles/current_tick_style.dart';
+import 'painting_styles/grid_style.dart';
+import 'painting_styles/line_style.dart';
 import 'text_styles.dart';
 
 /// A default implementation of [ChartTheme] which provides access to
@@ -26,6 +30,34 @@ abstract class ChartDefaultTheme implements ChartTheme {
 
   @override
   Color get brandOrangeColor => BrandColors.orange;
+
+  @override
+  GridStyle get gridStyle => GridStyle(
+        gridLineColor: base07Color,
+        labelStyle: textStyle(
+          textStyle: caption2,
+          color: base03Color,
+        ),
+      );
+
+  @override
+  CurrentTickStyle get currentTickStyle => CurrentTickStyle(
+        color: brandCoralColor,
+        labelStyle: textStyle(
+          textStyle: caption2,
+          color: base01Color,
+        ),
+      );
+
+  @override
+  CandleStyle get candleStyle => CandleStyle(
+        positiveColor: accentGreenColor,
+        negativeColor: accentRedColor,
+        lineColor: base04Color,
+      );
+
+  @override
+  LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
 
   TextStyle _getStyle({
     @required TextStyle textStyle,

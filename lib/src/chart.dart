@@ -173,9 +173,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
     // Decide dark/light based on Theme.of(context) brightness
     _chartTheme =
-    widget.theme ?? Theme.of(context).brightness == Brightness.dark
-        ? ChartDefaultDarkTheme()
-        : ChartDefaultLightTheme();
+        widget.theme ?? Theme.of(context).brightness == Brightness.dark
+            ? ChartDefaultDarkTheme()
+            : ChartDefaultLightTheme();
 
     _setChartPaintingStyle();
   }
@@ -206,12 +206,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _setChartPaintingStyle() =>
       _chartPaintingStyle = widget.style == ChartStyle.candles
-          ? CandleStyle(
-              positiveColor: _chartTheme.accentGreenColor,
-              negativeColor: _chartTheme.accentRedColor,
-              lineColor: _chartTheme.base04Color,
-            )
-          : LineStyle(color: _chartTheme.brandGreenishColor);
+          ? _chartTheme.candleStyle
+          : _chartTheme.lineStyle;
 
   @override
   void dispose() {
@@ -440,13 +436,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
                       epochToCanvasX: _epochToCanvasX,
                       quoteToCanvasY: _quoteToCanvasY,
-                      style: GridStyle(
-                        gridLineColor: _chartTheme.base07Color,
-                        labelStyle: _chartTheme.textStyle(
-                          textStyle: _chartTheme.caption2,
-                          color: _chartTheme.base03Color,
-                        ),
-                      ),
+                      style: _chartTheme.gridStyle,
                     ),
                   ),
                   CustomPaint(
@@ -480,13 +470,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
                       epochToCanvasX: _epochToCanvasX,
                       quoteToCanvasY: _quoteToCanvasY,
-                      style: CurrentTickStyle(
-                        color: _chartTheme.brandCoralColor,
-                        labelStyle: _chartTheme.textStyle(
-                          textStyle: _chartTheme.caption2,
-                          color: _chartTheme.base01Color,
-                        ),
-                      ),
+                      style: _chartTheme.currentTickStyle,
                     ),
                   ),
                   CustomPaint(
