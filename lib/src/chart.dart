@@ -89,7 +89,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   List<Candle> visibleCandles = [];
 
-  int nowEpoch;
   int requestedLeftEpoch;
   Size canvasSize;
   Tick prevTick;
@@ -126,7 +125,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   // TODO(Rustem): move to XAxisModel
   bool get _isAutoPanning =>
-      _xAxis.rightBoundEpoch > nowEpoch && !_isCrosshairMode;
+      _xAxis.rightBoundEpoch > _xAxis.nowEpoch && !_isCrosshairMode;
 
   // TODO(Rustem): move to XAxisModel
   bool get _isScrollingToNow =>
@@ -182,9 +181,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void initState() {
     super.initState();
 
-    nowEpoch = DateTime.now().millisecondsSinceEpoch;
+    _xAxis.nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _xAxis.rightBoundEpoch =
-        nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
+        _xAxis.nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     _xAxis.updateGranularity(_getGranularity(widget.candles));
 
     ticker = this.createTicker(_onNewFrame);
@@ -208,8 +207,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _xAxis.updateGranularity(newGranularity);
 
       // TODO(Rustem): Move to `updateGranularity` method on xAxisModel
-      _xAxis.rightBoundEpoch =
-          nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
+      _xAxis.rightBoundEpoch = _xAxis.nowEpoch +
+          _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
     }
@@ -235,9 +234,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onNewFrame(Duration elapsed) {
     setState(() {
-      final prevEpoch = nowEpoch;
-      nowEpoch = DateTime.now().millisecondsSinceEpoch;
-      final elapsedMs = nowEpoch - prevEpoch;
+      final prevEpoch = _xAxis.nowEpoch;
+      _xAxis.nowEpoch = DateTime.now().millisecondsSinceEpoch;
+      final elapsedMs = _xAxis.nowEpoch - prevEpoch;
 
       if (_isAutoPanning) {
         _xAxis.rightBoundEpoch += elapsedMs;
@@ -566,12 +565,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound =
-        _xAxis.convertMsToPx(_xAxis.rightBoundEpoch - nowEpoch);
+        _xAxis.convertMsToPx(_xAxis.rightBoundEpoch - _xAxis.nowEpoch);
 
     _xAxis.onScaleUpdate(details);
 
     setState(() {
-      _xAxis.rightBoundEpoch = nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
+      _xAxis.rightBoundEpoch =
+          _xAxis.nowEpoch + _xAxis.convertPxToMs(nowToRightBound);
     });
   }
 
@@ -611,7 +611,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _scrollToNow() {
     final animationMsDuration = 600;
     final lowerBound = _xAxis.rightBoundEpoch.toDouble();
-    final upperBound = nowEpoch +
+    final upperBound = _xAxis.nowEpoch +
         _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset).toDouble() +
         animationMsDuration;
 
@@ -644,7 +644,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool _limitRightBoundEpoch() {
     if (widget.candles.isEmpty) return false;
     final int offset = _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
-    final int upperLimit = nowEpoch + offset;
+    final int upperLimit = _xAxis.nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
     _xAxis.rightBoundEpoch =
         _xAxis.rightBoundEpoch.clamp(lowerLimit, upperLimit);

@@ -22,6 +22,8 @@ class XAxisModel extends ChangeNotifier {
   /// Horizontal panning is controlled by this variable.
   int rightBoundEpoch;
 
+  int nowEpoch;
+
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
   double msPerPx = 1000;
