@@ -228,17 +228,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onNewFrame(Duration elapsed) {
-    setState(() {
-      final prevEpoch = _xAxis.nowEpoch;
-      _xAxis.nowEpoch = DateTime.now().millisecondsSinceEpoch;
-      final elapsedMs = _xAxis.nowEpoch - prevEpoch;
-
-      if (_xAxis.isAutoPanning) {
-        _xAxis.rightBoundEpoch += elapsedMs;
-      }
-
-      if (_shouldLoadMoreHistory) _loadMoreHistory();
-    });
+    _xAxis.updateNowEpoch(DateTime.now().millisecondsSinceEpoch);
+    if (_shouldLoadMoreHistory) _loadMoreHistory();
   }
 
   void _setupAnimations() {
@@ -407,7 +398,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
-      _xAxis.canvasWidth = constraints.maxWidth;
+      context.watch<XAxisModel>().canvasWidth = constraints.maxWidth;
+
       _updateVisibleCandles();
       _updateQuoteBoundTargets();
 

@@ -50,6 +50,15 @@ class XAxisModel extends ChangeNotifier {
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;
   double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
 
+  void updateNowEpoch(int newNowEpoch) {
+    final elapsedMs = newNowEpoch - nowEpoch;
+    nowEpoch = newNowEpoch;
+    if (isAutoPanning) {
+      rightBoundEpoch += elapsedMs;
+    }
+    notifyListeners();
+  }
+
   void updateGranularity(int newGranularity) {
     _granularity = newGranularity;
     msPerPx = _defaultScale;
