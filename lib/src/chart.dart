@@ -207,8 +207,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final newGranularity = _getGranularity(widget.candles);
 
     if (newGranularity != _xAxis.granularity) {
-      _xAxis.granularity = newGranularity;
-      _xAxis.msPerPx = _getDefaultScale(newGranularity);
+      _xAxis.updateGranularity(newGranularity);
+
+      // TODO(Rustem): Move to `updateGranularity` method on xAxisModel
       rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
@@ -417,10 +418,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   int _getGranularity(List<Candle> candles) {
     if (candles.length < 2) return -1;
     return candles[1].epoch - candles[0].epoch;
-  }
-
-  double _getDefaultScale(int granularity) {
-    return granularity / XAxisModel.defaultIntervalWidth;
   }
 
   @override
