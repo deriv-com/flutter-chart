@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/painters/crosshair_painter.dart';
 import 'package:deriv_chart/src/painters/loading_painter.dart';
+import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
+import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -156,8 +158,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _chartTheme = widget.theme ?? ChartDefaultTheme();
-
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
 
@@ -165,6 +165,17 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     ticker.start();
 
     _setupAnimations();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Decide dark/light based on Theme.of(context) brightness
+    _chartTheme =
+    widget.theme ?? Theme.of(context).brightness == Brightness.dark
+        ? ChartDefaultDarkTheme()
+        : ChartDefaultLightTheme();
 
     _setChartPaintingStyle();
   }
