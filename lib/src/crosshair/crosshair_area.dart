@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/chart_style.dart';
+import 'package:deriv_chart/src/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +43,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   Candle crosshairCandle;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
+  XAxisModel get xAxis => context.read<XAxisModel>();
 
   @override
   void initState() {
@@ -82,6 +84,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     // TODO(Rustem): ask yAxisModel to zoom out
     // TODO(Rustem): call callback that was passed to chart
     widget.onCrosshairAppeared?.call();
+
+    xAxis.disableAutoPan();
+
     setState(() {
       crosshairCandle = _getClosestCandle(details.localPosition.dx);
     });
@@ -101,6 +106,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   void _onLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
+
+    xAxis.enableAutoPan();
+
     setState(() {
       crosshairCandle = null;
     });

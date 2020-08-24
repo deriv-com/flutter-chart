@@ -470,12 +470,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
               _isCrosshairMode = true;
               widget.onCrosshairAppeared?.call();
               _crosshairZoomOutAnimationController.forward();
-              _xAxis.disableAutoPan();
             },
             onCrosshairDisappeared: () {
               _isCrosshairMode = false;
               _crosshairZoomOutAnimationController.reverse();
-              _xAxis.enableAutoPan();
             },
           ),
           if (_isScrollToNowAvailable)
