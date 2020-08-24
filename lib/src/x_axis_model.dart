@@ -38,6 +38,9 @@ class XAxisModel extends ChangeNotifier {
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
 
+  /// Epoch value of the leftmost chart's edge.
+  int get leftBoundEpoch => rightBoundEpoch - convertPxToMs(canvasWidth);
+
   /// Bounds and default for [msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;

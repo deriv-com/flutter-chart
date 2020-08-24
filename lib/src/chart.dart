@@ -138,12 +138,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool get _shouldLoadMoreHistory {
     if (widget.candles.isEmpty) return false;
 
-    final leftBoundEpoch =
-        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(_xAxis.canvasWidth);
-    final waitingForHistory =
-        requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
+    final waitingForHistory = requestedLeftEpoch != null &&
+        requestedLeftEpoch <= _xAxis.leftBoundEpoch;
 
-    return !waitingForHistory && leftBoundEpoch < widget.candles.first.epoch;
+    return !waitingForHistory &&
+        _xAxis.leftBoundEpoch < widget.candles.first.epoch;
   }
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
@@ -335,10 +334,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _updateVisibleCandles() {
     final candles = widget.candles;
-    final leftBoundEpoch =
-        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(_xAxis.canvasWidth);
 
-    var start = candles.indexWhere((candle) => leftBoundEpoch < candle.epoch);
+    var start =
+        candles.indexWhere((candle) => _xAxis.leftBoundEpoch < candle.epoch);
     var end = candles
         .lastIndexWhere((candle) => candle.epoch < _xAxis.rightBoundEpoch);
 
@@ -507,8 +505,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   List<DateTime> _getGridLineTimestamps() {
     return gridTimestamps(
       timeGridInterval: timeGridInterval(_xAxis.msPerPx),
-      leftBoundEpoch:
-          _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(_xAxis.canvasWidth),
+      leftBoundEpoch: _xAxis.leftBoundEpoch,
       rightBoundEpoch: _xAxis.rightBoundEpoch,
     );
   }
