@@ -179,6 +179,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   GestureManagerState get _gestureManager =>
       context.read<GestureManagerState>();
 
+  XAxisModel get _xAxis => context.read<XAxisModel>();
+
   @override
   void initState() {
     super.initState();
@@ -205,7 +207,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final newGranularity = _getGranularity(widget.candles);
 
     if (oldGranularity != newGranularity) {
-      context.read<XAxisModel>().msPerPx = _getDefaultScale(newGranularity);
+      _xAxis.msPerPx = _getDefaultScale(newGranularity);
       rightBoundEpoch = nowEpoch + _pxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
@@ -374,11 +376,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   int _pxToMs(double px) {
-    return pxToMs(px, msPerPx: context.read<XAxisModel>().msPerPx);
+    return pxToMs(px, msPerPx: _xAxis.msPerPx);
   }
 
   double _msToPx(int ms) {
-    return msToPx(ms, msPerPx: context.read<XAxisModel>().msPerPx);
+    return msToPx(ms, msPerPx: _xAxis.msPerPx);
   }
 
   Tick _candleToTick(Candle candle) {
@@ -392,14 +394,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
         epoch: epoch,
         rightBoundEpoch: rightBoundEpoch,
         canvasWidth: canvasSize.width,
-        msPerPx: context.read<XAxisModel>().msPerPx,
+        msPerPx: _xAxis.msPerPx,
       );
 
   int _canvasXToEpoch(double x) => canvasXToEpoch(
         x: x,
         rightBoundEpoch: rightBoundEpoch,
         canvasWidth: canvasSize.width,
-        msPerPx: context.read<XAxisModel>().msPerPx,
+        msPerPx: _xAxis.msPerPx,
       );
 
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
@@ -514,11 +516,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   List<DateTime> _getGridLineTimestamps() {
     return gridTimestamps(
-      timeGridInterval: timeGridInterval(context.read<XAxisModel>().msPerPx),
+      timeGridInterval: timeGridInterval(_xAxis.msPerPx),
       leftBoundEpoch: rightBoundEpoch -
           pxToMs(
             canvasSize.width,
-            msPerPx: context.read<XAxisModel>().msPerPx,
+            msPerPx: _xAxis.msPerPx,
           ),
       rightBoundEpoch: rightBoundEpoch,
     );
@@ -564,7 +566,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
     _rightEpochAnimationController.stop();
-    context.read<XAxisModel>().onScaleStart(details);
+    _xAxis.onScaleStart(details);
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
@@ -594,7 +596,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _scaleChart(ScaleUpdateDetails details) {
     final granularity = _getGranularity(widget.candles);
-    context.read<XAxisModel>().onScaleUpdate(details, granularity);
+    _xAxis.onScaleUpdate(details, granularity);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
@@ -641,9 +643,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _triggerScrollMomentum(Velocity velocity) {
     final Simulation simulation = ClampingScrollSimulation(
       position: rightBoundEpoch.toDouble(),
-      velocity:
-          -velocity.pixelsPerSecond.dx * context.read<XAxisModel>().msPerPx,
-      friction: 0.015 * context.read<XAxisModel>().msPerPx,
+      velocity: -velocity.pixelsPerSecond.dx * _xAxis.msPerPx,
+      friction: 0.015 * _xAxis.msPerPx,
     );
     _rightEpochAnimationController
       ..value = rightBoundEpoch.toDouble()
