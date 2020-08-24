@@ -652,7 +652,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _loadMoreHistory() {
-    final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
     final int widthInMs = _xAxis.convertPxToMs(canvasSize.width);
 
     requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
@@ -660,7 +659,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     widget.onLoadHistory?.call(
       requestedLeftEpoch,
       widget.candles.first.epoch,
-      (2 * widthInMs) ~/ granularity,
+      (2 * widthInMs) ~/ _xAxis.granularity,
     );
   }
 }
