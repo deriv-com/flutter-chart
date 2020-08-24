@@ -557,21 +557,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (_isAutoPanning) {
       _xAxis.scaleWithNowFixed(details);
     } else {
-      _scaleWithFocalPointFixed(details);
+      _xAxis.scaleWithFocalPointFixed(details);
     }
-  }
-
-  void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = _xAxis.canvasWidth - details.focalPoint.dx;
-    final focalEpoch =
-        _xAxis.rightBoundEpoch - _xAxis.convertPxToMs(focalToRightBound);
-
-    _xAxis.onScaleUpdate(details);
-
-    setState(() {
-      _xAxis.rightBoundEpoch =
-          focalEpoch + _xAxis.convertPxToMs(focalToRightBound);
-    });
   }
 
   void _onPanUpdate(DragUpdateDetails details) {

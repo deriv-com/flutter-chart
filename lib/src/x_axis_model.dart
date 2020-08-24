@@ -77,6 +77,14 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void scaleWithFocalPointFixed(ScaleUpdateDetails details) {
+    final focalToRightBound = canvasWidth - details.focalPoint.dx;
+    final focalEpoch = rightBoundEpoch - convertPxToMs(focalToRightBound);
+    onScaleUpdate(details);
+    rightBoundEpoch = focalEpoch + convertPxToMs(focalToRightBound);
+    notifyListeners();
+  }
+
   void onPanUpdate(DragUpdateDetails details) {
     rightBoundEpoch -= convertPxToMs(details.delta.dx);
     notifyListeners();
