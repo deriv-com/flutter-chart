@@ -176,10 +176,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void initState() {
     super.initState();
 
-    _xAxis.nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    _xAxis.rightBoundEpoch =
-        _xAxis.nowEpoch + _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
-    _xAxis.updateGranularity(_getGranularity(widget.candles));
+    _xAxis.init(
+      DateTime.now().millisecondsSinceEpoch,
+      _getGranularity(widget.candles),
+    );
 
     ticker = this.createTicker(_onNewFrame);
     ticker.start();
