@@ -12,10 +12,10 @@ void paintLine(
   assert(yCoords.isNotEmpty);
   assert(xCoords.length == yCoords.length);
 
-  Path path = Path();
+  final path = Path();
   path.moveTo(xCoords[0], yCoords[0]);
 
-  for (int i = 1; i < xCoords.length; i++) {
+  for (var i = 1; i < xCoords.length; i++) {
     path.lineTo(xCoords[i], yCoords[i]);
   }
 

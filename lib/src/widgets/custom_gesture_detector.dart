@@ -95,11 +95,12 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
         if (_longPressed) _handleLongPressEnd();
         break;
       case 1:
-        if (!_longPressed)
+        if (!_longPressed) {
           _longPressTimer = Timer(
             longPressHoldDuration,
             _handleLongPressStart,
           );
+        }
         break;
       default:
         _longPressTimer?.cancel();
@@ -149,8 +150,9 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     final distanceFromStartPosition =
         (_longPressStartPosition - contactPoint).distance;
 
-    if (distanceFromStartPosition > longPressHoldRadius)
+    if (distanceFromStartPosition > longPressHoldRadius) {
       _longPressTimer?.cancel();
+    }
   }
 
   void _handlePanUpdate(ScaleUpdateDetails details) {

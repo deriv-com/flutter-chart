@@ -26,9 +26,9 @@ void paintLoadingAnimation({
   final topLeftPath = Path();
   final bottomRightPath = Path();
 
-  double barX = 0;
+  var barX = 0.0;
 
-  for (int i = 0; i < numberOfBars; i++) {
+  for (var i = 0; i < numberOfBars; i++) {
     final barPosition = convertToLoadingRange(
       (barX + (loadingAnimationProgress * rectWidth)) % rectWidth,
     );

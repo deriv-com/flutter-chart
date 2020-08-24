@@ -118,11 +118,12 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     final px =
         verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
     final minCrosshairVerticalPadding = 80;
-    if (px < minCrosshairVerticalPadding)
+    if (px < minCrosshairVerticalPadding) {
       return px +
           (minCrosshairVerticalPadding - px) * _crosshairZoomOutAnimation.value;
-    else
+    } else {
       return px;
+    }
   }
 
   double get _topPadding => _verticalPadding;
@@ -143,7 +144,7 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
 
-    ticker = this.createTicker(_onNewFrame);
+    ticker = createTicker(_onNewFrame);
     ticker.start();
 
     _setupAnimations();
@@ -154,8 +155,9 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     super.didUpdateWidget(oldChart);
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
-    if (oldChart.candles.isNotEmpty)
+    if (oldChart.candles.isNotEmpty) {
       prevTick = _candleToTick(oldChart.candles.last);
+    }
 
     final oldGranularity = _getGranularity(oldChart.candles);
     final newGranularity = _getGranularity(widget.candles);
@@ -636,9 +638,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
 
   void _limitRightBoundEpoch() {
     if (widget.candles.isEmpty) return;
-    final int upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
-    final int lowerLimit =
-        widget.candles.first.epoch - _pxToMs(canvasSize.width);
+    final upperLimit = nowEpoch + _pxToMs(maxCurrentTickOffset);
+    final lowerLimit = widget.candles.first.epoch - _pxToMs(canvasSize.width);
     rightBoundEpoch = upperLimit > lowerLimit
         ? rightBoundEpoch.clamp(lowerLimit, upperLimit)
         : lowerLimit;
@@ -648,8 +649,8 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
     if (widget.candles.isEmpty) return;
     final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
     if (leftBoundEpoch < widget.candles.first.epoch) {
-      int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-      int widthInMs = _pxToMs(canvasSize.width);
+      final granularity = widget.candles[1].epoch - widget.candles[0].epoch;
+      final widthInMs = _pxToMs(canvasSize.width);
       widget.onLoadHistory?.call(
         widget.candles.first.epoch - (2 * widthInMs),
         widget.candles.first.epoch,

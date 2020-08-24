@@ -173,7 +173,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     if (fromEpoch < _startEpoch) {
       // So we don't request for a history range more than once
       _startEpoch = fromEpoch;
-      final TickHistory moreData = await TickHistory.fetchTickHistory(
+      final moreData = await TickHistory.fetchTickHistory(
         TicksHistoryRequest(
           ticksHistory: 'R_50',
           end: '${toEpoch ~/ 1000}',
@@ -183,7 +183,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-      final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
+      final loadedCandles = _getCandlesFromResponse(moreData);
 
       loadedCandles.removeLast();
 
@@ -290,7 +290,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
-    List<Candle> candles = [];
+    var candles = <Candle>[];
     if (tickHistory.history != null) {
       final count = tickHistory.history.prices.length;
       for (var i = 0; i < count; i++) {

@@ -7,8 +7,8 @@ import '../models/candle.dart';
 Candle findClosestToEpoch(int targetEpoch, List<Candle> candles) {
   if (candles.isEmpty) return null;
 
-  int left = 0;
-  int right = candles.length - 1;
+  var left = 0;
+  var right = candles.length - 1;
 
   while (right - left > 1) {
     final mid = ((left + right) / 2).floor();
@@ -26,8 +26,9 @@ Candle findClosestToEpoch(int targetEpoch, List<Candle> candles) {
   final distanceToLeft = (targetEpoch - candles[left].epoch).abs();
   final distanceToRight = (targetEpoch - candles[right].epoch).abs();
 
-  if (distanceToLeft <= distanceToRight)
+  if (distanceToLeft <= distanceToRight) {
     return candles[left];
-  else
+  } else {
     return candles[right];
+  }
 }

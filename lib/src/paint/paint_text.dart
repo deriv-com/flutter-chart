@@ -7,11 +7,11 @@ void paintTextFromCenter(
   @required double centerY,
   TextStyle style,
 }) {
-  TextSpan span = TextSpan(
+  final span = TextSpan(
     text: text,
     style: style,
   );
-  TextPainter tp = TextPainter(
+  final tp = TextPainter(
     text: span,
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
