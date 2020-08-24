@@ -10,8 +10,8 @@ import 'painting_styles/grid_style.dart';
 import 'painting_styles/line_style.dart';
 import 'text_styles.dart';
 
-/// A default implementation of [ChartTheme] which provides access to
-/// theme-related details for the chart package.
+/// Provides access to common theme-related colors and styles between default
+/// light and dark themes
 abstract class ChartDefaultTheme implements ChartTheme {
   final Map<TextStyle, Map<Color, TextStyle>> _textStyle =
       <TextStyle, Map<Color, TextStyle>>{};

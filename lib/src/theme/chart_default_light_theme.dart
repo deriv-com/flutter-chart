@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'chart_default_theme.dart';
 import 'colors.dart';
 
+/// An implementation of [ChartDefaultTheme] which provides access to
+/// light theme-related colors and styles for the chart package.
 class ChartDefaultLightTheme extends ChartDefaultTheme {
   @override
   Color get accentRedColor => LightThemeColors.accentRed;
