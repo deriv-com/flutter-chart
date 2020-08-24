@@ -39,7 +39,7 @@ class _XAxisState extends State<XAxis> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
+    return ChangeNotifierProvider<XAxisModel>.value(
       value: model,
       child: widget.child,
     );

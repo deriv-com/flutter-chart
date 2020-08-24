@@ -18,6 +18,7 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 import 'painters/loading_painter.dart';
+import 'x_axis.dart';
 import 'x_axis_model.dart';
 
 class Chart extends StatelessWidget {
@@ -43,8 +44,7 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureManager(
-      child: ChangeNotifierProvider<XAxisModel>(
-        create: (BuildContext context) => XAxisModel(),
+      child: XAxis(
         child: _ChartImplementation(
           candles: candles,
           pipSize: pipSize,
@@ -316,7 +316,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager
       ..registerCallback(_onScaleAndPanStart)
       ..registerCallback(_onPanUpdate)
-      ..registerCallback(_onScaleUpdate)
       ..registerCallback(_onScaleAndPanEnd);
   }
 
@@ -324,7 +323,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager
       ..removeCallback(_onScaleAndPanStart)
       ..removeCallback(_onPanUpdate)
-      ..removeCallback(_onScaleUpdate)
       ..removeCallback(_onScaleAndPanEnd);
   }
 
@@ -546,11 +544,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onScaleAndPanStart(ScaleStartDetails details) {
     _rightEpochAnimationController.stop();
-    _xAxis.onScaleStart(details);
-  }
-
-  void _onScaleUpdate(ScaleUpdateDetails details) {
-    _xAxis.onScaleUpdate(details);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
