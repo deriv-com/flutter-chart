@@ -80,23 +80,29 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void onScaleUpdate(ScaleUpdateDetails details) {
-    msPerPx = (_prevMsPerPx / details.scale).clamp(_minScale, _maxScale);
+    if (isAutoPanning) {
+      _scaleWithNowFixed(details);
+    } else {
+      _scaleWithFocalPointFixed(details);
+    }
     notifyListeners();
   }
 
-  void scaleWithNowFixed(ScaleUpdateDetails details) {
+  void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound = convertMsToPx(rightBoundEpoch - nowEpoch);
-    onScaleUpdate(details);
+    _updateScale(details.scale);
     rightBoundEpoch = nowEpoch + convertPxToMs(nowToRightBound);
-    notifyListeners();
   }
 
-  void scaleWithFocalPointFixed(ScaleUpdateDetails details) {
+  void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = canvasWidth - details.focalPoint.dx;
     final focalEpoch = rightBoundEpoch - convertPxToMs(focalToRightBound);
-    onScaleUpdate(details);
+    _updateScale(details.scale);
     rightBoundEpoch = focalEpoch + convertPxToMs(focalToRightBound);
-    notifyListeners();
+  }
+
+  void _updateScale(double scale) {
+    msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
   }
 
   void onPanUpdate(DragUpdateDetails details) {

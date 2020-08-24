@@ -550,11 +550,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    if (_xAxis.isAutoPanning) {
-      _xAxis.scaleWithNowFixed(details);
-    } else {
-      _xAxis.scaleWithFocalPointFixed(details);
-    }
+    _xAxis.onScaleUpdate(details);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
