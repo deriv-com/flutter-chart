@@ -24,7 +24,7 @@ class XAxisModel extends ChangeNotifier {
 
   int nowEpoch;
 
-  double canvasWidth;
+  double width;
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
@@ -41,7 +41,7 @@ class XAxisModel extends ChangeNotifier {
   int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
-  int get leftBoundEpoch => rightBoundEpoch - convertPxToMs(canvasWidth);
+  int get leftBoundEpoch => rightBoundEpoch - convertPxToMs(width);
 
   /// Current scrolling upper bound.
   int get maxRightBoundEpoch =>
@@ -115,7 +115,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = canvasWidth - details.focalPoint.dx;
+    final focalToRightBound = width - details.focalPoint.dx;
     final focalEpoch = rightBoundEpoch - convertPxToMs(focalToRightBound);
     _updateScale(details.scale);
     rightBoundEpoch = focalEpoch + convertPxToMs(focalToRightBound);

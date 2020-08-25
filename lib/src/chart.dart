@@ -365,14 +365,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double _epochToCanvasX(int epoch) => epochToCanvasX(
         epoch: epoch,
         rightBoundEpoch: _xAxis.rightBoundEpoch,
-        canvasWidth: _xAxis.canvasWidth,
+        canvasWidth: _xAxis.width,
         msPerPx: _xAxis.msPerPx,
       );
 
   int _canvasXToEpoch(double x) => canvasXToEpoch(
         x: x,
         rightBoundEpoch: _xAxis.rightBoundEpoch,
-        canvasWidth: _xAxis.canvasWidth,
+        canvasWidth: _xAxis.width,
         msPerPx: _xAxis.msPerPx,
       );
 
@@ -394,7 +394,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
-      context.watch<XAxisModel>().canvasWidth = constraints.maxWidth;
+      context.watch<XAxisModel>().width = constraints.maxWidth;
 
       _updateVisibleCandles();
       _updateQuoteBoundTargets();
@@ -417,7 +417,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
               loadingRightBoundX: widget.candles.isEmpty
-                  ? _xAxis.canvasWidth
+                  ? _xAxis.width
                   : _epochToCanvasX(widget.candles.first.epoch),
               epochToCanvasX: _epochToCanvasX,
               quoteToCanvasY: _quoteToCanvasY,
@@ -540,7 +540,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _limitRightBoundEpoch();
 
       final bool onQuoteLabelsArea =
-          details.localPosition.dx > _xAxis.canvasWidth - quoteLabelsAreaWidth;
+          details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
 
       if (onQuoteLabelsArea) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
@@ -600,7 +600,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _loadMoreHistory() {
-    final int widthInMs = _xAxis.convertPxToMs(_xAxis.canvasWidth);
+    final int widthInMs = _xAxis.convertPxToMs(_xAxis.width);
 
     requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
 
