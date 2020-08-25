@@ -197,8 +197,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       prevTick = _candleToTick(oldChart.candles.last);
       _onNewTick();
     }
-
-    _xAxis.updateGranularity(_getGranularity(widget.candles));
   }
 
   @override

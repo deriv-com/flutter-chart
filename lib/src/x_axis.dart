@@ -37,6 +37,12 @@ class _XAxisState extends State<XAxis> {
   }
 
   @override
+  void didUpdateWidget(XAxis oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    model.updateGranularity(widget.granularity);
+  }
+
+  @override
   void dispose() {
     gestureManager
       ..removeCallback(model.onScaleStart)
