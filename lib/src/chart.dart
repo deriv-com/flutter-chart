@@ -130,7 +130,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   // TODO(Rustem): move to XAxisModel
   bool get _isScrollToNowAvailable =>
-      !_xAxis.isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
+      widget.candles.isNotEmpty &&
+      !_xAxis.isAutoPanning &&
+      !_isScrollingToNow &&
+      !_isCrosshairMode;
 
   bool get _shouldLoadMoreHistory {
     if (widget.candles.isEmpty) return false;
