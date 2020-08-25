@@ -29,8 +29,8 @@ class _XAxisState extends State<XAxis> {
   @override
   void initState() {
     super.initState();
-    model = XAxisModel()
-      ..init(DateTime.now().millisecondsSinceEpoch, widget.granularity);
+    model =
+        XAxisModel(DateTime.now().millisecondsSinceEpoch, widget.granularity);
     gestureManager
       ..registerCallback(model.onScaleStart)
       ..registerCallback(model.onScaleUpdate);

@@ -5,6 +5,12 @@ import 'package:flutter/material.dart';
 // 1) live chart
 // 2) closed contract
 class XAxisModel extends ChangeNotifier {
+  XAxisModel(int nowEpoch, int granularity) {
+    _nowEpoch = nowEpoch;
+    rightBoundEpoch = nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
+    updateGranularity(granularity);
+  }
+
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
   static const double maxCurrentTickOffset = 150;
@@ -53,12 +59,6 @@ class XAxisModel extends ChangeNotifier {
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;
   double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
-
-  void init(int nowEpoch, int granularity) {
-    _nowEpoch = nowEpoch;
-    rightBoundEpoch = nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
-    updateGranularity(granularity);
-  }
 
   void updateNowEpoch(int newNowEpoch) {
     final elapsedMs = newNowEpoch - _nowEpoch;
