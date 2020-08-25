@@ -76,6 +76,10 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFirstCandleEpoch(int firstCandleEpoch) {
+    _firstCandleEpoch = firstCandleEpoch;
+  }
+
   void updateGranularity(int newGranularity) {
     if (_granularity == newGranularity) return;
     _granularity = newGranularity;

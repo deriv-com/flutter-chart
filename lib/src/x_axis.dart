@@ -42,6 +42,7 @@ class _XAxisState extends State<XAxis> {
   @override
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
+    model.updateFirstCandleEpoch(widget.firstCandleEpoch);
     model.updateGranularity(widget.granularity);
   }
 
