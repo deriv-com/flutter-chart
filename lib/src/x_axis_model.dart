@@ -9,10 +9,9 @@ class XAxisModel extends ChangeNotifier {
     @required int nowEpoch,
     @required int firstCandleEpoch,
     @required int granularity,
-  }) {
-    _nowEpoch = nowEpoch;
-    _firstCandleEpoch = firstCandleEpoch ?? nowEpoch;
-    rightBoundEpoch = maxRightBoundEpoch;
+  })  : _nowEpoch = nowEpoch,
+        _firstCandleEpoch = firstCandleEpoch ?? nowEpoch {
+    _rightBoundEpoch = maxRightBoundEpoch;
     updateGranularity(granularity);
   }
 
