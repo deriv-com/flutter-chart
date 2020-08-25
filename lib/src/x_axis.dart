@@ -84,4 +84,17 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
       child: widget.child,
     );
   }
+
+  void scrollToNow() {
+    const duration = Duration(milliseconds: 600);
+    final target = model.maxRightBoundEpoch + duration.inMilliseconds;
+
+    _rightEpochAnimationController
+      ..value = model.rightBoundEpoch.toDouble()
+      ..animateTo(
+        target.toDouble(),
+        curve: Curves.easeOut,
+        duration: duration,
+      );
+  }
 }
