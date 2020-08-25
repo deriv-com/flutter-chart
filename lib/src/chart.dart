@@ -193,15 +193,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.didUpdateWidget(oldChart);
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
-    if (oldChart.candles.isNotEmpty)
+    if (oldChart.candles.isNotEmpty) {
       prevTick = _candleToTick(oldChart.candles.last);
+      _onNewTick();
+    }
 
     final newGranularity = _getGranularity(widget.candles);
 
     if (newGranularity != _xAxis.granularity) {
       _xAxis.updateGranularity(newGranularity);
-    } else {
-      _onNewTick();
     }
   }
 
