@@ -381,11 +381,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
         bottomPadding: _bottomPadding,
       );
 
-  int _getGranularity(List<Candle> candles) {
-    if (candles.length < 2) return -1;
-    return candles[1].epoch - candles[0].epoch;
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
