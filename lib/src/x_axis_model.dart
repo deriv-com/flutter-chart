@@ -43,6 +43,10 @@ class XAxisModel extends ChangeNotifier {
   /// Epoch value of the leftmost chart's edge.
   int get leftBoundEpoch => rightBoundEpoch - convertPxToMs(canvasWidth);
 
+  /// Current scrolling upper bound.
+  int get maxRightBoundEpoch =>
+      nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
+
   bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > nowEpoch;
 
   /// Bounds and default for [msPerPx].

@@ -562,9 +562,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _scrollToNow() {
     final animationMsDuration = 600;
     final lowerBound = _xAxis.rightBoundEpoch.toDouble();
-    final upperBound = _xAxis.nowEpoch +
-        _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset).toDouble() +
-        animationMsDuration;
+    final upperBound =
+        _xAxis.maxRightBoundEpoch + animationMsDuration.toDouble();
 
     if (upperBound > lowerBound) {
       _rightEpochAnimationController.value = lowerBound;
@@ -595,11 +594,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool _limitRightBoundEpoch() {
     if (widget.candles.isEmpty) return false;
     final int offset = _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
-    final int upperLimit = _xAxis.nowEpoch + offset;
     final int lowerLimit = widget.candles.first.epoch + offset;
     _xAxis.rightBoundEpoch =
-        _xAxis.rightBoundEpoch.clamp(lowerLimit, upperLimit);
-    return _xAxis.rightBoundEpoch == upperLimit ||
+        _xAxis.rightBoundEpoch.clamp(lowerLimit, _xAxis.maxRightBoundEpoch);
+    return _xAxis.rightBoundEpoch == _xAxis.maxRightBoundEpoch ||
         _xAxis.rightBoundEpoch == lowerLimit;
   }
 
