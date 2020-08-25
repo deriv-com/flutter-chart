@@ -595,7 +595,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _loadMoreHistory() {
-    final int widthInMs = _xAxis.convertPxToMs(_xAxis.width);
+    final int widthInMs = _xAxis.msFromPx(_xAxis.width);
 
     requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
 

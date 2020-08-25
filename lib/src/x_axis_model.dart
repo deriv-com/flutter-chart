@@ -12,7 +12,7 @@ class XAxisModel extends ChangeNotifier {
   }) {
     _nowEpoch = nowEpoch;
     _firstCandleEpoch = firstCandleEpoch;
-    rightBoundEpoch = nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
+    rightBoundEpoch = nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
     updateGranularity(granularity);
   }
 
@@ -54,15 +54,15 @@ class XAxisModel extends ChangeNotifier {
   int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
-  int get leftBoundEpoch => rightBoundEpoch - convertPxToMs(width);
+  int get leftBoundEpoch => rightBoundEpoch - msFromPx(width);
 
   /// Current scrolling lower bound.
   int get minRightBoundEpoch =>
-      _firstCandleEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
+      _firstCandleEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
   int get maxRightBoundEpoch =>
-      _nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
+      _nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
 
   bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
@@ -102,12 +102,12 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Convert px to ms using current scale.
-  int convertPxToMs(double px) {
+  int msFromPx(double px) {
     return pxToMs(px, msPerPx: msPerPx);
   }
 
   /// Convert ms to px using current scale.
-  double convertMsToPx(int ms) {
+  double pxFromMs(int ms) {
     return msToPx(ms, msPerPx: msPerPx);
   }
 
@@ -125,16 +125,16 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = convertMsToPx(rightBoundEpoch - _nowEpoch);
+    final nowToRightBound = pxFromMs(rightBoundEpoch - _nowEpoch);
     _scale(details.scale);
-    rightBoundEpoch = _nowEpoch + convertPxToMs(nowToRightBound);
+    rightBoundEpoch = _nowEpoch + msFromPx(nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = width - details.focalPoint.dx;
-    final focalEpoch = rightBoundEpoch - convertPxToMs(focalToRightBound);
+    final focalEpoch = rightBoundEpoch - msFromPx(focalToRightBound);
     _scale(details.scale);
-    rightBoundEpoch = focalEpoch + convertPxToMs(focalToRightBound);
+    rightBoundEpoch = focalEpoch + msFromPx(focalToRightBound);
   }
 
   void _scale(double scale) {
@@ -142,7 +142,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void onPanUpdate(DragUpdateDetails details) {
-    rightBoundEpoch -= convertPxToMs(details.delta.dx);
+    rightBoundEpoch -= msFromPx(details.delta.dx);
     notifyListeners();
   }
 }
