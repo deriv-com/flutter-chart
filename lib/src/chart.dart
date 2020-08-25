@@ -591,12 +591,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Clamps [rightBoundEpoch] and returns true if hits the limit.
   bool _limitRightBoundEpoch() {
     if (widget.candles.isEmpty) return false;
-    final int offset = _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
-    final int lowerLimit = widget.candles.first.epoch + offset;
-    _xAxis.rightBoundEpoch =
-        _xAxis.rightBoundEpoch.clamp(lowerLimit, _xAxis.maxRightBoundEpoch);
+    _xAxis.rightBoundEpoch = _xAxis.rightBoundEpoch.clamp(
+      _xAxis.minRightBoundEpoch,
+      _xAxis.maxRightBoundEpoch,
+    );
     return _xAxis.rightBoundEpoch == _xAxis.maxRightBoundEpoch ||
-        _xAxis.rightBoundEpoch == lowerLimit;
+        _xAxis.rightBoundEpoch == _xAxis.minRightBoundEpoch;
   }
 
   void _loadMoreHistory() {
