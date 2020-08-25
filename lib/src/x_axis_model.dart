@@ -116,6 +116,22 @@ class XAxisModel extends ChangeNotifier {
     return msToPx(ms, msPerPx: msPerPx);
   }
 
+  /// Get x position of epoch.
+  double xFromEpoch(int epoch) => epochToCanvasX(
+        epoch: epoch,
+        rightBoundEpoch: rightBoundEpoch,
+        canvasWidth: width,
+        msPerPx: msPerPx,
+      );
+
+  /// Get epoch of x position.
+  int epochFromX(double x) => canvasXToEpoch(
+        x: x,
+        rightBoundEpoch: rightBoundEpoch,
+        canvasWidth: width,
+        msPerPx: msPerPx,
+      );
+
   void onScaleStart(ScaleStartDetails details) {
     _prevMsPerPx = msPerPx;
   }

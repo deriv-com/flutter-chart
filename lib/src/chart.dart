@@ -358,20 +358,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  double _epochToCanvasX(int epoch) => epochToCanvasX(
-        epoch: epoch,
-        rightBoundEpoch: _xAxis.rightBoundEpoch,
-        canvasWidth: _xAxis.width,
-        msPerPx: _xAxis.msPerPx,
-      );
-
-  int _canvasXToEpoch(double x) => canvasXToEpoch(
-        x: x,
-        rightBoundEpoch: _xAxis.rightBoundEpoch,
-        canvasWidth: _xAxis.width,
-        msPerPx: _xAxis.msPerPx,
-      );
-
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
         quote: quote,
         topBoundQuote: _topBoundQuote,
@@ -399,7 +385,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              epochToCanvasX: _epochToCanvasX,
+              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
@@ -409,8 +395,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
               loadingAnimationProgress: _loadingAnimationController.value,
               loadingRightBoundX: widget.candles.isEmpty
                   ? _xAxis.width
-                  : _epochToCanvasX(widget.candles.first.epoch),
-              epochToCanvasX: _epochToCanvasX,
+                  : _xAxis.xFromEpoch(widget.candles.first.epoch),
+              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
@@ -420,7 +406,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               candles: _getChartCandles(),
               style: widget.style,
               pipSize: widget.pipSize,
-              epochToCanvasX: _epochToCanvasX,
+              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
@@ -431,7 +417,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               blinkAnimationProgress: _currentTickBlinkAnimation.value,
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              epochToCanvasX: _epochToCanvasX,
+              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
@@ -439,8 +425,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
             visibleCandles: visibleCandles,
             style: widget.style,
             pipSize: widget.pipSize,
-            epochToCanvasX: _epochToCanvasX,
-            canvasXToEpoch: _canvasXToEpoch,
+            epochToCanvasX: _xAxis.xFromEpoch,
+            canvasXToEpoch: _xAxis.epochFromX,
             quoteToCanvasY: _quoteToCanvasY,
             // TODO(Rustem): remove callbacks when axis models are provided
             onCrosshairAppeared: () {
