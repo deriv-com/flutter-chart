@@ -87,7 +87,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Ticker ticker;
 
   /// Width of the area with quote labels on the right.
-  final double quoteLabelsAreaWidth = 70;
+  double quoteLabelsAreaWidth = 70;
 
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
@@ -190,6 +190,20 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupGestures();
   }
 
+  void _calculateQuoteLabelAreaWidth() {
+    TextSpan textSpan = TextSpan(
+      style: TextStyle(fontSize: 12),
+      text: widget.candles.first.close.toStringAsFixed(widget.pipSize),
+    );
+    TextPainter textPainter = TextPainter(
+      text: textSpan,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(minWidth: 20, maxWidth: 120);
+    quoteLabelsAreaWidth = textPainter.width + 10;
+  }
+
   @override
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
@@ -199,6 +213,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
       prevTick = _candleToTick(oldChart.candles.last);
       _onNewTick();
     }
+
+    _calculateQuoteLabelAreaWidth();
   }
 
   @override
