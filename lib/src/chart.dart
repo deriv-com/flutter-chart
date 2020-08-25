@@ -182,11 +182,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void initState() {
     super.initState();
 
-    _xAxis.init(
-      DateTime.now().millisecondsSinceEpoch,
-      _getGranularity(widget.candles),
-    );
-
     ticker = createTicker(_onNewFrame)..start();
 
     _setupAnimations();
