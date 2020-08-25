@@ -56,6 +56,10 @@ class XAxisModel extends ChangeNotifier {
   /// Epoch value of the leftmost chart's edge.
   int get leftBoundEpoch => rightBoundEpoch - convertPxToMs(width);
 
+  /// Current scrolling lower bound.
+  int get minRightBoundEpoch =>
+      _firstCandleEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
+
   /// Current scrolling upper bound.
   int get maxRightBoundEpoch =>
       _nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
