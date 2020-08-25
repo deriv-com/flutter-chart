@@ -14,9 +14,6 @@ class CrosshairArea extends StatefulWidget {
   CrosshairArea({
     Key key,
     @required this.visibleCandles,
-    // TODO(Rustem): remove when xAxisModel is provided
-    @required this.epochToCanvasX,
-    @required this.canvasXToEpoch,
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     // TODO(Rustem): remove when chart params are provided
@@ -29,8 +26,6 @@ class CrosshairArea extends StatefulWidget {
   final List<Candle> visibleCandles;
   final ChartStyle style;
   final int pipSize;
-  final double Function(int) epochToCanvasX;
-  final int Function(double) canvasXToEpoch;
   final double Function(double) quoteToCanvasY;
   final VoidCallback onCrosshairAppeared;
   final VoidCallback onCrosshairDisappeared;
@@ -100,7 +95,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   Candle _getClosestCandle(double canvasX) {
-    final epoch = widget.canvasXToEpoch(canvasX);
+    final epoch = xAxis.epochFromX(canvasX);
     return findClosestToEpoch(epoch, widget.visibleCandles);
   }
 
@@ -126,7 +121,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
             painter: CrosshairPainter(
               crosshairCandle: crosshairCandle,
               style: widget.style,
-              epochToCanvasX: widget.epochToCanvasX,
+              epochToCanvasX: xAxis.xFromEpoch,
               quoteToCanvasY: widget.quoteToCanvasY,
             ),
           ),
@@ -135,7 +130,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
               top: 0,
               bottom: 0,
               width: constraints.maxWidth,
-              left: widget.epochToCanvasX(crosshairCandle.epoch) -
+              left: xAxis.xFromEpoch(crosshairCandle.epoch) -
                   constraints.maxWidth / 2,
               child: Align(
                 alignment: Alignment.center,

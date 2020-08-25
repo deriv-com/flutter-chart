@@ -425,8 +425,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
             visibleCandles: visibleCandles,
             style: widget.style,
             pipSize: widget.pipSize,
-            epochToCanvasX: _xAxis.xFromEpoch,
-            canvasXToEpoch: _xAxis.epochFromX,
             quoteToCanvasY: _quoteToCanvasY,
             // TODO(Rustem): remove callbacks when axis models are provided
             onCrosshairAppeared: () {
