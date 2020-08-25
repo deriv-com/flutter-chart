@@ -185,7 +185,6 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // Decide dark/light based on Theme.of(context) brightness
     _chartTheme =
         widget.theme ?? Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
