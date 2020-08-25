@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 // 1) live chart
 // 2) closed contract
 class XAxisModel extends ChangeNotifier {
-  XAxisModel(int nowEpoch, int granularity) {
+  XAxisModel({
+    @required int nowEpoch,
+    @required int granularity,
+  }) {
     _nowEpoch = nowEpoch;
     rightBoundEpoch = nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
     updateGranularity(granularity);
