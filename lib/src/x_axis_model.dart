@@ -143,6 +143,10 @@ class XAxisModel extends ChangeNotifier {
 
   void onPanUpdate(DragUpdateDetails details) {
     rightBoundEpoch -= msFromPx(details.delta.dx);
+    rightBoundEpoch = rightBoundEpoch.clamp(
+      minRightBoundEpoch,
+      maxRightBoundEpoch,
+    );
     notifyListeners();
   }
 }
