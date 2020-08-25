@@ -31,10 +31,7 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _rightEpochAnimationController = AnimationController.unbounded(
-      vsync: this,
-      value: model.rightBoundEpoch.toDouble(),
-    );
+    _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
     model = XAxisModel(
       nowEpoch: DateTime.now().millisecondsSinceEpoch,
