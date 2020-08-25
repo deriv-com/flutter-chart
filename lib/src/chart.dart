@@ -82,7 +82,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   final double maxCurrentTickOffset = 150;
 
   /// Width of the area with quote labels on the right.
-  final double quoteLabelsAreaWidth = 70;
+  double quoteLabelsAreaWidth = 70;
 
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
@@ -202,13 +202,30 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupGestures();
   }
 
+  _calculateQuoteLabelAreaWidth() {
+    TextSpan textSpan = TextSpan(
+      style: TextStyle(fontSize: 12),
+      text: widget.candles.first.close.toStringAsFixed(widget.pipSize),
+    );
+    TextPainter textPainter = TextPainter(
+      text: textSpan,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(minWidth: 20, maxWidth: 120);
+    quoteLabelsAreaWidth = textPainter.width + 10;
+  }
+
   @override
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
-    if (oldChart.candles.isNotEmpty)
+    _calculateQuoteLabelAreaWidth();
+
+    if (oldChart.candles.isNotEmpty) {
       prevTick = _candleToTick(oldChart.candles.last);
+    }
 
     final oldGranularity = _getGranularity(oldChart.candles);
     final newGranularity = _getGranularity(widget.candles);
