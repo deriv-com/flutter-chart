@@ -70,6 +70,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void updateGranularity(int newGranularity) {
+    if (_granularity == newGranularity) return;
     _granularity = newGranularity;
     msPerPx = _defaultScale;
     rightBoundEpoch = maxRightBoundEpoch;

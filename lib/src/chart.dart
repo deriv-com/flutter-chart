@@ -198,11 +198,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _onNewTick();
     }
 
-    final newGranularity = _getGranularity(widget.candles);
-
-    if (newGranularity != _xAxis.granularity) {
-      _xAxis.updateGranularity(newGranularity);
-    }
+    _xAxis.updateGranularity(_getGranularity(widget.candles));
   }
 
   @override
