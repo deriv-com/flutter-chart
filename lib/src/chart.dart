@@ -530,22 +530,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _onPanUpdate(DragUpdateDetails details) {
     _xAxis.onPanUpdate(details);
-    setState(() {
-      _limitRightBoundEpoch();
+    _limitRightBoundEpoch();
 
-      final bool onQuoteLabelsArea =
-          details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
+    final bool onQuoteLabelsArea =
+        details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
 
-      if (onQuoteLabelsArea) {
-        _scaleVertically(details.delta.dy);
-      }
-    });
+    if (onQuoteLabelsArea) {
+      _scaleVertically(details.delta.dy);
+    }
   }
 
   void _scaleVertically(double dy) {
-    verticalPaddingFraction =
-        ((_verticalPadding + dy) / (canvasSize.height - timeLabelsAreaHeight))
-            .clamp(0.05, 0.49);
+    setState(() {
+      verticalPaddingFraction =
+          ((_verticalPadding + dy) / (canvasSize.height - timeLabelsAreaHeight))
+              .clamp(0.05, 0.49);
+    });
   }
 
   IconButton _buildScrollToNowButton() {
