@@ -31,7 +31,13 @@ class XAxisModel extends ChangeNotifier {
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   /// Horizontal panning is controlled by this variable.
-  int rightBoundEpoch;
+  int _rightBoundEpoch;
+
+  int get rightBoundEpoch => _rightBoundEpoch;
+
+  set rightBoundEpoch(int rightBoundEpoch) {
+    _rightBoundEpoch = rightBoundEpoch;
+  }
 
   int _firstCandleEpoch;
 
