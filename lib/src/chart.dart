@@ -46,6 +46,8 @@ class Chart extends StatelessWidget {
     return GestureManager(
       child: XAxis(
         firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
+        // TODO(Rustem): App should pass granularity to chart,
+        // calculation is error prone when gaps are present
         granularity:
             candles.length >= 2 ? candles[1].epoch - candles[0].epoch : -1,
         child: _ChartImplementation(
