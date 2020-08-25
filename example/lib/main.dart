@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter_deriv_api/api/api_initializer.dart';
+import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
+import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
@@ -16,7 +17,6 @@ import 'package:vibration/vibration.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 
@@ -24,8 +24,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: FullscreenChart(),
+      home: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          body: FullscreenChart(),
+        ),
+      ),
     );
   }
 }
@@ -48,6 +54,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
   // We keep track of the candles start epoch to not make more than one API call to get a history
   int _startEpoch;
 
+  List<Market> _markets;
+  Asset symbol = Asset(name: 'R_50', displayName: 'Volatility 50 Index');
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +74,41 @@ class _FullscreenChartState extends State<FullscreenChart> {
         );
 
     _initTickStream();
+    _getActiveSymbols();
+  }
+
+  Future<void> _getActiveSymbols() async {
+    final List<ActiveSymbol> activeSymbols =
+        await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
+            activeSymbols: 'brief', productType: 'basic'));
+
+    final marketTitles = <String>{};
+
+    final markets = <Market>[];
+
+    for (final symbol in activeSymbols) {
+      if (!marketTitles.contains(symbol.market)) {
+        marketTitles.add(symbol.market);
+        markets.add(
+          Market.fromAssets(
+            name: symbol.market,
+            displayName: symbol.marketDisplayName,
+            assets: activeSymbols
+                .where((activeSymbol) => activeSymbol.market == symbol.market)
+                .map<Asset>((activeSymbol) => Asset(
+                      market: activeSymbol.market,
+                      marketDisplayName: activeSymbol.marketDisplayName,
+                      subMarket: activeSymbol.submarket,
+                      name: activeSymbol.symbol,
+                      displayName: activeSymbol.displayName,
+                      subMarketDisplayName: activeSymbol.submarketDisplayName,
+                    ))
+                .toList(),
+          ),
+        );
+      }
+    }
+    setState(() => _markets = markets);
   }
 
   void _initTickStream() async {
@@ -73,7 +117,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _startEpoch = candles.first.epoch;
 
-      historySubscription.tickStream.listen((tickBase) {
+      historySubscription?.tickStream?.listen((tickBase) {
         if (tickBase != null) {
           _currentTick = tickBase;
 
@@ -104,9 +148,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
     try {
       final history = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
-          ticksHistory: 'R_50',
+          ticksHistory: symbol.name,
           end: 'latest',
-          count: 50,
+          count: 500,
           style: granularity == 0 ? 'ticks' : 'candles',
           granularity: granularity > 0 ? granularity : null,
         ),
@@ -146,22 +190,37 @@ class _FullscreenChartState extends State<FullscreenChart> {
       color: Color(0xFF0E0E0E),
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              _buildChartTypeButton(),
-              _buildIntervalSelector(),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Stack(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: _markets == null
+                      ? SizedBox.shrink()
+                      : _buildMarketSelectorButton(),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      _buildChartTypeButton(),
+                      _buildIntervalSelector(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
-            child: ClipRect(
-              child: Chart(
-                candles: candles,
-                pipSize: 4,
-                style: style,
-                onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                onLoadHistory: (fromEpoch, toEpoch, count) =>
-                    _loadHistory(fromEpoch, toEpoch, count),
-              ),
+            child: Chart(
+              candles: candles,
+              pipSize: 4,
+              style: style,
+              onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+              onLoadHistory: (fromEpoch, toEpoch, count) =>
+                  _loadHistory(fromEpoch, toEpoch, count),
             ),
           ),
         ],
@@ -169,13 +228,32 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
+  Widget _buildMarketSelectorButton() => MarketSelectorButton(
+        asset: symbol,
+        onTap: () => showBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (BuildContext context) => MarketSelector(
+            selectedItem: symbol,
+            markets: _markets,
+            onAssetClicked: (asset, favoriteClicked) {
+              if (!favoriteClicked) {
+                Navigator.of(context).pop();
+                symbol = asset;
+                _onIntervalSelected(granularity);
+              }
+            },
+          ),
+        ),
+      );
+
   void _loadHistory(int fromEpoch, int toEpoch, int count) async {
     if (fromEpoch < _startEpoch) {
       // So we don't request for a history range more than once
       _startEpoch = fromEpoch;
       final TickHistory moreData = await TickHistory.fetchTickHistory(
         TicksHistoryRequest(
-          ticksHistory: 'R_50',
+          ticksHistory: symbol.name,
           end: '${toEpoch ~/ 1000}',
           count: count,
           style: granularity == 0 ? 'ticks' : 'candles',
@@ -249,11 +327,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _onIntervalSelected(int value) async {
     try {
       await _currentTick?.unsubscribe();
-    } on Exception catch (e) {
-      print(e);
+    } on TickException catch (e) {
+      print(e.message); // TODO(Ramin): Handle the case when unsubscribe fails
+    } finally {
+      granularity = value;
+      _initTickStream();
     }
-    granularity = value;
-    _initTickStream();
   }
 
   String _granularityLabel(int granularity) {
