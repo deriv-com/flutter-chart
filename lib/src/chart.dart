@@ -182,8 +182,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _getGranularity(widget.candles),
     );
 
-    ticker = this.createTicker(_onNewFrame);
-    ticker.start();
+    ticker = createTicker(_onNewFrame)..start();
 
     _setupAnimations();
     _setupGestures();
