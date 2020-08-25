@@ -5,11 +5,15 @@ import 'gestures/gesture_manager.dart';
 import 'x_axis_model.dart';
 
 class XAxis extends StatefulWidget {
-  XAxis({Key key, @required this.child})
-      : assert(child != null),
+  XAxis({
+    Key key,
+    @required this.child,
+    @required this.firstCandleEpoch,
+  })  : assert(child != null),
         super(key: key);
 
   final Widget child;
+  final int firstCandleEpoch;
 
   @override
   _XAxisState createState() => _XAxisState();
