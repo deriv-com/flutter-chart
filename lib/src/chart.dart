@@ -200,10 +200,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     if (newGranularity != _xAxis.granularity) {
       _xAxis.updateGranularity(newGranularity);
-
-      // TODO(Rustem): Move to `updateGranularity` method on xAxisModel
-      _xAxis.rightBoundEpoch = _xAxis.nowEpoch +
-          _xAxis.convertPxToMs(XAxisModel.maxCurrentTickOffset);
     } else {
       _onNewTick();
     }

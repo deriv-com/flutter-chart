@@ -72,6 +72,7 @@ class XAxisModel extends ChangeNotifier {
   void updateGranularity(int newGranularity) {
     _granularity = newGranularity;
     msPerPx = _defaultScale;
+    rightBoundEpoch = maxRightBoundEpoch;
   }
 
   void enableAutoPan() {
