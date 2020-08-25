@@ -21,23 +21,40 @@ class XAxis extends StatefulWidget {
   _XAxisState createState() => _XAxisState();
 }
 
-class _XAxisState extends State<XAxis> {
+class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
   XAxisModel model;
+  AnimationController _rightEpochAnimationController;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
 
   @override
   void initState() {
     super.initState();
+
     model = XAxisModel(
       nowEpoch: DateTime.now().millisecondsSinceEpoch,
       firstCandleEpoch: widget.firstCandleEpoch,
       granularity: widget.granularity,
     );
+
     gestureManager
       ..registerCallback(model.onScaleStart)
       ..registerCallback(model.onScaleUpdate)
       ..registerCallback(model.onPanUpdate);
+
+    _setupRightEpochAnimation();
+  }
+
+  void _setupRightEpochAnimation() {
+    _rightEpochAnimationController = AnimationController.unbounded(
+      vsync: this,
+      value: model.rightBoundEpoch.toDouble(),
+    )..addListener(() {
+        model.rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+        if (model.hasHitLimit) {
+          _rightEpochAnimationController.stop();
+        }
+      });
   }
 
   @override
@@ -50,10 +67,13 @@ class _XAxisState extends State<XAxis> {
 
   @override
   void dispose() {
+    _rightEpochAnimationController?.dispose();
+
     gestureManager
       ..removeCallback(model.onScaleStart)
       ..removeCallback(model.onScaleUpdate)
       ..removeCallback(model.onPanUpdate);
+
     super.dispose();
   }
 
