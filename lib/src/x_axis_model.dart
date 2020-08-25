@@ -66,6 +66,11 @@ class XAxisModel extends ChangeNotifier {
 
   bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
+  /// Has hit left or right panning limit.
+  bool get hasHitLimit =>
+      rightBoundEpoch == maxRightBoundEpoch ||
+      rightBoundEpoch == minRightBoundEpoch;
+
   /// Bounds and default for [msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;

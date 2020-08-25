@@ -239,10 +239,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     )..addListener(() {
         _xAxis.rightBoundEpoch = _rightEpochAnimationController.value.toInt();
         _limitRightBoundEpoch();
-        final bool hitLimit =
-            _xAxis.rightBoundEpoch == _xAxis.maxRightBoundEpoch ||
-                _xAxis.rightBoundEpoch == _xAxis.minRightBoundEpoch;
-        if (hitLimit) _rightEpochAnimationController.stop();
+        if (_xAxis.hasHitLimit) _rightEpochAnimationController.stop();
       });
   }
 
