@@ -110,18 +110,18 @@ class XAxisModel extends ChangeNotifier {
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound = convertMsToPx(rightBoundEpoch - nowEpoch);
-    _updateScale(details.scale);
+    _scale(details.scale);
     rightBoundEpoch = nowEpoch + convertPxToMs(nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = width - details.focalPoint.dx;
     final focalEpoch = rightBoundEpoch - convertPxToMs(focalToRightBound);
-    _updateScale(details.scale);
+    _scale(details.scale);
     rightBoundEpoch = focalEpoch + convertPxToMs(focalToRightBound);
   }
 
-  void _updateScale(double scale) {
+  void _scale(double scale) {
     msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
   }
 
