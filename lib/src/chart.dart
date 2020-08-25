@@ -529,8 +529,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    _xAxis.onPanUpdate(details);
-
     final bool onQuoteLabelsArea =
         details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
 

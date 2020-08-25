@@ -36,7 +36,8 @@ class _XAxisState extends State<XAxis> {
     );
     gestureManager
       ..registerCallback(model.onScaleStart)
-      ..registerCallback(model.onScaleUpdate);
+      ..registerCallback(model.onScaleUpdate)
+      ..registerCallback(model.onPanUpdate);
   }
 
   @override
@@ -51,7 +52,8 @@ class _XAxisState extends State<XAxis> {
   void dispose() {
     gestureManager
       ..removeCallback(model.onScaleStart)
-      ..removeCallback(model.onScaleUpdate);
+      ..removeCallback(model.onScaleUpdate)
+      ..removeCallback(model.onPanUpdate);
     super.dispose();
   }
 
