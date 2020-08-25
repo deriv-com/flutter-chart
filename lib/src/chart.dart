@@ -528,24 +528,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   IconButton _buildScrollToNowButton() {
     return IconButton(
       icon: Icon(Icons.arrow_forward, color: Colors.white),
-      onPressed: _scrollToNow,
+      onPressed: _xAxis.scrollToNow,
     );
-  }
-
-  void _scrollToNow() {
-    final animationMsDuration = 600;
-    final lowerBound = _xAxis.rightBoundEpoch.toDouble();
-    final upperBound =
-        _xAxis.maxRightBoundEpoch + animationMsDuration.toDouble();
-
-    if (upperBound > lowerBound) {
-      _rightEpochAnimationController.value = lowerBound;
-      _rightEpochAnimationController.animateTo(
-        upperBound,
-        curve: Curves.easeOut,
-        duration: Duration(milliseconds: animationMsDuration),
-      );
-    }
   }
 
   void _onScaleAndPanEnd(ScaleEndDetails details) {
