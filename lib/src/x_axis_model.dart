@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 // 1) live chart
 // 2) closed contract
 class XAxisModel extends ChangeNotifier {
-  /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels.
+  /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
   static const double maxCurrentTickOffset = 150;
 
@@ -22,7 +22,7 @@ class XAxisModel extends ChangeNotifier {
   /// Horizontal panning is controlled by this variable.
   int rightBoundEpoch;
 
-  int nowEpoch;
+  int _nowEpoch;
 
   double width;
 
@@ -45,9 +45,9 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling upper bound.
   int get maxRightBoundEpoch =>
-      nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
+      _nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
 
-  bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > nowEpoch;
+  bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
   /// Bounds and default for [msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
@@ -55,14 +55,14 @@ class XAxisModel extends ChangeNotifier {
   double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
 
   void init(int nowEpoch, int granularity) {
-    this.nowEpoch = nowEpoch;
+    _nowEpoch = nowEpoch;
     rightBoundEpoch = nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
     updateGranularity(granularity);
   }
 
   void updateNowEpoch(int newNowEpoch) {
-    final elapsedMs = newNowEpoch - nowEpoch;
-    nowEpoch = newNowEpoch;
+    final elapsedMs = newNowEpoch - _nowEpoch;
+    _nowEpoch = newNowEpoch;
     if (isAutoPanning) {
       rightBoundEpoch += elapsedMs;
     }
@@ -110,9 +110,9 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = convertMsToPx(rightBoundEpoch - nowEpoch);
+    final nowToRightBound = convertMsToPx(rightBoundEpoch - _nowEpoch);
     _scale(details.scale);
-    rightBoundEpoch = nowEpoch + convertPxToMs(nowToRightBound);
+    rightBoundEpoch = _nowEpoch + convertPxToMs(nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
