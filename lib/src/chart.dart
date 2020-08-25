@@ -45,7 +45,7 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureManager(
       child: XAxis(
-        firstCandleEpoch: candles?.first?.epoch,
+        firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
         child: _ChartImplementation(
           candles: candles,
           pipSize: pipSize,
