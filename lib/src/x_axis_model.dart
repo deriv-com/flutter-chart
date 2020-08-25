@@ -11,7 +11,7 @@ class XAxisModel extends ChangeNotifier {
     @required int granularity,
   }) {
     _nowEpoch = nowEpoch;
-    _firstCandleEpoch = firstCandleEpoch;
+    _firstCandleEpoch = firstCandleEpoch ?? nowEpoch;
     rightBoundEpoch = nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
     updateGranularity(granularity);
   }
@@ -36,7 +36,10 @@ class XAxisModel extends ChangeNotifier {
   int get rightBoundEpoch => _rightBoundEpoch;
 
   set rightBoundEpoch(int rightBoundEpoch) {
-    _rightBoundEpoch = rightBoundEpoch;
+    _rightBoundEpoch = rightBoundEpoch.clamp(
+      minRightBoundEpoch,
+      maxRightBoundEpoch,
+    );
   }
 
   int _firstCandleEpoch;
@@ -170,10 +173,6 @@ class XAxisModel extends ChangeNotifier {
 
   void onPanUpdate(DragUpdateDetails details) {
     rightBoundEpoch -= msFromPx(details.delta.dx);
-    rightBoundEpoch = rightBoundEpoch.clamp(
-      minRightBoundEpoch,
-      maxRightBoundEpoch,
-    );
     notifyListeners();
   }
 }

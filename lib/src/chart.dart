@@ -238,7 +238,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       value: _xAxis.rightBoundEpoch.toDouble(),
     )..addListener(() {
         _xAxis.rightBoundEpoch = _rightEpochAnimationController.value.toInt();
-        _limitRightBoundEpoch();
         if (_xAxis.hasHitLimit) _rightEpochAnimationController.stop();
       });
   }
@@ -562,14 +561,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _rightEpochAnimationController
       ..value = _xAxis.rightBoundEpoch.toDouble()
       ..animateWith(simulation);
-  }
-
-  void _limitRightBoundEpoch() {
-    if (widget.candles.isEmpty) return;
-    _xAxis.rightBoundEpoch = _xAxis.rightBoundEpoch.clamp(
-      _xAxis.minRightBoundEpoch,
-      _xAxis.maxRightBoundEpoch,
-    );
   }
 
   void _loadMoreHistory() {
