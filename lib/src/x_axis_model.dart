@@ -12,7 +12,7 @@ class XAxisModel extends ChangeNotifier {
   }) {
     _nowEpoch = nowEpoch;
     _firstCandleEpoch = firstCandleEpoch ?? nowEpoch;
-    rightBoundEpoch = nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
+    rightBoundEpoch = maxRightBoundEpoch;
     updateGranularity(granularity);
   }
 
