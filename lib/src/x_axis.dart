@@ -31,6 +31,7 @@ class _XAxisState extends State<XAxis> {
     super.initState();
     model = XAxisModel(
       nowEpoch: DateTime.now().millisecondsSinceEpoch,
+      firstCandleEpoch: widget.firstCandleEpoch,
       granularity: widget.granularity,
     );
     gestureManager

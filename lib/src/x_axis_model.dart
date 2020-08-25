@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 class XAxisModel extends ChangeNotifier {
   XAxisModel({
     @required int nowEpoch,
+    @required int firstCandleEpoch,
     @required int granularity,
   }) {
     _nowEpoch = nowEpoch;
+    _firstCandleEpoch = firstCandleEpoch;
     rightBoundEpoch = nowEpoch + convertPxToMs(XAxisModel.maxCurrentTickOffset);
     updateGranularity(granularity);
   }
@@ -30,6 +32,8 @@ class XAxisModel extends ChangeNotifier {
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   /// Horizontal panning is controlled by this variable.
   int rightBoundEpoch;
+
+  int _firstCandleEpoch;
 
   int _nowEpoch;
 
