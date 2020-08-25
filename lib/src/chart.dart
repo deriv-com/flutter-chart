@@ -543,11 +543,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
           details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
 
       if (onQuoteLabelsArea) {
-        verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
-                (canvasSize.height - timeLabelsAreaHeight))
-            .clamp(0.05, 0.49);
+        _scaleVertically(details.delta.dy);
       }
     });
+  }
+
+  void _scaleVertically(double dy) {
+    verticalPaddingFraction =
+        ((_verticalPadding + dy) / (canvasSize.height - timeLabelsAreaHeight))
+            .clamp(0.05, 0.49);
   }
 
   IconButton _buildScrollToNowButton() {
