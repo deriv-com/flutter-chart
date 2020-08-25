@@ -539,8 +539,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     setState(() {
       _limitRightBoundEpoch();
 
-      if (details.localPosition.dx >
-          _xAxis.canvasWidth - quoteLabelsAreaWidth) {
+      final bool onQuoteLabelsArea =
+          details.localPosition.dx > _xAxis.canvasWidth - quoteLabelsAreaWidth;
+
+      if (onQuoteLabelsArea) {
         verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
                 (canvasSize.height - timeLabelsAreaHeight))
             .clamp(0.05, 0.49);
