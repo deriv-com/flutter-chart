@@ -31,30 +31,22 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    _rightEpochAnimationController = AnimationController.unbounded(
+      vsync: this,
+      value: model.rightBoundEpoch.toDouble(),
+    );
+
     model = XAxisModel(
       nowEpoch: DateTime.now().millisecondsSinceEpoch,
       firstCandleEpoch: widget.firstCandleEpoch,
       granularity: widget.granularity,
+      animationController: _rightEpochAnimationController,
     );
 
     gestureManager
       ..registerCallback(model.onScaleStart)
       ..registerCallback(model.onScaleUpdate)
       ..registerCallback(model.onPanUpdate);
-
-    _setupRightEpochAnimation();
-  }
-
-  void _setupRightEpochAnimation() {
-    _rightEpochAnimationController = AnimationController.unbounded(
-      vsync: this,
-      value: model.rightBoundEpoch.toDouble(),
-    )..addListener(() {
-        model.rightBoundEpoch = _rightEpochAnimationController.value.toInt();
-        if (model.hasHitLimit) {
-          _rightEpochAnimationController.stop();
-        }
-      });
   }
 
   @override
@@ -83,18 +75,5 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
       value: model,
       child: widget.child,
     );
-  }
-
-  void scrollToNow() {
-    const duration = Duration(milliseconds: 600);
-    final target = model.maxRightBoundEpoch + duration.inMilliseconds;
-
-    _rightEpochAnimationController
-      ..value = model.rightBoundEpoch.toDouble()
-      ..animateTo(
-        target.toDouble(),
-        curve: Curves.easeOut,
-        duration: duration,
-      );
   }
 }

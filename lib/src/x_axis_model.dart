@@ -9,10 +9,19 @@ class XAxisModel extends ChangeNotifier {
     @required int nowEpoch,
     @required int firstCandleEpoch,
     @required int granularity,
+    @required AnimationController animationController,
   })  : _nowEpoch = nowEpoch,
-        _firstCandleEpoch = firstCandleEpoch ?? nowEpoch {
+        _firstCandleEpoch = firstCandleEpoch ?? nowEpoch,
+        _rightEpochAnimationController = animationController {
     _rightBoundEpoch = maxRightBoundEpoch;
     updateGranularity(granularity);
+
+    _rightEpochAnimationController.addListener(() {
+      rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+      if (hasHitLimit) {
+        _rightEpochAnimationController.stop();
+      }
+    });
   }
 
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
@@ -40,6 +49,8 @@ class XAxisModel extends ChangeNotifier {
       maxRightBoundEpoch,
     );
   }
+
+  AnimationController _rightEpochAnimationController;
 
   int _firstCandleEpoch;
 
@@ -173,5 +184,18 @@ class XAxisModel extends ChangeNotifier {
   void onPanUpdate(DragUpdateDetails details) {
     rightBoundEpoch -= msFromPx(details.delta.dx);
     notifyListeners();
+  }
+
+  void scrollToNow() {
+    const duration = Duration(milliseconds: 600);
+    final target = maxRightBoundEpoch + duration.inMilliseconds;
+
+    _rightEpochAnimationController
+      ..value = rightBoundEpoch.toDouble()
+      ..animateTo(
+        target.toDouble(),
+        curve: Curves.easeOut,
+        duration: duration,
+      );
   }
 }
