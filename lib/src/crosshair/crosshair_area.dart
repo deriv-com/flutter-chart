@@ -132,8 +132,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
               width: constraints.maxWidth,
               left: xAxis.xFromEpoch(crosshairCandle.epoch) -
                   constraints.maxWidth / 2,
-              child: Align(
-                alignment: Alignment.center,
+              child: Center(
                 child: CrosshairDetails(
                   style: widget.style,
                   crosshairCandle: crosshairCandle,
