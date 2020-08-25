@@ -9,11 +9,13 @@ class XAxis extends StatefulWidget {
     Key key,
     @required this.child,
     @required this.firstCandleEpoch,
+    @required this.granularity,
   })  : assert(child != null),
         super(key: key);
 
   final Widget child;
   final int firstCandleEpoch;
+  final int granularity;
 
   @override
   _XAxisState createState() => _XAxisState();
