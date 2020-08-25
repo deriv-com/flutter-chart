@@ -238,7 +238,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
       value: _xAxis.rightBoundEpoch.toDouble(),
     )..addListener(() {
         _xAxis.rightBoundEpoch = _rightEpochAnimationController.value.toInt();
-        final bool hitLimit = _limitRightBoundEpoch();
+        _limitRightBoundEpoch();
+        final bool hitLimit =
+            _xAxis.rightBoundEpoch == _xAxis.maxRightBoundEpoch ||
+                _xAxis.rightBoundEpoch == _xAxis.minRightBoundEpoch;
         if (hitLimit) _rightEpochAnimationController.stop();
       });
   }
@@ -583,15 +586,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
       ..animateWith(simulation);
   }
 
-  /// Clamps [rightBoundEpoch] and returns true if hits the limit.
-  bool _limitRightBoundEpoch() {
-    if (widget.candles.isEmpty) return false;
+  void _limitRightBoundEpoch() {
+    if (widget.candles.isEmpty) return;
     _xAxis.rightBoundEpoch = _xAxis.rightBoundEpoch.clamp(
       _xAxis.minRightBoundEpoch,
       _xAxis.maxRightBoundEpoch,
     );
-    return _xAxis.rightBoundEpoch == _xAxis.maxRightBoundEpoch ||
-        _xAxis.rightBoundEpoch == _xAxis.minRightBoundEpoch;
   }
 
   void _loadMoreHistory() {
