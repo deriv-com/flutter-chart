@@ -201,11 +201,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _recalculateQuoteLabelsAreaWidth() {
     final label = widget.candles.first.close.toStringAsFixed(widget.pipSize);
     // TODO(Rustem): Get label style from _theme
-    quoteLabelsAreaWidth = _getTextWidth(label, TextStyle(fontSize: 12)) + 10;
+    quoteLabelsAreaWidth =
+        _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
   }
 
   // TODO(Rustem): Extract this helper function
-  double _getTextWidth(String text, TextStyle style) {
+  double _getRenderedTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
       style: style,
       text: text,
