@@ -9,18 +9,20 @@ class XAxisModel extends ChangeNotifier {
     @required int firstCandleEpoch,
     @required int granularity,
     @required AnimationController animationController,
-  })  : _nowEpoch = DateTime.now().millisecondsSinceEpoch,
-        _rightEpochAnimationController = animationController {
+  }) {
+    _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
-    _rightBoundEpoch = maxRightBoundEpoch;
-    updateGranularity(granularity);
+    _granularity = granularity;
+    msPerPx = _defaultScale;
+    rightBoundEpoch = maxRightBoundEpoch;
 
-    _rightEpochAnimationController.addListener(() {
-      rightBoundEpoch = _rightEpochAnimationController.value.toInt();
-      if (hasHitLimit) {
-        _rightEpochAnimationController.stop();
-      }
-    });
+    _rightEpochAnimationController = animationController
+      ..addListener(() {
+        rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+        if (hasHitLimit) {
+          _rightEpochAnimationController.stop();
+        }
+      });
   }
 
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
