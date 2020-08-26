@@ -88,13 +88,13 @@ class XAxisModel extends ChangeNotifier {
   /// Current tick is visible, chart is being autopanned.
   bool get _autoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
+  /// Current scale value.
+  double get msPerPx => _msPerPx;
+
   /// Bounds and default for [_msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;
   double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
-
-  /// Time difference between time grid lines.
-  Duration get gridInterval => timeGridInterval(_msPerPx);
 
   /// Updates left panning limit.
   void updateFirstCandleEpoch(int firstCandleEpoch) {
