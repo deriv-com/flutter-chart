@@ -14,7 +14,7 @@ class XAxisModel extends ChangeNotifier {
     _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
     _granularity = granularity;
     msPerPx = _defaultScale;
-    rightBoundEpoch = maxRightBoundEpoch;
+    rightBoundEpoch = _maxRightBoundEpoch;
 
     _rightEpochAnimationController = animationController
       ..addListener(() {
@@ -46,8 +46,8 @@ class XAxisModel extends ChangeNotifier {
 
   set rightBoundEpoch(int rightBoundEpoch) {
     _rightBoundEpoch = rightBoundEpoch.clamp(
-      minRightBoundEpoch,
-      maxRightBoundEpoch,
+      _minRightBoundEpoch,
+      _maxRightBoundEpoch,
     );
   }
 
@@ -77,11 +77,11 @@ class XAxisModel extends ChangeNotifier {
   int get leftBoundEpoch => rightBoundEpoch - msFromPx(width);
 
   /// Current scrolling lower bound.
-  int get minRightBoundEpoch =>
+  int get _minRightBoundEpoch =>
       _firstCandleEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get maxRightBoundEpoch =>
+  int get _maxRightBoundEpoch =>
       _nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
 
   /// Chart pan is currently being animated (without user input).
@@ -92,8 +92,8 @@ class XAxisModel extends ChangeNotifier {
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
-      rightBoundEpoch == maxRightBoundEpoch ||
-      rightBoundEpoch == minRightBoundEpoch;
+      rightBoundEpoch == _maxRightBoundEpoch ||
+      rightBoundEpoch == _minRightBoundEpoch;
 
   /// Bounds and default for [msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
@@ -120,7 +120,7 @@ class XAxisModel extends ChangeNotifier {
     if (_granularity == newGranularity) return;
     _granularity = newGranularity;
     msPerPx = _defaultScale;
-    rightBoundEpoch = maxRightBoundEpoch;
+    rightBoundEpoch = _maxRightBoundEpoch;
   }
 
   /// Enables autopanning when current tick is visible.
@@ -209,7 +209,7 @@ class XAxisModel extends ChangeNotifier {
   /// Animate scrolling to current tick.
   void scrollToNow() {
     const duration = Duration(milliseconds: 600);
-    final target = maxRightBoundEpoch + duration.inMilliseconds;
+    final target = _maxRightBoundEpoch + duration.inMilliseconds;
 
     _rightEpochAnimationController
       ..value = rightBoundEpoch.toDouble()
