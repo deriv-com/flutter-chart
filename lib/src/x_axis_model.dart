@@ -13,7 +13,7 @@ class XAxisModel extends ChangeNotifier {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
     _granularity = granularity;
-    msPerPx = _defaultScale;
+    _msPerPx = _defaultScale;
     rightBoundEpoch = _maxRightBoundEpoch;
 
     _rightEpochAnimationController = animationController
@@ -43,7 +43,9 @@ class XAxisModel extends ChangeNotifier {
 
   /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
   /// Scaling is controlled by this variable.
-  double msPerPx = 1000;
+  double _msPerPx = 1000;
+
+  double get msPerPx => _msPerPx;
 
   bool _autoPanEnabled = true;
   int _granularity;
@@ -90,7 +92,7 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch == _maxRightBoundEpoch ||
       rightBoundEpoch == _minRightBoundEpoch;
 
-  /// Bounds and default for [msPerPx].
+  /// Bounds and default for [_msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;
   double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
@@ -114,7 +116,7 @@ class XAxisModel extends ChangeNotifier {
   void updateGranularity(int newGranularity) {
     if (_granularity == newGranularity) return;
     _granularity = newGranularity;
-    msPerPx = _defaultScale;
+    _msPerPx = _defaultScale;
     rightBoundEpoch = _maxRightBoundEpoch;
   }
 
@@ -133,12 +135,12 @@ class XAxisModel extends ChangeNotifier {
 
   /// Convert px to ms using current scale.
   int msFromPx(double px) {
-    return pxToMs(px, msPerPx: msPerPx);
+    return pxToMs(px, msPerPx: _msPerPx);
   }
 
   /// Convert ms to px using current scale.
   double pxFromMs(int ms) {
-    return msToPx(ms, msPerPx: msPerPx);
+    return msToPx(ms, msPerPx: _msPerPx);
   }
 
   /// Get x position of epoch.
@@ -146,7 +148,7 @@ class XAxisModel extends ChangeNotifier {
         epoch: epoch,
         rightBoundEpoch: rightBoundEpoch,
         canvasWidth: width,
-        msPerPx: msPerPx,
+        msPerPx: _msPerPx,
       );
 
   /// Get epoch of x position.
@@ -154,13 +156,13 @@ class XAxisModel extends ChangeNotifier {
         x: x,
         rightBoundEpoch: rightBoundEpoch,
         canvasWidth: width,
-        msPerPx: msPerPx,
+        msPerPx: _msPerPx,
       );
 
   /// Called at the start of scale and pan gestures.
   void onScaleAndPanStart(ScaleStartDetails details) {
     _rightEpochAnimationController.stop();
-    _prevMsPerPx = msPerPx;
+    _prevMsPerPx = _msPerPx;
   }
 
   /// Called when user is scaling the chart.
@@ -198,7 +200,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scale(double scale) {
-    msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
+    _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
   }
 
   /// Animate scrolling to current tick.
@@ -218,8 +220,8 @@ class XAxisModel extends ChangeNotifier {
   void _triggerScrollMomentum(Velocity velocity) {
     final Simulation simulation = ClampingScrollSimulation(
       position: rightBoundEpoch.toDouble(),
-      velocity: -velocity.pixelsPerSecond.dx * msPerPx,
-      friction: 0.015 * msPerPx,
+      velocity: -velocity.pixelsPerSecond.dx * _msPerPx,
+      friction: 0.015 * _msPerPx,
     );
     _rightEpochAnimationController
       ..value = rightBoundEpoch.toDouble()
