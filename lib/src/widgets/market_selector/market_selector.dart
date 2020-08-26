@@ -1,8 +1,12 @@
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
+import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:deriv_chart/src/widgets/custom_draggable_sheet.dart';
 import 'package:deriv_chart/src/widgets/market_selector/assets_search_bar.dart';
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/no_result_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'market_item.dart';
 
@@ -21,6 +25,7 @@ class MarketSelector extends StatefulWidget {
     this.markets,
     this.selectedItem,
     this.favouriteAssets,
+    this.theme,
   }) : super(key: key);
 
   /// It will be called when a symbol item [Asset] is tapped.
@@ -32,6 +37,8 @@ class MarketSelector extends StatefulWidget {
 
   /// [Optional] whenever it is null, it will be substituted with a list of assets that their [Asset.isFavourite] is true.
   final List<Asset> favouriteAssets;
+
+  final ChartTheme theme;
 
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
@@ -46,6 +53,8 @@ class _MarketSelectorState extends State<MarketSelector>
 
   /// Is used to scroll to the selected symbol(Asset).
   GlobalObjectKey _selectedItemKey;
+
+  ChartTheme _theme;
 
   @override
   void initState() {
@@ -68,27 +77,39 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _theme = widget.theme ?? Theme.of(context).brightness == Brightness.dark
+        ? ChartDefaultDarkTheme()
+        : ChartDefaultLightTheme();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _fillMarketsList();
 
     return CustomDraggableSheet(
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        child: Material(
-          elevation: 8, // TODO(Ramin): Use Chart's theme when its ready
-          color: Color(0xFF151717),
-          child: Column(
-            children: <Widget>[
-              _buildTopHandle(),
-              AssetsSearchBar(
-                onSearchTextChanged: (String text) =>
-                    setState(() => _filterText = text),
-              ),
-              _buildMarketsList(),
-            ],
+      child: Provider<ChartTheme>.value(
+        value: _theme,
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+          child: Material(
+            elevation: 8,
+            color: _theme.base07Color,
+            child: Column(
+              children: <Widget>[
+                _buildTopHandle(),
+                AssetsSearchBar(
+                  onSearchTextChanged: (String text) =>
+                      setState(() => _filterText = text),
+                ),
+                _buildMarketsList(),
+              ],
+            ),
           ),
         ),
       ),
@@ -135,8 +156,7 @@ class _MarketSelectorState extends State<MarketSelector>
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              // TODO(Ramin): Use Chart's theme when its ready
-              color: const Color(0xFF3E3E3E),
+              color: _theme.base05Color,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
