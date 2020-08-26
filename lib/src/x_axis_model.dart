@@ -174,7 +174,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void onScaleAndPanEnd(ScaleEndDetails details) {
-    triggerScrollMomentum(details.velocity);
+    _triggerScrollMomentum(details.velocity);
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
@@ -207,7 +207,7 @@ class XAxisModel extends ChangeNotifier {
       );
   }
 
-  void triggerScrollMomentum(Velocity velocity) {
+  void _triggerScrollMomentum(Velocity velocity) {
     final Simulation simulation = ClampingScrollSimulation(
       position: rightBoundEpoch.toDouble(),
       velocity: -velocity.pixelsPerSecond.dx * msPerPx,
