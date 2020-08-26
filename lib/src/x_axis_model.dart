@@ -198,4 +198,15 @@ class XAxisModel extends ChangeNotifier {
         duration: duration,
       );
   }
+
+  void triggerScrollMomentum(Velocity velocity) {
+    final Simulation simulation = ClampingScrollSimulation(
+      position: rightBoundEpoch.toDouble(),
+      velocity: -velocity.pixelsPerSecond.dx * msPerPx,
+      friction: 0.015 * msPerPx,
+    );
+    _rightEpochAnimationController
+      ..value = rightBoundEpoch.toDouble()
+      ..animateWith(simulation);
+  }
 }

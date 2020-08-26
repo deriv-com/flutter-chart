@@ -550,18 +550,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onScaleAndPanEnd(ScaleEndDetails details) {
-    _triggerScrollMomentum(details.velocity);
-  }
-
-  void _triggerScrollMomentum(Velocity velocity) {
-    final Simulation simulation = ClampingScrollSimulation(
-      position: _xAxis.rightBoundEpoch.toDouble(),
-      velocity: -velocity.pixelsPerSecond.dx * _xAxis.msPerPx,
-      friction: 0.015 * _xAxis.msPerPx,
-    );
-    _rightEpochAnimationController
-      ..value = _xAxis.rightBoundEpoch.toDouble()
-      ..animateWith(simulation);
+    _xAxis.triggerScrollMomentum(details.velocity);
   }
 
   void _loadMoreHistory() {
