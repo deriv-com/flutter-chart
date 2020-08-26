@@ -8,11 +8,14 @@ class MarketSelectorButton extends StatelessWidget {
     Key key,
     @required this.asset,
     this.onTap,
+    this.textStyle = const TextStyle(fontSize: 14, color: Colors.white),
   }) : super(key: key);
 
   final VoidCallback onTap;
 
   final Asset asset;
+
+  final TextStyle textStyle;
 
   static const iconFadeDuration = Duration(milliseconds: 100);
 
@@ -38,13 +41,7 @@ class MarketSelectorButton extends StatelessWidget {
             fadeOutDuration: iconFadeDuration,
           ),
           SizedBox(width: 16),
-          Text(
-            asset.displayName,
-            style: TextStyle(
-              fontSize: 14, // TODO(Ramin): Use Chart's theme when its ready
-              color: Colors.white,
-            ),
-          ),
+          Text(asset.displayName, style: textStyle),
         ],
       ),
       onPressed: onTap,
