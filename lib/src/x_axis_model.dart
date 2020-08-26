@@ -83,10 +83,11 @@ class XAxisModel extends ChangeNotifier {
   int get maxRightBoundEpoch =>
       _nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
 
-  bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
+  /// Chart pan is currently being animated (without user input).
+  bool get animatingPan =>
+      _autoPanning || _rightEpochAnimationController?.isAnimating ?? false;
 
-  bool get isScrollingToNow =>
-      _rightEpochAnimationController?.isAnimating ?? false;
+  bool get _autoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -102,7 +103,7 @@ class XAxisModel extends ChangeNotifier {
   void updateNowEpoch(int newNowEpoch) {
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
-    if (isAutoPanning) {
+    if (_autoPanning) {
       rightBoundEpoch += elapsedMs;
     }
     notifyListeners();
@@ -168,7 +169,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is scaling the chart.
   void onScaleUpdate(ScaleUpdateDetails details) {
-    if (isAutoPanning) {
+    if (_autoPanning) {
       _scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);
