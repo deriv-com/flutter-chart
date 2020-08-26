@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class NoResultPage extends StatelessWidget {
   const NoResultPage({Key key, this.text = ''}) : super(key: key);
 
-  final text;
+  final String text;
 
   // TODO(ramin): use theme colors once its ready
   @override
