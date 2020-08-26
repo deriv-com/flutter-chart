@@ -234,7 +234,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onNewFrame(Duration elapsed) {
-    _xAxis.updateNowEpoch(DateTime.now().millisecondsSinceEpoch);
     if (_shouldLoadMoreHistory) _loadMoreHistory();
   }
 

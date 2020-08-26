@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import 'gestures/gesture_manager.dart';
@@ -21,8 +22,9 @@ class XAxis extends StatefulWidget {
   _XAxisState createState() => _XAxisState();
 }
 
-class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
+class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   XAxisModel model;
+  Ticker ticker;
   AnimationController _rightEpochAnimationController;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
@@ -39,6 +41,10 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,
     );
+
+    ticker = createTicker(
+      (_) => model.updateNowEpoch(DateTime.now().millisecondsSinceEpoch),
+    )..start();
 
     gestureManager
       ..registerCallback(model.onScaleAndPanStart)
@@ -57,6 +63,7 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    ticker?.dispose();
     _rightEpochAnimationController?.dispose();
 
     gestureManager
