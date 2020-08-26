@@ -187,7 +187,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double _getTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
       style: style,
-      text: widget.candles.first.close.toStringAsFixed(widget.pipSize),
+      text: text,
     );
     TextPainter textPainter = TextPainter(
       text: textSpan,
