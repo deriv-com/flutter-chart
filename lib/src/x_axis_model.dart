@@ -98,6 +98,7 @@ class XAxisModel extends ChangeNotifier {
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;
   double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
 
+  /// Updates right panning limit and autopan if enabled.
   void updateNowEpoch(int newNowEpoch) {
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
@@ -107,10 +108,12 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Updates left panning limit.
   void updateFirstCandleEpoch(int firstCandleEpoch) {
     _firstCandleEpoch = firstCandleEpoch;
   }
 
+  /// Resets scale and pan on granularity change.
   void updateGranularity(int newGranularity) {
     if (_granularity == newGranularity) return;
     _granularity = newGranularity;
@@ -118,11 +121,14 @@ class XAxisModel extends ChangeNotifier {
     rightBoundEpoch = maxRightBoundEpoch;
   }
 
+  /// Enables autopanning when current tick is visible.
   void enableAutoPan() {
     _autoPanEnabled = true;
     notifyListeners();
   }
 
+  /// Disables autopanning when current tick is visible.
+  /// E.g. crosshair disables autopan while it is visible.
   void disableAutoPan() {
     _autoPanEnabled = false;
     notifyListeners();
@@ -154,11 +160,13 @@ class XAxisModel extends ChangeNotifier {
         msPerPx: msPerPx,
       );
 
+  /// Called at the start of scale and pan gestures.
   void onScaleAndPanStart(ScaleStartDetails details) {
     _rightEpochAnimationController.stop();
     _prevMsPerPx = msPerPx;
   }
 
+  /// Called when user is scaling the chart.
   void onScaleUpdate(ScaleUpdateDetails details) {
     if (isAutoPanning) {
       _scaleWithNowFixed(details);
@@ -168,11 +176,13 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
     rightBoundEpoch -= msFromPx(details.delta.dx);
     notifyListeners();
   }
 
+  /// Called at the end of scale and pan gestures.
   void onScaleAndPanEnd(ScaleEndDetails details) {
     _triggerScrollMomentum(details.velocity);
   }
@@ -194,6 +204,7 @@ class XAxisModel extends ChangeNotifier {
     msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
   }
 
+  /// Animate scrolling to current tick.
   void scrollToNow() {
     const duration = Duration(milliseconds: 600);
     final target = maxRightBoundEpoch + duration.inMilliseconds;
