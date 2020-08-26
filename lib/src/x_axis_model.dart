@@ -88,6 +88,7 @@ class XAxisModel extends ChangeNotifier {
   bool get animatingPan =>
       _autoPanning || _rightEpochAnimationController?.isAnimating ?? false;
 
+  /// Current tick is visible, chart is being autopanned.
   bool get _autoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
   /// Has hit left or right panning limit.
