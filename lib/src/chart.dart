@@ -190,18 +190,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupGestures();
   }
 
-  void _calculateQuoteLabelAreaWidth() {
+  double _getTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
-      style: TextStyle(fontSize: 12),
+      style: style,
       text: widget.candles.first.close.toStringAsFixed(widget.pipSize),
     );
     TextPainter textPainter = TextPainter(
       text: textSpan,
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
-    );
-    textPainter.layout(minWidth: 20, maxWidth: 120);
-    quoteLabelsAreaWidth = textPainter.width + 10;
+    )..layout();
+    return textPainter.width;
   }
 
   @override
@@ -215,7 +214,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
 
     // TODO: recalculate only when price label length changed
-    _calculateQuoteLabelAreaWidth();
+    final label = widget.candles.first.close.toStringAsFixed(widget.pipSize);
+    quoteLabelsAreaWidth = _getTextWidth(label, TextStyle(fontSize: 12)) + 10;
   }
 
   @override
