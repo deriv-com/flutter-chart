@@ -36,7 +36,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
     model = XAxisModel(
-      nowEpoch: DateTime.now().millisecondsSinceEpoch,
       firstCandleEpoch: widget.firstCandleEpoch,
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,

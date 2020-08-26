@@ -6,13 +6,12 @@ import 'package:flutter/material.dart';
 // 2) closed contract
 class XAxisModel extends ChangeNotifier {
   XAxisModel({
-    @required int nowEpoch,
     @required int firstCandleEpoch,
     @required int granularity,
     @required AnimationController animationController,
-  })  : _nowEpoch = nowEpoch,
-        _firstCandleEpoch = firstCandleEpoch ?? nowEpoch,
+  })  : _nowEpoch = DateTime.now().millisecondsSinceEpoch,
         _rightEpochAnimationController = animationController {
+    _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
     _rightBoundEpoch = maxRightBoundEpoch;
     updateGranularity(granularity);
 
