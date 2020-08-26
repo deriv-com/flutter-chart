@@ -217,6 +217,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   @override
   void dispose() {
+    ticker?.dispose();
     _currentTickAnimationController?.dispose();
     _currentTickBlinkingController?.dispose();
     _loadingAnimationController?.dispose();
