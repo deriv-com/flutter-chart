@@ -43,26 +43,22 @@ class XAxisModel extends ChangeNotifier {
   /// Canvas width.
   double width;
 
-  /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
-  /// Scaling is controlled by this variable.
-  double _msPerPx = 1000;
-
-  /// Time difference between time grid lines.
-  Duration get gridInterval => timeGridInterval(_msPerPx);
-
-  bool _autoPanEnabled = true;
-  int _granularity;
-  int _firstCandleEpoch;
-  int _rightBoundEpoch;
-  int _nowEpoch;
-  double _prevMsPerPx;
   AnimationController _rightEpochAnimationController;
+  bool _autoPanEnabled = true;
+  double _msPerPx = 1000;
+  double _prevMsPerPx;
+  int _firstCandleEpoch;
+  int _granularity;
+  int _nowEpoch;
+  int _rightBoundEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
 
+  /// Epoch value of the leftmost chart's edge.
+  int get leftBoundEpoch => rightBoundEpoch - msFromPx(width);
+
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
-  /// Horizontal panning is controlled by this variable.
   int get rightBoundEpoch => _rightBoundEpoch;
 
   set rightBoundEpoch(int rightBoundEpoch) {
@@ -72,9 +68,6 @@ class XAxisModel extends ChangeNotifier {
     );
   }
 
-  /// Epoch value of the leftmost chart's edge.
-  int get leftBoundEpoch => rightBoundEpoch - msFromPx(width);
-
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
       _firstCandleEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
@@ -83,6 +76,11 @@ class XAxisModel extends ChangeNotifier {
   int get _maxRightBoundEpoch =>
       _nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
 
+  /// Has hit left or right panning limit.
+  bool get hasHitLimit =>
+      rightBoundEpoch == _maxRightBoundEpoch ||
+      rightBoundEpoch == _minRightBoundEpoch;
+
   /// Chart pan is currently being animated (without user input).
   bool get animatingPan =>
       _autoPanning || _rightEpochAnimationController?.isAnimating ?? false;
@@ -90,15 +88,18 @@ class XAxisModel extends ChangeNotifier {
   /// Current tick is visible, chart is being autopanned.
   bool get _autoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
-  /// Has hit left or right panning limit.
-  bool get hasHitLimit =>
-      rightBoundEpoch == _maxRightBoundEpoch ||
-      rightBoundEpoch == _minRightBoundEpoch;
-
   /// Bounds and default for [_msPerPx].
   double get _minScale => granularity / XAxisModel.maxIntervalWidth;
   double get _maxScale => granularity / XAxisModel.minIntervalWidth;
   double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
+
+  /// Time difference between time grid lines.
+  Duration get gridInterval => timeGridInterval(_msPerPx);
+
+  /// Updates left panning limit.
+  void updateFirstCandleEpoch(int firstCandleEpoch) {
+    _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
+  }
 
   /// Updates right panning limit and autopan if enabled.
   void updateNowEpoch(int newNowEpoch) {
@@ -108,11 +109,6 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch += elapsedMs;
     }
     notifyListeners();
-  }
-
-  /// Updates left panning limit.
-  void updateFirstCandleEpoch(int firstCandleEpoch) {
-    _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
   }
 
   /// Resets scale and pan on granularity change.
