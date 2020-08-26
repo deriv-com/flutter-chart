@@ -214,6 +214,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _onNewTick();
     }
 
+    // TODO: recalculate only when price label length changed
     _calculateQuoteLabelAreaWidth();
   }
 
