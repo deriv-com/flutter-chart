@@ -204,6 +204,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     quoteLabelsAreaWidth = _getTextWidth(label, TextStyle(fontSize: 12)) + 10;
   }
 
+  // TODO(Rustem): Extract this helper function
   double _getTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
       style: style,
