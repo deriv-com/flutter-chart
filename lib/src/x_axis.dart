@@ -41,9 +41,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       animationController: _rightEpochAnimationController,
     );
 
-    ticker = createTicker(
-      (_) => model.updateNowEpoch(DateTime.now().millisecondsSinceEpoch),
-    )..start();
+    ticker = createTicker(model.onNewFrame)..start();
 
     gestureManager
       ..registerCallback(model.onScaleAndPanStart)
