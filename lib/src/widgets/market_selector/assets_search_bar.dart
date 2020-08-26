@@ -1,4 +1,6 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A widget to handle search interaction and its TextFiled.
 class AssetsSearchBar extends StatefulWidget {
@@ -19,12 +21,21 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
 
   TextEditingController _textEditingController;
 
+  ChartTheme _theme;
+
   @override
   void initState() {
     super.initState();
 
     _searchFieldFocusNode = FocusNode();
     _textEditingController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _theme = Provider.of<ChartTheme>(context);
   }
 
   @override
@@ -58,7 +69,10 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
         child: Text(
           'Assets',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: _theme.textStyle(
+            textStyle: _theme.subheading,
+            color: _theme.base01Color,
+          ),
         ),
         onTap: () => _switchToSearchMode(),
       );
@@ -90,6 +104,10 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
         onChanged: (String text) => widget.onSearchTextChanged?.call(text),
         cursorColor: Colors.white70,
         textAlign: TextAlign.left,
+        style: _theme.textStyle(
+          textStyle: _theme.subheading,
+          color: _theme.base01Color,
+        ),
         decoration: new InputDecoration(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,

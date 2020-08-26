@@ -23,6 +23,18 @@ abstract class ChartDefaultTheme implements ChartTheme {
   TextStyle get caption2 => TextStyles.caption2;
 
   @override
+  TextStyle get subheading => TextStyles.subheading;
+
+  @override
+  TextStyle get body2 => TextStyles.body2;
+
+  @override
+  TextStyle get body1 => TextStyles.body1;
+
+  @override
+  TextStyle get title => TextStyles.title;
+
+  @override
   Color get brandCoralColor => BrandColors.coral;
 
   @override
