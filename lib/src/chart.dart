@@ -191,7 +191,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
     TextPainter textPainter = TextPainter(
       text: textSpan,
-      textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     )..layout();
     return textPainter.width;
