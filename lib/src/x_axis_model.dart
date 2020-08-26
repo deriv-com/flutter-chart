@@ -47,6 +47,7 @@ class XAxisModel extends ChangeNotifier {
   /// Scaling is controlled by this variable.
   double _msPerPx = 1000;
 
+  /// Time difference between time grid lines.
   Duration get gridInterval => timeGridInterval(_msPerPx);
 
   bool _autoPanEnabled = true;
