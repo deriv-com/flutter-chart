@@ -38,10 +38,26 @@ class XAxisModel extends ChangeNotifier {
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
 
+  /// Canvas width.
+  double width;
+
+  /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
+  /// Scaling is controlled by this variable.
+  double msPerPx = 1000;
+
+  bool _autoPanEnabled = true;
+  int _granularity;
+  int _firstCandleEpoch;
+  int _rightBoundEpoch;
+  int _nowEpoch;
+  double _prevMsPerPx;
+  AnimationController _rightEpochAnimationController;
+
+  /// Difference in milliseconds between two consecutive candles/points.
+  int get granularity => _granularity;
+
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   /// Horizontal panning is controlled by this variable.
-  int _rightBoundEpoch;
-
   int get rightBoundEpoch => _rightBoundEpoch;
 
   set rightBoundEpoch(int rightBoundEpoch) {
@@ -50,28 +66,6 @@ class XAxisModel extends ChangeNotifier {
       _maxRightBoundEpoch,
     );
   }
-
-  AnimationController _rightEpochAnimationController;
-
-  int _firstCandleEpoch;
-
-  int _nowEpoch;
-
-  double width;
-
-  /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
-  /// Scaling is controlled by this variable.
-  double msPerPx = 1000;
-
-  /// Previous value of [msPerPx]. Used for scaling computation.
-  double _prevMsPerPx;
-
-  int _granularity;
-
-  bool _autoPanEnabled = true;
-
-  /// Difference in milliseconds between two consecutive candles/points.
-  int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
   int get leftBoundEpoch => rightBoundEpoch - msFromPx(width);
