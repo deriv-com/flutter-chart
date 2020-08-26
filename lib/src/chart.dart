@@ -184,18 +184,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupGestures();
   }
 
-  double _getTextWidth(String text, TextStyle style) {
-    TextSpan textSpan = TextSpan(
-      style: style,
-      text: text,
-    );
-    TextPainter textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
-    return textPainter.width;
-  }
-
   @override
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
@@ -206,9 +194,25 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _onNewTick();
     }
 
-    // TODO: recalculate only when price label length has changed
+    // TODO(Rustem): recalculate only when price label length has changed
+    _recalculateQuoteLabelsAreaWidth();
+  }
+
+  void _recalculateQuoteLabelsAreaWidth() {
     final label = widget.candles.first.close.toStringAsFixed(widget.pipSize);
     quoteLabelsAreaWidth = _getTextWidth(label, TextStyle(fontSize: 12)) + 10;
+  }
+
+  double _getTextWidth(String text, TextStyle style) {
+    TextSpan textSpan = TextSpan(
+      style: style,
+      text: text,
+    );
+    TextPainter textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return textPainter.width;
   }
 
   @override
