@@ -1,8 +1,6 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:flutter/material.dart';
 
-import 'logic/time_grid.dart';
-
 // Keep in mind these 2 use cases:
 // 1) live chart
 // 2) closed contract
