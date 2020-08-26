@@ -1,6 +1,8 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:flutter/material.dart';
 
+import 'logic/time_grid.dart';
+
 // Keep in mind these 2 use cases:
 // 1) live chart
 // 2) closed contract
@@ -45,7 +47,7 @@ class XAxisModel extends ChangeNotifier {
   /// Scaling is controlled by this variable.
   double _msPerPx = 1000;
 
-  double get msPerPx => _msPerPx;
+  Duration get gridInterval => timeGridInterval(_msPerPx);
 
   bool _autoPanEnabled = true;
   int _granularity;

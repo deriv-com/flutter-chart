@@ -456,7 +456,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   List<DateTime> _getGridLineTimestamps() {
     return gridTimestamps(
-      timeGridInterval: timeGridInterval(_xAxis.msPerPx),
+      timeGridInterval: _xAxis.gridInterval,
       leftBoundEpoch: _xAxis.leftBoundEpoch,
       rightBoundEpoch: _xAxis.rightBoundEpoch,
     );
