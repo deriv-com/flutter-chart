@@ -213,7 +213,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _onNewTick();
     }
 
-    // TODO: recalculate only when price label length changed
+    // TODO: recalculate only when price label length has changed
     final label = widget.candles.first.close.toStringAsFixed(widget.pipSize);
     quoteLabelsAreaWidth = _getTextWidth(label, TextStyle(fontSize: 12)) + 10;
   }
