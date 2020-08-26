@@ -110,7 +110,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Updates left panning limit.
   void updateFirstCandleEpoch(int firstCandleEpoch) {
-    _firstCandleEpoch = firstCandleEpoch;
+    _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
   }
 
   /// Resets scale and pan on granularity change.
