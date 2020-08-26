@@ -10,14 +10,12 @@ class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
     @required this.crosshairCandle,
     @required this.style,
-    @required this.pipSize,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
   });
 
   final Candle crosshairCandle;
   final ChartPaintingStyle style;
-  final int pipSize;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
 
