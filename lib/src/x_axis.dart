@@ -41,9 +41,10 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
     );
 
     gestureManager
-      ..registerCallback(model.onScaleStart)
+      ..registerCallback(model.onScaleAndPanStart)
       ..registerCallback(model.onScaleUpdate)
-      ..registerCallback(model.onPanUpdate);
+      ..registerCallback(model.onPanUpdate)
+      ..registerCallback(model.onScaleAndPanEnd);
   }
 
   @override
@@ -59,9 +60,10 @@ class _XAxisState extends State<XAxis> with SingleTickerProviderStateMixin {
     _rightEpochAnimationController?.dispose();
 
     gestureManager
-      ..removeCallback(model.onScaleStart)
+      ..removeCallback(model.onScaleAndPanStart)
       ..removeCallback(model.onScaleUpdate)
-      ..removeCallback(model.onPanUpdate);
+      ..removeCallback(model.onPanUpdate)
+      ..removeCallback(model.onScaleAndPanEnd);
 
     super.dispose();
   }

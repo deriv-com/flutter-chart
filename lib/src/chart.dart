@@ -118,8 +118,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _bottomBoundQuoteAnimationController;
   // TODO(Rustem): move to YAxisModel
   AnimationController _crosshairZoomOutAnimationController;
-  // TODO(Rustem): move to XAxisModel
-  AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
   // TODO(Rustem): move to YAxisModel
@@ -129,14 +127,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool _isCrosshairMode = false;
 
   // TODO(Rustem): move to XAxisModel
-  bool get _isScrollingToNow =>
-      _rightEpochAnimationController?.isAnimating ?? false;
-
-  // TODO(Rustem): move to XAxisModel
   bool get _isScrollToNowAvailable =>
       widget.candles.isNotEmpty &&
       !_xAxis.isAutoPanning &&
-      !_isScrollingToNow &&
+      !_xAxis.isScrollingToNow &&
       !_isCrosshairMode;
 
   bool get _shouldLoadMoreHistory {
@@ -220,7 +214,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   @override
   void dispose() {
-    _rightEpochAnimationController?.dispose();
     _currentTickAnimationController?.dispose();
     _currentTickBlinkingController?.dispose();
     _loadingAnimationController?.dispose();
@@ -246,17 +239,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupBlinkingAnimation();
     _setupBoundsAnimation();
     _setupCrosshairZoomOutAnimation();
-    _setupRightEpochAnimation();
-  }
-
-  void _setupRightEpochAnimation() {
-    _rightEpochAnimationController = AnimationController.unbounded(
-      vsync: this,
-      value: _xAxis.rightBoundEpoch.toDouble(),
-    )..addListener(() {
-        _xAxis.rightBoundEpoch = _rightEpochAnimationController.value.toInt();
-        if (_xAxis.hasHitLimit) _rightEpochAnimationController.stop();
-      });
   }
 
   void _setupCurrentTickAnimation() {
@@ -312,17 +294,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager
-      ..registerCallback(_onScaleAndPanStart)
-      ..registerCallback(_onPanUpdate)
-      ..registerCallback(_onScaleAndPanEnd);
+    _gestureManager.registerCallback(_onPanUpdate);
   }
 
   void _clearGestures() {
-    _gestureManager
-      ..removeCallback(_onScaleAndPanStart)
-      ..removeCallback(_onPanUpdate)
-      ..removeCallback(_onScaleAndPanEnd);
+    _gestureManager.removeCallback(_onPanUpdate);
   }
 
   void _updateVisibleCandles() {
@@ -521,10 +497,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  void _onScaleAndPanStart(ScaleStartDetails details) {
-    _rightEpochAnimationController.stop();
-  }
-
   void _onPanUpdate(DragUpdateDetails details) {
     final bool onQuoteLabelsArea =
         details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
@@ -547,10 +519,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       icon: Icon(Icons.arrow_forward, color: Colors.white),
       onPressed: _xAxis.scrollToNow,
     );
-  }
-
-  void _onScaleAndPanEnd(ScaleEndDetails details) {
-    _xAxis.triggerScrollMomentum(details.velocity);
   }
 
   void _loadMoreHistory() {

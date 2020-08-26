@@ -85,6 +85,9 @@ class XAxisModel extends ChangeNotifier {
 
   bool get isAutoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
+  bool get isScrollingToNow =>
+      _rightEpochAnimationController?.isAnimating ?? false;
+
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
       rightBoundEpoch == maxRightBoundEpoch ||
@@ -151,7 +154,8 @@ class XAxisModel extends ChangeNotifier {
         msPerPx: msPerPx,
       );
 
-  void onScaleStart(ScaleStartDetails details) {
+  void onScaleAndPanStart(ScaleStartDetails details) {
+    _rightEpochAnimationController.stop();
     _prevMsPerPx = msPerPx;
   }
 
@@ -162,6 +166,15 @@ class XAxisModel extends ChangeNotifier {
       _scaleWithFocalPointFixed(details);
     }
     notifyListeners();
+  }
+
+  void onPanUpdate(DragUpdateDetails details) {
+    rightBoundEpoch -= msFromPx(details.delta.dx);
+    notifyListeners();
+  }
+
+  void onScaleAndPanEnd(ScaleEndDetails details) {
+    triggerScrollMomentum(details.velocity);
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
@@ -179,11 +192,6 @@ class XAxisModel extends ChangeNotifier {
 
   void _scale(double scale) {
     msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
-  }
-
-  void onPanUpdate(DragUpdateDetails details) {
-    rightBoundEpoch -= msFromPx(details.delta.dx);
-    notifyListeners();
   }
 
   void scrollToNow() {
