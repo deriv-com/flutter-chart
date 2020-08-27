@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../paint/paint_grid.dart';
+import '../paint/paint_y_grid.dart';
 
 class YGridPainter extends CustomPainter {
   YGridPainter({
