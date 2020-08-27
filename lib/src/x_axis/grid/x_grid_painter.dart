@@ -1,7 +1,7 @@
-import 'package:deriv_chart/src/x_axis/grid/time_grid.dart';
 import 'package:flutter/material.dart';
 
 import 'paint_x_grid.dart';
+import 'time_label.dart';
 
 class XGridPainter extends CustomPainter {
   XGridPainter({
