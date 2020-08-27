@@ -364,8 +364,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
-      context.watch<XAxisModel>().width = constraints.maxWidth;
+      canvasSize = Size(
+        context.watch<XAxisModel>().width,
+        constraints.maxHeight,
+      );
 
       _updateVisibleCandles();
       _updateQuoteBoundTargets();
