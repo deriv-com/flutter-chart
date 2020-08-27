@@ -7,17 +7,27 @@ import 'grid/calc_time_grid.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 
+/// X-axis widget.
+///
+/// Draws x-axis grid and manages [XAxisModel].
+/// Exposes the model to all descendants.
 class XAxis extends StatefulWidget {
+  /// Creates x-axis the size of child.
   XAxis({
-    Key key,
     @required this.child,
     @required this.firstCandleEpoch,
     @required this.granularity,
+    Key key,
   })  : assert(child != null),
         super(key: key);
 
+  /// The widget below this widget in the tree.
   final Widget child;
+
+  /// Leftmost data entry. Defines panning bounds.
   final int firstCandleEpoch;
+
+  /// Millisecond difference between two consecutive candles.
   final int granularity;
 
   @override
