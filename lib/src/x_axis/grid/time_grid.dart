@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:meta/meta.dart';
 
-import 'conversion.dart';
+import '../../logic/conversion.dart';
 
 const _day = Duration(days: 1);
 const _week = Duration(days: DateTime.daysPerWeek);

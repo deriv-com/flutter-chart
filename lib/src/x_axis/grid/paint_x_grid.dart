@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../paint/paint_text.dart';
+import '../../paint/paint_text.dart';
 
 void paintXGrid(
   Canvas canvas,
