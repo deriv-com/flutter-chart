@@ -50,14 +50,22 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ChartTheme chartTheme =
+        theme ?? Theme.of(context).brightness == Brightness.dark
+            ? ChartDefaultDarkTheme()
+            : ChartDefaultLightTheme();
+
     return GestureManager(
-      child: _ChartImplementation(
-        candles: candles,
-        pipSize: pipSize,
-        onCrosshairAppeared: onCrosshairAppeared,
-        onLoadHistory: onLoadHistory,
-        style: style,
-        theme: theme,
+      child: Ink(
+        color: chartTheme.base08Color,
+        child: _ChartImplementation(
+          candles: candles,
+          pipSize: pipSize,
+          onCrosshairAppeared: onCrosshairAppeared,
+          onLoadHistory: onLoadHistory,
+          style: style,
+          theme: chartTheme,
+        ),
       ),
     );
   }
@@ -88,8 +96,6 @@ class _ChartImplementation extends StatefulWidget {
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
-
-  ChartTheme _chartTheme;
 
   ChartPaintingStyle _chartPaintingStyle;
 
@@ -142,12 +148,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _loadingAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
+
   // TODO(Rustem): move to XAxisModel
   AnimationController _crosshairZoomOutAnimationController;
+
   // TODO(Rustem): move to XAxisModel
   AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
+
   // TODO(Rustem): move to XAxisModel
   Animation _crosshairZoomOutAnimation;
 
@@ -236,11 +245,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _chartTheme =
-        widget.theme ?? Theme.of(context).brightness == Brightness.dark
-            ? ChartDefaultDarkTheme()
-            : ChartDefaultLightTheme();
-
     _setChartPaintingStyle();
   }
 
@@ -273,8 +277,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _setChartPaintingStyle() =>
       _chartPaintingStyle = widget.style == ChartStyle.candles
-          ? _chartTheme.candleStyle
-          : _chartTheme.lineStyle;
+          ? widget.theme.candleStyle
+          : widget.theme.lineStyle;
 
   @override
   void dispose() {
@@ -502,81 +506,78 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _updateVisibleCandles();
       _updateQuoteBoundTargets();
 
-      return Ink(
-        color: _chartTheme.base08Color,
-        child: Stack(
-          children: <Widget>[
-            CustomPaint(
-              size: canvasSize,
-              painter: GridPainter(
-                gridTimestamps: _getGridLineTimestamps(),
-                gridLineQuotes: _getGridLineQuotes(),
-                pipSize: widget.pipSize,
-                quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-                style: _chartTheme.gridStyle,
-              ),
+      return Stack(
+        children: <Widget>[
+          CustomPaint(
+            size: canvasSize,
+            painter: GridPainter(
+              gridTimestamps: _getGridLineTimestamps(),
+              gridLineQuotes: _getGridLineQuotes(),
+              pipSize: widget.pipSize,
+              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: widget.theme.gridStyle,
             ),
-            CustomPaint(
-              size: canvasSize,
-              painter: LoadingPainter(
-                loadingAnimationProgress: _loadingAnimationController.value,
-                loadingRightBoundX: widget.candles.isEmpty
-                    ? canvasSize.width
-                    : _epochToCanvasX(widget.candles.first.epoch),
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: LoadingPainter(
+              loadingAnimationProgress: _loadingAnimationController.value,
+              loadingRightBoundX: widget.candles.isEmpty
+                  ? canvasSize.width
+                  : _epochToCanvasX(widget.candles.first.epoch),
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
-            CustomPaint(
-              size: canvasSize,
-              painter: ChartPainter(
-                candles: _getChartCandles(),
-                style: _chartPaintingStyle,
-                pipSize: widget.pipSize,
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
-            ),
-            CustomPaint(
-              size: canvasSize,
-              painter: CurrentTickPainter(
-                animatedCurrentTick: _getAnimatedCurrentTick(),
-                blinkAnimationProgress: _currentTickBlinkAnimation.value,
-                pipSize: widget.pipSize,
-                quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-                epochToCanvasX: _epochToCanvasX,
-                quoteToCanvasY: _quoteToCanvasY,
-                style: _chartTheme.currentTickStyle,
-              ),
-            ),
-            CrosshairArea(
-              visibleCandles: visibleCandles,
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: ChartPainter(
+              candles: _getChartCandles(),
               style: _chartPaintingStyle,
               pipSize: widget.pipSize,
               epochToCanvasX: _epochToCanvasX,
-              canvasXToEpoch: _canvasXToEpoch,
               quoteToCanvasY: _quoteToCanvasY,
-              // TODO(Rustem): remove callbacks when axis models are provided
-              onCrosshairAppeared: () {
-                _isCrosshairMode = true;
-                widget.onCrosshairAppeared?.call();
-                _crosshairZoomOutAnimationController.forward();
-              },
-              onCrosshairDisappeared: () {
-                _isCrosshairMode = false;
-                _crosshairZoomOutAnimationController.reverse();
-              },
             ),
-            if (_isScrollToNowAvailable)
-              Positioned(
-                bottom: 30 + timeLabelsAreaHeight,
-                right: 30 + quoteLabelsAreaWidth,
-                child: _buildScrollToNowButton(),
-              ),
-          ],
-        ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: CurrentTickPainter(
+              animatedCurrentTick: _getAnimatedCurrentTick(),
+              blinkAnimationProgress: _currentTickBlinkAnimation.value,
+              pipSize: widget.pipSize,
+              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+              epochToCanvasX: _epochToCanvasX,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: widget.theme.currentTickStyle,
+            ),
+          ),
+          CrosshairArea(
+            visibleCandles: visibleCandles,
+            style: _chartPaintingStyle,
+            pipSize: widget.pipSize,
+            epochToCanvasX: _epochToCanvasX,
+            canvasXToEpoch: _canvasXToEpoch,
+            quoteToCanvasY: _quoteToCanvasY,
+            // TODO(Rustem): remove callbacks when axis models are provided
+            onCrosshairAppeared: () {
+              _isCrosshairMode = true;
+              widget.onCrosshairAppeared?.call();
+              _crosshairZoomOutAnimationController.forward();
+            },
+            onCrosshairDisappeared: () {
+              _isCrosshairMode = false;
+              _crosshairZoomOutAnimationController.reverse();
+            },
+          ),
+          if (_isScrollToNowAvailable)
+            Positioned(
+              bottom: 30 + timeLabelsAreaHeight,
+              right: 30 + quoteLabelsAreaWidth,
+              child: _buildScrollToNowButton(),
+            ),
+        ],
       );
     });
   }
