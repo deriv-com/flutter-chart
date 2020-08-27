@@ -35,8 +35,8 @@ class XAxis extends StatefulWidget {
 }
 
 class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
-  XAxisModel model;
-  Ticker ticker;
+  XAxisModel _model;
+  Ticker _ticker;
   AnimationController _rightEpochAnimationController;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
@@ -47,39 +47,39 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
-    model = XAxisModel(
+    _model = XAxisModel(
       firstCandleEpoch: widget.firstCandleEpoch,
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,
     );
 
-    ticker = createTicker(model.onNewFrame)..start();
+    _ticker = createTicker(_model.onNewFrame)..start();
 
     gestureManager
-      ..registerCallback(model.onScaleAndPanStart)
-      ..registerCallback(model.onScaleUpdate)
-      ..registerCallback(model.onPanUpdate)
-      ..registerCallback(model.onScaleAndPanEnd);
+      ..registerCallback(_model.onScaleAndPanStart)
+      ..registerCallback(_model.onScaleUpdate)
+      ..registerCallback(_model.onPanUpdate)
+      ..registerCallback(_model.onScaleAndPanEnd);
   }
 
   @override
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
-    model
+    _model
       ..updateFirstCandleEpoch(widget.firstCandleEpoch)
       ..updateGranularity(widget.granularity);
   }
 
   @override
   void dispose() {
-    ticker?.dispose();
+    _ticker?.dispose();
     _rightEpochAnimationController?.dispose();
 
     gestureManager
-      ..removeCallback(model.onScaleAndPanStart)
-      ..removeCallback(model.onScaleUpdate)
-      ..removeCallback(model.onPanUpdate)
-      ..removeCallback(model.onScaleAndPanEnd);
+      ..removeCallback(_model.onScaleAndPanStart)
+      ..removeCallback(_model.onScaleUpdate)
+      ..removeCallback(_model.onPanUpdate)
+      ..removeCallback(_model.onScaleAndPanEnd);
 
     super.dispose();
   }
@@ -87,7 +87,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<XAxisModel>.value(
-      value: model,
+      value: _model,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           context.watch<XAxisModel>().width = constraints.maxWidth;
@@ -95,11 +95,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
           return CustomPaint(
             painter: XGridPainter(
               gridTimestamps: gridTimestamps(
-                timeGridInterval: timeGridInterval(model.pxFromMs),
-                leftBoundEpoch: model.leftBoundEpoch,
-                rightBoundEpoch: model.rightBoundEpoch,
+                timeGridInterval: timeGridInterval(_model.pxFromMs),
+                leftBoundEpoch: _model.leftBoundEpoch,
+                rightBoundEpoch: _model.rightBoundEpoch,
               ),
-              epochToCanvasX: model.xFromEpoch,
+              epochToCanvasX: _model.xFromEpoch,
             ),
             child: widget.child,
           );
