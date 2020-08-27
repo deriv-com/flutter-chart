@@ -85,7 +85,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
           return CustomPaint(
             painter: XGridPainter(
               gridTimestamps: gridTimestamps(
-                timeGridInterval: timeGridInterval(model.msPerPx),
+                timeGridInterval: timeGridInterval(model.pxFromMs),
                 leftBoundEpoch: model.leftBoundEpoch,
                 rightBoundEpoch: model.rightBoundEpoch,
               ),

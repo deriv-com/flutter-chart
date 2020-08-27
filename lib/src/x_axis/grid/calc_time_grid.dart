@@ -1,7 +1,5 @@
 import 'package:meta/meta.dart';
 
-import '../../logic/conversion.dart';
-
 const _day = Duration(days: 1);
 const _week = Duration(days: DateTime.daysPerWeek);
 const month = Duration(days: 30);
@@ -58,8 +56,12 @@ DateTime _addMonth(DateTime time) {
   return DateTime.utc(time.year, time.month + 1);
 }
 
+/// Px width of duration in ms on time axis with current scale.
+/// Conversion callback dependency of [timeGridInterval].
+typedef PxFromMs = double Function(int ms);
+
 Duration timeGridInterval(
-  double msPerPx, {
+  PxFromMs pxFromMs, {
   double minDistanceBetweenLines = 100,
   List<Duration> intervals = const [
     Duration(seconds: 5),
@@ -82,10 +84,7 @@ Duration timeGridInterval(
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(Duration interval) {
-    final distanceBetweenLines = msToPx(
-      interval.inMilliseconds,
-      msPerPx: msPerPx,
-    );
+    final distanceBetweenLines = pxFromMs(interval.inMilliseconds);
     return distanceBetweenLines >= minDistanceBetweenLines;
   }
 
