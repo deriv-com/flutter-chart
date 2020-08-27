@@ -20,7 +20,9 @@ import 'painters/y_grid_painter.dart';
 import 'x_axis/x_axis.dart';
 import 'x_axis/x_axis_model.dart';
 
+/// Interactive chart widget.
 class Chart extends StatelessWidget {
+  /// Creates chart that expands to available space.
   const Chart({
     Key key,
     @required this.candles,
@@ -30,8 +32,18 @@ class Chart extends StatelessWidget {
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
+  /// Sorted list of all candles (including those outside bounds).
+  /// Use [Candle.tick] constructor to represent ticks.
   final List<Candle> candles;
+  // Super class for ticks and candles wasn't used to avoid complicating things.
+  // If you are going to refactor it, consider these features:
+  // - switching between chart styles
+  // - disabling candle style for ticks
+
+  /// Number of digits in price after decimal point.
   final int pipSize;
+
+  /// Chart type used to paint [candles].
   final ChartStyle style;
 
   /// Called when crosshair details appear after long press.
