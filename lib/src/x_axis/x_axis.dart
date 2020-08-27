@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import 'gestures/gesture_manager.dart';
-import 'logic/time_grid.dart';
-import 'painters/grid_painter.dart';
+import '../gestures/gesture_manager.dart';
+import '../logic/time_grid.dart';
+import '../painters/grid_painter.dart';
 import 'x_axis_model.dart';
 
 class XAxis extends StatefulWidget {

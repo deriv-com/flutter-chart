@@ -10,7 +10,6 @@ import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
-import 'logic/time_grid.dart';
 import 'models/candle.dart';
 import 'models/chart_style.dart';
 import 'models/tick.dart';
@@ -18,8 +17,8 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 import 'painters/loading_painter.dart';
-import 'x_axis.dart';
-import 'x_axis_model.dart';
+import 'x_axis/x_axis.dart';
+import 'x_axis/x_axis_model.dart';
 
 class Chart extends StatelessWidget {
   const Chart({
