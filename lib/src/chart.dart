@@ -375,12 +375,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
         children: <Widget>[
           CustomPaint(
             size: canvasSize,
-            painter: GridPainter(
-              gridTimestamps: _getGridLineTimestamps(),
+            painter: YGridPainter(
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
@@ -451,14 +449,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       canvasHeight: canvasSize.height,
       topPadding: _topPadding,
       bottomPadding: _bottomPadding,
-    );
-  }
-
-  List<DateTime> _getGridLineTimestamps() {
-    return gridTimestamps(
-      timeGridInterval: timeGridInterval(_xAxis.msPerPx),
-      leftBoundEpoch: _xAxis.leftBoundEpoch,
-      rightBoundEpoch: _xAxis.rightBoundEpoch,
     );
   }
 

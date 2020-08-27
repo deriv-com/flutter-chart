@@ -3,6 +3,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import 'gestures/gesture_manager.dart';
+import 'logic/time_grid.dart';
+import 'painters/grid_painter.dart';
 import 'x_axis_model.dart';
 
 class XAxis extends StatefulWidget {
@@ -76,7 +78,23 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<XAxisModel>.value(
       value: model,
-      child: widget.child,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          context.watch<XAxisModel>().width = constraints.maxWidth;
+
+          return CustomPaint(
+            painter: XGridPainter(
+              gridTimestamps: gridTimestamps(
+                timeGridInterval: timeGridInterval(model.msPerPx),
+                leftBoundEpoch: model.leftBoundEpoch,
+                rightBoundEpoch: model.rightBoundEpoch,
+              ),
+              epochToCanvasX: model.xFromEpoch,
+            ),
+            child: widget.child,
+          );
+        },
+      ),
     );
   }
 }

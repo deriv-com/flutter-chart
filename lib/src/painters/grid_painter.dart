@@ -3,26 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../paint/paint_grid.dart';
 
-class GridPainter extends CustomPainter {
-  GridPainter({
+class XGridPainter extends CustomPainter {
+  XGridPainter({
     @required this.gridTimestamps,
-    @required this.gridLineQuotes,
-    @required this.quoteLabelsAreaWidth,
-    @required this.pipSize,
     @required this.epochToCanvasX,
-    @required this.quoteToCanvasY,
   });
 
-  final int pipSize;
-
   final List<DateTime> gridTimestamps;
-  final List<double> gridLineQuotes;
-
-  /// Width of the area where quote labels and current tick arrow are painted.
-  final double quoteLabelsAreaWidth;
-
   final double Function(int) epochToCanvasX;
-  final double Function(double) quoteToCanvasY;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -34,7 +22,33 @@ class GridPainter extends CustomPainter {
           .map((time) => epochToCanvasX(time.millisecondsSinceEpoch))
           .toList(),
     );
+  }
 
+  @override
+  bool shouldRepaint(XGridPainter oldDelegate) => true;
+
+  @override
+  bool shouldRebuildSemantics(XGridPainter oldDelegate) => false;
+}
+
+class YGridPainter extends CustomPainter {
+  YGridPainter({
+    @required this.gridLineQuotes,
+    @required this.quoteLabelsAreaWidth,
+    @required this.pipSize,
+    @required this.quoteToCanvasY,
+  });
+
+  final int pipSize;
+  final List<double> gridLineQuotes;
+
+  /// Width of the area where quote labels and current tick arrow are painted.
+  final double quoteLabelsAreaWidth;
+
+  final double Function(double) quoteToCanvasY;
+
+  @override
+  void paint(Canvas canvas, Size size) {
     paintYGrid(
       canvas,
       size,
@@ -47,8 +61,8 @@ class GridPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(GridPainter oldDelegate) => true;
+  bool shouldRepaint(YGridPainter oldDelegate) => true;
 
   @override
-  bool shouldRebuildSemantics(GridPainter oldDelegate) => false;
+  bool shouldRebuildSemantics(YGridPainter oldDelegate) => false;
 }
