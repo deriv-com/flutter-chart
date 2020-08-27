@@ -99,6 +99,7 @@ class XAxisModel extends ChangeNotifier {
     _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
   }
 
+  /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
   void onNewFrame(Duration _) {
     final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
