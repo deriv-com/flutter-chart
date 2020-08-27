@@ -1,9 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/src/painters/loading_painter.dart';
-import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
-import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +19,10 @@ import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 import 'painters/loading_painter.dart';
 
+import 'theme/chart_default_dark_theme.dart';
+import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
 import 'theme/painting_styles/chart_paiting_style.dart';
-
 
 class Chart extends StatelessWidget {
   const Chart({

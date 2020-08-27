@@ -47,7 +47,7 @@ class CurrentTickPainter extends CustomPainter {
       quoteLabel: animatedCurrentTick.quote.toStringAsFixed(pipSize),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
       currentTickX: epochToCanvasX(animatedCurrentTick.epoch),
-      style: style
+      style: style,
     );
   }
 

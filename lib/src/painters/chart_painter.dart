@@ -37,7 +37,7 @@ class ChartPainter extends CustomPainter {
 
     if (style is CandleStyle) {
       _paintCandles(style);
-    } else if (style is LineStyle){
+    } else if (style is LineStyle) {
       _paintLine(style);
     }
   }
