@@ -13,7 +13,7 @@ import 'x_axis_model.dart';
 /// Exposes the model to all descendants.
 class XAxis extends StatefulWidget {
   /// Creates x-axis the size of child.
-  XAxis({
+  const XAxis({
     @required this.child,
     @required this.firstCandleEpoch,
     @required this.granularity,
