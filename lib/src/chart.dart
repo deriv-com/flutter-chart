@@ -125,7 +125,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
-  // TODO(Rustem): move to XAxisModel
   bool get _isScrollToNowAvailable =>
       widget.candles.isNotEmpty && !_xAxis.animatingPan && !_isCrosshairMode;
 
