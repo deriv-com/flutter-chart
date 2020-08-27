@@ -24,12 +24,12 @@ import 'x_axis/x_axis_model.dart';
 class Chart extends StatelessWidget {
   /// Creates chart that expands to available space.
   const Chart({
-    Key key,
     @required this.candles,
     @required this.pipSize,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
+    Key key,
   }) : super(key: key);
 
   /// Sorted list of all candles (including those outside bounds).
