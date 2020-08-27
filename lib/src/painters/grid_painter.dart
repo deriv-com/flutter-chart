@@ -26,15 +26,20 @@ class GridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    paintGrid(
+    paintXGrid(
       canvas,
       size,
       timeLabels: gridTimestamps.map((time) => timeLabel(time)).toList(),
-      quoteLabels: gridLineQuotes
-          .map((quote) => quote.toStringAsFixed(pipSize))
-          .toList(),
       xCoords: gridTimestamps
           .map((time) => epochToCanvasX(time.millisecondsSinceEpoch))
+          .toList(),
+    );
+
+    paintYGrid(
+      canvas,
+      size,
+      quoteLabels: gridLineQuotes
+          .map((quote) => quote.toStringAsFixed(pipSize))
           .toList(),
       yCoords: gridLineQuotes.map((quote) => quoteToCanvasY(quote)).toList(),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,

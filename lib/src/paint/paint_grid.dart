@@ -2,33 +2,39 @@ import 'package:flutter/material.dart';
 
 import '../paint/paint_text.dart';
 
-void paintGrid(
+void paintXGrid(
   Canvas canvas,
   Size size, {
   @required List<String> timeLabels,
-  @required List<String> quoteLabels,
   @required List<double> xCoords,
+}) {
+  assert(timeLabels.length == xCoords.length);
+
+  _paintTimeGridLines(canvas, size, xCoords);
+  _paintTimeLabels(
+    canvas,
+    size,
+    xCoords: xCoords,
+    timeLabels: timeLabels,
+  );
+}
+
+void paintYGrid(
+  Canvas canvas,
+  Size size, {
+  @required List<String> quoteLabels,
   @required List<double> yCoords,
   @required double quoteLabelsAreaWidth,
 }) {
-  assert(timeLabels.length == xCoords.length);
   assert(quoteLabels.length == yCoords.length);
 
-  _paintTimeGridLines(canvas, size, xCoords);
   _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth);
-
   _paintQuoteLabels(
     canvas,
     size,
     yCoords: yCoords,
     quoteLabels: quoteLabels,
     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-  );
-  _paintTimeLabels(
-    canvas,
-    size,
-    xCoords: xCoords,
-    timeLabels: timeLabels,
   );
 }
 
