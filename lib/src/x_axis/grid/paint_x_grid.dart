@@ -24,6 +24,7 @@ void _paintTimeGridLines(Canvas canvas, Size size, List<double> xCoords) {
     canvas.drawLine(
       Offset(x, 0),
       Offset(x, size.height - 20),
+      // TODO(Rustem): get color from theme
       Paint()..color = Colors.white12,
     );
   });
@@ -41,6 +42,7 @@ void _paintTimeLabels(
       text: timeLabel,
       centerX: xCoords[index],
       centerY: size.height - 10,
+      // TODO(Rustem): get style from theme
       style: TextStyle(
         color: Colors.white30,
         fontSize: 12,
