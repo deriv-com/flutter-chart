@@ -34,11 +34,12 @@ class Chart extends StatelessWidget {
 
   /// Sorted list of all candles (including those outside bounds).
   /// Use [Candle.tick] constructor to represent ticks.
+  ///
+  /// Super class for ticks and candles wasn't used to avoid complicating things.
+  /// If you are going to refactor it, consider these features:
+  /// - switching between chart styles
+  /// - disabling candle style for ticks
   final List<Candle> candles;
-  // Super class for ticks and candles wasn't used to avoid complicating things.
-  // If you are going to refactor it, consider these features:
-  // - switching between chart styles
-  // - disabling candle style for ticks
 
   /// Number of digits in price after decimal point.
   final int pipSize;
