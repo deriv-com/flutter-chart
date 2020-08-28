@@ -133,9 +133,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Convert px to ms using current scale.
-  int msFromPx(double px) {
-    return pxToMs(px, msPerPx: _msPerPx);
-  }
+  int msFromPx(double px)  => return pxToMs(px, msPerPx: _msPerPx);
 
   /// Convert ms to px using current scale.
   double pxFromMs(int ms) {
