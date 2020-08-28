@@ -44,7 +44,7 @@ class Chart extends StatelessWidget {
   /// Number of digits in price after decimal point.
   final int pipSize;
 
-  /// Chart type used to paint [candles].
+  /// The chart type that is used to paint [candles].
   final ChartStyle style;
 
   /// Called when crosshair details appear after long press.
