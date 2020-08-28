@@ -133,12 +133,10 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Convert px to ms using current scale.
-  int msFromPx(double px)  => return pxToMs(px, msPerPx: _msPerPx);
+  int msFromPx(double px) => pxToMs(px, msPerPx: _msPerPx);
 
   /// Convert ms to px using current scale.
-  double pxFromMs(int ms) {
-    return msToPx(ms, msPerPx: _msPerPx);
-  }
+  double pxFromMs(int ms) => msToPx(ms, msPerPx: _msPerPx);
 
   /// Get x position of epoch.
   double xFromEpoch(int epoch) => epochToCanvasX(
