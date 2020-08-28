@@ -12,7 +12,7 @@ class XAxisModel extends ChangeNotifier {
   }) {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
-    _granularity = granularity;
+    _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     rightBoundEpoch = _maxRightBoundEpoch;
 
@@ -90,9 +90,9 @@ class XAxisModel extends ChangeNotifier {
   double get msPerPx => _msPerPx;
 
   /// Bounds and default for [_msPerPx].
-  double get _minScale => granularity / XAxisModel.maxIntervalWidth;
-  double get _maxScale => granularity / XAxisModel.minIntervalWidth;
-  double get _defaultScale => granularity / XAxisModel.defaultIntervalWidth;
+  double get _minScale => _granularity / XAxisModel.maxIntervalWidth;
+  double get _maxScale => _granularity / XAxisModel.minIntervalWidth;
+  double get _defaultScale => _granularity / XAxisModel.defaultIntervalWidth;
 
   /// Updates left panning limit.
   void updateFirstCandleEpoch(int firstCandleEpoch) {
@@ -113,7 +113,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Resets scale and pan on granularity change.
   void updateGranularity(int newGranularity) {
-    if (_granularity == newGranularity) return;
+    if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
     _msPerPx = _defaultScale;
     rightBoundEpoch = _maxRightBoundEpoch;

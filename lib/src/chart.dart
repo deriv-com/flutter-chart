@@ -61,7 +61,7 @@ class Chart extends StatelessWidget {
         // TODO(Rustem): App should pass granularity to chart,
         // the calculation is error-prone when gaps are present
         granularity:
-            candles.length >= 2 ? candles[1].epoch - candles[0].epoch : -1,
+            candles.length >= 2 ? candles[1].epoch - candles[0].epoch : null,
         child: _ChartImplementation(
           candles: candles,
           pipSize: pipSize,
