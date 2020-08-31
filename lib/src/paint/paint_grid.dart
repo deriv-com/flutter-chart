@@ -71,7 +71,7 @@ void _paintQuoteLabels(
       centerX: size.width - quoteLabelsAreaWidth / 2,
       centerY: yCoords[index],
       style: TextStyle(
-        color: Colors.white30,
+        color: Colors.white30, // TODO(Ramin): Use theme's color when it's ready
         fontSize: 12,
         height: 1,
       ),

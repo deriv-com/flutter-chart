@@ -5,6 +5,7 @@ build/
 pubspec.lock
 .flutter-plugins
 .flutter-plugins-dependencies
+.last_build_id
 
 # Mac
 .DS_Store

@@ -5,6 +5,11 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:flutter_deriv_api/api/api_initializer.dart';
+import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
@@ -20,7 +25,6 @@ import 'utils/misc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 
@@ -28,9 +32,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: FullscreenChart(),
+      debugShowCheckedModeBanner: false,
+      home: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          body: FullscreenChart(),
+        ),
+      ),
     );
   }
 }
@@ -59,6 +68,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int _startEpoch;
 
   Completer _requestCompleter;
+  List<Market> _markets;
+  Asset symbol = Asset(name: 'R_50', displayName: 'Volatility 50 Index');
 
   @override
   void initState() {
@@ -85,11 +96,46 @@ class _FullscreenChartState extends State<FullscreenChart> {
         if (connectionState is Connected) {
           if (candles.isEmpty) {
             _initTickStream();
+            _getActiveSymbols();
           } else {
             _resumeTickStream();
           }
         }
       });
+  }
+
+  Future<void> _getActiveSymbols() async {
+    final List<ActiveSymbol> activeSymbols =
+        await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
+            activeSymbols: 'brief', productType: 'basic'));
+
+    final marketTitles = <String>{};
+
+    final markets = <Market>[];
+
+    for (final symbol in activeSymbols) {
+      if (!marketTitles.contains(symbol.market)) {
+        marketTitles.add(symbol.market);
+        markets.add(
+          Market.fromAssets(
+            name: symbol.market,
+            displayName: symbol.marketDisplayName,
+            assets: activeSymbols
+                .where((activeSymbol) => activeSymbol.market == symbol.market)
+                .map<Asset>((activeSymbol) => Asset(
+                      market: activeSymbol.market,
+                      marketDisplayName: activeSymbol.marketDisplayName,
+                      subMarket: activeSymbol.submarket,
+                      name: activeSymbol.symbol,
+                      displayName: activeSymbol.displayName,
+                      subMarketDisplayName: activeSymbol.submarketDisplayName,
+                    ))
+                .toList(),
+          ),
+        );
+      }
+    }
+    setState(() => _markets = markets);
   }
 
   void _resumeTickStream() async {
@@ -128,7 +174,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     try {
       _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
-          ticksHistory: 'R_50',
+          ticksHistory: symbol.name,
           end: 'latest',
           count: 500,
           style: granularity == 0 ? 'ticks' : 'candles',
@@ -199,11 +245,28 @@ class _FullscreenChartState extends State<FullscreenChart> {
       color: Color(0xFF0E0E0E),
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              _buildChartTypeButton(),
-              _buildIntervalSelector(),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Stack(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: _markets == null
+                      ? SizedBox.shrink()
+                      : _buildMarketSelectorButton(),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      _buildChartTypeButton(),
+                      _buildIntervalSelector(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: Stack(
@@ -213,8 +276,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     candles: candles,
                     pipSize: 4,
                     style: style,
+                    onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onLoadHistory: (fromEpoch, toEpoch, count) =>
-                        _onLoadHistory(fromEpoch, toEpoch, count),
+                          _loadHistory(fromEpoch, toEpoch, count),
                   ),
                 ),
                 if (_connectionBloc != null &&
@@ -239,13 +303,32 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 : 'Connecting...',
       );
 
-  void _onLoadHistory(int fromEpoch, int toEpoch, int count) async {
+  Widget _buildMarketSelectorButton() => MarketSelectorButton(
+        asset: symbol,
+        onTap: () => showBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (BuildContext context) => MarketSelector(
+            selectedItem: symbol,
+            markets: _markets,
+            onAssetClicked: (asset, favoriteClicked) {
+              if (!favoriteClicked) {
+                Navigator.of(context).pop();
+                symbol = asset;
+                _onIntervalSelected(granularity);
+              }
+            },
+          ),
+        ),
+      );
+
+  void _loadHistory(int fromEpoch, int toEpoch, int count) async {
     if (fromEpoch < _startEpoch) {
       // So we don't request for a history range more than once
       _startEpoch = fromEpoch;
       final TickHistory moreData = await TickHistory.fetchTickHistory(
         TicksHistoryRequest(
-          ticksHistory: 'R_50',
+          ticksHistory: symbol.name,
           end: '${toEpoch ~/ 1000}',
           count: count,
           style: granularity == 0 ? 'ticks' : 'candles',
