@@ -4,11 +4,6 @@ import 'dart:developer' as dev;
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
-
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:flutter_deriv_api/api/api_initializer.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
@@ -144,7 +139,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
-          ticksHistory: 'R_50',
+          ticksHistory: symbol.name,
           end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
           start: candles.last.epoch ~/ 1000,
           style: granularity == 0 ? 'ticks' : 'candles',
