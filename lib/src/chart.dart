@@ -217,6 +217,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void initState() {
     super.initState();
 
+    _setChartPaintingStyle();
+
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
 
@@ -239,13 +241,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
     textPainter.layout(minWidth: 20, maxWidth: 120);
     quoteLabelsAreaWidth = textPainter.width + 10;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _setChartPaintingStyle();
   }
 
   @override
