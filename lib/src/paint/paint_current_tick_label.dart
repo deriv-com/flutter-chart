@@ -12,7 +12,14 @@ void paintCurrentTickLabel(
   @required double currentTickX,
   @required CurrentTickStyle style,
 }) {
-  _paintDashedLine(canvas, size, currentTickX, centerY, style);
+  paintHorizontalDashedLine(
+    canvas,
+    currentTickX,
+    size.width,
+    centerY,
+    style.color,
+    style.lineThickness,
+  );
 
   _paintLabel(
     canvas,
@@ -58,23 +65,29 @@ void _paintLabel(
   );
 }
 
-void _paintDashedLine(
+/// Paints a horizontal dashed-line for the given parameters.
+void paintHorizontalDashedLine(
   Canvas canvas,
-  Size size,
-  double currentTickX,
-  double y,
-  CurrentTickStyle style,
-) {
-  double startX = currentTickX;
-  const double dashWidth = 4;
-  const double dashSpace = 4;
+  double lineStartX,
+  double lineEndX,
+  double lineY,
+  Color lineColor,
+  double lineThickness, {
+  double dashWidth = 4,
+  double dashSpace = 4,
+}) {
+  double startX = lineStartX;
 
-  final paint = Paint()
-    ..color = style.color
-    ..strokeWidth = style.lineThickness;
+  final Paint paint = Paint()
+    ..color = lineColor
+    ..strokeWidth = lineThickness;
 
-  while (startX <= size.width) {
-    canvas.drawLine(Offset(startX, y), Offset(startX + dashWidth, y), paint);
-    startX += (dashSpace + dashWidth);
+  while (startX <= lineEndX) {
+    canvas.drawLine(
+      Offset(startX, lineY),
+      Offset(startX + dashWidth, lineY),
+      paint,
+    );
+    startX += dashSpace + dashWidth;
   }
 }
