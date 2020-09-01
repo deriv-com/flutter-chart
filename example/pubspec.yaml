@@ -13,8 +13,8 @@ dependencies:
   vibration: ^1.4.0
   flutter_deriv_api:
     git:
-      url: git@github.com:raminvakili-fs/flutter-deriv-api.git
-      ref: ramin/fix_subscription_manager
+      url: git@github.com:regentmarkets/flutter-deriv-api.git
+      ref: dev
 
 dev_dependencies:
 
