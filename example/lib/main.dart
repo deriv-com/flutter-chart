@@ -401,11 +401,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     try {
       await _tickHistorySubscription?.unsubscribe();
-      granularity = value;
-      _initTickStream();
     } on Exception catch (e) {
       _completeRequest();
       print(e);
+    } finally {
+      granularity = value;
+      _initTickStream();
     }
   }
 
