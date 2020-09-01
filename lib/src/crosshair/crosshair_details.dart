@@ -27,6 +27,7 @@ class CrosshairDetails extends StatelessWidget {
         gradient: RadialGradient(
           center: Alignment.topCenter,
           radius: 0.35,
+          // TODO(Ramin): Add style for cross-hair when design updated
           colors: [Color(0xFF0E0E0E), Colors.transparent],
         ),
       ),
