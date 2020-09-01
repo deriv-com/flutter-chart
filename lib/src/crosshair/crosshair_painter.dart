@@ -36,6 +36,7 @@ class CrosshairPainter extends CustomPainter {
           Offset(0, 0),
           Offset(0, size.height),
           [
+            // TODO(Ramin): Use theme color when cross-hair design got updated
             Colors.white.withOpacity(0.1),
             Colors.white.withOpacity(0.3),
             Colors.white.withOpacity(0.1),
