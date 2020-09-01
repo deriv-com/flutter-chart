@@ -93,6 +93,7 @@ class _MarketSelectorState extends State<MarketSelector>
       child: Provider<ChartTheme>.value(
         value: _theme,
         child: ClipRRect(
+          // TODO(Ramin): Include hardcode style values in theme later
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),

@@ -65,6 +65,7 @@ void _paintLabel(
   );
 }
 
+// TODO(Ramin): Move to a general file where general painting functions are there
 /// Paints a horizontal dashed-line for the given parameters.
 void paintHorizontalDashedLine(
   Canvas canvas,

@@ -52,6 +52,7 @@ class CrosshairPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(x, y),
         5,
+        // TODO(Ramin): Use theme color when cross-hair design got updated
         Paint()..color = Colors.white,
       );
     }
