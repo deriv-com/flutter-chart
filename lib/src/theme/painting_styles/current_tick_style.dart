@@ -1,8 +1,8 @@
-// ignore_for_file: public_member_api_docs
-
 import 'package:flutter/material.dart';
 
+/// For defining current tick indicator style
 class CurrentTickStyle {
+  /// Initializes
   const CurrentTickStyle({
     this.color = const Color(0xFFFF444F),
     this.lineThickness = 1,
@@ -19,5 +19,6 @@ class CurrentTickStyle {
   /// Thickness of the dashed line
   final double lineThickness;
 
+  /// The text style of the current tick indicator label on the Y-Axis
   final TextStyle labelStyle;
 }
