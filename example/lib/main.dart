@@ -269,11 +269,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 ClipRect(
                   child: Chart(
                     candles: candles,
-                    pipSize: 4,
+                    pipSize:
+                        _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     style: style,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onLoadHistory: (fromEpoch, toEpoch, count) =>
-                          _loadHistory(fromEpoch, toEpoch, count),
+                        _loadHistory(fromEpoch, toEpoch, count),
                   ),
                 ),
                 if (_connectionBloc != null &&
