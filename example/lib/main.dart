@@ -93,9 +93,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
         if (connectionState is Connected) {
           if (candles.isEmpty) {
             await _getActiveSymbols();
-            _initTickStream();
+
+            _requestCompleter.complete();
+            _onIntervalSelected(0);
           } else {
-            _resumeTickStream();
+            _initTickStream(
+              TicksHistoryRequest(
+                ticksHistory: _symbol.name,
+                end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
+                start: candles.last.epoch ~/ 1000,
+                style: granularity == 0 ? 'ticks' : 'candles',
+                granularity: granularity > 0 ? granularity : null,
+              ),
+              resume: true,
+            );
           }
         }
       });
@@ -143,56 +154,33 @@ class _FullscreenChartState extends State<FullscreenChart> {
     setState(() => _markets = markets);
   }
 
-  void _resumeTickStream() async {
+  void _initTickStream(
+    TicksHistoryRequest request, {
+    bool resume = false,
+  }) async {
     try {
-      await _tickStreamSubscription?.cancel();
+      _tickHistorySubscription =
+          await TickHistory.fetchTicksAndSubscribe(request);
 
-      _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
-        TicksHistoryRequest(
-          ticksHistory: _symbol.name,
-          end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
-          start: candles.last.epoch ~/ 1000,
-          style: granularity == 0 ? 'ticks' : 'candles',
-          granularity: granularity > 0 ? granularity : null,
-        ),
-      );
-
-      final missedCandles =
+      final fetchedCandles =
           _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
 
-      if (candles.last.epoch == missedCandles.first.epoch) {
-        candles.removeLast();
+      if (resume) {
+        if (candles.last.epoch == fetchedCandles.first.epoch) {
+          candles.removeLast();
+        }
+
+        setState(() => candles.addAll(fetchedCandles));
+      } else {
+        setState(() {
+          candles.clear();
+          candles = fetchedCandles;
+
+          _startEpoch = candles.first.epoch;
+        });
       }
 
-      setState(() => candles.addAll(missedCandles));
-
-      _tickStreamSubscription =
-          _tickHistorySubscription.tickStream.listen(_handleTickStream);
-    } on TickException catch (e) {
-      dev.log(e.message, error: e);
-    } finally {
-      _completeRequest();
-    }
-  }
-
-  void _initTickStream() async {
-    try {
-      _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
-        TicksHistoryRequest(
-          ticksHistory: _symbol.name,
-          end: 'latest',
-          count: 500,
-          style: granularity == 0 ? 'ticks' : 'candles',
-          granularity: granularity > 0 ? granularity : null,
-        ),
-      );
-
-      setState(() {
-        candles.clear();
-        candles = _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
-
-        _startEpoch = candles.first.epoch;
-      });
+      await _tickStreamSubscription?.cancel();
 
       _tickStreamSubscription =
           _tickHistorySubscription.tickStream.listen(_handleTickStream);
@@ -416,7 +404,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
       dev.log(e.toString(), error: e);
     } finally {
       granularity = value;
-      _initTickStream();
+
+      _initTickStream(TicksHistoryRequest(
+        ticksHistory: _symbol.name,
+        end: 'latest',
+        count: 500,
+        style: granularity == 0 ? 'ticks' : 'candles',
+        granularity: granularity > 0 ? granularity : null,
+      ));
     }
   }
 
