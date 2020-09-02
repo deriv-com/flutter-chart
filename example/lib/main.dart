@@ -413,7 +413,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       await _tickHistorySubscription?.unsubscribe();
     } on Exception catch (e) {
       _completeRequest();
-      print(e);
+      dev.log(e.toString(), error: e);
     } finally {
       granularity = value;
       _initTickStream();
