@@ -1,10 +1,11 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:flutter/material.dart';
 
-// Keep in mind these 2 use cases:
-// 1) live chart
-// 2) closed contract
+/// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
+  // TODO(Rustem): Add closed contract x-axis constructor.
+
+  /// Creates x-axis model for live chart.
   XAxisModel({
     @required int firstCandleEpoch,
     @required int granularity,
