@@ -145,7 +145,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _resumeTickStream() async {
     try {
-      _tickStreamSubscription?.cancel();
+      await _tickStreamSubscription?.cancel();
 
       _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
