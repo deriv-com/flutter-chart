@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/time_grid.dart';
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
 import '../paint/paint_grid.dart';
@@ -11,6 +12,7 @@ class GridPainter extends CustomPainter {
     @required this.pipSize,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
+    @required this.style,
   });
 
   final int pipSize;
@@ -23,6 +25,8 @@ class GridPainter extends CustomPainter {
 
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
+
+  final GridStyle style;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -38,6 +42,7 @@ class GridPainter extends CustomPainter {
           .toList(),
       yCoords: gridLineQuotes.map((quote) => quoteToCanvasY(quote)).toList(),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+      style: style,
     );
   }
 

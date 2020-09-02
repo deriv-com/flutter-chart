@@ -311,7 +311,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
         asset: _symbol,
-        onTap: () => showBottomSheet(
+        onTap: () => showBottomSheet<void>(
           backgroundColor: Colors.transparent,
           context: context,
           builder: (BuildContext context) => MarketSelector(

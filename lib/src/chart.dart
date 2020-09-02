@@ -19,11 +19,17 @@ import 'painters/current_tick_painter.dart';
 import 'painters/grid_painter.dart';
 import 'painters/loading_painter.dart';
 
+import 'theme/chart_default_dark_theme.dart';
+import 'theme/chart_default_light_theme.dart';
+import 'theme/chart_theme.dart';
+import 'theme/painting_styles/chart_paiting_style.dart';
+
 class Chart extends StatelessWidget {
   const Chart({
     Key key,
     @required this.candles,
     @required this.pipSize,
+    this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
@@ -39,15 +45,27 @@ class Chart extends StatelessWidget {
   /// Called when chart is scrolled back and missing data is visible.
   final OnLoadHistory onLoadHistory;
 
+  /// Chart's theme
+  final ChartTheme theme;
+
   @override
   Widget build(BuildContext context) {
+    final ChartTheme chartTheme =
+        theme ?? Theme.of(context).brightness == Brightness.dark
+            ? ChartDefaultDarkTheme()
+            : ChartDefaultLightTheme();
+
     return GestureManager(
-      child: _ChartImplementation(
-        candles: candles,
-        pipSize: pipSize,
-        onCrosshairAppeared: onCrosshairAppeared,
-        onLoadHistory: onLoadHistory,
-        style: style,
+      child: Ink(
+        color: chartTheme.base08Color,
+        child: _ChartImplementation(
+          candles: candles,
+          pipSize: pipSize,
+          onCrosshairAppeared: onCrosshairAppeared,
+          onLoadHistory: onLoadHistory,
+          style: style,
+          theme: chartTheme,
+        ),
       ),
     );
   }
@@ -61,6 +79,7 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
+    this.theme,
   }) : super(key: key);
 
   final List<Candle> candles;
@@ -68,6 +87,7 @@ class _ChartImplementation extends StatefulWidget {
   final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
+  final ChartTheme theme;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -76,6 +96,8 @@ class _ChartImplementation extends StatefulWidget {
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
+
+  ChartPaintingStyle _chartPaintingStyle;
 
   // TODO(Rustem): move to XAxisModel
   /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
@@ -126,12 +148,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _loadingAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
+
   // TODO(Rustem): move to XAxisModel
   AnimationController _crosshairZoomOutAnimationController;
+
   // TODO(Rustem): move to XAxisModel
   AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
+
   // TODO(Rustem): move to XAxisModel
   Animation _crosshairZoomOutAnimation;
 
@@ -192,6 +217,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void initState() {
     super.initState();
 
+    _setChartPaintingStyle();
+
     nowEpoch = DateTime.now().millisecondsSinceEpoch;
     rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
 
@@ -202,7 +229,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupGestures();
   }
 
-  _calculateQuoteLabelAreaWidth() {
+  void _calculateQuoteLabelAreaWidth() {
     TextSpan textSpan = TextSpan(
       style: TextStyle(fontSize: 12),
       text: widget.candles.first.close.toStringAsFixed(widget.pipSize),
@@ -219,6 +246,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   @override
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
+
+    if (oldChart == null || widget.style != oldChart.style) {
+      _setChartPaintingStyle();
+    }
+
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
     _calculateQuoteLabelAreaWidth();
@@ -237,6 +269,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _onNewTick();
     }
   }
+
+  void _setChartPaintingStyle() =>
+      _chartPaintingStyle = widget.style == ChartStyle.candles
+          ? widget.theme.candleStyle
+          : widget.theme.lineStyle;
 
   @override
   void dispose() {
@@ -478,6 +515,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               epochToCanvasX: _epochToCanvasX,
               quoteToCanvasY: _quoteToCanvasY,
+              style: widget.theme.gridStyle,
             ),
           ),
           CustomPaint(
@@ -495,7 +533,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: ChartPainter(
               candles: _getChartCandles(),
-              style: widget.style,
+              style: _chartPaintingStyle,
               pipSize: widget.pipSize,
               epochToCanvasX: _epochToCanvasX,
               quoteToCanvasY: _quoteToCanvasY,
@@ -510,11 +548,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               epochToCanvasX: _epochToCanvasX,
               quoteToCanvasY: _quoteToCanvasY,
+              style: widget.theme.currentTickStyle,
             ),
           ),
           CrosshairArea(
             visibleCandles: visibleCandles,
-            style: widget.style,
+            style: _chartPaintingStyle,
             pipSize: widget.pipSize,
             epochToCanvasX: _epochToCanvasX,
             canvasXToEpoch: _canvasXToEpoch,

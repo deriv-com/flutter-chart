@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart'
 import 'package:deriv_chart/src/widgets/market_selector/models.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A widget to show a sub-market item under a market.
 class SubMarketItem extends StatelessWidget {
@@ -23,25 +24,30 @@ class SubMarketItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ChartTheme>(context);
+
     final List<Asset> assets = (filterText == null || filterText.isEmpty)
         ? subMarket.assets
         : subMarket.assets.where((a) => a.containsText(filterText)).toList();
     return assets.isEmpty
         ? SizedBox.shrink()
         : Material(
-            // TODO(Ramin): Use Chart's theme color when its ready
-            color: const Color(0xFF151717),
+            color: theme.base07Color,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 if (isCategorized)
                   Container(
-                    margin: const EdgeInsets.only(top: 16, left: 8),
+                    margin: EdgeInsets.only(
+                      top: theme.margin16,
+                      left: theme.margin08,
+                    ),
                     child: Text(
                       subMarket.displayName,
-                      style: // TODO(Ramin): Use Chart's theme color when its ready
-                          TextStyle(
-                              fontSize: 14, color: const Color(0xFF6E6E6E)),
+                      style: theme.textStyle(
+                        textStyle: theme.body1,
+                        color: theme.base04Color,
+                      ),
                     ),
                   ),
                 ..._buildAssetsList(assets)

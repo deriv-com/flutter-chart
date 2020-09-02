@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
 import '../paint/paint_text.dart';
@@ -8,20 +9,25 @@ void paintCurrentTickLabel(
   @required double centerY,
   @required String quoteLabel,
   @required double quoteLabelsAreaWidth,
+  @required double currentTickX,
+  @required CurrentTickStyle style,
 }) {
-  canvas.drawLine(
-    Offset(0, centerY),
-    Offset(size.width, centerY),
-    Paint()
-      ..color = Colors.white24
-      ..strokeWidth = 1,
+  paintHorizontalDashedLine(
+    canvas,
+    currentTickX,
+    size.width,
+    centerY,
+    style.color,
+    style.lineThickness,
   );
+
   _paintLabel(
     canvas,
     size,
     centerY: centerY,
     quoteLabel: quoteLabel,
     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+    style: style,
   );
 }
 
@@ -31,6 +37,7 @@ void _paintLabel(
   @required double centerY,
   @required String quoteLabel,
   @required double quoteLabelsAreaWidth,
+  @required CurrentTickStyle style,
 }) {
   final triangleWidth = 8;
   final height = 24;
@@ -45,7 +52,7 @@ void _paintLabel(
   canvas.drawPath(
     path,
     Paint()
-      ..color = Color(0xFFFF444F)
+      ..color = style.color
       ..style = PaintingStyle.fill,
   );
 
@@ -54,11 +61,34 @@ void _paintLabel(
     text: quoteLabel,
     centerX: size.width - quoteLabelsAreaWidth / 2,
     centerY: centerY,
-    style: TextStyle(
-      color: Colors.white,
-      fontSize: 12,
-      fontWeight: FontWeight.bold,
-      height: 1,
-    ),
+    style: style.labelStyle,
   );
+}
+
+// TODO(Ramin): Move to a general file where general painting functions are there
+/// Paints a horizontal dashed-line for the given parameters.
+void paintHorizontalDashedLine(
+  Canvas canvas,
+  double lineStartX,
+  double lineEndX,
+  double lineY,
+  Color lineColor,
+  double lineThickness, {
+  double dashWidth = 4,
+  double dashSpace = 4,
+}) {
+  double startX = lineStartX;
+
+  final Paint paint = Paint()
+    ..color = lineColor
+    ..strokeWidth = lineThickness;
+
+  while (startX <= lineEndX) {
+    canvas.drawLine(
+      Offset(startX, lineY),
+      Offset(startX + dashWidth, lineY),
+      paint,
+    );
+    startX += dashSpace + dashWidth;
+  }
 }

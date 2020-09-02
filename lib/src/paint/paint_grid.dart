@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
 import '../paint/paint_text.dart';
@@ -10,12 +11,13 @@ void paintGrid(
   @required List<double> xCoords,
   @required List<double> yCoords,
   @required double quoteLabelsAreaWidth,
+  @required GridStyle style,
 }) {
   assert(timeLabels.length == xCoords.length);
   assert(quoteLabels.length == yCoords.length);
 
-  _paintTimeGridLines(canvas, size, xCoords);
-  _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth);
+  _paintTimeGridLines(canvas, size, xCoords, style);
+  _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth, style);
 
   _paintQuoteLabels(
     canvas,
@@ -23,21 +25,31 @@ void paintGrid(
     yCoords: yCoords,
     quoteLabels: quoteLabels,
     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+    style: style,
   );
   _paintTimeLabels(
     canvas,
     size,
     xCoords: xCoords,
     timeLabels: timeLabels,
+    style: style,
   );
 }
 
-void _paintTimeGridLines(Canvas canvas, Size size, List<double> xCoords) {
+void _paintTimeGridLines(
+  Canvas canvas,
+  Size size,
+  List<double> xCoords,
+  GridStyle style,
+) {
   xCoords.forEach((x) {
     canvas.drawLine(
       Offset(x, 0),
       Offset(x, size.height - 20),
-      Paint()..color = Colors.white12,
+      Paint()
+        ..color = style.gridLineColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = style.lineThickness,
     );
   });
 }
@@ -47,12 +59,16 @@ void _paintQuoteGridLines(
   Size size,
   List<double> yCoords,
   double quoteLabelsAreaWidth,
+  GridStyle style,
 ) {
   yCoords.forEach((y) {
     canvas.drawLine(
       Offset(0, y),
       Offset(size.width - quoteLabelsAreaWidth, y),
-      Paint()..color = Colors.white12,
+      Paint()
+        ..color = style.gridLineColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = style.lineThickness,
     );
   });
 }
@@ -63,6 +79,7 @@ void _paintQuoteLabels(
   @required List<double> yCoords,
   @required List<String> quoteLabels,
   @required double quoteLabelsAreaWidth,
+  @required GridStyle style,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
     paintTextFromCenter(
@@ -70,11 +87,7 @@ void _paintQuoteLabels(
       text: quoteLabel,
       centerX: size.width - quoteLabelsAreaWidth / 2,
       centerY: yCoords[index],
-      style: TextStyle(
-        color: Colors.white30, // TODO(Ramin): Use theme's color when it's ready
-        fontSize: 12,
-        height: 1,
-      ),
+      style: style.labelStyle,
     );
   });
 }
@@ -84,6 +97,7 @@ void _paintTimeLabels(
   Size size, {
   @required List<String> timeLabels,
   @required List<double> xCoords,
+  @required GridStyle style,
 }) {
   timeLabels.asMap().forEach((index, timeLabel) {
     paintTextFromCenter(
@@ -91,11 +105,7 @@ void _paintTimeLabels(
       text: timeLabel,
       centerX: xCoords[index],
       centerY: size.height - 10,
-      style: TextStyle(
-        color: Colors.white30,
-        fontSize: 12,
-        height: 1,
-      ),
+      style: style.labelStyle,
     );
   });
 }
