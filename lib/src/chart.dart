@@ -581,7 +581,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   Tick _getAnimatedCurrentTick() {
-    if (prevTick == null || widget.candles.isEmpty) return null;
+    if (widget.candles.isEmpty) return null;
 
     final currentTick = _candleToTick(widget.candles.last);
 
