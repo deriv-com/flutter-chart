@@ -1,8 +1,10 @@
+import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../models/candle.dart';
 import '../models/candle_painting.dart';
-import '../models/chart_style.dart';
 
 import '../paint/paint_candles.dart';
 import '../paint/paint_line.dart';
@@ -18,7 +20,7 @@ class ChartPainter extends CustomPainter {
 
   final List<Candle> candles;
   final int pipSize;
-  final ChartStyle style;
+  final ChartPaintingStyle style;
 
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
@@ -33,23 +35,24 @@ class ChartPainter extends CustomPainter {
     this.canvas = canvas;
     this.size = size;
 
-    if (style == ChartStyle.candles) {
-      _paintCandles();
-    } else {
-      _paintLine();
+    if (style is CandleStyle) {
+      _paintCandles(style);
+    } else if (style is LineStyle) {
+      _paintLine(style);
     }
   }
 
-  void _paintLine() {
+  void _paintLine(LineStyle lineStyle) {
     paintLine(
       canvas,
       size,
       xCoords: candles.map((candle) => epochToCanvasX(candle.epoch)).toList(),
       yCoords: candles.map((candle) => quoteToCanvasY(candle.close)).toList(),
+      style: lineStyle,
     );
   }
 
-  void _paintCandles() {
+  void _paintCandles(CandleStyle candleStyle) {
     final intervalWidth =
         epochToCanvasX(candles[1].epoch) - epochToCanvasX(candles[0].epoch);
     final candleWidth = intervalWidth * 0.6;
@@ -65,7 +68,7 @@ class ChartPainter extends CustomPainter {
       );
     }).toList();
 
-    paintCandles(canvas, candlePaintings);
+    paintCandles(canvas, candlePaintings, candleStyle);
   }
 
   @override
