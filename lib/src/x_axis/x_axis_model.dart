@@ -69,11 +69,10 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
-      _firstCandleEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
+      _firstCandleEpoch + msFromPx(maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch =>
-      _nowEpoch + msFromPx(XAxisModel.maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _nowEpoch + msFromPx(maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -91,9 +90,9 @@ class XAxisModel extends ChangeNotifier {
   double get msPerPx => _msPerPx;
 
   /// Bounds and default for [_msPerPx].
-  double get _minScale => _granularity / XAxisModel.maxIntervalWidth;
-  double get _maxScale => _granularity / XAxisModel.minIntervalWidth;
-  double get _defaultScale => _granularity / XAxisModel.defaultIntervalWidth;
+  double get _minScale => _granularity / maxIntervalWidth;
+  double get _maxScale => _granularity / minIntervalWidth;
+  double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Updates left panning limit.
   void updateFirstCandleEpoch(int firstCandleEpoch) {
