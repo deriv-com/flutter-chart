@@ -1,4 +1,4 @@
-String granularityLabel(int granularity) {
+String getGranularityLabel(int granularity) {
   switch (granularity) {
     case 0:
       return '1 tick';

@@ -55,7 +55,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   TickHistorySubscription _tickHistorySubscription;
 
-  StreamSubscription _tickSubscription;
+  StreamSubscription _tickStreamSubscription;
 
   ConnectionBloc _connectionBloc;
 
@@ -63,6 +63,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int _startEpoch;
 
   Completer _requestCompleter;
+
   List<Market> _markets;
 
   Asset _symbol;
@@ -76,7 +77,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   @override
   void dispose() {
-    _tickSubscription?.cancel();
+    _tickStreamSubscription?.cancel();
     _connectionBloc?.close();
     super.dispose();
   }
@@ -144,7 +145,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _resumeTickStream() async {
     try {
-      _tickSubscription?.cancel();
+      _tickStreamSubscription?.cancel();
 
       _tickHistorySubscription = await TickHistory.fetchTicksAndSubscribe(
         TicksHistoryRequest(
@@ -165,7 +166,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       setState(() => candles.addAll(missedCandles));
 
-      _tickSubscription =
+      _tickStreamSubscription =
           _tickHistorySubscription.tickStream.listen(_handleTickStream);
     } on TickException catch (e) {
       dev.log(e.message, error: e);
@@ -193,7 +194,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _startEpoch = candles.first.epoch;
       });
 
-      _tickSubscription =
+      _tickStreamSubscription =
           _tickHistorySubscription.tickStream.listen(_handleTickStream);
     } on TickException catch (e) {
       dev.log(e.message, error: e);
