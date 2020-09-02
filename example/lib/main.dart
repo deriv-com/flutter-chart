@@ -397,7 +397,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ]
             .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
                   value: granularity,
-                  child: Text('${granularityLabel(granularity)}'),
+                  child: Text('${getGranularityLabel(granularity)}'),
                 ))
             .toList(),
         onChanged: _onIntervalSelected,
