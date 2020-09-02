@@ -25,7 +25,7 @@ class AssetItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Provider.of<ChartTheme>(context);
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 12),
+      contentPadding: EdgeInsets.only(left: theme.margin12),
       leading: _buildAssetIcon(),
       title: HighLightedText(
         '${asset.displayName}',

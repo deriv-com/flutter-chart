@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
+import 'dimens.dart';
 import 'painting_styles/candle_style.dart';
 import 'painting_styles/current_tick_style.dart';
 import 'painting_styles/grid_style.dart';
@@ -15,6 +16,36 @@ import 'text_styles.dart';
 abstract class ChartDefaultTheme implements ChartTheme {
   final Map<TextStyle, Map<Color, TextStyle>> _textStyle =
       <TextStyle, Map<Color, TextStyle>>{};
+
+  @override
+  double get margin04 => Dimens.margin04;
+
+  @override
+  double get margin08 => Dimens.margin08;
+
+  @override
+  double get margin12 => Dimens.margin12;
+
+  @override
+  double get margin16 => Dimens.margin16;
+
+  @override
+  double get margin24 => Dimens.margin24;
+
+  @override
+  double get margin32 => Dimens.margin32;
+
+  @override
+  double get borderRadius04 => Dimens.borderRadius04;
+
+  @override
+  double get borderRadius08 => Dimens.borderRadius08;
+
+  @override
+  double get borderRadius16 => Dimens.borderRadius16;
+
+  @override
+  double get borderRadius24 => Dimens.borderRadius24;
 
   @override
   String get fontFamily => TextStyles.appFontFamily;

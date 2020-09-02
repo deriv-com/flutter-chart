@@ -18,7 +18,7 @@ class NoResultPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Icon(Icons.search, size: 96, color: theme.base05Color),
-          SizedBox(height: 16),
+          SizedBox(height: theme.margin16),
           Text(
             'No results for \"$text\"',
             style: theme.textStyle(
@@ -26,7 +26,7 @@ class NoResultPage extends StatelessWidget {
               color: theme.base03Color,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: theme.margin08),
           Text(
             'Try checking your spelling or use a different term',
             style: theme.textStyle(

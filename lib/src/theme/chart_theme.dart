@@ -41,6 +41,26 @@ abstract class ChartTheme {
 
   Color get base08Color;
 
+  double get margin04;
+
+  double get margin08;
+
+  double get margin12;
+
+  double get margin16;
+
+  double get margin24;
+
+  double get margin32;
+
+  double get borderRadius04;
+
+  double get borderRadius08;
+
+  double get borderRadius16;
+
+  double get borderRadius24;
+
   TextStyle get caption2;
 
   GridStyle get gridStyle;

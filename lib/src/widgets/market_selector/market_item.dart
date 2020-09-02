@@ -38,7 +38,11 @@ class MarketItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: const EdgeInsets.only(top: 24, left: 8, bottom: 8),
+            margin: EdgeInsets.only(
+              top: theme.margin24,
+              left: theme.margin08,
+              bottom: theme.margin08,
+            ),
             child: Text(
               market.displayName ?? '',
               style: theme.textStyle(

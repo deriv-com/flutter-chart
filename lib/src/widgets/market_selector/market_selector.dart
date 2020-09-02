@@ -93,10 +93,9 @@ class _MarketSelectorState extends State<MarketSelector>
       child: Provider<ChartTheme>.value(
         value: _theme,
         child: ClipRRect(
-          // TODO(Ramin): Include hardcode style values in theme later
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+            topLeft: Radius.circular(_theme.borderRadius24),
+            topRight: Radius.circular(_theme.borderRadius24),
           ),
           child: Material(
             elevation: 8,
@@ -150,7 +149,7 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   Widget _buildTopHandle() => Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: _theme.margin08),
         width: double.infinity,
         child: Center(
           child: Container(
@@ -158,7 +157,7 @@ class _MarketSelectorState extends State<MarketSelector>
             height: 4,
             decoration: BoxDecoration(
               color: _theme.base05Color,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(_theme.borderRadius04),
             ),
           ),
         ),
