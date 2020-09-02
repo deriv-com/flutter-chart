@@ -264,8 +264,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
       if (_isAutoPanning &&
           (widget.candles.isEmpty ||
-              nowEpoch - widget.candles.last.epoch <
-                  _pxToMs(canvasSize.width * 0.2))) {
+              widget.candles.last.epoch >
+                  rightBoundEpoch - _pxToMs(canvasSize.width) + _pxToMs(30))) {
         rightBoundEpoch += elapsedMs;
       }
 
