@@ -8,23 +8,23 @@ import 'package:flutter/material.dart';
 /// entries called [visibleEntries] inside the [paint] method
 abstract class BaseRendererable {
   /// Initializes
-  BaseRendererable({
-    @required this.series,
-    @required this.visibleEntries,
-    @required this.leftEpoch,
-    @required  this.rightEpoch,
-  });
+  BaseRendererable(
+    this.series,
+    this.visibleEntries,
+    this.leftEpoch,
+    this.rightEpoch,
+  );
 
   /// Visible entries of [series] inside the frame
   final List<Candle> visibleEntries;
-  
+
   /// The [BaseSeries] which this renderable belongs to
   final BaseSeries series;
-  
+
   /// Left epoch
   final int leftEpoch;
-  
-  /// Right epoch 
+
+  /// Right epoch
   final int rightEpoch;
 
   int startIndex = 0;
