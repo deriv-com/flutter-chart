@@ -2,12 +2,16 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
 abstract class BaseSeries {
   /// Initializes
   BaseSeries(this.entries, this.id);
+
+  /// Paints a frame into canvas
+  BaseRendererable rendererable;
 
   /// Series ID
   final String id;
@@ -44,13 +48,7 @@ abstract class BaseSeries {
 
     _setMinMaxValues(visibleCandles);
 
-//    updateRenderable(
-//      visibleCandles,
-//      leftXFactor,
-//      rightXFactor,
-//      touchInfo,
-//      isIndependentChart,
-//    );
+    updateRenderable(visibleCandles, leftEpoch, rightEpoch);
 
     return visibleCandles;
   }
@@ -165,14 +163,11 @@ abstract class BaseSeries {
     Size size,
     double animatingMinValue,
     double animatingMaxValue,
-  ) {
-//    rendererable?.paint(
-//      canvas: canvas,
-//      size: size,
-//      animationsInfo: animationsInfo,
-//      animatingMinValue: animatingMinValue,
-//      animatingMaxValue: animatingMaxValue,
-//      prevLastEntry: prevLastEntry,
-//    );
-  }
+  ) =>
+      rendererable?.paint(
+        canvas: canvas,
+        size: size,
+        animatingMinValue: animatingMinValue,
+        animatingMaxValue: animatingMaxValue,
+      );
 }
