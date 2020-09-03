@@ -167,37 +167,49 @@ class _FullscreenChartState extends State<FullscreenChart> {
     bool resume = false,
   }) async {
     try {
-      _tickHistorySubscription =
-          await TickHistory.fetchTicksAndSubscribe(request);
+      if (_symbol.isOpen) {
+        _tickHistorySubscription =
+            await TickHistory.fetchTicksAndSubscribe(request);
 
-      final fetchedCandles =
-          _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
+        final fetchedCandles =
+            _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
 
-      if (resume) {
-        // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping candles
-        if (candles.last.epoch == fetchedCandles.first.epoch) {
-          candles.removeLast();
+        if (resume) {
+          if (candles.last.epoch == fetchedCandles.first.epoch) {
+            candles.removeLast();
+          }
+
+          setState(() => candles.addAll(fetchedCandles));
+        } else {
+          _resetCandlesTo(fetchedCandles);
         }
 
-        setState(() => candles.addAll(fetchedCandles));
+        await _tickStreamSubscription?.cancel();
+
+        _tickStreamSubscription =
+            _tickHistorySubscription.tickStream.listen(_handleTickStream);
       } else {
-        setState(() {
-          candles = fetchedCandles;
+        _tickHistorySubscription = null;
 
-          _startEpoch = candles.first.epoch;
-        });
+        final historyCandles = _getCandlesFromResponse(
+          await TickHistory.fetchTickHistory(request),
+        );
+
+        _resetCandlesTo(historyCandles);
       }
-
-      await _tickStreamSubscription?.cancel();
-
-      _tickStreamSubscription =
-          _tickHistorySubscription.tickStream.listen(_handleTickStream);
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {
       _completeRequest();
     }
   }
+
+  void _resetCandlesTo(List<Candle> fetchedCandles) => setState(() {
+        candles.clear();
+        candles = fetchedCandles;
+
+        _startEpoch = candles.first.epoch;
+      });
 
   void _completeRequest() {
     if (!_requestCompleter.isCompleted) {
