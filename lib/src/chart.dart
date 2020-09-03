@@ -86,7 +86,6 @@ class Chart extends StatelessWidget {
               onCrosshairAppeared: onCrosshairAppeared,
               onLoadHistory: onLoadHistory,
               style: style,
-              theme: chartTheme,
             ),
           ),
         ),
@@ -103,7 +102,6 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
-    this.theme,
   }) : super(key: key);
 
   final List<Candle> candles;
@@ -111,7 +109,6 @@ class _ChartImplementation extends StatefulWidget {
   final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
-  final ChartTheme theme;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -208,6 +205,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   GestureManagerState get _gestureManager =>
       context.read<GestureManagerState>();
 
+  ChartTheme get _theme => context.read<ChartTheme>();
+
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
   @override
@@ -262,8 +261,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _setChartPaintingStyle() =>
       _chartPaintingStyle = widget.style == ChartStyle.candles
-          ? widget.theme.candleStyle
-          : widget.theme.lineStyle;
+          ? _theme.candleStyle
+          : _theme.lineStyle;
 
   @override
   void dispose() {
@@ -433,7 +432,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               quoteToCanvasY: _quoteToCanvasY,
-              style: widget.theme.gridStyle,
+              style: context.watch<ChartTheme>().gridStyle,
             ),
           ),
           CustomPaint(
@@ -466,7 +465,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
-              style: widget.theme.currentTickStyle,
+              style: context.watch<ChartTheme>().currentTickStyle,
             ),
           ),
           CrosshairArea(
