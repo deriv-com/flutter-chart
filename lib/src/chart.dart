@@ -68,22 +68,26 @@ class Chart extends StatelessWidget {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
 
-    return Ink(
-      color: chartTheme.base08Color,
-      child: GestureManager(
-        child: XAxis(
-          firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
-          // TODO(Rustem): App should pass granularity to chart,
-          // the calculation is error-prone when gaps are present
-          granularity:
-              candles.length >= 2 ? candles[1].epoch - candles[0].epoch : null,
-          child: _ChartImplementation(
-            candles: candles,
-            pipSize: pipSize,
-            onCrosshairAppeared: onCrosshairAppeared,
-            onLoadHistory: onLoadHistory,
-            style: style,
-            theme: chartTheme,
+    return Provider<ChartTheme>.value(
+      value: chartTheme,
+      child: Ink(
+        color: chartTheme.base08Color,
+        child: GestureManager(
+          child: XAxis(
+            firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
+            // TODO(Rustem): App should pass granularity to chart,
+            // the calculation is error-prone when gaps are present
+            granularity: candles.length >= 2
+                ? candles[1].epoch - candles[0].epoch
+                : null,
+            child: _ChartImplementation(
+              candles: candles,
+              pipSize: pipSize,
+              onCrosshairAppeared: onCrosshairAppeared,
+              onLoadHistory: onLoadHistory,
+              style: style,
+              theme: chartTheme,
+            ),
           ),
         ),
       ),
