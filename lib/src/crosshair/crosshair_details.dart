@@ -1,10 +1,11 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/candle.dart';
-import '../models/chart_style.dart';
 
 class CrosshairDetails extends StatelessWidget {
   const CrosshairDetails({
@@ -15,7 +16,7 @@ class CrosshairDetails extends StatelessWidget {
   }) : super(key: key);
 
   final Candle crosshairCandle;
-  final ChartStyle style;
+  final ChartPaintingStyle style;
   final int pipSize;
 
   @override
@@ -26,12 +27,13 @@ class CrosshairDetails extends StatelessWidget {
         gradient: RadialGradient(
           center: Alignment.topCenter,
           radius: 0.35,
+          // TODO(Ramin): Add style for cross-hair when design updated
           colors: [Color(0xFF0E0E0E), Colors.transparent],
         ),
       ),
       child: Column(
         children: <Widget>[
-          style == ChartStyle.candles
+          style is CandleStyle
               ? _buildCandleStyleDetails()
               : _buildLineStyleDetails(),
           SizedBox(height: 2),
@@ -85,6 +87,7 @@ class CrosshairDetails extends StatelessWidget {
     return _buildLabel(timeLabel);
   }
 
+  // TODO(Ramin): Add style for cross-hair when design updated
   Text _buildLabel(String label) {
     return Text(
       label,
@@ -96,6 +99,7 @@ class CrosshairDetails extends StatelessWidget {
     );
   }
 
+  // TODO(Ramin): Add style for cross-hair when design updated
   Text _buildValue(double value, {double fontSize = 12}) {
     return Text(
       value.toStringAsFixed(pipSize),

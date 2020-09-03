@@ -1,8 +1,8 @@
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/candle.dart';
-import 'package:deriv_chart/src/models/chart_style.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class CrosshairArea extends StatefulWidget {
   }) : super(key: key);
 
   final List<Candle> visibleCandles;
-  final ChartStyle style;
+  final ChartPaintingStyle style;
   final int pipSize;
   final double Function(double) quoteToCanvasY;
   final VoidCallback onCrosshairAppeared;

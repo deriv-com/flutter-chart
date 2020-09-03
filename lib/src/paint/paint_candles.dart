@@ -1,16 +1,21 @@
+import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
 import '../models/candle_painting.dart';
 
-void paintCandles(Canvas canvas, List<CandlePainting> candlePaintings) {
-  candlePaintings.forEach((candlePaiting) {
-    _paintCandle(canvas, candlePaiting);
+void paintCandles(
+  Canvas canvas,
+  List<CandlePainting> candlePaintings,
+  CandleStyle candleStyle,
+) {
+  candlePaintings.forEach((candlePainting) {
+    _paintCandle(canvas, candlePainting, candleStyle);
   });
 }
 
-void _paintCandle(Canvas canvas, CandlePainting cp) {
+void _paintCandle(Canvas canvas, CandlePainting cp, CandleStyle candleStyle) {
   final linePaint = Paint()
-    ..color = Color(0xFF6E6E6E)
+    ..color = candleStyle.lineColor
     ..strokeWidth = 1.2;
 
   canvas.drawLine(
@@ -33,7 +38,7 @@ void _paintCandle(Canvas canvas, CandlePainting cp) {
         cp.xCenter + cp.width / 2,
         cp.yOpen,
       ),
-      Paint()..color = Color(0xFF00A79E),
+      Paint()..color = candleStyle.positiveColor,
     );
   } else {
     canvas.drawRect(
@@ -43,7 +48,7 @@ void _paintCandle(Canvas canvas, CandlePainting cp) {
         cp.xCenter + cp.width / 2,
         cp.yClose,
       ),
-      Paint()..color = Color(0xFFCC2E3D),
+      Paint()..color = candleStyle.negativeColor,
     );
   }
 }

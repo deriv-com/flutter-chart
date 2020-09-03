@@ -17,6 +17,10 @@ import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
 import 'painters/loading_painter.dart';
 import 'painters/y_grid_painter.dart';
+import 'theme/chart_default_dark_theme.dart';
+import 'theme/chart_default_light_theme.dart';
+import 'theme/chart_theme.dart';
+import 'theme/painting_styles/chart_paiting_style.dart';
 import 'x_axis/x_axis.dart';
 import 'x_axis/x_axis_model.dart';
 
@@ -26,6 +30,7 @@ class Chart extends StatelessWidget {
   const Chart({
     @required this.candles,
     @required this.pipSize,
+    this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
@@ -53,21 +58,33 @@ class Chart extends StatelessWidget {
   /// Called when chart is scrolled back and missing data is visible.
   final OnLoadHistory onLoadHistory;
 
+  /// Chart's theme.
+  final ChartTheme theme;
+
   @override
   Widget build(BuildContext context) {
-    return GestureManager(
-      child: XAxis(
-        firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
-        // TODO(Rustem): App should pass granularity to chart,
-        // the calculation is error-prone when gaps are present
-        granularity:
-            candles.length >= 2 ? candles[1].epoch - candles[0].epoch : null,
-        child: _ChartImplementation(
-          candles: candles,
-          pipSize: pipSize,
-          onCrosshairAppeared: onCrosshairAppeared,
-          onLoadHistory: onLoadHistory,
-          style: style,
+    final ChartTheme chartTheme =
+        theme ?? Theme.of(context).brightness == Brightness.dark
+            ? ChartDefaultDarkTheme()
+            : ChartDefaultLightTheme();
+
+    return Ink(
+      color: chartTheme.base08Color,
+      child: GestureManager(
+        child: XAxis(
+          firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
+          // TODO(Rustem): App should pass granularity to chart,
+          // the calculation is error-prone when gaps are present
+          granularity:
+              candles.length >= 2 ? candles[1].epoch - candles[0].epoch : null,
+          child: _ChartImplementation(
+            candles: candles,
+            pipSize: pipSize,
+            onCrosshairAppeared: onCrosshairAppeared,
+            onLoadHistory: onLoadHistory,
+            style: style,
+            theme: chartTheme,
+          ),
         ),
       ),
     );
@@ -82,6 +99,7 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
+    this.theme,
   }) : super(key: key);
 
   final List<Candle> candles;
@@ -89,6 +107,7 @@ class _ChartImplementation extends StatefulWidget {
   final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
+  final ChartTheme theme;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -97,6 +116,8 @@ class _ChartImplementation extends StatefulWidget {
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
+
+  ChartPaintingStyle _chartPaintingStyle;
 
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
@@ -128,10 +149,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _loadingAnimationController;
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
+
   // TODO(Rustem): move to YAxisModel
   AnimationController _crosshairZoomOutAnimationController;
+
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
+
   // TODO(Rustem): move to YAxisModel
   Animation _crosshairZoomOutAnimation;
 
@@ -188,6 +212,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     ticker = createTicker(_onNewFrame)..start();
 
+    _setChartPaintingStyle();
     _setupAnimations();
     _setupGestures();
   }
@@ -195,6 +220,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   @override
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
+
+    if (oldChart == null || widget.style != oldChart.style) {
+      _setChartPaintingStyle();
+    }
+
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
     if (oldChart.candles.isNotEmpty) {
@@ -225,6 +255,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
     )..layout();
     return textPainter.width;
   }
+
+  void _setChartPaintingStyle() =>
+      _chartPaintingStyle = widget.style == ChartStyle.candles
+          ? widget.theme.candleStyle
+          : widget.theme.lineStyle;
 
   @override
   void dispose() {
@@ -394,6 +429,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               quoteToCanvasY: _quoteToCanvasY,
+              style: widget.theme.gridStyle,
             ),
           ),
           CustomPaint(
@@ -411,7 +447,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: ChartPainter(
               candles: _getChartCandles(),
-              style: widget.style,
+              style: _chartPaintingStyle,
               pipSize: widget.pipSize,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
@@ -426,11 +462,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
+              style: widget.theme.currentTickStyle,
             ),
           ),
           CrosshairArea(
             visibleCandles: visibleCandles,
-            style: widget.style,
+            style: _chartPaintingStyle,
             pipSize: widget.pipSize,
             quoteToCanvasY: _quoteToCanvasY,
             // TODO(Rustem): remove callbacks when axis models are provided

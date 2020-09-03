@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
 import 'paint_text.dart';
@@ -8,16 +9,19 @@ void paintYGrid(
   @required List<String> quoteLabels,
   @required List<double> yCoords,
   @required double quoteLabelsAreaWidth,
+  @required GridStyle style,
 }) {
   assert(quoteLabels.length == yCoords.length);
 
-  _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth);
+  _paintQuoteGridLines(canvas, size, yCoords, quoteLabelsAreaWidth, style);
+
   _paintQuoteLabels(
     canvas,
     size,
     yCoords: yCoords,
     quoteLabels: quoteLabels,
     quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+    style: style,
   );
 }
 
@@ -26,12 +30,16 @@ void _paintQuoteGridLines(
   Size size,
   List<double> yCoords,
   double quoteLabelsAreaWidth,
+  GridStyle style,
 ) {
   yCoords.forEach((y) {
     canvas.drawLine(
       Offset(0, y),
       Offset(size.width - quoteLabelsAreaWidth, y),
-      Paint()..color = Colors.white12,
+      Paint()
+        ..color = style.gridLineColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = style.lineThickness,
     );
   });
 }
@@ -42,6 +50,7 @@ void _paintQuoteLabels(
   @required List<double> yCoords,
   @required List<String> quoteLabels,
   @required double quoteLabelsAreaWidth,
+  @required GridStyle style,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
     paintTextFromCenter(
@@ -49,11 +58,7 @@ void _paintQuoteLabels(
       text: quoteLabel,
       centerX: size.width - quoteLabelsAreaWidth / 2,
       centerY: yCoords[index],
-      style: TextStyle(
-        color: Colors.white30, // TODO(Ramin): Use theme's color when it's ready
-        fontSize: 12,
-        height: 1,
-      ),
+      style: style.labelStyle,
     );
   });
 }

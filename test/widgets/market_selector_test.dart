@@ -51,8 +51,7 @@ void main() {
       expect(find.byType(AnimatedHighlight), findsNothing);
     });
 
-    testWidgets('Selected asset is highlighted',
-        (tester) async {
+    testWidgets('Selected asset is highlighted', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           markets: [
@@ -110,7 +109,8 @@ void main() {
       expect(find.text('Volatility 50 Index'), findsNWidgets(2));
     });
 
-    testWidgets('Favourite asset passed from outside NOT exist', (tester) async {
+    testWidgets('Favourite asset passed from outside NOT exist',
+        (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
           markets: [

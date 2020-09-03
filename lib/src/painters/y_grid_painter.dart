@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
 import '../paint/paint_y_grid.dart';
@@ -8,6 +9,7 @@ class YGridPainter extends CustomPainter {
     @required this.quoteLabelsAreaWidth,
     @required this.pipSize,
     @required this.quoteToCanvasY,
+    @required this.style,
   });
 
   final int pipSize;
@@ -17,6 +19,8 @@ class YGridPainter extends CustomPainter {
   final double quoteLabelsAreaWidth;
 
   final double Function(double) quoteToCanvasY;
+
+  final GridStyle style;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -28,6 +32,7 @@ class YGridPainter extends CustomPainter {
           .toList(),
       yCoords: gridLineQuotes.map((quote) => quoteToCanvasY(quote)).toList(),
       quoteLabelsAreaWidth: quoteLabelsAreaWidth,
+      style: style,
     );
   }
 
