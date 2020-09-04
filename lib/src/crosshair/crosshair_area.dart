@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/candle.dart';
-import 'package:deriv_chart/src/models/chart_style.dart';
+import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,9 +14,6 @@ class CrosshairArea extends StatefulWidget {
   CrosshairArea({
     Key key,
     @required this.visibleCandles,
-    // TODO(Rustem): remove when xAxisModel is provided
-    @required this.epochToCanvasX,
-    @required this.canvasXToEpoch,
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     // TODO(Rustem): remove when chart params are provided
@@ -29,8 +26,6 @@ class CrosshairArea extends StatefulWidget {
   final List<Candle> visibleCandles;
   final ChartPaintingStyle style;
   final int pipSize;
-  final double Function(int) epochToCanvasX;
-  final int Function(double) canvasXToEpoch;
   final double Function(double) quoteToCanvasY;
   final VoidCallback onCrosshairAppeared;
   final VoidCallback onCrosshairDisappeared;
@@ -43,6 +38,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   Candle crosshairCandle;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
+  XAxisModel get xAxis => context.read<XAxisModel>();
 
   @override
   void initState() {
@@ -83,6 +79,10 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     // TODO(Rustem): ask yAxisModel to zoom out
     // TODO(Rustem): call callback that was passed to chart
     widget.onCrosshairAppeared?.call();
+
+    // Stop auto-panning to make it easier to select candle or tick.
+    xAxis.disableAutoPan();
+
     setState(() {
       crosshairCandle = _getClosestCandle(details.localPosition.dx);
     });
@@ -95,13 +95,16 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   Candle _getClosestCandle(double canvasX) {
-    final epoch = widget.canvasXToEpoch(canvasX);
+    final epoch = xAxis.epochFromX(canvasX);
     return findClosestToEpoch(epoch, widget.visibleCandles);
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
+
+    xAxis.enableAutoPan();
+
     setState(() {
       crosshairCandle = null;
     });
@@ -118,7 +121,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
             painter: CrosshairPainter(
               crosshairCandle: crosshairCandle,
               style: widget.style,
-              epochToCanvasX: widget.epochToCanvasX,
+              epochToCanvasX: xAxis.xFromEpoch,
               quoteToCanvasY: widget.quoteToCanvasY,
             ),
           ),
@@ -127,10 +130,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
               top: 0,
               bottom: 0,
               width: constraints.maxWidth,
-              left: widget.epochToCanvasX(crosshairCandle.epoch) -
+              left: xAxis.xFromEpoch(crosshairCandle.epoch) -
                   constraints.maxWidth / 2,
-              child: Align(
-                alignment: Alignment.center,
+              child: Center(
                 child: CrosshairDetails(
                   style: widget.style,
                   crosshairCandle: crosshairCandle,

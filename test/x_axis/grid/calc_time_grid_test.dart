@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:deriv_chart/src/logic/time_grid.dart';
+import 'package:deriv_chart/src/x_axis/grid/calc_time_grid.dart';
 
 void main() {
   // Timestamps.
@@ -213,14 +213,14 @@ void main() {
   test('given interval if only one is given', () {
     expect(
       timeGridInterval(
-        10000000,
+        (int ms) => ms / 10000000,
         intervals: [Duration(seconds: 10)],
       ),
       equals(Duration(seconds: 10)),
     );
     expect(
       timeGridInterval(
-        0.000001,
+        (int ms) => ms / 0.000001,
         intervals: [Duration(seconds: 42)],
       ),
       equals(Duration(seconds: 42)),
@@ -229,7 +229,7 @@ void main() {
   test('smallest given interval that satisfies [minDistanceBetweenLines]', () {
     expect(
       timeGridInterval(
-        1000,
+        (int ms) => ms / 1000,
         minDistanceBetweenLines: 100,
         intervals: [
           Duration(seconds: 10),
@@ -243,7 +243,7 @@ void main() {
     );
     expect(
       timeGridInterval(
-        1000,
+        (int ms) => ms / 1000,
         minDistanceBetweenLines: 100,
         intervals: [
           Duration(seconds: 10),
@@ -256,7 +256,7 @@ void main() {
     );
     expect(
       timeGridInterval(
-        1000,
+        (int ms) => ms / 1000,
         minDistanceBetweenLines: 42,
         intervals: [
           Duration(seconds: 39),
@@ -267,26 +267,6 @@ void main() {
         ],
       ),
       equals(Duration(seconds: 45)),
-    );
-  });
-
-  // Time label.
-  test('start of day -> date in format `2 Jul`', () {
-    expect(
-      timeLabel(DateTime.parse('2020-07-02 00:00:00Z')),
-      '2 Jul',
-    );
-  });
-  test('start of the month -> full month name', () {
-    expect(
-      timeLabel(DateTime.parse('2020-07-01 00:00:00Z')),
-      'July',
-    );
-  });
-  test('start of the year -> year', () {
-    expect(
-      timeLabel(DateTime.parse('2020-01-01 00:00:00Z')),
-      '2020',
     );
   });
 }

@@ -271,7 +271,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
         loadedCandles.removeLast();
       }
 
-      candles.insertAll(0, loadedCandles);
+      setState(() {
+        candles.insertAll(0, loadedCandles);
+      });
     }
   }
 
