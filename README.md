@@ -81,3 +81,6 @@ Chart(
   onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
 );
 ```
+
+Chart has its own default dart and light themes, that switch depending on `Theme.of(context).brightness` value.
+You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
