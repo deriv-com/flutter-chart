@@ -49,11 +49,11 @@ Chart(
 ```
 
 Chart will request more data on scrolling by calling `onLoadHistory` callback.
-The callback will not be called again until data is supplied.
+The callback being called means the chart wants `count` number of candles appended to the front of the `candles` list.
 
 ```dart
 Chart(
-  candles: data,
+  candles: candles,
   pipSize: 4,
   onLoadHistory: (int count) {
     // append [count] candles to the front of [data]
