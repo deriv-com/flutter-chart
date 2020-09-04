@@ -47,7 +47,7 @@ class Chart extends StatelessWidget {
   /// - disabling candle style for ticks
   final List<Candle> candles;
 
-  /// Number of digits in price after decimal point.
+  /// Number of digits after decimal point in price.
   final int pipSize;
 
   /// For candles: Duration of one candle.
