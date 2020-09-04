@@ -71,3 +71,13 @@ Chart(
   },
 );
 ```
+
+Use `onCrosshairAppeared` for listening to chart's crosshair.
+
+```dart
+Chart(
+  candles: candles,
+  pipSize: 4,
+  onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+);
+```
