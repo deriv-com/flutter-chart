@@ -43,8 +43,19 @@ final candle2 = Candle(
 Chart(
   candles: [candle1, candle2],
   pipSize: 4, // digits after decimal point
+  style: ChartStyle.candles,
   // TODO: add granularity
   // TODO: add isLive
+);
+```
+
+Supply different `ChartStyle` to switch between chart types (candle / line).
+
+```dart
+Chart(
+  candles: [candle1, candle2],
+  pipSize: 4,
+  style: ChartStyle.line,
 );
 ```
 
