@@ -30,6 +30,7 @@ class Chart extends StatelessWidget {
   const Chart({
     @required this.candles,
     @required this.pipSize,
+    @required this.intervalDuration,
     this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
@@ -48,6 +49,10 @@ class Chart extends StatelessWidget {
 
   /// Number of digits in price after decimal point.
   final int pipSize;
+
+  /// For candles: Duration of one candle.
+  /// For ticks: Exact or average time difference between two consecutive ticks.
+  final Duration intervalDuration;
 
   /// The chart type that is used to paint [candles].
   final ChartStyle style;
@@ -75,11 +80,7 @@ class Chart extends StatelessWidget {
         child: GestureManager(
           child: XAxis(
             firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
-            // TODO(Rustem): App should pass granularity to chart,
-            // the calculation is error-prone when gaps are present
-            granularity: candles.length >= 2
-                ? candles[1].epoch - candles[0].epoch
-                : null,
+            granularity: intervalDuration.inMilliseconds,
             child: _ChartImplementation(
               candles: candles,
               pipSize: pipSize,
@@ -451,6 +452,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: ChartPainter(
               candles: _getChartCandles(),
               style: _chartPaintingStyle,
+              granularity: context.watch<XAxisModel>().granularity,
               pipSize: widget.pipSize,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
