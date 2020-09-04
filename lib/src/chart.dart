@@ -30,7 +30,7 @@ class Chart extends StatelessWidget {
   const Chart({
     @required this.candles,
     @required this.pipSize,
-    @required this.intervalDuration,
+    @required this.granularity,
     this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
@@ -50,9 +50,9 @@ class Chart extends StatelessWidget {
   /// Number of digits after decimal point in price.
   final int pipSize;
 
-  /// For candles: Duration of one candle.
-  /// For ticks: Average time difference between two consecutive ticks.
-  final Duration intervalDuration;
+  /// For candles: Duration of one candle in ms.
+  /// For ticks: Average ms difference between two consecutive ticks.
+  final int granularity;
 
   /// The chart type that is used to paint [candles].
   final ChartStyle style;
@@ -80,7 +80,7 @@ class Chart extends StatelessWidget {
         child: GestureManager(
           child: XAxis(
             firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
-            granularity: intervalDuration.inMilliseconds,
+            granularity: granularity,
             child: _ChartImplementation(
               candles: candles,
               pipSize: pipSize,
