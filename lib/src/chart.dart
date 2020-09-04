@@ -51,7 +51,7 @@ class Chart extends StatelessWidget {
   final int pipSize;
 
   /// For candles: Duration of one candle.
-  /// For ticks: Exact or average time difference between two consecutive ticks.
+  /// For ticks: Average time difference between two consecutive ticks.
   final Duration intervalDuration;
 
   /// The chart type that is used to paint [candles].
