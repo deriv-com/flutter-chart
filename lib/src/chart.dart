@@ -10,33 +10,46 @@ import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
-import 'logic/time_grid.dart';
 import 'models/candle.dart';
 import 'models/chart_style.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
 import 'painters/current_tick_painter.dart';
-import 'painters/grid_painter.dart';
 import 'painters/loading_painter.dart';
-
+import 'painters/y_grid_painter.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
 import 'theme/painting_styles/chart_paiting_style.dart';
+import 'x_axis/x_axis.dart';
+import 'x_axis/x_axis_model.dart';
 
+/// Interactive chart widget.
 class Chart extends StatelessWidget {
+  /// Creates chart that expands to available space.
   const Chart({
-    Key key,
     @required this.candles,
     @required this.pipSize,
     this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
+    Key key,
   }) : super(key: key);
 
+  /// Sorted list of all candles (including those outside bounds).
+  /// Use [Candle.tick] constructor to represent ticks.
+  ///
+  /// Super class for ticks and candles wasn't used to avoid complicating things.
+  /// If you are going to refactor it, consider these features:
+  /// - switching between chart styles
+  /// - disabling candle style for ticks
   final List<Candle> candles;
+
+  /// Number of digits in price after decimal point.
   final int pipSize;
+
+  /// The chart type that is used to paint [candles].
   final ChartStyle style;
 
   /// Called when crosshair details appear after long press.
@@ -45,7 +58,7 @@ class Chart extends StatelessWidget {
   /// Called when chart is scrolled back and missing data is visible.
   final OnLoadHistory onLoadHistory;
 
-  /// Chart's theme
+  /// Chart's theme.
   final ChartTheme theme;
 
   @override
@@ -55,16 +68,26 @@ class Chart extends StatelessWidget {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
 
-    return GestureManager(
+    return Provider<ChartTheme>.value(
+      value: chartTheme,
       child: Ink(
         color: chartTheme.base08Color,
-        child: _ChartImplementation(
-          candles: candles,
-          pipSize: pipSize,
-          onCrosshairAppeared: onCrosshairAppeared,
-          onLoadHistory: onLoadHistory,
-          style: style,
-          theme: chartTheme,
+        child: GestureManager(
+          child: XAxis(
+            firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
+            // TODO(Rustem): App should pass granularity to chart,
+            // the calculation is error-prone when gaps are present
+            granularity: candles.length >= 2
+                ? candles[1].epoch - candles[0].epoch
+                : null,
+            child: _ChartImplementation(
+              candles: candles,
+              pipSize: pipSize,
+              onCrosshairAppeared: onCrosshairAppeared,
+              onLoadHistory: onLoadHistory,
+              style: style,
+            ),
+          ),
         ),
       ),
     );
@@ -79,7 +102,6 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
-    this.theme,
   }) : super(key: key);
 
   final List<Candle> candles;
@@ -87,7 +109,6 @@ class _ChartImplementation extends StatefulWidget {
   final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
-  final ChartTheme theme;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -99,10 +120,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   ChartPaintingStyle _chartPaintingStyle;
 
-  // TODO(Rustem): move to XAxisModel
-  /// Max distance between [rightBoundEpoch] and [nowEpoch] in pixels. Limits panning to the right.
-  final double maxCurrentTickOffset = 150;
-
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
 
@@ -111,24 +128,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   List<Candle> visibleCandles = [];
 
-  int nowEpoch;
   int requestedLeftEpoch;
   Size canvasSize;
   Tick prevTick;
-
-  // TODO(Rustem): move to XAxisModel
-  /// Epoch value of the rightmost chart's edge. Including quote labels area.
-  /// Horizontal panning is controlled by this variable.
-  int rightBoundEpoch;
-
-  // TODO(Rustem): move to XAxisModel
-  /// Time axis scale value. Duration in milliseconds of one pixel along the time axis.
-  /// Scaling is controlled by this variable.
-  double msPerPx = 1000;
-
-  // TODO(Rustem): move to XAxisModel
-  /// Previous value of [msPerPx]. Used for scaling computation.
-  double prevMsPerPx;
 
   /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
@@ -149,39 +151,29 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
 
-  // TODO(Rustem): move to XAxisModel
+  // TODO(Rustem): move to YAxisModel
   AnimationController _crosshairZoomOutAnimationController;
 
-  // TODO(Rustem): move to XAxisModel
-  AnimationController _rightEpochAnimationController;
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
-  // TODO(Rustem): move to XAxisModel
+  // TODO(Rustem): move to YAxisModel
   Animation _crosshairZoomOutAnimation;
 
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
-  // TODO(Rustem): move to XAxisModel
-  bool get _isAutoPanning => rightBoundEpoch > nowEpoch && !_isCrosshairMode;
-
-  // TODO(Rustem): move to XAxisModel
-  bool get _isScrollingToNow =>
-      _rightEpochAnimationController?.isAnimating ?? false;
-
-  // TODO(Rustem): move to XAxisModel
   bool get _isScrollToNowAvailable =>
-      !_isAutoPanning && !_isScrollingToNow && !_isCrosshairMode;
+      widget.candles.isNotEmpty && !_xAxis.animatingPan && !_isCrosshairMode;
 
   bool get _shouldLoadMoreHistory {
     if (widget.candles.isEmpty) return false;
 
-    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
-    final waitingForHistory =
-        requestedLeftEpoch != null && requestedLeftEpoch <= leftBoundEpoch;
+    final waitingForHistory = requestedLeftEpoch != null &&
+        requestedLeftEpoch <= _xAxis.leftBoundEpoch;
 
-    return !waitingForHistory && leftBoundEpoch < widget.candles.first.epoch;
+    return !waitingForHistory &&
+        _xAxis.leftBoundEpoch < widget.candles.first.epoch;
   }
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
@@ -213,34 +205,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
   GestureManagerState get _gestureManager =>
       context.read<GestureManagerState>();
 
+  ChartTheme get _theme => context.read<ChartTheme>();
+
+  XAxisModel get _xAxis => context.read<XAxisModel>();
+
   @override
   void initState() {
     super.initState();
 
+    ticker = createTicker(_onNewFrame)..start();
+
     _setChartPaintingStyle();
-
-    nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
-
-    ticker = this.createTicker(_onNewFrame);
-    ticker.start();
-
     _setupAnimations();
     _setupGestures();
-  }
-
-  void _calculateQuoteLabelAreaWidth() {
-    TextSpan textSpan = TextSpan(
-      style: TextStyle(fontSize: 12),
-      text: widget.candles.first.close.toStringAsFixed(widget.pipSize),
-    );
-    TextPainter textPainter = TextPainter(
-      text: textSpan,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout(minWidth: 20, maxWidth: 120);
-    quoteLabelsAreaWidth = textPainter.width + 10;
   }
 
   @override
@@ -253,31 +230,43 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
 
-    _calculateQuoteLabelAreaWidth();
-
     if (oldChart.candles.isNotEmpty) {
       prevTick = _candleToTick(oldChart.candles.last);
-    }
-
-    final oldGranularity = _getGranularity(oldChart.candles);
-    final newGranularity = _getGranularity(widget.candles);
-
-    if (oldGranularity != newGranularity) {
-      msPerPx = _getDefaultScale(newGranularity);
-      rightBoundEpoch = nowEpoch + _pxToMs(maxCurrentTickOffset);
-    } else {
       _onNewTick();
     }
+
+    // TODO(Rustem): recalculate only when price label length has changed
+    _recalculateQuoteLabelsAreaWidth();
+  }
+
+  void _recalculateQuoteLabelsAreaWidth() {
+    final label = widget.candles.first.close.toStringAsFixed(widget.pipSize);
+    // TODO(Rustem): Get label style from _theme
+    quoteLabelsAreaWidth =
+        _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
+  }
+
+  // TODO(Rustem): Extract this helper function
+  double _getRenderedTextWidth(String text, TextStyle style) {
+    TextSpan textSpan = TextSpan(
+      style: style,
+      text: text,
+    );
+    TextPainter textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return textPainter.width;
   }
 
   void _setChartPaintingStyle() =>
       _chartPaintingStyle = widget.style == ChartStyle.candles
-          ? widget.theme.candleStyle
-          : widget.theme.lineStyle;
+          ? _theme.candleStyle
+          : _theme.lineStyle;
 
   @override
   void dispose() {
-    _rightEpochAnimationController?.dispose();
+    ticker?.dispose();
     _currentTickAnimationController?.dispose();
     _currentTickBlinkingController?.dispose();
     _loadingAnimationController?.dispose();
@@ -294,20 +283,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onNewFrame(Duration elapsed) {
-    setState(() {
-      final prevEpoch = nowEpoch;
-      nowEpoch = DateTime.now().millisecondsSinceEpoch;
-      final elapsedMs = nowEpoch - prevEpoch;
-
-      if (_isAutoPanning &&
-          (widget.candles.isEmpty ||
-              widget.candles.last.epoch >
-                  rightBoundEpoch - _pxToMs(canvasSize.width) + _pxToMs(30))) {
-        rightBoundEpoch += elapsedMs;
-      }
-
-      if (_shouldLoadMoreHistory) _loadMoreHistory();
-    });
+    if (_shouldLoadMoreHistory) _loadMoreHistory();
   }
 
   void _setupAnimations() {
@@ -315,18 +291,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupBlinkingAnimation();
     _setupBoundsAnimation();
     _setupCrosshairZoomOutAnimation();
-    _setupRightEpochAnimation();
-  }
-
-  void _setupRightEpochAnimation() {
-    _rightEpochAnimationController = AnimationController.unbounded(
-      vsync: this,
-      value: rightBoundEpoch.toDouble(),
-    )..addListener(() {
-        rightBoundEpoch = _rightEpochAnimationController.value.toInt();
-        final bool hitLimit = _limitRightBoundEpoch();
-        if (hitLimit) _rightEpochAnimationController.stop();
-      });
   }
 
   void _setupCurrentTickAnimation() {
@@ -382,28 +346,20 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager
-      ..registerCallback(_onScaleAndPanStart)
-      ..registerCallback(_onPanUpdate)
-      ..registerCallback(_onScaleUpdate)
-      ..registerCallback(_onScaleAndPanEnd);
+    _gestureManager.registerCallback(_onPanUpdate);
   }
 
   void _clearGestures() {
-    _gestureManager
-      ..removeCallback(_onScaleAndPanStart)
-      ..removeCallback(_onPanUpdate)
-      ..removeCallback(_onScaleUpdate)
-      ..removeCallback(_onScaleAndPanEnd);
+    _gestureManager.removeCallback(_onPanUpdate);
   }
 
   void _updateVisibleCandles() {
     final candles = widget.candles;
-    final leftBoundEpoch = rightBoundEpoch - _pxToMs(canvasSize.width);
 
-    var start = candles.indexWhere((candle) => leftBoundEpoch < candle.epoch);
-    var end =
-        candles.lastIndexWhere((candle) => candle.epoch < rightBoundEpoch);
+    var start =
+        candles.indexWhere((candle) => _xAxis.leftBoundEpoch < candle.epoch);
+    var end = candles
+        .lastIndexWhere((candle) => candle.epoch < _xAxis.rightBoundEpoch);
 
     if (start == -1 || end == -1) {
       visibleCandles = [];
@@ -439,34 +395,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
   }
 
-  int _pxToMs(double px) {
-    return pxToMs(px, msPerPx: msPerPx);
-  }
-
-  double _msToPx(int ms) {
-    return msToPx(ms, msPerPx: msPerPx);
-  }
-
   Tick _candleToTick(Candle candle) {
     return Tick(
       epoch: candle.epoch,
       quote: candle.close,
     );
   }
-
-  double _epochToCanvasX(int epoch) => epochToCanvasX(
-        epoch: epoch,
-        rightBoundEpoch: rightBoundEpoch,
-        canvasWidth: canvasSize.width,
-        msPerPx: msPerPx,
-      );
-
-  int _canvasXToEpoch(double x) => canvasXToEpoch(
-        x: x,
-        rightBoundEpoch: rightBoundEpoch,
-        canvasWidth: canvasSize.width,
-        msPerPx: msPerPx,
-      );
 
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
         quote: quote,
@@ -477,30 +411,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
         bottomPadding: _bottomPadding,
       );
 
-  int _getGranularity(List<Candle> candles) {
-    if (candles.length < 2) return -1;
-    return candles[1].epoch - candles[0].epoch;
-  }
-
-  double _getDefaultScale(int granularity) {
-    const int defaultIntervalWidth = 20;
-    return granularity / defaultIntervalWidth;
-  }
-
-  double _getMinScale(int granularity) {
-    const int maxIntervalWidth = 80;
-    return granularity / maxIntervalWidth;
-  }
-
-  double _getMaxScale(int granularity) {
-    const int minIntervalWidth = 4;
-    return granularity / minIntervalWidth;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      canvasSize = Size(
+        context.watch<XAxisModel>().width,
+        constraints.maxHeight,
+      );
+
       _updateVisibleCandles();
       _updateQuoteBoundTargets();
 
@@ -508,14 +427,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
         children: <Widget>[
           CustomPaint(
             size: canvasSize,
-            painter: GridPainter(
-              gridTimestamps: _getGridLineTimestamps(),
+            painter: YGridPainter(
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              epochToCanvasX: _epochToCanvasX,
               quoteToCanvasY: _quoteToCanvasY,
-              style: widget.theme.gridStyle,
+              style: context.watch<ChartTheme>().gridStyle,
             ),
           ),
           CustomPaint(
@@ -523,9 +440,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
               loadingRightBoundX: visibleCandles?.isEmpty ?? false
-                    ? canvasSize.width
-                    : _epochToCanvasX(visibleCandles.first.epoch),
-              epochToCanvasX: _epochToCanvasX,
+                  ? _xAxis.width
+                  : _xAxis.xFromEpoch(visibleCandles.first.epoch),
+              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
@@ -535,7 +452,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               candles: _getChartCandles(),
               style: _chartPaintingStyle,
               pipSize: widget.pipSize,
-              epochToCanvasX: _epochToCanvasX,
+              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
@@ -546,17 +463,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
               blinkAnimationProgress: _currentTickBlinkAnimation.value,
               pipSize: widget.pipSize,
               quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              epochToCanvasX: _epochToCanvasX,
+              epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
-              style: widget.theme.currentTickStyle,
+              style: context.watch<ChartTheme>().currentTickStyle,
             ),
           ),
           CrosshairArea(
             visibleCandles: visibleCandles,
             style: _chartPaintingStyle,
             pipSize: widget.pipSize,
-            epochToCanvasX: _epochToCanvasX,
-            canvasXToEpoch: _canvasXToEpoch,
             quoteToCanvasY: _quoteToCanvasY,
             // TODO(Rustem): remove callbacks when axis models are provided
             onCrosshairAppeared: () {
@@ -588,15 +503,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       canvasHeight: canvasSize.height,
       topPadding: _topPadding,
       bottomPadding: _bottomPadding,
-    );
-  }
-
-  List<DateTime> _getGridLineTimestamps() {
-    return gridTimestamps(
-      timeGridInterval: timeGridInterval(msPerPx),
-      leftBoundEpoch:
-          rightBoundEpoch - pxToMs(canvasSize.width, msPerPx: msPerPx),
-      rightBoundEpoch: rightBoundEpoch,
     );
   }
 
@@ -638,116 +544,39 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  void _onScaleAndPanStart(ScaleStartDetails details) {
-    _rightEpochAnimationController.stop();
-    prevMsPerPx = msPerPx;
-  }
+  void _onPanUpdate(DragUpdateDetails details) {
+    final bool onQuoteLabelsArea =
+        details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
 
-  void _onScaleUpdate(ScaleUpdateDetails details) {
-    if (_isAutoPanning) {
-      _scaleWithNowFixed(details);
-    } else {
-      _scaleWithFocalPointFixed(details);
+    if (onQuoteLabelsArea) {
+      _scaleVertically(details.delta.dy);
     }
   }
 
-  void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = _msToPx(rightBoundEpoch - nowEpoch);
-    _scaleChart(details);
+  void _scaleVertically(double dy) {
     setState(() {
-      rightBoundEpoch = nowEpoch + _pxToMs(nowToRightBound);
-    });
-  }
-
-  void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = canvasSize.width - details.focalPoint.dx;
-    final focalEpoch = rightBoundEpoch - _pxToMs(focalToRightBound);
-    _scaleChart(details);
-    setState(() {
-      rightBoundEpoch = focalEpoch + _pxToMs(focalToRightBound);
-    });
-  }
-
-  void _scaleChart(ScaleUpdateDetails details) {
-    final granularity = _getGranularity(widget.candles);
-    msPerPx = (prevMsPerPx / details.scale).clamp(
-      _getMinScale(granularity),
-      _getMaxScale(granularity),
-    );
-  }
-
-  void _onPanUpdate(DragUpdateDetails details) {
-    setState(() {
-      rightBoundEpoch -= _pxToMs(details.delta.dx);
-      _limitRightBoundEpoch();
-
-      if (details.localPosition.dx > canvasSize.width - quoteLabelsAreaWidth) {
-        verticalPaddingFraction = ((_verticalPadding + details.delta.dy) /
-                (canvasSize.height - timeLabelsAreaHeight))
-            .clamp(0.05, 0.49);
-      }
+      verticalPaddingFraction =
+          ((_verticalPadding + dy) / (canvasSize.height - timeLabelsAreaHeight))
+              .clamp(0.05, 0.49);
     });
   }
 
   IconButton _buildScrollToNowButton() {
     return IconButton(
       icon: Icon(Icons.arrow_forward, color: Colors.white),
-      onPressed: _scrollToNow,
+      onPressed: _xAxis.scrollToNow,
     );
-  }
-
-  void _scrollToNow() {
-    final animationMsDuration = 600;
-    final lowerBound = rightBoundEpoch.toDouble();
-    final upperBound = nowEpoch +
-        _pxToMs(maxCurrentTickOffset).toDouble() +
-        animationMsDuration;
-
-    if (upperBound > lowerBound) {
-      _rightEpochAnimationController.value = lowerBound;
-      _rightEpochAnimationController.animateTo(
-        upperBound,
-        curve: Curves.easeOut,
-        duration: Duration(milliseconds: animationMsDuration),
-      );
-    }
-  }
-
-  void _onScaleAndPanEnd(ScaleEndDetails details) {
-    _triggerScrollMomentum(details.velocity);
-  }
-
-  void _triggerScrollMomentum(Velocity velocity) {
-    final Simulation simulation = ClampingScrollSimulation(
-      position: rightBoundEpoch.toDouble(),
-      velocity: -velocity.pixelsPerSecond.dx * msPerPx,
-      friction: 0.015 * msPerPx,
-    );
-    _rightEpochAnimationController
-      ..value = rightBoundEpoch.toDouble()
-      ..animateWith(simulation);
-  }
-
-  /// Clamps [rightBoundEpoch] and returns true if hits the limit.
-  bool _limitRightBoundEpoch() {
-    if (widget.candles.isEmpty) return false;
-    final int offset = _pxToMs(maxCurrentTickOffset);
-    final int upperLimit = nowEpoch + offset;
-    final int lowerLimit = widget.candles.first.epoch + offset;
-    rightBoundEpoch = rightBoundEpoch.clamp(lowerLimit, upperLimit);
-    return rightBoundEpoch == upperLimit || rightBoundEpoch == lowerLimit;
   }
 
   void _loadMoreHistory() {
-    final int granularity = widget.candles[1].epoch - widget.candles[0].epoch;
-    final int widthInMs = _pxToMs(canvasSize.width);
+    final int widthInMs = _xAxis.msFromPx(_xAxis.width);
 
     requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
 
     widget.onLoadHistory?.call(
       requestedLeftEpoch,
       widget.candles.first.epoch,
-      (2 * widthInMs) ~/ granularity,
+      (2 * widthInMs) ~/ _xAxis.granularity,
     );
   }
 }

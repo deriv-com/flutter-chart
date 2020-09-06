@@ -1,7 +1,4 @@
-import 'package:intl/intl.dart' show DateFormat;
 import 'package:meta/meta.dart';
-
-import 'conversion.dart';
 
 const _day = Duration(days: 1);
 const _week = Duration(days: DateTime.daysPerWeek);
@@ -59,8 +56,12 @@ DateTime _addMonth(DateTime time) {
   return DateTime.utc(time.year, time.month + 1);
 }
 
+/// Px width of duration in ms on time axis with current scale.
+/// Conversion callback dependency of [timeGridInterval].
+typedef PxFromMs = double Function(int ms);
+
 Duration timeGridInterval(
-  double msPerPx, {
+  PxFromMs pxFromMs, {
   double minDistanceBetweenLines = 100,
   List<Duration> intervals = const [
     Duration(seconds: 5),
@@ -83,10 +84,7 @@ Duration timeGridInterval(
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(Duration interval) {
-    final distanceBetweenLines = msToPx(
-      interval.inMilliseconds,
-      msPerPx: msPerPx,
-    );
+    final distanceBetweenLines = pxFromMs(interval.inMilliseconds);
     return distanceBetweenLines >= minDistanceBetweenLines;
   }
 
@@ -94,18 +92,4 @@ Duration timeGridInterval(
     hasEnoughDistanceBetweenLines,
     orElse: () => intervals.last,
   );
-}
-
-String timeLabel(DateTime time) {
-  final is0h0m0s = time.hour == 0 && time.minute == 0 && time.second == 0;
-  if (time.month == 1 && time.day == 1 && is0h0m0s) {
-    return DateFormat('y').format(time);
-  }
-  if (time.day == 1 && is0h0m0s) {
-    return DateFormat('MMMM').format(time);
-  }
-  if (is0h0m0s) {
-    return DateFormat('d MMM').format(time);
-  }
-  return DateFormat('Hms').format(time);
 }
