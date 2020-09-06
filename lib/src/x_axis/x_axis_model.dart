@@ -115,8 +115,7 @@ class XAxisModel extends ChangeNotifier {
     _nowEpoch = newNowEpoch;
     if (_autoPanning &&
         (_candles.isEmpty ||
-            _candles.last.epoch >
-                rightBoundEpoch - msFromPx(width) + msFromPx(30))) {
+            _candles.last.epoch > leftBoundEpoch + msFromPx(30))) {
       rightBoundEpoch += elapsedMs;
     }
     notifyListeners();
