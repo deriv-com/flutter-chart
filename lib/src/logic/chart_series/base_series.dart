@@ -52,28 +52,20 @@ abstract class BaseSeries {
   void _setMinMaxValues(List<Candle> visibleEntries) {
     final List<double> minMaxValues = getMinMaxValue(visibleEntries);
 
-    if (minMaxValues == null) {
-      _calculateMinMax(visibleEntries);
-    } else {
-      _minValueInFrame = minMaxValues[0];
-      _maxValueInFrame = minMaxValues[1];
-    }
+    _minValueInFrame = minMaxValues[0];
+    _maxValueInFrame = minMaxValues[1];
   }
 
-  /// Get min and max values after updating visible candles
-  List<double> getMinMaxValue(List<Candle> visibleEntries);
-
-  void _calculateMinMax(List<Candle> visibleEntries) {
+  /// Get min and max values after updating visible candles as an array with two items [min, max]
+  List<double> getMinMaxValue(List<Candle> visibleEntries) {
     final Iterable<double> valuesInAction = visibleEntries
         .where((Candle candle) => !candle.close.isNaN)
         .map((Candle candle) => candle.close);
 
     if (valuesInAction.isEmpty) {
-      _minValueInFrame = null;
-      _maxValueInFrame = null;
+      return <double>[double.nan, double.nan];
     } else {
-      _minValueInFrame = valuesInAction.reduce(min);
-      _maxValueInFrame = valuesInAction.reduce(max);
+      return <double>[valuesInAction.reduce(min), valuesInAction.reduce(max)];
     }
   }
 

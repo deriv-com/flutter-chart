@@ -8,9 +8,6 @@ class LineSeries extends BaseSeries {
   LineSeries(List<Candle> entries, String id) : super(entries, id);
 
   @override
-  List<double> getMinMaxValue(List<Candle> visibleEntries) => null;
-
-  @override
   void updateRenderable(
     List<Candle> visibleEntries,
     int leftEpoch,
