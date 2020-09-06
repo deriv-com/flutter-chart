@@ -156,13 +156,13 @@ abstract class BaseSeries {
   void paint(
     Canvas canvas,
     Size size,
-    double animatingMinValue,
-    double animatingMaxValue,
+    double Function(int) epochToX,
+    double Function(double) quoteToY,
   ) =>
       rendererable?.paint(
         canvas: canvas,
         size: size,
-        animatingMinValue: animatingMinValue,
-        animatingMaxValue: animatingMaxValue,
+        epochToX: epochToX,
+        quoteToY: quoteToY,
       );
 }

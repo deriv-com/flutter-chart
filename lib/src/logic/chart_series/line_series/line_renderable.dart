@@ -10,12 +10,16 @@ class LineRenderable extends BaseRendererable {
   LineRenderable(
     BaseSeries series,
     List<Candle> visibleEntries,
-    int leftEpoch,
-    int rightEpoch,
-  ) : super(series, visibleEntries, leftEpoch, rightEpoch);
+    Candle prevLastCandle,
+  ) : super(series, visibleEntries, prevLastCandle);
 
   @override
-  void onPaint({Canvas canvas, Size size, Candle prevLastEntry}) {
+  void onPaint({
+    Canvas canvas,
+    Size size,
+    double Function(int) epochToX,
+    double Function(double) quoteToY,
+  }) {
     // TODO(ramin): paint line chart
   }
 }

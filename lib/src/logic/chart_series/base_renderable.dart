@@ -11,32 +11,24 @@ abstract class BaseRendererable {
   BaseRendererable(
     this.series,
     this.visibleEntries,
-    this.leftEpoch,
-    this.rightEpoch,
+    this.prevLastEntry,
   );
 
   /// Visible entries of [series] inside the frame
   final List<Candle> visibleEntries;
 
+  /// PrevLast
+  final Candle prevLastEntry;
+
   /// The [BaseSeries] which this renderable belongs to
   final BaseSeries series;
-
-  /// Left epoch
-  final int leftEpoch;
-
-  /// Right epoch
-  final int rightEpoch;
-
-  int startIndex = 0;
-  int endIndex = 1;
 
   /// Paints [entries] on the [canvas]
   void paint({
     Canvas canvas,
     Size size,
-    double animatingMinValue,
-    double animatingMaxValue,
-    Candle prevLastEntry,
+    double Function(int) epochToX,
+    double Function(double) quoteToY,
   }) {
     if (visibleEntries.isEmpty) {
       return;
@@ -44,7 +36,8 @@ abstract class BaseRendererable {
     onPaint(
       canvas: canvas,
       size: size,
-      prevLastEntry: prevLastEntry,
+      epochToX: epochToX,
+      quoteToY: quoteToY,
     );
   }
 
@@ -52,6 +45,7 @@ abstract class BaseRendererable {
   void onPaint({
     Canvas canvas,
     Size size,
-    Candle prevLastEntry,
+    double Function(int) epochToX,
+    double Function(double) quoteToY,
   });
 }

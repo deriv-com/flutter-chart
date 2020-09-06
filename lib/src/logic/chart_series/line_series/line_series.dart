@@ -14,5 +14,5 @@ class LineSeries extends BaseSeries {
     int rightEpoch,
   ) =>
       rendererable =
-          LineRenderable(this, visibleEntries, leftEpoch, rightEpoch);
+          LineRenderable(this, visibleEntries, prevLastCandle);
 }
