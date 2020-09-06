@@ -16,16 +16,12 @@ abstract class BaseSeries {
   /// Series ID
   final String id;
 
-  ///
+  /// Series entries
   final List<Candle> entries;
 
   Candle _prevLastCandle;
 
-  /// Setter for [prevLastCandle]
-  // ignore: avoid_setters_without_getters
-  set prevLast(Candle candle) => _prevLastCandle = candle;
-
-  /// Getter
+  /// A reference to the last candle from series previous [entries] before update.
   Candle get prevLastCandle => _prevLastCandle;
 
   double _minValueInFrame;
@@ -147,6 +143,13 @@ abstract class BaseSeries {
         ? closest
         : (closest + 1 > entries.length ? closest : closest + 1);
     return index == entries.length ? index : index + 1;
+  }
+
+  /// Updates the series.
+  void updateSeries(BaseSeries oldSeries) {
+    if (oldSeries.entries.isNotEmpty) {
+      _prevLastCandle = oldSeries.entries.last;
+    }
   }
 
   /// Updates [rendererable] with the new [visibleEntries] and XFactor boundaries
