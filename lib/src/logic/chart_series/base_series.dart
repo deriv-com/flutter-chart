@@ -74,34 +74,10 @@ abstract class BaseSeries {
     }
   }
 
-  /// Binary search to find closest entry to XFactor
+  /// Binary search to find closest entry to the [leftEpoch]
   int _searchLowerIndex(int leftEpoch) {
-    if (leftEpoch < entries[0].epoch) {
-      return 0;
-    }
-    if (leftEpoch > entries[entries.length - 1].epoch) {
-      return -1;
-    }
+    final closest = _findClosestIndex(leftEpoch);
 
-    int lo = 0;
-    int hi = entries.length - 1;
-
-    while (lo <= hi) {
-      final int mid = (hi + lo) ~/ 2;
-
-      if (leftEpoch < entries[mid].epoch) {
-        hi = mid - 1;
-      } else if (leftEpoch > entries[mid].epoch) {
-        lo = mid + 1;
-      } else {
-        return mid;
-      }
-    }
-
-    final int closest =
-        (entries[lo].epoch - leftEpoch) < (leftEpoch - entries[hi].epoch)
-            ? lo
-            : hi;
     final int index = closest <= leftEpoch
         ? closest
         : closest - 1 < 0 ? closest : closest - 1;
@@ -109,10 +85,19 @@ abstract class BaseSeries {
   }
 
   int _searchUpperIndex(int rightEpoch) {
-    if (rightEpoch < entries[0].epoch) {
+    final closest = _findClosestIndex(rightEpoch);
+
+    final int index = closest >= rightEpoch
+        ? closest
+        : (closest + 1 > entries.length ? closest : closest + 1);
+    return index == entries.length ? index : index + 1;
+  }
+
+  int _findClosestIndex(int epoch) {
+    if (epoch < entries[0].epoch) {
       return -1;
     }
-    if (rightEpoch > entries[entries.length - 1].epoch) {
+    if (epoch > entries[entries.length - 1].epoch) {
       return entries.length;
     }
 
@@ -122,9 +107,9 @@ abstract class BaseSeries {
     while (lo <= hi) {
       final int mid = (hi + lo) ~/ 2;
 
-      if (rightEpoch < entries[mid].epoch) {
+      if (epoch < entries[mid].epoch) {
         hi = mid - 1;
-      } else if (rightEpoch > entries[mid].epoch) {
+      } else if (epoch > entries[mid].epoch) {
         lo = mid + 1;
       } else {
         return mid;
@@ -132,14 +117,8 @@ abstract class BaseSeries {
     }
 
     final int closest =
-        (entries[lo].epoch - rightEpoch) < (rightEpoch - entries[hi].epoch)
-            ? lo
-            : hi;
-
-    final int index = closest >= rightEpoch
-        ? closest
-        : (closest + 1 > entries.length ? closest : closest + 1);
-    return index == entries.length ? index : index + 1;
+        (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
+    return closest;
   }
 
   /// Updates the series.
