@@ -243,6 +243,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _recalculateQuoteLabelsAreaWidth() {
+    if (widget.mainSeries.entries.isEmpty) {
+      return;
+    }
+
     final label =
         widget.mainSeries.entries.first.close.toStringAsFixed(widget.pipSize);
     // TODO(Rustem): Get label style from _theme
