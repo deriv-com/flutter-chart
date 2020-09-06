@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
@@ -158,11 +159,13 @@ abstract class BaseSeries {
     Size size,
     double Function(int) epochToX,
     double Function(double) quoteToY,
+    AnimationInfo animationInfo,
   ) =>
       rendererable?.paint(
         canvas: canvas,
         size: size,
         epochToX: epochToX,
         quoteToY: quoteToY,
+        animationInfo: animationInfo,
       );
 }

@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +84,7 @@ class Chart extends StatelessWidget {
                 ? candles[1].epoch - candles[0].epoch
                 : null,
             child: _ChartImplementation(
-              candles: candles,
+              mainSeries: LineSeries(candles, 'line'),
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
               onLoadHistory: onLoadHistory,
@@ -97,14 +100,14 @@ class Chart extends StatelessWidget {
 class _ChartImplementation extends StatefulWidget {
   const _ChartImplementation({
     Key key,
-    @required this.candles,
+    @required this.mainSeries,
     @required this.pipSize,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
-  final List<Candle> candles;
+  final BaseSeries mainSeries;
   final int pipSize;
   final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
@@ -130,7 +133,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   int requestedLeftEpoch;
   Size canvasSize;
-  Tick prevTick;
 
   /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
@@ -164,16 +166,18 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool _isCrosshairMode = false;
 
   bool get _isScrollToNowAvailable =>
-      widget.candles.isNotEmpty && !_xAxis.animatingPan && !_isCrosshairMode;
+      widget.mainSeries.entries.isNotEmpty &&
+      !_xAxis.animatingPan &&
+      !_isCrosshairMode;
 
   bool get _shouldLoadMoreHistory {
-    if (widget.candles.isEmpty) return false;
+    if (widget.mainSeries.entries.isEmpty) return false;
 
     final waitingForHistory = requestedLeftEpoch != null &&
         requestedLeftEpoch <= _xAxis.leftBoundEpoch;
 
     return !waitingForHistory &&
-        _xAxis.leftBoundEpoch < widget.candles.first.epoch;
+        _xAxis.leftBoundEpoch < widget.mainSeries.entries.first.epoch;
   }
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
@@ -228,19 +232,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _setChartPaintingStyle();
     }
 
-    if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
-
-    if (oldChart.candles.isNotEmpty) {
-      prevTick = _candleToTick(oldChart.candles.last);
-      _onNewTick();
+    if (widget.mainSeries.id == oldChart.mainSeries.id) {
+      widget.mainSeries.updateSeries(oldChart.mainSeries);
     }
+
+    _onNewTick();
 
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
   }
 
   void _recalculateQuoteLabelsAreaWidth() {
-    final label = widget.candles.first.close.toStringAsFixed(widget.pipSize);
+    final label =
+        widget.mainSeries.entries.first.close.toStringAsFixed(widget.pipSize);
     // TODO(Rustem): Get label style from _theme
     quoteLabelsAreaWidth =
         _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
@@ -354,23 +358,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _updateVisibleCandles() {
-    final candles = widget.candles;
-
-    var start =
-        candles.indexWhere((candle) => _xAxis.leftBoundEpoch < candle.epoch);
-    var end = candles
-        .lastIndexWhere((candle) => candle.epoch < _xAxis.rightBoundEpoch);
-
-    if (start == -1 || end == -1) {
-      visibleCandles = [];
-      return;
-    }
-
-    // Include nearby points outside the viewport, so the line extends beyond the side edges.
-    if (start > 0) start -= 1;
-    if (end < candles.length - 1) end += 1;
-
-    visibleCandles = candles.sublist(start, end + 1);
+    widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
   }
 
   void _updateQuoteBoundTargets() {
@@ -439,9 +427,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.candles.isEmpty
+              loadingRightBoundX: widget.mainSeries.entries.isEmpty
                   ? _xAxis.width
-                  : _xAxis.xFromEpoch(widget.candles.first.epoch),
+                  : _xAxis.xFromEpoch(widget.mainSeries.entries.first.epoch),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
@@ -449,23 +437,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: ChartPainter(
-              candles: _getChartCandles(),
+              animationInfo: AnimationInfo(
+                newTickPercent: _currentTickAnimation.value,
+                blinkingPercent: _currentTickBlinkAnimation.value,
+              ),
+              mainSeries: widget.mainSeries,
               style: _chartPaintingStyle,
               pipSize: widget.pipSize,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
-            ),
-          ),
-          CustomPaint(
-            size: canvasSize,
-            painter: CurrentTickPainter(
-              animatedCurrentTick: _getAnimatedCurrentTick(),
-              blinkAnimationProgress: _currentTickBlinkAnimation.value,
-              pipSize: widget.pipSize,
-              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().currentTickStyle,
             ),
           ),
           CrosshairArea(
@@ -506,44 +486,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  List<Candle> _getChartCandles() {
-    if (visibleCandles.isEmpty) return [];
-
-    final currentTickVisible = visibleCandles.last == widget.candles.last;
-    final animatedCurrentTick = _getAnimatedCurrentTick();
-
-    if (currentTickVisible && animatedCurrentTick != null) {
-      final excludeLast =
-          visibleCandles.take(visibleCandles.length - 1).toList();
-      final animatedLast = visibleCandles.last.copyWith(
-        epoch: animatedCurrentTick.epoch,
-        close: animatedCurrentTick.quote,
-      );
-      return excludeLast + [animatedLast];
-    } else {
-      return visibleCandles;
-    }
-  }
-
-  Tick _getAnimatedCurrentTick() {
-    if (widget.candles.isEmpty) return null;
-
-    final currentTick = _candleToTick(widget.candles.last);
-
-    if (prevTick == null) return currentTick;
-
-    final epochDiff = currentTick.epoch - prevTick.epoch;
-    final quoteDiff = currentTick.quote - prevTick.quote;
-
-    final animatedEpochDiff = (epochDiff * _currentTickAnimation.value).toInt();
-    final animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
-
-    return Tick(
-      epoch: prevTick.epoch + animatedEpochDiff,
-      quote: prevTick.quote + animatedQuoteDiff,
-    );
-  }
-
   void _onPanUpdate(DragUpdateDetails details) {
     final bool onQuoteLabelsArea =
         details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
@@ -571,11 +513,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _loadMoreHistory() {
     final int widthInMs = _xAxis.msFromPx(_xAxis.width);
 
-    requestedLeftEpoch = widget.candles.first.epoch - (2 * widthInMs);
+    requestedLeftEpoch =
+        widget.mainSeries.entries.first.epoch - (2 * widthInMs);
 
     widget.onLoadHistory?.call(
       requestedLeftEpoch,
-      widget.candles.first.epoch,
+      widget.mainSeries.entries.first.epoch,
       (2 * widthInMs) ~/ _xAxis.granularity,
     );
   }

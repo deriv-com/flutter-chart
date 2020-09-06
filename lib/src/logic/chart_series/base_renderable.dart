@@ -1,8 +1,13 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:flutter/material.dart';
+
+
+typedef EpochToX = double Function(int);
+typedef QuoteToY = double Function(double);
 
 /// Base class for Renderables which has a list of entries to paint
 /// entries called [visibleEntries] inside the [paint] method
@@ -27,8 +32,9 @@ abstract class BaseRendererable {
   void paint({
     Canvas canvas,
     Size size,
-    double Function(int) epochToX,
-    double Function(double) quoteToY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
   }) {
     if (visibleEntries.isEmpty) {
       return;
@@ -38,6 +44,7 @@ abstract class BaseRendererable {
       size: size,
       epochToX: epochToX,
       quoteToY: quoteToY,
+      animationInfo: animationInfo,
     );
   }
 
@@ -45,7 +52,8 @@ abstract class BaseRendererable {
   void onPaint({
     Canvas canvas,
     Size size,
-    double Function(int) epochToX,
-    double Function(double) quoteToY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
   });
 }
