@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
@@ -51,7 +51,7 @@ class LineRenderable extends BaseRendererable {
       final lastEntry = visibleEntries.last;
       path.lineTo(
           epochToX(lastEntry.epoch),
-          quoteToY(lerpDouble(
+          quoteToY(ui.lerpDouble(
             prevLastEntry.close,
             lastEntry.close,
             animationInfo.newTickPercent,
@@ -60,7 +60,19 @@ class LineRenderable extends BaseRendererable {
       _addNewTickTpPath(path, animationInfo.newTickPercent, epochToX, quoteToY);
     }
 
-    canvas.drawPath(path, Paint()..color = Colors.white12);
+    canvas.drawPath(
+        path,
+        Paint()
+          ..color = Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1);
+
+    _drawArea(
+      canvas,
+      size,
+      linePath: path,
+      lineEndX: epochToX(visibleEntries.last.epoch),
+    );
   }
 
   void _addNewTickTpPath(
@@ -75,16 +87,45 @@ class LineRenderable extends BaseRendererable {
     if (lastEntry.close.isNaN) return;
 
     path.lineTo(
-      lerpDouble(
+      ui.lerpDouble(
         epochToX(preLastEntry.epoch),
         epochToX(lastEntry.epoch),
         newTickAnimationPercent,
       ),
-      quoteToY(lerpDouble(
+      quoteToY(ui.lerpDouble(
         preLastEntry.close,
         lastEntry.close,
         newTickAnimationPercent,
       )),
+    );
+  }
+
+  void _drawArea(
+    Canvas canvas,
+    Size size, {
+    Path linePath,
+    double lineEndX,
+  }) {
+    final areaPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..shader = ui.Gradient.linear(
+        Offset(0, 0),
+        Offset(0, size.height),
+        [
+          Colors.white.withOpacity(0.3),
+          Colors.white.withOpacity(0.01),
+        ],
+      );
+
+    linePath.lineTo(
+      lineEndX,
+      size.height,
+    );
+    linePath.lineTo(0, size.height);
+
+    canvas.drawPath(
+      linePath,
+      areaPaint,
     );
   }
 }

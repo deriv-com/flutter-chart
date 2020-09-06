@@ -129,8 +129,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
 
-  List<Candle> visibleCandles = [];
-
   int requestedLeftEpoch;
   Size canvasSize;
 
@@ -362,10 +360,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _updateQuoteBoundTargets() {
-    if (visibleCandles.isEmpty) return;
-
-    final minQuote = visibleCandles.map((candle) => candle.low).reduce(min);
-    final maxQuote = visibleCandles.map((candle) => candle.high).reduce(max);
+    final minQuote = widget.mainSeries.minValue;
+    final maxQuote = widget.mainSeries.maxValue;
 
     if (minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
@@ -448,22 +444,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
-          CrosshairArea(
-            visibleCandles: visibleCandles,
-            style: _chartPaintingStyle,
-            pipSize: widget.pipSize,
-            quoteToCanvasY: _quoteToCanvasY,
-            // TODO(Rustem): remove callbacks when axis models are provided
-            onCrosshairAppeared: () {
-              _isCrosshairMode = true;
-              widget.onCrosshairAppeared?.call();
-              _crosshairZoomOutAnimationController.forward();
-            },
-            onCrosshairDisappeared: () {
-              _isCrosshairMode = false;
-              _crosshairZoomOutAnimationController.reverse();
-            },
-          ),
+//          CrosshairArea(
+//            visibleCandles: visibleCandles,
+//            style: _chartPaintingStyle,
+//            pipSize: widget.pipSize,
+//            quoteToCanvasY: _quoteToCanvasY,
+//            // TODO(Rustem): remove callbacks when axis models are provided
+//            onCrosshairAppeared: () {
+//              _isCrosshairMode = true;
+//              widget.onCrosshairAppeared?.call();
+//              _crosshairZoomOutAnimationController.forward();
+//            },
+//            onCrosshairDisappeared: () {
+//              _isCrosshairMode = false;
+//              _crosshairZoomOutAnimationController.reverse();
+//            },
+//          ),
           if (_isScrollToNowAvailable)
             Positioned(
               bottom: 30 + timeLabelsAreaHeight,
