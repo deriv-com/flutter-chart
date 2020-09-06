@@ -36,6 +36,10 @@ abstract class BaseSeries {
 
   /// Updates visible entries for this renderer
   List<Candle> update(int leftEpoch, int rightEpoch) {
+    if (entries.isEmpty) {
+      return <Candle>[];
+    }
+
     final int startIndex = _searchLowerIndex(leftEpoch);
     final int endIndex = _searchUpperIndex(rightEpoch);
 

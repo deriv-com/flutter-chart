@@ -211,6 +211,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
+  List<Candle> _mainVisibleCandles;
+
   @override
   void initState() {
     super.initState();
@@ -355,8 +357,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager.removeCallback(_onPanUpdate);
   }
 
-  void _updateVisibleCandles() {
-    widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
+  void _updateSeries() {
+    _mainVisibleCandles = widget.mainSeries.update(
+      _xAxis.leftBoundEpoch,
+      _xAxis.rightBoundEpoch,
+    );
   }
 
   void _updateQuoteBoundTargets() {
@@ -404,7 +409,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         constraints.maxHeight,
       );
 
-      _updateVisibleCandles();
+      _updateSeries();
       _updateQuoteBoundTargets();
 
       return Stack(
@@ -444,22 +449,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
-//          CrosshairArea(
-//            visibleCandles: visibleCandles,
-//            style: _chartPaintingStyle,
-//            pipSize: widget.pipSize,
-//            quoteToCanvasY: _quoteToCanvasY,
-//            // TODO(Rustem): remove callbacks when axis models are provided
-//            onCrosshairAppeared: () {
-//              _isCrosshairMode = true;
-//              widget.onCrosshairAppeared?.call();
-//              _crosshairZoomOutAnimationController.forward();
-//            },
-//            onCrosshairDisappeared: () {
-//              _isCrosshairMode = false;
-//              _crosshairZoomOutAnimationController.reverse();
-//            },
-//          ),
+          CrosshairArea(
+            visibleCandles: _mainVisibleCandles,
+            style: _chartPaintingStyle,
+            pipSize: widget.pipSize,
+            quoteToCanvasY: _quoteToCanvasY,
+            // TODO(Rustem): remove callbacks when axis models are provided
+            onCrosshairAppeared: () {
+              _isCrosshairMode = true;
+              widget.onCrosshairAppeared?.call();
+              _crosshairZoomOutAnimationController.forward();
+            },
+            onCrosshairDisappeared: () {
+              _isCrosshairMode = false;
+              _crosshairZoomOutAnimationController.reverse();
+            },
+          ),
           if (_isScrollToNowAvailable)
             Positioned(
               bottom: 30 + timeLabelsAreaHeight,
