@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
+import 'package:deriv_chart/src/models/candle.dart';
 import 'package:flutter/material.dart';
 
 /// State and methods of chart's x-axis.
@@ -7,12 +8,11 @@ class XAxisModel extends ChangeNotifier {
 
   /// Creates x-axis model for live chart.
   XAxisModel({
-    @required int firstCandleEpoch,
+    @required List<Candle> candles,
     @required int granularity,
     @required AnimationController animationController,
-  }) {
+  }) : _candles = candles {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     rightBoundEpoch = _maxRightBoundEpoch;
@@ -25,6 +25,8 @@ class XAxisModel extends ChangeNotifier {
         }
       });
   }
+
+  List<Candle> _candles;
 
   // TODO(Rustem): Expose this setting
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
@@ -50,10 +52,12 @@ class XAxisModel extends ChangeNotifier {
   bool _autoPanEnabled = true;
   double _msPerPx = 1000;
   double _prevMsPerPx;
-  int _firstCandleEpoch;
   int _granularity;
   int _nowEpoch;
   int _rightBoundEpoch;
+
+  int get _firstCandleEpoch =>
+      _candles.isNotEmpty ? _candles.first.epoch : _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -95,13 +99,13 @@ class XAxisModel extends ChangeNotifier {
 
   /// Bounds and default for [_msPerPx].
   double get _minScale => _granularity / maxIntervalWidth;
+
   double get _maxScale => _granularity / minIntervalWidth;
+
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Updates left panning limit.
-  void updateFirstCandleEpoch(int firstCandleEpoch) {
-    _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
-  }
+  void updateCandles(List<Candle> candles) => _candles = candles;
 
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
@@ -109,7 +113,10 @@ class XAxisModel extends ChangeNotifier {
     final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
-    if (_autoPanning) {
+    if (_autoPanning &&
+        (_candles.isEmpty ||
+            _candles.last.epoch >
+                rightBoundEpoch - msFromPx(width) + msFromPx(30))) {
       rightBoundEpoch += elapsedMs;
     }
     notifyListeners();
