@@ -211,8 +211,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
-  List<Candle> _mainVisibleCandles;
-
   @override
   void initState() {
     super.initState();
@@ -362,7 +360,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _updateSeries() {
-    _mainVisibleCandles = widget.mainSeries.update(
+    widget.mainSeries.update(
       _xAxis.leftBoundEpoch,
       _xAxis.rightBoundEpoch,
     );
@@ -386,13 +384,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
         curve: Curves.easeOut,
       );
     }
-  }
-
-  Tick _candleToTick(Candle candle) {
-    return Tick(
-      epoch: candle.epoch,
-      quote: candle.close,
-    );
   }
 
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
@@ -454,7 +445,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             ),
           ),
           CrosshairArea(
-            visibleCandles: _mainVisibleCandles,
+            mainSeries: widget.mainSeries,
             style: _chartPaintingStyle,
             pipSize: widget.pipSize,
             quoteToCanvasY: _quoteToCanvasY,

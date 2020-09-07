@@ -20,6 +20,11 @@ abstract class BaseSeries {
   /// Series entries
   final List<Candle> entries;
 
+  List<Candle> _visibleEntries = <Candle>[];
+
+  /// Series visible entries
+  List<Candle> get visibleEntries => _visibleEntries;
+
   Candle _prevLastCandle;
 
   /// A reference to the last candle from series previous [entries] before update.
@@ -35,9 +40,9 @@ abstract class BaseSeries {
   double get maxValue => _maxValueInFrame ?? double.nan;
 
   /// Updates visible entries for this renderer
-  List<Candle> update(int leftEpoch, int rightEpoch) {
+  void update(int leftEpoch, int rightEpoch) {
     if (entries.isEmpty) {
-      return <Candle>[];
+      return;
     }
 
     final int startIndex = _searchLowerIndex(leftEpoch);
@@ -51,7 +56,8 @@ abstract class BaseSeries {
 
     updateRenderable(visibleCandles, leftEpoch, rightEpoch);
 
-    return visibleCandles;
+    _visibleEntries = visibleCandles;
+
   }
 
   void _setMinMaxValues(List<Candle> visibleEntries) {

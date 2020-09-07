@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
@@ -13,7 +14,7 @@ import 'crosshair_painter.dart';
 class CrosshairArea extends StatefulWidget {
   CrosshairArea({
     Key key,
-    @required this.visibleCandles,
+    @required this.mainSeries,
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     // TODO(Rustem): remove when chart params are provided
@@ -23,7 +24,7 @@ class CrosshairArea extends StatefulWidget {
     this.onCrosshairDisappeared,
   }) : super(key: key);
 
-  final List<Candle> visibleCandles;
+  final BaseSeries mainSeries;
   final ChartPaintingStyle style;
   final int pipSize;
   final double Function(double) quoteToCanvasY;
@@ -57,10 +58,10 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
   void _updateCrosshairCandle() {
     if (crosshairCandle == null ||
-        widget.visibleCandles == null ||
-        widget.visibleCandles.isEmpty) return;
+        widget.mainSeries.visibleEntries == null ||
+        widget.mainSeries.visibleEntries.isEmpty) return;
 
-    final lastCandle = widget.visibleCandles.last;
+    final lastCandle = widget.mainSeries.visibleEntries.last;
     if (crosshairCandle.epoch == lastCandle.epoch) {
       crosshairCandle = lastCandle;
     }
@@ -96,7 +97,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
   Candle _getClosestCandle(double canvasX) {
     final epoch = xAxis.epochFromX(canvasX);
-    return findClosestToEpoch(epoch, widget.visibleCandles);
+    return findClosestToEpoch(epoch, widget.mainSeries.visibleEntries);
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {
