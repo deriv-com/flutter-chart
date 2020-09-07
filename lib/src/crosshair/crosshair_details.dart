@@ -40,44 +40,6 @@ class CrosshairDetails extends StatelessWidget {
     );
   }
 
-//  Widget _buildCandleStyleDetails() {
-//    return Row(
-//      mainAxisAlignment: MainAxisAlignment.center,
-//      children: <Widget>[
-//        Column(
-//          children: <Widget>[
-//            _buildLabelValue('O', crosshairTick.open),
-//            _buildLabelValue('C', crosshairTick.close),
-//          ],
-//        ),
-//        SizedBox(width: 16),
-//        Column(
-//          children: <Widget>[
-//            _buildLabelValue('H', crosshairTick.high),
-//            _buildLabelValue('L', crosshairTick.low),
-//          ],
-//        ),
-//      ],
-//    );
-//  }
-//
-//  Widget _buildLineStyleDetails() {
-//    return _buildValue(crosshairTick.close, fontSize: 16);
-//  }
-
-  Widget _buildLabelValue(String label, double value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: <Widget>[
-          _buildLabel(label),
-          SizedBox(width: 4),
-          _buildValue(value),
-        ],
-      ),
-    );
-  }
-
   Text _buildTimeLabel() {
     final time = DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch);
     final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
@@ -91,18 +53,6 @@ class CrosshairDetails extends StatelessWidget {
       style: TextStyle(
         fontSize: 12,
         color: Colors.white70,
-        fontFeatures: [FontFeature.tabularFigures()],
-      ),
-    );
-  }
-
-  // TODO(Ramin): Add style for cross-hair when design updated
-  Text _buildValue(double value, {double fontSize = 12}) {
-    return Text(
-      value.toStringAsFixed(pipSize),
-      style: TextStyle(
-        fontSize: fontSize,
-        color: Colors.white,
         fontFeatures: [FontFeature.tabularFigures()],
       ),
     );
