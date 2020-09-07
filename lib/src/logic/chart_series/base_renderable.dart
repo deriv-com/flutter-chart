@@ -3,7 +3,6 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
-
 typedef EpochToX = double Function(int);
 typedef QuoteToY = double Function(double);
 
@@ -20,7 +19,7 @@ abstract class BaseRendererable<T extends Tick> {
   /// Visible entries of [series] inside the frame
   final List<T> visibleEntries;
 
-  /// PrevLast
+  /// Previous last entry
   final T prevLastEntry;
 
   /// The [BaseSeries] which this renderable belongs to
@@ -44,6 +43,11 @@ abstract class BaseRendererable<T extends Tick> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
     );
+
+    if (series.style.currentTickStyle != null) {
+    // TODO(ramin): paint current tick indicator
+
+    }
   }
 
   /// Paints [visibleEntries] based on the [animatingMaxValue] [_animatingMinValue]

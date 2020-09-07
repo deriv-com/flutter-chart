@@ -1,5 +1,7 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +10,14 @@ import '../models/candle.dart';
 
 class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
+    @required this.mainSeries,
     @required this.crosshairCandle,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
   });
 
+  /// Chart's main series
+  final BaseSeries mainSeries;
   final Candle crosshairCandle;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
@@ -47,13 +52,14 @@ class CrosshairPainter extends CustomPainter {
         ),
     );
 
-    // TODO(ramin): if is line type
-    canvas.drawCircle(
-      Offset(x, y),
-      5,
-      // TODO(Ramin): Use theme color when cross-hair design got updated
-      Paint()..color = Colors.white,
-    );
+    if (mainSeries is LineSeries) {
+      canvas.drawCircle(
+        Offset(x, y),
+        5,
+        // TODO(Ramin): Use theme color when cross-hair design got updated
+        Paint()..color = Colors.white,
+      );
+    }
   }
 
   @override
