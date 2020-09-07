@@ -11,7 +11,7 @@ abstract class BaseSeries {
   /// Initializes
   BaseSeries(this.entries, this.id);
 
-  /// Paints a frame into canvas
+  /// Responsible for painting a frame on the canvas
   BaseRendererable rendererable;
 
   /// Series ID
@@ -27,19 +27,19 @@ abstract class BaseSeries {
 
   Candle _prevLastCandle;
 
-  /// A reference to the last candle from series previous [entries] before update.
+  /// A reference to the last candle from series previous [entries] before update
   Candle get prevLastCandle => _prevLastCandle;
 
   double _minValueInFrame;
   double _maxValueInFrame;
 
-  /// Min value in frame
+  /// Min value in a frame
   double get minValue => _minValueInFrame ?? double.nan;
 
-  /// Max value in frame
+  /// Max value in a frame
   double get maxValue => _maxValueInFrame ?? double.nan;
 
-  /// Updates visible entries for this renderer
+  /// Updates visible entries for this renderer.
   void update(int leftEpoch, int rightEpoch) {
     if (entries.isEmpty) {
       return;
@@ -66,7 +66,9 @@ abstract class BaseSeries {
     _maxValueInFrame = minMaxValues[1];
   }
 
-  /// Get min and max values after updating visible candles as an array with two items [min, max]
+  /// Gets min and max values after updating [visibleEntries] as an array with two elements [min, max].
+  ///
+  /// Sub-classes of can override this method if the calculate min/max differently.
   List<double> getMinMaxValue(List<Candle> visibleEntries) {
     final Iterable<double> valuesInAction = visibleEntries
         .where((Candle candle) => !candle.close.isNaN)
@@ -79,7 +81,6 @@ abstract class BaseSeries {
     }
   }
 
-  /// Binary search to find closest entry to the [leftEpoch]
   int _searchLowerIndex(int leftEpoch) {
     if (leftEpoch < entries[0].epoch) {
       return 0;
@@ -110,6 +111,7 @@ abstract class BaseSeries {
     return index == entries.length ? index : index + 1;
   }
 
+  // Binary search to find closest index to the [epoch].
   int _findClosestIndex(int epoch) {
     int lo = 0;
     int hi = entries.length - 1;
@@ -136,7 +138,7 @@ abstract class BaseSeries {
     }
   }
 
-  /// Updates [rendererable] with the new [visibleEntries] and XFactor boundaries
+  /// Updates [rendererable] with the new [visibleEntries] and XFactor boundaries.
   void updateRenderable(
     List<Candle> visibleEntries,
     int leftEpoch,
