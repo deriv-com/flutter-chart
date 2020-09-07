@@ -59,8 +59,8 @@ Chart(
 );
 ```
 
-Chart will request more data on scrolling by calling `onLoadHistory` callback.
-The callback being called means the chart wants `count` number of candles appended to the front of the `candles` list.
+Chart will call `onLoadHistory` callback when missing historical data on the left is scrolled into view.
+Chart will pass `count`, which is a number of candles that should be appended to front of the `candles` list.
 
 ```dart
 Chart(
