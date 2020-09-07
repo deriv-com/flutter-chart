@@ -59,7 +59,7 @@ Chart(
 );
 ```
 
-Chart will call `onLoadHistory` callback when missing historical data on the left is scrolled into view.
+Chart will call `onLoadHistory` callback when user scrolls back and gap with no data is scrolled into view. (Gap will be filled with loading animation.)
 Chart will pass `count`, which is a number of candles that should be appended to front of the `candles` list.
 
 ```dart
