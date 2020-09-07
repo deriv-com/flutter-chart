@@ -1,10 +1,10 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/candle_series/candle_renderable.dart';
 import 'package:deriv_chart/src/models/candle.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
 /// Line series
@@ -13,8 +13,32 @@ class CandleSeries extends BaseSeries<Candle> {
   CandleSeries(
     List<Candle> entries,
     String id, {
-    LineStyle style,
-  }) : super(entries, id, style: style ?? LineStyle());
+    CandleStyle style,
+  }) : super(entries, id, style: style ?? CandleStyle());
+
+  @override
+  List<double> getMinMaxValue(List<Candle> visibleEntries) {
+    final Iterable<double> maxValuesInAction = visibleEntries
+        .where((Candle candle) => !candle.high.isNaN)
+        .map((Candle candle) => candle.high);
+
+    if (maxValuesInAction.isEmpty) {
+      return [double.nan, double.nan];
+    }
+
+    final Iterable<double> minValuesInAction = visibleEntries
+        .where((Candle candle) => !candle.low.isNaN)
+        .map((Candle candle) => candle.low);
+
+    if (minValuesInAction.isEmpty) {
+      return [double.nan, double.nan];
+    }
+
+    return <double>[
+      minValuesInAction.reduce(min),
+      maxValuesInAction.reduce(max)
+    ];
+  }
 
   @override
   void updateRenderable(
@@ -22,7 +46,7 @@ class CandleSeries extends BaseSeries<Candle> {
     int leftEpoch,
     int rightEpoch,
   ) =>
-      rendererable = LineRenderable(this, visibleEntries, prevLastEntry);
+      rendererable = CandleRenderable(this, visibleEntries, prevLastEntry);
 
   @override
   Widget getCrossHairInfo(Candle crossHairTick) => Row(

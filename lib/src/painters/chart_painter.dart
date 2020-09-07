@@ -47,24 +47,6 @@ class ChartPainter extends CustomPainter {
 //    );
 //  }
 //
-//  void _paintCandles(CandleStyle candleStyle) {
-//    final intervalWidth =
-//        epochToCanvasX(candles[1].epoch) - epochToCanvasX(candles[0].epoch);
-//    final candleWidth = intervalWidth * 0.6;
-//
-//    final candlePaintings = candles.map((candle) {
-//      return CandlePainting(
-//        width: candleWidth,
-//        xCenter: epochToCanvasX(candle.epoch),
-//        yHigh: quoteToCanvasY(candle.high),
-//        yLow: quoteToCanvasY(candle.low),
-//        yOpen: quoteToCanvasY(candle.open),
-//        yClose: quoteToCanvasY(candle.close),
-//      );
-//    }).toList();
-//
-//    paintCandles(canvas, candlePaintings, candleStyle);
-//  }
 
   @override
   bool shouldRepaint(ChartPainter oldDelegate) => true;
