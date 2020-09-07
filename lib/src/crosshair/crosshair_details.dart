@@ -1,20 +1,21 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
+import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/candle.dart';
 
 class CrosshairDetails extends StatelessWidget {
   const CrosshairDetails({
     Key key,
-    @required this.crosshairCandle,
+    @required this.mainSeries,
+    @required this.crosshairTick,
     @required this.pipSize,
   }) : super(key: key);
 
-  final Candle crosshairCandle;
+  final BaseSeries mainSeries;
+  final Tick crosshairTick;
   final int pipSize;
 
   @override
@@ -31,7 +32,7 @@ class CrosshairDetails extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          _buildLineStyleDetails(),
+          mainSeries.getCrossHairInfo(crosshairTick),
           SizedBox(height: 2),
           _buildTimeLabel(),
         ],
@@ -39,30 +40,30 @@ class CrosshairDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildCandleStyleDetails() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            _buildLabelValue('O', crosshairCandle.open),
-            _buildLabelValue('C', crosshairCandle.close),
-          ],
-        ),
-        SizedBox(width: 16),
-        Column(
-          children: <Widget>[
-            _buildLabelValue('H', crosshairCandle.high),
-            _buildLabelValue('L', crosshairCandle.low),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLineStyleDetails() {
-    return _buildValue(crosshairCandle.close, fontSize: 16);
-  }
+//  Widget _buildCandleStyleDetails() {
+//    return Row(
+//      mainAxisAlignment: MainAxisAlignment.center,
+//      children: <Widget>[
+//        Column(
+//          children: <Widget>[
+//            _buildLabelValue('O', crosshairTick.open),
+//            _buildLabelValue('C', crosshairTick.close),
+//          ],
+//        ),
+//        SizedBox(width: 16),
+//        Column(
+//          children: <Widget>[
+//            _buildLabelValue('H', crosshairTick.high),
+//            _buildLabelValue('L', crosshairTick.low),
+//          ],
+//        ),
+//      ],
+//    );
+//  }
+//
+//  Widget _buildLineStyleDetails() {
+//    return _buildValue(crosshairTick.close, fontSize: 16);
+//  }
 
   Widget _buildLabelValue(String label, double value) {
     return Padding(
@@ -78,7 +79,7 @@ class CrosshairDetails extends StatelessWidget {
   }
 
   Text _buildTimeLabel() {
-    final time = DateTime.fromMillisecondsSinceEpoch(crosshairCandle.epoch);
+    final time = DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch);
     final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
     return _buildLabel(timeLabel);
   }

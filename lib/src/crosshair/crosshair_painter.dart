@@ -1,33 +1,30 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
-
-import '../models/candle.dart';
 
 class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
     @required this.mainSeries,
-    @required this.crosshairCandle,
+    @required this.crosshairTick,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
   });
 
   /// Chart's main series
   final BaseSeries mainSeries;
-  final Candle crosshairCandle;
+  final Tick crosshairTick;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (crosshairCandle == null) return;
+    if (crosshairTick == null) return;
 
-    final x = epochToCanvasX(crosshairCandle.epoch);
-    final y = quoteToCanvasY(crosshairCandle.close);
+    final x = epochToCanvasX(crosshairTick.epoch);
+    final y = quoteToCanvasY(crosshairTick.quote);
 
     canvas.drawLine(
       Offset(x, 0),

@@ -1,9 +1,8 @@
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
 import 'package:deriv_chart/src/logic/find.dart';
-import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +33,7 @@ class CrosshairArea extends StatefulWidget {
 }
 
 class _CrosshairAreaState extends State<CrosshairArea> {
-  Candle crosshairCandle;
+  Tick crosshairTick;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
   XAxisModel get xAxis => context.read<XAxisModel>();
@@ -55,13 +54,13 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _updateCrosshairCandle() {
-    if (crosshairCandle == null ||
+    if (crosshairTick == null ||
         widget.mainSeries.visibleEntries == null ||
         widget.mainSeries.visibleEntries.isEmpty) return;
 
-    final lastCandle = widget.mainSeries.visibleEntries.last;
-    if (crosshairCandle.epoch == lastCandle.epoch) {
-      crosshairCandle = lastCandle;
+    final lastTick = widget.mainSeries.visibleEntries.last;
+    if (crosshairTick.epoch == lastTick.epoch) {
+      crosshairTick = lastTick;
     }
   }
 
@@ -83,17 +82,17 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     xAxis.disableAutoPan();
 
     setState(() {
-      crosshairCandle = _getClosestCandle(details.localPosition.dx);
+      crosshairTick = _getClosestTick(details.localPosition.dx);
     });
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     setState(() {
-      crosshairCandle = _getClosestCandle(details.localPosition.dx);
+      crosshairTick = _getClosestTick(details.localPosition.dx);
     });
   }
 
-  Candle _getClosestCandle(double canvasX) {
+  Tick _getClosestTick(double canvasX) {
     final epoch = xAxis.epochFromX(canvasX);
     return findClosestToEpoch(epoch, widget.mainSeries.visibleEntries);
   }
@@ -105,7 +104,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     xAxis.enableAutoPan();
 
     setState(() {
-      crosshairCandle = null;
+      crosshairTick = null;
     });
   }
 
@@ -118,21 +117,23 @@ class _CrosshairAreaState extends State<CrosshairArea> {
           CustomPaint(
             size: Size.infinite,
             painter: CrosshairPainter(
-              crosshairCandle: crosshairCandle,
+              mainSeries: widget.mainSeries,
+              crosshairTick: crosshairTick,
               epochToCanvasX: xAxis.xFromEpoch,
               quoteToCanvasY: widget.quoteToCanvasY,
             ),
           ),
-          if (crosshairCandle != null)
+          if (crosshairTick != null)
             Positioned(
               top: 0,
               bottom: 0,
               width: constraints.maxWidth,
-              left: xAxis.xFromEpoch(crosshairCandle.epoch) -
+              left: xAxis.xFromEpoch(crosshairTick.epoch) -
                   constraints.maxWidth / 2,
               child: Center(
                 child: CrosshairDetails(
-                  crosshairCandle: crosshairCandle,
+                  mainSeries: widget.mainSeries,
+                  crosshairTick: crosshairTick,
                   pipSize: widget.pipSize,
                 ),
               ),

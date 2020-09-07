@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/logic/chart_series/line_series/line_renderable.d
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:flutter/cupertino.dart';
 
 /// Line series
 class LineSeries extends BaseSeries<Tick> {
@@ -20,4 +21,10 @@ class LineSeries extends BaseSeries<Tick> {
     int rightEpoch,
   ) =>
       rendererable = LineRenderable(this, visibleEntries, prevLastEntry);
+
+  @override
+  Widget getCrossHairInfo(Tick crossHairTick) => Text(
+        '${crossHairTick.quote}',
+        style: TextStyle(fontSize: 16),
+      );
 }

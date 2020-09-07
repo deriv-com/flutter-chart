@@ -164,4 +164,7 @@ abstract class BaseSeries<T extends Tick> {
         quoteToY: quoteToY,
         animationInfo: animationInfo,
       );
+
+  /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements
+  Widget getCrossHairInfo(Tick crossHairTick);
 }

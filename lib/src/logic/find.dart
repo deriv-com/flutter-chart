@@ -1,33 +1,33 @@
-import '../models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 
 /// Returns a reference to candle with exact or closest epoch to [targetEpoch].
 ///
 /// Returns [null] if list is empty.
 /// Expects a list of candles to be sorted.
-Candle findClosestToEpoch(int targetEpoch, List<Candle> candles) {
-  if (candles.isEmpty) return null;
+Tick findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
+  if (ticks.isEmpty) return null;
 
   int left = 0;
-  int right = candles.length - 1;
+  int right = ticks.length - 1;
 
   while (right - left > 1) {
     final mid = ((left + right) / 2).floor();
-    final candle = candles[mid];
+    final tick = ticks[mid];
 
-    if (candle.epoch < targetEpoch) {
+    if (tick.epoch < targetEpoch) {
       left = mid;
-    } else if (candle.epoch > targetEpoch) {
+    } else if (tick.epoch > targetEpoch) {
       right = mid;
     } else {
-      return candle;
+      return tick;
     }
   }
 
-  final distanceToLeft = (targetEpoch - candles[left].epoch).abs();
-  final distanceToRight = (targetEpoch - candles[right].epoch).abs();
+  final distanceToLeft = (targetEpoch - ticks[left].epoch).abs();
+  final distanceToRight = (targetEpoch - ticks[right].epoch).abs();
 
   if (distanceToLeft <= distanceToRight)
-    return candles[left];
+    return ticks[left];
   else
-    return candles[right];
+    return ticks[right];
 }
