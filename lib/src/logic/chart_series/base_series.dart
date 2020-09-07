@@ -4,15 +4,19 @@ import 'dart:ui';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
 abstract class BaseSeries<T extends Tick> {
   /// Initializes
-  BaseSeries(this.entries, this.id);
+  BaseSeries(this.entries, this.id, {this.style});
 
   /// Responsible for painting a frame on the canvas
   BaseRendererable rendererable;
+
+  /// The painting style of this series
+  final ChartPaintingStyle style;
 
   /// Series ID
   final String id;

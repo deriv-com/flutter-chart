@@ -194,8 +194,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   GestureManagerState get _gestureManager =>
       context.read<GestureManagerState>();
 
-  ChartTheme get _theme => context.read<ChartTheme>();
-
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
   @override
@@ -337,10 +335,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _updateSeries() {
-    widget.mainSeries.update(
-      _xAxis.leftBoundEpoch,
-      _xAxis.rightBoundEpoch,
-    );
+    widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
   }
 
   void _updateQuoteBoundTargets() {

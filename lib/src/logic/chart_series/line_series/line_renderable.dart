@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 /// Line renderable
@@ -63,12 +64,14 @@ class LineRenderable extends BaseRendererable<Tick> {
       _addNewTickTpPath(path, animationInfo.newTickPercent, epochToX, quoteToY);
     }
 
+    final LineStyle style = series.style;
+
     canvas.drawPath(
       path,
       Paint()
-        ..color = Colors.white
+        ..color = style.color
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1,
+        ..strokeWidth = style.thickness,
     );
 
     _drawArea(
@@ -76,6 +79,7 @@ class LineRenderable extends BaseRendererable<Tick> {
       size,
       path,
       epochToX(visibleEntries.last.epoch),
+      style,
     );
   }
 
@@ -111,6 +115,7 @@ class LineRenderable extends BaseRendererable<Tick> {
     Size size,
     Path linePath,
     double lineEndX,
+    LineStyle style,
   ) {
     final Paint areaPaint = Paint()
       ..style = PaintingStyle.fill
@@ -118,8 +123,8 @@ class LineRenderable extends BaseRendererable<Tick> {
         const Offset(0, 0),
         Offset(0, size.height),
         <Color>[
-          Colors.white.withOpacity(0.3),
-          Colors.white.withOpacity(0.01),
+          style.color.withOpacity(0.3),
+          style.color.withOpacity(0.01),
         ],
       );
 
