@@ -1,6 +1,7 @@
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:meta/meta.dart';
 
-class Candle {
+class Candle extends Tick {
   final int epoch;
   final double high;
   final double low;
@@ -13,7 +14,7 @@ class Candle {
     @required this.low,
     @required this.open,
     @required this.close,
-  });
+  }) : super(epoch: epoch, quote: close);
 
   Candle.tick({
     @required this.epoch,
@@ -21,7 +22,8 @@ class Candle {
   })  : high = quote,
         low = quote,
         open = quote,
-        close = quote;
+        close = quote,
+        super(epoch: epoch, quote: quote);
 
   Candle copyWith({
     int epoch,

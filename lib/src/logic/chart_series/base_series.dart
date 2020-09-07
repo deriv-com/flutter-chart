@@ -7,7 +7,7 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
-abstract class BaseSeries {
+abstract class BaseSeries<T extends Tick> {
   /// Initializes
   BaseSeries(this.entries, this.id);
 
@@ -18,25 +18,25 @@ abstract class BaseSeries {
   final String id;
 
   /// Series entries
-  final List<Candle> entries;
+  final List<T> entries;
 
-  List<Candle> _visibleEntries = <Candle>[];
+  List<T> _visibleEntries = <T>[];
 
   /// Series visible entries
-  List<Candle> get visibleEntries => _visibleEntries;
+  List<T> get visibleEntries => _visibleEntries;
 
-  Candle _prevLastCandle;
+  T _prevLastEntry;
 
-  /// A reference to the last candle from series previous [entries] before update
-  Candle get prevLastCandle => _prevLastCandle;
+  /// A reference to the last entry from series previous [entries] before update
+  T get prevLastEntry => _prevLastEntry;
 
   double _minValueInFrame;
   double _maxValueInFrame;
 
-  /// Min value in a frame
+  /// Min quote in a frame
   double get minValue => _minValueInFrame ?? double.nan;
 
-  /// Max value in a frame
+  /// Max quote in a frame
   double get maxValue => _maxValueInFrame ?? double.nan;
 
   /// Updates visible entries for this renderer.
@@ -48,8 +48,8 @@ abstract class BaseSeries {
     final int startIndex = _searchLowerIndex(leftEpoch);
     final int endIndex = _searchUpperIndex(rightEpoch);
 
-    final List<Candle> visibleCandles = startIndex == -1 || endIndex == -1
-        ? <Candle>[]
+    final List<T> visibleCandles = startIndex == -1 || endIndex == -1
+        ? <T>[]
         : entries.sublist(startIndex, endIndex);
 
     _setMinMaxValues(visibleCandles);
@@ -59,20 +59,19 @@ abstract class BaseSeries {
     _visibleEntries = visibleCandles;
   }
 
-  void _setMinMaxValues(List<Candle> visibleEntries) {
+  void _setMinMaxValues(List<T> visibleEntries) {
     final List<double> minMaxValues = getMinMaxValue(visibleEntries);
 
     _minValueInFrame = minMaxValues[0];
     _maxValueInFrame = minMaxValues[1];
   }
 
-  /// Gets min and max values after updating [visibleEntries] as an array with two elements [min, max].
+  /// Gets min and max quotes after updating [visibleEntries] as an array with two elements [min, max].
   ///
   /// Sub-classes of can override this method if the calculate min/max differently.
-  List<double> getMinMaxValue(List<Candle> visibleEntries) {
-    final Iterable<double> valuesInAction = visibleEntries
-        .where((Candle candle) => !candle.close.isNaN)
-        .map((Candle candle) => candle.close);
+  List<double> getMinMaxValue(List<T> visibleEntries) {
+    final Iterable<double> valuesInAction =
+        visibleEntries.where((T t) => !t.quote.isNaN).map((T t) => t.quote);
 
     if (valuesInAction.isEmpty) {
       return <double>[double.nan, double.nan];
@@ -132,15 +131,15 @@ abstract class BaseSeries {
   }
 
   /// Updates the series.
-  void updateSeries(BaseSeries oldSeries) {
+  void updateSeries(BaseSeries<T> oldSeries) {
     if (oldSeries.entries.isNotEmpty) {
-      _prevLastCandle = oldSeries.entries.last;
+      _prevLastEntry = oldSeries.entries.last;
     }
   }
 
   /// Updates [rendererable] with the new [visibleEntries] and XFactor boundaries.
   void updateRenderable(
-    List<Candle> visibleEntries,
+    List<T> visibleEntries,
     int leftEpoch,
     int rightEpoch,
   );

@@ -1,8 +1,6 @@
-import 'dart:math';
-
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 
@@ -11,7 +9,7 @@ typedef QuoteToY = double Function(double);
 
 /// Base class for Renderables which has a list of entries to paint
 /// entries called [visibleEntries] inside the [paint] method
-abstract class BaseRendererable {
+abstract class BaseRendererable<T extends Tick> {
   /// Initializes
   BaseRendererable(
     this.series,
@@ -20,15 +18,15 @@ abstract class BaseRendererable {
   );
 
   /// Visible entries of [series] inside the frame
-  final List<Candle> visibleEntries;
+  final List<T> visibleEntries;
 
   /// PrevLast
-  final Candle prevLastEntry;
+  final T prevLastEntry;
 
   /// The [BaseSeries] which this renderable belongs to
-  final BaseSeries series;
+  final BaseSeries<T> series;
 
-  /// Paints [entries] on the [canvas]
+  /// Paints [visibleEntries] on the [canvas]
   void paint({
     Canvas canvas,
     Size size,

@@ -246,7 +246,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
 
     final label =
-        widget.mainSeries.entries.first.close.toStringAsFixed(widget.pipSize);
+        widget.mainSeries.entries.first.quote.toStringAsFixed(widget.pipSize);
     // TODO(Rustem): Get label style from _theme
     quoteLabelsAreaWidth =
         _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
