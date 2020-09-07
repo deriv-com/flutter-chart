@@ -57,7 +57,6 @@ abstract class BaseSeries {
     updateRenderable(visibleCandles, leftEpoch, rightEpoch);
 
     _visibleEntries = visibleCandles;
-
   }
 
   void _setMinMaxValues(List<Candle> visibleEntries) {
@@ -82,7 +81,13 @@ abstract class BaseSeries {
 
   /// Binary search to find closest entry to the [leftEpoch]
   int _searchLowerIndex(int leftEpoch) {
-    final closest = _findClosestIndex(leftEpoch);
+    if (leftEpoch < entries[0].epoch) {
+      return 0;
+    } else if (leftEpoch > entries[entries.length - 1].epoch) {
+      return -1;
+    }
+
+    final int closest = _findClosestIndex(leftEpoch);
 
     final int index = closest <= leftEpoch
         ? closest
@@ -91,7 +96,13 @@ abstract class BaseSeries {
   }
 
   int _searchUpperIndex(int rightEpoch) {
-    final closest = _findClosestIndex(rightEpoch);
+    if (rightEpoch < entries[0].epoch) {
+      return -1;
+    } else if (rightEpoch > entries[entries.length - 1].epoch) {
+      return entries.length;
+    }
+
+    final int closest = _findClosestIndex(rightEpoch);
 
     final int index = closest >= rightEpoch
         ? closest
@@ -100,13 +111,6 @@ abstract class BaseSeries {
   }
 
   int _findClosestIndex(int epoch) {
-    if (epoch < entries[0].epoch) {
-      return -1;
-    }
-    if (epoch > entries[entries.length - 1].epoch) {
-      return entries.length;
-    }
-
     int lo = 0;
     int hi = entries.length - 1;
 
@@ -122,9 +126,7 @@ abstract class BaseSeries {
       }
     }
 
-    final int closest =
-        (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
-    return closest;
+    return (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
   }
 
   /// Updates the series.
