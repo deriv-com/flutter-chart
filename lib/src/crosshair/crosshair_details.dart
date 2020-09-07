@@ -11,12 +11,10 @@ class CrosshairDetails extends StatelessWidget {
   const CrosshairDetails({
     Key key,
     @required this.crosshairCandle,
-    @required this.style,
     @required this.pipSize,
   }) : super(key: key);
 
   final Candle crosshairCandle;
-  final ChartPaintingStyle style;
   final int pipSize;
 
   @override
@@ -33,9 +31,7 @@ class CrosshairDetails extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          style is CandleStyle
-              ? _buildCandleStyleDetails()
-              : _buildLineStyleDetails(),
+          _buildLineStyleDetails(),
           SizedBox(height: 2),
           _buildTimeLabel(),
         ],

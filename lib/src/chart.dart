@@ -31,29 +31,19 @@ import 'x_axis/x_axis_model.dart';
 class Chart extends StatelessWidget {
   /// Creates chart that expands to available space.
   const Chart({
-    @required this.candles,
+    @required this.mainSeries,
     @required this.pipSize,
     this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
-    this.style = ChartStyle.candles,
     Key key,
   }) : super(key: key);
 
-  /// Sorted list of all candles (including those outside bounds).
-  /// Use [Candle.tick] constructor to represent ticks.
-  ///
-  /// Super class for ticks and candles wasn't used to avoid complicating things.
-  /// If you are going to refactor it, consider these features:
-  /// - switching between chart styles
-  /// - disabling candle style for ticks
-  final List<Candle> candles;
+  /// Chart's main data series
+  final BaseSeries<Tick> mainSeries;
 
   /// Number of digits in price after decimal point.
   final int pipSize;
-
-  /// The chart type that is used to paint [candles].
-  final ChartStyle style;
 
   /// Called when crosshair details appear after long press.
   final VoidCallback onCrosshairAppeared;
@@ -77,18 +67,19 @@ class Chart extends StatelessWidget {
         color: chartTheme.base08Color,
         child: GestureManager(
           child: XAxis(
-            firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
+            firstCandleEpoch: mainSeries.entries.isNotEmpty
+                ? mainSeries.entries.first.epoch
+                : null,
             // TODO(Rustem): App should pass granularity to chart,
             // the calculation is error-prone when gaps are present
-            granularity: candles.length >= 2
-                ? candles[1].epoch - candles[0].epoch
+            granularity: mainSeries.entries.length >= 2
+                ? mainSeries.entries[1].epoch - mainSeries.entries[0].epoch
                 : null,
             child: _ChartImplementation(
-              mainSeries: LineSeries(candles, 'line'),
+              mainSeries: mainSeries,
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
               onLoadHistory: onLoadHistory,
-              style: style,
             ),
           ),
         ),
@@ -104,12 +95,10 @@ class _ChartImplementation extends StatefulWidget {
     @required this.pipSize,
     this.onCrosshairAppeared,
     this.onLoadHistory,
-    this.style = ChartStyle.candles,
   }) : super(key: key);
 
   final BaseSeries mainSeries;
   final int pipSize;
-  final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
 
@@ -120,8 +109,6 @@ class _ChartImplementation extends StatefulWidget {
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
   Ticker ticker;
-
-  ChartPaintingStyle _chartPaintingStyle;
 
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
@@ -217,7 +204,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     ticker = createTicker(_onNewFrame)..start();
 
-    _setChartPaintingStyle();
     _setupAnimations();
     _setupGestures();
   }
@@ -225,10 +211,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   @override
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
-
-    if (oldChart == null || widget.style != oldChart.style) {
-      _setChartPaintingStyle();
-    }
 
     if (widget.mainSeries.id == oldChart.mainSeries.id) {
       widget.mainSeries.updateSeries(oldChart.mainSeries);
@@ -264,11 +246,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     )..layout();
     return textPainter.width;
   }
-
-  void _setChartPaintingStyle() =>
-      _chartPaintingStyle = widget.style == ChartStyle.candles
-          ? _theme.candleStyle
-          : _theme.lineStyle;
 
   @override
   void dispose() {
@@ -438,7 +415,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 blinkingPercent: _currentTickBlinkAnimation.value,
               ),
               mainSeries: widget.mainSeries,
-              style: _chartPaintingStyle,
               pipSize: widget.pipSize,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
@@ -446,7 +422,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
           ),
           CrosshairArea(
             mainSeries: widget.mainSeries,
-            style: _chartPaintingStyle,
             pipSize: widget.pipSize,
             quoteToCanvasY: _quoteToCanvasY,
             // TODO(Rustem): remove callbacks when axis models are provided

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 class ChartPainter extends CustomPainter {
   ChartPainter({
     this.pipSize,
-    this.style,
     this.mainSeries,
     this.animationInfo,
     this.epochToCanvasX,
@@ -14,7 +13,6 @@ class ChartPainter extends CustomPainter {
   });
 
   final int pipSize;
-  final ChartPaintingStyle style;
 
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;

@@ -215,9 +215,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
           ),
           Expanded(
             child: Chart(
-              candles: candles,
+              mainSeries: LineSeries(candles, 'line'),
               pipSize: 4,
-              style: style,
               onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
               onLoadHistory: (fromEpoch, toEpoch, count) =>
                   _loadHistory(fromEpoch, toEpoch, count),

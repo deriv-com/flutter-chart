@@ -9,13 +9,11 @@ import '../models/candle.dart';
 class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
     @required this.crosshairCandle,
-    @required this.style,
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
   });
 
   final Candle crosshairCandle;
-  final ChartPaintingStyle style;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
 
@@ -49,14 +47,13 @@ class CrosshairPainter extends CustomPainter {
         ),
     );
 
-    if (style is LineStyle) {
-      canvas.drawCircle(
-        Offset(x, y),
-        5,
-        // TODO(Ramin): Use theme color when cross-hair design got updated
-        Paint()..color = Colors.white,
-      );
-    }
+    // TODO(ramin): if is line type
+    canvas.drawCircle(
+      Offset(x, y),
+      5,
+      // TODO(Ramin): Use theme color when cross-hair design got updated
+      Paint()..color = Colors.white,
+    );
   }
 
   @override

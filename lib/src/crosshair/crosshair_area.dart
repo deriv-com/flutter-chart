@@ -18,14 +18,12 @@ class CrosshairArea extends StatefulWidget {
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     // TODO(Rustem): remove when chart params are provided
-    @required this.style,
     @required this.pipSize,
     this.onCrosshairAppeared,
     this.onCrosshairDisappeared,
   }) : super(key: key);
 
   final BaseSeries mainSeries;
-  final ChartPaintingStyle style;
   final int pipSize;
   final double Function(double) quoteToCanvasY;
   final VoidCallback onCrosshairAppeared;
@@ -121,7 +119,6 @@ class _CrosshairAreaState extends State<CrosshairArea> {
             size: Size.infinite,
             painter: CrosshairPainter(
               crosshairCandle: crosshairCandle,
-              style: widget.style,
               epochToCanvasX: xAxis.xFromEpoch,
               quoteToCanvasY: widget.quoteToCanvasY,
             ),
@@ -135,7 +132,6 @@ class _CrosshairAreaState extends State<CrosshairArea> {
                   constraints.maxWidth / 2,
               child: Center(
                 child: CrosshairDetails(
-                  style: widget.style,
                   crosshairCandle: crosshairCandle,
                   pipSize: widget.pipSize,
                 ),

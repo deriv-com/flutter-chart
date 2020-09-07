@@ -1,6 +1,7 @@
 library deriv_chart;
 
 export './src/chart.dart';
+export './src/logic/chart_series/line_series/line_series.dart';
 export './src/models/candle.dart';
 export './src/models/chart_style.dart';
 export './src/models/tick.dart';
