@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -9,6 +10,9 @@ import 'package:flutter/material.dart';
 
 typedef EpochToX = double Function(int);
 typedef QuoteToY = double Function(double);
+
+// TODO(ramin): We need to eventually remove quoteLabelAreaWidth and use textPainter's width instead
+const double quoteLabelHorizontalPadding = 10;
 
 /// Base class for Renderables which has a list of entries to paint
 /// entries called [visibleEntries] inside the [paint] method
@@ -48,10 +52,14 @@ abstract class BaseRendererable<T extends Tick> {
       animationInfo: animationInfo,
     );
 
+    // Paint current Tick indicator
     if (series?.style?.currentTickStyle != null ?? false) {
       double currentTickX;
       double currentTickY;
       final T lastEntry = series.entries.last;
+      final CurrentTickStyle currentTickStyle = series.style.currentTickStyle;
+
+      double quoteValue;
 
       if (prevLastEntry != null) {
         currentTickX = lerpDouble(
@@ -60,14 +68,17 @@ abstract class BaseRendererable<T extends Tick> {
           animationInfo.newTickPercent,
         );
 
-        currentTickY = quoteToY(lerpDouble(
+        quoteValue = lerpDouble(
           prevLastEntry.quote,
           lastEntry.quote,
           animationInfo.newTickPercent,
-        ));
+        );
+        currentTickY = quoteToY(quoteValue);
       } else {
         currentTickX = epochToX(lastEntry.epoch);
-        currentTickY = quoteToY(lastEntry.quote);
+
+        quoteValue = lastEntry.quote;
+        currentTickY = quoteToY(quoteValue);
       }
 
       if (!currentTickX.isNaN && !currentTickY.isNaN) {
@@ -75,24 +86,53 @@ abstract class BaseRendererable<T extends Tick> {
           canvas,
           center: Offset(currentTickX, currentTickY),
           animationProgress: animationInfo.blinkingPercent,
-          style: series.style.currentTickStyle,
+          style: currentTickStyle,
         );
 
-//      paintCurrentTickLabel(
-//        canvas,
-//        size,
-//        centerY: quoteToCanvasY(animatedCurrentTick.quote),
-//        quoteLabel: animatedCurrentTick.quote.toStringAsFixed(pipSize),
-//        quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-//        currentTickX: epochToCanvasX(animatedCurrentTick.epoch),
-//        style: style,
-//      );
+        paintHorizontalDashedLine(
+          canvas,
+          currentTickX,
+          size.width,
+          currentTickY,
+          currentTickStyle.color,
+          currentTickStyle.lineThickness,
+        );
+
+        TextSpan span = TextSpan(
+          // TODO(ramin): get pip size from cross-hair style
+          text: quoteValue.toStringAsFixed(4),
+          style: currentTickStyle.labelStyle,
+        );
+        TextPainter tp = TextPainter(
+          text: span,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+        );
+        tp.layout();
+
+        final double quoteLabelAreaWidth =
+            tp.width + quoteLabelHorizontalPadding;
+
+        paintCurrentTickLabelBackground(
+          canvas,
+          size,
+          centerY: currentTickY,
+          quoteLabelsAreaWidth: quoteLabelAreaWidth,
+          quoteLabel: lastEntry.quote.toStringAsFixed(4),
+          currentTickX: currentTickX,
+          style: currentTickStyle,
+        );
+
+        tp.paint(
+          canvas,
+          Offset(
+              size.width - quoteLabelAreaWidth, currentTickY - tp.height / 2),
+        );
       }
-      // TODO(ramin): paint current tick indicator
     }
   }
 
-  /// Paints [visibleEntries] based on the [animatingMaxValue] [_animatingMinValue]
+  /// Paints [visibleEntries]
   void onPaint({
     Canvas canvas,
     Size size,

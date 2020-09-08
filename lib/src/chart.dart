@@ -1,8 +1,6 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,17 +11,13 @@ import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
-import 'models/candle.dart';
-import 'models/chart_style.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
-import 'painters/current_tick_painter.dart';
 import 'painters/loading_painter.dart';
 import 'painters/y_grid_painter.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
-import 'theme/painting_styles/chart_paiting_style.dart';
 import 'x_axis/x_axis.dart';
 import 'x_axis/x_axis_model.dart';
 

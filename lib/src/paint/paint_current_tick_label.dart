@@ -3,40 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../paint/paint_text.dart';
 
-void paintCurrentTickLabel(
+void paintCurrentTickLabelBackground(
   Canvas canvas,
   Size size, {
   @required double centerY,
   @required String quoteLabel,
   @required double quoteLabelsAreaWidth,
   @required double currentTickX,
-  @required CurrentTickStyle style,
-}) {
-  paintHorizontalDashedLine(
-    canvas,
-    currentTickX,
-    size.width,
-    centerY,
-    style.color,
-    style.lineThickness,
-  );
-
-  _paintLabel(
-    canvas,
-    size,
-    centerY: centerY,
-    quoteLabel: quoteLabel,
-    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-    style: style,
-  );
-}
-
-void _paintLabel(
-  Canvas canvas,
-  Size size, {
-  @required double centerY,
-  @required String quoteLabel,
-  @required double quoteLabelsAreaWidth,
   @required CurrentTickStyle style,
 }) {
   final triangleWidth = 8;
@@ -54,14 +27,6 @@ void _paintLabel(
     Paint()
       ..color = style.color
       ..style = PaintingStyle.fill,
-  );
-
-  paintTextFromCenter(
-    canvas,
-    text: quoteLabel,
-    centerX: size.width - quoteLabelsAreaWidth / 2,
-    centerY: centerY,
-    style: style.labelStyle,
   );
 }
 
