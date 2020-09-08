@@ -26,16 +26,13 @@ class LineRenderable extends BaseRendererable<Tick> {
   }) {
     final Path path = Path();
 
-    bool movedToStartPoint = false;
+    bool isStartPointSet = false;
 
     for (int i = 0; i < visibleEntries.length - 1; i++) {
       final Tick tick = visibleEntries[i];
-      if (tick.quote.isNaN) {
-        continue;
-      }
 
-      if (!movedToStartPoint) {
-        movedToStartPoint = true;
+      if (!isStartPointSet) {
+        isStartPointSet = true;
         path.moveTo(
           epochToX(tick.epoch),
           quoteToY(tick.quote),
@@ -48,19 +45,28 @@ class LineRenderable extends BaseRendererable<Tick> {
       path.lineTo(x, y);
     }
 
-    if (prevLastEntry != null &&
-        prevLastEntry.epoch == visibleEntries.last.epoch) {
-      // Chart's first load
-      final Tick lastTick = visibleEntries.last;
-      path.lineTo(
-          epochToX(lastTick.epoch),
-          quoteToY(ui.lerpDouble(
-            prevLastEntry.quote,
-            lastTick.quote,
-            animationInfo.newTickPercent,
-          )));
+    // Last visible Tick
+    final Tick lastTick = series.entries.last;
+    final Tick lastVisibleTick = visibleEntries.last;
+    double lastVisibleTickX;
+
+    if (lastTick == lastVisibleTick && prevLastEntry != null) {
+      lastVisibleTickX = ui.lerpDouble(
+        epochToX(prevLastEntry.epoch),
+        epochToX(lastTick.epoch),
+        animationInfo.newTickPercent,
+      );
+
+      final double tickY = quoteToY(ui.lerpDouble(
+        prevLastEntry.quote,
+        lastTick.quote,
+        animationInfo.newTickPercent,
+      ));
+
+      path.lineTo(lastVisibleTickX, tickY);
     } else {
-      _addNewTickTpPath(path, animationInfo.newTickPercent, epochToX, quoteToY);
+      lastVisibleTickX = epochToX(lastVisibleTick.epoch);
+      path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
 
     final LineStyle style = series.style;
@@ -77,35 +83,9 @@ class LineRenderable extends BaseRendererable<Tick> {
       canvas,
       size,
       path,
-      epochToX(visibleEntries.last.epoch),
+      epochToX(visibleEntries.first.epoch),
+      lastVisibleTickX,
       style,
-    );
-  }
-
-  void _addNewTickTpPath(
-    Path path,
-    double newTickAnimationPercent,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-  ) {
-    final Tick lastTick = visibleEntries.last;
-    final Tick secondLastTick = visibleEntries[visibleEntries.length - 2];
-
-    if (lastTick.quote.isNaN) {
-      return;
-    }
-
-    path.lineTo(
-      ui.lerpDouble(
-        epochToX(secondLastTick.epoch),
-        epochToX(lastTick.epoch),
-        newTickAnimationPercent,
-      ),
-      quoteToY(ui.lerpDouble(
-        secondLastTick.quote,
-        lastTick.quote,
-        newTickAnimationPercent,
-      )),
     );
   }
 
@@ -113,6 +93,7 @@ class LineRenderable extends BaseRendererable<Tick> {
     Canvas canvas,
     Size size,
     Path linePath,
+    double lineStartX,
     double lineEndX,
     LineStyle style,
   ) {
@@ -122,7 +103,7 @@ class LineRenderable extends BaseRendererable<Tick> {
         const Offset(0, 0),
         Offset(0, size.height),
         <Color>[
-          style.color.withOpacity(0.3),
+          style.color.withOpacity(0.2),
           style.color.withOpacity(0.01),
         ],
       );
@@ -132,7 +113,7 @@ class LineRenderable extends BaseRendererable<Tick> {
         lineEndX,
         size.height,
       )
-      ..lineTo(0, size.height);
+      ..lineTo(lineStartX, size.height);
 
     canvas.drawPath(
       linePath,
