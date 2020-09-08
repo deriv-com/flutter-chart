@@ -60,8 +60,11 @@ class CandleRenderable extends BaseRendererable<Candle> {
         animationInfo.newTickPercent,
       ));
 
-      final xCenter = ui.lerpDouble(epochToX(prevLastEntry.epoch),
-          epochToX(lastCandle.epoch), animationInfo.newTickPercent);
+      final xCenter = ui.lerpDouble(
+        epochToX(prevLastEntry.epoch),
+        epochToX(lastCandle.epoch),
+        animationInfo.newTickPercent,
+      );
 
       candlePaintings.add(CandlePainting(
         xCenter: xCenter,
