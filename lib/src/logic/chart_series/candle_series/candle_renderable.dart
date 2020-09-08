@@ -49,10 +49,11 @@ class CandleRenderable extends BaseRendererable<Candle> {
       ));
     }
 
-    // Last candle
+    // Last visible candle
     final Candle lastCandle = series.entries.last;
+    final Candle lastVisibleCandle = visibleEntries.last;
 
-    if (lastCandle == visibleEntries.last && prevLastEntry != null) {
+    if (lastCandle == lastVisibleCandle && prevLastEntry != null) {
       final yClose = quoteToY(lerpDouble(
         prevLastEntry.close,
         lastCandle.close,
@@ -68,6 +69,15 @@ class CandleRenderable extends BaseRendererable<Candle> {
         yLow: quoteToY(lastCandle.low),
         yOpen: quoteToY(lastCandle.open),
         yClose: yClose,
+        width: candleWidth,
+      ));
+    } else {
+      candlePaintings.add(CandlePainting(
+        xCenter: epochToX(lastVisibleCandle.epoch),
+        yHigh: quoteToY(lastVisibleCandle.high),
+        yLow: quoteToY(lastVisibleCandle.low),
+        yOpen: quoteToY(lastVisibleCandle.open),
+        yClose: quoteToY(lastVisibleCandle.close),
         width: candleWidth,
       ));
     }
