@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
@@ -33,16 +34,43 @@ class CandleRenderable extends BaseRendererable<Candle> {
         epochToX(visibleEntries[1].epoch) - epochToX(visibleEntries[0].epoch);
     final candleWidth = intervalWidth * 0.6;
 
-    final candlePaintings = visibleEntries.map((candle) {
-      return CandlePainting(
+    final List<CandlePainting> candlePaintings = <CandlePainting>[];
+
+    for (int i = 0; i < visibleEntries.length - 1; i++) {
+      final Candle candle = visibleEntries[i];
+
+      candlePaintings.add(CandlePainting(
         width: candleWidth,
         xCenter: epochToX(candle.epoch),
         yHigh: quoteToY(candle.high),
         yLow: quoteToY(candle.low),
         yOpen: quoteToY(candle.open),
         yClose: quoteToY(candle.close),
-      );
-    }).toList();
+      ));
+    }
+
+    // Last candle
+    final Candle lastCandle = series.entries.last;
+
+    if (lastCandle == visibleEntries.last && prevLastEntry != null) {
+      final yClose = quoteToY(lerpDouble(
+        prevLastEntry.close,
+        lastCandle.close,
+        animationInfo.newTickPercent,
+      ));
+
+      final xCenter = ui.lerpDouble(epochToX(prevLastEntry.epoch),
+          epochToX(lastCandle.epoch), animationInfo.newTickPercent);
+
+      candlePaintings.add(CandlePainting(
+        xCenter: xCenter,
+        yHigh: quoteToY(lastCandle.high),
+        yLow: quoteToY(lastCandle.low),
+        yOpen: quoteToY(lastCandle.open),
+        yClose: yClose,
+        width: candleWidth,
+      ));
+    }
 
     paintCandles(canvas, candlePaintings, series.style);
   }
