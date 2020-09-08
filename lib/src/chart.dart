@@ -205,7 +205,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.didUpdateWidget(oldChart);
 
     if (widget.mainSeries.id == oldChart.mainSeries.id) {
-      widget.mainSeries.updateSeries(oldChart.mainSeries);
+      widget.mainSeries.didUpdateSeries(oldChart.mainSeries);
     }
 
     _onNewTick();

@@ -1,5 +1,4 @@
 import 'dart:ui' as ui;
-import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
@@ -54,7 +53,7 @@ class CandleRenderable extends BaseRendererable<Candle> {
     final Candle lastVisibleCandle = visibleEntries.last;
 
     if (lastCandle == lastVisibleCandle && prevLastEntry != null) {
-      final yClose = quoteToY(lerpDouble(
+      final yClose = quoteToY(ui.lerpDouble(
         prevLastEntry.close,
         lastCandle.close,
         animationInfo.newTickPercent,

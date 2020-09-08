@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 
@@ -134,8 +134,8 @@ abstract class BaseSeries<T extends Tick> {
     return (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
   }
 
-  /// Updates the series.
-  void updateSeries(BaseSeries<T> oldSeries) {
+  /// Will be called by the chart when the it was updated.
+  void didUpdateSeries(BaseSeries<T> oldSeries) {
     if (oldSeries.entries.isNotEmpty) {
       _prevLastEntry = oldSeries.entries.last;
     }
