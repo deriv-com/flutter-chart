@@ -32,7 +32,7 @@ class CrosshairDetails extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          mainSeries.getCrossHairInfo(crosshairTick),
+          mainSeries.getCrossHairInfo(crosshairTick, pipSize),
           SizedBox(height: 2),
           _buildTimeLabel(),
         ],

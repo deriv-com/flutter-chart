@@ -22,8 +22,8 @@ class LineSeries extends BaseSeries<Tick> {
       rendererable = LineRenderable(this, visibleEntries, prevLastEntry);
 
   @override
-  Widget getCrossHairInfo(Tick crossHairTick) => Text(
-        '${crossHairTick.quote}',
-        style: TextStyle(fontSize: 16),
+  Widget getCrossHairInfo(Tick crossHairTick, int pipSize) => Text(
+        '${crossHairTick.quote.toStringAsFixed(pipSize)}',
+        style: const TextStyle(fontSize: 16),
       );
 }

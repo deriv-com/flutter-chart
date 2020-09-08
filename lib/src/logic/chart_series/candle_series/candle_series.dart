@@ -49,32 +49,32 @@ class CandleSeries extends BaseSeries<Candle> {
       rendererable = CandleRenderable(this, visibleEntries, prevLastEntry);
 
   @override
-  Widget getCrossHairInfo(Candle crossHairTick) => Row(
+  Widget getCrossHairInfo(Candle crossHairTick, int pipSize) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Column(
             children: <Widget>[
-              _buildLabelValue('O', crossHairTick.open),
-              _buildLabelValue('C', crossHairTick.close),
+              _buildLabelValue('O', crossHairTick.open, pipSize),
+              _buildLabelValue('C', crossHairTick.close, pipSize),
             ],
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Column(
             children: <Widget>[
-              _buildLabelValue('H', crossHairTick.high),
-              _buildLabelValue('L', crossHairTick.low),
+              _buildLabelValue('H', crossHairTick.high, pipSize),
+              _buildLabelValue('L', crossHairTick.low, pipSize),
             ],
           ),
         ],
       );
 
-  Widget _buildLabelValue(String label, double value) => Padding(
+  Widget _buildLabelValue(String label, double value, int pipSize) => Padding(
         padding: const EdgeInsets.only(bottom: 4),
         child: Row(
           children: <Widget>[
             _buildLabel(label),
-            SizedBox(width: 4),
-            _buildValue(value),
+            const SizedBox(width: 4),
+            _buildValue(value, pipSize),
           ],
         ),
       );
@@ -82,21 +82,20 @@ class CandleSeries extends BaseSeries<Candle> {
   // TODO(Ramin): Add style for cross-hair when design updated
   Text _buildLabel(String label) => Text(
         label,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 12,
           color: Colors.white70,
-          fontFeatures: [FontFeature.tabularFigures()],
+          fontFeatures: [const FontFeature.tabularFigures()],
         ),
       );
 
   // TODO(Ramin): Add style for cross-hair when design updated
-  Text _buildValue(double value, {double fontSize = 12}) => Text(
-        // TODO(ramin): Add a CrossHairStyle to ChartPaintingStyle like current tick one
-        value.toStringAsFixed(4),
-        style: TextStyle(
-          fontSize: fontSize,
+  Text _buildValue(double value, int pipSize) => Text(
+        value.toStringAsFixed(pipSize),
+        style: const TextStyle(
+          fontSize: 12,
           color: Colors.white,
-          fontFeatures: [FontFeature.tabularFigures()],
+          fontFeatures: [const FontFeature.tabularFigures()],
         ),
       );
 }
