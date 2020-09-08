@@ -214,8 +214,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               pipSize: 4,
               style: style,
               onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-              onLoadHistory: (fromEpoch, toEpoch, count) =>
-                  _loadHistory(fromEpoch, toEpoch, count),
+              onLoadHistory: (int count) => _loadHistory(count),
             ),
           ),
         ],
@@ -242,11 +241,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-  void _loadHistory(int fromEpoch, int toEpoch, int count) async {
+  void _loadHistory(int count) async {
     final TickHistory moreData = await TickHistory.fetchTickHistory(
       TicksHistoryRequest(
         ticksHistory: symbol.name,
-        end: '${toEpoch ~/ 1000}',
+        end: '${candles.first.epoch ~/ 1000}',
         count: count,
         style: granularity == 0 ? 'ticks' : 'candles',
         granularity: granularity > 0 ? granularity : null,
