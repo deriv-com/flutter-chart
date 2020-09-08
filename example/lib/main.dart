@@ -51,9 +51,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int granularity = 0;
   TickBase _currentTick;
 
-  // We keep track of the candles start epoch to not make more than one API call to get a history
-  int _startEpoch;
-
   List<Market> _markets;
   Asset symbol = Asset(name: 'R_50', displayName: 'Volatility 50 Index');
 
@@ -114,8 +111,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _initTickStream() async {
     try {
       final historySubscription = await _getHistoryAndSubscribe();
-
-      _startEpoch = candles.first.epoch;
 
       historySubscription?.tickStream?.listen((tickBase) {
         if (tickBase != null) {
@@ -248,33 +243,29 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   void _loadHistory(int fromEpoch, int toEpoch, int count) async {
-    if (fromEpoch < _startEpoch) {
-      // So we don't request for a history range more than once
-      _startEpoch = fromEpoch;
-      final TickHistory moreData = await TickHistory.fetchTickHistory(
-        TicksHistoryRequest(
-          ticksHistory: symbol.name,
-          end: '${toEpoch ~/ 1000}',
-          count: count,
-          style: granularity == 0 ? 'ticks' : 'candles',
-          granularity: granularity > 0 ? granularity : null,
-        ),
-      );
+    final TickHistory moreData = await TickHistory.fetchTickHistory(
+      TicksHistoryRequest(
+        ticksHistory: symbol.name,
+        end: '${toEpoch ~/ 1000}',
+        count: count,
+        style: granularity == 0 ? 'ticks' : 'candles',
+        granularity: granularity > 0 ? granularity : null,
+      ),
+    );
 
-      final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
+    final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
 
+    loadedCandles.removeLast();
+
+    // Unlikely to happen, just to ensure we don't have two candles with the same epoch
+    while (loadedCandles.isNotEmpty &&
+        loadedCandles.last.epoch >= candles.first.epoch) {
       loadedCandles.removeLast();
-
-      // Unlikely to happen, just to ensure we don't have two candles with the same epoch
-      while (loadedCandles.isNotEmpty &&
-          loadedCandles.last.epoch >= candles.first.epoch) {
-        loadedCandles.removeLast();
-      }
-
-      setState(() {
-        candles.insertAll(0, loadedCandles);
-      });
     }
+
+    setState(() {
+      candles.insertAll(0, loadedCandles);
+    });
   }
 
   IconButton _buildChartTypeButton() {
