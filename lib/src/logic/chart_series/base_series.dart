@@ -13,7 +13,7 @@ abstract class BaseSeries<T extends Tick> {
   BaseSeries(this.entries, this.id, {this.style});
 
   /// Responsible for painting a frame on the canvas
-  BaseRendererable rendererable;
+  BaseRendererable<T> rendererable;
 
   /// The painting style of this series
   final ChartPaintingStyle style;
@@ -141,7 +141,7 @@ abstract class BaseSeries<T extends Tick> {
     }
   }
 
-  /// Updates [rendererable] with the new [visibleEntries] and XFactor boundaries.
+  /// Updates [rendererable] with the new [visibleEntries].
   void updateRenderable(
     List<T> visibleEntries,
     int leftEpoch,

@@ -12,6 +12,7 @@ typedef EpochToX = double Function(int);
 typedef QuoteToY = double Function(double);
 
 // TODO(ramin): We need to eventually remove quoteLabelAreaWidth and use textPainter's width instead
+/// Overall horizontal padding for current tick indicator quote label
 const double quoteLabelHorizontalPadding = 10;
 
 /// Base class for Renderables which has a list of entries to paint
@@ -98,20 +99,19 @@ abstract class BaseRendererable<T extends Tick> {
           currentTickStyle.lineThickness,
         );
 
-        TextSpan span = TextSpan(
-          // TODO(ramin): get pip size from cross-hair style
+        final TextSpan span = TextSpan(
           text: quoteValue.toStringAsFixed(4),
           style: currentTickStyle.labelStyle,
         );
-        TextPainter tp = TextPainter(
+
+        final TextPainter textPainter = TextPainter(
           text: span,
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
-        );
-        tp.layout();
+        )..layout();
 
         final double quoteLabelAreaWidth =
-            tp.width + quoteLabelHorizontalPadding;
+            textPainter.width + quoteLabelHorizontalPadding;
 
         paintCurrentTickLabelBackground(
           canvas,
@@ -123,10 +123,10 @@ abstract class BaseRendererable<T extends Tick> {
           style: currentTickStyle,
         );
 
-        tp.paint(
+        textPainter.paint(
           canvas,
-          Offset(
-              size.width - quoteLabelAreaWidth, currentTickY - tp.height / 2),
+          Offset(size.width - quoteLabelAreaWidth,
+              currentTickY - textPainter.height / 2),
         );
       }
     }

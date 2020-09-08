@@ -11,7 +11,7 @@ class LineSeries extends BaseSeries<Tick> {
     List<Tick> entries,
     String id, {
     LineStyle style,
-  }) : super(entries, id, style: style ?? LineStyle());
+  }) : super(entries, id, style: style ?? const LineStyle());
 
   @override
   void updateRenderable(

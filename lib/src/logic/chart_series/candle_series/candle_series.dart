@@ -14,7 +14,7 @@ class CandleSeries extends BaseSeries<Candle> {
     List<Candle> entries,
     String id, {
     CandleStyle style,
-  }) : super(entries, id, style: style ?? CandleStyle());
+  }) : super(entries, id, style: style ?? const CandleStyle());
 
   @override
   List<double> getMinMaxValue(List<Candle> visibleEntries) {
@@ -23,7 +23,7 @@ class CandleSeries extends BaseSeries<Candle> {
         .map((Candle candle) => candle.high);
 
     if (maxValuesInAction.isEmpty) {
-      return [double.nan, double.nan];
+      return <double>[double.nan, double.nan];
     }
 
     final Iterable<double> minValuesInAction = visibleEntries
@@ -31,7 +31,7 @@ class CandleSeries extends BaseSeries<Candle> {
         .map((Candle candle) => candle.low);
 
     if (minValuesInAction.isEmpty) {
-      return [double.nan, double.nan];
+      return <double>[double.nan, double.nan];
     }
 
     return <double>[
