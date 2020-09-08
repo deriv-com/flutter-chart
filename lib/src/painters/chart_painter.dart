@@ -34,6 +34,7 @@ class ChartPainter extends CustomPainter {
       epochToCanvasX,
       quoteToCanvasY,
       animationInfo,
+      pipSize,
     );
   }
 

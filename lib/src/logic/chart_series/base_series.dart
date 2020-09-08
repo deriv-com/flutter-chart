@@ -156,6 +156,7 @@ abstract class BaseSeries<T extends Tick> {
     double Function(int) epochToX,
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
+    int pipSize,
   ) =>
       rendererable?.paint(
         canvas: canvas,
@@ -163,6 +164,7 @@ abstract class BaseSeries<T extends Tick> {
         epochToX: epochToX,
         quoteToY: quoteToY,
         animationInfo: animationInfo,
+        pipSize: pipSize,
       );
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements

@@ -41,6 +41,7 @@ abstract class BaseRendererable<T extends Tick> {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    int pipSize,
   }) {
     if (visibleEntries.isEmpty) {
       return;
@@ -100,7 +101,7 @@ abstract class BaseRendererable<T extends Tick> {
         );
 
         final TextSpan span = TextSpan(
-          text: quoteValue.toStringAsFixed(4),
+          text: quoteValue.toStringAsFixed(pipSize),
           style: currentTickStyle.labelStyle,
         );
 
