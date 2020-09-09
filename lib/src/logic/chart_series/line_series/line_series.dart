@@ -15,7 +15,7 @@ class LineSeries extends Series<Tick> {
 
   @override
   void updateRenderable(List<Tick> visibleEntries) =>
-      rendererable = LineRenderable(this, visibleEntries, prevLastEntry);
+      rendererable = LineRenderable(this);
 
   @override
   Widget getCrossHairInfo(Tick crossHairTick, int pipSize) => Text(

@@ -13,7 +13,7 @@ abstract class Series<T extends Tick> {
   Series(this.entries, this.id, {this.style});
 
   /// Responsible for painting a frame on the canvas
-  Rendererable<T> rendererable;
+  Rendererable<Series> rendererable;
 
   /// The painting style of this series
   final ChartPaintingStyle style;

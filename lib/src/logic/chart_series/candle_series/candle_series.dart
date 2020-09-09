@@ -42,7 +42,7 @@ class CandleSeries extends Series<Candle> {
 
   @override
   void updateRenderable(List<Candle> visibleEntries) =>
-      rendererable = CandleRenderable(this, visibleEntries, prevLastEntry);
+      rendererable = CandleRenderable(this);
 
   @override
   Widget getCrossHairInfo(Candle crossHairTick, int pipSize) => Row(

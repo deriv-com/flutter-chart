@@ -7,14 +7,12 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
+import 'line_series.dart';
+
 /// Line renderable
-class LineRenderable extends Rendererable<Tick> {
+class LineRenderable extends Rendererable<LineSeries> {
   /// Initializes
-  LineRenderable(
-    Series<Tick> series,
-    List<Tick> visibleEntries,
-    Tick prevLastCandle,
-  ) : super(series, visibleEntries, prevLastCandle);
+  LineRenderable(Series<Tick> series) : super(series);
 
   @override
   void onPaint({
@@ -28,15 +26,12 @@ class LineRenderable extends Rendererable<Tick> {
 
     bool isStartPointSet = false;
 
-    for (int i = 0; i < visibleEntries.length - 1; i++) {
-      final Tick tick = visibleEntries[i];
+    for (int i = 0; i < series.visibleEntries.length - 1; i++) {
+      final Tick tick = series.visibleEntries[i];
 
       if (!isStartPointSet) {
         isStartPointSet = true;
-        path.moveTo(
-          epochToX(tick.epoch),
-          quoteToY(tick.quote),
-        );
+        path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
         continue;
       }
 
@@ -47,18 +42,18 @@ class LineRenderable extends Rendererable<Tick> {
 
     // Last visible Tick
     final Tick lastTick = series.entries.last;
-    final Tick lastVisibleTick = visibleEntries.last;
+    final Tick lastVisibleTick = series.visibleEntries.last;
     double lastVisibleTickX;
 
-    if (lastTick == lastVisibleTick && prevLastEntry != null) {
+    if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
       lastVisibleTickX = ui.lerpDouble(
-        epochToX(prevLastEntry.epoch),
+        epochToX(series.prevLastEntry.epoch),
         epochToX(lastTick.epoch),
         animationInfo.newTickPercent,
       );
 
       final double tickY = quoteToY(ui.lerpDouble(
-        prevLastEntry.quote,
+        series.prevLastEntry.quote,
         lastTick.quote,
         animationInfo.newTickPercent,
       ));
@@ -84,7 +79,7 @@ class LineRenderable extends Rendererable<Tick> {
         canvas,
         size,
         path,
-        epochToX(visibleEntries.first.epoch),
+        epochToX(series.visibleEntries.first.epoch),
         lastVisibleTickX,
         style,
       );
@@ -117,9 +112,6 @@ class LineRenderable extends Rendererable<Tick> {
       )
       ..lineTo(lineStartX, size.height);
 
-    canvas.drawPath(
-      linePath,
-      areaPaint,
-    );
+    canvas.drawPath(linePath, areaPaint);
   }
 }

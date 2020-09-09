@@ -1,9 +1,7 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
@@ -18,22 +16,12 @@ const double quoteLabelHorizontalPadding = 10;
 
 /// Base class for Renderables which has a list of entries to paint
 /// entries called [visibleEntries] inside the [paint] method
-abstract class Rendererable<T extends Tick> {
-  /// Initializes
-  Rendererable(
-    this.series,
-    this.visibleEntries,
-    this.prevLastEntry,
-  );
-
-  /// Visible entries of [series] inside the frame
-  final List<T> visibleEntries;
-
-  /// Previous last entry
-  final T prevLastEntry;
+abstract class Rendererable<S extends Series> {
+  /// Initializes series for sub-class
+  Rendererable(this.series);
 
   /// The [Series] which this renderable belongs to
-  final Series<T> series;
+  final S series;
 
   /// Paints [visibleEntries] on the [canvas]
   void paint({
@@ -44,7 +32,7 @@ abstract class Rendererable<T extends Tick> {
     AnimationInfo animationInfo,
     int pipSize,
   }) {
-    if (visibleEntries.isEmpty) {
+    if (series.visibleEntries.isEmpty) {
       return;
     }
     onPaint(
@@ -59,20 +47,20 @@ abstract class Rendererable<T extends Tick> {
     if (series?.style?.currentTickStyle != null ?? false) {
       double currentTickX;
       double currentTickY;
-      final T lastEntry = series.entries.last;
+      final lastEntry = series.entries.last;
       final CurrentTickStyle currentTickStyle = series.style.currentTickStyle;
 
       double quoteValue;
 
-      if (prevLastEntry != null) {
+      if (series.prevLastEntry != null) {
         currentTickX = lerpDouble(
-          epochToX(prevLastEntry.epoch),
+          epochToX(series.prevLastEntry.epoch),
           epochToX(lastEntry.epoch),
           animationInfo.newTickPercent,
         );
 
         quoteValue = lerpDouble(
-          prevLastEntry.quote,
+          series.prevLastEntry.quote,
           lastEntry.quote,
           animationInfo.newTickPercent,
         );

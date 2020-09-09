@@ -8,7 +8,7 @@ import 'line_series.dart';
 class MASeries extends LineSeries {
   /// Initializes
   ///
-  /// [period] average of this number of past data will be calculated for every entry
+  /// [period] is the average of this number of past data which will be calculated as MA value
   MASeries(
     List<Tick> entries,
     String id, {

@@ -8,14 +8,12 @@ import 'package:deriv_chart/src/models/candle_painting.dart';
 import 'package:deriv_chart/src/paint/paint_candles.dart';
 import 'package:flutter/material.dart';
 
+import 'candle_series.dart';
+
 /// Line renderable
-class CandleRenderable extends Rendererable<Candle> {
+class CandleRenderable extends Rendererable<CandleSeries> {
   /// Initializes
-  CandleRenderable(
-    Series<Candle> series,
-    List<Candle> visibleEntries,
-    Candle prevLastCandle,
-  ) : super(series, visibleEntries, prevLastCandle);
+  CandleRenderable(Series<Candle> series) : super(series);
 
   @override
   void onPaint({
@@ -25,18 +23,18 @@ class CandleRenderable extends Rendererable<Candle> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
-    if (visibleEntries.length < 2) {
+    if (series.visibleEntries.length < 2) {
       return;
     }
 
-    final intervalWidth =
-        epochToX(visibleEntries[1].epoch) - epochToX(visibleEntries[0].epoch);
+    final intervalWidth = epochToX(series.visibleEntries[1].epoch) -
+        epochToX(series.visibleEntries[0].epoch);
     final candleWidth = intervalWidth * 0.6;
 
     final List<CandlePainting> candlePaintings = <CandlePainting>[];
 
-    for (int i = 0; i < visibleEntries.length - 1; i++) {
-      final Candle candle = visibleEntries[i];
+    for (int i = 0; i < series.visibleEntries.length - 1; i++) {
+      final Candle candle = series.visibleEntries[i];
 
       candlePaintings.add(CandlePainting(
         width: candleWidth,
@@ -50,17 +48,17 @@ class CandleRenderable extends Rendererable<Candle> {
 
     // Last visible candle
     final Candle lastCandle = series.entries.last;
-    final Candle lastVisibleCandle = visibleEntries.last;
+    final Candle lastVisibleCandle = series.visibleEntries.last;
 
-    if (lastCandle == lastVisibleCandle && prevLastEntry != null) {
+    if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
       final yClose = quoteToY(ui.lerpDouble(
-        prevLastEntry.close,
+        series.prevLastEntry.close,
         lastCandle.close,
         animationInfo.newTickPercent,
       ));
 
       final xCenter = ui.lerpDouble(
-        epochToX(prevLastEntry.epoch),
+        epochToX(series.prevLastEntry.epoch),
         epochToX(lastCandle.epoch),
         animationInfo.newTickPercent,
       );
