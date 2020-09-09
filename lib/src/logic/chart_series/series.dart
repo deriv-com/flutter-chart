@@ -62,7 +62,7 @@ abstract class Series<T extends Tick> {
   }
 
   void _setMinMaxValues() {
-    final List<double> minMaxValues = getMinMaxValue(visibleEntries);
+    final List<double> minMaxValues = getMinMaxValues();
 
     _minValueInFrame = minMaxValues[0];
     _maxValueInFrame = minMaxValues[1];
@@ -71,7 +71,7 @@ abstract class Series<T extends Tick> {
   /// Gets min and max quotes after updating [visibleEntries] as an array with two elements [min, max].
   ///
   /// Sub-classes can override this method if they calculate [minValue] & [maxValue] differently.
-  List<double> getMinMaxValue(List<T> visibleEntries) {
+  List<double> getMinMaxValues() {
     final Iterable<double> valuesInAction =
         visibleEntries.where((T t) => !t.quote.isNaN).map((T t) => t.quote);
 

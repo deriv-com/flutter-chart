@@ -17,7 +17,7 @@ class CandleSeries extends Series<Candle> {
   }) : super(entries, id, style: style ?? const CandleStyle());
 
   @override
-  List<double> getMinMaxValue(List<Candle> visibleEntries) {
+  List<double> getMinMaxValues() {
     final Iterable<double> maxValuesInAction = visibleEntries
         .where((Candle candle) => !candle.high.isNaN)
         .map((Candle candle) => candle.high);
