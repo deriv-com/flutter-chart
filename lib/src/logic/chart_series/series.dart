@@ -1,19 +1,19 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
-abstract class BaseSeries<T extends Tick> {
+abstract class Series<T extends Tick> {
   /// Initializes
-  BaseSeries(this.entries, this.id, {this.style});
+  Series(this.entries, this.id, {this.style});
 
   /// Responsible for painting a frame on the canvas
-  BaseRendererable<T> rendererable;
+  Rendererable<T> rendererable;
 
   /// The painting style of this series
   final ChartPaintingStyle style;
@@ -135,7 +135,7 @@ abstract class BaseSeries<T extends Tick> {
   }
 
   /// Will be called by the chart when the it was updated.
-  void didUpdateSeries(BaseSeries<T> oldSeries) {
+  void didUpdateSeries(Series<T> oldSeries) {
     if (oldSeries.entries.isNotEmpty) {
       _prevLastEntry = oldSeries.entries.last;
     }

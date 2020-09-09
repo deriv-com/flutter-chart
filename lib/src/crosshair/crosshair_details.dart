@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +14,7 @@ class CrosshairDetails extends StatelessWidget {
     @required this.pipSize,
   }) : super(key: key);
 
-  final BaseSeries mainSeries;
+  final Series mainSeries;
   final Tick crosshairTick;
   final int pipSize;
 

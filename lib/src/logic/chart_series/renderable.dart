@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
@@ -18,9 +18,9 @@ const double quoteLabelHorizontalPadding = 10;
 
 /// Base class for Renderables which has a list of entries to paint
 /// entries called [visibleEntries] inside the [paint] method
-abstract class BaseRendererable<T extends Tick> {
+abstract class Rendererable<T extends Tick> {
   /// Initializes
-  BaseRendererable(
+  Rendererable(
     this.series,
     this.visibleEntries,
     this.prevLastEntry,
@@ -32,8 +32,8 @@ abstract class BaseRendererable<T extends Tick> {
   /// Previous last entry
   final T prevLastEntry;
 
-  /// The [BaseSeries] which this renderable belongs to
-  final BaseSeries<T> series;
+  /// The [Series] which this renderable belongs to
+  final Series<T> series;
 
   /// Paints [visibleEntries] on the [canvas]
   void paint({

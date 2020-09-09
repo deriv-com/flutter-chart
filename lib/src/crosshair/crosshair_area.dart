@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
@@ -22,7 +22,7 @@ class CrosshairArea extends StatefulWidget {
     this.onCrosshairDisappeared,
   }) : super(key: key);
 
-  final BaseSeries mainSeries;
+  final Series mainSeries;
   final int pipSize;
   final double Function(double) quoteToCanvasY;
   final VoidCallback onCrosshairAppeared;

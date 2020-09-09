@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class ChartPainter extends CustomPainter {
   Canvas canvas;
   Size size;
 
-  final List<BaseSeries> series;
+  final List<Series> series;
 
   @override
   void paint(Canvas canvas, Size size) {

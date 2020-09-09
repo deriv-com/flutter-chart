@@ -1,17 +1,17 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 /// Line renderable
-class LineRenderable extends BaseRendererable<Tick> {
+class LineRenderable extends Rendererable<Tick> {
   /// Initializes
   LineRenderable(
-    BaseSeries<Tick> series,
+    Series<Tick> series,
     List<Tick> visibleEntries,
     Tick prevLastCandle,
   ) : super(series, visibleEntries, prevLastCandle);

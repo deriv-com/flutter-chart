@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/logic/chart_series/base_renderable.dart';
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/candle_painting.dart';
@@ -9,10 +9,10 @@ import 'package:deriv_chart/src/paint/paint_candles.dart';
 import 'package:flutter/material.dart';
 
 /// Line renderable
-class CandleRenderable extends BaseRendererable<Candle> {
+class CandleRenderable extends Rendererable<Candle> {
   /// Initializes
   CandleRenderable(
-    BaseSeries<Candle> series,
+    Series<Candle> series,
     List<Candle> visibleEntries,
     Candle prevLastCandle,
   ) : super(series, visibleEntries, prevLastCandle);

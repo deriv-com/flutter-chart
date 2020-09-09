@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -36,12 +36,12 @@ class Chart extends StatelessWidget {
   }) : super(key: key);
 
   /// Chart's main data series
-  final BaseSeries<Tick> mainSeries;
+  final Series<Tick> mainSeries;
 
   /// List of series to add on chart beside the [mainSeries].
   ///
   /// Useful for adding on-chart indicators.
-  final List<BaseSeries<Tick>> secondarySeries;
+  final List<Series<Tick>> secondarySeries;
 
   /// Number of digits in price after decimal point.
   final int pipSize;
@@ -100,8 +100,8 @@ class _ChartImplementation extends StatefulWidget {
     this.onLoadHistory,
   }) : super(key: key);
 
-  final BaseSeries mainSeries;
-  final List<BaseSeries<Tick>> secondarySeries;
+  final Series mainSeries;
+  final List<Series<Tick>> secondarySeries;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
@@ -230,7 +230,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.secondarySeries != null) {
       for (final series in widget.secondarySeries) {
         final oldSeries = oldChart.secondarySeries.firstWhere(
-          (BaseSeries oldSeries) => oldSeries.id == series.id,
+          (Series oldSeries) => oldSeries.id == series.id,
           orElse: () => null,
         );
     
@@ -371,16 +371,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
     double maxQuote = widget.mainSeries.maxValue;
 
     if (widget.secondarySeries != null) {
-      final Iterable<BaseSeries> seriesInAction = widget.secondarySeries.where(
-        (BaseSeries series) => !series.minValue.isNaN && !series.maxValue.isNaN,
+      final Iterable<Series> seriesInAction = widget.secondarySeries.where(
+        (Series series) => !series.minValue.isNaN && !series.maxValue.isNaN,
       );
 
       if (seriesInAction.isNotEmpty) {
         final secondarySeriesMin = seriesInAction
-            .map((BaseSeries series) => series.minValue)
+            .map((Series series) => series.minValue)
             .reduce(min);
         final secondarySeriesMax = seriesInAction
-            .map((BaseSeries series) => series.maxValue)
+            .map((Series series) => series.maxValue)
             .reduce(max);
 
         minQuote = min(widget.mainSeries.minValue, secondarySeriesMin);

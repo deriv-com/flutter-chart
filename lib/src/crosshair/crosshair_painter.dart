@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class CrosshairPainter extends CustomPainter {
   });
 
   /// Chart's main series
-  final BaseSeries mainSeries;
+  final Series mainSeries;
   final Tick crosshairTick;
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;

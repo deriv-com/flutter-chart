@@ -1,14 +1,14 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/candle_series/candle_renderable.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
 /// Line series
-class CandleSeries extends BaseSeries<Candle> {
+class CandleSeries extends Series<Candle> {
   /// Initializes
   CandleSeries(
     List<Candle> entries,
