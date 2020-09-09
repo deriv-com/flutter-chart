@@ -221,8 +221,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   : LineSeries(candles, 'line',
                       style: LineStyle(currentTickStyle: CurrentTickStyle())),
               secondarySeries: [
-                LineSeries(
-                  MovingAverage.movingAverage(candles, 14),
+                MASeries(
+                  candles,
                   'MA',
                   style: LineStyle(
                     color: Colors.grey,
