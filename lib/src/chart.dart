@@ -570,7 +570,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _loadMoreHistory() {
     final int widthInMs = _xAxis.msFromPx(_xAxis.width);
-    final int extendByMs = 2 * widthInMs;
+    final int extendByMs = 20 * widthInMs;
     final int count = extendByMs ~/ _xAxis.granularity;
 
     widget.onLoadHistory?.call(count);
