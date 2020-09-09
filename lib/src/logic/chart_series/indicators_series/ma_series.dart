@@ -2,7 +2,7 @@ import 'package:deriv_chart/src/logic/indicators/indicators.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
-import 'line_series.dart';
+import '../line_series/line_series.dart';
 
 /// A series which shows Moving Average data calculated from [entries]
 class MASeries extends LineSeries {
