@@ -14,11 +14,7 @@ class LineSeries extends Series<Tick> {
   }) : super(entries, id, style: style ?? const LineStyle());
 
   @override
-  void updateRenderable(
-    List<Tick> visibleEntries,
-    int leftEpoch,
-    int rightEpoch,
-  ) =>
+  void updateRenderable(List<Tick> visibleEntries) =>
       rendererable = LineRenderable(this, visibleEntries, prevLastEntry);
 
   @override

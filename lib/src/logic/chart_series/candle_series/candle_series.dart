@@ -41,11 +41,7 @@ class CandleSeries extends Series<Candle> {
   }
 
   @override
-  void updateRenderable(
-    List<Candle> visibleEntries,
-    int leftEpoch,
-    int rightEpoch,
-  ) =>
+  void updateRenderable(List<Candle> visibleEntries) =>
       rendererable = CandleRenderable(this, visibleEntries, prevLastEntry);
 
   @override

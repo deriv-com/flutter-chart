@@ -58,7 +58,7 @@ abstract class Series<T extends Tick> {
 
     _setMinMaxValues(visibleCandles);
 
-    updateRenderable(visibleCandles, leftEpoch, rightEpoch);
+    updateRenderable(visibleCandles);
 
     _visibleEntries = visibleCandles;
   }
@@ -142,11 +142,7 @@ abstract class Series<T extends Tick> {
   }
 
   /// Updates [rendererable] with the new [visibleEntries].
-  void updateRenderable(
-    List<T> visibleEntries,
-    int leftEpoch,
-    int rightEpoch,
-  );
+  void updateRenderable(List<T> visibleEntries);
 
   /// Paints [rendererable]'s data on the [canvas]
   /// Will get called after [updateRenderable] method
