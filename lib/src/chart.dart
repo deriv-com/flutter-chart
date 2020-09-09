@@ -570,6 +570,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _loadMoreHistory() {
     final int widthInMs = _xAxis.msFromPx(_xAxis.width);
-    widget.onLoadHistory?.call((2 * widthInMs) ~/ _xAxis.granularity);
+    final int extendByMs = 2 * widthInMs;
+    final int count = extendByMs ~/ _xAxis.granularity;
+
+    widget.onLoadHistory?.call(count);
+
+    requestedLeftEpoch = widget.candles.first.epoch - extendByMs;
   }
 }
