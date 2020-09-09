@@ -214,14 +214,31 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
 
-    if (widget.mainSeries.id == oldChart.mainSeries.id) {
-      widget.mainSeries.didUpdateSeries(oldChart.mainSeries);
-    }
+    _didUpdateSeries(oldChart);
 
     _onNewTick();
 
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
+  }
+
+  void _didUpdateSeries(_ChartImplementation oldChart) {
+    if (widget.mainSeries.id == oldChart.mainSeries.id) {
+      widget.mainSeries.didUpdateSeries(oldChart.mainSeries);
+    }
+    
+    if (widget.secondarySeries != null) {
+      for (final series in widget.secondarySeries) {
+        final oldSeries = oldChart.secondarySeries.firstWhere(
+          (BaseSeries oldSeries) => oldSeries.id == series.id,
+          orElse: () => null,
+        );
+    
+        if (oldSeries != null) {
+          series.didUpdateSeries(oldSeries);
+        }
+      }
+    }
   }
 
   // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
@@ -514,10 +531,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     requestedLeftEpoch =
         widget.mainSeries.entries.first.epoch - (2 * widthInMs);
 
-//    widget.onLoadHistory?.call(
-//      requestedLeftEpoch,
-//      widget.mainSeries.entries.first.epoch,
-//      (2 * widthInMs) ~/ _xAxis.granularity,
-//    );
+    widget.onLoadHistory?.call(
+      requestedLeftEpoch,
+      widget.mainSeries.entries.first.epoch,
+      (2 * widthInMs) ~/ _xAxis.granularity,
+    );
   }
 }

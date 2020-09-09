@@ -225,7 +225,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   MovingAverage.movingAverage(candles, 14),
                   'MA',
                   style: LineStyle(
-                      color: Colors.grey, thickness: 0.5, hasArea: false),
+                    color: Colors.grey,
+                    thickness: 0.5,
+                    hasArea: false,
+                  ),
                 ),
               ],
               pipSize: 4,
