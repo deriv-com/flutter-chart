@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 /// Base class of all chart series
 abstract class Series<T extends Tick> {
   /// Initializes
-  Series(this.entries, this.id, {this.style});
+  Series(this.entries, this.id, {this.style}) {
+    createRenderable();
+  }
 
-  /// Responsible for painting a frame on the canvas
+  /// Responsible for painting a frame of this series on the canvas
   Rendererable<Series> rendererable;
 
   /// The painting style of this series
@@ -43,7 +45,7 @@ abstract class Series<T extends Tick> {
   /// Max quote in a frame
   double get maxValue => _maxValueInFrame ?? double.nan;
 
-  /// Updates visible entries for this renderer.
+  /// Updates visible entries for this Series.
   void update(int leftEpoch, int rightEpoch) {
     if (entries.isEmpty) {
       return;
@@ -52,18 +54,14 @@ abstract class Series<T extends Tick> {
     final int startIndex = _searchLowerIndex(leftEpoch);
     final int endIndex = _searchUpperIndex(rightEpoch);
 
-    final List<T> visibleCandles = startIndex == -1 || endIndex == -1
+    _visibleEntries = startIndex == -1 || endIndex == -1
         ? <T>[]
         : entries.sublist(startIndex, endIndex);
 
-    _setMinMaxValues(visibleCandles);
-
-    updateRenderable(visibleCandles);
-
-    _visibleEntries = visibleCandles;
+    _setMinMaxValues();
   }
 
-  void _setMinMaxValues(List<T> visibleEntries) {
+  void _setMinMaxValues() {
     final List<double> minMaxValues = getMinMaxValue(visibleEntries);
 
     _minValueInFrame = minMaxValues[0];
@@ -72,7 +70,7 @@ abstract class Series<T extends Tick> {
 
   /// Gets min and max quotes after updating [visibleEntries] as an array with two elements [min, max].
   ///
-  /// Sub-classes of can override this method if the calculate min/max differently.
+  /// Sub-classes can override this method if they calculate [minValue] & [maxValue] differently.
   List<double> getMinMaxValue(List<T> visibleEntries) {
     final Iterable<double> valuesInAction =
         visibleEntries.where((T t) => !t.quote.isNaN).map((T t) => t.quote);
@@ -141,11 +139,10 @@ abstract class Series<T extends Tick> {
     }
   }
 
-  /// Updates [rendererable] with the new [visibleEntries].
-  void updateRenderable(List<T> visibleEntries);
+  /// Is called whenever series is created to create its [rendererable] too.
+  void createRenderable();
 
   /// Paints [rendererable]'s data on the [canvas]
-  /// Will get called after [updateRenderable] method
   void paint(
     Canvas canvas,
     Size size,
