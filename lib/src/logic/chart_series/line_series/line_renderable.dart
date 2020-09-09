@@ -79,14 +79,16 @@ class LineRenderable extends BaseRendererable<Tick> {
         ..strokeWidth = style.thickness,
     );
 
-    _drawArea(
-      canvas,
-      size,
-      path,
-      epochToX(visibleEntries.first.epoch),
-      lastVisibleTickX,
-      style,
-    );
+    if ((series.style as LineStyle).hasArea) {
+      _drawArea(
+        canvas,
+        size,
+        path,
+        epochToX(visibleEntries.first.epoch),
+        lastVisibleTickX,
+        style,
+      );
+    }
   }
 
   void _drawArea(

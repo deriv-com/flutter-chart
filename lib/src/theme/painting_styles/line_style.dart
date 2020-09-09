@@ -8,6 +8,7 @@ class LineStyle extends ChartPaintingStyle {
   const LineStyle({
     this.color = const Color(0xFF85ACB0),
     this.thickness = 1,
+    this.hasArea = true,
     CurrentTickStyle currentTickStyle,
   }) : super(currentTickStyle: currentTickStyle);
 
@@ -16,4 +17,7 @@ class LineStyle extends ChartPaintingStyle {
 
   /// Line thickness
   final double thickness;
+
+  /// Whether the line series has area or not
+  final bool hasArea;
 }

@@ -220,6 +220,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       style: CandleStyle(currentTickStyle: CurrentTickStyle()))
                   : LineSeries(candles, 'line',
                       style: LineStyle(currentTickStyle: CurrentTickStyle())),
+              secondarySeries: [
+                LineSeries(
+                  MovingAverage.movingAverage(candles, 14),
+                  'MA',
+                  style: LineStyle(
+                      color: Colors.grey, thickness: 0.5, hasArea: false),
+                ),
+              ],
               pipSize: 4,
               onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
               onLoadHistory: (fromEpoch, toEpoch, count) =>

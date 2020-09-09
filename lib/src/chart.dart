@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/base_series.dart';
@@ -27,6 +28,7 @@ class Chart extends StatelessWidget {
   const Chart({
     @required this.mainSeries,
     @required this.pipSize,
+    this.secondarySeries,
     this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
@@ -35,6 +37,11 @@ class Chart extends StatelessWidget {
 
   /// Chart's main data series
   final BaseSeries<Tick> mainSeries;
+
+  /// List of series to add on chart beside the [mainSeries].
+  ///
+  /// Useful for adding on-chart indicators.
+  final List<BaseSeries<Tick>> secondarySeries;
 
   /// Number of digits in price after decimal point.
   final int pipSize;
@@ -71,6 +78,7 @@ class Chart extends StatelessWidget {
                 : null,
             child: _ChartImplementation(
               mainSeries: mainSeries,
+              secondarySeries: secondarySeries,
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
               onLoadHistory: onLoadHistory,
@@ -87,11 +95,13 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
+    this.secondarySeries,
     this.onCrosshairAppeared,
     this.onLoadHistory,
   }) : super(key: key);
 
   final BaseSeries mainSeries;
+  final List<BaseSeries<Tick>> secondarySeries;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
@@ -214,6 +224,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _recalculateQuoteLabelsAreaWidth();
   }
 
+  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
   void _recalculateQuoteLabelsAreaWidth() {
     if (widget.mainSeries.entries.isEmpty) {
       return;
@@ -226,7 +237,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
   }
 
-  // TODO(Rustem): Extract this helper function
+  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
   double _getRenderedTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
       style: style,
@@ -330,11 +341,35 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _updateSeries() {
     widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
+
+    if (widget.secondarySeries != null) {
+      for (final series in widget.secondarySeries) {
+        series.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
+      }
+    }
   }
 
   void _updateQuoteBoundTargets() {
-    final minQuote = widget.mainSeries.minValue;
-    final maxQuote = widget.mainSeries.maxValue;
+    double minQuote = widget.mainSeries.minValue;
+    double maxQuote = widget.mainSeries.maxValue;
+
+    if (widget.secondarySeries != null) {
+      final Iterable<BaseSeries> seriesInAction = widget.secondarySeries.where(
+        (BaseSeries series) => !series.minValue.isNaN && !series.maxValue.isNaN,
+      );
+
+      if (seriesInAction.isNotEmpty) {
+        final secondarySeriesMin = seriesInAction
+            .map((BaseSeries series) => series.minValue)
+            .reduce(min);
+        final secondarySeriesMax = seriesInAction
+            .map((BaseSeries series) => series.maxValue)
+            .reduce(max);
+
+        minQuote = min(widget.mainSeries.minValue, secondarySeriesMin);
+        maxQuote = max(widget.mainSeries.maxValue, secondarySeriesMax);
+      }
+    }
 
     if (minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
@@ -403,7 +438,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 newTickPercent: _currentTickAnimation.value,
                 blinkingPercent: _currentTickBlinkAnimation.value,
               ),
-              mainSeries: widget.mainSeries,
+              series: [
+                widget.mainSeries,
+                if (widget.secondarySeries != null) ...widget.secondarySeries
+              ],
               pipSize: widget.pipSize,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
@@ -476,10 +514,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     requestedLeftEpoch =
         widget.mainSeries.entries.first.epoch - (2 * widthInMs);
 
-    widget.onLoadHistory?.call(
-      requestedLeftEpoch,
-      widget.mainSeries.entries.first.epoch,
-      (2 * widthInMs) ~/ _xAxis.granularity,
-    );
+//    widget.onLoadHistory?.call(
+//      requestedLeftEpoch,
+//      widget.mainSeries.entries.first.epoch,
+//      (2 * widthInMs) ~/ _xAxis.granularity,
+//    );
   }
 }

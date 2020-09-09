@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ChartPainter extends CustomPainter {
   ChartPainter({
     this.pipSize,
-    this.mainSeries,
+    this.series,
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
@@ -21,21 +21,23 @@ class ChartPainter extends CustomPainter {
   Canvas canvas;
   Size size;
 
-  final BaseSeries mainSeries;
+  final List<BaseSeries> series;
 
   @override
   void paint(Canvas canvas, Size size) {
     this.canvas = canvas;
     this.size = size;
 
-    mainSeries.paint(
-      canvas,
-      size,
-      epochToCanvasX,
-      quoteToCanvasY,
-      animationInfo,
-      pipSize,
-    );
+    for (final s in series) {
+      s.paint(
+        canvas,
+        size,
+        epochToCanvasX,
+        quoteToCanvasY,
+        animationInfo,
+        pipSize,
+      );
+    }
   }
 
 //  void _paintLine(LineStyle lineStyle) {
