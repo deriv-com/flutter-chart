@@ -9,31 +9,30 @@ abstract class Component {
   /// The ID of this [Component]
   String id;
 
-  /// Will be called by the chart when the it was updated.
+  /// Will be called by the chart when it was updated.
   void didUpdateSeries(Component oldComponent);
 
   /// Updates this [Component] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
 
-  /// The minimum value this [Component] has at the current x-axis epoch range after [update] is called.
+  /// The minimum value this [Component] has at the current X-Axis epoch range after [update] is called.
   ///
   /// [double.nan] should be returned if this component doesn't have any element to have a minimum value.
   double get minValue;
 
-  /// The maximum value this [Component] has at the current x-axis epoch range after [update] is called.
+  /// The maximum value this [Component] has at the current X-Axis epoch range after [update] is called.
   ///
-  /// /// [double.nan] should be returned if this component doesn't have any element to have a maximum value.
+  /// [double.nan] should be returned if this component doesn't have any element to have a maximum value.
   double get maxValue;
 
-  /// Paints this [Component]'s on the passed [canvas].
+  /// Paints this [Component] on the given [canvas].
   ///
   /// [Size] is the size of the [canvas].
   ///
-  /// [epochToX] is the conversion function to convert epoch to canvas X.
+  /// [epochToX] and [quoteToY] are the conversion functions
+  /// to convert epoch to canvas X and quote to canvas Y.
   ///
-  /// [quoteToY] is the conversion function to convert quote to canvas Y.
-  ///
-  /// [animationInfo] Contains animations progress value in this frame of painting.
+  /// [animationInfo] Contains animations progress values in this frame of painting.
   ///
   /// [pipSize] Number of decimal digits components must use on showing their values.
   void paint(

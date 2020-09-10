@@ -10,7 +10,13 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
-/// A sample class just to represent how a custom indicator with multiple data-series can be implemented.
+/// A sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
+///
+/// Can also extend from a concrete implementation of [Series] like [LineSeries] and instead of two only
+/// define one nested series. In that case, since we override [createRenderable]
+/// and set value for [rendererable] We can have another reference to a custom [Renderable].
+///
+/// Or we can directly implement [Component] interface.
 class SampleMultiSeries extends Series<Tick> {
   /// Initializes
   SampleMultiSeries(List<Tick> entries, String id)
