@@ -168,6 +168,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
 
       if (resume) {
+        // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping candles
         if (candles.last.epoch == fetchedCandles.first.epoch) {
           candles.removeLast();
         }
