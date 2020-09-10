@@ -2,6 +2,9 @@ import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:flutter/material.dart';
 
+/// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
+const double autoPanOffset = 30;
+
 /// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
   // TODO(Rustem): Add closed contract x-axis constructor.
@@ -94,6 +97,10 @@ class XAxisModel extends ChangeNotifier {
   /// Current tick is visible, chart is being autopanned.
   bool get _autoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
 
+  bool get _autoPanLimitHasReached =>
+      _candles.isEmpty ||
+      _candles.last.epoch > leftBoundEpoch + msFromPx(autoPanOffset);
+
   /// Current scale value.
   double get msPerPx => _msPerPx;
 
@@ -113,9 +120,7 @@ class XAxisModel extends ChangeNotifier {
     final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
-    if (_autoPanning &&
-        (_candles.isEmpty ||
-            _candles.last.epoch > leftBoundEpoch + msFromPx(30))) {
+    if (_autoPanning && _autoPanLimitHasReached) {
       rightBoundEpoch += elapsedMs;
     }
     notifyListeners();
