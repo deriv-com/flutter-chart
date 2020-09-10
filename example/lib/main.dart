@@ -90,24 +90,26 @@ class _FullscreenChartState extends State<FullscreenChart> {
       endpoint: 'frontend.binaryws.com',
     ))
       ..listen((connectionState) async {
-        if (connectionState is Connected) {
-          if (candles.isEmpty) {
-            await _getActiveSymbols();
+        if (connectionState is! Connected) {
+          return;
+        }
 
-            _requestCompleter.complete();
-            _onIntervalSelected(0);
-          } else {
-            _initTickStream(
-              TicksHistoryRequest(
-                ticksHistory: _symbol.name,
-                end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
-                start: candles.last.epoch ~/ 1000,
-                style: granularity == 0 ? 'ticks' : 'candles',
-                granularity: granularity > 0 ? granularity : null,
-              ),
-              resume: true,
-            );
-          }
+        if (candles.isEmpty) {
+          await _getActiveSymbols();
+
+          _requestCompleter.complete();
+          _onIntervalSelected(0);
+        } else {
+          _initTickStream(
+            TicksHistoryRequest(
+              ticksHistory: _symbol.name,
+              end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
+              start: candles.last.epoch ~/ 1000,
+              style: granularity == 0 ? 'ticks' : 'candles',
+              granularity: granularity > 0 ? granularity : null,
+            ),
+            resume: true,
+          );
         }
       });
   }
