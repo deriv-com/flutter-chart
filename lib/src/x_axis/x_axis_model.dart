@@ -94,8 +94,9 @@ class XAxisModel extends ChangeNotifier {
   bool get animatingPan =>
       _autoPanning || (_rightEpochAnimationController?.isAnimating ?? false);
 
-  /// Current tick is visible, chart is being autopanned.
-  bool get _autoPanning => _autoPanEnabled && rightBoundEpoch > _nowEpoch;
+  /// Current tick is visible, chart is being autoPanned.
+  bool get _autoPanning =>
+      _autoPanEnabled && rightBoundEpoch > _nowEpoch && _autoPanLimitHasReached;
 
   bool get _autoPanLimitHasReached =>
       _candles.isEmpty ||
@@ -120,7 +121,7 @@ class XAxisModel extends ChangeNotifier {
     final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
-    if (_autoPanning && _autoPanLimitHasReached) {
+    if (_autoPanning) {
       rightBoundEpoch += elapsedMs;
     }
     notifyListeners();
