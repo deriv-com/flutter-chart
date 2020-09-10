@@ -545,13 +545,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    final bool onQuoteLabelsArea =
-        details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
+    final bool onQuoteLabelsArea = _onQuoteLabelsArea(details.localPosition);
 
     if (onQuoteLabelsArea) {
       _scaleVertically(details.delta.dy);
     }
   }
+
+  bool _onQuoteLabelsArea(Offset position) =>
+      position.dx > _xAxis.width - quoteLabelsAreaWidth;
 
   void _scaleVertically(double dy) {
     setState(() {
