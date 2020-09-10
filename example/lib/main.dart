@@ -90,7 +90,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
       endpoint: 'frontend.binaryws.com',
     ))
       ..listen((connectionState) async {
-        setState(() {});
         if (connectionState is Connected) {
           if (candles.isEmpty) {
             await _getActiveSymbols();
@@ -174,7 +173,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
         setState(() => candles.addAll(fetchedCandles));
       } else {
         setState(() {
-          candles.clear();
           candles = fetchedCandles;
 
           _startEpoch = candles.first.epoch;
