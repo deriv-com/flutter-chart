@@ -91,6 +91,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
     ))
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
+          // Calling this since we show some status labels when NOT connected.
+          setState(() {});
           return;
         }
 
