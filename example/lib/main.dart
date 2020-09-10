@@ -62,6 +62,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   // We keep track of the candles start epoch to not make more than one API call to get a history
   int _startEpoch;
 
+  // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
   Completer _requestCompleter;
 
   List<Market> _markets;
@@ -398,7 +399,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _onIntervalSelected(value) async {
-    await _requestCompleter.future;
+    if (!_requestCompleter.isCompleted) {
+      return;
+    }
+
     _requestCompleter = Completer();
 
     candles.clear();
