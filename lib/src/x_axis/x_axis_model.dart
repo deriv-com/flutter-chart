@@ -96,9 +96,11 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current tick is visible, chart is being autoPanned.
   bool get _autoPanning =>
-      _autoPanEnabled && rightBoundEpoch > _nowEpoch && _autoPanLimitHasReached;
+      _autoPanEnabled &&
+      rightBoundEpoch > _nowEpoch &&
+      _currentTickFarEnoughFromLeftBound;
 
-  bool get _autoPanLimitHasReached =>
+  bool get _currentTickFarEnoughFromLeftBound =>
       _candles.isEmpty ||
       _candles.last.epoch > leftBoundEpoch + msFromPx(autoPanOffset);
 
