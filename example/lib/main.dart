@@ -299,7 +299,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         text: _connectionBloc.state is ConnectionError
             ? '${(_connectionBloc.state as ConnectionError).error}'
             : _connectionBloc.state is Disconnected
-                ? 'Internet is down, trying to reconnect...'
+                ? 'Connection lost, trying to reconnect...'
                 : 'Connecting...',
       );
 
