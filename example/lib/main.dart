@@ -198,21 +198,23 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _handleTickStream(TickBase newTick) {
-    if (_requestCompleter.isCompleted && newTick != null) {
-      if (newTick is api_tick.Tick) {
-        _onNewTick(Candle.tick(
-          epoch: newTick.epoch.millisecondsSinceEpoch,
-          quote: newTick.quote,
-        ));
-      } else if (newTick is OHLC) {
-        _onNewCandle(Candle(
-          epoch: newTick.openTime.millisecondsSinceEpoch,
-          high: newTick.high,
-          low: newTick.low,
-          open: newTick.open,
-          close: newTick.close,
-        ));
-      }
+    if (!_requestCompleter.isCompleted || newTick == null) {
+      return;
+    }
+
+    if (newTick is api_tick.Tick) {
+      _onNewTick(Candle.tick(
+        epoch: newTick.epoch.millisecondsSinceEpoch,
+        quote: newTick.quote,
+      ));
+    } else if (newTick is OHLC) {
+      _onNewCandle(Candle(
+        epoch: newTick.openTime.millisecondsSinceEpoch,
+        high: newTick.high,
+        low: newTick.low,
+        open: newTick.open,
+        close: newTick.close,
+      ));
     }
   }
 
