@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/component.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -101,7 +102,7 @@ class _ChartImplementation extends StatefulWidget {
   }) : super(key: key);
 
   final Series mainSeries;
-  final List<Series<Tick>> secondarySeries;
+  final List<Component> secondarySeries;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
@@ -226,14 +227,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.mainSeries.id == oldChart.mainSeries.id) {
       widget.mainSeries.didUpdateSeries(oldChart.mainSeries);
     }
-    
+
     if (widget.secondarySeries != null) {
       for (final series in widget.secondarySeries) {
         final oldSeries = oldChart.secondarySeries.firstWhere(
-          (Series oldSeries) => oldSeries.id == series.id,
+          (Component oldComponent) => oldComponent.id == series.id,
           orElse: () => null,
         );
-    
+
         if (oldSeries != null) {
           series.didUpdateSeries(oldSeries);
         }
@@ -372,16 +373,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     if (widget.secondarySeries != null) {
       final Iterable<Series> seriesInAction = widget.secondarySeries.where(
-        (Series series) => !series.minValue.isNaN && !series.maxValue.isNaN,
+        (Component component) =>
+            !component.minValue.isNaN && !component.maxValue.isNaN,
       );
 
       if (seriesInAction.isNotEmpty) {
-        final secondarySeriesMin = seriesInAction
-            .map((Series series) => series.minValue)
-            .reduce(min);
-        final secondarySeriesMax = seriesInAction
-            .map((Series series) => series.maxValue)
-            .reduce(max);
+        final secondarySeriesMin =
+            seriesInAction.map((Series series) => series.minValue).reduce(min);
+        final secondarySeriesMax =
+            seriesInAction.map((Series series) => series.maxValue).reduce(max);
 
         minQuote = min(widget.mainSeries.minValue, secondarySeriesMin);
         maxQuote = max(widget.mainSeries.maxValue, secondarySeriesMax);

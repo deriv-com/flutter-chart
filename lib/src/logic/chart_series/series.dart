@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/component.dart';
 import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -8,20 +9,20 @@ import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
-abstract class Series<T extends Tick> {
+abstract class Series<T extends Tick> implements Component {
   /// Initializes
-  Series(this.entries, this.id, {this.style}) {
+  Series(this.entries, String id, {this.style}) : this.id = id{
     createRenderable();
   }
+
+  @override
+  String id;
 
   /// Responsible for painting a frame of this series on the canvas
   Rendererable<Series> rendererable;
 
   /// The painting style of this series
   final ChartPaintingStyle style;
-
-  /// Series ID
-  final String id;
 
   /// Series entries
   final List<T> entries;
@@ -40,12 +41,15 @@ abstract class Series<T extends Tick> {
   double _maxValueInFrame;
 
   /// Min quote in a frame
+  @override
   double get minValue => _minValueInFrame ?? double.nan;
 
   /// Max quote in a frame
+  @override
   double get maxValue => _maxValueInFrame ?? double.nan;
 
   /// Updates visible entries for this Series.
+  @override
   void update(int leftEpoch, int rightEpoch) {
     if (entries.isEmpty) {
       return;
@@ -133,7 +137,9 @@ abstract class Series<T extends Tick> {
   }
 
   /// Will be called by the chart when the it was updated.
-  void didUpdateSeries(Series<T> oldSeries) {
+  @override
+  void didUpdateSeries(Component oldComponent) {
+    final Series oldSeries = oldComponent;
     if (oldSeries.entries.isNotEmpty) {
       _prevLastEntry = oldSeries.entries.last;
     }
@@ -143,6 +149,7 @@ abstract class Series<T extends Tick> {
   void createRenderable();
 
   /// Paints [rendererable]'s data on the [canvas]
+  @override
   void paint(
     Canvas canvas,
     Size size,

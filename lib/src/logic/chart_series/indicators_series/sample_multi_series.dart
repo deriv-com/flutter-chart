@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/component.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/sample_multi_renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -48,7 +49,7 @@ class SampleMultiSeries extends Series<Tick> {
   void createRenderable() => rendererable = SampleMultiRenderable(this);
 
   @override
-  void didUpdateSeries(Series<Tick> oldSeries) {
+  void didUpdateSeries(Component oldSeries) {
     super.didUpdateSeries(oldSeries);
 
     final SampleMultiSeries old = oldSeries;

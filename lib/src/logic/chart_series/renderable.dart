@@ -7,8 +7,7 @@ import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
-typedef EpochToX = double Function(int);
-typedef QuoteToY = double Function(double);
+import '../component.dart';
 
 // TODO(ramin): We need to eventually remove quoteLabelAreaWidth and use textPainter's width instead
 /// Overall horizontal padding for current tick indicator quote label
