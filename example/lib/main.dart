@@ -198,7 +198,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _handleTickStream(TickBase newTick) {
-    if (newTick != null) {
+    if (_requestCompleter.isCompleted && newTick != null) {
       if (newTick is api_tick.Tick) {
         _onNewTick(Candle.tick(
           epoch: newTick.epoch.millisecondsSinceEpoch,
@@ -398,6 +398,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Future<void> _onIntervalSelected(value) async {
     await _requestCompleter.future;
     _requestCompleter = Completer();
+
+    candles.clear();
 
     try {
       await _tickHistorySubscription?.unsubscribe();

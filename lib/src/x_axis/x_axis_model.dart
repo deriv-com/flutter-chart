@@ -112,7 +112,7 @@ class XAxisModel extends ChangeNotifier {
 
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
-  /// Updates left panning limit.
+  /// Updates chart's main data
   void updateCandles(List<Candle> candles) => _candles = candles;
 
   /// Called on each frame.
