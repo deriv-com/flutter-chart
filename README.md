@@ -44,7 +44,7 @@ Chart(
   candles: [candle1, candle2],
   pipSize: 4, // digits after decimal point
   style: ChartStyle.candles,
-  // TODO: add granularity
+  granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
   // TODO: add isLive
 );
 ```
