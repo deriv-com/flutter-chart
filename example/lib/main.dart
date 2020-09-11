@@ -217,6 +217,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
             child: Chart(
               candles: candles,
               pipSize: 4,
+              granularity: granularity == 0
+                  ? 2000 // average ms difference between ticks
+                  : granularity * 1000,
               style: style,
               onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
               onLoadHistory: (fromEpoch, toEpoch, count) =>
