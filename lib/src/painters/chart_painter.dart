@@ -7,11 +7,13 @@ class ChartPainter extends CustomPainter {
     this.pipSize,
     this.series,
     this.animationInfo,
+    this.granularity,
     this.epochToCanvasX,
     this.quoteToCanvasY,
   });
 
   final int pipSize;
+  final int granularity;
 
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
@@ -40,16 +42,6 @@ class ChartPainter extends CustomPainter {
     }
   }
 
-//  void _paintLine(LineStyle lineStyle) {
-//    paintLine(
-//      canvas,
-//      size,
-//      xCoords: candles.map((candle) => epochToCanvasX(candle.epoch)).toList(),
-//      yCoords: candles.map((candle) => quoteToCanvasY(candle.close)).toList(),
-//      style: lineStyle,
-//    );
-//  }
-//
 
   @override
   bool shouldRepaint(ChartPainter oldDelegate) => true;

@@ -30,6 +30,8 @@ class CandleRenderable extends Rendererable<CandleSeries> {
 
     final intervalWidth = epochToX(series.visibleEntries[1].epoch) -
         epochToX(series.visibleEntries[0].epoch);
+    //final intervalWidth = epochToCanvasX(granularity) - epochToCanvasX(0);
+
     final candleWidth = intervalWidth * 0.6;
 
     final List<CandlePainting> candlePaintings = <CandlePainting>[];

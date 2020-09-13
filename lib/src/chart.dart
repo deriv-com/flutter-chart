@@ -29,6 +29,7 @@ class Chart extends StatelessWidget {
   const Chart({
     @required this.mainSeries,
     @required this.pipSize,
+    @required this.granularity,
     this.secondarySeries,
     this.theme,
     this.onCrosshairAppeared,
@@ -44,8 +45,12 @@ class Chart extends StatelessWidget {
   /// Useful for adding on-chart indicators.
   final List<Series<Tick>> secondarySeries;
 
-  /// Number of digits in price after decimal point.
+  /// Number of digits after decimal point in price.
   final int pipSize;
+
+  /// For candles: Duration of one candle in ms.
+  /// For ticks: Average ms difference between two consecutive ticks.
+  final int granularity;
 
   /// Called when crosshair details appear after long press.
   final VoidCallback onCrosshairAppeared;
@@ -72,11 +77,7 @@ class Chart extends StatelessWidget {
             firstCandleEpoch: mainSeries.entries.isNotEmpty
                 ? mainSeries.entries.first.epoch
                 : null,
-            // TODO(Rustem): App should pass granularity to chart,
-            // the calculation is error-prone when gaps are present
-            granularity: mainSeries.entries.length >= 2
-                ? mainSeries.entries[1].epoch - mainSeries.entries[0].epoch
-                : null,
+            granularity: granularity,
             child: _ChartImplementation(
               mainSeries: mainSeries,
               secondarySeries: secondarySeries,
@@ -459,6 +460,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 widget.mainSeries,
                 if (widget.secondarySeries != null) ...widget.secondarySeries
               ],
+              granularity: context.watch<XAxisModel>().granularity,
               pipSize: widget.pipSize,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
