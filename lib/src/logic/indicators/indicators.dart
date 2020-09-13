@@ -3,6 +3,12 @@ import 'package:deriv_chart/src/models/tick.dart';
 /// A class to calculate Moving Average
 // TODO(ramin): It's performance might not be ideal. Its only for the purpose of showing how to add multiple data series to the chart.
 class MovingAverage {
+  /// Initializes
+  MovingAverage(this._period) {
+    _oneOverLength = 1.0 / _period;
+    _circularBuffer = List<Tick>(_period);
+  }
+
   final int _period;
   int _index = -1;
   bool _filled = false;
@@ -11,18 +17,14 @@ class MovingAverage {
   List<Tick> _circularBuffer;
   double _total = 0;
 
-  MovingAverage(this._period) {
-    this._oneOverLength = 1.0 / _period;
-    this._circularBuffer = List<Tick>(_period);
-  }
-
+  /// Push new entry to calculate average for the next window
   MovingAverage push(Tick entry) {
     // Apply the circular buffer
     if (++_index == _period) {
       _index = 0;
     }
 
-    double lostValue = _circularBuffer[_index]?.quote ?? 0;
+    final double lostValue = _circularBuffer[_index]?.quote ?? 0;
     _circularBuffer[_index] = entry;
 
     // Compute the average
@@ -43,10 +45,11 @@ class MovingAverage {
     return this;
   }
 
+  /// Calculates Moving Average for [input] and return its data.
   static List<Tick> movingAverage(List<Tick> input, int period) {
     final MovingAverage ma = MovingAverage(period);
 
-    final List<Tick> output = List<Tick>();
+    final List<Tick> output = <Tick>[];
 
     for (int i = 0; i < input.length; i++) {
       ma.push(input[i]);
