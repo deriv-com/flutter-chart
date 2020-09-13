@@ -66,7 +66,7 @@ abstract class Series<T extends Tick> implements Component {
   }
 
   void _setMinMaxValues() {
-    final List<double> minMaxValues = getMinMaxValues();
+    final List<double> minMaxValues = recalculateMinMax();
 
     _minValueInFrame = minMaxValues[0];
     _maxValueInFrame = minMaxValues[1];
@@ -75,14 +75,24 @@ abstract class Series<T extends Tick> implements Component {
   /// Gets min and max quotes after updating [visibleEntries] as an array with two elements [min, max].
   ///
   /// Sub-classes can override this method if they calculate [minValue] & [maxValue] differently.
-  List<double> getMinMaxValues() {
-    final Iterable<double> valuesInAction =
-        visibleEntries.where((T t) => !t.quote.isNaN).map((T t) => t.quote);
+  List<double> recalculateMinMax() {
+    if (visibleEntries.isNotEmpty) {
+      double min = visibleEntries[0].quote;
+      double max = visibleEntries[0].quote;
 
-    if (valuesInAction.isEmpty) {
-      return <double>[double.nan, double.nan];
+      for (int i = 1; i < visibleEntries.length; i++) {
+        final T t = visibleEntries[i];
+
+        if (t.quote > max) {
+          max = t.quote;
+        } else if (t.quote < min) {
+          min = t.quote;
+        }
+      }
+
+      return <double>[min, max];
     } else {
-      return <double>[valuesInAction.reduce(min), valuesInAction.reduce(max)];
+      return <double>[double.nan, double.nan];
     }
   }
 

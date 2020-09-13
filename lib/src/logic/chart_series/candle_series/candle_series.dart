@@ -17,27 +17,25 @@ class CandleSeries extends Series<Candle> {
   }) : super(entries, id, style: style ?? const CandleStyle());
 
   @override
-  List<double> getMinMaxValues() {
-    final Iterable<double> maxValuesInAction = visibleEntries
-        .where((Candle candle) => !candle.high.isNaN)
-        .map((Candle candle) => candle.high);
+  List<double> recalculateMinMax() {
+    if (visibleEntries.isNotEmpty) {
+      double min = visibleEntries[0].low;
+      double max = visibleEntries[0].high;
 
-    if (maxValuesInAction.isEmpty) {
+      for (int i = 1; i < visibleEntries.length; i++) {
+        final Candle c = visibleEntries[i];
+
+        if (c.high > max) {
+          max = c.high;
+        } else if (c.low < min) {
+          min = c.low;
+        }
+      }
+
+      return <double>[min, max];
+    } else {
       return <double>[double.nan, double.nan];
     }
-
-    final Iterable<double> minValuesInAction = visibleEntries
-        .where((Candle candle) => !candle.low.isNaN)
-        .map((Candle candle) => candle.low);
-
-    if (minValuesInAction.isEmpty) {
-      return <double>[double.nan, double.nan];
-    }
-
-    return <double>[
-      minValuesInAction.reduce(min),
-      maxValuesInAction.reduce(max)
-    ];
   }
 
   @override

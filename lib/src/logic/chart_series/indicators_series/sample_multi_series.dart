@@ -47,7 +47,7 @@ class SampleMultiSeries extends Series<Tick> {
   }
 
   @override
-  List<double> getMinMaxValues() => <double>[
+  List<double> recalculateMinMax() => <double>[
         min(series1.minValue, series2.maxValue),
         max(series1.maxValue, series2.maxValue)
       ];
