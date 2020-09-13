@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 ///
 /// Can also extend from a concrete implementation of [Series] like [LineSeries] and instead of two only
 /// define one nested series. In that case, since we override [createRenderable]
-/// and set value for [rendererable] We can have another reference to a custom Renderable.
+/// and set value for [rendererable] we should have another Renderable inside this class.
 ///
 /// Or we can directly implement [Component] interface.
 class SampleMultiSeries extends Series<Tick> {
@@ -40,9 +40,10 @@ class SampleMultiSeries extends Series<Tick> {
 
   @override
   void update(int leftEpoch, int rightEpoch) {
-    super.update(leftEpoch, rightEpoch);
     series1.update(leftEpoch, rightEpoch);
     series2.update(leftEpoch, rightEpoch);
+
+    super.update(leftEpoch, rightEpoch);
   }
 
   @override
