@@ -80,7 +80,7 @@ class Chart extends StatelessWidget {
             granularity: granularity,
             child: _ChartImplementation(
               mainSeries: mainSeries,
-              components: secondarySeries,
+              components: <Component>[...secondarySeries],
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
               onLoadHistory: onLoadHistory,
@@ -359,12 +359,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager.removeCallback(_onPanUpdate);
   }
 
-  void _updateSeries() {
+  void _updateComponents() {
     widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
 
     if (widget.components != null) {
-      for (final series in widget.components) {
-        series.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
+      for (final Component component in widget.components) {
+        component.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
       }
     }
   }
@@ -374,19 +374,21 @@ class _ChartImplementationState extends State<_ChartImplementation>
     double maxQuote = widget.mainSeries.maxValue;
 
     if (widget.components != null) {
-      final Iterable<Series> seriesInAction = widget.components.where(
+      final Iterable<Component> componentsInAction = widget.components.where(
         (Component component) =>
             !component.minValue.isNaN && !component.maxValue.isNaN,
       );
 
-      if (seriesInAction.isNotEmpty) {
-        final secondarySeriesMin =
-            seriesInAction.map((Series series) => series.minValue).reduce(min);
-        final secondarySeriesMax =
-            seriesInAction.map((Series series) => series.maxValue).reduce(max);
+      if (componentsInAction.isNotEmpty) {
+        final double componentsMin = componentsInAction
+            .map((Component component) => component.minValue)
+            .reduce(min);
+        final double componentsMax = componentsInAction
+            .map((Component component) => component.maxValue)
+            .reduce(max);
 
-        minQuote = min(widget.mainSeries.minValue, secondarySeriesMin);
-        maxQuote = max(widget.mainSeries.maxValue, secondarySeriesMax);
+        minQuote = min(widget.mainSeries.minValue, componentsMin);
+        maxQuote = max(widget.mainSeries.maxValue, componentsMax);
       }
     }
 
@@ -424,7 +426,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         constraints.maxHeight,
       );
 
-      _updateSeries();
+      _updateComponents();
       _updateQuoteBoundTargets();
 
       return Stack(
