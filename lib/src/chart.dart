@@ -227,7 +227,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _didUpdateSeries(_ChartImplementation oldChart) {
     if (widget.mainSeries.id == oldChart.mainSeries.id) {
-      widget.mainSeries.didUpdateSeries(oldChart.mainSeries);
+      widget.mainSeries.didUpdate(oldChart.mainSeries);
     }
 
     if (widget.components != null) {
@@ -238,7 +238,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         );
 
         if (oldSeries != null) {
-          series.didUpdateSeries(oldSeries);
+          series.didUpdate(oldSeries);
         }
       }
     }

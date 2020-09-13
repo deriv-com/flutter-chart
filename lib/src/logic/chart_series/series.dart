@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 /// Base class of all chart series
 abstract class Series<T extends Tick> implements Component {
   /// Initializes
-  Series(this.entries, String id, {this.style}) : this.id = id{
+  Series(this.entries, this.id, {this.style}) {
     createRenderable();
   }
 
@@ -19,7 +19,7 @@ abstract class Series<T extends Tick> implements Component {
   String id;
 
   /// Responsible for painting a frame of this series on the canvas
-  Rendererable<Series> rendererable;
+  Rendererable<Series<T>> rendererable;
 
   /// The painting style of this series
   final ChartPaintingStyle style;
@@ -138,8 +138,8 @@ abstract class Series<T extends Tick> implements Component {
 
   /// Will be called by the chart when the it was updated.
   @override
-  void didUpdateSeries(Component oldComponent) {
-    final Series oldSeries = oldComponent;
+  void didUpdate(Component oldComponent) {
+    final Series<T> oldSeries = oldComponent;
     if (oldSeries.entries.isNotEmpty) {
       _prevLastEntry = oldSeries.entries.last;
     }

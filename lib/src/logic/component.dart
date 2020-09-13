@@ -10,7 +10,7 @@ abstract class Component {
   String id;
 
   /// Will be called by the chart when it was updated.
-  void didUpdateSeries(Component oldComponent);
+  void didUpdate(Component oldComponent);
 
   /// Updates this [Component] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
