@@ -1,11 +1,11 @@
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/component.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
     this.pipSize,
-    this.series,
+    this.components,
     this.animationInfo,
     this.granularity,
     this.epochToCanvasX,
@@ -23,15 +23,15 @@ class ChartPainter extends CustomPainter {
   Canvas canvas;
   Size size;
 
-  final List<Series> series;
+  final List<Component> components;
 
   @override
   void paint(Canvas canvas, Size size) {
     this.canvas = canvas;
     this.size = size;
 
-    for (final s in series) {
-      s.paint(
+    for (final Component c in components) {
+      c.paint(
         canvas,
         size,
         epochToCanvasX,
@@ -41,7 +41,6 @@ class ChartPainter extends CustomPainter {
       );
     }
   }
-
 
   @override
   bool shouldRepaint(ChartPainter oldDelegate) => true;

@@ -80,7 +80,7 @@ class Chart extends StatelessWidget {
             granularity: granularity,
             child: _ChartImplementation(
               mainSeries: mainSeries,
-              secondarySeries: secondarySeries,
+              components: secondarySeries,
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
               onLoadHistory: onLoadHistory,
@@ -97,13 +97,14 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
-    this.secondarySeries,
+    this.components,
     this.onCrosshairAppeared,
     this.onLoadHistory,
   }) : super(key: key);
 
   final Series mainSeries;
-  final List<Component> secondarySeries;
+
+  final List<Component> components;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
@@ -229,9 +230,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
       widget.mainSeries.didUpdateSeries(oldChart.mainSeries);
     }
 
-    if (widget.secondarySeries != null) {
-      for (final series in widget.secondarySeries) {
-        final oldSeries = oldChart.secondarySeries.firstWhere(
+    if (widget.components != null) {
+      for (final series in widget.components) {
+        final oldSeries = oldChart.components.firstWhere(
           (Component oldComponent) => oldComponent.id == series.id,
           orElse: () => null,
         );
@@ -361,8 +362,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _updateSeries() {
     widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
 
-    if (widget.secondarySeries != null) {
-      for (final series in widget.secondarySeries) {
+    if (widget.components != null) {
+      for (final series in widget.components) {
         series.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
       }
     }
@@ -372,8 +373,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     double minQuote = widget.mainSeries.minValue;
     double maxQuote = widget.mainSeries.maxValue;
 
-    if (widget.secondarySeries != null) {
-      final Iterable<Series> seriesInAction = widget.secondarySeries.where(
+    if (widget.components != null) {
+      final Iterable<Series> seriesInAction = widget.components.where(
         (Component component) =>
             !component.minValue.isNaN && !component.maxValue.isNaN,
       );
@@ -456,9 +457,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 newTickPercent: _currentTickAnimation.value,
                 blinkingPercent: _currentTickBlinkAnimation.value,
               ),
-              series: [
+              components: [
                 widget.mainSeries,
-                if (widget.secondarySeries != null) ...widget.secondarySeries
+                if (widget.components != null) ...widget.components
               ],
               granularity: context.watch<XAxisModel>().granularity,
               pipSize: widget.pipSize,
