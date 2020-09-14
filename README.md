@@ -41,21 +41,31 @@ final candle2 = Candle(
 );
 
 Chart(
-  candles: [candle1, candle2],
+  mainSeries: CandleSeries([candle1, candle2], 'mainSeries'),
   pipSize: 4, // digits after decimal point
-  style: ChartStyle.candles,
   granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
   // TODO: add isLive
 );
 ```
 
-Supply different `ChartStyle` to switch between chart types (candle / line).
+Supply different `Series` for `mainSeries` parameter to switch between chart types (candle / line).
 
 ```dart
 Chart(
-  candles: [candle1, candle2],
+  mainSeries: LineSeries([candle1, candle2], 'mainSeries'),
   pipSize: 4,
-  style: ChartStyle.line,
+);
+```
+
+To add more series with same y-scale supply them as an array to `secondarySeries` parameter.
+
+```dart
+Chart(
+  mainSeries: LineSeries([candle1, candle2], 'mainSeries'),
+  secondarySeries: [
+    MASeries(candles, 'MA'),
+  ],
+  pipSize: 4,
 );
 ```
 
@@ -64,7 +74,7 @@ Chart will pass `count`, which is a number of candles that should be appended to
 
 ```dart
 Chart(
-  candles: candles,
+  mainSeries: LineSeries(candles, 'mainSeries'),
   pipSize: 4,
   onLoadHistory: (int count) {
     // append [count] candles to the front of [data]
@@ -72,11 +82,11 @@ Chart(
 );
 ```
 
-Use `onCrosshairAppeared` for listening to chart's crosshair.
+Use `onCrosshairAppeared` for listening to chart's cross-hair.
 
 ```dart
 Chart(
-  candles: candles,
+  mainSeries: LineSeries(candles, 'mainSeries'),
   pipSize: 4,
   onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
 );
