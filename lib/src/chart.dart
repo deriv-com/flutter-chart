@@ -445,9 +445,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.mainSeries.entries.isEmpty
+              loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
                   ? _xAxis.width
-                  : _xAxis.xFromEpoch(widget.mainSeries.entries.first.epoch),
+                  : _xAxis.xFromEpoch(
+                      widget.mainSeries.visibleEntries.first.epoch,
+                    ),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
