@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import 'candle_series.dart';
 
-/// Line renderable
+/// Candle renderable for painting CandleStick data.
 class CandleRenderable extends Rendererable<CandleSeries> {
   /// Initializes
   CandleRenderable(Series<Candle> series) : super(series);
@@ -55,13 +55,13 @@ class CandleRenderable extends Rendererable<CandleSeries> {
       final yClose = quoteToY(ui.lerpDouble(
         series.prevLastEntry.close,
         lastCandle.close,
-        animationInfo.newTickPercent,
+        animationInfo.currentTickPercent,
       ));
 
       final xCenter = ui.lerpDouble(
         epochToX(series.prevLastEntry.epoch),
         epochToX(lastCandle.epoch),
-        animationInfo.newTickPercent,
+        animationInfo.currentTickPercent,
       );
 
       candlePaintings.add(CandlePainting(

@@ -456,7 +456,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: ChartPainter(
               animationInfo: AnimationInfo(
-                newTickPercent: _currentTickAnimation.value,
+                currentTickPercent: _currentTickAnimation.value,
                 blinkingPercent: _currentTickBlinkAnimation.value,
               ),
               chartDataList: <ChartData>[

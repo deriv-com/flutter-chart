@@ -66,13 +66,13 @@ abstract class Rendererable<S extends Series> {
         currentTickX = lerpDouble(
           epochToX(series.prevLastEntry.epoch),
           epochToX(lastEntry.epoch),
-          animationInfo.newTickPercent,
+          animationInfo.currentTickPercent,
         );
 
         quoteValue = lerpDouble(
           series.prevLastEntry.quote,
           lastEntry.quote,
-          animationInfo.newTickPercent,
+          animationInfo.currentTickPercent,
         );
         currentTickY = quoteToY(quoteValue);
       } else {

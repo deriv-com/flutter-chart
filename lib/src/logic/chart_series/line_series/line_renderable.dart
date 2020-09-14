@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import 'line_series.dart';
 
-/// Line renderable
+/// Line renderable for painting line data.
 class LineRenderable extends Rendererable<LineSeries> {
   /// Initializes
   LineRenderable(Series<Tick> series) : super(series);
@@ -50,13 +50,13 @@ class LineRenderable extends Rendererable<LineSeries> {
       lastVisibleTickX = ui.lerpDouble(
         epochToX(series.prevLastEntry.epoch),
         epochToX(lastTick.epoch),
-        animationInfo.newTickPercent,
+        animationInfo.currentTickPercent,
       );
 
       final double tickY = quoteToY(ui.lerpDouble(
         series.prevLastEntry.quote,
         lastTick.quote,
-        animationInfo.newTickPercent,
+        animationInfo.currentTickPercent,
       ));
 
       path.lineTo(lastVisibleTickX, tickY);
