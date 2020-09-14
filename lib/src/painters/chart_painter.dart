@@ -1,11 +1,11 @@
-import 'package:deriv_chart/src/logic/component.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
     this.pipSize,
-    this.components,
+    this.chartDataList,
     this.animationInfo,
     this.granularity,
     this.epochToCanvasX,
@@ -23,14 +23,14 @@ class ChartPainter extends CustomPainter {
   Canvas canvas;
   Size size;
 
-  final List<Component> components;
+  final List<ChartData> chartDataList;
 
   @override
   void paint(Canvas canvas, Size size) {
     this.canvas = canvas;
     this.size = size;
 
-    for (final Component c in components) {
+    for (final ChartData c in chartDataList) {
       c.paint(
         canvas,
         size,

@@ -6,7 +6,7 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
-import '../../component.dart';
+import '../../chart_data.dart';
 import 'sample_multi_series.dart';
 
 /// A sample class just to represent how a custom indicator with multiple data-series can be implemented.

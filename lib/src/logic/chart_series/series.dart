@@ -1,7 +1,6 @@
-import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/component.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -9,7 +8,7 @@ import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
-abstract class Series<T extends Tick> implements Component {
+abstract class Series<T extends Tick> implements ChartData {
   /// Initializes
   Series(this.entries, this.id, {this.style}) {
     createRenderable();
@@ -146,10 +145,10 @@ abstract class Series<T extends Tick> implements Component {
     return (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
   }
 
-  /// Will be called by the chart when the it was updated.
+  /// Will be called by the chart when it was updated.
   @override
-  void didUpdate(Component oldComponent) {
-    final Series<T> oldSeries = oldComponent;
+  void didUpdate(ChartData oldData) {
+    final Series<T> oldSeries = oldData;
     if (oldSeries.entries.isNotEmpty) {
       _prevLastEntry = oldSeries.entries.last;
     }

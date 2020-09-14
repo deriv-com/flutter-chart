@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/logic/component.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/sample_multi_renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 /// define one nested series. In that case, since we override [createRenderable]
 /// and set value for [rendererable] we should have another Renderable inside this class.
 ///
-/// Or we can directly implement [Component] interface.
+/// Or we can directly implement [ChartData] interface.
 class SampleMultiSeries extends Series<Tick> {
   /// Initializes
   SampleMultiSeries(List<Tick> entries, String id)
@@ -56,10 +56,10 @@ class SampleMultiSeries extends Series<Tick> {
   void createRenderable() => rendererable = SampleMultiRenderable(this);
 
   @override
-  void didUpdate(Component oldComponent) {
-    super.didUpdate(oldComponent);
+  void didUpdate(ChartData oldData) {
+    super.didUpdate(oldData);
 
-    final SampleMultiSeries old = oldComponent;
+    final SampleMultiSeries old = oldData;
 
     series1.didUpdate(old.series1);
     series2.didUpdate(old.series2);

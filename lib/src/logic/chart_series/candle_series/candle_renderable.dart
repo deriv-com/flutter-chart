@@ -8,7 +8,7 @@ import 'package:deriv_chart/src/models/candle_painting.dart';
 import 'package:deriv_chart/src/paint/paint_candles.dart';
 import 'package:flutter/material.dart';
 
-import '../../component.dart';
+import '../../chart_data.dart';
 import 'candle_series.dart';
 
 /// Line renderable

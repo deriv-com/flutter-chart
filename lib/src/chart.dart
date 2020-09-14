@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/component.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -80,7 +80,7 @@ class Chart extends StatelessWidget {
             granularity: granularity,
             child: _ChartImplementation(
               mainSeries: mainSeries,
-              components: <Component>[...secondarySeries],
+              chartDataList: <ChartData>[...secondarySeries],
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
               onLoadHistory: onLoadHistory,
@@ -97,14 +97,14 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
-    this.components,
+    this.chartDataList,
     this.onCrosshairAppeared,
     this.onLoadHistory,
   }) : super(key: key);
 
-  final Series mainSeries;
+  final Series<Tick> mainSeries;
 
-  final List<Component> components;
+  final List<ChartData> chartDataList;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
@@ -230,15 +230,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
       widget.mainSeries.didUpdate(oldChart.mainSeries);
     }
 
-    if (widget.components != null) {
-      for (final series in widget.components) {
-        final oldSeries = oldChart.components.firstWhere(
-          (Component oldComponent) => oldComponent.id == series.id,
+    if (widget.chartDataList != null) {
+      for (final ChartData data in widget.chartDataList) {
+        final ChartData oldData = oldChart.chartDataList.firstWhere(
+          (ChartData d) => d.id == data.id,
           orElse: () => null,
         );
 
-        if (oldSeries != null) {
-          series.didUpdate(oldSeries);
+        if (oldData != null) {
+          data.didUpdate(oldData);
         }
       }
     }
@@ -359,12 +359,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager.removeCallback(_onPanUpdate);
   }
 
-  void _updateComponents() {
+  void _updateChartData() {
     widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
 
-    if (widget.components != null) {
-      for (final Component component in widget.components) {
-        component.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
+    if (widget.chartDataList != null) {
+      for (final ChartData data in widget.chartDataList) {
+        data.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
       }
     }
   }
@@ -373,22 +373,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
     double minQuote = widget.mainSeries.minValue;
     double maxQuote = widget.mainSeries.maxValue;
 
-    if (widget.components != null) {
-      final Iterable<Component> componentsInAction = widget.components.where(
-        (Component component) =>
-            !component.minValue.isNaN && !component.maxValue.isNaN,
+    if (widget.chartDataList != null) {
+      final Iterable<ChartData> dataInAction = widget.chartDataList.where(
+        (ChartData chartData) =>
+            !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
       );
 
-      if (componentsInAction.isNotEmpty) {
-        final double componentsMin = componentsInAction
-            .map((Component component) => component.minValue)
+      if (dataInAction.isNotEmpty) {
+        final double chartDataMin = dataInAction
+            .map((ChartData chartData) => chartData.minValue)
             .reduce(min);
-        final double componentsMax = componentsInAction
-            .map((Component component) => component.maxValue)
+        final double chartDataMax = dataInAction
+            .map((ChartData chartData) => chartData.maxValue)
             .reduce(max);
 
-        minQuote = min(widget.mainSeries.minValue, componentsMin);
-        maxQuote = max(widget.mainSeries.maxValue, componentsMax);
+        minQuote = min(widget.mainSeries.minValue, chartDataMin);
+        maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
       }
     }
 
@@ -426,7 +426,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         constraints.maxHeight,
       );
 
-      _updateComponents();
+      _updateChartData();
       _updateQuoteBoundTargets();
 
       return Stack(
@@ -459,9 +459,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 newTickPercent: _currentTickAnimation.value,
                 blinkingPercent: _currentTickBlinkAnimation.value,
               ),
-              components: [
+              chartDataList: <ChartData>[
                 widget.mainSeries,
-                if (widget.components != null) ...widget.components
+                if (widget.chartDataList != null) ...widget.chartDataList
               ],
               granularity: context.watch<XAxisModel>().granularity,
               pipSize: widget.pipSize,
