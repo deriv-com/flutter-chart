@@ -81,6 +81,7 @@ class Chart extends StatelessWidget {
           child: XAxis(
             firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
             granularity: granularity,
+            onVisibleAreaChanged: onVisibleAreaChanged,
             child: _ChartImplementation(
               candles: candles,
               pipSize: pipSize,

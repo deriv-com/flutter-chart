@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
+import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
 import '../theme/chart_theme.dart';
 import 'grid/calc_time_grid.dart';
@@ -18,6 +19,7 @@ class XAxis extends StatefulWidget {
     @required this.child,
     @required this.firstCandleEpoch,
     @required this.granularity,
+    this.onVisibleAreaChanged,
     Key key,
   })  : assert(child != null),
         super(key: key);
@@ -30,6 +32,9 @@ class XAxis extends StatefulWidget {
 
   /// Millisecond difference between two consecutive candles.
   final int granularity;
+
+  /// Callback provided by library user.
+  final VisibleAreaChangedCallback onVisibleAreaChanged;
 
   @override
   _XAxisState createState() => _XAxisState();
