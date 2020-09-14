@@ -217,7 +217,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
 
-    _didUpdateSeries(oldChart);
+    _didUpdateChartData(oldChart);
 
     _onNewTick();
 
@@ -225,7 +225,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _recalculateQuoteLabelsAreaWidth();
   }
 
-  void _didUpdateSeries(_ChartImplementation oldChart) {
+  void _didUpdateChartData(_ChartImplementation oldChart) {
     if (widget.mainSeries.id == oldChart.mainSeries.id) {
       widget.mainSeries.didUpdate(oldChart.mainSeries);
     }
