@@ -10,6 +10,8 @@ class XAxisModel extends ChangeNotifier {
     @required int firstCandleEpoch,
     @required int granularity,
     @required AnimationController animationController,
+    this.onScale,
+    this.onScroll,
   }) {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
@@ -45,6 +47,12 @@ class XAxisModel extends ChangeNotifier {
 
   /// Canvas width.
   double width;
+
+  /// Called on scale.
+  final VoidCallback onScale;
+
+  /// Called on scroll.
+  final VoidCallback onScroll;
 
   AnimationController _rightEpochAnimationController;
   bool _autoPanEnabled = true;
@@ -193,6 +201,7 @@ class XAxisModel extends ChangeNotifier {
 
   void _scale(double scale) {
     _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
+    onScale?.call();
   }
 
   void _scrollTo(int rightBoundEpoch) {
@@ -200,6 +209,7 @@ class XAxisModel extends ChangeNotifier {
       _minRightBoundEpoch,
       _maxRightBoundEpoch,
     );
+    onScroll?.call();
   }
 
   /// Animate scrolling to current tick.

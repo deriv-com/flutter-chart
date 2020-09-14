@@ -57,6 +57,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       firstCandleEpoch: widget.firstCandleEpoch,
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,
+      onScale: _onVisibleAreaChanged,
+      onScroll: _onVisibleAreaChanged,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -66,6 +68,13 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
       ..registerCallback(_model.onScaleAndPanEnd);
+  }
+
+  void _onVisibleAreaChanged() {
+    widget.onVisibleAreaChanged?.call(
+      _model.leftBoundEpoch,
+      _model.rightBoundEpoch,
+    );
   }
 
   @override
