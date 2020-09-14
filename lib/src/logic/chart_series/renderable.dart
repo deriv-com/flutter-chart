@@ -22,6 +22,12 @@ abstract class Rendererable<S extends Series> {
   /// The [Series] which this renderable belongs to
   final S series;
 
+  @protected
+  int pipSize;
+
+  @protected
+  int granularity;
+
   /// Paints [visibleEntries] on the [canvas]
   void paint({
     Canvas canvas,
@@ -30,10 +36,15 @@ abstract class Rendererable<S extends Series> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
     int pipSize,
+    int granularity,
   }) {
     if (series.visibleEntries.isEmpty) {
       return;
     }
+
+    this.pipSize = pipSize;
+    this.granularity = granularity;
+
     onPaint(
       canvas: canvas,
       size: size,

@@ -38,6 +38,7 @@ class ChartPainter extends CustomPainter {
         quoteToCanvasY,
         animationInfo,
         pipSize,
+        granularity,
       );
     }
   }

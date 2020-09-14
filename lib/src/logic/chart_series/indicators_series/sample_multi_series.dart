@@ -73,11 +73,15 @@ class SampleMultiSeries extends Series<Tick> {
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
     int pipSize,
+    int granularity,
   ) {
-    super.paint(canvas, size, epochToX, quoteToY, animationInfo, pipSize);
+    super.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
 
-    series1.paint(canvas, size, epochToX, quoteToY, animationInfo, pipSize);
-    series2.paint(canvas, size, epochToX, quoteToY, animationInfo, pipSize);
+    series1.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
+    series2.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
   }
 
   @override

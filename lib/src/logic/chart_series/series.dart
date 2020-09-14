@@ -167,6 +167,7 @@ abstract class Series<T extends Tick> implements Component {
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
     int pipSize,
+    int granularity,
   ) =>
       rendererable?.paint(
         canvas: canvas,
@@ -175,6 +176,7 @@ abstract class Series<T extends Tick> implements Component {
         quoteToY: quoteToY,
         animationInfo: animationInfo,
         pipSize: pipSize,
+        granularity: granularity,
       );
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements

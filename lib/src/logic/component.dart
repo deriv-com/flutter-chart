@@ -42,5 +42,6 @@ abstract class Component {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
     int pipSize,
+    int granularity,
   );
 }
