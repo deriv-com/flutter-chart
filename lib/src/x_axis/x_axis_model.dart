@@ -15,11 +15,11 @@ class XAxisModel extends ChangeNotifier {
     _firstCandleEpoch = firstCandleEpoch ?? _nowEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
-    rightBoundEpoch = _maxRightBoundEpoch;
+    _rightBoundEpoch = _maxRightBoundEpoch;
 
     _rightEpochAnimationController = animationController
       ..addListener(() {
-        rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+        _scrollTo(_rightEpochAnimationController.value.toInt());
         if (hasHitLimit) {
           _rightEpochAnimationController.stop();
         }
@@ -64,13 +64,6 @@ class XAxisModel extends ChangeNotifier {
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
 
-  set rightBoundEpoch(int rightBoundEpoch) {
-    _rightBoundEpoch = rightBoundEpoch.clamp(
-      _minRightBoundEpoch,
-      _maxRightBoundEpoch,
-    );
-  }
-
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
       _firstCandleEpoch + msFromPx(maxCurrentTickOffset);
@@ -110,7 +103,7 @@ class XAxisModel extends ChangeNotifier {
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
-      rightBoundEpoch += elapsedMs;
+      _scrollTo(_rightBoundEpoch + elapsedMs);
     }
     notifyListeners();
   }
@@ -120,7 +113,7 @@ class XAxisModel extends ChangeNotifier {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
     _msPerPx = _defaultScale;
-    rightBoundEpoch = _maxRightBoundEpoch;
+    _scrollTo(_maxRightBoundEpoch);
   }
 
   /// Enables autopanning when current tick is visible.
@@ -176,7 +169,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    rightBoundEpoch -= msFromPx(details.delta.dx);
+    _scrollTo(_rightBoundEpoch - msFromPx(details.delta.dx));
     notifyListeners();
   }
 
@@ -188,18 +181,25 @@ class XAxisModel extends ChangeNotifier {
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound = pxFromMs(rightBoundEpoch - _nowEpoch);
     _scale(details.scale);
-    rightBoundEpoch = _nowEpoch + msFromPx(nowToRightBound);
+    _scrollTo(_nowEpoch + msFromPx(nowToRightBound));
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = width - details.focalPoint.dx;
     final focalEpoch = rightBoundEpoch - msFromPx(focalToRightBound);
     _scale(details.scale);
-    rightBoundEpoch = focalEpoch + msFromPx(focalToRightBound);
+    _scrollTo(focalEpoch + msFromPx(focalToRightBound));
   }
 
   void _scale(double scale) {
     _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
+  }
+
+  void _scrollTo(int rightBoundEpoch) {
+    _rightBoundEpoch = rightBoundEpoch.clamp(
+      _minRightBoundEpoch,
+      _maxRightBoundEpoch,
+    );
   }
 
   /// Animate scrolling to current tick.
