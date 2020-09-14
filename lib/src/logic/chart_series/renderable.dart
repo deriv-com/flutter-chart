@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
@@ -14,21 +15,23 @@ import '../chart_data.dart';
 const double quoteLabelHorizontalPadding = 10;
 
 /// Base class for Renderables which has a list of entries to paint
-/// entries called [visibleEntries] inside the [paint] method
-abstract class Rendererable<S extends Series> {
+/// entries called [Series.visibleEntries] inside the [paint] method
+abstract class Rendererable<S extends Series<Tick>> {
   /// Initializes series for sub-class
   Rendererable(this.series);
 
   /// The [Series] which this renderable belongs to
   final S series;
 
+  /// Number of decimal digits in showing prices.
   @protected
   int pipSize;
 
+  /// Duration of a candle in ms or (time difference between two ticks).
   @protected
   int granularity;
 
-  /// Paints [visibleEntries] on the [canvas]
+  /// Paints [Series.visibleEntries] on the [canvas]
   void paint({
     Canvas canvas,
     Size size,
@@ -57,7 +60,7 @@ abstract class Rendererable<S extends Series> {
     if (series?.style?.currentTickStyle != null ?? false) {
       double currentTickX;
       double currentTickY;
-      final lastEntry = series.entries.last;
+      final Tick lastEntry = series.entries.last;
       final CurrentTickStyle currentTickStyle = series.style.currentTickStyle;
 
       double quoteValue;
@@ -132,7 +135,7 @@ abstract class Rendererable<S extends Series> {
     }
   }
 
-  /// Paints [visibleEntries]
+  /// Paints [Series.visibleEntries]
   void onPaint({
     Canvas canvas,
     Size size,

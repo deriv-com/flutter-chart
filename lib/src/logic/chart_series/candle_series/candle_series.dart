@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -78,7 +77,7 @@ class CandleSeries extends Series<Candle> {
         style: const TextStyle(
           fontSize: 12,
           color: Colors.white70,
-          fontFeatures: [const FontFeature.tabularFigures()],
+          fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
         ),
       );
 
@@ -88,7 +87,7 @@ class CandleSeries extends Series<Candle> {
         style: const TextStyle(
           fontSize: 12,
           color: Colors.white,
-          fontFeatures: [const FontFeature.tabularFigures()],
+          fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
         ),
       );
 }

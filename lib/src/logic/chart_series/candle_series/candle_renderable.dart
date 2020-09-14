@@ -28,9 +28,9 @@ class CandleRenderable extends Rendererable<CandleSeries> {
       return;
     }
 
-    final intervalWidth = epochToX(granularity) - epochToX(0);
+    final double intervalWidth = epochToX(granularity) - epochToX(0);
 
-    final candleWidth = intervalWidth * 0.6;
+    final double candleWidth = intervalWidth * 0.6;
 
     final List<CandlePainting> candlePaintings = <CandlePainting>[];
 
@@ -52,13 +52,13 @@ class CandleRenderable extends Rendererable<CandleSeries> {
     final Candle lastVisibleCandle = series.visibleEntries.last;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
-      final yClose = quoteToY(ui.lerpDouble(
+      final double yClose = quoteToY(ui.lerpDouble(
         series.prevLastEntry.close,
         lastCandle.close,
         animationInfo.currentTickPercent,
       ));
 
-      final xCenter = ui.lerpDouble(
+      final double xCenter = ui.lerpDouble(
         epochToX(series.prevLastEntry.epoch),
         epochToX(lastCandle.epoch),
         animationInfo.currentTickPercent,
