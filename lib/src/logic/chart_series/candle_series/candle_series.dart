@@ -6,7 +6,7 @@ import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
-/// Line series
+/// CandleStick series
 class CandleSeries extends Series<Candle> {
   /// Initializes
   CandleSeries(
