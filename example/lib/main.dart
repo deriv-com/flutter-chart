@@ -217,7 +217,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   : granularity * 1000,
               style: style,
               onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-              onLoadHistory: (int count) => _loadHistory(count),
             ),
           ),
         ],

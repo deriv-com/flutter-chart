@@ -33,7 +33,7 @@ class Chart extends StatelessWidget {
     @required this.granularity,
     this.theme,
     this.onCrosshairAppeared,
-    this.onLoadHistory,
+    this.onVisibleAreaChanged,
     this.style = ChartStyle.candles,
     Key key,
   }) : super(key: key);
@@ -60,8 +60,8 @@ class Chart extends StatelessWidget {
   /// Called when crosshair details appear after long press.
   final VoidCallback onCrosshairAppeared;
 
-  /// Called when chart is scrolled back and missing data is visible.
-  final OnLoadHistory onLoadHistory;
+  /// Called when chart is scrolled or zoomed.
+  final VisibleAreaChangedCallback onVisibleAreaChanged;
 
   /// Chart's theme.
   final ChartTheme theme;
@@ -85,7 +85,6 @@ class Chart extends StatelessWidget {
               candles: candles,
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
-              onLoadHistory: onLoadHistory,
               style: style,
             ),
           ),
@@ -101,7 +100,6 @@ class _ChartImplementation extends StatefulWidget {
     @required this.candles,
     @required this.pipSize,
     this.onCrosshairAppeared,
-    this.onLoadHistory,
     this.style = ChartStyle.candles,
   }) : super(key: key);
 
@@ -109,7 +107,6 @@ class _ChartImplementation extends StatefulWidget {
   final int pipSize;
   final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
-  final OnLoadHistory onLoadHistory;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -117,8 +114,6 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-  Ticker ticker;
-
   ChartPaintingStyle _chartPaintingStyle;
 
   /// Width of the area with quote labels on the right.
@@ -167,16 +162,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool get _isScrollToNowAvailable =>
       widget.candles.isNotEmpty && !_xAxis.animatingPan && !_isCrosshairMode;
 
-  bool get _shouldLoadMoreHistory {
-    if (widget.candles.isEmpty) return false;
-
-    final waitingForHistory = requestedLeftEpoch != null &&
-        requestedLeftEpoch <= _xAxis.leftBoundEpoch;
-
-    return !waitingForHistory &&
-        _xAxis.leftBoundEpoch < widget.candles.first.epoch;
-  }
-
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
@@ -213,8 +198,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   @override
   void initState() {
     super.initState();
-
-    ticker = createTicker(_onNewFrame)..start();
 
     _setChartPaintingStyle();
     _setupAnimations();
@@ -267,7 +250,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   @override
   void dispose() {
-    ticker?.dispose();
     _currentTickAnimationController?.dispose();
     _currentTickBlinkingController?.dispose();
     _loadingAnimationController?.dispose();
@@ -281,10 +263,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _onNewTick() {
     _currentTickAnimationController.reset();
     _currentTickAnimationController.forward();
-  }
-
-  void _onNewFrame(Duration elapsed) {
-    if (_shouldLoadMoreHistory) _loadMoreHistory();
   }
 
   void _setupAnimations() {
@@ -568,15 +546,5 @@ class _ChartImplementationState extends State<_ChartImplementation>
       icon: Icon(Icons.arrow_forward, color: Colors.white),
       onPressed: _xAxis.scrollToNow,
     );
-  }
-
-  void _loadMoreHistory() {
-    final int widthInMs = _xAxis.msFromPx(_xAxis.width);
-    final int extendByMs = 20 * widthInMs;
-    final int count = extendByMs ~/ _xAxis.granularity;
-
-    widget.onLoadHistory?.call(count);
-
-    requestedLeftEpoch = widget.candles.first.epoch - extendByMs;
   }
 }

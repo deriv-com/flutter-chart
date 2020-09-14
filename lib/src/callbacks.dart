@@ -1,5 +1,5 @@
-/// Callback when user scrolls back and gap with no data is scrolled into view.
+/// Called when chart is scrolled or zoomed.
 ///
-/// [count] is the number of candles that should be appended to the front of the
-/// candles list.
-typedef OnLoadHistory = Function(int count);
+/// [leftEpoch] is an epoch value of the chart's left edge.
+/// [rightEpoch] is an epoch value of the chart's right edge.
+typedef VisibleAreaChangedCallback = Function(int leftEpoch, int rightEpoch);
