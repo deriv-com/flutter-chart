@@ -51,6 +51,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int granularity = 0;
   TickBase _currentTick;
 
+  bool _waitingForHistory = false;
+
   List<Market> _markets;
   Asset symbol = Asset(name: 'R_50', displayName: 'Volatility 50 Index');
 
@@ -217,6 +219,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   : granularity * 1000,
               style: style,
               onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+              onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                if (!_waitingForHistory &&
+                    candles.isNotEmpty &&
+                    leftEpoch < candles.first.epoch) {
+                  _loadHistory(2000);
+                }
+              },
             ),
           ),
         ],
@@ -244,6 +253,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   void _loadHistory(int count) async {
+    _waitingForHistory = true;
+
     final TickHistory moreData = await TickHistory.fetchTickHistory(
       TicksHistoryRequest(
         ticksHistory: symbol.name,
@@ -266,6 +277,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     setState(() {
       candles.insertAll(0, loadedCandles);
+      _waitingForHistory = false;
     });
   }
 
