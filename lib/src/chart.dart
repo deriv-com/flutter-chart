@@ -124,7 +124,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   List<Candle> visibleCandles = [];
 
-  int requestedLeftEpoch;
   Size canvasSize;
   Tick prevTick;
 
