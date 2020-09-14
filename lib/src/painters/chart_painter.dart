@@ -13,6 +13,7 @@ class ChartPainter extends CustomPainter {
   ChartPainter({
     this.candles,
     this.pipSize,
+    this.granularity,
     this.style,
     this.epochToCanvasX,
     this.quoteToCanvasY,
@@ -20,6 +21,7 @@ class ChartPainter extends CustomPainter {
 
   final List<Candle> candles;
   final int pipSize;
+  final int granularity;
   final ChartPaintingStyle style;
 
   final double Function(int) epochToCanvasX;
@@ -53,8 +55,7 @@ class ChartPainter extends CustomPainter {
   }
 
   void _paintCandles(CandleStyle candleStyle) {
-    final intervalWidth =
-        epochToCanvasX(candles[1].epoch) - epochToCanvasX(candles[0].epoch);
+    final intervalWidth = epochToCanvasX(granularity) - epochToCanvasX(0);
     final candleWidth = intervalWidth * 0.6;
 
     final candlePaintings = candles.map((candle) {
