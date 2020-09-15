@@ -12,7 +12,7 @@ import 'sample_multi_series.dart';
 /// A sample class just to represent how a custom indicator with multiple data-series can be implemented.
 class SampleMultiRenderable extends Rendererable<SampleMultiSeries> {
   /// Initializes
-  SampleMultiRenderable(Series<Tick> series) : super(series);
+  SampleMultiRenderable(Series series) : super(series);
 
   @override
   void onPaint({

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -16,7 +17,7 @@ const double quoteLabelHorizontalPadding = 10;
 
 /// Base class for Renderables which has a list of entries to paint
 /// entries called [Series.visibleEntries] inside the [paint] method
-abstract class Rendererable<S extends Series<Tick>> {
+abstract class Rendererable<S extends Series> {
   /// Initializes series for sub-class
   Rendererable(this.series);
 
@@ -41,9 +42,6 @@ abstract class Rendererable<S extends Series<Tick>> {
     int pipSize,
     int granularity,
   }) {
-    if (series.visibleEntries.isEmpty) {
-      return;
-    }
 
     this.pipSize = pipSize;
     this.granularity = granularity;
@@ -55,84 +53,6 @@ abstract class Rendererable<S extends Series<Tick>> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
     );
-
-    // Paint current Tick indicator
-    if (series?.style?.currentTickStyle != null ?? false) {
-      double currentTickX;
-      double currentTickY;
-      final Tick lastEntry = series.entries.last;
-      final CurrentTickStyle currentTickStyle = series.style.currentTickStyle;
-
-      double quoteValue;
-
-      if (series.prevLastEntry != null) {
-        currentTickX = lerpDouble(
-          epochToX(series.prevLastEntry.epoch),
-          epochToX(lastEntry.epoch),
-          animationInfo.currentTickPercent,
-        );
-
-        quoteValue = lerpDouble(
-          series.prevLastEntry.quote,
-          lastEntry.quote,
-          animationInfo.currentTickPercent,
-        );
-        currentTickY = quoteToY(quoteValue);
-      } else {
-        currentTickX = epochToX(lastEntry.epoch);
-
-        quoteValue = lastEntry.quote;
-        currentTickY = quoteToY(quoteValue);
-      }
-
-      if (!currentTickX.isNaN && !currentTickY.isNaN) {
-        paintCurrentTickDot(
-          canvas,
-          center: Offset(currentTickX, currentTickY),
-          animationProgress: animationInfo.blinkingPercent,
-          style: currentTickStyle,
-        );
-
-        paintHorizontalDashedLine(
-          canvas,
-          currentTickX,
-          size.width,
-          currentTickY,
-          currentTickStyle.color,
-          currentTickStyle.lineThickness,
-        );
-
-        final TextSpan span = TextSpan(
-          text: quoteValue.toStringAsFixed(pipSize),
-          style: currentTickStyle.labelStyle,
-        );
-
-        final TextPainter textPainter = TextPainter(
-          text: span,
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr,
-        )..layout();
-
-        final double quoteLabelAreaWidth =
-            textPainter.width + quoteLabelHorizontalPadding;
-
-        paintCurrentTickLabelBackground(
-          canvas,
-          size,
-          centerY: currentTickY,
-          quoteLabelsAreaWidth: quoteLabelAreaWidth,
-          quoteLabel: lastEntry.quote.toStringAsFixed(4),
-          currentTickX: currentTickX,
-          style: currentTickStyle,
-        );
-
-        textPainter.paint(
-          canvas,
-          Offset(size.width - quoteLabelAreaWidth,
-              currentTickY - textPainter.height / 2),
-        );
-      }
-    }
   }
 
   /// Paints [Series.visibleEntries]

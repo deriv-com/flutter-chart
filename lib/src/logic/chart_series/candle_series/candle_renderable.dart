@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/candle_painting.dart';
@@ -14,7 +13,7 @@ import 'candle_series.dart';
 /// Candle renderable for painting CandleStick data.
 class CandleRenderable extends Rendererable<CandleSeries> {
   /// Initializes
-  CandleRenderable(Series<Candle> series) : super(series);
+  CandleRenderable(CandleSeries series) : super(series);
 
   @override
   void onPaint({

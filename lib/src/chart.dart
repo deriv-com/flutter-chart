@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -38,12 +39,12 @@ class Chart extends StatelessWidget {
   }) : super(key: key);
 
   /// Chart's main data series
-  final Series<Tick> mainSeries;
+  final DataSeries<Tick> mainSeries;
 
   /// List of series to add on chart beside the [mainSeries].
   ///
   /// Useful for adding on-chart indicators.
-  final List<Series<Tick>> secondarySeries;
+  final List<Series> secondarySeries;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -102,7 +103,7 @@ class _ChartImplementation extends StatefulWidget {
     this.onLoadHistory,
   }) : super(key: key);
 
-  final Series<Tick> mainSeries;
+  final DataSeries<Tick> mainSeries;
 
   final List<ChartData> chartDataList;
   final int pipSize;

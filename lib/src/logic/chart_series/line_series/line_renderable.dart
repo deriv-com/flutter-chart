@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -13,7 +14,7 @@ import 'line_series.dart';
 /// Line renderable for painting line data.
 class LineRenderable extends Rendererable<LineSeries> {
   /// Initializes
-  LineRenderable(Series<Tick> series) : super(series);
+  LineRenderable(LineSeries series) : super(series);
 
   @override
   void onPaint({

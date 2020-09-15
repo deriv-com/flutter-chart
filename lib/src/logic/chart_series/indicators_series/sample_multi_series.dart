@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 /// and set value for [rendererable] we should have another Renderable inside this class.
 ///
 /// Or we can directly implement [ChartData] interface.
-class SampleMultiSeries extends Series<Tick> {
+class SampleMultiSeries extends Series {
   /// Initializes
   SampleMultiSeries(List<Tick> entries, String id)
       : series1 = LineSeries(
@@ -30,7 +30,7 @@ class SampleMultiSeries extends Series<Tick> {
           's2',
           style: const LineStyle(hasArea: false),
         ),
-        super(entries, id);
+        super(id);
 
   /// Series 1
   final LineSeries series1;
@@ -39,11 +39,9 @@ class SampleMultiSeries extends Series<Tick> {
   final LineSeries series2;
 
   @override
-  void update(int leftEpoch, int rightEpoch) {
+  void onUpdate(int leftEpoch, int rightEpoch) {
     series1.update(leftEpoch, rightEpoch);
     series2.update(leftEpoch, rightEpoch);
-
-    super.update(leftEpoch, rightEpoch);
   }
 
   @override
@@ -57,7 +55,6 @@ class SampleMultiSeries extends Series<Tick> {
 
   @override
   void didUpdate(ChartData oldData) {
-    super.didUpdate(oldData);
 
     final SampleMultiSeries old = oldData;
 
