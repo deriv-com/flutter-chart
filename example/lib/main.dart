@@ -277,8 +277,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     setState(() {
       candles.insertAll(0, loadedCandles);
-      _waitingForHistory = false;
     });
+
+    _waitingForHistory = false;
   }
 
   IconButton _buildChartTypeButton() {
