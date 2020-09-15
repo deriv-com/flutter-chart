@@ -39,22 +39,28 @@ abstract class DataSeries<T extends Tick> extends Series {
         : entries.sublist(startIndex, endIndex);
   }
 
+  /// Minimum value in [t]
+  double minValueOf(T t);
+
+  /// Maximum value in [t]
+  double maxValueOf(T t);
+
   /// Gets min and max quotes after updating [visibleEntries] as an array with two elements [min, max].
   ///
   /// Sub-classes can override this method if they calculate [minValue] & [maxValue] differently.
   @override
   List<double> recalculateMinMax() {
     if (visibleEntries.isNotEmpty) {
-      double min = visibleEntries[0].quote;
-      double max = visibleEntries[0].quote;
+      double min = minValueOf(visibleEntries[0]);
+      double max = maxValueOf(visibleEntries[0]);
 
       for (int i = 1; i < visibleEntries.length; i++) {
         final T t = visibleEntries[i];
 
-        if (t.quote > max) {
-          max = t.quote;
-        } else if (t.quote < min) {
-          min = t.quote;
+        if (maxValueOf(t) > max) {
+          max = maxValueOf(t);
+        } else if (minValueOf(t) < min) {
+          min = minValueOf(t);
         }
       }
 

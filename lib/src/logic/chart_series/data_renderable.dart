@@ -23,7 +23,7 @@ abstract class DataRendererable<S extends DataSeries<Tick>>
   /// Initializes series for sub-class
   DataRendererable(DataSeries series) : super(series);
 
-  /// Paints [Series.visibleEntries] on the [canvas]
+  /// Paints [DataSeries.visibleEntries] on the [canvas]
   @override
   void onPaint({
     Canvas canvas,
@@ -119,7 +119,7 @@ abstract class DataRendererable<S extends DataSeries<Tick>>
     }
   }
 
-  /// Paints [Series.visibleEntries]
+  /// Paints [DataSeries.visibleEntries]
   void onPaintData(
     Canvas canvas,
     Size size,
@@ -127,5 +127,4 @@ abstract class DataRendererable<S extends DataSeries<Tick>>
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   );
-
 }

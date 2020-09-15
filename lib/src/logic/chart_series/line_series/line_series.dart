@@ -22,4 +22,10 @@ class LineSeries extends DataSeries<Tick> {
         '${crossHairTick.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
       );
+
+  @override
+  double maxValueOf(Tick t) => t.quote;
+
+  @override
+  double minValueOf(Tick t) => t.quote;
 }

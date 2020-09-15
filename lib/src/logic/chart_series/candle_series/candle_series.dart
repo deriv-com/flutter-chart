@@ -17,28 +17,6 @@ class CandleSeries extends DataSeries<Candle> {
   }) : super(entries, id, style: style ?? const CandleStyle());
 
   @override
-  List<double> recalculateMinMax() {
-    if (visibleEntries.isNotEmpty) {
-      double min = visibleEntries[0].low;
-      double max = visibleEntries[0].high;
-
-      for (int i = 1; i < visibleEntries.length; i++) {
-        final Candle c = visibleEntries[i];
-
-        if (c.high > max) {
-          max = c.high;
-        } else if (c.low < min) {
-          min = c.low;
-        }
-      }
-
-      return <double>[min, max];
-    } else {
-      return <double>[double.nan, double.nan];
-    }
-  }
-
-  @override
   void createRenderable() => rendererable = CandleRenderable(this);
 
   @override
@@ -91,4 +69,10 @@ class CandleSeries extends DataSeries<Candle> {
           fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
         ),
       );
+
+  @override
+  double maxValueOf(Candle t) => t.high;
+
+  @override
+  double minValueOf(Candle t) => t.low;
 }
