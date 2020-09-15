@@ -42,7 +42,6 @@ abstract class Rendererable<S extends Series> {
     int pipSize,
     int granularity,
   }) {
-
     this.pipSize = pipSize;
     this.granularity = granularity;
 

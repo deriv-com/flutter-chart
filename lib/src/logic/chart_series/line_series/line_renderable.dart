@@ -1,8 +1,7 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/src/logic/chart_series/data_renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -12,21 +11,23 @@ import '../../chart_data.dart';
 import 'line_series.dart';
 
 /// Line renderable for painting line data.
-class LineRenderable extends Rendererable<LineSeries> {
+class LineRenderable extends DataRendererable<LineSeries> {
   /// Initializes
   LineRenderable(LineSeries series) : super(series);
 
   @override
-  void onPaint({
+  void onPaintData(
     Canvas canvas,
     Size size,
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-  }) {
+  ) {
     final Path path = Path();
 
     bool isStartPointSet = false;
+
+    final DataSeries<Tick> series = this.series;
 
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Tick tick = series.visibleEntries[i];
