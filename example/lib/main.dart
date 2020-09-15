@@ -267,9 +267,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
 
-    loadedCandles.removeLast();
-
-    // Unlikely to happen, just to ensure we don't have two candles with the same epoch
+    // Ensure we don't have two candles with the same epoch.
     while (loadedCandles.isNotEmpty &&
         loadedCandles.last.epoch >= candles.first.epoch) {
       loadedCandles.removeLast();
