@@ -3,10 +3,6 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
-import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
-import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
 import '../chart_data.dart';
@@ -15,8 +11,7 @@ import '../chart_data.dart';
 /// Overall horizontal padding for current tick indicator quote label
 const double quoteLabelHorizontalPadding = 10;
 
-/// Base class for Renderables which has a list of entries to paint
-/// entries called [Series.visibleEntries] inside the [paint] method
+/// A class responsible to paint its [series] data.
 abstract class Rendererable<S extends Series> {
   /// Initializes series for sub-class
   Rendererable(this.series);
@@ -32,7 +27,7 @@ abstract class Rendererable<S extends Series> {
   @protected
   int granularity;
 
-  /// Paints [Series.visibleEntries] on the [canvas]
+  /// Sets some variables and paints this [Rendererable]'s data
   void paint({
     Canvas canvas,
     Size size,
@@ -54,7 +49,7 @@ abstract class Rendererable<S extends Series> {
     );
   }
 
-  /// Paints [Series.visibleEntries]
+  /// Paints this [Rendererable]'s data
   void onPaint({
     Canvas canvas,
     Size size,

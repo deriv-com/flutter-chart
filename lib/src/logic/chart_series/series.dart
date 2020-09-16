@@ -16,15 +16,17 @@ abstract class Series implements ChartData {
   @override
   String id;
 
-  /// Responsible for painting a frame of this series on the canvas
+  /// Responsible for painting a frame of this series on the canvas.
   Rendererable<Series> rendererable;
 
   /// The painting style of this series
   final ChartPaintingStyle style;
 
+  /// Minimum value of this series in a visible range of the chart
   @protected
   double minValueInFrame;
 
+  /// Maximum value of this series in a visible range of the chart
   @protected
   double maxValueInFrame;
 

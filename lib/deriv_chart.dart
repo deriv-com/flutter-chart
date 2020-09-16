@@ -4,7 +4,6 @@ export './src/chart.dart';
 export './src/logic/chart_series/candle_series/candle_series.dart';
 export './src/logic/chart_series/line_series/line_series.dart';
 export 'src/logic/chart_series/indicators_series/ma_series.dart';
-export 'src/logic/chart_series/indicators_series/sample_multi_series.dart';
 export './src/models/candle.dart';
 export './src/models/chart_style.dart';
 export './src/models/tick.dart';

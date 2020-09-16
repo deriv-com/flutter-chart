@@ -230,7 +230,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     hasArea: false,
                   ),
                 ),
-                SampleMultiSeries(candles, 'SMS'),
               ],
               pipSize: 4,
               granularity: granularity == 0

@@ -10,6 +10,11 @@ import '../../chart_data.dart';
 import 'sample_multi_series.dart';
 
 /// A sample class just to represent how a custom indicator with multiple data-series can be implemented.
+///
+/// This class is created to examine painting some additional things between [SampleMultiSeries] different series.
+/// Like area color between Ichimoku clouds leading spans A and B.
+///
+/// In this example we only paint red lines between [SampleMultiSeries.series1] and [SampleMultiSeries.series2] entries.
 class SampleMultiRenderable extends Rendererable<SampleMultiSeries> {
   /// Initializes
   SampleMultiRenderable(Series series) : super(series);

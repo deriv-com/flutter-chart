@@ -4,7 +4,11 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 
+/// Series with only a single list of data to show.
 abstract class DataSeries<T extends Tick> extends Series {
+  /// Initializes
+  ///
+  /// [entries] is the list of data to show.
   DataSeries(
     this.entries,
     String id, {

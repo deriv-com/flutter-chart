@@ -46,8 +46,8 @@ class SampleMultiSeries extends Series {
 
   @override
   List<double> recalculateMinMax() => <double>[
-        min(series1.minValue, series2.maxValue),
-        max(series1.maxValue, series2.maxValue)
+        min(series1.minValue, series2.minValue),
+        max(series1.maxValue, series2.maxValue),
       ];
 
   @override
@@ -55,7 +55,6 @@ class SampleMultiSeries extends Series {
 
   @override
   void didUpdate(ChartData oldData) {
-
     final SampleMultiSeries old = oldData;
 
     series1.didUpdate(old.series1);
@@ -79,10 +78,5 @@ class SampleMultiSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
     series2.paint(
         canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
-  }
-
-  @override
-  Widget getCrossHairInfo(Tick crossHairTick, int pipSize) {
-    throw UnimplementedError();
   }
 }

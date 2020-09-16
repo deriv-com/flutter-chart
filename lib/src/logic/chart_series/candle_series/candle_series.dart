@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/candle_series/candle_renderable.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';

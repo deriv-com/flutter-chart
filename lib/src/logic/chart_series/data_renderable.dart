@@ -1,27 +1,25 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
-import 'renderable.dart';
 
 import '../chart_data.dart';
+import 'renderable.dart';
 
 // TODO(ramin): We need to eventually remove quoteLabelAreaWidth and use textPainter's width instead
 /// Overall horizontal padding for current tick indicator quote label
 const double quoteLabelHorizontalPadding = 10;
 
-/// Base class for Renderables which has a list of entries to paint
-/// entries called [Series.visibleEntries] inside the [paint] method
+/// A class to paint common option of [DataSeries] data.
 abstract class DataRendererable<S extends DataSeries<Tick>>
-    extends Rendererable {
+    extends Rendererable<S> {
   /// Initializes series for sub-class
-  DataRendererable(DataSeries series) : super(series);
+  DataRendererable(DataSeries<Tick> series) : super(series);
 
   /// Paints [DataSeries.visibleEntries] on the [canvas]
   @override
@@ -32,7 +30,7 @@ abstract class DataRendererable<S extends DataSeries<Tick>>
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
-    final DataSeries series = this.series;
+    final DataSeries<Tick> series = this.series;
 
     if (series.visibleEntries.isEmpty) {
       return;

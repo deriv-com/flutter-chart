@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import 'line_series.dart';
 
-/// Line renderable for painting line data.
+/// Line renderable for painting [LineSeries] data.
 class LineRenderable extends DataRendererable<LineSeries> {
   /// Initializes
   LineRenderable(LineSeries series) : super(series);

@@ -10,7 +10,10 @@ typedef QuoteToY = double Function(double);
 /// Any data that the chart takes and makes it paint its self on the chart's canvas including
 /// Line, CandleStick data, Markers, barriers etc..
 abstract class ChartData {
-  /// The ID of this [ChartData]
+  /// The ID of this [ChartData].
+  ///
+  /// [id] is used to recognize an old [ChartData] with its new version after chart being updated.
+  /// Doing so makes the chart able to perform live update animation.
   String id;
 
   /// Will be called by the chart when it was updated.

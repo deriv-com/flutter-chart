@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_renderable.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
