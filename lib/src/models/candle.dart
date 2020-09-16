@@ -42,6 +42,12 @@ class Candle extends Tick {
   }
 
   @override
+  double get topValue => high;
+
+  @override
+  double get bottomValue => low;
+
+  @override
   String toString() =>
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 }

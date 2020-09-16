@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/entry_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
@@ -21,7 +22,7 @@ abstract class DataRendererable<S extends DataSeries<Tick>>
   /// Initializes series for sub-class
   DataRendererable(DataSeries<Tick> series) : super(series);
 
-  /// Paints [DataSeries.visibleEntries] on the [canvas]
+  /// Paints [EntrySeries.visibleEntries] on the [canvas]
   @override
   void onPaint({
     Canvas canvas,
@@ -117,7 +118,7 @@ abstract class DataRendererable<S extends DataSeries<Tick>>
     }
   }
 
-  /// Paints [DataSeries.visibleEntries]
+  /// Paints [EntrySeries.visibleEntries]
   void onPaintData(
     Canvas canvas,
     Size size,
