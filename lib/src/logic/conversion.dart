@@ -38,9 +38,9 @@ double timeRangePxWidth({
 }) {
   double overlap = 0;
 
-  gaps.forEach((TimeRange gap) {
+  for (final gap in gaps) {
     overlap += gap.overlap(range);
-  });
+  }
 
   return (range.msWidth - overlap) / msPerPx;
 }
