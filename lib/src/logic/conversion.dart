@@ -15,6 +15,8 @@ class TimeRange {
   final int leftEpoch;
   final int rightEpoch;
 
+  int get msWidth => rightEpoch - leftEpoch;
+
   int overlap(TimeRange other) =>
       min(other.rightEpoch, rightEpoch) - max(other.leftEpoch, leftEpoch);
 }
@@ -37,7 +39,7 @@ double timeRangePxWidth({
     overlap += gap.overlap(range);
   });
 
-  return (range.rightEpoch - range.leftEpoch - overlap) / msPerPx;
+  return (range.msWidth - overlap) / msPerPx;
 }
 
 double epochToCanvasX({
