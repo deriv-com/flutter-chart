@@ -16,7 +16,7 @@ void main() {
       );
     });
 
-    test('px distance when no gaps are given', () {
+    test('full distance when no gaps are given', () {
       expect(
         pxBetween(
           leftEpoch: 20,
@@ -43,6 +43,18 @@ void main() {
           gaps: [],
         ),
         equals(40),
+      );
+    });
+
+    test('full distance when gaps do not overlap with epoch range', () {
+      expect(
+        pxBetween(
+          leftEpoch: 1111,
+          rightEpoch: 2222,
+          msPerPx: 0.5,
+          gaps: [Gap(1000, 1100)],
+        ),
+        equals(2222),
       );
     });
   });
