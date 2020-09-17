@@ -26,20 +26,18 @@ int shiftEpochByPx({
   @required List<TimeRange> gaps,
 }) {}
 
-double pxBetween({
-  @required int leftEpoch,
-  @required int rightEpoch,
+double timeRangePxWidth({
+  @required TimeRange range,
   @required double msPerPx,
   @required List<TimeRange> gaps,
 }) {
   double overlap = 0;
-  final range = TimeRange(leftEpoch, rightEpoch);
 
   gaps.forEach((TimeRange gap) {
     overlap += gap.overlap(range);
   });
 
-  return (rightEpoch - leftEpoch - overlap) / msPerPx;
+  return (range.rightEpoch - range.leftEpoch - overlap) / msPerPx;
 }
 
 double epochToCanvasX({

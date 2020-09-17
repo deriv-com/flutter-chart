@@ -6,9 +6,8 @@ void main() {
   group('pxBetween should return', () {
     test('0 when [leftEpoch == rightEpoch]', () {
       expect(
-        pxBetween(
-          leftEpoch: 0,
-          rightEpoch: 0,
+        timeRangePxWidth(
+          range: TimeRange(0, 0),
           msPerPx: 1,
           gaps: [],
         ),
@@ -18,27 +17,24 @@ void main() {
 
     test('full distance when no gaps are given', () {
       expect(
-        pxBetween(
-          leftEpoch: 20,
-          rightEpoch: 100,
+        timeRangePxWidth(
+          range: TimeRange(20, 100),
           msPerPx: 0.5,
           gaps: [],
         ),
         equals(160),
       );
       expect(
-        pxBetween(
-          leftEpoch: 20,
-          rightEpoch: 100,
+        timeRangePxWidth(
+          range: TimeRange(20, 100),
           msPerPx: 1,
           gaps: [],
         ),
         equals(80),
       );
       expect(
-        pxBetween(
-          leftEpoch: 20,
-          rightEpoch: 100,
+        timeRangePxWidth(
+          range: TimeRange(20, 100),
           msPerPx: 2,
           gaps: [],
         ),
@@ -48,9 +44,8 @@ void main() {
 
     test('full distance when gaps do not overlap with the epoch range', () {
       expect(
-        pxBetween(
-          leftEpoch: 1111,
-          rightEpoch: 2222,
+        timeRangePxWidth(
+          range: TimeRange(1111, 2222),
           msPerPx: 0.5,
           gaps: [TimeRange(1000, 1100)],
         ),
@@ -60,9 +55,8 @@ void main() {
 
     test('0 when gap covers the epoch range', () {
       expect(
-        pxBetween(
-          leftEpoch: 300,
-          rightEpoch: 400,
+        timeRangePxWidth(
+          range: TimeRange(300, 400),
           msPerPx: 0.5,
           gaps: [TimeRange(250, 400)],
         ),
@@ -72,9 +66,8 @@ void main() {
 
     test('distance minus gap when one gap is in the middle of epoch range', () {
       expect(
-        pxBetween(
-          leftEpoch: 300,
-          rightEpoch: 400,
+        timeRangePxWidth(
+          range: TimeRange(300, 400),
           msPerPx: 1,
           gaps: [TimeRange(350, 360)],
         ),
@@ -84,9 +77,8 @@ void main() {
 
     test('distance minus overlaps with gaps', () {
       expect(
-        pxBetween(
-          leftEpoch: 300,
-          rightEpoch: 400,
+        timeRangePxWidth(
+          range: TimeRange(300, 400),
           msPerPx: 1,
           gaps: [TimeRange(250, 360), TimeRange(390, 1000)],
         ),
