@@ -141,7 +141,9 @@ class XAxisModel extends ChangeNotifier {
   int msFromPx(double px) => pxToMs(px, msPerPx: _msPerPx);
 
   /// Convert ms to px using current scale.
-  /// TODO(Rustem): Replace with pxBetween
+  ///
+  /// Doesn't take removed time gaps into account. Use [pxBetween] if you need
+  /// to measure distance between two timestamps on the chart.
   double pxFromMs(int ms) => msToPx(ms, msPerPx: _msPerPx);
 
   /// Px distance between epochs on the chart (time gaps are removed).
