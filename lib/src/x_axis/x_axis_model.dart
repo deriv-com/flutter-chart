@@ -137,9 +137,11 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Convert px to ms using current scale.
+  /// TODO(Rustem): Replace with shiftEpochByPx
   int msFromPx(double px) => pxToMs(px, msPerPx: _msPerPx);
 
   /// Convert ms to px using current scale.
+  /// TODO(Rustem): Replace with pxBetween
   double pxFromMs(int ms) => msToPx(ms, msPerPx: _msPerPx);
 
   /// Get x position of epoch.

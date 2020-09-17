@@ -8,6 +8,27 @@ int pxToMs(double px, {@required double msPerPx}) {
   return (px * msPerPx).round();
 }
 
+class Gap {
+  Gap(this.leftEpoch, this.rightEpoch);
+
+  final int leftEpoch;
+  final int rightEpoch;
+}
+
+int shiftEpochByPx({
+  @required int epoch,
+  @required double pxShift,
+  @required double msPerPx,
+  @required List<Gap> gaps,
+}) {}
+
+double pxBetween({
+  @required int leftEpoch,
+  @required int rightEpoch,
+  @required double msPerPx,
+  @required List<Gap> gaps,
+}) {}
+
 double epochToCanvasX({
   @required int epoch,
   @required int rightBoundEpoch,
