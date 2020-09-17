@@ -3,6 +3,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 
 void main() {
+  group('pxBetween should return', () {
+    test('0 when [leftEpoch == rightEpoch]', () {
+      expect(
+        pxBetween(
+          leftEpoch: 0,
+          rightEpoch: 0,
+          msPerPx: 1,
+          gaps: [],
+        ),
+        equals(0),
+      );
+    });
+  });
+
   group('msToPx should return', () {
     test('10 when [ms == 5] and [msPerPx == 0.5]', () {
       expect(

@@ -27,7 +27,9 @@ double pxBetween({
   @required int rightEpoch,
   @required double msPerPx,
   @required List<Gap> gaps,
-}) {}
+}) {
+  return 0;
+}
 
 double epochToCanvasX({
   @required int epoch,
