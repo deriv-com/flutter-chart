@@ -105,31 +105,6 @@ void main() {
     });
   });
 
-  group('epochToCanvasX should return', () {
-    test('[canvasWidth] when [epoch == rightBoundEpoch]', () {
-      expect(
-        epochToCanvasX(
-          epoch: 123456789,
-          rightBoundEpoch: 123456789,
-          canvasWidth: 1234,
-          msPerPx: 0.12345,
-        ),
-        equals(1234),
-      );
-    });
-    test('0 when [epoch == rightBoundEpoch - canvasWidth * msPerPx]', () {
-      expect(
-        epochToCanvasX(
-          epoch: 512,
-          rightBoundEpoch: 1024,
-          canvasWidth: 1024,
-          msPerPx: 0.5,
-        ),
-        equals(0),
-      );
-    });
-  });
-
   group('quoteToCanvasY should return', () {
     test('[topPadding] when [quote == topBoundQuote]', () {
       expect(
