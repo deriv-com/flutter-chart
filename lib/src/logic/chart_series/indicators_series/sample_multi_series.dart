@@ -4,11 +4,11 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/sample_multi_renderable.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/indicators/indicators.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
+
+import 'ma_series.dart';
 
 /// A sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
 ///
@@ -20,21 +20,15 @@ import 'package:flutter/material.dart';
 class SampleMultiSeries extends Series {
   /// Initializes
   SampleMultiSeries(List<Tick> entries, {String id})
-      : series1 = LineSeries(
-          MovingAverage.movingAverage(entries, 10),
-          style: const LineStyle(hasArea: false),
-        ),
-        series2 = LineSeries(
-          MovingAverage.movingAverage(entries, 20),
-          style: const LineStyle(hasArea: false),
-        ),
+      : series1 = MASeries(entries, period: 10),
+        series2 = MASeries(entries, period: 20),
         super(id);
 
   /// Series 1
-  final LineSeries series1;
+  final MASeries series1;
 
   /// Series 2
-  final LineSeries series2;
+  final MASeries series2;
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {

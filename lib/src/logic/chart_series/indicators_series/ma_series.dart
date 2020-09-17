@@ -17,7 +17,7 @@ class MASeries extends LineSeries {
   }) : super(
           MovingAverage.movingAverage(entries, period),
           id: id,
-          style: style,
+          style: style ?? LineStyle(thickness: 0.5, hasArea: false),
         );
 
   /// Moving average period
