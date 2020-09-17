@@ -274,9 +274,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   child: Chart(
                     mainSeries: style == ChartStyle.candles
                         ? CandleSeries(candles, 'candle',
-                        style: CandleStyle(currentTickStyle: CurrentTickStyle()))
+                            style: CandleStyle(
+                                currentTickStyle: CurrentTickStyle()))
                         : LineSeries(candles, 'line',
-                        style: LineStyle(currentTickStyle: CurrentTickStyle())),
+                            style: LineStyle(
+                                currentTickStyle: CurrentTickStyle())),
                     secondarySeries: [
                       MASeries(
                         candles,
@@ -425,7 +427,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     _requestCompleter = Completer();
 
-    candles.clear();
+    setState(() => candles.clear());
 
     try {
       await _tickHistorySubscription?.unsubscribe();
