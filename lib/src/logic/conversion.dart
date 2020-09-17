@@ -17,8 +17,11 @@ class TimeRange {
 
   int get msWidth => rightEpoch - leftEpoch;
 
-  int overlap(TimeRange other) =>
-      min(other.rightEpoch, rightEpoch) - max(other.leftEpoch, leftEpoch);
+  int overlap(TimeRange other) {
+    final int left = max(other.leftEpoch, leftEpoch);
+    final int right = min(other.rightEpoch, rightEpoch);
+    return right <= left ? 0 : right - left;
+  }
 }
 
 int shiftEpochByPx({
