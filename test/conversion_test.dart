@@ -46,7 +46,7 @@ void main() {
       );
     });
 
-    test('full distance when gaps do not overlap with epoch range', () {
+    test('full distance when gaps do not overlap with the epoch range', () {
       expect(
         pxBetween(
           leftEpoch: 1111,
@@ -70,15 +70,27 @@ void main() {
       );
     });
 
-    test('0 when gap covers the epoch range', () {
+    test('distance minus gap when one gap is in the middle of epoch range', () {
       expect(
         pxBetween(
           leftEpoch: 300,
           rightEpoch: 400,
-          msPerPx: 0.5,
-          gaps: [TimeRange(250, 400)],
+          msPerPx: 1,
+          gaps: [TimeRange(350, 360)],
         ),
-        equals(0),
+        equals(90),
+      );
+    });
+
+    test('distance minus overlaps with gaps', () {
+      expect(
+        pxBetween(
+          leftEpoch: 300,
+          rightEpoch: 400,
+          msPerPx: 1,
+          gaps: [TimeRange(250, 360), TimeRange(390, 1000)],
+        ),
+        equals(30),
       );
     });
   });
