@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:meta/meta.dart';
 
 double msToPx(int ms, {@required double msPerPx}) {
@@ -13,6 +14,9 @@ class Gap {
 
   final int leftEpoch;
   final int rightEpoch;
+
+  int overlap(Gap other) =>
+      min(other.rightEpoch, rightEpoch) - max(other.leftEpoch, leftEpoch);
 }
 
 int shiftEpochByPx({
@@ -28,7 +32,14 @@ double pxBetween({
   @required double msPerPx,
   @required List<Gap> gaps,
 }) {
-  return (rightEpoch - leftEpoch) / msPerPx;
+  double overlap = 0;
+  final range = Gap(leftEpoch, rightEpoch);
+
+  gaps.forEach((Gap gap) {
+    overlap += gap.overlap(range);
+  });
+
+  return (rightEpoch - leftEpoch - overlap) / msPerPx;
 }
 
 double epochToCanvasX({

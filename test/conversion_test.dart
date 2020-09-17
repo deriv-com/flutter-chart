@@ -57,6 +57,18 @@ void main() {
         equals(2222),
       );
     });
+
+    test('0 when gap covers the epoch range', () {
+      expect(
+        pxBetween(
+          leftEpoch: 300,
+          rightEpoch: 400,
+          msPerPx: 0.5,
+          gaps: [Gap(250, 400)],
+        ),
+        equals(0),
+      );
+    });
   });
 
   group('msToPx should return', () {
