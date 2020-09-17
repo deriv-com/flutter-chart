@@ -28,7 +28,7 @@ double pxBetween({
   @required double msPerPx,
   @required List<Gap> gaps,
 }) {
-  return 0;
+  return (rightEpoch - leftEpoch) / msPerPx;
 }
 
 double epochToCanvasX({

@@ -15,6 +15,36 @@ void main() {
         equals(0),
       );
     });
+
+    test('px distance when no gaps are given', () {
+      expect(
+        pxBetween(
+          leftEpoch: 20,
+          rightEpoch: 100,
+          msPerPx: 0.5,
+          gaps: [],
+        ),
+        equals(160),
+      );
+      expect(
+        pxBetween(
+          leftEpoch: 20,
+          rightEpoch: 100,
+          msPerPx: 1,
+          gaps: [],
+        ),
+        equals(80),
+      );
+      expect(
+        pxBetween(
+          leftEpoch: 20,
+          rightEpoch: 100,
+          msPerPx: 2,
+          gaps: [],
+        ),
+        equals(40),
+      );
+    });
   });
 
   group('msToPx should return', () {
