@@ -79,7 +79,7 @@ class Chart extends StatelessWidget {
         color: chartTheme.base08Color,
         child: GestureManager(
           child: XAxis(
-            firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
+            candles: candles,
             granularity: granularity,
             child: _ChartImplementation(
               candles: candles,
@@ -440,9 +440,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.candles.isEmpty
+              loadingRightBoundX: visibleCandles?.isEmpty ?? false
                   ? _xAxis.width
-                  : _xAxis.xFromEpoch(widget.candles.first.epoch),
+                  : _xAxis.xFromEpoch(visibleCandles.first.epoch),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
