@@ -273,16 +273,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 ClipRect(
                   child: Chart(
                     mainSeries: style == ChartStyle.candles
-                        ? CandleSeries(candles, 'candle',
+                        ? CandleSeries(candles,
                             style: CandleStyle(
                                 currentTickStyle: CurrentTickStyle()))
-                        : LineSeries(candles, 'line',
+                        : LineSeries(candles,
                             style: LineStyle(
                                 currentTickStyle: CurrentTickStyle())),
                     secondarySeries: [
                       MASeries(
                         candles,
-                        'MA',
                         style: LineStyle(
                           color: Colors.grey,
                           thickness: 0.5,

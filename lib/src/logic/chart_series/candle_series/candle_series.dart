@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 class CandleSeries extends DataSeries<Candle> {
   /// Initializes
   CandleSeries(
-    List<Candle> entries,
-    String id, {
+    List<Candle> entries, {
+    String id,
     CandleStyle style,
   }) : super(entries, id, style: style ?? const CandleStyle());
 

@@ -19,15 +19,13 @@ import 'package:flutter/material.dart';
 /// Or we can directly implement [ChartData] interface.
 class SampleMultiSeries extends Series {
   /// Initializes
-  SampleMultiSeries(List<Tick> entries, String id)
+  SampleMultiSeries(List<Tick> entries, {String id})
       : series1 = LineSeries(
           MovingAverage.movingAverage(entries, 10),
-          's1',
           style: const LineStyle(hasArea: false),
         ),
         series2 = LineSeries(
           MovingAverage.movingAverage(entries, 20),
-          's2',
           style: const LineStyle(hasArea: false),
         ),
         super(id);

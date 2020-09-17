@@ -11,6 +11,8 @@ abstract class Series implements ChartData {
   /// Initializes
   Series(this.id, {this.style}) {
     createRenderable();
+    this.id ??= '$runtimeType${style.runtimeType}${rendererable.runtimeType}';
+    print('');
   }
 
   @override

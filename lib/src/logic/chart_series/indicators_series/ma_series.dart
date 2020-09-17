@@ -10,11 +10,15 @@ class MASeries extends LineSeries {
   ///
   /// [period] is the average of this number of past data which will be calculated as MA value
   MASeries(
-    List<Tick> entries,
-    String id, {
+    List<Tick> entries, {
+    String id,
     LineStyle style,
     this.period = 15,
-  }) : super(MovingAverage.movingAverage(entries, period), id, style: style);
+  }) : super(
+          MovingAverage.movingAverage(entries, period),
+          id: id,
+          style: style,
+        );
 
   /// Moving average period
   final int period;

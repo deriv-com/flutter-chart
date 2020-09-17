@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 class LineSeries extends DataSeries<Tick> {
   /// Initializes
   LineSeries(
-    List<Tick> entries,
-    String id, {
+    List<Tick> entries, {
+    String id,
     LineStyle style,
   }) : super(entries, id, style: style ?? const LineStyle());
 
