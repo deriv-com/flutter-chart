@@ -144,6 +144,13 @@ class XAxisModel extends ChangeNotifier {
   /// TODO(Rustem): Replace with pxBetween
   double pxFromMs(int ms) => msToPx(ms, msPerPx: _msPerPx);
 
+  /// Px distance between epochs on the chart (time gaps are removed).
+  double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(
+        range: TimeRange(leftEpoch, rightEpoch),
+        msPerPx: _msPerPx,
+        gaps: <TimeRange>[],
+      );
+
   /// Get x position of epoch.
   double xFromEpoch(int epoch) => epochToCanvasX(
         epoch: epoch,
