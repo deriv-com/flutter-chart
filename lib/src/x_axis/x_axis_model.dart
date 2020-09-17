@@ -154,13 +154,10 @@ class XAxisModel extends ChangeNotifier {
       );
 
   /// Get x position of epoch.
-  /// TODO(Rustem): Handle time gaps.
-  double xFromEpoch(int epoch) => epochToCanvasX(
-        epoch: epoch,
-        rightBoundEpoch: rightBoundEpoch,
-        canvasWidth: width,
-        msPerPx: _msPerPx,
-      );
+  double xFromEpoch(int epoch) {
+    final double pxFromRight = pxBetween(epoch, rightBoundEpoch);
+    return width - pxFromRight;
+  }
 
   /// Get epoch of x position.
   /// TODO(Rustem): Handle time gaps.

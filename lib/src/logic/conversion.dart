@@ -45,16 +45,6 @@ double timeRangePxWidth({
   return (range.msWidth - overlap) / msPerPx;
 }
 
-double epochToCanvasX({
-  @required int epoch,
-  @required int rightBoundEpoch,
-  @required double canvasWidth,
-  @required double msPerPx,
-}) {
-  final pxFromRight = msToPx(rightBoundEpoch - epoch, msPerPx: msPerPx);
-  return canvasWidth - pxFromRight;
-}
-
 double quoteToCanvasY({
   @required double quote,
   @required double topBoundQuote,
