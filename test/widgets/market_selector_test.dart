@@ -63,7 +63,8 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.byType(AnimatedHighlight), findsOneWidget);
+      // Must be two one the original and one in list of favorites
+      expect(find.byType(AnimatedHighlight), findsNWidgets(2));
     });
 
     testWidgets('1 asset that is favourite', (tester) async {
