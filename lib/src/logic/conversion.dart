@@ -9,13 +9,13 @@ int pxToMs(double px, {@required double msPerPx}) {
   return (px * msPerPx).round();
 }
 
-class Gap {
-  Gap(this.leftEpoch, this.rightEpoch);
+class TimeRange {
+  TimeRange(this.leftEpoch, this.rightEpoch);
 
   final int leftEpoch;
   final int rightEpoch;
 
-  int overlap(Gap other) =>
+  int overlap(TimeRange other) =>
       min(other.rightEpoch, rightEpoch) - max(other.leftEpoch, leftEpoch);
 }
 
@@ -23,19 +23,19 @@ int shiftEpochByPx({
   @required int epoch,
   @required double pxShift,
   @required double msPerPx,
-  @required List<Gap> gaps,
+  @required List<TimeRange> gaps,
 }) {}
 
 double pxBetween({
   @required int leftEpoch,
   @required int rightEpoch,
   @required double msPerPx,
-  @required List<Gap> gaps,
+  @required List<TimeRange> gaps,
 }) {
   double overlap = 0;
-  final range = Gap(leftEpoch, rightEpoch);
+  final range = TimeRange(leftEpoch, rightEpoch);
 
-  gaps.forEach((Gap gap) {
+  gaps.forEach((TimeRange gap) {
     overlap += gap.overlap(range);
   });
 

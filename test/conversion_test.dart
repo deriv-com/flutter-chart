@@ -52,7 +52,7 @@ void main() {
           leftEpoch: 1111,
           rightEpoch: 2222,
           msPerPx: 0.5,
-          gaps: [Gap(1000, 1100)],
+          gaps: [TimeRange(1000, 1100)],
         ),
         equals(2222),
       );
@@ -64,7 +64,19 @@ void main() {
           leftEpoch: 300,
           rightEpoch: 400,
           msPerPx: 0.5,
-          gaps: [Gap(250, 400)],
+          gaps: [TimeRange(250, 400)],
+        ),
+        equals(0),
+      );
+    });
+
+    test('0 when gap covers the epoch range', () {
+      expect(
+        pxBetween(
+          leftEpoch: 300,
+          rightEpoch: 400,
+          msPerPx: 0.5,
+          gaps: [TimeRange(250, 400)],
         ),
         equals(0),
       );
