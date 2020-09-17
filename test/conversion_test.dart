@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 
 void main() {
-  group('pxBetween should return', () {
+  group('timeRangePxWidth should return', () {
     test('0 when [leftEpoch == rightEpoch]', () {
       expect(
         timeRangePxWidth(
