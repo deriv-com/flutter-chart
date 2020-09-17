@@ -10,7 +10,7 @@ int pxToMs(double px, {@required double msPerPx}) {
 }
 
 class TimeRange {
-  TimeRange(this.leftEpoch, this.rightEpoch);
+  TimeRange(this.leftEpoch, this.rightEpoch) : assert(leftEpoch <= rightEpoch);
 
   final int leftEpoch;
   final int rightEpoch;
