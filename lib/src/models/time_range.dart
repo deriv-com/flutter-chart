@@ -13,4 +13,6 @@ class TimeRange {
     final int right = min(other.rightEpoch, rightEpoch);
     return right <= left ? 0 : right - left;
   }
+
+  bool contains(int epoch) => leftEpoch <= epoch && epoch <= rightEpoch;
 }

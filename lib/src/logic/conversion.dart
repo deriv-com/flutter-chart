@@ -15,7 +15,7 @@ int shiftEpochByPx({
   @required double msPerPx,
   @required List<TimeRange> gaps,
 }) {
-  if (gaps.isNotEmpty && gaps.first.leftEpoch == epoch) {
+  if (gaps.isNotEmpty && gaps.first.contains(epoch)) {
     epoch = gaps.first.rightEpoch;
   }
   return epoch + (pxShift * msPerPx).round();
