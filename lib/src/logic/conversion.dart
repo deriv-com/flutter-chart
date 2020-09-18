@@ -15,15 +15,16 @@ int shiftEpochByPx({
   @required double msPerPx,
   @required List<TimeRange> gaps,
 }) {
-  if (gaps.isNotEmpty && gaps.first.contains(epoch)) {
-    epoch = gaps.first.rightEpoch;
+  int shiftedEpoch = epoch;
+  for (final gap in gaps) {
+    if (gap.contains(shiftedEpoch)) {
+      shiftedEpoch = gap.rightEpoch;
+    } else if (shiftedEpoch < gap.leftEpoch &&
+        gap.leftEpoch - epoch < pxShift * msPerPx) {
+      shiftedEpoch += gap.msWidth;
+    }
   }
-  if (gaps.isNotEmpty &&
-      epoch < gaps.first.leftEpoch &&
-      gaps.first.leftEpoch - epoch < pxShift * msPerPx) {
-    epoch += gaps.first.msWidth;
-  }
-  return epoch + (pxShift * msPerPx).round();
+  return shiftedEpoch + (pxShift * msPerPx).round();
 }
 
 double timeRangePxWidth({

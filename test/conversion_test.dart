@@ -76,6 +76,16 @@ void main() {
           ),
           equals(300));
     });
+    test('handle two near gap after epoch', () {
+      expect(
+          shiftEpochByPx(
+            epoch: 200,
+            pxShift: 100,
+            msPerPx: 1,
+            gaps: [TimeRange(220, 240), TimeRange(260, 300)],
+          ),
+          equals(360));
+    });
   });
 
   group('timeRangePxWidth should return', () {
