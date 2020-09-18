@@ -4,8 +4,8 @@ import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 
 void main() {
-  group('shiftEpochByPx should return', () {
-    test('the same epoch when px shift is 0', () {
+  group('shiftEpochByPx should', () {
+    test('return the same epoch when px shift is 0', () {
       expect(
           shiftEpochByPx(
             epoch: 123456,
@@ -15,7 +15,8 @@ void main() {
           ),
           equals(123456));
     });
-    test('future epoch when px shift is positive and no gaps overlap', () {
+    test('return future epoch when px shift is positive and no gaps overlap',
+        () {
       expect(
           shiftEpochByPx(
             epoch: 123456,
@@ -25,7 +26,7 @@ void main() {
           ),
           equals(123556));
     });
-    test('past epoch when px shift is negative and no gaps overlap', () {
+    test('return past epoch when px shift is negative and no gaps overlap', () {
       expect(
           shiftEpochByPx(
             epoch: 123456,
@@ -34,6 +35,16 @@ void main() {
             gaps: [],
           ),
           equals(123350));
+    });
+    test('handle epoch at the start of a gap', () {
+      expect(
+          shiftEpochByPx(
+            epoch: 999,
+            pxShift: 1,
+            msPerPx: 1,
+            gaps: [TimeRange(999, 1200)],
+          ),
+          equals(1201));
     });
   });
 
