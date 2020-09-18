@@ -15,7 +15,7 @@ int shiftEpochByPx({
   @required double msPerPx,
   @required List<TimeRange> gaps,
 }) {
-  return epoch;
+  return epoch + pxToMs(pxShift, msPerPx: msPerPx);
 }
 
 double timeRangePxWidth({

@@ -15,6 +15,16 @@ void main() {
           ),
           equals(123456));
     });
+    test('future epoch when px shift is positive and no gaps overlap', () {
+      expect(
+          shiftEpochByPx(
+            epoch: 123456,
+            pxShift: 100,
+            msPerPx: 1,
+            gaps: [],
+          ),
+          equals(123556));
+    });
   });
 
   group('timeRangePxWidth should return', () {
