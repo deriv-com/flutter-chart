@@ -18,6 +18,9 @@ int shiftEpochByPx({
   if (gaps.isNotEmpty && gaps.first.contains(epoch)) {
     epoch = gaps.first.rightEpoch;
   }
+  if (gaps.isNotEmpty && epoch < gaps.first.leftEpoch) {
+    epoch += gaps.first.msWidth;
+  }
   return epoch + (pxShift * msPerPx).round();
 }
 
