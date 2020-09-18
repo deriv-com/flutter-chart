@@ -56,7 +56,7 @@ void main() {
           ),
           equals(1201));
     });
-    test('handle near gap after epoch', () {
+    test('handle obstructing gap after epoch', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -66,7 +66,7 @@ void main() {
           ),
           equals(310));
     });
-    test('handle far gap after epoch', () {
+    test('handle non-obstructing gap after epoch', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -76,7 +76,7 @@ void main() {
           ),
           equals(300));
     });
-    test('handle two near gap after epoch', () {
+    test('handle two obstructing gap after epoch', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -86,7 +86,7 @@ void main() {
           ),
           equals(360));
     });
-    test('handle 2 near and 1 far gap after epoch', () {
+    test('handle 2 obstructing and 1 non-obstructing gap after epoch', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -100,7 +100,7 @@ void main() {
           ),
           equals(360));
     });
-    test('handle near gap before epoch', () {
+    test('handle obstructing gap before epoch', () {
       expect(
         shiftEpochByPx(
           epoch: 200,
@@ -111,7 +111,7 @@ void main() {
         equals(145),
       );
     });
-    test('handle 2 near gaps before epoch', () {
+    test('handle 2 obstructing gaps before epoch', () {
       expect(
         shiftEpochByPx(
           epoch: 200,
