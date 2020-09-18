@@ -150,6 +150,7 @@ class XAxisModel extends ChangeNotifier {
   double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(
         range: TimeRange(leftEpoch, rightEpoch),
         msPerPx: _msPerPx,
+        // TODO(Rustem): pass time gaps here
         gaps: <TimeRange>[],
       );
 
