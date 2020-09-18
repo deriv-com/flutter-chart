@@ -100,6 +100,17 @@ void main() {
           ),
           equals(360));
     });
+    test('handle near gap before epoch', () {
+      expect(
+        shiftEpochByPx(
+          epoch: 200,
+          pxShift: -50,
+          msPerPx: 1,
+          gaps: [TimeRange(190, 195)],
+        ),
+        equals(145),
+      );
+    });
   });
 
   group('timeRangePxWidth should return', () {
