@@ -124,6 +124,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
 
+  bool _panStartedOnQuoteLabelsArea = false;
+
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
 
@@ -347,11 +349,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager.registerCallback(_onPanUpdate);
+    _gestureManager
+      ..registerCallback(_onPanStart)
+      ..registerCallback(_onPanUpdate);
   }
 
   void _clearGestures() {
-    _gestureManager.removeCallback(_onPanUpdate);
+    _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
   }
 
   void _updateVisibleCandles() {
@@ -546,14 +550,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  void _onPanUpdate(DragUpdateDetails details) {
-    final bool onQuoteLabelsArea =
-        details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
+  void _onPanStart(ScaleStartDetails details) {
+    _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
+  }
 
-    if (onQuoteLabelsArea) {
+  void _onPanUpdate(DragUpdateDetails details) {
+    if (_panStartedOnQuoteLabelsArea &&
+        _onQuoteLabelsArea(details.localPosition)) {
       _scaleVertically(details.delta.dy);
     }
   }
+
+  bool _onQuoteLabelsArea(Offset position) =>
+      position.dx > _xAxis.width - quoteLabelsAreaWidth;
 
   void _scaleVertically(double dy) {
     setState(() {
