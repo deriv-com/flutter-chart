@@ -64,10 +64,10 @@ class SubMarketItem extends StatelessWidget {
           onAssetClicked: onAssetClicked,
         );
 
-        if ((selectedItemKey?.value == asset.name || false) && isCategorized) {
+        if (selectedItemKey?.value == asset.name || false) {
           return AnimatedHighlight(
             playAfter: scrollToSelectedDuration,
-            key: selectedItemKey,
+            key: isCategorized ? selectedItemKey : null,
             child: assetItem,
           );
         }
