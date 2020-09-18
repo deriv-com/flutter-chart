@@ -3,6 +3,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 
 void main() {
+  group('shiftEpochByPx should return', () {
+    test('the same epoch when px shift is 0', () {
+      expect(
+          shiftEpochByPx(
+            epoch: 123456,
+            pxShift: 0,
+            msPerPx: 1,
+            gaps: [],
+          ),
+          equals(123456));
+    });
+  });
+
   group('timeRangePxWidth should return', () {
     test('0 when [leftEpoch == rightEpoch]', () {
       expect(
