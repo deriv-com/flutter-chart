@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:meta/meta.dart';
 
 double msToPx(int ms, {@required double msPerPx}) {
@@ -7,21 +7,6 @@ double msToPx(int ms, {@required double msPerPx}) {
 
 int pxToMs(double px, {@required double msPerPx}) {
   return (px * msPerPx).round();
-}
-
-class TimeRange {
-  TimeRange(this.leftEpoch, this.rightEpoch) : assert(leftEpoch <= rightEpoch);
-
-  final int leftEpoch;
-  final int rightEpoch;
-
-  int get msWidth => rightEpoch - leftEpoch;
-
-  int overlap(TimeRange other) {
-    final int left = max(other.leftEpoch, leftEpoch);
-    final int right = min(other.rightEpoch, rightEpoch);
-    return right <= left ? 0 : right - left;
-  }
 }
 
 int shiftEpochByPx({
