@@ -56,7 +56,7 @@ void main() {
           ),
           equals(1201));
     });
-    test('handle gap after epoch', () {
+    test('handle near gap after epoch', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -65,6 +65,16 @@ void main() {
             gaps: [TimeRange(210, 220)],
           ),
           equals(310));
+    });
+    test('handle far gap after epoch', () {
+      expect(
+          shiftEpochByPx(
+            epoch: 200,
+            pxShift: 100,
+            msPerPx: 1,
+            gaps: [TimeRange(400, 500)],
+          ),
+          equals(300));
     });
   });
 
