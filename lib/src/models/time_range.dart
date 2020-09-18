@@ -8,10 +8,10 @@ class TimeRange {
 
   int get msWidth => rightEpoch - leftEpoch;
 
-  int overlap(TimeRange other) {
+  TimeRange overlap(TimeRange other) {
     final int left = max(other.leftEpoch, leftEpoch);
     final int right = min(other.rightEpoch, rightEpoch);
-    return right <= left ? 0 : right - left;
+    return right <= left ? null : TimeRange(left, right);
   }
 
   bool contains(int epoch) => leftEpoch <= epoch && epoch <= rightEpoch;
