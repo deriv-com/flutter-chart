@@ -91,7 +91,7 @@ class Asset {
     this.marketDisplayName,
     this.subMarket,
     this.subMarketDisplayName,
-    this.isOpen,
+    this.isOpen = true,
     this.isFavourite = false,
   });
 
