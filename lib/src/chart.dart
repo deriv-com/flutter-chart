@@ -395,14 +395,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
       }
     }
 
-    if (minQuote != bottomBoundQuoteTarget) {
+    if (!minQuote.isNaN && minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
       _bottomBoundQuoteAnimationController.animateTo(
         bottomBoundQuoteTarget,
         curve: Curves.easeOut,
       );
     }
-    if (maxQuote != topBoundQuoteTarget) {
+    if (!maxQuote.isNaN && maxQuote != topBoundQuoteTarget) {
       topBoundQuoteTarget = maxQuote;
       _topBoundQuoteAnimationController.animateTo(
         topBoundQuoteTarget,
