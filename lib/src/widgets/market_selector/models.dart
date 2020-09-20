@@ -91,6 +91,7 @@ class Asset {
     this.marketDisplayName,
     this.subMarket,
     this.subMarketDisplayName,
+    this.isOpen,
     this.isFavourite = false,
   });
 
@@ -100,6 +101,7 @@ class Asset {
   final String marketDisplayName;
   final String subMarket;
   final String subMarketDisplayName;
+  final bool isOpen;
   bool isFavourite;
 
   bool containsText(String text) =>

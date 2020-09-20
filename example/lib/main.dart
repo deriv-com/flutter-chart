@@ -127,6 +127,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _symbol = Asset(
       name: firstOpenSymbol.symbol,
       displayName: firstOpenSymbol.displayName,
+      market: firstOpenSymbol.market,
+      subMarket: firstOpenSymbol.submarket,
+      isOpen: firstOpenSymbol.exchangeIsOpen,
     );
 
     final marketTitles = <String>{};
@@ -149,6 +152,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       name: activeSymbol.symbol,
                       displayName: activeSymbol.displayName,
                       subMarketDisplayName: activeSymbol.submarketDisplayName,
+                      isOpen: activeSymbol.exchangeIsOpen,
                     ))
                 .toList(),
           ),
