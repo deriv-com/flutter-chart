@@ -1,6 +1,6 @@
-import 'package:deriv_chart/src/logic/chart_series/ohlc_series/candle/candle_renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/ohlc_series/candle/candle_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/ohlc_series/ohlc_type_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 
@@ -14,5 +14,5 @@ class CandleSeries extends OHLCTypeSeries {
   }) : super(entries, id, style: style ?? const CandleStyle());
 
   @override
-  Rendererable<CandleSeries> createRenderable() => CandleRenderable(this);
+  SeriesPainter<CandleSeries> createPainter() => CandlePainter(this);
 }

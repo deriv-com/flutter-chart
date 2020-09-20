@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_renderable.dart';
-import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ class LineSeries extends DataSeries<Tick> {
   }) : super(entries, id, style: style ?? const LineStyle());
 
   @override
-  Rendererable<LineSeries> createRenderable() => LineRenderable(this);
+  SeriesPainter<LineSeries> createPainter() => LinePainter(this);
 
   @override
   Widget getCrossHairInfo(Tick crossHairTick, int pipSize) => Text(

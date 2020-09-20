@@ -9,17 +9,17 @@ import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
 import '../chart_data.dart';
-import 'renderable.dart';
+import 'series_painter.dart';
 
 // TODO(ramin): We need to eventually remove quoteLabelAreaWidth and use textPainter's width instead
 /// Overall horizontal padding for current tick indicator quote label
 const double quoteLabelHorizontalPadding = 10;
 
 /// A class to paint common option of [DataSeries] data.
-abstract class DataRendererable<S extends DataSeries<Tick>>
-    extends Rendererable<S> {
+abstract class DataPainter<S extends DataSeries<Tick>>
+    extends SeriesPainter<S> {
   /// Initializes series for sub-class
-  DataRendererable(DataSeries<Tick> series) : super(series);
+  DataPainter(DataSeries<Tick> series) : super(series);
 
   /// Paints [DataSeries.visibleEntries] on the [canvas]
   @override

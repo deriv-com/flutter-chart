@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/sample_multi_renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/sample_multi_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -14,8 +14,8 @@ import 'ma_series.dart';
 /// A sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
 ///
 /// Can also extend from a concrete implementation of [Series] like [LineSeries] and instead of two only
-/// define one nested series. In that case, since we override [createRenderable]
-/// and set value for [rendererable] we should have another Renderable inside this class.
+/// define one nested series. In that case, since we override [createPainter()]
+/// and set value for [seriesPainter] we should have another [SeriesPainter] inside this class.
 ///
 /// Or we can directly implement [ChartData] interface.
 class SampleMultiSeries extends Series {
@@ -44,8 +44,8 @@ class SampleMultiSeries extends Series {
       ];
 
   @override
-  Rendererable<SampleMultiSeries> createRenderable() =>
-      SampleMultiRenderable(this);
+  SeriesPainter<SampleMultiSeries> createPainter() =>
+      SampleMultiPainter(this);
 
   @override
   void didUpdate(ChartData oldData) {

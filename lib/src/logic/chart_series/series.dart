@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +10,8 @@ import 'package:flutter/material.dart';
 abstract class Series implements ChartData {
   /// Initializes
   Series(this.id, {this.style}) {
-    rendererable = createRenderable();
-    this.id ??= '$runtimeType${style.runtimeType}${rendererable.runtimeType}';
-    print('');
+    seriesPainter = createPainter();
+    this.id ??= '$runtimeType${style.runtimeType}${seriesPainter.runtimeType}';
   }
 
   @override
@@ -20,9 +19,9 @@ abstract class Series implements ChartData {
 
   /// Responsible for painting a frame of this series on the canvas.
   @protected
-  Rendererable<Series> rendererable;
+  SeriesPainter<Series> seriesPainter;
 
-  /// The painting style of this series
+  /// The painting style of this [Series]
   final ChartPaintingStyle style;
 
   /// Minimum value of this series in a visible range of the chart
@@ -58,10 +57,10 @@ abstract class Series implements ChartData {
   /// Updates series visible data
   void onUpdate(int leftEpoch, int rightEpoch);
 
-  /// Is called whenever series is created to create its [rendererable] too.
-  Rendererable<Series> createRenderable();
+  /// Is called whenever series is created to create its [seriesPainter] as well.
+  SeriesPainter<Series> createPainter();
 
-  /// Paints [rendererable]'s data on the [canvas]
+  /// Paints [seriesPainter]'s data on the [canvas]
   @override
   void paint(
     Canvas canvas,
@@ -72,7 +71,7 @@ abstract class Series implements ChartData {
     int pipSize,
     int granularity,
   ) =>
-      rendererable?.paint(
+      seriesPainter?.paint(
         canvas: canvas,
         size: size,
         epochToX: epochToX,

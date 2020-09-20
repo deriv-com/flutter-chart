@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/logic/chart_series/data_renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 import '../../../chart_data.dart';
 import 'candle_series.dart';
 
-/// Candle renderable for painting CandleStick data.
-class CandleRenderable extends DataRendererable<CandleSeries> {
+/// A [DataPainter] for painting CandleStick data.
+class CandlePainter extends DataPainter<CandleSeries> {
   /// Initializes
-  CandleRenderable(CandleSeries series) : super(series);
+  CandlePainter(CandleSeries series) : super(series);
 
   @override
   void onPaintData(

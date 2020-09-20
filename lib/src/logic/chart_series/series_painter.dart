@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +11,11 @@ import '../chart_data.dart';
 const double quoteLabelHorizontalPadding = 10;
 
 /// A class responsible to paint its [series] data.
-abstract class Rendererable<S extends Series> {
+abstract class SeriesPainter<S extends Series> {
   /// Initializes series for sub-class
-  Rendererable(this.series);
+  SeriesPainter(this.series);
 
-  /// The [Series] which this renderable belongs to
+  /// The [Series] which this [SeriesPainter] belongs to
   final S series;
 
   /// Number of decimal digits in showing prices.
@@ -27,7 +26,7 @@ abstract class Rendererable<S extends Series> {
   @protected
   int granularity;
 
-  /// Sets some variables and paints this [Rendererable]'s data
+  /// Sets some variables and paints this [SeriesPainter]'s data
   void paint({
     Canvas canvas,
     Size size,
@@ -49,7 +48,7 @@ abstract class Rendererable<S extends Series> {
     );
   }
 
-  /// Paints this [Rendererable]'s data
+  /// Paints this [SeriesPainter]'s data
   void onPaint({
     Canvas canvas,
     Size size,

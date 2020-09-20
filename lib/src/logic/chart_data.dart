@@ -36,8 +36,8 @@ abstract class ChartData {
   ///
   /// [Size] is the size of the [canvas].
   ///
-  /// [epochToX] and [quoteToY] are the conversion functions
-  /// to convert epoch to canvas X and quote to canvas Y.
+  /// [epochToX] and [quoteToY] are conversion functions in the chart's coordinate system.
+  /// They respectively convert epoch to canvas X and quote to canvas Y.
   ///
   /// [animationInfo] Contains animations progress values in this frame of painting.
   ///

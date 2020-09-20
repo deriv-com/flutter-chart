@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/chart_series/renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -15,9 +15,9 @@ import 'sample_multi_series.dart';
 /// Like area color between Ichimoku clouds leading spans A and B.
 ///
 /// In this example we only paint red lines between [SampleMultiSeries.series1] and [SampleMultiSeries.series2] entries.
-class SampleMultiRenderable extends Rendererable<SampleMultiSeries> {
+class SampleMultiPainter extends SeriesPainter<SampleMultiSeries> {
   /// Initializes
-  SampleMultiRenderable(Series series) : super(series);
+  SampleMultiPainter(Series series) : super(series);
 
   @override
   void onPaint({

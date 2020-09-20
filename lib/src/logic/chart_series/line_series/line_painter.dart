@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/logic/chart_series/data_renderable.dart';
+import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import 'line_series.dart';
 
-/// Line renderable for painting [LineSeries] data.
-class LineRenderable extends DataRendererable<LineSeries> {
+/// A [DataPainter] for painting [LineSeries] data.
+class LinePainter extends DataPainter<LineSeries> {
   /// Initializes
-  LineRenderable(LineSeries series) : super(series);
+  LinePainter(LineSeries series) : super(series);
 
   @override
   void onPaintData(
