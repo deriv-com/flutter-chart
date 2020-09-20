@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 abstract class Series implements ChartData {
   /// Initializes
   Series(this.id, {this.style}) {
-    createRenderable();
+    rendererable = createRenderable();
     this.id ??= '$runtimeType${style.runtimeType}${rendererable.runtimeType}';
     print('');
   }
@@ -19,6 +19,7 @@ abstract class Series implements ChartData {
   String id;
 
   /// Responsible for painting a frame of this series on the canvas.
+  @protected
   Rendererable<Series> rendererable;
 
   /// The painting style of this series
@@ -58,7 +59,7 @@ abstract class Series implements ChartData {
   void onUpdate(int leftEpoch, int rightEpoch);
 
   /// Is called whenever series is created to create its [rendererable] too.
-  void createRenderable();
+  Rendererable<Series> createRenderable();
 
   /// Paints [rendererable]'s data on the [canvas]
   @override
