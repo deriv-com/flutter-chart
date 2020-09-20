@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class CrosshairDetails extends StatelessWidget {
   const CrosshairDetails({
     Key key,
@@ -41,7 +40,8 @@ class CrosshairDetails extends StatelessWidget {
   }
 
   Text _buildTimeLabel() {
-    final time = DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch);
+    final time =
+        DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch, isUtc: true);
     final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
     return _buildLabel(timeLabel);
   }
