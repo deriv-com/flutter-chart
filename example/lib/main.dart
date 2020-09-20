@@ -167,6 +167,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
     bool resume = false,
   }) async {
     try {
+      await _tickStreamSubscription?.cancel();
+
       if (_symbol.isOpen) {
         _tickHistorySubscription =
             await TickHistory.fetchTicksAndSubscribe(request);
@@ -183,8 +185,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
         } else {
           _resetCandlesTo(fetchedCandles);
         }
-
-        await _tickStreamSubscription?.cancel();
 
         _tickStreamSubscription =
             _tickHistorySubscription.tickStream.listen(_handleTickStream);
