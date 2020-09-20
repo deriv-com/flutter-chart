@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ class Chart extends StatelessWidget {
     @required this.candles,
     @required this.pipSize,
     @required this.granularity,
+    this.controller,
     this.theme,
     this.onCrosshairAppeared,
     this.onLoadHistory,
@@ -46,6 +48,9 @@ class Chart extends StatelessWidget {
   /// - switching between chart styles
   /// - disabling candle style for ticks
   final List<Candle> candles;
+
+  /// Chart's controller
+  final ChartController controller;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -82,6 +87,7 @@ class Chart extends StatelessWidget {
             candles: candles,
             granularity: granularity,
             child: _ChartImplementation(
+              controller: controller,
               candles: candles,
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
@@ -100,6 +106,7 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.candles,
     @required this.pipSize,
+    this.controller,
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
@@ -110,6 +117,7 @@ class _ChartImplementation extends StatefulWidget {
   final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
+  final ChartController controller;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -221,6 +229,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setChartPaintingStyle();
     _setupAnimations();
     _setupGestures();
+
+    widget.controller?.scrollToNowListener = () {
+      _xAxis.scrollToNow();
+    };
   }
 
   @override

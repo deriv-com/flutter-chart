@@ -69,6 +69,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Asset _symbol;
 
+  ChartController _controller = ChartController();
+
   @override
   void initState() {
     super.initState();
@@ -198,6 +200,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
         _resetCandlesTo(historyCandles);
       }
+
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      _controller.scrollToNow();
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {
@@ -296,6 +301,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ? 2000 // average ms difference between ticks
                         : granularity * 1000,
                     style: style,
+                    controller: _controller,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onLoadHistory: (fromEpoch, toEpoch, count) =>
                         _loadHistory(fromEpoch, toEpoch, count),
