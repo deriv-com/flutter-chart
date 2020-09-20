@@ -105,6 +105,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           _initTickStream(
             TicksHistoryRequest(
               ticksHistory: _symbol.name,
+              adjustStartTime: 1,
               end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
               start: candles.last.epoch ~/ 1000,
               style: granularity == 0 ? 'ticks' : 'candles',
@@ -439,6 +440,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _initTickStream(TicksHistoryRequest(
         ticksHistory: _symbol.name,
+        adjustStartTime: 1,
         end: 'latest',
         count: 500,
         style: granularity == 0 ? 'ticks' : 'candles',
