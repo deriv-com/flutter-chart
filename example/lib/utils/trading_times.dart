@@ -14,6 +14,7 @@ class TradingTimesReminder {
   /// Initializes
   TradingTimesReminder(this.tradingTimes, {this.onMarketsStatusChange}) {
     _fillTheQueue();
+    _prepareQueue();
     _setReminderTimer();
   }
 
@@ -36,11 +37,20 @@ class TradingTimesReminder {
     tradingTimes.markets.forEach((MarketModel market) {
       market.submarkets.forEach((SubmarketModel subMarket) {
         subMarket.symbols.forEach((SymbolModel symbol) {
+          final DateTime now = DateTime.now().toUtc();
           symbol.times.open.forEach((String openTime) {
             if (openTime == '--') return;
+
             final DateTime openDateTime = dateFormat.parse(openTime);
 
-            _getValueOfKey(openDateTime).add(SymbolStatusChange(
+            _getValueOfKey(DateTime(
+                    now.year,
+                    now.month,
+                    now.day,
+                    openDateTime.hour,
+                    openDateTime.minute,
+                    openDateTime.second))
+                .add(SymbolStatusChange(
               symbol.name,
               true,
             ));
@@ -50,7 +60,14 @@ class TradingTimesReminder {
             if (closeTime == '--') return;
             final DateTime closeDateTime = dateFormat.parse(closeTime);
 
-            _getValueOfKey(closeDateTime).add(SymbolStatusChange(
+            _getValueOfKey(DateTime(
+                    now.year,
+                    now.month,
+                    now.day,
+                    closeDateTime.hour,
+                    closeDateTime.minute,
+                    closeDateTime.second))
+                .add(SymbolStatusChange(
               symbol.name,
               false,
             ));
@@ -59,12 +76,19 @@ class TradingTimesReminder {
       });
     });
 
-
     _statusChangeTimes.forEach((key, value) {
       print('');
     });
 
     print('object');
+  }
+
+  // Removing times that are passed
+  void _prepareQueue() {
+    final DateTime now = DateTime.now().toUtc();
+    while (_statusChangeTimes.isNotEmpty) {
+
+    }
   }
 
   List<SymbolStatusChange> _getValueOfKey(DateTime key) {
@@ -77,7 +101,7 @@ class TradingTimesReminder {
     _reminderTimer?.cancel();
 
     if (_statusChangeTimes.isNotEmpty) {
-      final DateTime now = DateTime.now();
+      final DateTime now = DateTime.now().toUtc();
       final DateTime nextStatusChangeTime = _statusChangeTimes.firstKey();
       final List<SymbolStatusChange> symbolsChanging =
           _statusChangeTimes.remove(nextStatusChangeTime);
