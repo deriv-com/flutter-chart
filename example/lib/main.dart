@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' as dev;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:example/utils/trading_times.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
+import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
@@ -100,6 +102,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
         if (candles.isEmpty) {
           await _getActiveSymbols();
+          TradingTimesReminder(
+              await TradingTimes.fetchTradingTimes(
+                TradingTimesRequest(tradingTimes: 'today'),
+              ),
+              onMarketsStatusChange: (List<ActiveSymbol> symbols) {
+                print('***** ${DateTime.now()}');
+              });
 
           _requestCompleter.complete();
           _onIntervalSelected(0);
