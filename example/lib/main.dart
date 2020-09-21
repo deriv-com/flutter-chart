@@ -103,12 +103,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
         if (candles.isEmpty) {
           await _getActiveSymbols();
           TradingTimesReminder(
-              await TradingTimes.fetchTradingTimes(
-                TradingTimesRequest(tradingTimes: 'today'),
-              ),
-              onMarketsStatusChange: (List<ActiveSymbol> symbols) {
-                print('***** ${DateTime.now()}');
-              });
+            await TradingTimes.fetchTradingTimes(
+              TradingTimesRequest(tradingTimes: 'today'),
+            ),
+            onMarketsStatusChange: (List<SymbolStatusChange> statusChanges) {
+              print('***** ${DateTime.now()}');
+            },
+          );
 
           _requestCompleter.complete();
           _onIntervalSelected(0);
