@@ -364,8 +364,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
 
-      loadedCandles.removeLast();
-
       // Unlikely to happen, just to ensure we don't have two candles with the same epoch
       while (loadedCandles.isNotEmpty &&
           loadedCandles.last.epoch >= candles.first.epoch) {
@@ -457,7 +455,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
     List<Candle> candles = [];
-    if (tickHistory.history != null) {
+    if (tickHistory.history != null && tickHistory.history.prices != null) {
       final count = tickHistory.history.prices.length;
       for (var i = 0; i < count; i++) {
         candles.add(Candle.tick(
