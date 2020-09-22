@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'models.dart';
 
@@ -26,19 +27,11 @@ class MarketSelectorButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          FadeInImage(
+          SvgPicture.asset(
+            'assets/icons/symbols/${asset.name}.svg',
             width: 32,
             height: 32,
-            placeholder: AssetImage(
-              'assets/icons/icon_placeholder.png',
-              package: 'deriv_chart',
-            ),
-            image: AssetImage(
-              'assets/icons/${asset.name}.png',
-              package: 'deriv_chart',
-            ),
-            fadeInDuration: iconFadeDuration,
-            fadeOutDuration: iconFadeDuration,
+            package: 'deriv_chart',
           ),
           SizedBox(width: 16),
           Text(asset.displayName, style: textStyle),

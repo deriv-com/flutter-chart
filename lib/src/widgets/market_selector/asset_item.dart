@@ -1,6 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/market_selector/highlighted_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'market_selector.dart';
@@ -53,18 +54,10 @@ class AssetItem extends StatelessWidget {
     );
   }
 
-  Widget _buildAssetIcon() => FadeInImage(
+  Widget _buildAssetIcon() => SvgPicture.asset(
+        'assets/icons/symbols/${asset.name}.svg',
         width: 24,
         height: 24,
-        placeholder: AssetImage(
-          'assets/icons/icon_placeholder.png',
-          package: 'deriv_chart',
-        ),
-        image: AssetImage(
-          'assets/icons/${asset.name}.png',
-          package: 'deriv_chart',
-        ),
-        fadeInDuration: iconFadeInDuration,
-        fadeOutDuration: iconFadeInDuration,
+        package: 'deriv_chart',
       );
 }
