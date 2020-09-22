@@ -17,10 +17,13 @@ class TradingTimesReminder {
     _setReminderTimer();
   }
 
-  static DateFormat dateFormat = DateFormat('hh:mm:ss');
+  static DateFormat _dateFormat = DateFormat('hh:mm:ss');
+  static RegExp _timeFormatReg = RegExp(r'[0-9]{2}:[0-9]{2}:[0-9]{2}');
 
   /// Trading times
   final TradingTimes tradingTimes;
+
+  Timer _reminderTimer;
 
   /// Gets called when market status changes with the list of symbols that their
   /// open/closed status is changed.
@@ -30,28 +33,20 @@ class TradingTimesReminder {
       SplayTreeMap<DateTime, List<SymbolStatusChange>>(
           (DateTime d1, DateTime d2) => d1.compareTo(d2));
 
-  Timer _reminderTimer;
-
   void _fillTheQueue() {
+    final DateTime now = DateTime.now().toUtc();
+
     tradingTimes.markets.forEach((MarketModel market) {
       market.submarkets.forEach((SubmarketModel subMarket) {
         subMarket.symbols.forEach((SymbolModel symbol) {
-          final DateTime now = DateTime.now().toUtc();
-
           symbol.times.open.forEach((String openTime) =>
-              _addEntryToStatusChanges(openTime, symbol.name, true, now));
+              _addEntryToStatusChanges(openTime, symbol.symbol, true, now));
 
           symbol.times.close.forEach((String closeTime) =>
-              _addEntryToStatusChanges(closeTime, symbol.name, false, now));
+              _addEntryToStatusChanges(closeTime, symbol.symbol, false, now));
         });
       });
     });
-
-    _statusChangeTimes.forEach((key, value) {
-      print('');
-    });
-
-    print('object');
   }
 
   void _addEntryToStatusChanges(
@@ -60,8 +55,11 @@ class TradingTimesReminder {
     bool goesOpen,
     DateTime now,
   ) {
-    if (time == '--') return;
-    final DateTime dateTimeOfToday = dateFormat.parse(time);
+    if (_timeFormatReg.allMatches(time).length != 1) {
+      return;
+    }
+
+    final DateTime dateTimeOfToday = _dateFormat.parse(time);
     final DateTime dateTime = DateTime(
       now.year,
       now.month,
@@ -75,16 +73,12 @@ class TradingTimesReminder {
       return;
     }
 
-    _getValueOfKey(dateTime).add(SymbolStatusChange(
+    _statusChangeTimes[dateTime] ??= <SymbolStatusChange>[];
+
+    _statusChangeTimes[dateTime].add(SymbolStatusChange(
       symbol,
       false,
     ));
-  }
-
-  List<SymbolStatusChange> _getValueOfKey(DateTime key) {
-    _statusChangeTimes[key] ??= <SymbolStatusChange>[];
-
-    return _statusChangeTimes[key];
   }
 
   void _setReminderTimer() {
@@ -101,7 +95,7 @@ class TradingTimesReminder {
         () {
           onMarketsStatusChange?.call(symbolsChanging);
 
-          // Next status change in the Queue.
+          // Reminder for the next status change in the Queue.
           _setReminderTimer();
         },
       );
@@ -109,7 +103,8 @@ class TradingTimesReminder {
   }
 }
 
-/// Model class containing symbols status change information.
+/// Model class containing symbols status change information,
+/// whether the [symbol] goes open/close at a specific time.
 class SymbolStatusChange {
   /// Initializes
   SymbolStatusChange(this.symbol, this.goesOpen);
