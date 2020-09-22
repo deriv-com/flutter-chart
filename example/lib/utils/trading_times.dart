@@ -14,7 +14,6 @@ class TradingTimesReminder {
   /// Initializes
   TradingTimesReminder(this.tradingTimes, {this.onMarketsStatusChange}) {
     _fillTheQueue();
-    _prepareQueue();
     _setReminderTimer();
   }
 
@@ -38,40 +37,12 @@ class TradingTimesReminder {
       market.submarkets.forEach((SubmarketModel subMarket) {
         subMarket.symbols.forEach((SymbolModel symbol) {
           final DateTime now = DateTime.now().toUtc();
-          symbol.times.open.forEach((String openTime) {
-            if (openTime == '--') return;
 
-            final DateTime openDateTime = dateFormat.parse(openTime);
+          symbol.times.open.forEach((String openTime) =>
+              _addEntryToStatusChanges(openTime, symbol.name, true, now));
 
-            _getValueOfKey(DateTime(
-                    now.year,
-                    now.month,
-                    now.day,
-                    openDateTime.hour,
-                    openDateTime.minute,
-                    openDateTime.second))
-                .add(SymbolStatusChange(
-              symbol.name,
-              true,
-            ));
-          });
-
-          symbol.times.close.forEach((String closeTime) {
-            if (closeTime == '--') return;
-            final DateTime closeDateTime = dateFormat.parse(closeTime);
-
-            _getValueOfKey(DateTime(
-                    now.year,
-                    now.month,
-                    now.day,
-                    closeDateTime.hour,
-                    closeDateTime.minute,
-                    closeDateTime.second))
-                .add(SymbolStatusChange(
-              symbol.name,
-              false,
-            ));
-          });
+          symbol.times.close.forEach((String closeTime) =>
+              _addEntryToStatusChanges(closeTime, symbol.name, false, now));
         });
       });
     });
@@ -83,12 +54,31 @@ class TradingTimesReminder {
     print('object');
   }
 
-  // Removing times that are passed
-  void _prepareQueue() {
-    final DateTime now = DateTime.now().toUtc();
-    while (_statusChangeTimes.isNotEmpty) {
+  void _addEntryToStatusChanges(
+    String time,
+    String symbol,
+    bool goesOpen,
+    DateTime now,
+  ) {
+    if (time == '--') return;
+    final DateTime dateTimeOfToday = dateFormat.parse(time);
+    final DateTime dateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      dateTimeOfToday.hour,
+      dateTimeOfToday.minute,
+      dateTimeOfToday.second,
+    );
 
+    if (now.compareTo(dateTime) >= 0) {
+      return;
     }
+
+    _getValueOfKey(dateTime).add(SymbolStatusChange(
+      symbol,
+      false,
+    ));
   }
 
   List<SymbolStatusChange> _getValueOfKey(DateTime key) {
