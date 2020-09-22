@@ -108,4 +108,25 @@ class Asset {
       displayName?.toLowerCase()?.contains(text) ?? false;
 
   void toggleFavourite() => isFavourite = !isFavourite;
+
+  Asset copyWith({
+    String name,
+    String displayName,
+    String market,
+    String marketDisplayName,
+    String subMarket,
+    String subMarketDisplayName,
+    bool isOpen,
+    bool isFavourite,
+  }) =>
+      Asset(
+        name: name ?? this.name,
+        displayName: displayName ?? this.displayName,
+        market: market ?? this.market,
+        marketDisplayName: marketDisplayName ?? this.marketDisplayName,
+        subMarket: subMarket ?? this.subMarket,
+        subMarketDisplayName: subMarketDisplayName ?? this.subMarketDisplayName,
+        isOpen: isOpen ?? this.isOpen,
+        isFavourite: isFavourite ?? this.isFavourite,
+      );
 }

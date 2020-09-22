@@ -107,7 +107,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
               TradingTimesRequest(tradingTimes: 'today'),
             ),
             onMarketsStatusChange: (List<SymbolStatusChange> statusChanges) {
-              print('***** ${DateTime.now()}');
+              final currentSymbolStatusChange = statusChanges.firstWhere(
+                (SymbolStatusChange statusChange) =>
+                    statusChange.symbol == _symbol.name,
+                orElse: () => null,
+              );
+
+              if (currentSymbolStatusChange != null) {
+                _symbol = _symbol.copyWith(
+                    isOpen: currentSymbolStatusChange.goesOpen);
+
+                _onIntervalSelected(granularity);
+              }
             },
           );
 
