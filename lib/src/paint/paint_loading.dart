@@ -62,14 +62,12 @@ void paintLoadingAnimation({
       canvas.drawPath(topLeftPath, loadingPaint);
     }
 
-    final leftPointY = rectWidth + barPosition;
-
     startPointX = 0;
-    startPointY = leftPointY;
+    startPointY = rectWidth + barPosition;
 
     if (startPointY > size.height) {
-      startPointX = (loadingRightBoundX * (size.height - leftPointY)) /
-          (rectWidth - loadingRightBoundX + barPosition - leftPointY);
+      startPointX = (loadingRightBoundX * (size.height - startPointY)) /
+          (rectWidth - loadingRightBoundX + barPosition - startPointY);
       startPointY = size.height;
     }
 
