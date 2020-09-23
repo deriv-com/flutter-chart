@@ -36,29 +36,52 @@ void paintLoadingAnimation({
     topLeftPath.reset();
     bottomRightPath.reset();
 
-    // A bar in top-left triangle
-    topLeftPath.moveTo(0, barPosition);
-    topLeftPath.lineTo(barPosition, 0);
-    if (barPosition + barWidth < loadingRightBoundX) {
-      topLeftPath.lineTo(barPosition + barWidth, 0);
-    } else {
-      final barEndJutOut = barPosition + barWidth - loadingRightBoundX;
-      topLeftPath.lineTo(barPosition + barWidth - barEndJutOut, 0);
-      topLeftPath.lineTo(barPosition + barWidth - barEndJutOut, barEndJutOut);
+    if (barPosition >= 0) {
+      // A bar in top-left triangle
+      double x = 0;
+      double y = barPosition;
+
+      if (barPosition > size.height) {
+        x = barPosition - size.height;
+        y = size.height;
+      }
+
+      topLeftPath.moveTo(x, y);
+      topLeftPath.lineTo(barPosition, 0);
+      if (barPosition + barWidth < loadingRightBoundX) {
+        topLeftPath.lineTo(barPosition + barWidth, 0);
+      } else {
+        final barEndJutOut = barPosition + barWidth - loadingRightBoundX;
+        topLeftPath.lineTo(barPosition + barWidth - barEndJutOut, 0);
+        topLeftPath.lineTo(barPosition + barWidth - barEndJutOut, barEndJutOut);
+      }
+      topLeftPath.lineTo(x, y + barWidth);
+
+      canvas.drawPath(topLeftPath, loadingPaint);
     }
-    topLeftPath.lineTo(0, barPosition + barWidth);
 
-    canvas.drawPath(topLeftPath, loadingPaint);
+    final leftPointY = rectWidth + barPosition;
 
-    // A bar in bottom-right triangle
-    bottomRightPath.moveTo(barPosition, rectWidth);
-    bottomRightPath.lineTo(
-        loadingRightBoundX, rectWidth - (loadingRightBoundX - barPosition));
-    bottomRightPath.lineTo(loadingRightBoundX,
-        rectWidth - (loadingRightBoundX - barPosition) + barWidth);
-    bottomRightPath.lineTo(barPosition, rectWidth + barWidth);
+    double x = 0;
+    double y = leftPointY;
 
-    canvas.drawPath(bottomRightPath, loadingPaint);
+    if (y > size.height) {
+      x = (loadingRightBoundX * (size.height - leftPointY)) /
+          (rectWidth - loadingRightBoundX + barPosition - leftPointY);
+      y = size.height;
+    }
+
+    if (x <= loadingRightBoundX) {
+      // A bar in bottom-right triangle
+      bottomRightPath.moveTo(x, y);
+      bottomRightPath.lineTo(
+          loadingRightBoundX, rectWidth - (loadingRightBoundX - barPosition));
+      bottomRightPath.lineTo(loadingRightBoundX,
+          rectWidth - (loadingRightBoundX - barPosition) + barWidth);
+      bottomRightPath.lineTo(x, y + barWidth);
+
+      canvas.drawPath(bottomRightPath, loadingPaint);
+    }
 
     barX += barWidthAndSpace;
   }
