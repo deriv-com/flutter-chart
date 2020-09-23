@@ -1,9 +1,10 @@
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/widgets/market_selector/highlighted_text.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import 'asset_icon_placeholder.dart';
+import 'highlighted_text.dart';
 import 'market_selector.dart';
 import 'models.dart';
 
@@ -58,6 +59,7 @@ class AssetItem extends StatelessWidget {
         'assets/icons/symbols/${asset.name}.svg',
         width: 24,
         height: 24,
+        placeholderBuilder: (BuildContext context) => AssetIconPlaceholder(),
         package: 'deriv_chart',
       );
 }
