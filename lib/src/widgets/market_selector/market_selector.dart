@@ -1,14 +1,14 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/widgets/custom_draggable_sheet.dart';
-import 'package:deriv_chart/src/widgets/market_selector/assets_search_bar.dart';
-import 'package:deriv_chart/src/widgets/market_selector/models.dart';
-import 'package:deriv_chart/src/widgets/market_selector/no_result_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'assets_search_bar.dart';
 import 'market_item.dart';
+import 'models.dart';
+import 'no_result_page.dart';
 
 /// Handles the tap on [Asset] in market selector.
 ///
