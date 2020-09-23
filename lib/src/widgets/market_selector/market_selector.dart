@@ -117,7 +117,7 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   void _fillMarketsList() {
-    _marketsToDisplay = _filterText.isEmpty
+    _marketsToDisplay = _filterText.isEmpty || widget.markets == null
         ? widget.markets
         : widget.markets
             .where(
@@ -166,8 +166,8 @@ class _MarketSelectorState extends State<MarketSelector>
   Widget _buildMarketsList() {
     final List<Asset> favouritesList = _getFavouritesList();
 
-    return _marketsToDisplay == null
-        ? Container()
+    return widget.markets == null || widget.markets.isEmpty
+        ? const Expanded(child: Center(child: Text('No asset is available!')))
         : Expanded(
             child: Stack(
               children: <Widget>[
