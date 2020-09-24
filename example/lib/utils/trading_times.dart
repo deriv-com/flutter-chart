@@ -17,8 +17,8 @@ class TradingTimesReminder {
     _setReminderTimer();
   }
 
-  static DateFormat _dateFormat = DateFormat('hh:mm:ss');
-  static RegExp _timeFormatReg = RegExp(r'[0-9]{2}:[0-9]{2}:[0-9]{2}');
+  static final DateFormat _dateFormat = DateFormat('hh:mm:ss');
+  static final RegExp _timeFormatReg = RegExp(r'[0-9]{2}:[0-9]{2}:[0-9]{2}');
 
   /// Trading times
   final TradingTimes tradingTimes;
@@ -29,24 +29,26 @@ class TradingTimesReminder {
   /// open/closed status is changed.
   final OnMarketsStatusChange onMarketsStatusChange;
 
-  SplayTreeMap<DateTime, List<SymbolStatusChange>> _statusChangeTimes =
+  final SplayTreeMap<DateTime, List<SymbolStatusChange>> _statusChangeTimes =
       SplayTreeMap<DateTime, List<SymbolStatusChange>>(
           (DateTime d1, DateTime d2) => d1.compareTo(d2));
 
   void _fillTheQueue() {
     final DateTime now = DateTime.now().toUtc();
 
-    tradingTimes.markets.forEach((MarketModel market) {
-      market.submarkets.forEach((SubmarketModel subMarket) {
-        subMarket.symbols.forEach((SymbolModel symbol) {
-          symbol.times.open.forEach((String openTime) =>
-              _addEntryToStatusChanges(openTime, symbol.symbol, true, now));
+    for (final MarketModel market in tradingTimes.markets) {
+      for (final SubmarketModel subMarket in market.submarkets) {
+        for (final SymbolModel symbol in subMarket.symbols) {
+          for (final String time in symbol.times.open) {
+            _addEntryToStatusChanges(time, symbol.symbol, true, now);
+          }
 
-          symbol.times.close.forEach((String closeTime) =>
-              _addEntryToStatusChanges(closeTime, symbol.symbol, false, now));
-        });
-      });
-    });
+          for (final String time in symbol.times.close) {
+            _addEntryToStatusChanges(time, symbol.symbol, false, now);
+          }
+        }
+      }
+    }
   }
 
   void _addEntryToStatusChanges(
@@ -77,7 +79,7 @@ class TradingTimesReminder {
 
     _statusChangeTimes[dateTime].add(SymbolStatusChange(
       symbol,
-      false,
+      goesOpen: goesOpen,
     ));
   }
 
@@ -107,12 +109,12 @@ class TradingTimesReminder {
 /// whether the [symbol] goes open/close at a specific time.
 class SymbolStatusChange {
   /// Initializes
-  SymbolStatusChange(this.symbol, this.goesOpen);
+  SymbolStatusChange(this.symbol, {this.goesOpen});
 
   /// The symbol
   final String symbol;
 
-  /// If true [symbol] opens at [time]
-  /// If false it closes at [time]
+  /// If true [symbol] opens
+  /// If false it closes
   final bool goesOpen;
 }
