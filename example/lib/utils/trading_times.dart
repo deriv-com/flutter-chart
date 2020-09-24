@@ -29,7 +29,7 @@ class TradingTimesReminder {
   /// open/closed status is changed.
   final OnMarketsStatusChange onMarketsStatusChange;
 
-  final SplayTreeMap<DateTime, List<SymbolStatusChange>> _statusChangeTimes =
+  final SplayTreeMap<DateTime, List<SymbolStatusChange>> statusChangeTimes =
       SplayTreeMap<DateTime, List<SymbolStatusChange>>(
           (DateTime d1, DateTime d2) => d1.compareTo(d2));
 
@@ -39,11 +39,11 @@ class TradingTimesReminder {
     for (final MarketModel market in tradingTimes.markets) {
       for (final SubmarketModel subMarket in market.submarkets) {
         for (final SymbolModel symbol in subMarket.symbols) {
-          for (final String time in symbol.times.open) {
+          for (final String time in symbol.times.close) {
             _addEntryToStatusChanges(time, symbol.symbol, true, now);
           }
 
-          for (final String time in symbol.times.close) {
+          for (final String time in symbol.times.open) {
             _addEntryToStatusChanges(time, symbol.symbol, false, now);
           }
         }
@@ -75,9 +75,9 @@ class TradingTimesReminder {
       return;
     }
 
-    _statusChangeTimes[dateTime] ??= <SymbolStatusChange>[];
+    statusChangeTimes[dateTime] ??= <SymbolStatusChange>[];
 
-    _statusChangeTimes[dateTime].add(SymbolStatusChange(
+    statusChangeTimes[dateTime].add(SymbolStatusChange(
       symbol,
       goesOpen: goesOpen,
     ));
@@ -86,11 +86,11 @@ class TradingTimesReminder {
   void _setReminderTimer() {
     _reminderTimer?.cancel();
 
-    if (_statusChangeTimes.isNotEmpty) {
+    if (statusChangeTimes.isNotEmpty) {
       final DateTime now = DateTime.now().toUtc();
-      final DateTime nextStatusChangeTime = _statusChangeTimes.firstKey();
+      final DateTime nextStatusChangeTime = statusChangeTimes.firstKey();
       final List<SymbolStatusChange> symbolsChanging =
-          _statusChangeTimes.remove(nextStatusChangeTime);
+          statusChangeTimes.remove(nextStatusChangeTime);
 
       _reminderTimer = Timer(
         nextStatusChangeTime.difference(now),
@@ -117,4 +117,8 @@ class SymbolStatusChange {
   /// If true [symbol] opens
   /// If false it closes
   final bool goesOpen;
+
+  @override
+  String toString() =>
+      'Status change: $symbol ${goesOpen ? 'opens' : 'closes'}';
 }
