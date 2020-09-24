@@ -12,16 +12,22 @@ typedef OnMarketsStatusChange = void Function(List<SymbolStatusChange> symbols);
 /// A class to to remind us when there is change on opening and closing a market.
 class TradingTimesReminder {
   /// Initializes
-  TradingTimesReminder(this.tradingTimes, {this.onMarketsStatusChange}) {
-    _fillTheQueue();
-    _setReminderTimer();
+  TradingTimesReminder(
+    this.todayTradingTimes, {
+    this.serverTime,
+    this.onMarketsStatusChange,
+  }) {
+    _init();
   }
 
   static final DateFormat _dateFormat = DateFormat('hh:mm:ss');
   static final RegExp _timeFormatReg = RegExp(r'[0-9]{2}:[0-9]{2}:[0-9]{2}');
 
   /// Trading times
-  final TradingTimes tradingTimes;
+  final TradingTimes todayTradingTimes;
+
+  /// Callback to get server time
+  final Future<DateTime> Function() serverTime;
 
   Timer _reminderTimer;
 
@@ -33,10 +39,15 @@ class TradingTimesReminder {
       SplayTreeMap<DateTime, List<SymbolStatusChange>>(
           (DateTime d1, DateTime d2) => d1.compareTo(d2));
 
-  void _fillTheQueue() {
-    final DateTime now = DateTime.now().toUtc();
+  void _init() async {
+    await _fillTheQueue();
+    await _setReminderTimer();
+  }
 
-    for (final MarketModel market in tradingTimes.markets) {
+  Future<void> _fillTheQueue() async {
+    final DateTime now = await serverTime();
+
+    for (final MarketModel market in todayTradingTimes.markets) {
       for (final SubmarketModel subMarket in market.submarkets) {
         for (final SymbolModel symbol in subMarket.symbols) {
           for (final String time in symbol.times.close) {
@@ -83,11 +94,11 @@ class TradingTimesReminder {
     ));
   }
 
-  void _setReminderTimer() {
+  Future<void> _setReminderTimer() async {
     _reminderTimer?.cancel();
 
     if (statusChangeTimes.isNotEmpty) {
-      final DateTime now = DateTime.now().toUtc();
+      final DateTime now = await serverTime();
       final DateTime nextStatusChangeTime = statusChangeTimes.firstKey();
       final List<SymbolStatusChange> symbolsChanging =
           statusChangeTimes.remove(nextStatusChangeTime);

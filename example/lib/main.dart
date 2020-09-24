@@ -6,6 +6,7 @@ import 'package:example/utils/trading_times.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
+import 'package:flutter_deriv_api/api/common/server_time/server_time.dart';
 import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
@@ -106,6 +107,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
             await TradingTimes.fetchTradingTimes(
               TradingTimesRequest(tradingTimes: 'today'),
             ),
+            serverTime: () async {
+              final ServerTime serverTime = await ServerTime.fetchTime();
+              return serverTime.time;
+            },
             onMarketsStatusChange: (List<SymbolStatusChange> statusChanges) {
               final currentSymbolStatusChange = statusChanges.firstWhere(
                 (SymbolStatusChange statusChange) =>
