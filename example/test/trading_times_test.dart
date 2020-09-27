@@ -21,7 +21,7 @@ void main() {
         },
       );
 
-      await Future.delayed(Duration(milliseconds: 1));
+      await Future<void>.delayed(const Duration(milliseconds: 1));
 
       final firstMarketChangeDate =
           tradingTimesReminder.statusChangeTimes.firstKey();

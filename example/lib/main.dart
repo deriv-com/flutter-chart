@@ -120,7 +120,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
               if (currentSymbolStatusChange != null) {
                 _symbol = _symbol.copyWith(
-                    isOpen: currentSymbolStatusChange.goesOpen);
+                  isOpen: currentSymbolStatusChange.goesOpen,
+                );
 
                 _onIntervalSelected(granularity);
               }

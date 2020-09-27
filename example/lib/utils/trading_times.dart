@@ -55,11 +55,25 @@ class TradingTimesReminder {
     for (final MarketModel market in todayTradingTimes.markets) {
       for (final SubmarketModel subMarket in market.submarkets) {
         for (final SymbolModel symbol in subMarket.symbols) {
-          for (final String time in symbol.times.close) {
+          final List<dynamic> openTimes = symbol.times.close;
+          final List<dynamic> closeTimes = symbol.times.open;
+
+          final bool isOpenAllDay = openTimes.length == 1 &&
+              openTimes[0] == '00:00:00' &&
+              closeTimes[0] == '23:59:59';
+          final bool isClosedAllDay = openTimes.length == 1 &&
+              closeTimes[0] == '--' &&
+              closeTimes[0] == '--';
+
+          if (isOpenAllDay || isClosedAllDay) {
+            continue;
+          }
+
+          for (final String time in openTimes) {
             _addEntryToStatusChanges(time, symbol.symbol, true, now);
           }
 
-          for (final String time in symbol.times.open) {
+          for (final String time in closeTimes) {
             _addEntryToStatusChanges(time, symbol.symbol, false, now);
           }
         }
