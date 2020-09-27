@@ -70,6 +70,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   List<Market> _markets;
 
+  List<ActiveSymbol> _activeSymbols;
+
   Asset _symbol;
 
   ChartController _controller = ChartController();
@@ -112,11 +114,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
               return serverTime.time;
             },
             onMarketsStatusChange: (Map<String, bool> statusChanges) {
-              final bool currentSymbolChange = statusChanges[_symbol.name];
+              for (ActiveSymbol symbol in _activeSymbols) {
+                if (statusChanges[symbol] != null) {
+                  symbol = symbol.copyWith(
+                    exchangeIsOpen: statusChanges[symbol],
+                  );
+                }
+              }
 
-              if (currentSymbolChange != null) {
-                _symbol = _symbol.copyWith(isOpen: currentSymbolChange);
+              _fillMarketSelectorList();
 
+              if (statusChanges[_symbol.name] != null) {
                 _onIntervalSelected(granularity);
               }
             },
@@ -141,11 +149,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _getActiveSymbols() async {
-    final List<ActiveSymbol> activeSymbols =
-        await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
-            activeSymbols: 'brief', productType: 'basic'));
+    _activeSymbols = await ActiveSymbol.fetchActiveSymbols(
+      const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic'),
+    );
 
-    final ActiveSymbol firstOpenSymbol = activeSymbols
+    final ActiveSymbol firstOpenSymbol = _activeSymbols
         .firstWhere((ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen);
 
     _symbol = Asset(
@@ -156,18 +164,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
       isOpen: firstOpenSymbol.exchangeIsOpen,
     );
 
+    _fillMarketSelectorList();
+  }
+
+  void _fillMarketSelectorList() {
     final marketTitles = <String>{};
 
     final markets = <Market>[];
 
-    for (final symbol in activeSymbols) {
+    for (final symbol in _activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
         markets.add(
           Market.fromAssets(
             name: symbol.market,
             displayName: symbol.marketDisplayName,
-            assets: activeSymbols
+            assets: _activeSymbols
                 .where((activeSymbol) => activeSymbol.market == symbol.market)
                 .map<Asset>((activeSymbol) => Asset(
                       market: activeSymbol.market,
