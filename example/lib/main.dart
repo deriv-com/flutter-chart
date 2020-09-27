@@ -111,17 +111,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
               final ServerTime serverTime = await ServerTime.fetchTime();
               return serverTime.time;
             },
-            onMarketsStatusChange: (List<SymbolStatusChange> statusChanges) {
-              final currentSymbolStatusChange = statusChanges.firstWhere(
-                (SymbolStatusChange statusChange) =>
-                    statusChange.symbol == _symbol.name,
-                orElse: () => null,
-              );
+            onMarketsStatusChange: (Map<String, bool> statusChanges) {
+              final bool currentSymbolChange = statusChanges[_symbol.name];
 
-              if (currentSymbolStatusChange != null) {
-                _symbol = _symbol.copyWith(
-                  isOpen: currentSymbolStatusChange.goesOpen,
-                );
+              if (currentSymbolChange != null) {
+                _symbol = _symbol.copyWith(isOpen: currentSymbolChange);
 
                 _onIntervalSelected(granularity);
               }

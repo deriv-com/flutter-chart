@@ -8,7 +8,7 @@ import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:intl/intl.dart';
 
 /// Markets status change callback. (List of symbols that have been changed.)
-typedef OnMarketsStatusChange = void Function(List<SymbolStatusChange> symbols);
+typedef OnMarketsStatusChange = void Function(Map<String, bool> symbols);
 
 /// A class to to remind us when there is change on opening and closing a market.
 class TradingTimesReminder {
@@ -40,8 +40,8 @@ class TradingTimesReminder {
   ///
   /// [SplayTreeMap] has been used to have the change times in correct order
   /// while we are adding new entries to it.
-  final SplayTreeMap<DateTime, List<SymbolStatusChange>> statusChangeTimes =
-      SplayTreeMap<DateTime, List<SymbolStatusChange>>(
+  final SplayTreeMap<DateTime, Map<String, bool>> statusChangeTimes =
+      SplayTreeMap<DateTime, Map<String, bool>>(
           (DateTime d1, DateTime d2) => d1.compareTo(d2));
 
   void _init() async {
@@ -105,12 +105,9 @@ class TradingTimesReminder {
       return;
     }
 
-    statusChangeTimes[dateTime] ??= <SymbolStatusChange>[];
+    statusChangeTimes[dateTime] ??= <String, bool>{};
 
-    statusChangeTimes[dateTime].add(SymbolStatusChange(
-      symbol,
-      goesOpen: goesOpen,
-    ));
+    statusChangeTimes[dateTime][symbol] = goesOpen;
   }
 
   /// Removes the next upcoming market change time from [statusChangeTimes] and
@@ -121,7 +118,7 @@ class TradingTimesReminder {
     if (statusChangeTimes.isNotEmpty) {
       final DateTime now = await serverTime();
       final DateTime nextStatusChangeTime = statusChangeTimes.firstKey();
-      final List<SymbolStatusChange> symbolsChanging =
+      final Map<String, bool> symbolsChanging =
           statusChangeTimes.remove(nextStatusChangeTime);
 
       _reminderTimer = Timer(
@@ -135,22 +132,4 @@ class TradingTimesReminder {
       );
     }
   }
-}
-
-/// Model class containing symbols status change information,
-/// whether the [symbol] opens/closes at a specific time.
-class SymbolStatusChange {
-  /// Initializes
-  SymbolStatusChange(this.symbol, {this.goesOpen});
-
-  /// The symbol
-  final String symbol;
-
-  /// If true [symbol] opens
-  /// If false it closes
-  final bool goesOpen;
-
-  @override
-  String toString() =>
-      'Status change: $symbol ${goesOpen ? 'opens' : 'closes'}';
 }
