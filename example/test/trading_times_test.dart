@@ -26,14 +26,24 @@ void main() {
       final firstMarketChangeDate =
           tradingTimesReminder.statusChangeTimes.firstKey();
 
-      final firstMarkChangeSymbols = tradingTimesReminder
-          .statusChangeTimes[tradingTimesReminder.statusChangeTimes.firstKey()];
+      final firstMarkChangeSymbols =
+          tradingTimesReminder.statusChangeTimes[firstMarketChangeDate];
 
       // First date will be remove to set the first reminding timer
-      expect(tradingTimesReminder.statusChangeTimes.length, 4);
-      expect(firstMarketChangeDate, DateTime(2020, 10, 10, 6, 30));
+      expect(tradingTimesReminder.statusChangeTimes.length, 3);
+      expect(firstMarketChangeDate, DateTime(2020, 10, 10, 7, 30));
       expect(firstMarkChangeSymbols.first.symbol, 'OTC_AS51');
-      expect(firstMarkChangeSymbols.first.goesOpen, false);
+      expect(firstMarkChangeSymbols.first.goesOpen, true);
+
+      final lastMarketChangeDate =
+          tradingTimesReminder.statusChangeTimes.lastKey();
+
+      final lastMarkChangeSymbols =
+          tradingTimesReminder.statusChangeTimes[lastMarketChangeDate];
+
+      expect(lastMarketChangeDate, DateTime(2020, 10, 10, 22));
+      expect(lastMarkChangeSymbols.first.symbol, 'OTC_HSI');
+      expect(lastMarkChangeSymbols.first.goesOpen, false);
     });
   });
 }

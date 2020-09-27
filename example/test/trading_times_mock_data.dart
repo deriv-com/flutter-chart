@@ -28,7 +28,7 @@ const String tradingTimesResponse = '''{
                 "times": {
                   "open": [
                     "01:30:00",
-                    "05:00:00"
+                    "07:30:00"
                   ],
                   "close": [
                     "04:00:00",
