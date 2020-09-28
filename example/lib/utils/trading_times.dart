@@ -30,6 +30,7 @@ class TradingTimesReminder {
   /// Callback to get server time
   final Future<DateTime> Function() serverTime;
 
+  // TODO(Ramin): Consider using a reliable timer if Dart's version had any problems.
   Timer _reminderTimer;
 
   /// Gets called when market status changes with the list of symbols that their
@@ -55,8 +56,8 @@ class TradingTimesReminder {
     for (final MarketModel market in todayTradingTimes.markets) {
       for (final SubmarketModel subMarket in market.submarkets) {
         for (final SymbolModel symbol in subMarket.symbols) {
-          final List<dynamic> openTimes = symbol.times.close;
-          final List<dynamic> closeTimes = symbol.times.open;
+          final List<dynamic> openTimes = symbol.times.open;
+          final List<dynamic> closeTimes = symbol.times.close;
 
           final bool isOpenAllDay = openTimes.length == 1 &&
               openTimes[0] == '00:00:00' &&
