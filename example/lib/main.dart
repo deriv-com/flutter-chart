@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:developer' as dev;
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:flutter_deriv_api/api/api_initializer.dart';
+import 'package:example/widgets/connection_status_label.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
 import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
@@ -10,10 +12,11 @@ import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
-import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
-import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
+import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
 import 'package:vibration/vibration.dart';
+
+import 'utils/misc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,37 +52,81 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Candle> candles = [];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
-  TickBase _currentTick;
+
+  TickHistorySubscription _tickHistorySubscription;
+
+  StreamSubscription _tickStreamSubscription;
+
+  ConnectionBloc _connectionBloc;
 
   bool _waitingForHistory = false;
 
+  // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
+  Completer _requestCompleter;
+
   List<Market> _markets;
-  Asset symbol = Asset(name: 'R_50', displayName: 'Volatility 50 Index');
+
+  Asset _symbol;
 
   @override
   void initState() {
     super.initState();
+    _requestCompleter = Completer();
     _connectToAPI();
   }
 
-  Future<void> _connectToAPI() async {
-    APIInitializer().initialize();
-    await Injector.getInjector().get<BaseAPI>().connect(
-          ConnectionInformation(
-            appId: '1089',
-            brand: 'binary',
-            endpoint: 'frontend.binaryws.com',
-          ),
-        );
+  @override
+  void dispose() {
+    _tickStreamSubscription?.cancel();
+    _connectionBloc?.close();
+    super.dispose();
+  }
 
-    _initTickStream();
-    _getActiveSymbols();
+  Future<void> _connectToAPI() async {
+    _connectionBloc = ConnectionBloc(ConnectionInformation(
+      appId: '1089',
+      brand: 'binary',
+      endpoint: 'frontend.binaryws.com',
+    ))
+      ..listen((connectionState) async {
+        if (connectionState is! Connected) {
+          // Calling this since we show some status labels when NOT connected.
+          setState(() {});
+          return;
+        }
+
+        if (candles.isEmpty) {
+          await _getActiveSymbols();
+
+          _requestCompleter.complete();
+          _onIntervalSelected(0);
+        } else {
+          _initTickStream(
+            TicksHistoryRequest(
+              ticksHistory: _symbol.name,
+              end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
+              start: candles.last.epoch ~/ 1000,
+              style: granularity == 0 ? 'ticks' : 'candles',
+              granularity: granularity > 0 ? granularity : null,
+            ),
+            resume: true,
+          );
+        }
+      });
   }
 
   Future<void> _getActiveSymbols() async {
     final List<ActiveSymbol> activeSymbols =
         await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
             activeSymbols: 'brief', productType: 'basic'));
+
+    final ActiveSymbol firstOpenSymbol = activeSymbols
+        .firstWhere((ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen);
+
+    _symbol = Asset(
+      name: firstOpenSymbol.symbol,
+      displayName: firstOpenSymbol.displayName,
+    );
 
     final marketTitles = <String>{};
 
@@ -110,63 +157,70 @@ class _FullscreenChartState extends State<FullscreenChart> {
     setState(() => _markets = markets);
   }
 
-  void _initTickStream() async {
+  void _initTickStream(
+    TicksHistoryRequest request, {
+    bool resume = false,
+  }) async {
     try {
-      final historySubscription = await _getHistoryAndSubscribe();
+      _tickHistorySubscription =
+          await TickHistory.fetchTicksAndSubscribe(request);
 
-      historySubscription?.tickStream?.listen((tickBase) {
-        if (tickBase != null) {
-          _currentTick = tickBase;
+      final fetchedCandles =
+          _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
 
-          if (tickBase is api_tick.Tick) {
-            _onNewTick(tickBase.epoch.millisecondsSinceEpoch, tickBase.quote);
-          }
-
-          if (tickBase is OHLC) {
-            final newCandle = Candle(
-              epoch: tickBase.openTime.millisecondsSinceEpoch,
-              high: tickBase.high,
-              low: tickBase.low,
-              open: tickBase.open,
-              close: tickBase.close,
-            );
-            _onNewCandle(newCandle);
-          }
+      if (resume) {
+        // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping candles
+        if (candles.last.epoch == fetchedCandles.first.epoch) {
+          candles.removeLast();
         }
-      });
 
-      setState(() {});
-    } on Exception catch (e) {
-      print(e);
+        setState(() => candles.addAll(fetchedCandles));
+      } else {
+        setState(() {
+          candles = fetchedCandles;
+        });
+      }
+
+      await _tickStreamSubscription?.cancel();
+
+      _tickStreamSubscription =
+          _tickHistorySubscription.tickStream.listen(_handleTickStream);
+    } on TickException catch (e) {
+      dev.log(e.message, error: e);
+    } finally {
+      _completeRequest();
     }
   }
 
-  Future<TickHistorySubscription> _getHistoryAndSubscribe() async {
-    try {
-      final history = await TickHistory.fetchTicksAndSubscribe(
-        TicksHistoryRequest(
-          ticksHistory: symbol.name,
-          end: 'latest',
-          count: 500,
-          style: granularity == 0 ? 'ticks' : 'candles',
-          granularity: granularity > 0 ? granularity : null,
-        ),
-      );
-
-      candles.clear();
-      candles = _getCandlesFromResponse(history.tickHistory);
-
-      return history;
-    } on Exception catch (e) {
-      print(e);
-      return null;
+  void _completeRequest() {
+    if (!_requestCompleter.isCompleted) {
+      _requestCompleter.complete(null);
     }
   }
 
-  void _onNewTick(int epoch, double quote) {
-    setState(() {
-      candles = candles + [Candle.tick(epoch: epoch, quote: quote)];
-    });
+  void _handleTickStream(TickBase newTick) {
+    if (!_requestCompleter.isCompleted || newTick == null) {
+      return;
+    }
+
+    if (newTick is api_tick.Tick) {
+      _onNewTick(Candle.tick(
+        epoch: newTick.epoch.millisecondsSinceEpoch,
+        quote: newTick.quote,
+      ));
+    } else if (newTick is OHLC) {
+      _onNewCandle(Candle(
+        epoch: newTick.openTime.millisecondsSinceEpoch,
+        high: newTick.high,
+        low: newTick.low,
+        open: newTick.open,
+        close: newTick.close,
+      ));
+    }
+  }
+
+  void _onNewTick(Candle newTick) {
+    setState(() => candles = candles + [newTick]);
   }
 
   void _onNewCandle(Candle newCandle) {
@@ -211,21 +265,34 @@ class _FullscreenChartState extends State<FullscreenChart> {
             ),
           ),
           Expanded(
-            child: Chart(
-              candles: candles,
-              pipSize: 4,
-              granularity: granularity == 0
-                  ? 2000 // average ms difference between ticks
-                  : granularity * 1000,
-              style: style,
-              onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-              onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                if (!_waitingForHistory &&
-                    candles.isNotEmpty &&
-                    leftEpoch < candles.first.epoch) {
-                  _loadHistory(2000);
-                }
-              },
+            child: Stack(
+              children: <Widget>[
+                ClipRect(
+                  child: Chart(
+                    candles: candles,
+                    pipSize:
+                        _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
+                    granularity: granularity == 0
+                        ? 2000 // average ms difference between ticks
+                        : granularity * 1000,
+                    style: style,
+                    onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                      if (!_waitingForHistory &&
+                          candles.isNotEmpty &&
+                          leftEpoch < candles.first.epoch) {
+                        _loadHistory(2000);
+                      }
+                    },
+                  ),
+                ),
+                if (_connectionBloc != null &&
+                    _connectionBloc.state is! Connected)
+                  Align(
+                    alignment: Alignment.center,
+                    child: _buildConnectionStatus(),
+                  ),
+              ],
             ),
           ),
         ],
@@ -233,18 +300,26 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
+  Widget _buildConnectionStatus() => ConnectionStatusLabel(
+        text: _connectionBloc.state is ConnectionError
+            ? '${(_connectionBloc.state as ConnectionError).error}'
+            : _connectionBloc.state is Disconnected
+                ? 'Connection lost, trying to reconnect...'
+                : 'Connecting...',
+      );
+
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
-        asset: symbol,
+        asset: _symbol,
         onTap: () => showBottomSheet<void>(
           backgroundColor: Colors.transparent,
           context: context,
           builder: (BuildContext context) => MarketSelector(
-            selectedItem: symbol,
+            selectedItem: _symbol,
             markets: _markets,
             onAssetClicked: (asset, favoriteClicked) {
               if (!favoriteClicked) {
                 Navigator.of(context).pop();
-                symbol = asset;
+                _symbol = asset;
                 _onIntervalSelected(granularity);
               }
             },
@@ -257,7 +332,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     final TickHistory moreData = await TickHistory.fetchTickHistory(
       TicksHistoryRequest(
-        ticksHistory: symbol.name,
+        ticksHistory: _symbol.name,
         end: '${candles.first.epoch ~/ 1000}',
         count: count,
         style: granularity == 0 ? 'ticks' : 'candles',
@@ -321,7 +396,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ]
             .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
                   value: granularity,
-                  child: Text('${_granularityLabel(granularity)}'),
+                  child: Text('${getGranularityLabel(granularity)}'),
                 ))
             .toList(),
         onChanged: _onIntervalSelected,
@@ -329,47 +404,30 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  void _onIntervalSelected(int value) async {
+  Future<void> _onIntervalSelected(value) async {
+    if (!_requestCompleter.isCompleted) {
+      return;
+    }
+
+    _requestCompleter = Completer();
+
+    candles.clear();
+
     try {
-      await _currentTick?.unsubscribe();
-    } on TickException catch (e) {
-      print(e.message); // TODO(Ramin): Handle the case when unsubscribe fails
+      await _tickHistorySubscription?.unsubscribe();
+    } on Exception catch (e) {
+      _completeRequest();
+      dev.log(e.toString(), error: e);
     } finally {
       granularity = value;
-      _initTickStream();
-    }
-  }
 
-  String _granularityLabel(int granularity) {
-    switch (granularity) {
-      case 0:
-        return '1 tick';
-      case 60:
-        return '1 min';
-      case 120:
-        return '2 min';
-      case 180:
-        return '3 min';
-      case 300:
-        return '5 min';
-      case 600:
-        return '10 min';
-      case 900:
-        return '15 min';
-      case 1800:
-        return '30 min';
-      case 3600:
-        return '1 hour';
-      case 7200:
-        return '2 hours';
-      case 14400:
-        return '4 hours';
-      case 28800:
-        return '8 hours';
-      case 86400:
-        return '1 day';
-      default:
-        return '???';
+      _initTickStream(TicksHistoryRequest(
+        ticksHistory: _symbol.name,
+        end: 'latest',
+        count: 500,
+        style: granularity == 0 ? 'ticks' : 'candles',
+        granularity: granularity > 0 ? granularity : null,
+      ));
     }
   }
 

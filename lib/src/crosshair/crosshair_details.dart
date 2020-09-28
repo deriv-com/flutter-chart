@@ -82,7 +82,8 @@ class CrosshairDetails extends StatelessWidget {
   }
 
   Text _buildTimeLabel() {
-    final time = DateTime.fromMillisecondsSinceEpoch(crosshairCandle.epoch);
+    final time =
+        DateTime.fromMillisecondsSinceEpoch(crosshairCandle.epoch, isUtc: true);
     final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
     return _buildLabel(timeLabel);
   }

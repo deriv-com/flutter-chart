@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/models/candle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +17,8 @@ import 'x_axis_model.dart';
 class XAxis extends StatefulWidget {
   /// Creates x-axis the size of child.
   const XAxis({
+    @required this.candles,
     @required this.child,
-    @required this.firstCandleEpoch,
     @required this.granularity,
     this.onVisibleAreaChanged,
     Key key,
@@ -27,8 +28,8 @@ class XAxis extends StatefulWidget {
   /// The widget below this widget in the tree.
   final Widget child;
 
-  /// Leftmost data entry. Defines panning bounds.
-  final int firstCandleEpoch;
+  /// A reference to chart's main candles.
+  final List<Candle> candles;
 
   /// Millisecond difference between two consecutive candles.
   final int granularity;
@@ -54,7 +55,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
     _model = XAxisModel(
-      firstCandleEpoch: widget.firstCandleEpoch,
+      candles: widget.candles,
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,
       onScale: _onVisibleAreaChanged,
@@ -81,7 +82,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
     _model
-      ..updateFirstCandleEpoch(widget.firstCandleEpoch)
+      ..updateCandles(widget.candles)
       ..updateGranularity(widget.granularity);
   }
 
