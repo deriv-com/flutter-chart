@@ -59,15 +59,17 @@ Chart(
 );
 ```
 
-Chart will call `onLoadHistory` callback when user scrolls back and gap with no data is scrolled into view. (Gap will be filled with loading animation.)
-Chart will pass `count`, which is a number of candles that should be appended to front of the `candles` list.
+Use `onVisibleAreaChanged` for listening to chart's scrolling and zooming.
+`leftEpoch` is the timestamp of the chart's left edge.
+`rightEpoch` is the timestamp of the chart's right edge.
+Check out the example where loading of more data on scrolling is implemented.
 
 ```dart
 Chart(
   candles: candles,
   pipSize: 4,
-  onLoadHistory: (int count) {
-    // append [count] candles to the front of [data]
+  onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+    // do something (e.g. load more data)
   },
 );
 ```
@@ -82,5 +84,5 @@ Chart(
 );
 ```
 
-Chart has its own default dart and light themes, that switch depending on `Theme.of(context).brightness` value.
+Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
 You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
