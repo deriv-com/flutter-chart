@@ -161,9 +161,21 @@ class XAxisModel extends ChangeNotifier {
   /// to measure distance between two timestamps on the chart.
   double pxFromMs(int ms) => msToPx(ms, msPerPx: _msPerPx);
 
-  /// Px distance between epochs on the chart (time gaps are removed).
+  /// Px distance between two epochs on the x-axis.
   double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(
         range: TimeRange(leftEpoch, rightEpoch),
+        msPerPx: _msPerPx,
+        // TODO(Rustem): pass time gaps here
+        gaps: <TimeRange>[],
+      );
+
+  /// Resulting epoch when given epoch value is shifted by given px amount on x-axis.
+  ///
+  /// Positive [pxShift] is shifting epoch into the future,
+  /// and negative [pxShift] into the past.
+  int shiftEpoch(int epoch, double pxShift) => shiftEpochByPx(
+        epoch: epoch,
+        pxShift: pxShift,
         msPerPx: _msPerPx,
         // TODO(Rustem): pass time gaps here
         gaps: <TimeRange>[],
