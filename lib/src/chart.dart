@@ -79,7 +79,7 @@ class Chart extends StatelessWidget {
         color: chartTheme.base08Color,
         child: GestureManager(
           child: XAxis(
-            firstCandleEpoch: candles.isNotEmpty ? candles.first.epoch : null,
+            candles: candles,
             granularity: granularity,
             child: _ChartImplementation(
               candles: candles,
@@ -123,6 +123,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
+
+  bool _panStartedOnQuoteLabelsArea = false;
 
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
@@ -347,11 +349,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager.registerCallback(_onPanUpdate);
+    _gestureManager
+      ..registerCallback(_onPanStart)
+      ..registerCallback(_onPanUpdate);
   }
 
   void _clearGestures() {
-    _gestureManager.removeCallback(_onPanUpdate);
+    _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
   }
 
   void _updateVisibleCandles() {
@@ -440,9 +444,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.candles.isEmpty
+              loadingRightBoundX: visibleCandles?.isEmpty ?? false
                   ? _xAxis.width
-                  : _xAxis.xFromEpoch(widget.candles.first.epoch),
+                  : _xAxis.xFromEpoch(visibleCandles.first.epoch),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
@@ -546,14 +550,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  void _onPanUpdate(DragUpdateDetails details) {
-    final bool onQuoteLabelsArea =
-        details.localPosition.dx > _xAxis.width - quoteLabelsAreaWidth;
+  void _onPanStart(ScaleStartDetails details) {
+    _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
+  }
 
-    if (onQuoteLabelsArea) {
+  void _onPanUpdate(DragUpdateDetails details) {
+    if (_panStartedOnQuoteLabelsArea &&
+        _onQuoteLabelsArea(details.localPosition)) {
       _scaleVertically(details.delta.dy);
     }
   }
+
+  bool _onQuoteLabelsArea(Offset position) =>
+      position.dx > _xAxis.width - quoteLabelsAreaWidth;
 
   void _scaleVertically(double dy) {
     setState(() {
