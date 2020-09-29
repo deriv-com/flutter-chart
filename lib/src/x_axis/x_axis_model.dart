@@ -226,7 +226,7 @@ class XAxisModel extends ChangeNotifier {
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
     _scale(details.scale);
-    rightBoundEpoch = _nowEpoch + msFromPx(nowToRightBound);
+    rightBoundEpoch = shiftEpoch(_nowEpoch, nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
