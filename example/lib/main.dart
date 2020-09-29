@@ -81,8 +81,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   ConnectionBloc _connectionBloc;
 
-  // We keep track of the candles start epoch to not make more than one API call to get a history
-  int _startEpoch;
+  bool _waitingForHistory = false;
 
   final List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier? _slBarrier, _tpBarrier;
