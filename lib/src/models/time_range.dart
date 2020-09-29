@@ -15,4 +15,8 @@ class TimeRange {
   }
 
   bool contains(int epoch) => leftEpoch <= epoch && epoch <= rightEpoch;
+
+  bool isBefore(int epoch) => rightEpoch < epoch;
+
+  bool isAfter(int epoch) => epoch < leftEpoch;
 }

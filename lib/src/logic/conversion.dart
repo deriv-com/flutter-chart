@@ -26,14 +26,27 @@ int shiftEpochByPx({
       }
     }
   } else {
-    for (final gap in gaps) {
-      if (gap.contains(shiftedEpoch)) {
-        shiftedEpoch = gap.leftEpoch;
-      } else if (shiftedEpoch > gap.rightEpoch &&
-          epoch - gap.rightEpoch < pxShift.abs() * msPerPx) {
-        shiftedEpoch -= gap.msWidth;
-      }
+    int i = gaps
+        .lastIndexWhere((gap) => gap.isBefore(epoch) || gap.contains(epoch));
+
+    if (i >= 0 && gaps[i].contains(epoch)) {
+      epoch = gaps[i].leftEpoch;
+      i--;
     }
+
+    double pxToGap(TimeRange gap) => (epoch - gap.rightEpoch) / msPerPx;
+
+    while (i >= 0) {
+      final distance = pxToGap(gaps[i]);
+
+      if (pxShift.abs() >= distance.abs()) {
+        epoch = gaps[i].leftEpoch;
+        pxShift += distance;
+      }
+      i--;
+    }
+
+    return epoch + (pxShift * msPerPx).round();
   }
   return shiftedEpoch + (pxShift * msPerPx).round();
 }
