@@ -19,6 +19,7 @@ class XAxis extends StatefulWidget {
     @required this.candles,
     @required this.child,
     @required this.granularity,
+    @required this.isLive,
     Key key,
   })  : assert(child != null),
         super(key: key);
@@ -31,6 +32,9 @@ class XAxis extends StatefulWidget {
 
   /// Millisecond difference between two consecutive candles.
   final int granularity;
+
+  /// `True` the chart showing live data
+  final bool isLive;
 
   @override
   _XAxisState createState() => _XAxisState();
@@ -53,6 +57,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       candles: widget.candles,
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,
+      isLive: widget.isLive,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -69,7 +74,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
     _model
       ..updateCandles(widget.candles)
-      ..updateGranularity(widget.granularity);
+      ..updateGranularity(widget.granularity)
+      ..updateIsLive(widget.isLive);
   }
 
   @override

@@ -341,6 +341,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     style: style,
                     controller: _controller,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+                    isLive: _symbol?.isOpen,
                     onLoadHistory: (fromEpoch, toEpoch, count) =>
                         _loadHistory(fromEpoch, toEpoch, count),
                   ),

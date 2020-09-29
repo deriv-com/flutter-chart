@@ -14,10 +14,12 @@ class XAxisModel extends ChangeNotifier {
     @required List<Candle> candles,
     @required int granularity,
     @required AnimationController animationController,
+    @required bool isLive,
   }) : _candles = candles {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
+    _isLive = isLive ?? true;
     rightBoundEpoch = _maxRightBoundEpoch;
 
     _rightEpochAnimationController = animationController
@@ -47,6 +49,8 @@ class XAxisModel extends ChangeNotifier {
   // TODO(Rustem): Expose this setting
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
+
+  bool _isLive;
 
   /// Canvas width.
   double width;
@@ -84,7 +88,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch =>
-      (_candles.isNotEmpty ? _candles.last.epoch : _nowEpoch) +
+      (_candles.isEmpty || _isLive ? _nowEpoch : _candles.last.epoch) +
       msFromPx(maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
@@ -118,6 +122,9 @@ class XAxisModel extends ChangeNotifier {
 
   /// Updates chart's main data
   void updateCandles(List<Candle> candles) => _candles = candles;
+
+  /// Update's chart's isLive property
+  void updateIsLive(bool isLive) => _isLive = isLive;
 
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.

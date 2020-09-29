@@ -37,6 +37,7 @@ class Chart extends StatelessWidget {
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
+    this.isLive,
     Key key,
   }) : super(key: key);
 
@@ -71,6 +72,12 @@ class Chart extends StatelessWidget {
   /// Chart's theme.
   final ChartTheme theme;
 
+  /// Indicates whether the chart should be showing live data or not,
+  ///
+  /// In cas of being true the chart will keep auto-scrolling when its visible area
+  /// is on the newest ticks/candles.
+  final bool isLive;
+
   @override
   Widget build(BuildContext context) {
     final ChartTheme chartTheme =
@@ -86,6 +93,7 @@ class Chart extends StatelessWidget {
           child: XAxis(
             candles: candles,
             granularity: granularity,
+            isLive: isLive,
             child: _ChartImplementation(
               controller: controller,
               candles: candles,
@@ -110,6 +118,7 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.onLoadHistory,
     this.style = ChartStyle.candles,
+    this.isLive,
   }) : super(key: key);
 
   final List<Candle> candles;
@@ -118,6 +127,7 @@ class _ChartImplementation extends StatefulWidget {
   final VoidCallback onCrosshairAppeared;
   final OnLoadHistory onLoadHistory;
   final ChartController controller;
+  final bool isLive;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
