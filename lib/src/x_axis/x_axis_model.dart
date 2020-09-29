@@ -103,7 +103,7 @@ class XAxisModel extends ChangeNotifier {
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _candles.isEmpty ||
-      _candles.last.epoch > leftBoundEpoch + msFromPx(autoPanOffset);
+      _candles.last.epoch > shiftEpoch(leftBoundEpoch, autoPanOffset);
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -214,7 +214,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    rightBoundEpoch -= msFromPx(details.delta.dx);
+    rightBoundEpoch = shiftEpoch(rightBoundEpoch, -details.delta.dx);
     notifyListeners();
   }
 
