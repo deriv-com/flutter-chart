@@ -21,31 +21,39 @@ int shiftEpochByPx({
       if (gap.contains(shiftedEpoch)) {
         shiftedEpoch = gap.rightEpoch;
       } else if (shiftedEpoch < gap.leftEpoch &&
-          gap.leftEpoch - epoch < pxShift * msPerPx) {
+          gap.leftEpoch - shiftedEpoch <= pxShift * msPerPx) {
         shiftedEpoch += gap.msWidth;
       }
     }
   } else {
-    int i = gaps
-        .lastIndexWhere((gap) => gap.isBefore(epoch) || gap.contains(epoch));
-
-    if (i >= 0 && gaps[i].contains(epoch)) {
-      epoch = gaps[i].leftEpoch;
-      i--;
-    }
-
-    double pxToGap(TimeRange gap) => (epoch - gap.rightEpoch) / msPerPx;
-
-    for (; i >= 0; i--) {
-      final distance = pxToGap(gaps[i]);
-
-      if (pxShift.abs() >= distance.abs()) {
-        epoch = gaps[i].leftEpoch;
-        pxShift += distance;
+    for (final gap in gaps.reversed) {
+      if (gap.contains(shiftedEpoch)) {
+        shiftedEpoch = gap.leftEpoch;
+      } else if (shiftedEpoch > gap.rightEpoch &&
+          shiftedEpoch - gap.rightEpoch <= pxShift.abs() * msPerPx) {
+        shiftedEpoch -= gap.msWidth;
       }
     }
+    // int i = gaps
+    //     .lastIndexWhere((gap) => gap.isBefore(epoch) || gap.contains(epoch));
 
-    return epoch + (pxShift * msPerPx).round();
+    // if (i >= 0 && gaps[i].contains(epoch)) {
+    //   epoch = gaps[i].leftEpoch;
+    //   i--;
+    // }
+
+    // double pxToGap(TimeRange gap) => (epoch - gap.rightEpoch) / msPerPx;
+
+    // for (; i >= 0; i--) {
+    //   final distance = pxToGap(gaps[i]);
+
+    //   if (pxShift.abs() >= distance.abs()) {
+    //     epoch = gaps[i].leftEpoch;
+    //     pxShift += distance;
+    //   }
+    // }
+
+    // return epoch + (pxShift * msPerPx).round();
   }
   return shiftedEpoch + (pxShift * msPerPx).round();
 }
