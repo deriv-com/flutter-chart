@@ -231,9 +231,9 @@ class XAxisModel extends ChangeNotifier {
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = width - details.focalPoint.dx;
-    final focalEpoch = rightBoundEpoch - msFromPx(focalToRightBound);
+    final focalEpoch = shiftEpoch(rightBoundEpoch, -focalToRightBound);
     _scale(details.scale);
-    rightBoundEpoch = focalEpoch + msFromPx(focalToRightBound);
+    rightBoundEpoch = shiftEpoch(focalEpoch, focalToRightBound);
   }
 
   void _scale(double scale) {
