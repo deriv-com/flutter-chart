@@ -36,14 +36,13 @@ int shiftEpochByPx({
 
     double pxToGap(TimeRange gap) => (epoch - gap.rightEpoch) / msPerPx;
 
-    while (i >= 0) {
+    for (; i >= 0; i--) {
       final distance = pxToGap(gaps[i]);
 
       if (pxShift.abs() >= distance.abs()) {
         epoch = gaps[i].leftEpoch;
         pxShift += distance;
       }
-      i--;
     }
 
     return epoch + (pxShift * msPerPx).round();
