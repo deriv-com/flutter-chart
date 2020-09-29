@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
+import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
 import '../theme/chart_theme.dart';
 import 'grid/calc_time_grid.dart';
@@ -19,6 +20,7 @@ class XAxis extends StatefulWidget {
     @required this.entries,
     @required this.child,
     @required this.granularity,
+    this.onVisibleAreaChanged,
     Key key,
   })  : assert(child != null),
         super(key: key);
@@ -31,6 +33,9 @@ class XAxis extends StatefulWidget {
 
   /// Millisecond difference between two consecutive candles.
   final int granularity;
+
+  /// Callback provided by library user.
+  final VisibleAreaChangedCallback onVisibleAreaChanged;
 
   @override
   _XAxisState createState() => _XAxisState();
@@ -53,6 +58,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       entries: widget.entries,
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,
+      onScale: _onVisibleAreaChanged,
+      onScroll: _onVisibleAreaChanged,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -62,6 +69,13 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
       ..registerCallback(_model.onScaleAndPanEnd);
+  }
+
+  void _onVisibleAreaChanged() {
+    widget.onVisibleAreaChanged?.call(
+      _model.leftBoundEpoch,
+      _model.rightBoundEpoch,
+    );
   }
 
   @override

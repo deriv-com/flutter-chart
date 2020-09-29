@@ -59,8 +59,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   ConnectionBloc _connectionBloc;
 
-  // We keep track of the ticks start epoch to not make more than one API call to get a history
-  int _startEpoch;
+  bool _waitingForHistory = false;
 
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
   Completer _requestCompleter;
@@ -179,8 +178,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
       } else {
         setState(() {
           ticks = fetchedTicks;
-
-          _startEpoch = ticks.first.epoch;
         });
       }
 
@@ -272,14 +269,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
               children: <Widget>[
                 ClipRect(
                   child: Chart(
-                    mainSeries:
-                        style == ChartStyle.candles && ticks is List<Candle>
-                            ? CandleSeries(ticks,
-                                style: CandleStyle(
-                                    currentTickStyle: CurrentTickStyle()))
-                            : LineSeries(ticks,
-                                style: LineStyle(
-                                    currentTickStyle: CurrentTickStyle())),
+                    mainSeries: style == ChartStyle.candles &&
+                            ticks is List<Candle>
+                        ? CandleSeries(ticks,
+                            style: CandleStyle(
+                                currentTickStyle: CurrentTickStyle()))
+                        : LineSeries(ticks,
+                            style: LineStyle(
+                                currentTickStyle: CurrentTickStyle())),
                     secondarySeries: [
                       MASeries(
                         ticks,
@@ -296,8 +293,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ? 2000 // average ms difference between ticks
                         : granularity * 1000,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                    onLoadHistory: (fromEpoch, toEpoch, count) =>
-                        _loadHistory(fromEpoch, toEpoch, count),
+                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                      if (!_waitingForHistory &&
+                          ticks.isNotEmpty &&
+                          leftEpoch < ticks.first.epoch) {
+                        _loadHistory(2000);
+                      }
+                    },
                   ),
                 ),
                 if (_connectionBloc != null &&
@@ -341,34 +343,32 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-  void _loadHistory(int fromEpoch, int toEpoch, int count) async {
-    if (fromEpoch < _startEpoch) {
-      // So we don't request for a history range more than once
-      _startEpoch = fromEpoch;
-      final TickHistory moreData = await TickHistory.fetchTickHistory(
-        TicksHistoryRequest(
-          ticksHistory: _symbol.name,
-          end: '${toEpoch ~/ 1000}',
-          count: count,
-          style: granularity == 0 ? 'ticks' : 'candles',
-          granularity: granularity > 0 ? granularity : null,
-        ),
-      );
+  void _loadHistory(int count) async {
+    _waitingForHistory = true;
 
-      final List<Tick> loadedTicks = _getTicksFromResponse(moreData);
+    final TickHistory moreData = await TickHistory.fetchTickHistory(
+      TicksHistoryRequest(
+        ticksHistory: _symbol.name,
+        end: '${ticks.first.epoch ~/ 1000}',
+        count: count,
+        style: granularity == 0 ? 'ticks' : 'candles',
+        granularity: granularity > 0 ? granularity : null,
+      ),
+    );
 
-      loadedTicks.removeLast();
+    final List<Tick> loadedCandles = _getTicksFromResponse(moreData);
 
-      // Unlikely to happen, just to ensure we don't have two ticks with the same epoch
-      while (loadedTicks.isNotEmpty &&
-          loadedTicks.last.epoch >= ticks.first.epoch) {
-        loadedTicks.removeLast();
-      }
-
-      setState(() {
-        ticks.insertAll(0, loadedTicks);
-      });
+    // Ensure we don't have two candles with the same epoch.
+    while (loadedCandles.isNotEmpty &&
+        loadedCandles.last.epoch >= ticks.first.epoch) {
+      loadedCandles.removeLast();
     }
+
+    setState(() {
+      ticks.insertAll(0, loadedCandles);
+    });
+
+    _waitingForHistory = false;
   }
 
   IconButton _buildChartTypeButton() {
