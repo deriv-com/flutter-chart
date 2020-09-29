@@ -67,7 +67,7 @@ class XAxisModel extends ChangeNotifier {
   int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
-  int get leftBoundEpoch => rightBoundEpoch - msFromPx(width);
+  int get leftBoundEpoch => shiftEpoch(rightBoundEpoch, -width);
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
@@ -159,6 +159,7 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Doesn't take removed time gaps into account. Use [pxBetween] if you need
   /// to measure distance between two timestamps on the chart.
+  /// TODO(Rustem): Remove once time grid doesn't depend on it.
   double pxFromMs(int ms) => msToPx(ms, msPerPx: _msPerPx);
 
   /// Px distance between two epochs on the x-axis.
