@@ -16,15 +16,6 @@ class Candle extends Tick {
     @required this.close,
   }) : super(epoch: epoch, quote: close);
 
-  Candle.tick({
-    @required this.epoch,
-    @required double quote,
-  })  : high = quote,
-        low = quote,
-        open = quote,
-        close = quote,
-        super(epoch: epoch, quote: quote);
-
   Candle copyWith({
     int epoch,
     double high,

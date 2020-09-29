@@ -49,7 +49,7 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
-  List<Candle> candles = [];
+  List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
@@ -59,7 +59,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   ConnectionBloc _connectionBloc;
 
-  // We keep track of the candles start epoch to not make more than one API call to get a history
+  // We keep track of the ticks start epoch to not make more than one API call to get a history
   int _startEpoch;
 
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
@@ -96,7 +96,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           return;
         }
 
-        if (candles.isEmpty) {
+        if (ticks.isEmpty) {
           await _getActiveSymbols();
 
           _requestCompleter.complete();
@@ -106,7 +106,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             TicksHistoryRequest(
               ticksHistory: _symbol.name,
               end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
-              start: candles.last.epoch ~/ 1000,
+              start: ticks.last.epoch ~/ 1000,
               style: granularity == 0 ? 'ticks' : 'candles',
               granularity: granularity > 0 ? granularity : null,
             ),
@@ -166,21 +166,21 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _tickHistorySubscription =
           await TickHistory.fetchTicksAndSubscribe(request);
 
-      final fetchedCandles =
-          _getCandlesFromResponse(_tickHistorySubscription.tickHistory);
+      final fetchedTicks =
+          _getTicksFromResponse(_tickHistorySubscription.tickHistory);
 
       if (resume) {
-        // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping candles
-        if (candles.last.epoch == fetchedCandles.first.epoch) {
-          candles.removeLast();
+        // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping ticks
+        if (ticks.last.epoch == fetchedTicks.first.epoch) {
+          ticks.removeLast();
         }
 
-        setState(() => candles.addAll(fetchedCandles));
+        setState(() => ticks.addAll(fetchedTicks));
       } else {
         setState(() {
-          candles = fetchedCandles;
+          ticks = fetchedTicks;
 
-          _startEpoch = candles.first.epoch;
+          _startEpoch = ticks.first.epoch;
         });
       }
 
@@ -207,7 +207,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
 
     if (newTick is api_tick.Tick) {
-      _onNewTick(Candle.tick(
+      _onNewTick(Tick(
         epoch: newTick.epoch.millisecondsSinceEpoch,
         quote: newTick.quote,
       ));
@@ -222,19 +222,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
   }
 
-  void _onNewTick(Candle newTick) {
-    setState(() => candles = candles + [newTick]);
+  void _onNewTick(Tick newTick) {
+    setState(() => ticks = ticks + [newTick]);
   }
 
   void _onNewCandle(Candle newCandle) {
-    final previousCandles =
-        candles.isNotEmpty && candles.last.epoch == newCandle.epoch
-            ? candles.sublist(0, candles.length - 1)
-            : candles;
+    final List<Candle> previousCandles =
+        ticks.isNotEmpty && ticks.last.epoch == newCandle.epoch
+            ? ticks.sublist(0, ticks.length - 1)
+            : ticks;
 
     setState(() {
       // Don't modify candles in place, otherwise Chart's didUpdateWidget won't see the difference.
-      candles = previousCandles + [newCandle];
+      ticks = previousCandles + <Candle>[newCandle];
     });
   }
 
@@ -272,16 +272,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
               children: <Widget>[
                 ClipRect(
                   child: Chart(
-                    mainSeries: style == ChartStyle.candles
-                        ? CandleSeries(candles,
-                            style: CandleStyle(
-                                currentTickStyle: CurrentTickStyle()))
-                        : LineSeries(candles,
-                            style: LineStyle(
-                                currentTickStyle: CurrentTickStyle())),
+                    mainSeries:
+                        style == ChartStyle.candles && ticks is List<Candle>
+                            ? CandleSeries(ticks,
+                                style: CandleStyle(
+                                    currentTickStyle: CurrentTickStyle()))
+                            : LineSeries(ticks,
+                                style: LineStyle(
+                                    currentTickStyle: CurrentTickStyle())),
                     secondarySeries: [
                       MASeries(
-                        candles,
+                        ticks,
                         style: LineStyle(
                           color: Colors.grey,
                           thickness: 0.5,
@@ -354,18 +355,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-      final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
+      final List<Tick> loadedTicks = _getTicksFromResponse(moreData);
 
-      loadedCandles.removeLast();
+      loadedTicks.removeLast();
 
-      // Unlikely to happen, just to ensure we don't have two candles with the same epoch
-      while (loadedCandles.isNotEmpty &&
-          loadedCandles.last.epoch >= candles.first.epoch) {
-        loadedCandles.removeLast();
+      // Unlikely to happen, just to ensure we don't have two ticks with the same epoch
+      while (loadedTicks.isNotEmpty &&
+          loadedTicks.last.epoch >= ticks.first.epoch) {
+        loadedTicks.removeLast();
       }
 
       setState(() {
-        candles.insertAll(0, loadedCandles);
+        ticks.insertAll(0, loadedTicks);
       });
     }
   }
@@ -426,7 +427,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     _requestCompleter = Completer();
 
-    setState(() => candles.clear());
+    setState(() => ticks.clear());
 
     try {
       await _tickHistorySubscription?.unsubscribe();
@@ -446,12 +447,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
   }
 
-  List<Candle> _getCandlesFromResponse(TickHistory tickHistory) {
-    List<Candle> candles = [];
+  List<Tick> _getTicksFromResponse(TickHistory tickHistory) {
+    List<Tick> candles = [];
     if (tickHistory.history != null) {
       final count = tickHistory.history.prices.length;
       for (var i = 0; i < count; i++) {
-        candles.add(Candle.tick(
+        candles.add(Tick(
           epoch: tickHistory.history.times[i].millisecondsSinceEpoch,
           quote: tickHistory.history.prices[i],
         ));

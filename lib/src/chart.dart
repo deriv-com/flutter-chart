@@ -75,7 +75,7 @@ class Chart extends StatelessWidget {
         color: chartTheme.base08Color,
         child: GestureManager(
           child: XAxis(
-            candles: mainSeries.entries,
+            entries: mainSeries.entries,
             granularity: granularity,
             child: _ChartImplementation(
               mainSeries: mainSeries,
