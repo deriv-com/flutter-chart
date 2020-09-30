@@ -59,8 +59,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   ConnectionBloc _connectionBloc;
 
-  // We keep track of the candles start epoch to not make more than one API call to get a history
-  int _startEpoch;
+  bool _waitingForHistory = false;
 
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
   Completer _requestCompleter;
@@ -179,8 +178,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
       } else {
         setState(() {
           candles = fetchedCandles;
-
-          _startEpoch = candles.first.epoch;
         });
       }
 
@@ -280,8 +277,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         : granularity * 1000,
                     style: style,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                    onLoadHistory: (fromEpoch, toEpoch, count) =>
-                        _loadHistory(fromEpoch, toEpoch, count),
+                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                      if (!_waitingForHistory &&
+                          candles.isNotEmpty &&
+                          leftEpoch < candles.first.epoch) {
+                        _loadHistory(2000);
+                      }
+                    },
                   ),
                 ),
                 if (_connectionBloc != null &&
@@ -325,34 +327,32 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ),
       );
 
-  void _loadHistory(int fromEpoch, int toEpoch, int count) async {
-    if (fromEpoch < _startEpoch) {
-      // So we don't request for a history range more than once
-      _startEpoch = fromEpoch;
-      final TickHistory moreData = await TickHistory.fetchTickHistory(
-        TicksHistoryRequest(
-          ticksHistory: _symbol.name,
-          end: '${toEpoch ~/ 1000}',
-          count: count,
-          style: granularity == 0 ? 'ticks' : 'candles',
-          granularity: granularity > 0 ? granularity : null,
-        ),
-      );
+  void _loadHistory(int count) async {
+    _waitingForHistory = true;
 
-      final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
+    final TickHistory moreData = await TickHistory.fetchTickHistory(
+      TicksHistoryRequest(
+        ticksHistory: _symbol.name,
+        end: '${candles.first.epoch ~/ 1000}',
+        count: count,
+        style: granularity == 0 ? 'ticks' : 'candles',
+        granularity: granularity > 0 ? granularity : null,
+      ),
+    );
 
+    final List<Candle> loadedCandles = _getCandlesFromResponse(moreData);
+
+    // Ensure we don't have two candles with the same epoch.
+    while (loadedCandles.isNotEmpty &&
+        loadedCandles.last.epoch >= candles.first.epoch) {
       loadedCandles.removeLast();
-
-      // Unlikely to happen, just to ensure we don't have two candles with the same epoch
-      while (loadedCandles.isNotEmpty &&
-          loadedCandles.last.epoch >= candles.first.epoch) {
-        loadedCandles.removeLast();
-      }
-
-      setState(() {
-        candles.insertAll(0, loadedCandles);
-      });
     }
+
+    setState(() {
+      candles.insertAll(0, loadedCandles);
+    });
+
+    _waitingForHistory = false;
   }
 
   IconButton _buildChartTypeButton() {
