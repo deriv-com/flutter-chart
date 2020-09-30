@@ -9,7 +9,7 @@ import 'trading_times_mock_data.dart';
 
 void main() {
   group('Trading times', () {
-    test('Trading times reminder queue fills correctly', () async {
+    test('Trading times reminder queue fills in the correct order', () async {
       MarketChangeReminder tradingTimesReminder = MarketChangeReminder(
         () async {
           final tradingTimesCompleter = Completer<TradingTimes>()

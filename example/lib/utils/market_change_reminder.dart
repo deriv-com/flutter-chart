@@ -10,7 +10,22 @@ import 'package:intl/intl.dart';
 /// Markets status change callback. (List of symbols that have been changed.)
 typedef OnMarketsStatusChange = void Function(Map<String, bool> symbols);
 
-/// A class to to remind when there is a change on market.
+/// A class to remind when there is a change on market.
+///
+///
+/// This class will notify about the status changes in market by calling
+/// [onMarketsStatusChange] with a Map of {symbolCode: status}.
+/// For example it might be like:
+///
+///   {'frxAUDJPY': false, 'frxUSDMXN': true}
+///   Meaning that at this time frxAUDJPY will become closed and frxUSDMXN opens.
+///
+///
+/// At start this class gets the TradingTimes and it will setup a queue of the upcoming
+/// market changes and sets a timer to notify about the first one.
+/// Once first timer finishes it will set for the next status change and so on,
+/// until its queue becomes empty and will sets the last timer to the start of
+/// tomorrow to reset its queue.
 class MarketChangeReminder {
   /// Initializes
   MarketChangeReminder(
