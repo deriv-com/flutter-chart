@@ -204,8 +204,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    // TODO(Rustem): Use scrollBy with clamping
-    _rightBoundEpoch = shiftEpoch(_rightBoundEpoch, -details.delta.dx);
+    _scrollBy(-details.delta.dx);
     notifyListeners();
   }
 
@@ -232,8 +231,17 @@ class XAxisModel extends ChangeNotifier {
     onScale?.call();
   }
 
+  // TODO(Rustem): Remove once everything switched to scrollBy
   void _scrollTo(int rightBoundEpoch) {
     _rightBoundEpoch = rightBoundEpoch.clamp(
+      _minRightBoundEpoch,
+      _maxRightBoundEpoch,
+    );
+    onScroll?.call();
+  }
+
+  void _scrollBy(double pxShift) {
+    _rightBoundEpoch = shiftEpoch(_rightBoundEpoch, pxShift).clamp(
       _minRightBoundEpoch,
       _maxRightBoundEpoch,
     );
