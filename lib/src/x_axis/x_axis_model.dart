@@ -204,6 +204,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
+    // TODO(Rustem): Use scrollBy with clamping
     _rightBoundEpoch = shiftEpoch(_rightBoundEpoch, -details.delta.dx);
     notifyListeners();
   }
