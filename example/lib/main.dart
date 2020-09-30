@@ -104,35 +104,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
         if (ticks.isEmpty) {
           await _getActiveSymbols();
-          TradingTimesReminder(
-            await TradingTimes.fetchTradingTimes(
-              TradingTimesRequest(tradingTimes: 'today'),
-            ),
-            serverTime: () async {
-              final ServerTime serverTime = await ServerTime.fetchTime();
-              return serverTime.time;
-            },
-            onMarketsStatusChange: (Map<String, bool> statusChanges) {
-              for (int i = 0; i < _activeSymbols.length; i++) {
-                if (statusChanges[_activeSymbols[i].symbol] != null) {
-                  _activeSymbols[i] = _activeSymbols[i].copyWith(
-                    exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
-                  );
-                }
-              }
-
-              _fillMarketSelectorList();
-
-              if (statusChanges[_symbol.name] != null) {
-                _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
-
-                // Request for tick stream if symbol is changing from closed to open.
-                if (statusChanges[_symbol.name]) {
-                  _onIntervalSelected(granularity);
-                }
-              }
-            },
-          );
 
           _requestCompleter.complete();
           _onIntervalSelected(0);
@@ -149,7 +120,41 @@ class _FullscreenChartState extends State<FullscreenChart> {
             resume: true,
           );
         }
+
+        await _setupMarketChangeReminder();
       });
+  }
+
+  Future<void> _setupMarketChangeReminder() async {
+    TradingTimesReminder(
+      await TradingTimes.fetchTradingTimes(
+        TradingTimesRequest(tradingTimes: 'today'),
+      ),
+      serverTime: () async {
+        final ServerTime serverTime = await ServerTime.fetchTime();
+        return serverTime.time;
+      },
+      onMarketsStatusChange: (Map<String, bool> statusChanges) {
+        for (int i = 0; i < _activeSymbols.length; i++) {
+          if (statusChanges[_activeSymbols[i].symbol] != null) {
+            _activeSymbols[i] = _activeSymbols[i].copyWith(
+              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
+            );
+          }
+        }
+    
+        _fillMarketSelectorList();
+    
+        if (statusChanges[_symbol.name] != null) {
+          _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
+    
+          // Request for tick stream if symbol is changing from closed to open.
+          if (statusChanges[_symbol.name]) {
+            _onIntervalSelected(granularity);
+          }
+        }
+      },
+    );
   }
 
   Future<void> _getActiveSymbols() async {
