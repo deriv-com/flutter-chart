@@ -185,13 +185,7 @@ class XAxisModel extends ChangeNotifier {
       : width + pxBetween(rightBoundEpoch, epoch);
 
   /// Get epoch of x position.
-  /// TODO(Rustem): Handle time gaps.
-  int epochFromX(double x) => canvasXToEpoch(
-        x: x,
-        rightBoundEpoch: rightBoundEpoch,
-        canvasWidth: width,
-        msPerPx: _msPerPx,
-      );
+  int epochFromX(double x) => shiftEpoch(rightBoundEpoch, -width + x);
 
   /// Called at the start of scale and pan gestures.
   void onScaleAndPanStart(ScaleStartDetails details) {
