@@ -231,6 +231,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
+
+    if (_xAxis.isLive && !_currentTickBlinkingController.isAnimating) {
+      _currentTickBlinkingController.repeat(reverse: true);
+    } else {
+      _currentTickBlinkingController.reset();
+      _currentTickBlinkingController.stop();
+    }
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
