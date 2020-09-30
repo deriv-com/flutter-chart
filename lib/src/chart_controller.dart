@@ -12,5 +12,5 @@ class ChartController extends ChangeNotifier {
   set scrollToNowListener(OnScrollToNow listener) => _onScrollToNow = listener;
 
   /// Scroll chart visible area to the newest data.
-  void scrollToNow({bool jump}) => _onScrollToNow?.call(jump);
+  void scrollToNow({bool animate}) => _onScrollToNow?.call(animate);
 }

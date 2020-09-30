@@ -248,7 +248,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }
 
       await Future<void>.delayed(const Duration(milliseconds: 50));
-      _controller.scrollToNow(jump: true);
+      _controller.scrollToNow(animate: false);
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {

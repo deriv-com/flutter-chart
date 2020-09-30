@@ -239,8 +239,9 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Animate scrolling to current tick.
-  void scrollToNow({bool jump = false}) {
-    final duration = jump ? Duration.zero : const Duration(milliseconds: 600);
+  void scrollToNow({bool animate = true}) {
+    final duration =
+        animate ? const Duration(milliseconds: 600) : Duration.zero;
     final target = _maxRightBoundEpoch + duration.inMilliseconds;
 
     _rightEpochAnimationController

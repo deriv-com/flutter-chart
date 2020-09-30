@@ -214,8 +214,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupAnimations();
     _setupGestures();
 
-    widget.controller?.scrollToNowListener = (bool jump) {
-      _xAxis.scrollToNow(jump: jump);
+    widget.controller?.scrollToNowListener = (bool animate) {
+      _xAxis.scrollToNow(animate: animate);
     };
   }
 
