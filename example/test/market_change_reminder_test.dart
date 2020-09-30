@@ -19,10 +19,10 @@ void main() {
 
           return tradingTimesCompleter.future;
         },
-        onServerTime: () {
-          final serverTimeCompleter = Completer<DateTime>()
+        onCurrentTime: () {
+          final currentTimeCompleter = Completer<DateTime>()
             ..complete(DateTime(2020, 10, 10, 4, 0, 0));
-          return serverTimeCompleter.future;
+          return currentTimeCompleter.future;
         },
       );
 

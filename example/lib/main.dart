@@ -133,9 +133,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
       () async => await TradingTimes.fetchTradingTimes(
         TradingTimesRequest(tradingTimes: 'today'),
       ),
-      onServerTime: () async {
+      onCurrentTime: () async {
         final ServerTime serverTime = await ServerTime.fetchTime();
-        return serverTime.time;
+        return serverTime.time.toUtc();
       },
       onMarketsStatusChange: (Map<String, bool> statusChanges) {
         for (int i = 0; i < _activeSymbols.length; i++) {

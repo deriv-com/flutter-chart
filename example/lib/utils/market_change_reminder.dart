@@ -30,7 +30,7 @@ class MarketChangeReminder {
   /// Initializes
   MarketChangeReminder(
     this.onTradingTimes, {
-    this.onServerTime,
+    this.onCurrentTime,
     this.onMarketsStatusChange,
   }) {
     _init();
@@ -42,7 +42,7 @@ class MarketChangeReminder {
   /// Callback to get server time
   ///
   /// If not set it will be using DateTime.now().toUTC();
-  final Future<DateTime> Function() onServerTime;
+  final Future<DateTime> Function() onCurrentTime;
 
   /// Callback to get trading times of today
   final Future<TradingTimes> Function() onTradingTimes;
@@ -110,23 +110,23 @@ class MarketChangeReminder {
       return;
     }
 
-    final DateTime dateTimeOfToday = _dateFormat.parse(time);
-    final DateTime dateTime = DateTime(
+    final DateTime hourMinSec = _dateFormat.parse(time);
+    final DateTime statusChangeTime = DateTime.utc(
       now.year,
       now.month,
       now.day,
-      dateTimeOfToday.hour,
-      dateTimeOfToday.minute,
-      dateTimeOfToday.second,
+      hourMinSec.hour,
+      hourMinSec.minute,
+      hourMinSec.second,
     );
 
-    if (now.compareTo(dateTime) >= 0) {
+    if (now.isAfter(statusChangeTime)) {
       return;
     }
 
-    statusChangeTimes[dateTime] ??= <String, bool>{};
+    statusChangeTimes[statusChangeTime] ??= <String, bool>{};
 
-    statusChangeTimes[dateTime][symbol] = goesOpen;
+    statusChangeTimes[statusChangeTime][symbol] = goesOpen;
   }
 
   /// Removes the next upcoming market change time from [statusChangeTimes] and
@@ -158,7 +158,7 @@ class MarketChangeReminder {
   }
 
   Future<DateTime> _getNowTime() async =>
-      onServerTime != null ? await onServerTime() : DateTime.now().toUtc();
+      onCurrentTime != null ? await onCurrentTime() : DateTime.now().toUtc();
 
   /// Cancels current reminder timer.
   void reset() => _reminderTimer?.cancel();
