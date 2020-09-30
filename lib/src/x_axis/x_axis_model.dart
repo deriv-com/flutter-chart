@@ -23,17 +23,20 @@ class XAxisModel extends ChangeNotifier {
     _msPerPx = _defaultScale;
     _rightBoundEpoch = _maxRightBoundEpoch;
 
-    _rightEpochAnimationController = animationController
+    _scrollAnimationController = animationController
       ..addListener(() {
-        _scrollTo(_rightEpochAnimationController.value.toInt());
+        final diff =
+            _scrollAnimationController.value - (_prevScrollAnimationValue ?? 0);
+        _scrollBy(diff);
         if (hasHitLimit) {
-          _rightEpochAnimationController.stop();
+          _scrollAnimationController.stop();
         }
+        _prevScrollAnimationValue = _scrollAnimationController.value;
       });
   }
 
   List<Candle> _candles;
-  List<TimeRange> _timeGaps = [TimeRange(1601434572281, 1601434891491)];
+  List<TimeRange> _timeGaps = [TimeRange(1601430072281, 1601434891491)];
 
   // TODO(Rustem): Expose this setting
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
@@ -61,7 +64,8 @@ class XAxisModel extends ChangeNotifier {
   /// Called on scroll.
   final VoidCallback onScroll;
 
-  AnimationController _rightEpochAnimationController;
+  AnimationController _scrollAnimationController;
+  double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
   double _msPerPx = 1000;
   double _prevMsPerPx;
@@ -95,7 +99,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Chart pan is currently being animated (without user input).
   bool get animatingPan =>
-      _autoPanning || (_rightEpochAnimationController?.isAnimating ?? false);
+      _autoPanning || (_scrollAnimationController?.isAnimating ?? false);
 
   /// Current tick is visible, chart is being autoPanned.
   bool get _autoPanning =>
@@ -188,7 +192,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called at the start of scale and pan gestures.
   void onScaleAndPanStart(ScaleStartDetails details) {
-    _rightEpochAnimationController.stop();
+    _scrollAnimationController.stop();
     _prevMsPerPx = _msPerPx;
   }
 
@@ -210,7 +214,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called at the end of scale and pan gestures.
   void onScaleAndPanEnd(ScaleEndDetails details) {
-    _triggerScrollMomentum(details.velocity);
+    // _triggerScrollMomentum(details.velocity);
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
@@ -250,13 +254,15 @@ class XAxisModel extends ChangeNotifier {
 
   /// Animate scrolling to current tick.
   void scrollToNow() {
-    const duration = Duration(milliseconds: 600);
-    final target = _maxRightBoundEpoch + duration.inMilliseconds;
+    const Duration duration = Duration(milliseconds: 600);
+    final int target = _maxRightBoundEpoch + duration.inMilliseconds;
+    final double distance = pxBetween(_rightBoundEpoch, target);
 
-    _rightEpochAnimationController
-      ..value = rightBoundEpoch.toDouble()
+    _prevScrollAnimationValue = 0;
+    _scrollAnimationController
+      ..value = 0
       ..animateTo(
-        target.toDouble(),
+        distance,
         curve: Curves.easeOut,
         duration: duration,
       );
@@ -268,7 +274,9 @@ class XAxisModel extends ChangeNotifier {
       velocity: -velocity.pixelsPerSecond.dx * _msPerPx,
       friction: 0.015 * _msPerPx,
     );
-    _rightEpochAnimationController
+
+    _prevScrollAnimationValue = 0;
+    _scrollAnimationController
       ..value = rightBoundEpoch.toDouble()
       ..animateWith(simulation);
   }
