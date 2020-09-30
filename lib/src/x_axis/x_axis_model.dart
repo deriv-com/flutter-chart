@@ -27,6 +27,7 @@ class XAxisModel extends ChangeNotifier {
       ..addListener(() {
         final diff =
             _scrollAnimationController.value - (_prevScrollAnimationValue ?? 0);
+        print(diff);
         _scrollBy(diff);
         if (hasHitLimit) {
           _scrollAnimationController.stop();
@@ -214,7 +215,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called at the end of scale and pan gestures.
   void onScaleAndPanEnd(ScaleEndDetails details) {
-    // _triggerScrollMomentum(details.velocity);
+    _triggerScrollMomentum(details.velocity);
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
@@ -235,7 +236,6 @@ class XAxisModel extends ChangeNotifier {
     onScale?.call();
   }
 
-  // TODO(Rustem): Remove once everything switched to scrollBy
   void _scrollTo(int rightBoundEpoch) {
     _rightBoundEpoch = rightBoundEpoch.clamp(
       _minRightBoundEpoch,
@@ -270,14 +270,10 @@ class XAxisModel extends ChangeNotifier {
 
   void _triggerScrollMomentum(Velocity velocity) {
     final Simulation simulation = ClampingScrollSimulation(
-      position: rightBoundEpoch.toDouble(),
-      velocity: -velocity.pixelsPerSecond.dx * _msPerPx,
-      friction: 0.015 * _msPerPx,
+      position: 0,
+      velocity: -velocity.pixelsPerSecond.dx,
     );
-
     _prevScrollAnimationValue = 0;
-    _scrollAnimationController
-      ..value = rightBoundEpoch.toDouble()
-      ..animateWith(simulation);
+    _scrollAnimationController.animateWith(simulation);
   }
 }
