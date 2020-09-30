@@ -130,10 +130,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Future<void> _setupMarketChangeReminder() async {
     _marketsChangeReminder?.reset();
     _marketsChangeReminder = MarketChangeReminder(
-      await TradingTimes.fetchTradingTimes(
+      () async => await TradingTimes.fetchTradingTimes(
         TradingTimesRequest(tradingTimes: 'today'),
       ),
-      serverTime: () async {
+      onServerTime: () async {
         final ServerTime serverTime = await ServerTime.fetchTime();
         return serverTime.time;
       },
@@ -145,12 +145,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
             );
           }
         }
-    
+
         _fillMarketSelectorList();
-    
+
         if (statusChanges[_symbol.name] != null) {
           _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
-    
+
           // Request for tick stream if symbol is changing from closed to open.
           if (statusChanges[_symbol.name]) {
             _onIntervalSelected(granularity);

@@ -10,12 +10,12 @@ import 'package:intl/intl.dart';
 /// Markets status change callback. (List of symbols that have been changed.)
 typedef OnMarketsStatusChange = void Function(Map<String, bool> symbols);
 
-/// A class to to remind us when there is change on opening and closing a market.
+/// A class to to remind when there is a change on market.
 class MarketChangeReminder {
   /// Initializes
   MarketChangeReminder(
-    this.todayTradingTimes, {
-    this.serverTime,
+    this.onTradingTimes, {
+    this.onServerTime,
     this.onMarketsStatusChange,
   }) {
     _init();
@@ -24,11 +24,13 @@ class MarketChangeReminder {
   static final DateFormat _dateFormat = DateFormat('hh:mm:ss');
   static final RegExp _timeFormatReg = RegExp(r'[0-9]{2}:[0-9]{2}:[0-9]{2}');
 
-  /// Trading times
-  final TradingTimes todayTradingTimes;
-
   /// Callback to get server time
-  final Future<DateTime> Function() serverTime;
+  ///
+  /// If not set it will be using DateTime.now().toUTC();
+  final Future<DateTime> Function() onServerTime;
+
+  /// Callback to get trading times of today
+  final Future<TradingTimes> Function() onTradingTimes;
 
   // TODO(Ramin): Consider using a reliable timer if Dart's version had any problems.
   Timer _reminderTimer;
@@ -50,7 +52,9 @@ class MarketChangeReminder {
   }
 
   Future<void> _fillTheQueue() async {
-    final DateTime now = await serverTime();
+    final DateTime now = await _getNowTime();
+
+    final TradingTimes todayTradingTimes = await onTradingTimes();
 
     for (final MarketModel market in todayTradingTimes.markets) {
       for (final SubmarketModel subMarket in market.submarkets) {
@@ -116,7 +120,7 @@ class MarketChangeReminder {
     _reminderTimer?.cancel();
 
     if (statusChangeTimes.isNotEmpty) {
-      final DateTime now = await serverTime();
+      final DateTime now = await _getNowTime();
       final DateTime nextStatusChangeTime = statusChangeTimes.firstKey();
       final Map<String, bool> symbolsChanging =
           statusChangeTimes.remove(nextStatusChangeTime);
@@ -132,6 +136,9 @@ class MarketChangeReminder {
       );
     }
   }
+
+  Future<DateTime> _getNowTime() async =>
+      onServerTime != null ? await onServerTime() : DateTime.now().toUtc();
 
   /// Cancels current reminder timer.
   void reset() => _reminderTimer?.cancel();

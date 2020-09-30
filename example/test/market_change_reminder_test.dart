@@ -11,10 +11,15 @@ void main() {
   group('Trading times', () {
     test('Trading times reminder queue fills correctly', () async {
       MarketChangeReminder tradingTimesReminder = MarketChangeReminder(
-        TradingTimes.fromJson(
-          jsonDecode(tradingTimesResponse)['trading_times'],
-        ),
-        serverTime: () {
+        () async {
+          final tradingTimesCompleter = Completer<TradingTimes>()
+            ..complete(TradingTimes.fromJson(
+              jsonDecode(tradingTimesResponse)['trading_times'],
+            ));
+
+          return tradingTimesCompleter.future;
+        },
+        onServerTime: () {
           final serverTimeCompleter = Completer<DateTime>()
             ..complete(DateTime(2020, 10, 10, 4, 0, 0));
           return serverTimeCompleter.future;
