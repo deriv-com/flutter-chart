@@ -33,6 +33,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   List<Candle> _candles;
+  List<TimeRange> _timeGaps = [TimeRange(1601434572281, 1601434891491)];
 
   // TODO(Rustem): Expose this setting
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
@@ -163,8 +164,7 @@ class XAxisModel extends ChangeNotifier {
   double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(
         range: TimeRange(leftEpoch, rightEpoch),
         msPerPx: _msPerPx,
-        // TODO(Rustem): pass time gaps here
-        gaps: <TimeRange>[],
+        gaps: _timeGaps,
       );
 
   /// Resulting epoch when given epoch value is shifted by given px amount on x-axis.
@@ -175,8 +175,7 @@ class XAxisModel extends ChangeNotifier {
         epoch: epoch,
         pxShift: pxShift,
         msPerPx: _msPerPx,
-        // TODO(Rustem): pass time gaps here
-        gaps: <TimeRange>[],
+        gaps: _timeGaps,
       );
 
   /// Get x position of epoch.
