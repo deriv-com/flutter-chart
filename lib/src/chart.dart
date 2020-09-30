@@ -86,20 +86,17 @@ class Chart extends StatelessWidget {
       child: Ink(
         color: chartTheme.base08Color,
         child: GestureManager(
-          child: Opacity(
-            opacity: (isLive ?? true) ? 1 : 0.5,
-            child: XAxis(
-              entries: mainSeries.entries,
-              granularity: granularity,
-              onVisibleAreaChanged: onVisibleAreaChanged,
-              isLive: isLive,
-              child: _ChartImplementation(
-              controller: controller,
-                mainSeries: mainSeries,
-                chartDataList: <ChartData>[...secondarySeries],
-                pipSize: pipSize,
-                onCrosshairAppeared: onCrosshairAppeared,
-              ),
+          child: XAxis(
+            entries: mainSeries.entries,
+            granularity: granularity,
+            onVisibleAreaChanged: onVisibleAreaChanged,
+            isLive: isLive,
+            child: _ChartImplementation(
+            controller: controller,
+              mainSeries: mainSeries,
+              chartDataList: <ChartData>[...secondarySeries],
+              pipSize: pipSize,
+              onCrosshairAppeared: onCrosshairAppeared,
             ),
           ),
         ),
@@ -466,21 +463,24 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
-          CustomPaint(
-            size: canvasSize,
-            painter: ChartPainter(
-              animationInfo: AnimationInfo(
-                currentTickPercent: _currentTickAnimation.value,
-                blinkingPercent: _currentTickBlinkAnimation.value,
+          Opacity(
+            opacity: (_xAxis.isLive ?? true) ? 1 : 0.5,
+            child: CustomPaint(
+              size: canvasSize,
+              painter: ChartPainter(
+                animationInfo: AnimationInfo(
+                  currentTickPercent: _currentTickAnimation.value,
+                  blinkingPercent: _currentTickBlinkAnimation.value,
+                ),
+                chartDataList: <ChartData>[
+                  widget.mainSeries,
+                  if (widget.chartDataList != null) ...widget.chartDataList
+                ],
+                granularity: context.watch<XAxisModel>().granularity,
+                pipSize: widget.pipSize,
+                epochToCanvasX: _xAxis.xFromEpoch,
+                quoteToCanvasY: _quoteToCanvasY,
               ),
-              chartDataList: <ChartData>[
-                widget.mainSeries,
-                if (widget.chartDataList != null) ...widget.chartDataList
-              ],
-              granularity: context.watch<XAxisModel>().granularity,
-              pipSize: widget.pipSize,
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
           CrosshairArea(
