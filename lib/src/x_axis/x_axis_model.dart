@@ -25,10 +25,10 @@ class XAxisModel extends ChangeNotifier {
 
     _scrollAnimationController = animationController
       ..addListener(() {
-        final diff =
+        final double diff =
             _scrollAnimationController.value - (_prevScrollAnimationValue ?? 0);
-        print(diff);
         _scrollBy(diff);
+
         if (hasHitLimit) {
           _scrollAnimationController.stop();
         }
