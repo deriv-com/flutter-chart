@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:deriv_chart/src/logic/find.dart';
-import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 
 void main() {
   group('findClosestToEpoch should', () {
@@ -11,46 +11,46 @@ void main() {
         equals(null),
       );
     });
-    test('return candle with exact epoch if present', () {
-      final candle100 = Candle.tick(epoch: 100, quote: 0);
-      final candle200 = Candle.tick(epoch: 200, quote: 0);
-      final candle300 = Candle.tick(epoch: 300, quote: 0);
+    test('return tick with exact epoch if present', () {
+      final tick100 = Tick(epoch: 100, quote: 0);
+      final tick200 = Tick(epoch: 200, quote: 0);
+      final tick300 = Tick(epoch: 300, quote: 0);
 
       expect(
         findClosestToEpoch(
           100,
-          [candle100, candle200, candle300],
+          [tick100, tick200, tick300],
         ),
-        equals(candle100),
+        equals(tick100),
       );
       expect(
         findClosestToEpoch(
           200,
-          [candle100, candle200, candle300],
+          [tick100, tick200, tick300],
         ),
-        equals(candle200),
+        equals(tick200),
       );
       expect(
         findClosestToEpoch(
           300,
-          [candle100, candle200, candle300],
+          [tick100, tick200, tick300],
         ),
-        equals(candle300),
+        equals(tick300),
       );
     });
-    test('return candle with closest epoch if exact isn\'t present', () {
-      final candle100 = Candle.tick(epoch: 100, quote: 0);
-      final candle110 = Candle.tick(epoch: 110, quote: 0);
-      final candle120 = Candle.tick(epoch: 120, quote: 0);
-      final candle130 = Candle.tick(epoch: 130, quote: 0);
-      final candle140 = Candle.tick(epoch: 140, quote: 0);
+    test('return tick with closest epoch if exact isn\'t present', () {
+      final tick100 = Tick(epoch: 100, quote: 0);
+      final tick110 = Tick(epoch: 110, quote: 0);
+      final tick120 = Tick(epoch: 120, quote: 0);
+      final tick130 = Tick(epoch: 130, quote: 0);
+      final tick140 = Tick(epoch: 140, quote: 0);
 
       expect(
         findClosestToEpoch(
           101,
-          [candle100, candle110, candle120, candle130, candle140],
+          [tick100, tick110, tick120, tick130, tick140],
         ),
-        equals(candle100),
+        equals(tick100),
       );
     });
   });
