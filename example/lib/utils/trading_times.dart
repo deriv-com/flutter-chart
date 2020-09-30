@@ -133,4 +133,7 @@ class TradingTimesReminder {
       );
     }
   }
+
+  /// Cancels current reminder timer.
+  void reset() => _reminderTimer?.cancel();
 }

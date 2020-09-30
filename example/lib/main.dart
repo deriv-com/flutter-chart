@@ -64,6 +64,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   bool _waitingForHistory = false;
 
+  TradingTimesReminder _marketsChangeReminder;
+
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
   Completer _requestCompleter;
 
@@ -126,7 +128,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _setupMarketChangeReminder() async {
-    TradingTimesReminder(
+    _marketsChangeReminder?.reset();
+    _marketsChangeReminder = TradingTimesReminder(
       await TradingTimes.fetchTradingTimes(
         TradingTimesRequest(tradingTimes: 'today'),
       ),
