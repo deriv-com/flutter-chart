@@ -47,11 +47,11 @@ class MarketChangeReminder {
       SplayTreeMap<DateTime, Map<String, bool>>();
 
   Future<void> _init() async {
-    await _fillTheQueue();
+    await _fillStatusChangeMap();
     await _setReminderTimer();
   }
 
-  Future<void> _fillTheQueue() async {
+  Future<void> _fillStatusChangeMap() async {
     final DateTime now = await _getNowTime();
 
     final TradingTimes todayTradingTimes = await onTradingTimes();
@@ -119,8 +119,9 @@ class MarketChangeReminder {
   Future<void> _setReminderTimer() async {
     _reminderTimer?.cancel();
 
+    final DateTime now = await _getNowTime();
+
     if (statusChangeTimes.isNotEmpty) {
-      final DateTime now = await _getNowTime();
       final DateTime nextStatusChangeTime = statusChangeTimes.firstKey();
       final Map<String, bool> symbolsChanging =
           statusChangeTimes.remove(nextStatusChangeTime);
@@ -134,6 +135,10 @@ class MarketChangeReminder {
           _setReminderTimer();
         },
       );
+    } else {
+      // Setting a timer to reset trading times when next day start
+      final DateTime tomorrowStart = DateTime(now.year, now.month, now.day + 1);
+      _reminderTimer = Timer(tomorrowStart.difference(now), () => _init());
     }
   }
 
