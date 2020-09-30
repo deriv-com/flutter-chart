@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
-import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
@@ -11,12 +11,12 @@ class XAxisModel extends ChangeNotifier {
 
   /// Creates x-axis model for live chart.
   XAxisModel({
-    @required List<Candle> candles,
+    @required List<Tick> entries,
     @required int granularity,
     @required AnimationController animationController,
     this.onScale,
     this.onScroll,
-  }) : _candles = candles {
+  }) : _entries = entries {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
@@ -31,7 +31,7 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
-  List<Candle> _candles;
+  List<Tick> _entries;
 
   // TODO(Rustem): Expose this setting
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
@@ -68,7 +68,7 @@ class XAxisModel extends ChangeNotifier {
   int _rightBoundEpoch;
 
   int get _firstCandleEpoch =>
-      _candles.isNotEmpty ? _candles.first.epoch : _nowEpoch;
+      _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -102,8 +102,8 @@ class XAxisModel extends ChangeNotifier {
       _currentTickFarEnoughFromLeftBound;
 
   bool get _currentTickFarEnoughFromLeftBound =>
-      _candles.isEmpty ||
-      _candles.last.epoch > leftBoundEpoch + msFromPx(autoPanOffset);
+      _entries.isEmpty ||
+      _entries.last.epoch > leftBoundEpoch + msFromPx(autoPanOffset);
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -116,7 +116,7 @@ class XAxisModel extends ChangeNotifier {
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Updates chart's main data
-  void updateCandles(List<Candle> candles) => _candles = candles;
+  void updateCandles(List<Tick> candles) => _entries = candles;
 
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.

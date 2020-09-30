@@ -1,6 +1,10 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -10,17 +14,13 @@ import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
-import 'models/candle.dart';
-import 'models/chart_style.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
-import 'painters/current_tick_painter.dart';
 import 'painters/loading_painter.dart';
 import 'painters/y_grid_painter.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
-import 'theme/painting_styles/chart_paiting_style.dart';
 import 'x_axis/x_axis.dart';
 import 'x_axis/x_axis_model.dart';
 
@@ -28,24 +28,23 @@ import 'x_axis/x_axis_model.dart';
 class Chart extends StatelessWidget {
   /// Creates chart that expands to available space.
   const Chart({
-    @required this.candles,
+    @required this.mainSeries,
     @required this.pipSize,
     @required this.granularity,
+    this.secondarySeries,
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
-    this.style = ChartStyle.candles,
     Key key,
   }) : super(key: key);
 
-  /// Sorted list of all candles (including those outside bounds).
-  /// Use [Candle.tick] constructor to represent ticks.
+  /// Chart's main data series
+  final DataSeries<Tick> mainSeries;
+
+  /// List of series to add on chart beside the [mainSeries].
   ///
-  /// Super class for ticks and candles wasn't used to avoid complicating things.
-  /// If you are going to refactor it, consider these features:
-  /// - switching between chart styles
-  /// - disabling candle style for ticks
-  final List<Candle> candles;
+  /// Useful for adding on-chart indicators.
+  final List<Series> secondarySeries;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -53,9 +52,6 @@ class Chart extends StatelessWidget {
   /// For candles: Duration of one candle in ms.
   /// For ticks: Average ms difference between two consecutive ticks.
   final int granularity;
-
-  /// The chart type that is used to paint [candles].
-  final ChartStyle style;
 
   /// Called when crosshair details appear after long press.
   final VoidCallback onCrosshairAppeared;
@@ -79,14 +75,14 @@ class Chart extends StatelessWidget {
         color: chartTheme.base08Color,
         child: GestureManager(
           child: XAxis(
-            candles: candles,
+            entries: mainSeries.entries,
             granularity: granularity,
             onVisibleAreaChanged: onVisibleAreaChanged,
             child: _ChartImplementation(
-              candles: candles,
+              mainSeries: mainSeries,
+              chartDataList: <ChartData>[...secondarySeries],
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
-              style: style,
             ),
           ),
         ),
@@ -98,15 +94,16 @@ class Chart extends StatelessWidget {
 class _ChartImplementation extends StatefulWidget {
   const _ChartImplementation({
     Key key,
-    @required this.candles,
+    @required this.mainSeries,
     @required this.pipSize,
+    this.chartDataList,
     this.onCrosshairAppeared,
-    this.style = ChartStyle.candles,
   }) : super(key: key);
 
-  final List<Candle> candles;
+  final DataSeries<Tick> mainSeries;
+
+  final List<ChartData> chartDataList;
   final int pipSize;
-  final ChartStyle style;
   final VoidCallback onCrosshairAppeared;
 
   @override
@@ -115,7 +112,6 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-  ChartPaintingStyle _chartPaintingStyle;
 
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
@@ -125,10 +121,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Height of the area with time labels on the bottom.
   final double timeLabelsAreaHeight = 20;
 
-  List<Candle> visibleCandles = [];
-
   Size canvasSize;
-  Tick prevTick;
 
   /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
@@ -162,7 +155,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   bool _isCrosshairMode = false;
 
   bool get _isScrollToNowAvailable =>
-      widget.candles.isNotEmpty && !_xAxis.animatingPan && !_isCrosshairMode;
+      widget.mainSeries.entries.isNotEmpty &&
+      !_xAxis.animatingPan &&
+      !_isCrosshairMode;
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
@@ -193,15 +188,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
   GestureManagerState get _gestureManager =>
       context.read<GestureManagerState>();
 
-  ChartTheme get _theme => context.read<ChartTheme>();
-
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
   @override
   void initState() {
     super.initState();
 
-    _setChartPaintingStyle();
     _setupAnimations();
     _setupGestures();
   }
@@ -210,29 +202,47 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void didUpdateWidget(_ChartImplementation oldChart) {
     super.didUpdateWidget(oldChart);
 
-    if (oldChart == null || widget.style != oldChart.style) {
-      _setChartPaintingStyle();
-    }
+    _didUpdateChartData(oldChart);
 
-    if (widget.candles.isEmpty || oldChart.candles == widget.candles) return;
-
-    if (oldChart.candles.isNotEmpty) {
-      prevTick = _candleToTick(oldChart.candles.last);
-      _onNewTick();
-    }
+    _onNewTick();
 
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
   }
 
+  void _didUpdateChartData(_ChartImplementation oldChart) {
+    if (widget.mainSeries.id == oldChart.mainSeries.id) {
+      widget.mainSeries.didUpdate(oldChart.mainSeries);
+    }
+
+    if (widget.chartDataList != null) {
+      for (final ChartData data in widget.chartDataList) {
+        final ChartData oldData = oldChart.chartDataList.firstWhere(
+          (ChartData d) => d.id == data.id,
+          orElse: () => null,
+        );
+
+        if (oldData != null) {
+          data.didUpdate(oldData);
+        }
+      }
+    }
+  }
+
+  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
   void _recalculateQuoteLabelsAreaWidth() {
-    final label = widget.candles.first.close.toStringAsFixed(widget.pipSize);
+    if (widget.mainSeries.entries.isEmpty) {
+      return;
+    }
+
+    final label =
+        widget.mainSeries.entries.first.quote.toStringAsFixed(widget.pipSize);
     // TODO(Rustem): Get label style from _theme
     quoteLabelsAreaWidth =
         _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
   }
 
-  // TODO(Rustem): Extract this helper function
+  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
   double _getRenderedTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
       style: style,
@@ -244,11 +254,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     )..layout();
     return textPainter.width;
   }
-
-  void _setChartPaintingStyle() =>
-      _chartPaintingStyle = widget.style == ChartStyle.candles
-          ? _theme.candleStyle
-          : _theme.lineStyle;
 
   @override
   void dispose() {
@@ -336,53 +341,53 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
   }
 
-  void _updateVisibleCandles() {
-    final candles = widget.candles;
+  void _updateChartData() {
+    widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
 
-    var start =
-        candles.indexWhere((candle) => _xAxis.leftBoundEpoch < candle.epoch);
-    var end = candles
-        .lastIndexWhere((candle) => candle.epoch < _xAxis.rightBoundEpoch);
-
-    if (start == -1 || end == -1) {
-      visibleCandles = [];
-      return;
+    if (widget.chartDataList != null) {
+      for (final ChartData data in widget.chartDataList) {
+        data.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
+      }
     }
-
-    // Include nearby points outside the viewport, so the line extends beyond the side edges.
-    if (start > 0) start -= 1;
-    if (end < candles.length - 1) end += 1;
-
-    visibleCandles = candles.sublist(start, end + 1);
   }
 
   void _updateQuoteBoundTargets() {
-    if (visibleCandles.isEmpty) return;
+    double minQuote = widget.mainSeries.minValue;
+    double maxQuote = widget.mainSeries.maxValue;
 
-    final minQuote = visibleCandles.map((candle) => candle.low).reduce(min);
-    final maxQuote = visibleCandles.map((candle) => candle.high).reduce(max);
+    if (widget.chartDataList != null) {
+      final Iterable<ChartData> dataInAction = widget.chartDataList.where(
+        (ChartData chartData) =>
+            !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
+      );
 
-    if (minQuote != bottomBoundQuoteTarget) {
+      if (dataInAction.isNotEmpty) {
+        final double chartDataMin = dataInAction
+            .map((ChartData chartData) => chartData.minValue)
+            .reduce(min);
+        final double chartDataMax = dataInAction
+            .map((ChartData chartData) => chartData.maxValue)
+            .reduce(max);
+
+        minQuote = min(widget.mainSeries.minValue, chartDataMin);
+        maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
+      }
+    }
+
+    if (!minQuote.isNaN && minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
       _bottomBoundQuoteAnimationController.animateTo(
         bottomBoundQuoteTarget,
         curve: Curves.easeOut,
       );
     }
-    if (maxQuote != topBoundQuoteTarget) {
+    if (!maxQuote.isNaN && maxQuote != topBoundQuoteTarget) {
       topBoundQuoteTarget = maxQuote;
       _topBoundQuoteAnimationController.animateTo(
         topBoundQuoteTarget,
         curve: Curves.easeOut,
       );
     }
-  }
-
-  Tick _candleToTick(Candle candle) {
-    return Tick(
-      epoch: candle.epoch,
-      quote: candle.close,
-    );
   }
 
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
@@ -403,7 +408,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         constraints.maxHeight,
       );
 
-      _updateVisibleCandles();
+      _updateChartData();
       _updateQuoteBoundTargets();
 
       return Stack(
@@ -422,9 +427,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
             size: canvasSize,
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: visibleCandles?.isEmpty ?? false
+              loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
                   ? _xAxis.width
-                  : _xAxis.xFromEpoch(visibleCandles.first.epoch),
+                  : _xAxis.xFromEpoch(
+                      widget.mainSeries.visibleEntries.first.epoch,
+                    ),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
@@ -432,29 +439,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: ChartPainter(
-              candles: _getChartCandles(),
-              style: _chartPaintingStyle,
+              animationInfo: AnimationInfo(
+                currentTickPercent: _currentTickAnimation.value,
+                blinkingPercent: _currentTickBlinkAnimation.value,
+              ),
+              chartDataList: <ChartData>[
+                widget.mainSeries,
+                if (widget.chartDataList != null) ...widget.chartDataList
+              ],
               granularity: context.watch<XAxisModel>().granularity,
               pipSize: widget.pipSize,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
-          CustomPaint(
-            size: canvasSize,
-            painter: CurrentTickPainter(
-              animatedCurrentTick: _getAnimatedCurrentTick(),
-              blinkAnimationProgress: _currentTickBlinkAnimation.value,
-              pipSize: widget.pipSize,
-              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().currentTickStyle,
-            ),
-          ),
           CrosshairArea(
-            visibleCandles: visibleCandles,
-            style: _chartPaintingStyle,
+            mainSeries: widget.mainSeries,
             pipSize: widget.pipSize,
             quoteToCanvasY: _quoteToCanvasY,
             // TODO(Rustem): remove callbacks when axis models are provided
@@ -490,43 +490,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  List<Candle> _getChartCandles() {
-    if (visibleCandles.isEmpty) return [];
-
-    final currentTickVisible = visibleCandles.last == widget.candles.last;
-    final animatedCurrentTick = _getAnimatedCurrentTick();
-
-    if (currentTickVisible && animatedCurrentTick != null) {
-      final excludeLast =
-          visibleCandles.take(visibleCandles.length - 1).toList();
-      final animatedLast = visibleCandles.last.copyWith(
-        epoch: animatedCurrentTick.epoch,
-        close: animatedCurrentTick.quote,
-      );
-      return excludeLast + [animatedLast];
-    } else {
-      return visibleCandles;
-    }
-  }
-
-  Tick _getAnimatedCurrentTick() {
-    if (widget.candles.isEmpty) return null;
-
-    final currentTick = _candleToTick(widget.candles.last);
-
-    if (prevTick == null) return currentTick;
-
-    final epochDiff = currentTick.epoch - prevTick.epoch;
-    final quoteDiff = currentTick.quote - prevTick.quote;
-
-    final animatedEpochDiff = (epochDiff * _currentTickAnimation.value).toInt();
-    final animatedQuoteDiff = quoteDiff * _currentTickAnimation.value;
-
-    return Tick(
-      epoch: prevTick.epoch + animatedEpochDiff,
-      quote: prevTick.quote + animatedQuoteDiff,
-    );
-  }
 
   void _onPanStart(ScaleStartDetails details) {
     _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
