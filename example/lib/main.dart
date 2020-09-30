@@ -95,7 +95,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _connectionBloc = ConnectionBloc(ConnectionInformation(
       appId: '1089',
       brand: 'binary',
-      endpoint: 'frontend.binaryws.com',
+      endpoint: 'blue.binaryws.com',
     ))
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
