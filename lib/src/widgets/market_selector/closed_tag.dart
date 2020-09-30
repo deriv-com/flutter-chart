@@ -11,16 +11,16 @@ class ClosedTag extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChartTheme theme = Provider.of<ChartTheme>(context);
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
-        border: Border.all(color: theme.brandCoralColor, width: 0.5),
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        border: Border.all(color: theme.accentRedColor, width: 0.8),
       ),
       child: Text(
-        'Closed',
+        'CLOSED',
         style: theme.textStyle(
           textStyle: theme.caption2,
-          color: theme.base03Color,
+          color: theme.accentRedColor,
         ),
       ),
     );
