@@ -11,9 +11,9 @@ import 'package:intl/intl.dart';
 typedef OnMarketsStatusChange = void Function(Map<String, bool> symbols);
 
 /// A class to to remind us when there is change on opening and closing a market.
-class TradingTimesReminder {
+class MarketChangeReminder {
   /// Initializes
-  TradingTimesReminder(
+  MarketChangeReminder(
     this.todayTradingTimes, {
     this.serverTime,
     this.onMarketsStatusChange,
@@ -42,10 +42,9 @@ class TradingTimesReminder {
   /// [SplayTreeMap] has been used to have the change times in correct order
   /// while we are adding new entries to it.
   final SplayTreeMap<DateTime, Map<String, bool>> statusChangeTimes =
-      SplayTreeMap<DateTime, Map<String, bool>>(
-          (DateTime d1, DateTime d2) => d1.compareTo(d2));
+      SplayTreeMap<DateTime, Map<String, bool>>();
 
-  void _init() async {
+  Future<void> _init() async {
     await _fillTheQueue();
     await _setReminderTimer();
   }

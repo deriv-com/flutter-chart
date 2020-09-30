@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer' as dev;
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:example/utils/trading_times.dart';
+import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
@@ -64,7 +64,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   bool _waitingForHistory = false;
 
-  TradingTimesReminder _marketsChangeReminder;
+  MarketChangeReminder _marketsChangeReminder;
 
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
   Completer _requestCompleter;
@@ -129,7 +129,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<void> _setupMarketChangeReminder() async {
     _marketsChangeReminder?.reset();
-    _marketsChangeReminder = TradingTimesReminder(
+    _marketsChangeReminder = MarketChangeReminder(
       await TradingTimes.fetchTradingTimes(
         TradingTimesRequest(tradingTimes: 'today'),
       ),

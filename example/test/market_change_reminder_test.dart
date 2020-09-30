@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:example/utils/trading_times.dart';
+import 'package:example/utils/market_change_reminder.dart';
 import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -10,7 +10,7 @@ import 'trading_times_mock_data.dart';
 void main() {
   group('Trading times', () {
     test('Trading times reminder queue fills correctly', () async {
-      TradingTimesReminder tradingTimesReminder = TradingTimesReminder(
+      MarketChangeReminder tradingTimesReminder = MarketChangeReminder(
         TradingTimes.fromJson(
           jsonDecode(tradingTimesResponse)['trading_times'],
         ),
