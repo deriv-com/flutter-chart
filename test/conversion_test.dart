@@ -304,38 +304,4 @@ void main() {
       );
     });
   });
-
-  group('canvasXToEpoch should return', () {
-    test('[rightBoundEpoch] when [x == canvasWidth]', () {
-      expect(
-        canvasXToEpoch(
-          x: 784,
-          rightBoundEpoch: 1234,
-          canvasWidth: 784,
-          msPerPx: 0.33,
-        ),
-        equals(1234),
-      );
-    });
-    test('closest epoch when result is a fraction', () {
-      expect(
-        canvasXToEpoch(
-          x: 99.6,
-          rightBoundEpoch: 100,
-          canvasWidth: 100,
-          msPerPx: 1,
-        ),
-        equals(100),
-      );
-      expect(
-        canvasXToEpoch(
-          x: 52.3,
-          rightBoundEpoch: 100,
-          canvasWidth: 100,
-          msPerPx: 1,
-        ),
-        equals(52),
-      );
-    });
-  });
 }

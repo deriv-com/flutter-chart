@@ -76,12 +76,3 @@ double quoteToCanvasY({
 
   return topPadding + pxFromTopBound;
 }
-
-int canvasXToEpoch({
-  @required double x,
-  @required int rightBoundEpoch,
-  @required double canvasWidth,
-  @required double msPerPx,
-}) {
-  return rightBoundEpoch - pxToMs(canvasWidth - x, msPerPx: msPerPx);
-}
