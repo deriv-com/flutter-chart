@@ -86,17 +86,20 @@ class Chart extends StatelessWidget {
       child: Ink(
         color: chartTheme.base08Color,
         child: GestureManager(
-          child: XAxis(
-            entries: mainSeries.entries,
-            granularity: granularity,
-            onVisibleAreaChanged: onVisibleAreaChanged,
-            isLive: isLive,
-            child: _ChartImplementation(
-            controller: controller,
-              mainSeries: mainSeries,
-              chartDataList: <ChartData>[...secondarySeries],
-              pipSize: pipSize,
-              onCrosshairAppeared: onCrosshairAppeared,
+          child: Opacity(
+            opacity: (isLive ?? true) ? 1 : 0.5,
+            child: XAxis(
+              entries: mainSeries.entries,
+              granularity: granularity,
+              onVisibleAreaChanged: onVisibleAreaChanged,
+              isLive: isLive,
+              child: _ChartImplementation(
+              controller: controller,
+                mainSeries: mainSeries,
+                chartDataList: <ChartData>[...secondarySeries],
+                pipSize: pipSize,
+                onCrosshairAppeared: onCrosshairAppeared,
+              ),
             ),
           ),
         ),
