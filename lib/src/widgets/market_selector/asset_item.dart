@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/util/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +57,7 @@ class AssetItem extends StatelessWidget {
   }
 
   Widget _buildAssetIcon() => SvgPicture.asset(
-        'assets/icons/symbols/${asset.name}.svg',
+        getSVGPathForAsset(asset.name),
         width: 24,
         height: 24,
         placeholderBuilder: (BuildContext context) => AssetIconPlaceholder(),

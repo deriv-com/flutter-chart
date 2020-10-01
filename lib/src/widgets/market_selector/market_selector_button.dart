@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/util/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -29,7 +30,7 @@ class MarketSelectorButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SvgPicture.asset(
-            'assets/icons/symbols/${asset.name}.svg',
+            getSVGPathForAsset(asset.name),
             width: 32,
             height: 32,
             placeholderBuilder: (BuildContext context) =>

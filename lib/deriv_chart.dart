@@ -14,3 +14,4 @@ export './src/theme/painting_styles/line_style.dart';
 export './src/widgets/market_selector/market_selector.dart';
 export './src/widgets/market_selector/market_selector_button.dart';
 export './src/widgets/market_selector/models.dart';
+export './src/util/helpers.dart';
