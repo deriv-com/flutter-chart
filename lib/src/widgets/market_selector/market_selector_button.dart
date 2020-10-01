@@ -1,9 +1,8 @@
-import 'package:deriv_chart/src/util/helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'asset_icon_placeholder.dart';
 import 'models.dart';
+import 'symbol_svg_picture.dart';
 
 /// A Button to open the market selector. The selected [Asset] should be passed as [asset]
 class MarketSelectorButton extends StatelessWidget {
@@ -29,13 +28,12 @@ class MarketSelectorButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SvgPicture.asset(
-            getSVGPathForAsset(asset.name),
+          SymbolSvgPicture(
+            symbolCode: asset.name,
             width: 32,
             height: 32,
             placeholderBuilder: (BuildContext context) =>
                 AssetIconPlaceholder(),
-            package: 'deriv_chart',
           ),
           SizedBox(width: 16),
           Text(asset.displayName, style: textStyle),

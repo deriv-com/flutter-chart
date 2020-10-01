@@ -1,13 +1,12 @@
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/util/helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'asset_icon_placeholder.dart';
 import 'highlighted_text.dart';
 import 'market_selector.dart';
 import 'models.dart';
+import 'symbol_svg_picture.dart';
 
 /// A widget to show an asset (active symbol) item in the market selector.
 class AssetItem extends StatelessWidget {
@@ -56,11 +55,10 @@ class AssetItem extends StatelessWidget {
     );
   }
 
-  Widget _buildAssetIcon() => SvgPicture.asset(
-        getSVGPathForAsset(asset.name),
+  Widget _buildAssetIcon() => SymbolSvgPicture(
+        symbolCode: asset.name,
         width: 24,
         height: 24,
         placeholderBuilder: (BuildContext context) => AssetIconPlaceholder(),
-        package: 'deriv_chart',
       );
 }
