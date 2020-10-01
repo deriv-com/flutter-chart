@@ -24,7 +24,7 @@ class MarketSelectorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
