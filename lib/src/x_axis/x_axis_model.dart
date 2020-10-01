@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
+import 'package:deriv_chart/src/logic/find_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,13 @@ class XAxisModel extends ChangeNotifier {
     @required AnimationController animationController,
     this.onScale,
     this.onScroll,
-  }) : _entries = entries {
+  }) {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     _rightBoundEpoch = _maxRightBoundEpoch;
+
+    updateEntries(entries);
 
     _scrollAnimationController = animationController
       ..addListener(() {
@@ -123,7 +126,17 @@ class XAxisModel extends ChangeNotifier {
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Updates chart's main data
-  void updateEntries(List<Tick> entries) => _entries = entries;
+  void updateEntries(List<Tick> entries) {
+    // Scenarios:
+    // 1. New tick
+    // 2. More historical data -> append new gaps
+    // 3. New market or first load -> recalc gaps
+
+    // identify change [_entries] -> [entries]
+    // update time gaps
+    _entries = entries;
+    _timeGaps = findGaps(entries, granularity);
+  }
 
   /// Resets scale and pan on granularity change.
   void updateGranularity(int newGranularity) {
