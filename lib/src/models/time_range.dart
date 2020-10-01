@@ -19,4 +19,7 @@ class TimeRange {
   bool isBefore(int epoch) => rightEpoch < epoch;
 
   bool isAfter(int epoch) => epoch < leftEpoch;
+
+  @override
+  String toString() => 'TimeRange($leftEpoch, $rightEpoch)';
 }
