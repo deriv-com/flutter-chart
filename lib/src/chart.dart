@@ -112,7 +112,6 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
 
@@ -489,7 +488,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       bottomPadding: _bottomPadding,
     );
   }
-
 
   void _onPanStart(ScaleStartDetails details) {
     _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
