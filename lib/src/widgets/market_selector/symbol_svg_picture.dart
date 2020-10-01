@@ -6,7 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 String getSVGPathForAsset(String assetCode) =>
     'assets/icons/symbols/$assetCode.svg';
 
-/// SvgPicture for [MarketSelector] symbols to be usable for Chart package users.
+/// Just a wrapper widget around [SvgPicture.asset()] for [MarketSelector] symbols,
+/// to be usable on the Apps using this chart package.
 class SymbolSvgPicture extends StatelessWidget {
   /// Initializes
   const SymbolSvgPicture({
