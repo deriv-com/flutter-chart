@@ -82,7 +82,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
     _model
-      ..updateCandles(widget.entries)
+      ..updateEntries(widget.entries)
       ..updateGranularity(widget.granularity);
   }
 
