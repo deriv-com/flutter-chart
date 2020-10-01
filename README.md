@@ -41,46 +41,58 @@ final candle2 = Candle(
 );
 
 Chart(
-  candles: [candle1, candle2],
+  mainSeries: CandleSeries([candle1, candle2]),
   pipSize: 4, // digits after decimal point
-  style: ChartStyle.candles,
   granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
   // TODO: add isLive
 );
 ```
 
-Supply different `ChartStyle` to switch between chart types (candle / line).
+Supply different `Series` for `mainSeries` parameter to switch between chart types (candle / line).
 
 ```dart
 Chart(
-  candles: [candle1, candle2],
+  mainSeries: LineSeries([candle1, candle2]),
   pipSize: 4,
-  style: ChartStyle.line,
 );
 ```
 
-Chart will call `onLoadHistory` callback when user scrolls back and gap with no data is scrolled into view. (Gap will be filled with loading animation.)
-Chart will pass `count`, which is a number of candles that should be appended to front of the `candles` list.
+To add more series with same y-scale supply them as an array to `secondarySeries` parameter.
 
 ```dart
 Chart(
-  candles: candles,
+  mainSeries: LineSeries([candle1, candle2]),
+  secondarySeries: [
+    MASeries(candles),
+  ],
   pipSize: 4,
-  onLoadHistory: (int count) {
-    // append [count] candles to the front of [data]
+);
+```
+
+Use `onVisibleAreaChanged` for listening to chart's scrolling and zooming.
+`leftEpoch` is the timestamp of the chart's left edge.
+`rightEpoch` is the timestamp of the chart's right edge.
+Check out the example where loading of more data on scrolling is implemented.
+
+```dart
+Chart(
+  mainSeries: LineSeries(candles),
+  pipSize: 4,
+  onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+    // do something (e.g. load more data)
   },
 );
 ```
 
-Use `onCrosshairAppeared` for listening to chart's crosshair.
+Use `onCrosshairAppeared` for listening to chart's cross-hair.
 
 ```dart
 Chart(
-  candles: candles,
+  mainSeries: LineSeries(candles),
   pipSize: 4,
   onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
 );
 ```
 
-Chart has its own default dart and light themes, that switch depending on `Theme.of(context).brightness` value.
+Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
 You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.

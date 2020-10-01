@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
-import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
@@ -11,25 +11,27 @@ class XAxisModel extends ChangeNotifier {
 
   /// Creates x-axis model for live chart.
   XAxisModel({
-    @required List<Candle> candles,
+    @required List<Tick> entries,
     @required int granularity,
     @required AnimationController animationController,
-  }) : _candles = candles {
+    this.onScale,
+    this.onScroll,
+  }) : _entries = entries {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
-    rightBoundEpoch = _maxRightBoundEpoch;
+    _rightBoundEpoch = _maxRightBoundEpoch;
 
     _rightEpochAnimationController = animationController
       ..addListener(() {
-        rightBoundEpoch = _rightEpochAnimationController.value.toInt();
+        _scrollTo(_rightEpochAnimationController.value.toInt());
         if (hasHitLimit) {
           _rightEpochAnimationController.stop();
         }
       });
   }
 
-  List<Candle> _candles;
+  List<Tick> _entries;
 
   // TODO(Rustem): Expose this setting
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
@@ -51,6 +53,12 @@ class XAxisModel extends ChangeNotifier {
   /// Canvas width.
   double width;
 
+  /// Called on scale.
+  final VoidCallback onScale;
+
+  /// Called on scroll.
+  final VoidCallback onScroll;
+
   AnimationController _rightEpochAnimationController;
   bool _autoPanEnabled = true;
   double _msPerPx = 1000;
@@ -60,7 +68,7 @@ class XAxisModel extends ChangeNotifier {
   int _rightBoundEpoch;
 
   int get _firstCandleEpoch =>
-      _candles.isNotEmpty ? _candles.first.epoch : _nowEpoch;
+      _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -70,13 +78,6 @@ class XAxisModel extends ChangeNotifier {
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
-
-  set rightBoundEpoch(int rightBoundEpoch) {
-    _rightBoundEpoch = rightBoundEpoch.clamp(
-      _minRightBoundEpoch,
-      _maxRightBoundEpoch,
-    );
-  }
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
@@ -101,8 +102,8 @@ class XAxisModel extends ChangeNotifier {
       _currentTickFarEnoughFromLeftBound;
 
   bool get _currentTickFarEnoughFromLeftBound =>
-      _candles.isEmpty ||
-      _candles.last.epoch > leftBoundEpoch + msFromPx(autoPanOffset);
+      _entries.isEmpty ||
+      _entries.last.epoch > leftBoundEpoch + msFromPx(autoPanOffset);
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -115,7 +116,7 @@ class XAxisModel extends ChangeNotifier {
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Updates chart's main data
-  void updateCandles(List<Candle> candles) => _candles = candles;
+  void updateCandles(List<Tick> candles) => _entries = candles;
 
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
@@ -124,7 +125,7 @@ class XAxisModel extends ChangeNotifier {
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
-      rightBoundEpoch += elapsedMs;
+      _scrollTo(_rightBoundEpoch + elapsedMs);
     }
     notifyListeners();
   }
@@ -134,7 +135,7 @@ class XAxisModel extends ChangeNotifier {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
     _msPerPx = _defaultScale;
-    rightBoundEpoch = _maxRightBoundEpoch;
+    _scrollTo(_maxRightBoundEpoch);
   }
 
   /// Enables autopanning when current tick is visible.
@@ -190,7 +191,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    rightBoundEpoch -= msFromPx(details.delta.dx);
+    _scrollTo(_rightBoundEpoch - msFromPx(details.delta.dx));
     notifyListeners();
   }
 
@@ -202,18 +203,27 @@ class XAxisModel extends ChangeNotifier {
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound = pxFromMs(rightBoundEpoch - _nowEpoch);
     _scale(details.scale);
-    rightBoundEpoch = _nowEpoch + msFromPx(nowToRightBound);
+    _scrollTo(_nowEpoch + msFromPx(nowToRightBound));
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = width - details.focalPoint.dx;
     final focalEpoch = rightBoundEpoch - msFromPx(focalToRightBound);
     _scale(details.scale);
-    rightBoundEpoch = focalEpoch + msFromPx(focalToRightBound);
+    _scrollTo(focalEpoch + msFromPx(focalToRightBound));
   }
 
   void _scale(double scale) {
     _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
+    onScale?.call();
+  }
+
+  void _scrollTo(int rightBoundEpoch) {
+    _rightBoundEpoch = rightBoundEpoch.clamp(
+      _minRightBoundEpoch,
+      _maxRightBoundEpoch,
+    );
+    onScroll?.call();
   }
 
   /// Animate scrolling to current tick.

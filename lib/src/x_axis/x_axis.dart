@@ -1,8 +1,9 @@
-import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
+import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
 import '../theme/chart_theme.dart';
 import 'grid/calc_time_grid.dart';
@@ -16,9 +17,10 @@ import 'x_axis_model.dart';
 class XAxis extends StatefulWidget {
   /// Creates x-axis the size of child.
   const XAxis({
-    @required this.candles,
+    @required this.entries,
     @required this.child,
     @required this.granularity,
+    this.onVisibleAreaChanged,
     Key key,
   })  : assert(child != null),
         super(key: key);
@@ -27,10 +29,13 @@ class XAxis extends StatefulWidget {
   final Widget child;
 
   /// A reference to chart's main candles.
-  final List<Candle> candles;
+  final List<Tick> entries;
 
   /// Millisecond difference between two consecutive candles.
   final int granularity;
+
+  /// Callback provided by library user.
+  final VisibleAreaChangedCallback onVisibleAreaChanged;
 
   @override
   _XAxisState createState() => _XAxisState();
@@ -50,9 +55,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
     _model = XAxisModel(
-      candles: widget.candles,
+      entries: widget.entries,
       granularity: widget.granularity,
       animationController: _rightEpochAnimationController,
+      onScale: _onVisibleAreaChanged,
+      onScroll: _onVisibleAreaChanged,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -64,11 +71,18 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       ..registerCallback(_model.onScaleAndPanEnd);
   }
 
+  void _onVisibleAreaChanged() {
+    widget.onVisibleAreaChanged?.call(
+      _model.leftBoundEpoch,
+      _model.rightBoundEpoch,
+    );
+  }
+
   @override
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
     _model
-      ..updateCandles(widget.candles)
+      ..updateCandles(widget.entries)
       ..updateGranularity(widget.granularity);
   }
 
