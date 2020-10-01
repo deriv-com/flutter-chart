@@ -125,6 +125,14 @@ class XAxisModel extends ChangeNotifier {
   /// Updates chart's main data
   void updateEntries(List<Tick> entries) => _entries = entries;
 
+  /// Resets scale and pan on granularity change.
+  void updateGranularity(int newGranularity) {
+    if (newGranularity == null || _granularity == newGranularity) return;
+    _granularity = newGranularity;
+    _msPerPx = _defaultScale;
+    _scrollTo(_maxRightBoundEpoch);
+  }
+
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
   void onNewFrame(Duration _) {
@@ -135,14 +143,6 @@ class XAxisModel extends ChangeNotifier {
       _scrollTo(_rightBoundEpoch + elapsedMs);
     }
     notifyListeners();
-  }
-
-  /// Resets scale and pan on granularity change.
-  void updateGranularity(int newGranularity) {
-    if (newGranularity == null || _granularity == newGranularity) return;
-    _granularity = newGranularity;
-    _msPerPx = _defaultScale;
-    _scrollTo(_maxRightBoundEpoch);
   }
 
   /// Enables autopanning when current tick is visible.
