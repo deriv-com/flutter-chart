@@ -125,17 +125,19 @@ class XAxisModel extends ChangeNotifier {
 
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
-  /// Updates chart's main data
+  /// Update scrolling bounds and time gaps based on main chart's entries.
   void updateEntries(List<Tick> entries) {
     // Scenarios:
     // 1. New tick
     // 2. More historical data -> append new gaps
     // 3. New market or first load -> recalc gaps
 
-    // identify change [_entries] -> [entries]
-    // update time gaps
-    _entries = entries;
-    _timeGaps = findGaps(entries, granularity);
+    if (_entries == null || entries.first != _entries.first) {
+      _timeGaps = findGaps(entries, granularity);
+      print('new gaps ${_timeGaps.length}');
+    }
+
+    _entries = entries.sublist(0);
   }
 
   /// Resets scale and pan on granularity change.
