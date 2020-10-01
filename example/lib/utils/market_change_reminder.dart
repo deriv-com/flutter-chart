@@ -118,7 +118,7 @@ class MarketChangeReminder {
       hourMinSec.hour,
       hourMinSec.minute,
       hourMinSec.second,
-    );
+    ).add(const Duration(seconds: 5));
 
     if (now.isAfter(statusChangeTime)) {
       return;
