@@ -146,6 +146,20 @@ void main() {
         equals(135),
       );
     });
+    test('handle 1 before and one overlapping gap', () {
+      expect(
+        shiftEpochByPx(
+          epoch: 1601248601086,
+          pxShift: 2.181818181818187,
+          msPerPx: 900000,
+          gaps: [
+            TimeRange(1600462800000, 1600646400000),
+            TimeRange(1601067600000, 1601251200000),
+          ],
+        ),
+        equals(1601253163636),
+      );
+    });
   });
 
   group('timeRangePxWidth should return', () {

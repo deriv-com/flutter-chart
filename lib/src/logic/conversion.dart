@@ -26,8 +26,6 @@ int shiftEpochByPx({
       } else if (gap.isAfter(shiftedEpoch) &&
           gap.leftEpoch - shiftedEpoch <= pxShift * msPerPx) {
         shiftedEpoch += gap.msWidth;
-      } else {
-        break;
       }
     }
   } else {
@@ -37,8 +35,6 @@ int shiftEpochByPx({
       } else if (gap.isBefore(shiftedEpoch) &&
           shiftedEpoch - gap.rightEpoch <= pxShift.abs() * msPerPx) {
         shiftedEpoch -= gap.msWidth;
-      } else {
-        break;
       }
     }
   }
