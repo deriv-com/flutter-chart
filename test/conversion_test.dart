@@ -7,13 +7,27 @@ void main() {
   group('shiftEpochByPx should', () {
     test('return the same epoch when px shift is 0', () {
       expect(
-          shiftEpochByPx(
-            epoch: 123456,
-            pxShift: 0,
-            msPerPx: 1,
-            gaps: [],
-          ),
-          equals(123456));
+        shiftEpochByPx(
+          epoch: 123456,
+          pxShift: 0,
+          msPerPx: 1,
+          gaps: [],
+        ),
+        equals(123456),
+      );
+      expect(
+        shiftEpochByPx(
+          epoch: 1601140057031,
+          pxShift: 0,
+          msPerPx: 161472.32783279638,
+          gaps: [
+            TimeRange(1599858000000, 1600041600000),
+            TimeRange(1600462800000, 1600646400000),
+            TimeRange(1601067600000, 1601251200000)
+          ],
+        ),
+        equals(1601140057031),
+      );
     });
     test('return future epoch when px shift is positive and no gaps overlap',
         () {
