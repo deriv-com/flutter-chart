@@ -132,11 +132,20 @@ class XAxisModel extends ChangeNotifier {
     // 2. More historical data -> append new gaps
     // 3. New market or first load -> recalc gaps
 
-    if (_entries == null || entries.first != _entries.first) {
+    final List<Tick> prevEntries = _entries;
+    final bool firstLoad = prevEntries == null;
+    final bool historyLoad = !firstLoad &&
+        entries.isNotEmpty &&
+        prevEntries.isNotEmpty &&
+        entries.first != prevEntries.first &&
+        entries.last == prevEntries.last;
+
+    if (firstLoad || historyLoad) {
       _timeGaps = findGaps(entries, granularity);
       print('new gaps ${_timeGaps.length}');
     }
 
+    // Sublist, so that [_entries] references the old list when [entries] is modified in place.
     _entries = entries.sublist(0);
   }
 
