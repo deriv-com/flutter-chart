@@ -16,7 +16,10 @@ int shiftEpochByPx({
   @required List<TimeRange> gaps,
 }) {
   int shiftedEpoch = epoch;
-  if (pxShift > 0) {
+
+  if (pxShift == 0) {
+    return epoch;
+  } else if (pxShift > 0) {
     for (final gap in gaps) {
       if (gap.contains(shiftedEpoch)) {
         shiftedEpoch = gap.rightEpoch;
