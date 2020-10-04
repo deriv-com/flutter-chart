@@ -12,7 +12,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends ChartData {
   T annotationObject;
 
   @protected
-  T preChartObject;
+  T previousObject;
 
   @protected
   bool isOnRange = false;
@@ -21,7 +21,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends ChartData {
   void didUpdate(ChartData oldData) {
     final ChartAnnotation oldAnnotation = oldData;
 
-    preChartObject = oldAnnotation.annotationObject;
+    previousObject = oldAnnotation.annotationObject;
   }
 
   @override

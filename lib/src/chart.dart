@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
@@ -35,6 +36,7 @@ class Chart extends StatelessWidget {
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
+    this.annotations,
     Key key,
   }) : super(key: key);
 
@@ -62,6 +64,8 @@ class Chart extends StatelessWidget {
   /// Chart's theme.
   final ChartTheme theme;
 
+  final List<ChartAnnotation> annotations;
+
   @override
   Widget build(BuildContext context) {
     final ChartTheme chartTheme =
@@ -80,7 +84,7 @@ class Chart extends StatelessWidget {
             onVisibleAreaChanged: onVisibleAreaChanged,
             child: _ChartImplementation(
               mainSeries: mainSeries,
-              chartDataList: <ChartData>[...secondarySeries],
+              chartDataList: <ChartData>[...secondarySeries, ...annotations],
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
             ),
@@ -112,7 +116,6 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
 
@@ -489,7 +492,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       bottomPadding: _bottomPadding,
     );
   }
-
 
   void _onPanStart(ScaleStartDetails details) {
     _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);

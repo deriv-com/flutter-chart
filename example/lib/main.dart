@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
+import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/widgets/connection_status_label.dart';
@@ -286,6 +287,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           hasArea: false,
                         ),
                       ),
+                    ],
+                    annotations: [
+                      if (ticks.isNotEmpty)
+                        Barrier(ticks.last.quote + Random().nextInt(3), id: 'Take profit'),
                     ],
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
