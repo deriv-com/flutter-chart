@@ -7,15 +7,12 @@ import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
-abstract class Series implements ChartData {
+abstract class Series extends ChartData {
   /// Initializes
-  Series(this.id, {this.style}) {
+  Series(String id, {this.style}) : super(id){
     seriesPainter = createPainter();
     this.id ??= '$runtimeType${style.runtimeType}${seriesPainter.runtimeType}';
   }
-
-  @override
-  String id;
 
   /// Responsible for painting a frame of this series on the canvas.
   @protected
@@ -23,22 +20,6 @@ abstract class Series implements ChartData {
 
   /// The painting style of this [Series]
   final ChartPaintingStyle style;
-
-  /// Minimum value of this series in a visible range of the chart
-  @protected
-  double minValueInFrame;
-
-  /// Maximum value of this series in a visible range of the chart
-  @protected
-  double maxValueInFrame;
-
-  /// Min quote in a frame
-  @override
-  double get minValue => minValueInFrame ?? double.nan;
-
-  /// Max quote in a frame
-  @override
-  double get maxValue => maxValueInFrame ?? double.nan;
 
   /// Updates visible entries for this Series.
   @override
