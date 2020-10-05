@@ -3,10 +3,11 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 
-import 'barrier.dart';
+import 'horizontal_barrier.dart';
 
-class BarrierPainter extends SeriesPainter<Barrier> {
-  BarrierPainter(Barrier series) : super(series);
+
+class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
+  HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
 
   @override
   void onPaint({
@@ -26,7 +27,7 @@ class BarrierPainter extends SeriesPainter<Barrier> {
       if (series.previousObject == null) {
         animatedValue = series.value;
       } else {
-        final BarrierObject previousBarrier = series.previousObject;
+        final HorizontalBarrierObject previousBarrier = series.previousObject;
         animatedValue = lerpDouble(
           previousBarrier.value,
           series.value,

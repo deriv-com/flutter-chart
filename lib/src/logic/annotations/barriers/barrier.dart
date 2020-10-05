@@ -1,26 +1,21 @@
-import 'package:deriv_chart/src/logic/annotations/barriers/barrier_painter.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 
-class BarrierObject extends ChartObject {
-  BarrierObject(this.value) : super(null, null, value, value);
-
-  final double value;
+abstract class BarrierObject extends ChartObject {
+  BarrierObject(
+    int leftEpoch,
+    int rightEpoch,
+    double bottomValue,
+    double topValue,
+  ) : super(leftEpoch, rightEpoch, bottomValue, topValue);
 }
 
-class Barrier extends ChartAnnotation<BarrierObject> {
-  Barrier(
-    this.value, {
+abstract class Barrier extends ChartAnnotation<BarrierObject> {
+  Barrier({
     String id,
-    String title,
-  }) : super(id) {
-    annotationObject = BarrierObject(value);
-  }
+    this.title,
+  }) : super(id);
 
-  final double value;
-
-  @override
-  SeriesPainter<Series> createPainter() => BarrierPainter(this);
+  /// Title of the barrier
+  final String title;
 }

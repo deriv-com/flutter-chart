@@ -290,7 +290,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     ],
                     annotations: [
                       if (ticks.length > 1)
-                        Barrier(
+                        HorizontalBarrier(
                             ticks.last.quote + (ticks.last.quote - ticks[ticks.length - 2].quote)
                                 .abs(),
                             id: 'Take profit'),

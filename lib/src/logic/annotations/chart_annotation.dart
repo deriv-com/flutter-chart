@@ -1,10 +1,11 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
-import 'package:flutter/material.dart';
 
 abstract class ChartAnnotation<T extends ChartObject> extends Series {
-  ChartAnnotation(String id) : super(id);
+  ChartAnnotation(String id) : super(id) {
+    annotationObject = createObject();
+  }
 
   /// Annotation Object
   T annotationObject;
@@ -27,4 +28,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   @override
   List<double> recalculateMinMax() =>
       <double>[annotationObject.bottomValue, annotationObject.topValue];
+
+  /// Prepares the [AnnotationObject]
+  T createObject();
 }

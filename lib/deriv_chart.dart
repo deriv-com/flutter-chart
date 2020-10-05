@@ -4,7 +4,7 @@ export './src/chart.dart';
 export 'src/logic/chart_series/ohlc_series/candle/candle_series.dart';
 export './src/logic/chart_series/line_series/line_series.dart';
 export './src/logic/chart_series/series.dart';
-export 'src/logic/annotations/barriers/barrier.dart';
+export 'src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 export 'src/logic/chart_series/indicators_series/ma_series.dart';
 export './src/models/candle.dart';
 export './src/models/chart_style.dart';
