@@ -288,13 +288,26 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ),
                       ),
                     ],
-                    annotations: [
-                      if (ticks.length > 1)
-                        HorizontalBarrier(
-                            ticks.last.quote + (ticks.last.quote - ticks[ticks.length - 2].quote)
-                                .abs(),
-                            id: 'Take profit'),
-                    ],
+                    annotations: ticks.length > 2
+                        ? [
+                            HorizontalBarrier(
+                              ticks.last.quote +
+                                  (ticks.last.quote -
+                                          ticks[ticks.length - 3].quote)
+                                      .abs(),
+                              title: 'Take Profit',
+                              id: 'Take profit',
+                            ),
+                            HorizontalBarrier(
+                              ticks.last.quote -
+                                  (ticks.last.quote -
+                                          ticks[ticks.length - 3].quote)
+                                      .abs(),
+                              title: 'Stop Loss',
+                              id: 'Stop Loss',
+                            ),
+                          ]
+                        : [],
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0

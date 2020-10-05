@@ -84,7 +84,10 @@ class Chart extends StatelessWidget {
             onVisibleAreaChanged: onVisibleAreaChanged,
             child: _ChartImplementation(
               mainSeries: mainSeries,
-              chartDataList: <ChartData>[...secondarySeries, ...annotations],
+              chartDataList: <ChartData>[
+                if (secondarySeries != null) ...secondarySeries,
+                if (annotations != null) ...annotations
+              ],
               pipSize: pipSize,
               onCrosshairAppeared: onCrosshairAppeared,
             ),
