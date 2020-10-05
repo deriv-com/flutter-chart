@@ -127,21 +127,19 @@ class XAxisModel extends ChangeNotifier {
 
   /// Update scrolling bounds and time gaps based on main chart's entries.
   void updateEntries(List<Tick> entries) {
-    // Scenarios:
-    // 1. New tick
-    // 2. More historical data -> append new gaps
-    // 3. New market or first load -> recalc gaps
-
     final bool firstLoad = _entries == null;
+
     final bool tickLoad = !firstLoad &&
         entries.length >= 2 &&
         _entries.isNotEmpty &&
         entries[entries.length - 2] == _entries.last;
+
     final bool historyLoad = !firstLoad &&
         entries.isNotEmpty &&
         _entries.isNotEmpty &&
         entries.first != _entries.first &&
         entries.last == _entries.last;
+
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
     if (firstLoad || reload) {
