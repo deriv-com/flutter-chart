@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/annotations/barriers/vertical_barrier/vert
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
+import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
 
       final double lineX = epochToX(animatedEpoch);
 
-      canvas.drawLine(Offset(lineX, 0), Offset(lineX, size.height), paint);
+      paintVerticalDashedLine(canvas, lineX, 0, size.height, Colors.white30, 1);
     }
   }
 }

@@ -29,31 +29,3 @@ void paintCurrentTickLabelBackground(
       ..style = PaintingStyle.fill,
   );
 }
-
-// TODO(Ramin): Move to a general file where general painting functions are there
-/// Paints a horizontal dashed-line for the given parameters.
-void paintHorizontalDashedLine(
-  Canvas canvas,
-  double lineStartX,
-  double lineEndX,
-  double lineY,
-  Color lineColor,
-  double lineThickness, {
-  double dashWidth = 4,
-  double dashSpace = 4,
-}) {
-  double startX = lineStartX;
-
-  final Paint paint = Paint()
-    ..color = lineColor
-    ..strokeWidth = lineThickness;
-
-  while (startX <= lineEndX) {
-    canvas.drawLine(
-      Offset(startX, lineY),
-      Offset(startX + dashWidth, lineY),
-      paint,
-    );
-    startX += dashSpace + dashWidth;
-  }
-}
