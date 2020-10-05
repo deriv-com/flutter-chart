@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 
+/// Finds time gaps in a list of entries.
 List<TimeRange> findGaps(List<Tick> entries, int granularity) {
   final List<TimeRange> gaps = [];
 
