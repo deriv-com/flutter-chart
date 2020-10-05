@@ -7,13 +7,10 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   ChartAnnotation(String id) : super(id);
 
   /// Annotation Object
-  @protected
   T annotationObject;
 
-  @protected
   T previousObject;
 
-  @protected
   bool isOnRange = false;
 
   @override
