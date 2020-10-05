@@ -132,17 +132,23 @@ class XAxisModel extends ChangeNotifier {
     // 2. More historical data -> append new gaps
     // 3. New market or first load -> recalc gaps
 
-    final List<Tick> prevEntries = _entries;
-    final bool firstLoad = prevEntries == null;
+    final bool firstLoad = _entries == null;
+    final bool tickLoad = !firstLoad &&
+        entries.length >= 2 &&
+        _entries.isNotEmpty &&
+        entries[entries.length - 2] == _entries.last;
     final bool historyLoad = !firstLoad &&
         entries.isNotEmpty &&
-        prevEntries.isNotEmpty &&
-        entries.first != prevEntries.first &&
-        entries.last == prevEntries.last;
+        _entries.isNotEmpty &&
+        entries.first != _entries.first &&
+        entries.last == _entries.last;
+    final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
-    if (firstLoad || historyLoad) {
+    if (firstLoad || reload) {
       _timeGaps = findGaps(entries, granularity);
-      print('new gaps ${_timeGaps.length}');
+    } else if (historyLoad) {
+      // TODO(Rustem): only findGaps in sublist
+      _timeGaps = findGaps(entries, granularity);
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
