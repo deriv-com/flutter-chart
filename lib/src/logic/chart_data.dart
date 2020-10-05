@@ -10,10 +10,6 @@ typedef QuoteToY = double Function(double);
 /// Any data that the chart takes and makes it paint its self on the chart's canvas including
 /// Line, CandleStick data, Markers, barriers etc..
 abstract class ChartData {
-
-  /// Initializes [id]
-  ChartData(this.id);
-
   /// The ID of this [ChartData].
   ///
   /// [id] is used to recognize an old [ChartData] with its new version after chart being updated.
@@ -26,23 +22,15 @@ abstract class ChartData {
   /// Updates this [ChartData] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
 
-  /// Minimum value of this series in a visible range of the chart
-  @protected
-  double minValueInFrame;
-
-  /// Maximum value of this series in a visible range of the chart
-  @protected
-  double maxValueInFrame;
-
   /// The minimum value this [ChartData] has at the current X-Axis epoch range after [update] is called.
   ///
   /// [double.nan] should be returned if this [ChartData] doesn't have any element to have a minimum value.
-  double get minValue => minValueInFrame ?? double.nan;
+  double get minValue;
 
   /// The maximum value this [ChartData] has at the current X-Axis epoch range after [update] is called.
   ///
   /// [double.nan] should be returned if this [ChartData] doesn't have any element to have a maximum value.
-  double get maxValue => maxValueInFrame ?? double.nan;
+  double get maxValue;
 
   /// Paints this [ChartData] on the given [canvas].
   ///

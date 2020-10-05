@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
@@ -55,4 +57,7 @@ class Barrier extends ChartAnnotation<BarrierObject> {
       canvas.drawLine(Offset(size.width - 30, y), Offset(size.width, y), paint);
     }
   }
+
+  @override
+  SeriesPainter<Series> createPainter() => null;
 }
