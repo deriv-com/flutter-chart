@@ -9,36 +9,47 @@ int pxToMs(double px, {@required double msPerPx}) {
   return (px * msPerPx).round();
 }
 
+int _indexOfContainingOrRightGap(List<TimeRange> gaps, int epoch) {
+  return 0;
+}
+
 int shiftEpochByPx({
   @required int epoch,
   @required double pxShift,
   @required double msPerPx,
   @required List<TimeRange> gaps,
 }) {
-  int shiftedEpoch = epoch;
+  if (pxShift == 0) return epoch;
 
-  if (pxShift == 0) {
-    return epoch;
-  } else if (pxShift > 0) {
-    for (final gap in gaps) {
-      if (gap.contains(shiftedEpoch)) {
-        shiftedEpoch = gap.rightEpoch;
-      } else if (gap.isAfter(shiftedEpoch) &&
-          gap.leftEpoch - shiftedEpoch <= pxShift * msPerPx) {
-        shiftedEpoch += gap.msWidth;
-      }
+  int shiftedEpoch = epoch;
+  double remainingPxShift = pxShift;
+  int i = _indexOfContainingOrRightGap(gaps, epoch);
+
+  if (pxShift.isNegative) {
+    // Move to gap edge if initially inside a gap.
+    if (gaps[i].contains(epoch)) {
+      shiftedEpoch = gaps[i].leftEpoch;
+      i--;
+    }
+
+    while (i >= 0 && remainingPxShift > 0) {
+      gaps[i]; // jump the gap
+      i--;
     }
   } else {
-    for (final gap in gaps.reversed) {
-      if (gap.contains(shiftedEpoch)) {
-        shiftedEpoch = gap.leftEpoch;
-      } else if (gap.isBefore(shiftedEpoch) &&
-          shiftedEpoch - gap.rightEpoch <= pxShift.abs() * msPerPx) {
-        shiftedEpoch -= gap.msWidth;
-      }
+    // Move to gap edge if initially inside a gap.
+    if (gaps[i].contains(epoch)) {
+      shiftedEpoch = gaps[i].rightEpoch;
+      i++;
+    }
+
+    while (i < gaps.length && remainingPxShift > 0) {
+      gaps[i]; // jump the gap
+      i++;
     }
   }
-  return shiftedEpoch + (pxShift * msPerPx).round();
+
+  return shiftedEpoch;
 }
 
 double timeRangePxWidth({
