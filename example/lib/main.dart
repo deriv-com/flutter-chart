@@ -307,8 +307,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 id: 'Stop loss',
                                 style: BarrierStyle(color: Colors.redAccent)),
                             if (ticks.length > 4)
-                              VerticalBarrier(ticks[ticks.length - 5].epoch,
-                                  style: BarrierStyle(isDashed: true))
+                              VerticalBarrier(
+                                ticks[ticks.length - 5].epoch,
+                                title: 'Buy time',
+                                style: BarrierStyle(
+                                  color: Colors.white38,
+                                  isDashed: true,
+                                ),
+                              )
                           ]
                         : [],
                     pipSize:

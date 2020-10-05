@@ -39,12 +39,28 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
       }
 
       final double lineX = epochToX(animatedEpoch);
+      final double lineEndY = size.height - 20;
 
       if (style.isDashed) {
-        paintVerticalDashedLine(canvas, lineX, 0, size.height, style.color, 1);
+        paintVerticalDashedLine(canvas, lineX, 0, lineEndY, style.color, 1);
       } else {
-        canvas.drawLine(Offset(lineX, 0), Offset(lineX, size.height), paint);
+        canvas.drawLine(Offset(lineX, 0), Offset(lineX, lineEndY), paint);
       }
+
+      // Painting title and value
+      final TextPainter titlePainter = TextPainter(
+        text: TextSpan(
+          text: series.title,
+          style: style.textStyle.copyWith(color: style.color),
+        ),
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      titlePainter.paint(
+        canvas,
+        Offset(lineX - titlePainter.width - 5, lineEndY - titlePainter.height),
+      );
     }
   }
 }
