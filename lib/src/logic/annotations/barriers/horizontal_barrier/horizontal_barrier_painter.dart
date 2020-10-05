@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -75,7 +76,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       titlePainter.paint(
           canvas, Offset(titleStartX, y - titlePainter.height / 2));
 
-      canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), paint);
+      if (style.isDashed) {
+        paintHorizontalDashedLine(canvas, 0, mainLineEndX, y, style.color, 1);
+      } else {
+        canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), paint);
+      }
       canvas.drawLine(Offset(titleEndX, y), Offset(valueStartX, y), paint);
     }
   }
