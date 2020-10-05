@@ -145,8 +145,15 @@ class XAxisModel extends ChangeNotifier {
     if (firstLoad || reload) {
       _timeGaps = findGaps(entries, granularity);
     } else if (historyLoad) {
-      // TODO(Rustem): only findGaps in sublist
-      _timeGaps = findGaps(entries, granularity);
+      // ------------- entries
+      //         ----- _entries
+      // ---------     prefix
+      //        ↑↑
+      //        AB
+      // include B in prefix to detect gaps between A and B
+      final List<Tick> prefix =
+          entries.sublist(0, entries.length - _entries.length + 1);
+      _timeGaps = findGaps(prefix, granularity) + _timeGaps;
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
