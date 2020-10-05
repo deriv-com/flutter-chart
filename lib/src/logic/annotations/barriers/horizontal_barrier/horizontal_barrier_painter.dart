@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 
 import 'horizontal_barrier.dart';
 
+/// Padding between lines
+const double linesPadding = 4;
+
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
 
@@ -54,13 +57,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       )..layout();
 
       final double valueStartX = size.width - valuePainter.width - 10;
-      final double titleEndX = valueStartX - 12 - 5;
+      final double middleLineEndX = valueStartX - linesPadding;
+      final double middleLineStartX = middleLineEndX - 12;
 
       valuePainter.paint(
         canvas,
         Offset(valueStartX, y - valuePainter.height / 2),
       );
 
+      // Painting title and value
       final TextPainter titlePainter = TextPainter(
         text: TextSpan(
           text: series.title,
@@ -70,18 +75,28 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         textDirection: TextDirection.ltr,
       )..layout();
 
+      final double titleEndX = middleLineStartX - linesPadding;
       final double titleStartX = titleEndX - titlePainter.width;
-      final double mainLineEndX = titleStartX - 5;
+      final double mainLineEndX = titleStartX - linesPadding;
 
       titlePainter.paint(
-          canvas, Offset(titleStartX, y - titlePainter.height / 2));
+        canvas,
+        Offset(titleStartX, y - titlePainter.height / 2),
+      );
 
+      // Painting main line
       if (style.isDashed) {
         paintHorizontalDashedLine(canvas, 0, mainLineEndX, y, style.color, 1);
       } else {
         canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), paint);
       }
-      canvas.drawLine(Offset(titleEndX, y), Offset(valueStartX, y), paint);
+
+      // Painting middle line
+      canvas.drawLine(
+        Offset(middleLineStartX, y),
+        Offset(middleLineEndX, y),
+        paint,
+      );
     }
   }
 }
