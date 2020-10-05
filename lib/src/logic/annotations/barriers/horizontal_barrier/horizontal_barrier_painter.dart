@@ -11,7 +11,9 @@ import 'horizontal_barrier.dart';
 /// Padding between lines
 const double linesPadding = 4;
 
+/// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
+  /// Initializes [series]
   HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
 
   @override

@@ -3,12 +3,13 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
+/// A class for painting horizontal barriers
 class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
+  /// Initializes [series]
   VerticalBarrierPainter(VerticalBarrier series) : super(series);
 
   @override

@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
@@ -44,7 +43,7 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     final DataSeriesStyle style = series.style;
 
     // Paint current Tick indicator
-    if ((series?.style as DataSeriesStyle)?.currentTickStyle != null ?? false) {
+    if (style.currentTickStyle != null ?? false) {
       double currentTickX;
       double currentTickY;
       final Tick lastEntry = series.entries.last;
