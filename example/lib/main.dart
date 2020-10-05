@@ -288,12 +288,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ),
                       ),
                     ],
-                    annotations: ticks.length > 2
+                    annotations: ticks.length > 4
                         ? [
                             HorizontalBarrier(
                               ticks.last.quote +
                                   (ticks.last.quote -
-                                          ticks[ticks.length - 3].quote)
+                                          ticks[ticks.length - 5].quote)
                                       .abs(),
                               title: 'Take profit',
                               id: 'Take profit',
@@ -301,12 +301,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
                             HorizontalBarrier(
                                 ticks.last.quote -
                                     (ticks.last.quote -
-                                            ticks[ticks.length - 3].quote)
+                                            ticks[ticks.length - 5].quote)
                                         .abs(),
                                 title: 'Stop loss',
                                 id: 'Stop loss',
                                 style: BarrierStyle(color: Colors.redAccent)),
-                            if (ticks.length > 4)
                               VerticalBarrier(
                                 ticks[ticks.length - 5].epoch,
                                 title: 'Buy time',
