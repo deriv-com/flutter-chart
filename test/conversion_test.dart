@@ -25,8 +25,13 @@ void main() {
         equals(1601140057031),
       );
     });
-    test('return future epoch when px shift is positive and no gaps overlap',
-        () {
+
+    // Symbol explanation:
+    // | is initial position
+    // x is expected result
+    // -- is time
+    // __ is time gap
+    test('handle --|--x', () {
       expect(
           shiftEpochByPx(
             epoch: 123456,
@@ -36,7 +41,7 @@ void main() {
           ),
           equals(123556));
     });
-    test('return past epoch when px shift is negative and no gaps overlap', () {
+    test('handle x--|--', () {
       expect(
           shiftEpochByPx(
             epoch: 123456,
@@ -46,7 +51,7 @@ void main() {
           ),
           equals(123350));
     });
-    test('handle epoch at the start of a gap', () {
+    test('handle --|__x', () {
       expect(
           shiftEpochByPx(
             epoch: 999,
@@ -56,7 +61,7 @@ void main() {
           ),
           equals(1201));
     });
-    test('handle epoch in the middle of a gap', () {
+    test('handle __|__x', () {
       expect(
           shiftEpochByPx(
             epoch: 999,
@@ -66,7 +71,7 @@ void main() {
           ),
           equals(1201));
     });
-    test('handle obstructing gap after epoch', () {
+    test('handle --|--__--x', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -76,7 +81,7 @@ void main() {
           ),
           equals(310));
     });
-    test('handle non-obstructing gap after epoch', () {
+    test('handle --|--x--__', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -86,7 +91,7 @@ void main() {
           ),
           equals(300));
     });
-    test('handle 2 obstructing gaps after epoch', () {
+    test('handle --|--__--__--x', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -96,7 +101,7 @@ void main() {
           ),
           equals(360));
     });
-    test('handle 3 obstructing gaps after epoch', () {
+    test('handle --|--__--__--__x', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -110,7 +115,7 @@ void main() {
           ),
           equals(400));
     });
-    test('handle 2 obstructing and 1 non-obstructing gap after epoch', () {
+    test('handle --|--__--__--x__', () {
       expect(
           shiftEpochByPx(
             epoch: 200,
@@ -124,7 +129,7 @@ void main() {
           ),
           equals(360));
     });
-    test('handle obstructing gap before epoch', () {
+    test('handle x--__--|--', () {
       expect(
         shiftEpochByPx(
           epoch: 200,
@@ -135,7 +140,7 @@ void main() {
         equals(145),
       );
     });
-    test('handle 2 obstructing gaps before epoch', () {
+    test('handle x--__--__--|--', () {
       expect(
         shiftEpochByPx(
           epoch: 200,
@@ -146,7 +151,7 @@ void main() {
         equals(135),
       );
     });
-    test('handle 1 before and one overlapping gap', () {
+    test('handle __--__|__--x', () {
       expect(
         shiftEpochByPx(
           epoch: 1601248601086,
