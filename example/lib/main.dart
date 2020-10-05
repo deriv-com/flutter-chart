@@ -299,14 +299,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                               id: 'Take profit',
                             ),
                             HorizontalBarrier(
-                              ticks.last.quote -
-                                  (ticks.last.quote -
-                                          ticks[ticks.length - 3].quote)
-                                      .abs(),
-                              title: 'Stop loss',
-                              id: 'Stop loss',
-                              style: BarrierStyle(color: Colors.redAccent)
-                            ),
+                                ticks.last.quote -
+                                    (ticks.last.quote -
+                                            ticks[ticks.length - 3].quote)
+                                        .abs(),
+                                title: 'Stop loss',
+                                id: 'Stop loss',
+                                style: BarrierStyle(color: Colors.redAccent)),
+                            VerticalBarrier(ticks[ticks.length - 3].epoch)
                           ]
                         : [],
                     pipSize:
