@@ -1,9 +1,9 @@
-import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
 /// Defines the style of painting candle data
-class CandleStyle extends ChartPaintingStyle {
+class CandleStyle extends DataSeriesStyle {
   /// Initializes
   const CandleStyle({
     this.positiveColor = const Color(0xFF00A79E),

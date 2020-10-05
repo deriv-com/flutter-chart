@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/annotations/barriers/barrier.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -15,7 +16,8 @@ class HorizontalBarrier extends Barrier {
     this.value, {
     String id,
     String title,
-  }) : super(id: id, title: title);
+    BarrierStyle style,
+  }) : super(id: id, title: title, style: style);
 
   final double value;
 

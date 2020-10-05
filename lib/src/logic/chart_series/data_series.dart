@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
 /// Series with only a single list of data to show.
@@ -12,7 +12,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   DataSeries(
     this.entries,
     String id, {
-    ChartPaintingStyle style,
+    DataSeriesStyle style,
   }) : super(id, style: style);
 
   /// Series entries

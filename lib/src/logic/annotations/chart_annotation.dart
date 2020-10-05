@@ -1,9 +1,13 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 
 abstract class ChartAnnotation<T extends ChartObject> extends Series {
-  ChartAnnotation(String id) : super(id) {
+  ChartAnnotation(
+    String id, {
+    ChartPaintingStyle style,
+  }) : super(id, style: style) {
     annotationObject = createObject();
   }
 

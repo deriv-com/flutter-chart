@@ -295,7 +295,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   (ticks.last.quote -
                                           ticks[ticks.length - 3].quote)
                                       .abs(),
-                              title: 'Take Profit',
+                              title: 'Take profit',
                               id: 'Take profit',
                             ),
                             HorizontalBarrier(
@@ -303,8 +303,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   (ticks.last.quote -
                                           ticks[ticks.length - 3].quote)
                                       .abs(),
-                              title: 'Stop Loss',
-                              id: 'Stop Loss',
+                              title: 'Stop loss',
+                              id: 'Stop loss',
+                              style: BarrierStyle(color: Colors.redAccent)
                             ),
                           ]
                         : [],

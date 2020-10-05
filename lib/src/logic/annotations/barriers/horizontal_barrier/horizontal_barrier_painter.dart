@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
 import 'horizontal_barrier.dart';
@@ -18,10 +19,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     AnimationInfo animationInfo,
   }) {
     if (series.isOnRange) {
+      final BarrierStyle style = series.style;
+
       Paint paint = Paint()
-        ..color = const Color(0xFF00A79E)
+        ..color = style.color
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1;
+
       double animatedValue;
 
       if (series.previousObject == null) {
@@ -39,12 +43,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       final TextSpan valueTextSpan = TextSpan(
         text: animatedValue.toStringAsFixed(pipSize),
-        style: const TextStyle(
-          fontSize: 10,
-          height: 1.3,
-          fontWeight: FontWeight.normal,
-          color: const Color(0xFF00A79E),
-        ),
+        style: style.textStyle.copyWith(color: style.color),
       );
 
       final TextPainter valuePainter = TextPainter(
@@ -64,12 +63,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       final TextPainter titlePainter = TextPainter(
         text: TextSpan(
           text: series.title,
-          style: const TextStyle(
-            fontSize: 10,
-            height: 1.3,
-            fontWeight: FontWeight.normal,
-            color: const Color(0xFF00A79E),
-          ),
+          style: style.textStyle.copyWith(color: style.color),
         ),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
