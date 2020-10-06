@@ -126,6 +126,8 @@ class XAxisModel extends ChangeNotifier {
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Update scrolling bounds and time gaps based on main chart's entries.
+  ///
+  /// Should be called after [updateGranularity].
   void updateEntries(List<Tick> entries) {
     final bool firstLoad = _entries == null;
 
@@ -161,6 +163,8 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Resets scale and pan on granularity change.
+  ///
+  /// Should be called before [updateEntries].
   void updateGranularity(int newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
