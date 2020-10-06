@@ -39,11 +39,12 @@ int shiftEpochByPx({
   int i = _indexOfNearestGap(gaps, epoch);
 
   if (pxShift.isNegative) {
-    // Move to gap edge if initially inside a gap.
     if (gaps[i].contains(epoch)) {
+      // Move to gap edge if initially inside a gap.
       shiftedEpoch = gaps[i].leftEpoch;
       i--;
     } else if (gaps[i].isAfter(epoch)) {
+      // Start with a gap in the direction of movement.
       i--;
     }
     while (i >= 0 && remainingPxShift < 0) {
@@ -51,19 +52,22 @@ int shiftEpochByPx({
       final int msToGap = gap.rightEpoch - shiftedEpoch;
       final double pxToGap = msToGap / msPerPx;
       if (remainingPxShift <= pxToGap) {
+        // jump the gap
         remainingPxShift -= pxToGap;
         shiftedEpoch = gap.leftEpoch;
       } else {
+        // gap is too far
         break;
       }
       i--;
     }
   } else {
-    // Move to gap edge if initially inside a gap.
     if (gaps[i].contains(epoch)) {
+      // Move to gap edge if initially inside a gap.
       shiftedEpoch = gaps[i].rightEpoch;
       i++;
     } else if (gaps[i].isBefore(epoch)) {
+      // Start with a gap in the direction of movement.
       i++;
     }
     while (i < gaps.length && remainingPxShift > 0) {
@@ -71,9 +75,11 @@ int shiftEpochByPx({
       final int msToGap = gap.leftEpoch - shiftedEpoch;
       final double pxToGap = msToGap / msPerPx;
       if (remainingPxShift >= pxToGap) {
+        // jump the gap
         remainingPxShift -= pxToGap;
         shiftedEpoch = gap.rightEpoch;
       } else {
+        // gap is too far
         break;
       }
       i++;
