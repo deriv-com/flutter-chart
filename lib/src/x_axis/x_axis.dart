@@ -35,7 +35,7 @@ class XAxis extends StatefulWidget {
   /// Millisecond difference between two consecutive candles.
   final int granularity;
 
-  /// `True` the chart showing live data
+  /// Whether the chart is showing live data.
   final bool isLive;
 
   /// Callback provided by library user.

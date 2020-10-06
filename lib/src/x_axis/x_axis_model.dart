@@ -54,7 +54,7 @@ class XAxisModel extends ChangeNotifier {
 
   bool _isLive;
 
-  /// Is the chart live
+  /// Whether the chart is live.
   bool get isLive => _isLive ?? true;
 
   /// Canvas width.
