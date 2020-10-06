@@ -173,7 +173,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   bool get _isScrollToLastTickAvailable =>
       widget.mainSeries.entries.isNotEmpty &&
-      !_xAxis.animatingPan &&
+      _xAxis.rightBoundEpoch < widget.mainSeries.entries.last.epoch &&
       !_isCrosshairMode;
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
