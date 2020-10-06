@@ -20,6 +20,7 @@ int shiftEpochByPx({
   @required List<TimeRange> gaps,
 }) {
   if (pxShift == 0) return epoch;
+  if (gaps.isEmpty) return epoch + (pxShift * msPerPx).round();
 
   int shiftedEpoch = epoch;
   double remainingPxShift = pxShift;
@@ -31,25 +32,26 @@ int shiftEpochByPx({
       shiftedEpoch = gaps[i].leftEpoch;
       i--;
     }
-
-    while (i >= 0 && remainingPxShift > 0) {
-      gaps[i]; // jump the gap
-      i--;
-    }
   } else {
     // Move to gap edge if initially inside a gap.
     if (gaps[i].contains(epoch)) {
       shiftedEpoch = gaps[i].rightEpoch;
       i++;
     }
-
     while (i < gaps.length && remainingPxShift > 0) {
-      gaps[i]; // jump the gap
+      final TimeRange gap = gaps[i];
+      final int msToGap = gap.leftEpoch - shiftedEpoch;
+      final double pxToGap = msToGap / msPerPx;
+      if (remainingPxShift >= pxToGap) {
+        remainingPxShift -= pxToGap;
+        shiftedEpoch = gap.rightEpoch;
+      } else {
+        break;
+      }
       i++;
     }
   }
-
-  return shiftedEpoch;
+  return shiftedEpoch + (remainingPxShift * msPerPx).round();
 }
 
 double timeRangePxWidth({
