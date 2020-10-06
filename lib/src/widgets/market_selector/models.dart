@@ -129,4 +129,28 @@ class Asset {
         isOpen: isOpen ?? this.isOpen,
         isFavourite: isFavourite ?? this.isFavourite,
       );
+
+  /// Creates an [Asset] object from JSON map
+  factory Asset.fromJson(Map<String, dynamic> json) => Asset(
+        name: json['name'],
+        displayName: json['display_name'],
+        market: json['market'],
+        marketDisplayName: json['market_display_name'],
+        subMarket: json['sub_market'],
+        subMarketDisplayName: json['sub_market_display_name'],
+        isOpen: json['is_open'],
+        isFavourite: json['is_favourite'],
+      );
+
+  /// Converts this object to a JSON map
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'name': name,
+        'display_name': displayName,
+        'market': market,
+        'market_display_name': marketDisplayName,
+        'sub_market': subMarket,
+        'sub_market_display_name': subMarketDisplayName,
+        'is_open': isOpen,
+        'is_favourite': isFavourite,
+      };
 }

@@ -16,6 +16,11 @@ void main() {
       r50 = Asset(
         name: 'R_50',
         displayName: 'Volatility 50 Index',
+        market: 'synthetic',
+        marketDisplayName: 'Synthetic Indices',
+        subMarket: 'continues',
+        subMarketDisplayName: 'Continues Indices',
+        isOpen: true,
         isFavourite: false,
       );
       r25Favourite = Asset(
@@ -260,6 +265,21 @@ void main() {
         find.text('No results for \"A non-relevant text\"'),
         findsOneWidget,
       );
+    });
+
+    test('Asset class toJson <-> fromJson conversion', () {
+      final Map<String, dynamic> r50JSON = r50.toJson();
+
+      final Asset r50Copy = Asset.fromJson(r50JSON);
+
+      expect(r50.name, r50Copy.name);
+      expect(r50.displayName, r50Copy.displayName);
+      expect(r50.market, r50Copy.market);
+      expect(r50.marketDisplayName, r50Copy.marketDisplayName);
+      expect(r50.subMarket, r50Copy.subMarket);
+      expect(r50.subMarketDisplayName, r50Copy.subMarketDisplayName);
+      expect(r50.isOpen, r50Copy.isOpen);
+      expect(r50.isFavourite, r50Copy.isFavourite);
     });
   });
 }
