@@ -43,6 +43,20 @@ int shiftEpochByPx({
     if (gaps[i].contains(epoch)) {
       shiftedEpoch = gaps[i].leftEpoch;
       i--;
+    } else if (gaps[i].isAfter(epoch)) {
+      i--;
+    }
+    while (i >= 0 && remainingPxShift < 0) {
+      final TimeRange gap = gaps[i];
+      final int msToGap = gap.rightEpoch - shiftedEpoch;
+      final double pxToGap = msToGap / msPerPx;
+      if (remainingPxShift <= pxToGap) {
+        remainingPxShift -= pxToGap;
+        shiftedEpoch = gap.leftEpoch;
+      } else {
+        break;
+      }
+      i--;
     }
   } else {
     // Move to gap edge if initially inside a gap.
