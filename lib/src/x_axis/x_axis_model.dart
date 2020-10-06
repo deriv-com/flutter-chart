@@ -40,7 +40,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   List<Tick> _entries;
-  List<TimeRange> _timeGaps = [TimeRange(1601430072281, 1601434891491)];
+  List<TimeRange> _timeGaps = [];
 
   // TODO(Rustem): Expose this setting
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
