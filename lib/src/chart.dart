@@ -171,7 +171,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
-  bool get _isScrollToNowAvailable =>
+  bool get _isScrollToLastTickAvailable =>
       widget.mainSeries.entries.isNotEmpty &&
       !_xAxis.animatingPan &&
       !_isCrosshairMode;
@@ -214,8 +214,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupAnimations();
     _setupGestures();
 
-    widget.controller?.scrollToNowListener = (bool animate) {
-      _xAxis.scrollToNow(animate: animate);
+    widget.controller?.scrollToLastTickListener = (bool animate) {
+      _xAxis.scrollToLastTick(animate: animate);
     };
   }
 
@@ -499,11 +499,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
               _crosshairZoomOutAnimationController.reverse();
             },
           ),
-          if (_isScrollToNowAvailable)
+          if (_isScrollToLastTickAvailable)
             Positioned(
               bottom: 30 + timeLabelsAreaHeight,
               right: 30 + quoteLabelsAreaWidth,
-              child: _buildScrollToNowButton(),
+              child: _buildScrollToLastTickButton(),
             ),
         ],
       );
@@ -543,10 +543,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     });
   }
 
-  IconButton _buildScrollToNowButton() {
+  IconButton _buildScrollToLastTickButton() {
     return IconButton(
       icon: Icon(Icons.arrow_forward, color: Colors.white),
-      onPressed: _xAxis.scrollToNow,
+      onPressed: _xAxis.scrollToLastTick,
     );
   }
 }

@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
-
-/// ScrollToNow callback
-typedef OnScrollToNow = Function(bool);
+/// ScrollToLastTick callback
+typedef OnScrollToLastTick = Function(bool);
 
 /// Chart widget's controller
-class ChartController extends ChangeNotifier {
-  OnScrollToNow _onScrollToNow;
+class ChartController {
+  OnScrollToLastTick _onScrollToLastTick;
 
-  /// Registers a listener for
+  /// Sets a listener to get notified when the [scrollToLastTick] is called on the controller.
   // ignore: avoid_setters_without_getters
-  set scrollToNowListener(OnScrollToNow listener) => _onScrollToNow = listener;
+  set scrollToLastTickListener(OnScrollToLastTick listener) =>
+      _onScrollToLastTick = listener;
 
   /// Scroll chart visible area to the newest data.
-  void scrollToNow({bool animate}) => _onScrollToNow?.call(animate);
+  void scrollToLastTick({bool animate}) => _onScrollToLastTick?.call(animate);
 }
