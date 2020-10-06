@@ -114,7 +114,7 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   void _fillMarketsList() {
-    _marketsToDisplay = _filterText.isEmpty
+    _marketsToDisplay = _filterText.isEmpty || widget.markets == null
         ? widget.markets
         : widget.markets
             .where((Market market) =>
