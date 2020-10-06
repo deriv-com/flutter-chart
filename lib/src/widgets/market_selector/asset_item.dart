@@ -1,11 +1,13 @@
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/widgets/market_selector/highlighted_text.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'closed_tag.dart';
+import 'asset_icon_placeholder.dart';
+import 'highlighted_text.dart';
 import 'market_selector.dart';
 import 'models.dart';
+import 'symbol_svg_picture.dart';
 
 /// A widget to show an asset (active symbol) item in the market selector.
 class AssetItem extends StatelessWidget {
@@ -35,45 +37,38 @@ class AssetItem extends StatelessWidget {
   }
 
   Widget _buildAssetTitle(ChartTheme theme) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: <Widget>[
-      Expanded(
-        child: HighLightedText(
-          '${asset.displayName}',
-          highlightText: filterText,
-          style: theme.textStyle(
-            textStyle: theme.body1,
-            color: theme.base03Color,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Expanded(
+            child: HighLightedText(
+              '${asset.displayName}',
+              highlightText: filterText,
+              style: theme.textStyle(
+                textStyle: theme.body1,
+                color: theme.base03Color,
+              ),
+            ),
           ),
-        ),
-      ),
-      if (!asset.isOpen) ClosedTag(),
-    ],
-  );
+          if (!asset.isOpen) ClosedTag(),
+        ],
+      );
 
   IconButton _buildFavouriteIcon(ChartTheme theme) => IconButton(
-    key: ValueKey<String>('${asset.name}-fav-icon'),
-    icon: Icon(
-      asset.isFavourite ? Icons.star : Icons.star_border,
-      color:
-      asset.isFavourite ? theme.accentYellowColor : theme.base04Color,
-      size: 20,
-    ),
-    onPressed: () => onAssetClicked?.call(asset, true),
-  );
+        key: ValueKey<String>('${asset.name}-fav-icon'),
+        icon: Icon(
+          asset.isFavourite ? Icons.star : Icons.star_border,
+          color:
+              asset.isFavourite ? theme.accentYellowColor : theme.base04Color,
+          size: 20,
+        ),
+        onPressed: () => onAssetClicked?.call(asset, true),
+      );
 
-  Widget _buildAssetIcon() => FadeInImage(
+  Widget _buildAssetIcon() => SymbolSvgPicture(
+        symbolCode: asset.name,
         width: 24,
         height: 24,
-        placeholder: const AssetImage(
-          'assets/icons/icon_placeholder.png',
-          package: 'deriv_chart',
-        ),
-        image: AssetImage(
-          'assets/icons/${asset.name}.png',
-          package: 'deriv_chart',
-        ),
-        fadeInDuration: iconFadeInDuration,
-        fadeOutDuration: iconFadeInDuration,
+        placeholderBuilder: (BuildContext context) =>
+            const AssetIconPlaceholder(),
       );
 }
