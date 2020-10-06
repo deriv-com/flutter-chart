@@ -76,6 +76,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Asset _symbol;
 
   ChartController _controller = ChartController();
+  PersistentBottomSheetController _bottomSheetController;
 
   @override
   void initState() {
@@ -88,6 +89,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void dispose() {
     _tickStreamSubscription?.cancel();
     _connectionBloc?.close();
+    _bottomSheetController?.close();
     super.dispose();
   }
 
@@ -208,6 +210,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }
     }
     setState(() => _markets = markets);
+    _bottomSheetController?.setState(() {});
   }
 
   void _initTickStream(
@@ -397,21 +400,23 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
         asset: _symbol,
-        onTap: () => showBottomSheet<void>(
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (BuildContext context) => MarketSelector(
-            selectedItem: _symbol,
-            markets: _markets,
-            onAssetClicked: (asset, favoriteClicked) {
-              if (!favoriteClicked) {
-                Navigator.of(context).pop();
-                _symbol = asset;
-                _onIntervalSelected(granularity);
-              }
-            },
-          ),
-        ),
+        onTap: () {
+          _bottomSheetController = showBottomSheet<void>(
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext context) => MarketSelector(
+              selectedItem: _symbol,
+              markets: _markets,
+              onAssetClicked: (asset, favoriteClicked) {
+                if (!favoriteClicked) {
+                  Navigator.of(context).pop();
+                  _symbol = asset;
+                  _onIntervalSelected(granularity);
+                }
+              },
+            ),
+          );
+        },
       );
 
   void _loadHistory(int count) async {
