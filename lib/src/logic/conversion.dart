@@ -9,8 +9,20 @@ int pxToMs(double px, {@required double msPerPx}) {
   return (px * msPerPx).round();
 }
 
-int _indexOfContainingOrRightGap(List<TimeRange> gaps, int epoch) {
-  return 0;
+int _indexOfNearestGap(List<TimeRange> gaps, int epoch) {
+  int left = 0, right = gaps.length - 1;
+  while (left < right) {
+    final int mid = (left + right) ~/ 2;
+
+    if (gaps[mid].isAfter(epoch)) {
+      right = mid;
+    } else if (gaps[mid].isBefore(epoch)) {
+      left = mid + 1;
+    } else {
+      return mid;
+    }
+  }
+  return right;
 }
 
 int shiftEpochByPx({
@@ -24,7 +36,7 @@ int shiftEpochByPx({
 
   int shiftedEpoch = epoch;
   double remainingPxShift = pxShift;
-  int i = _indexOfContainingOrRightGap(gaps, epoch);
+  int i = _indexOfNearestGap(gaps, epoch);
 
   if (pxShift.isNegative) {
     // Move to gap edge if initially inside a gap.
@@ -36,6 +48,8 @@ int shiftEpochByPx({
     // Move to gap edge if initially inside a gap.
     if (gaps[i].contains(epoch)) {
       shiftedEpoch = gaps[i].rightEpoch;
+      i++;
+    } else if (gaps[i].isBefore(epoch)) {
       i++;
     }
     while (i < gaps.length && remainingPxShift > 0) {
