@@ -1,9 +1,11 @@
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart';
-import 'package:deriv_chart/src/widgets/market_selector/models.dart';
-import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'animated_highlight.dart';
+import 'asset_item.dart';
+import 'market_selector.dart';
+import 'models.dart';
 
 /// A widget to show a sub-market item under a market.
 class SubMarketItem extends StatelessWidget {
