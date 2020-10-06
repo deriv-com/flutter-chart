@@ -50,7 +50,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       final TextSpan valueTextSpan = TextSpan(
         text: animatedValue.toStringAsFixed(pipSize),
-        style: style.textStyle.copyWith(color: style.color),
+        style: style.textStyle.copyWith(
+          color: style.color,
+          backgroundColor: style.valueBackgroundColor,
+        ),
       );
 
       final TextPainter valuePainter = TextPainter(
