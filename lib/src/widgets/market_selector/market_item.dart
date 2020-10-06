@@ -1,9 +1,9 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/src/widgets/market_selector/models.dart';
-import 'package:deriv_chart/src/widgets/market_selector/sub_market_item.dart';
 import 'package:provider/provider.dart';
 import 'market_selector.dart';
+import 'models.dart';
+import 'sub_market_item.dart';
 
 /// A widget to show a market item in market selector
 class MarketItem extends StatelessWidget {
