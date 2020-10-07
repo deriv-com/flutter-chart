@@ -94,5 +94,18 @@ Chart(
 );
 ```
 
+To add horizontal/vertical barriers add specify them in `annotations` parameter of the chart.
+
+```dart
+Chart(
+  mainSeries: LineSeries(candles),
+  pipSize: 4,
+  annotations: <ChartAnnotation> [
+    HorizontalBarrier(60, title: 'Take profit'),
+    VerticalBarrier(candles.last.epoch, title: 'Buy time'),
+  ],
+);
+```
+
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
 You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
