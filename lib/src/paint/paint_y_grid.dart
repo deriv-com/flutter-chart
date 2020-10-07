@@ -56,7 +56,6 @@ void _paintQuoteLabels(
       text: quoteLabel,
       x: size.width,
       y: yCoords[index],
-      rightPadding: 10,
       style: style.labelStyle,
     );
   });

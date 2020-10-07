@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -48,47 +49,31 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       final double y = quoteToY(animatedValue);
 
-      final TextSpan valueTextSpan = TextSpan(
+      final double valueStartX = paintTextFromRight(
+        canvas,
         text: animatedValue.toStringAsFixed(pipSize),
+        x: size.width,
+        y: y,
         style: style.textStyle.copyWith(
           color: style.color,
           backgroundColor: style.valueBackgroundColor,
         ),
       );
 
-      final TextPainter valuePainter = TextPainter(
-        text: valueTextSpan,
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )..layout();
-
-      final double valueStartX = size.width - valuePainter.width - 10;
       final double middleLineEndX = valueStartX - linesPadding;
       final double middleLineStartX = middleLineEndX - 12;
 
-      valuePainter.paint(
-        canvas,
-        Offset(valueStartX, y - valuePainter.height / 2),
-      );
-
       // Painting title and value
-      final TextPainter titlePainter = TextPainter(
-        text: TextSpan(
-          text: series.title,
-          style: style.textStyle.copyWith(color: style.color),
-        ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )..layout();
-
-      final double titleEndX = middleLineStartX - linesPadding;
-      final double titleStartX = titleEndX - titlePainter.width;
-      final double mainLineEndX = titleStartX - linesPadding;
-
-      titlePainter.paint(
+      final double titleStartX = paintTextFromRight(
         canvas,
-        Offset(titleStartX, y - titlePainter.height / 2),
+        text: series.title,
+        x: middleLineStartX,
+        y: y,
+        rightPadding: linesPadding,
+        style: style.textStyle.copyWith(color: style.color),
       );
+
+      final double mainLineEndX = titleStartX - linesPadding;
 
       // Painting main line
       if (style.isDashed) {
