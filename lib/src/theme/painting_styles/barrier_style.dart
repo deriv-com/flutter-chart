@@ -1,12 +1,13 @@
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 /// Barrier style
 class BarrierStyle extends ChartPaintingStyle {
   /// Initializes
   const BarrierStyle({
     this.color = const Color(0xFF00A79E),
-    this.valueBackgroundColor = const Color(0xFF0E0E0E),
+    this.valueBackgroundColor = Colors.transparent,
     this.isDashed = false,
     this.textStyle = const TextStyle(
       fontSize: 10,

@@ -25,3 +25,27 @@ void paintTextFromCenter(
     ),
   );
 }
+
+/// Paints a screen with the padding specified for its right side
+void paintTextFromRight(
+  Canvas canvas, {
+  @required String text,
+  @required double x,
+  @required double y,
+  double rightPadding = 10,
+  TextStyle style,
+}) {
+  TextPainter textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textAlign: TextAlign.center,
+    textDirection: TextDirection.ltr,
+  );
+  textPainter
+    ..layout()
+    ..paint(
+        canvas,
+        Offset(
+          x - textPainter.width - rightPadding,
+          y - textPainter.height / 2,
+        ));
+}
