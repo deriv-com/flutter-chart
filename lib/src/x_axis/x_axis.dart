@@ -10,6 +10,8 @@ import 'grid/calc_time_grid.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 
+const double _minDistanceBetweenTimeGridLines = 90;
+
 /// X-axis widget.
 ///
 /// Draws x-axis grid and manages [XAxisModel].
@@ -111,7 +113,10 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
           // Calculate time labels' timestamps for current scale.
           final List<DateTime> _gridTimestamps = gridTimestamps(
-            timeGridInterval: timeGridInterval(_model.pxFromMs),
+            timeGridInterval: timeGridInterval(
+              _model.pxFromMs,
+              minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
+            ),
             leftBoundEpoch: _model.leftBoundEpoch,
             rightBoundEpoch: _model.rightBoundEpoch,
           );
@@ -126,7 +131,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
               timestamp.millisecondsSinceEpoch,
               _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
             );
-            if (distance >= 100) {
+            if (distance >= _minDistanceBetweenTimeGridLines) {
               _noOverlapGridTimestamps.insert(0, timestamp);
             }
           }
