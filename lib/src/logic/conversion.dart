@@ -5,10 +5,6 @@ double msToPx(int ms, {@required double msPerPx}) {
   return ms / msPerPx;
 }
 
-int pxToMs(double px, {@required double msPerPx}) {
-  return (px * msPerPx).round();
-}
-
 int _indexOfNearestGap(List<TimeRange> gaps, int epoch) {
   int left = 0, right = gaps.length - 1;
   while (left < right) {
