@@ -114,10 +114,10 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             timeGridInterval: timeGridInterval(_model.pxFromMs),
             leftBoundEpoch: _model.leftBoundEpoch,
             rightBoundEpoch: _model.rightBoundEpoch,
-          )
-            // Remove timestamps inside time gaps.
-            ..removeWhere((DateTime timestamp) =>
-                _model.fallsIntoGap(timestamp.millisecondsSinceEpoch));
+          );
+
+          // TODO(Rustem): Remove labels inside time gaps.
+          // Except if the last label in the gap can fit, then keep it.
 
           return CustomPaint(
             painter: XGridPainter(
