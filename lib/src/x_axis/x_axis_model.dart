@@ -197,6 +197,11 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Whether the given epoch falls into a time gap.
+  bool fallsIntoGap(int epoch) =>
+      _timeGaps.isNotEmpty &&
+      _timeGaps[indexOfNearestGap(_timeGaps, epoch)].contains(epoch);
+
   /// Convert ms to px using current scale.
   ///
   /// Doesn't take removed time gaps into account. Use [pxBetween] if you need

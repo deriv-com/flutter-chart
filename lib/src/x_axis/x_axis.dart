@@ -102,20 +102,22 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final List<DateTime> _gridTimestamps = gridTimestamps(
-      timeGridInterval: timeGridInterval(_model.pxFromMs),
-      leftBoundEpoch: _model.leftBoundEpoch,
-      rightBoundEpoch: _model.rightBoundEpoch,
-    );
-
-    // Remove timestamps that fall inside time gaps.
-    _gridTimestamps.removeWhere((DateTime timestamp) => false);
-
     return ChangeNotifierProvider<XAxisModel>.value(
       value: _model,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
+          // Update x-axis width.
           context.watch<XAxisModel>().width = constraints.maxWidth;
+
+          // Calculate time labels' timestamps for current scale.
+          final List<DateTime> _gridTimestamps = gridTimestamps(
+            timeGridInterval: timeGridInterval(_model.pxFromMs),
+            leftBoundEpoch: _model.leftBoundEpoch,
+            rightBoundEpoch: _model.rightBoundEpoch,
+          )
+            // Remove timestamps inside time gaps.
+            ..removeWhere((DateTime timestamp) =>
+                _model.fallsIntoGap(timestamp.millisecondsSinceEpoch));
 
           return CustomPaint(
             painter: XGridPainter(
