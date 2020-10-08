@@ -102,6 +102,15 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final List<DateTime> _gridTimestamps = gridTimestamps(
+      timeGridInterval: timeGridInterval(_model.pxFromMs),
+      leftBoundEpoch: _model.leftBoundEpoch,
+      rightBoundEpoch: _model.rightBoundEpoch,
+    );
+
+    // Remove timestamps that fall inside time gaps.
+    _gridTimestamps.removeWhere((DateTime timestamp) => false);
+
     return ChangeNotifierProvider<XAxisModel>.value(
       value: _model,
       child: LayoutBuilder(
@@ -110,11 +119,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
           return CustomPaint(
             painter: XGridPainter(
-              gridTimestamps: gridTimestamps(
-                timeGridInterval: timeGridInterval(_model.pxFromMs),
-                leftBoundEpoch: _model.leftBoundEpoch,
-                rightBoundEpoch: _model.rightBoundEpoch,
-              ),
+              gridTimestamps: _gridTimestamps,
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),
