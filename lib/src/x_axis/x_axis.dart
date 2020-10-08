@@ -116,12 +116,24 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             rightBoundEpoch: _model.rightBoundEpoch,
           );
 
-          // TODO(Rustem): Remove labels inside time gaps.
+          // Remove labels inside time gaps.
           // Except if the last label in the gap can fit, then keep it.
+          final List<DateTime> _noOverlapGridTimestamps = [
+            if (_gridTimestamps.isNotEmpty) _gridTimestamps.last,
+          ];
+          for (final DateTime timestamp in _gridTimestamps.reversed.skip(1)) {
+            final double distance = _model.pxBetween(
+              timestamp.millisecondsSinceEpoch,
+              _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
+            );
+            if (distance >= 100) {
+              _noOverlapGridTimestamps.insert(0, timestamp);
+            }
+          }
 
           return CustomPaint(
             painter: XGridPainter(
-              gridTimestamps: _gridTimestamps,
+              gridTimestamps: _noOverlapGridTimestamps,
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),
