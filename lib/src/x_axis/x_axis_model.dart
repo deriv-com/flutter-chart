@@ -201,8 +201,7 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Doesn't take removed time gaps into account. Use [pxBetween] if you need
   /// to measure distance between two timestamps on the chart.
-  /// TODO(Rustem): Remove once time grid doesn't depend on it.
-  double pxFromMs(int ms) => msToPx(ms, msPerPx: _msPerPx);
+  double pxFromMs(int ms) => ms / _msPerPx;
 
   /// Px distance between two epochs on the x-axis.
   double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(

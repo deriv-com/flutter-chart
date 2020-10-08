@@ -251,15 +251,6 @@ void main() {
     });
   });
 
-  group('msToPx should return', () {
-    test('10 when [ms == 5] and [msPerPx == 0.5]', () {
-      expect(
-        msToPx(5, msPerPx: 0.5),
-        equals(10),
-      );
-    });
-  });
-
   group('quoteToCanvasY should return', () {
     test('[topPadding] when [quote == topBoundQuote]', () {
       expect(

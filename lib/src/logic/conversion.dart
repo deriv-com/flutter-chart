@@ -1,10 +1,6 @@
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:meta/meta.dart';
 
-double msToPx(int ms, {@required double msPerPx}) {
-  return ms / msPerPx;
-}
-
 /// Returns index of the gap in the given list, that either contains the given [epoch] or is to the left/right to it.
 int indexOfNearestGap(List<TimeRange> gaps, int epoch) {
   int left = 0, right = gaps.length - 1;
