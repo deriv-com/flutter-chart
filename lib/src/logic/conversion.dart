@@ -21,6 +21,7 @@ int _indexOfNearestGap(List<TimeRange> gaps, int epoch) {
   return right;
 }
 
+/// Resulting epoch when given [epoch] is shifted by [pxShift] on x-axis, skipping time gaps.
 int shiftEpochByPx({
   @required int epoch,
   @required double pxShift,
@@ -84,6 +85,7 @@ int shiftEpochByPx({
   return shiftedEpoch + (remainingPxShift * msPerPx).round();
 }
 
+/// Pixel width of the time range minus the time gaps, which have 0 width on x-axis.
 double timeRangePxWidth({
   @required TimeRange range,
   @required double msPerPx,
@@ -91,13 +93,14 @@ double timeRangePxWidth({
 }) {
   double overlap = 0;
 
-  for (final gap in gaps) {
+  for (final TimeRange gap in gaps) {
     overlap += gap.overlap(range)?.msWidth ?? 0;
   }
 
   return (range.msWidth - overlap) / msPerPx;
 }
 
+/// Canvas y coordinate of the given quote/value.
 double quoteToCanvasY({
   @required double quote,
   @required double topBoundQuote,
