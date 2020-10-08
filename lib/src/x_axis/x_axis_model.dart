@@ -39,8 +39,6 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
-  List<Tick> _entries;
-
   // TODO(Rustem): Expose this setting
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
@@ -67,6 +65,8 @@ class XAxisModel extends ChangeNotifier {
   /// Called on scroll.
   final VoidCallback onScroll;
 
+  List<Tick> _entries;
+  List<TimeRange> _timeGaps = [];
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
@@ -75,10 +75,6 @@ class XAxisModel extends ChangeNotifier {
   int _granularity;
   int _nowEpoch;
   int _rightBoundEpoch;
-
-  /// List of time ranges that are removed from x-axis.
-  List<TimeRange> get timeGaps => _timeGaps;
-  List<TimeRange> _timeGaps = [];
 
   int get _firstCandleEpoch =>
       _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
