@@ -89,17 +89,21 @@ class CombinedBarrier extends HorizontalBarrier {
 
     canvas.drawCircle(
       Offset(
-          lerpDouble(
-            epochToX(prevVerticalObject.epoch),
-            epochToX(tick.epoch),
-            animationInfo.currentTickPercent,
-          ),
+          prevVerticalObject == null
+              ? epochToX(tick.epoch)
+              : lerpDouble(
+                  epochToX(prevVerticalObject.epoch),
+                  epochToX(tick.epoch),
+                  animationInfo.currentTickPercent,
+                ),
           quoteToY(
-            lerpDouble(
-              prevHorizontalObject.value,
-              tick.quote,
-              animationInfo.currentTickPercent,
-            ),
+            prevHorizontalObject == null
+                ? tick.quote
+                : lerpDouble(
+                    prevHorizontalObject.value,
+                    tick.quote,
+                    animationInfo.currentTickPercent,
+                  ),
           )),
       3,
       _dotPaint,

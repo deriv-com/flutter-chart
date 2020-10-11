@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
@@ -15,22 +16,24 @@ const double padding = 5;
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Initializes [series]
-  HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
+  HorizontalBarrierPainter(HorizontalBarrier series)
+      : _paint = Paint()..strokeWidth = 1,
+        super(series);
+
+  final Paint _paint;
 
   @override
   void onPaint({
     Canvas canvas,
     Size size,
-    epochToX,
-    quoteToY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
     if (series.isOnRange) {
       final BarrierStyle style = series.style;
 
-      Paint paint = Paint()
-        ..color = style.color
-        ..strokeWidth = 1;
+      _paint.color = style.color;
 
       double animatedValue;
 
@@ -67,8 +70,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
                   y - valuePainter.height / 2 - padding,
                   size.width - 10 + padding,
                   y + valuePainter.height / 2 + padding),
-              Radius.circular(4)),
-          paint);
+              const Radius.circular(4)),
+          _paint);
 
       valuePainter.paint(
         canvas,
@@ -92,7 +95,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         Offset(titleStartX, y - valuePainter.height / 2),
       );
 
-
       if (!style.hasLine) {
         return;
       }
@@ -106,7 +108,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         canvas.drawLine(
           Offset(middleLineStartX, y),
           Offset(middleLineEndX, y),
-          paint,
+          _paint,
         );
       } else {
         mainLineEndX = valueStartX;
@@ -116,9 +118,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       if (style.isDashed) {
         paintHorizontalDashedLine(canvas, 0, mainLineEndX, y, style.color, 1);
       } else {
-        canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), paint);
+        canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), _paint);
       }
-
     }
   }
 }
