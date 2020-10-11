@@ -185,15 +185,29 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final double middleY = bottomY - arrowSize + arrowThickness;
 
     canvas
-      ..drawPath(_getUpwardArrowPath(middleX, middleY), arrowPaint)
       ..drawPath(
-        _getUpwardArrowPath(middleX, middleY - arrowSize),
+          _getUpwardArrowPath(
+            middleX,
+            middleY,
+            size: arrowSize,
+            thickness: arrowThickness,
+          ),
+          arrowPaint)
+      ..drawPath(
+        _getUpwardArrowPath(
+          middleX,
+          middleY - arrowSize,
+          size: arrowSize,
+          thickness: arrowThickness,
+        ),
         arrowPaint..color = _paint.color.withOpacity(0.64),
       )
       ..drawPath(
         _getUpwardArrowPath(
           middleX,
           middleY - 2 * arrowSize,
+          size: arrowSize,
+          thickness: arrowThickness,
         ),
         arrowPaint..color = _paint.color.withOpacity(0.32),
       );
@@ -210,10 +224,29 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final double middleY = topY + arrowSize - arrowThickness;
 
     canvas
-      ..drawPath(_getDownArrowPath(middleX, middleY), arrowPaint)
-      ..drawPath(_getDownArrowPath(middleX, middleY + arrowSize),
+      ..drawPath(
+          _getDownArrowPath(
+            middleX,
+            middleY,
+            size: arrowSize,
+            thickness: arrowThickness,
+          ),
+          arrowPaint)
+      ..drawPath(
+          _getDownArrowPath(
+            middleX,
+            middleY + arrowSize,
+            size: arrowSize,
+            thickness: arrowThickness,
+          ),
           arrowPaint..color = _paint.color.withOpacity(0.64))
-      ..drawPath(_getDownArrowPath(middleX, middleY + 2 * arrowSize),
+      ..drawPath(
+          _getDownArrowPath(
+            middleX,
+            middleY + 2 * arrowSize,
+            size: arrowSize,
+            thickness: arrowThickness,
+          ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
   }
 }
