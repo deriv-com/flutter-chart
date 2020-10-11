@@ -30,96 +30,97 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
-    if (series.isOnRange) {
-      final BarrierStyle style = series.style;
+    if (!series.isOnRange) {
+      return;
+    }
 
-      _paint.color = style.color;
+    final BarrierStyle style = series.style;
 
-      double animatedValue;
+    _paint.color = style.color;
 
-      if (series.previousObject == null) {
-        animatedValue = series.value;
-      } else {
-        final HorizontalBarrierObject previousBarrier = series.previousObject;
-        animatedValue = lerpDouble(
-          previousBarrier.value,
-          series.value,
-          animationInfo.currentTickPercent,
-        );
-      }
+    double animatedValue;
 
-      final double y = quoteToY(animatedValue);
-
-      final TextPainter valuePainter = TextPainter(
-        text: TextSpan(
-          text: animatedValue.toStringAsFixed(pipSize),
-          style: style.textStyle,
-        ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )..layout();
-
-      final double valueStartX = size.width - valuePainter.width - 10;
-      final double middleLineEndX = valueStartX - padding;
-      final double middleLineStartX = middleLineEndX - 12;
-
-      canvas.drawRRect(
-          RRect.fromRectAndRadius(
-              Rect.fromLTRB(
-                  middleLineEndX,
-                  y - valuePainter.height / 2 - padding,
-                  size.width - 10 + padding,
-                  y + valuePainter.height / 2 + padding),
-              const Radius.circular(4)),
-          _paint);
-
-      valuePainter.paint(
-        canvas,
-        Offset(valueStartX, y - valuePainter.height / 2),
+    if (series.previousObject == null) {
+      animatedValue = series.value;
+    } else {
+      final HorizontalBarrierObject previousBarrier = series.previousObject;
+      animatedValue = lerpDouble(
+        previousBarrier.value,
+        series.value,
+        animationInfo.currentTickPercent,
       );
+    }
 
-      final TextPainter titlePainter = TextPainter(
-        text: TextSpan(
-          text: series.title,
-          style: style.textStyle.copyWith(color: style.color),
-        ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )..layout();
+    final double y = quoteToY(animatedValue);
 
-      final double titleStartX =
-          middleLineStartX - titlePainter.width - padding;
+    final TextPainter valuePainter = TextPainter(
+      text: TextSpan(
+        text: animatedValue.toStringAsFixed(pipSize),
+        style: style.textStyle,
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout();
 
-      titlePainter.paint(
-        canvas,
-        Offset(titleStartX, y - valuePainter.height / 2),
+    final double valueStartX = size.width - valuePainter.width - 10;
+    final double middleLineEndX = valueStartX - padding;
+    final double middleLineStartX = middleLineEndX - 12;
+
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTRB(
+                middleLineEndX,
+                y - valuePainter.height / 2 - padding,
+                size.width - 10 + padding,
+                y + valuePainter.height / 2 + padding),
+            const Radius.circular(4)),
+        _paint);
+
+    valuePainter.paint(
+      canvas,
+      Offset(valueStartX, y - valuePainter.height / 2),
+    );
+
+    final TextPainter titlePainter = TextPainter(
+      text: TextSpan(
+        text: series.title,
+        style: style.textStyle.copyWith(color: style.color),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final double titleStartX = middleLineStartX - titlePainter.width - padding;
+
+    titlePainter.paint(
+      canvas,
+      Offset(titleStartX, y - valuePainter.height / 2),
+    );
+
+    if (!style.hasLine) {
+      return;
+    }
+
+    double mainLineEndX;
+
+    if (series.title != null) {
+      mainLineEndX = titleStartX - padding;
+
+      // Painting right line
+      canvas.drawLine(
+        Offset(middleLineStartX, y),
+        Offset(middleLineEndX, y),
+        _paint,
       );
+    } else {
+      mainLineEndX = valueStartX;
+    }
 
-      if (!style.hasLine) {
-        return;
-      }
-
-      double mainLineEndX;
-
-      if (series.title != null) {
-        mainLineEndX = titleStartX - padding;
-
-        // Painting right line
-        canvas.drawLine(
-          Offset(middleLineStartX, y),
-          Offset(middleLineEndX, y),
-          _paint,
-        );
-      } else {
-        mainLineEndX = valueStartX;
-      }
-
-      // Painting main line
-      if (style.isDashed) {
-        paintHorizontalDashedLine(canvas, 0, mainLineEndX, y, style.color, 1);
-      } else {
-        canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), _paint);
-      }
+    // Painting main line
+    if (style.isDashed) {
+      paintHorizontalDashedLine(canvas, 0, mainLineEndX, y, style.color, 1);
+    } else {
+      canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), _paint);
     }
   }
 }
