@@ -51,12 +51,20 @@ void _paintQuoteLabels(
   @required GridStyle style,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
-    paintTextFromRight(
+    TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: quoteLabel,
+        style: style.labelStyle,
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final double textLeftX = size.width - textPainter.width - 10;
+
+    textPainter.paint(
       canvas,
-      text: quoteLabel,
-      x: size.width,
-      y: yCoords[index],
-      style: style.labelStyle,
+      Offset(textLeftX, yCoords[index] - textPainter.height / 2),
     );
   });
 }
