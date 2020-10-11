@@ -16,6 +16,7 @@ class BarrierStyle extends ChartPaintingStyle {
       fontWeight: FontWeight.normal,
       color: Colors.white,
     ),
+    this.arrowType = BarrierArrowType.none,
   });
 
   /// Color of the barrier
@@ -32,4 +33,19 @@ class BarrierStyle extends ChartPaintingStyle {
 
   /// Value label background color
   final Color valueBackgroundColor;
+
+  /// Arrow type
+  final BarrierArrowType arrowType;
+}
+
+/// The type of arrow on top/bottom of barrier label (Horizontal barrier).
+enum BarrierArrowType {
+  /// No arrows
+  none,
+
+  /// Upward arrows on top of the label
+  upward,
+
+  /// Downward arrows on bottom of the label
+  downward,
 }

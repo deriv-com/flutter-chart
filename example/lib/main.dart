@@ -296,7 +296,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                             ticks[ticks.length - 5].quote)
                                         .abs(),
                                 title: 'Take profit',
-                                style: BarrierStyle(hasLine: false)),
+                                style: BarrierStyle(
+                                  hasLine: false,
+                                  arrowType: BarrierArrowType.upward,
+                                )),
                             HorizontalBarrier(
                                 ticks.last.quote -
                                     (ticks.last.quote -
@@ -305,6 +308,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 title: 'Stop loss',
                                 style: BarrierStyle(
                                   hasLine: false,
+                                  arrowType: BarrierArrowType.downward,
                                   color: const Color(0xFFCC2E3D),
                                 )),
                             CombinedBarrier(
