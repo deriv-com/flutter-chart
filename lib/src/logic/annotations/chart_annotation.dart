@@ -24,7 +24,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
 
   @override
   void didUpdate(ChartData oldData) {
-    final ChartAnnotation oldAnnotation = oldData;
+    final ChartAnnotation<T> oldAnnotation = oldData;
 
     previousObject = oldAnnotation.annotationObject;
   }
@@ -37,6 +37,6 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   List<double> recalculateMinMax() =>
       <double>[annotationObject.bottomValue, annotationObject.topValue];
 
-  /// Prepares the [AnnotationObject] of this [ChartAnnotation]
+  /// Prepares the [annotationObject] of this [ChartAnnotation]
   T createObject();
 }

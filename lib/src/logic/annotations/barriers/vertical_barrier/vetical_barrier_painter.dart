@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
@@ -17,8 +18,8 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
   void onPaint({
     Canvas canvas,
     Size size,
-    epochToX,
-    quoteToY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
     if (series.isOnRange) {

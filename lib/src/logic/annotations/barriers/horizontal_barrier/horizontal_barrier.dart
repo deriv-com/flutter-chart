@@ -8,6 +8,7 @@ import 'horizontal_barrier_painter.dart';
 
 /// Horizontal barrier class
 class HorizontalBarrier extends Barrier {
+  /// Initializes
   HorizontalBarrier(
     this.value, {
     String id,
