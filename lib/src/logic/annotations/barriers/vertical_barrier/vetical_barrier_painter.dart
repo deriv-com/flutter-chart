@@ -49,20 +49,34 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
         canvas.drawLine(Offset(lineX, 0), Offset(lineX, lineEndY), paint);
       }
 
-      // Painting title and value
-      final TextPainter titlePainter = TextPainter(
-        text: TextSpan(
-          text: series.title,
-          style: style.textStyle.copyWith(color: style.color),
-        ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )..layout();
-
-      titlePainter.paint(
-        canvas,
-        Offset(lineX - titlePainter.width - 5, lineEndY - titlePainter.height),
-      );
+      _paintLineLabel(canvas, lineX, lineEndY, style);
     }
+  }
+
+  void _paintLineLabel(
+    Canvas canvas,
+    double lineX,
+    double lineEndY,
+    BarrierStyle style,
+  ) {
+    final TextPainter titlePainter = TextPainter(
+      text: TextSpan(
+        text: series.title,
+        style: style.textStyle.copyWith(color: style.color),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    double titleStartX = lineX - titlePainter.width - 5;
+
+    if (titleStartX < 0) {
+      titleStartX = lineX + 5;
+    }
+
+    titlePainter.paint(
+      canvas,
+      Offset(titleStartX, lineEndY - titlePainter.height),
+    );
   }
 }
