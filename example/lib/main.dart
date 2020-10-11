@@ -270,14 +270,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
               children: <Widget>[
                 ClipRect(
                   child: Chart(
-                    mainSeries: style == ChartStyle.candles &&
-                            ticks is List<Candle>
-                        ? CandleSeries(ticks,
-                            style: CandleStyle(
-                                currentTickStyle: CurrentTickStyle()))
-                        : LineSeries(ticks,
-                            style: LineStyle(
-                                currentTickStyle: CurrentTickStyle())),
+                    mainSeries:
+                        style == ChartStyle.candles && ticks is List<Candle>
+                            ? CandleSeries(ticks)
+                            : LineSeries(ticks),
                     secondarySeries: [
                       MASeries(
                         ticks,
@@ -318,7 +314,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 color: Colors.grey,
                                 isDashed: true,
                               ),
-                            )
+                            ),
+                            LastTickIndicator(ticks.last),
                           ]
                         : [],
                     pipSize:

@@ -1,5 +1,7 @@
+import 'package:deriv_chart/src/logic/annotations/barriers/last_tick_indicator/last_tick_indicator.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,9 @@ abstract class DataSeries<T extends Tick> extends Series {
     this.entries,
     String id, {
     DataSeriesStyle style,
-  }) : super(id, style: style);
+  }) : super(id, style: style) {
+    _initLastTickIndicator();
+  }
 
   /// Series entries
   final List<T> entries;
@@ -28,9 +32,13 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// A reference to the last entry from series previous [entries] before update
   T get prevLastEntry => _prevLastEntry;
 
+  LastTickIndicator _lastTickIndicator;
+
   /// Updates visible entries for this Series.
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
+    _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
+
     if (entries.isEmpty) {
       return;
     }
@@ -48,6 +56,14 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Maximum value in [t]
   double maxValueOf(T t);
+
+
+  void _initLastTickIndicator() {
+    final DataSeriesStyle style = this.style;
+    if (entries.isNotEmpty && style?.currentTickStyle != null ?? false) {
+      _lastTickIndicator = LastTickIndicator(entries.last);
+    }
+  }
 
   /// Gets min and max quotes after updating [visibleEntries] as an array with two elements [min, max].
   ///
@@ -131,6 +147,25 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (oldSeries.entries.isNotEmpty) {
       _prevLastEntry = oldSeries.entries.last;
     }
+
+    _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
+  }
+
+  @override
+  void paint(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    int pipSize,
+    int granularity,
+  ) {
+    super.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
+
+    _lastTickIndicator?.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
   }
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements

@@ -26,7 +26,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   void didUpdate(ChartData oldData) {
     final ChartAnnotation<T> oldAnnotation = oldData;
 
-    previousObject = oldAnnotation.annotationObject;
+    previousObject = oldAnnotation?.annotationObject;
   }
 
   @override
