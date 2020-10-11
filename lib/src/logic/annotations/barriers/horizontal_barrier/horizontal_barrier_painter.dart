@@ -67,14 +67,22 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final double middleLineStartX = middleLineEndX - 12;
 
     canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            Rect.fromLTRB(
-                middleLineEndX,
-                y - valuePainter.height / 2 - padding,
-                size.width - 10 + padding,
-                y + valuePainter.height / 2 + padding),
-            const Radius.circular(4)),
-        _paint);
+      RRect.fromRectAndRadius(
+          Rect.fromLTRB(
+            middleLineEndX,
+            y - valuePainter.height / 2 - padding,
+            size.width - 10 + padding,
+            y + valuePainter.height / 2 + padding,
+          ),
+          const Radius.circular(4)),
+      _paint,
+    );
+
+    _paintUpwardArrows(
+      canvas,
+      valueStartX + valuePainter.width / 2,
+      y - valuePainter.height / 2 - padding - 10,
+    );
 
     valuePainter.paint(
       canvas,
@@ -122,5 +130,46 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     } else {
       canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), _paint);
     }
+  }
+
+  Path _getUpwardArrow(
+    double middleX,
+    double middleY, {
+    double thickness = 4,
+    double size = 10,
+  }) {
+    final double halfSize = size / 2;
+
+    return Path()
+      ..moveTo(middleX, middleY)
+      ..lineTo(middleX + halfSize, middleY + halfSize)
+      ..lineTo(middleX + halfSize + thickness, middleY + halfSize)
+      ..lineTo(middleX, middleY - thickness)
+      ..lineTo(middleX - halfSize - thickness, middleY + halfSize)
+      ..lineTo(middleX - halfSize, middleY + halfSize);
+  }
+
+  void _paintUpwardArrows(
+    Canvas canvas,
+    double middleX,
+    double middleY, {
+    double arrowSize = 10,
+    double arrowThickness = 4,
+  }) {
+    final Paint arrowPaint = Paint()..color = _paint.color;
+
+    canvas
+      ..drawPath(_getUpwardArrow(middleX, middleY), arrowPaint)
+      ..drawPath(
+        _getUpwardArrow(middleX, middleY - arrowSize),
+        arrowPaint..color = _paint.color.withOpacity(0.64),
+      )
+      ..drawPath(
+        _getUpwardArrow(
+          middleX,
+          middleY - 2 * arrowSize,
+        ),
+        arrowPaint..color = _paint.color.withOpacity(0.32),
+      );
   }
 }
