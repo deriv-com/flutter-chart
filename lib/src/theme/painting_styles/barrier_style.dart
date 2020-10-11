@@ -13,7 +13,7 @@ class BarrierStyle extends ChartPaintingStyle {
       fontSize: 10,
       height: 1.3,
       fontWeight: FontWeight.normal,
-      color: const Color(0xFF00A79E),
+      color: Colors.white,
     ),
   });
 

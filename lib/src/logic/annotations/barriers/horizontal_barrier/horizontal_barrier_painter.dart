@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'horizontal_barrier.dart';
 
 /// Padding between lines
-const double linesPadding = 5;
+const double padding = 5;
 
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
@@ -30,7 +30,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       Paint paint = Paint()
         ..color = style.color
-        ..style = PaintingStyle.stroke
         ..strokeWidth = 1;
 
       double animatedValue;
@@ -51,22 +50,30 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       final TextPainter valuePainter = TextPainter(
         text: TextSpan(
           text: animatedValue.toStringAsFixed(pipSize),
-          style: style.textStyle.copyWith(
-            color: style.color,
-            backgroundColor: style.valueBackgroundColor,
-          ),
+          style: style.textStyle,
         ),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout();
 
       final double valueStartX = size.width - valuePainter.width - 10;
+      final double middleLineEndX = valueStartX - padding;
+      final double middleLineStartX = middleLineEndX - 12;
+
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(
+              Rect.fromLTRB(
+                  middleLineEndX,
+                  y - valuePainter.height / 2 - padding,
+                  size.width - 10 + padding,
+                  y + valuePainter.height / 2 + padding),
+              Radius.circular(4)),
+          paint);
 
       valuePainter.paint(
-          canvas, Offset(valueStartX, y - valuePainter.height / 2));
-
-      final double middleLineEndX = valueStartX - linesPadding;
-      final double middleLineStartX = middleLineEndX - 12;
+        canvas,
+        Offset(valueStartX, y - valuePainter.height / 2),
+      );
 
       final TextPainter titlePainter = TextPainter(
         text: TextSpan(
@@ -77,12 +84,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         textDirection: TextDirection.ltr,
       )..layout();
 
-      final double titleStartX = middleLineStartX - titlePainter.width - linesPadding;
+      final double titleStartX =
+          middleLineStartX - titlePainter.width - padding;
 
       titlePainter.paint(
-          canvas, Offset(titleStartX, y - valuePainter.height / 2));
+        canvas,
+        Offset(titleStartX, y - valuePainter.height / 2),
+      );
 
-      final double mainLineEndX = titleStartX - linesPadding;
+      final double mainLineEndX = titleStartX - padding;
 
       // Painting main line
       if (style.isDashed) {
