@@ -5,6 +5,7 @@ export 'src/logic/chart_series/ohlc_series/candle/candle_series.dart';
 export './src/logic/chart_series/line_series/line_series.dart';
 export './src/logic/chart_series/series.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
+export 'src/logic/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 export 'src/logic/annotations/chart_annotation.dart';
 export 'src/logic/chart_series/indicators_series/ma_series.dart';

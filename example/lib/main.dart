@@ -303,12 +303,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                             ticks[ticks.length - 5].quote)
                                         .abs(),
                                 title: 'Stop loss',
-                                style: BarrierStyle(color: const Color(0xFFCC2E3D))),
-                            VerticalBarrier(
-                              ticks[ticks.length - 5].epoch,
+                                style: BarrierStyle(
+                                    color: const Color(0xFFCC2E3D))),
+                            CombinedBarrier(
+                              ticks[ticks.length - 8],
                               title: 'Buy time',
                               style: BarrierStyle(
-                                color: Colors.white38,
+                                color: Colors.grey,
                                 isDashed: true,
                               ),
                             )
