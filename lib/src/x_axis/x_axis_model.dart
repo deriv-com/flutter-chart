@@ -55,7 +55,7 @@ class XAxisModel extends ChangeNotifier {
   bool _isLive;
 
   /// Whether the chart is live.
-  bool get isLive => _isLive ?? true;
+  bool get isLive => _isLive;
 
   /// Canvas width.
   double width;
@@ -129,7 +129,7 @@ class XAxisModel extends ChangeNotifier {
   void updateCandles(List<Tick> candles) => _entries = candles;
 
   /// Update's chart's isLive property
-  void updateIsLive(bool isLive) => _isLive = isLive;
+  void updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.

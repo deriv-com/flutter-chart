@@ -68,9 +68,9 @@ class Chart extends StatelessWidget {
   /// Chart's theme.
   final ChartTheme theme;
 
-  /// Indicates whether the chart should be showing live data or not,
+  /// Whether the chart should be showing live data or not.
   ///
-  /// In cas of being true the chart will keep auto-scrolling when its visible area
+  /// In case of being true the chart will keep auto-scrolling when its visible area
   /// is on the newest ticks/candles.
   final bool isLive;
 
