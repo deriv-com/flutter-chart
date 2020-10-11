@@ -13,7 +13,11 @@ class CombinedBarrier extends HorizontalBarrier {
     String id,
     String title,
     BarrierStyle style,
-  })  : verticalBarrier = VerticalBarrier(tick.epoch, style: style),
+  })  : verticalBarrier = VerticalBarrier(
+          tick.epoch,
+          title: title,
+          style: style,
+        ),
         super(tick.quote, id: id, title: title, style: style);
 
   final VerticalBarrier verticalBarrier;

@@ -8,6 +8,7 @@ class BarrierStyle extends ChartPaintingStyle {
   const BarrierStyle({
     this.color = const Color(0xFF00A79E),
     this.valueBackgroundColor = Colors.transparent,
+    this.hasLine = true,
     this.isDashed = false,
     this.textStyle = const TextStyle(
       fontSize: 10,
@@ -23,7 +24,10 @@ class BarrierStyle extends ChartPaintingStyle {
   /// Style of the title and value
   final TextStyle textStyle;
 
-  /// Is the barrier ad dashed-line
+  /// Whether the barrier has line.
+  final bool hasLine;
+
+  /// Whether barrier's line should be dashed.
   final bool isDashed;
 
   /// Value label background color

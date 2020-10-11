@@ -94,6 +94,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       final double mainLineEndX = titleStartX - padding;
 
+      if (!style.hasLine) {
+        return;
+      }
+
       // Painting main line
       if (style.isDashed) {
         paintHorizontalDashedLine(canvas, 0, mainLineEndX, y, style.color, 1);

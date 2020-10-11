@@ -291,12 +291,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     annotations: ticks.length > 4
                         ? [
                             HorizontalBarrier(
-                              ticks.last.quote +
-                                  (ticks.last.quote -
-                                          ticks[ticks.length - 5].quote)
-                                      .abs(),
-                              title: 'Take profit',
-                            ),
+                                ticks.last.quote +
+                                    (ticks.last.quote -
+                                            ticks[ticks.length - 5].quote)
+                                        .abs(),
+                                title: 'Take profit',
+                                style: BarrierStyle(hasLine: false)),
                             HorizontalBarrier(
                                 ticks.last.quote -
                                     (ticks.last.quote -
@@ -304,7 +304,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                         .abs(),
                                 title: 'Stop loss',
                                 style: BarrierStyle(
-                                    color: const Color(0xFFCC2E3D))),
+                                  hasLine: false,
+                                  color: const Color(0xFFCC2E3D),
+                                )),
                             CombinedBarrier(
                               ticks[ticks.length - 8],
                               title: 'Buy time',
