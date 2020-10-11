@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +12,7 @@ import 'horizontal_barrier.dart';
 
 class CombinedBarrier extends HorizontalBarrier {
   CombinedBarrier(
-    Tick tick, {
+    this.tick, {
     String id,
     String title,
     BarrierStyle style,
@@ -20,7 +23,11 @@ class CombinedBarrier extends HorizontalBarrier {
         ),
         super(tick.quote, id: id, style: style);
 
+  /// For vertical barrier.
   final VerticalBarrier verticalBarrier;
+
+  /// The for epoch and quote.
+  final Tick tick;
 
   @override
   void update(int leftEpoch, int rightEpoch) {
@@ -65,6 +72,29 @@ class CombinedBarrier extends HorizontalBarrier {
       animationInfo,
       pipSize,
       granularity,
+    );
+
+    final int prevEpoch =
+        (verticalBarrier.previousObject as VerticalBarrierObject).epoch;
+
+    final prevQuote = (previousObject as HorizontalBarrierObject).value;
+
+    canvas.drawCircle(
+      Offset(
+          lerpDouble(
+            epochToX(prevEpoch),
+            epochToX(tick.epoch),
+            animationInfo.currentTickPercent,
+          ),
+          quoteToY(
+            lerpDouble(
+              prevQuote,
+              tick.quote,
+              animationInfo.currentTickPercent,
+            ),
+          )),
+      4,
+      Paint()..color = Colors.redAccent,
     );
   }
 }
