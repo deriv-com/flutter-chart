@@ -18,7 +18,7 @@ class CombinedBarrier extends HorizontalBarrier {
           title: title,
           style: style,
         ),
-        super(tick.quote, id: id, title: title, style: style);
+        super(tick.quote, id: id, style: style);
 
   final VerticalBarrier verticalBarrier;
 

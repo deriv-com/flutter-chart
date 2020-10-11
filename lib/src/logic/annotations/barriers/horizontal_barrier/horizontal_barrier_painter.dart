@@ -92,10 +92,24 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         Offset(titleStartX, y - valuePainter.height / 2),
       );
 
-      final double mainLineEndX = titleStartX - padding;
 
       if (!style.hasLine) {
         return;
+      }
+
+      double mainLineEndX;
+
+      if (series.title != null) {
+        mainLineEndX = titleStartX - padding;
+
+        // Painting right line
+        canvas.drawLine(
+          Offset(middleLineStartX, y),
+          Offset(middleLineEndX, y),
+          paint,
+        );
+      } else {
+        mainLineEndX = valueStartX;
       }
 
       // Painting main line
@@ -105,12 +119,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), paint);
       }
 
-      // Painting middle line
-      canvas.drawLine(
-        Offset(middleLineStartX, y),
-        Offset(middleLineEndX, y),
-        paint,
-      );
     }
   }
 }
