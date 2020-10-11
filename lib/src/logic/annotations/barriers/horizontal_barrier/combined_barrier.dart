@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 
 import 'horizontal_barrier.dart';
 
+/// A barrier with both horizontal and vertical lines.
 class CombinedBarrier extends HorizontalBarrier {
+  /// Initializes
   CombinedBarrier(
     this.tick, {
     String id,
@@ -21,6 +23,10 @@ class CombinedBarrier extends HorizontalBarrier {
           title: title,
           style: style,
         ),
+        _dotPaint = Paint()
+          ..color = Colors.redAccent
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1,
         super(tick.quote, id: id, style: style);
 
   /// For vertical barrier.
@@ -28,6 +34,8 @@ class CombinedBarrier extends HorizontalBarrier {
 
   /// The for epoch and quote.
   final Tick tick;
+
+  final Paint _dotPaint;
 
   @override
   void update(int leftEpoch, int rightEpoch) {
@@ -74,27 +82,27 @@ class CombinedBarrier extends HorizontalBarrier {
       granularity,
     );
 
-    final int prevEpoch =
-        (verticalBarrier.previousObject as VerticalBarrierObject).epoch;
+    final VerticalBarrierObject prevVerticalObject =
+        verticalBarrier.previousObject;
 
-    final prevQuote = (previousObject as HorizontalBarrierObject).value;
+    final HorizontalBarrierObject prevHorizontalObject = previousObject;
 
     canvas.drawCircle(
       Offset(
           lerpDouble(
-            epochToX(prevEpoch),
+            epochToX(prevVerticalObject.epoch),
             epochToX(tick.epoch),
             animationInfo.currentTickPercent,
           ),
           quoteToY(
             lerpDouble(
-              prevQuote,
+              prevHorizontalObject.value,
               tick.quote,
               animationInfo.currentTickPercent,
             ),
           )),
-      4,
-      Paint()..color = Colors.redAccent,
+      3,
+      _dotPaint,
     );
   }
 }
