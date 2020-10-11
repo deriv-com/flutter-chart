@@ -83,22 +83,24 @@ class Chart extends StatelessWidget {
 
     return Provider<ChartTheme>.value(
       value: chartTheme,
-      child: Ink(
-        color: chartTheme.base08Color,
-        child: GestureManager(
-          child: XAxis(
-            entries: mainSeries.entries,
-            granularity: granularity,
-            onVisibleAreaChanged: onVisibleAreaChanged,
-            isLive: isLive,
-            child: _ChartImplementation(
-              controller: controller,
-              mainSeries: mainSeries,
-              chartDataList: <ChartData>[
-                if (secondarySeries != null) ...secondarySeries
-              ],
-              pipSize: pipSize,
-              onCrosshairAppeared: onCrosshairAppeared,
+      child: ClipRect(
+        child: Ink(
+          color: chartTheme.base08Color,
+          child: GestureManager(
+            child: XAxis(
+              entries: mainSeries.entries,
+              granularity: granularity,
+              onVisibleAreaChanged: onVisibleAreaChanged,
+              isLive: isLive,
+              child: _ChartImplementation(
+                controller: controller,
+                mainSeries: mainSeries,
+                chartDataList: <ChartData>[
+                  if (secondarySeries != null) ...secondarySeries
+                ],
+                pipSize: pipSize,
+                onCrosshairAppeared: onCrosshairAppeared,
+              ),
             ),
           ),
         ),
