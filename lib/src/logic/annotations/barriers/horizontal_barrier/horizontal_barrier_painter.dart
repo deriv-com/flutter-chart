@@ -164,14 +164,34 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     double size = 10,
   }) {
     final double halfSize = size / 2;
+    final double halfThickness = thickness / 2;
 
     return Path()
       ..moveTo(middleX, middleY)
       ..lineTo(middleX + halfSize, middleY - halfSize)
-      ..lineTo(middleX + halfSize + thickness, middleY - halfSize)
-      ..lineTo(middleX, middleY + thickness)
-      ..lineTo(middleX - halfSize - thickness, middleY - halfSize)
-      ..lineTo(middleX - halfSize, middleY - halfSize);
+      ..quadraticBezierTo(
+        middleX + halfSize + halfThickness,
+        middleY - halfSize,
+        middleX + halfSize + halfThickness,
+        middleY - halfSize + halfThickness,
+      )
+      ..lineTo(middleX + halfThickness, middleY + halfThickness)
+      ..quadraticBezierTo(
+        middleX,
+        middleY + thickness,
+        middleX - halfThickness,
+        middleY + halfThickness,
+      )
+      ..lineTo(
+        middleX - halfSize - halfThickness,
+        middleY - halfSize + halfThickness,
+      )
+      ..quadraticBezierTo(
+        middleX - halfSize - halfThickness,
+        middleY - halfSize,
+        middleX - halfSize,
+        middleY - halfSize,
+      );
   }
 
   void _paintUpwardArrows(
