@@ -66,7 +66,7 @@ class XAxisModel extends ChangeNotifier {
   final VoidCallback onScroll;
 
   List<Tick> _entries;
-  List<TimeRange> _timeGaps = [];
+  List<TimeRange> _timeGaps = < TimeRange >[];
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
