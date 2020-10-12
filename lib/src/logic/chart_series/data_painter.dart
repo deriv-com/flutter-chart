@@ -2,11 +2,6 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
-import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
-import 'package:deriv_chart/src/paint/paint_line.dart';
-import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
 import '../chart_data.dart';
@@ -39,86 +34,6 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     }
 
     onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
-
-    final DataSeriesStyle style = series.style;
-
-    // Paint current Tick indicator
-//    if (style.currentTickStyle != null ?? false) {
-//      double currentTickX;
-//      double currentTickY;
-//      final Tick lastEntry = series.entries.last;
-//      final CurrentTickStyle currentTickStyle = style.currentTickStyle;
-//
-//      double quoteValue;
-//
-//      if (series.prevLastEntry != null) {
-//        currentTickX = lerpDouble(
-//          epochToX(series.prevLastEntry.epoch),
-//          epochToX(lastEntry.epoch),
-//          animationInfo.currentTickPercent,
-//        );
-//
-//        quoteValue = lerpDouble(
-//          series.prevLastEntry.quote,
-//          lastEntry.quote,
-//          animationInfo.currentTickPercent,
-//        );
-//        currentTickY = quoteToY(quoteValue);
-//      } else {
-//        currentTickX = epochToX(lastEntry.epoch);
-//
-//        quoteValue = lastEntry.quote;
-//        currentTickY = quoteToY(quoteValue);
-//      }
-//
-//      if (!currentTickX.isNaN && !currentTickY.isNaN) {
-//        paintCurrentTickDot(
-//          canvas,
-//          center: Offset(currentTickX, currentTickY),
-//          animationProgress: animationInfo.blinkingPercent,
-//          style: currentTickStyle,
-//        );
-//
-//        paintHorizontalDashedLine(
-//          canvas,
-//          currentTickX,
-//          size.width,
-//          currentTickY,
-//          currentTickStyle.color,
-//          currentTickStyle.lineThickness,
-//        );
-//
-//        final TextSpan span = TextSpan(
-//          text: quoteValue.toStringAsFixed(pipSize),
-//          style: currentTickStyle.labelStyle,
-//        );
-//
-//        final TextPainter textPainter = TextPainter(
-//          text: span,
-//          textAlign: TextAlign.center,
-//          textDirection: TextDirection.ltr,
-//        )..layout();
-//
-//        final double quoteLabelAreaWidth =
-//            textPainter.width + quoteLabelHorizontalPadding;
-//
-//        paintCurrentTickLabelBackground(
-//          canvas,
-//          size,
-//          centerY: currentTickY,
-//          quoteLabelsAreaWidth: quoteLabelAreaWidth,
-//          quoteLabel: lastEntry.quote.toStringAsFixed(4),
-//          currentTickX: currentTickX,
-//          style: currentTickStyle,
-//        );
-//
-//        textPainter.paint(
-//          canvas,
-//          Offset(size.width - quoteLabelAreaWidth,
-//              currentTickY - textPainter.height / 2),
-//        );
-//      }
-//    }
   }
 
   /// Paints [DataSeries.visibleEntries]

@@ -13,14 +13,17 @@ abstract class BarrierObject extends ChartObject {
 
 /// A [ChartObject] for defining position of a vertical barrier
 class VerticalBarrierObject extends BarrierObject {
+  /// Initializes
   VerticalBarrierObject(this.epoch)
       : super(epoch, epoch, double.nan, double.nan);
 
+  /// Epoch of the vertical barrier.
   final int epoch;
 }
 
 /// A [ChartObject] for defining position of a horizontal barrier
 class HorizontalBarrierObject extends BarrierObject {
+  /// Initializes
   HorizontalBarrierObject(this.value) : super(null, null, value, value);
 
   /// Barrier's value

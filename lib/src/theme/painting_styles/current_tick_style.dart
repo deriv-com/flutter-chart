@@ -1,7 +1,8 @@
+import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
 /// For defining current tick indicator style
-class CurrentTickStyle {
+class CurrentTickStyle extends ChartPaintingStyle {
   /// Initializes
   const CurrentTickStyle({
     this.color = const Color(0xFFFF444F),

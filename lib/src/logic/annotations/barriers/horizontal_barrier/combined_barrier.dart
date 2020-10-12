@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 import 'horizontal_barrier.dart';
 
-/// A barrier with both horizontal and vertical lines.
+/// A barrier with both horizontal and vertical barriers.
 class CombinedBarrier extends HorizontalBarrier {
   /// Initializes
   CombinedBarrier(
@@ -63,24 +63,10 @@ class CombinedBarrier extends HorizontalBarrier {
     int granularity,
   ) {
     super.paint(
-      canvas,
-      size,
-      epochToX,
-      quoteToY,
-      animationInfo,
-      pipSize,
-      granularity,
-    );
+        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
 
     verticalBarrier.paint(
-      canvas,
-      size,
-      epochToX,
-      quoteToY,
-      animationInfo,
-      pipSize,
-      granularity,
-    );
+        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
 
     final VerticalBarrierObject prevVerticalObject =
         verticalBarrier.previousObject;
