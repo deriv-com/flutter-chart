@@ -286,6 +286,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     ],
                     annotations: ticks.length > 4
                         ? [
+                            CombinedBarrier(
+                              ticks[ticks.length - 8],
+                              title: 'Buy time',
+                              style: BarrierStyle(
+                                  color: Colors.grey, isDashed: true),
+                            ),
                             HorizontalBarrier(
                                 ticks.last.quote +
                                     (ticks.last.quote -
@@ -307,14 +313,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   arrowType: BarrierArrowType.downward,
                                   color: const Color(0xFFCC2E3D),
                                 )),
-                            CombinedBarrier(
-                              ticks[ticks.length - 8],
-                              title: 'Buy time',
-                              style: BarrierStyle(
-                                color: Colors.grey,
-                                isDashed: true,
-                              ),
-                            ),
                             LastTickIndicator(ticks.last),
                           ]
                         : [],
