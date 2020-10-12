@@ -287,6 +287,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ),
                       ),
                     ],
+                    markerSeries: MarkerSeries([
+                      Marker(
+                        direction: MarkerDirection.up,
+                        epoch: 1602491086000,
+                        quote: 262.6490,
+                      ),
+                      Marker(
+                        direction: MarkerDirection.down,
+                        epoch: 1602491096000,
+                        quote: 262.5018,
+                      ),
+                    ]),
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0

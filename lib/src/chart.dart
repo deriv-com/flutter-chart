@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/chart_series/marker_series/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class Chart extends StatelessWidget {
     @required this.pipSize,
     @required this.granularity,
     this.secondarySeries,
+    this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
@@ -45,6 +47,9 @@ class Chart extends StatelessWidget {
   ///
   /// Useful for adding on-chart indicators.
   final List<Series> secondarySeries;
+
+  /// Open position marker series.
+  final MarkerSeries markerSeries;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -81,7 +86,10 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               child: _ChartImplementation(
                 mainSeries: mainSeries,
-                chartDataList: <ChartData>[...secondarySeries],
+                chartDataList: <ChartData>[
+                  ...secondarySeries,
+                  if (markerSeries != null) markerSeries,
+                ],
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
               ),
@@ -114,7 +122,6 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-
   /// Width of the area with quote labels on the right.
   double quoteLabelsAreaWidth = 70;
 
@@ -491,7 +498,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       bottomPadding: _bottomPadding,
     );
   }
-
 
   void _onPanStart(ScaleStartDetails details) {
     _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
