@@ -3,9 +3,9 @@ import 'package:deriv_chart/src/models/time_range.dart';
 
 /// Finds time gaps in a list of entries.
 List<TimeRange> findGaps(List<Tick> entries, int granularity) {
-  final List<TimeRange> gaps = [];
+  final List<TimeRange> gaps = <TimeRange>[];
 
-  for (var i = 1; i < entries.length; i++) {
+  for (int i = 1; i < entries.length; i++) {
     final left = entries[i - 1];
     final right = entries[i];
 
