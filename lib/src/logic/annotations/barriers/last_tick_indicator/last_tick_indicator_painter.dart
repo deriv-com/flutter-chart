@@ -12,6 +12,12 @@ import 'package:flutter/material.dart';
 
 import 'last_tick_indicator.dart';
 
+/// Right padding of the chart
+const double rightMargin = 5;
+
+/// Background label padding
+const double labelPadding = 5;
+
 /// The class to paint last tick indicator on the chart's canvas
 class LastTickIndicatorPainter extends SeriesPainter<LastTickIndicator> {
   /// Initializes
@@ -54,52 +60,56 @@ class LastTickIndicatorPainter extends SeriesPainter<LastTickIndicator> {
       currentTickY = quoteToY(quoteValue);
     }
 
-    if (!currentTickX.isNaN && !currentTickY.isNaN) {
-      paintCurrentTickDot(
-        canvas,
-        center: Offset(currentTickX, currentTickY),
-        animationProgress: animationInfo.blinkingPercent,
-        style: currentTickStyle,
-      );
+    paintCurrentTickDot(
+      canvas,
+      center: Offset(currentTickX, currentTickY),
+      animationProgress: animationInfo.blinkingPercent,
+      style: currentTickStyle,
+    );
 
-      paintHorizontalDashedLine(
-        canvas,
-        currentTickX,
-        size.width,
-        currentTickY,
-        currentTickStyle.color,
-        currentTickStyle.lineThickness,
-      );
+    final TextSpan span = TextSpan(
+      text: quoteValue.toStringAsFixed(pipSize),
+      style: currentTickStyle.labelStyle,
+    );
 
-      final TextSpan span = TextSpan(
-        text: quoteValue.toStringAsFixed(pipSize),
-        style: currentTickStyle.labelStyle,
-      );
+    final TextPainter valuePainter = TextPainter(
+      text: span,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout();
 
-      final TextPainter textPainter = TextPainter(
-        text: span,
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      )..layout();
+    final double quoteLabelAreaWidth =
+        valuePainter.width + quoteLabelHorizontalPadding;
 
-      final double quoteLabelAreaWidth =
-          textPainter.width + quoteLabelHorizontalPadding;
+    final double labelBackgroundRight = size.width - rightMargin;
+    final double labelBackgroundLeft =
+        labelBackgroundRight - valuePainter.width - labelPadding;
 
-      paintCurrentTickLabelBackground(
-        canvas,
-        size,
-        centerY: currentTickY,
-        quoteLabelsAreaWidth: quoteLabelAreaWidth,
-        quoteLabel: lastEntry.quote.toStringAsFixed(4),
-        currentTickX: currentTickX,
-        style: currentTickStyle,
-      );
+    paintHorizontalDashedLine(
+      canvas,
+      currentTickX,
+      labelBackgroundLeft,
+      currentTickY,
+      currentTickStyle.color,
+      currentTickStyle.lineThickness,
+    );
 
-      textPainter.paint(
-        canvas,
-        Offset(size.width - quoteLabelAreaWidth,
-            currentTickY - textPainter.height / 2),
-      );
-    }
+    canvas.drawPath(
+      getCurrentTickLabelBackgroundPath(
+        left: labelBackgroundLeft,
+        top: currentTickY - valuePainter.height / 2 - labelPadding,
+        right: labelBackgroundRight,
+        bottom: currentTickY + valuePainter.height / 2 + labelPadding,
+      ),
+      Paint()..color = currentTickStyle.color,
+    );
+
+    valuePainter.paint(
+      canvas,
+      Offset(
+        size.width - quoteLabelAreaWidth,
+        currentTickY - valuePainter.height / 2,
+      ),
+    );
   }
 }
