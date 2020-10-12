@@ -124,7 +124,7 @@ class XAxisModel extends ChangeNotifier {
 
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
-  /// Update scrolling bounds and time gaps based on main chart's entries.
+  /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
   /// Should be called after [updateGranularity].
   void updateEntries(List<Tick> entries) {
