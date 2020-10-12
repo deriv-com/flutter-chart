@@ -20,18 +20,36 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final MarkerStyle style = series.style;
-
     for (final Marker marker in series.visibleEntries) {
-      final Offset center = Offset(
+      final Offset anchor = Offset(
         epochToX(marker.epoch),
         quoteToY(marker.quote),
       );
-      canvas.drawCircle(
-        center,
-        5,
-        Paint()..color = style.color,
-      );
+      if (marker.direction == MarkerDirection.up) {
+        _drawUpMarker(canvas, anchor);
+      } else {
+        _drawDownMarker(canvas, anchor);
+      }
     }
+  }
+
+  void _drawUpMarker(Canvas canvas, Offset anchor) {
+    final MarkerStyle style = series.style;
+
+    canvas.drawCircle(
+      anchor,
+      5,
+      Paint()..color = style.upColor,
+    );
+  }
+
+  void _drawDownMarker(Canvas canvas, Offset anchor) {
+    final MarkerStyle style = series.style;
+
+    canvas.drawCircle(
+      anchor,
+      5,
+      Paint()..color = style.downColor,
+    );
   }
 }

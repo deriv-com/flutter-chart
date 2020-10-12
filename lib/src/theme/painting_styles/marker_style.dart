@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 class MarkerStyle extends ChartPaintingStyle {
   /// Creates marker style.
   const MarkerStyle({
-    this.color = Colors.red,
+    this.upColor = Colors.green,
+    this.downColor = Colors.red,
   });
 
-  /// Marker color.
-  final Color color;
+  /// Color of marker pointing up.
+  final Color upColor;
+
+  /// Color of marker pointing down.
+  final Color downColor;
 }
