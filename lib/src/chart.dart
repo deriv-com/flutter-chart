@@ -216,7 +216,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _setupAnimations();
     _setupGestures();
 
-    widget.controller?.scrollToLastTickListener = (bool animate) {
+    widget.controller?.onScrollToLastTick = (bool animate) {
       _xAxis.scrollToLastTick(animate: animate);
     };
   }
