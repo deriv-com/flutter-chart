@@ -250,8 +250,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _resetCandlesTo(historyCandles);
       }
 
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-      _controller.scrollToLastTick(animate: false);
+      WidgetsBinding.instance.addPostFrameCallback(
+        (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
+      );
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {
