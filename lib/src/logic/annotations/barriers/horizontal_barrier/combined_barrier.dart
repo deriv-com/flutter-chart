@@ -68,6 +68,15 @@ class CombinedBarrier extends HorizontalBarrier {
     verticalBarrier.paint(
         canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
 
+    _paintCircleOnIntersection(canvas, epochToX, quoteToY, animationInfo);
+  }
+
+  void _paintCircleOnIntersection(
+    Canvas canvas,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+  ) {
     final VerticalBarrierObject prevVerticalObject =
         verticalBarrier.previousObject;
 

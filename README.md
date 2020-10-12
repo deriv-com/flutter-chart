@@ -94,7 +94,7 @@ Chart(
 );
 ```
 
-To add horizontal/vertical barriers add specify them in `annotations` parameter of the chart.
+To add horizontal/vertical barriers specify them in `annotations` parameter of the chart.
 
 ```dart
 Chart(

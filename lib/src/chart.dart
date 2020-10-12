@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,8 @@ class Chart extends StatelessWidget {
   /// Chart's theme.
   final ChartTheme theme;
 
-  final List<ChartAnnotation> annotations;
+  /// Chart's annotations
+  final List<ChartAnnotation<ChartObject>> annotations;
 
   @override
   Widget build(BuildContext context) {

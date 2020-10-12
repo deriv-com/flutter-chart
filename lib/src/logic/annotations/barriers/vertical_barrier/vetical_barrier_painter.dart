@@ -25,7 +25,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     if (series.isOnRange) {
       final BarrierStyle style = series.style;
       final Paint paint = Paint()
-        ..color = Colors.white24
+        ..color = style.color
         ..strokeWidth = 1
         ..style = PaintingStyle.stroke;
 

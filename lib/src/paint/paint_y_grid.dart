@@ -51,7 +51,7 @@ void _paintQuoteLabels(
   @required GridStyle style,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
-    TextPainter textPainter = TextPainter(
+    final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: quoteLabel,
         style: style.labelStyle,

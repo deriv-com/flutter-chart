@@ -33,7 +33,7 @@ class LastTickIndicator extends ChartAnnotation<LastTickObject> {
   SeriesPainter<Series> createPainter() => LastTickIndicatorPainter(this);
 
   // We return NaN cause we don't want to contribute last tick indicator in the
-  // process of defining min/max values of the chart's y-axis.
+  // process of defining min/max of the chart's y-axis.
   @override
   List<double> recalculateMinMax() => <double>[double.nan, double.nan];
 }

@@ -285,12 +285,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       ),
                     ],
                     annotations: ticks.length > 4
-                        ? [
+                        ? <ChartAnnotation>[
                             CombinedBarrier(
                               ticks[ticks.length - 8],
                               title: 'Buy time',
                               style: BarrierStyle(
-                                  color: Colors.grey, isDashed: true),
+                                color: Colors.grey,
+                                isDashed: true,
+                              ),
                             ),
                             HorizontalBarrier(
                                 ticks.last.quote +
@@ -315,7 +317,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 )),
                             LastTickIndicator(ticks.last),
                           ]
-                        : [],
+                        : null,
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0
