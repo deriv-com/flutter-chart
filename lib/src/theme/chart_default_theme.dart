@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 import 'dimens.dart';
 import 'painting_styles/candle_style.dart';
-import 'painting_styles/current_tick_style.dart';
+import 'painting_styles/tick_indicator_style.dart';
 import 'painting_styles/grid_style.dart';
 import 'painting_styles/line_style.dart';
 import 'text_styles.dart';
@@ -84,7 +84,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
       );
 
   @override
-  CurrentTickStyle get currentTickStyle => CurrentTickStyle(
+  TickIndicatorStyle get currentTickStyle => TickIndicatorStyle(
         color: brandCoralColor,
         labelStyle: textStyle(
           textStyle: caption2,

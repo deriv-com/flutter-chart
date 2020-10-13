@@ -286,12 +286,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     ],
                     annotations: ticks.length > 4
                         ? <ChartAnnotation>[
-                            CombinedBarrier(
+                            TickIndicator(
                               ticks[ticks.length - 8],
-                              title: 'Buy time',
-                              style: BarrierStyle(
+                              style: TickIndicatorStyle(
                                 color: Colors.grey,
-                                isDashed: true,
+                                blinking: false,
+                                labelShape: LabelShape.rectangle,
                               ),
                             ),
                             HorizontalBarrier(
@@ -321,7 +321,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   isDashed: true,
                                   color: Colors.grey,
                                 )),
-                            TickIndicator(ticks.last),
+                            TickIndicator(ticks.last, id: 'last tick'),
                           ]
                         : null,
                     pipSize:

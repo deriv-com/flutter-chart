@@ -1,11 +1,11 @@
-import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/tick_indicator_style.dart';
 import 'package:flutter/material.dart';
 
 void paintCurrentTickDot(
   Canvas canvas, {
   @required Offset center,
   @required double animationProgress,
-  @required CurrentTickStyle style,
+  @required TickIndicatorStyle style,
 }) {
   canvas.drawCircle(
     center,

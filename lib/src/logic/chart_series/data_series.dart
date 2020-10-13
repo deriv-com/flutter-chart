@@ -62,7 +62,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (entries.isNotEmpty && style?.currentTickStyle != null ?? false) {
       _lastTickIndicator = TickIndicator(
         entries.last,
-        currentTickStyle: style.currentTickStyle,
+        style: style.currentTickStyle,
       );
     }
   }

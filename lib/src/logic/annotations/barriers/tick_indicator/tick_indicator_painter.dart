@@ -4,11 +4,10 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
-import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/tick_indicator_style.dart';
 import 'package:flutter/material.dart';
 
 import 'tick_indicator.dart';
@@ -35,7 +34,7 @@ class TickIndicatorPainter extends SeriesPainter<TickIndicator> {
     double currentTickX;
     double currentTickY;
     final BarrierObject lastTickObject = series.annotationObject;
-    final CurrentTickStyle currentTickStyle = series.style;
+    final TickIndicatorStyle style = series.style;
 
     double quoteValue;
 
@@ -63,13 +62,13 @@ class TickIndicatorPainter extends SeriesPainter<TickIndicator> {
     paintCurrentTickDot(
       canvas,
       center: Offset(currentTickX, currentTickY),
-      animationProgress: animationInfo.blinkingPercent,
-      style: currentTickStyle,
+      animationProgress: style.blinking ? animationInfo.blinkingPercent : 0,
+      style: style,
     );
 
     final TextSpan span = TextSpan(
       text: quoteValue.toStringAsFixed(pipSize),
-      style: currentTickStyle.labelStyle,
+      style: style.labelStyle,
     );
 
     final TextPainter valuePainter = TextPainter(
@@ -83,26 +82,40 @@ class TickIndicatorPainter extends SeriesPainter<TickIndicator> {
 
     final double labelBackgroundRight = size.width - rightMargin;
     final double labelBackgroundLeft =
-        labelBackgroundRight - valuePainter.width - labelPadding;
+        labelBackgroundRight - valuePainter.width - 2 * labelPadding;
 
     paintHorizontalDashedLine(
       canvas,
       currentTickX,
       labelBackgroundLeft,
       currentTickY,
-      currentTickStyle.color,
-      currentTickStyle.lineThickness,
+      style.color,
+      style.lineThickness,
     );
 
-    canvas.drawPath(
-      getCurrentTickLabelBackgroundPath(
-        left: labelBackgroundLeft,
-        top: currentTickY - valuePainter.height / 2 - labelPadding,
-        right: labelBackgroundRight,
-        bottom: currentTickY + valuePainter.height / 2 + labelPadding,
-      ),
-      Paint()..color = currentTickStyle.color,
-    );
+    if (style.labelShape == LabelShape.pentagon) {
+      canvas.drawPath(
+        getCurrentTickLabelBackgroundPath(
+          left: labelBackgroundLeft,
+          top: currentTickY - valuePainter.height / 2 - labelPadding,
+          right: labelBackgroundRight,
+          bottom: currentTickY + valuePainter.height / 2 + labelPadding,
+        ),
+        Paint()..color = style.color,
+      );
+    } else if (style.labelShape == LabelShape.rectangle) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTRB(
+              labelBackgroundLeft,
+              currentTickY - valuePainter.height / 2 - labelPadding,
+              labelBackgroundRight,
+              currentTickY + valuePainter.height / 2 + labelPadding,
+            ),
+            const Radius.circular(4)),
+        Paint()..color = style.color,
+      );
+    }
 
     valuePainter.paint(
       canvas,

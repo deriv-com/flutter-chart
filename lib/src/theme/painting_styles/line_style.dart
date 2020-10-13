@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/tick_indicator_style.dart';
 import 'package:flutter/material.dart';
 
 /// Defines the style of painting line data
@@ -9,7 +9,7 @@ class LineStyle extends DataSeriesStyle {
     this.color = const Color(0xFF85ACB0),
     this.thickness = 1,
     this.hasArea = true,
-    CurrentTickStyle currentTickStyle,
+    TickIndicatorStyle currentTickStyle,
   }) : super(currentTickStyle: currentTickStyle);
 
   /// Line color
