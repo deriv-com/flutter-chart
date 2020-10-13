@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/marker.dart';
