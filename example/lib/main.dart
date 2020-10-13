@@ -290,13 +290,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     markerSeries: MarkerSeries([
                       Marker(
                         direction: MarkerDirection.up,
-                        epoch: 1602491086000,
-                        quote: 262.6490,
+                        epoch: 1602561671000,
+                        quote: 873.745,
                       ),
                       Marker(
                         direction: MarkerDirection.down,
-                        epoch: 1602491096000,
-                        quote: 262.5018,
+                        epoch: 1602561704000,
+                        quote: 873.636,
                       ),
                     ]),
                     pipSize:
