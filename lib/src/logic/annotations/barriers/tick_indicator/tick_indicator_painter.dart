@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
@@ -10,7 +11,7 @@ import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
-import 'last_tick_indicator.dart';
+import 'tick_indicator.dart';
 
 /// Right padding of the chart
 const double rightMargin = 5;
@@ -19,9 +20,9 @@ const double rightMargin = 5;
 const double labelPadding = 5;
 
 /// The class to paint last tick indicator on the chart's canvas
-class LastTickIndicatorPainter extends SeriesPainter<LastTickIndicator> {
+class TickIndicatorPainter extends SeriesPainter<TickIndicator> {
   /// Initializes
-  LastTickIndicatorPainter(LastTickIndicator series) : super(series);
+  TickIndicatorPainter(TickIndicator series) : super(series);
 
   @override
   void onPaint({
@@ -33,30 +34,29 @@ class LastTickIndicatorPainter extends SeriesPainter<LastTickIndicator> {
   }) {
     double currentTickX;
     double currentTickY;
-    final LastTickObject lastTickObject = series.annotationObject;
-    final Tick lastEntry = lastTickObject.tick;
+    final BarrierObject lastTickObject = series.annotationObject;
     final CurrentTickStyle currentTickStyle = series.style;
 
     double quoteValue;
 
     if (series.previousObject != null) {
-      final LastTickObject prevLastTickObject = series.previousObject;
+      final BarrierObject prevLastTickObject = series.previousObject;
       currentTickX = lerpDouble(
-        epochToX(prevLastTickObject.tick.epoch),
-        epochToX(lastEntry.epoch),
+        epochToX(prevLastTickObject.epoch),
+        epochToX(lastTickObject.epoch),
         animationInfo.currentTickPercent,
       );
 
       quoteValue = lerpDouble(
-        prevLastTickObject.tick.quote,
-        lastEntry.quote,
+        prevLastTickObject.value,
+        lastTickObject.value,
         animationInfo.currentTickPercent,
       );
       currentTickY = quoteToY(quoteValue);
     } else {
-      currentTickX = epochToX(lastEntry.epoch);
+      currentTickX = epochToX(lastTickObject.epoch);
 
-      quoteValue = lastEntry.quote;
+      quoteValue = lastTickObject.value;
       currentTickY = quoteToY(quoteValue);
     }
 

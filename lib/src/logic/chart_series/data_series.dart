@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/annotations/barriers/last_tick_indicator/last_tick_indicator.dart';
+import 'package:deriv_chart/src/logic/annotations/barriers/tick_indicator/tick_indicator.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -32,7 +32,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// A reference to the last entry from series previous [entries] before update
   T get prevLastEntry => _prevLastEntry;
 
-  LastTickIndicator _lastTickIndicator;
+  TickIndicator _lastTickIndicator;
 
   /// Updates visible entries for this Series.
   @override
@@ -60,7 +60,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   void _initLastTickIndicator() {
     final DataSeriesStyle style = this.style;
     if (entries.isNotEmpty && style?.currentTickStyle != null ?? false) {
-      _lastTickIndicator = LastTickIndicator(
+      _lastTickIndicator = TickIndicator(
         entries.last,
         currentTickStyle: style.currentTickStyle,
       );

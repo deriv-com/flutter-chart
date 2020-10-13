@@ -3,7 +3,7 @@ library deriv_chart;
 export 'src/chart.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
-export 'src/logic/annotations/barriers/last_tick_indicator/last_tick_indicator.dart';
+export 'src/logic/annotations/barriers/tick_indicator/tick_indicator.dart';
 export 'src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 export 'src/logic/annotations/chart_annotation.dart';
 export 'src/logic/chart_series/indicators_series/ma_series.dart';
