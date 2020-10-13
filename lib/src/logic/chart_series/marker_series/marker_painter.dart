@@ -25,72 +25,39 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
         epochToX(marker.epoch),
         quoteToY(marker.quote),
       );
-      if (marker.direction == MarkerDirection.up) {
-        _drawUpMarker(canvas, anchor);
-      } else {
-        _drawDownMarker(canvas, anchor);
-      }
+      _drawMarker(canvas, anchor, marker.direction);
     }
   }
 
-  void _drawUpMarker(Canvas canvas, Offset anchor) {
+  void _drawMarker(Canvas canvas, Offset anchor, MarkerDirection direction) {
     final MarkerStyle style = series.style;
+    final Color color =
+        direction == MarkerDirection.up ? style.upColor : style.downColor;
+    final double dir = direction == MarkerDirection.up ? -1 : 1;
+    final Offset center = anchor + const Offset(0, 18) * dir;
 
     canvas
       ..drawLine(
         anchor,
-        anchor + Offset(0, -6),
+        center,
         Paint()
-          ..color = style.upColor
+          ..color = color
           ..strokeWidth = 1.5,
       )
       ..drawCircle(
-        anchor + Offset(0, -18),
+        center,
         12,
-        Paint()..color = style.upColor,
+        Paint()..color = color,
       )
       ..drawCircle(
-        anchor + Offset(0, -18),
+        center,
         10,
         Paint()..color = Colors.black.withOpacity(0.32),
       )
       ..drawCircle(
         anchor,
         3,
-        Paint()..color = style.upColor,
-      )
-      ..drawCircle(
-        anchor,
-        1.5,
-        Paint()..color = Colors.black,
-      );
-  }
-
-  void _drawDownMarker(Canvas canvas, Offset anchor) {
-    final MarkerStyle style = series.style;
-
-    canvas
-      ..drawLine(
-        anchor,
-        anchor + Offset(0, 6),
-        Paint()
-          ..color = style.downColor
-          ..strokeWidth = 1.5,
-      )
-      ..drawCircle(
-        anchor + Offset(0, 18),
-        12,
-        Paint()..color = style.downColor,
-      )
-      ..drawCircle(
-        anchor + Offset(0, 18),
-        10,
-        Paint()..color = Colors.black.withOpacity(0.32),
-      )
-      ..drawCircle(
-        anchor,
-        3,
-        Paint()..color = style.downColor,
+        Paint()..color = color,
       )
       ..drawCircle(
         anchor,
