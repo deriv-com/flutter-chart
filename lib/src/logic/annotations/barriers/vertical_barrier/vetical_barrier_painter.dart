@@ -49,6 +49,17 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
       final double lineX = epochToX(animatedEpoch);
       final double lineEndY = size.height - 20;
 
+      if (lineStartY != 0) {
+        canvas.drawCircle(
+          Offset(lineX, lineStartY),
+          3,
+          Paint()
+            ..color = Colors.redAccent
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1,
+        );
+      }
+
       if (style.isDashed) {
         paintVerticalDashedLine(
             canvas, lineX, lineStartY, lineEndY, style.color, 1);
