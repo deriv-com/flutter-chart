@@ -13,6 +13,9 @@ import 'horizontal_barrier.dart';
 /// Padding between lines
 const double padding = 5;
 
+/// Right margin
+const double rightMargin = 5;
+
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Initializes [series]
@@ -62,7 +65,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       textDirection: TextDirection.ltr,
     )..layout();
 
-    final double valueStartX = size.width - valuePainter.width - 10;
+    final double valueStartX =
+        size.width - rightMargin - padding - valuePainter.width;
     final double middleLineEndX = valueStartX - padding;
     final double middleLineStartX = middleLineEndX - 12;
 
@@ -71,7 +75,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           Rect.fromLTRB(
             middleLineEndX,
             y - valuePainter.height / 2 - padding,
-            size.width - 10 + padding,
+            size.width - rightMargin,
             y + valuePainter.height / 2 + padding,
           ),
           const Radius.circular(4)),
