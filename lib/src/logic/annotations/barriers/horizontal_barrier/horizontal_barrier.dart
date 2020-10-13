@@ -27,5 +27,5 @@ class HorizontalBarrier extends Barrier {
   SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
 
   @override
-  BarrierObject createObject() => HorizontalBarrierObject(value, startEpoch);
+  BarrierObject createObject() => BarrierObject(startEpoch, value);
 }

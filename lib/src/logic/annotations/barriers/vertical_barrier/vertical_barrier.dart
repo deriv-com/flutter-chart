@@ -11,6 +11,7 @@ class VerticalBarrier extends Barrier {
   /// Initializes
   VerticalBarrier(
     this.epoch, {
+    this.value,
     String id,
     String title,
     BarrierStyle style,
@@ -23,13 +24,17 @@ class VerticalBarrier extends Barrier {
     String title,
     BarrierStyle style,
   }) =>
-      VerticalBarrier(tick.epoch, id: id, title: title, style: style);
+      VerticalBarrier(tick.epoch,
+          value: tick.quote, id: id, title: title, style: style);
 
   /// Epoch of the vertical barrier
   final int epoch;
 
+  /// The value that this barrier points to
+  final double value;
+
   @override
-  BarrierObject createObject() => VerticalBarrierObject(epoch);
+  BarrierObject createObject() => BarrierObject(epoch, value);
 
   @override
   SeriesPainter<Series> createPainter() => VerticalBarrierPainter(this);

@@ -8,8 +8,8 @@ void paintHorizontalDashedLine(
   double lineY,
   Color lineColor,
   double lineThickness, {
-  double dashWidth = 4,
-  double dashSpace = 4,
+  double dashWidth = 3,
+  double dashSpace = 3,
 }) {
   double startX = lineStartX;
 
@@ -35,8 +35,8 @@ void paintVerticalDashedLine(
   double lineEndY,
   Color lineColor,
   double lineThickness, {
-  double dashWidth = 4,
-  double dashSpace = 4,
+  double dashWidth = 3,
+  double dashSpace = 3,
 }) {
   double startY = lineStartY;
 

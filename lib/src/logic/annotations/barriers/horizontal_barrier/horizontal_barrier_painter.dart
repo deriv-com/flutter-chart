@@ -46,7 +46,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (series.previousObject == null) {
       animatedValue = series.value;
     } else {
-      final HorizontalBarrierObject previousBarrier = series.previousObject;
+      final BarrierObject previousBarrier = series.previousObject;
       animatedValue = lerpDouble(
         previousBarrier.value,
         series.value,

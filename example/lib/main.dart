@@ -315,6 +315,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   arrowType: BarrierArrowType.downward,
                                   color: const Color(0xFFCC2E3D),
                                 )),
+                            VerticalBarrier.onTick(ticks[ticks.length - 3],
+                                title: 'Sell time',
+                                style: BarrierStyle(
+                                  isDashed: true,
+                                  color: Colors.grey,
+                                )),
                             LastTickIndicator(ticks.last),
                           ]
                         : null,

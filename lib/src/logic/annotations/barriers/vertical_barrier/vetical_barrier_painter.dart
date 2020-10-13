@@ -30,23 +30,31 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
         ..style = PaintingStyle.stroke;
 
       int animatedEpoch;
+      double lineStartY = 0;
 
       if (series.previousObject == null) {
         animatedEpoch = series.epoch;
       } else {
-        final VerticalBarrierObject prevObject = series.previousObject;
+        final BarrierObject prevObject = series.previousObject;
         animatedEpoch = lerpDouble(prevObject.epoch.toDouble(), series.epoch,
                 animationInfo.currentTickPercent)
             .toInt();
+
+        if (series.annotationObject.value != null && prevObject.value != null) {
+          lineStartY = quoteToY(lerpDouble(prevObject.value,
+              series.annotationObject.value, animationInfo.currentTickPercent));
+        }
       }
 
       final double lineX = epochToX(animatedEpoch);
       final double lineEndY = size.height - 20;
 
       if (style.isDashed) {
-        paintVerticalDashedLine(canvas, lineX, 0, lineEndY, style.color, 1);
+        paintVerticalDashedLine(
+            canvas, lineX, lineStartY, lineEndY, style.color, 1);
       } else {
-        canvas.drawLine(Offset(lineX, 0), Offset(lineX, lineEndY), paint);
+        canvas.drawLine(
+            Offset(lineX, lineStartY), Offset(lineX, lineEndY), paint);
       }
 
       _paintLineLabel(canvas, lineX, lineEndY, style);

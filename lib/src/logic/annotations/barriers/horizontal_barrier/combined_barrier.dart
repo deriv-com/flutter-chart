@@ -77,10 +77,9 @@ class CombinedBarrier extends HorizontalBarrier {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final VerticalBarrierObject prevVerticalObject =
-        verticalBarrier.previousObject;
+    final BarrierObject prevVerticalObject = verticalBarrier.previousObject;
 
-    final HorizontalBarrierObject prevHorizontalObject = previousObject;
+    final BarrierObject prevHorizontalObject = previousObject;
 
     canvas.drawCircle(
       Offset(
