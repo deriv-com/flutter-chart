@@ -24,8 +24,14 @@ class VerticalBarrierObject extends BarrierObject {
 /// A [ChartObject] for defining position of a horizontal barrier
 class HorizontalBarrierObject extends BarrierObject {
   /// Initializes
-  HorizontalBarrierObject(this.value) : super(null, null, value, value);
+  HorizontalBarrierObject(
+    this.value,
+    this.start,
+  ) : super(start, start, value, value);
 
   /// Barrier's value
   final double value;
+
+  /// Barrier's start epoch
+  final int start;
 }

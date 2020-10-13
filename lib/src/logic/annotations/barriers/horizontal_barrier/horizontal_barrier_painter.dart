@@ -122,6 +122,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     double mainLineEndX;
+    final double mainLineStartX =
+        series.startEpoch != null ? epochToX(series.startEpoch) : 0;
 
     if (series.title != null) {
       mainLineEndX = titleStartX - padding;
@@ -138,9 +140,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     // Painting main line
     if (style.isDashed) {
-      paintHorizontalDashedLine(canvas, 0, mainLineEndX, y, style.color, 1);
+      paintHorizontalDashedLine(
+          canvas, mainLineStartX, mainLineEndX, y, style.color, 1);
     } else {
-      canvas.drawLine(Offset(0, y), Offset(mainLineEndX, y), _paint);
+      canvas.drawLine(
+          Offset(mainLineStartX, y), Offset(mainLineEndX, y), _paint);
     }
   }
 

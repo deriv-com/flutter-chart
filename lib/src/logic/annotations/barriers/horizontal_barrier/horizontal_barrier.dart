@@ -11,6 +11,7 @@ class HorizontalBarrier extends Barrier {
   /// Initializes
   HorizontalBarrier(
     this.value, {
+    this.startEpoch,
     String id,
     String title,
     BarrierStyle style,
@@ -19,9 +20,12 @@ class HorizontalBarrier extends Barrier {
   /// Value of the barrier
   final double value;
 
+  /// Start epoch
+  final int startEpoch;
+
   @override
   SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
 
   @override
-  BarrierObject createObject() => HorizontalBarrierObject(value);
+  BarrierObject createObject() => HorizontalBarrierObject(value, startEpoch);
 }
