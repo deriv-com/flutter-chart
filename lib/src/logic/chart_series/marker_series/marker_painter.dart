@@ -36,11 +36,34 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
   void _drawUpMarker(Canvas canvas, Offset anchor) {
     final MarkerStyle style = series.style;
 
-    canvas.drawCircle(
-      anchor,
-      5,
-      Paint()..color = style.upColor,
-    );
+    canvas
+      ..drawLine(
+        anchor,
+        anchor + Offset(0, -6),
+        Paint()
+          ..color = style.upColor
+          ..strokeWidth = 1.5,
+      )
+      ..drawCircle(
+        anchor + Offset(0, -18),
+        12,
+        Paint()..color = style.upColor,
+      )
+      ..drawCircle(
+        anchor + Offset(0, -18),
+        10,
+        Paint()..color = Colors.black.withOpacity(0.32),
+      )
+      ..drawCircle(
+        anchor,
+        3,
+        Paint()..color = style.upColor,
+      )
+      ..drawCircle(
+        anchor,
+        1.5,
+        Paint()..color = Colors.black,
+      );
   }
 
   void _drawDownMarker(Canvas canvas, Offset anchor) {
