@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/marker.dart';
@@ -33,8 +35,8 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
     final MarkerStyle style = series.style;
     final Color color =
         direction == MarkerDirection.up ? style.upColor : style.downColor;
-    final double dir = direction == MarkerDirection.up ? -1 : 1;
-    final Offset center = anchor + const Offset(0, 18) * dir;
+    final double dir = direction == MarkerDirection.up ? 1 : -1;
+    final Offset center = anchor - const Offset(0, 18) * dir;
 
     canvas
       ..drawLine(
@@ -64,15 +66,23 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
         1.5,
         Paint()..color = Colors.black,
       );
-    _drawArrow(canvas, center, Size(12, 12));
+    _drawArrow(canvas, center, const Size(12, 12), dir);
   }
 
-  void _drawArrow(Canvas canvas, Offset center, Size size) {
+  void _drawArrow(Canvas canvas, Offset center, Size size, double dir) {
     final Path path = Path();
     canvas
       ..save()
-      ..translate(center.dx - size.width / 2, center.dy - size.height / 2)
-      ..scale(size.width / 16, size.height / 16); // 16x16 is original svg size
+      ..translate(
+        center.dx - size.width / 2,
+        center.dy - (size.height / 2) * dir,
+      )
+      // 16x16 is original svg size
+      ..scale(
+        size.width / 16,
+        size.height / 16 * dir,
+      );
+
     // This path was generated with http://demo.qunee.com/svg2canvas/.
     path
       ..moveTo(9.41, 1.70999)
@@ -91,6 +101,7 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
       ..cubicTo(10.5047, 5.63249, 11.0116, 5.84157, 11.54, 5.84157)
       ..cubicTo(12.0684, 5.84157, 12.5753, 5.63249, 12.95, 5.25999)
       ..lineTo(9.41, 1.70999);
+
     canvas
       ..drawPath(path, Paint()..color = Colors.white)
       ..restore();
