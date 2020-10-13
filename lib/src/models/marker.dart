@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 
 /// Directions in which marker can face.
 enum MarkerDirection {
@@ -17,10 +17,14 @@ class Marker extends Tick {
     @required this.direction,
     @required int epoch,
     @required double quote,
+    this.onTap,
   }) : super(epoch: epoch, quote: quote);
 
   /// Direction in which marker is facing.
   final MarkerDirection direction;
+
+  /// Called when marker is tapped.
+  final VoidCallback onTap;
 
   @override
   String toString() => 'Marker(epoch: $epoch, quote: $quote)';
