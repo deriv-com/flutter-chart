@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class MarkerStyle extends ChartPaintingStyle {
   /// Creates marker style.
   const MarkerStyle({
-    this.upColor = Colors.green,
-    this.downColor = Colors.red,
+    this.upColor = const Color(0xFF00A79E),
+    this.downColor = const Color(0xFFCC2E3D),
   });
 
   /// Color of marker pointing up.
