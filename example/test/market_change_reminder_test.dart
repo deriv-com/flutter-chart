@@ -11,19 +11,11 @@ void main() {
   group('Trading times', () {
     test('Trading times reminder queue fills in the correct order', () async {
       MarketChangeReminder tradingTimesReminder = MarketChangeReminder(
-        () async {
-          final tradingTimesCompleter = Completer<TradingTimes>()
-            ..complete(TradingTimes.fromJson(
-              jsonDecode(tradingTimesResponse)['trading_times'],
-            ));
-
-          return tradingTimesCompleter.future;
-        },
-        onCurrentTime: () {
-          final currentTimeCompleter = Completer<DateTime>()
-            ..complete(DateTime(2020, 10, 10, 4, 0, 0));
-          return currentTimeCompleter.future;
-        },
+        () => Future<TradingTimes>.value(TradingTimes.fromJson(
+          jsonDecode(tradingTimesResponse)['trading_times'],
+        )),
+        onCurrentTime: () =>
+            Future<DateTime>.value(DateTime.utc(2020, 10, 10, 4, 0, 0)),
       );
 
       await Future<void>.delayed(const Duration(milliseconds: 1));
