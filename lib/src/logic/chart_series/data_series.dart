@@ -57,11 +57,13 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Maximum value in [t]
   double maxValueOf(T t);
 
-
   void _initLastTickIndicator() {
     final DataSeriesStyle style = this.style;
     if (entries.isNotEmpty && style?.currentTickStyle != null ?? false) {
-      _lastTickIndicator = LastTickIndicator(entries.last);
+      _lastTickIndicator = LastTickIndicator(
+        entries.last,
+        currentTickStyle: style.currentTickStyle,
+      );
     }
   }
 
