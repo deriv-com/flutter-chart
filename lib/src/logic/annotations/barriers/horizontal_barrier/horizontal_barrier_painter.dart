@@ -166,16 +166,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     if (style.intersectionDotStyle != null && dotX != null) {
-      paintIntersectionDot(canvas, dotX, y, style.intersectionDotStyle);
-
-      if (style.intersectionDotStyle.blinking) {
-        paintBlinkingDot(
-          canvas,
-          center: Offset(dotX, y),
-          animationProgress: animationInfo.blinkingPercent,
-          style: style.intersectionDotStyle,
-        );
-      }
+      _paintDot(canvas, dotX, y, animationInfo, style);
 
       if (!series.longLine) {
         mainLineStartX = dotX;
@@ -183,6 +174,35 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     // Painting main line
+    _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
+  }
+
+  void _paintDot(
+    Canvas canvas,
+    double dotX,
+    double y,
+    AnimationInfo animationInfo,
+    HorizontalBarrierStyle style,
+  ) {
+    paintIntersectionDot(canvas, Offset(dotX, y), style.intersectionDotStyle);
+
+    if (style.intersectionDotStyle.blinking) {
+      paintBlinkingDot(
+        canvas,
+        Offset(dotX, y),
+        animationInfo.blinkingPercent,
+        style.intersectionDotStyle,
+      );
+    }
+  }
+
+  void _paintMainLine(
+    Canvas canvas,
+    double mainLineStartX,
+    double mainLineEndX,
+    double y,
+    HorizontalBarrierStyle style,
+  ) {
     if (style.isDashed) {
       paintHorizontalDashedLine(
           canvas, mainLineStartX, mainLineEndX, y, style.color, 1);

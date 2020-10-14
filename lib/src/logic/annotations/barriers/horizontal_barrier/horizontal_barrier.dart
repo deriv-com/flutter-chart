@@ -26,7 +26,7 @@ class HorizontalBarrier extends Barrier {
   /// Value of the barrier
   final double value;
 
-  /// Start epoch
+  /// Epoch
   final int epoch;
 
   @override

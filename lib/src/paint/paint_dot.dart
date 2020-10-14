@@ -3,27 +3,26 @@ import 'package:flutter/material.dart';
 
 /// Paints a blinking opaque dot.
 void paintBlinkingDot(
-  Canvas canvas, {
-  @required Offset center,
-  @required double animationProgress,
-  @required IntersectionDotStyle style,
-}) =>
+  Canvas canvas,
+  Offset center,
+  double animationProgress,
+  IntersectionDotStyle style,
+) =>
     canvas.drawCircle(
       center,
       12 * animationProgress,
       Paint()..color = style.color.withAlpha(50),
     );
 
-/// Paints a dot on [x] and [y]
+/// Paints a dot on [center]
 void paintIntersectionDot(
   Canvas canvas,
-  double x,
-  double y,
+  Offset center,
   IntersectionDotStyle style, {
   double radius = 3,
 }) =>
     canvas.drawCircle(
-      Offset(x, y),
+      center,
       3,
       Paint()
         ..color = style.color

@@ -15,8 +15,8 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   /// Title of the barrier
   final String title;
 
-  /// Vertical line start from top or from the tick
+  /// Barrier line start from screen edge or from the tick
   ///
-  /// Will be ignored if the [value] was null.
+  /// Will be ignored if the barrier has only an epoch or a value, and not both.
   final bool longLine;
 }
