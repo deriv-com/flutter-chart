@@ -1,9 +1,11 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
+import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -70,17 +72,29 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final double middleLineEndX = valueStartX - padding;
     final double middleLineStartX = middleLineEndX - 12;
 
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          Rect.fromLTRB(
-            middleLineEndX,
-            y - valuePainter.height / 2 - padding,
-            size.width - rightMargin,
-            y + valuePainter.height / 2 + padding,
-          ),
-          const Radius.circular(4)),
-      _paint,
-    );
+    if (style.labelShape == LabelShape.rectangle) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTRB(
+              middleLineEndX,
+              y - valuePainter.height / 2 - padding,
+              size.width - rightMargin,
+              y + valuePainter.height / 2 + padding,
+            ),
+            const Radius.circular(4)),
+        _paint,
+      );
+    } else if (style.labelShape == LabelShape.pentagon) {
+      canvas.drawPath(
+        getCurrentTickLabelBackgroundPath(
+          left: middleLineEndX,
+          top: y - valuePainter.height / 2 - padding,
+          right: size.width - rightMargin,
+          bottom: y + valuePainter.height / 2 + padding,
+        ),
+        Paint()..color = style.color,
+      );
+    }
 
     if (style.arrowType == BarrierArrowType.upward) {
       _paintUpwardArrows(

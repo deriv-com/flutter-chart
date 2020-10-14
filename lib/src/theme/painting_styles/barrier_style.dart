@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart'
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'tick_indicator_style.dart';
+
 /// Barrier style
 abstract class BarrierStyle extends ChartPaintingStyle {
   /// Initializes
@@ -42,6 +44,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Initializes
   const HorizontalBarrierStyle({
     this.arrowType = BarrierArrowType.none,
+    this.labelShape = LabelShape.rectangle,
     Color color = const Color(0xFF00A79E),
     Color valueBackgroundColor = Colors.transparent,
     bool hasLine = true,
@@ -64,6 +67,9 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// Arrow type
   final BarrierArrowType arrowType;
+
+  /// Label shape
+  final LabelShape labelShape;
 
   @override
   String toString() => '${super.toString()}, $arrowType';
