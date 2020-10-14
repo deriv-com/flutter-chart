@@ -86,29 +86,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final double middleLineEndX = valueStartX - padding;
     final double middleLineStartX = middleLineEndX - 12;
 
-    if (style.labelShape == LabelShape.rectangle) {
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            Rect.fromLTRB(
-              middleLineEndX,
-              y - valuePainter.height / 2 - padding,
-              size.width - rightMargin,
-              y + valuePainter.height / 2 + padding,
-            ),
-            const Radius.circular(4)),
-        _paint,
-      );
-    } else if (style.labelShape == LabelShape.pentagon) {
-      canvas.drawPath(
-        getCurrentTickLabelBackgroundPath(
-          left: middleLineEndX,
-          top: y - valuePainter.height / 2 - padding,
-          right: size.width - rightMargin,
-          bottom: y + valuePainter.height / 2 + padding,
-        ),
-        Paint()..color = style.color,
-      );
-    }
+    _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
 
     if (style.arrowType == BarrierArrowType.upward) {
       _paintUpwardArrows(
@@ -175,6 +153,39 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     // Painting main line
     _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
+  }
+
+  void _paintLabelBackground(
+    Canvas canvas,
+    Size size,
+    double middleLineEndX,
+    double y,
+    TextPainter valuePainter,
+    HorizontalBarrierStyle style,
+  ) {
+    if (style.labelShape == LabelShape.rectangle) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTRB(
+              middleLineEndX,
+              y - valuePainter.height / 2 - padding,
+              size.width - rightMargin,
+              y + valuePainter.height / 2 + padding,
+            ),
+            const Radius.circular(4)),
+        _paint,
+      );
+    } else if (style.labelShape == LabelShape.pentagon) {
+      canvas.drawPath(
+        getCurrentTickLabelBackgroundPath(
+          left: middleLineEndX,
+          top: y - valuePainter.height / 2 - padding,
+          right: size.width - rightMargin,
+          bottom: y + valuePainter.height / 2 + padding,
+        ),
+        Paint()..color = style.color,
+      );
+    }
   }
 
   void _paintDot(
