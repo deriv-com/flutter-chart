@@ -15,11 +15,12 @@ class VerticalBarrier extends Barrier {
     String id,
     String title,
     BarrierStyle style,
-    this.longLine = true,
+    bool longLine = true,
   }) : super(
           id: id,
           title: title,
           style: style ?? const VerticalBarrierStyle(),
+          longLine: longLine,
         );
 
   /// A vertical barrier on [Tick]'s epoch
@@ -44,11 +45,6 @@ class VerticalBarrier extends Barrier {
 
   /// The value that this barrier points to
   final double value;
-
-  /// Vertical line start from top or from the tick
-  ///
-  /// Will be ignored if the [value] was null.
-  final bool longLine;
 
   @override
   BarrierObject createObject() => BarrierObject(epoch, value);

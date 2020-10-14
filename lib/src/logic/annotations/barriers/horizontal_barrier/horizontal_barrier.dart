@@ -14,11 +14,13 @@ class HorizontalBarrier extends Barrier {
     this.startEpoch,
     String id,
     String title,
+    bool longLine = true,
     BarrierStyle style,
   }) : super(
           id: id,
           title: title,
           style: style ?? const HorizontalBarrierStyle(),
+          longLine: longLine,
         );
 
   /// Value of the barrier

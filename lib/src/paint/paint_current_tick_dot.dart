@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/tick_indicator_style.dart';
 import 'package:flutter/material.dart';
 
@@ -16,5 +17,23 @@ void paintCurrentTickDot(
     center,
     3,
     Paint()..color = style.color,
+  );
+}
+
+/// Paints a dot on [x] and [y]
+void paintIntersectionDot(
+  Canvas canvas,
+  double x,
+  double y,
+  IntersectionDotStyle style, {
+  double radius = 3,
+}) {
+  canvas.drawCircle(
+    Offset(x, y),
+    3,
+    Paint()
+      ..color = style.color
+      ..style = style.filled ? PaintingStyle.fill : PaintingStyle.stroke
+      ..strokeWidth = style.radius,
   );
 }

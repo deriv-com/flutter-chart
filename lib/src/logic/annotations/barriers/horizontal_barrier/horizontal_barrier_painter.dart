@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
+import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
@@ -45,8 +46,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double animatedValue;
 
+    double dotX;
+
     if (series.previousObject == null) {
       animatedValue = series.value;
+      if (series.startEpoch != null) {
+        dotX = epochToX(series.startEpoch);
+      }
     } else {
       final BarrierObject previousBarrier = series.previousObject;
       animatedValue = lerpDouble(
@@ -54,6 +60,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         series.value,
         animationInfo.currentTickPercent,
       );
+
+      if (series.startEpoch != null && series.previousObject.epoch != null) {
+        dotX = lerpDouble(
+          epochToX(series.previousObject.epoch),
+          epochToX(series.startEpoch),
+          animationInfo.currentTickPercent,
+        );
+      }
     }
 
     final double y = quoteToY(animatedValue);
@@ -136,8 +150,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     double mainLineEndX;
-    final double mainLineStartX =
-        series.startEpoch != null ? epochToX(series.startEpoch) : 0;
+    double mainLineStartX = 0;
 
     if (series.title != null) {
       mainLineEndX = titleStartX - padding;
@@ -150,6 +163,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       );
     } else {
       mainLineEndX = valueStartX;
+    }
+
+    if (style.intersectionDotStyle != null && dotX != null) {
+      paintIntersectionDot(canvas, dotX, y, style.intersectionDotStyle);
+
+      if (!series.longLine) {
+        mainLineStartX = dotX;
+      }
     }
 
     // Painting main line

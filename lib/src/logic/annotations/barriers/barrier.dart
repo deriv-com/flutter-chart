@@ -8,9 +8,15 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   Barrier({
     String id,
     this.title,
+    this.longLine,
     BarrierStyle style,
   }) : super(id ?? title, style: style);
 
   /// Title of the barrier
   final String title;
+
+  /// Vertical line start from top or from the tick
+  ///
+  /// Will be ignored if the [value] was null.
+  final bool longLine;
 }

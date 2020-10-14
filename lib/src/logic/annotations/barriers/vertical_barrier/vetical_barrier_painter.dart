@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
+import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
       final double lineEndY = size.height - 20;
 
       if (style.intersectionDotStyle != null && dotY != null) {
-        _paintIntersectionDot(canvas, lineX, dotY, style.intersectionDotStyle);
+        paintIntersectionDot(canvas, lineX, dotY, style.intersectionDotStyle);
 
         if (!series.longLine) {
           lineStartY = dotY;
@@ -97,22 +98,6 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     titlePainter.paint(
       canvas,
       Offset(titleStartX, lineEndY - titlePainter.height),
-    );
-  }
-
-  void _paintIntersectionDot(
-    Canvas canvas,
-    double x,
-    double y,
-    IntersectionDotStyle style,
-  ) {
-    canvas.drawCircle(
-      Offset(x, y),
-      3,
-      Paint()
-        ..color = style.color
-        ..style = style.filled ? PaintingStyle.fill : PaintingStyle.stroke
-        ..strokeWidth = style.radius,
     );
   }
 }
