@@ -44,4 +44,7 @@ class VerticalBarrier extends Barrier {
 
   @override
   SeriesPainter<Series> createPainter() => VerticalBarrierPainter(this);
+
+  @override
+  BarrierObject createObject() => VerticalBarrierObject(epoch, value);
 }

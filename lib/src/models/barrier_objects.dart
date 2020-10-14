@@ -4,13 +4,23 @@ import 'package:deriv_chart/src/models/chart_object.dart';
 class BarrierObject extends ChartObject {
   /// Initializes
   BarrierObject(
-    this.epoch,
+    int leftEpoch,
+    int rightEpoch,
     this.value,
-  ) : super(epoch, epoch, value, value);
+  ) : super(leftEpoch, rightEpoch, value, value);
 
   /// Barrier's value
   final double value;
+}
 
-  /// Barrier's start epoch
+/// Vertical barrier object
+class VerticalBarrierObject extends BarrierObject {
+  /// Initializes
+  VerticalBarrierObject(
+    this.epoch,
+    double value,
+  ) : super(epoch, epoch, value);
+
+  /// Epoch of the vertical barrier
   final int epoch;
 }

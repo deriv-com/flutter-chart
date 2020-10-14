@@ -61,9 +61,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         animationInfo.currentTickPercent,
       );
 
-      if (series.epoch != null && series.previousObject.epoch != null) {
+      if (series.epoch != null && series.previousObject.leftEpoch != null) {
         dotX = lerpDouble(
-          epochToX(series.previousObject.epoch),
+          epochToX(series.previousObject.leftEpoch),
           epochToX(series.epoch),
           animationInfo.currentTickPercent,
         );

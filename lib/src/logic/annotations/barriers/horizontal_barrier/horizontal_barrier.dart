@@ -32,4 +32,7 @@ class HorizontalBarrier extends Barrier {
   List<double> recalculateMinMax() => epoch == null
       ? super.recalculateMinMax()
       : <double>[double.nan, double.nan];
+
+  @override
+  BarrierObject createObject() => BarrierObject(epoch, null, value);
 }

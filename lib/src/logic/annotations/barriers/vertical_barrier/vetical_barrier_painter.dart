@@ -44,7 +44,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
           dotY = quoteToY(series.value);
         }
       } else {
-        final BarrierObject prevObject = series.previousObject;
+        final VerticalBarrierObject prevObject = series.previousObject;
         animatedEpoch = lerpDouble(prevObject.epoch.toDouble(), series.epoch,
                 animationInfo.currentTickPercent)
             .toInt();

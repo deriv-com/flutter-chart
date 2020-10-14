@@ -29,6 +29,4 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   /// The value that this barrier points to
   final double value;
 
-  @override
-  BarrierObject createObject() => BarrierObject(epoch, value);
 }
