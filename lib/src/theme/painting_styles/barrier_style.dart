@@ -33,7 +33,7 @@ abstract class BarrierStyle extends ChartPaintingStyle {
 
   @override
   String toString() =>
-      '${super.toString()}$color, ${textStyle.toStringShort()}, $hasLine, $isDashed, $valueBackgroundColor';
+      '${super.toString()}$color, ${textStyle.toStringShort()}, ${intersectionDotStyle.toString()}, $hasLine, $isDashed, $valueBackgroundColor';
 }
 
 /// Horizontal barrier style
@@ -69,7 +69,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
   final LabelShape labelShape;
 
   @override
-  String toString() => '${super.toString()}, $arrowType';
+  String toString() => '${super.toString()}, $arrowType $labelShape';
 }
 
 /// Vertical barrier style
@@ -118,6 +118,10 @@ class IntersectionDotStyle extends ChartPaintingStyle {
 
   /// Whether has blinking animation.
   final bool blinking;
+
+  @override
+  String toString() =>
+      '${super.toString()}, $color, $radius, $isFilled, $blinking';
 }
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).
