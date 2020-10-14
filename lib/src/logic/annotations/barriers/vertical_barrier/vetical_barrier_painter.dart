@@ -13,7 +13,15 @@ import 'package:flutter/material.dart';
 /// A class for painting horizontal barriers
 class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
   /// Initializes [series]
-  VerticalBarrierPainter(VerticalBarrier series) : super(series);
+  VerticalBarrierPainter(VerticalBarrier series)
+      : _paint = Paint()
+          // ignore: avoid_as
+          ..color = (series.style as BarrierStyle).color
+          ..strokeWidth = 1
+          ..style = PaintingStyle.stroke,
+        super(series);
+
+  final Paint _paint;
 
   @override
   void onPaint({
@@ -25,10 +33,6 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
   }) {
     if (series.isOnRange) {
       final BarrierStyle style = series.style;
-      final Paint paint = Paint()
-        ..color = style.color
-        ..strokeWidth = 1
-        ..style = PaintingStyle.stroke;
 
       int animatedEpoch;
       double lineStartY = 0;
@@ -68,7 +72,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
             canvas, lineX, lineStartY, lineEndY, style.color, 1);
       } else {
         canvas.drawLine(
-            Offset(lineX, lineStartY), Offset(lineX, lineEndY), paint);
+            Offset(lineX, lineStartY), Offset(lineX, lineEndY), _paint);
       }
 
       _paintLineLabel(canvas, lineX, lineEndY, style);
