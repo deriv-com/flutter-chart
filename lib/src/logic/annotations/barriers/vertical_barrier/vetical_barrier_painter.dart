@@ -40,7 +40,9 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
                 animationInfo.currentTickPercent)
             .toInt();
 
-        if (series.annotationObject.value != null && prevObject.value != null) {
+        if (series.annotationObject.value != null &&
+            prevObject.value != null &&
+            !series.longLine) {
           lineStartY = quoteToY(lerpDouble(prevObject.value,
               series.annotationObject.value, animationInfo.currentTickPercent));
         }
