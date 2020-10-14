@@ -168,6 +168,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (style.intersectionDotStyle != null && dotX != null) {
       paintIntersectionDot(canvas, dotX, y, style.intersectionDotStyle);
 
+      if (style.intersectionDotStyle.blinking) {
+        paintBlinkingDot(
+          canvas,
+          center: Offset(dotX, y),
+          animationProgress: animationInfo.blinkingPercent,
+          style: style.intersectionDotStyle,
+        );
+      }
+
       if (!series.longLine) {
         mainLineStartX = dotX;
       }

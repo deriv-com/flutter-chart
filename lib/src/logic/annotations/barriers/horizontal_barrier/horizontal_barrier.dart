@@ -15,7 +15,7 @@ class HorizontalBarrier extends Barrier {
     String id,
     String title,
     bool longLine = true,
-    BarrierStyle style,
+    HorizontalBarrierStyle style,
   }) : super(
           id: id,
           title: title,
@@ -39,4 +39,23 @@ class HorizontalBarrier extends Barrier {
   List<double> recalculateMinMax() => epoch == null
       ? super.recalculateMinMax()
       : <double>[double.nan, double.nan];
+}
+
+/// Tick indicator
+class TickIndicator extends HorizontalBarrier {
+  /// Initializes
+  TickIndicator(
+    Tick tick, {
+    String id,
+    HorizontalBarrierStyle style,
+  }) : super(
+          tick.quote,
+          epoch: tick.epoch,
+          id: id,
+          style: style ?? HorizontalBarrierStyle,
+          longLine: false,
+        );
+
+  @override
+  List<double> recalculateMinMax() => <double>[double.nan, double.nan];
 }

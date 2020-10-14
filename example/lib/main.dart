@@ -297,11 +297,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 )),
                             TickIndicator(
                               ticks[ticks.length - 6],
-                              style: TickIndicatorStyle(
-                                color: Colors.grey,
-                                blinking: false,
-                                labelShape: LabelShape.rectangle,
-                              ),
+                              style: HorizontalBarrierStyle(
+                                  color: Colors.grey,
+                                  labelShape: LabelShape.rectangle,
+                                  intersectionDotStyle: IntersectionDotStyle(
+                                    blinking: false,
+                                  )),
                             ),
                             HorizontalBarrier(
                                 ticks.last.quote +

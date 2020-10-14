@@ -106,7 +106,8 @@ class IntersectionDotStyle extends ChartPaintingStyle {
   const IntersectionDotStyle({
     this.color = Colors.redAccent,
     this.radius = 1,
-    this.filled = false,
+    this.isFilled = false,
+    this.blinking = false,
   });
 
   /// Color of the dot
@@ -116,7 +117,10 @@ class IntersectionDotStyle extends ChartPaintingStyle {
   final double radius;
 
   /// Whether dot is filled or not.
-  final bool filled;
+  final bool isFilled;
+
+  /// Whether has blinking animation.
+  final bool blinking;
 }
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).

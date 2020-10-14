@@ -1,23 +1,23 @@
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/tick_indicator_style.dart';
 import 'package:flutter/material.dart';
 
-void paintCurrentTickDot(
+/// Paints a blinking opaque dot.
+void paintBlinkingDot(
   Canvas canvas, {
   @required Offset center,
   @required double animationProgress,
-  @required TickIndicatorStyle style,
+  @required IntersectionDotStyle style,
 }) {
   canvas.drawCircle(
     center,
     12 * animationProgress,
     Paint()..color = style.color.withAlpha(50),
   );
-  canvas.drawCircle(
-    center,
-    3,
-    Paint()..color = style.color,
-  );
+//  canvas.drawCircle(
+//    center,
+//    3,
+//    Paint()..color = style.color,
+//  );
 }
 
 /// Paints a dot on [x] and [y]
@@ -33,7 +33,7 @@ void paintIntersectionDot(
     3,
     Paint()
       ..color = style.color
-      ..style = style.filled ? PaintingStyle.fill : PaintingStyle.stroke
+      ..style = style.isFilled ? PaintingStyle.fill : PaintingStyle.stroke
       ..strokeWidth = style.radius,
   );
 }
