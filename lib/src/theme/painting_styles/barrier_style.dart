@@ -36,6 +36,10 @@ class BarrierStyle extends ChartPaintingStyle {
 
   /// Arrow type
   final BarrierArrowType arrowType;
+
+  @override
+  String toString() =>
+      '${super.toString()}($color, ${textStyle.toStringShort()}, $hasLine, $isDashed, $valueBackgroundColor, $arrowType)';
 }
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).

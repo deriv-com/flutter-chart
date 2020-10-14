@@ -20,4 +20,8 @@ class CandleStyle extends DataSeriesStyle {
 
   /// The vertical line inside candle which represents high/low
   final Color lineColor;
+
+  @override
+  String toString() =>
+      '${super.toString()}($positiveColor, $negativeColor, $lineColor)';
 }

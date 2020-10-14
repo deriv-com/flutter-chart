@@ -321,7 +321,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   isDashed: true,
                                   color: Colors.grey,
                                 )),
-                            TickIndicator(ticks.last, id: 'last tick'),
+                            TickIndicator(ticks.last),
                           ]
                         : null,
                     pipSize:

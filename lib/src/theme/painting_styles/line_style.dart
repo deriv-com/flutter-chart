@@ -20,4 +20,7 @@ class LineStyle extends DataSeriesStyle {
 
   /// Whether the line series has area or not
   final bool hasArea;
+
+  @override
+  String toString() => '${super.toString()}($color, $thickness, $hasArea)';
 }

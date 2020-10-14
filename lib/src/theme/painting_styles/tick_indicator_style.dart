@@ -31,6 +31,10 @@ class TickIndicatorStyle extends ChartPaintingStyle {
 
   /// Whether has blinking animation.
   final bool blinking;
+
+  @override
+  String toString() =>
+      '${super.toString()}($color, $lineThickness, ${labelStyle.toStringShort()}, $labelShape, $blinking)';
 }
 
 /// Label shape
