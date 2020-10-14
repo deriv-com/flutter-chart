@@ -11,7 +11,7 @@ class HorizontalBarrier extends Barrier {
   /// Initializes
   HorizontalBarrier(
     this.value, {
-    this.startEpoch,
+    this.epoch,
     String id,
     String title,
     bool longLine = true,
@@ -27,11 +27,16 @@ class HorizontalBarrier extends Barrier {
   final double value;
 
   /// Start epoch
-  final int startEpoch;
+  final int epoch;
 
   @override
   SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
 
   @override
-  BarrierObject createObject() => BarrierObject(startEpoch, value);
+  BarrierObject createObject() => BarrierObject(epoch, value);
+
+  @override
+  List<double> recalculateMinMax() => epoch == null
+      ? super.recalculateMinMax()
+      : <double>[double.nan, double.nan];
 }

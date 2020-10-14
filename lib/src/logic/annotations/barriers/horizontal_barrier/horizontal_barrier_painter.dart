@@ -50,8 +50,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     if (series.previousObject == null) {
       animatedValue = series.value;
-      if (series.startEpoch != null) {
-        dotX = epochToX(series.startEpoch);
+      if (series.epoch != null) {
+        dotX = epochToX(series.epoch);
       }
     } else {
       final BarrierObject previousBarrier = series.previousObject;
@@ -61,10 +61,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         animationInfo.currentTickPercent,
       );
 
-      if (series.startEpoch != null && series.previousObject.epoch != null) {
+      if (series.epoch != null && series.previousObject.epoch != null) {
         dotX = lerpDouble(
           epochToX(series.previousObject.epoch),
-          epochToX(series.startEpoch),
+          epochToX(series.epoch),
           animationInfo.currentTickPercent,
         );
       }
