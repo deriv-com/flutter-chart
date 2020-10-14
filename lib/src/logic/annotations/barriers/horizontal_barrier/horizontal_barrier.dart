@@ -15,7 +15,11 @@ class HorizontalBarrier extends Barrier {
     String id,
     String title,
     BarrierStyle style,
-  }) : super(id: id, title: title, style: style);
+  }) : super(
+          id: id,
+          title: title,
+          style: style ?? const HorizontalBarrierStyle(),
+        );
 
   /// Value of the barrier
   final double value;

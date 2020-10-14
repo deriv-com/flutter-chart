@@ -15,7 +15,11 @@ class VerticalBarrier extends Barrier {
     String id,
     String title,
     BarrierStyle style,
-  }) : super(id: id, title: title, style: style);
+  }) : super(
+          id: id,
+          title: title,
+          style: style ?? const VerticalBarrierStyle(),
+        );
 
   /// A vertical barrier on [Tick]'s epoch
   factory VerticalBarrier.onTick(

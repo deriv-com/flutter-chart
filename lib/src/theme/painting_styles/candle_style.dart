@@ -23,5 +23,5 @@ class CandleStyle extends DataSeriesStyle {
 
   @override
   String toString() =>
-      '${super.toString()}($positiveColor, $negativeColor, $lineColor)';
+      '${super.toString()}$positiveColor, $negativeColor, $lineColor';
 }

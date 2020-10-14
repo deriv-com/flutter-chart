@@ -4,5 +4,5 @@ abstract class ChartPaintingStyle {
   const ChartPaintingStyle();
 
   @override
-  String toString() => '$runtimeType';
+  String toString() => '$runtimeType: ';
 }

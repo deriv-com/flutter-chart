@@ -25,5 +25,5 @@ class GridStyle {
 
   @override
   String toString() =>
-      '${super.toString()}($gridLineColor, ${labelStyle.toStringShort()}, $lineThickness)';
+      '${super.toString()}$gridLineColor, ${labelStyle.toStringShort()}, $lineThickness';
 }

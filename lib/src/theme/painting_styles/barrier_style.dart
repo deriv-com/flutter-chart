@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Barrier style
-class BarrierStyle extends ChartPaintingStyle {
+abstract class BarrierStyle extends ChartPaintingStyle {
   /// Initializes
   const BarrierStyle({
     this.color = const Color(0xFF00A79E),
@@ -16,7 +16,6 @@ class BarrierStyle extends ChartPaintingStyle {
       fontWeight: FontWeight.normal,
       color: Colors.white,
     ),
-    this.arrowType = BarrierArrowType.none,
   });
 
   /// Color of the barrier
@@ -34,12 +33,62 @@ class BarrierStyle extends ChartPaintingStyle {
   /// Value label background color
   final Color valueBackgroundColor;
 
+  @override
+  String toString() =>
+      '${super.toString()}$color, ${textStyle.toStringShort()}, $hasLine, $isDashed, $valueBackgroundColor';
+}
+
+/// Horizontal barrier style
+class HorizontalBarrierStyle extends BarrierStyle {
+  /// Initializes
+  const HorizontalBarrierStyle({
+    this.arrowType = BarrierArrowType.none,
+    Color color = const Color(0xFF00A79E),
+    Color valueBackgroundColor = Colors.transparent,
+    bool hasLine = true,
+    bool isDashed = true,
+    TextStyle textStyle = const TextStyle(
+      fontSize: 10,
+      height: 1.3,
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+    ),
+  }) : super(
+          color: color,
+          valueBackgroundColor: valueBackgroundColor,
+          hasLine: hasLine,
+          isDashed: isDashed,
+          textStyle: textStyle,
+        );
+
   /// Arrow type
   final BarrierArrowType arrowType;
 
   @override
-  String toString() =>
-      '${super.toString()}($color, ${textStyle.toStringShort()}, $hasLine, $isDashed, $valueBackgroundColor, $arrowType)';
+  String toString() => '${super.toString()}, $arrowType';
+}
+
+/// Vertical barrier style
+class VerticalBarrierStyle extends BarrierStyle {
+  /// Initializes
+  const VerticalBarrierStyle({
+    Color color = Colors.grey,
+    Color valueBackgroundColor = Colors.transparent,
+    bool hasLine = true,
+    bool isDashed = true,
+    TextStyle textStyle = const TextStyle(
+      fontSize: 10,
+      height: 1.3,
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+    ),
+  }) : super(
+          color: color,
+          valueBackgroundColor: valueBackgroundColor,
+          hasLine: hasLine,
+          isDashed: isDashed,
+          textStyle: textStyle,
+        );
 }
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).

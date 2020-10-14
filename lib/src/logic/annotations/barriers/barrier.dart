@@ -9,7 +9,7 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
     String id,
     this.title,
     BarrierStyle style,
-  }) : super(id ?? title, style: style ?? const BarrierStyle());
+  }) : super(id ?? title, style: style);
 
   /// Title of the barrier
   final String title;

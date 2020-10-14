@@ -34,7 +34,7 @@ class TickIndicatorStyle extends ChartPaintingStyle {
 
   @override
   String toString() =>
-      '${super.toString()}($color, $lineThickness, ${labelStyle.toStringShort()}, $labelShape, $blinking)';
+      '${super.toString()}$color, $lineThickness, ${labelStyle.toStringShort()}, $labelShape, $blinking';
 }
 
 /// Label shape

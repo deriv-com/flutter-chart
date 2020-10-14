@@ -17,17 +17,22 @@ class CombinedBarrier extends HorizontalBarrier {
     this.tick, {
     String id,
     String title,
-    BarrierStyle style,
-  })  : verticalBarrier = VerticalBarrier(
-          tick.epoch,
-          title: title,
-          style: style,
-        ),
-        _dotPaint = Paint()
+    HorizontalBarrierStyle horizontalBarrierStyle,
+    VerticalBarrierStyle verticalBarrierStyle,
+  })  : _dotPaint = Paint()
           ..color = Colors.redAccent
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1,
-        super(tick.quote, id: id, style: style);
+        verticalBarrier = VerticalBarrier(
+          tick.epoch,
+          title: title,
+          style: verticalBarrierStyle ?? const VerticalBarrierStyle(),
+        ),
+        super(
+          tick.quote,
+          id: id,
+          style: horizontalBarrierStyle ?? const HorizontalBarrierStyle(),
+        );
 
   /// For vertical barrier.
   final VerticalBarrier verticalBarrier;

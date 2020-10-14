@@ -37,7 +37,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       return;
     }
 
-    final BarrierStyle style = series.style;
+    final HorizontalBarrierStyle style = series.style;
 
     _paint.color = style.color;
 
