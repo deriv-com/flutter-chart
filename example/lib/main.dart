@@ -286,14 +286,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     ],
                     annotations: ticks.length > 4
                         ? <ChartAnnotation>[
-                            CombinedBarrier(
-                              ticks[ticks.length - 8],
-                              title: 'Buy time',
-                              horizontalBarrierStyle: HorizontalBarrierStyle(
-                                color: Colors.grey,
-                                isDashed: true,
-                              ),
-                            ),
+                            CombinedBarrier(ticks[ticks.length - 8],
+                                title: 'Buy time',
+                                horizontalBarrierStyle: HorizontalBarrierStyle(
+                                  color: Colors.grey,
+                                  isDashed: true,
+                                ),
+                                verticalBarrierStyle: VerticalBarrierStyle(
+                                  intersectionDotStyle: IntersectionDotStyle(),
+                                )),
                             TickIndicator(
                               ticks[ticks.length - 6],
                               style: TickIndicatorStyle(

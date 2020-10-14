@@ -36,7 +36,7 @@ class VerticalBarrier extends Barrier {
         id: id,
         title: title,
         style: style,
-        longLine: longLine,
+        longLine: longLine ?? true,
       );
 
   /// Epoch of the vertical barrier

@@ -6,16 +6,12 @@ import 'package:flutter/material.dart';
 abstract class BarrierStyle extends ChartPaintingStyle {
   /// Initializes
   const BarrierStyle({
-    this.color = const Color(0xFF00A79E),
-    this.valueBackgroundColor = Colors.transparent,
-    this.hasLine = true,
-    this.isDashed = false,
-    this.textStyle = const TextStyle(
-      fontSize: 10,
-      height: 1.3,
-      fontWeight: FontWeight.normal,
-      color: Colors.white,
-    ),
+    this.color,
+    this.valueBackgroundColor,
+    this.hasLine,
+    this.isDashed,
+    this.intersectionDotStyle,
+    this.textStyle,
   });
 
   /// Color of the barrier
@@ -33,6 +29,9 @@ abstract class BarrierStyle extends ChartPaintingStyle {
   /// Value label background color
   final Color valueBackgroundColor;
 
+  /// The style of the dot where barrier and chart data are intersected.
+  final IntersectionDotStyle intersectionDotStyle;
+
   @override
   String toString() =>
       '${super.toString()}$color, ${textStyle.toStringShort()}, $hasLine, $isDashed, $valueBackgroundColor';
@@ -47,6 +46,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     Color valueBackgroundColor = Colors.transparent,
     bool hasLine = true,
     bool isDashed = true,
+    IntersectionDotStyle intersectionDotStyle,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -59,6 +59,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
           hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
+          intersectionDotStyle: intersectionDotStyle,
         );
 
   /// Arrow type
@@ -76,6 +77,7 @@ class VerticalBarrierStyle extends BarrierStyle {
     Color valueBackgroundColor = Colors.transparent,
     bool hasLine = true,
     bool isDashed = true,
+    IntersectionDotStyle intersectionDotStyle,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -88,7 +90,27 @@ class VerticalBarrierStyle extends BarrierStyle {
           hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
+          intersectionDotStyle: intersectionDotStyle,
         );
+}
+
+/// Style of the dot where two lines are intersected.
+class IntersectionDotStyle extends ChartPaintingStyle {
+  /// Initializes
+  const IntersectionDotStyle({
+    this.color = Colors.redAccent,
+    this.radius = 1,
+    this.filled = false,
+  });
+
+  /// Color of the dot
+  final Color color;
+
+  /// Radius of the dot
+  final double radius;
+
+  /// Whether dot is filled or not.
+  final bool filled;
 }
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).

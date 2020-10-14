@@ -31,19 +31,21 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
 
       int animatedEpoch;
       double lineStartY = 0;
+      double dotY;
 
       if (series.previousObject == null) {
         animatedEpoch = series.epoch;
+        if (series.value != null) {
+          dotY = quoteToY(series.value);
+        }
       } else {
         final BarrierObject prevObject = series.previousObject;
         animatedEpoch = lerpDouble(prevObject.epoch.toDouble(), series.epoch,
                 animationInfo.currentTickPercent)
             .toInt();
 
-        if (series.annotationObject.value != null &&
-            prevObject.value != null &&
-            !series.longLine) {
-          lineStartY = quoteToY(lerpDouble(prevObject.value,
+        if (series.annotationObject.value != null && prevObject.value != null) {
+          dotY = quoteToY(lerpDouble(prevObject.value,
               series.annotationObject.value, animationInfo.currentTickPercent));
         }
       }
@@ -51,15 +53,12 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
       final double lineX = epochToX(animatedEpoch);
       final double lineEndY = size.height - 20;
 
-      if (lineStartY != 0) {
-        canvas.drawCircle(
-          Offset(lineX, lineStartY),
-          3,
-          Paint()
-            ..color = Colors.redAccent
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 1,
-        );
+      if (style.intersectionDotStyle != null && dotY != null) {
+        _paintIntersectionDot(canvas, lineX, dotY, style.intersectionDotStyle);
+
+        if (!series.longLine) {
+          lineStartY = dotY;
+        }
       }
 
       if (style.isDashed) {
@@ -98,6 +97,22 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     titlePainter.paint(
       canvas,
       Offset(titleStartX, lineEndY - titlePainter.height),
+    );
+  }
+
+  void _paintIntersectionDot(
+    Canvas canvas,
+    double x,
+    double y,
+    IntersectionDotStyle style,
+  ) {
+    canvas.drawCircle(
+      Offset(x, y),
+      3,
+      Paint()
+        ..color = style.color
+        ..style = style.filled ? PaintingStyle.fill : PaintingStyle.stroke
+        ..strokeWidth = style.radius,
     );
   }
 }

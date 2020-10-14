@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +18,8 @@ class CombinedBarrier extends HorizontalBarrier {
     String title,
     HorizontalBarrierStyle horizontalBarrierStyle,
     VerticalBarrierStyle verticalBarrierStyle,
-  })  : _dotPaint = Paint()
-          ..color = Colors.redAccent
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1,
-        verticalBarrier = VerticalBarrier(
-          tick.epoch,
+  })  : verticalBarrier = VerticalBarrier.onTick(
+          tick,
           title: title,
           style: verticalBarrierStyle ?? const VerticalBarrierStyle(),
         ),
@@ -39,8 +34,6 @@ class CombinedBarrier extends HorizontalBarrier {
 
   /// The for epoch and quote.
   final Tick tick;
-
-  final Paint _dotPaint;
 
   @override
   void update(int leftEpoch, int rightEpoch) {
@@ -72,40 +65,5 @@ class CombinedBarrier extends HorizontalBarrier {
 
     verticalBarrier.paint(
         canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
-
-    _paintCircleOnIntersection(canvas, epochToX, quoteToY, animationInfo);
-  }
-
-  void _paintCircleOnIntersection(
-    Canvas canvas,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
-  ) {
-    final BarrierObject prevVerticalObject = verticalBarrier.previousObject;
-
-    final BarrierObject prevHorizontalObject = previousObject;
-
-    canvas.drawCircle(
-      Offset(
-          prevVerticalObject == null
-              ? epochToX(tick.epoch)
-              : lerpDouble(
-                  epochToX(prevVerticalObject.epoch),
-                  epochToX(tick.epoch),
-                  animationInfo.currentTickPercent,
-                ),
-          quoteToY(
-            prevHorizontalObject == null
-                ? tick.quote
-                : lerpDouble(
-                    prevHorizontalObject.value,
-                    tick.quote,
-                    animationInfo.currentTickPercent,
-                  ),
-          )),
-      3,
-      _dotPaint,
-    );
   }
 }
