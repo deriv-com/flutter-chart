@@ -6,6 +6,8 @@ import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 abstract class Barrier extends ChartAnnotation<BarrierObject> {
   /// Initializes
   Barrier({
+    this.epoch,
+    this.value,
     String id,
     this.title,
     this.longLine,
@@ -19,4 +21,14 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   ///
   /// Will be ignored if the barrier has only an epoch or a value, and not both.
   final bool longLine;
+
+
+  /// Epoch of the vertical barrier
+  final int epoch;
+
+  /// The value that this barrier points to
+  final double value;
+
+  @override
+  BarrierObject createObject() => BarrierObject(epoch, value);
 }

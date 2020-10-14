@@ -10,8 +10,8 @@ import 'horizontal_barrier_painter.dart';
 class HorizontalBarrier extends Barrier {
   /// Initializes
   HorizontalBarrier(
-    this.value, {
-    this.epoch,
+    double value, {
+    int epoch,
     String id,
     String title,
     bool longLine = true,
@@ -19,21 +19,14 @@ class HorizontalBarrier extends Barrier {
   }) : super(
           id: id,
           title: title,
+          epoch: epoch,
+          value: value,
           style: style ?? const HorizontalBarrierStyle(),
           longLine: longLine,
         );
 
-  /// Value of the barrier
-  final double value;
-
-  /// Epoch
-  final int epoch;
-
   @override
   SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
-
-  @override
-  BarrierObject createObject() => BarrierObject(epoch, value);
 
   @override
   List<double> recalculateMinMax() => epoch == null

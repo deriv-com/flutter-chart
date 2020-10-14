@@ -10,8 +10,8 @@ import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 class VerticalBarrier extends Barrier {
   /// Initializes
   VerticalBarrier(
-    this.epoch, {
-    this.value,
+    int epoch, {
+    double value,
     String id,
     String title,
     BarrierStyle style,
@@ -19,6 +19,8 @@ class VerticalBarrier extends Barrier {
   }) : super(
           id: id,
           title: title,
+          epoch: epoch,
+          value: value,
           style: style ?? const VerticalBarrierStyle(),
           longLine: longLine,
         );
@@ -39,15 +41,6 @@ class VerticalBarrier extends Barrier {
         style: style,
         longLine: longLine ?? true,
       );
-
-  /// Epoch of the vertical barrier
-  final int epoch;
-
-  /// The value that this barrier points to
-  final double value;
-
-  @override
-  BarrierObject createObject() => BarrierObject(epoch, value);
 
   @override
   SeriesPainter<Series> createPainter() => VerticalBarrierPainter(this);
