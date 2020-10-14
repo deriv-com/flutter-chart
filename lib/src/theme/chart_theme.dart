@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/tick_indicator_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +74,7 @@ abstract class ChartTheme {
   TextStyle get title;
 
   /// The style of the current tick indicator
-  TickIndicatorStyle get currentTickStyle;
+  HorizontalBarrierStyle get currentTickStyle;
 
   /// The painting styles of candlestick chart
   CandleStyle get candleStyle;

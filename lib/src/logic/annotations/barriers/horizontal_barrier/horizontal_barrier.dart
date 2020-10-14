@@ -40,22 +40,3 @@ class HorizontalBarrier extends Barrier {
       ? super.recalculateMinMax()
       : <double>[double.nan, double.nan];
 }
-
-/// Tick indicator
-class TickIndicator extends HorizontalBarrier {
-  /// Initializes
-  TickIndicator(
-    Tick tick, {
-    String id,
-    HorizontalBarrierStyle style,
-  }) : super(
-          tick.quote,
-          epoch: tick.epoch,
-          id: id,
-          style: style ?? HorizontalBarrierStyle,
-          longLine: false,
-        );
-
-  @override
-  List<double> recalculateMinMax() => <double>[double.nan, double.nan];
-}

@@ -1,8 +1,5 @@
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'tick_indicator_style.dart';
 
 /// Barrier style
 abstract class BarrierStyle extends ChartPaintingStyle {
@@ -133,4 +130,13 @@ enum BarrierArrowType {
 
   /// Downward arrows on bottom of the label
   downward,
+}
+
+/// Label shape
+enum LabelShape {
+  /// Rectangle
+  rectangle,
+
+  /// pentagon
+  pentagon,
 }

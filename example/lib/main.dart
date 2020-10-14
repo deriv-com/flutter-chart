@@ -325,7 +325,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   arrowType: BarrierArrowType.downward,
                                   color: const Color(0xFFCC2E3D),
                                 )),
-                            TickIndicator(ticks.last),
+                            TickIndicator(
+                              ticks.last,
+                              style: const HorizontalBarrierStyle(
+                                  color: Colors.redAccent,
+                                  labelShape: LabelShape.pentagon,
+                                  intersectionDotStyle: IntersectionDotStyle(
+                                    isFilled: true,
+                                    blinking: true,
+                                  )),
+                            ),
                           ]
                         : null,
                     pipSize:
