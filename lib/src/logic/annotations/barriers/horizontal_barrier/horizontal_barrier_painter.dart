@@ -88,18 +88,17 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
 
-    if (style.arrowType == BarrierArrowType.upward) {
-      _paintUpwardArrows(
-        canvas,
-        valueStartX + valuePainter.width / 2,
-        y - valuePainter.height / 2 - padding - 3,
-      );
-    } else if (style.arrowType == BarrierArrowType.downward) {
-      _paintDownwardArrows(
-        canvas,
-        valueStartX + valuePainter.width / 2,
-        y + valuePainter.height / 2 + padding + 3,
-      );
+    if (style.arrowType != BarrierArrowType.none) {
+      final double labelMidX = valueStartX + valuePainter.width / 2;
+      double arrowY;
+
+      if (style.arrowType == BarrierArrowType.upward) {
+        arrowY = y - valuePainter.height / 2 - padding - 3;
+        _paintUpwardArrows(canvas, labelMidX, arrowY);
+      } else if (style.arrowType == BarrierArrowType.downward) {
+        arrowY = y + valuePainter.height / 2 + padding + 3;
+        _paintDownwardArrows(canvas, labelMidX, arrowY);
+      }
     }
 
     valuePainter.paint(
@@ -154,7 +153,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    // Painting main line
     _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
   }
 
