@@ -102,7 +102,7 @@ class IntersectionDotStyle extends ChartPaintingStyle {
   /// Initializes
   const IntersectionDotStyle({
     this.color = Colors.redAccent,
-    this.radius = 1,
+    this.radius = 3,
     this.isFilled = false,
     this.blinking = false,
   });

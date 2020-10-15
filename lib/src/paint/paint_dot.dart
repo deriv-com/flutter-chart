@@ -10,7 +10,7 @@ void paintBlinkingDot(
 ) =>
     canvas.drawCircle(
       center,
-      12 * animationProgress,
+      4 * style.radius * animationProgress,
       Paint()..color = style.color.withAlpha(50),
     );
 
@@ -18,14 +18,13 @@ void paintBlinkingDot(
 void paintIntersectionDot(
   Canvas canvas,
   Offset center,
-  IntersectionDotStyle style, {
-  double radius = 3,
-}) =>
+  IntersectionDotStyle style,
+) =>
     canvas.drawCircle(
       center,
-      3,
+      style.radius,
       Paint()
         ..color = style.color
         ..style = style.isFilled ? PaintingStyle.fill : PaintingStyle.stroke
-        ..strokeWidth = style.radius,
+        ..strokeWidth = 1,
     );

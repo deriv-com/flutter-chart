@@ -300,9 +300,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                               style: HorizontalBarrierStyle(
                                   color: Colors.grey,
                                   labelShape: LabelShape.rectangle,
-                                  intersectionDotStyle: IntersectionDotStyle(
-                                    blinking: false,
-                                  )),
+                                  intersectionDotStyle: IntersectionDotStyle()),
                             ),
                             HorizontalBarrier(
                                 ticks.last.quote +
