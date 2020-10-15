@@ -66,7 +66,7 @@ class XAxisModel extends ChangeNotifier {
   final VoidCallback onScroll;
 
   List<Tick> _entries;
-  List<TimeRange> _timeGaps = < TimeRange >[];
+  List<TimeRange> _timeGaps = <TimeRange>[];
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
@@ -83,17 +83,17 @@ class XAxisModel extends ChangeNotifier {
   int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
-  int get leftBoundEpoch => shiftEpoch(rightBoundEpoch, -width);
+  int get leftBoundEpoch => _shiftEpoch(rightBoundEpoch, -width);
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
-      shiftEpoch(_firstCandleEpoch, maxCurrentTickOffset);
+      _shiftEpoch(_firstCandleEpoch, maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => shiftEpoch(_nowEpoch, maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(_nowEpoch, maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -112,7 +112,7 @@ class XAxisModel extends ChangeNotifier {
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _entries.isEmpty ||
-      _entries.last.epoch > shiftEpoch(leftBoundEpoch, autoPanOffset);
+      _entries.last.epoch > _shiftEpoch(leftBoundEpoch, autoPanOffset);
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -213,7 +213,7 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Positive [pxShift] is shifting epoch into the future,
   /// and negative [pxShift] into the past.
-  int shiftEpoch(int epoch, double pxShift) => shiftEpochByPx(
+  int _shiftEpoch(int epoch, double pxShift) => shiftEpochByPx(
         epoch: epoch,
         pxShift: pxShift,
         msPerPx: _msPerPx,
@@ -226,7 +226,7 @@ class XAxisModel extends ChangeNotifier {
       : width + pxBetween(rightBoundEpoch, epoch);
 
   /// Get epoch of x position.
-  int epochFromX(double x) => shiftEpoch(rightBoundEpoch, -width + x);
+  int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width + x);
 
   /// Called at the start of scale and pan gestures.
   void onScaleAndPanStart(ScaleStartDetails details) {
@@ -258,14 +258,14 @@ class XAxisModel extends ChangeNotifier {
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
     _scale(details.scale);
-    _rightBoundEpoch = shiftEpoch(_nowEpoch, nowToRightBound);
+    _rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final focalToRightBound = width - details.focalPoint.dx;
-    final focalEpoch = shiftEpoch(rightBoundEpoch, -focalToRightBound);
+    final focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
     _scale(details.scale);
-    _rightBoundEpoch = shiftEpoch(focalEpoch, focalToRightBound);
+    _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
   }
 
   void _scale(double scale) {
@@ -282,7 +282,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scrollBy(double pxShift) {
-    _rightBoundEpoch = shiftEpoch(_rightBoundEpoch, pxShift).clamp(
+    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift).clamp(
       _minRightBoundEpoch,
       _maxRightBoundEpoch,
     );
