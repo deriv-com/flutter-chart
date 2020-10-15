@@ -65,7 +65,7 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
         10,
         Paint()..color = Colors.black.withOpacity(0.32),
       );
-    _drawArrow(canvas, anchor, const Size(12, 12), dir);
+    _drawArrow(canvas, center, const Size(12, 12), dir);
   }
 
   void _drawArrow(Canvas canvas, Offset center, Size size, double dir) {
