@@ -32,7 +32,7 @@ class CombinedBarrier extends HorizontalBarrier {
   /// For vertical barrier.
   final VerticalBarrier verticalBarrier;
 
-  /// The for epoch and quote.
+  /// The tick this barrier points to.
   final Tick tick;
 
   @override

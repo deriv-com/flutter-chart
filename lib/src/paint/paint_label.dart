@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Returns the path of the current tick label background.
+/// Returns the path of a pentagon shaped label.
 Path getCurrentTickLabelBackgroundPath({
   @required double left,
   @required double top,
