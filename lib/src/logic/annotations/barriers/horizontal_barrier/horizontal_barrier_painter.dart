@@ -110,7 +110,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final TextPainter titlePainter = TextPainter(
       text: TextSpan(
         text: series.title,
-        style: style.textStyle.copyWith(color: style.color),
+        style: style.textStyle.copyWith(
+          color: style.color,
+          backgroundColor: style.titleBackgroundColor,
+        ),
       ),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
@@ -183,7 +186,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           right: size.width - rightMargin,
           bottom: y + valuePainter.height / 2 + padding,
         ),
-        Paint()..color = style.color,
+        _paint,
       );
     }
   }

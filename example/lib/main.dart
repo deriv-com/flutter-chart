@@ -309,7 +309,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                         .abs(),
                                 title: 'Take profit',
                                 style: HorizontalBarrierStyle(
-                                  hasLine: false,
                                   arrowType: BarrierArrowType.upward,
                                 )),
                             HorizontalBarrier(

@@ -6,7 +6,7 @@ abstract class BarrierStyle extends ChartPaintingStyle {
   /// Initializes
   const BarrierStyle({
     this.color,
-    this.valueBackgroundColor,
+    this.titleBackgroundColor,
     this.hasLine,
     this.isDashed,
     this.intersectionDotStyle,
@@ -25,15 +25,15 @@ abstract class BarrierStyle extends ChartPaintingStyle {
   /// Whether barrier's line should be dashed.
   final bool isDashed;
 
-  /// Value label background color
-  final Color valueBackgroundColor;
+  /// Title label background color
+  final Color titleBackgroundColor;
 
   /// The style of the dot where barrier and chart data are intersected.
   final IntersectionDotStyle intersectionDotStyle;
 
   @override
   String toString() =>
-      '${super.toString()}$color, ${textStyle.toStringShort()}, ${intersectionDotStyle.toString()}, $hasLine, $isDashed, $valueBackgroundColor';
+      '${super.toString()}$color, ${textStyle.toStringShort()}, ${intersectionDotStyle.toString()}, $hasLine, $isDashed, $titleBackgroundColor';
 }
 
 /// Horizontal barrier style
@@ -43,7 +43,8 @@ class HorizontalBarrierStyle extends BarrierStyle {
     this.arrowType = BarrierArrowType.none,
     this.labelShape = LabelShape.rectangle,
     Color color = const Color(0xFF00A79E),
-    Color valueBackgroundColor = Colors.transparent,
+    Color valueBackgroundColor = const Color(0xFF00A79E),
+    Color titleBackgroundColor = Colors.transparent,
     bool hasLine = true,
     bool isDashed = true,
     IntersectionDotStyle intersectionDotStyle,
@@ -55,7 +56,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     ),
   }) : super(
           color: color,
-          valueBackgroundColor: valueBackgroundColor,
+          titleBackgroundColor: titleBackgroundColor,
           hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
@@ -77,7 +78,7 @@ class VerticalBarrierStyle extends BarrierStyle {
   /// Initializes
   const VerticalBarrierStyle({
     Color color = Colors.grey,
-    Color valueBackgroundColor = Colors.transparent,
+    Color titleBackgroundColor = Colors.transparent,
     bool hasLine = true,
     bool isDashed = true,
     IntersectionDotStyle intersectionDotStyle,
@@ -89,7 +90,7 @@ class VerticalBarrierStyle extends BarrierStyle {
     ),
   }) : super(
           color: color,
-          valueBackgroundColor: valueBackgroundColor,
+          titleBackgroundColor: titleBackgroundColor,
           hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
