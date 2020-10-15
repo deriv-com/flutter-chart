@@ -21,20 +21,21 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
     AnimationInfo animationInfo,
   ) {
     for (final Marker marker in series.visibleEntries) {
-      final Offset anchor = Offset(
+      final Offset center = Offset(
         epochToX(marker.epoch),
         quoteToY(marker.quote),
       );
-      _drawMarker(canvas, anchor, marker.direction);
+      final Offset anchor = center;
+      _drawMarker(canvas, center, anchor, marker.direction);
     }
   }
 
-  void _drawMarker(Canvas canvas, Offset anchor, MarkerDirection direction) {
+  void _drawMarker(
+      Canvas canvas, Offset center, Offset anchor, MarkerDirection direction) {
     final MarkerStyle style = series.style;
     final Color color =
         direction == MarkerDirection.up ? style.upColor : style.downColor;
     final double dir = direction == MarkerDirection.up ? 1 : -1;
-    final Offset center = anchor - const Offset(0, 18) * dir;
 
     canvas
       ..drawLine(
@@ -45,16 +46,6 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
           ..strokeWidth = 1.5,
       )
       ..drawCircle(
-        center,
-        12,
-        Paint()..color = color,
-      )
-      ..drawCircle(
-        center,
-        10,
-        Paint()..color = Colors.black.withOpacity(0.32),
-      )
-      ..drawCircle(
         anchor,
         3,
         Paint()..color = color,
@@ -63,8 +54,18 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
         anchor,
         1.5,
         Paint()..color = Colors.black,
+      )
+      ..drawCircle(
+        center,
+        12,
+        Paint()..color = color,
+      )
+      ..drawCircle(
+        center,
+        10,
+        Paint()..color = Colors.black.withOpacity(0.32),
       );
-    _drawArrow(canvas, center, const Size(12, 12), dir);
+    _drawArrow(canvas, anchor, const Size(12, 12), dir);
   }
 
   void _drawArrow(Canvas canvas, Offset center, Size size, double dir) {
