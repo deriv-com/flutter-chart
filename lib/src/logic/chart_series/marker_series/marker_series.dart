@@ -15,6 +15,9 @@ class MarkerSeries extends DataSeries<Marker> {
     MarkerStyle style,
   }) : super(entries, id, style: style ?? const MarkerStyle());
 
+  /// Tappable areas of visible markers.
+  List<Rect> tapAreas = <Rect>[];
+
   @override
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
 

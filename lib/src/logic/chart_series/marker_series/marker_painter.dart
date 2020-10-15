@@ -20,13 +20,23 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
+    series.tapAreas = <Rect>[];
+
     for (final Marker marker in series.visibleEntries) {
       final Offset center = Offset(
         epochToX(marker.epoch),
         quoteToY(marker.quote),
       );
       final Offset anchor = center;
+
       _drawMarker(canvas, center, anchor, marker.direction);
+
+      // Update marker tap area.
+      series.tapAreas.add(Rect.fromCenter(
+        center: center,
+        width: 24,
+        height: 24,
+      ));
     }
   }
 
