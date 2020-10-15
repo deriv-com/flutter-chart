@@ -6,7 +6,7 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/paint/paint_dot.dart';
-import 'package:deriv_chart/src/paint/paint_label.dart';
+import 'package:deriv_chart/src/paint/create_shape_path.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -226,80 +226,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
   }
 
-  Path _getUpwardArrowPath(
-    double middleX,
-    double middleY, {
-    double thickness = 4,
-    double size = 10,
-  }) {
-    final double halfSize = size / 2;
-    final double halfThickness = thickness / 2;
-
-    return Path()
-      ..moveTo(middleX, middleY)
-      ..lineTo(middleX + halfSize, middleY + halfSize)
-      ..quadraticBezierTo(
-        middleX + halfSize + halfThickness,
-        middleY + halfSize,
-        middleX + halfSize + halfThickness,
-        middleY + halfSize - halfThickness,
-      )
-      ..lineTo(middleX + halfThickness, middleY - halfThickness)
-      ..quadraticBezierTo(
-        middleX,
-        middleY - thickness,
-        middleX - halfThickness,
-        middleY - halfThickness,
-      )
-      ..lineTo(
-        middleX - halfSize - halfThickness,
-        middleY + halfSize - halfThickness,
-      )
-      ..quadraticBezierTo(
-        middleX - halfSize - halfThickness,
-        middleY + halfSize,
-        middleX - halfSize,
-        middleY + halfSize,
-      );
-  }
-
-  Path _getDownArrowPath(
-    double middleX,
-    double middleY, {
-    double thickness = 4,
-    double size = 10,
-  }) {
-    final double halfSize = size / 2;
-    final double halfThickness = thickness / 2;
-
-    return Path()
-      ..moveTo(middleX, middleY)
-      ..lineTo(middleX + halfSize, middleY - halfSize)
-      ..quadraticBezierTo(
-        middleX + halfSize + halfThickness,
-        middleY - halfSize,
-        middleX + halfSize + halfThickness,
-        middleY - halfSize + halfThickness,
-      )
-      ..lineTo(middleX + halfThickness, middleY + halfThickness)
-      ..quadraticBezierTo(
-        middleX,
-        middleY + thickness,
-        middleX - halfThickness,
-        middleY + halfThickness,
-      )
-      ..lineTo(
-        middleX - halfSize - halfThickness,
-        middleY - halfSize + halfThickness,
-      )
-      ..quadraticBezierTo(
-        middleX - halfSize - halfThickness,
-        middleY - halfSize,
-        middleX - halfSize,
-        middleY - halfSize,
-      );
-  }
-
   void _paintUpwardArrows(
     Canvas canvas,
     double middleX,
@@ -312,7 +238,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     canvas
       ..drawPath(
-          _getUpwardArrowPath(
+          getUpwardArrowPath(
             middleX,
             middleY,
             size: arrowSize,
@@ -320,7 +246,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           ),
           arrowPaint)
       ..drawPath(
-        _getUpwardArrowPath(
+        getUpwardArrowPath(
           middleX,
           middleY - arrowSize,
           size: arrowSize,
@@ -329,7 +255,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         arrowPaint..color = _paint.color.withOpacity(0.64),
       )
       ..drawPath(
-        _getUpwardArrowPath(
+        getUpwardArrowPath(
           middleX,
           middleY - 2 * arrowSize,
           size: arrowSize,
@@ -351,7 +277,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     canvas
       ..drawPath(
-          _getDownArrowPath(
+          getDownArrowPath(
             middleX,
             middleY,
             size: arrowSize,
@@ -359,7 +285,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           ),
           arrowPaint)
       ..drawPath(
-          _getDownArrowPath(
+          getDownArrowPath(
             middleX,
             middleY + arrowSize,
             size: arrowSize,
@@ -367,7 +293,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           ),
           arrowPaint..color = _paint.color.withOpacity(0.64))
       ..drawPath(
-          _getDownArrowPath(
+          getDownArrowPath(
             middleX,
             middleY + 2 * arrowSize,
             size: arrowSize,
