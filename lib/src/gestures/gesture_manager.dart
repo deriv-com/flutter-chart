@@ -45,6 +45,7 @@ class GestureManagerState extends State<GestureManager> {
       onLongPressMoveUpdate: (d) =>
           _callAll<GestureLongPressMoveUpdateCallback>(d),
       onLongPressEnd: (d) => _callAll<GestureLongPressEndCallback>(d),
+      onTapUp: (d) => _callAll<GestureTapUpCallback>(d),
       child: Provider.value(
         value: this,
         child: widget.child,

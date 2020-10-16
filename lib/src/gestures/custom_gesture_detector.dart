@@ -42,6 +42,7 @@ class CustomGestureDetector extends StatefulWidget {
     this.onLongPressStart,
     this.onLongPressMoveUpdate,
     this.onLongPressEnd,
+    this.onTapUp,
   }) : super(key: key);
 
   final Widget child;
@@ -60,18 +61,19 @@ class CustomGestureDetector extends StatefulWidget {
 
   final GestureLongPressEndCallback onLongPressEnd;
 
+  final GestureTapUpCallback onTapUp;
+
   @override
   _CustomGestureDetectorState createState() => _CustomGestureDetectorState();
 }
 
 class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   int _pointersDown = 0;
-  Offset _lastContactPoint;
+  Offset _startPoint;
 
   bool _tap = false;
   bool _longPressed = false;
   Timer _longPressTimer;
-  Offset _longPressStartPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -111,19 +113,24 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     if (_pointersDown == 1 && futureValue == 2) {
       _tap = false;
       _longPressTimer?.cancel();
-      if (_longPressed) _onLongPressEnd();
+      if (_longPressed) {
+        _onLongPressEnd();
+      }
     }
 
     // Removed last pointer.
     if (_pointersDown == 1 && futureValue == 0) {
       _longPressTimer?.cancel();
-      if (_longPressed) _onLongPressEnd();
+      if (_longPressed) {
+        _onLongPressEnd();
+      } else if (_tap) {
+        widget.onTapUp?.call(TapUpDetails(globalPosition: _startPoint));
+      }
     }
   }
 
   void _onScaleStart(ScaleStartDetails details) {
-    _lastContactPoint = details.focalPoint;
-    _longPressStartPosition = details.focalPoint;
+    _startPoint = details.focalPoint;
 
     widget.onScaleAndPanStart?.call(details);
   }
@@ -132,33 +139,28 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     if (_longPressed) {
       _onLongPressMoveUpdate(details);
     } else if (_pointersDown == 1) {
-      _cancelLongPressIfMovedTooFar(details.focalPoint);
+      final double distanceFromStart =
+          (_startPoint - details.focalPoint).distance;
+
+      if (distanceFromStart > longPressHoldRadius) {
+        _tap = false;
+        _longPressTimer?.cancel();
+      }
+
       _onPanUpdate(details);
     } else {
       widget.onScaleUpdate?.call(details);
     }
   }
 
-  void _cancelLongPressIfMovedTooFar(Offset contactPoint) {
-    if (_longPressStartPosition == null) return;
-
-    final distanceFromStartPosition =
-        (_longPressStartPosition - contactPoint).distance;
-
-    if (distanceFromStartPosition > longPressHoldRadius) {
-      _tap = false;
-      _longPressTimer?.cancel();
-    }
-  }
-
   void _onPanUpdate(ScaleUpdateDetails details) {
     final currentContactPoint = details.focalPoint;
     final dragUpdateDetails = DragUpdateDetails(
-      delta: currentContactPoint - _lastContactPoint,
+      delta: currentContactPoint - _startPoint,
       globalPosition: currentContactPoint,
       localPosition: details.localFocalPoint,
     );
-    _lastContactPoint = details.focalPoint;
+    _startPoint = details.focalPoint;
 
     widget.onPanUpdate?.call(dragUpdateDetails);
   }
@@ -166,8 +168,8 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   void _onLongPressStart() {
     _longPressed = true;
     widget.onLongPressStart?.call(LongPressStartDetails(
-      globalPosition: _lastContactPoint,
-      localPosition: _lastContactPoint,
+      globalPosition: _startPoint,
+      localPosition: _startPoint,
     ));
   }
 

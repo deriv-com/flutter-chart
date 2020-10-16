@@ -343,11 +343,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupGestures() {
     _gestureManager
       ..registerCallback(_onPanStart)
-      ..registerCallback(_onPanUpdate);
+      ..registerCallback(_onPanUpdate)
+      ..registerCallback(_onTap);
   }
 
   void _clearGestures() {
-    _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
+    _gestureManager
+      ..removeCallback(_onPanStart)
+      ..removeCallback(_onPanUpdate)
+      ..removeCallback(_onTap);
   }
 
   void _updateChartData() {
@@ -507,6 +511,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (_panStartedOnQuoteLabelsArea &&
         _onQuoteLabelsArea(details.localPosition)) {
       _scaleVertically(details.delta.dy);
+    }
+  }
+
+  void _onTap(TapUpDetails details) {
+    print('>>> tap ${details.globalPosition}');
+    final MarkerSeries markerSeries = widget.chartDataList
+        .lastWhere((series) => series is MarkerSeries, orElse: () => null);
+
+    for (final tapArea in markerSeries.tapAreas.reversed) {
+      // if tapArea.contains(details.)
     }
   }
 
