@@ -12,13 +12,21 @@ enum MarkerDirection {
 
 /// Chart open position marker.
 class Marker extends Tick {
-  /// Creates a marker with given type, positioned at the given coordinate.
-  Marker({
-    @required this.direction,
+  /// Creates an up marker.
+  Marker.up({
     @required int epoch,
     @required double quote,
     this.onTap,
-  }) : super(epoch: epoch, quote: quote);
+  })  : direction = MarkerDirection.up,
+        super(epoch: epoch, quote: quote);
+
+  /// Creates a down marker.
+  Marker.down({
+    @required int epoch,
+    @required double quote,
+    this.onTap,
+  })  : direction = MarkerDirection.down,
+        super(epoch: epoch, quote: quote);
 
   /// Direction in which marker is facing.
   final MarkerDirection direction;

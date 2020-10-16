@@ -323,8 +323,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   child: Text('Up'),
                   onPressed: () {
                     setState(() {
-                      _markers.add(Marker(
-                        direction: MarkerDirection.up,
+                      _markers.add(Marker.up(
                         epoch: ticks.last.epoch,
                         quote: ticks.last.quote,
                       ));
@@ -336,8 +335,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   child: Text('Down'),
                   onPressed: () {
                     setState(() {
-                      _markers.add(Marker(
-                        direction: MarkerDirection.down,
+                      _markers.add(Marker.down(
                         epoch: ticks.last.epoch,
                         quote: ticks.last.quote,
                       ));
