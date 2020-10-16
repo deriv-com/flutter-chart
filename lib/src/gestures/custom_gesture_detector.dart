@@ -138,9 +138,17 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
+    if (_pointersDown == 1) {
+      _onSinglePointerMoveUpdate(details);
+    } else {
+      widget.onScaleUpdate?.call(details);
+    }
+  }
+
+  void _onSinglePointerMoveUpdate(ScaleUpdateDetails details) {
     if (_longPressed) {
       _onLongPressMoveUpdate(details);
-    } else if (_pointersDown == 1) {
+    } else {
       final double distanceFromStart =
           (_startPoint - details.focalPoint).distance;
 
@@ -148,10 +156,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
         _tap = false;
         _longPressTimer?.cancel();
       }
-
       _onPanUpdate(details);
-    } else {
-      widget.onScaleUpdate?.call(details);
     }
   }
 
