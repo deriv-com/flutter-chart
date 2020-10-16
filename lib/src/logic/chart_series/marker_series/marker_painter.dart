@@ -36,7 +36,7 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
         center: center,
         width: 24,
         height: 24,
-      ));
+      ).inflate(12));
     }
   }
 
