@@ -65,6 +65,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Completer _requestCompleter;
 
   List<Market> _markets;
+  List<Marker> _markers = [];
 
   Asset _symbol;
 
@@ -287,18 +288,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ),
                       ),
                     ],
-                    markerSeries: MarkerSeries([
-                      Marker(
-                        direction: MarkerDirection.up,
-                        epoch: 1602561671000,
-                        quote: 873.745,
-                      ),
-                      Marker(
-                        direction: MarkerDirection.down,
-                        epoch: 1602561704000,
-                        quote: 873.636,
-                      ),
-                    ]),
+                    markerSeries: MarkerSeries(_markers),
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0
@@ -320,6 +310,40 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     alignment: Alignment.center,
                     child: _buildConnectionStatus(),
                   ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 64,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton(
+                  color: Colors.green,
+                  child: Text('Up'),
+                  onPressed: () {
+                    setState(() {
+                      _markers.add(Marker(
+                        direction: MarkerDirection.up,
+                        epoch: ticks.last.epoch,
+                        quote: ticks.last.quote,
+                      ));
+                    });
+                  },
+                ),
+                RaisedButton(
+                  color: Colors.red,
+                  child: Text('Down'),
+                  onPressed: () {
+                    setState(() {
+                      _markers.add(Marker(
+                        direction: MarkerDirection.down,
+                        epoch: ticks.last.epoch,
+                        quote: ticks.last.quote,
+                      ));
+                    });
+                  },
+                ),
               ],
             ),
           ),
