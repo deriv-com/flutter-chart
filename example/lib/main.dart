@@ -322,10 +322,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   color: Colors.green,
                   child: Text('Up'),
                   onPressed: () {
+                    final lastTick = ticks.last;
                     setState(() {
                       _markers.add(Marker.up(
-                        epoch: ticks.last.epoch,
-                        quote: ticks.last.quote,
+                        epoch: lastTick.epoch,
+                        quote: lastTick.quote,
+                        onTap: () {
+                          print('>>>${lastTick.quote}');
+                        },
                       ));
                     });
                   },
@@ -334,10 +338,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   color: Colors.red,
                   child: Text('Down'),
                   onPressed: () {
+                    final lastTick = ticks.last;
                     setState(() {
                       _markers.add(Marker.down(
-                        epoch: ticks.last.epoch,
-                        quote: ticks.last.quote,
+                        epoch: lastTick.epoch,
+                        quote: lastTick.quote,
+                        onTap: () {
+                          print('>>>${lastTick.quote}');
+                        },
                       ));
                     });
                   },

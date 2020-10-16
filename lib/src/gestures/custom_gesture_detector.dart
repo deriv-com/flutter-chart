@@ -75,8 +75,8 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     _pointersDown = value;
   }
 
-  Offset _startPoint;
-  Offset _lastPoint;
+  Offset _localStartPoint;
+  Offset _localLastPoint;
 
   bool _tap = false;
   bool _longPressed = false;
@@ -120,14 +120,17 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
       if (_longPressed) {
         _onLongPressEnd();
       } else if (_tap) {
-        widget.onTapUp?.call(TapUpDetails(globalPosition: _startPoint));
+        widget.onTapUp?.call(TapUpDetails(
+          globalPosition: _localStartPoint,
+          localPosition: _localLastPoint,
+        ));
       }
     }
   }
 
   void _onScaleStart(ScaleStartDetails details) {
-    _startPoint = details.focalPoint;
-    _lastPoint = _startPoint;
+    _localStartPoint = details.localFocalPoint;
+    _localLastPoint = _localStartPoint;
 
     widget.onScaleAndPanStart?.call(details);
   }
@@ -145,7 +148,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
       _onLongPressMoveUpdate(details);
     } else {
       final double distanceFromStart =
-          (_startPoint - details.focalPoint).distance;
+          (_localStartPoint - details.localFocalPoint).distance;
 
       if (distanceFromStart > longPressHoldRadius) {
         _tap = false;
@@ -157,18 +160,18 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
 
   void _onPanUpdate(ScaleUpdateDetails details) {
     widget.onPanUpdate?.call(DragUpdateDetails(
-      delta: details.focalPoint - _lastPoint,
+      delta: details.localFocalPoint - _localLastPoint,
       globalPosition: details.focalPoint,
       localPosition: details.localFocalPoint,
     ));
-    _lastPoint = details.focalPoint;
+    _localLastPoint = details.focalPoint;
   }
 
   void _onLongPressStart() {
     _longPressed = true;
     widget.onLongPressStart?.call(LongPressStartDetails(
-      globalPosition: _startPoint,
-      localPosition: _startPoint,
+      globalPosition: _localStartPoint,
+      localPosition: _localStartPoint,
     ));
   }
 

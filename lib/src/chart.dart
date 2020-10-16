@@ -515,12 +515,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onTap(TapUpDetails details) {
-    print('>>> tap ${details.globalPosition}');
-    final MarkerSeries markerSeries = widget.chartDataList
-        .lastWhere((series) => series is MarkerSeries, orElse: () => null);
+    final MarkerSeries markerSeries = widget.chartDataList.lastWhere(
+      (ChartData series) => series is MarkerSeries,
+      orElse: () => null,
+    );
 
-    for (final tapArea in markerSeries.tapAreas.reversed) {
-      // if tapArea.contains(details.)
+    for (int i = markerSeries.visibleEntries.length - 1; i >= 0; i--) {
+      final Rect tapArea = markerSeries.tapAreas[i];
+      if (tapArea.contains(details.localPosition)) {
+        markerSeries.entries[i].onTap?.call();
+        break;
+      }
     }
   }
 
