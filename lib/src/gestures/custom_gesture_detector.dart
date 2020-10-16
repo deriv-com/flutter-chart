@@ -69,25 +69,25 @@ class CustomGestureDetector extends StatefulWidget {
 
 class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   int _pointersDown = 0;
+  Offset _startPoint;
   Offset _lastPoint;
 
   bool _tap = false;
   bool _longPressed = false;
   Timer _longPressTimer;
-  Offset _startPoint;
 
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerDown: (event) {
+      onPointerDown: (PointerDownEvent event) {
         _onPointersDownWillChange(_pointersDown + 1);
         _pointersDown += 1;
       },
-      onPointerCancel: (event) {
+      onPointerCancel: (PointerCancelEvent event) {
         _onPointersDownWillChange(_pointersDown - 1);
         _pointersDown -= 1;
       },
-      onPointerUp: (event) {
+      onPointerUp: (PointerUpEvent event) {
         _onPointersDownWillChange(_pointersDown - 1);
         _pointersDown -= 1;
       },
@@ -156,15 +156,12 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   }
 
   void _onPanUpdate(ScaleUpdateDetails details) {
-    final currentContactPoint = details.focalPoint;
-    final dragUpdateDetails = DragUpdateDetails(
-      delta: currentContactPoint - _lastPoint,
-      globalPosition: currentContactPoint,
+    widget.onPanUpdate?.call(DragUpdateDetails(
+      delta: details.focalPoint - _lastPoint,
+      globalPosition: details.focalPoint,
       localPosition: details.localFocalPoint,
-    );
+    ));
     _lastPoint = details.focalPoint;
-
-    widget.onPanUpdate?.call(dragUpdateDetails);
   }
 
   void _onLongPressStart() {
