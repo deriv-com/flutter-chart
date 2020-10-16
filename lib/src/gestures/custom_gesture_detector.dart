@@ -65,9 +65,10 @@ class CustomGestureDetector extends StatefulWidget {
 }
 
 class _CustomGestureDetectorState extends State<CustomGestureDetector> {
-  int _fingersOnScreen = 0;
+  int _pointersDown = 0;
   Offset _lastContactPoint;
 
+  bool _tap = false;
   bool _longPressed = false;
   Timer _longPressTimer;
   Offset _longPressStartPosition;
@@ -76,16 +77,16 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerDown: (event) {
-        _fingersOnScreen += 1;
-        _afterNumberOfFingersOnScreenChanged();
+        _onPointersDownWillChange(_pointersDown + 1);
+        _pointersDown += 1;
       },
       onPointerCancel: (event) {
-        _fingersOnScreen -= 1;
-        _afterNumberOfFingersOnScreenChanged();
+        _onPointersDownWillChange(_pointersDown - 1);
+        _pointersDown -= 1;
       },
       onPointerUp: (event) {
-        _fingersOnScreen -= 1;
-        _afterNumberOfFingersOnScreenChanged();
+        _onPointersDownWillChange(_pointersDown - 1);
+        _pointersDown -= 1;
       },
       child: GestureDetector(
         onScaleStart: _onScaleStart,
@@ -96,21 +97,27 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     );
   }
 
-  void _afterNumberOfFingersOnScreenChanged() {
-    switch (_fingersOnScreen) {
-      case 0:
-        _longPressTimer?.cancel();
-        if (_longPressed) _onLongPressEnd();
-        break;
-      case 1:
-        if (!_longPressed)
-          _longPressTimer = Timer(
-            longPressHoldDuration,
-            _onLongPressStart,
-          );
-        break;
-      default:
-        _longPressTimer?.cancel();
+  void _onPointersDownWillChange(int futureValue) {
+    // First pointer down.
+    if (_pointersDown == 0 && futureValue == 1) {
+      _tap = true;
+      _longPressTimer = Timer(
+        longPressHoldDuration,
+        _onLongPressStart,
+      );
+    }
+
+    // Added second pointer.
+    if (_pointersDown == 1 && futureValue == 2) {
+      _tap = false;
+      _longPressTimer?.cancel();
+      if (_longPressed) _onLongPressEnd();
+    }
+
+    // Removed last pointer.
+    if (_pointersDown == 1 && futureValue == 0) {
+      _longPressTimer?.cancel();
+      if (_longPressed) _onLongPressEnd();
     }
   }
 
@@ -124,7 +131,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   void _onScaleUpdate(ScaleUpdateDetails details) {
     if (_longPressed) {
       _onLongPressMoveUpdate(details);
-    } else if (_fingersOnScreen == 1) {
+    } else if (_pointersDown == 1) {
       _cancelLongPressIfMovedTooFar(details.focalPoint);
       _onPanUpdate(details);
     } else {
@@ -138,8 +145,10 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     final distanceFromStartPosition =
         (_longPressStartPosition - contactPoint).distance;
 
-    if (distanceFromStartPosition > longPressHoldRadius)
+    if (distanceFromStartPosition > longPressHoldRadius) {
+      _tap = false;
       _longPressTimer?.cancel();
+    }
   }
 
   void _onPanUpdate(ScaleUpdateDetails details) {
