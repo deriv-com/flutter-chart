@@ -34,8 +34,8 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
       // Update marker tap area.
       series.tapAreas.add(Rect.fromCenter(
         center: center,
-        width: 24,
-        height: 24,
+        width: series.markerSize.width,
+        height: series.markerSize.height,
       ).inflate(12));
     }
   }
@@ -46,6 +46,7 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
     final Color color =
         direction == MarkerDirection.up ? style.upColor : style.downColor;
     final double dir = direction == MarkerDirection.up ? 1 : -1;
+    final double markerRadius = series.markerSize.width / 2;
 
     canvas
       ..drawLine(
@@ -67,12 +68,12 @@ class MarkerPainter extends DataPainter<MarkerSeries> {
       )
       ..drawCircle(
         center,
-        12,
+        markerRadius,
         Paint()..color = color,
       )
       ..drawCircle(
         center,
-        10,
+        markerRadius - 2,
         Paint()..color = Colors.black.withOpacity(0.32),
       );
     _drawArrow(canvas, center, const Size(12, 12), dir);

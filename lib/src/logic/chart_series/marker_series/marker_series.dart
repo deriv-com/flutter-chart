@@ -13,7 +13,11 @@ class MarkerSeries extends DataSeries<Marker> {
     List<Marker> entries, {
     String id,
     MarkerStyle style,
+    this.markerSize = const Size.square(24),
   }) : super(entries, id, style: style ?? const MarkerStyle());
+
+  /// Size of a single marker.
+  final Size markerSize;
 
   /// Tappable areas of visible markers.
   List<Rect> tapAreas = <Rect>[];
