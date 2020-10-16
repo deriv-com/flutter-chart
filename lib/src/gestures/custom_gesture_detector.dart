@@ -68,7 +68,13 @@ class CustomGestureDetector extends StatefulWidget {
 }
 
 class _CustomGestureDetectorState extends State<CustomGestureDetector> {
+  int get pointersDown => _pointersDown;
   int _pointersDown = 0;
+  set pointersDown(int value) {
+    _onPointersDownWillChange(value);
+    _pointersDown = value;
+  }
+
   Offset _startPoint;
   Offset _lastPoint;
 
@@ -77,28 +83,17 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   Timer _longPressTimer;
 
   @override
-  Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (PointerDownEvent event) {
-        _onPointersDownWillChange(_pointersDown + 1);
-        _pointersDown += 1;
-      },
-      onPointerCancel: (PointerCancelEvent event) {
-        _onPointersDownWillChange(_pointersDown - 1);
-        _pointersDown -= 1;
-      },
-      onPointerUp: (PointerUpEvent event) {
-        _onPointersDownWillChange(_pointersDown - 1);
-        _pointersDown -= 1;
-      },
-      child: GestureDetector(
-        onScaleStart: _onScaleStart,
-        onScaleUpdate: _onScaleUpdate,
-        onScaleEnd: widget.onScaleAndPanEnd,
-        child: widget.child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Listener(
+        onPointerDown: (PointerDownEvent event) => pointersDown += 1,
+        onPointerCancel: (PointerCancelEvent event) => pointersDown -= 1,
+        onPointerUp: (PointerUpEvent event) => pointersDown -= 1,
+        child: GestureDetector(
+          onScaleStart: _onScaleStart,
+          onScaleUpdate: _onScaleUpdate,
+          onScaleEnd: widget.onScaleAndPanEnd,
+          child: widget.child,
+        ),
+      );
 
   void _onPointersDownWillChange(int futureValue) {
     // First pointer down.
