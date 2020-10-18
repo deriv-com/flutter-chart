@@ -54,6 +54,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
+  List<Barrier> _sampleBarriers = <Barrier>[];
+
   TickHistorySubscription _tickHistorySubscription;
 
   StreamSubscription _tickStreamSubscription;
@@ -286,22 +288,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     ],
                     annotations: ticks.length > 4
                         ? <ChartAnnotation>[
-                            CombinedBarrier(ticks[ticks.length - 8],
-                                title: 'Buy time',
-                                horizontalBarrierStyle: HorizontalBarrierStyle(
-                                  color: Colors.grey,
-                                  isDashed: true,
-                                ),
-                                verticalBarrierStyle: VerticalBarrierStyle(
-                                  intersectionDotStyle: IntersectionDotStyle(),
-                                )),
-                            TickIndicator(
-                              ticks[ticks.length - 6],
-                              style: HorizontalBarrierStyle(
-                                  color: Colors.grey,
-                                  labelShape: LabelShape.rectangle,
-                                  intersectionDotStyle: IntersectionDotStyle()),
-                            ),
+                            ..._sampleBarriers,
                             HorizontalBarrier(
                                 ticks.last.quote +
                                     (ticks.last.quote -
@@ -358,6 +345,69 @@ class _FullscreenChartState extends State<FullscreenChart> {
               ],
             ),
           ),
+          SizedBox(
+            height: 64,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FlatButton(
+                  child: Text('+ V barrier'),
+                  onPressed: () => setState(
+                    () => _sampleBarriers.add(
+                      VerticalBarrier.onTick(ticks.last,
+                          title: 'V Barrier',
+                          id: 'VBarrier${_sampleBarriers.length}',
+                          longLine: math.Random().nextBool(),
+                          style: VerticalBarrierStyle(
+                            intersectionDotStyle: const IntersectionDotStyle(),
+                            isDashed: math.Random().nextBool(),
+                          )),
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  child: Text('+ H barrier'),
+                  onPressed: () => setState(
+                    () => _sampleBarriers.add(
+                      HorizontalBarrier(
+                        ticks.last.quote,
+                        epoch:
+                            math.Random().nextBool() ? ticks.last.epoch : null,
+                        id: 'HBarrier${_sampleBarriers.length}',
+                        longLine: math.Random().nextBool(),
+                        style: HorizontalBarrierStyle(
+                          color: Colors.grey,
+                          labelShape: LabelShape.rectangle,
+                          isDashed: math.Random().nextBool(),
+                          intersectionDotStyle: IntersectionDotStyle(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  child: Text('+ Both'),
+                  onPressed: () => setState(() => _sampleBarriers.add(
+                        CombinedBarrier(ticks.last,
+                            title: 'B Barrier',
+                            id: 'CBarrier${_sampleBarriers.length}',
+                            horizontalBarrierStyle: HorizontalBarrierStyle(
+                              color: Colors.grey,
+                              isDashed: true,
+                            ),
+                            verticalBarrierStyle: VerticalBarrierStyle(
+                              intersectionDotStyle: IntersectionDotStyle(),
+                            )),
+                      )),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => setState(() => _sampleBarriers.clear()),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

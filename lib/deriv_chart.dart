@@ -1,6 +1,7 @@
 library deriv_chart;
 
 export 'src/chart.dart';
+export 'src/logic/annotations/barriers/barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/tick_indicator.dart';
