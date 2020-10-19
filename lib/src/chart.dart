@@ -470,7 +470,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
             mainSeries: widget.mainSeries,
             pipSize: widget.pipSize,
             quoteToCanvasY: _quoteToCanvasY,
-            // TODO(Rustem): remove callbacks when axis models are provided
             onCrosshairAppeared: () {
               _isCrosshairMode = true;
               widget.onCrosshairAppeared?.call();
@@ -519,6 +518,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
       (ChartData series) => series is MarkerSeries,
       orElse: () => null,
     );
+
+    print('>>>${markerSeries.visibleEntries.length}');
 
     for (int i = markerSeries.visibleEntries.length - 1; i >= 0; i--) {
       final Rect tapArea = markerSeries.tapAreas[i];

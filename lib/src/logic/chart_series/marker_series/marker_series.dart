@@ -1,4 +1,5 @@
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
@@ -7,14 +8,21 @@ import 'package:flutter/material.dart';
 import 'marker_painter.dart';
 
 /// Marker series
-class MarkerSeries extends DataSeries<Marker> {
+class MarkerSeries extends Series {
   /// Initializes
   MarkerSeries(
     List<Marker> entries, {
     String id,
     MarkerStyle style,
     this.markerSize = const Size.square(24),
-  }) : super(entries, id, style: style ?? const MarkerStyle());
+  })  : _entries = entries,
+        super(id, style: style ?? const MarkerStyle());
+
+  /// Marker entries.
+  final List<Marker> _entries;
+
+  /// Visible marker entries.
+  List<Marker> visibleEntries = <Marker>[];
 
   /// Size of a single marker.
   final Size markerSize;
@@ -26,11 +34,11 @@ class MarkerSeries extends DataSeries<Marker> {
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
 
   @override
-  Widget getCrossHairInfo(Marker crossHairTick, int pipSize) => null;
+  void didUpdate(ChartData oldData) {}
 
   @override
-  double maxValueOf(Marker t) => t.quote;
+  void onUpdate(int leftEpoch, int rightEpoch) {}
 
   @override
-  double minValueOf(Marker t) => t.quote;
+  List<double> recalculateMinMax() {}
 }

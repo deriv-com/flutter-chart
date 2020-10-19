@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
@@ -7,19 +7,19 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import 'marker_series.dart';
 
-/// A [DataPainter] for painting [MarkerPainter] data.
-class MarkerPainter extends DataPainter<MarkerSeries> {
+/// A [SeriesPainter] for painting [MarkerPainter] data.
+class MarkerPainter extends SeriesPainter<MarkerSeries> {
   /// Initializes
   MarkerPainter(MarkerSeries series) : super(series);
 
   @override
-  void onPaintData(
+  void onPaint({
     Canvas canvas,
     Size size,
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-  ) {
+  }) {
     series.tapAreas = <Rect>[];
 
     for (final Marker marker in series.visibleEntries) {
