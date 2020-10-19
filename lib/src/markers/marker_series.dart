@@ -40,8 +40,10 @@ class MarkerSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    // TODO(Rustem): Slice visible range.
-    visibleEntries = _entries.sublist(0);
+    final int left = findEpochIndex(leftEpoch, _entries).ceil();
+    final int right = findEpochIndex(rightEpoch, _entries).floor();
+
+    visibleEntries = _entries.sublist(left, right + 1);
   }
 
   @override
