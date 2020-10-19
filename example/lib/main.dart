@@ -78,6 +78,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartController _controller = ChartController();
   PersistentBottomSheetController _bottomSheetController;
 
+  int _chartRightEpoch;
+
   @override
   void initState() {
     super.initState();
@@ -232,10 +234,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
           if (ticks.last.epoch == fetchedTicks.first.epoch) {
             ticks.removeLast();
           }
+          bool shouldScroll =
+              _chartRightEpoch != null && ticks.last.epoch < _chartRightEpoch;
 
           setState(() => ticks.addAll(fetchedTicks));
+          if (shouldScroll) {
+            _scrollToLastTick(animate: true);
+          }
         } else {
           _resetCandlesTo(fetchedTicks);
+          _scrollToLastTick();
         }
 
         _tickStreamSubscription =
@@ -248,16 +256,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
         );
 
         _resetCandlesTo(historyCandles);
+        _scrollToLastTick();
       }
-
-      WidgetsBinding.instance.addPostFrameCallback(
-        (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
-      );
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {
       _completeRequest();
     }
+  }
+
+  void _scrollToLastTick({bool animate = false}) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (Duration timeStamp) => _controller.scrollToLastTick(animate: animate),
+    );
   }
 
   void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
@@ -369,6 +380,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     isLive: _symbol?.isOpen,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                      _chartRightEpoch = rightEpoch;
                       if (!_waitingForHistory &&
                           ticks.isNotEmpty &&
                           leftEpoch < ticks.first.epoch) {
