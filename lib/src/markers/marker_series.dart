@@ -40,6 +40,11 @@ class MarkerSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
+    if (_entries.isEmpty) {
+      visibleEntries = <Marker>[];
+      return;
+    }
+
     final int left = findEpochIndex(leftEpoch, _entries).ceil();
     final int right = findEpochIndex(rightEpoch, _entries).floor();
 
