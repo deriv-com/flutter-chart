@@ -55,8 +55,37 @@ class _MarkerAreaState extends State<MarkerArea> {
   Widget build(BuildContext context) {
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
-    // widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
+    widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
 
-    return Container();
+    return CustomPaint(
+      painter: _Painter(
+        series: widget.markerSeries,
+        epochToX: xAxis.xFromEpoch,
+        quoteToY: widget.quoteToCanvasY,
+      ),
+    );
   }
+}
+
+class _Painter extends CustomPainter {
+  _Painter({
+    this.series,
+    this.epochToX,
+    this.quoteToY,
+  });
+
+  final MarkerSeries series;
+  final Function epochToX;
+  final Function quoteToY;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    series.paint(canvas, size, epochToX, quoteToY, null, null, null);
+  }
+
+  @override
+  bool shouldRepaint(_Painter oldDelegate) => true;
+
+  @override
+  bool shouldRebuildSemantics(_Painter oldDelegate) => false;
 }
