@@ -234,9 +234,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     if (_xAxis.isLive && !_currentTickBlinkingController.isAnimating) {
       _currentTickBlinkingController.repeat(reverse: true);
-    } else {
-      _currentTickBlinkingController.reset();
-      _currentTickBlinkingController.stop();
+    } else if (!_xAxis.isLive && _currentTickBlinkingController.isAnimating) {
+      _currentTickBlinkingController
+        ..reset()
+        ..stop();
     }
   }
 
