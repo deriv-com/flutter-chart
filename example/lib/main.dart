@@ -248,7 +248,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
         _tickStreamSubscription =
             _tickHistorySubscription.tickStream.listen(_handleTickStream);
-      } else {
+      } else if (!resume) {
         _tickHistorySubscription = null;
 
         final historyCandles = _getTicksFromResponse(
@@ -257,6 +257,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
         _resetCandlesTo(historyCandles);
         _scrollToLastTick();
+      } else {
+        setState(() {});
       }
     } on TickException catch (e) {
       dev.log(e.message, error: e);
