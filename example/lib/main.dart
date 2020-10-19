@@ -115,6 +115,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   late PrefServiceCache _prefService;
 
+  ChartController _controller = ChartController();
+  PersistentBottomSheetController _bottomSheetController;
+
   @override
   void initState() {
     super.initState();
