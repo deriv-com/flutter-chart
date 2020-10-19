@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -37,8 +38,21 @@ class MarkerSeries extends Series {
   void didUpdate(ChartData oldData) {}
 
   @override
-  void onUpdate(int leftEpoch, int rightEpoch) {}
+  void onUpdate(int leftEpoch, int rightEpoch) {
+    // TODO(Rustem): Slice visible range.
+    visibleEntries = _entries.sublist(0);
+  }
 
   @override
-  List<double> recalculateMinMax() {}
+  List<double> recalculateMinMax() {
+    final double min = visibleEntries.fold(
+      double.infinity,
+      (double min, Marker marker) => math.min(min, marker.quote),
+    );
+    final double max = visibleEntries.fold(
+      double.negativeInfinity,
+      (double max, Marker marker) => math.max(max, marker.quote),
+    );
+    return <double>[min, max];
+  }
 }
