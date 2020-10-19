@@ -32,13 +32,13 @@ Tick findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
     return ticks[right];
 }
 
-/// Returns index of the [targetEpoch] location in [ticks].
+/// Returns index of the [epoch] location in [ticks].
 ///
-/// E.g. `3` if [targetEpoch] matches epoch of `ticks[3]`.
-/// `3.5` if [targetEpoch] is between epochs of `ticks[3]` and `ticks[4]`.
-/// `-0.5` if [targetEpoch] is before the first tick.
-/// `9.5` if [targetEpoch] is after the last tick and last tick index is `9`.
-double findEpochIndex(int targetEpoch, List<Tick> ticks) {
+/// E.g. `3` if [epoch] matches epoch of `ticks[3]`.
+/// `3.5` if [epoch] is between epochs of `ticks[3]` and `ticks[4]`.
+/// `-0.5` if [epoch] is before the first tick.
+/// `9.5` if [epoch] is after the last tick and the last tick index is `9`.
+double findEpochIndex(int epoch, List<Tick> ticks) {
   if (ticks.isEmpty) {
     throw ArgumentError('No ticks given.');
   }
@@ -46,5 +46,23 @@ double findEpochIndex(int targetEpoch, List<Tick> ticks) {
   int left = -1;
   int right = ticks.length;
 
-  return (left + right) / 2;
+  while (right - left > 1) {
+    final int mid = (left + right) ~/ 2;
+    final int pivot = ticks[mid].epoch;
+    if (epoch < pivot) {
+      right = mid;
+    } else if (epoch > pivot) {
+      left = mid;
+    } else {
+      return mid.toDouble();
+    }
+  }
+
+  if (left >= 0 && epoch == ticks[left].epoch) {
+    return left.toDouble();
+  } else if (right < ticks.length && epoch == ticks[right].epoch) {
+    return right.toDouble();
+  } else {
+    return (left + right) / 2;
+  }
 }
