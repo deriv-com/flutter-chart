@@ -5,31 +5,23 @@ import 'package:deriv_chart/src/models/tick.dart';
 /// Returns [null] if list is empty.
 /// Expects a list of candles to be sorted.
 Tick findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
-  if (ticks.isEmpty) return null;
-
-  int left = 0;
-  int right = ticks.length - 1;
-
-  while (right - left > 1) {
-    final mid = ((left + right) / 2).floor();
-    final tick = ticks[mid];
-
-    if (tick.epoch < targetEpoch) {
-      left = mid;
-    } else if (tick.epoch > targetEpoch) {
-      right = mid;
-    } else {
-      return tick;
-    }
+  if (ticks.isEmpty) {
+    return null;
   }
 
-  final distanceToLeft = (targetEpoch - ticks[left].epoch).abs();
-  final distanceToRight = (targetEpoch - ticks[right].epoch).abs();
+  final double index = findEpochIndex(targetEpoch, ticks);
 
-  if (distanceToLeft <= distanceToRight)
-    return ticks[left];
-  else
-    return ticks[right];
+  if (index < 0) {
+    return ticks.first;
+  } else if (index > ticks.length - 1) {
+    return ticks.last;
+  } else {
+    final Tick leftTick = ticks[index.floor()];
+    final Tick rightTick = ticks[index.ceil()];
+    final int distanceToLeft = targetEpoch - leftTick.epoch;
+    final int distanceToRight = rightTick.epoch - targetEpoch;
+    return distanceToLeft <= distanceToRight ? leftTick : rightTick;
+  }
 }
 
 /// Returns index of the [epoch] location in [ticks].
