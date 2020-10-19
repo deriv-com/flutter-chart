@@ -100,6 +100,7 @@ class Chart extends StatelessWidget {
                 ],
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
+                isLive: isLive,
               ),
             ),
           ),
@@ -114,6 +115,7 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
+    @required this.isLive,
     this.controller,
     this.onCrosshairAppeared,
     this.chartDataList,
@@ -125,6 +127,8 @@ class _ChartImplementation extends StatefulWidget {
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final ChartController controller;
+
+  final bool isLive;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -232,9 +236,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
 
-    if (_xAxis.isLive && !_currentTickBlinkingController.isAnimating) {
+    if (widget.isLive && !_currentTickBlinkingController.isAnimating) {
       _currentTickBlinkingController.repeat(reverse: true);
-    } else if (!_xAxis.isLive && _currentTickBlinkingController.isAnimating) {
+    } else if (!widget.isLive && _currentTickBlinkingController.isAnimating) {
       _currentTickBlinkingController
         ..reset()
         ..stop();
