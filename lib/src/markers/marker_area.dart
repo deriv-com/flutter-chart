@@ -53,7 +53,9 @@ class _MarkerAreaState extends State<MarkerArea> {
 
   @override
   Widget build(BuildContext context) {
-    widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
+    final XAxisModel xAxis = context.watch<XAxisModel>();
+
+    // widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
 
     return Container();
   }
