@@ -54,4 +54,13 @@ void main() {
       );
     });
   });
+
+  group('findEpochIndex should', () {
+    test('throw exception if list is empty', () {
+      expect(
+        () => findEpochIndex(0, <Tick>[]),
+        throwsArgumentError,
+      );
+    });
+  });
 }

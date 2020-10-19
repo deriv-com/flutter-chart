@@ -31,3 +31,20 @@ Tick findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
   else
     return ticks[right];
 }
+
+/// Returns index of the [targetEpoch] location in [ticks].
+///
+/// E.g. `3` if [targetEpoch] matches epoch of `ticks[3]`.
+/// `3.5` if [targetEpoch] is between epochs of `ticks[3]` and `ticks[4]`.
+/// `-0.5` if [targetEpoch] is before the first tick.
+/// `9.5` if [targetEpoch] is after the last tick and last tick index is `9`.
+double findEpochIndex(int targetEpoch, List<Tick> ticks) {
+  if (ticks.isEmpty) {
+    throw ArgumentError('No ticks given.');
+  }
+
+  int left = -1;
+  int right = ticks.length;
+
+  return (left + right) / 2;
+}
