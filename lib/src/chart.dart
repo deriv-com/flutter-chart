@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/chart_series/marker_series/marker_series.dart';
+import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,7 @@ import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
+import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
 import 'painters/loading_painter.dart';
@@ -86,10 +87,8 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               child: _ChartImplementation(
                 mainSeries: mainSeries,
-                chartDataList: <ChartData>[
-                  ...secondarySeries,
-                  if (markerSeries != null) markerSeries,
-                ],
+                chartDataList: <ChartData>[...secondarySeries],
+                markerSeries: markerSeries,
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
               ),
@@ -106,11 +105,13 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
+    this.markerSeries,
     this.chartDataList,
     this.onCrosshairAppeared,
   }) : super(key: key);
 
   final DataSeries<Tick> mainSeries;
+  final MarkerSeries markerSeries;
 
   final List<ChartData> chartDataList;
   final int pipSize;
@@ -343,15 +344,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupGestures() {
     _gestureManager
       ..registerCallback(_onPanStart)
-      ..registerCallback(_onPanUpdate)
-      ..registerCallback(_onTap);
+      ..registerCallback(_onPanUpdate);
   }
 
   void _clearGestures() {
-    _gestureManager
-      ..removeCallback(_onPanStart)
-      ..removeCallback(_onPanUpdate)
-      ..removeCallback(_onTap);
+    _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
   }
 
   void _updateChartData() {
@@ -466,6 +463,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
+          MarkerArea(
+            markerSeries: widget.markerSeries,
+            quoteToCanvasY: _quoteToCanvasY,
+          ),
           CrosshairArea(
             mainSeries: widget.mainSeries,
             pipSize: widget.pipSize,
@@ -510,23 +511,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (_panStartedOnQuoteLabelsArea &&
         _onQuoteLabelsArea(details.localPosition)) {
       _scaleVertically(details.delta.dy);
-    }
-  }
-
-  void _onTap(TapUpDetails details) {
-    final MarkerSeries markerSeries = widget.chartDataList.lastWhere(
-      (ChartData series) => series is MarkerSeries,
-      orElse: () => null,
-    );
-
-    print('>>>${markerSeries.visibleEntries.length}');
-
-    for (int i = markerSeries.visibleEntries.length - 1; i >= 0; i--) {
-      final Rect tapArea = markerSeries.tapAreas[i];
-      if (tapArea.contains(details.localPosition)) {
-        markerSeries.entries[i].onTap?.call();
-        break;
-      }
     }
   }
 
