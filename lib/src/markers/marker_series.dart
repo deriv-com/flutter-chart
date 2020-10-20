@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
+import 'package:deriv_chart/src/markers/active_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ class MarkerSeries extends Series {
     String id,
     MarkerStyle style,
     this.markerSize = const Size.square(24),
+    this.activeMarker,
   })  : _entries = entries,
         super(id, style: style ?? const MarkerStyle());
 
@@ -31,6 +33,9 @@ class MarkerSeries extends Series {
 
   /// Tappable areas of visible markers.
   List<Rect> tapAreas = <Rect>[];
+
+  /// Active/focused marker on the chart.
+  final ActiveMarker activeMarker;
 
   @override
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);

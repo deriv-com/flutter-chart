@@ -71,6 +71,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   List<Market> _markets;
   List<Marker> _markers = [];
+  ActiveMarker _activeMarker;
 
   List<ActiveSymbol> _activeSymbols;
 
@@ -361,7 +362,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ),
                       ),
                     ],
-                    markerSeries: MarkerSeries(_markers),
+                    markerSeries: MarkerSeries(
+                      _markers,
+                      activeMarker: _activeMarker,
+                    ),
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0
@@ -395,35 +399,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
               children: [
                 RaisedButton(
                   color: Colors.green,
-                  child: Text('Up'),
-                  onPressed: () {
-                    final lastTick = ticks.last;
-                    setState(() {
-                      _markers.add(Marker.up(
-                        epoch: lastTick.epoch,
-                        quote: lastTick.quote,
-                        onTap: () {
-                          print('>>>${lastTick.quote}');
-                        },
-                      ));
-                    });
-                  },
+                  child: const Text('Up'),
+                  onPressed: () => _addMarker(MarkerDirection.up),
                 ),
                 RaisedButton(
                   color: Colors.red,
-                  child: Text('Down'),
-                  onPressed: () {
-                    final lastTick = ticks.last;
-                    setState(() {
-                      _markers.add(Marker.down(
-                        epoch: lastTick.epoch,
-                        quote: lastTick.quote,
-                        onTap: () {
-                          print('>>>${lastTick.quote}');
-                        },
-                      ));
-                    });
-                  },
+                  child: const Text('Down'),
+                  onPressed: () => _addMarker(MarkerDirection.down),
                 ),
               ],
             ),
@@ -431,6 +413,36 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ],
       ),
     );
+  }
+
+  void _addMarker(MarkerDirection direction) {
+    final lastTick = ticks.last;
+    final onTap = () {
+      setState(() {
+        _activeMarker = ActiveMarker(
+          direction: direction,
+          epoch: lastTick.epoch,
+          quote: lastTick.quote,
+          text: '0.00 USD',
+          onTap: () {
+            // open contract page
+          },
+          onTapOutside: () {
+            setState(() {
+              _activeMarker = null;
+            });
+          },
+        );
+      });
+    };
+    setState(() {
+      _markers.add(Marker(
+        direction: direction,
+        epoch: lastTick.epoch,
+        quote: lastTick.quote,
+        onTap: onTap,
+      ));
+    });
   }
 
   Widget _buildConnectionStatus() => ConnectionStatusLabel(

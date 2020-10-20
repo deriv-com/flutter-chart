@@ -8,6 +8,7 @@ export 'src/logic/chart_series/indicators_series/ma_series.dart';
 export './src/models/candle.dart';
 export './src/models/chart_style.dart';
 export './src/models/tick.dart';
+export 'src/markers/active_marker.dart';
 export 'src/markers/marker.dart';
 export './src/theme/chart_theme.dart';
 export './src/theme/painting_styles/candle_style.dart';
