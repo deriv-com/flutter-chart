@@ -366,7 +366,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ? 2000 // average ms difference between ticks
                         : granularity * 1000,
                     controller: _controller,
-                    isLive: _symbol?.isOpen,
+                    isLive: (_symbol?.isOpen ?? false) &&
+                        (_connectionBloc?.state is Connected ?? false),
+                    enabledOpacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
                       if (!_waitingForHistory &&
