@@ -1,6 +1,7 @@
 library deriv_chart;
 
 export 'src/chart.dart';
+export 'src/chart_controller.dart';
 export 'src/logic/annotations/barriers/barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
@@ -17,6 +18,7 @@ export 'src/models/tick.dart';
 export 'src/theme/chart_theme.dart';
 export 'src/theme/painting_styles/barrier_style.dart';
 export 'src/theme/painting_styles/candle_style.dart';
+export 'src/theme/painting_styles/current_tick_style.dart';
 export 'src/theme/painting_styles/line_style.dart';
 export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';

@@ -16,12 +16,18 @@ void main() {
       r50 = Asset(
         name: 'R_50',
         displayName: 'Volatility 50 Index',
+        market: 'synthetic',
+        marketDisplayName: 'Synthetic Indices',
+        subMarket: 'continues',
+        subMarketDisplayName: 'Continues Indices',
+        isOpen: true,
         isFavourite: false,
       );
       r25Favourite = Asset(
         name: 'R_25',
         displayName: 'Volatility 25 Index',
         isFavourite: true,
+        isOpen: false,
       );
       r50SubMarket = SubMarket(
         name: 'smart',
@@ -260,6 +266,37 @@ void main() {
         find.text('No results for \"A non-relevant text\"'),
         findsOneWidget,
       );
+    });
+
+    testWidgets('Shows closed tag on closed assets', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: MarketSelector(
+          markets: [
+            Market(subMarkets: [r25SubMarket, r50SubMarket])
+          ],
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+
+      // Should be two, r25 original and in favourites list
+      expect(find.text('CLOSED'), findsNWidgets(2));
+      expect(find.text('Volatility 25 Index'), findsNWidgets(2));
+    });
+
+    test('Asset class toJson <-> fromJson conversion', () {
+      final Map<String, dynamic> r50JSON = r50.toJson();
+
+      final Asset r50Copy = Asset.fromJson(r50JSON);
+
+      expect(r50.name, r50Copy.name);
+      expect(r50.displayName, r50Copy.displayName);
+      expect(r50.market, r50Copy.market);
+      expect(r50.marketDisplayName, r50Copy.marketDisplayName);
+      expect(r50.subMarket, r50Copy.subMarket);
+      expect(r50.subMarketDisplayName, r50Copy.subMarketDisplayName);
+      expect(r50.isOpen, r50Copy.isOpen);
+      expect(r50.isFavourite, r50Copy.isFavourite);
     });
   });
 }
