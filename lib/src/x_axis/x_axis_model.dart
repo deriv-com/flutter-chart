@@ -101,7 +101,9 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch => _shiftEpoch(
-        _entries.isEmpty || _isLive ? _nowEpoch : _entries.last.epoch,
+        _entries == null || _entries.isEmpty || _isLive
+            ? _nowEpoch
+            : _entries.last.epoch,
         maxCurrentTickOffset,
       );
 
