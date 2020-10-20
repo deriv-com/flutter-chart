@@ -495,13 +495,28 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 ),
                 chartDataList: <ChartData>[
                   widget.mainSeries,
-                  if (widget.chartDataList != null) ...widget.chartDataList
                 ],
                 granularity: context.watch<XAxisModel>().granularity,
                 pipSize: widget.pipSize,
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
               ),
+            ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: ChartPainter(
+              animationInfo: AnimationInfo(
+                currentTickPercent: _currentTickAnimation.value,
+                blinkingPercent: _currentTickBlinkAnimation.value,
+              ),
+              chartDataList: <ChartData>[
+                if (widget.chartDataList != null) ...widget.chartDataList
+              ],
+              granularity: context.watch<XAxisModel>().granularity,
+              pipSize: widget.pipSize,
+              epochToCanvasX: _xAxis.xFromEpoch,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
           CrosshairArea(
