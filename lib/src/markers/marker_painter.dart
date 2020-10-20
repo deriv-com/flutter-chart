@@ -20,8 +20,6 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
-    series.tapAreas = <Rect>[];
-
     for (final Marker marker in series.visibleEntries) {
       final Offset center = Offset(
         epochToX(marker.epoch),
@@ -32,11 +30,11 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
       _drawMarker(canvas, center, anchor, marker.direction);
 
       // Update marker tap area.
-      series.tapAreas.add(Rect.fromCenter(
+      marker.tapArea = Rect.fromCenter(
         center: center,
         width: series.markerSize.width,
         height: series.markerSize.height,
-      ).inflate(12));
+      ).inflate(12);
     }
   }
 

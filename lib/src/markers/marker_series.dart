@@ -31,9 +31,6 @@ class MarkerSeries extends Series {
   /// Size of a single marker.
   final Size markerSize;
 
-  /// Tappable areas of visible markers.
-  List<Rect> tapAreas = <Rect>[];
-
   /// Active/focused marker on the chart.
   final ActiveMarker activeMarker;
 

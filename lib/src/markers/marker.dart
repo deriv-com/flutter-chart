@@ -42,6 +42,9 @@ class Marker extends Tick {
   /// Called when marker is tapped.
   final VoidCallback onTap;
 
+  /// Used to store marker tap area on the chart.
+  Rect tapArea;
+
   @override
   String toString() => 'Marker(epoch: $epoch, quote: $quote)';
 }

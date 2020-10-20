@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'marker.dart';
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
@@ -46,10 +47,9 @@ class _MarkerAreaState extends State<MarkerArea> {
       // TODO(Rustem): check if tapped on active marker
     }
 
-    for (int i = series.visibleEntries.length - 1; i >= 0; i--) {
-      final Rect tapArea = series.tapAreas[i];
-      if (tapArea.contains(details.localPosition)) {
-        series.visibleEntries[i].onTap?.call();
+    for (final Marker marker in series.visibleEntries.reversed) {
+      if (marker.tapArea.contains(details.localPosition)) {
+        marker.onTap?.call();
         return;
       }
     }
