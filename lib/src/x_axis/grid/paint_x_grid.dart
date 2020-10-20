@@ -11,8 +11,8 @@ void paintXGrid(
 }) {
   assert(timeLabels.length == xCoords.length);
 
-  _paintTimeGridLines(canvas, size, xCoords, style);
-  _paintTimeLabels(
+  paintTimeGridLines(canvas, size, xCoords, style);
+  paintTimeLabels(
     canvas,
     size,
     xCoords: xCoords,
@@ -21,7 +21,7 @@ void paintXGrid(
   );
 }
 
-void _paintTimeGridLines(
+void paintTimeGridLines(
   Canvas canvas,
   Size size,
   List<double> xCoords,
@@ -39,7 +39,7 @@ void _paintTimeGridLines(
   });
 }
 
-void _paintTimeLabels(
+void paintTimeLabels(
   Canvas canvas,
   Size size, {
   @required List<String> timeLabels,

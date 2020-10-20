@@ -3,11 +3,12 @@ import 'package:deriv_chart/src/x_axis/grid/x_axis_painter.dart';
 import 'package:flutter/material.dart';
 
 import 'paint_x_grid.dart';
+import 'time_label.dart';
 
-/// Paint X-Axis grid lines
-class XGridPainter extends XAxisPainter {
+/// Paints X-Axis time labels
+class XLabelsPainter extends XAxisPainter {
   /// Initializes
-  XGridPainter({
+  XLabelsPainter({
     List<DateTime> gridTimestamps,
     double Function(int) epochToCanvasX,
     GridStyle style,
@@ -18,12 +19,13 @@ class XGridPainter extends XAxisPainter {
         );
 
   @override
-  void paint(Canvas canvas, Size size) => paintTimeGridLines(
+  void paint(Canvas canvas, Size size) => paintTimeLabels(
         canvas,
         size,
-        gridTimestamps
+        timeLabels: gridTimestamps.map((time) => timeLabel(time)).toList(),
+        xCoords: gridTimestamps
             .map((time) => epochToCanvasX(time.millisecondsSinceEpoch))
             .toList(),
-        style,
+        style: style,
       );
 }

@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/x_axis/grid/x_labels_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -114,13 +115,20 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
         builder: (BuildContext context, BoxConstraints constraints) {
           context.watch<XAxisModel>().width = constraints.maxWidth;
 
+          final List<DateTime> xAxisLabelTimes = gridTimestamps(
+            timeGridInterval: timeGridInterval(_model.pxFromMs),
+            leftBoundEpoch: _model.leftBoundEpoch,
+            rightBoundEpoch: _model.rightBoundEpoch,
+          );
+
           return CustomPaint(
+            foregroundPainter: XLabelsPainter(
+              gridTimestamps: xAxisLabelTimes,
+              epochToCanvasX: _model.xFromEpoch,
+              style: context.watch<ChartTheme>().gridStyle,
+            ),
             painter: XGridPainter(
-              gridTimestamps: gridTimestamps(
-                timeGridInterval: timeGridInterval(_model.pxFromMs),
-                leftBoundEpoch: _model.leftBoundEpoch,
-                rightBoundEpoch: _model.rightBoundEpoch,
-              ),
+              gridTimestamps: xAxisLabelTimes,
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),
