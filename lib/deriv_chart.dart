@@ -17,4 +17,5 @@ export './src/theme/painting_styles/marker_style.dart';
 export './src/widgets/market_selector/market_selector.dart';
 export './src/widgets/market_selector/market_selector_button.dart';
 export './src/widgets/market_selector/models.dart';
+export './src/chart_controller.dart';
 export './src/widgets/market_selector/symbol_svg_picture.dart';

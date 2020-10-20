@@ -91,6 +91,7 @@ class Asset {
     this.marketDisplayName,
     this.subMarket,
     this.subMarketDisplayName,
+    this.isOpen = true,
     this.isFavourite = false,
   });
 
@@ -100,10 +101,56 @@ class Asset {
   final String marketDisplayName;
   final String subMarket;
   final String subMarketDisplayName;
+  final bool isOpen;
   bool isFavourite;
 
   bool containsText(String text) =>
       displayName?.toLowerCase()?.contains(text) ?? false;
 
   void toggleFavourite() => isFavourite = !isFavourite;
+
+  Asset copyWith({
+    String name,
+    String displayName,
+    String market,
+    String marketDisplayName,
+    String subMarket,
+    String subMarketDisplayName,
+    bool isOpen,
+    bool isFavourite,
+  }) =>
+      Asset(
+        name: name ?? this.name,
+        displayName: displayName ?? this.displayName,
+        market: market ?? this.market,
+        marketDisplayName: marketDisplayName ?? this.marketDisplayName,
+        subMarket: subMarket ?? this.subMarket,
+        subMarketDisplayName: subMarketDisplayName ?? this.subMarketDisplayName,
+        isOpen: isOpen ?? this.isOpen,
+        isFavourite: isFavourite ?? this.isFavourite,
+      );
+
+  /// Creates an [Asset] object from JSON map
+  factory Asset.fromJson(Map<String, dynamic> json) => Asset(
+        name: json['name'],
+        displayName: json['display_name'],
+        market: json['market'],
+        marketDisplayName: json['market_display_name'],
+        subMarket: json['sub_market'],
+        subMarketDisplayName: json['sub_market_display_name'],
+        isOpen: json['is_open'],
+        isFavourite: json['is_favourite'],
+      );
+
+  /// Converts this object to a JSON map
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'name': name,
+        'display_name': displayName,
+        'market': market,
+        'market_display_name': marketDisplayName,
+        'sub_market': subMarket,
+        'sub_market_display_name': subMarketDisplayName,
+        'is_open': isOpen,
+        'is_favourite': isFavourite,
+      };
 }
