@@ -11,12 +11,15 @@ dependencies:
   deriv_chart:
     path: ../
   vibration: ^1.4.0
+  intl: ^0.16.1
   flutter_deriv_api:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-api.git
       ref: dev
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

@@ -2,15 +2,18 @@ import 'dart:async';
 import 'dart:developer' as dev;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
+import 'package:flutter_deriv_api/api/common/server_time/server_time.dart';
 import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
 import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
+import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
@@ -61,12 +64,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   bool _waitingForHistory = false;
 
+  MarketChangeReminder _marketsChangeReminder;
+
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
   Completer _requestCompleter;
 
   List<Market> _markets;
 
+  List<ActiveSymbol> _activeSymbols;
+
   Asset _symbol;
+
+  ChartController _controller = ChartController();
+  PersistentBottomSheetController _bottomSheetController;
 
   @override
   void initState() {
@@ -79,14 +89,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void dispose() {
     _tickStreamSubscription?.cancel();
     _connectionBloc?.close();
+    _bottomSheetController?.close();
     super.dispose();
   }
 
   Future<void> _connectToAPI() async {
     _connectionBloc = ConnectionBloc(ConnectionInformation(
-      appId: '1089',
+      appId: '1004',
       brand: 'binary',
-      endpoint: 'frontend.binaryws.com',
+      endpoint: 'www.binaryqa15.com',
     ))
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
@@ -104,6 +115,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           _initTickStream(
             TicksHistoryRequest(
               ticksHistory: _symbol.name,
+              adjustStartTime: 1,
               end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
               start: ticks.last.epoch ~/ 1000,
               style: granularity == 0 ? 'ticks' : 'candles',
@@ -112,34 +124,76 @@ class _FullscreenChartState extends State<FullscreenChart> {
             resume: true,
           );
         }
+
+        await _setupMarketChangeReminder();
       });
   }
 
-  Future<void> _getActiveSymbols() async {
-    final List<ActiveSymbol> activeSymbols =
-        await ActiveSymbol.fetchActiveSymbols(const ActiveSymbolsRequest(
-            activeSymbols: 'brief', productType: 'basic'));
+  Future<void> _setupMarketChangeReminder() async {
+    _marketsChangeReminder?.reset();
+    _marketsChangeReminder = MarketChangeReminder(
+      () async => await TradingTimes.fetchTradingTimes(
+        TradingTimesRequest(tradingTimes: 'today'),
+      ),
+      onCurrentTime: () async {
+        final ServerTime serverTime = await ServerTime.fetchTime();
+        return serverTime.time.toUtc();
+      },
+      onMarketsStatusChange: (Map<String, bool> statusChanges) {
+        for (int i = 0; i < _activeSymbols.length; i++) {
+          if (statusChanges[_activeSymbols[i].symbol] != null) {
+            _activeSymbols[i] = _activeSymbols[i].copyWith(
+              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
+            );
+          }
+        }
 
-    final ActiveSymbol firstOpenSymbol = activeSymbols
+        _fillMarketSelectorList();
+
+        if (statusChanges[_symbol.name] != null) {
+          _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
+
+          // Request for tick stream if symbol is changing from closed to open.
+          if (statusChanges[_symbol.name]) {
+            _onIntervalSelected(granularity);
+          }
+        }
+      },
+    );
+  }
+
+  Future<void> _getActiveSymbols() async {
+    _activeSymbols = await ActiveSymbol.fetchActiveSymbols(
+      const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic'),
+    );
+
+    final ActiveSymbol firstOpenSymbol = _activeSymbols
         .firstWhere((ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen);
 
     _symbol = Asset(
       name: firstOpenSymbol.symbol,
       displayName: firstOpenSymbol.displayName,
+      market: firstOpenSymbol.market,
+      subMarket: firstOpenSymbol.submarket,
+      isOpen: firstOpenSymbol.exchangeIsOpen,
     );
 
+    _fillMarketSelectorList();
+  }
+
+  void _fillMarketSelectorList() {
     final marketTitles = <String>{};
 
     final markets = <Market>[];
 
-    for (final symbol in activeSymbols) {
+    for (final symbol in _activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
         markets.add(
           Market.fromAssets(
             name: symbol.market,
             displayName: symbol.marketDisplayName,
-            assets: activeSymbols
+            assets: _activeSymbols
                 .where((activeSymbol) => activeSymbol.market == symbol.market)
                 .map<Asset>((activeSymbol) => Asset(
                       market: activeSymbol.market,
@@ -148,6 +202,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       name: activeSymbol.symbol,
                       displayName: activeSymbol.displayName,
                       subMarketDisplayName: activeSymbol.submarketDisplayName,
+                      isOpen: activeSymbol.exchangeIsOpen,
                     ))
                 .toList(),
           ),
@@ -155,6 +210,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }
     }
     setState(() => _markets = markets);
+    _bottomSheetController?.setState(() {});
   }
 
   void _initTickStream(
@@ -162,35 +218,52 @@ class _FullscreenChartState extends State<FullscreenChart> {
     bool resume = false,
   }) async {
     try {
-      _tickHistorySubscription =
-          await TickHistory.fetchTicksAndSubscribe(request);
-
-      final fetchedTicks =
-          _getTicksFromResponse(_tickHistorySubscription.tickHistory);
-
-      if (resume) {
-        // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping ticks
-        if (ticks.last.epoch == fetchedTicks.first.epoch) {
-          ticks.removeLast();
-        }
-
-        setState(() => ticks.addAll(fetchedTicks));
-      } else {
-        setState(() {
-          ticks = fetchedTicks;
-        });
-      }
-
       await _tickStreamSubscription?.cancel();
 
-      _tickStreamSubscription =
-          _tickHistorySubscription.tickStream.listen(_handleTickStream);
+      if (_symbol.isOpen) {
+        _tickHistorySubscription =
+            await TickHistory.fetchTicksAndSubscribe(request);
+
+        final fetchedTicks =
+            _getTicksFromResponse(_tickHistorySubscription.tickHistory);
+
+        if (resume) {
+          // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping ticks
+          if (ticks.last.epoch == fetchedTicks.first.epoch) {
+            ticks.removeLast();
+          }
+
+          setState(() => ticks.addAll(fetchedTicks));
+        } else {
+          _resetCandlesTo(fetchedTicks);
+        }
+
+        _tickStreamSubscription =
+            _tickHistorySubscription.tickStream.listen(_handleTickStream);
+      } else {
+        _tickHistorySubscription = null;
+
+        final historyCandles = _getTicksFromResponse(
+          await TickHistory.fetchTickHistory(request),
+        );
+
+        _resetCandlesTo(historyCandles);
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback(
+        (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
+      );
     } on TickException catch (e) {
       dev.log(e.message, error: e);
     } finally {
       _completeRequest();
     }
   }
+
+  void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
+        ticks.clear();
+        ticks = fetchedCandles;
+      });
 
   void _completeRequest() {
     if (!_requestCompleter.isCompleted) {
@@ -292,6 +365,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     granularity: granularity == 0
                         ? 2000 // average ms difference between ticks
                         : granularity * 1000,
+                    controller: _controller,
+                    isLive: _symbol?.isOpen,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
                       if (!_waitingForHistory &&
@@ -326,21 +401,23 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
         asset: _symbol,
-        onTap: () => showBottomSheet<void>(
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (BuildContext context) => MarketSelector(
-            selectedItem: _symbol,
-            markets: _markets,
-            onAssetClicked: (asset, favoriteClicked) {
-              if (!favoriteClicked) {
-                Navigator.of(context).pop();
-                _symbol = asset;
-                _onIntervalSelected(granularity);
-              }
-            },
-          ),
-        ),
+        onTap: () {
+          _bottomSheetController = showBottomSheet<void>(
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext context) => MarketSelector(
+              selectedItem: _symbol,
+              markets: _markets,
+              onAssetClicked: (asset, favoriteClicked) {
+                if (!favoriteClicked) {
+                  Navigator.of(context).pop();
+                  _symbol = asset;
+                  _onIntervalSelected(granularity);
+                }
+              },
+            ),
+          );
+        },
       );
 
   void _loadHistory(int count) async {
@@ -439,6 +516,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _initTickStream(TicksHistoryRequest(
         ticksHistory: _symbol.name,
+        adjustStartTime: 1,
         end: 'latest',
         count: 500,
         style: granularity == 0 ? 'ticks' : 'candles',

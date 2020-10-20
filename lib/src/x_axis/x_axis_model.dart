@@ -16,12 +16,14 @@ class XAxisModel extends ChangeNotifier {
     @required List<Tick> entries,
     @required int granularity,
     @required AnimationController animationController,
+    @required bool isLive,
     this.onScale,
     this.onScroll,
   }) {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
+    _isLive = isLive ?? true;
     _rightBoundEpoch = _maxRightBoundEpoch;
 
     updateEntries(entries);
@@ -55,6 +57,11 @@ class XAxisModel extends ChangeNotifier {
   // TODO(Rustem): Expose this setting
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
+
+  bool _isLive;
+
+  /// Whether the chart is live.
+  bool get isLive => _isLive;
 
   /// Canvas width.
   double width;
@@ -93,7 +100,10 @@ class XAxisModel extends ChangeNotifier {
       _shiftEpoch(_firstCandleEpoch, maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => _shiftEpoch(_nowEpoch, maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(
+        _entries.isEmpty || _isLive ? _nowEpoch : _entries.last.epoch,
+        maxCurrentTickOffset,
+      );
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -107,6 +117,7 @@ class XAxisModel extends ChangeNotifier {
   /// Current tick is visible, chart is being autoPanned.
   bool get _autoPanning =>
       _autoPanEnabled &&
+      isLive &&
       rightBoundEpoch > _nowEpoch &&
       _currentTickFarEnoughFromLeftBound;
 
@@ -170,6 +181,9 @@ class XAxisModel extends ChangeNotifier {
     _msPerPx = _defaultScale;
     _scrollTo(_maxRightBoundEpoch);
   }
+
+  /// Update's chart's isLive property
+  void updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
@@ -290,9 +304,10 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Animate scrolling to current tick.
-  void scrollToNow() {
-    const Duration duration = Duration(milliseconds: 600);
-    final int target = _maxRightBoundEpoch + duration.inMilliseconds;
+  void scrollToLastTick({bool animate = true}) {
+    final duration =
+        animate ? const Duration(milliseconds: 600) : Duration.zero;
+    final target = _maxRightBoundEpoch + duration.inMilliseconds;
     final double distance = pxBetween(_rightBoundEpoch, target);
 
     _prevScrollAnimationValue = 0;

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
@@ -31,10 +32,12 @@ class Chart extends StatelessWidget {
     @required this.mainSeries,
     @required this.pipSize,
     @required this.granularity,
+    this.controller,
     this.secondarySeries,
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
+    this.isLive,
     Key key,
   }) : super(key: key);
 
@@ -45,6 +48,9 @@ class Chart extends StatelessWidget {
   ///
   /// Useful for adding on-chart indicators.
   final List<Series> secondarySeries;
+
+  /// Chart's controller
+  final ChartController controller;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -61,6 +67,12 @@ class Chart extends StatelessWidget {
 
   /// Chart's theme.
   final ChartTheme theme;
+
+  /// Whether the chart should be showing live data or not.
+  ///
+  /// In case of being true the chart will keep auto-scrolling when its visible area
+  /// is on the newest ticks/candles.
+  final bool isLive;
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +91,13 @@ class Chart extends StatelessWidget {
               entries: mainSeries.entries,
               granularity: granularity,
               onVisibleAreaChanged: onVisibleAreaChanged,
+              isLive: isLive,
               child: _ChartImplementation(
+                controller: controller,
                 mainSeries: mainSeries,
-                chartDataList: <ChartData>[...secondarySeries],
+                chartDataList: <ChartData>[
+                  if (secondarySeries != null) ...secondarySeries
+                ],
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
               ),
@@ -98,8 +114,9 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
-    this.chartDataList,
+    this.controller,
     this.onCrosshairAppeared,
+    this.chartDataList,
   }) : super(key: key);
 
   final DataSeries<Tick> mainSeries;
@@ -107,6 +124,7 @@ class _ChartImplementation extends StatefulWidget {
   final List<ChartData> chartDataList;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
+  final ChartController controller;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -155,9 +173,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
-  bool get _isScrollToNowAvailable =>
+  bool get _isScrollToLastTickAvailable =>
       widget.mainSeries.entries.isNotEmpty &&
-      !_xAxis.animatingPan &&
+      _xAxis.rightBoundEpoch < widget.mainSeries.entries.last.epoch &&
       !_isCrosshairMode;
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
@@ -197,6 +215,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     _setupAnimations();
     _setupGestures();
+
+    widget.controller?.onScrollToLastTick = (bool animate) {
+      _xAxis.scrollToLastTick(animate: animate);
+    };
   }
 
   @override
@@ -209,6 +231,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
+
+    if (_xAxis.isLive && !_currentTickBlinkingController.isAnimating) {
+      _currentTickBlinkingController.repeat(reverse: true);
+    } else {
+      _currentTickBlinkingController.reset();
+      _currentTickBlinkingController.stop();
+    }
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
@@ -437,21 +466,24 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
-          CustomPaint(
-            size: canvasSize,
-            painter: ChartPainter(
-              animationInfo: AnimationInfo(
-                currentTickPercent: _currentTickAnimation.value,
-                blinkingPercent: _currentTickBlinkAnimation.value,
+          Opacity(
+            opacity: (_xAxis.isLive ?? true) ? 1 : 0.5,
+            child: CustomPaint(
+              size: canvasSize,
+              painter: ChartPainter(
+                animationInfo: AnimationInfo(
+                  currentTickPercent: _currentTickAnimation.value,
+                  blinkingPercent: _currentTickBlinkAnimation.value,
+                ),
+                chartDataList: <ChartData>[
+                  widget.mainSeries,
+                  if (widget.chartDataList != null) ...widget.chartDataList
+                ],
+                granularity: context.watch<XAxisModel>().granularity,
+                pipSize: widget.pipSize,
+                epochToCanvasX: _xAxis.xFromEpoch,
+                quoteToCanvasY: _quoteToCanvasY,
               ),
-              chartDataList: <ChartData>[
-                widget.mainSeries,
-                if (widget.chartDataList != null) ...widget.chartDataList
-              ],
-              granularity: context.watch<XAxisModel>().granularity,
-              pipSize: widget.pipSize,
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
           CrosshairArea(
@@ -469,11 +501,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
               _crosshairZoomOutAnimationController.reverse();
             },
           ),
-          if (_isScrollToNowAvailable)
+          if (_isScrollToLastTickAvailable)
             Positioned(
               bottom: 30 + timeLabelsAreaHeight,
               right: 30 + quoteLabelsAreaWidth,
-              child: _buildScrollToNowButton(),
+              child: _buildScrollToLastTickButton(),
             ),
         ],
       );
@@ -513,10 +545,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     });
   }
 
-  IconButton _buildScrollToNowButton() {
+  IconButton _buildScrollToLastTickButton() {
     return IconButton(
       icon: Icon(Icons.arrow_forward, color: Colors.white),
-      onPressed: _xAxis.scrollToNow,
+      onPressed: _xAxis.scrollToLastTick,
     );
   }
 }

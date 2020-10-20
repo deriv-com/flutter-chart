@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'closed_tag.dart';
 import 'asset_icon_placeholder.dart';
 import 'highlighted_text.dart';
 import 'market_selector.dart';
@@ -25,40 +26,49 @@ class AssetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ChartTheme>(context);
+    final ChartTheme theme = Provider.of<ChartTheme>(context);
     return ListTile(
       contentPadding: EdgeInsets.only(left: theme.margin12),
       leading: _buildAssetIcon(),
-      title: HighLightedText(
-        '${asset.displayName}',
-        highlightText: filterText,
-        style: theme.textStyle(
-          textStyle: theme.body1,
-          color: theme.base03Color,
-        ),
-      ),
+      title: _buildAssetTitle(theme),
       onTap: () => onAssetClicked?.call(asset, false),
-      trailing: _buildFavouriteIcon(context),
+      trailing: _buildFavouriteIcon(theme),
     );
   }
 
-  IconButton _buildFavouriteIcon(BuildContext context) {
-    final theme = Provider.of<ChartTheme>(context);
-    return IconButton(
-      key: ValueKey<String>('${asset.name}-fav-icon'),
-      icon: Icon(
-        asset.isFavourite ? Icons.star : Icons.star_border,
-        color: asset.isFavourite ? theme.accentYellowColor : theme.base04Color,
-        size: 20,
-      ),
-      onPressed: () => onAssetClicked?.call(asset, true),
-    );
-  }
+  Widget _buildAssetTitle(ChartTheme theme) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Expanded(
+            child: HighLightedText(
+              '${asset.displayName}',
+              highlightText: filterText,
+              style: theme.textStyle(
+                textStyle: theme.body1,
+                color: theme.base03Color,
+              ),
+            ),
+          ),
+          if (!asset.isOpen) ClosedTag(),
+        ],
+      );
+
+  IconButton _buildFavouriteIcon(ChartTheme theme) => IconButton(
+        key: ValueKey<String>('${asset.name}-fav-icon'),
+        icon: Icon(
+          asset.isFavourite ? Icons.star : Icons.star_border,
+          color:
+              asset.isFavourite ? theme.accentYellowColor : theme.base04Color,
+          size: 20,
+        ),
+        onPressed: () => onAssetClicked?.call(asset, true),
+      );
 
   Widget _buildAssetIcon() => SymbolSvgPicture(
         symbolCode: asset.name,
         width: 24,
         height: 24,
-        placeholderBuilder: (BuildContext context) => AssetIconPlaceholder(),
+        placeholderBuilder: (BuildContext context) =>
+            const AssetIconPlaceholder(),
       );
 }
