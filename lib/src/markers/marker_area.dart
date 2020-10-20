@@ -42,12 +42,20 @@ class _MarkerAreaState extends State<MarkerArea> {
   void _onTap(TapUpDetails details) {
     final MarkerSeries series = widget.markerSeries;
 
+    if (series.activeMarker != null) {
+      // TODO(Rustem): check if tapped on active marker
+    }
+
     for (int i = series.visibleEntries.length - 1; i >= 0; i--) {
       final Rect tapArea = series.tapAreas[i];
       if (tapArea.contains(details.localPosition)) {
         series.visibleEntries[i].onTap?.call();
-        break;
+        return;
       }
+    }
+
+    if (series.activeMarker != null) {
+      series.activeMarker.onTapOutside?.call();
     }
   }
 
@@ -57,11 +65,14 @@ class _MarkerAreaState extends State<MarkerArea> {
 
     widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
 
-    return CustomPaint(
-      painter: _Painter(
-        series: widget.markerSeries,
-        epochToX: xAxis.xFromEpoch,
-        quoteToY: widget.quoteToCanvasY,
+    return Opacity(
+      opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
+      child: CustomPaint(
+        painter: _Painter(
+          series: widget.markerSeries,
+          epochToX: xAxis.xFromEpoch,
+          quoteToY: widget.quoteToCanvasY,
+        ),
       ),
     );
   }
