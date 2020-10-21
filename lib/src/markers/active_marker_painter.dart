@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'active_marker.dart';
 import 'paint_marker.dart';
 
@@ -34,6 +35,14 @@ class ActiveMarkerPainter extends CustomPainter {
       anchor,
       activeMarker.direction,
       style,
+    );
+
+    paintText(
+      canvas,
+      text: activeMarker.text,
+      anchor: center + Offset(style.radius, 0),
+      anchorAlignment: Alignment.centerLeft,
+      style: style.activeMarkerText,
     );
   }
 

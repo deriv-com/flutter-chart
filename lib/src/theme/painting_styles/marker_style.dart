@@ -8,6 +8,11 @@ class MarkerStyle extends ChartPaintingStyle {
     this.upColor = const Color(0xFF00A79E),
     this.downColor = const Color(0xFFCC2E3D),
     this.radius = 12.0,
+    this.activeMarkerText = const TextStyle(
+      color: Colors.white,
+      fontSize: 10,
+      height: 1.4,
+    ),
   });
 
   /// Color of marker pointing up.
@@ -18,4 +23,7 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Radius of a single marker.
   final double radius;
+
+  /// Active marker text style.
+  final TextStyle activeMarkerText;
 }
