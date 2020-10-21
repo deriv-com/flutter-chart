@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
 import 'package:deriv_chart/src/markers/active_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
-import 'package:flutter/material.dart';
 
 import 'marker_painter.dart';
 

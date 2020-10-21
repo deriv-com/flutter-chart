@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'marker.dart';
+import 'paint_marker.dart';
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
@@ -65,15 +66,26 @@ class _MarkerAreaState extends State<MarkerArea> {
 
     widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
 
-    return Opacity(
-      opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
-      child: CustomPaint(
-        painter: _Painter(
-          series: widget.markerSeries,
-          epochToX: xAxis.xFromEpoch,
-          quoteToY: widget.quoteToCanvasY,
+    return Stack(
+      children: <Widget>[
+        Opacity(
+          opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
+          child: CustomPaint(
+            painter: _Painter(
+              series: widget.markerSeries,
+              epochToX: xAxis.xFromEpoch,
+              quoteToY: widget.quoteToCanvasY,
+            ),
+          ),
         ),
-      ),
+        CustomPaint(
+          painter: _ActiveMarkerPainter(
+            series: widget.markerSeries,
+            epochToX: xAxis.xFromEpoch,
+            quoteToY: widget.quoteToCanvasY,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -99,4 +111,44 @@ class _Painter extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(_Painter oldDelegate) => false;
+}
+
+class _ActiveMarkerPainter extends CustomPainter {
+  _ActiveMarkerPainter({
+    this.series,
+    this.epochToX,
+    this.quoteToY,
+  });
+
+  final MarkerSeries series;
+  final Function epochToX;
+  final Function quoteToY;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (series.activeMarker == null) {
+      return;
+    }
+
+    final Offset center = Offset(
+      epochToX(series.activeMarker.epoch),
+      quoteToY(series.activeMarker.quote),
+    );
+    final Offset anchor = center;
+
+    paintMarker(
+      canvas,
+      center,
+      anchor,
+      series.markerRadius,
+      series.activeMarker.direction,
+      series.style,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ActiveMarkerPainter oldDelegate) => true;
+
+  @override
+  bool shouldRebuildSemantics(_ActiveMarkerPainter oldDelegate) => false;
 }
