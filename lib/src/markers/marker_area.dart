@@ -1,12 +1,10 @@
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'active_marker.dart';
+import 'active_marker_painter.dart';
 import 'marker.dart';
-import 'paint_marker.dart';
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
@@ -78,7 +76,7 @@ class _MarkerAreaState extends State<MarkerArea> {
           ),
         ),
         CustomPaint(
-          painter: _ActiveMarkerPainter(
+          painter: ActiveMarkerPainter(
             activeMarker: widget.markerSeries.activeMarker,
             style: widget.markerSeries.style,
             epochToX: xAxis.xFromEpoch,
@@ -111,45 +109,4 @@ class _MarkerPainter extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(_MarkerPainter oldDelegate) => false;
-}
-
-class _ActiveMarkerPainter extends CustomPainter {
-  _ActiveMarkerPainter({
-    this.activeMarker,
-    this.style,
-    this.epochToX,
-    this.quoteToY,
-  });
-
-  final ActiveMarker activeMarker;
-  final MarkerStyle style;
-  final Function epochToX;
-  final Function quoteToY;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (activeMarker == null) {
-      return;
-    }
-
-    final Offset center = Offset(
-      epochToX(activeMarker.epoch),
-      quoteToY(activeMarker.quote),
-    );
-    final Offset anchor = center;
-
-    paintMarker(
-      canvas,
-      center,
-      anchor,
-      activeMarker.direction,
-      style,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_ActiveMarkerPainter oldDelegate) => true;
-
-  @override
-  bool shouldRebuildSemantics(_ActiveMarkerPainter oldDelegate) => false;
 }
