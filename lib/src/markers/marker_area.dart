@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'active_marker_painter.dart';
 import 'marker.dart';
 
+const Duration animationDuration = Duration(milliseconds: 200);
+
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
   MarkerArea({
@@ -68,7 +70,8 @@ class _MarkerAreaState extends State<MarkerArea> {
 
     return Stack(
       children: <Widget>[
-        Opacity(
+        AnimatedOpacity(
+          duration: animationDuration,
           opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
           child: CustomPaint(
             painter: _MarkerPainter(
