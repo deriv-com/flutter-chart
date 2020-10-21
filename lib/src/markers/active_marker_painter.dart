@@ -11,12 +11,14 @@ class ActiveMarkerPainter extends CustomPainter {
     this.style,
     this.epochToX,
     this.quoteToY,
+    this.animationProgress,
   });
 
   final ActiveMarker activeMarker;
   final MarkerStyle style;
   final Function epochToX;
   final Function quoteToY;
+  final double animationProgress;
 
   @override
   void paint(Canvas canvas, Size size) {

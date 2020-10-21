@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'active_marker_painter.dart';
 import 'marker.dart';
 
+/// Duration of active marker transition.
 const Duration animationDuration = Duration(milliseconds: 200);
 
 /// Layer with markers.
@@ -24,7 +25,10 @@ class MarkerArea extends StatefulWidget {
   _MarkerAreaState createState() => _MarkerAreaState();
 }
 
-class _MarkerAreaState extends State<MarkerArea> {
+class _MarkerAreaState extends State<MarkerArea>
+    with SingleTickerProviderStateMixin {
+  AnimationController _activeMarkerAnimation;
+
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
   XAxisModel get xAxis => context.read<XAxisModel>();
 
@@ -32,11 +36,36 @@ class _MarkerAreaState extends State<MarkerArea> {
   void initState() {
     super.initState();
     gestureManager.registerCallback(_onTap);
+
+    _activeMarkerAnimation = AnimationController(
+      vsync: this,
+      duration: animationDuration,
+    );
+  }
+
+  @override
+  void didUpdateWidget(MarkerArea oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print(
+        '>>> did update widget ${widget.markerSeries.activeMarker == oldWidget.markerSeries.activeMarker}');
+    final activeMarker = widget.markerSeries.activeMarker;
+    final activeMarkerChanged =
+        activeMarker != oldWidget.markerSeries.activeMarker;
+
+    if (activeMarkerChanged) {
+      if (activeMarker == null) {
+        _activeMarkerAnimation.reverse();
+      } else {
+        _activeMarkerAnimation.forward();
+      }
+    }
   }
 
   @override
   void dispose() {
     gestureManager.removeCallback(_onTap);
+
+    _activeMarkerAnimation.dispose();
     super.dispose();
   }
 
@@ -87,6 +116,7 @@ class _MarkerAreaState extends State<MarkerArea> {
             style: widget.markerSeries.style,
             epochToX: xAxis.xFromEpoch,
             quoteToY: widget.quoteToCanvasY,
+            animationProgress: _activeMarkerAnimation.value,
           ),
         ),
       ],
