@@ -53,11 +53,13 @@ void _paintQuoteLabels(
   @required GridStyle style,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
-    paintTextFromCenter(
+    paintText(
       canvas,
       text: quoteLabel,
-      centerX: size.width - quoteLabelsAreaWidth / 2,
-      centerY: yCoords[index],
+      anchor: Offset(
+        size.width - quoteLabelsAreaWidth / 2,
+        yCoords[index],
+      ),
       style: style.labelStyle,
     );
   });

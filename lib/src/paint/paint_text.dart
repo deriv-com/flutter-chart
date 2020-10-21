@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 
-void paintTextFromCenter(
+/// Paints text on the canvas.
+void paintText(
   Canvas canvas, {
   @required String text,
-  @required double centerX,
-  @required double centerY,
+  @required Offset anchor,
+  Alignment anchorAlignment = Alignment.center,
   TextStyle style,
 }) {
-  TextSpan span = TextSpan(
+  final TextSpan span = TextSpan(
     text: text,
     style: style,
   );
-  TextPainter tp = TextPainter(
+  final TextPainter tp = TextPainter(
     text: span,
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
-  tp.layout();
-  tp.paint(
-    canvas,
-    Offset(
-      centerX - tp.width / 2,
-      centerY - tp.height / 2,
-    ),
-  );
+  tp
+    ..layout()
+    ..paint(
+      canvas,
+      Offset(
+        anchor.dx - tp.width / 2 * (anchorAlignment.x + 1),
+        anchor.dy - tp.height / 2 * (anchorAlignment.y + 1),
+      ),
+    );
 }
