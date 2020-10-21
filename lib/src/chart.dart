@@ -37,8 +37,8 @@ class Chart extends StatelessWidget {
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
-    this.isLive,
-    this.enabledOpacity = 1.0,
+    this.isLive = false,
+    this.opacity = 1.0,
     Key key,
   }) : super(key: key);
 
@@ -75,8 +75,8 @@ class Chart extends StatelessWidget {
   /// is on the newest ticks/candles.
   final bool isLive;
 
-  /// Chart's enabled opacity
-  final double enabledOpacity;
+  /// Chart's opacity, Will be applied on the [mainSeries].
+  final double opacity;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class Chart extends StatelessWidget {
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
                 isLive: isLive,
-                enabledOpacity: enabledOpacity,
+                opacity: opacity,
               ),
             ),
           ),
@@ -121,7 +121,7 @@ class _ChartImplementation extends StatefulWidget {
     @required this.mainSeries,
     @required this.pipSize,
     @required this.isLive,
-    this.enabledOpacity,
+    this.opacity,
     this.controller,
     this.onCrosshairAppeared,
     this.chartDataList,
@@ -135,7 +135,7 @@ class _ChartImplementation extends StatefulWidget {
   final ChartController controller;
 
   final bool isLive;
-  final double enabledOpacity;
+  final double opacity;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -485,7 +485,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             ),
           ),
           Opacity(
-            opacity: widget.enabledOpacity,
+            opacity: widget.opacity,
             child: CustomPaint(
               size: canvasSize,
               painter: ChartPainter(
