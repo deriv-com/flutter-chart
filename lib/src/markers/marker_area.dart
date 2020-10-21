@@ -1,6 +1,5 @@
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +25,6 @@ class MarkerArea extends StatefulWidget {
 }
 
 class _MarkerAreaState extends State<MarkerArea> {
-  Tick crosshairTick;
-
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
   XAxisModel get xAxis => context.read<XAxisModel>();
 
