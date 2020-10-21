@@ -425,7 +425,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           quote: lastTick.quote,
           text: '0.00 USD',
           onTap: () {
-            // open contract page
+            print('>>> tapped active marker');
           },
           onTapOutside: () {
             setState(() {

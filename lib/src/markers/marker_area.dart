@@ -42,7 +42,10 @@ class _MarkerAreaState extends State<MarkerArea> {
     final MarkerSeries series = widget.markerSeries;
 
     if (series.activeMarker != null) {
-      // TODO(Rustem): check if tapped on active marker
+      if (series.activeMarker.tapArea.contains(details.localPosition)) {
+        series.activeMarker.onTap?.call();
+        return;
+      }
     }
 
     for (final Marker marker in series.visibleEntries.reversed) {
