@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
 import '../logic/chart_data.dart';
@@ -20,6 +21,8 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
+    final MarkerStyle style = series.style;
+
     for (final Marker marker in series.visibleEntries) {
       final Offset center = Offset(
         epochToX(marker.epoch),
@@ -31,16 +34,15 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         canvas,
         center,
         anchor,
-        series.markerRadius,
         marker.direction,
-        series.style,
+        style,
       );
 
       // Update marker tap area.
       marker.tapArea = Rect.fromCenter(
         center: center,
-        width: series.markerRadius * 2,
-        height: series.markerRadius * 2,
+        width: style.radius * 2,
+        height: style.radius * 2,
       ).inflate(12);
     }
   }

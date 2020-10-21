@@ -16,7 +16,6 @@ class MarkerSeries extends Series {
     List<Marker> entries, {
     String id,
     MarkerStyle style,
-    this.markerRadius = 12.0,
     this.activeMarker,
   })  : _entries = entries,
         super(id, style: style ?? const MarkerStyle());
@@ -26,9 +25,6 @@ class MarkerSeries extends Series {
 
   /// Visible marker entries.
   List<Marker> visibleEntries = <Marker>[];
-
-  /// Radius of a single marker.
-  final double markerRadius;
 
   /// Active/focused marker on the chart.
   final ActiveMarker activeMarker;

@@ -140,7 +140,6 @@ class _ActiveMarkerPainter extends CustomPainter {
       canvas,
       center,
       anchor,
-      series.markerRadius,
       series.activeMarker.direction,
       series.style,
     );

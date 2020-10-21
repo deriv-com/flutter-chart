@@ -7,7 +7,6 @@ void paintMarker(
   Canvas canvas,
   Offset center,
   Offset anchor,
-  double markerRadius,
   MarkerDirection direction,
   MarkerStyle style,
 ) {
@@ -35,12 +34,12 @@ void paintMarker(
     )
     ..drawCircle(
       center,
-      markerRadius,
+      style.radius,
       Paint()..color = color,
     )
     ..drawCircle(
       center,
-      markerRadius - 2,
+      style.radius - 2,
       Paint()..color = Colors.black.withOpacity(0.32),
     );
   _drawArrow(canvas, center, const Size(12, 12), dir);

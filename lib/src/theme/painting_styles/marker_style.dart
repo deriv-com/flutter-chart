@@ -7,6 +7,7 @@ class MarkerStyle extends ChartPaintingStyle {
   const MarkerStyle({
     this.upColor = const Color(0xFF00A79E),
     this.downColor = const Color(0xFFCC2E3D),
+    this.radius = 12.0,
   });
 
   /// Color of marker pointing up.
@@ -14,4 +15,7 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Color of marker pointing down.
   final Color downColor;
+
+  /// Radius of a single marker.
+  final double radius;
 }
