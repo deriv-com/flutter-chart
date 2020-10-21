@@ -70,7 +70,7 @@ class _MarkerAreaState extends State<MarkerArea> {
         Opacity(
           opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
           child: CustomPaint(
-            painter: _Painter(
+            painter: _MarkerPainter(
               series: widget.markerSeries,
               epochToX: xAxis.xFromEpoch,
               quoteToY: widget.quoteToCanvasY,
@@ -90,8 +90,8 @@ class _MarkerAreaState extends State<MarkerArea> {
   }
 }
 
-class _Painter extends CustomPainter {
-  _Painter({
+class _MarkerPainter extends CustomPainter {
+  _MarkerPainter({
     this.series,
     this.epochToX,
     this.quoteToY,
@@ -107,10 +107,10 @@ class _Painter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_Painter oldDelegate) => true;
+  bool shouldRepaint(_MarkerPainter oldDelegate) => true;
 
   @override
-  bool shouldRebuildSemantics(_Painter oldDelegate) => false;
+  bool shouldRebuildSemantics(_MarkerPainter oldDelegate) => false;
 }
 
 class _ActiveMarkerPainter extends CustomPainter {
