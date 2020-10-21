@@ -1,9 +1,11 @@
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'active_marker.dart';
 import 'marker.dart';
 import 'paint_marker.dart';
 
@@ -80,7 +82,8 @@ class _MarkerAreaState extends State<MarkerArea> {
         ),
         CustomPaint(
           painter: _ActiveMarkerPainter(
-            series: widget.markerSeries,
+            activeMarker: widget.markerSeries.activeMarker,
+            style: widget.markerSeries.style,
             epochToX: xAxis.xFromEpoch,
             quoteToY: widget.quoteToCanvasY,
           ),
@@ -115,24 +118,26 @@ class _Painter extends CustomPainter {
 
 class _ActiveMarkerPainter extends CustomPainter {
   _ActiveMarkerPainter({
-    this.series,
+    this.activeMarker,
+    this.style,
     this.epochToX,
     this.quoteToY,
   });
 
-  final MarkerSeries series;
+  final ActiveMarker activeMarker;
+  final MarkerStyle style;
   final Function epochToX;
   final Function quoteToY;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (series.activeMarker == null) {
+    if (activeMarker == null) {
       return;
     }
 
     final Offset center = Offset(
-      epochToX(series.activeMarker.epoch),
-      quoteToY(series.activeMarker.quote),
+      epochToX(activeMarker.epoch),
+      quoteToY(activeMarker.quote),
     );
     final Offset anchor = center;
 
@@ -140,8 +145,8 @@ class _ActiveMarkerPainter extends CustomPainter {
       canvas,
       center,
       anchor,
-      series.activeMarker.direction,
-      series.style,
+      activeMarker.direction,
+      style,
     );
   }
 
