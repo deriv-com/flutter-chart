@@ -14,7 +14,6 @@ void paintText(
   );
   final TextPainter tp = TextPainter(
     text: span,
-    textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
   );
   tp
