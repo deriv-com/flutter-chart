@@ -13,6 +13,8 @@ class MarkerStyle extends ChartPaintingStyle {
       fontSize: 10,
       height: 1.4,
     ),
+    this.textLeftPadding = 2.0,
+    this.textRightPadding = 4.0,
   });
 
   /// Color of marker pointing up.
@@ -26,4 +28,10 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Active marker text style.
   final TextStyle activeMarkerText;
+
+  /// Active marker text left padding.
+  final double textLeftPadding;
+
+  /// Active marker text right padding.
+  final double textRightPadding;
 }

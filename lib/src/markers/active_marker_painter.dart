@@ -33,7 +33,10 @@ class ActiveMarkerPainter extends CustomPainter {
     final TextPainter textPainter =
         makeTextPainter(activeMarker.text, style.activeMarkerText);
 
-    final double markerWidth = style.radius * 2 + textPainter.width + 4;
+    final double markerWidth = style.radius * 2 +
+        style.textLeftPadding +
+        textPainter.width +
+        style.textRightPadding;
     final double markerHeight = style.radius * 2;
     final Rect markerArea = Rect.fromCenter(
       center: center,
@@ -55,7 +58,8 @@ class ActiveMarkerPainter extends CustomPainter {
     paintWithTextPainter(
       canvas,
       painter: textPainter,
-      anchor: center + Offset(style.radius, 0) + iconShift,
+      anchor:
+          center + iconShift + Offset(style.radius + style.textLeftPadding, 0),
       anchorAlignment: Alignment.centerLeft,
     );
 
