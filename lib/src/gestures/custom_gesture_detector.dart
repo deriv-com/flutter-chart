@@ -164,7 +164,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
       globalPosition: details.focalPoint,
       localPosition: details.localFocalPoint,
     ));
-    _localLastPoint = details.focalPoint;
+    _localLastPoint = details.localFocalPoint;
   }
 
   void _onLongPressStart() {
