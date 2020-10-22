@@ -3,12 +3,8 @@ import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'active_marker.dart';
-import 'active_marker_painter.dart';
+import 'animated_active_marker.dart';
 import 'marker.dart';
-
-/// Duration of active marker transition.
-const Duration animationDuration = Duration(milliseconds: 250);
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
@@ -27,12 +23,7 @@ class MarkerArea extends StatefulWidget {
   _MarkerAreaState createState() => _MarkerAreaState();
 }
 
-class _MarkerAreaState extends State<MarkerArea>
-    with SingleTickerProviderStateMixin {
-  ActiveMarker _prevActiveMarker;
-  AnimationController _activeMarkerController;
-  Animation<double> _activeMarkerAnimation;
-
+class _MarkerAreaState extends State<MarkerArea> {
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
   XAxisModel get xAxis => context.read<XAxisModel>();
 
@@ -40,39 +31,11 @@ class _MarkerAreaState extends State<MarkerArea>
   void initState() {
     super.initState();
     gestureManager.registerCallback(_onTap);
-
-    _activeMarkerController = AnimationController(
-      vsync: this,
-      duration: animationDuration,
-    );
-    _activeMarkerAnimation = CurvedAnimation(
-      curve: Curves.easeInOut,
-      parent: _activeMarkerController,
-    );
-  }
-
-  @override
-  void didUpdateWidget(MarkerArea oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final ActiveMarker activeMarker = widget.markerSeries.activeMarker;
-    final ActiveMarker prevActiveMarker = oldWidget.markerSeries.activeMarker;
-    final bool activeMarkerChanged = activeMarker != prevActiveMarker;
-
-    if (activeMarkerChanged) {
-      if (activeMarker == null) {
-        _prevActiveMarker = prevActiveMarker;
-        _activeMarkerController.reverse();
-      } else {
-        _activeMarkerController.forward();
-      }
-    }
   }
 
   @override
   void dispose() {
     gestureManager.removeCallback(_onTap);
-
-    _activeMarkerController.dispose();
     super.dispose();
   }
 
@@ -118,14 +81,9 @@ class _MarkerAreaState extends State<MarkerArea>
             ),
           ),
         ),
-        CustomPaint(
-          painter: ActiveMarkerPainter(
-            activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker,
-            style: widget.markerSeries.style,
-            epochToX: xAxis.xFromEpoch,
-            quoteToY: widget.quoteToCanvasY,
-            animationProgress: _activeMarkerAnimation.value,
-          ),
+        AnimatedActiveMarker(
+          markerSeries: widget.markerSeries,
+          quoteToCanvasY: widget.quoteToCanvasY,
         ),
       ],
     );
