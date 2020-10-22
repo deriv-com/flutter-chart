@@ -48,8 +48,6 @@ class _MarkerAreaState extends State<MarkerArea>
   @override
   void didUpdateWidget(MarkerArea oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print(
-        '>>> did update widget ${widget.markerSeries.activeMarker == oldWidget.markerSeries.activeMarker}');
     final ActiveMarker activeMarker = widget.markerSeries.activeMarker;
     final bool activeMarkerChanged =
         activeMarker != oldWidget.markerSeries.activeMarker;
