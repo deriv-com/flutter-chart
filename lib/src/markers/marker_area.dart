@@ -86,15 +86,16 @@ class _MarkerAreaState extends State<MarkerArea>
       }
     }
 
+    if (series.activeMarker != null) {
+      series.activeMarker.onTapOutside?.call();
+      return;
+    }
+
     for (final Marker marker in series.visibleEntries.reversed) {
       if (marker.tapArea.contains(details.localPosition)) {
         marker.onTap?.call();
         return;
       }
-    }
-
-    if (series.activeMarker != null) {
-      series.activeMarker.onTapOutside?.call();
     }
   }
 
