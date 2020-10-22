@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'active_marker.dart';
 import 'active_marker_painter.dart';
 import 'marker.dart';
 
@@ -11,7 +12,8 @@ const Duration animationDuration = Duration(milliseconds: 200);
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
-  MarkerArea({
+  /// Initializes marker area.
+  const MarkerArea({
     @required this.markerSeries,
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
@@ -48,8 +50,8 @@ class _MarkerAreaState extends State<MarkerArea>
     super.didUpdateWidget(oldWidget);
     print(
         '>>> did update widget ${widget.markerSeries.activeMarker == oldWidget.markerSeries.activeMarker}');
-    final activeMarker = widget.markerSeries.activeMarker;
-    final activeMarkerChanged =
+    final ActiveMarker activeMarker = widget.markerSeries.activeMarker;
+    final bool activeMarkerChanged =
         activeMarker != oldWidget.markerSeries.activeMarker;
 
     if (activeMarkerChanged) {
