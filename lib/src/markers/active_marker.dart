@@ -21,6 +21,6 @@ class ActiveMarker extends Marker {
   /// Text displayed on the marker.
   final String text;
 
-  /// Called when chart is tapped outside markers.
+  /// Called when chart is tapped outside of active marker.
   final VoidCallback onTapOutside;
 }
