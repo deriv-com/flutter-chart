@@ -30,7 +30,8 @@ class MarkerArea extends StatefulWidget {
 class _MarkerAreaState extends State<MarkerArea>
     with SingleTickerProviderStateMixin {
   ActiveMarker _prevActiveMarker;
-  AnimationController _activeMarkerAnimation;
+  AnimationController _activeMarkerController;
+  Animation<double> _activeMarkerAnimation;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
   XAxisModel get xAxis => context.read<XAxisModel>();
@@ -40,9 +41,13 @@ class _MarkerAreaState extends State<MarkerArea>
     super.initState();
     gestureManager.registerCallback(_onTap);
 
-    _activeMarkerAnimation = AnimationController(
+    _activeMarkerController = AnimationController(
       vsync: this,
       duration: animationDuration,
+    );
+    _activeMarkerAnimation = CurvedAnimation(
+      curve: Curves.easeInOut,
+      parent: _activeMarkerController,
     );
   }
 
@@ -56,9 +61,9 @@ class _MarkerAreaState extends State<MarkerArea>
     if (activeMarkerChanged) {
       if (activeMarker == null) {
         _prevActiveMarker = prevActiveMarker;
-        _activeMarkerAnimation.reverse();
+        _activeMarkerController.reverse();
       } else {
-        _activeMarkerAnimation.forward();
+        _activeMarkerController.forward();
       }
     }
   }
@@ -67,7 +72,7 @@ class _MarkerAreaState extends State<MarkerArea>
   void dispose() {
     gestureManager.removeCallback(_onTap);
 
-    _activeMarkerAnimation.dispose();
+    _activeMarkerController.dispose();
     super.dispose();
   }
 
