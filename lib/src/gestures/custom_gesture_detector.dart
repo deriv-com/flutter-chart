@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Duration for which you have to hold one finger without moving until
 /// long press is triggered.
 /// (small deviation is allowed, see [longPressHoldRadius])
-const longPressHoldDuration = Duration(milliseconds: 200);
+const longPressHoldDuration = Duration(milliseconds: 500);
 
 /// If contact point is moved by more than [longPressHoldRadius] from
 /// its original place and [longPressHoldDuration] hasn't elapsed yet,
