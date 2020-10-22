@@ -29,6 +29,7 @@ class MarkerArea extends StatefulWidget {
 
 class _MarkerAreaState extends State<MarkerArea>
     with SingleTickerProviderStateMixin {
+  ActiveMarker _prevActiveMarker;
   AnimationController _activeMarkerAnimation;
 
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
@@ -49,11 +50,12 @@ class _MarkerAreaState extends State<MarkerArea>
   void didUpdateWidget(MarkerArea oldWidget) {
     super.didUpdateWidget(oldWidget);
     final ActiveMarker activeMarker = widget.markerSeries.activeMarker;
-    final bool activeMarkerChanged =
-        activeMarker != oldWidget.markerSeries.activeMarker;
+    final ActiveMarker prevActiveMarker = oldWidget.markerSeries.activeMarker;
+    final bool activeMarkerChanged = activeMarker != prevActiveMarker;
 
     if (activeMarkerChanged) {
       if (activeMarker == null) {
+        _prevActiveMarker = prevActiveMarker;
         _activeMarkerAnimation.reverse();
       } else {
         _activeMarkerAnimation.forward();
@@ -112,7 +114,7 @@ class _MarkerAreaState extends State<MarkerArea>
         ),
         CustomPaint(
           painter: ActiveMarkerPainter(
-            activeMarker: widget.markerSeries.activeMarker,
+            activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker,
             style: widget.markerSeries.style,
             epochToX: xAxis.xFromEpoch,
             quoteToY: widget.quoteToCanvasY,
