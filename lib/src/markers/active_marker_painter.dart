@@ -75,7 +75,7 @@ class ActiveMarkerPainter extends CustomPainter {
     );
 
     // Update tap area.
-    activeMarker.tapArea = markerArea.inflate(12);
+    activeMarker.tapArea = markerArea;
   }
 
   @override

@@ -43,7 +43,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         center: center,
         width: style.radius * 2,
         height: style.radius * 2,
-      ).inflate(12);
+      );
     }
   }
 }
