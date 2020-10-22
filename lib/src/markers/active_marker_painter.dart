@@ -35,15 +35,12 @@ class ActiveMarkerPainter extends CustomPainter {
     final TextPainter textPainter =
         makeTextPainter(activeMarker.text, style.activeMarkerText);
 
-    final double markerWidth = style.radius * 2 +
-        style.textLeftPadding +
-        textPainter.width +
-        style.textRightPadding;
-    final double markerHeight = style.radius * 2;
     final Rect markerArea = Rect.fromCenter(
       center: center,
-      height: markerHeight,
-      width: markerWidth,
+      height: style.radius * 2,
+      width: style.radius * 2 +
+          (style.textLeftPadding + textPainter.width + style.textRightPadding) *
+              animationProgress,
     );
     final Offset iconShift = Offset(-markerArea.width / 2 + style.radius, 0);
 
@@ -57,13 +54,16 @@ class ActiveMarkerPainter extends CustomPainter {
     );
 
     // Label.
-    paintWithTextPainter(
-      canvas,
-      painter: textPainter,
-      anchor:
-          center + iconShift + Offset(style.radius + style.textLeftPadding, 0),
-      anchorAlignment: Alignment.centerLeft,
-    );
+    if (animationProgress == 1) {
+      paintWithTextPainter(
+        canvas,
+        painter: textPainter,
+        anchor: center +
+            iconShift +
+            Offset(style.radius + style.textLeftPadding, 0),
+        anchorAlignment: Alignment.centerLeft,
+      );
+    }
 
     // Circle with icon.
     paintMarker(

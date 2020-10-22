@@ -8,7 +8,7 @@ import 'active_marker_painter.dart';
 import 'marker.dart';
 
 /// Duration of active marker transition.
-const Duration animationDuration = Duration(milliseconds: 200);
+const Duration animationDuration = Duration(seconds: 1);
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
