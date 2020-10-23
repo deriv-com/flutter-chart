@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
-import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'active_marker.dart';
 import 'marker.dart';
 import 'paint_marker.dart';
