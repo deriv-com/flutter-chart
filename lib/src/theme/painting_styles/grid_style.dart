@@ -13,6 +13,7 @@ class GridStyle {
       color: Color(0xFFC2C2C2),
       fontFeatures: [FontFeature.tabularFigures()],
     ),
+    this.labelHorizontalPadding = 8,
     this.lineThickness = 1,
   });
 
@@ -21,6 +22,9 @@ class GridStyle {
 
   /// The text style of the labels on time and value axes
   final TextStyle labelStyle;
+
+  /// Padding on the sides of the text label.
+  final double labelHorizontalPadding;
 
   /// The line thickness of the grid lines
   final double lineThickness;
