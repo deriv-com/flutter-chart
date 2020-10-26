@@ -363,14 +363,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ? <ChartAnnotation>[
                             ..._sampleBarriers,
                             HorizontalBarrier(
-                                ticks.last.quote +
-                                    (ticks.last.quote -
-                                            ticks[ticks.length - 5].quote)
-                                        .abs(),
-                                title: 'Take profit',
-                                style: HorizontalBarrierStyle(
-                                  arrowType: BarrierArrowType.upward,
-                                )),
+                              ticks.last.quote +
+                                  (ticks.last.quote -
+                                          ticks[ticks.length - 5].quote)
+                                      .abs(),
+                              title: 'Take profit',
+                            ),
                             HorizontalBarrier(
                                 ticks.last.quote -
                                     (ticks.last.quote -
@@ -379,7 +377,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 title: 'Stop loss',
                                 style: HorizontalBarrierStyle(
                                   hasLine: false,
-                                  arrowType: BarrierArrowType.downward,
                                   color: const Color(0xFFCC2E3D),
                                 )),
                             TickIndicator(

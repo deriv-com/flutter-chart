@@ -29,7 +29,7 @@ class HorizontalBarrier extends Barrier {
   /// Whether force the chart to keep this barrier on Y-Axis by widening its range.
   ///
   /// In case of `false` when the barrier was out of vertical view port, it will
-  /// show it top/bottom edge with an arrow which indicates its value it out of range.
+  /// show it on top/bottom edge with an arrow which indicates its value it out of range.
   final bool keepOnYAxisRange;
 
   @override
