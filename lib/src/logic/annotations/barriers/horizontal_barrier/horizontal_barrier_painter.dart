@@ -105,10 +105,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       double arrowY;
 
       if (arrowType == BarrierArrowType.upward) {
-        arrowY = y - valuePainter.height / 2 - padding - 3;
+        arrowY = y - labelHalfHeight - 3;
         _paintUpwardArrows(canvas, labelMidX, arrowY);
       } else if (arrowType == BarrierArrowType.downward) {
-        arrowY = y + valuePainter.height / 2 + padding + 3;
+        arrowY = y + labelHalfHeight + 3;
         _paintDownwardArrows(canvas, labelMidX, arrowY);
       }
     }
