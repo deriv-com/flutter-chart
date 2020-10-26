@@ -16,7 +16,7 @@ class HorizontalBarrier extends Barrier {
     String title,
     bool longLine = true,
     HorizontalBarrierStyle style,
-    this.keepOnYAxisRange = false,
+    this.visibility = HorizontalBarrierVisibility.alwaysVisible,
   }) : super(
           id: id,
           title: title,
@@ -26,20 +26,36 @@ class HorizontalBarrier extends Barrier {
           longLine: longLine,
         );
 
-  /// Whether force the chart to keep this barrier on Y-Axis by widening its range.
-  ///
-  /// In case of `false` when the barrier was out of vertical view port, it will
-  /// show it on top/bottom edge with an arrow which indicates its value it out of range.
-  final bool keepOnYAxisRange;
+  /// Barrier visibility behavior
+  final HorizontalBarrierVisibility visibility;
 
   @override
   SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
 
   @override
-  List<double> recalculateMinMax() => keepOnYAxisRange
-      ? super.recalculateMinMax()
-      : <double>[double.nan, double.nan];
+  List<double> recalculateMinMax() =>
+  // When its visibility is NOT forceToStayOnRange, we return [NaN, NaN]
+  // so it will be excluded from those ChartData that define Y-Axis range.
+      visibility == HorizontalBarrierVisibility.forceToStayOnRange
+          ? super.recalculateMinMax()
+          : <double>[double.nan, double.nan];
 
   @override
   BarrierObject createObject() => BarrierObject(epoch, null, value);
+}
+
+/// Horizontal barrier visibility behavior and whether it contributes in defining
+/// the overall Y-Axis range of the chart.
+enum HorizontalBarrierVisibility {
+  /// Won't force the chart to keep the barrier in its Y-Axis range, if it was
+  /// out of range it will go off the screen.
+  normal,
+
+  /// Won't force the chart to keep the barrier in its Y-Axis range, if it was
+  /// out of range, will show it on top/bottom edge with an arrow which indicates
+  /// its value is beyond Y-Axis range.
+  alwaysVisible,
+
+  /// Will forces the chart to keep this barrier in its Y-Axis range.
+  forceToStayOnRange,
 }

@@ -10,6 +10,7 @@ class TickIndicator extends HorizontalBarrier {
     Tick tick, {
     String id,
     HorizontalBarrierStyle style,
+    HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
   }) : super(
           tick.quote,
           epoch: tick.epoch,
@@ -18,6 +19,7 @@ class TickIndicator extends HorizontalBarrier {
               const HorizontalBarrierStyle(
                 labelShape: LabelShape.pentagon,
               ),
+          visibility: visibility,
           longLine: false,
         );
 }

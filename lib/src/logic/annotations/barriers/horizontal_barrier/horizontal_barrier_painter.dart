@@ -89,12 +89,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     final double labelHalfHeight = valuePainter.height / 2 + padding;
 
-    if (y - labelHalfHeight < 0) {
-      y = labelHalfHeight;
-      arrowType = BarrierArrowType.upward;
-    } else if (y + labelHalfHeight > size.height) {
-      y = size.height - labelHalfHeight;
-      arrowType = BarrierArrowType.downward;
+    if (series.visibility == HorizontalBarrierVisibility.alwaysVisible) {
+      if (y - labelHalfHeight < 0) {
+        y = labelHalfHeight;
+        arrowType = BarrierArrowType.upward;
+      } else if (y + labelHalfHeight > size.height) {
+        y = size.height - labelHalfHeight;
+        arrowType = BarrierArrowType.downward;
+      }
     }
 
     _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
