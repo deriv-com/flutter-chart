@@ -57,9 +57,10 @@ void _paintQuoteLabels(
       canvas,
       text: quoteLabel,
       anchor: Offset(
-        size.width - quoteLabelsAreaWidth / 2,
+        size.width - 4,
         yCoords[index],
       ),
+      anchorAlignment: Alignment.centerRight,
       style: style.labelStyle,
     );
   });
