@@ -40,7 +40,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       return;
     }
 
-
     final HorizontalBarrierStyle style = series.style;
     BarrierArrowType arrowType = BarrierArrowType.none;
 
@@ -91,7 +90,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final double labelHalfHeight = valuePainter.height / 2 + padding;
 
     if (y - labelHalfHeight < 0) {
-      y =  labelHalfHeight;
+      y = labelHalfHeight;
       arrowType = BarrierArrowType.upward;
     } else if (y + labelHalfHeight > size.height) {
       y = size.height - labelHalfHeight;
@@ -228,7 +227,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   ) {
     if (style.isDashed) {
       paintHorizontalDashedLine(
-          canvas, mainLineStartX, mainLineEndX, y, style.color, 1);
+        canvas,
+        mainLineEndX,
+        mainLineStartX,
+        y,
+        style.color,
+        1,
+      );
     } else {
       canvas.drawLine(
           Offset(mainLineStartX, y), Offset(mainLineEndX, y), _paint);

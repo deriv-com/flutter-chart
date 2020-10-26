@@ -11,19 +11,72 @@ void paintHorizontalDashedLine(
   double dashWidth = 3,
   double dashSpace = 3,
 }) {
-  double startX = lineStartX;
-
   final Paint paint = Paint()
     ..color = lineColor
     ..strokeWidth = lineThickness;
 
-  while (startX <= lineEndX) {
+  if (lineStartX < lineEndX) {
+    _paintLTRDashedLine(
+      lineStartX,
+      lineEndX,
+      canvas,
+      lineY,
+      paint,
+      dashWidth,
+      dashSpace,
+    );
+  } else {
+    _paintRTLDashedLine(
+      lineEndX,
+      lineStartX,
+      canvas,
+      lineY,
+      paint,
+      dashWidth,
+      dashSpace,
+    );
+  }
+}
+
+void _paintLTRDashedLine(
+  double leftX,
+  double rightX,
+  Canvas canvas,
+  double lineY,
+  Paint paint,
+  double dashWidth,
+  double dashSpace,
+) {
+  double startX = leftX;
+
+  while (startX <= rightX) {
     canvas.drawLine(
       Offset(startX, lineY),
       Offset(startX + dashWidth, lineY),
       paint,
     );
     startX += dashSpace + dashWidth;
+  }
+}
+
+void _paintRTLDashedLine(
+  double leftX,
+  double rightX,
+  Canvas canvas,
+  double lineY,
+  Paint paint,
+  double dashWidth,
+  double dashSpace,
+) {
+  double startX = rightX;
+
+  while (startX >= leftX) {
+    canvas.drawLine(
+      Offset(startX, lineY),
+      Offset(startX - dashWidth, lineY),
+      paint,
+    );
+    startX -= dashSpace + dashWidth;
   }
 }
 
