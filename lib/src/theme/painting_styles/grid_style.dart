@@ -1,3 +1,4 @@
+import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 
 /// For defining the style of the chart's grid. (X and Y axes)
@@ -10,6 +11,7 @@ class GridStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Color(0xFFC2C2C2),
+      fontFeatures: [FontFeature.tabularFigures()],
     ),
     this.lineThickness = 1,
   });
