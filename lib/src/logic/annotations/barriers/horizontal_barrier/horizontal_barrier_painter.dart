@@ -19,6 +19,9 @@ const double padding = 5;
 /// Right margin
 const double rightMargin = 5;
 
+/// Arrow size
+const double _arrowSize = 5;
+
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Initializes [series]
@@ -101,19 +104,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
 
-    if (arrowType != BarrierArrowType.none) {
-      final double labelMidX = valueStartX + valuePainter.width / 2;
-      double arrowY;
-
-      if (arrowType == BarrierArrowType.upward) {
-        arrowY = y - labelHalfHeight - 3;
-        _paintUpwardArrows(canvas, labelMidX, arrowY);
-      } else if (arrowType == BarrierArrowType.downward) {
-        arrowY = y + labelHalfHeight + 3;
-        _paintDownwardArrows(canvas, labelMidX, arrowY);
-      }
-    }
-
     valuePainter.paint(
       canvas,
       Offset(valueStartX, y - valuePainter.height / 2),
@@ -137,6 +127,19 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       canvas,
       Offset(titleStartX, y - valuePainter.height / 2),
     );
+
+    if (arrowType != BarrierArrowType.none) {
+      final double labelMidX = titleStartX - padding - _arrowSize;
+      double arrowY;
+
+      if (arrowType == BarrierArrowType.upward) {
+        arrowY = y + titlePainter.height / 2;
+        _paintUpwardArrows(canvas, labelMidX, arrowY, arrowSize: _arrowSize);
+      } else if (arrowType == BarrierArrowType.downward) {
+        arrowY = y - titlePainter.height / 2;
+        _paintDownwardArrows(canvas, labelMidX, arrowY, arrowSize: _arrowSize);
+      }
+    }
 
     if (arrowType != BarrierArrowType.none) {
       return;
