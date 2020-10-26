@@ -99,8 +99,7 @@ abstract class DataPainter<S extends DataSeries<Tick>>
           canvas,
           size,
           centerY: currentTickY,
-          quoteLabelsAreaWidth: quoteLabelAreaWidth,
-          quoteLabel: label,
+          width: quoteLabelAreaWidth,
           currentTickX: currentTickX,
           style: currentTickStyle,
         );
