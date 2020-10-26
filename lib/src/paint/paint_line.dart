@@ -84,25 +84,25 @@ void _paintRTLDashedLine(
 void paintVerticalDashedLine(
   Canvas canvas,
   double lineX,
-  double lineStartY,
-  double lineEndY,
+  double lineTopY,
+  double lineBottomY,
   Color lineColor,
   double lineThickness, {
   double dashWidth = 3,
   double dashSpace = 3,
 }) {
-  double startY = lineStartY;
+  double startY = lineBottomY;
 
   final Paint paint = Paint()
     ..color = lineColor
     ..strokeWidth = lineThickness;
 
-  while (startY <= lineEndY) {
+  while (startY >= lineTopY) {
     canvas.drawLine(
       Offset(lineX, startY),
-      Offset(lineX, startY + dashWidth),
+      Offset(lineX, startY - dashWidth),
       paint,
     );
-    startY += dashSpace + dashWidth;
+    startY -= dashSpace + dashWidth;
   }
 }
