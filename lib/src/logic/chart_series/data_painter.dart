@@ -81,10 +81,8 @@ abstract class DataPainter<S extends DataSeries<Tick>>
           currentTickStyle.lineThickness,
         );
 
-        final String label = quoteValue.toStringAsFixed(pipSize);
-
         final TextPainter textPainter = makeTextPainter(
-          label,
+          quoteValue.toStringAsFixed(pipSize),
           currentTickStyle.labelStyle,
         );
 
