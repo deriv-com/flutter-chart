@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_dot.dart';
 import 'package:deriv_chart/src/paint/paint_current_tick_label.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/current_tick_style.dart';
 import 'package:flutter/material.dart';
 
@@ -84,16 +85,12 @@ abstract class DataPainter<S extends DataSeries<Tick>>
           currentTickStyle.lineThickness,
         );
 
-        final TextSpan span = TextSpan(
-          text: quoteValue.toStringAsFixed(pipSize),
-          style: currentTickStyle.labelStyle,
-        );
+        final String label = quoteValue.toStringAsFixed(pipSize);
 
-        final TextPainter textPainter = TextPainter(
-          text: span,
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr,
-        )..layout();
+        final TextPainter textPainter = makeTextPainter(
+          label,
+          currentTickStyle.labelStyle,
+        );
 
         final double quoteLabelAreaWidth =
             textPainter.width + quoteLabelHorizontalPadding;
@@ -103,15 +100,16 @@ abstract class DataPainter<S extends DataSeries<Tick>>
           size,
           centerY: currentTickY,
           quoteLabelsAreaWidth: quoteLabelAreaWidth,
-          quoteLabel: lastEntry.quote.toStringAsFixed(4),
+          quoteLabel: label,
           currentTickX: currentTickX,
           style: currentTickStyle,
         );
 
-        textPainter.paint(
+        paintWithTextPainter(
           canvas,
-          Offset(size.width - quoteLabelAreaWidth,
-              currentTickY - textPainter.height / 2),
+          painter: textPainter,
+          anchor: Offset(size.width - 4, currentTickY),
+          anchorAlignment: Alignment.centerRight,
         );
       }
     }
