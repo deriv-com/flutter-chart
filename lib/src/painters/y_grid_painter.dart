@@ -7,7 +7,6 @@ import '../paint/paint_text.dart';
 class YGridPainter extends CustomPainter {
   YGridPainter({
     @required this.gridLineQuotes,
-    @required this.quoteLabelsAreaWidth,
     @required this.pipSize,
     @required this.quoteToCanvasY,
     @required this.style,
@@ -15,9 +14,6 @@ class YGridPainter extends CustomPainter {
 
   final int pipSize;
   final List<double> gridLineQuotes;
-
-  /// Width of the area where quote labels and current tick arrow are painted.
-  final double quoteLabelsAreaWidth;
 
   final double Function(double) quoteToCanvasY;
 

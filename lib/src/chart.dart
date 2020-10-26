@@ -457,7 +457,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: YGridPainter(
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
-              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
             ),
