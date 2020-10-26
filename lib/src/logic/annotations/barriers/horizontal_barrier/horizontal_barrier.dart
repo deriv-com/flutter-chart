@@ -34,8 +34,8 @@ class HorizontalBarrier extends Barrier {
 
   @override
   List<double> recalculateMinMax() =>
-  // When its visibility is NOT forceToStayOnRange, we return [NaN, NaN]
-  // so it will be excluded from those ChartData that define Y-Axis range.
+  // When its visibility is NOT forceToStayOnRange, we return [NaN, NaN],
+  // so the chart will ignore this barrier when it wants to define its Y-Axis range.
       visibility == HorizontalBarrierVisibility.forceToStayOnRange
           ? super.recalculateMinMax()
           : <double>[double.nan, double.nan];
