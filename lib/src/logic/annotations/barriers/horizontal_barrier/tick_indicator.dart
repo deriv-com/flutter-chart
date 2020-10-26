@@ -17,7 +17,6 @@ class TickIndicator extends HorizontalBarrier {
           style: style ??
               const HorizontalBarrierStyle(
                 labelShape: LabelShape.pentagon,
-                intersectionDotStyle: IntersectionDotStyle(),
               ),
           longLine: false,
         );

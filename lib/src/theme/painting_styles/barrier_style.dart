@@ -9,7 +9,6 @@ abstract class BarrierStyle extends ChartPaintingStyle {
     this.titleBackgroundColor,
     this.hasLine,
     this.isDashed,
-    this.intersectionDotStyle,
     this.textStyle,
   });
 
@@ -28,12 +27,9 @@ abstract class BarrierStyle extends ChartPaintingStyle {
   /// Title label background color
   final Color titleBackgroundColor;
 
-  /// The style of the dot where barrier and chart data are intersected.
-  final IntersectionDotStyle intersectionDotStyle;
-
   @override
   String toString() =>
-      '${super.toString()}$color, ${textStyle.toStringShort()}, ${intersectionDotStyle.toString()}, $hasLine, $isDashed, $titleBackgroundColor';
+      '${super.toString()}$color, ${textStyle.toStringShort()}, $hasLine, $isDashed, $titleBackgroundColor';
 }
 
 /// Horizontal barrier style
@@ -43,11 +39,10 @@ class HorizontalBarrierStyle extends BarrierStyle {
     this.arrowType = BarrierArrowType.none,
     this.labelShape = LabelShape.rectangle,
     Color color = const Color(0xFF00A79E),
-    Color valueBackgroundColor = const Color(0xFF00A79E),
     Color titleBackgroundColor = Colors.transparent,
     bool hasLine = true,
     bool isDashed = true,
-    IntersectionDotStyle intersectionDotStyle,
+    this.hasBlinkingDot = false,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -60,7 +55,6 @@ class HorizontalBarrierStyle extends BarrierStyle {
           hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
-          intersectionDotStyle: intersectionDotStyle,
         );
 
   /// Arrow type
@@ -68,6 +62,9 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// Label shape
   final LabelShape labelShape;
+
+  /// Whether to have a blinking dot animation where barrier and chart data are intersected.
+  final bool hasBlinkingDot;
 
   @override
   String toString() => '${super.toString()}, $arrowType $labelShape';
@@ -81,7 +78,6 @@ class VerticalBarrierStyle extends BarrierStyle {
     Color titleBackgroundColor = Colors.transparent,
     bool hasLine = true,
     bool isDashed = true,
-    IntersectionDotStyle intersectionDotStyle,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -94,35 +90,7 @@ class VerticalBarrierStyle extends BarrierStyle {
           hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
-          intersectionDotStyle: intersectionDotStyle,
         );
-}
-
-/// Style of the dot where two lines are intersected.
-class IntersectionDotStyle extends ChartPaintingStyle {
-  /// Initializes
-  const IntersectionDotStyle({
-    this.color = Colors.redAccent,
-    this.radius = 3,
-    this.isFilled = false,
-    this.blinking = false,
-  });
-
-  /// Color of the dot
-  final Color color;
-
-  /// Radius of the dot
-  final double radius;
-
-  /// Whether dot is filled or not.
-  final bool isFilled;
-
-  /// Whether has blinking animation.
-  final bool blinking;
-
-  @override
-  String toString() =>
-      '${super.toString()}, $color, $radius, $isFilled, $blinking';
 }
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).

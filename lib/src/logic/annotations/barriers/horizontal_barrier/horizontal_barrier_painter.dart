@@ -145,8 +145,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       mainLineEndX = valueStartX;
     }
 
-    if (style.intersectionDotStyle != null && dotX != null) {
-      _paintDot(canvas, dotX, y, animationInfo, style);
+    if (dotX != null) {
+      if (style.hasBlinkingDot) {
+        _paintBlinkingDot(canvas, dotX, y, animationInfo);
+      }
 
       if (!series.longLine) {
         mainLineStartX = dotX;
@@ -189,23 +191,20 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
   }
 
-  void _paintDot(
+  void _paintBlinkingDot(
     Canvas canvas,
     double dotX,
     double y,
     AnimationInfo animationInfo,
-    HorizontalBarrierStyle style,
   ) {
-    paintIntersectionDot(canvas, Offset(dotX, y), style.intersectionDotStyle);
+    paintIntersectionDot(canvas, Offset(dotX, y), Colors.redAccent);
 
-    if (style.intersectionDotStyle.blinking) {
-      paintBlinkingDot(
-        canvas,
-        Offset(dotX, y),
-        animationInfo.blinkingPercent,
-        style.intersectionDotStyle,
-      );
-    }
+    paintBlinkingDot(
+      canvas,
+      Offset(dotX, y),
+      animationInfo.blinkingPercent,
+      Colors.redAccent,
+    );
   }
 
   void _paintMainLine(

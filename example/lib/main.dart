@@ -385,12 +385,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                             TickIndicator(
                               ticks.last,
                               style: const HorizontalBarrierStyle(
-                                  color: Colors.redAccent,
-                                  labelShape: LabelShape.pentagon,
-                                  intersectionDotStyle: IntersectionDotStyle(
-                                    isFilled: true,
-                                    blinking: true,
-                                  )),
+                                color: Colors.redAccent,
+                                labelShape: LabelShape.pentagon,
+                                hasBlinkingDot: true,
+                              ),
                             ),
                           ]
                         : null,
@@ -435,7 +433,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           id: 'VBarrier${_sampleBarriers.length}',
                           longLine: math.Random().nextBool(),
                           style: VerticalBarrierStyle(
-                            intersectionDotStyle: const IntersectionDotStyle(),
                             isDashed: math.Random().nextBool(),
                           )),
                     ),
@@ -455,7 +452,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           color: Colors.grey,
                           labelShape: LabelShape.rectangle,
                           isDashed: math.Random().nextBool(),
-                          intersectionDotStyle: IntersectionDotStyle(),
                         ),
                       ),
                     ),
@@ -464,16 +460,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 FlatButton(
                   child: Text('+ Both'),
                   onPressed: () => setState(() => _sampleBarriers.add(
-                        CombinedBarrier(ticks.last,
-                            title: 'B Barrier',
-                            id: 'CBarrier${_sampleBarriers.length}',
-                            horizontalBarrierStyle: HorizontalBarrierStyle(
-                              color: Colors.grey,
-                              isDashed: true,
-                            ),
-                            verticalBarrierStyle: VerticalBarrierStyle(
-                              intersectionDotStyle: IntersectionDotStyle(),
-                            )),
+                        CombinedBarrier(
+                          ticks.last,
+                          title: 'B Barrier',
+                          id: 'CBarrier${_sampleBarriers.length}',
+                          horizontalBarrierStyle: HorizontalBarrierStyle(
+                            color: Colors.grey,
+                            isDashed: true,
+                          ),
+                        ),
                       )),
                 ),
                 IconButton(

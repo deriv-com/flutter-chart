@@ -58,13 +58,8 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
       final double lineX = epochToX(animatedEpoch);
       final double lineEndY = size.height - 20;
 
-      if (style.intersectionDotStyle != null && dotY != null) {
-        paintIntersectionDot(
-            canvas, Offset(lineX, dotY), style.intersectionDotStyle);
-
-        if (!series.longLine) {
-          lineStartY = dotY;
-        }
+      if (dotY != null && !series.longLine) {
+        lineStartY = dotY;
       }
 
       if (style.isDashed) {
