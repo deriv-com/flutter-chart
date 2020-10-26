@@ -16,6 +16,7 @@ class HorizontalBarrier extends Barrier {
     String title,
     bool longLine = true,
     HorizontalBarrierStyle style,
+    this.keepOnYAxisRange = false,
   }) : super(
           id: id,
           title: title,
@@ -25,11 +26,19 @@ class HorizontalBarrier extends Barrier {
           longLine: longLine,
         );
 
+  /// Whether force the chart to keep this barrier on Y-Axis by widening its range.
+  ///
+  /// In case of `false` when the barrier was out of vertical view port, it will
+  /// show it top/bottom edge with an arrow which indicates its value it out of range.
+  final bool keepOnYAxisRange;
+
   @override
   SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
 
   @override
-  List<double> recalculateMinMax() => <double>[double.nan, double.nan];
+  List<double> recalculateMinMax() => keepOnYAxisRange
+      ? super.recalculateMinMax()
+      : <double>[double.nan, double.nan];
 
   @override
   BarrierObject createObject() => BarrierObject(epoch, null, value);
