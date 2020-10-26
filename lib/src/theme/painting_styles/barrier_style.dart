@@ -7,7 +7,6 @@ abstract class BarrierStyle extends ChartPaintingStyle {
   const BarrierStyle({
     this.color,
     this.titleBackgroundColor,
-    this.hasLine,
     this.isDashed,
     this.textStyle,
   });
@@ -18,9 +17,6 @@ abstract class BarrierStyle extends ChartPaintingStyle {
   /// Style of the title and value
   final TextStyle textStyle;
 
-  /// Whether the barrier has line.
-  final bool hasLine;
-
   /// Whether barrier's line should be dashed.
   final bool isDashed;
 
@@ -29,7 +25,7 @@ abstract class BarrierStyle extends ChartPaintingStyle {
 
   @override
   String toString() =>
-      '${super.toString()}$color, ${textStyle.toStringShort()}, $hasLine, $isDashed, $titleBackgroundColor';
+      '${super.toString()}$color, ${textStyle.toStringShort()}, $isDashed, $titleBackgroundColor';
 }
 
 /// Horizontal barrier style
@@ -39,7 +35,6 @@ class HorizontalBarrierStyle extends BarrierStyle {
     this.labelShape = LabelShape.rectangle,
     Color color = const Color(0xFF00A79E),
     Color titleBackgroundColor = Colors.transparent,
-    bool hasLine = true,
     bool isDashed = true,
     this.hasBlinkingDot = false,
     TextStyle textStyle = const TextStyle(
@@ -51,7 +46,6 @@ class HorizontalBarrierStyle extends BarrierStyle {
   }) : super(
           color: color,
           titleBackgroundColor: titleBackgroundColor,
-          hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
         );
@@ -72,7 +66,6 @@ class VerticalBarrierStyle extends BarrierStyle {
   const VerticalBarrierStyle({
     Color color = Colors.grey,
     Color titleBackgroundColor = Colors.transparent,
-    bool hasLine = true,
     bool isDashed = true,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
@@ -83,7 +76,6 @@ class VerticalBarrierStyle extends BarrierStyle {
   }) : super(
           color: color,
           titleBackgroundColor: titleBackgroundColor,
-          hasLine: hasLine,
           isDashed: isDashed,
           textStyle: textStyle,
         );

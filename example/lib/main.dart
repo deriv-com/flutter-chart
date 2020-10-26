@@ -376,7 +376,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                         .abs(),
                                 title: 'Stop loss',
                                 style: HorizontalBarrierStyle(
-                                  hasLine: false,
                                   color: const Color(0xFFCC2E3D),
                                 )),
                             TickIndicator(

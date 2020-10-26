@@ -137,7 +137,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       Offset(titleStartX, y - valuePainter.height / 2),
     );
 
-    if (!style.hasLine) {
+    if (arrowType != BarrierArrowType.none) {
       return;
     }
 
