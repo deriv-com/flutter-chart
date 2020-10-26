@@ -92,14 +92,11 @@ abstract class DataPainter<S extends DataSeries<Tick>>
           currentTickStyle.labelStyle,
         );
 
-        final double quoteLabelAreaWidth =
-            textPainter.width + quoteLabelHorizontalPadding;
-
         paintCurrentTickLabelBackground(
           canvas,
           size,
           centerY: currentTickY,
-          width: quoteLabelAreaWidth,
+          width: textPainter.width + quoteLabelHorizontalPadding,
           currentTickX: currentTickX,
           style: currentTickStyle,
         );
@@ -107,8 +104,10 @@ abstract class DataPainter<S extends DataSeries<Tick>>
         paintWithTextPainter(
           canvas,
           painter: textPainter,
-          // TODO(Rustem): Extract this padding.
-          anchor: Offset(size.width - 4, currentTickY),
+          anchor: Offset(
+            size.width - quoteLabelHorizontalPadding / 2,
+            currentTickY,
+          ),
           anchorAlignment: Alignment.centerRight,
         );
       }
