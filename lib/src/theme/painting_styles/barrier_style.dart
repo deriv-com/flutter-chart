@@ -34,7 +34,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
   const HorizontalBarrierStyle({
     this.labelShape = LabelShape.rectangle,
     Color color = const Color(0xFF00A79E),
-    Color titleBackgroundColor = Colors.transparent,
+    Color titleBackgroundColor = const Color(0xFF0E0E0E),
     bool isDashed = true,
     this.hasBlinkingDot = false,
     TextStyle textStyle = const TextStyle(
