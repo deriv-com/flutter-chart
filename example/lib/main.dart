@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/utils/market_change_reminder.dart';
@@ -58,6 +59,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   int granularity = 0;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
+  HorizontalBarrier _slBarrier, _tpBarrier;
+  bool _sl = false, _tp = false;
 
   TickHistorySubscription _tickHistorySubscription;
 
@@ -253,6 +256,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _resetCandlesTo(historyCandles);
       }
 
+      _createSampleSLAndTP();
+
       WidgetsBinding.instance.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
       );
@@ -362,22 +367,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     annotations: ticks.length > 4
                         ? <ChartAnnotation>[
                             ..._sampleBarriers,
-                            HorizontalBarrier(
-                              ticks.last.quote +
-                                  (ticks.last.quote -
-                                          ticks[ticks.length - 5].quote)
-                                      .abs(),
-                              title: 'Take profit',
-                            ),
-                            HorizontalBarrier(
-                                ticks.last.quote -
-                                    (ticks.last.quote -
-                                            ticks[ticks.length - 5].quote)
-                                        .abs(),
-                                title: 'Stop loss',
-                                style: HorizontalBarrierStyle(
-                                  color: const Color(0xFFCC2E3D),
-                                )),
+                            if (_sl && _slBarrier != null) _slBarrier,
+                            if (_tp && _tpBarrier != null) _tpBarrier,
                             TickIndicator(
                               ticks.last,
                               style: const HorizontalBarrierStyle(
@@ -421,7 +412,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 FlatButton(
-                  child: Text('+ V barrier'),
+                  child: Text('V barrier'),
                   onPressed: () => setState(
                     () => _sampleBarriers.add(
                       VerticalBarrier.onTick(ticks.last,
@@ -435,7 +426,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   ),
                 ),
                 FlatButton(
-                  child: Text('+ H barrier'),
+                  child: Text('H barrier'),
                   onPressed: () => setState(
                     () => _sampleBarriers.add(
                       HorizontalBarrier(
@@ -469,7 +460,32 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 ),
                 IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: () => setState(() => _sampleBarriers.clear()),
+                  onPressed: () => setState(() {
+                    _sampleBarriers.clear();
+                    _sl = false;
+                    _tp = false;
+                  }),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 64,
+            child: Row(
+              children: [
+                Expanded(
+                  child: CheckboxListTile(
+                    value: _sl,
+                    onChanged: (bool sl) => setState(() => _sl = sl),
+                    title: Text('Stop loss'),
+                  ),
+                ),
+                Expanded(
+                  child: CheckboxListTile(
+                    value: _tp,
+                    onChanged: (bool tp) => setState(() => _tp = tp),
+                    title: Text('Take profit'),
+                  ),
                 ),
               ],
             ),
@@ -637,5 +653,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }).toList();
     }
     return candles;
+  }
+
+  void _createSampleSLAndTP() {
+    final double ticksMin = ticks.map((Tick t) => t.quote).reduce(min);
+    final double ticksMax = ticks.map((Tick t) => t.quote).reduce(max);
+
+    _slBarrier = HorizontalBarrier(
+      ticksMin,
+      title: 'Stop loss',
+      style: HorizontalBarrierStyle(
+        color: const Color(0xFFCC2E3D),
+      ),
+    );
+
+    _tpBarrier = HorizontalBarrier(ticksMax, title: 'Take profit');
   }
 }
