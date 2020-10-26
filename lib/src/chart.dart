@@ -141,8 +141,8 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-  /// Width of the area with quote labels on the right.
-  double quoteLabelsAreaWidth = 70;
+  /// Width of the touch area for vertical zoom (on top of quote labels).
+  double quoteLabelsTouchAreaWidth = 70;
 
   bool _panStartedOnQuoteLabelsArea = false;
 
@@ -277,7 +277,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final label =
         widget.mainSeries.entries.first.quote.toStringAsFixed(widget.pipSize);
     // TODO(Rustem): Get label style from _theme
-    quoteLabelsAreaWidth =
+    quoteLabelsTouchAreaWidth =
         _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
   }
 
@@ -515,7 +515,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           if (_isScrollToLastTickAvailable)
             Positioned(
               bottom: 30 + timeLabelsAreaHeight,
-              right: 30 + quoteLabelsAreaWidth,
+              right: 30 + quoteLabelsTouchAreaWidth,
               child: _buildScrollToLastTickButton(),
             ),
         ],
@@ -535,18 +535,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onPanStart(ScaleStartDetails details) {
-    _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
+    _panStartedOnQuoteLabelsArea =
+        _onQuoteLabelsTouchArea(details.localFocalPoint);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     if (_panStartedOnQuoteLabelsArea &&
-        _onQuoteLabelsArea(details.localPosition)) {
+        _onQuoteLabelsTouchArea(details.localPosition)) {
       _scaleVertically(details.delta.dy);
     }
   }
 
-  bool _onQuoteLabelsArea(Offset position) =>
-      position.dx > _xAxis.width - quoteLabelsAreaWidth;
+  bool _onQuoteLabelsTouchArea(Offset position) =>
+      position.dx > _xAxis.width - quoteLabelsTouchAreaWidth;
 
   void _scaleVertically(double dy) {
     setState(() {
