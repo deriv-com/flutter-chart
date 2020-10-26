@@ -57,6 +57,7 @@ void _paintQuoteLabels(
       canvas,
       text: quoteLabel,
       anchor: Offset(
+        // TODO(Rustem): Extract this padding.
         size.width - 4,
         yCoords[index],
       ),

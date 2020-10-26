@@ -107,6 +107,7 @@ abstract class DataPainter<S extends DataSeries<Tick>>
         paintWithTextPainter(
           canvas,
           painter: textPainter,
+          // TODO(Rustem): Extract this padding.
           anchor: Offset(size.width - 4, currentTickY),
           anchorAlignment: Alignment.centerRight,
         );
