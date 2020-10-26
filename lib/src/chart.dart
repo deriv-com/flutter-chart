@@ -238,9 +238,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     _onNewTick();
 
-    // TODO(Rustem): recalculate only when price label length has changed
-    _recalculateQuoteLabelsAreaWidth();
-
     if (_xAxis.isLive && !_currentTickBlinkingController.isAnimating) {
       _currentTickBlinkingController.repeat(reverse: true);
     } else {
@@ -266,32 +263,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
         }
       }
     }
-  }
-
-  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
-  void _recalculateQuoteLabelsAreaWidth() {
-    if (widget.mainSeries.entries.isEmpty) {
-      return;
-    }
-
-    final label =
-        widget.mainSeries.entries.first.quote.toStringAsFixed(widget.pipSize);
-    // TODO(Rustem): Get label style from _theme
-    quoteLabelsTouchAreaWidth =
-        _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
-  }
-
-  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
-  double _getRenderedTextWidth(String text, TextStyle style) {
-    TextSpan textSpan = TextSpan(
-      style: style,
-      text: text,
-    );
-    TextPainter textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
-    return textPainter.width;
   }
 
   @override
