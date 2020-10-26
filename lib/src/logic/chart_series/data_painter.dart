@@ -96,7 +96,8 @@ abstract class DataPainter<S extends DataSeries<Tick>>
           canvas,
           size,
           centerY: currentTickY,
-          width: textPainter.width + quoteLabelHorizontalPadding,
+          width:
+              textPainter.width + currentTickStyle.labelHorizontalPadding * 2,
           currentTickX: currentTickX,
           style: currentTickStyle,
         );
@@ -105,7 +106,7 @@ abstract class DataPainter<S extends DataSeries<Tick>>
           canvas,
           painter: textPainter,
           anchor: Offset(
-            size.width - quoteLabelHorizontalPadding / 2,
+            size.width - currentTickStyle.labelHorizontalPadding,
             currentTickY,
           ),
           anchorAlignment: Alignment.centerRight,

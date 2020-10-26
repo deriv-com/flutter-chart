@@ -14,6 +14,7 @@ class CurrentTickStyle {
       color: Color(0xFFFFFFFF),
       fontFeatures: [FontFeature.tabularFigures()],
     ),
+    this.labelHorizontalPadding = 8,
   });
 
   /// The color of label, dashed-line and current tick dot.
@@ -24,4 +25,7 @@ class CurrentTickStyle {
 
   /// The text style of the current tick indicator label on the Y-Axis
   final TextStyle labelStyle;
+
+  /// Padding on the sides of the text label.
+  final double labelHorizontalPadding;
 }
