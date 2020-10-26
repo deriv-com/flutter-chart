@@ -18,6 +18,7 @@ class CombinedBarrier extends HorizontalBarrier {
     String title,
     HorizontalBarrierStyle horizontalBarrierStyle,
     VerticalBarrierStyle verticalBarrierStyle,
+    HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
   })  : verticalBarrier = VerticalBarrier.onTick(
           tick,
           title: title,
@@ -27,6 +28,7 @@ class CombinedBarrier extends HorizontalBarrier {
           tick.quote,
           id: id,
           style: horizontalBarrierStyle ?? const HorizontalBarrierStyle(),
+          visibility: visibility,
         );
 
   /// For vertical barrier.

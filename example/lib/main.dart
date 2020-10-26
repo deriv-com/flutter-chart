@@ -256,7 +256,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _resetCandlesTo(historyCandles);
       }
 
-      _createSampleSLAndTP();
+      _updateSampleSLAndTP();
 
       WidgetsBinding.instance.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
@@ -435,6 +435,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                             math.Random().nextBool() ? ticks.last.epoch : null,
                         id: 'HBarrier${_sampleBarriers.length}',
                         longLine: math.Random().nextBool(),
+                        visibility: HorizontalBarrierVisibility.normal,
                         style: HorizontalBarrierStyle(
                           color: Colors.grey,
                           labelShape: LabelShape.rectangle,
@@ -655,7 +656,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     return candles;
   }
 
-  void _createSampleSLAndTP() {
+  void _updateSampleSLAndTP() {
     final double ticksMin = ticks.map((Tick t) => t.quote).reduce(min);
     final double ticksMax = ticks.map((Tick t) => t.quote).reduce(max);
 
