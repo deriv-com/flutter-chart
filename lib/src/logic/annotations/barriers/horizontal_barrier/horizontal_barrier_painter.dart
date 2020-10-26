@@ -40,7 +40,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       return;
     }
 
+
     final HorizontalBarrierStyle style = series.style;
+    BarrierArrowType arrowType = BarrierArrowType.none;
 
     _paint.color = style.color;
 
@@ -70,7 +72,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    final double y = quoteToY(animatedValue);
+    double y = quoteToY(animatedValue);
 
     final TextPainter valuePainter = TextPainter(
       text: TextSpan(
@@ -86,16 +88,26 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     final double middleLineEndX = valueStartX - padding;
     final double middleLineStartX = middleLineEndX - 12;
 
+    final double labelHalfHeight = valuePainter.height / 2 + padding;
+
+    if (y - labelHalfHeight < 0) {
+      y =  labelHalfHeight;
+      arrowType = BarrierArrowType.upward;
+    } else if (y + labelHalfHeight > size.height) {
+      y = size.height - labelHalfHeight;
+      arrowType = BarrierArrowType.downward;
+    }
+
     _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
 
-    if (style.arrowType != BarrierArrowType.none) {
+    if (arrowType != BarrierArrowType.none) {
       final double labelMidX = valueStartX + valuePainter.width / 2;
       double arrowY;
 
-      if (style.arrowType == BarrierArrowType.upward) {
+      if (arrowType == BarrierArrowType.upward) {
         arrowY = y - valuePainter.height / 2 - padding - 3;
         _paintUpwardArrows(canvas, labelMidX, arrowY);
-      } else if (style.arrowType == BarrierArrowType.downward) {
+      } else if (arrowType == BarrierArrowType.downward) {
         arrowY = y + valuePainter.height / 2 + padding + 3;
         _paintDownwardArrows(canvas, labelMidX, arrowY);
       }

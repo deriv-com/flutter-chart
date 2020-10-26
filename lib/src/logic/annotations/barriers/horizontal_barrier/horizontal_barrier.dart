@@ -29,9 +29,7 @@ class HorizontalBarrier extends Barrier {
   SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
 
   @override
-  List<double> recalculateMinMax() => epoch == null
-      ? super.recalculateMinMax()
-      : <double>[double.nan, double.nan];
+  List<double> recalculateMinMax() => <double>[double.nan, double.nan];
 
   @override
   BarrierObject createObject() => BarrierObject(epoch, null, value);

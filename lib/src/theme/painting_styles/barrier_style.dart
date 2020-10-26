@@ -36,7 +36,6 @@ abstract class BarrierStyle extends ChartPaintingStyle {
 class HorizontalBarrierStyle extends BarrierStyle {
   /// Initializes
   const HorizontalBarrierStyle({
-    this.arrowType = BarrierArrowType.none,
     this.labelShape = LabelShape.rectangle,
     Color color = const Color(0xFF00A79E),
     Color titleBackgroundColor = Colors.transparent,
@@ -57,9 +56,6 @@ class HorizontalBarrierStyle extends BarrierStyle {
           textStyle: textStyle,
         );
 
-  /// Arrow type
-  final BarrierArrowType arrowType;
-
   /// Label shape
   final LabelShape labelShape;
 
@@ -67,7 +63,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
   final bool hasBlinkingDot;
 
   @override
-  String toString() => '${super.toString()}, $arrowType $labelShape';
+  String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';
 }
 
 /// Vertical barrier style
