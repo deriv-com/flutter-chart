@@ -495,10 +495,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
               ),
             ),
           ),
-          MarkerArea(
-            markerSeries: widget.markerSeries,
-            quoteToCanvasY: _quoteToCanvasY,
-          ),
+          if (widget.markerSeries != null)
+            MarkerArea(
+              markerSeries: widget.markerSeries,
+              quoteToCanvasY: _quoteToCanvasY,
+            ),
           CrosshairArea(
             mainSeries: widget.mainSeries,
             pipSize: widget.pipSize,
