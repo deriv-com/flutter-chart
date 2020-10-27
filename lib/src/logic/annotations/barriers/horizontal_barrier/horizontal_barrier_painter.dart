@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -13,15 +12,6 @@ import 'package:flutter/material.dart';
 
 import 'horizontal_barrier.dart';
 
-/// Padding between lines
-const double padding = 5;
-
-/// Right margin
-const double rightMargin = 5;
-
-/// Arrow size
-const double _arrowSize = 5;
-
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Initializes [series]
@@ -30,6 +20,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         super(series);
 
   final Paint _paint;
+
+  /// Padding between lines
+  static const double padding = 5;
+
+  /// Right margin
+  static const double rightMargin = 5;
+
+  /// Arrow size
+  static const double _arrowSize = 5;
 
   @override
   void onPaint({
@@ -52,6 +51,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double dotX;
 
+    // If previous object is null then its first load and no need to perform
+    // transition animation from previousObject to new object.
     if (series.previousObject == null) {
       animatedValue = series.value;
       if (series.epoch != null) {
@@ -59,6 +60,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     } else {
       final BarrierObject previousBarrier = series.previousObject;
+      // Calculating animated values regarding `currentTickPercent` in transition animation
+      // from previousObject to new object
       animatedValue = lerpDouble(
         previousBarrier.value,
         series.value,
