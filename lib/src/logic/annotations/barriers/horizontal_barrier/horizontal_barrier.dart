@@ -16,7 +16,7 @@ class HorizontalBarrier extends Barrier {
     String title,
     bool longLine = true,
     HorizontalBarrierStyle style,
-    this.visibility = HorizontalBarrierVisibility.alwaysVisible,
+    this.visibility = HorizontalBarrierVisibility.keepBarrierLabelVisible,
   }) : super(
           id: id,
           title: title,
@@ -54,7 +54,7 @@ enum HorizontalBarrierVisibility {
   /// Won't force the chart to keep the barrier in its Y-Axis range, if it was
   /// out of range, will show it on top/bottom edge with an arrow which indicates
   /// its value is beyond Y-Axis range.
-  alwaysVisible,
+  keepBarrierLabelVisible,
 
   /// Will forces the chart to keep this barrier in its Y-Axis range.
   forceToStayOnRange,

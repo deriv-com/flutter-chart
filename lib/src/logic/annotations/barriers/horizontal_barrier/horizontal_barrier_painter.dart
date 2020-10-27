@@ -92,7 +92,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     final double labelHalfHeight = valuePainter.height / 2 + padding;
 
-    if (series.visibility == HorizontalBarrierVisibility.alwaysVisible) {
+    if (series.visibility == HorizontalBarrierVisibility.keepBarrierLabelVisible) {
       if (y - labelHalfHeight < 0) {
         y = labelHalfHeight;
         arrowType = BarrierArrowType.upward;
