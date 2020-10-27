@@ -299,7 +299,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     canvas
       ..drawPath(
-          getDownArrowPath(
+          getDownwardArrowPath(
             middleX,
             middleY,
             size: arrowSize,
@@ -307,7 +307,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           ),
           arrowPaint)
       ..drawPath(
-          getDownArrowPath(
+          getDownwardArrowPath(
             middleX,
             middleY + arrowSize,
             size: arrowSize,
@@ -315,7 +315,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           ),
           arrowPaint..color = _paint.color.withOpacity(0.64))
       ..drawPath(
-          getDownArrowPath(
+          getDownwardArrowPath(
             middleX,
             middleY + 2 * arrowSize,
             size: arrowSize,

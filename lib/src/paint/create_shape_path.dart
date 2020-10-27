@@ -71,7 +71,7 @@ Path getUpwardArrowPath(
 }
 
 /// Returns the path of an downward arrow for the label.
-Path getDownArrowPath(
+Path getDownwardArrowPath(
   double middleX,
   double middleY, {
   double thickness = 4,
