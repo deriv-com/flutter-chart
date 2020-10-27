@@ -1,4 +1,4 @@
-/// Eny component other that chart data (line. candle), which can take a rectangle on the chart's canvas
+/// Any component other than chart data (line or candle) which can take a rectangle on the chart's canvas.
 abstract class ChartObject {
   /// Initializes
   ChartObject(

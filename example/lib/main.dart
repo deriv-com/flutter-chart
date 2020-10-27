@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:math' as math;
-import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/utils/market_change_reminder.dart';
@@ -661,8 +660,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _updateSampleSLAndTP() {
-    final double ticksMin = ticks.map((Tick t) => t.quote).reduce(min);
-    final double ticksMax = ticks.map((Tick t) => t.quote).reduce(max);
+    final double ticksMin = ticks.map((Tick t) => t.quote).reduce(math.min);
+    final double ticksMax = ticks.map((Tick t) => t.quote).reduce(math.max);
 
     _slBarrier = HorizontalBarrier(
       ticksMin,
