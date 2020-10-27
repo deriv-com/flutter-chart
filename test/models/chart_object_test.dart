@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BarrierObject', () {
-    test('Barrier with epoch values isOnEpochRange', () {
+    test('Barrier with epoch values isOnEpochRange and isOnValueRange', () {
       final BarrierObject barrierObject = BarrierObject(10, 20, 10.2);
 
       expect(barrierObject.isOnEpochRange(5, 9), false);
@@ -27,7 +27,8 @@ void main() {
       expect(barrierObject.isOnValueRange(11, 13), false);
     });
 
-    test('Horizontal Barrier without epoch isOnEpochRange', () {
+    test('Horizontal Barrier without epoch isOnEpochRange and isOnValueRange',
+        () {
       final BarrierObject hBarrierObject = BarrierObject(null, null, 10.2);
 
       // A horizontal line which will be visible in the entire x-axis view port
@@ -42,7 +43,7 @@ void main() {
       expect(hBarrierObject.isOnValueRange(11, 13), false);
     });
 
-    test('Vertical Barrier isOnEpochRange', () {
+    test('Vertical Barrier isOnEpochRange and isOnValueRange', () {
       final BarrierObject barrierObject = VerticalBarrierObject(10, null);
 
       expect(barrierObject.isOnEpochRange(5, 9), false);
