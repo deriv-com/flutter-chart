@@ -22,11 +22,9 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   /// Will be ignored if the barrier has only an epoch or a value, and not both.
   final bool longLine;
 
-
   /// Epoch of the vertical barrier
   final int epoch;
 
   /// The value that this barrier points to
   final double value;
-
 }
