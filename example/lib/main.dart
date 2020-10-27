@@ -269,7 +269,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
-        ticks.clear();
+        _clearBarriers();
         ticks = fetchedCandles;
       });
 
@@ -462,9 +462,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () => setState(() {
-                    _sampleBarriers.clear();
-                    _sl = false;
-                    _tp = false;
+                    _clearBarriers();
                   }),
                 ),
               ],
@@ -494,6 +492,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ],
       ),
     );
+  }
+
+  void _clearBarriers() {
+    _sampleBarriers.clear();
+    _sl = false;
+    _tp = false;
   }
 
   Widget _buildConnectionStatus() => ConnectionStatusLabel(
