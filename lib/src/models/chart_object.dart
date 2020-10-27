@@ -24,8 +24,14 @@ abstract class ChartObject {
   bool isOnEpochRange(int leftBoundEpoch, int rightBoundEpoch) =>
       leftEpoch == null ||
       rightEpoch == null ||
-      (leftEpoch > leftBoundEpoch && leftEpoch < rightBoundEpoch) ||
-      (rightEpoch > leftBoundEpoch && rightEpoch < rightBoundEpoch);
+      _isLeftEpochOnRange(leftBoundEpoch, rightBoundEpoch) ||
+      _isRightEpochOnRange(leftBoundEpoch, rightBoundEpoch);
+
+  bool _isRightEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) =>
+      rightEpoch > leftBoundEpoch && rightEpoch < rightBoundEpoch;
+
+  bool _isLeftEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) =>
+      leftEpoch > leftBoundEpoch && leftEpoch < rightBoundEpoch;
 
   /// Whether this chart object is in chart horizontal visible area.
   bool isOnValueRange(double bottomBoundValue, double topBoundValue) =>
