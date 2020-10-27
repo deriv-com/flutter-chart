@@ -21,7 +21,7 @@ abstract class ChartObject {
   final double topValue;
 
   /// Whether this chart object is in chart horizontal visible area.
-  bool isOnRange(int leftBoundEpoch, int rightBoundEpoch) =>
+  bool isOnEpochRange(int leftBoundEpoch, int rightBoundEpoch) =>
       leftEpoch == null ||
       rightEpoch == null ||
       (leftEpoch > leftBoundEpoch && leftEpoch < rightBoundEpoch) ||

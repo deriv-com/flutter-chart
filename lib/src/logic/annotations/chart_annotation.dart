@@ -31,7 +31,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) =>
-      isOnRange = annotationObject.isOnRange(leftEpoch, rightEpoch);
+      isOnRange = annotationObject.isOnEpochRange(leftEpoch, rightEpoch);
 
   @override
   List<double> recalculateMinMax() =>
