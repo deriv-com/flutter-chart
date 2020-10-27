@@ -16,17 +16,22 @@ class CombinedBarrier extends HorizontalBarrier {
     this.tick, {
     String id,
     String title,
+    bool verticalLongLine = true,
+    bool horizontalLongLine = false,
     HorizontalBarrierStyle horizontalBarrierStyle,
     VerticalBarrierStyle verticalBarrierStyle,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
   })  : verticalBarrier = VerticalBarrier.onTick(
           tick,
           title: title,
+          longLine: verticalLongLine,
           style: verticalBarrierStyle ?? const VerticalBarrierStyle(),
         ),
         super(
           tick.quote,
+          epoch: tick.epoch,
           id: id,
+          longLine: horizontalLongLine,
           style: horizontalBarrierStyle ?? const HorizontalBarrierStyle(),
           visibility: visibility,
         );
