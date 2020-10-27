@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('BarrierObject', () {
     test('Barrier with epoch values isOnEpochRange', () {
-      final BarrierObject barrierObject = BarrierObject(10, 20, 10);
+      final BarrierObject barrierObject = BarrierObject(10, 20, 10.2);
 
       expect(barrierObject.isOnEpochRange(5, 9), false);
 
@@ -13,6 +13,9 @@ void main() {
 
       // Fully visible
       expect(barrierObject.isOnEpochRange(5, 21), true);
+
+      // Covers the chart visible range
+      expect(barrierObject.isOnEpochRange(12, 18), true);
 
       // Left side partially visible
       expect(barrierObject.isOnEpochRange(15, 21), true);
