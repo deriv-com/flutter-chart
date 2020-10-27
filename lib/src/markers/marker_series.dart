@@ -49,15 +49,5 @@ class MarkerSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() {
-    final double min = visibleEntries.fold(
-      double.infinity,
-      (double min, Marker marker) => math.min(min, marker.quote),
-    );
-    final double max = visibleEntries.fold(
-      double.negativeInfinity,
-      (double max, Marker marker) => math.max(max, marker.quote),
-    );
-    return <double>[min, max];
-  }
+  List<double> recalculateMinMax() => <double>[double.nan, double.nan];
 }
