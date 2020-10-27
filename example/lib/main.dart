@@ -263,6 +263,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
+        _markers.clear();
         ticks.clear();
         ticks = fetchedCandles;
       });
