@@ -407,6 +407,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   child: const Text('Down'),
                   onPressed: () => _addMarker(MarkerDirection.down),
                 ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      _markers.clear();
+                    });
+                  },
+                ),
               ],
             ),
           ),
