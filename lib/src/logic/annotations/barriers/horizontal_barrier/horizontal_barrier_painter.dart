@@ -95,7 +95,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     final double labelHalfHeight = valuePainter.height / 2 + padding;
 
-    if (series.visibility == HorizontalBarrierVisibility.keepBarrierLabelVisible) {
+    if (series.visibility ==
+        HorizontalBarrierVisibility.keepBarrierLabelVisible) {
       if (y - labelHalfHeight < 0) {
         y = labelHalfHeight;
         arrowType = BarrierArrowType.upward;
@@ -144,37 +145,42 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    if (arrowType != BarrierArrowType.none) {
-      return;
-    }
+    if (arrowType == BarrierArrowType.none) {
+      double mainLineEndX;
+      double mainLineStartX = 0;
 
-    double mainLineEndX;
-    double mainLineStartX = 0;
+      if (series.title != null) {
+        mainLineEndX = titleStartX - padding;
 
-    if (series.title != null) {
-      mainLineEndX = titleStartX - padding;
-
-      // Painting right line
-      canvas.drawLine(
-        Offset(middleLineStartX, y),
-        Offset(middleLineEndX, y),
-        _paint,
-      );
-    } else {
-      mainLineEndX = valueStartX;
-    }
-
-    if (dotX != null) {
-      if (style.hasBlinkingDot) {
-        _paintBlinkingDot(canvas, dotX, y, animationInfo);
+        // Painting right line
+        canvas.drawLine(
+          Offset(middleLineStartX, y),
+          Offset(middleLineEndX, y),
+          _paint,
+        );
+      } else {
+        mainLineEndX = valueStartX;
       }
 
-      if (!series.longLine) {
-        mainLineStartX = dotX;
+      if (dotX != null) {
+        if (style.hasBlinkingDot) {
+          _paintBlinkingDot(canvas, dotX, y, animationInfo);
+        }
+
+        if (!series.longLine) {
+          mainLineStartX = dotX;
+        }
       }
+
+      _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
 
-    _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
+    _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
+
+    valuePainter.paint(
+      canvas,
+      Offset(valueStartX, y - valuePainter.height / 2),
+    );
   }
 
   void _paintLabelBackground(
