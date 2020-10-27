@@ -41,6 +41,16 @@ abstract class ChartObject {
   bool isOnValueRange(double bottomBoundValue, double topBoundValue) =>
       bottomValue == null ||
       topValue == null ||
-      (bottomValue > bottomBoundValue && bottomValue < topBoundValue) ||
-      (topValue > bottomBoundValue && topValue < topBoundValue);
+      _coversValueRange(bottomBoundValue, topBoundValue) ||
+      _isBottomValueOnRange(bottomBoundValue, topBoundValue) ||
+      _isTopValueOnRange(bottomBoundValue, topBoundValue);
+
+  bool _coversValueRange(double bottomBoundValue, double topBoundValue) =>
+      bottomValue <= bottomBoundValue && topValue > topBoundValue;
+
+  bool _isTopValueOnRange(double bottomBoundValue, double topBoundValue) =>
+      topValue > bottomBoundValue && topValue < topBoundValue;
+
+  bool _isBottomValueOnRange(double bottomBoundValue, double topBoundValue) =>
+      bottomValue > bottomBoundValue && bottomValue < topBoundValue;
 }
