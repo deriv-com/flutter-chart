@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/candle_painting.dart';
@@ -40,8 +39,6 @@ class CandlePainter extends DataPainter<CandleSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final DataSeries<Candle> series = this.series;
-
     if (series.visibleEntries.length < 2) {
       return;
     }
@@ -50,6 +47,7 @@ class CandlePainter extends DataPainter<CandleSeries> {
 
     final double candleWidth = intervalWidth * 0.6;
 
+    // Painting visible candles except the last one that might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Candle candle = series.visibleEntries[i];
 
@@ -70,7 +68,7 @@ class CandlePainter extends DataPainter<CandleSeries> {
       );
     }
 
-    // Last visible candle
+    // Painting last visible candle
     final Candle lastCandle = series.entries.last;
     final Candle lastVisibleCandle = series.visibleEntries.last;
 
