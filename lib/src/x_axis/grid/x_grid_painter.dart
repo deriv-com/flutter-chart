@@ -22,7 +22,7 @@ class XGridPainter extends XAxisPainter {
         canvas,
         size,
         gridTimestamps
-            .map((time) => epochToCanvasX(time.millisecondsSinceEpoch))
+            .map((DateTime time) => epochToCanvasX(time.millisecondsSinceEpoch))
             .toList(),
         style,
       );
