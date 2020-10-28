@@ -11,6 +11,8 @@ import 'grid/calc_time_grid.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 
+const double _minDistanceBetweenTimeGridLines = 90;
+
 /// X-axis widget.
 ///
 /// Draws x-axis grid and manages [XAxisModel].
@@ -88,8 +90,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
     _model
-      ..updateCandles(widget.entries)
       ..updateGranularity(widget.granularity)
+      ..updateEntries(widget.entries)
       ..updateIsLive(widget.isLive);
   }
 
@@ -113,22 +115,42 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       value: _model,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
+          // Update x-axis width.
           context.watch<XAxisModel>().width = constraints.maxWidth;
 
-          final List<DateTime> xAxisLabelTimes = gridTimestamps(
-            timeGridInterval: timeGridInterval(_model.pxFromMs),
+          // Calculate time labels' timestamps for current scale.
+          final List<DateTime> _gridTimestamps = gridTimestamps(
+            timeGridInterval: timeGridInterval(
+              _model.pxFromMs,
+              minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
+            ),
             leftBoundEpoch: _model.leftBoundEpoch,
             rightBoundEpoch: _model.rightBoundEpoch,
           );
 
+          // Remove labels inside time gaps.
+          // Except if the last label in the gap can fit, then keep it.
+          final List<DateTime> _noOverlapGridTimestamps = [
+            if (_gridTimestamps.isNotEmpty) _gridTimestamps.last,
+          ];
+          for (final DateTime timestamp in _gridTimestamps.reversed.skip(1)) {
+            final double distance = _model.pxBetween(
+              timestamp.millisecondsSinceEpoch,
+              _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
+            );
+            if (distance >= _minDistanceBetweenTimeGridLines) {
+              _noOverlapGridTimestamps.insert(0, timestamp);
+            }
+          }
+
           return CustomPaint(
             foregroundPainter: XLabelsPainter(
-              gridTimestamps: xAxisLabelTimes,
+              gridTimestamps: _noOverlapGridTimestamps,
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),
             painter: XGridPainter(
-              gridTimestamps: xAxisLabelTimes,
+              gridTimestamps: _noOverlapGridTimestamps,
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),
