@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -14,7 +15,22 @@ import 'candle_series.dart';
 /// A [DataPainter] for painting CandleStick data.
 class CandlePainter extends DataPainter<CandleSeries> {
   /// Initializes
-  CandlePainter(CandleSeries series) : super(series);
+  CandlePainter(CandleSeries series)
+      : _linePaint = Paint()
+          // ignore: avoid_as
+          ..color = (series.style as CandleStyle).lineColor
+          ..strokeWidth = 1.2,
+        _positiveCandlePaint = Paint()
+          // ignore: avoid_as
+          ..color = (series.style as CandleStyle).positiveColor,
+        _negativeCandlePaint = Paint()
+          // ignore: avoid_as
+          ..color = (series.style as CandleStyle).negativeColor,
+        super(series);
+
+  final Paint _linePaint;
+  final Paint _positiveCandlePaint;
+  final Paint _negativeCandlePaint;
 
   @override
   void onPaintData(
@@ -38,8 +54,8 @@ class CandlePainter extends DataPainter<CandleSeries> {
       final Candle candle = series.visibleEntries[i];
 
       paintCandle(
-        canvas,
-        CandlePainting(
+        canvas: canvas,
+        cp: CandlePainting(
           width: candleWidth,
           xCenter: epochToX(candle.epoch),
           yHigh: quoteToY(candle.high),
@@ -47,7 +63,10 @@ class CandlePainter extends DataPainter<CandleSeries> {
           yOpen: quoteToY(candle.open),
           yClose: quoteToY(candle.close),
         ),
-        series.style,
+        candleStyle: series.style,
+        linePaint: _linePaint,
+        positiveCandlePaint: _positiveCandlePaint,
+        negativeCandlePaint: _negativeCandlePaint,
       );
     }
 
@@ -78,7 +97,6 @@ class CandlePainter extends DataPainter<CandleSeries> {
         yClose: yClose,
         width: candleWidth,
       );
-
     } else {
       lastCandlePainting = CandlePainting(
         xCenter: epochToX(lastVisibleCandle.epoch),
@@ -90,6 +108,13 @@ class CandlePainter extends DataPainter<CandleSeries> {
       );
     }
 
-    paintCandle(canvas, lastCandlePainting, series.style);
+    paintCandle(
+      canvas: canvas,
+      cp: lastCandlePainting,
+      candleStyle: series.style,
+      linePaint: _linePaint,
+      positiveCandlePaint: _positiveCandlePaint,
+      negativeCandlePaint: _negativeCandlePaint,
+    );
   }
 }

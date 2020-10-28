@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import '../models/candle_painting.dart';
 
 /// Paints a [CandlePainting] on the given [canvas].
-void paintCandle(Canvas canvas, CandlePainting cp, CandleStyle candleStyle) {
-  final Paint linePaint = Paint()
-    ..color = candleStyle.lineColor
-    ..strokeWidth = 1.2;
-
+void paintCandle({
+  @required Canvas canvas,
+  @required CandlePainting cp,
+  @required CandleStyle candleStyle,
+  @required Paint linePaint,
+  @required Paint positiveCandlePaint,
+  @required Paint negativeCandlePaint,
+}) {
   canvas.drawLine(
     Offset(cp.xCenter, cp.yHigh),
     Offset(cp.xCenter, cp.yLow),
@@ -29,7 +32,7 @@ void paintCandle(Canvas canvas, CandlePainting cp, CandleStyle candleStyle) {
         cp.xCenter + cp.width / 2,
         cp.yOpen,
       ),
-      Paint()..color = candleStyle.positiveColor,
+      positiveCandlePaint,
     );
   } else {
     canvas.drawRect(
@@ -39,7 +42,7 @@ void paintCandle(Canvas canvas, CandlePainting cp, CandleStyle candleStyle) {
         cp.xCenter + cp.width / 2,
         cp.yClose,
       ),
-      Paint()..color = candleStyle.negativeColor,
+      negativeCandlePaint,
     );
   }
 }
