@@ -75,24 +75,30 @@ class CandlePainter extends DataPainter<CandleSeries> {
     CandlePainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
-      final double yClose = quoteToY(ui.lerpDouble(
-        series.prevLastEntry.close,
+      final Candle prevLastCandle = series.prevLastEntry;
+
+      final double animatedYClose = quoteToY(ui.lerpDouble(
+        prevLastCandle.close,
         lastCandle.close,
         animationInfo.currentTickPercent,
       ));
 
       final double xCenter = ui.lerpDouble(
-        epochToX(series.prevLastEntry.epoch),
+        epochToX(prevLastCandle.epoch),
         epochToX(lastCandle.epoch),
         animationInfo.currentTickPercent,
       );
 
       lastCandlePainting = CandlePainting(
         xCenter: xCenter,
-        yHigh: quoteToY(lastCandle.high),
-        yLow: quoteToY(lastCandle.low),
+        yHigh: lastCandle.high > prevLastCandle.high
+            ? quoteToY(prevLastCandle.high)
+            : quoteToY(lastCandle.high),
+        yLow: lastCandle.low < prevLastCandle.low
+            ? quoteToY(prevLastCandle.low)
+            : quoteToY(lastCandle.low),
         yOpen: quoteToY(lastCandle.open),
-        yClose: yClose,
+        yClose: animatedYClose,
         width: candleWidth,
       );
     } else {
