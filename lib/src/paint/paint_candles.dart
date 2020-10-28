@@ -3,18 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../models/candle_painting.dart';
 
-void paintCandles(
-  Canvas canvas,
-  List<CandlePainting> candlePaintings,
-  CandleStyle candleStyle,
-) {
-  candlePaintings.forEach((candlePainting) {
-    _paintCandle(canvas, candlePainting, candleStyle);
-  });
-}
-
-void _paintCandle(Canvas canvas, CandlePainting cp, CandleStyle candleStyle) {
-  final linePaint = Paint()
+/// Paints a [CandlePainting] on the given [canvas].
+void paintCandle(Canvas canvas, CandlePainting cp, CandleStyle candleStyle) {
+  final Paint linePaint = Paint()
     ..color = candleStyle.lineColor
     ..strokeWidth = 1.2;
 

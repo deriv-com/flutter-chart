@@ -34,24 +34,28 @@ class CandlePainter extends DataPainter<CandleSeries> {
 
     final double candleWidth = intervalWidth * 0.6;
 
-    final List<CandlePainting> candlePaintings = <CandlePainting>[];
-
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Candle candle = series.visibleEntries[i];
 
-      candlePaintings.add(CandlePainting(
-        width: candleWidth,
-        xCenter: epochToX(candle.epoch),
-        yHigh: quoteToY(candle.high),
-        yLow: quoteToY(candle.low),
-        yOpen: quoteToY(candle.open),
-        yClose: quoteToY(candle.close),
-      ));
+      paintCandle(
+        canvas,
+        CandlePainting(
+          width: candleWidth,
+          xCenter: epochToX(candle.epoch),
+          yHigh: quoteToY(candle.high),
+          yLow: quoteToY(candle.low),
+          yOpen: quoteToY(candle.open),
+          yClose: quoteToY(candle.close),
+        ),
+        series.style,
+      );
     }
 
     // Last visible candle
     final Candle lastCandle = series.entries.last;
     final Candle lastVisibleCandle = series.visibleEntries.last;
+
+    CandlePainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
       final double yClose = quoteToY(ui.lerpDouble(
@@ -66,25 +70,26 @@ class CandlePainter extends DataPainter<CandleSeries> {
         animationInfo.currentTickPercent,
       );
 
-      candlePaintings.add(CandlePainting(
+      lastCandlePainting = CandlePainting(
         xCenter: xCenter,
         yHigh: quoteToY(lastCandle.high),
         yLow: quoteToY(lastCandle.low),
         yOpen: quoteToY(lastCandle.open),
         yClose: yClose,
         width: candleWidth,
-      ));
+      );
+
     } else {
-      candlePaintings.add(CandlePainting(
+      lastCandlePainting = CandlePainting(
         xCenter: epochToX(lastVisibleCandle.epoch),
         yHigh: quoteToY(lastVisibleCandle.high),
         yLow: quoteToY(lastVisibleCandle.low),
         yOpen: quoteToY(lastVisibleCandle.open),
         yClose: quoteToY(lastVisibleCandle.close),
         width: candleWidth,
-      ));
+      );
     }
 
-    paintCandles(canvas, candlePaintings, series.style);
+    paintCandle(canvas, lastCandlePainting, series.style);
   }
 }
