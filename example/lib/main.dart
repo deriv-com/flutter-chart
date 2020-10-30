@@ -75,6 +75,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
+  List<Barrier> _sampleBarriers = <Barrier>[];
+  HorizontalBarrier _slBarrier, _tpBarrier;
+  bool _sl = false, _tp = false;
+
   TickHistorySubscription _tickHistorySubscription;
 
   StreamSubscription _tickStreamSubscription;
@@ -636,6 +640,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _clearMarkers() {
     _markers.clear();
     _activeMarker = null;
+  }
+
+  void _clearBarriers() {
+    _sampleBarriers.clear();
+    _sl = false;
+    _tp = false;
   }
 
   void _clearBarriers() {

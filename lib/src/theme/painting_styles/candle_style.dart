@@ -10,8 +10,8 @@ class CandleStyle extends DataSeriesStyle with EquatableMixin {
     this.positiveColor = const Color(0xFF00A79E),
     this.negativeColor = const Color(0xFFCC2E3D),
     this.lineColor = const Color(0xFF6E6E6E),
-    CurrentTickStyle currentTickStyle,
-  }) : super(currentTickStyle: currentTickStyle);
+    HorizontalBarrierStyle lastTickStyle,
+  }) : super(lastTickStyle: lastTickStyle);
 
   /// Color of candles in which the price moved HIGHER during their period.
   final Color positiveColor;
