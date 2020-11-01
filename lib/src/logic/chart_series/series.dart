@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_paiting_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
 /// Base class of all chart series
@@ -11,7 +11,7 @@ abstract class Series implements ChartData {
   /// Initializes
   Series(this.id, {this.style}) {
     seriesPainter = createPainter();
-    this.id ??= '$runtimeType${style.runtimeType}${seriesPainter.runtimeType}';
+    id = '$runtimeType${style?.toString()}${seriesPainter.runtimeType}$id';
   }
 
   @override
