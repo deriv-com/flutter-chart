@@ -20,7 +20,6 @@ void paintYGrid(
     size,
     yCoords: yCoords,
     quoteLabels: quoteLabels,
-    quoteLabelsAreaWidth: quoteLabelsAreaWidth,
     style: style,
   );
 }
@@ -49,16 +48,23 @@ void _paintQuoteLabels(
   Size size, {
   @required List<double> yCoords,
   @required List<String> quoteLabels,
-  @required double quoteLabelsAreaWidth,
   @required GridStyle style,
 }) {
   quoteLabels.asMap().forEach((index, quoteLabel) {
-    paintTextFromCenter(
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: quoteLabel,
+        style: style.labelStyle,
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final double textLeftX = size.width - textPainter.width - 10;
+
+    textPainter.paint(
       canvas,
-      text: quoteLabel,
-      centerX: size.width - quoteLabelsAreaWidth / 2,
-      centerY: yCoords[index],
-      style: style.labelStyle,
+      Offset(textLeftX, yCoords[index] - textPainter.height / 2),
     );
   });
 }

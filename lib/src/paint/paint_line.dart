@@ -1,70 +1,108 @@
-import 'dart:ui' as ui;
-
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
-void paintLine(
+/// Paints a horizontal dashed-line for the given parameters.
+void paintHorizontalDashedLine(
   Canvas canvas,
-  Size size, {
-  @required List<double> xCoords,
-  @required List<double> yCoords,
-  @required LineStyle style,
-}) {
-  assert(xCoords.isNotEmpty);
-  assert(yCoords.isNotEmpty);
-  assert(xCoords.length == yCoords.length);
-
-  Path path = Path();
-  path.moveTo(xCoords[0], yCoords[0]);
-
-  for (int i = 1; i < xCoords.length; i++) {
-    path.lineTo(xCoords[i], yCoords[i]);
-  }
-
-  final linePaint = Paint()
-    ..color = style.color
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = style.thickness;
-
-  canvas.drawPath(path, linePaint);
-
-  _paintLineArea(
-    canvas,
-    size,
-    linePath: path,
-    lineStartX: xCoords[0],
-    lineEndX: xCoords.last,
-    style: style,
-  );
-}
-
-void _paintLineArea(
-  Canvas canvas,
-  Size size, {
-  @required LineStyle style,
-  Path linePath,
   double lineStartX,
   double lineEndX,
+  double lineY,
+  Color lineColor,
+  double lineThickness, {
+  double dashWidth = 3,
+  double dashSpace = 3,
 }) {
-  final areaPaint = Paint()
-    ..style = PaintingStyle.fill
-    ..shader = ui.Gradient.linear(
-      Offset(0, 0),
-      Offset(0, size.height),
-      [
-        style.color.withOpacity(0.2),
-        style.color.withOpacity(0.01),
-      ],
+  final Paint paint = Paint()
+    ..color = lineColor
+    ..strokeWidth = lineThickness;
+
+  if (lineStartX < lineEndX) {
+    _paintLTRDashedLine(
+      lineStartX,
+      lineEndX,
+      canvas,
+      lineY,
+      paint,
+      dashWidth,
+      dashSpace,
     );
+  } else {
+    _paintRTLDashedLine(
+      lineEndX,
+      lineStartX,
+      canvas,
+      lineY,
+      paint,
+      dashWidth,
+      dashSpace,
+    );
+  }
+}
 
-  linePath.lineTo(
-    lineEndX,
-    size.height,
-  );
-  linePath.lineTo(lineStartX, size.height);
+void _paintLTRDashedLine(
+  double leftX,
+  double rightX,
+  Canvas canvas,
+  double lineY,
+  Paint paint,
+  double dashWidth,
+  double dashSpace,
+) {
+  double startX = leftX;
 
-  canvas.drawPath(
-    linePath,
-    areaPaint,
-  );
+  while (startX <= rightX) {
+    canvas.drawLine(
+      Offset(startX, lineY),
+      Offset(startX + dashWidth, lineY),
+      paint,
+    );
+    startX += dashSpace + dashWidth;
+  }
+}
+
+void _paintRTLDashedLine(
+  double leftX,
+  double rightX,
+  Canvas canvas,
+  double lineY,
+  Paint paint,
+  double dashWidth,
+  double dashSpace,
+) {
+  double startX = rightX;
+
+  while (startX >= leftX) {
+    canvas.drawLine(
+      Offset(startX, lineY),
+      Offset(startX - dashWidth, lineY),
+      paint,
+    );
+    startX -= dashSpace + dashWidth;
+  }
+}
+
+/// Paints a vertical dashed-line for the given parameters.
+void paintVerticalDashedLine(
+  Canvas canvas,
+  double lineX,
+  double lineTopY,
+  double lineBottomY,
+  Color lineColor,
+  double lineThickness, {
+  double dashWidth = 3,
+  double dashSpace = 3,
+}) {
+  double startY = lineBottomY;
+
+  final Paint paint = Paint()
+    ..color = lineColor
+    ..strokeWidth = lineThickness;
+
+  while (startY >= lineTopY) {
+    canvas.drawLine(
+      Offset(lineX, startY),
+      Offset(lineX, startY - dashWidth),
+      paint,
+    );
+    startY -= dashSpace + dashWidth;
+  }
 }

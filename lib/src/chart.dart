@@ -1,11 +1,13 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +41,7 @@ class Chart extends StatelessWidget {
     this.onVisibleAreaChanged,
     this.isLive = false,
     this.opacity = 1.0,
+    this.annotations,
     Key key,
   }) : super(key: key);
 
@@ -68,6 +71,9 @@ class Chart extends StatelessWidget {
 
   /// Chart's theme.
   final ChartTheme theme;
+
+  /// Chart's annotations
+  final List<ChartAnnotation<ChartObject>> annotations;
 
   /// Whether the chart should be showing live data or not.
   ///
@@ -100,7 +106,8 @@ class Chart extends StatelessWidget {
                 controller: controller,
                 mainSeries: mainSeries,
                 chartDataList: <ChartData>[
-                  if (secondarySeries != null) ...secondarySeries
+                  if (secondarySeries != null) ...secondarySeries,
+                  if (annotations != null) ...annotations
                 ],
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
