@@ -4,7 +4,6 @@ import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/candle_painting.dart';
-import 'package:deriv_chart/src/paint/paint_candles.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
@@ -51,9 +50,9 @@ class CandlePainter extends DataPainter<CandleSeries> {
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Candle candle = series.visibleEntries[i];
 
-      paintCandle(
-        canvas: canvas,
-        cp: CandlePainting(
+      _paintCandle(
+        canvas,
+        CandlePainting(
           width: candleWidth,
           xCenter: epochToX(candle.epoch),
           yHigh: quoteToY(candle.high),
@@ -61,10 +60,6 @@ class CandlePainter extends DataPainter<CandleSeries> {
           yOpen: quoteToY(candle.open),
           yClose: quoteToY(candle.close),
         ),
-        candleStyle: series.style,
-        linePaint: _linePaint,
-        positiveCandlePaint: _positiveCandlePaint,
-        negativeCandlePaint: _negativeCandlePaint,
       );
     }
 
@@ -115,13 +110,42 @@ class CandlePainter extends DataPainter<CandleSeries> {
       );
     }
 
-    paintCandle(
-      canvas: canvas,
-      cp: lastCandlePainting,
-      candleStyle: series.style,
-      linePaint: _linePaint,
-      positiveCandlePaint: _positiveCandlePaint,
-      negativeCandlePaint: _negativeCandlePaint,
+    _paintCandle(canvas, lastCandlePainting);
+  }
+
+  void _paintCandle(Canvas canvas, CandlePainting cp) {
+    canvas.drawLine(
+      Offset(cp.xCenter, cp.yHigh),
+      Offset(cp.xCenter, cp.yLow),
+      _linePaint,
     );
+
+    if (cp.yOpen == cp.yClose) {
+      canvas.drawLine(
+        Offset(cp.xCenter - cp.width / 2, cp.yOpen),
+        Offset(cp.xCenter + cp.width / 2, cp.yOpen),
+        _linePaint,
+      );
+    } else if (cp.yOpen > cp.yClose) {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          cp.xCenter - cp.width / 2,
+          cp.yClose,
+          cp.xCenter + cp.width / 2,
+          cp.yOpen,
+        ),
+        _positiveCandlePaint,
+      );
+    } else {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          cp.xCenter - cp.width / 2,
+          cp.yOpen,
+          cp.xCenter + cp.width / 2,
+          cp.yClose,
+        ),
+        _negativeCandlePaint,
+      );
+    }
   }
 }
