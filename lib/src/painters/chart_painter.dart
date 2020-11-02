@@ -20,16 +20,10 @@ class ChartPainter extends CustomPainter {
 
   final AnimationInfo animationInfo;
 
-  Canvas canvas;
-  Size size;
-
   final List<ChartData> chartDataList;
 
   @override
   void paint(Canvas canvas, Size size) {
-    this.canvas = canvas;
-    this.size = size;
-
     for (final ChartData c in chartDataList) {
       c.paint(
         canvas,
