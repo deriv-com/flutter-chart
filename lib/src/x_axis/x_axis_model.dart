@@ -310,7 +310,9 @@ class XAxisModel extends ChangeNotifier {
     final duration =
         animate ? const Duration(milliseconds: 600) : Duration.zero;
     final target = _maxRightBoundEpoch + duration.inMilliseconds;
-    final double distance = pxBetween(_rightBoundEpoch, target);
+    final double distance = target > _rightBoundEpoch
+        ? pxBetween(_rightBoundEpoch, target)
+        : pxBetween(target, _rightBoundEpoch);
 
     _prevScrollAnimationValue = 0;
     _scrollAnimationController
