@@ -35,22 +35,20 @@ class ActiveMarkerPainter extends CustomPainter {
     final TextPainter textPainter =
         makeTextPainter(activeMarker.text, style.activeMarkerText);
 
-    final Rect markerArea = Rect.fromCenter(
-      center: center,
-      height: style.radius * 2,
-      width: style.radius * 2 +
+    final Rect markerArea = Rect.fromLTWH(
+      center.dx - style.radius,
+      center.dy - style.radius,
+      style.radius * 2 +
           (style.textLeftPadding + textPainter.width + style.textRightPadding) *
               animationProgress,
+      style.radius * 2,
     );
     final Offset iconShift = Offset(-markerArea.width / 2 + style.radius, 0);
 
     // Marker body.
     canvas.drawRRect(
       RRect.fromRectAndRadius(markerArea, Radius.circular(style.radius)),
-      Paint()
-        ..color = activeMarker.direction == MarkerDirection.up
-            ? style.upColor
-            : style.downColor,
+      Paint()..color = Colors.white,
     );
 
     // Label.
@@ -58,9 +56,7 @@ class ActiveMarkerPainter extends CustomPainter {
       paintWithTextPainter(
         canvas,
         painter: textPainter,
-        anchor: center +
-            iconShift +
-            Offset(style.radius + style.textLeftPadding, 0),
+        anchor: center + Offset(style.textLeftPadding + style.radius, 0),
         anchorAlignment: Alignment.centerLeft,
       );
     }
@@ -68,10 +64,21 @@ class ActiveMarkerPainter extends CustomPainter {
     // Circle with icon.
     paintMarker(
       canvas,
-      center + iconShift,
-      anchor + iconShift,
+      center,
+      anchor - Offset(49, 0),
       activeMarker.direction,
       style,
+    );
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        markerArea.inflate(style.lineWidth / 2 - 0.5),
+        Radius.circular(style.radius + style.lineWidth),
+      ),
+      Paint()
+        ..color = Colors.white
+        ..strokeWidth = style.lineWidth
+        ..style = PaintingStyle.stroke,
     );
 
     // Update tap area.

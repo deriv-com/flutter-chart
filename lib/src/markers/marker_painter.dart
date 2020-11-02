@@ -28,7 +28,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         epochToX(marker.epoch),
         quoteToY(marker.quote),
       );
-      final Offset anchor = center;
+      final Offset anchor = center - Offset(49, 0);
 
       paintMarker(
         canvas,
@@ -36,6 +36,15 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         anchor,
         marker.direction,
         style,
+      );
+
+      canvas.drawCircle(
+        center,
+        style.radius + style.lineWidth / 2,
+        Paint()
+          ..color = Colors.white
+          ..strokeWidth = style.lineWidth
+          ..style = PaintingStyle.stroke,
       );
 
       // Update marker tap area.

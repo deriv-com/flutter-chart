@@ -19,28 +19,23 @@ void paintMarker(
       anchor,
       center,
       Paint()
-        ..color = color
-        ..strokeWidth = 1.5,
+        ..color = Colors.white
+        ..strokeWidth = style.lineWidth,
     )
     ..drawCircle(
       anchor,
-      3,
-      Paint()..color = color,
+      style.holeRadius + style.lineWidth,
+      Paint()..color = Colors.white,
     )
     ..drawCircle(
       anchor,
-      1.5,
+      style.holeRadius,
       Paint()..color = Colors.black,
     )
     ..drawCircle(
       center,
       style.radius,
       Paint()..color = color,
-    )
-    ..drawCircle(
-      center,
-      style.radius - 2,
-      Paint()..color = Colors.black.withOpacity(0.32),
     );
   _drawArrow(canvas, center, const Size(10, 10), dir);
 }

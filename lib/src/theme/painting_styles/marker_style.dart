@@ -9,12 +9,14 @@ class MarkerStyle extends ChartPaintingStyle {
     this.downColor = const Color(0xFFCC2E3D),
     this.radius = 12.0,
     this.activeMarkerText = const TextStyle(
-      color: Colors.white,
+      color: Colors.black,
       fontSize: 10,
       height: 1.4,
     ),
-    this.textLeftPadding = 2.0,
-    this.textRightPadding = 4.0,
+    this.textLeftPadding = 4.0,
+    this.textRightPadding = 6.0,
+    this.lineWidth = 1.0,
+    this.holeRadius = 1.5,
   });
 
   /// Color of marker pointing up.
@@ -34,4 +36,8 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Active marker text right padding.
   final double textRightPadding;
+
+  final double lineWidth;
+
+  final double holeRadius;
 }
