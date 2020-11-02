@@ -92,8 +92,8 @@ class CandlePainter extends DataPainter<CandleSeries> {
       lastCandlePainting = CandlePainting(
         xCenter: xCenter,
         yHigh: lastCandle.high > prevLastCandle.high
-            // Candle close value animation will cover high-low line in this case
-            // and no need to update this line.
+            // In this case we don't update high-low line to avoid instant change of its
+            // height (ahead of animation). Candle close value animation will cover the line.
             ? quoteToY(prevLastCandle.high)
             : quoteToY(lastCandle.high),
         yLow: lastCandle.low < prevLastCandle.low
