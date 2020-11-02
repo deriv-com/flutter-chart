@@ -39,8 +39,9 @@ class Chart extends StatelessWidget {
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
+    this.isLive = false,
+    this.opacity = 1.0,
     this.annotations,
-    this.isLive,
     Key key,
   }) : super(key: key);
 
@@ -80,6 +81,9 @@ class Chart extends StatelessWidget {
   /// is on the newest ticks/candles.
   final bool isLive;
 
+  /// Chart's opacity, Will be applied on the [mainSeries].
+  final double opacity;
+
   @override
   Widget build(BuildContext context) {
     final ChartTheme chartTheme =
@@ -107,6 +111,8 @@ class Chart extends StatelessWidget {
                 ],
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
+                isLive: isLive,
+                opacity: opacity,
               ),
             ),
           ),
@@ -121,6 +127,8 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
+    @required this.isLive,
+    this.opacity,
     this.controller,
     this.onCrosshairAppeared,
     this.chartDataList,
@@ -132,6 +140,9 @@ class _ChartImplementation extends StatefulWidget {
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final ChartController controller;
+
+  final bool isLive;
+  final double opacity;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -239,11 +250,18 @@ class _ChartImplementationState extends State<_ChartImplementation>
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
 
-    if (_xAxis.isLive && !_currentTickBlinkingController.isAnimating) {
+    if (widget.isLive != oldChart.isLive) {
+      _updateBlinkingAnimationStatus();
+    }
+  }
+
+  void _updateBlinkingAnimationStatus() {
+    if (widget.isLive) {
       _currentTickBlinkingController.repeat(reverse: true);
     } else {
-      _currentTickBlinkingController.reset();
-      _currentTickBlinkingController.stop();
+      _currentTickBlinkingController
+        ..reset()
+        ..stop();
     }
   }
 
@@ -474,7 +492,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             ),
           ),
           Opacity(
-            opacity: (_xAxis.isLive ?? true) ? 1 : 0.5,
+            opacity: widget.opacity,
             child: CustomPaint(
               size: canvasSize,
               painter: ChartPainter(
@@ -484,13 +502,28 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 ),
                 chartDataList: <ChartData>[
                   widget.mainSeries,
-                  if (widget.chartDataList != null) ...widget.chartDataList
                 ],
                 granularity: context.watch<XAxisModel>().granularity,
                 pipSize: widget.pipSize,
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
               ),
+            ),
+          ),
+          CustomPaint(
+            size: canvasSize,
+            painter: ChartPainter(
+              animationInfo: AnimationInfo(
+                currentTickPercent: _currentTickAnimation.value,
+                blinkingPercent: _currentTickBlinkAnimation.value,
+              ),
+              chartDataList: <ChartData>[
+                if (widget.chartDataList != null) ...widget.chartDataList
+              ],
+              granularity: context.watch<XAxisModel>().granularity,
+              pipSize: widget.pipSize,
+              epochToCanvasX: _xAxis.xFromEpoch,
+              quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
           CrosshairArea(
