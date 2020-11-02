@@ -412,6 +412,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     setState(() {
+                      _activeMarker = null;
                       _markers.clear();
                     });
                   },
