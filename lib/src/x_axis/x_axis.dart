@@ -143,14 +143,20 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             }
           }
 
+          final gridLineCoords = _noOverlapGridTimestamps
+              .map((DateTime time) =>
+                  _model.xFromEpoch(time.millisecondsSinceEpoch))
+              .toList();
+
           return CustomPaint(
             foregroundPainter: XLabelsPainter(
               gridTimestamps: _noOverlapGridTimestamps,
+              gridLineCoords: gridLineCoords,
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),
             painter: XGridPainter(
-              gridTimestamps: _noOverlapGridTimestamps,
+              gridLineCoords: gridLineCoords,
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),

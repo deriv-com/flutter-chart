@@ -9,14 +9,18 @@ import 'time_label.dart';
 class XLabelsPainter extends XAxisPainter {
   /// Initializes
   XLabelsPainter({
-    List<DateTime> gridTimestamps,
+    this.gridTimestamps,
+    List<double> gridLineCoords,
     double Function(int) epochToCanvasX,
     GridStyle style,
   }) : super(
-          gridTimestamps: gridTimestamps,
+          gridLineCoords: gridLineCoords,
           epochToCanvasX: epochToCanvasX,
           style: style,
         );
+
+  /// X-Axis labels timestamp.
+  final List<DateTime> gridTimestamps;
 
   @override
   void paint(Canvas canvas, Size size) => paintTimeLabels(
@@ -24,9 +28,7 @@ class XLabelsPainter extends XAxisPainter {
         size,
         timeLabels:
             gridTimestamps.map((DateTime time) => timeLabel(time)).toList(),
-        xCoords: gridTimestamps
-            .map((DateTime time) => epochToCanvasX(time.millisecondsSinceEpoch))
-            .toList(),
+        xCoords: gridLineCoords,
         style: style,
       );
 }

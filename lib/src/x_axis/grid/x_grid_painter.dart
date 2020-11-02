@@ -8,22 +8,16 @@ import 'paint_x_grid.dart';
 class XGridPainter extends XAxisPainter {
   /// Initializes
   XGridPainter({
-    List<DateTime> gridTimestamps,
+    List<double> gridLineCoords,
     double Function(int) epochToCanvasX,
     GridStyle style,
   }) : super(
-          gridTimestamps: gridTimestamps,
+          gridLineCoords: gridLineCoords,
           epochToCanvasX: epochToCanvasX,
           style: style,
         );
 
   @override
-  void paint(Canvas canvas, Size size) => paintTimeGridLines(
-        canvas,
-        size,
-        gridTimestamps
-            .map((DateTime time) => epochToCanvasX(time.millisecondsSinceEpoch))
-            .toList(),
-        style,
-      );
+  void paint(Canvas canvas, Size size) =>
+      paintTimeGridLines(canvas, size, gridLineCoords, style);
 }

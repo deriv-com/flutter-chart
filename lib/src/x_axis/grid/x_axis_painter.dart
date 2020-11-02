@@ -5,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 abstract class XAxisPainter extends CustomPainter {
   /// Initializes
   XAxisPainter({
-    @required this.gridTimestamps,
+    @required this.gridLineCoords,
     @required this.epochToCanvasX,
     @required this.style,
   });
 
-  /// Grids and labels timestamps
-  final List<DateTime> gridTimestamps;
+  /// Grids lines x coordinates.
+  final List<double> gridLineCoords;
 
   /// X-Axis conversion function for epoch -> x
   final double Function(int) epochToCanvasX;
