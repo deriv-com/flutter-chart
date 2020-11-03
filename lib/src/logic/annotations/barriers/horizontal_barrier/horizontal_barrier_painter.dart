@@ -79,14 +79,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double y = quoteToY(animatedValue);
 
-    final TextPainter valuePainter = TextPainter(
-      text: TextSpan(
-        text: animatedValue.toStringAsFixed(pipSize),
-        style: style.textStyle,
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )..layout();
+    final TextPainter valuePainter = makeTextPainter(
+      animatedValue.toStringAsFixed(pipSize),
+      style.textStyle,
+    );
 
     final double valueStartX =
         size.width - rightMargin - padding - valuePainter.width;
