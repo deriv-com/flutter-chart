@@ -84,6 +84,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       animatedValue.toStringAsFixed(pipSize),
       style.textStyle,
     );
+    final TextPainter titlePainter = makeTextPainter(
+      series.title,
+      style.textStyle.copyWith(
+        color: style.color,
+        backgroundColor: style.titleBackgroundColor,
+      ),
+    );
 
     final Offset labelCenter = Offset(
       size.width - rightMargin - padding - valuePainter.width / 2,
@@ -95,8 +102,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       height: valuePainter.height + padding * 2,
     );
 
-    final double middleLineEndX = labelArea.left;
-    final double middleLineStartX = middleLineEndX - 12;
+    final Offset titleCenter = Offset(
+      labelArea.left - 12 - padding - titlePainter.width / 2,
+      y,
+    );
+    final Rect titleArea = Rect.fromCenter(
+      center: titleCenter,
+      width: titlePainter.width + padding * 2,
+      height: titlePainter.height + padding * 2,
+    );
 
     final double labelHalfHeight = labelArea.height / 2;
 
@@ -111,25 +125,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    final TextPainter titlePainter = makeTextPainter(
-      series.title,
-      style.textStyle.copyWith(
-        color: style.color,
-        backgroundColor: style.titleBackgroundColor,
-      ),
-    );
-
-    final double titleStartX = middleLineStartX - titlePainter.width - padding;
-
-    paintWithTextPainter(
-      canvas,
-      painter: titlePainter,
-      anchor: Offset(titleStartX, y),
-      anchorAlignment: Alignment.centerLeft,
-    );
+    paintWithTextPainter(canvas, painter: titlePainter, anchor: titleCenter);
 
     if (arrowType != BarrierArrowType.none) {
-      final double labelMidX = titleStartX - padding - _arrowSize;
+      final double labelMidX = titleArea.left - _arrowSize;
       double arrowY;
 
       if (arrowType == BarrierArrowType.upward) {
@@ -146,16 +145,16 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       double mainLineStartX = 0;
 
       if (series.title != null) {
-        mainLineEndX = titleStartX - padding;
+        mainLineEndX = titleArea.left;
 
         // Painting right line
         canvas.drawLine(
-          Offset(middleLineStartX, y),
-          Offset(middleLineEndX, y),
+          Offset(titleArea.right, y),
+          Offset(labelArea.left, y),
           _paint,
         );
       } else {
-        mainLineEndX = middleLineEndX;
+        mainLineEndX = labelArea.left;
       }
 
       if (dotX != null) {
