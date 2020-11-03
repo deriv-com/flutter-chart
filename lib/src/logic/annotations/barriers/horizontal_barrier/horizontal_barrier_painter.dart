@@ -80,10 +80,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double y = quoteToY(animatedValue);
 
-    final double labelHalfHeight = style.labelHeight / 2;
-
     if (series.visibility ==
         HorizontalBarrierVisibility.keepBarrierLabelVisible) {
+      final double labelHalfHeight = style.labelHeight / 2;
+
       if (y - labelHalfHeight < 0) {
         y = labelHalfHeight;
         arrowType = BarrierArrowType.upward;
