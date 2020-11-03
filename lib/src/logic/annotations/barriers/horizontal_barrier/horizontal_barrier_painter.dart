@@ -163,23 +163,18 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
 
-    _paintLabelBackground(
-      canvas,
-      Rect.fromLTRB(
-        middleLineEndX,
-        y - valuePainter.height / 2 - padding,
-        size.width - rightMargin,
-        y + valuePainter.height / 2 + padding,
-      ),
-      style.labelShape,
+    final Offset labelCenter = Offset(
+      size.width - rightMargin - padding - valuePainter.width / 2,
+      y,
+    );
+    final Rect labelArea = Rect.fromCenter(
+      center: labelCenter,
+      width: valuePainter.width + padding * 2,
+      height: valuePainter.height + padding * 2,
     );
 
-    paintWithTextPainter(
-      canvas,
-      painter: valuePainter,
-      anchor: Offset(valueStartX, y),
-      anchorAlignment: Alignment.centerLeft,
-    );
+    _paintLabelBackground(canvas, labelArea, style.labelShape);
+    paintWithTextPainter(canvas, painter: valuePainter, anchor: labelCenter);
   }
 
   void _paintLabelBackground(
