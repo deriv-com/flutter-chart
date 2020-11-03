@@ -44,7 +44,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Colors.white,
-      fontFeatures: [FontFeature.tabularFigures()],
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
   }) : super(
           color: color,
@@ -75,7 +75,7 @@ class VerticalBarrierStyle extends BarrierStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Colors.white,
-      fontFeatures: [FontFeature.tabularFigures()],
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
   }) : super(
           color: color,
