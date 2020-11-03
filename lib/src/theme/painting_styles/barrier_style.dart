@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
@@ -42,6 +44,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Colors.white,
+      fontFeatures: [FontFeature.tabularFigures()],
     ),
   }) : super(
           color: color,
@@ -72,6 +75,7 @@ class VerticalBarrierStyle extends BarrierStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Colors.white,
+      fontFeatures: [FontFeature.tabularFigures()],
     ),
   }) : super(
           color: color,
