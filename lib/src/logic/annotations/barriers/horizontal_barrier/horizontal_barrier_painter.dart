@@ -163,23 +163,16 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
 
-    if (style.labelShape == LabelShape.rectangle) {
-      _paintRectangleBackground(
-        canvas,
-        size,
+    _paintLabelBackground(
+      canvas,
+      Rect.fromLTRB(
         middleLineEndX,
-        y,
-        valuePainter,
-      );
-    } else if (style.labelShape == LabelShape.pentagon) {
-      _paintPentagonBackground(
-        canvas,
-        size,
-        middleLineEndX,
-        y,
-        valuePainter,
-      );
-    }
+        y - valuePainter.height / 2 - padding,
+        size.width - rightMargin,
+        y + valuePainter.height / 2 + padding,
+      ),
+      style.labelShape,
+    );
 
     paintWithTextPainter(
       canvas,
@@ -189,42 +182,27 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     );
   }
 
-  void _paintRectangleBackground(
+  void _paintLabelBackground(
     Canvas canvas,
-    Size size,
-    double middleLineEndX,
-    double y,
-    TextPainter valuePainter,
+    Rect rect,
+    LabelShape shape,
   ) {
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          Rect.fromLTRB(
-            middleLineEndX,
-            y - valuePainter.height / 2 - padding,
-            size.width - rightMargin,
-            y + valuePainter.height / 2 + padding,
-          ),
-          const Radius.circular(4)),
-      _paint,
-    );
-  }
-
-  void _paintPentagonBackground(
-    Canvas canvas,
-    Size size,
-    double middleLineEndX,
-    double y,
-    TextPainter valuePainter,
-  ) {
-    canvas.drawPath(
-      getCurrentTickLabelBackgroundPath(
-        left: middleLineEndX,
-        top: y - valuePainter.height / 2 - padding,
-        right: size.width - rightMargin,
-        bottom: y + valuePainter.height / 2 + padding,
-      ),
-      _paint,
-    );
+    if (shape == LabelShape.rectangle) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(4)),
+        _paint,
+      );
+    } else if (shape == LabelShape.pentagon) {
+      canvas.drawPath(
+        getCurrentTickLabelBackgroundPath(
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+        ),
+        _paint,
+      );
+    }
   }
 
   void _paintBlinkingDot(
