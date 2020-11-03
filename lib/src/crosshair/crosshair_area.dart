@@ -35,13 +35,14 @@ class CrosshairArea extends StatefulWidget {
 class _CrosshairAreaState extends State<CrosshairArea> {
   Tick crosshairTick;
 
-  GestureManagerState get gestureManager => context.read<GestureManagerState>();
+  GestureManagerState gestureManager;
+
   XAxisModel get xAxis => context.read<XAxisModel>();
 
   @override
   void initState() {
     super.initState();
-    gestureManager
+    gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_onLongPressStart)
       ..registerCallback(_onLongPressUpdate)
       ..registerCallback(_onLongPressEnd);
