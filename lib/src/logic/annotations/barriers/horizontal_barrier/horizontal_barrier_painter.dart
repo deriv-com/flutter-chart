@@ -163,7 +163,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
 
-    _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
+    _paintLabelBackground(
+      canvas,
+      size,
+      middleLineEndX,
+      y,
+      valuePainter,
+      style.labelShape,
+    );
 
     paintWithTextPainter(
       canvas,
@@ -179,9 +186,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     double middleLineEndX,
     double y,
     TextPainter valuePainter,
-    HorizontalBarrierStyle style,
+    LabelShape shape,
   ) {
-    if (style.labelShape == LabelShape.rectangle) {
+    if (shape == LabelShape.rectangle) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
             Rect.fromLTRB(
@@ -193,7 +200,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
             const Radius.circular(4)),
         _paint,
       );
-    } else if (style.labelShape == LabelShape.pentagon) {
+    } else if (shape == LabelShape.pentagon) {
       canvas.drawPath(
         getCurrentTickLabelBackgroundPath(
           left: middleLineEndX,
