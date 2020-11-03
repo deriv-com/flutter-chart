@@ -85,12 +85,20 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       style.textStyle,
     );
 
-    final double valueStartX =
-        size.width - rightMargin - padding - valuePainter.width;
-    final double middleLineEndX = valueStartX - padding;
+    final Offset labelCenter = Offset(
+      size.width - rightMargin - padding - valuePainter.width / 2,
+      y,
+    );
+    final Rect labelArea = Rect.fromCenter(
+      center: labelCenter,
+      width: valuePainter.width + padding * 2,
+      height: valuePainter.height + padding * 2,
+    );
+
+    final double middleLineEndX = labelArea.left;
     final double middleLineStartX = middleLineEndX - 12;
 
-    final double labelHalfHeight = valuePainter.height / 2 + padding;
+    final double labelHalfHeight = labelArea.height / 2;
 
     if (series.visibility ==
         HorizontalBarrierVisibility.keepBarrierLabelVisible) {
@@ -147,7 +155,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           _paint,
         );
       } else {
-        mainLineEndX = valueStartX;
+        mainLineEndX = middleLineEndX;
       }
 
       if (dotX != null) {
@@ -162,16 +170,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
-
-    final Offset labelCenter = Offset(
-      size.width - rightMargin - padding - valuePainter.width / 2,
-      y,
-    );
-    final Rect labelArea = Rect.fromCenter(
-      center: labelCenter,
-      width: valuePainter.width + padding * 2,
-      height: valuePainter.height + padding * 2,
-    );
 
     _paintLabelBackground(canvas, labelArea, style.labelShape);
     paintWithTextPainter(canvas, painter: valuePainter, anchor: labelCenter);
