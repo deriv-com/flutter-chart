@@ -103,17 +103,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    final TextPainter titlePainter = TextPainter(
-      text: TextSpan(
-        text: series.title,
-        style: style.textStyle.copyWith(
-          color: style.color,
-          backgroundColor: style.titleBackgroundColor,
-        ),
+    final TextPainter titlePainter = makeTextPainter(
+      series.title,
+      style.textStyle.copyWith(
+        color: style.color,
+        backgroundColor: style.titleBackgroundColor,
       ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )..layout();
+    );
 
     final double titleStartX = middleLineStartX - titlePainter.width - padding;
 
