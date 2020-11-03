@@ -22,7 +22,7 @@ class ActiveMarkerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (activeMarker == null) {
+    if (activeMarker == null || animationProgress == 0) {
       return;
     }
 

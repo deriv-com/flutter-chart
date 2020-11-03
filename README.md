@@ -126,6 +126,18 @@ Chart(
       },
     ),
   ),
+```
+
+To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
+
+```dart
+Chart(
+  mainSeries: LineSeries(candles),
+  pipSize: 4,
+  annotations: <ChartAnnotation> [
+    HorizontalBarrier(60, title: 'Take profit'),
+    VerticalBarrier(candles.last.epoch, title: 'Buy time'),
+  ],
 );
 ```
 

@@ -14,7 +14,8 @@ class MarkerArea extends StatefulWidget {
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     Key key,
-  }) : super(key: key);
+  })  : assert(markerSeries != null),
+        super(key: key);
 
   final MarkerSeries markerSeries;
   final double Function(double) quoteToCanvasY;
