@@ -138,14 +138,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     if (arrowType != BarrierArrowType.none) {
       final double labelMidX = titleArea.left - _arrowSize;
-      double arrowY;
 
       if (arrowType == BarrierArrowType.upward) {
-        arrowY = y + titlePainter.height / 2;
-        _paintUpwardArrows(canvas, labelMidX, arrowY, arrowSize: _arrowSize);
+        _paintUpwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
       } else if (arrowType == BarrierArrowType.downward) {
-        arrowY = y - titlePainter.height / 2;
-        _paintDownwardArrows(canvas, labelMidX, arrowY, arrowSize: _arrowSize);
+        _paintDownwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
       }
     }
 
@@ -238,18 +235,17 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   void _paintUpwardArrows(
     Canvas canvas,
     double middleX,
-    double bottomY, {
+    double middleY, {
     double arrowSize = 10,
     double arrowThickness = 4,
   }) {
     final Paint arrowPaint = Paint()..color = _paint.color;
-    final double middleY = bottomY - arrowSize + arrowThickness;
 
     canvas
       ..drawPath(
           getUpwardArrowPath(
             middleX,
-            middleY,
+            middleY + arrowSize,
             size: arrowSize,
             thickness: arrowThickness,
           ),
@@ -257,7 +253,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
         getUpwardArrowPath(
           middleX,
-          middleY - arrowSize,
+          middleY,
           size: arrowSize,
           thickness: arrowThickness,
         ),
@@ -266,7 +262,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
         getUpwardArrowPath(
           middleX,
-          middleY - 2 * arrowSize,
+          middleY - arrowSize,
           size: arrowSize,
           thickness: arrowThickness,
         ),
@@ -277,18 +273,17 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   void _paintDownwardArrows(
     Canvas canvas,
     double middleX,
-    double topY, {
+    double middleY, {
     double arrowSize = 10,
     double arrowThickness = 4,
   }) {
     final Paint arrowPaint = Paint()..color = _paint.color;
-    final double middleY = topY + arrowSize - arrowThickness;
 
     canvas
       ..drawPath(
           getDownwardArrowPath(
             middleX,
-            middleY,
+            middleY - arrowSize,
             size: arrowSize,
             thickness: arrowThickness,
           ),
@@ -296,7 +291,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
           getDownwardArrowPath(
             middleX,
-            middleY + arrowSize,
+            middleY,
             size: arrowSize,
             thickness: arrowThickness,
           ),
@@ -304,7 +299,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
           getDownwardArrowPath(
             middleX,
-            middleY + 2 * arrowSize,
+            middleY + arrowSize,
             size: arrowSize,
             thickness: arrowThickness,
           ),
