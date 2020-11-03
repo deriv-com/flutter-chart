@@ -92,22 +92,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ),
     );
 
-    final Offset labelCenter = Offset(
-      size.width - rightMargin - padding - valuePainter.width / 2,
-      y,
-    );
     final Rect labelArea = Rect.fromCenter(
-      center: labelCenter,
+      center: Offset(
+          size.width - rightMargin - padding - valuePainter.width / 2, y),
       width: valuePainter.width + padding * 2,
       height: valuePainter.height + padding * 2,
     );
 
-    final Offset titleCenter = Offset(
-      labelArea.left - 12 - padding - titlePainter.width / 2,
-      y,
-    );
     final Rect titleArea = Rect.fromCenter(
-      center: titleCenter,
+      center: Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
       width: titlePainter.width + padding * 2,
       height: titlePainter.height + padding * 2,
     );
@@ -125,7 +118,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    paintWithTextPainter(canvas, painter: titlePainter, anchor: titleCenter);
+    paintWithTextPainter(
+      canvas,
+      painter: titlePainter,
+      anchor: titleArea.center,
+    );
 
     if (arrowType != BarrierArrowType.none) {
       final double labelMidX = titleArea.left - _arrowSize;
@@ -171,7 +168,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     _paintLabelBackground(canvas, labelArea, style.labelShape);
-    paintWithTextPainter(canvas, painter: valuePainter, anchor: labelCenter);
+    paintWithTextPainter(
+      canvas,
+      painter: valuePainter,
+      anchor: labelArea.center,
+    );
   }
 
   void _paintLabelBackground(
