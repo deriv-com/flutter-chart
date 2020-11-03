@@ -103,13 +103,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
-
-    valuePainter.paint(
-      canvas,
-      Offset(valueStartX, y - valuePainter.height / 2),
-    );
-
     final TextPainter titlePainter = TextPainter(
       text: TextSpan(
         text: series.title,
