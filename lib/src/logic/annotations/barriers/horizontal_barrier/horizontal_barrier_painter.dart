@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/create_shape_path.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
