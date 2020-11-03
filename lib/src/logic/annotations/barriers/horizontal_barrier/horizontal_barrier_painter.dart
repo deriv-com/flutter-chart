@@ -113,9 +113,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     final double titleStartX = middleLineStartX - titlePainter.width - padding;
 
-    titlePainter.paint(
+    paintWithTextPainter(
       canvas,
-      Offset(titleStartX, y - valuePainter.height / 2),
+      painter: titlePainter,
+      anchor: Offset(titleStartX, y),
+      anchorAlignment: Alignment.centerLeft,
     );
 
     if (arrowType != BarrierArrowType.none) {
@@ -163,9 +165,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
 
-    valuePainter.paint(
+    paintWithTextPainter(
       canvas,
-      Offset(valueStartX, y - valuePainter.height / 2),
+      painter: valuePainter,
+      anchor: Offset(valueStartX, y),
+      anchorAlignment: Alignment.centerLeft,
     );
   }
 
