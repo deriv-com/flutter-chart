@@ -80,6 +80,19 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double y = quoteToY(animatedValue);
 
+    final double labelHalfHeight = style.labelHeight / 2;
+
+    if (series.visibility ==
+        HorizontalBarrierVisibility.keepBarrierLabelVisible) {
+      if (y - labelHalfHeight < 0) {
+        y = labelHalfHeight;
+        arrowType = BarrierArrowType.upward;
+      } else if (y + labelHalfHeight > size.height) {
+        y = size.height - labelHalfHeight;
+        arrowType = BarrierArrowType.downward;
+      }
+    }
+
     final TextPainter valuePainter = makeTextPainter(
       animatedValue.toStringAsFixed(pipSize),
       style.textStyle,
@@ -96,27 +109,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       center: Offset(
           size.width - rightMargin - padding - valuePainter.width / 2, y),
       width: valuePainter.width + padding * 2,
-      height: valuePainter.height + padding * 2,
+      height: style.labelHeight,
     );
 
     final Rect titleArea = Rect.fromCenter(
       center: Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
       width: titlePainter.width + padding * 2,
-      height: titlePainter.height + padding * 2,
+      height: titlePainter.height,
     );
-
-    final double labelHalfHeight = labelArea.height / 2;
-
-    if (series.visibility ==
-        HorizontalBarrierVisibility.keepBarrierLabelVisible) {
-      if (y - labelHalfHeight < 0) {
-        y = labelHalfHeight;
-        arrowType = BarrierArrowType.upward;
-      } else if (y + labelHalfHeight > size.height) {
-        y = size.height - labelHalfHeight;
-        arrowType = BarrierArrowType.downward;
-      }
-    }
 
     paintWithTextPainter(
       canvas,

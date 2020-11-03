@@ -35,6 +35,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Initializes
   const HorizontalBarrierStyle({
     this.labelShape = LabelShape.rectangle,
+    this.labelHeight = 24,
     Color color = const Color(0xFF00A79E),
     Color titleBackgroundColor = const Color(0xFF0E0E0E),
     bool isDashed = true,
@@ -55,6 +56,9 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// Label shape
   final LabelShape labelShape;
+
+  /// Height of label background.
+  final double labelHeight;
 
   /// Whether to have a blinking dot animation where barrier and chart data are intersected.
   final bool hasBlinkingDot;
