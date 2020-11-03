@@ -52,7 +52,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
 
-  GestureManagerState get gestureManager => context.read<GestureManagerState>();
+  GestureManagerState gestureManager;
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
     _ticker = createTicker(_model.onNewFrame)..start();
 
-    gestureManager
+    gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_model.onScaleAndPanStart)
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
