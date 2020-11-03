@@ -97,13 +97,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       animatedValue.toStringAsFixed(pipSize),
       style.textStyle,
     );
-    final TextPainter titlePainter = makeTextPainter(
-      series.title,
-      style.textStyle.copyWith(
-        color: style.color,
-        backgroundColor: style.titleBackgroundColor,
-      ),
-    );
 
     final Rect labelArea = Rect.fromCenter(
       center: Offset(
@@ -112,17 +105,36 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       height: style.labelHeight,
     );
 
-    final Rect titleArea = Rect.fromCenter(
-      center: Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
-      width: titlePainter.width + padding * 2,
-      height: titlePainter.height,
-    );
+    TextPainter titlePainter;
+    Rect titleArea;
 
-    paintWithTextPainter(
-      canvas,
-      painter: titlePainter,
-      anchor: titleArea.center,
-    );
+    if (series.title != null) {
+      titlePainter = makeTextPainter(
+        series.title,
+        style.textStyle.copyWith(
+          color: style.color,
+          backgroundColor: style.titleBackgroundColor,
+        ),
+      );
+      titleArea = Rect.fromCenter(
+        center:
+            Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
+        width: titlePainter.width + padding * 2,
+        height: titlePainter.height,
+      );
+
+      // Painting the line between title and label.
+      canvas.drawLine(
+        Offset(titleArea.right, y),
+        Offset(labelArea.left, y),
+        _paint,
+      );
+      paintWithTextPainter(
+        canvas,
+        painter: titlePainter,
+        anchor: titleArea.center,
+      );
+    }
 
     if (arrowType != BarrierArrowType.none) {
       final double labelMidX = titleArea.left - _arrowSize;
@@ -138,27 +150,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     if (arrowType == BarrierArrowType.none) {
-      double mainLineEndX;
       double mainLineStartX = 0;
-
-      if (series.title != null) {
-        mainLineEndX = titleArea.left;
-
-        // Painting right line
-        canvas.drawLine(
-          Offset(titleArea.right, y),
-          Offset(labelArea.left, y),
-          _paint,
-        );
-      } else {
-        mainLineEndX = labelArea.left;
-      }
+      final double mainLineEndX =
+          series.title != null ? titleArea.left : labelArea.left;
 
       if (dotX != null) {
         if (style.hasBlinkingDot) {
           _paintBlinkingDot(canvas, dotX, y, animationInfo);
         }
-
         if (!series.longLine) {
           mainLineStartX = dotX;
         }
