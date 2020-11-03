@@ -648,6 +648,41 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _tp = false;
   }
 
+  void _addMarker(MarkerDirection direction) {
+    final lastTick = ticks.last;
+    final onTap = () {
+      setState(() {
+        _activeMarker = ActiveMarker(
+          direction: direction,
+          epoch: lastTick.epoch,
+          quote: lastTick.quote,
+          text: '0.00 USD',
+          onTap: () {
+            print('>>> tapped active marker');
+          },
+          onTapOutside: () {
+            setState(() {
+              _activeMarker = null;
+            });
+          },
+        );
+      });
+    };
+    setState(() {
+      _markers.add(Marker(
+        direction: direction,
+        epoch: lastTick.epoch,
+        quote: lastTick.quote,
+        onTap: onTap,
+      ));
+    });
+  }
+
+  void _clearMarkers() {
+    _markers.clear();
+    _activeMarker = null;
+  }
+
   void _clearBarriers() {
     _sampleBarriers.clear();
     _sl = false;
