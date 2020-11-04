@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
@@ -68,8 +69,7 @@ abstract class Series implements ChartData {
     double Function(int) epochToX,
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
-    int pipSize,
-    int granularity,
+    ChartConfig chartConfig,
   ) =>
       seriesPainter?.paint(
         canvas: canvas,
@@ -77,7 +77,6 @@ abstract class Series implements ChartData {
         epochToX: epochToX,
         quoteToY: quoteToY,
         animationInfo: animationInfo,
-        pipSize: pipSize,
-        granularity: granularity,
+        chartConfig: chartConfig,
       );
 }

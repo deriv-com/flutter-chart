@@ -26,6 +26,7 @@ class MarkerArea extends StatefulWidget {
 
 class _MarkerAreaState extends State<MarkerArea> {
   GestureManagerState get gestureManager => context.read<GestureManagerState>();
+
   XAxisModel get xAxis => context.read<XAxisModel>();
 
   @override
@@ -104,7 +105,7 @@ class _MarkerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    series.paint(canvas, size, epochToX, quoteToY, null, null, null);
+    series.paint(canvas, size, epochToX, quoteToY, null, null);
   }
 
   @override

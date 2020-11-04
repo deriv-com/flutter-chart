@@ -81,7 +81,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     final TextPainter valuePainter = TextPainter(
       text: TextSpan(
-        text: animatedValue.toStringAsFixed(pipSize),
+        text: animatedValue.toStringAsFixed(chartConfig.pipSize),
         style: style.textStyle,
       ),
       textAlign: TextAlign.center,

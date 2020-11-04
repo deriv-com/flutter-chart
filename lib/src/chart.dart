@@ -521,8 +521,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 chartDataList: <ChartData>[
                   widget.mainSeries,
                 ],
-                granularity: context.watch<XAxisModel>().granularity,
-                pipSize: widget.pipSize,
+                chartConfig: widget.chartConfig,
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
               ),
@@ -538,8 +537,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               chartDataList: <ChartData>[
                 if (widget.chartDataList != null) ...widget.chartDataList
               ],
-              granularity: context.watch<XAxisModel>().granularity,
-              pipSize: widget.pipSize,
+              chartConfig: widget.chartConfig,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),

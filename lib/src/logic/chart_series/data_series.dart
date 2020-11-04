@@ -1,7 +1,8 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +105,9 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     final int index = closest <= leftEpoch
         ? closest
-        : closest - 1 < 0 ? closest : closest - 1;
+        : closest - 1 < 0
+            ? closest
+            : closest - 1;
     return index - 1 < 0 ? index : index - 1;
   }
 
@@ -161,14 +164,12 @@ abstract class DataSeries<T extends Tick> extends Series {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    int pipSize,
-    int granularity,
+    ChartConfig chartConfig,
   ) {
-    super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
+    super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
 
     _lastTickIndicator?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
   }
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements
