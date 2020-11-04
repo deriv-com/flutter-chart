@@ -231,8 +231,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
       );
 
-  GestureManagerState get _gestureManager =>
-      context.read<GestureManagerState>();
+  GestureManagerState _gestureManager;
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
@@ -367,7 +366,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager
+    _gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_onPanStart)
       ..registerCallback(_onPanUpdate);
   }
