@@ -95,6 +95,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
+    // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
       _paintBlinkingDot(canvas, dotX, y, animationInfo);
     }
@@ -110,12 +111,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       height: style.labelHeight,
     );
 
+    // Line.
     if (arrowType == BarrierArrowType.none) {
       final double mainLineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double mainLineEndX = labelArea.left;
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
 
+    // Title.
     if (series.title != null) {
       final TextPainter titlePainter = makeTextPainter(
         series.title,
@@ -138,6 +141,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       );
     }
 
+    // Label.
     _paintLabelBackground(canvas, labelArea, style.labelShape);
     paintWithTextPainter(
       canvas,
@@ -145,6 +149,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       anchor: labelArea.center,
     );
 
+    // Arrows.
     final double arrowMidX = (titleArea?.left ?? labelArea.left) - _arrowSize;
     if (arrowType == BarrierArrowType.upward) {
       _paintUpwardArrows(canvas, arrowMidX, y, arrowSize: _arrowSize);
