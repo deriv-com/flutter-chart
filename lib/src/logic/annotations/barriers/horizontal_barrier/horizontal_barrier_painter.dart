@@ -122,17 +122,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (series.title != null) {
       final TextPainter titlePainter = makeTextPainter(
         series.title,
-        style.textStyle.copyWith(
-          color: style.color,
-          backgroundColor: style.titleBackgroundColor,
-        ),
+        style.textStyle.copyWith(color: style.color),
       );
       titleArea = Rect.fromCenter(
         center:
             Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
-        width: titlePainter.width + padding * 2,
+        width: titlePainter.width + 4,
         height: titlePainter.height,
       );
+      canvas.drawRect(titleArea, Paint()..color = style.titleBackgroundColor);
       paintWithTextPainter(
         canvas,
         painter: titlePainter,
