@@ -94,5 +94,52 @@ Chart(
 );
 ```
 
+Supply `markerSeries` to show markers on the chart.
+
+```dart
+Chart(
+  ...,
+  markerSeries: MarkerSeries([
+    Marker.up(epoch: 123, quote: 10, onTap: () {}),
+    Marker.down(epoch: 124, quote: 12, onTap: () {}),
+  ]),
+);
+```
+
+Supply `activeMarker` to show active marker on the chart.
+See `/example` for a complete implementation.
+
+```dart
+Chart(
+  ...,
+  markerSeries: MarkerSeries(
+    [
+      Marker.up(epoch: 123, quote: 10, onTap: () {}),
+      Marker.down(epoch: 124, quote: 12, onTap: () {}),
+    ],
+    activeMarker: ActiveMarker(
+      epoch: 123,
+      quote: 10,
+      onTap: () {},
+      onOutsideTap: () {
+        // remove active marker
+      },
+    ),
+  ),
+```
+
+To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
+
+```dart
+Chart(
+  mainSeries: LineSeries(candles),
+  pipSize: 4,
+  annotations: <ChartAnnotation> [
+    HorizontalBarrier(60, title: 'Take profit'),
+    VerticalBarrier(candles.last.epoch, title: 'Buy time'),
+  ],
+);
+```
+
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
 You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.

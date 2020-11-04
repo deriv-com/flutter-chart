@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
+import 'dart:math' as math;
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/utils/market_change_reminder.dart';
@@ -56,6 +57,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
+  List<Barrier> _sampleBarriers = <Barrier>[];
+  HorizontalBarrier _slBarrier, _tpBarrier;
+  bool _sl = false, _tp = false;
+
   TickHistorySubscription _tickHistorySubscription;
 
   StreamSubscription _tickStreamSubscription;
@@ -70,6 +75,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Completer _requestCompleter;
 
   List<Market> _markets;
+  List<Marker> _markers = [];
+  ActiveMarker _activeMarker;
 
   List<ActiveSymbol> _activeSymbols;
 
@@ -250,6 +257,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _resetCandlesTo(historyCandles);
       }
 
+      _updateSampleSLAndTP();
+
       WidgetsBinding.instance.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
       );
@@ -262,6 +271,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
         ticks.clear();
+        _clearMarkers();
+        _clearBarriers();
         ticks = fetchedCandles;
       });
 
@@ -342,14 +353,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
               children: <Widget>[
                 ClipRect(
                   child: Chart(
-                    mainSeries: style == ChartStyle.candles &&
-                            ticks is List<Candle>
-                        ? CandleSeries(ticks,
-                            style: CandleStyle(
-                                currentTickStyle: CurrentTickStyle()))
-                        : LineSeries(ticks,
-                            style: LineStyle(
-                                currentTickStyle: CurrentTickStyle())),
+                    mainSeries:
+                        style == ChartStyle.candles && ticks is List<Candle>
+                            ? CandleSeries(ticks)
+                            : LineSeries(ticks),
                     secondarySeries: [
                       MASeries(
                         ticks,
@@ -360,13 +367,34 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ),
                       ),
                     ],
+                    markerSeries: MarkerSeries(
+                      _markers,
+                      activeMarker: _activeMarker,
+                    ),
+                    annotations: ticks.length > 4
+                        ? <ChartAnnotation>[
+                            ..._sampleBarriers,
+                            if (_sl && _slBarrier != null) _slBarrier,
+                            if (_tp && _tpBarrier != null) _tpBarrier,
+                            TickIndicator(
+                              ticks.last,
+                              style: const HorizontalBarrierStyle(
+                                color: Colors.redAccent,
+                                labelShape: LabelShape.pentagon,
+                                hasBlinkingDot: true,
+                              ),
+                            ),
+                          ]
+                        : null,
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0
                         ? 2000 // average ms difference between ticks
                         : granularity * 1000,
                     controller: _controller,
-                    isLive: _symbol?.isOpen,
+                    isLive: (_symbol?.isOpen ?? false) &&
+                        (_connectionBloc?.state is Connected ?? false),
+                    opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
                       if (!_waitingForHistory &&
@@ -386,9 +414,156 @@ class _FullscreenChartState extends State<FullscreenChart> {
               ],
             ),
           ),
+          SizedBox(
+            height: 64,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton(
+                  color: Colors.green,
+                  child: const Text('Up'),
+                  onPressed: () => _addMarker(MarkerDirection.up),
+                ),
+                RaisedButton(
+                  color: Colors.red,
+                  child: const Text('Down'),
+                  onPressed: () => _addMarker(MarkerDirection.down),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => setState(_clearMarkers),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 64,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FlatButton(
+                  child: Text('V barrier'),
+                  onPressed: () => setState(
+                    () => _sampleBarriers.add(
+                      VerticalBarrier.onTick(ticks.last,
+                          title: 'V Barrier',
+                          id: 'VBarrier${_sampleBarriers.length}',
+                          longLine: math.Random().nextBool(),
+                          style: VerticalBarrierStyle(
+                            isDashed: math.Random().nextBool(),
+                          )),
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  child: Text('H barrier'),
+                  onPressed: () => setState(
+                    () => _sampleBarriers.add(
+                      HorizontalBarrier(
+                        ticks.last.quote,
+                        epoch:
+                            math.Random().nextBool() ? ticks.last.epoch : null,
+                        id: 'HBarrier${_sampleBarriers.length}',
+                        longLine: math.Random().nextBool(),
+                        visibility: HorizontalBarrierVisibility.normal,
+                        style: HorizontalBarrierStyle(
+                          color: Colors.grey,
+                          labelShape: LabelShape.rectangle,
+                          isDashed: math.Random().nextBool(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  child: Text('+ Both'),
+                  onPressed: () => setState(() => _sampleBarriers.add(
+                        CombinedBarrier(
+                          ticks.last,
+                          title: 'B Barrier',
+                          id: 'CBarrier${_sampleBarriers.length}',
+                          horizontalBarrierStyle: HorizontalBarrierStyle(
+                            color: Colors.grey,
+                            isDashed: true,
+                          ),
+                        ),
+                      )),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => setState(() {
+                    _clearBarriers();
+                  }),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 64,
+            child: Row(
+              children: [
+                Expanded(
+                  child: CheckboxListTile(
+                    value: _sl,
+                    onChanged: (bool sl) => setState(() => _sl = sl),
+                    title: Text('Stop loss'),
+                  ),
+                ),
+                Expanded(
+                  child: CheckboxListTile(
+                    value: _tp,
+                    onChanged: (bool tp) => setState(() => _tp = tp),
+                    title: Text('Take profit'),
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
+  }
+
+  void _addMarker(MarkerDirection direction) {
+    final lastTick = ticks.last;
+    final onTap = () {
+      setState(() {
+        _activeMarker = ActiveMarker(
+          direction: direction,
+          epoch: lastTick.epoch,
+          quote: lastTick.quote,
+          text: '0.00 USD',
+          onTap: () {
+            print('>>> tapped active marker');
+          },
+          onTapOutside: () {
+            setState(() {
+              _activeMarker = null;
+            });
+          },
+        );
+      });
+    };
+    setState(() {
+      _markers.add(Marker(
+        direction: direction,
+        epoch: lastTick.epoch,
+        quote: lastTick.quote,
+        onTap: onTap,
+      ));
+    });
+  }
+
+  void _clearMarkers() {
+    _markers.clear();
+    _activeMarker = null;
+  }
+
+  void _clearBarriers() {
+    _sampleBarriers.clear();
+    _sl = false;
+    _tp = false;
   }
 
   Widget _buildConnectionStatus() => ConnectionStatusLabel(
@@ -549,5 +724,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }).toList();
     }
     return candles;
+  }
+
+  void _updateSampleSLAndTP() {
+    final double ticksMin = ticks.map((Tick t) => t.quote).reduce(math.min);
+    final double ticksMax = ticks.map((Tick t) => t.quote).reduce(math.max);
+
+    _slBarrier = HorizontalBarrier(
+      ticksMin,
+      title: 'Stop loss',
+      style: HorizontalBarrierStyle(
+        color: const Color(0xFFCC2E3D),
+      ),
+    );
+
+    _tpBarrier = HorizontalBarrier(ticksMax, title: 'Take profit');
   }
 }

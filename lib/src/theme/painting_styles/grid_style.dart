@@ -22,4 +22,8 @@ class GridStyle {
 
   /// The line thickness of the grid lines
   final double lineThickness;
+
+  @override
+  String toString() =>
+      '${super.toString()}$gridLineColor, ${labelStyle.toStringShort()}, $lineThickness';
 }

@@ -1,14 +1,15 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
 import 'dimens.dart';
 import 'painting_styles/candle_style.dart';
-import 'painting_styles/current_tick_style.dart';
 import 'painting_styles/grid_style.dart';
 import 'painting_styles/line_style.dart';
+import 'painting_styles/marker_style.dart';
 import 'text_styles.dart';
 
 /// Provides access to common theme-related colors and styles between default
@@ -84,9 +85,9 @@ abstract class ChartDefaultTheme implements ChartTheme {
       );
 
   @override
-  CurrentTickStyle get currentTickStyle => CurrentTickStyle(
+  HorizontalBarrierStyle get currentTickStyle => HorizontalBarrierStyle(
         color: brandCoralColor,
-        labelStyle: textStyle(
+        textStyle: textStyle(
           textStyle: caption2,
           color: base01Color,
         ),
@@ -101,6 +102,12 @@ abstract class ChartDefaultTheme implements ChartTheme {
 
   @override
   LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
+
+  @override
+  MarkerStyle get markerStyle => MarkerStyle(
+        upColor: accentGreenColor,
+        downColor: accentRedColor,
+      );
 
   TextStyle _getStyle({
     @required TextStyle textStyle,

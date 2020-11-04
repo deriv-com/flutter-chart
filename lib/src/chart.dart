@@ -1,11 +1,14 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +18,7 @@ import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
+import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
 import 'painters/loading_painter.dart';
@@ -34,10 +38,13 @@ class Chart extends StatelessWidget {
     @required this.granularity,
     this.controller,
     this.secondarySeries,
+    this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
-    this.isLive,
+    this.isLive = false,
+    this.opacity = 1.0,
+    this.annotations,
     Key key,
   }) : super(key: key);
 
@@ -48,6 +55,9 @@ class Chart extends StatelessWidget {
   ///
   /// Useful for adding on-chart indicators.
   final List<Series> secondarySeries;
+
+  /// Open position marker series.
+  final MarkerSeries markerSeries;
 
   /// Chart's controller
   final ChartController controller;
@@ -68,11 +78,17 @@ class Chart extends StatelessWidget {
   /// Chart's theme.
   final ChartTheme theme;
 
+  /// Chart's annotations
+  final List<ChartAnnotation<ChartObject>> annotations;
+
   /// Whether the chart should be showing live data or not.
   ///
   /// In case of being true the chart will keep auto-scrolling when its visible area
   /// is on the newest ticks/candles.
   final bool isLive;
+
+  /// Chart's opacity, Will be applied on the [mainSeries].
+  final double opacity;
 
   @override
   Widget build(BuildContext context) {
@@ -96,10 +112,14 @@ class Chart extends StatelessWidget {
                 controller: controller,
                 mainSeries: mainSeries,
                 chartDataList: <ChartData>[
-                  if (secondarySeries != null) ...secondarySeries
+                  if (secondarySeries != null) ...secondarySeries,
+                  if (annotations != null) ...annotations
                 ],
+                markerSeries: markerSeries,
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
+                isLive: isLive,
+                opacity: opacity,
               ),
             ),
           ),
@@ -114,17 +134,24 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
+    this.markerSeries,
+    @required this.isLive,
+    this.opacity,
     this.controller,
     this.onCrosshairAppeared,
     this.chartDataList,
   }) : super(key: key);
 
   final DataSeries<Tick> mainSeries;
+  final MarkerSeries markerSeries;
 
   final List<ChartData> chartDataList;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final ChartController controller;
+
+  final bool isLive;
+  final double opacity;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -204,8 +231,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
       );
 
-  GestureManagerState get _gestureManager =>
-      context.read<GestureManagerState>();
+  GestureManagerState _gestureManager;
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
@@ -232,11 +258,18 @@ class _ChartImplementationState extends State<_ChartImplementation>
     // TODO(Rustem): recalculate only when price label length has changed
     _recalculateQuoteLabelsAreaWidth();
 
-    if (_xAxis.isLive && !_currentTickBlinkingController.isAnimating) {
+    if (widget.isLive != oldChart.isLive) {
+      _updateBlinkingAnimationStatus();
+    }
+  }
+
+  void _updateBlinkingAnimationStatus() {
+    if (widget.isLive) {
       _currentTickBlinkingController.repeat(reverse: true);
     } else {
-      _currentTickBlinkingController.reset();
-      _currentTickBlinkingController.stop();
+      _currentTickBlinkingController
+        ..reset()
+        ..stop();
     }
   }
 
@@ -362,7 +395,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager
+    _gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_onPanStart)
       ..registerCallback(_onPanUpdate);
   }
@@ -467,7 +500,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             ),
           ),
           Opacity(
-            opacity: (_xAxis.isLive ?? true) ? 1 : 0.5,
+            opacity: widget.opacity,
             child: CustomPaint(
               size: canvasSize,
               painter: ChartPainter(
@@ -477,7 +510,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 ),
                 chartDataList: <ChartData>[
                   widget.mainSeries,
-                  if (widget.chartDataList != null) ...widget.chartDataList
                 ],
                 granularity: context.watch<XAxisModel>().granularity,
                 pipSize: widget.pipSize,
@@ -486,11 +518,31 @@ class _ChartImplementationState extends State<_ChartImplementation>
               ),
             ),
           ),
+          CustomPaint(
+            size: canvasSize,
+            painter: ChartPainter(
+              animationInfo: AnimationInfo(
+                currentTickPercent: _currentTickAnimation.value,
+                blinkingPercent: _currentTickBlinkAnimation.value,
+              ),
+              chartDataList: <ChartData>[
+                if (widget.chartDataList != null) ...widget.chartDataList
+              ],
+              granularity: context.watch<XAxisModel>().granularity,
+              pipSize: widget.pipSize,
+              epochToCanvasX: _xAxis.xFromEpoch,
+              quoteToCanvasY: _quoteToCanvasY,
+            ),
+          ),
+          if (widget.markerSeries != null)
+            MarkerArea(
+              markerSeries: widget.markerSeries,
+              quoteToCanvasY: _quoteToCanvasY,
+            ),
           CrosshairArea(
             mainSeries: widget.mainSeries,
             pipSize: widget.pipSize,
             quoteToCanvasY: _quoteToCanvasY,
-            // TODO(Rustem): remove callbacks when axis models are provided
             onCrosshairAppeared: () {
               _isCrosshairMode = true;
               widget.onCrosshairAppeared?.call();
