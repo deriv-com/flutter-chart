@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Duration for which you have to hold one finger without moving until
 /// long press is triggered.
 /// (small deviation is allowed, see [longPressHoldRadius])
-const longPressHoldDuration = Duration(milliseconds: 200);
+const longPressHoldDuration = Duration(milliseconds: 500);
 
 /// If contact point is moved by more than [longPressHoldRadius] from
 /// its original place and [longPressHoldDuration] hasn't elapsed yet,
@@ -42,6 +42,7 @@ class CustomGestureDetector extends StatefulWidget {
     this.onLongPressStart,
     this.onLongPressMoveUpdate,
     this.onLongPressEnd,
+    this.onTapUp,
   }) : super(key: key);
 
   final Widget child;
@@ -60,89 +61,118 @@ class CustomGestureDetector extends StatefulWidget {
 
   final GestureLongPressEndCallback onLongPressEnd;
 
+  final GestureTapUpCallback onTapUp;
+
   @override
   _CustomGestureDetectorState createState() => _CustomGestureDetectorState();
 }
 
 class _CustomGestureDetectorState extends State<CustomGestureDetector> {
-  int _fingersOnScreen = 0;
-  Offset _lastContactPoint;
-
-  bool _longPressed = false;
-  Timer _longPressTimer;
-  Offset _longPressStartPosition;
-
-  @override
-  Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (event) {
-        _fingersOnScreen += 1;
-        _afterNumberOfFingersOnScreenChanged();
-      },
-      onPointerCancel: (event) {
-        _fingersOnScreen -= 1;
-        _afterNumberOfFingersOnScreenChanged();
-      },
-      onPointerUp: (event) {
-        _fingersOnScreen -= 1;
-        _afterNumberOfFingersOnScreenChanged();
-      },
-      child: GestureDetector(
-        onScaleStart: _onScaleStart,
-        onScaleUpdate: _onScaleUpdate,
-        onScaleEnd: widget.onScaleAndPanEnd,
-        child: widget.child,
-      ),
-    );
+  int get pointersDown => _pointersDown;
+  int _pointersDown = 0;
+  set pointersDown(int value) {
+    _onPointersDownWillChange(value);
+    _pointersDown = value;
   }
 
-  void _afterNumberOfFingersOnScreenChanged() {
-    switch (_fingersOnScreen) {
-      case 0:
-        _longPressTimer?.cancel();
-        if (_longPressed) _onLongPressEnd();
-        break;
-      case 1:
-        if (!_longPressed)
-          _longPressTimer = Timer(
-            longPressHoldDuration,
-            _onLongPressStart,
-          );
-        break;
-      default:
-        _longPressTimer?.cancel();
+  Offset _localStartPoint;
+  Offset _localLastPoint;
+
+  bool _tap = false;
+  bool _longPressed = false;
+  Timer _longPressTimer;
+
+  @override
+  Widget build(BuildContext context) => Listener(
+        onPointerDown: (PointerDownEvent event) => pointersDown += 1,
+        onPointerCancel: (PointerCancelEvent event) => pointersDown -= 1,
+        onPointerUp: (PointerUpEvent event) => pointersDown -= 1,
+        child: GestureDetector(
+          onScaleStart: _onScaleStart,
+          onScaleUpdate: _onScaleUpdate,
+          onScaleEnd: widget.onScaleAndPanEnd,
+          child: widget.child,
+        ),
+      );
+
+  void _onPointersDownWillChange(int futureValue) {
+    // First pointer down.
+    if (_pointersDown == 0 && futureValue == 1) {
+      _tap = true;
+      _longPressTimer = Timer(
+        longPressHoldDuration,
+        _onLongPressStart,
+      );
+    }
+
+    // Added second pointer.
+    if (_pointersDown == 1 && futureValue == 2) {
+      _tap = false;
+      _longPressTimer?.cancel();
+      if (_longPressed) {
+        _onLongPressEnd();
+      }
+    }
+
+    // Removed last pointer.
+    if (_pointersDown == 1 && futureValue == 0) {
+      _longPressTimer?.cancel();
+      if (_longPressed) {
+        _onLongPressEnd();
+      } else if (_tap) {
+        widget.onTapUp?.call(TapUpDetails(
+          globalPosition: _localStartPoint,
+          localPosition: _localLastPoint,
+        ));
+      }
     }
   }
 
-  void _onLongPressStart() {
-    _longPressed = true;
-    widget.onLongPressStart?.call(LongPressStartDetails(
-      globalPosition: _lastContactPoint,
-      localPosition: _lastContactPoint,
-    ));
-  }
-
-  void _onLongPressEnd() {
-    _longPressed = false;
-    widget.onLongPressEnd?.call(null);
-  }
-
   void _onScaleStart(ScaleStartDetails details) {
-    _lastContactPoint = details.focalPoint;
-    _longPressStartPosition = details.focalPoint;
+    _localStartPoint = details.localFocalPoint;
+    _localLastPoint = _localStartPoint;
 
     widget.onScaleAndPanStart?.call(details);
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    if (_longPressed) {
-      _onLongPressMoveUpdate(details);
-    } else if (_fingersOnScreen == 1) {
-      _cancelLongPressIfMovedTooFar(details.focalPoint);
-      _onPanUpdate(details);
+    if (_pointersDown == 1) {
+      _onSinglePointerMoveUpdate(details);
     } else {
       widget.onScaleUpdate?.call(details);
     }
+  }
+
+  void _onSinglePointerMoveUpdate(ScaleUpdateDetails details) {
+    if (_longPressed) {
+      _onLongPressMoveUpdate(details);
+    } else {
+      final double distanceFromStart =
+          (_localStartPoint - details.localFocalPoint).distance;
+
+      if (distanceFromStart > longPressHoldRadius) {
+        _tap = false;
+        _longPressTimer?.cancel();
+      }
+      _onPanUpdate(details);
+    }
+  }
+
+  void _onPanUpdate(ScaleUpdateDetails details) {
+    widget.onPanUpdate?.call(DragUpdateDetails(
+      delta: details.localFocalPoint - _localLastPoint,
+      globalPosition: details.focalPoint,
+      localPosition: details.localFocalPoint,
+    ));
+    _localLastPoint = details.localFocalPoint;
+  }
+
+  void _onLongPressStart() {
+    _longPressed = true;
+    widget.onLongPressStart?.call(LongPressStartDetails(
+      globalPosition: _localStartPoint,
+      localPosition: _localStartPoint,
+    ));
   }
 
   void _onLongPressMoveUpdate(ScaleUpdateDetails details) {
@@ -151,25 +181,8 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     ));
   }
 
-  void _cancelLongPressIfMovedTooFar(Offset contactPoint) {
-    if (_longPressStartPosition == null) return;
-
-    final distanceFromStartPosition =
-        (_longPressStartPosition - contactPoint).distance;
-
-    if (distanceFromStartPosition > longPressHoldRadius)
-      _longPressTimer?.cancel();
-  }
-
-  void _onPanUpdate(ScaleUpdateDetails details) {
-    final currentContactPoint = details.focalPoint;
-    final dragUpdateDetails = DragUpdateDetails(
-      delta: currentContactPoint - _lastContactPoint,
-      globalPosition: currentContactPoint,
-      localPosition: details.localFocalPoint,
-    );
-    _lastContactPoint = details.focalPoint;
-
-    widget.onPanUpdate?.call(dragUpdateDetails);
+  void _onLongPressEnd() {
+    _longPressed = false;
+    widget.onLongPressEnd?.call(null);
   }
 }

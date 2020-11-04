@@ -47,11 +47,13 @@ void paintTimeLabels(
   @required GridStyle style,
 }) {
   timeLabels.asMap().forEach((index, timeLabel) {
-    paintTextFromCenter(
+    paintText(
       canvas,
       text: timeLabel,
-      centerX: xCoords[index],
-      centerY: size.height - 10,
+      anchor: Offset(
+        xCoords[index],
+        size.height - 10,
+      ),
       style: style.labelStyle,
     );
   });
