@@ -145,20 +145,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       anchor: labelArea.center,
     );
 
+    final double arrowMidX = (titleArea?.left ?? labelArea.left) - _arrowSize;
     if (arrowType == BarrierArrowType.upward) {
-      _paintUpwardArrows(
-        canvas,
-        (titleArea?.left ?? labelArea.left) - _arrowSize - padding,
-        y,
-        arrowSize: _arrowSize,
-      );
+      _paintUpwardArrows(canvas, arrowMidX, y, arrowSize: _arrowSize);
     } else if (arrowType == BarrierArrowType.downward) {
-      _paintDownwardArrows(
-        canvas,
-        (titleArea?.left ?? labelArea.left) - _arrowSize - padding,
-        y,
-        arrowSize: _arrowSize,
-      );
+      _paintDownwardArrows(canvas, arrowMidX, y, arrowSize: _arrowSize);
     }
   }
 
