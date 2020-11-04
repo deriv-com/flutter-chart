@@ -93,6 +93,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
+    if (style.hasBlinkingDot && dotX != null) {
+      _paintBlinkingDot(canvas, dotX, y, animationInfo);
+    }
+
     final TextPainter valuePainter = makeTextPainter(
       animatedValue.toStringAsFixed(pipSize),
       style.textStyle,
@@ -108,10 +112,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (arrowType == BarrierArrowType.none) {
       final double mainLineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double mainLineEndX = labelArea.left;
-
-      if (style.hasBlinkingDot && dotX != null) {
-        _paintBlinkingDot(canvas, dotX, y, animationInfo);
-      }
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
 
