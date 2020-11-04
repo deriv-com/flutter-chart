@@ -136,16 +136,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       );
     }
 
-    if (arrowType != BarrierArrowType.none) {
-      final double labelMidX = titleArea.left - _arrowSize;
-
-      if (arrowType == BarrierArrowType.upward) {
-        _paintUpwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
-      } else if (arrowType == BarrierArrowType.downward) {
-        _paintDownwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
-      }
-    }
-
     if (arrowType == BarrierArrowType.none) {
       double mainLineStartX = 0;
       final double mainLineEndX =
@@ -159,8 +149,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           mainLineStartX = dotX;
         }
       }
-
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
+    } else {
+      final double labelMidX = titleArea.left - _arrowSize;
+
+      if (arrowType == BarrierArrowType.upward) {
+        _paintUpwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
+      } else if (arrowType == BarrierArrowType.downward) {
+        _paintDownwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
+      }
     }
 
     _paintLabelBackground(canvas, labelArea, style.labelShape);
