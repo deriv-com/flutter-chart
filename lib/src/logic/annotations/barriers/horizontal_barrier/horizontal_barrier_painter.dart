@@ -105,11 +105,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       height: style.labelHeight,
     );
 
-    TextPainter titlePainter;
     Rect titleArea;
 
     if (series.title != null) {
-      titlePainter = makeTextPainter(
+      final TextPainter titlePainter = makeTextPainter(
         series.title,
         style.textStyle.copyWith(
           color: style.color,
