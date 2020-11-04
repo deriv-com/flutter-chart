@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -111,6 +112,11 @@ class Chart extends StatelessWidget {
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
+                chartConfig: ChartConfig(
+                  pipSize: pipSize,
+                  granularity: granularity,
+                  theme: chartTheme,
+                ),
                 chartDataList: <ChartData>[
                   if (secondarySeries != null) ...secondarySeries,
                   if (annotations != null) ...annotations
@@ -134,6 +140,7 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
+    @required this.chartConfig,
     this.markerSeries,
     @required this.isLive,
     this.opacity,
@@ -152,6 +159,9 @@ class _ChartImplementation extends StatefulWidget {
 
   final bool isLive;
   final double opacity;
+
+  /// Chart's general configuration
+  final ChartConfig chartConfig;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
