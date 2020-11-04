@@ -37,7 +37,9 @@ class MarkerStyle extends ChartPaintingStyle {
   /// Active marker text right padding.
   final double textRightPadding;
 
+  /// Width of the line spanning from the marker to the anchor point.
   final double lineWidth;
 
+  /// Radius of the hole on the anchor point.
   final double holeRadius;
 }
