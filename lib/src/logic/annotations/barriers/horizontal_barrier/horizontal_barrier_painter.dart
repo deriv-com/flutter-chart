@@ -115,7 +115,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (arrowType == BarrierArrowType.none) {
       final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double lineEndX = labelArea.left;
-      _paintLine(canvas, lineStartX, lineEndX, y, style);
+      if (lineStartX < lineEndX) {
+        _paintLine(canvas, lineStartX, lineEndX, y, style);
+      }
     }
 
     // Title.
