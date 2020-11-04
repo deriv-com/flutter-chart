@@ -140,10 +140,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       final double mainLineEndX =
           series.title != null ? titleArea.left : labelArea.left;
 
-      if (dotX != null) {
-        if (style.hasBlinkingDot) {
-          _paintBlinkingDot(canvas, dotX, y, animationInfo);
-        }
+      if (style.hasBlinkingDot && dotX != null) {
+        _paintBlinkingDot(canvas, dotX, y, animationInfo);
       }
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     } else {
