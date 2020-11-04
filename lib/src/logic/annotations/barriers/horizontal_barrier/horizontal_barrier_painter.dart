@@ -158,6 +158,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         arrowSize: _arrowSize,
       );
     } else if (arrowType == BarrierArrowType.downward) {
+      // TODO(Rustem): Rotate arrows like in `paintMarker`.
       _paintDownwardArrows(
         canvas,
         center: Offset(arrowMidX, y),
