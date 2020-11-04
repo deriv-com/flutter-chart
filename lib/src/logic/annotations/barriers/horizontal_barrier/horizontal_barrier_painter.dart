@@ -133,7 +133,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         width: titlePainter.width + padding * 2,
         height: titlePainter.height,
       );
-      canvas.drawRect(titleArea, Paint()..blendMode = BlendMode.clear);
       paintWithTextPainter(
         canvas,
         painter: titlePainter,
