@@ -52,6 +52,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double dotX;
 
+    Rect titleArea;
+
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
     if (series.previousObject == null) {
@@ -101,7 +103,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       animatedValue.toStringAsFixed(pipSize),
       style.textStyle,
     );
-
     final Rect labelArea = Rect.fromCenter(
       center: Offset(
           size.width - rightMargin - padding - valuePainter.width / 2, y),
@@ -114,8 +115,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       final double mainLineEndX = labelArea.left;
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
-
-    Rect titleArea;
 
     if (series.title != null) {
       final TextPainter titlePainter = makeTextPainter(
