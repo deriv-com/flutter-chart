@@ -149,14 +149,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (arrowType == BarrierArrowType.upward) {
       _paintUpwardArrows(
         canvas,
-        titleArea.left - _arrowSize,
+        (titleArea?.left ?? labelArea.left) - _arrowSize - padding,
         y,
         arrowSize: _arrowSize,
       );
     } else if (arrowType == BarrierArrowType.downward) {
       _paintDownwardArrows(
         canvas,
-        titleArea.left - _arrowSize,
+        (titleArea?.left ?? labelArea.left) - _arrowSize - padding,
         y,
         arrowSize: _arrowSize,
       );
