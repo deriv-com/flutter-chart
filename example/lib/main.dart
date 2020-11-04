@@ -75,6 +75,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Completer _requestCompleter;
 
   List<Market> _markets;
+  List<Marker> _markers = [];
+  ActiveMarker _activeMarker;
 
   List<ActiveSymbol> _activeSymbols;
 
@@ -268,6 +270,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
+        ticks.clear();
+        _clearMarkers();
         _clearBarriers();
         ticks = fetchedCandles;
       });
@@ -363,6 +367,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ),
                       ),
                     ],
+                    markerSeries: MarkerSeries(
+                      _markers,
+                      activeMarker: _activeMarker,
+                    ),
                     annotations: ticks.length > 4
                         ? <ChartAnnotation>[
                             ..._sampleBarriers,
@@ -403,6 +411,28 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     alignment: Alignment.center,
                     child: _buildConnectionStatus(),
                   ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 64,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton(
+                  color: Colors.green,
+                  child: const Text('Up'),
+                  onPressed: () => _addMarker(MarkerDirection.up),
+                ),
+                RaisedButton(
+                  color: Colors.red,
+                  child: const Text('Down'),
+                  onPressed: () => _addMarker(MarkerDirection.down),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => setState(_clearMarkers),
+                ),
               ],
             ),
           ),
@@ -493,6 +523,41 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ],
       ),
     );
+  }
+
+  void _addMarker(MarkerDirection direction) {
+    final lastTick = ticks.last;
+    final onTap = () {
+      setState(() {
+        _activeMarker = ActiveMarker(
+          direction: direction,
+          epoch: lastTick.epoch,
+          quote: lastTick.quote,
+          text: '0.00 USD',
+          onTap: () {
+            print('>>> tapped active marker');
+          },
+          onTapOutside: () {
+            setState(() {
+              _activeMarker = null;
+            });
+          },
+        );
+      });
+    };
+    setState(() {
+      _markers.add(Marker(
+        direction: direction,
+        epoch: lastTick.epoch,
+        quote: lastTick.quote,
+        onTap: onTap,
+      ));
+    });
+  }
+
+  void _clearMarkers() {
+    _markers.clear();
+    _activeMarker = null;
   }
 
   void _clearBarriers() {

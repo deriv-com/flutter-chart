@@ -54,4 +54,88 @@ void main() {
       );
     });
   });
+
+  group('findEpochIndex should', () {
+    test('throw exception if list is empty', () {
+      expect(
+        () => findEpochIndex(0, <Tick>[]),
+        throwsArgumentError,
+      );
+    });
+    test('return index of matching tick', () {
+      expect(
+        findEpochIndex(1, <Tick>[
+          Tick(epoch: 1, quote: 0),
+          Tick(epoch: 2, quote: 0),
+          Tick(epoch: 3, quote: 0),
+        ]),
+        0,
+      );
+      expect(
+        findEpochIndex(2, <Tick>[
+          Tick(epoch: 1, quote: 0),
+          Tick(epoch: 2, quote: 0),
+        ]),
+        1,
+      );
+      expect(
+        findEpochIndex(4, <Tick>[
+          Tick(epoch: 1, quote: 0),
+          Tick(epoch: 2, quote: 0),
+          Tick(epoch: 3, quote: 0),
+          Tick(epoch: 4, quote: 0),
+        ]),
+        3,
+      );
+      expect(
+        findEpochIndex(300, <Tick>[
+          Tick(epoch: 100, quote: 0),
+          Tick(epoch: 200, quote: 0),
+          Tick(epoch: 300, quote: 0),
+          Tick(epoch: 400, quote: 0),
+        ]),
+        2,
+      );
+    });
+    test('return -0.5 if epoch is before the 1st tick', () {
+      expect(
+        findEpochIndex(100, <Tick>[
+          Tick(epoch: 300, quote: 0),
+          Tick(epoch: 400, quote: 0),
+          Tick(epoch: 500, quote: 0),
+        ]),
+        -0.5,
+      );
+    });
+    test('return 0.5 if epoch is between 1st and 2nd', () {
+      expect(
+        findEpochIndex(350, <Tick>[
+          Tick(epoch: 300, quote: 0),
+          Tick(epoch: 400, quote: 0),
+          Tick(epoch: 500, quote: 0),
+        ]),
+        0.5,
+      );
+    });
+    test('return 1.5 if epoch is between 2nd and 3rd', () {
+      expect(
+        findEpochIndex(450, <Tick>[
+          Tick(epoch: 300, quote: 0),
+          Tick(epoch: 400, quote: 0),
+          Tick(epoch: 500, quote: 0),
+        ]),
+        1.5,
+      );
+    });
+    test('return 2.5 if epoch is after 3rd', () {
+      expect(
+        findEpochIndex(128, <Tick>[
+          Tick(epoch: 123, quote: 0),
+          Tick(epoch: 125, quote: 0),
+          Tick(epoch: 127, quote: 0),
+        ]),
+        2.5,
+      );
+    });
+  });
 }

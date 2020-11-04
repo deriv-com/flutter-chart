@@ -9,6 +9,7 @@ import 'dimens.dart';
 import 'painting_styles/candle_style.dart';
 import 'painting_styles/grid_style.dart';
 import 'painting_styles/line_style.dart';
+import 'painting_styles/marker_style.dart';
 import 'text_styles.dart';
 
 /// Provides access to common theme-related colors and styles between default
@@ -101,6 +102,12 @@ abstract class ChartDefaultTheme implements ChartTheme {
 
   @override
   LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
+
+  @override
+  MarkerStyle get markerStyle => MarkerStyle(
+        upColor: accentGreenColor,
+        downColor: accentRedColor,
+      );
 
   TextStyle _getStyle({
     @required TextStyle textStyle,

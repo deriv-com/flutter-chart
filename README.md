@@ -94,6 +94,40 @@ Chart(
 );
 ```
 
+Supply `markerSeries` to show markers on the chart.
+
+```dart
+Chart(
+  ...,
+  markerSeries: MarkerSeries([
+    Marker.up(epoch: 123, quote: 10, onTap: () {}),
+    Marker.down(epoch: 124, quote: 12, onTap: () {}),
+  ]),
+);
+```
+
+Supply `activeMarker` to show active marker on the chart.
+See `/example` for a complete implementation.
+
+```dart
+Chart(
+  ...,
+  markerSeries: MarkerSeries(
+    [
+      Marker.up(epoch: 123, quote: 10, onTap: () {}),
+      Marker.down(epoch: 124, quote: 12, onTap: () {}),
+    ],
+    activeMarker: ActiveMarker(
+      epoch: 123,
+      quote: 10,
+      onTap: () {},
+      onOutsideTap: () {
+        // remove active marker
+      },
+    ),
+  ),
+```
+
 To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
 
 ```dart

@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
@@ -17,6 +18,7 @@ import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
+import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
 import 'painters/loading_painter.dart';
@@ -36,6 +38,7 @@ class Chart extends StatelessWidget {
     @required this.granularity,
     this.controller,
     this.secondarySeries,
+    this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
@@ -52,6 +55,9 @@ class Chart extends StatelessWidget {
   ///
   /// Useful for adding on-chart indicators.
   final List<Series> secondarySeries;
+
+  /// Open position marker series.
+  final MarkerSeries markerSeries;
 
   /// Chart's controller
   final ChartController controller;
@@ -109,6 +115,7 @@ class Chart extends StatelessWidget {
                   if (secondarySeries != null) ...secondarySeries,
                   if (annotations != null) ...annotations
                 ],
+                markerSeries: markerSeries,
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
                 isLive: isLive,
@@ -127,6 +134,7 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
+    this.markerSeries,
     @required this.isLive,
     this.opacity,
     this.controller,
@@ -135,6 +143,7 @@ class _ChartImplementation extends StatefulWidget {
   }) : super(key: key);
 
   final DataSeries<Tick> mainSeries;
+  final MarkerSeries markerSeries;
 
   final List<ChartData> chartDataList;
   final int pipSize;
@@ -222,8 +231,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
       );
 
-  GestureManagerState get _gestureManager =>
-      context.read<GestureManagerState>();
+  GestureManagerState _gestureManager;
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
@@ -387,7 +395,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupGestures() {
-    _gestureManager
+    _gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_onPanStart)
       ..registerCallback(_onPanUpdate);
   }
@@ -526,11 +534,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
+          if (widget.markerSeries != null)
+            MarkerArea(
+              markerSeries: widget.markerSeries,
+              quoteToCanvasY: _quoteToCanvasY,
+            ),
           CrosshairArea(
             mainSeries: widget.mainSeries,
             pipSize: widget.pipSize,
             quoteToCanvasY: _quoteToCanvasY,
-            // TODO(Rustem): remove callbacks when axis models are provided
             onCrosshairAppeared: () {
               _isCrosshairMode = true;
               widget.onCrosshairAppeared?.call();
