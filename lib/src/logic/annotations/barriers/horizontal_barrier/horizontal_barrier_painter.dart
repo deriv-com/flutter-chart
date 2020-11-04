@@ -136,16 +136,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     if (arrowType == BarrierArrowType.none) {
-      double mainLineStartX = 0;
+      final double mainLineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double mainLineEndX =
           series.title != null ? titleArea.left : labelArea.left;
 
       if (dotX != null) {
         if (style.hasBlinkingDot) {
           _paintBlinkingDot(canvas, dotX, y, animationInfo);
-        }
-        if (!series.longLine) {
-          mainLineStartX = dotX;
         }
       }
       _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
