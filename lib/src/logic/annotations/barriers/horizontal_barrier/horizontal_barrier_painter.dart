@@ -105,6 +105,16 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       height: style.labelHeight,
     );
 
+    if (arrowType == BarrierArrowType.none) {
+      final double mainLineStartX = series.longLine ? 0 : (dotX ?? 0);
+      final double mainLineEndX = labelArea.left;
+
+      if (style.hasBlinkingDot && dotX != null) {
+        _paintBlinkingDot(canvas, dotX, y, animationInfo);
+      }
+      _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
+    }
+
     Rect titleArea;
 
     if (series.title != null) {
@@ -121,37 +131,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         width: titlePainter.width + padding * 2,
         height: titlePainter.height,
       );
-
-      // Painting the line between title and label.
-      canvas.drawLine(
-        Offset(titleArea.right, y),
-        Offset(labelArea.left, y),
-        _paint,
-      );
       paintWithTextPainter(
         canvas,
         painter: titlePainter,
         anchor: titleArea.center,
       );
-    }
-
-    if (arrowType == BarrierArrowType.none) {
-      final double mainLineStartX = series.longLine ? 0 : (dotX ?? 0);
-      final double mainLineEndX =
-          series.title != null ? titleArea.left : labelArea.left;
-
-      if (style.hasBlinkingDot && dotX != null) {
-        _paintBlinkingDot(canvas, dotX, y, animationInfo);
-      }
-      _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
-    } else {
-      final double labelMidX = titleArea.left - _arrowSize;
-
-      if (arrowType == BarrierArrowType.upward) {
-        _paintUpwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
-      } else if (arrowType == BarrierArrowType.downward) {
-        _paintDownwardArrows(canvas, labelMidX, y, arrowSize: _arrowSize);
-      }
     }
 
     _paintLabelBackground(canvas, labelArea, style.labelShape);
@@ -160,6 +144,22 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       painter: valuePainter,
       anchor: labelArea.center,
     );
+
+    if (arrowType == BarrierArrowType.upward) {
+      _paintUpwardArrows(
+        canvas,
+        titleArea.left - _arrowSize,
+        y,
+        arrowSize: _arrowSize,
+      );
+    } else if (arrowType == BarrierArrowType.downward) {
+      _paintDownwardArrows(
+        canvas,
+        titleArea.left - _arrowSize,
+        y,
+        arrowSize: _arrowSize,
+      );
+    }
   }
 
   void _paintLabelBackground(
