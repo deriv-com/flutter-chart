@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -21,7 +22,7 @@ class XAxis extends StatefulWidget {
   const XAxis({
     @required this.entries,
     @required this.child,
-    @required this.granularity,
+    @required this.chartConfig,
     @required this.isLive,
     this.onVisibleAreaChanged,
     Key key,
@@ -34,8 +35,8 @@ class XAxis extends StatefulWidget {
   /// A reference to chart's main candles.
   final List<Tick> entries;
 
-  /// Millisecond difference between two consecutive candles.
-  final int granularity;
+  /// Chart's config
+  final ChartConfig chartConfig;
 
   /// Whether the chart is showing live data.
   final bool isLive;
@@ -62,7 +63,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
     _model = XAxisModel(
       entries: widget.entries,
-      granularity: widget.granularity,
+      chartConfig: widget.chartConfig,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
       onScale: _onVisibleAreaChanged,
@@ -89,7 +90,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
     _model
-      ..updateGranularity(widget.granularity)
+      ..updateChartConfig(widget.chartConfig)
       ..updateEntries(widget.entries)
       ..updateIsLive(widget.isLive);
   }

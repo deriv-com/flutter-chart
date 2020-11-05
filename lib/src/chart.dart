@@ -98,6 +98,12 @@ class Chart extends StatelessWidget {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
 
+    final ChartConfig chartConfig = ChartConfig(
+      pipSize: pipSize,
+      granularity: granularity,
+      theme: chartTheme,
+    );
+
     return Provider<ChartTheme>.value(
       value: chartTheme,
       child: ClipRect(
@@ -106,17 +112,13 @@ class Chart extends StatelessWidget {
           child: GestureManager(
             child: XAxis(
               entries: mainSeries.entries,
-              granularity: granularity,
+              chartConfig: chartConfig,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
-                chartConfig: ChartConfig(
-                  pipSize: pipSize,
-                  granularity: granularity,
-                  theme: chartTheme,
-                ),
+                chartConfig: chartConfig,
                 chartDataList: <ChartData>[
                   if (secondarySeries != null) ...secondarySeries,
                   if (annotations != null) ...annotations
