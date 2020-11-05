@@ -37,7 +37,6 @@ class MarketSelectorButton extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SymbolSvgPicture(
             symbolCode: asset.name,
