@@ -81,7 +81,7 @@ class _MarkerAreaState extends State<MarkerArea> {
               series: widget.markerSeries,
               epochToX: xAxis.xFromEpoch,
               quoteToY: widget.quoteToCanvasY,
-              chartTheme: Provider.of<ChartTheme>(context)
+              chartTheme: context.watch<ChartTheme>()
             ),
           ),
         ),
