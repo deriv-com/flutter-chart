@@ -118,7 +118,6 @@ class Chart extends StatelessWidget {
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
-                chartConfig: chartConfig,
                 chartDataList: <ChartData>[
                   if (secondarySeries != null) ...secondarySeries,
                   if (annotations != null) ...annotations
@@ -142,7 +141,6 @@ class _ChartImplementation extends StatefulWidget {
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
-    @required this.chartConfig,
     this.markerSeries,
     @required this.isLive,
     this.opacity,
@@ -161,9 +159,6 @@ class _ChartImplementation extends StatefulWidget {
 
   final bool isLive;
   final double opacity;
-
-  /// Chart's general configuration
-  final ChartConfig chartConfig;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -523,7 +518,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 chartDataList: <ChartData>[
                   widget.mainSeries,
                 ],
-                chartConfig: widget.chartConfig,
+                chartConfig: _xAxis.chartConfig,
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
               ),
@@ -539,7 +534,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               chartDataList: <ChartData>[
                 if (widget.chartDataList != null) ...widget.chartDataList
               ],
-              chartConfig: widget.chartConfig,
+              chartConfig: _xAxis.chartConfig,
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
