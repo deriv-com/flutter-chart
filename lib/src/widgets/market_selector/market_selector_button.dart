@@ -19,7 +19,7 @@ class MarketSelectorButton extends StatelessWidget {
 
   final Color backgroundColor;
 
-  final double borderRadius;
+  final BorderRadius borderRadius;
 
   final Asset asset;
 
@@ -33,7 +33,7 @@ class MarketSelectorButton extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       color: backgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius ?? 4.0),
+        borderRadius: borderRadius ?? BorderRadius.circular(4.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
