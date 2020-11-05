@@ -13,6 +13,7 @@ import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 import 'callbacks.dart';
 import 'crosshair/crosshair_area.dart';
@@ -103,15 +104,17 @@ class Chart extends StatelessWidget {
       granularity: granularity,
     );
 
-    return Provider<ChartTheme>.value(
-      value: chartTheme,
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        Provider<ChartTheme>.value(value: chartTheme),
+        Provider<ChartConfig>.value(value: chartConfig),
+      ],
       child: ClipRect(
         child: Ink(
           color: chartTheme.base08Color,
           child: GestureManager(
             child: XAxis(
               entries: mainSeries.entries,
-              chartConfig: chartConfig,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               child: _ChartImplementation(

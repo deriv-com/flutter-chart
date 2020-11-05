@@ -22,7 +22,6 @@ class XAxis extends StatefulWidget {
   const XAxis({
     @required this.entries,
     @required this.child,
-    @required this.chartConfig,
     @required this.isLive,
     this.onVisibleAreaChanged,
     Key key,
@@ -34,9 +33,6 @@ class XAxis extends StatefulWidget {
 
   /// A reference to chart's main candles.
   final List<Tick> entries;
-
-  /// Chart's config
-  final ChartConfig chartConfig;
 
   /// Whether the chart is showing live data.
   final bool isLive;
@@ -63,7 +59,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
     _model = XAxisModel(
       entries: widget.entries,
-      chartConfig: widget.chartConfig,
+      chartConfig: context.read<ChartConfig>(),
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
       onScale: _onVisibleAreaChanged,
@@ -90,7 +86,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
     _model
-      ..updateChartConfig(widget.chartConfig)
+      ..updateChartConfig(context.read<ChartConfig>())
       ..updateEntries(widget.entries)
       ..updateIsLive(widget.isLive);
   }
