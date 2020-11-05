@@ -180,6 +180,7 @@ class XAxisModel extends ChangeNotifier {
   /// Should be called before [updateEntries].
   void updateChartConfig(ChartConfig newConfig) {
     if (newConfig == null || _chartConfig == newConfig) return;
+    _chartConfig = newConfig;
 
     _msPerPx = _defaultScale;
     _scrollTo(_maxRightBoundEpoch);

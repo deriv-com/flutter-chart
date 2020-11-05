@@ -8,4 +8,11 @@ class ChartConfig {
 
   /// Granularity
   final int granularity;
+
+  @override
+  bool operator ==(covariant ChartConfig other) =>
+      pipSize == other.pipSize && granularity == other.granularity;
+
+  @override
+  int get hashCode => super.hashCode;
 }
