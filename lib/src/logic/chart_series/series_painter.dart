@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -23,6 +24,10 @@ abstract class SeriesPainter<S extends Series> {
   @protected
   ChartConfig chartConfig;
 
+  /// Chart's theme
+  @protected
+  ChartTheme theme;
+
   /// Sets some variables and paints this [SeriesPainter]'s data
   void paint({
     Canvas canvas,
@@ -31,8 +36,10 @@ abstract class SeriesPainter<S extends Series> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
+    ChartTheme theme,
   }) {
     this.chartConfig = chartConfig;
+    this.theme = theme;
 
     onPaint(
       canvas: canvas,

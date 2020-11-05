@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
@@ -165,11 +166,13 @@ abstract class DataSeries<T extends Tick> extends Series {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
+    ChartTheme theme,
   ) {
-    super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
+    super.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     _lastTickIndicator?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements

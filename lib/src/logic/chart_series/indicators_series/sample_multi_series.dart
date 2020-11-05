@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'ma_series.dart';
@@ -63,10 +64,14 @@ class SampleMultiSeries extends Series {
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
+    ChartTheme theme,
   ) {
-    super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
+    super.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
-    series1.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
-    series2.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
+    series1.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    series2.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 }

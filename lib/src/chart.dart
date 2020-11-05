@@ -101,7 +101,6 @@ class Chart extends StatelessWidget {
     final ChartConfig chartConfig = ChartConfig(
       pipSize: pipSize,
       granularity: granularity,
-      theme: chartTheme,
     );
 
     return Provider<ChartTheme>.value(

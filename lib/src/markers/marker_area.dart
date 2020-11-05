@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
@@ -80,6 +81,7 @@ class _MarkerAreaState extends State<MarkerArea> {
               series: widget.markerSeries,
               epochToX: xAxis.xFromEpoch,
               quoteToY: widget.quoteToCanvasY,
+              chartTheme: Provider.of<ChartTheme>(context)
             ),
           ),
         ),
@@ -97,15 +99,17 @@ class _MarkerPainter extends CustomPainter {
     this.series,
     this.epochToX,
     this.quoteToY,
+    this.chartTheme,
   });
 
   final MarkerSeries series;
   final Function epochToX;
   final Function quoteToY;
+  final ChartTheme chartTheme;
 
   @override
   void paint(Canvas canvas, Size size) {
-    series.paint(canvas, size, epochToX, quoteToY, null, null);
+    series.paint(canvas, size, epochToX, quoteToY, null, null, chartTheme);
   }
 
   @override

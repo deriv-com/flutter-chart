@@ -1,11 +1,13 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
     this.chartConfig,
+    this.theme,
     this.chartDataList,
     this.animationInfo,
     this.epochToCanvasX,
@@ -14,6 +16,8 @@ class ChartPainter extends CustomPainter {
 
   /// Chart config
   final ChartConfig chartConfig;
+
+  final ChartTheme theme;
 
   final double Function(int) epochToCanvasX;
   final double Function(double) quoteToCanvasY;
@@ -32,6 +36,7 @@ class ChartPainter extends CustomPainter {
         quoteToCanvasY,
         animationInfo,
         chartConfig,
+        theme,
       );
     }
   }

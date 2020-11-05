@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -70,6 +71,7 @@ abstract class Series implements ChartData {
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
+    ChartTheme theme,
   ) =>
       seriesPainter?.paint(
         canvas: canvas,
@@ -78,5 +80,6 @@ abstract class Series implements ChartData {
         quoteToY: quoteToY,
         animationInfo: animationInfo,
         chartConfig: chartConfig,
+        theme: theme,
       );
 }

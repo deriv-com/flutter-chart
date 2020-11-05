@@ -179,13 +179,7 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Should be called before [updateEntries].
   void updateChartConfig(ChartConfig newConfig) {
-    if (newConfig == null) return;
-
-    final bool granularityChanged =
-        _chartConfig.granularity != newConfig.granularity;
-    _chartConfig = newConfig;
-
-    if (!granularityChanged) return;
+    if (newConfig == null || _chartConfig == newConfig) return;
 
     _msPerPx = _defaultScale;
     _scrollTo(_maxRightBoundEpoch);
