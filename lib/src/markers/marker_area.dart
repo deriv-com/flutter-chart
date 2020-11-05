@@ -81,7 +81,7 @@ class _MarkerAreaState extends State<MarkerArea> {
               series: widget.markerSeries,
               epochToX: xAxis.xFromEpoch,
               quoteToY: widget.quoteToCanvasY,
-              chartTheme: context.watch<ChartTheme>()
+              theme: context.watch<ChartTheme>()
             ),
           ),
         ),
@@ -99,17 +99,17 @@ class _MarkerPainter extends CustomPainter {
     this.series,
     this.epochToX,
     this.quoteToY,
-    this.chartTheme,
+    this.theme,
   });
 
   final MarkerSeries series;
   final Function epochToX;
   final Function quoteToY;
-  final ChartTheme chartTheme;
+  final ChartTheme theme;
 
   @override
   void paint(Canvas canvas, Size size) {
-    series.paint(canvas, size, epochToX, quoteToY, null, null, chartTheme);
+    series.paint(canvas, size, epochToX, quoteToY, null, null, theme);
   }
 
   @override
