@@ -33,7 +33,8 @@ class MarketSelectorButton extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       color: backgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? BorderRadius.circular(4.0),
+        borderRadius:
+            borderRadius ?? const BorderRadius.all(Radius.circular(4.0)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -45,7 +46,7 @@ class MarketSelectorButton extends StatelessWidget {
             placeholderBuilder: (BuildContext context) =>
                 AssetIconPlaceholder(),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(asset.displayName, style: textStyle),
         ],
       ),
