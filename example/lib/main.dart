@@ -331,7 +331,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Expanded(
-                  child: _buildMarketSelectorButton(),
+                  child: _markets == null
+                      ? SizedBox.shrink()
+                      : _buildMarketSelectorButton(),
                 ),
                 _buildChartTypeButton(),
                 _buildIntervalSelector(),
