@@ -11,7 +11,7 @@ class GridStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Color(0xFFC2C2C2),
-      fontFeatures: [FontFeature.tabularFigures()],
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
     this.labelHorizontalPadding = 8,
     this.lineThickness = 1,

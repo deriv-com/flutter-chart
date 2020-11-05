@@ -23,10 +23,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   final Paint _paint;
 
   /// Padding between lines
-  static const double padding = 5;
+  static const double padding = 4;
 
   /// Right margin
-  static const double rightMargin = 5;
+  static const double rightMargin = 4;
 
   /// Arrow size
   static const double _arrowSize = 5;
