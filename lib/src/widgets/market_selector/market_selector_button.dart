@@ -10,6 +10,7 @@ class MarketSelectorButton extends StatelessWidget {
     Key key,
     @required this.asset,
     this.backgroundColor,
+    this.borderRadius,
     this.onTap,
     this.textStyle = const TextStyle(fontSize: 14, color: Colors.white),
   }) : super(key: key);
@@ -17,6 +18,8 @@ class MarketSelectorButton extends StatelessWidget {
   final VoidCallback onTap;
 
   final Color backgroundColor;
+
+  final double borderRadius;
 
   final Asset asset;
 
@@ -29,8 +32,11 @@ class MarketSelectorButton extends StatelessWidget {
     return FlatButton(
       padding: const EdgeInsets.all(8),
       color: backgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 4.0),
+      ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SymbolSvgPicture(
