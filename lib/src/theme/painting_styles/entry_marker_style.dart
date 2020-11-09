@@ -2,21 +2,21 @@ import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
-/// Defines the style of entry marker.
+/// Defines the style of an entry marker.
 class EntryMarkerStyle extends ChartPaintingStyle {
-  /// Creates entry marker style.
+  /// Creates an entry marker style.
   const EntryMarkerStyle({
     this.radius = 2.5,
     this.borderWidth = 1.0,
     this.borderColor = BrandColors.coral,
   });
 
-  /// Marker radius.
+  /// Radius of the marker.
   final double radius;
 
-  /// Width of inner border.
+  /// Width of the inner border.
   final double borderWidth;
 
-  /// Color of inner border.
+  /// Color of the inner border.
   final Color borderColor;
 }
