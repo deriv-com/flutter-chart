@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Paints a blinking semi-transparent dot.
+/// Paints a blinking semi-transparent glow around [center].
 void paintBlinkingDot(
   Canvas canvas,
   Offset center,
