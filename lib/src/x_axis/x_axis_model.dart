@@ -332,4 +332,8 @@ class XAxisModel extends ChangeNotifier {
     _prevScrollAnimationValue = 0;
     _scrollAnimationController.animateWith(simulation);
   }
+
+  /// Keeps rightBoundEpoch in the valid range
+  void clampRightBoundEpoch() => _rightBoundEpoch =
+      _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
 }
