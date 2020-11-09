@@ -59,7 +59,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
     _model = XAxisModel(
       entries: widget.entries,
-      chartConfig: context.read<ChartConfig>(),
+      granularity: context.read<ChartConfig>().granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
       onScale: _onVisibleAreaChanged,
@@ -86,7 +86,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
     _model
-      ..updateChartConfig(context.read<ChartConfig>())
+      ..updateGranularity(context.read<ChartConfig>().granularity)
       ..updateEntries(widget.entries)
       ..updateIsLive(widget.isLive);
   }

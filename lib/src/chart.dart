@@ -520,7 +520,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 chartDataList: <ChartData>[
                   widget.mainSeries,
                 ],
-                chartConfig: _xAxis.chartConfig,
+                chartConfig: context.read<ChartConfig>(),
                 theme: context.read<ChartTheme>(),
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
@@ -537,7 +537,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               chartDataList: <ChartData>[
                 if (widget.chartDataList != null) ...widget.chartDataList
               ],
-              chartConfig: _xAxis.chartConfig,
+              chartConfig: context.read<ChartConfig>(),
               theme: context.read<ChartTheme>(),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,

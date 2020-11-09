@@ -15,14 +15,14 @@ class XAxisModel extends ChangeNotifier {
   /// Creates x-axis model for live chart.
   XAxisModel({
     @required List<Tick> entries,
-    @required ChartConfig chartConfig,
+    @required int granularity,
     @required AnimationController animationController,
     @required bool isLive,
     this.onScale,
     this.onScroll,
   }) {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    _chartConfig = chartConfig ?? 0;
+    _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     _isLive = isLive ?? true;
     _rightBoundEpoch = _maxRightBoundEpoch;
@@ -80,7 +80,7 @@ class XAxisModel extends ChangeNotifier {
   bool _autoPanEnabled = true;
   double _msPerPx = 1000;
   double _prevMsPerPx;
-  ChartConfig _chartConfig;
+  int _granularity;
   int _nowEpoch;
   int _rightBoundEpoch;
 
@@ -88,7 +88,7 @@ class XAxisModel extends ChangeNotifier {
       _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
-  ChartConfig get chartConfig => _chartConfig;
+  int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
   int get leftBoundEpoch => _shiftEpoch(rightBoundEpoch, -width);
@@ -132,11 +132,11 @@ class XAxisModel extends ChangeNotifier {
   double get msPerPx => _msPerPx;
 
   /// Bounds and default for [_msPerPx].
-  double get _minScale => _chartConfig.granularity / maxIntervalWidth;
+  double get _minScale => _granularity / maxIntervalWidth;
 
-  double get _maxScale => _chartConfig.granularity / minIntervalWidth;
+  double get _maxScale => _granularity / minIntervalWidth;
 
-  double get _defaultScale => _chartConfig.granularity / defaultIntervalWidth;
+  double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
@@ -158,7 +158,7 @@ class XAxisModel extends ChangeNotifier {
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
     if (firstLoad || reload) {
-      _timeGaps = findGaps(entries, _chartConfig.granularity);
+      _timeGaps = findGaps(entries, _granularity);
     } else if (historyLoad) {
       // ------------- entries
       //         ----- _entries
@@ -168,7 +168,7 @@ class XAxisModel extends ChangeNotifier {
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
           entries.sublist(0, entries.length - _entries.length + 1);
-      _timeGaps = findGaps(prefix, _chartConfig.granularity) + _timeGaps;
+      _timeGaps = findGaps(prefix, _granularity) + _timeGaps;
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
@@ -178,9 +178,9 @@ class XAxisModel extends ChangeNotifier {
   /// Resets scale and pan on granularity change.
   ///
   /// Should be called before [updateEntries].
-  void updateChartConfig(ChartConfig newConfig) {
-    if (newConfig == null || _chartConfig == newConfig) return;
-    _chartConfig = newConfig;
+  void updateGranularity(int newGranularity) {
+    if (newGranularity == null || _granularity == newGranularity) return;
+    _granularity = newGranularity;
 
     _msPerPx = _defaultScale;
     _scrollTo(_maxRightBoundEpoch);
