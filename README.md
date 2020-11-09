@@ -57,6 +57,8 @@ Chart(
 );
 ```
 
+### Indicators
+
 To add more series with same y-scale supply them as an array to `secondarySeries` parameter.
 
 ```dart
@@ -68,6 +70,8 @@ Chart(
   pipSize: 4,
 );
 ```
+
+### Callbacks
 
 Use `onVisibleAreaChanged` for listening to chart's scrolling and zooming.
 `leftEpoch` is the timestamp of the chart's left edge.
@@ -93,6 +97,8 @@ Chart(
   onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
 );
 ```
+
+### Markers
 
 Supply `markerSeries` to show markers on the chart.
 
@@ -128,6 +134,8 @@ Chart(
   ),
 ```
 
+### Barriers
+
 To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
 
 ```dart
@@ -140,6 +148,8 @@ Chart(
   ],
 );
 ```
+
+### Theme
 
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
 You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
