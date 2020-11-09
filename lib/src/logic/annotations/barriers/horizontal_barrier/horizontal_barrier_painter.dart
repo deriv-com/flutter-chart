@@ -224,7 +224,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   ) {
     paintDot(canvas, Offset(dotX, y), Colors.redAccent);
 
-    paintBlinkingDot(
+    paintBlinkingGlow(
       canvas,
       Offset(dotX, y),
       animationInfo.blinkingPercent,
