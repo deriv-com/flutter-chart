@@ -23,6 +23,22 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
   }) {
     final MarkerStyle style = series.style;
 
+    if (series.entryTick != null) {
+      final Offset center = Offset(
+        epochToX(series.entryTick.epoch),
+        quoteToY(series.entryTick.quote),
+      );
+      canvas.drawCircle(center, 2.5, Paint()..color = Colors.red);
+    }
+
+    if (series.exitTick != null) {
+      final Offset center = Offset(
+        epochToX(series.exitTick.epoch),
+        quoteToY(series.exitTick.quote),
+      );
+      canvas.drawCircle(center, 2.5, Paint()..color = Colors.green);
+    }
+
     for (final Marker marker in series.visibleEntries) {
       final Offset center = Offset(
         epochToX(marker.epoch),
