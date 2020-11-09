@@ -222,7 +222,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     double y,
     AnimationInfo animationInfo,
   ) {
-    paintIntersectionDot(canvas, Offset(dotX, y), Colors.redAccent);
+    paintDot(canvas, Offset(dotX, y), Colors.redAccent);
 
     paintBlinkingDot(
       canvas,
