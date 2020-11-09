@@ -134,6 +134,18 @@ Chart(
   ),
 ```
 
+Supply `entryTick` and `exitTick` to show entry and exit tick markers.
+
+```dart
+Chart(
+  ...,
+  markerSeries: MarkerSeries(
+    [...],
+    entryTick: Tick(epoch: ..., quote: ...),
+    exitTick: Tick(epoch: ..., quote: ...),
+  ),
+```
+
 ### Barriers
 
 To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
