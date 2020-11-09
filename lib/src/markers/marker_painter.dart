@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
 import 'package:deriv_chart/src/paint/paint_entry_marker.dart';
+import 'package:deriv_chart/src/paint/paint_exit_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         epochToX(series.exitTick.epoch),
         quoteToY(series.exitTick.quote),
       );
-      canvas.drawCircle(center, 2.5, Paint()..color = Colors.green);
+      paintExitMarker(canvas, center, style.exitMarkerStyle);
     }
 
     for (final Marker marker in series.visibleEntries) {
