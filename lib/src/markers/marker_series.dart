@@ -1,4 +1,4 @@
-import 'dart:math' as math;
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -17,6 +17,8 @@ class MarkerSeries extends Series {
     String id,
     MarkerStyle style,
     this.activeMarker,
+    this.entryTick,
+    this.exitTick,
   })  : _entries = entries,
         super(id, style: style ?? const MarkerStyle());
 
@@ -28,6 +30,12 @@ class MarkerSeries extends Series {
 
   /// Active/focused marker on the chart.
   final ActiveMarker activeMarker;
+
+  /// Entry tick marker.
+  final Tick entryTick;
+
+  /// Exit tick marker.
+  final Tick exitTick;
 
   @override
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
