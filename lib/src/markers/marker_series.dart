@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
