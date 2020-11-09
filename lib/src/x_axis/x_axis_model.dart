@@ -1,6 +1,5 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/find_gaps.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -180,7 +179,6 @@ class XAxisModel extends ChangeNotifier {
   /// Should be called before [updateEntries].
   void updateGranularity(int newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
-
     _granularity = newGranularity;
     _msPerPx = _defaultScale;
     _scrollTo(_maxRightBoundEpoch);
