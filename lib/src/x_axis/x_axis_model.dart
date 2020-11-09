@@ -158,7 +158,7 @@ class XAxisModel extends ChangeNotifier {
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
     if (firstLoad || reload) {
-      _timeGaps = findGaps(entries, _granularity);
+      _timeGaps = findGaps(entries, granularity);
     } else if (historyLoad) {
       // ------------- entries
       //         ----- _entries
@@ -168,7 +168,7 @@ class XAxisModel extends ChangeNotifier {
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
           entries.sublist(0, entries.length - _entries.length + 1);
-      _timeGaps = findGaps(prefix, _granularity) + _timeGaps;
+      _timeGaps = findGaps(prefix, granularity) + _timeGaps;
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
@@ -180,8 +180,8 @@ class XAxisModel extends ChangeNotifier {
   /// Should be called before [updateEntries].
   void updateGranularity(int newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
-    _granularity = newGranularity;
 
+    _granularity = newGranularity;
     _msPerPx = _defaultScale;
     _scrollTo(_maxRightBoundEpoch);
   }
