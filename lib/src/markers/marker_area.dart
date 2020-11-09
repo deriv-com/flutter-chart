@@ -25,13 +25,15 @@ class MarkerArea extends StatefulWidget {
 }
 
 class _MarkerAreaState extends State<MarkerArea> {
-  GestureManagerState get gestureManager => context.read<GestureManagerState>();
+  GestureManagerState gestureManager;
+
   XAxisModel get xAxis => context.read<XAxisModel>();
 
   @override
   void initState() {
     super.initState();
-    gestureManager.registerCallback(_onTap);
+    gestureManager = context.read<GestureManagerState>()
+      ..registerCallback(_onTap);
   }
 
   @override
