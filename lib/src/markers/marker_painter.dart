@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
+import 'package:deriv_chart/src/paint/paint_entry_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,13 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         epochToX(series.entryTick.epoch),
         quoteToY(series.entryTick.quote),
       );
-      canvas.drawCircle(center, 2.5, Paint()..color = Colors.red);
+      paintEntryMarker(
+        canvas,
+        center,
+        style.entryMarkerStyle,
+        // TODO(Rustem): Provide chart background color from theme.
+        Colors.black,
+      );
     }
 
     if (series.exitTick != null) {
