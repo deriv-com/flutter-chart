@@ -12,6 +12,7 @@ class GridStyle {
       color: Color(0xFFC2C2C2),
     ),
     this.lineThickness = 1,
+    this.xLabelsAreaHeight = 100,
   });
 
   /// The color of the grid lines
@@ -22,6 +23,9 @@ class GridStyle {
 
   /// The line thickness of the grid lines
   final double lineThickness;
+
+  /// Height of the area for x-axis labels.
+  final double xLabelsAreaHeight;
 
   @override
   String toString() =>

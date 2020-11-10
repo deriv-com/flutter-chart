@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -142,14 +143,16 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             }
           }
 
+          final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
+
           return CustomPaint(
             painter: XGridPainter(
               gridTimestamps: _noOverlapGridTimestamps,
               epochToCanvasX: _model.xFromEpoch,
-              style: context.watch<ChartTheme>().gridStyle,
+              style: gridStyle,
             ),
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
               child: widget.child,
             ),
           );
