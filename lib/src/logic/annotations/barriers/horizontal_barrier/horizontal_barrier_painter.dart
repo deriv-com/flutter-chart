@@ -26,9 +26,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Right margin
   static const double rightMargin = 4;
 
-  /// Arrow size
-  static const double _arrowSize = 5;
-
   @override
   void onPaint({
     Canvas canvas,

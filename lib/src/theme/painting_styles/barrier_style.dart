@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +38,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     Color titleBackgroundColor = const Color(0xFF0E0E0E),
     bool isDashed = true,
     this.hasBlinkingDot = false,
+    this.arrowSize = 5,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -62,6 +61,12 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// Whether to have a blinking dot animation where barrier and chart data are intersected.
   final bool hasBlinkingDot;
+
+  /// The size of the arrow.
+  ///
+  /// The arrow when barrier is out of Y-Axis range and its [HorizontalBarrier.visibility]
+  /// is [HorizontalBarrierVisibility.keepBarrierLabelVisible]
+  final double arrowSize;
 
   @override
   String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';
