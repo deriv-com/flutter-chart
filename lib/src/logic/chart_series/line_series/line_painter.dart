@@ -15,6 +15,8 @@ class LinePainter extends DataPainter<LineSeries> {
   /// Initializes
   LinePainter(LineSeries series) : super(series);
 
+  Paint _linePaint;
+
   @override
   void onPaintData(
     Canvas canvas,
@@ -23,11 +25,17 @@ class LinePainter extends DataPainter<LineSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
+    final LineStyle style = series.style ?? theme.lineStyle;
+
+    _linePaint = Paint()
+      ..color = style.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = style.thickness;
+
     final Path path = Path();
 
     bool isStartPointSet = false;
 
-    final DataSeries<Tick> series = this.series;
 
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
@@ -68,15 +76,7 @@ class LinePainter extends DataPainter<LineSeries> {
       path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
 
-    final LineStyle style = series.style;
-
-    canvas.drawPath(
-      path,
-      Paint()
-        ..color = style.color
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = style.thickness,
-    );
+    canvas.drawPath(path, _linePaint);
 
     if (style.hasArea) {
       _drawArea(
