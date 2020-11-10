@@ -47,4 +47,8 @@ class VerticalBarrier extends Barrier {
 
   @override
   BarrierObject createObject() => VerticalBarrierObject(epoch, value);
+
+  @override
+  List<double> recalculateMinMax() =>
+      isOnRange ? super.recalculateMinMax() : <double>[double.nan, double.nan];
 }
