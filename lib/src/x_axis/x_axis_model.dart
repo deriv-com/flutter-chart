@@ -177,8 +177,7 @@ class XAxisModel extends ChangeNotifier {
     // be without any overlap, scroll position on the new symbol might be completely off
     // where there is no data hence the chart will show just a loading animation.
     // Here we make sure that it's on-range.
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => clampRightBoundEpoch());
+    _clampRightBoundEpoch();
   }
 
   /// Resets scale and pan on granularity change.
@@ -341,6 +340,6 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Keeps rightBoundEpoch in the valid range
-  void clampRightBoundEpoch() => _rightBoundEpoch =
+  void _clampRightBoundEpoch() => _rightBoundEpoch =
       _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
 }
