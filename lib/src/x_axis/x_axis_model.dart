@@ -172,6 +172,13 @@ class XAxisModel extends ChangeNotifier {
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
     _entries = entries.sublist(0);
+
+    // After switching between closed and open symbols, since their epoch range might
+    // be without any overlap, scroll position on the new symbol might be completely off
+    // where there is no data hence the chart will show just a loading animation.
+    // Here we make sure that it's on-range.
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _model.clampRightBoundEpoch());
   }
 
   /// Resets scale and pan on granularity change.
