@@ -380,11 +380,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupCrosshairZoomOutAnimation() {
     _crosshairZoomOutAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 150),
     );
     _crosshairZoomOutAnimation = CurvedAnimation(
       parent: _crosshairZoomOutAnimationController,
-      curve: Curves.easeOut,
+      curve: Curves.easeInOut,
     );
   }
 
