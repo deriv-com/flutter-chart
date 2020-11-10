@@ -28,7 +28,7 @@ void _paintTimeGridLines(
   List<double> xCoords,
   GridStyle style,
 ) {
-  xCoords.forEach((double x) {
+  for (final double x in xCoords) {
     canvas.drawLine(
       Offset(x, 0),
       Offset(x, size.height - style.xLabelsAreaHeight),
@@ -37,7 +37,7 @@ void _paintTimeGridLines(
         ..style = PaintingStyle.stroke
         ..strokeWidth = style.lineThickness,
     );
-  });
+  }
 }
 
 void _paintTimeLabels(
