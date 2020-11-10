@@ -20,6 +20,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  intl: ^0.16.1
+  flutter_localizations:
+    sdk: flutter
 flutter:
   uses-material-design: true
+
+flutter_intl:
+  main_locale: en_US
+  enabled: true

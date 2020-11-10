@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -309,7 +310,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double _getRenderedTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
       style: style,
-      text: text,
+      text: S.of(context).testContent,
+      // text,
     );
     TextPainter textPainter = TextPainter(
       text: textSpan,
