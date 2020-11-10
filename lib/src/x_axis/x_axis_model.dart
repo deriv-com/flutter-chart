@@ -296,18 +296,14 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scrollTo(int rightBoundEpoch) {
-    _rightBoundEpoch = rightBoundEpoch.clamp(
-      _minRightBoundEpoch,
-      _maxRightBoundEpoch,
-    );
+    _rightBoundEpoch = rightBoundEpoch;
+    _clampRightBoundEpoch();
     onScroll?.call();
   }
 
   void _scrollBy(double pxShift) {
-    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift).clamp(
-      _minRightBoundEpoch,
-      _maxRightBoundEpoch,
-    );
+    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
+    _clampRightBoundEpoch();
     onScroll?.call();
   }
 
