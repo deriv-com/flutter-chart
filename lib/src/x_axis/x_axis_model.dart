@@ -178,7 +178,7 @@ class XAxisModel extends ChangeNotifier {
     // where there is no data hence the chart will show just a loading animation.
     // Here we make sure that it's on-range.
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => _model.clampRightBoundEpoch());
+        .addPostFrameCallback((_) => clampRightBoundEpoch());
   }
 
   /// Resets scale and pan on granularity change.
