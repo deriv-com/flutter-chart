@@ -27,9 +27,10 @@ class XGridPainter extends CustomPainter {
     paintXGrid(
       canvas,
       size,
-      timeLabels: gridTimestamps.map((time) => timeLabel(time)).toList(),
+      timeLabels:
+          gridTimestamps.map((DateTime time) => timeLabel(time)).toList(),
       xCoords: gridTimestamps
-          .map((time) => epochToCanvasX(time.millisecondsSinceEpoch))
+          .map((DateTime time) => epochToCanvasX(time.millisecondsSinceEpoch))
           .toList(),
       style: style,
     );
