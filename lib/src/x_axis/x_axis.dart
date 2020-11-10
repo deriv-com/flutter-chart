@@ -148,7 +148,10 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
               epochToCanvasX: _model.xFromEpoch,
               style: context.watch<ChartTheme>().gridStyle,
             ),
-            child: widget.child,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: widget.child,
+            ),
           );
         },
       ),
