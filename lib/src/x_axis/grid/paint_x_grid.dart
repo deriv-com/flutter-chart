@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
+/// Paints x-axis grid lines and labels.
 void paintXGrid(
   Canvas canvas,
   Size size, {
