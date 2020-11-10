@@ -20,7 +20,7 @@ class MarkerSeries extends Series {
     this.entryTick,
     this.exitTick,
   })  : _entries = entries,
-        super(id, style: style ?? const MarkerStyle());
+        super(id, style: style);
 
   /// Marker entries.
   final List<Marker> _entries;
