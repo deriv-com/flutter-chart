@@ -1,11 +1,10 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/candle_painting.dart';
-import 'package:deriv_chart/src/paint/paint_candles.dart';
+import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../../chart_data.dart';
@@ -14,7 +13,22 @@ import 'candle_series.dart';
 /// A [DataPainter] for painting CandleStick data.
 class CandlePainter extends DataPainter<CandleSeries> {
   /// Initializes
-  CandlePainter(CandleSeries series) : super(series);
+  CandlePainter(CandleSeries series)
+      : _linePaint = Paint()
+          // ignore: avoid_as
+          ..color = (series.style as CandleStyle).lineColor
+          ..strokeWidth = 1.2,
+        _positiveCandlePaint = Paint()
+          // ignore: avoid_as
+          ..color = (series.style as CandleStyle).positiveColor,
+        _negativeCandlePaint = Paint()
+          // ignore: avoid_as
+          ..color = (series.style as CandleStyle).negativeColor,
+        super(series);
+
+  final Paint _linePaint;
+  final Paint _positiveCandlePaint;
+  final Paint _negativeCandlePaint;
 
   @override
   void onPaintData(
@@ -24,8 +38,6 @@ class CandlePainter extends DataPainter<CandleSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final DataSeries<Candle> series = this.series;
-
     if (series.visibleEntries.length < 2) {
       return;
     }
@@ -34,57 +46,106 @@ class CandlePainter extends DataPainter<CandleSeries> {
 
     final double candleWidth = intervalWidth * 0.6;
 
-    final List<CandlePainting> candlePaintings = <CandlePainting>[];
-
+    // Painting visible candles except the last one that might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Candle candle = series.visibleEntries[i];
 
-      candlePaintings.add(CandlePainting(
-        width: candleWidth,
-        xCenter: epochToX(candle.epoch),
-        yHigh: quoteToY(candle.high),
-        yLow: quoteToY(candle.low),
-        yOpen: quoteToY(candle.open),
-        yClose: quoteToY(candle.close),
-      ));
+      _paintCandle(
+        canvas,
+        CandlePainting(
+          width: candleWidth,
+          xCenter: epochToX(candle.epoch),
+          yHigh: quoteToY(candle.high),
+          yLow: quoteToY(candle.low),
+          yOpen: quoteToY(candle.open),
+          yClose: quoteToY(candle.close),
+        ),
+      );
     }
 
-    // Last visible candle
+    // Painting last visible candle
     final Candle lastCandle = series.entries.last;
     final Candle lastVisibleCandle = series.visibleEntries.last;
 
+    CandlePainting lastCandlePainting;
+
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
-      final double yClose = quoteToY(ui.lerpDouble(
-        series.prevLastEntry.close,
+      final Candle prevLastCandle = series.prevLastEntry;
+
+      final double animatedYClose = quoteToY(ui.lerpDouble(
+        prevLastCandle.close,
         lastCandle.close,
         animationInfo.currentTickPercent,
       ));
 
       final double xCenter = ui.lerpDouble(
-        epochToX(series.prevLastEntry.epoch),
+        epochToX(prevLastCandle.epoch),
         epochToX(lastCandle.epoch),
         animationInfo.currentTickPercent,
       );
 
-      candlePaintings.add(CandlePainting(
+      lastCandlePainting = CandlePainting(
         xCenter: xCenter,
-        yHigh: quoteToY(lastCandle.high),
-        yLow: quoteToY(lastCandle.low),
+        yHigh: lastCandle.high > prevLastCandle.high
+            // In this case we don't update high-low line to avoid instant change of its
+            // height (ahead of animation). Candle close value animation will cover the line.
+            ? quoteToY(prevLastCandle.high)
+            : quoteToY(lastCandle.high),
+        yLow: lastCandle.low < prevLastCandle.low
+            // Same as comment above.
+            ? quoteToY(prevLastCandle.low)
+            : quoteToY(lastCandle.low),
         yOpen: quoteToY(lastCandle.open),
-        yClose: yClose,
+        yClose: animatedYClose,
         width: candleWidth,
-      ));
+      );
     } else {
-      candlePaintings.add(CandlePainting(
+      lastCandlePainting = CandlePainting(
         xCenter: epochToX(lastVisibleCandle.epoch),
         yHigh: quoteToY(lastVisibleCandle.high),
         yLow: quoteToY(lastVisibleCandle.low),
         yOpen: quoteToY(lastVisibleCandle.open),
         yClose: quoteToY(lastVisibleCandle.close),
         width: candleWidth,
-      ));
+      );
     }
 
-    paintCandles(canvas, candlePaintings, series.style);
+    _paintCandle(canvas, lastCandlePainting);
+  }
+
+  void _paintCandle(Canvas canvas, CandlePainting cp) {
+    canvas.drawLine(
+      Offset(cp.xCenter, cp.yHigh),
+      Offset(cp.xCenter, cp.yLow),
+      _linePaint,
+    );
+
+    if (cp.yOpen == cp.yClose) {
+      canvas.drawLine(
+        Offset(cp.xCenter - cp.width / 2, cp.yOpen),
+        Offset(cp.xCenter + cp.width / 2, cp.yOpen),
+        _linePaint,
+      );
+    } else if (cp.yOpen > cp.yClose) {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          cp.xCenter - cp.width / 2,
+          cp.yClose,
+          cp.xCenter + cp.width / 2,
+          cp.yOpen,
+        ),
+        _positiveCandlePaint,
+      );
+    } else {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          cp.xCenter - cp.width / 2,
+          cp.yOpen,
+          cp.xCenter + cp.width / 2,
+          cp.yClose,
+        ),
+        _negativeCandlePaint,
+      );
+    }
   }
 }

@@ -29,6 +29,7 @@ class LinePainter extends DataPainter<LineSeries> {
 
     final DataSeries<Tick> series = this.series;
 
+    // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Tick tick = series.visibleEntries[i];
 
@@ -43,7 +44,7 @@ class LinePainter extends DataPainter<LineSeries> {
       path.lineTo(x, y);
     }
 
-    // Last visible Tick
+    // Adding last visible entry line to the path
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
     double lastVisibleTickX;
@@ -77,7 +78,7 @@ class LinePainter extends DataPainter<LineSeries> {
         ..strokeWidth = style.thickness,
     );
 
-    if ((series.style as LineStyle).hasArea) {
+    if (style.hasArea) {
       _drawArea(
         canvas,
         size,
