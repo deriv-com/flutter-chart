@@ -27,14 +27,14 @@ class CombinedBarrier extends HorizontalBarrier {
           tick,
           title: title,
           longLine: verticalLongLine,
-          style: verticalBarrierStyle ?? const VerticalBarrierStyle(),
+          style: verticalBarrierStyle,
         ),
         super(
           tick.quote,
           epoch: tick.epoch,
           id: id,
           longLine: horizontalLongLine,
-          style: horizontalBarrierStyle ?? const HorizontalBarrierStyle(),
+          style: horizontalBarrierStyle,
           visibility: visibility,
         );
 

@@ -16,11 +16,9 @@ import 'horizontal_barrier.dart';
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Initializes [series]
-  HorizontalBarrierPainter(HorizontalBarrier series)
-      : _paint = Paint()..strokeWidth = 1,
-        super(series);
+  HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
 
-  final Paint _paint;
+  Paint _paint;
 
   /// Padding between lines
   static const double padding = 4;
@@ -43,10 +41,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       return;
     }
 
-    final HorizontalBarrierStyle style = series.style;
-    BarrierArrowType arrowType = BarrierArrowType.none;
+    final HorizontalBarrierStyle style =
+        series.style ?? theme.horizontalBarrierStyle;
 
-    _paint.color = style.color;
+    _paint = Paint()
+      ..strokeWidth = 1
+      ..color = style.color;
+
+    BarrierArrowType arrowType = BarrierArrowType.none;
 
     double animatedValue;
 
