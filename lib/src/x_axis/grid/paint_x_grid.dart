@@ -30,7 +30,7 @@ void _paintTimeGridLines(
   xCoords.forEach((x) {
     canvas.drawLine(
       Offset(x, 0),
-      Offset(x, size.height - 20),
+      Offset(x, size.height - style.xLabelsAreaHeight),
       Paint()
         ..color = style.gridLineColor
         ..style = PaintingStyle.stroke
@@ -52,7 +52,7 @@ void _paintTimeLabels(
       text: timeLabel,
       anchor: Offset(
         xCoords[index],
-        size.height - 10,
+        size.height - style.xLabelsAreaHeight / 2,
       ),
       style: style.labelStyle,
     );
