@@ -27,7 +27,7 @@ void _paintTimeGridLines(
   List<double> xCoords,
   GridStyle style,
 ) {
-  xCoords.forEach((x) {
+  xCoords.forEach((double x) {
     canvas.drawLine(
       Offset(x, 0),
       Offset(x, size.height - style.xLabelsAreaHeight),
@@ -46,7 +46,7 @@ void _paintTimeLabels(
   @required List<double> xCoords,
   @required GridStyle style,
 }) {
-  timeLabels.asMap().forEach((index, timeLabel) {
+  timeLabels.asMap().forEach((int index, String timeLabel) {
     paintText(
       canvas,
       text: timeLabel,
