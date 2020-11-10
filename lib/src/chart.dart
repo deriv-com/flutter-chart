@@ -209,9 +209,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double get _verticalPadding {
     final double padding = verticalPaddingFraction * canvasSize.height;
     const double minCrosshairPadding = 80;
-    return padding < minCrosshairPadding
-        ? (minCrosshairPadding - padding) * _crosshairZoomOutAnimation.value
-        : padding;
+    return padding +
+        (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
+            _crosshairZoomOutAnimation.value;
   }
 
   double get _topPadding => _verticalPadding;
