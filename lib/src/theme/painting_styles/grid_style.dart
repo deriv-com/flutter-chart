@@ -12,7 +12,7 @@ class GridStyle {
       color: Color(0xFFC2C2C2),
     ),
     this.lineThickness = 1,
-    this.xLabelsAreaHeight = 100,
+    this.xLabelsAreaHeight = 24,
   });
 
   /// The color of the grid lines
