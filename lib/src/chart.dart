@@ -207,11 +207,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
 
   double get _verticalPadding {
-    final double px = verticalPaddingFraction * canvasSize.height;
-    const double minCrosshairVerticalPadding = 80;
-    return px < minCrosshairVerticalPadding
-        ? (minCrosshairVerticalPadding - px) * _crosshairZoomOutAnimation.value
-        : px;
+    final double padding = verticalPaddingFraction * canvasSize.height;
+    const double minCrosshairPadding = 80;
+    return padding < minCrosshairPadding
+        ? (minCrosshairPadding - padding) * _crosshairZoomOutAnimation.value
+        : padding;
   }
 
   double get _topPadding => _verticalPadding;
