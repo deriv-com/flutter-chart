@@ -374,6 +374,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 color: Colors.redAccent,
                                 labelShape: LabelShape.pentagon,
                                 hasBlinkingDot: true,
+                                hasArrow: false,
                               ),
                               visibility: HorizontalBarrierVisibility
                                   .keepBarrierLabelVisible,
