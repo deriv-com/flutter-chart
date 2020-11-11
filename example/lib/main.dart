@@ -700,6 +700,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
+        backgroundColor: Color.fromRGBO(21, 23, 23, 1),
         asset: _symbol,
         onTap: () {
           _bottomSheetController = showBottomSheet<void>(
