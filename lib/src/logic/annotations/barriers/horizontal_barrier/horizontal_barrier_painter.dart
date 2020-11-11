@@ -149,20 +149,22 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     );
 
     // Arrows.
-    final double arrowMidX = (titleArea?.left ?? labelArea.left) - _arrowSize;
-    if (arrowType == BarrierArrowType.upward) {
-      _paintUpwardArrows(
-        canvas,
-        center: Offset(arrowMidX, y),
-        arrowSize: _arrowSize,
-      );
-    } else if (arrowType == BarrierArrowType.downward) {
-      // TODO(Rustem): Rotate arrows like in `paintMarker`.
-      _paintDownwardArrows(
-        canvas,
-        center: Offset(arrowMidX, y),
-        arrowSize: _arrowSize,
-      );
+    if (style.hasArrow) {
+      final double arrowMidX = (titleArea?.left ?? labelArea.left) - _arrowSize;
+      if (arrowType == BarrierArrowType.upward) {
+        _paintUpwardArrows(
+          canvas,
+          center: Offset(arrowMidX, y),
+          arrowSize: _arrowSize,
+        );
+      } else if (arrowType == BarrierArrowType.downward) {
+        // TODO(Rustem): Rotate arrows like in `paintMarker`.
+        _paintDownwardArrows(
+          canvas,
+          center: Offset(arrowMidX, y),
+          arrowSize: _arrowSize,
+        );
+      }
     }
   }
 
