@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 /// This include all text styles according to Deriv theme guideline
@@ -61,10 +63,12 @@ class TextStyles {
       fontWeight: FontWeight.normal);
 
   static TextStyle caption2 = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 10,
-      height: 1.3,
-      fontWeight: FontWeight.normal);
+    fontFamily: appFontFamily,
+    fontSize: 10,
+    height: 1.3,
+    fontWeight: FontWeight.normal,
+    fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
+  );
 
   static TextStyle captionBold = const TextStyle(
       fontFamily: appFontFamily,

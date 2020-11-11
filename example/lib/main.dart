@@ -88,7 +88,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   @override
   void initState() {
     super.initState();
-    _requestCompleter = Completer();
+    _requestCompleter = Completer<dynamic>();
     _connectToAPI();
   }
 
@@ -665,12 +665,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  Future<void> _onIntervalSelected(value) async {
+  Future<void> _onIntervalSelected(int value) async {
     if (!_requestCompleter.isCompleted) {
       return;
     }
 
-    _requestCompleter = Completer();
+    _requestCompleter = Completer<dynamic>();
 
     setState(() => ticks.clear());
 
