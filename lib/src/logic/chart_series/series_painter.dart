@@ -8,10 +8,6 @@ import 'package:flutter/material.dart';
 
 import '../chart_data.dart';
 
-// TODO(ramin): We need to eventually remove quoteLabelAreaWidth and use textPainter's width instead
-/// Overall horizontal padding for current tick indicator quote label
-const double quoteLabelHorizontalPadding = 10;
-
 /// A class responsible to paint its [series] data.
 abstract class SeriesPainter<S extends Series> {
   /// Initializes series for sub-class

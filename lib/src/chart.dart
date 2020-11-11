@@ -168,8 +168,8 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-  /// Width of the area with quote labels on the right.
-  double quoteLabelsAreaWidth = 70;
+  /// Width of the touch area for vertical zoom (on top of quote labels).
+  double quoteLabelsTouchAreaWidth = 70;
 
   bool _panStartedOnQuoteLabelsArea = false;
 
@@ -264,9 +264,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     _onNewTick();
 
-    // TODO(Rustem): recalculate only when price label length has changed
-    _recalculateQuoteLabelsAreaWidth();
-
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
     }
@@ -299,32 +296,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
         }
       }
     }
-  }
-
-  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
-  void _recalculateQuoteLabelsAreaWidth() {
-    if (widget.mainSeries.entries.isEmpty) {
-      return;
-    }
-
-    final label =
-        widget.mainSeries.entries.first.quote.toStringAsFixed(widget.pipSize);
-    // TODO(Rustem): Get label style from _theme
-    quoteLabelsAreaWidth =
-        _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
-  }
-
-  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
-  double _getRenderedTextWidth(String text, TextStyle style) {
-    TextSpan textSpan = TextSpan(
-      style: style,
-      text: text,
-    );
-    TextPainter textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
-    return textPainter.width;
   }
 
   @override
@@ -490,7 +461,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: YGridPainter(
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
-              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
             ),
@@ -565,7 +535,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           if (_isScrollToLastTickAvailable)
             Positioned(
               bottom: 30 + timeLabelsAreaHeight,
-              right: 30 + quoteLabelsAreaWidth,
+              right: 30 + quoteLabelsTouchAreaWidth,
               child: _buildScrollToLastTickButton(),
             ),
         ],
@@ -585,18 +555,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onPanStart(ScaleStartDetails details) {
-    _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
+    _panStartedOnQuoteLabelsArea =
+        _onQuoteLabelsTouchArea(details.localFocalPoint);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     if (_panStartedOnQuoteLabelsArea &&
-        _onQuoteLabelsArea(details.localPosition)) {
+        _onQuoteLabelsTouchArea(details.localPosition)) {
       _scaleVertically(details.delta.dy);
     }
   }
 
-  bool _onQuoteLabelsArea(Offset position) =>
-      position.dx > _xAxis.width - quoteLabelsAreaWidth;
+  bool _onQuoteLabelsTouchArea(Offset position) =>
+      position.dx > _xAxis.width - quoteLabelsTouchAreaWidth;
 
   void _scaleVertically(double dy) {
     setState(() {
