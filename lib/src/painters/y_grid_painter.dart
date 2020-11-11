@@ -1,12 +1,11 @@
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
-import '../paint/paint_y_grid.dart';
+import '../paint/paint_text.dart';
 
 class YGridPainter extends CustomPainter {
   YGridPainter({
     @required this.gridLineQuotes,
-    @required this.quoteLabelsAreaWidth,
     @required this.pipSize,
     @required this.quoteToCanvasY,
     @required this.style,
@@ -15,25 +14,39 @@ class YGridPainter extends CustomPainter {
   final int pipSize;
   final List<double> gridLineQuotes;
 
-  /// Width of the area where quote labels and current tick arrow are painted.
-  final double quoteLabelsAreaWidth;
-
   final double Function(double) quoteToCanvasY;
 
   final GridStyle style;
 
   @override
   void paint(Canvas canvas, Size size) {
-    paintYGrid(
-      canvas,
-      size,
-      quoteLabels: gridLineQuotes
-          .map((quote) => quote.toStringAsFixed(pipSize))
-          .toList(),
-      yCoords: gridLineQuotes.map((quote) => quoteToCanvasY(quote)).toList(),
-      quoteLabelsAreaWidth: quoteLabelsAreaWidth,
-      style: style,
-    );
+    for (final double quote in gridLineQuotes) {
+      final double y = quoteToCanvasY(quote);
+
+      final TextPainter labelPainter = makeTextPainter(
+        quote.toStringAsFixed(pipSize),
+        style.labelStyle,
+      );
+
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(
+          size.width - labelPainter.width - style.labelHorizontalPadding * 2,
+          y,
+        ),
+        Paint()
+          ..color = style.gridLineColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = style.lineThickness,
+      );
+
+      paintWithTextPainter(
+        canvas,
+        painter: labelPainter,
+        anchor: Offset(size.width - style.labelHorizontalPadding, y),
+        anchorAlignment: Alignment.centerRight,
+      );
+    }
   }
 
   @override

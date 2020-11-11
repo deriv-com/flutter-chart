@@ -327,24 +327,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Stack(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
+                Expanded(
                   child: _markets == null
                       ? SizedBox.shrink()
                       : _buildMarketSelectorButton(),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      _buildChartTypeButton(),
-                      _buildIntervalSelector(),
-                    ],
-                  ),
-                ),
+                _buildChartTypeButton(),
+                _buildIntervalSelector(),
               ],
             ),
           ),
@@ -575,6 +567,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
+        backgroundColor: Color.fromRGBO(21, 23, 23, 1),
         asset: _symbol,
         onTap: () {
           _bottomSheetController = showBottomSheet<void>(

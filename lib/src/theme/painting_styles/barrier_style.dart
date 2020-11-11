@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +35,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Initializes
   const HorizontalBarrierStyle({
     this.labelShape = LabelShape.rectangle,
+    this.labelHeight = 24,
     Color color = const Color(0xFF00A79E),
     Color titleBackgroundColor = const Color(0xFF0E0E0E),
     bool isDashed = true,
@@ -42,6 +45,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Colors.white,
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
   }) : super(
           color: color,
@@ -52,6 +56,9 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// Label shape
   final LabelShape labelShape;
+
+  /// Height of label background.
+  final double labelHeight;
 
   /// Whether to have a blinking dot animation where barrier and chart data are intersected.
   final bool hasBlinkingDot;
@@ -72,6 +79,7 @@ class VerticalBarrierStyle extends BarrierStyle {
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Colors.white,
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
   }) : super(
           color: color,
