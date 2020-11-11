@@ -28,3 +28,4 @@ flutter:
 flutter_intl:
   main_locale: en_US
   enabled: true
+  class_name: ChartLocalization

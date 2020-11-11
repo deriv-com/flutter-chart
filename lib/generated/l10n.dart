@@ -10,27 +10,27 @@ import 'intl/messages_all.dart';
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 
-class S {
-  S();
+class ChartLocalization {
+  ChartLocalization();
   
-  static S current;
+  static ChartLocalization current;
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
 
-  static Future<S> load(Locale locale) {
+  static Future<ChartLocalization> load(Locale locale) {
     final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      S.current = S();
+      ChartLocalization.current = ChartLocalization();
       
-      return S.current;
+      return ChartLocalization.current;
     });
   } 
 
-  static S of(BuildContext context) {
-    return Localizations.of<S>(context, S);
+  static ChartLocalization of(BuildContext context) {
+    return Localizations.of<ChartLocalization>(context, ChartLocalization);
   }
 
   /// `Test Content`
@@ -54,19 +54,21 @@ class S {
   }
 }
 
-class AppLocalizationDelegate extends LocalizationsDelegate<S> {
+class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
   const AppLocalizationDelegate();
 
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
+      Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'es'),
     ];
   }
 
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
   @override
-  Future<S> load(Locale locale) => S.load(locale);
+  Future<ChartLocalization> load(Locale locale) => ChartLocalization.load(locale);
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

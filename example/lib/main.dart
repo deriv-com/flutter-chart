@@ -20,6 +20,7 @@ import 'package:flutter_deriv_api/services/connection/api_manager/connection_inf
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:example/generated/l10n.dart';
 
 import 'utils/misc.dart';
 
@@ -31,18 +32,18 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       localizationsDelegates: [
         // ... app-specific localization delegate[s] here
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
+        ChartLocalization.delegate,
+        ExampleLocalization.delegate,
       ],
-      supportedLocales: [
-        const Locale('en', ''), // English, no country code
-        const Locale('he', ''), // Hebrew, no country code
-        const Locale.fromSubtags(languageCode: 'zh'), // Chinese *See Advanced Locales below*
-      ],
+      supportedLocales: ExampleLocalization.delegate.supportedLocales,
+      // locale: Locale('en'),
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: SafeArea(
@@ -65,6 +66,7 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
+
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
@@ -97,9 +99,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartController _controller = ChartController();
   PersistentBottomSheetController _bottomSheetController;
 
+
   @override
   void initState() {
     super.initState();
+    ExampleLocalization.load(Locale('es'));
     _requestCompleter = Completer();
     _connectToAPI();
   }
@@ -333,6 +337,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    print("bbbbbbbb ${Localizations.localeOf(context)}");
+
+
     return Material(
       color: Color(0xFF0E0E0E),
       child: Column(
@@ -541,20 +550,21 @@ class _FullscreenChartState extends State<FullscreenChart> {
     final lastTick = ticks.last;
     final onTap = () {
       setState(() {
-        _activeMarker = ActiveMarker(
-          direction: direction,
-          epoch: lastTick.epoch,
-          quote: lastTick.quote,
-          text: '0.00 USD',
-          onTap: () {
-            print('>>> tapped active marker');
-          },
-          onTapOutside: () {
-            setState(() {
-              _activeMarker = null;
-            });
-          },
-        );
+        ExampleLocalization.load(Locale('es'));
+        // _activeMarker = ActiveMarker(
+        //   direction: direction,
+        //   epoch: lastTick.epoch,
+        //   quote: lastTick.quote,
+        //   text: '0.00 USD',
+        //   onTap: () {
+        //     print('>>> tapped active marker');
+        //   },
+        //   onTapOutside: () {
+        //     setState(() {
+        //       _activeMarker = null;
+        //     });
+        //   },
+        // );
       });
     };
     setState(() {

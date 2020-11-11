@@ -30,6 +30,8 @@ import 'theme/chart_theme.dart';
 import 'x_axis/x_axis.dart';
 import 'x_axis/x_axis_model.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 /// Interactive chart widget.
 class Chart extends StatelessWidget {
   /// Creates chart that expands to available space.
@@ -93,6 +95,9 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print("aaaaaaaa ${Localizations.localeOf(context)}");
+
     final ChartTheme chartTheme =
         theme ?? Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
@@ -310,8 +315,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double _getRenderedTextWidth(String text, TextStyle style) {
     TextSpan textSpan = TextSpan(
       style: style,
-      text: S.of(context).testContent,
-      // text,
+      text: text,
     );
     TextPainter textPainter = TextPainter(
       text: textSpan,
@@ -478,6 +482,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
       return Stack(
         children: <Widget>[
+          Text(ChartLocalization.of(context).testContent,style: TextStyle(fontSize: 14),),
           CustomPaint(
             size: canvasSize,
             painter: YGridPainter(

@@ -12,6 +12,8 @@ dependencies:
     path: ../
   vibration: ^1.4.0
   intl: ^0.16.1
+  flutter_localizations:
+    sdk: flutter
   flutter_deriv_api:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-api.git
@@ -29,3 +31,4 @@ flutter:
 flutter_intl:
   main_locale: en_US
   enabled: true
+  class_name: ExampleLocalization
