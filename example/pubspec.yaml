@@ -25,6 +25,7 @@ dev_dependencies:
   intl: ^0.16.1
   flutter_localizations:
     sdk: flutter
+
 flutter:
   uses-material-design: true
 
