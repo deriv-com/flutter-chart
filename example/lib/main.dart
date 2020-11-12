@@ -98,7 +98,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   @override
   void initState() {
     super.initState();
-    _requestCompleter = Completer();
+    _requestCompleter = Completer<dynamic>();
     _connectToAPI();
   }
 
@@ -337,24 +337,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Stack(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
+                Expanded(
                   child: _markets == null
                       ? SizedBox.shrink()
                       : _buildMarketSelectorButton(),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      _buildChartTypeButton(),
-                      _buildIntervalSelector(),
-                    ],
-                  ),
-                ),
+                _buildChartTypeButton(),
+                _buildIntervalSelector(),
               ],
             ),
           ),
@@ -585,6 +577,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
+        backgroundColor: Color.fromRGBO(21, 23, 23, 1),
         asset: _symbol,
         onTap: () {
           _bottomSheetController = showBottomSheet<void>(
@@ -682,12 +675,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  Future<void> _onIntervalSelected(value) async {
+  Future<void> _onIntervalSelected(int value) async {
     if (!_requestCompleter.isCompleted) {
       return;
     }
 
-    _requestCompleter = Completer();
+    _requestCompleter = Completer<dynamic>();
 
     setState(() => ticks.clear());
 

@@ -1,4 +1,6 @@
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/entry_marker_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/exit_marker_style.dart';
 import 'package:flutter/material.dart';
 
 /// Defines the style of markers.
@@ -15,6 +17,8 @@ class MarkerStyle extends ChartPaintingStyle {
     ),
     this.textLeftPadding = 2.0,
     this.textRightPadding = 4.0,
+    this.entryMarkerStyle = const EntryMarkerStyle(),
+    this.exitMarkerStyle = const ExitMarkerStyle(),
   });
 
   /// Color of marker pointing up.
@@ -34,4 +38,10 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Active marker text right padding.
   final double textRightPadding;
+
+  /// Style of an entry tick marker.
+  final EntryMarkerStyle entryMarkerStyle;
+
+  /// Style of an exit tick marker.
+  final ExitMarkerStyle exitMarkerStyle;
 }
