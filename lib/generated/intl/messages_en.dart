@@ -19,12 +19,12 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(text) => "No results for \'${text}\'";
+  static m0(text) => "No results for \"${text}\"";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "no_results_for_text_214859493" : m0,
-    "search_assets_347920236" : MessageLookupByLibrary.simpleMessage("Search assets"),
-    "try_checking_your_sp_205400823" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
+    "inform_no_result" : m0,
+    "label_search_assets" : MessageLookupByLibrary.simpleMessage("Search assets"),
+    "warn_check_asset_searching_text" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
   };
 }

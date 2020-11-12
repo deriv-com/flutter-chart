@@ -1,3 +1,0 @@
-'Search assets'
-'No results for \'$text\''
-'Try checking your spelling or use a different term'

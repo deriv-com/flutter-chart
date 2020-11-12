@@ -15,9 +15,6 @@ dependencies:
     sdk: flutter
   provider: ^4.3.1
   flutter_svg: ^0.19.0
-  build: ^1.2.2
-  build_config: ^0.4.2
-  recase: ^3.0.0
 
 
 dev_dependencies:

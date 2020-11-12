@@ -1,15 +1,6 @@
 {
   "@@locale": "en",
-  "search_assets_347920236": "Search assets",
-  "@search_assets_347920236": {
-    "description": ""
-  },
-  "no_results_for_text_214859493": "No results for '{text}'",
-  "@no_results_for_text_214859493": {
-    "description": ""
-  },
-  "try_checking_your_sp_205400823": "Try checking your spelling or use a different term",
-  "@try_checking_your_sp_205400823": {
-    "description": ""
-  }
+  "label_search_assets": "Search assets",
+  "inform_no_result": "No results for \"{text}\"",
+  "warn_check_asset_searching_text": "Try checking your spelling or use a different term"
 }

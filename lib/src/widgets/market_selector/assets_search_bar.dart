@@ -115,7 +115,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
           enabledBorder: InputBorder.none,
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
-          hintText: ChartLocalization.of(context).search_assets_347920236,
+          hintText: ChartLocalization.of(context).label_search_assets,
         ),
       );
 
