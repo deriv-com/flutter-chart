@@ -43,10 +43,10 @@ class ChartLocalization {
     );
   }
 
-  /// `No results for '{text}' `
+  /// `No results for '{text}'`
   String no_results_for_text_214859493(Object text) {
     return Intl.message(
-      'No results for \'$text\' ',
+      'No results for \'$text\'',
       name: 'no_results_for_text_214859493',
       desc: '',
       args: [text],

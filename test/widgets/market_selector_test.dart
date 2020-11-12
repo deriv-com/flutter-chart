@@ -285,7 +285,7 @@ void main() {
 
       expect(find.byType(AssetItem), findsNothing);
       expect(
-        find.text('No results for \"A non-relevant text\"'),
+        find.text('No results for \'A non-relevant text\''),
         findsOneWidget,
       );
     });
