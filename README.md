@@ -165,3 +165,13 @@ Chart(
 
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
 You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
+
+### Localization
+
+to use the ChartLocalization, you should add the `ChartLocalization.delegate` to your `localizationsDelegates` inside the `MaterialApp` that you added the chart in.
+when you want to change the locale of chart,try this code:
+
+```dart
+
+ChartLocalization.load(locale);
+```
