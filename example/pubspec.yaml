@@ -29,6 +29,6 @@ flutter:
   uses-material-design: true
 
 flutter_intl:
-  main_locale: en_US
+  main_locale: en
   enabled: true
   class_name: ExampleLocalization

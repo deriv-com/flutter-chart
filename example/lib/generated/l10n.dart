@@ -33,15 +33,7 @@ class ExampleLocalization {
     return Localizations.of<ExampleLocalization>(context, ExampleLocalization);
   }
 
-  /// `Test US`
-  String get test {
-    return Intl.message(
-      'Test US',
-      name: 'test',
-      desc: '',
-      args: [],
-    );
-  }
+
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ExampleLocalization> {
@@ -49,7 +41,6 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ExampleLocalization>
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'es'),
     ];

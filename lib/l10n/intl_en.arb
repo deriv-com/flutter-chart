@@ -1,4 +1,15 @@
 {
   "@@locale": "en",
-  "testContent": "Test Content"
+  "search_assets_347920236": "Search assets",
+  "@search_assets_347920236": {
+    "description": ""
+  },
+  "no_results_for_text_214859493": "No results for '{text}' ",
+  "@no_results_for_text_214859493": {
+    "description": ""
+  },
+  "try_checking_your_sp_205400823": "Try checking your spelling or use a different term",
+  "@try_checking_your_sp_205400823": {
+    "description": ""
+  }
 }

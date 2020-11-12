@@ -33,21 +33,31 @@ class ChartLocalization {
     return Localizations.of<ChartLocalization>(context, ChartLocalization);
   }
 
-  /// `Test Content`
-  String get testContent {
+  /// `Search assets`
+  String get search_assets_347920236 {
     return Intl.message(
-      'Test Content',
-      name: 'testContent',
+      'Search assets',
+      name: 'search_assets_347920236',
       desc: '',
       args: [],
     );
   }
 
-  /// `Test 2 Content`
-  String get test2Content {
+  /// `No results for '{text}' `
+  String no_results_for_text_214859493(Object text) {
     return Intl.message(
-      'Test 2 Content',
-      name: 'test2Content',
+      'No results for \'$text\' ',
+      name: 'no_results_for_text_214859493',
+      desc: '',
+      args: [text],
+    );
+  }
+
+  /// `Try checking your spelling or use a different term`
+  String get try_checking_your_sp_205400823 {
+    return Intl.message(
+      'Try checking your spelling or use a different term',
+      name: 'try_checking_your_sp_205400823',
       desc: '',
       args: [],
     );
@@ -59,7 +69,6 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'es'),
     ];

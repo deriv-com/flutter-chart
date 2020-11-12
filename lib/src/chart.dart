@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
-import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -29,8 +28,6 @@ import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
 import 'x_axis/x_axis.dart';
 import 'x_axis/x_axis_model.dart';
-
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 /// Interactive chart widget.
 class Chart extends StatelessWidget {
@@ -95,9 +92,6 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    print("aaaaaaaa ${Localizations.localeOf(context)}");
-
     final ChartTheme chartTheme =
         theme ?? Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
@@ -482,7 +476,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
       return Stack(
         children: <Widget>[
-          Text(ChartLocalization.of(context).testContent,style: TextStyle(fontSize: 14),),
           CustomPaint(
             size: canvasSize,
             painter: YGridPainter(
