@@ -101,7 +101,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     final TextPainter valuePainter = makeTextPainter(
-      animatedValue.toStringAsFixed(pipSize),
+      animatedValue.toStringAsFixed(chartConfig.pipSize),
       style.textStyle,
     );
     final Rect labelArea = Rect.fromCenter(

@@ -8,10 +8,12 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 import 'callbacks.dart';
 import 'crosshair/crosshair_area.dart';
@@ -97,15 +99,22 @@ class Chart extends StatelessWidget {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
 
-    return Provider<ChartTheme>.value(
-      value: chartTheme,
+    final ChartConfig chartConfig = ChartConfig(
+      pipSize: pipSize,
+      granularity: granularity,
+    );
+
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        Provider<ChartTheme>.value(value: chartTheme),
+        Provider<ChartConfig>.value(value: chartConfig),
+      ],
       child: ClipRect(
         child: Ink(
           color: chartTheme.base08Color,
           child: GestureManager(
             child: XAxis(
               entries: mainSeries.entries,
-              granularity: granularity,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               child: _ChartImplementation(
@@ -481,8 +490,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 chartDataList: <ChartData>[
                   widget.mainSeries,
                 ],
-                granularity: context.watch<XAxisModel>().granularity,
-                pipSize: widget.pipSize,
+                chartConfig: context.read<ChartConfig>(),
+                theme: context.read<ChartTheme>(),
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
               ),
@@ -498,8 +507,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
               chartDataList: <ChartData>[
                 if (widget.chartDataList != null) ...widget.chartDataList
               ],
-              granularity: context.watch<XAxisModel>().granularity,
-              pipSize: widget.pipSize,
+              chartConfig: context.read<ChartConfig>(),
+              theme: context.read<ChartTheme>(),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
