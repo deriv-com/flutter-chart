@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/paint/create_shape_path.dart';
-import 'package:deriv_chart/src/paint/paint_barrier_arrows.dart';
 import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/paint/paint_text.dart';
