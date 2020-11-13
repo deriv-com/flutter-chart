@@ -4,8 +4,9 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
-import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/create_shape_path.dart';
+import 'package:deriv_chart/src/paint/paint_barrier_arrows.dart';
+import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
@@ -157,6 +158,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           center: Offset(arrowMidX, y),
           arrowSize: _arrowSize,
         );
+        paintBarrierArrows(canvas, Size(100, 100));
       } else if (arrowType == BarrierArrowType.downward) {
         // TODO(Rustem): Rotate arrows like in `paintMarker`.
         _paintDownwardArrows(
