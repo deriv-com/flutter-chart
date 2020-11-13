@@ -151,7 +151,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     // Arrows.
     if (style.hasArrow) {
-      final double arrowMidX = labelArea.left - _arrowSize;
+      final double arrowMidX = labelArea.left - _arrowSize - 5;
       if (arrowType == BarrierArrowType.upward) {
         _paintUpwardArrows(
           canvas,
