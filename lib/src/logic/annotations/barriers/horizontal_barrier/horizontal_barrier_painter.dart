@@ -32,6 +32,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Arrow size
   static const double _arrowSize = 4;
 
+  /// Padding on both sides of the title
+  static const double _titleHorizontalPadding = 2;
+
   @override
   void onPaint({
     Canvas canvas,
@@ -126,9 +129,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         style.textStyle.copyWith(color: style.color),
       );
       final Rect titleArea = Rect.fromCenter(
-        center:
-            Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
-        width: titlePainter.width + 4,
+        center: Offset(
+          labelArea.left -
+              titlePainter.width / 2 -
+              _titleHorizontalPadding -
+              16,
+          y,
+        ),
+        width: titlePainter.width + _titleHorizontalPadding * 2,
         height: titlePainter.height,
       );
       canvas.drawRect(titleArea, Paint()..color = style.titleBackgroundColor);
