@@ -30,7 +30,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   static const double rightMargin = 4;
 
   /// Arrow size
-  static const double _arrowSize = 5;
+  static const double _arrowSize = 4;
 
   @override
   void onPaint({
@@ -233,8 +233,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   void _paintUpwardArrows(
     Canvas canvas, {
     Offset center,
-    double arrowSize = 10,
-    double arrowThickness = 4,
+    double arrowSize,
+    double arrowThickness = 1,
   }) {
     final Paint arrowPaint = Paint()..color = _paint.color;
 
@@ -242,7 +242,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
           getUpwardArrowPath(
             center.dx,
-            center.dy + arrowSize,
+            center.dy + arrowSize - 1,
             size: arrowSize,
             thickness: arrowThickness,
           ),
@@ -259,7 +259,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
         getUpwardArrowPath(
           center.dx,
-          center.dy - arrowSize,
+          center.dy - arrowSize + 1,
           size: arrowSize,
           thickness: arrowThickness,
         ),
@@ -270,8 +270,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   void _paintDownwardArrows(
     Canvas canvas, {
     Offset center,
-    double arrowSize = 10,
-    double arrowThickness = 4,
+    double arrowSize,
+    double arrowThickness = 1,
   }) {
     final Paint arrowPaint = Paint()..color = _paint.color;
 
@@ -279,7 +279,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
           getDownwardArrowPath(
             center.dx,
-            center.dy - arrowSize,
+            center.dy - arrowSize + 1,
             size: arrowSize,
             thickness: arrowThickness,
           ),
@@ -295,7 +295,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..drawPath(
           getDownwardArrowPath(
             center.dx,
-            center.dy + arrowSize,
+            center.dy + arrowSize - 1,
             size: arrowSize,
             thickness: arrowThickness,
           ),
