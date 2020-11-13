@@ -117,6 +117,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (arrowType == BarrierArrowType.none) {
       final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double lineEndX = labelArea.left;
+
+      // To erase the line behind title.
+      if (series.title != null) {
+        canvas.saveLayer(
+          Rect.fromLTRB(lineStartX, y - 10, lineEndX, y + 10),
+          Paint(),
+        );
+      }
+
       if (lineStartX < lineEndX) {
         _paintLine(canvas, lineStartX, lineEndX, y, style);
       }
@@ -139,7 +148,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         width: titlePainter.width + _titleHorizontalPadding * 2,
         height: titlePainter.height,
       );
-      canvas.drawRect(titleArea, Paint()..color = style.titleBackgroundColor);
+
+      // Erase the line behind title.
+      if (arrowType == BarrierArrowType.none) {
+        canvas.drawRect(titleArea, Paint()..blendMode = BlendMode.clear);
+        canvas.restore();
+      }
+
       paintWithTextPainter(
         canvas,
         painter: titlePainter,
