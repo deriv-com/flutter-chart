@@ -173,12 +173,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   bool _panStartedOnQuoteLabelsArea = false;
 
-  /// Height of the area with time labels on the bottom.
-  final double timeLabelsAreaHeight = 20;
-
   Size canvasSize;
 
-  /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
+  /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
 
@@ -219,19 +216,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
 
   double get _verticalPadding {
-    final px =
-        verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
-    final minCrosshairVerticalPadding = 80;
-    if (px < minCrosshairVerticalPadding)
-      return px +
-          (minCrosshairVerticalPadding - px) * _crosshairZoomOutAnimation.value;
-    else
-      return px;
+    final double padding = verticalPaddingFraction * canvasSize.height;
+    const double minCrosshairPadding = 80;
+    return padding +
+        (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
+            _crosshairZoomOutAnimation.value;
   }
 
   double get _topPadding => _verticalPadding;
 
-  double get _bottomPadding => _verticalPadding + timeLabelsAreaHeight;
+  double get _bottomPadding => _verticalPadding;
 
   double get _quotePerPx => quotePerPx(
         topBoundQuote: _topBoundQuote,
@@ -366,11 +360,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupCrosshairZoomOutAnimation() {
     _crosshairZoomOutAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 150),
     );
     _crosshairZoomOutAnimation = CurvedAnimation(
       parent: _crosshairZoomOutAnimationController,
-      curve: Curves.easeOut,
+      curve: Curves.easeInOut,
     );
   }
 
@@ -534,7 +528,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           ),
           if (_isScrollToLastTickAvailable)
             Positioned(
-              bottom: 30 + timeLabelsAreaHeight,
+              bottom: 30,
               right: 30 + quoteLabelsTouchAreaWidth,
               child: _buildScrollToLastTickButton(),
             ),
@@ -572,8 +566,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _scaleVertically(double dy) {
     setState(() {
       verticalPaddingFraction =
-          ((_verticalPadding + dy) / (canvasSize.height - timeLabelsAreaHeight))
-              .clamp(0.05, 0.49);
+          ((_verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
     });
   }
 
