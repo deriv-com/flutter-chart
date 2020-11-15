@@ -23,7 +23,9 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     AnimationInfo animationInfo,
   }) {
     if (series.isOnRange) {
-      final BarrierStyle style = series.style ?? theme.verticalBarrierStyle;
+      final BarrierStyle style = series.style ??
+          theme.verticalBarrierStyle ??
+          const VerticalBarrierStyle();
 
       final Paint paint = Paint()
         ..color = style.color

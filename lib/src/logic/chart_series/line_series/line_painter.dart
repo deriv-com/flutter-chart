@@ -22,7 +22,8 @@ class LinePainter extends DataPainter<LineSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final LineStyle style = series.style ?? theme.lineStyle;
+    final LineStyle style =
+        series.style ?? theme.lineStyle ?? const LineStyle();
 
     final Paint linePaint = Paint()
       ..color = style.color

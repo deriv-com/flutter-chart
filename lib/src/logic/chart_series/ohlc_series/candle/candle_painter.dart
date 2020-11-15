@@ -31,7 +31,8 @@ class CandlePainter extends DataPainter<CandleSeries> {
       return;
     }
 
-    final CandleStyle style = series.style ?? theme.candleStyle;
+    final CandleStyle style =
+        series.style ?? theme.candleStyle ?? const CandleStyle();
 
     _linePaint = Paint()
       ..color = style?.lineColor

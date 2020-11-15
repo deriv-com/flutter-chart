@@ -38,8 +38,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       return;
     }
 
-    final HorizontalBarrierStyle style =
-        series.style ?? theme.horizontalBarrierStyle;
+    final HorizontalBarrierStyle style = series.style ??
+        theme.horizontalBarrierStyle ??
+        const HorizontalBarrierStyle();
 
     _paint = Paint()
       ..strokeWidth = 1
@@ -148,7 +149,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     );
 
     // Arrows.
-    final double arrowMidX = (titleArea?.left ?? labelArea.left) - style.arrowSize;
+    final double arrowMidX =
+        (titleArea?.left ?? labelArea.left) - style.arrowSize;
     if (arrowType == BarrierArrowType.upward) {
       _paintUpwardArrows(
         canvas,

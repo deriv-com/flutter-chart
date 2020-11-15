@@ -23,7 +23,8 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   }) {
-    final MarkerStyle style = series.style ?? theme.markerStyle;
+    final MarkerStyle style =
+        series.style ?? theme.markerStyle ?? const MarkerStyle();
 
     if (series.entryTick != null) {
       final Offset center = Offset(
