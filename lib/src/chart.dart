@@ -324,7 +324,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupCurrentTickAnimation() {
     _currentTickAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 300),
     );
     _currentTickAnimation = CurvedAnimation(
       parent: _currentTickAnimationController,
