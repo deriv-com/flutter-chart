@@ -152,7 +152,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   void didUpdate(ChartData oldData) {
     final DataSeries<T> oldSeries = oldData;
 
-    if (oldSeries.entries.isNotEmpty) {
+    if (entries.isNotEmpty && oldSeries.entries.isNotEmpty) {
       if (entries.last == oldSeries.entries.last) {
         _prevLastEntry = oldSeries._prevLastEntry;
       } else {
