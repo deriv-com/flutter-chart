@@ -42,7 +42,8 @@ class CandlePainter extends DataPainter<CandleSeries> {
       return;
     }
 
-    final double intervalWidth = epochToX(granularity) - epochToX(0);
+    final double intervalWidth =
+        epochToX(chartConfig.granularity) - epochToX(0);
 
     final double candleWidth = intervalWidth * 0.6;
 

@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
+/// Paints x-axis grid lines and labels.
 void paintXGrid(
   Canvas canvas,
   Size size, {
@@ -27,16 +28,16 @@ void _paintTimeGridLines(
   List<double> xCoords,
   GridStyle style,
 ) {
-  xCoords.forEach((x) {
+  for (final double x in xCoords) {
     canvas.drawLine(
       Offset(x, 0),
-      Offset(x, size.height - 20),
+      Offset(x, size.height - style.xLabelsAreaHeight),
       Paint()
         ..color = style.gridLineColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = style.lineThickness,
     );
-  });
+  }
 }
 
 void _paintTimeLabels(
@@ -46,13 +47,13 @@ void _paintTimeLabels(
   @required List<double> xCoords,
   @required GridStyle style,
 }) {
-  timeLabels.asMap().forEach((index, timeLabel) {
+  timeLabels.asMap().forEach((int index, String timeLabel) {
     paintText(
       canvas,
       text: timeLabel,
       anchor: Offset(
         xCoords[index],
-        size.height - 10,
+        size.height - style.xLabelsAreaHeight / 2,
       ),
       style: style.labelStyle,
     );

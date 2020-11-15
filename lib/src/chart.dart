@@ -8,10 +8,12 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 import 'callbacks.dart';
 import 'crosshair/crosshair_area.dart';
@@ -97,15 +99,22 @@ class Chart extends StatelessWidget {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
 
-    return Provider<ChartTheme>.value(
-      value: chartTheme,
+    final ChartConfig chartConfig = ChartConfig(
+      pipSize: pipSize,
+      granularity: granularity,
+    );
+
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        Provider<ChartTheme>.value(value: chartTheme),
+        Provider<ChartConfig>.value(value: chartConfig),
+      ],
       child: ClipRect(
         child: Ink(
           color: chartTheme.base08Color,
           child: GestureManager(
             child: XAxis(
               entries: mainSeries.entries,
-              granularity: granularity,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               child: _ChartImplementation(
@@ -159,17 +168,14 @@ class _ChartImplementation extends StatefulWidget {
 
 class _ChartImplementationState extends State<_ChartImplementation>
     with TickerProviderStateMixin {
-  /// Width of the area with quote labels on the right.
-  double quoteLabelsAreaWidth = 70;
+  /// Width of the touch area for vertical zoom (on top of quote labels).
+  double quoteLabelsTouchAreaWidth = 70;
 
   bool _panStartedOnQuoteLabelsArea = false;
 
-  /// Height of the area with time labels on the bottom.
-  final double timeLabelsAreaHeight = 20;
-
   Size canvasSize;
 
-  /// Fraction of [canvasSize.height - timeLabelsAreaHeight] taken by top or bottom padding.
+  /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
 
@@ -210,19 +216,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
 
   double get _verticalPadding {
-    final px =
-        verticalPaddingFraction * (canvasSize.height - timeLabelsAreaHeight);
-    final minCrosshairVerticalPadding = 80;
-    if (px < minCrosshairVerticalPadding)
-      return px +
-          (minCrosshairVerticalPadding - px) * _crosshairZoomOutAnimation.value;
-    else
-      return px;
+    final double padding = verticalPaddingFraction * canvasSize.height;
+    const double minCrosshairPadding = 80;
+    return padding +
+        (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
+            _crosshairZoomOutAnimation.value;
   }
 
   double get _topPadding => _verticalPadding;
 
-  double get _bottomPadding => _verticalPadding + timeLabelsAreaHeight;
+  double get _bottomPadding => _verticalPadding;
 
   double get _quotePerPx => quotePerPx(
         topBoundQuote: _topBoundQuote,
@@ -254,9 +257,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _didUpdateChartData(oldChart);
 
     _onNewTick();
-
-    // TODO(Rustem): recalculate only when price label length has changed
-    _recalculateQuoteLabelsAreaWidth();
 
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
@@ -290,32 +290,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
         }
       }
     }
-  }
-
-  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
-  void _recalculateQuoteLabelsAreaWidth() {
-    if (widget.mainSeries.entries.isEmpty) {
-      return;
-    }
-
-    final label =
-        widget.mainSeries.entries.first.quote.toStringAsFixed(widget.pipSize);
-    // TODO(Rustem): Get label style from _theme
-    quoteLabelsAreaWidth =
-        _getRenderedTextWidth(label, TextStyle(fontSize: 12)) + 10;
-  }
-
-  // TODO(ramin): We will eventually remove this and use calculated width of the TextPainter
-  double _getRenderedTextWidth(String text, TextStyle style) {
-    TextSpan textSpan = TextSpan(
-      style: style,
-      text: text,
-    );
-    TextPainter textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
-    return textPainter.width;
   }
 
   @override
@@ -386,11 +360,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupCrosshairZoomOutAnimation() {
     _crosshairZoomOutAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 150),
     );
     _crosshairZoomOutAnimation = CurvedAnimation(
       parent: _crosshairZoomOutAnimationController,
-      curve: Curves.easeOut,
+      curve: Curves.easeInOut,
     );
   }
 
@@ -481,7 +455,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: YGridPainter(
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
-              quoteLabelsAreaWidth: quoteLabelsAreaWidth,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
             ),
@@ -511,8 +484,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 chartDataList: <ChartData>[
                   widget.mainSeries,
                 ],
-                granularity: context.watch<XAxisModel>().granularity,
-                pipSize: widget.pipSize,
+                chartConfig: context.read<ChartConfig>(),
+                theme: context.read<ChartTheme>(),
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
               ),
@@ -528,8 +501,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
               chartDataList: <ChartData>[
                 if (widget.chartDataList != null) ...widget.chartDataList
               ],
-              granularity: context.watch<XAxisModel>().granularity,
-              pipSize: widget.pipSize,
+              chartConfig: context.read<ChartConfig>(),
+              theme: context.read<ChartTheme>(),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
             ),
@@ -555,8 +528,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
           ),
           if (_isScrollToLastTickAvailable)
             Positioned(
-              bottom: 30 + timeLabelsAreaHeight,
-              right: 30 + quoteLabelsAreaWidth,
+              bottom: 30,
+              right: 30 + quoteLabelsTouchAreaWidth,
               child: _buildScrollToLastTickButton(),
             ),
         ],
@@ -576,24 +549,24 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _onPanStart(ScaleStartDetails details) {
-    _panStartedOnQuoteLabelsArea = _onQuoteLabelsArea(details.localFocalPoint);
+    _panStartedOnQuoteLabelsArea =
+        _onQuoteLabelsTouchArea(details.localFocalPoint);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     if (_panStartedOnQuoteLabelsArea &&
-        _onQuoteLabelsArea(details.localPosition)) {
+        _onQuoteLabelsTouchArea(details.localPosition)) {
       _scaleVertically(details.delta.dy);
     }
   }
 
-  bool _onQuoteLabelsArea(Offset position) =>
-      position.dx > _xAxis.width - quoteLabelsAreaWidth;
+  bool _onQuoteLabelsTouchArea(Offset position) =>
+      position.dx > _xAxis.width - quoteLabelsTouchAreaWidth;
 
   void _scaleVertically(double dy) {
     setState(() {
       verticalPaddingFraction =
-          ((_verticalPadding + dy) / (canvasSize.height - timeLabelsAreaHeight))
-              .clamp(0.05, 0.49);
+          ((_verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
     });
   }
 

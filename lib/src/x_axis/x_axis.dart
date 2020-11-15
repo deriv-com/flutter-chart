@@ -1,4 +1,6 @@
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +23,6 @@ class XAxis extends StatefulWidget {
   const XAxis({
     @required this.entries,
     @required this.child,
-    @required this.granularity,
     @required this.isLive,
     this.onVisibleAreaChanged,
     Key key,
@@ -33,9 +34,6 @@ class XAxis extends StatefulWidget {
 
   /// A reference to chart's main candles.
   final List<Tick> entries;
-
-  /// Millisecond difference between two consecutive candles.
-  final int granularity;
 
   /// Whether the chart is showing live data.
   final bool isLive;
@@ -62,7 +60,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
     _model = XAxisModel(
       entries: widget.entries,
-      granularity: widget.granularity,
+      granularity: context.read<ChartConfig>().granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
       onScale: _onVisibleAreaChanged,
@@ -90,7 +88,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
     _model
       ..updateIsLive(widget.isLive)
-      ..updateGranularity(widget.granularity)
+      ..updateGranularity(context.read<ChartConfig>().granularity)
       ..updateEntries(widget.entries);
   }
 
@@ -142,13 +140,20 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             }
           }
 
+          final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
+
           return CustomPaint(
             painter: XGridPainter(
               gridTimestamps: _noOverlapGridTimestamps,
               epochToCanvasX: _model.xFromEpoch,
-              style: context.watch<ChartTheme>().gridStyle,
+              style: gridStyle,
             ),
-            child: widget.child,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
+              child: ClipRect(
+                child: widget.child,
+              ),
+            ),
           );
         },
       ),

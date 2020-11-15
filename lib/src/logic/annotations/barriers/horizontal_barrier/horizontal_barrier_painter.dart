@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/create_shape_path.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +23,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   final Paint _paint;
 
   /// Padding between lines
-  static const double padding = 5;
+  static const double padding = 4;
 
   /// Right margin
-  static const double rightMargin = 5;
+  static const double rightMargin = 4;
 
   /// Arrow size
   static const double _arrowSize = 5;
@@ -50,6 +51,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     double animatedValue;
 
     double dotX;
+
+    Rect titleArea;
 
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
@@ -79,24 +82,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double y = quoteToY(animatedValue);
 
-    final TextPainter valuePainter = TextPainter(
-      text: TextSpan(
-        text: animatedValue.toStringAsFixed(pipSize),
-        style: style.textStyle,
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    final double valueStartX =
-        size.width - rightMargin - padding - valuePainter.width;
-    final double middleLineEndX = valueStartX - padding;
-    final double middleLineStartX = middleLineEndX - 12;
-
-    final double labelHalfHeight = valuePainter.height / 2 + padding;
-
     if (series.visibility ==
         HorizontalBarrierVisibility.keepBarrierLabelVisible) {
+      final double labelHalfHeight = style.labelHeight / 2;
+
       if (y - labelHalfHeight < 0) {
         y = labelHalfHeight;
         arrowType = BarrierArrowType.upward;
@@ -106,110 +95,94 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       }
     }
 
-    _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
-
-    valuePainter.paint(
-      canvas,
-      Offset(valueStartX, y - valuePainter.height / 2),
-    );
-
-    final TextPainter titlePainter = TextPainter(
-      text: TextSpan(
-        text: series.title,
-        style: style.textStyle.copyWith(
-          color: style.color,
-          backgroundColor: style.titleBackgroundColor,
-        ),
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    final double titleStartX = middleLineStartX - titlePainter.width - padding;
-
-    titlePainter.paint(
-      canvas,
-      Offset(titleStartX, y - valuePainter.height / 2),
-    );
-
-    if (arrowType != BarrierArrowType.none) {
-      final double labelMidX = titleStartX - padding - _arrowSize;
-      double arrowY;
-
-      if (arrowType == BarrierArrowType.upward) {
-        arrowY = y + titlePainter.height / 2;
-        _paintUpwardArrows(canvas, labelMidX, arrowY, arrowSize: _arrowSize);
-      } else if (arrowType == BarrierArrowType.downward) {
-        arrowY = y - titlePainter.height / 2;
-        _paintDownwardArrows(canvas, labelMidX, arrowY, arrowSize: _arrowSize);
-      }
+    // Blinking dot.
+    if (style.hasBlinkingDot && dotX != null) {
+      _paintBlinkingDot(canvas, dotX, y, animationInfo);
     }
 
+    final TextPainter valuePainter = makeTextPainter(
+      animatedValue.toStringAsFixed(chartConfig.pipSize),
+      style.textStyle,
+    );
+    final Rect labelArea = Rect.fromCenter(
+      center: Offset(
+          size.width - rightMargin - padding - valuePainter.width / 2, y),
+      width: valuePainter.width + padding * 2,
+      height: style.labelHeight,
+    );
+
+    // Line.
     if (arrowType == BarrierArrowType.none) {
-      double mainLineEndX;
-      double mainLineStartX = 0;
-
-      if (series.title != null) {
-        mainLineEndX = titleStartX - padding;
-
-        // Painting right line
-        canvas.drawLine(
-          Offset(middleLineStartX, y),
-          Offset(middleLineEndX, y),
-          _paint,
-        );
-      } else {
-        mainLineEndX = valueStartX;
+      final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
+      final double lineEndX = labelArea.left;
+      if (lineStartX < lineEndX) {
+        _paintLine(canvas, lineStartX, lineEndX, y, style);
       }
-
-      if (dotX != null) {
-        if (style.hasBlinkingDot) {
-          _paintBlinkingDot(canvas, dotX, y, animationInfo);
-        }
-
-        if (!series.longLine) {
-          mainLineStartX = dotX;
-        }
-      }
-
-      _paintMainLine(canvas, mainLineStartX, mainLineEndX, y, style);
     }
 
-    _paintLabelBackground(canvas, size, middleLineEndX, y, valuePainter, style);
+    // Title.
+    if (series.title != null) {
+      final TextPainter titlePainter = makeTextPainter(
+        series.title,
+        style.textStyle.copyWith(color: style.color),
+      );
+      titleArea = Rect.fromCenter(
+        center:
+            Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
+        width: titlePainter.width + 4,
+        height: titlePainter.height,
+      );
+      canvas.drawRect(titleArea, Paint()..color = style.titleBackgroundColor);
+      paintWithTextPainter(
+        canvas,
+        painter: titlePainter,
+        anchor: titleArea.center,
+      );
+    }
 
-    valuePainter.paint(
+    // Label.
+    _paintLabelBackground(canvas, labelArea, style.labelShape);
+    paintWithTextPainter(
       canvas,
-      Offset(valueStartX, y - valuePainter.height / 2),
+      painter: valuePainter,
+      anchor: labelArea.center,
     );
+
+    // Arrows.
+    final double arrowMidX = (titleArea?.left ?? labelArea.left) - _arrowSize;
+    if (arrowType == BarrierArrowType.upward) {
+      _paintUpwardArrows(
+        canvas,
+        center: Offset(arrowMidX, y),
+        arrowSize: _arrowSize,
+      );
+    } else if (arrowType == BarrierArrowType.downward) {
+      // TODO(Rustem): Rotate arrows like in `paintMarker`.
+      _paintDownwardArrows(
+        canvas,
+        center: Offset(arrowMidX, y),
+        arrowSize: _arrowSize,
+      );
+    }
   }
 
   void _paintLabelBackground(
     Canvas canvas,
-    Size size,
-    double middleLineEndX,
-    double y,
-    TextPainter valuePainter,
-    HorizontalBarrierStyle style,
+    Rect rect,
+    LabelShape shape,
   ) {
-    if (style.labelShape == LabelShape.rectangle) {
+    if (shape == LabelShape.rectangle) {
       canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            Rect.fromLTRB(
-              middleLineEndX,
-              y - valuePainter.height / 2 - padding,
-              size.width - rightMargin,
-              y + valuePainter.height / 2 + padding,
-            ),
-            const Radius.circular(4)),
+        RRect.fromRectAndRadius(rect, const Radius.circular(4)),
         _paint,
       );
-    } else if (style.labelShape == LabelShape.pentagon) {
+    } else if (shape == LabelShape.pentagon) {
       canvas.drawPath(
         getCurrentTickLabelBackgroundPath(
-          left: middleLineEndX,
-          top: y - valuePainter.height / 2 - padding,
-          right: size.width - rightMargin,
-          bottom: y + valuePainter.height / 2 + padding,
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
         ),
         _paint,
       );
@@ -232,7 +205,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     );
   }
 
-  void _paintMainLine(
+  void _paintLine(
     Canvas canvas,
     double mainLineStartX,
     double mainLineEndX,
@@ -255,28 +228,26 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   }
 
   void _paintUpwardArrows(
-    Canvas canvas,
-    double middleX,
-    double bottomY, {
+    Canvas canvas, {
+    Offset center,
     double arrowSize = 10,
     double arrowThickness = 4,
   }) {
     final Paint arrowPaint = Paint()..color = _paint.color;
-    final double middleY = bottomY - arrowSize + arrowThickness;
 
     canvas
       ..drawPath(
           getUpwardArrowPath(
-            middleX,
-            middleY,
+            center.dx,
+            center.dy + arrowSize,
             size: arrowSize,
             thickness: arrowThickness,
           ),
           arrowPaint)
       ..drawPath(
         getUpwardArrowPath(
-          middleX,
-          middleY - arrowSize,
+          center.dx,
+          center.dy,
           size: arrowSize,
           thickness: arrowThickness,
         ),
@@ -284,8 +255,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       )
       ..drawPath(
         getUpwardArrowPath(
-          middleX,
-          middleY - 2 * arrowSize,
+          center.dx,
+          center.dy - arrowSize,
           size: arrowSize,
           thickness: arrowThickness,
         ),
@@ -294,36 +265,34 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   }
 
   void _paintDownwardArrows(
-    Canvas canvas,
-    double middleX,
-    double topY, {
+    Canvas canvas, {
+    Offset center,
     double arrowSize = 10,
     double arrowThickness = 4,
   }) {
     final Paint arrowPaint = Paint()..color = _paint.color;
-    final double middleY = topY + arrowSize - arrowThickness;
 
     canvas
       ..drawPath(
           getDownwardArrowPath(
-            middleX,
-            middleY,
+            center.dx,
+            center.dy - arrowSize,
             size: arrowSize,
             thickness: arrowThickness,
           ),
           arrowPaint)
       ..drawPath(
           getDownwardArrowPath(
-            middleX,
-            middleY + arrowSize,
+            center.dx,
+            center.dy,
             size: arrowSize,
             thickness: arrowThickness,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.64))
       ..drawPath(
           getDownwardArrowPath(
-            middleX,
-            middleY + 2 * arrowSize,
+            center.dx,
+            center.dy + arrowSize,
             size: arrowSize,
             thickness: arrowThickness,
           ),
