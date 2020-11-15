@@ -148,19 +148,19 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     );
 
     // Arrows.
-    final double arrowMidX = (titleArea?.left ?? labelArea.left) - _arrowSize;
+    final double arrowMidX = (titleArea?.left ?? labelArea.left) - style.arrowSize;
     if (arrowType == BarrierArrowType.upward) {
       _paintUpwardArrows(
         canvas,
         center: Offset(arrowMidX, y),
-        arrowSize: _arrowSize,
+        arrowSize: style.arrowSize,
       );
     } else if (arrowType == BarrierArrowType.downward) {
       // TODO(Rustem): Rotate arrows like in `paintMarker`.
       _paintDownwardArrows(
         canvas,
         center: Offset(arrowMidX, y),
-        arrowSize: _arrowSize,
+        arrowSize: style.arrowSize,
       );
     }
   }
