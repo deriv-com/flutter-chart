@@ -56,8 +56,11 @@ class CombinedBarrier extends HorizontalBarrier {
     final bool superDidUpdated = super.didUpdate(oldData);
 
     final CombinedBarrier combinedBarrier = oldData;
-    return superDidUpdated ||
+
+    final bool verticalBarrierDidUpdated =
         verticalBarrier.didUpdate(combinedBarrier.verticalBarrier);
+
+    return superDidUpdated || verticalBarrierDidUpdated;
   }
 
   @override

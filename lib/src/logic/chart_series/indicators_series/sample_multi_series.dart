@@ -52,7 +52,10 @@ class SampleMultiSeries extends Series {
   bool didUpdate(ChartData oldData) {
     final SampleMultiSeries old = oldData;
 
-    return series1.didUpdate(old.series1) || series2.didUpdate(old.series2);
+    final bool series1DidUpdated = series1.didUpdate(old.series1);
+    final bool series2DidUpdated = series2.didUpdate(old.series2);
+
+    return series1DidUpdated || series2DidUpdated;
   }
 
   @override
