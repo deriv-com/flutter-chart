@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
-import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     if (series.isOnRange) {
       final BarrierStyle style = series.style ?? theme.verticalBarrierStyle;
 
-      Paint paint = Paint()
+      final Paint paint = Paint()
         ..color = style.color
         ..strokeWidth = 1
         ..style = PaintingStyle.stroke;

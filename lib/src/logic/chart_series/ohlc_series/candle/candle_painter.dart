@@ -38,7 +38,6 @@ class CandlePainter extends DataPainter<CandleSeries> {
       ..strokeWidth = 1.2;
 
     _positiveCandlePaint = Paint()..color = style.positiveColor;
-
     _negativeCandlePaint = Paint()..color = style.negativeColor;
 
     final double intervalWidth =

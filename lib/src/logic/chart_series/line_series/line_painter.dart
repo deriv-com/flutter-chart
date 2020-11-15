@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -15,8 +14,6 @@ class LinePainter extends DataPainter<LineSeries> {
   /// Initializes
   LinePainter(LineSeries series) : super(series);
 
-  Paint _linePaint;
-
   @override
   void onPaintData(
     Canvas canvas,
@@ -27,7 +24,7 @@ class LinePainter extends DataPainter<LineSeries> {
   ) {
     final LineStyle style = series.style ?? theme.lineStyle;
 
-    _linePaint = Paint()
+    final Paint linePaint = Paint()
       ..color = style.color
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
@@ -35,7 +32,6 @@ class LinePainter extends DataPainter<LineSeries> {
     final Path path = Path();
 
     bool isStartPointSet = false;
-
 
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
@@ -76,7 +72,7 @@ class LinePainter extends DataPainter<LineSeries> {
       path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
 
-    canvas.drawPath(path, _linePaint);
+    canvas.drawPath(path, linePaint);
 
     if (style.hasArea) {
       _drawArea(
