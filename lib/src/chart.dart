@@ -256,7 +256,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     _didUpdateChartData(oldChart);
 
-    _onNewTick();
+    if (widget.mainSeries.entries.isNotEmpty &&
+        oldChart.mainSeries.entries.isNotEmpty &&
+        widget.mainSeries.entries.last != oldChart.mainSeries.entries.last) {
+      _playNewTickAnimation();
+    }
 
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
@@ -304,9 +308,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.dispose();
   }
 
-  void _onNewTick() {
-    _currentTickAnimationController.reset();
-    _currentTickAnimationController.forward();
+  void _playNewTickAnimation() {
+    _currentTickAnimationController
+      ..reset()
+      ..forward();
   }
 
   void _setupAnimations() {
@@ -319,7 +324,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void _setupCurrentTickAnimation() {
     _currentTickAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 700),
     );
     _currentTickAnimation = CurvedAnimation(
       parent: _currentTickAnimationController,
