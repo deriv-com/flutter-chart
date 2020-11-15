@@ -41,7 +41,8 @@ class MarkerSeries extends Series {
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
 
   @override
-  void didUpdate(ChartData oldData) {}
+  // TODO(Ramin): Return correct result
+  bool didUpdate(ChartData oldData) => false;
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {

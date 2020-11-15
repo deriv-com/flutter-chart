@@ -149,18 +149,23 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Will be called by the chart when it was updated.
   @override
-  void didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData oldData) {
     final DataSeries<T> oldSeries = oldData;
+
+    bool didUpdated = false;
 
     if (entries.isNotEmpty && oldSeries.entries.isNotEmpty) {
       if (entries.last == oldSeries.entries.last) {
         _prevLastEntry = oldSeries._prevLastEntry;
       } else {
         _prevLastEntry = oldSeries.entries.last;
+        didUpdated = true;
       }
     }
 
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
+
+    return didUpdated;
   }
 
   @override

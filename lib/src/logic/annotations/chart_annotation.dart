@@ -23,13 +23,15 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   bool isOnRange = false;
 
   @override
-  void didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData oldData) {
     final ChartAnnotation<T> oldAnnotation = oldData;
 
     if (annotationObject == oldAnnotation?.annotationObject ?? false) {
       previousObject = oldAnnotation?.previousObject;
+      return false;
     } else {
       previousObject = oldAnnotation?.annotationObject;
+      return true;
     }
   }
 

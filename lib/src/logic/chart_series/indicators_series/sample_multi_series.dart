@@ -49,11 +49,10 @@ class SampleMultiSeries extends Series {
   SeriesPainter<SampleMultiSeries> createPainter() => SampleMultiPainter(this);
 
   @override
-  void didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData oldData) {
     final SampleMultiSeries old = oldData;
 
-    series1.didUpdate(old.series1);
-    series2.didUpdate(old.series2);
+    return series1.didUpdate(old.series1) || series2.didUpdate(old.series2);
   }
 
   @override
