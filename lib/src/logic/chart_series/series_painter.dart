@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 
 import '../chart_data.dart';
@@ -14,13 +16,13 @@ abstract class SeriesPainter<S extends Series> {
   /// The [Series] which this [SeriesPainter] belongs to
   final S series;
 
-  /// Number of decimal digits in showing prices.
+  /// Chart's config
   @protected
-  int pipSize;
+  ChartConfig chartConfig;
 
-  /// Duration of a candle in ms or (time difference between two ticks).
+  /// Chart's theme
   @protected
-  int granularity;
+  ChartTheme theme;
 
   /// Sets some variables and paints this [SeriesPainter]'s data
   void paint({
@@ -29,11 +31,11 @@ abstract class SeriesPainter<S extends Series> {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    int pipSize,
-    int granularity,
+    ChartConfig chartConfig,
+    ChartTheme theme,
   }) {
-    this.pipSize = pipSize;
-    this.granularity = granularity;
+    this.chartConfig = chartConfig;
+    this.theme = theme;
 
     onPaint(
       canvas: canvas,
