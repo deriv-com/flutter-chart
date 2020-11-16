@@ -21,7 +21,7 @@ class NoResultPage extends StatelessWidget {
           Icon(Icons.search, size: 96, color: theme.base05Color),
           SizedBox(height: theme.margin16),
           Text(
-            ChartLocalization.of(context).inform_no_result(text),
+            ChartLocalization.of(context).informNoResult(text),
             style: theme.textStyle(
               textStyle: theme.title,
               color: theme.base03Color,
@@ -29,7 +29,7 @@ class NoResultPage extends StatelessWidget {
           ),
           SizedBox(height: theme.margin08),
           Text(
-            ChartLocalization.of(context).warn_check_asset_searching_text,
+            ChartLocalization.of(context).warnCheckAssetSearchingText,
             style: theme.textStyle(
               textStyle: theme.body1,
               color: theme.base04Color,

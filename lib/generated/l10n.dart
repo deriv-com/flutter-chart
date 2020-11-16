@@ -34,30 +34,30 @@ class ChartLocalization {
   }
 
   /// `Search assets`
-  String get label_search_assets {
+  String get labelSearchAssets {
     return Intl.message(
       'Search assets',
-      name: 'label_search_assets',
+      name: 'labelSearchAssets',
       desc: '',
       args: [],
     );
   }
 
   /// `No results for "{text}"`
-  String inform_no_result(Object text) {
+  String informNoResult(Object text) {
     return Intl.message(
       'No results for "$text"',
-      name: 'inform_no_result',
+      name: 'informNoResult',
       desc: '',
       args: [text],
     );
   }
 
   /// `Try checking your spelling or use a different term`
-  String get warn_check_asset_searching_text {
+  String get warnCheckAssetSearchingText {
     return Intl.message(
       'Try checking your spelling or use a different term',
-      name: 'warn_check_asset_searching_text',
+      name: 'warnCheckAssetSearchingText',
       desc: '',
       args: [],
     );

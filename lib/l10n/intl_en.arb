@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "label_search_assets": "Search assets",
-  "inform_no_result": "No results for \"{text}\"",
-  "warn_check_asset_searching_text": "Try checking your spelling or use a different term"
+  "labelSearchAssets": "Search assets",
+  "informNoResult": "No results for \"{text}\"",
+  "warnCheckAssetSearchingText": "Try checking your spelling or use a different term"
 }

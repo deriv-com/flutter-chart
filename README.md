@@ -168,10 +168,9 @@ You can supply your own theme, but then you would have to handle switching yours
 
 ### Localization
 
-to use the ChartLocalization, you should add the `ChartLocalization.delegate` to your `localizationsDelegates` inside the `MaterialApp` that you added the chart in.
-when you want to change the locale of chart,try this code:
+To use the ChartLocalization, you should add the `ChartLocalization.delegate` to your `localizationsDelegates` inside the `MaterialApp` that you added the chart in.
+When you want to change the locale of the chart,use this code:
 
 ```dart
-
 ChartLocalization.load(locale);
 ```
