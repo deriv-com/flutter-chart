@@ -731,9 +731,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
       title: 'Stop loss',
       style: HorizontalBarrierStyle(
         color: const Color(0xFFCC2E3D),
+        isDashed: false,
       ),
     );
 
-    _tpBarrier = HorizontalBarrier(ticksMax, title: 'Take profit');
+    _tpBarrier = HorizontalBarrier(
+      ticksMax,
+      title: 'Take profit',
+      style: HorizontalBarrierStyle(
+        color: const Color(0xFF00A79E),
+        isDashed: false,
+      ),
+    );
   }
 }
