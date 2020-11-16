@@ -120,7 +120,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       // To erase the line behind title.
       if (series.title != null) {
         canvas.saveLayer(
-          Rect.fromLTRB(lineStartX, y - 10, lineEndX, y + 10),
+          Rect.fromLTRB(lineStartX, y - 1, lineEndX, y + 1),
           Paint(),
         );
       }
