@@ -31,7 +31,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Arrow size
   static const double _arrowSize = 4;
 
-  /// Padding on both sides of the title
+  /// Distance between title area and label area.
+  static const double _distanceBetweenTitleAndLabel = 16;
+
+  /// Padding on both sides of the title (so that barrier line doesn't touch title text).
   static const double _titleHorizontalPadding = 2;
 
   @override
@@ -141,7 +144,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           labelArea.left -
               titlePainter.width / 2 -
               _titleHorizontalPadding -
-              16,
+              _distanceBetweenTitleAndLabel,
           y,
         ),
         width: titlePainter.width + _titleHorizontalPadding * 2,
