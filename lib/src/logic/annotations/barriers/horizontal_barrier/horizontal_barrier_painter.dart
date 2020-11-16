@@ -139,15 +139,12 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         series.title,
         style.textStyle.copyWith(color: style.color),
       );
+      final double titleEndX = labelArea.left - _distanceBetweenTitleAndLabel;
+      final double titleAreaWidth =
+          titlePainter.width + _titleHorizontalPadding * 2;
       final Rect titleArea = Rect.fromCenter(
-        center: Offset(
-          labelArea.left -
-              titlePainter.width / 2 -
-              _titleHorizontalPadding -
-              _distanceBetweenTitleAndLabel,
-          y,
-        ),
-        width: titlePainter.width + _titleHorizontalPadding * 2,
+        center: Offset(titleEndX - titleAreaWidth / 2, y),
+        width: titleAreaWidth,
         height: titlePainter.height,
       );
 
