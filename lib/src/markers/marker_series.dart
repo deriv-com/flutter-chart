@@ -20,7 +20,7 @@ class MarkerSeries extends Series {
     this.entryTick,
     this.exitTick,
   })  : _entries = entries
-            .sort((Marker m1, Marker m2) => m1.epoch.compareTo(m2.epoch)),
+            ..sort((Marker m1, Marker m2) => m1.epoch.compareTo(m2.epoch)),
         super(id, style: style);
 
   /// Marker entries.
