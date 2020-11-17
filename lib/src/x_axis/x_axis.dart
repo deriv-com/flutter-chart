@@ -86,10 +86,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _model
-      ..updateIsLive(widget.isLive)
-      ..updateGranularity(context.read<ChartConfig>().granularity)
-      ..updateEntries(widget.entries);
+    _model.update(
+      isLive: widget.isLive,
+      granularity: context.read<ChartConfig>().granularity,
+      entries: widget.entries,
+    );
   }
 
   @override
