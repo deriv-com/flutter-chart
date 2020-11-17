@@ -182,7 +182,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Resets scale and pan on granularity change.
   ///
-  /// Should be called before [_updateEntries].
+  /// Should be called before [_updateEntries] and after [_updateIsLive]
   void _updateGranularity(int newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
@@ -191,6 +191,8 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Update's chart's isLive property
+  ///
+  /// Should be called before [_updateGranularity] and [_updateEntries]
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Called on each frame.
