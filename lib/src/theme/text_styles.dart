@@ -84,7 +84,7 @@ class TextStyles {
 
   static TextStyle overLine = const TextStyle(
       fontFamily: appFontFamily,
-      fontSize: 14,
+      fontSize: 10,
       height: 1.4,
       fontWeight: FontWeight.w400);
 }
