@@ -23,8 +23,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   assets:
+    - assets/icons/
     - assets/icons/symbols/
   #
   # For details regarding assets in packages, see

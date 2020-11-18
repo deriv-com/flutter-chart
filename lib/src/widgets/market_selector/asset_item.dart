@@ -64,11 +64,18 @@ class AssetItem extends StatelessWidget {
         onPressed: () => onAssetClicked?.call(asset, true),
       );
 
-  Widget _buildAssetIcon() => SymbolSvgPicture(
-        symbolCode: asset.name,
+  Widget _buildAssetIcon() => FadeInImage(
         width: 24,
         height: 24,
-        placeholderBuilder: (BuildContext context) =>
-            const AssetIconPlaceholder(),
+        placeholder: AssetImage(
+          'assets/icons/icon_placeholder.png',
+          package: 'deriv_chart',
+        ),
+        image: AssetImage(
+          'assets/icons/${asset.name}.png',
+          package: 'deriv_chart',
+        ),
+        fadeInDuration: iconFadeInDuration,
+        fadeOutDuration: iconFadeInDuration,
       );
 }
