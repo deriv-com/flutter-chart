@@ -41,6 +41,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     bool isDashed = true,
     this.hasBlinkingDot = false,
     this.arrowSize = 5,
+    this.hasArrow = true,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -69,6 +70,10 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// The arrow when barrier is out of Y-Axis range and its [HorizontalBarrier.visibility]
   /// is [HorizontalBarrierVisibility.keepBarrierLabelVisible]
   final double arrowSize;
+
+  /// Whether to show an arrow pointing in the direction of the barrier,
+  /// when the barrier is outside the y-axis range and visibility is set to `HorizontalBarrierVisibility.keepBarrierLabelVisible`.
+  final bool hasArrow;
 
   @override
   String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';
