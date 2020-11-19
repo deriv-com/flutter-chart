@@ -8,6 +8,7 @@ String getSVGPathForAsset(String assetCode) =>
 
 /// Just a wrapper widget around [SvgPicture.asset()] for [MarketSelector] symbols,
 /// to be usable on the Apps using this chart package.
+@Deprecated('next release')
 class SymbolSvgPicture extends StatelessWidget {
   /// Initializes
   const SymbolSvgPicture({

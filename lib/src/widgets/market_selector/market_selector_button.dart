@@ -39,12 +39,19 @@ class MarketSelectorButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          SymbolSvgPicture(
-            symbolCode: asset.name,
+          FadeInImage(
             width: 32,
             height: 32,
-            placeholderBuilder: (BuildContext context) =>
-                AssetIconPlaceholder(),
+            placeholder: AssetImage(
+              'assets/icons/icon_placeholder.png',
+              package: 'deriv_chart',
+            ),
+            image: AssetImage(
+              'assets/icons/${asset.name}.png',
+              package: 'deriv_chart',
+            ),
+            fadeInDuration: const Duration(milliseconds: 50),
+            fadeOutDuration: const Duration(milliseconds: 50),
           ),
           const SizedBox(width: 8),
           Text(asset.displayName, style: textStyle),
