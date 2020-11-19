@@ -20,16 +20,10 @@ class CrosshairDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints.expand(),
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment.topCenter,
-          radius: 0.35,
-          // TODO(Ramin): Add style for cross-hair when design updated
-          colors: [Color(0xFF0E0E0E), Colors.transparent],
-        ),
-      ),
+      padding: EdgeInsets.all(10),
+      color: Colors.yellow,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           mainSeries.getCrossHairInfo(crosshairTick, pipSize),
           SizedBox(height: 2),
@@ -39,7 +33,7 @@ class CrosshairDetails extends StatelessWidget {
     );
   }
 
-  Text _buildTimeLabel() {
+  Widget _buildTimeLabel() {
     final time =
         DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch, isUtc: true);
     final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
@@ -47,14 +41,14 @@ class CrosshairDetails extends StatelessWidget {
   }
 
   // TODO(Ramin): Add style for cross-hair when design updated
-  Text _buildLabel(String label) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: 12,
-        color: Colors.white70,
-        fontFeatures: [FontFeature.tabularFigures()],
-      ),
+  Widget _buildLabel(String label) {
+    return  Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.white70,
+          fontFeatures: [FontFeature.tabularFigures()],
+        ),
     );
   }
 }

@@ -131,7 +131,8 @@ class _CrosshairAreaState extends State<CrosshairArea> {
               width: constraints.maxWidth,
               left: xAxis.xFromEpoch(crosshairTick.epoch) -
                   constraints.maxWidth / 2,
-              child: Center(
+              child: Container(
+                alignment: Alignment.topCenter,
                 child: CrosshairDetails(
                   mainSeries: widget.mainSeries,
                   crosshairTick: crosshairTick,
