@@ -18,14 +18,19 @@ class Marker extends Tick {
     @required double quote,
     @required this.direction,
     this.onTap,
-  }) : super(epoch: epoch, quote: quote);
+  })  : assert(epoch != null),
+        assert(quote != null),
+        assert(direction != null),
+        super(epoch: epoch, quote: quote);
 
   /// Creates an up marker.
   Marker.up({
     @required int epoch,
     @required double quote,
     this.onTap,
-  })  : direction = MarkerDirection.up,
+  })  : assert(epoch != null),
+        assert(quote != null),
+        direction = MarkerDirection.up,
         super(epoch: epoch, quote: quote);
 
   /// Creates a down marker.
@@ -33,7 +38,9 @@ class Marker extends Tick {
     @required int epoch,
     @required double quote,
     this.onTap,
-  })  : direction = MarkerDirection.down,
+  })  : assert(epoch != null),
+        assert(quote != null),
+        direction = MarkerDirection.down,
         super(epoch: epoch, quote: quote);
 
   /// Direction in which marker is facing.

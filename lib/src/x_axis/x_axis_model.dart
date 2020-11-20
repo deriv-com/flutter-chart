@@ -26,7 +26,7 @@ class XAxisModel extends ChangeNotifier {
     _isLive = isLive ?? true;
     _rightBoundEpoch = _maxRightBoundEpoch;
 
-    updateEntries(entries);
+    _updateEntries(entries);
 
     _scrollAnimationController = animationController
       ..addListener(() {
@@ -139,8 +139,8 @@ class XAxisModel extends ChangeNotifier {
 
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
-  /// Should be called after [updateGranularity].
-  void updateEntries(List<Tick> entries) {
+  /// Should be called after [_updateGranularity] and [_updateIsLive].
+  void _updateEntries(List<Tick> entries) {
     final bool firstLoad = _entries == null;
 
     final bool tickLoad = !firstLoad &&
@@ -172,12 +172,18 @@ class XAxisModel extends ChangeNotifier {
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
     _entries = entries.sublist(0);
+
+    // After switching between closed and open symbols, since their epoch range might
+    // be without any overlap, scroll position on the new symbol might be completely off
+    // where there is no data hence the chart will show just a loading animation.
+    // Here we make sure that it's on-range.
+    _clampRightBoundEpoch();
   }
 
   /// Resets scale and pan on granularity change.
   ///
-  /// Should be called before [updateEntries].
-  void updateGranularity(int newGranularity) {
+  /// Should be called before [_updateEntries] and after [_updateIsLive]
+  void _updateGranularity(int newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
     _msPerPx = _defaultScale;
@@ -185,7 +191,9 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Update's chart's isLive property
-  void updateIsLive(bool isLive) => _isLive = isLive ?? true;
+  ///
+  /// Should be called before [_updateGranularity] and [_updateEntries]
+  void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
@@ -290,18 +298,14 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scrollTo(int rightBoundEpoch) {
-    _rightBoundEpoch = rightBoundEpoch.clamp(
-      _minRightBoundEpoch,
-      _maxRightBoundEpoch,
-    );
+    _rightBoundEpoch = rightBoundEpoch;
+    _clampRightBoundEpoch();
     onScroll?.call();
   }
 
   void _scrollBy(double pxShift) {
-    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift).clamp(
-      _minRightBoundEpoch,
-      _maxRightBoundEpoch,
-    );
+    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
+    _clampRightBoundEpoch();
     onScroll?.call();
   }
 
@@ -331,5 +335,16 @@ class XAxisModel extends ChangeNotifier {
     );
     _prevScrollAnimationValue = 0;
     _scrollAnimationController.animateWith(simulation);
+  }
+
+  /// Keeps rightBoundEpoch in the valid range
+  void _clampRightBoundEpoch() => _rightBoundEpoch =
+      _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
+
+  /// Updates the [XAxisModel] model variables.
+  void update({bool isLive, int granularity, List<Tick> entries}) {
+    _updateIsLive(isLive);
+    _updateGranularity(granularity);
+    _updateEntries(entries);
   }
 }

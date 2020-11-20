@@ -49,12 +49,9 @@ class _MarkerAreaState extends State<MarkerArea> {
     if (series.activeMarker != null) {
       if (series.activeMarker.tapArea.contains(details.localPosition)) {
         series.activeMarker.onTap?.call();
-        return;
+      } else {
+        series.activeMarker.onTapOutside?.call();
       }
-    }
-
-    if (series.activeMarker != null) {
-      series.activeMarker.onTapOutside?.call();
       return;
     }
 
