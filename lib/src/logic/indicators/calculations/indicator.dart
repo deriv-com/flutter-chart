@@ -51,6 +51,14 @@ class LowValueIndicator extends CachedIndicator {
   double calculate(int index) => candles[index].low;
 }
 
+class CloseValueIndicator extends CachedIndicator {
+  CloseValueIndicator(List<Candle> candles) : super(candles);
+
+  @override
+  double calculate(int index) => candles[index].close;
+}
+
+
 class HighestValueIndicator extends CachedIndicator {
   final AbstractIndicator indicator;
 
