@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -49,6 +50,12 @@ void main() {
       expect(10 / 3, smaIndicator.results[10].quote);
       expect(10 / 3, smaIndicator.results[11].quote);
       expect(3, smaIndicator.results[12].quote);
+    });
+
+    test('Parabolic SAR', () {
+      ParabolicSarIndicator parabolicSarIndicator = ParabolicSarIndicator(candles);
+
+      print('');
     });
   });
 }
