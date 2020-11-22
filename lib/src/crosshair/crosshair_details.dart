@@ -21,13 +21,16 @@ class CrosshairDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
-      color: Colors.yellow,
+      decoration: BoxDecoration(
+        color: const Color(0xFF323738),
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          mainSeries.getCrossHairInfo(crosshairTick, pipSize),
-          SizedBox(height: 2),
           _buildTimeLabel(),
+          SizedBox(height: 2),
+          mainSeries.getCrossHairInfo(crosshairTick, pipSize),
         ],
       ),
     );

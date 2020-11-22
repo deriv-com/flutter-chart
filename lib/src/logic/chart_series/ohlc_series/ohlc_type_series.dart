@@ -16,9 +16,10 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
 
   @override
   Widget getCrossHairInfo(Candle crossHairTick, int pipSize) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               _buildLabelValue('O', crossHairTick.open, pipSize),
               _buildLabelValue('C', crossHairTick.close, pipSize),
@@ -26,6 +27,7 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
           ),
           const SizedBox(width: 16),
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               _buildLabelValue('H', crossHairTick.high, pipSize),
               _buildLabelValue('L', crossHairTick.low, pipSize),
