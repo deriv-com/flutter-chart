@@ -1,4 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
