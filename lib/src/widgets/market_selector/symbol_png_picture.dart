@@ -25,14 +25,13 @@ class SymbolPNGPicture extends StatelessWidget {
   final double height;
 
   /// Duration of fade In
-  final Duration iconFadeInDuration = const Duration(milliseconds: 50);
+  static const Duration iconFadeInDuration = Duration(milliseconds: 50);
 
   @override
-  Widget build(BuildContext context) =>
-      FadeInImage(
+  Widget build(BuildContext context) => FadeInImage(
         width: width,
         height: height,
-        placeholder: AssetImage(
+        placeholder: const AssetImage(
           'assets/icons/icon_placeholder.png',
           package: 'deriv_chart',
         ),
