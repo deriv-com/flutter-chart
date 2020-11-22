@@ -6,6 +6,8 @@ import 'asset_icon_placeholder.dart';
 String getPNGPathForAsset(String assetCode) =>
     'assets/icons/symbols/$assetCode.png';
 
+///A wrapper widget around [AssetImage] which provides image icon for the
+///given [symbolCode].
 class SymbolPNGPicture extends StatelessWidget {
   /// Initializes
   const SymbolPNGPicture({
@@ -28,7 +30,8 @@ class SymbolPNGPicture extends StatelessWidget {
   static const Duration iconFadeInDuration = Duration(milliseconds: 50);
 
   @override
-  Widget build(BuildContext context) => FadeInImage(
+  Widget build(BuildContext context) =>
+      FadeInImage(
         width: width,
         height: height,
         placeholder: const AssetImage(
