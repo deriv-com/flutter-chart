@@ -22,5 +22,11 @@ void main() {
 
       print('object');
     });
+
+    test('SMAIndicator', () {
+      SMAIndicator smaIndicator = SMAIndicator(HighValueIndicator(candles), 2);
+
+      print('object');
+    });
   });
 }
