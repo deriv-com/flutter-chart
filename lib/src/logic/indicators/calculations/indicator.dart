@@ -17,7 +17,11 @@ abstract class AbstractIndicator implements Indicator {
 
 /// Handling a level of caching
 abstract class CachedIndicator extends AbstractIndicator {
-  CachedIndicator(List<Candle> candles) : super(candles);
+  CachedIndicator(List<Candle> candles) : super(candles) {
+    for (int i = 0;i< candles.length; i++) {
+      results.add(getValue(i));
+    }
+  }
 
   /// List of cached result.
   final List<double> results = <double>[];
@@ -91,7 +95,7 @@ class LowestValueIndicator extends CachedIndicator {
   }
 }
 
-abstract class AbstractIchimokuLineIndicator extends CachedIndicator {
+ class AbstractIchimokuLineIndicator extends CachedIndicator {
   /** The period high */
   final Indicator _periodHigh;
 
@@ -111,10 +115,13 @@ abstract class AbstractIchimokuLineIndicator extends CachedIndicator {
             new LowestValueIndicator(LowValueIndicator(candles), barCount),
         super(candles);
 
+  @override
   double calculate(int index) {
     return _periodHigh.getValue(index) + (_periodLow.getValue(index)) / 2;
   }
 }
+
+
 //
 // abstracttract class RecursiveCachedIndicator extends AbstractIndicator {
 //
