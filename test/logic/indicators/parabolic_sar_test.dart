@@ -15,11 +15,27 @@ void main() {
       Candle.noParam(8, 0, 73.390000, 73.830000, 72.720000),
       Candle.noParam(9, 0, 73.25, 73.890000, 72.86),
       Candle.noParam(10, 0, 74.36, 74.410000, 73),
+      Candle.noParam(11, 0, 76.510000, 76.830000, 74.820000),
+      Candle.noParam(12, 0, 75.590000, 76.850000, 74.540000),
+      Candle.noParam(13, 0, 75.910000, 76.960000, 75.510000),
+      Candle.noParam(14, 0, 74.610000, 77.070000, 74.560000),
+      Candle.noParam(15, 0, 75.330000, 75.530000, 74.010000),
+      Candle.noParam(16, 0, 75.010000, 75.500000, 74.510000),
+      Candle.noParam(17, 0, 75.620000, 76.210000, 75.250000),
+      Candle.noParam(18, 0, 76.040000, 76.460000, 75.092800),
+      Candle.noParam(19, 0, 76.450000, 76.450000, 75.435000),
+      Candle.noParam(20, 0, 76.260000, 76.470000, 75.840000),
+      Candle.noParam(21, 0, 76.850000, 77.000000, 76.190000),
     ];
 
     ParabolicSarIndicator sar = new ParabolicSarIndicator(bars);
 
     print('');
+
+    for (int i = 0; i < bars.length; i++) {
+      final result = sar.getValue(i);
+      print(result.quote);
+    }
 
     // assertEquals("NaN", sar.getValue(0).toString());
     // assertNumEquals(74.640000000000000568434188608080, sar.getValue(1));

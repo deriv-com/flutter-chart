@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/indicators/calculations/cached_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/recursive_cached_indicator.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
@@ -7,7 +8,7 @@ import 'helper_indicators/low_value_indicator.dart';
 import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
-class ParabolicSarIndicator extends CachedIndicator {
+class ParabolicSarIndicator extends RecursiveCachedIndicator {
   double maxAcceleration;
   double accelerationIncrement;
   double accelerationStart;
@@ -44,6 +45,7 @@ class ParabolicSarIndicator extends CachedIndicator {
   @override
   Tick calculate(int index) {
     final int epoch = candles[index].epoch;
+    print('${DateTime.now()}');
     double sar = double.nan;
     if (index == 0) {
       return Tick(
