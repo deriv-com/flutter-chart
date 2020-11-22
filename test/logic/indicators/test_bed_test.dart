@@ -1,5 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,19 +36,19 @@ void main() {
     test('SMAIndicator', () {
       SMAIndicator smaIndicator = SMAIndicator(CloseValueIndicator(candles), 3);
 
-      expect(1, smaIndicator.getValue(0));
-      expect(1.5, smaIndicator.getValue(1));
-      expect(2, smaIndicator.getValue(2));
-      expect(3, smaIndicator.getValue(3));
-      expect(10 / 3, smaIndicator.getValue(4));
-      expect(11 / 3, smaIndicator.getValue(5));
-      expect(4, smaIndicator.getValue(6));
-      expect(13 / 3, smaIndicator.getValue(7));
-      expect(4, smaIndicator.getValue(8));
-      expect(10 / 3, smaIndicator.getValue(9));
-      expect(10 / 3, smaIndicator.getValue(10));
-      expect(10 / 3, smaIndicator.getValue(11));
-      expect(3, smaIndicator.getValue(12));
+      expect(1, smaIndicator.getValue(0).quote);
+      expect(1.5, smaIndicator.getValue(1).quote);
+      expect(2, smaIndicator.getValue(2).quote);
+      expect(3, smaIndicator.getValue(3).quote);
+      expect(10 / 3, smaIndicator.getValue(4).quote);
+      expect(11 / 3, smaIndicator.getValue(5).quote);
+      expect(4, smaIndicator.getValue(6).quote);
+      expect(13 / 3, smaIndicator.getValue(7).quote);
+      expect(4, smaIndicator.getValue(8).quote);
+      expect(10 / 3, smaIndicator.getValue(9).quote);
+      expect(10 / 3, smaIndicator.getValue(10).quote);
+      expect(10 / 3, smaIndicator.getValue(11).quote);
+      expect(3, smaIndicator.getValue(12).quote);
     });
   });
 }

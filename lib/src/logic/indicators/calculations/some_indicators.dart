@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 
 import '../indicator.dart';
 import 'cached_indicator.dart';
@@ -27,9 +28,11 @@ class AbstractIchimokuLineIndicator extends CachedIndicator {
         super(candles);
 
   @override
-  double calculate(int index) {
-    return _periodHigh.getValue(index) + (_periodLow.getValue(index)) / 2;
-  }
+  Tick calculate(int index) => Tick(
+        epoch: candles[index].epoch,
+        quote: _periodHigh.getValue(index).quote +
+            _periodLow.getValue(index).quote / 2,
+      );
 }
 
 //

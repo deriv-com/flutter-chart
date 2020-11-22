@@ -1,4 +1,6 @@
 import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:flutter/material.dart';
 
 import 'abstract_indicator.dart';
 
@@ -13,13 +15,22 @@ abstract class CachedIndicator extends AbstractIndicator {
   CachedIndicator.fromIndicator(AbstractIndicator indicator)
       : this(indicator.candles);
 
+  /// Should always be the index of the last result in the results list. I.E. the
+  /// last calculated result.
+  @protected
+  int highestResultIndex = -1;
+
   /// List of cached result.
-  final List<double> results = <double>[];
+  final List<Tick> results = <Tick>[];
 
   @override
   // TODO(Ramin): Add caching logic if we it someday.
-  double getValue(int index) => calculate(index);
+  Tick getValue(int index) {
+    final Tick result = calculate(index);
+    highestResultIndex = index;
+    return calculate(index);
+  }
 
   /// Calculates the value of this indicator for the give [index]
-  double calculate(int index);
+  Tick calculate(int index);
 }
