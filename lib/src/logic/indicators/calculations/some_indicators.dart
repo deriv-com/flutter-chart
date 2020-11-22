@@ -1,12 +1,8 @@
 import 'dart:math';
 
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/models/candle.dart';
 
-/// An indicator
-abstract class Indicator {
-  /// Value of the indicator for the given [index].
-  double getValue(int index);
-}
+import '../indicator.dart';
 
 /// Bass class of all indicators.
 abstract class AbstractIndicator implements Indicator {
@@ -57,7 +53,6 @@ class CloseValueIndicator extends CachedIndicator {
   @override
   double calculate(int index) => candles[index].close;
 }
-
 
 class HighestValueIndicator extends CachedIndicator {
   final AbstractIndicator indicator;

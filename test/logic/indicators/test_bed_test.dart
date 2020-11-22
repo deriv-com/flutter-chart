@@ -1,5 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
