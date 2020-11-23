@@ -4,14 +4,18 @@ import '../indicator.dart';
 import 'recursive_cached_indicator.dart';
 
 /// Base class for Exponential Moving Average implementations.
-
 abstract class AbstractEMAIndicator extends RecursiveCachedIndicator {
-  final Indicator indicator;
-  final int barCount;
-  final double multiplier;
-
   AbstractEMAIndicator(this.indicator, this.barCount, this.multiplier)
       : super.fromIndicator(indicator);
+
+  /// Indicator to calculate EMA on.
+  final Indicator indicator;
+
+  /// Bar count
+  final int barCount;
+
+  /// Multiplier
+  final double multiplier;
 
   @override
   Tick calculate(int index) {

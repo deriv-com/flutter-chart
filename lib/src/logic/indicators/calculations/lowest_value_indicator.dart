@@ -5,13 +5,17 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'abstract_indicator.dart';
 import 'cached_indicator.dart';
 
+/// Lowest price in a range
 class LowestValueIndicator extends CachedIndicator {
-  final AbstractIndicator indicator;
-
-  final int barCount;
-
+  /// Initializes
   LowestValueIndicator(this.indicator, this.barCount)
       : super(indicator.candles);
+
+  /// Indicator to calculate Lowest value on
+  final AbstractIndicator indicator;
+
+  /// Bar count
+  final int barCount;
 
   @override
   Tick calculate(int index) {

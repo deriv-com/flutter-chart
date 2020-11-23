@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
     }
   }
 
+  /// Initializes from another [Indicator]
   CachedIndicator.fromIndicator(AbstractIndicator indicator)
       : this(indicator.candles);
 
@@ -82,38 +84,34 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
     return Tick(epoch: candles[index].epoch, quote: result);
   }
 
-  /**
-   * Increases the size of cached results buffer.
-   *
-   * @param index     the index to increase length to
-   * @param maxLength the maximum length of the results buffer
-   */
+  /// Increases the size of cached results buffer.
+  ///
+  /// [index]     the index to increase length to
+  /// [maxLength] the maximum length of the results buffer
   void increaseLengthTo(int index, int maxLength) {
-      if (highestResultIndex > -1) {
-        int newResultsCount = min(index - highestResultIndex, maxLength);
-        if (newResultsCount == maxLength) {
-          results.clear();
-          // results.addAll(Collections.nCopies(maxLength, null));
-          results.addAll(List<Tick>(maxLength));
-        } else if (newResultsCount > 0) {
-          // results.addAll(Collections.nCopies(newResultsCount, null));
-          results.addAll(List<Tick>(newResultsCount));
-          removeExceedingResults(maxLength);
-        }
-      } else {
-        // First use of cache
-        // assert results.isEmpty() : "Cache results list should be empty";
-        // results.addAll(Collections.nCopies(Math.min(index + 1, maxLength), null));
-        results.addAll(List<Tick>(min(index + 1, maxLength)));
+    if (highestResultIndex > -1) {
+      int newResultsCount = min(index - highestResultIndex, maxLength);
+      if (newResultsCount == maxLength) {
+        results.clear();
+        // results.addAll(Collections.nCopies(maxLength, null));
+        results.addAll(List<Tick>(maxLength));
+      } else if (newResultsCount > 0) {
+        // results.addAll(Collections.nCopies(newResultsCount, null));
+        results.addAll(List<Tick>(newResultsCount));
+        removeExceedingResults(maxLength);
+      }
+    } else {
+      // First use of cache
+      // assert results.isEmpty() : "Cache results list should be empty";
+      // results.addAll(Collections.nCopies(Math.min(index + 1, maxLength), null));
+      results.addAll(List<Tick>(min(index + 1, maxLength)));
     }
   }
 
-  /**
-   * Removes the N first results which exceed the maximum bar count. (i.e. keeps
-   * only the last maximumResultCount results)
-   *
-   * @param maximumResultCount the number of results to keep
-   */
+  /// Removes the N first results which exceed the maximum bar count. (i.e. keeps
+  /// only the last maximumResultCount results)
+  ///
+  /// [maximumResultCount] the number of results to keep
   void removeExceedingResults(int maximumResultCount) {
     int resultCount = results.length;
     if (resultCount > maximumResultCount) {

@@ -11,10 +11,3 @@ class CloseValueIndicator extends CachedIndicator<Candle> {
       Tick(epoch: candles[index].epoch, quote: candles[index].close);
 }
 
-class QuoteIndicator extends CachedIndicator<Tick> {
-  QuoteIndicator(List<Tick> candles) : super(candles);
-
-  @override
-  Tick calculate(int index) =>
-      Tick(epoch: candles[index].epoch, quote: candles[index].quote);
-}

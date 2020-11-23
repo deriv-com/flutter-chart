@@ -4,15 +4,20 @@ import '../indicator.dart';
 import 'recursive_cached_indicator.dart';
 import 'sma_indicator.dart';
 
+/// Zero-lag exponential moving average indicator
 class ZLEMAIndicator extends RecursiveCachedIndicator {
+  /// Indicator to calculate ZELMA on
   final Indicator indicator;
+
+  /// Bar count
   final int barCount;
-  final double k;
-  final int lag;
+
+  final double _k;
+  final int _lag;
 
   ZLEMAIndicator(this.indicator, this.barCount)
-      : k = 2 / (barCount + 1),
-        lag = (barCount - 1) ~/ 2,
+      : _k = 2 / (barCount + 1),
+        _lag = (barCount - 1) ~/ 2,
         super.fromIndicator(indicator);
 
   @override
@@ -28,10 +33,10 @@ class ZLEMAIndicator extends RecursiveCachedIndicator {
     double zlemaPrev = getValue(index - 1).quote;
     return Tick(
       epoch: getEpochOfIndex(index),
-      quote: (k *
+      quote: (_k *
               ((2 * (indicator.getValue(index).quote)) -
-                  (indicator.getValue(index - lag).quote))) +
-          ((1 - k) * zlemaPrev),
+                  (indicator.getValue(index - _lag).quote))) +
+          ((1 - _k) * zlemaPrev),
     );
   }
 }

@@ -6,12 +6,12 @@ import 'abstract_indicator.dart';
 import 'cached_indicator.dart';
 
 class HighestValueIndicator extends CachedIndicator {
+  HighestValueIndicator(this.indicator, this.barCount)
+      : super.fromIndicator(indicator);
+
   final AbstractIndicator indicator;
 
   final int barCount;
-
-  HighestValueIndicator(this.indicator, this.barCount)
-      : super.fromIndicator(indicator);
 
   @override
   Tick calculate(int index) {
