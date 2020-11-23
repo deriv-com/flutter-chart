@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/abstract_ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
@@ -53,9 +54,33 @@ void main() {
     });
 
     test('Parabolic SAR', () {
-      ParabolicSarIndicator parabolicSarIndicator = ParabolicSarIndicator(candles);
+      ParabolicSarIndicator parabolicSarIndicator =
+          ParabolicSarIndicator(candles);
 
       print('');
+    });
+
+    test('EMA', () {
+      final List<Candle> candles = <Candle>[
+        Candle(epoch: 1, high: 1, low: 1, open: 1, close: 64.75),
+        Candle(epoch: 2, high: 1, low: 1, open: 1, close: 63.79),
+        Candle(epoch: 3, high: 1, low: 1, open: 1, close: 63.73),
+        Candle(epoch: 4, high: 1, low: 1, open: 1, close: 63.73),
+        Candle(epoch: 5, high: 1, low: 1, open: 1, close: 63.55),
+        Candle(epoch: 6, high: 1, low: 1, open: 1, close: 63.19),
+        Candle(epoch: 7, high: 1, low: 1, open: 1, close: 63.91),
+        Candle(epoch: 8, high: 1, low: 1, open: 1, close: 63.85),
+        Candle(epoch: 9, high: 1, low: 1, open: 1, close: 62.95),
+        Candle(epoch: 10, high: 1, low: 1, open: 1, close: 63.37),
+        Candle(epoch: 11, high: 1, low: 1, open: 1, close: 61.33),
+        Candle(epoch: 12, high: 1, low: 1, open: 1, close: 61.51),
+      ];
+
+      EMAIndicator indicator = EMAIndicator(CloseValueIndicator(candles), 10);
+
+      expect(indicator.getValue(9).quote, 63.694826748355545);
+      expect(indicator.getValue(10).quote, 63.264858248654534);
+      expect(indicator.getValue(11).quote, 62.945793112535526);
     });
   });
 }
