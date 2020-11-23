@@ -8,12 +8,7 @@ import 'abstract_indicator.dart';
 
 /// Handling a level of caching
 abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
-  CachedIndicator(List<T> candles) : super(candles) {
-    // for (int i = 0; i < candles.length; i++) {
-    //   // results.add(getValue(i));
-    //   getValue(i);
-    // }
-  }
+  CachedIndicator(List<T> candles) : super(candles);
 
   /// Initializes from another [Indicator]
   CachedIndicator.fromIndicator(AbstractIndicator indicator)

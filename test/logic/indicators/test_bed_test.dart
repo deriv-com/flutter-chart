@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/abstract_ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
@@ -91,9 +89,15 @@ void main() {
 
       EMAIndicator indicator = EMAIndicator(QuoteIndicator(ticks), 10);
 
-      expect(indicator.getValue(9).quote, 63.694826748355545);
-      expect(indicator.getValue(10).quote, 63.264858248654534);
-      expect(indicator.getValue(11).quote, 62.945793112535526);
+      final List<Tick> result = <Tick>[];
+
+      for (int i = 0; i < ticks.length; i++) {
+        result.add(indicator.getValue(i));
+      }
+
+      expect(roundDouble(result[9].quote, 4), 63.6948);
+      expect(roundDouble(result[10].quote, 4), 63.2649);
+      expect(roundDouble(result[11].quote, 4), 62.9458);
     });
 
     test('ZELMA', () {
@@ -121,9 +125,9 @@ void main() {
         result.add(indicator.getValue(i));
       }
 
-      expect(result[9].quote, 11.909090909090908);
-      expect(result[10].quote, 8.83471074380165);
-      expect(result[11].quote, 5.773854244928623);
+      expect(roundDouble(result[9].quote, 3), 11.909);
+      expect(roundDouble(result[10].quote, 4), 8.8347);
+      expect(roundDouble(result[11].quote, 4), 5.7739);
     });
 
     test('WAM', () {
@@ -138,11 +142,11 @@ void main() {
       WMAIndicator wmaIndicator = new WMAIndicator(QuoteIndicator(ticks), 3);
 
       expect(wmaIndicator.getValue(0).quote, 1);
-      expect(wmaIndicator.getValue(1).quote, 1.6666666666666667);
-      expect(wmaIndicator.getValue(2).quote, 2.3333333333333335);
-      expect(wmaIndicator.getValue(3).quote, 3.3333333333333335);
-      expect(wmaIndicator.getValue(4).quote, 4.333333333333333);
-      expect(wmaIndicator.getValue(5).quote, 5.333333333333333);
+      expect(roundDouble(wmaIndicator.getValue(1).quote, 4), 1.6667);
+      expect(roundDouble(wmaIndicator.getValue(2).quote, 4), 2.3333);
+      expect(roundDouble(wmaIndicator.getValue(3).quote, 4), 3.3333);
+      expect(roundDouble(wmaIndicator.getValue(4).quote, 4), 4.3333);
+      expect(roundDouble(wmaIndicator.getValue(5).quote, 4), 5.3333);
     });
 
     test('HMA Indicator', () {
@@ -172,17 +176,23 @@ void main() {
 
       final HMAIndicator hma = HMAIndicator(QuoteIndicator(ticks), 9);
 
-      expect(hma.getValue(10).quote, 86.32044444444443);
-      expect(hma.getValue(11).quote, 85.37048148148149);
-      expect(hma.getValue(12).quote, 84.10444444444447);
-      expect(hma.getValue(13).quote, 83.01974074074077);
-      expect(hma.getValue(14).quote, 81.39133333333335);
-      expect(hma.getValue(15).quote, 79.6511111111111);
-      expect(hma.getValue(16).quote, 78.04429629629628);
-      expect(hma.getValue(17).quote, 76.88322222222223);
-      expect(hma.getValue(18).quote, 75.53633333333335);
-      expect(hma.getValue(19).quote, 75.17129629629629);
-      expect(hma.getValue(20).quote, 75.35974074074075);
+      final List<Tick> result = <Tick>[];
+
+      for (int i = 0; i < ticks.length; i++) {
+        result.add(hma.getValue(i));
+      }
+
+      expect(roundDouble(result[10].quote, 4), 86.3204);
+      expect(roundDouble(result[11].quote, 4), 85.3705);
+      expect(roundDouble(result[12].quote, 4), 84.1044);
+      expect(roundDouble(result[13].quote, 4), 83.0197);
+      expect(roundDouble(result[14].quote, 4), 81.3913);
+      expect(roundDouble(result[15].quote, 4), 79.6511);
+      expect(roundDouble(result[16].quote, 4), 78.0443);
+      expect(roundDouble(result[17].quote, 4), 76.8832);
+      expect(roundDouble(result[18].quote, 4), 75.5363);
+      expect(roundDouble(result[19].quote, 4), 75.1713);
+      expect(roundDouble(result[20].quote, 4), 75.3597);
     });
 
     test('Bollinger middle', () {
