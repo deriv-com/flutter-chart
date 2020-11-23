@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -81,6 +82,36 @@ void main() {
       expect(indicator.getValue(9).quote, 63.694826748355545);
       expect(indicator.getValue(10).quote, 63.264858248654534);
       expect(indicator.getValue(11).quote, 62.945793112535526);
+    });
+
+    test('ZELMA', () {
+      // , , , , , , , , , , ,
+      final ticks = <Tick>[
+        Tick(epoch: 1, quote: 10),
+        Tick(epoch: 1, quote: 15),
+        Tick(epoch: 1, quote: 20),
+        Tick(epoch: 1, quote: 18),
+        Tick(epoch: 1, quote: 17),
+        Tick(epoch: 1, quote: 18),
+        Tick(epoch: 1, quote: 15),
+        Tick(epoch: 1, quote: 12),
+        Tick(epoch: 1, quote: 10),
+        Tick(epoch: 1, quote: 8),
+        Tick(epoch: 1, quote: 5),
+        Tick(epoch: 1, quote: 2),
+      ];
+
+      ZLEMAIndicator indicator = ZLEMAIndicator(QuoteIndicator(ticks), 10);
+
+      final List<Tick> result = <Tick>[];
+
+      for (int i = 0; i < ticks.length; i++) {
+        result.add(indicator.getValue(i));
+      }
+
+      expect(result[9].quote, 11.909090909090908);
+      expect(result[10].quote, 8.83471074380165);
+      expect(result[11].quote, 5.773854244928623);
     });
   });
 }
