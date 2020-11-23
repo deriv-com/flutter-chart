@@ -88,8 +88,15 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
+    final dx = details.localPosition.dx;
+    double width = MediaQuery.of(context).size.width;
+    if (dx < 60) {
+      xAxis.scrollBy(-5);
+    } else if (width - dx < 60) {
+      xAxis.scrollBy(5);
+    }
     setState(() {
-      crosshairTick = _getClosestTick(details.localPosition.dx);
+      crosshairTick = _getClosestTick(dx);
     });
   }
 

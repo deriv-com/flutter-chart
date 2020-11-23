@@ -32,7 +32,7 @@ class XAxisModel extends ChangeNotifier {
       ..addListener(() {
         final double diff =
             _scrollAnimationController.value - (_prevScrollAnimationValue ?? 0);
-        _scrollBy(diff);
+        scrollBy(diff);
 
         if (hasHitLimit) {
           _scrollAnimationController.stop();
@@ -262,7 +262,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    _scrollBy(-details.delta.dx);
+    scrollBy(-details.delta.dx);
     notifyListeners();
   }
 
@@ -297,7 +297,7 @@ class XAxisModel extends ChangeNotifier {
     onScroll?.call();
   }
 
-  void _scrollBy(double pxShift) {
+  void scrollBy(double pxShift) {
     _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift).clamp(
       _minRightBoundEpoch,
       _maxRightBoundEpoch,
