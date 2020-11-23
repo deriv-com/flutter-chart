@@ -6,7 +6,7 @@ import 'asset_icon_placeholder.dart';
 String getPNGPathForAsset(String assetCode) =>
     'assets/icons/symbols/$assetCode.png';
 
-///A wrapper widget around [AssetImage] which provides image icon for the
+/// A wrapper widget around [AssetImage] which provides image icon for the
 /// given [symbolCode].
 class SymbolPNGPicture extends StatelessWidget {
   /// Initializes
