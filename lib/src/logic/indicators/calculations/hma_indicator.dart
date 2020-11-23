@@ -1,31 +1,29 @@
+import 'dart:math';
+
+import 'package:deriv_chart/src/models/tick.dart';
+
 import '../indicator.dart';
 import 'cached_indicator.dart';
+import 'helper_indicators/difference_indicator.dart';
+import 'helper_indicators/multiplier_indicator.dart';
 import 'wma_indicator.dart';
 
 /// Hull Moving Average
 class HMAIndicator extends CachedIndicator {
+  HMAIndicator(Indicator indicator, this.barCount)
+      : sqrtWma = WMAIndicator(
+          DifferenceIndicator(
+            MultiplierIndicator(WMAIndicator(indicator, barCount ~/ 2), 2),
+            WMAIndicator(indicator, barCount),
+          ),
+          sqrt(barCount).toInt(),
+        ),
+        super.fromIndicator(indicator);
 
   final int barCount;
 
-   WMAIndicator sqrtWma;
+  WMAIndicator sqrtWma;
 
-  HMAIndicator(Indicator indicator, this.barCount) : super.fromIndicator(indicator){
-
-    WMAIndicator halfWma = new WMAIndicator(indicator, barCount / 2);
-    WMAIndicator origWma = new WMAIndicator(indicator, barCount);
-
-    Indicator indicatorForSqrtWma = new DifferenceIndicator(new MultiplierIndicator(halfWma, 2), origWma);
-    sqrtWma = new WMAIndicator(indicatorForSqrtWma, numOf(barCount).sqrt().intValue());
-  }
-
-  @Override
-  protected Num calculate(int index) {
-    return sqrtWma.getValue(index);
-  }
-
-  @Override
-  public String toString() {
-    return getClass().getSimpleName() + " barCount: " + barCount;
-  }
-
+  @override
+  Tick calculate(int index) => sqrtWma.getValue(index);
 }

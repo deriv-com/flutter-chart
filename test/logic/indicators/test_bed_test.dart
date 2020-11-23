@@ -2,6 +2,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/abstract_ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/hma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
@@ -133,6 +134,46 @@ void main() {
       expect(wmaIndicator.getValue(3).quote, 3.3333333333333335);
       expect(wmaIndicator.getValue(4).quote, 4.333333333333333);
       expect(wmaIndicator.getValue(5).quote, 5.333333333333333);
+    });
+
+    test('HMA Indicator', () {
+      final List<Tick> ticks = <Tick>[
+        Tick(epoch: 1, quote: 84.53),
+        Tick(epoch: 1, quote: 87.39),
+        Tick(epoch: 1, quote: 84.55),
+        Tick(epoch: 1, quote: 82.83),
+        Tick(epoch: 1, quote: 82.58),
+        Tick(epoch: 1, quote: 83.74),
+        Tick(epoch: 1, quote: 83.33),
+        Tick(epoch: 1, quote: 84.57),
+        Tick(epoch: 1, quote: 86.98),
+        Tick(epoch: 1, quote: 87.10),
+        Tick(epoch: 1, quote: 83.11),
+        Tick(epoch: 1, quote: 83.60),
+        Tick(epoch: 1, quote: 83.66),
+        Tick(epoch: 1, quote: 82.76),
+        Tick(epoch: 1, quote: 79.22),
+        Tick(epoch: 1, quote: 79.03),
+        Tick(epoch: 1, quote: 78.18),
+        Tick(epoch: 1, quote: 77.42),
+        Tick(epoch: 1, quote: 74.65),
+        Tick(epoch: 1, quote: 77.48),
+        Tick(epoch: 1, quote: 76.87),
+      ];
+
+      final HMAIndicator hma = HMAIndicator(QuoteIndicator(ticks), 9);
+
+      expect(hma.getValue(10).quote, 86.32044444444443);
+      expect(hma.getValue(11).quote, 85.37048148148149);
+      expect(hma.getValue(12).quote, 84.10444444444447);
+      expect(hma.getValue(13).quote, 83.01974074074077);
+      expect(hma.getValue(14).quote, 81.39133333333335);
+      expect(hma.getValue(15).quote, 79.6511111111111);
+      expect(hma.getValue(16).quote, 78.04429629629628);
+      expect(hma.getValue(17).quote, 76.88322222222223);
+      expect(hma.getValue(18).quote, 75.53633333333335);
+      expect(hma.getValue(19).quote, 75.17129629629629);
+      expect(hma.getValue(20).quote, 75.35974074074075);
     });
   });
 }
