@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/logic/indicators/calculations/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/recursive_cached_indicator.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -21,14 +20,7 @@ class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
   double
       minMaxExtremePoint; // depending on trend the maximum or minimum extreme point value of trend
 
-  /**
-   * Constructor with custom parameters
-   *
-   * @param series    the bar series for this indicator
-   * @param aF        acceleration factor
-   * @param maxA      maximum acceleration
-   * @param increment the increment step
-   */
+  /// Initializes
   ParabolicSarIndicator(
     List<Candle> candles, {
     double aF = 0.02,
@@ -125,9 +117,7 @@ class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
     return Tick(epoch: epoch, quote: sar);
   }
 
-  /**
-   * Increments the acceleration factor.
-   */
+  ///  Increments the acceleration factor.
   void incrementAcceleration() {
     if (accelerationFactor >= maxAcceleration) {
       accelerationFactor = maxAcceleration;
