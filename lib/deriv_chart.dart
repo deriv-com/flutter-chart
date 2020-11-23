@@ -8,13 +8,14 @@ export 'src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dar
 export 'src/logic/annotations/barriers/horizontal_barrier/tick_indicator.dart';
 export 'src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 export 'src/logic/annotations/chart_annotation.dart';
+export 'src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
 export 'src/logic/chart_series/indicators_series/ma_series.dart';
 export 'src/logic/chart_series/line_series/line_series.dart';
 export 'src/logic/chart_series/ohlc_series/candle/candle_series.dart';
 export 'src/logic/chart_series/series.dart';
-export 'src/markers/marker_series.dart';
 export 'src/markers/active_marker.dart';
 export 'src/markers/marker.dart';
+export 'src/markers/marker_series.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_style.dart';
 export 'src/models/tick.dart';

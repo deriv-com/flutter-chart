@@ -44,8 +44,7 @@ class SampleMultiSeries extends Series {
       ];
 
   @override
-  SeriesPainter<SampleMultiSeries> createPainter() =>
-      SampleMultiPainter(this);
+  SeriesPainter<SampleMultiSeries> createPainter() => SampleMultiPainter(this);
 
   @override
   void didUpdate(ChartData oldData) {

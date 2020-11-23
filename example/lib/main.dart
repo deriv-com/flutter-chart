@@ -350,14 +350,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                             ? CandleSeries(ticks)
                             : LineSeries(ticks),
                     secondarySeries: [
-                      MASeries(
-                        ticks,
-                        style: LineStyle(
-                          color: Colors.grey,
-                          thickness: 0.5,
-                          hasArea: false,
-                        ),
-                      ),
+                      BollingerBandSeries(ticks),
                     ],
                     markerSeries: MarkerSeries(
                       _markers,
