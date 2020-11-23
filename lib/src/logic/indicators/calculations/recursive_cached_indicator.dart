@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/indicators/calculations/abstract_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
@@ -8,24 +9,14 @@ import 'cached_indicator.dart';
 
 abstract class RecursiveCachedIndicator<T extends Tick>
     extends CachedIndicator<T> {
-  /**
-   * The recursion threshold for which an iterative calculation is executed. TODO
-   * Should be variable (depending on the sub-indicators used in this indicator)
-   */
-  static final int RECURSION_THRESHOLD = 100;
+   /// The recursion threshold for which an iterative calculation is executed.
+  // TODO(ramin): Should be variable (depending on the sub-indicators used in this indicator)
+  static const int RECURSION_THRESHOLD = 100;
 
-  /**
-   * Constructor.
-   *
-   * @param series the related bar series
-   */
+  /// Initializes
   RecursiveCachedIndicator(List<T> candles) : super(candles);
 
-  /**
-   * Constructor.
-   *
-   * @param indicator a related indicator (with a bar series)
-   */
+  /// Initializes from another [Indicator]
   RecursiveCachedIndicator.fromIndicator(AbstractIndicator indicator)
       : this(indicator.candles);
 
@@ -38,7 +29,7 @@ abstract class RecursiveCachedIndicator<T extends Tick>
         final int removedBarsCount = 0;
         int startIndex = max(removedBarsCount, highestResultIndex);
         if (index - startIndex > RECURSION_THRESHOLD) {
-          // Too many uncalculated values; the risk for a StackOverflowError becomes high.
+          // Too many un-calculated values; the risk for a StackOverflowError becomes high.
           // Calculating the previous values iteratively
           for (int prevIdx = startIndex; prevIdx < index; prevIdx++) {
             super.getValue(prevIdx);
