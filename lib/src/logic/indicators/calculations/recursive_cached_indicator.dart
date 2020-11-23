@@ -6,8 +6,8 @@ import 'package:deriv_chart/src/models/tick.dart';
 
 import 'cached_indicator.dart';
 
-abstract class RecursiveCachedIndicator extends CachedIndicator{
-
+abstract class RecursiveCachedIndicator<T extends Tick>
+    extends CachedIndicator<T> {
   /**
    * The recursion threshold for which an iterative calculation is executed. TODO
    * Should be variable (depending on the sub-indicators used in this indicator)
@@ -19,14 +19,15 @@ abstract class RecursiveCachedIndicator extends CachedIndicator{
    *
    * @param series the related bar series
    */
-  RecursiveCachedIndicator(List<Candle> candles): super(candles) ;
+  RecursiveCachedIndicator(List<T> candles) : super(candles);
 
   /**
    * Constructor.
    *
    * @param indicator a related indicator (with a bar series)
    */
-  RecursiveCachedIndicator.fromIndicator(AbstractIndicator indicator) : this(indicator.candles);
+  RecursiveCachedIndicator.fromIndicator(AbstractIndicator indicator)
+      : this(indicator.candles);
 
   @override
   Tick getValue(int index) {

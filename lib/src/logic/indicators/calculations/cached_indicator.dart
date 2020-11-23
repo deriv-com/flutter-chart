@@ -1,14 +1,13 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import 'abstract_indicator.dart';
 
 /// Handling a level of caching
-abstract class CachedIndicator extends AbstractIndicator {
-  CachedIndicator(List<Candle> candles) : super(candles) {
+abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
+  CachedIndicator(List<T> candles) : super(candles) {
     for (int i = 0; i < candles.length; i++) {
       // results.add(getValue(i));
       getValue(i);

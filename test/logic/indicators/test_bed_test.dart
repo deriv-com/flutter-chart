@@ -61,22 +61,22 @@ void main() {
     });
 
     test('EMA', () {
-      final List<Candle> candles = <Candle>[
-        Candle(epoch: 1, high: 1, low: 1, open: 1, close: 64.75),
-        Candle(epoch: 2, high: 1, low: 1, open: 1, close: 63.79),
-        Candle(epoch: 3, high: 1, low: 1, open: 1, close: 63.73),
-        Candle(epoch: 4, high: 1, low: 1, open: 1, close: 63.73),
-        Candle(epoch: 5, high: 1, low: 1, open: 1, close: 63.55),
-        Candle(epoch: 6, high: 1, low: 1, open: 1, close: 63.19),
-        Candle(epoch: 7, high: 1, low: 1, open: 1, close: 63.91),
-        Candle(epoch: 8, high: 1, low: 1, open: 1, close: 63.85),
-        Candle(epoch: 9, high: 1, low: 1, open: 1, close: 62.95),
-        Candle(epoch: 10, high: 1, low: 1, open: 1, close: 63.37),
-        Candle(epoch: 11, high: 1, low: 1, open: 1, close: 61.33),
-        Candle(epoch: 12, high: 1, low: 1, open: 1, close: 61.51),
+      final List<Tick> ticks = <Tick>[
+        Tick(epoch: 1, quote: 64.75),
+        Tick(epoch: 2, quote: 63.79),
+        Tick(epoch: 3, quote: 63.73),
+        Tick(epoch: 4, quote: 63.73),
+        Tick(epoch: 5, quote: 63.55),
+        Tick(epoch: 6, quote: 63.19),
+        Tick(epoch: 7, quote: 63.91),
+        Tick(epoch: 8, quote: 63.85),
+        Tick(epoch: 9, quote: 62.95),
+        Tick(epoch: 10, quote: 63.37),
+        Tick(epoch: 11, quote: 61.33),
+        Tick(epoch: 12, quote: 61.51),
       ];
 
-      EMAIndicator indicator = EMAIndicator(CloseValueIndicator(candles), 10);
+      EMAIndicator indicator = EMAIndicator(QuoteIndicator(ticks), 10);
 
       expect(indicator.getValue(9).quote, 63.694826748355545);
       expect(indicator.getValue(10).quote, 63.264858248654534);

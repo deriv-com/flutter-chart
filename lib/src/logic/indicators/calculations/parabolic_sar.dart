@@ -8,7 +8,7 @@ import 'helper_indicators/low_value_indicator.dart';
 import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
-class ParabolicSarIndicator extends RecursiveCachedIndicator {
+class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
   double maxAcceleration;
   double accelerationIncrement;
   double accelerationStart;
