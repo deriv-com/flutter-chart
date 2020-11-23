@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -113,6 +114,25 @@ void main() {
       expect(result[9].quote, 11.909090909090908);
       expect(result[10].quote, 8.83471074380165);
       expect(result[11].quote, 5.773854244928623);
+    });
+
+    test('WAM', () {
+      final List<Tick> ticks = <Tick>[
+        Tick(epoch: 1, quote: 1.0),
+        Tick(epoch: 1, quote: 2.0),
+        Tick(epoch: 1, quote: 3.0),
+        Tick(epoch: 1, quote: 4.0),
+        Tick(epoch: 1, quote: 5.0),
+        Tick(epoch: 1, quote: 6.0),
+      ];
+      WMAIndicator wmaIndicator = new WMAIndicator(QuoteIndicator(ticks), 3);
+
+      expect(wmaIndicator.getValue(0).quote, 1);
+      expect(wmaIndicator.getValue(1).quote, 1.6666666666666667);
+      expect(wmaIndicator.getValue(2).quote, 2.3333333333333335);
+      expect(wmaIndicator.getValue(3).quote, 3.3333333333333335);
+      expect(wmaIndicator.getValue(4).quote, 4.333333333333333);
+      expect(wmaIndicator.getValue(5).quote, 5.333333333333333);
     });
   });
 }
