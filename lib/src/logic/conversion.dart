@@ -91,10 +91,10 @@ double timeRangePxWidth({
   double overlap = 0;
 
   for (final TimeRange gap in gaps) {
-    overlap += gap.overlap(range)?.msWidth ?? 0;
+    overlap += gap.overlap(range)?.duration ?? 0;
   }
 
-  return (range.msWidth - overlap) / msPerPx;
+  return (range.duration - overlap) / msPerPx;
 }
 
 /// Returns canvas y-coordinate of the given quote/value.
