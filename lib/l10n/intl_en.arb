@@ -1,0 +1,6 @@
+{
+  "@@locale": "en",
+  "labelSearchAssets": "Search assets",
+  "informNoResult": "No results for \"{text}\"",
+  "warnCheckAssetSearchingText": "Try checking your spelling or use a different term"
+}

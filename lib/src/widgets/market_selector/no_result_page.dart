@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class NoResultPage extends StatelessWidget {
           Icon(Icons.search, size: 96, color: theme.base05Color),
           SizedBox(height: theme.margin16),
           Text(
-            'No results for \"$text\"',
+            ChartLocalization.of(context).informNoResult(text),
             style: theme.textStyle(
               textStyle: theme.title,
               color: theme.base03Color,
@@ -28,7 +29,7 @@ class NoResultPage extends StatelessWidget {
           ),
           SizedBox(height: theme.margin08),
           Text(
-            'Try checking your spelling or use a different term',
+            ChartLocalization.of(context).warnCheckAssetSearchingText,
             style: theme.textStyle(
               textStyle: theme.body1,
               color: theme.base04Color,

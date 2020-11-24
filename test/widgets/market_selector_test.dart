@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart'
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   group('Test different scenarios that might break the [MarketSelector] widget',
@@ -187,6 +188,13 @@ void main() {
         'Search bar TextField appears/disappear on switching to search mode on/off',
         (tester) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          ChartLocalization.delegate,
+        ],
+        supportedLocales: ChartLocalization.delegate.supportedLocales,
         home: MarketSelector(),
       ));
 
@@ -207,6 +215,13 @@ void main() {
 
     testWidgets('Clearing search bar TextField', (tester) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          ChartLocalization.delegate,
+        ],
+        supportedLocales: ChartLocalization.delegate.supportedLocales,
         home: MarketSelector(
           markets: [
             Market(subMarkets: [r25SubMarket])
@@ -235,6 +250,13 @@ void main() {
     testWidgets('Filtering assets shows the assets containing filter text',
         (tester) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          ChartLocalization.delegate,
+        ],
+        supportedLocales: ChartLocalization.delegate.supportedLocales,
         home: MarketSelector(
           markets: [
             Market(subMarkets: [r25SubMarket, r50SubMarket])
