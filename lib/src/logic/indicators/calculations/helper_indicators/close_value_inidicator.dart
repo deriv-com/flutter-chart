@@ -10,4 +10,3 @@ class CloseValueIndicator extends CachedIndicator<Candle> {
   Tick calculate(int index) =>
       Tick(epoch: entries[index].epoch, quote: entries[index].close);
 }
-

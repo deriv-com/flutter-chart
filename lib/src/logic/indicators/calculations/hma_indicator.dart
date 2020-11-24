@@ -11,7 +11,7 @@ import 'wma_indicator.dart';
 /// Hull Moving Average
 class HMAIndicator extends CachedIndicator {
   HMAIndicator(Indicator indicator, this.barCount)
-      : sqrtWma = WMAIndicator(
+      : _sqrtWma = WMAIndicator(
           DifferenceIndicator(
             MultiplierIndicator(WMAIndicator(indicator, barCount ~/ 2), 2),
             WMAIndicator(indicator, barCount),
@@ -22,8 +22,8 @@ class HMAIndicator extends CachedIndicator {
 
   final int barCount;
 
-  WMAIndicator sqrtWma;
+  WMAIndicator _sqrtWma;
 
   @override
-  Tick calculate(int index) => sqrtWma.getValue(index);
+  Tick calculate(int index) => _sqrtWma.getValue(index);
 }

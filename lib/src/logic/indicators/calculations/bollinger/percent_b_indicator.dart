@@ -8,7 +8,7 @@ import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_middle_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
-/// %B indicator.
+/// %B Indicator.
 class PercentBIndicator extends CachedIndicator {
   final Indicator indicator;
 
@@ -26,7 +26,6 @@ class PercentBIndicator extends CachedIndicator {
         bbl = BollingerBandsLowerIndicator(bbm, sd, k: k),
         super.fromIndicator(indicator);
 
-  ///
   /// Initializes
   ///
   /// [indicator] an indicator (usually close price)
@@ -46,6 +45,7 @@ class PercentBIndicator extends CachedIndicator {
     final double value = indicator.getValue(index).quote;
     final double upValue = bbu.getValue(index).quote;
     final double lowValue = bbl.getValue(index).quote;
+
     return Tick(
       epoch: getEpochOfIndex(index),
       quote: (value - lowValue) / (upValue - lowValue),

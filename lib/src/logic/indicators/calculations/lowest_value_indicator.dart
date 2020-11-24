@@ -20,8 +20,7 @@ class LowestValueIndicator extends CachedIndicator {
   @override
   Tick calculate(int index) {
     if (indicator.getValue(index).quote.isNaN && barCount != 1) {
-      return new LowestValueIndicator(indicator, barCount - 1)
-          .getValue(index - 1);
+      return LowestValueIndicator(indicator, barCount - 1).getValue(index - 1);
     }
     int end = max(0, index - barCount + 1);
     double lowest = indicator.getValue(index).quote;

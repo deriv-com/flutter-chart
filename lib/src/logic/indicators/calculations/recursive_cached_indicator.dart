@@ -8,7 +8,7 @@ import 'cached_indicator.dart';
 
 abstract class RecursiveCachedIndicator<T extends Tick>
     extends CachedIndicator<T> {
-   /// The recursion threshold for which an iterative calculation is executed.
+  /// The recursion threshold for which an iterative calculation is executed.
   static const int RECURSION_THRESHOLD = 50;
 
   /// Initializes

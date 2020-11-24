@@ -11,7 +11,7 @@ class VarianceIndicator extends CachedIndicator {
   /// [indicator] the indicator
   /// [barCount]  the time frame
   VarianceIndicator(this.indicator, this.barCount)
-      : sma = new SMAIndicator(indicator, barCount),
+      : sma = SMAIndicator(indicator, barCount),
         super.fromIndicator(indicator);
 
   final Indicator indicator;

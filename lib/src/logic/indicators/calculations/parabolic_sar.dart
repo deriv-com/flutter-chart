@@ -7,6 +7,7 @@ import 'helper_indicators/low_value_indicator.dart';
 import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
+/// Parabolic Sar Indicator
 class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
   double maxAcceleration;
   double accelerationIncrement;
@@ -105,7 +106,7 @@ class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
       } else {
         // down trend io going on
         currentExtremePoint =
-            new LowestValueIndicator(lowPriceIndicator, index - startTrendIndex)
+            LowestValueIndicator(lowPriceIndicator, index - startTrendIndex)
                 .getValue(index)
                 .quote;
         if (currentExtremePoint < (minMaxExtremePoint)) {

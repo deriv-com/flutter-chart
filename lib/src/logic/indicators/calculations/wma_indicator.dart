@@ -31,6 +31,7 @@ class WMAIndicator extends CachedIndicator {
       value = value + (i * (indicator.getValue(actualIndex).quote));
       actualIndex--;
     }
+
     return Tick(
       epoch: getEpochOfIndex(index),
       quote: value / ((barCount * (barCount + 1)) / 2),

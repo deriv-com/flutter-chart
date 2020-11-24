@@ -8,18 +8,17 @@ import 'variance_indicator.dart';
 
 /// Standard deviation indicator.
 class StandardDeviationIndicator extends CachedIndicator {
-  final VarianceIndicator variance;
+  final VarianceIndicator _variance;
 
-  ///
-  /// @param indicator the indicator
-  /// @param barCount  the time frame
+  /// [indicator] the indicator
+  /// [barCount]  the time frame
   StandardDeviationIndicator(Indicator indicator, int barCount)
-      : variance = new VarianceIndicator(indicator, barCount),
+      : _variance = VarianceIndicator(indicator, barCount),
         super.fromIndicator(indicator);
 
   @override
   Tick calculate(int index) => Tick(
         epoch: getEpochOfIndex(index),
-        quote: sqrt(variance.getValue(index).quote),
+        quote: sqrt(_variance.getValue(index).quote),
       );
 }
