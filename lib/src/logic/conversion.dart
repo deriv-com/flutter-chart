@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/x_axis/gaps/duration_without_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:meta/meta.dart';
 
@@ -81,15 +80,6 @@ int shiftEpochByPx({
     }
   }
   return shiftedEpoch + (remainingPxShift * msPerPx).round();
-}
-
-/// Returns pixel width of the time range minus the time gaps, which have 0 width on x-axis.
-double timeRangePxWidth({
-  @required TimeRange range,
-  @required double msPerPx,
-  @required List<TimeRange> gaps,
-}) {
-  return durationWithoutGaps(range, gaps) / msPerPx;
 }
 
 /// Returns canvas y-coordinate of the given quote/value.

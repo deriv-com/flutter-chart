@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/conversion.dart';
+import 'package:deriv_chart/src/x_axis/gaps/duration_without_gaps.dart';
 import 'package:deriv_chart/src/x_axis/gaps/find_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -229,11 +230,9 @@ class XAxisModel extends ChangeNotifier {
   /// Px distance between two epochs on the x-axis.
   ///
   /// [leftEpoch] must be before [rightEpoch].
-  double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(
-        range: TimeRange(leftEpoch, rightEpoch),
-        msPerPx: _msPerPx,
-        gaps: _timeGaps,
-      );
+  double pxBetween(int leftEpoch, int rightEpoch) =>
+      durationWithoutGaps(TimeRange(leftEpoch, rightEpoch), _timeGaps) /
+      _msPerPx;
 
   /// Resulting epoch when given epoch value is shifted by given px amount on x-axis.
   ///
