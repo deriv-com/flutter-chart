@@ -7,12 +7,22 @@ import 'package:flutter/material.dart';
 import 'abstract_indicator.dart';
 
 /// Handling a level of caching
+// TODO(ramin): to later implement caching here.
 abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
-  CachedIndicator(List<T> candles) : super(candles);
+  CachedIndicator(List<T> candles) : super(candles) {
+    results = List<Tick>(entries.length);
+    calculateValues();
+  }
 
   /// Initializes from another [Indicator]
   CachedIndicator.fromIndicator(AbstractIndicator indicator)
       : this(indicator.entries);
+
+  void calculateValues() {
+    for (int i = 0; i < entries.length; i++) {
+      getValue(i);
+    }
+  }
 
   /// Should always be the index of the last result in the results list. I.E. the
   /// last calculated result.
@@ -20,10 +30,18 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   int highestResultIndex = -1;
 
   /// List of cached result.
-  final List<Tick> results = <Tick>[];
+  List<Tick> results;
 
   @override
   Tick getValue(int index) {
+    if (results[index] == null) {
+      results[index] = calculate(index);
+    }
+
+    return results[index];
+  }
+
+  Tick getValue1(int index) {
     // Caching buffer size is the length of entries for now.
     final int removedEntriesCount = 0;
     final int maximumResultCount = entries.length;

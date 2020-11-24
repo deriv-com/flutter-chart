@@ -307,26 +307,26 @@ void main() {
 
       PercentBIndicator pcb = new PercentBIndicator(closePrice, 5, 2);
 
-      expect(pcb.getValue(0).quote.isNaN, isTrue);
-      expect(roundDouble(pcb.getValue(1).quote, 2), 0.75);
-      expect(roundDouble(pcb.getValue(2).quote, 4), 0.8244);
-      expect(roundDouble(pcb.getValue(3).quote, 4), 0.6627);
-      expect(roundDouble(pcb.getValue(4).quote, 4), 0.8517);
-      expect(roundDouble(pcb.getValue(5).quote, 5), 0.90328);
-      expect(roundDouble(pcb.getValue(6).quote, 2), 0.83);
-      expect(roundDouble(pcb.getValue(7).quote, 4), 0.6552);
-      expect(roundDouble(pcb.getValue(8).quote, 4), 0.5737);
-      expect(roundDouble(pcb.getValue(9).quote, 4), 0.1047);
-      expect(pcb.getValue(10).quote, 0.5);
-      expect(roundDouble(pcb.getValue(11).quote, 4), 0.0284);
-      expect(roundDouble(pcb.getValue(12).quote, 4), 0.0344);
-      expect(roundDouble(pcb.getValue(13).quote, 4), 0.2064);
-      expect(roundDouble(pcb.getValue(14).quote, 4), 0.1835);
-      expect(roundDouble(pcb.getValue(15).quote, 4), 0.2131);
-      expect(roundDouble(pcb.getValue(16).quote, 4), 0.3506);
-      expect(roundDouble(pcb.getValue(17).quote, 4), 0.5737);
-      expect(pcb.getValue(18).quote, 0.5);
-      expect(roundDouble(pcb.getValue(19).quote, 4), 0.7673);
+      expect(pcb.results[0].quote.isNaN, isTrue);
+      expect(roundDouble(pcb.results[1].quote, 2), 0.75);
+      expect(roundDouble(pcb.results[2].quote, 4), 0.8244);
+      expect(roundDouble(pcb.results[3].quote, 4), 0.6627);
+      expect(roundDouble(pcb.results[4].quote, 4), 0.8517);
+      expect(roundDouble(pcb.results[5].quote, 5), 0.90328);
+      expect(roundDouble(pcb.results[6].quote, 2), 0.83);
+      expect(roundDouble(pcb.results[7].quote, 4), 0.6552);
+      expect(roundDouble(pcb.results[8].quote, 4), 0.5737);
+      expect(roundDouble(pcb.results[9].quote, 4), 0.1047);
+      expect(pcb.results[10].quote, 0.5);
+      expect(roundDouble(pcb.results[11].quote, 4), 0.0284);
+      expect(roundDouble(pcb.results[12].quote, 4), 0.0344);
+      expect(roundDouble(pcb.results[13].quote, 4), 0.2064);
+      expect(roundDouble(pcb.results[14].quote, 4), 0.1835);
+      expect(roundDouble(pcb.results[15].quote, 4), 0.2131);
+      expect(roundDouble(pcb.results[16].quote, 4), 0.3506);
+      expect(roundDouble(pcb.results[17].quote, 4), 0.5737);
+      expect(pcb.results[18].quote, 0.5);
+      expect(roundDouble(pcb.results[19].quote, 4), 0.7673);
     });
   });
 }

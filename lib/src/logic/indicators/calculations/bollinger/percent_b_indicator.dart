@@ -12,9 +12,19 @@ import 'bollinger_bands_upper_indicator.dart';
 class PercentBIndicator extends CachedIndicator {
   final Indicator indicator;
 
-  BollingerBandsUpperIndicator bbu;
+  final BollingerBandsUpperIndicator bbu;
 
-  BollingerBandsLowerIndicator bbl;
+  final BollingerBandsLowerIndicator bbl;
+
+  PercentBIndicator._(
+    this.indicator,
+    StandardDeviationIndicator sd,
+    BollingerBandsMiddleIndicator bbm,
+    int barCount,
+    double k,
+  )   : bbu = BollingerBandsUpperIndicator(bbm, sd, k: k),
+        bbl = BollingerBandsLowerIndicator(bbm, sd, k: k),
+        super.fromIndicator(indicator);
 
   ///
   /// Initializes
@@ -22,15 +32,14 @@ class PercentBIndicator extends CachedIndicator {
   /// [indicator] an indicator (usually close price)
   /// [barCount]  the time frame
   /// [k]         the K multiplier (usually 2.0)
-  PercentBIndicator(this.indicator, int barCount, double k)
-      : super.fromIndicator(indicator) {
-    BollingerBandsMiddleIndicator bbm =
-        BollingerBandsMiddleIndicator(SMAIndicator(indicator, barCount));
-    StandardDeviationIndicator sd =
-        StandardDeviationIndicator(indicator, barCount);
-    bbu = BollingerBandsUpperIndicator(bbm, sd, k: k);
-    bbl = BollingerBandsLowerIndicator(bbm, sd, k: k);
-  }
+  PercentBIndicator(Indicator indicator, int barCount, double k)
+      : this._(
+          indicator,
+          StandardDeviationIndicator(indicator, barCount),
+          BollingerBandsMiddleIndicator(SMAIndicator(indicator, barCount)),
+          barCount,
+          k,
+        );
 
   @override
   Tick calculate(int index) {
