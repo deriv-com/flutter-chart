@@ -152,20 +152,20 @@ abstract class DataSeries<T extends Tick> extends Series {
   bool didUpdate(ChartData oldData) {
     final DataSeries<T> oldSeries = oldData;
 
-    bool didUpdated = false;
+    bool updated = false;
 
     if (entries.isNotEmpty && oldSeries.entries.isNotEmpty) {
       if (entries.last == oldSeries.entries.last) {
         _prevLastEntry = oldSeries._prevLastEntry;
       } else {
         _prevLastEntry = oldSeries.entries.last;
-        didUpdated = true;
+        updated = true;
       }
     }
 
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
 
-    return didUpdated;
+    return updated;
   }
 
   @override
