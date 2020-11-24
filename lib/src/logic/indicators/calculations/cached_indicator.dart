@@ -9,8 +9,9 @@ import 'abstract_indicator.dart';
 /// Handling a level of caching
 // TODO(ramin): to later implement caching here.
 abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
-  CachedIndicator(List<T> candles) : super(candles) {
-    results = List<Tick>(entries.length);
+  CachedIndicator(List<T> entries)
+      : results = List<Tick>(entries.length),
+        super(entries) {
     calculateValues();
   }
 
@@ -30,7 +31,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   int highestResultIndex = -1;
 
   /// List of cached result.
-  List<Tick> results;
+  final List<Tick> results;
 
   @override
   Tick getValue(int index) {
