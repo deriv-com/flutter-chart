@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/logic/duration_without_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:meta/meta.dart';
 
@@ -82,30 +83,13 @@ int shiftEpochByPx({
   return shiftedEpoch + (remainingPxShift * msPerPx).round();
 }
 
-/// Total gap duration between [leftEpoch] and [rightEpoch].
-int gapsDurationBetween(
-  List<TimeRange> gaps,
-  int leftEpoch,
-  int rightEpoch,
-) {
-  int overlap = 0;
-
-  for (final TimeRange gap in gaps) {
-    overlap += gap.overlap(TimeRange(leftEpoch, rightEpoch))?.duration ?? 0;
-  }
-
-  return overlap;
-}
-
 /// Returns pixel width of the time range minus the time gaps, which have 0 width on x-axis.
 double timeRangePxWidth({
   @required TimeRange range,
   @required double msPerPx,
   @required List<TimeRange> gaps,
 }) {
-  return (range.duration -
-          gapsDurationBetween(gaps, range.leftEpoch, range.rightEpoch)) /
-      msPerPx;
+  return durationWithoutGaps(range, gaps) / msPerPx;
 }
 
 /// Returns canvas y-coordinate of the given quote/value.
