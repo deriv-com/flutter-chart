@@ -21,6 +21,8 @@ int durationWithoutGaps(
   TimeRange range,
   List<TimeRange> gaps,
 ) {
+  if (gaps.isEmpty) return range.duration;
+
   final int left = _indexOfGapThatContainsOrNearEpoch(gaps, range.leftEpoch);
   final int right = _indexOfGapThatContainsOrNearEpoch(gaps, range.rightEpoch);
 
