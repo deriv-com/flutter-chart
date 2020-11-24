@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/duration_without_gaps.dart';
+import 'package:deriv_chart/src/x_axis/gaps/duration_without_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:meta/meta.dart';
 
