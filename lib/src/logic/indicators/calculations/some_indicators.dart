@@ -27,7 +27,7 @@ class AbstractIchimokuLineIndicator extends CachedIndicator {
 
   @override
   Tick calculate(int index) => Tick(
-        epoch: candles[index].epoch,
+        epoch: entries[index].epoch,
         quote: _periodHigh.getValue(index).quote +
             _periodLow.getValue(index).quote / 2,
       );

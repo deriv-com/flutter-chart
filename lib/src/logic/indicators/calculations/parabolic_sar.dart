@@ -36,7 +36,7 @@ class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
 
   @override
   Tick calculate(int index) {
-    final int epoch = candles[index].epoch;
+    final int epoch = entries[index].epoch;
     print('${DateTime.now()}');
     double sar = double.nan;
     if (index == 0) {
@@ -45,7 +45,7 @@ class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
           quote: sar); // no trend detection possible for the first value
     } else if (index == 1) {
       // start trend detection
-      currentTrend = candles.first.close < (candles[index].close);
+      currentTrend = entries.first.close < (entries[index].close);
       if (!currentTrend) {
         // down trend
         sar = highPriceIndicator
@@ -76,7 +76,7 @@ class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
         currentTrend = false; // switch to down trend and reset values
         startTrendIndex = index;
         accelerationFactor = accelerationStart;
-        currentExtremePoint = candles[index].low; // put point on max
+        currentExtremePoint = entries[index].low; // put point on max
         minMaxExtremePoint = currentExtremePoint;
       } else {
         // up trend is going on
@@ -100,7 +100,7 @@ class ParabolicSarIndicator extends RecursiveCachedIndicator<Candle> {
             minMaxExtremePoint; // sar starts at the lowest extreme point of previous down trend
         accelerationFactor = accelerationStart;
         startTrendIndex = index;
-        currentExtremePoint = candles[index].high;
+        currentExtremePoint = entries[index].high;
         minMaxExtremePoint = currentExtremePoint;
       } else {
         // down trend io going on

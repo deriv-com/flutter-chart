@@ -8,6 +8,6 @@ class CloseValueIndicator extends CachedIndicator<Candle> {
 
   @override
   Tick calculate(int index) =>
-      Tick(epoch: candles[index].epoch, quote: candles[index].close);
+      Tick(epoch: entries[index].epoch, quote: entries[index].close);
 }
 

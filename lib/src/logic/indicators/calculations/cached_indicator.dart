@@ -12,7 +12,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
   /// Initializes from another [Indicator]
   CachedIndicator.fromIndicator(AbstractIndicator indicator)
-      : this(indicator.candles);
+      : this(indicator.entries);
 
   /// Should always be the index of the last result in the results list. I.E. the
   /// last calculated result.
@@ -24,36 +24,23 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
   @override
   Tick getValue(int index) {
-    if (candles == null) {
-      // Series is null; the indicator doesn't need cache.
-      // (e.g. simple computation of the value)
-      // --> Calculating the value
-      return calculate(index);
-    }
-
-    // Series is not null
-
-    final int removedBarsCount = 0;
-    final int maximumResultCount = candles.length;
+    // Caching buffer size is the length of entries for now.
+    final int removedEntriesCount = 0;
+    final int maximumResultCount = entries.length;
 
     double result;
-    if (index < removedBarsCount) {
+    if (index < removedEntriesCount) {
       // Result already removed from cache
-      print(
-          "{}: result from bar {} already removed from cache, use {}-th instead");
-      increaseLengthTo(removedBarsCount, maximumResultCount);
-      highestResultIndex = removedBarsCount;
+      increaseLengthTo(removedEntriesCount, maximumResultCount);
+      highestResultIndex = removedEntriesCount;
       result = results[0].quote;
       if (result == null) {
-        // It should be "result = calculate(removedBarsCount);".
-        // We use "result = calculate(0);" as a workaround
-        // to fix issue #120 (https://github.com/mdeverdelhan/ta4j/issues/120).
         result = calculate(0).quote;
-        results[0] = Tick(epoch: candles[index].epoch, quote: result);
+        results[0] = Tick(epoch: entries[index].epoch, quote: result);
       }
     } else {
-      if (index == candles.length - 1) {
-        // Don't cache result if last bar
+      if (index == entries.length - 1) {
+        // Don't cache result if last candle
         result = calculate(index).quote;
       } else {
         increaseLengthTo(index, maximumResultCount);
@@ -62,7 +49,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
           highestResultIndex = index;
           result = calculate(index).quote;
           results[results.length - 1] =
-              Tick(epoch: candles[index].epoch, quote: result);
+              Tick(epoch: entries[index].epoch, quote: result);
         } else {
           // Result covered by current cache
           int resultInnerIndex =
@@ -71,12 +58,12 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
           if (result == null) {
             result = calculate(index).quote;
             results[resultInnerIndex] =
-                Tick(epoch: candles[index].epoch, quote: result);
+                Tick(epoch: entries[index].epoch, quote: result);
           }
         }
       }
     }
-    return Tick(epoch: candles[index].epoch, quote: result);
+    return Tick(epoch: entries[index].epoch, quote: result);
   }
 
   /// Increases the size of cached results buffer.
@@ -88,17 +75,14 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
       int newResultsCount = min(index - highestResultIndex, maxLength);
       if (newResultsCount == maxLength) {
         results.clear();
-        // results.addAll(Collections.nCopies(maxLength, null));
         results.addAll(List<Tick>(maxLength));
       } else if (newResultsCount > 0) {
-        // results.addAll(Collections.nCopies(newResultsCount, null));
         results.addAll(List<Tick>(newResultsCount));
         removeExceedingResults(maxLength);
       }
     } else {
       // First use of cache
-      // assert results.isEmpty() : "Cache results list should be empty";
-      // results.addAll(Collections.nCopies(Math.min(index + 1, maxLength), null));
+      assert(results.isEmpty);
       results.addAll(List<Tick>(min(index + 1, maxLength)));
     }
   }

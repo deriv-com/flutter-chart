@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/logic/indicators/calculations/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/indicator.dart';
-import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import 'cached_indicator.dart';
@@ -18,16 +17,16 @@ abstract class RecursiveCachedIndicator<T extends Tick>
 
   /// Initializes from another [Indicator]
   RecursiveCachedIndicator.fromIndicator(AbstractIndicator indicator)
-      : this(indicator.candles);
+      : this(indicator.entries);
 
   @override
   Tick getValue(int index) {
-    if (candles != null) {
-      final int seriesEndIndex = candles.length - 1;
-      if (index <= seriesEndIndex) {
+    if (entries != null) {
+      final int endIndex = entries.length - 1;
+      if (index <= endIndex) {
         // We are not after the end of the series
-        final int removedBarsCount = 0;
-        int startIndex = max(removedBarsCount, highestResultIndex);
+        final int removedEntriesCount = 0;
+        int startIndex = max(removedEntriesCount, highestResultIndex);
         if (index - startIndex > RECURSION_THRESHOLD) {
           // Too many un-calculated values; the risk for a StackOverflowError becomes high.
           // Calculating the previous values iteratively

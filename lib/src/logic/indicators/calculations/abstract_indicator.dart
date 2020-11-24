@@ -6,11 +6,11 @@ import '../indicator.dart';
 /// Bass class of all indicators.
 abstract class AbstractIndicator<T extends Tick> implements Indicator {
   /// Initializes
-  AbstractIndicator(this.candles);
+  AbstractIndicator(this.entries);
 
   /// List of data
-  final List<T> candles;
+  final List<T> entries;
 
   /// Gets the epoch on the give [index]
-  int getEpochOfIndex(int index) => candles[index].epoch;
+  int getEpochOfIndex(int index) => entries[index].epoch;
 }

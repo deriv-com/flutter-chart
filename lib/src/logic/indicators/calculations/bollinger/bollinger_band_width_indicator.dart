@@ -23,7 +23,7 @@ class BollingerBandWidthIndicator extends CachedIndicator {
   /// bbl the lower band Indicator.
   BollingerBandWidthIndicator(this.bbu, this.bbm, this.bbl,
       {this.hundred = 100})
-      : super(bbm.candles);
+      : super(bbm.entries);
 
   @override
   Tick calculate(int index) {

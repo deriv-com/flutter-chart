@@ -9,7 +9,7 @@ import 'cached_indicator.dart';
 class LowestValueIndicator extends CachedIndicator {
   /// Initializes
   LowestValueIndicator(this.indicator, this.barCount)
-      : super(indicator.candles);
+      : super(indicator.entries);
 
   /// Indicator to calculate Lowest value on
   final AbstractIndicator indicator;
@@ -30,6 +30,6 @@ class LowestValueIndicator extends CachedIndicator {
         lowest = indicator.getValue(i).quote;
       }
     }
-    return Tick(epoch: candles[index].epoch, quote: lowest);
+    return Tick(epoch: entries[index].epoch, quote: lowest);
   }
 }

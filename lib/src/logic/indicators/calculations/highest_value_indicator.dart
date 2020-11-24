@@ -25,6 +25,6 @@ class HighestValueIndicator extends CachedIndicator {
         highest = indicator.getValue(i).quote;
       }
     }
-    return Tick(epoch: candles[index].epoch, quote: highest);
+    return Tick(epoch: entries[index].epoch, quote: highest);
   }
 }

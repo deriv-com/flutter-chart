@@ -7,5 +7,5 @@ class QuoteIndicator extends CachedIndicator<Tick> {
 
   @override
   Tick calculate(int index) =>
-      Tick(epoch: candles[index].epoch, quote: candles[index].quote);
+      Tick(epoch: entries[index].epoch, quote: entries[index].quote);
 }
