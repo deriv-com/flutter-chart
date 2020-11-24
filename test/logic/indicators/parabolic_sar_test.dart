@@ -30,11 +30,9 @@ void main() {
 
     ParabolicSarIndicator sar = new ParabolicSarIndicator(bars);
 
-    print('');
 
     for (int i = 0; i < bars.length; i++) {
       final result = sar.getValue(i);
-      print(result.quote);
     }
 
     // assertEquals("NaN", sar.getValue(0).toString());

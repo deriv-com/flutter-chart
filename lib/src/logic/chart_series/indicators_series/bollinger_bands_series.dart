@@ -46,21 +46,11 @@ class BollingerBandSeries extends Series {
     final BollingerBandsUpperIndicator bbuSMA =
         BollingerBandsUpperIndicator(bbmSMA, standardDeviation);
 
-    final List<Tick> lowerResult = <Tick>[];
-    final List<Tick> middleResult = <Tick>[];
-    final List<Tick> upperResult = <Tick>[];
-
-    for (int i = 0; i < ticks.length; i++) {
-      lowerResult.add(bblSMA.getValue(i));
-      middleResult.add(bbmSMA.getValue(i));
-      upperResult.add(bbuSMA.getValue(i));
-    }
-
-    _lowerSeries = LineSeries(lowerResult,
+    _lowerSeries = LineSeries(bblSMA.results,
         style: const LineStyle(hasArea: false, color: Colors.redAccent));
-    _middleSeries = LineSeries(middleResult,
+    _middleSeries = LineSeries(bbmSMA.results,
         style: const LineStyle(hasArea: false, color: Colors.white));
-    _upperSeries = LineSeries(upperResult,
+    _upperSeries = LineSeries(bbuSMA.results,
         style: const LineStyle(hasArea: false, color: Colors.lightGreen));
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands

@@ -42,8 +42,6 @@ void main() {
     test('Ichimoku test', () {
       AbstractIchimokuLineIndicator abstractIchimokuLineIndicator =
           AbstractIchimokuLineIndicator(candles, 3);
-
-      print('object');
     });
 
     test('SMAIndicator', () {
@@ -67,8 +65,6 @@ void main() {
     test('Parabolic SAR', () {
       ParabolicSarIndicator parabolicSarIndicator =
           ParabolicSarIndicator(candles);
-
-      print('');
     });
 
     test('EMA', () {
@@ -89,15 +85,9 @@ void main() {
 
       EMAIndicator indicator = EMAIndicator(QuoteIndicator(ticks), 10);
 
-      final List<Tick> result = <Tick>[];
-
-      for (int i = 0; i < ticks.length; i++) {
-        result.add(indicator.getValue(i));
-      }
-
-      expect(roundDouble(result[9].quote, 4), 63.6948);
-      expect(roundDouble(result[10].quote, 4), 63.2649);
-      expect(roundDouble(result[11].quote, 4), 62.9458);
+      expect(roundDouble(indicator.results[9].quote, 4), 63.6948);
+      expect(roundDouble(indicator.results[10].quote, 4), 63.2649);
+      expect(roundDouble(indicator.results[11].quote, 4), 62.9458);
     });
 
     test('ZELMA', () {
@@ -119,15 +109,9 @@ void main() {
 
       ZLEMAIndicator indicator = ZLEMAIndicator(QuoteIndicator(ticks), 10);
 
-      final List<Tick> result = <Tick>[];
-
-      for (int i = 0; i < ticks.length; i++) {
-        result.add(indicator.getValue(i));
-      }
-
-      expect(roundDouble(result[9].quote, 3), 11.909);
-      expect(roundDouble(result[10].quote, 4), 8.8347);
-      expect(roundDouble(result[11].quote, 4), 5.7739);
+      expect(roundDouble(indicator.results[9].quote, 3), 11.909);
+      expect(roundDouble(indicator.results[10].quote, 4), 8.8347);
+      expect(roundDouble(indicator.results[11].quote, 4), 5.7739);
     });
 
     test('WAM', () {
@@ -176,23 +160,17 @@ void main() {
 
       final HMAIndicator hma = HMAIndicator(QuoteIndicator(ticks), 9);
 
-      final List<Tick> result = <Tick>[];
-
-      for (int i = 0; i < ticks.length; i++) {
-        result.add(hma.getValue(i));
-      }
-
-      expect(roundDouble(result[10].quote, 4), 86.3204);
-      expect(roundDouble(result[11].quote, 4), 85.3705);
-      expect(roundDouble(result[12].quote, 4), 84.1044);
-      expect(roundDouble(result[13].quote, 4), 83.0197);
-      expect(roundDouble(result[14].quote, 4), 81.3913);
-      expect(roundDouble(result[15].quote, 4), 79.6511);
-      expect(roundDouble(result[16].quote, 4), 78.0443);
-      expect(roundDouble(result[17].quote, 4), 76.8832);
-      expect(roundDouble(result[18].quote, 4), 75.5363);
-      expect(roundDouble(result[19].quote, 4), 75.1713);
-      expect(roundDouble(result[20].quote, 4), 75.3597);
+      expect(roundDouble(hma.results[10].quote, 4), 86.3204);
+      expect(roundDouble(hma.results[11].quote, 4), 85.3705);
+      expect(roundDouble(hma.results[12].quote, 4), 84.1044);
+      expect(roundDouble(hma.results[13].quote, 4), 83.0197);
+      expect(roundDouble(hma.results[14].quote, 4), 81.3913);
+      expect(roundDouble(hma.results[15].quote, 4), 79.6511);
+      expect(roundDouble(hma.results[16].quote, 4), 78.0443);
+      expect(roundDouble(hma.results[17].quote, 4), 76.8832);
+      expect(roundDouble(hma.results[18].quote, 4), 75.5363);
+      expect(roundDouble(hma.results[19].quote, 4), 75.1713);
+      expect(roundDouble(hma.results[20].quote, 4), 75.3597);
     });
 
     test('Bollinger middle', () {
