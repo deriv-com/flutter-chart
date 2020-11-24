@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/find_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
@@ -156,8 +158,15 @@ class XAxisModel extends ChangeNotifier {
 
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
+    // Max difference between consecutive entries in milliseconds.
+    final int maxDiff = max(
+      granularity,
+      // Time gap cannot be shorter than this.
+      const Duration(minutes: 1).inMilliseconds,
+    );
+
     if (firstLoad || reload) {
-      _timeGaps = findGaps(entries, granularity);
+      _timeGaps = findGaps(entries, maxDiff);
     } else if (historyLoad) {
       // ------------- entries
       //         ----- _entries
@@ -167,7 +176,7 @@ class XAxisModel extends ChangeNotifier {
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
           entries.sublist(0, entries.length - _entries.length + 1);
-      _timeGaps = findGaps(prefix, granularity) + _timeGaps;
+      _timeGaps = findGaps(prefix, maxDiff) + _timeGaps;
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.

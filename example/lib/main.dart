@@ -19,6 +19,8 @@ import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:example/generated/l10n.dart';
 
 import 'utils/misc.dart';
 
@@ -31,6 +33,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        ChartLocalization.delegate,
+        ExampleLocalization.delegate,
+      ],
+      supportedLocales: ExampleLocalization.delegate.supportedLocales,
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: SafeArea(
