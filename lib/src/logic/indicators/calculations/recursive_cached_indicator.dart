@@ -9,8 +9,7 @@ import 'cached_indicator.dart';
 abstract class RecursiveCachedIndicator<T extends Tick>
     extends CachedIndicator<T> {
    /// The recursion threshold for which an iterative calculation is executed.
-  // TODO(ramin): Should be variable (depending on the sub-indicators used in this indicator)
-  static const int RECURSION_THRESHOLD = 100;
+  static const int RECURSION_THRESHOLD = 50;
 
   /// Initializes
   RecursiveCachedIndicator(List<T> candles) : super(candles);
@@ -24,7 +23,6 @@ abstract class RecursiveCachedIndicator<T extends Tick>
     if (entries != null) {
       final int endIndex = entries.length - 1;
       if (index <= endIndex) {
-        // We are not after the end of the series
         final int removedEntriesCount = 0;
         int startIndex = max(removedEntriesCount, highestResultIndex);
         if (index - startIndex > RECURSION_THRESHOLD) {

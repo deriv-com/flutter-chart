@@ -9,7 +9,7 @@ class DifferenceIndicator extends CachedIndicator {
 
   /// (first minus second)
   DifferenceIndicator(this.first, this.second) : super.fromIndicator(first) {
-    // TODO: check if first series is equal to second one
+    // TODO: check if first indicator is equal to second one
   }
 
   @override
