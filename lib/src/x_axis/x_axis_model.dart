@@ -227,6 +227,8 @@ class XAxisModel extends ChangeNotifier {
   double pxFromMs(int ms) => ms / _msPerPx;
 
   /// Px distance between two epochs on the x-axis.
+  ///
+  /// [leftEpoch] must be before [rightEpoch].
   double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(
         range: TimeRange(leftEpoch, rightEpoch),
         msPerPx: _msPerPx,
