@@ -26,10 +26,15 @@ int durationWithoutGaps(
   final int left = _indexOfGapThatContainsOrNearEpoch(gaps, range.leftEpoch);
   final int right = _indexOfGapThatContainsOrNearEpoch(gaps, range.rightEpoch);
 
+  print(left);
+  print(right);
+
   int overlap = 0;
 
   overlap += gaps[left].overlap(range)?.duration ?? 0;
-  overlap += gaps[right].overlap(range)?.duration ?? 0;
+  if (left != right) {
+    overlap += gaps[right].overlap(range)?.duration ?? 0;
+  }
 
   for (int i = left + 1; i < right; i++) {
     overlap += gaps[i].duration;
