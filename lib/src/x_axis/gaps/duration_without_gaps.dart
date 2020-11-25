@@ -6,9 +6,9 @@ int _indexOfGapThatContainsOrNearEpoch(List<TimeRange> gaps, int epoch) {
   while (low < high) {
     final int mid = (low + high) >> 1;
     if (gaps[mid].isBefore(epoch)) {
-      high = mid;
-    } else if (gaps[mid].isAfter(epoch)) {
       low = mid + 1;
+    } else if (gaps[mid].isAfter(epoch)) {
+      high = mid;
     } else {
       return mid;
     }
