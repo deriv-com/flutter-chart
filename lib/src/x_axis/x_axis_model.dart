@@ -34,7 +34,7 @@ class XAxisModel extends ChangeNotifier {
       ..addListener(() {
         final double diff =
             _scrollAnimationController.value - (_prevScrollAnimationValue ?? 0);
-        scrollBy(diff);
+        _scrollBy(diff);
 
         if (hasHitLimit) {
           _scrollAnimationController.stop();
@@ -139,6 +139,8 @@ class XAxisModel extends ChangeNotifier {
 
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
+  double _panSpeed;
+
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
   /// Should be called after [_updateGranularity] and [_updateIsLive].
@@ -212,7 +214,14 @@ class XAxisModel extends ChangeNotifier {
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
       _scrollTo(_rightBoundEpoch + elapsedMs);
+    } else if (_panSpeed != null && _panSpeed != 0) {
+      _scrollBy(_panSpeed * elapsedMs);
     }
+    notifyListeners();
+  }
+
+  void pan(double panSpeed) {
+    _panSpeed = panSpeed;
     notifyListeners();
   }
 
@@ -279,7 +288,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    scrollBy(-details.delta.dx);
+    _scrollBy(-details.delta.dx);
     notifyListeners();
   }
 
@@ -312,7 +321,7 @@ class XAxisModel extends ChangeNotifier {
     onScroll?.call();
   }
 
-  void scrollBy(double pxShift) {
+  void _scrollBy(double pxShift) {
     _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
     _clampRightBoundEpoch();
     onScroll?.call();

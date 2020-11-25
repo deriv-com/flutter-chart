@@ -81,6 +81,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
     // Stop auto-panning to make it easier to select candle or tick.
     xAxis.disableAutoPan();
+    xAxis.pan(0);
 
     setState(() {
       crosshairTick = _getClosestTick(details.localPosition.dx);
@@ -89,11 +90,12 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     final dx = details.localPosition.dx;
-    double width = MediaQuery.of(context).size.width;
     if (dx < 60) {
-      xAxis.scrollBy(-5);
-    } else if (width - dx < 60) {
-      xAxis.scrollBy(5);
+      xAxis.pan(-0.08);
+    } else if (xAxis.width - dx < 60) {
+      xAxis.pan(0.08);
+    } else {
+      xAxis.pan(0);
     }
     setState(() {
       crosshairTick = _getClosestTick(dx);
@@ -109,6 +111,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
 
+    xAxis.pan(0);
     xAxis.enableAutoPan();
 
     setState(() {
