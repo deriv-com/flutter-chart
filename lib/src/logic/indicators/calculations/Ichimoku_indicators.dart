@@ -1,3 +1,7 @@
+// **********
+// ** NOTE ** Not completed yet. In progress...
+// **********
+
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
@@ -13,7 +17,7 @@ class AbstractIchimokuLineIndicator extends CachedIndicator {
   /// Initializes.
   ///
   /// [entries]   the data
-  /// [barCount] the time frame
+  /// [barCount] Bar count
   AbstractIchimokuLineIndicator(List<Candle> entries, int barCount)
       : _periodHigh =
             HighestValueIndicator(HighValueIndicator(entries), barCount),
