@@ -1,12 +1,12 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../cached_indicator.dart';
+import '../../cached_indicator.dart';
 import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_middle_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 ///
-/// Bollinger BandWidth indicator.
+/// Bollinger Band Width indicator.
 ///
 class BollingerBandWidthIndicator extends CachedIndicator {
   final BollingerBandsUpperIndicator bbu;

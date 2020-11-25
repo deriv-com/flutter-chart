@@ -1,8 +1,8 @@
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
+import '../../cached_indicator.dart';
 import '../../indicator.dart';
-import '../cached_indicator.dart';
 import '../sma_indicator.dart';
 import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_middle_indicator.dart';

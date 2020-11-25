@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../indicator.dart';
-import 'cached_indicator.dart';
+import '../cached_indicator.dart';
 import 'sma_indicator.dart';
 
 /// Zero-lag exponential moving average indicator

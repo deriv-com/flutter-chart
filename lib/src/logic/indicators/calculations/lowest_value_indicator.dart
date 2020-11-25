@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import 'abstract_indicator.dart';
-import 'cached_indicator.dart';
+import '../abstract_indicator.dart';
+import '../cached_indicator.dart';
 
 /// Lowest price in a range
 class LowestValueIndicator extends CachedIndicator {

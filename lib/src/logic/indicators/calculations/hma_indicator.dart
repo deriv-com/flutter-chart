@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
+import '../cached_indicator.dart';
 import '../indicator.dart';
-import 'cached_indicator.dart';
 import 'helper_indicators/difference_indicator.dart';
 import 'helper_indicators/multiplier_indicator.dart';
 import 'wma_indicator.dart';

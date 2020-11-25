@@ -2,7 +2,7 @@ import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../indicator.dart';
-import 'cached_indicator.dart';
+import '../cached_indicator.dart';
 import 'helper_indicators/high_value_inidicator.dart';
 import 'helper_indicators/low_value_indicator.dart';
 import 'highest_value_indicator.dart';
