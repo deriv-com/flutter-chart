@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
@@ -13,9 +14,6 @@ import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standar
 import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-double roundDouble(double value, int places) =>
-    double.tryParse(value.toStringAsFixed(places));
 
 void main() {
   group('Indicators', () {
@@ -44,133 +42,9 @@ void main() {
           AbstractIchimokuLineIndicator(candles, 3);
     });
 
-    test('SMAIndicator', () {
-      SMAIndicator smaIndicator = SMAIndicator(CloseValueIndicator(candles), 3);
-
-      expect(1, smaIndicator.getValue(0).quote);
-      expect(1.5, smaIndicator.getValue(1).quote);
-      expect(2, smaIndicator.getValue(2).quote);
-      expect(3, smaIndicator.getValue(3).quote);
-      expect(10 / 3, smaIndicator.getValue(4).quote);
-      expect(11 / 3, smaIndicator.getValue(5).quote);
-      expect(4, smaIndicator.getValue(6).quote);
-      expect(13 / 3, smaIndicator.getValue(7).quote);
-      expect(4, smaIndicator.getValue(8).quote);
-      expect(10 / 3, smaIndicator.getValue(9).quote);
-      expect(10 / 3, smaIndicator.getValue(10).quote);
-      expect(10 / 3, smaIndicator.getValue(11).quote);
-      expect(3, smaIndicator.getValue(12).quote);
-    });
-
     test('Parabolic SAR', () {
       ParabolicSarIndicator parabolicSarIndicator =
           ParabolicSarIndicator(candles);
-    });
-
-    test('EMA', () {
-      final List<Tick> ticks = <Tick>[
-        Tick(epoch: 1, quote: 64.75),
-        Tick(epoch: 2, quote: 63.79),
-        Tick(epoch: 3, quote: 63.73),
-        Tick(epoch: 4, quote: 63.73),
-        Tick(epoch: 5, quote: 63.55),
-        Tick(epoch: 6, quote: 63.19),
-        Tick(epoch: 7, quote: 63.91),
-        Tick(epoch: 8, quote: 63.85),
-        Tick(epoch: 9, quote: 62.95),
-        Tick(epoch: 10, quote: 63.37),
-        Tick(epoch: 11, quote: 61.33),
-        Tick(epoch: 12, quote: 61.51),
-      ];
-
-      EMAIndicator indicator = EMAIndicator(QuoteIndicator(ticks), 10);
-
-      expect(roundDouble(indicator.results[9].quote, 4), 63.6948);
-      expect(roundDouble(indicator.results[10].quote, 4), 63.2649);
-      expect(roundDouble(indicator.results[11].quote, 4), 62.9458);
-    });
-
-    test('ZELMA', () {
-      // , , , , , , , , , , ,
-      final ticks = <Tick>[
-        Tick(epoch: 1, quote: 10),
-        Tick(epoch: 1, quote: 15),
-        Tick(epoch: 1, quote: 20),
-        Tick(epoch: 1, quote: 18),
-        Tick(epoch: 1, quote: 17),
-        Tick(epoch: 1, quote: 18),
-        Tick(epoch: 1, quote: 15),
-        Tick(epoch: 1, quote: 12),
-        Tick(epoch: 1, quote: 10),
-        Tick(epoch: 1, quote: 8),
-        Tick(epoch: 1, quote: 5),
-        Tick(epoch: 1, quote: 2),
-      ];
-
-      ZLEMAIndicator indicator = ZLEMAIndicator(QuoteIndicator(ticks), 10);
-
-      expect(roundDouble(indicator.results[9].quote, 3), 11.909);
-      expect(roundDouble(indicator.results[10].quote, 4), 8.8347);
-      expect(roundDouble(indicator.results[11].quote, 4), 5.7739);
-    });
-
-    test('WAM', () {
-      final List<Tick> ticks = <Tick>[
-        Tick(epoch: 1, quote: 1.0),
-        Tick(epoch: 1, quote: 2.0),
-        Tick(epoch: 1, quote: 3.0),
-        Tick(epoch: 1, quote: 4.0),
-        Tick(epoch: 1, quote: 5.0),
-        Tick(epoch: 1, quote: 6.0),
-      ];
-      WMAIndicator wmaIndicator = new WMAIndicator(QuoteIndicator(ticks), 3);
-
-      expect(wmaIndicator.getValue(0).quote, 1);
-      expect(roundDouble(wmaIndicator.getValue(1).quote, 4), 1.6667);
-      expect(roundDouble(wmaIndicator.getValue(2).quote, 4), 2.3333);
-      expect(roundDouble(wmaIndicator.getValue(3).quote, 4), 3.3333);
-      expect(roundDouble(wmaIndicator.getValue(4).quote, 4), 4.3333);
-      expect(roundDouble(wmaIndicator.getValue(5).quote, 4), 5.3333);
-    });
-
-    test('HMA Indicator', () {
-      final List<Tick> ticks = <Tick>[
-        Tick(epoch: 1, quote: 84.53),
-        Tick(epoch: 2, quote: 87.39),
-        Tick(epoch: 3, quote: 84.55),
-        Tick(epoch: 4, quote: 82.83),
-        Tick(epoch: 5, quote: 82.58),
-        Tick(epoch: 6, quote: 83.74),
-        Tick(epoch: 7, quote: 83.33),
-        Tick(epoch: 8, quote: 84.57),
-        Tick(epoch: 9, quote: 86.98),
-        Tick(epoch: 10, quote: 87.10),
-        Tick(epoch: 11, quote: 83.11),
-        Tick(epoch: 12, quote: 83.60),
-        Tick(epoch: 13, quote: 83.66),
-        Tick(epoch: 14, quote: 82.76),
-        Tick(epoch: 15, quote: 79.22),
-        Tick(epoch: 16, quote: 79.03),
-        Tick(epoch: 17, quote: 78.18),
-        Tick(epoch: 18, quote: 77.42),
-        Tick(epoch: 19, quote: 74.65),
-        Tick(epoch: 20, quote: 77.48),
-        Tick(epoch: 21, quote: 76.87),
-      ];
-
-      final HMAIndicator hma = HMAIndicator(QuoteIndicator(ticks), 9);
-
-      expect(roundDouble(hma.results[10].quote, 4), 86.3204);
-      expect(roundDouble(hma.results[11].quote, 4), 85.3705);
-      expect(roundDouble(hma.results[12].quote, 4), 84.1044);
-      expect(roundDouble(hma.results[13].quote, 4), 83.0197);
-      expect(roundDouble(hma.results[14].quote, 4), 81.3913);
-      expect(roundDouble(hma.results[15].quote, 4), 79.6511);
-      expect(roundDouble(hma.results[16].quote, 4), 78.0443);
-      expect(roundDouble(hma.results[17].quote, 4), 76.8832);
-      expect(roundDouble(hma.results[18].quote, 4), 75.5363);
-      expect(roundDouble(hma.results[19].quote, 4), 75.1713);
-      expect(roundDouble(hma.results[20].quote, 4), 75.3597);
     });
 
     test('Bollinger middle', () {

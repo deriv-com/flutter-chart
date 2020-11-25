@@ -4,16 +4,18 @@ import '../../abstract_indicator.dart';
 
 /// Difference values between two indicators
 class DifferenceIndicator extends AbstractIndicator {
+  /// Initializes
+  ///
+  /// (first minus second)
+  DifferenceIndicator(this.first, this.second) : super(first.entries) {
+    // TODO: check if first indicator is equal to second one
+  }
+
   /// First indicator
   final AbstractIndicator first;
 
   /// Second indicator
   final AbstractIndicator second;
-
-  /// (first minus second)
-  DifferenceIndicator(this.first, this.second) : super(first.entries) {
-    // TODO: check if first indicator is equal to second one
-  }
 
   @override
   Tick getValue(int index) => Tick(
