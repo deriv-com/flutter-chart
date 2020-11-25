@@ -7,7 +7,7 @@ import 'asset_icon_placeholder.dart';
 import 'highlighted_text.dart';
 import 'market_selector.dart';
 import 'models.dart';
-import 'symbol_png_picture.dart';
+import 'symbol_icon.dart';
 
 /// A widget to show an asset (active symbol) item in the market selector.
 class AssetItem extends StatelessWidget {
@@ -64,7 +64,7 @@ class AssetItem extends StatelessWidget {
         onPressed: () => onAssetClicked?.call(asset, true),
       );
 
-  Widget _buildAssetIcon() => SymbolPNGPicture(
+  Widget _buildAssetIcon() => SymbolIcon(
         width: 24,
         height: 24,
         symbolCode: asset.name,
