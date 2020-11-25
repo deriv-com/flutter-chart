@@ -1,7 +1,7 @@
+import 'dart:math';
+
 import 'package:deriv_chart/src/logic/conversion.dart';
-import 'package:deriv_chart/src/x_axis/gaps/duration_without_gaps.dart';
 import 'package:deriv_chart/src/x_axis/gaps/find_gaps.dart';
-import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/gaps/gap_manager.dart';
 import 'package:flutter/material.dart';
@@ -158,8 +158,15 @@ class XAxisModel extends ChangeNotifier {
 
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
+    // Max difference between consecutive entries in milliseconds.
+    final int maxDiff = max(
+      granularity,
+      // Time gap cannot be shorter than this.
+      const Duration(minutes: 1).inMilliseconds,
+    );
+
     if (firstLoad || reload) {
-      _gapManager.gaps = findGaps(entries, granularity);
+      _gapManager.gaps = findGaps(entries, maxDiff);
     } else if (historyLoad) {
       // ------------- entries
       //         ----- _entries
@@ -169,7 +176,7 @@ class XAxisModel extends ChangeNotifier {
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
           entries.sublist(0, entries.length - _entries.length + 1);
-      _gapManager.gaps = findGaps(prefix, granularity) + _gapManager.gaps;
+      _gapManager.gaps = findGaps(prefix, maxDiff) + _gapManager.gaps;
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
