@@ -7,18 +7,6 @@ import 'bollinger_bands_upper_indicator.dart';
 
 /// Bollinger Band Width indicator.
 class BollingerBandWidthIndicator extends CachedIndicator {
-  /// The upper band Indicator.
-  final BollingerBandsUpperIndicator bbu;
-
-  /// The middle band Indicator. Typically an SMAIndicator is used.
-  final BollingerBandsMiddleIndicator bbm;
-
-  /// The lower band Indicator.
-  final BollingerBandsLowerIndicator bbl;
-
-  /// Typically is 100.
-  final double hundred;
-
   /// Initializes.
   ///
   /// [bbu] the upper band Indicator.
@@ -30,6 +18,18 @@ class BollingerBandWidthIndicator extends CachedIndicator {
     this.bbl, {
     this.hundred = 100,
   }) : super(bbm.entries);
+
+  /// The upper band Indicator.
+  final BollingerBandsUpperIndicator bbu;
+
+  /// The middle band Indicator. Typically an SMAIndicator is used.
+  final BollingerBandsMiddleIndicator bbm;
+
+  /// The lower band Indicator.
+  final BollingerBandsLowerIndicator bbl;
+
+  /// Typically is 100.
+  final double hundred;
 
   @override
   Tick calculate(int index) => Tick(

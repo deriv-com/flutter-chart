@@ -1,22 +1,21 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../cached_indicator.dart';
-import '../../indicator.dart';
+import '../../abstract_indicator.dart';
 
 /// A helper indicator to multiply another indicator values by a [coefficient].
-class MultiplierIndicator extends CachedIndicator {
+class MultiplierIndicator extends AbstractIndicator {
   /// Initializes
   MultiplierIndicator(this.indicator, this.coefficient)
-      : super.fromIndicator(indicator);
+      : super(indicator.entries);
 
   /// Indicator
-  final Indicator indicator;
+  final AbstractIndicator indicator;
 
   /// Coefficient
   final double coefficient;
 
   @override
-  Tick calculate(int index) => Tick(
+  Tick getValue(int index) => Tick(
         epoch: getEpochOfIndex(index),
         quote: indicator.getValue(index).quote * coefficient,
       );

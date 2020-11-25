@@ -6,6 +6,7 @@ import 'abstract_indicator.dart';
 /// Decides for how many elements in the [entries] list indicator values should be calculated.
 // TODO(Ramin): Later if we require a level of caching can be added here. Right now it calculates indicator for the entire list.
 abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
+  /// Initializes
   CachedIndicator(List<T> entries)
       : results = List<Tick>(entries.length),
         super(entries) {
