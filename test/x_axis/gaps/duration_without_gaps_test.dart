@@ -53,6 +53,21 @@ void main() {
         ),
         equals(30),
       );
+      expect(
+        durationWithoutGaps(
+          TimeRange(300, 1000),
+          [
+            TimeRange(250, 360),
+            TimeRange(390, 400),
+            TimeRange(420, 422),
+            TimeRange(490, 499),
+            TimeRange(800, 900),
+            TimeRange(1000, 1200),
+            TimeRange(2000, 3000),
+          ],
+        ),
+        equals(519),
+      );
     });
   });
 }
