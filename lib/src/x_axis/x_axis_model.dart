@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/x_axis/gaps/duration_without_gaps.dart';
 import 'package:deriv_chart/src/x_axis/gaps/find_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/x_axis/gaps/gap_manager.dart';
 import 'package:flutter/material.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
@@ -74,7 +75,7 @@ class XAxisModel extends ChangeNotifier {
   final VoidCallback onScroll;
 
   List<Tick> _entries;
-  List<TimeRange> _timeGaps = <TimeRange>[];
+  final GapManager _gapManager = GapManager();
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
@@ -158,7 +159,7 @@ class XAxisModel extends ChangeNotifier {
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
     if (firstLoad || reload) {
-      _timeGaps = findGaps(entries, granularity);
+      _gapManager.gaps = findGaps(entries, granularity);
     } else if (historyLoad) {
       // ------------- entries
       //         ----- _entries
@@ -168,7 +169,7 @@ class XAxisModel extends ChangeNotifier {
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
           entries.sublist(0, entries.length - _entries.length + 1);
-      _timeGaps = findGaps(prefix, granularity) + _timeGaps;
+      _gapManager.gaps = findGaps(prefix, granularity) + _gapManager.gaps;
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
@@ -231,8 +232,7 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// [leftEpoch] must be before [rightEpoch].
   double pxBetween(int leftEpoch, int rightEpoch) =>
-      durationWithoutGaps(TimeRange(leftEpoch, rightEpoch), _timeGaps) /
-      _msPerPx;
+      _gapManager.removeGaps(leftEpoch, rightEpoch) / _msPerPx;
 
   /// Resulting epoch when given epoch value is shifted by given px amount on x-axis.
   ///
@@ -242,7 +242,7 @@ class XAxisModel extends ChangeNotifier {
         epoch: epoch,
         pxShift: pxShift,
         msPerPx: _msPerPx,
-        gaps: _timeGaps,
+        gaps: _gapManager.gaps,
       );
 
   /// Get x position of epoch.
