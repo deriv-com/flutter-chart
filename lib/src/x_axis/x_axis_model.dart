@@ -166,7 +166,7 @@ class XAxisModel extends ChangeNotifier {
     );
 
     if (firstLoad || reload) {
-      _gapManager.gaps = findGaps(entries, maxDiff);
+      _gapManager.replaceGaps(findGaps(entries, maxDiff));
     } else if (historyLoad) {
       // ------------- entries
       //         ----- _entries
@@ -176,7 +176,7 @@ class XAxisModel extends ChangeNotifier {
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
           entries.sublist(0, entries.length - _entries.length + 1);
-      _gapManager.gaps = findGaps(prefix, maxDiff) + _gapManager.gaps;
+      _gapManager.insertInFront(findGaps(prefix, maxDiff));
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
