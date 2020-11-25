@@ -6,7 +6,9 @@ import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart'
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'ma_series.dart';
@@ -61,15 +63,15 @@ class SampleMultiSeries extends Series {
     double Function(int) epochToX,
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
-    int pipSize,
-    int granularity,
+    ChartConfig chartConfig,
+    ChartTheme theme,
   ) {
     super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     series1.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     series2.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, pipSize, granularity);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 }

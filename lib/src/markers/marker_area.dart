@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
@@ -48,12 +49,9 @@ class _MarkerAreaState extends State<MarkerArea> {
     if (series.activeMarker != null) {
       if (series.activeMarker.tapArea.contains(details.localPosition)) {
         series.activeMarker.onTap?.call();
-        return;
+      } else {
+        series.activeMarker.onTapOutside?.call();
       }
-    }
-
-    if (series.activeMarker != null) {
-      series.activeMarker.onTapOutside?.call();
       return;
     }
 
@@ -81,6 +79,7 @@ class _MarkerAreaState extends State<MarkerArea> {
               series: widget.markerSeries,
               epochToX: xAxis.xFromEpoch,
               quoteToY: widget.quoteToCanvasY,
+              theme: context.watch<ChartTheme>()
             ),
           ),
         ),
@@ -98,15 +97,17 @@ class _MarkerPainter extends CustomPainter {
     this.series,
     this.epochToX,
     this.quoteToY,
+    this.theme,
   });
 
   final MarkerSeries series;
   final Function epochToX;
   final Function quoteToY;
+  final ChartTheme theme;
 
   @override
   void paint(Canvas canvas, Size size) {
-    series.paint(canvas, size, epochToX, quoteToY, null, null, null);
+    series.paint(canvas, size, epochToX, quoteToY, null, null, theme);
   }
 
   @override
