@@ -1,11 +1,11 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../indicator.dart';
-import 'recursive_cached_indicator.dart';
+import 'cached_indicator.dart';
 import 'sma_indicator.dart';
 
 /// Zero-lag exponential moving average indicator
-class ZLEMAIndicator extends RecursiveCachedIndicator {
+class ZLEMAIndicator extends CachedIndicator {
   /// Indicator to calculate ZELMA on
   final Indicator indicator;
 
