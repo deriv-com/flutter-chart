@@ -9,24 +9,12 @@ String getSymbolAssetPath(String assetCode) =>
 /// A wrapper widget around [AssetImage] which provides image icon for the
 /// given [symbolCode].
 class SymbolIcon extends FadeInImage {
-  /// Symbol code
-  final String symbolCode;
-
-  /// Width
-  final double width;
-
-  /// Height
-  final double height;
-
-  /// Duration of fade In
-  final Duration fadeDuration;
-
   /// Initializes
   SymbolIcon({
-    @required this.symbolCode,
-    this.width = 32,
-    this.height = 32,
-    this.fadeDuration = const Duration(milliseconds: 50),
+    @required String symbolCode,
+    double width = 32,
+    double height = 32,
+    Duration fadeDuration = const Duration(milliseconds: 50),
   }) : super(
           width: width,
           height: height,
