@@ -8,7 +8,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/
 import 'package:deriv_chart/src/logic/indicators/calculations/hma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/some_indicators.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/Ichimoku_indicators.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
@@ -283,7 +283,7 @@ void main() {
 
       final closePrice = QuoteIndicator(ticks);
 
-      PercentBIndicator pcb = new PercentBIndicator(closePrice, 5, 2);
+      PercentBIndicator pcb = new PercentBIndicator(closePrice, 5);
 
       expect(pcb.results[0].quote.isNaN, isTrue);
       expect(roundDouble(pcb.results[1].quote, 2), 0.75);

@@ -10,7 +10,9 @@ import 'variance_indicator.dart';
 class StandardDeviationIndicator extends CachedIndicator {
   final VarianceIndicator _variance;
 
-  /// [indicator] the indicator
+  /// Initializes
+  ///
+  /// [indicator] the indicator to calculates SD on.
   /// [barCount]  the time frame
   StandardDeviationIndicator(Indicator indicator, int barCount)
       : _variance = VarianceIndicator(indicator, barCount),

@@ -5,21 +5,25 @@ import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_middle_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
-///
 /// Bollinger Band Width indicator.
-///
 class BollingerBandWidthIndicator extends CachedIndicator {
+  /// The upper band Indicator.
   final BollingerBandsUpperIndicator bbu;
+
+  /// The middle band Indicator. Typically an SMAIndicator is used.
   final BollingerBandsMiddleIndicator bbm;
+
+  /// The lower band Indicator.
   final BollingerBandsLowerIndicator bbl;
+
+  /// Typically is 100.
   final double hundred;
 
+  /// Initializes.
   ///
-  /// Constructor.
-  ///
-  /// bbu the upper band Indicator.
-  /// bbm the middle band Indicator. Typically an SMAIndicator is used.
-  /// bbl the lower band Indicator.
+  /// [bbu] the upper band Indicator.
+  /// [bbm] the middle band Indicator. Typically an SMAIndicator is used.
+  /// [bbl] the lower band Indicator.
   BollingerBandWidthIndicator(
     this.bbu,
     this.bbm,

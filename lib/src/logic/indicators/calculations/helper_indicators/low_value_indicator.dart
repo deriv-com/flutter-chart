@@ -3,7 +3,9 @@ import 'package:deriv_chart/src/models/tick.dart';
 
 import '../../cached_indicator.dart';
 
+/// A helper indicator to get the low value of a list of [Candle]
 class LowValueIndicator extends CachedIndicator<Candle> {
+  /// Initializes
   LowValueIndicator(List<Candle> candles) : super(candles);
 
   @override

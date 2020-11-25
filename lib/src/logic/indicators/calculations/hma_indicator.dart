@@ -8,8 +8,9 @@ import 'helper_indicators/difference_indicator.dart';
 import 'helper_indicators/multiplier_indicator.dart';
 import 'wma_indicator.dart';
 
-/// Hull Moving Average
+/// Hull Moving Average indicator
 class HMAIndicator extends CachedIndicator {
+  /// Initializes
   HMAIndicator(Indicator indicator, this.barCount)
       : _sqrtWma = WMAIndicator(
           DifferenceIndicator(
@@ -20,6 +21,7 @@ class HMAIndicator extends CachedIndicator {
         ),
         super.fromIndicator(indicator);
 
+  /// Moving average bar count
   final int barCount;
 
   WMAIndicator _sqrtWma;

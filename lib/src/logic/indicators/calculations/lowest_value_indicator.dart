@@ -22,13 +22,16 @@ class LowestValueIndicator extends CachedIndicator {
     if (indicator.getValue(index).quote.isNaN && barCount != 1) {
       return LowestValueIndicator(indicator, barCount - 1).getValue(index - 1);
     }
-    int end = max(0, index - barCount + 1);
+
+    final int end = max(0, index - barCount + 1);
     double lowest = indicator.getValue(index).quote;
+
     for (int i = index - 1; i >= end; i--) {
       if (lowest > indicator.getValue(i).quote) {
         lowest = indicator.getValue(i).quote;
       }
     }
+
     return Tick(epoch: entries[index].epoch, quote: lowest);
   }
 }

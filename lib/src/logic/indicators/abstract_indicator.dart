@@ -7,9 +7,9 @@ abstract class AbstractIndicator<T extends Tick> implements Indicator {
   /// Initializes
   AbstractIndicator(this.entries);
 
-  /// List of data
+  /// List of data to calculate indicator values on.
   final List<T> entries;
 
-  /// Gets the epoch on the give [index]
+  /// Gets the epoch of the given [index]
   int getEpochOfIndex(int index) => entries[index].epoch;
 }

@@ -8,22 +8,23 @@ import 'helper_indicators/low_value_indicator.dart';
 import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
+/// Ichimoku abstract line indicator
 class AbstractIchimokuLineIndicator extends CachedIndicator {
+  /// Initializes.
+  ///
+  /// [entries]   the data
+  /// [barCount] the time frame
+  AbstractIchimokuLineIndicator(List<Candle> entries, int barCount)
+      : _periodHigh =
+            HighestValueIndicator(HighValueIndicator(entries), barCount),
+        _periodLow = LowestValueIndicator(LowValueIndicator(entries), barCount),
+        super(entries);
+
   /// The period high
   final Indicator _periodHigh;
 
   /// The period low
   final Indicator _periodLow;
-
-  /// Initializes.
-  ///
-  /// [candles]   the data
-  /// [barCount] the time frame
-  AbstractIchimokuLineIndicator(List<Candle> candles, int barCount)
-      : _periodHigh =
-            HighestValueIndicator(HighValueIndicator(candles), barCount),
-        _periodLow = LowestValueIndicator(LowValueIndicator(candles), barCount),
-        super(candles);
 
   @override
   Tick calculate(int index) => Tick(

@@ -8,12 +8,6 @@ import 'bollinger_bands_middle_indicator.dart';
 ///
 /// Sell - Occurs when the price line crosses from above to below the Upper Bollinger Band.
 class BollingerBandsUpperIndicator extends CachedIndicator {
-  final Indicator deviation;
-
-  final BollingerBandsMiddleIndicator bbm;
-
-  final double k;
-
   /// Initializes.
   ///
   ///  [bbm]       the middle band Indicator. Typically an SMAIndicator is
@@ -23,6 +17,15 @@ class BollingerBandsUpperIndicator extends CachedIndicator {
   ///  [k]         the scaling factor to multiply the deviation by. Typically 2
   BollingerBandsUpperIndicator(this.bbm, this.deviation, {this.k = 2})
       : super.fromIndicator(deviation);
+
+  /// Deviation indicator
+  final Indicator deviation;
+
+  /// The middle indicator of the BollingerBand
+  final BollingerBandsMiddleIndicator bbm;
+
+  /// Default is 2.
+  final double k;
 
   @override
   Tick calculate(int index) => Tick(

@@ -24,6 +24,7 @@ class SMAIndicator extends CachedIndicator {
     }
 
     final int realBarCount = min(barCount, index + 1);
+
     return Tick(epoch: entries[index].epoch, quote: sum / realBarCount);
   }
 }

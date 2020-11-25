@@ -5,6 +5,7 @@ import '../indicator.dart';
 
 /// Base class for Exponential Moving Average implementations.
 abstract class AbstractEMAIndicator extends CachedIndicator {
+  /// Initializes
   AbstractEMAIndicator(this.indicator, this.barCount, this.multiplier)
       : super.fromIndicator(indicator);
 
@@ -22,7 +23,8 @@ abstract class AbstractEMAIndicator extends CachedIndicator {
     if (index == 0) {
       return indicator.getValue(0);
     }
-    double prevValue = getValue(index - 1).quote;
+
+    final double prevValue = getValue(index - 1).quote;
     return Tick(
       epoch: getEpochOfIndex(index),
       quote: ((indicator.getValue(index).quote - prevValue) * multiplier) +

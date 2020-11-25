@@ -4,8 +4,18 @@ import '../indicator.dart';
 import '../cached_indicator.dart';
 import 'sma_indicator.dart';
 
-/// Zero-lag exponential moving average indicator
+/// Zero-lag Exponential Moving Average indicator
 class ZLEMAIndicator extends CachedIndicator {
+  /// Initializes
+  ///
+  /// [indicator] An indicator
+  ///
+  /// [barCount] Bar count.
+  ZLEMAIndicator(this.indicator, this.barCount)
+      : _k = 2 / (barCount + 1),
+        _lag = (barCount - 1) ~/ 2,
+        super.fromIndicator(indicator);
+
   /// Indicator to calculate ZELMA on
   final Indicator indicator;
 
@@ -14,11 +24,6 @@ class ZLEMAIndicator extends CachedIndicator {
 
   final double _k;
   final int _lag;
-
-  ZLEMAIndicator(this.indicator, this.barCount)
-      : _k = 2 / (barCount + 1),
-        _lag = (barCount - 1) ~/ 2,
-        super.fromIndicator(indicator);
 
   @override
   Tick calculate(int index) {
@@ -30,7 +35,9 @@ class ZLEMAIndicator extends CachedIndicator {
       // If the barCount is bigger than the indicator's value count
       return indicator.getValue(0);
     }
+
     double zlemaPrev = getValue(index - 1).quote;
+
     return Tick(
       epoch: getEpochOfIndex(index),
       quote: (_k *

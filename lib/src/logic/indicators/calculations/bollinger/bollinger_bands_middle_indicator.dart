@@ -7,11 +7,12 @@ import '../../cached_indicator.dart';
 ///
 /// Sell - Occurs when the price line crosses from above to below the Upper Bollinger Band.
 class BollingerBandsMiddleIndicator extends CachedIndicator {
-  final Indicator indicator;
-
   /// [indicator] the indicator that gives the values of the middle band
   BollingerBandsMiddleIndicator(this.indicator)
       : super.fromIndicator(indicator);
+
+  /// Indicator
+  final Indicator indicator;
 
   @override
   Tick calculate(int index) => indicator.getValue(index);

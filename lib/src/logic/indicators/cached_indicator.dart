@@ -3,7 +3,8 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'abstract_indicator.dart';
 
 /// Calculates and keeps the result of indicator calculation values in [results].
-// TODO(Ramin): Later if required a level of caching can be added here. Right now it calculates indicator for the entire entries.
+/// Decides for how many elements in the [entries] list indicator values should be calculated.
+// TODO(Ramin): Later if we require a level of caching can be added here. Right now it calculates indicator for the entire list.
 abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   CachedIndicator(List<T> entries)
       : results = List<Tick>(entries.length),
