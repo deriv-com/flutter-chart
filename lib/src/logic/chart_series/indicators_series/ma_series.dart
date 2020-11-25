@@ -5,7 +5,7 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
 import '../line_series/line_series.dart';
 
-/// A series which shows Moving Average data calculated from [entries]
+/// A series which shows Simple Moving Average data calculated from [entries]
 class SMASeries extends LineSeries {
   /// Initializes
   ///
@@ -17,7 +17,7 @@ class SMASeries extends LineSeries {
     this.period = 15,
   }) : super(
           SMAIndicator(QuoteIndicator(entries), period).results,
-          id: id ?? 'MASeries-Period$period',
+          id: id ?? 'SMASeries-Period$period',
           style: style ?? const LineStyle(thickness: 0.5, hasArea: false),
         );
 
