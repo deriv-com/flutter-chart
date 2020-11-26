@@ -35,6 +35,8 @@ class CrosshairArea extends StatefulWidget {
 class _CrosshairAreaState extends State<CrosshairArea> {
   Tick crosshairTick;
 
+  Offset _lastLongPressPosition;
+
   GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
@@ -84,26 +86,38 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     xAxis.pan(0);
 
     setState(() {
-      crosshairTick = _getClosestTick(details.localPosition.dx);
+      crosshairTick = _getClosestTick(details.localPosition.dx, xAxis);
     });
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     final dx = details.localPosition.dx;
-    if (dx < 60) {
-      xAxis.pan(-0.08);
-    } else if (xAxis.width - dx < 60) {
-      xAxis.pan(0.08);
-    } else {
-      xAxis.pan(0);
-    }
-    setState(() {
-      crosshairTick = _getClosestTick(dx);
-    });
+    _lastLongPressPosition = details.localPosition;
+    // _lastLongPressPositionEpoch = xAxis.epochFromX(dx);
   }
 
-  Tick _getClosestTick(double canvasX) {
-    final epoch = xAxis.epochFromX(canvasX);
+  void _updateCrossHairTick() {
+    XAxisModel xxAxis = context.watch<XAxisModel>();
+
+    if (_lastLongPressPosition != null) {
+      final dx = _lastLongPressPosition.dx;
+
+      final panSpeed = 0.08;
+      final closeDistance = 60;
+
+      if (dx < closeDistance) {
+        xxAxis.pan(-panSpeed);
+      } else if (xxAxis.width - dx < closeDistance) {
+        xxAxis.pan(panSpeed);
+      } else {
+        xxAxis.pan(0);
+      }
+      crosshairTick = _getClosestTick(dx, xxAxis);
+    }
+  }
+
+  Tick _getClosestTick(double canvasX, XAxisModel xxAxis) {
+    final epoch = xxAxis.epochFromX(canvasX);
     return findClosestToEpoch(epoch, widget.mainSeries.visibleEntries);
   }
 
@@ -116,11 +130,14 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
     setState(() {
       crosshairTick = null;
+      _lastLongPressPosition = null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    _updateCrossHairTick();
+
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         fit: StackFit.expand,
