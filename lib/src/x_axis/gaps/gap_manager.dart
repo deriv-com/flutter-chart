@@ -57,8 +57,8 @@ class GapManager {
       overlap += gaps[right].overlap(range)?.duration ?? 0;
     }
 
-    for (int i = left + 1; i < right; i++) {
-      overlap += gaps[i].duration;
+    if (left + 1 < right) {
+      overlap += _cumulativeSums[left + 1] - _cumulativeSums[right];
     }
     return range.duration - overlap;
   }
