@@ -8,7 +8,7 @@ class GapManager {
   /// Cumulative sums of gap durations from right to left.
   /// Allows getting a sum of any gap range in constant time.
   ///
-  /// Right to left is chosed to avoid recalculations,
+  /// Right to left is chosen to avoid recalculations,
   /// since new gaps are added on the left.
   ///
   /// Example:
