@@ -23,15 +23,15 @@ import 'ma_series.dart';
 class SampleMultiSeries extends Series {
   /// Initializes
   SampleMultiSeries(List<Tick> entries, {String id})
-      : series1 = SMASeries(entries, period: 10),
-        series2 = SMASeries(entries, period: 20),
+      : series1 = MASeries(entries, period: 10),
+        series2 = MASeries(entries, period: 20),
         super(id);
 
   /// Series 1
-  final SMASeries series1;
+  final MASeries series1;
 
   /// Series 2
-  final SMASeries series2;
+  final MASeries series2;
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
