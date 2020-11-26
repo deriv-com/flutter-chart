@@ -74,36 +74,11 @@ Path getUpwardArrowPath(
 Path getDownwardArrowPath(
   double middleX,
   double middleY, {
-  double thickness = 4,
   double size = 10,
 }) {
   final double halfSize = size / 2;
-  final double halfThickness = thickness / 2;
-
   return Path()
-    ..moveTo(middleX, middleY)
-    ..lineTo(middleX + halfSize, middleY - halfSize)
-    ..quadraticBezierTo(
-      middleX + halfSize + halfThickness,
-      middleY - halfSize,
-      middleX + halfSize + halfThickness,
-      middleY - halfSize + halfThickness,
-    )
-    ..lineTo(middleX + halfThickness, middleY + halfThickness)
-    ..quadraticBezierTo(
-      middleX,
-      middleY + thickness,
-      middleX - halfThickness,
-      middleY + halfThickness,
-    )
-    ..lineTo(
-      middleX - halfSize - halfThickness,
-      middleY - halfSize + halfThickness,
-    )
-    ..quadraticBezierTo(
-      middleX - halfSize - halfThickness,
-      middleY - halfSize,
-      middleX - halfSize,
-      middleY - halfSize,
-    );
+    ..moveTo(middleX + halfSize, middleY - halfSize)
+    ..lineTo(middleX, middleY)
+    ..lineTo(middleX - halfSize, middleY - halfSize);
 }
