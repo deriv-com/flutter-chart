@@ -15,14 +15,30 @@ class GapManager {
   /// 10-20 30-40 60-80 - [gaps]
   /// 10    10    20    - gap durations
   /// 40    30    20    - [_cumulativeSums]
-  List<int> _cumulativeSums;
+  List<int> _cumulativeSums = [];
 
   void replaceGaps(List<TimeRange> newGaps) {
     gaps = newGaps;
+    _cumulativeSums = _calcCumulativeSums(newGaps);
   }
 
   void insertInFront(List<TimeRange> newGaps) {
     gaps = newGaps + gaps;
+    _cumulativeSums = _calcCumulativeSums(
+      newGaps,
+      startSum: _cumulativeSums.first,
+    );
+  }
+
+  List<int> _calcCumulativeSums(List<TimeRange> gaps, {int startSum = 0}) {
+    List<int> sums = [];
+    int sum = startSum;
+
+    for (final TimeRange gap in gaps.reversed) {
+      sum += gap.duration;
+      sums.insert(0, sum);
+    }
+    return sums;
   }
 
   /// Milliseconds between [leftEpoch] and [rightEpoch] on x-axis without gaps.
