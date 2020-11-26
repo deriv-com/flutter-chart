@@ -24,7 +24,7 @@ class MASeries extends LineSeries {
     MovingAverageType type = MovingAverageType.simple,
   }) : super(
           _getMAIndicator(entries, period, type).results,
-          id: id ?? 'SMASeries-Period$period',
+          id: id ?? 'SMASeries-period$period-type$type',
           style: style ?? const LineStyle(thickness: 0.5, hasArea: false),
         );
 
