@@ -1,5 +1,5 @@
-import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
+import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 
 /// Manages time gaps (closed market time) on x-axis.
 class GapManager {
