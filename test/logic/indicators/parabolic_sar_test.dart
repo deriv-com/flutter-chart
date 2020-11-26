@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,33 +29,33 @@ void main() {
       Candle.noParam(21, 0, 76.850000, 77.000000, 76.190000),
     ];
 
-    ParabolicSarIndicator sar = new ParabolicSarIndicator(bars);
+    ParabolicSarIndicator sar = ParabolicSarIndicator(bars);
 
-
-    for (int i = 0; i < bars.length; i++) {
-      final result = sar.getValue(i);
-    }
-
-    // assertEquals("NaN", sar.getValue(0).toString());
-    // assertNumEquals(74.640000000000000568434188608080, sar.getValue(1));
-    // assertNumEquals(74.640000000000000568434188608080, sar.getValue(2)); // start with up trend
-    // assertNumEquals(76.269900000000006912159733474255, sar.getValue(3)); // switch to downtrend
-    // assertNumEquals(76.234502000000006773916538804770, sar.getValue(4)); // hold trend...
-    // assertNumEquals(76.200611960000006763493729522452, sar.getValue(5));
-    // assertNumEquals(76.112987481600006697590288240463, sar.getValue(6));
-    // assertNumEquals(75.958968232704006684543855953962, sar.getValue(7));
-    // assertNumEquals(75.699850774087686058830877300352, sar.getValue(8));
-    // assertNumEquals(75.461462712160671083174936939031, sar.getValue(9)); // switch to up trend
-    // assertNumEquals(72.719999999999998863131622783840, sar.getValue(10));// hold trend
-    // assertNumEquals(72.802199999999998851762939011678, sar.getValue(11));
-    // assertNumEquals(72.964111999999998670318746007979, sar.getValue(12));
-    // assertNumEquals(73.203865279999998374933056766167, sar.getValue(13));
-    // assertNumEquals(73.513156057599997959241591161117, sar.getValue(14));
-    // assertNumEquals(73.797703572991997576805442804471, sar.getValue(15));
-    // assertNumEquals(74.059487287152637224964186316356, sar.getValue(16));
-    // assertNumEquals(74.300328304180425701270230347291, sar.getValue(17));
-    // assertNumEquals(74.521902039845991099471790855751, sar.getValue(18));
-    // assertNumEquals(74.725749876658311265817226523534, sar.getValue(19));
-    // assertNumEquals(74.913289886525645818855027337894, sar.getValue(20));
+    expect(sar.getValue(0).quote, isNaN);
+    expect(roundDouble(sar.getValue(1).quote, 12), 74.640000000000);
+    // start with up trend
+    expect(roundDouble(sar.getValue(2).quote, 12), 74.640000000000);
+    // switch to downtrend
+    expect(roundDouble(sar.getValue(3).quote, 12), 76.269900000000);
+    // hold trend...
+    expect(roundDouble(sar.getValue(4).quote, 12), 76.234502000000);
+    expect(roundDouble(sar.getValue(5).quote, 12), 76.200611960000);
+    expect(roundDouble(sar.getValue(6).quote, 12), 76.112987481600);
+    expect(roundDouble(sar.getValue(7).quote, 12), 75.958968232704);
+    expect(roundDouble(sar.getValue(8).quote, 12), 75.699850774088);
+    // switch to up trend
+    expect(roundDouble(sar.getValue(9).quote, 12), 75.461462712161);
+    // hold trend
+    expect(roundDouble(sar.getValue(10).quote, 12), 72.720000000000);
+    expect(roundDouble(sar.getValue(11).quote, 12), 72.802200000000);
+    expect(roundDouble(sar.getValue(12).quote, 12), 72.964112000000);
+    expect(roundDouble(sar.getValue(13).quote, 12), 73.203865280000);
+    expect(roundDouble(sar.getValue(14).quote, 12), 73.513156057600);
+    expect(roundDouble(sar.getValue(15).quote, 12), 73.797703572992);
+    expect(roundDouble(sar.getValue(16).quote, 12), 74.059487287153);
+    expect(roundDouble(sar.getValue(17).quote, 12), 74.300328304180);
+    expect(roundDouble(sar.getValue(18).quote, 12), 74.521902039846);
+    expect(roundDouble(sar.getValue(19).quote, 12), 74.725749876658);
+    expect(roundDouble(sar.getValue(20).quote, 12), 74.913289886526);
   });
 }

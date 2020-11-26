@@ -37,96 +37,93 @@ class ParabolicSarIndicator extends CachedIndicator<Candle> {
 
   // index of start bar of the current trend
   int _startTrendIndex = 0;
-  
+
   final LowValueIndicator _lowPriceIndicator;
   final HighValueIndicator _highPriceIndicator;
 
   // the extreme point of the current calculation
-  double currentExtremePoint;
+  double _currentExtremePoint;
 
   // depending on trend the maximum or minimum extreme point value of trend
   double _minMaxExtremePoint;
 
   @override
   Tick calculate(int index) {
-    final int epoch = getEpochOfIndex(index);
     double sar = double.nan;
     if (index == 0) {
-      return Tick(
-          epoch: epoch,
-          quote: sar); // no trend detection possible for the first value
+      // no trend detection possible for the first value
+      return Tick(epoch: getEpochOfIndex(index), quote: sar);
     } else if (index == 1) {
       // start trend detection
       _currentTrend = entries.first.close < (entries[index].close);
       if (!_currentTrend) {
         // down trend
-        sar = _highPriceIndicator
-            .getValue(index)
-            .quote; // put sar on max price of candlestick
+        // put sar on max price of candlestick
+        sar = _highPriceIndicator.getValue(index).quote;
       } else {
         // up trend
-        sar = _lowPriceIndicator
-            .getValue(index)
-            .quote; // put sar on min price of candlestick
-
+        // put sar on min price of candlestick
+        sar = _lowPriceIndicator.getValue(index).quote;
       }
-      currentExtremePoint = sar;
-      _minMaxExtremePoint = currentExtremePoint;
-      return Tick(epoch: epoch, quote: sar);
+      _currentExtremePoint = sar;
+      _minMaxExtremePoint = _currentExtremePoint;
+      return Tick(epoch: getEpochOfIndex(index), quote: sar);
     }
 
     double priorSar = getValue(index - 1).quote;
     if (_currentTrend) {
       // if up trend
-      sar = priorSar +
-          (_accelerationFactor * ((currentExtremePoint - (priorSar))));
-      _currentTrend = _lowPriceIndicator.getValue(index).quote < sar;
+      sar =
+          priorSar + (_accelerationFactor * ((_currentExtremePoint - priorSar)));
+      _currentTrend = _lowPriceIndicator.getValue(index).quote > sar;
       if (!_currentTrend) {
         // check if sar touches the min price
-        sar =
-            _minMaxExtremePoint; // sar starts at the highest extreme point of previous up trend
-        _currentTrend = false; // switch to down trend and reset values
+        // sar starts at the highest extreme point of previous up trend
+        sar = _minMaxExtremePoint;
+        // switch to down trend and reset values
+        _currentTrend = false;
         _startTrendIndex = index;
         _accelerationFactor = _accelerationStart;
-        currentExtremePoint = entries[index].low; // put point on max
-        _minMaxExtremePoint = currentExtremePoint;
+        // put point on max
+        _currentExtremePoint = entries[index].low;
+        _minMaxExtremePoint = _currentExtremePoint;
       } else {
         // up trend is going on
-        currentExtremePoint =
+        _currentExtremePoint =
             HighestValueIndicator(_highPriceIndicator, index - _startTrendIndex)
                 .getValue(index)
                 .quote;
-        if (currentExtremePoint < _minMaxExtremePoint) {
+        if (_currentExtremePoint > _minMaxExtremePoint) {
           incrementAcceleration();
-          _minMaxExtremePoint = currentExtremePoint;
+          _minMaxExtremePoint = _currentExtremePoint;
         }
       }
     } else {
       // downtrend
-      sar = priorSar -
-          (_accelerationFactor * (((priorSar - (currentExtremePoint)))));
-      _currentTrend = _highPriceIndicator.getValue(index).quote < (sar);
+      sar =
+          priorSar - (_accelerationFactor * ((priorSar - _currentExtremePoint)));
+      _currentTrend = _highPriceIndicator.getValue(index).quote >= sar;
       if (_currentTrend) {
         // check if switch to up trend
-        sar =
-            _minMaxExtremePoint; // sar starts at the lowest extreme point of previous down trend
+        // sar starts at the lowest extreme point of previous down trend
+        sar = _minMaxExtremePoint;
         _accelerationFactor = _accelerationStart;
         _startTrendIndex = index;
-        currentExtremePoint = entries[index].high;
-        _minMaxExtremePoint = currentExtremePoint;
+        _currentExtremePoint = entries[index].high;
+        _minMaxExtremePoint = _currentExtremePoint;
       } else {
         // down trend io going on
-        currentExtremePoint =
+        _currentExtremePoint =
             LowestValueIndicator(_lowPriceIndicator, index - _startTrendIndex)
                 .getValue(index)
                 .quote;
-        if (currentExtremePoint < (_minMaxExtremePoint)) {
+        if (_currentExtremePoint < _minMaxExtremePoint) {
           incrementAcceleration();
-          _minMaxExtremePoint = currentExtremePoint;
+          _minMaxExtremePoint = _currentExtremePoint;
         }
       }
     }
-    return Tick(epoch: epoch, quote: sar);
+    return Tick(epoch: getEpochOfIndex(index), quote: sar);
   }
 
   ///  Increments the acceleration factor.
