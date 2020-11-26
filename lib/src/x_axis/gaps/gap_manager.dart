@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 
 /// Manages time gaps (closed market time) on x-axis.
@@ -46,9 +47,8 @@ class GapManager {
       return range.duration;
     }
 
-    final int left = _indexOfGapThatContainsOrNearEpoch(gaps, range.leftEpoch);
-    final int right =
-        _indexOfGapThatContainsOrNearEpoch(gaps, range.rightEpoch);
+    final int left = indexOfNearestGap(gaps, range.leftEpoch);
+    final int right = indexOfNearestGap(gaps, range.rightEpoch);
 
     int overlap = 0;
 
@@ -61,21 +61,5 @@ class GapManager {
       overlap += _cumulativeSums[left + 1] - _cumulativeSums[right];
     }
     return range.duration - overlap;
-  }
-
-  int _indexOfGapThatContainsOrNearEpoch(List<TimeRange> gaps, int epoch) {
-    int low = 0, high = gaps.length - 1;
-
-    while (low < high) {
-      final int mid = (low + high) >> 1;
-      if (gaps[mid].isBefore(epoch)) {
-        low = mid + 1;
-      } else if (gaps[mid].isAfter(epoch)) {
-        high = mid;
-      } else {
-        return mid;
-      }
-    }
-    return low;
   }
 }
