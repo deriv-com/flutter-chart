@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/conversion.dart';
+import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/x_axis/gaps/find_gaps.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/gaps/gap_manager.dart';
@@ -239,7 +240,7 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// [leftEpoch] must be before [rightEpoch].
   double pxBetween(int leftEpoch, int rightEpoch) =>
-      _gapManager.removeGaps(leftEpoch, rightEpoch) / _msPerPx;
+      _gapManager.removeGaps(TimeRange(leftEpoch, rightEpoch)) / _msPerPx;
 
   /// Resulting epoch when given epoch value is shifted by given px amount on x-axis.
   ///
