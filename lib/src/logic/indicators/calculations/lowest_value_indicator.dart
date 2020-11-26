@@ -32,6 +32,6 @@ class LowestValueIndicator extends CachedIndicator {
       }
     }
 
-    return Tick(epoch: entries[index].epoch, quote: lowest);
+    return Tick(epoch: getEpochOfIndex(index), quote: lowest);
   }
 }

@@ -9,5 +9,5 @@ class CloseValueIndicator extends AbstractIndicator<Candle> {
 
   @override
   Tick getValue(int index) =>
-      Tick(epoch: entries[index].epoch, quote: entries[index].close);
+      Tick(epoch: getEpochOfIndex(index), quote: entries[index].close);
 }

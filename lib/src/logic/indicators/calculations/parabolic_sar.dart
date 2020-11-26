@@ -49,7 +49,7 @@ class ParabolicSarIndicator extends CachedIndicator<Candle> {
 
   @override
   Tick calculate(int index) {
-    final int epoch = entries[index].epoch;
+    final int epoch = getEpochOfIndex(index);
     double sar = double.nan;
     if (index == 0) {
       return Tick(

@@ -32,6 +32,6 @@ class HighestValueIndicator extends CachedIndicator {
       }
     }
 
-    return Tick(epoch: entries[index].epoch, quote: highest);
+    return Tick(epoch: getEpochOfIndex(index), quote: highest);
   }
 }

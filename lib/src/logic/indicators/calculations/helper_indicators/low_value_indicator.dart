@@ -10,5 +10,5 @@ class LowValueIndicator extends AbstractIndicator<Candle> {
 
   @override
   Tick getValue(int index) =>
-      Tick(epoch: entries[index].epoch, quote: entries[index].low);
+      Tick(epoch: getEpochOfIndex(index), quote: entries[index].low);
 }
