@@ -25,7 +25,7 @@ class MASeries extends LineSeries {
   }) : super(
           _getMAIndicator(entries, period, type).results,
           id: id ?? 'SMASeries-period$period-type$type',
-          style: style ?? const LineStyle(thickness: 0.5, hasArea: false),
+          style: style ?? const LineStyle(thickness: 0.5),
         );
 
   static CachedIndicator _getMAIndicator(

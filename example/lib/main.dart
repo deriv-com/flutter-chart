@@ -358,7 +358,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     mainSeries:
                         style == ChartStyle.candles && ticks is List<Candle>
                             ? CandleSeries(ticks)
-                            : LineSeries(ticks),
+                            : LineSeries(
+                                ticks,
+                                style: const LineStyle(hasArea: true),
+                              ),
                     secondarySeries: [
                       BollingerBandSeries(ticks),
                     ],
