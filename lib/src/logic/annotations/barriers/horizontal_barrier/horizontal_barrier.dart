@@ -22,7 +22,7 @@ class HorizontalBarrier extends Barrier {
           title: title,
           epoch: epoch,
           value: value,
-          style: style ?? const HorizontalBarrierStyle(),
+          style: style,
           longLine: longLine,
         );
 

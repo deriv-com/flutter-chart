@@ -12,7 +12,7 @@ class LineSeries extends DataSeries<Tick> {
     List<Tick> entries, {
     String id,
     LineStyle style,
-  }) : super(entries, id, style: style ?? const LineStyle());
+  }) : super(entries, id, style: style);
 
   @override
   SeriesPainter<LineSeries> createPainter() => LinePainter(this);
