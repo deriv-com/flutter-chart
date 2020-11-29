@@ -41,9 +41,9 @@ Path getUpwardArrowPath(
   final double halfSize = size / 2;
 
   return Path()
-    ..moveTo(middleX + halfSize, middleY + halfSize)
-    ..lineTo(middleX, middleY)
-    ..lineTo(middleX - halfSize, middleY + halfSize);
+    ..moveTo(middleX + halfSize, middleY + halfSize / 2)
+    ..lineTo(middleX, middleY - halfSize / 2)
+    ..lineTo(middleX - halfSize, middleY + halfSize / 2);
 }
 
 /// Returns the path of an downward arrow for the label.
@@ -54,7 +54,7 @@ Path getDownwardArrowPath(
 }) {
   final double halfSize = size / 2;
   return Path()
-    ..moveTo(middleX + halfSize, middleY - halfSize)
-    ..lineTo(middleX, middleY)
-    ..lineTo(middleX - halfSize, middleY - halfSize);
+    ..moveTo(middleX + halfSize, middleY - halfSize / 2)
+    ..lineTo(middleX, middleY + halfSize / 2)
+    ..lineTo(middleX - halfSize, middleY - halfSize / 2);
 }
