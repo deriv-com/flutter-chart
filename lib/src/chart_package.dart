@@ -113,10 +113,12 @@ class _ChartPackageState extends State<ChartPackage> {
                   ) =>
                       _IndicatorsDialog(
                     ticks: widget.mainSeries.entries,
-                    onIndicators: (
-                      Map<String, IndicatorSeriesBuilder> indicators,
+                    indicatorsMap: _indicators,
+                    onAddIndicator: (
+                      String key,
+                      IndicatorSeriesBuilder indicatorBuilder,
                     ) =>
-                        setState(() => _indicators = indicators),
+                        setState(() => _indicators[key] = indicatorBuilder),
                   ),
                 );
               },
@@ -127,19 +129,22 @@ class _ChartPackageState extends State<ChartPackage> {
 }
 
 class _IndicatorsDialog extends StatefulWidget {
-  const _IndicatorsDialog({Key key, this.onIndicators, this.ticks})
-      : super(key: key);
+  const _IndicatorsDialog({
+    Key key,
+    this.onAddIndicator,
+    this.indicatorsMap,
+    this.ticks,
+  }) : super(key: key);
 
   final List<Tick> ticks;
-  final OnIndicators onIndicators;
+  final OnAddIndicator onAddIndicator;
+  final Map<String, IndicatorSeriesBuilder> indicatorsMap;
 
   @override
   _IndicatorsDialogState createState() => _IndicatorsDialogState();
 }
 
 class _IndicatorsDialogState extends State<_IndicatorsDialog> {
-  final Map<String, IndicatorSeriesBuilder> indicatorsMap =
-      <String, IndicatorSeriesBuilder>{};
 
   final List<IndicatorItem<Series>> indicatorItems = <IndicatorItem>[];
 
@@ -150,18 +155,10 @@ class _IndicatorsDialogState extends State<_IndicatorsDialog> {
     indicatorItems
       ..add(MAIndicatorItem(
         ticks: widget.ticks,
-        onAddIndicator: _onAddIndicator,
+        onAddIndicator: widget.onAddIndicator,
+        indicatorsMap: widget.indicatorsMap,
       ));
   }
-
-  void _onAddIndicator(
-    String key,
-    IndicatorSeriesBuilder indicatorBuilder,
-  ) =>
-      setState(() {
-        indicatorsMap[key] = indicatorBuilder;
-        widget.onIndicators(indicatorsMap);
-      });
 
   @override
   Widget build(BuildContext context) => AnimatedPopupDialog(
@@ -175,7 +172,6 @@ class _IndicatorsDialogState extends State<_IndicatorsDialog> {
 }
 
 typedef IndicatorSeriesBuilder = Series Function(List<Tick> ticks);
-typedef OnIndicators = Function(Map<String, IndicatorSeriesBuilder> indicators);
 typedef OnAddIndicator = Function(
   String key,
   IndicatorSeriesBuilder indicatorBuilder,
@@ -189,6 +185,7 @@ abstract class IndicatorItem<T extends Series> extends StatefulWidget {
     this.title,
     this.ticks,
     this.onAddIndicator,
+    this.indicatorsMap,
   }) : super(key: key);
 
   /// Title
@@ -198,6 +195,8 @@ abstract class IndicatorItem<T extends Series> extends StatefulWidget {
 
   final OnAddIndicator onAddIndicator;
 
+  final Map<String, IndicatorSeriesBuilder> indicatorsMap;
+
   @override
   _IndicatorItemState createState() => createIndicatorItemState();
 
@@ -205,23 +204,26 @@ abstract class IndicatorItem<T extends Series> extends StatefulWidget {
 }
 
 abstract class _IndicatorItemState extends State<IndicatorItem> {
-  bool _indicatorIsActive = false;
+  bool _isIndicatorActive() => widget.indicatorsMap != null
+      ? widget.indicatorsMap[_getIndicatorKey()] != null
+      : false;
 
   @override
   Widget build(BuildContext context) => ListTile(
         title: Text(widget.title),
         trailing: Checkbox(
-          value: _indicatorIsActive,
+          value: _isIndicatorActive(),
           onChanged: (bool newValue) => setState(
             () {
-              _indicatorIsActive = newValue;
-
               if (newValue) {
+                widget.indicatorsMap[_getIndicatorKey()] =
+                    createIndicatorSeries();
                 widget.onAddIndicator?.call(
                   _getIndicatorKey(),
-                  createIndicatorSeries(),
+                  widget.indicatorsMap[_getIndicatorKey()],
                 );
               } else {
+                widget.indicatorsMap[_getIndicatorKey()] = null;
                 widget.onAddIndicator?.call(_getIndicatorKey(), null);
               }
             },
@@ -239,11 +241,13 @@ class MAIndicatorItem extends IndicatorItem<MASeries> {
     Key key,
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
+    Map<String, IndicatorSeriesBuilder> indicatorsMap,
   }) : super(
           key: key,
           title: 'MAIndicator',
           ticks: ticks,
           onAddIndicator: onAddIndicator,
+          indicatorsMap: indicatorsMap,
         );
 
   @override
