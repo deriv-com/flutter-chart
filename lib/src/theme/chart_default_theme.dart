@@ -109,6 +109,20 @@ abstract class ChartDefaultTheme implements ChartTheme {
         downColor: accentRedColor,
       );
 
+  @override
+  HorizontalBarrierStyle get horizontalBarrierStyle => HorizontalBarrierStyle(
+        color: base04Color,
+        titleBackgroundColor: base08Color,
+        textStyle: TextStyles.overLine,
+      );
+
+  @override
+  VerticalBarrierStyle get verticalBarrierStyle => VerticalBarrierStyle(
+        color: Colors.grey,
+        titleBackgroundColor: Colors.transparent,
+        textStyle: TextStyles.overLine,
+      );
+
   TextStyle _getStyle({
     @required TextStyle textStyle,
     @required Color color,

@@ -16,11 +16,15 @@ class MarkerSeries extends Series {
     List<Marker> entries, {
     String id,
     MarkerStyle style,
+    bool sortMarkersList = true,
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-  })  : _entries = entries,
-        super(id, style: style ?? const MarkerStyle());
+  })  : _entries = sortMarkersList
+            ? (entries
+              ..sort((Marker m1, Marker m2) => m1.epoch.compareTo(m2.epoch)))
+            : entries,
+        super(id, style: style);
 
   /// Marker entries.
   final List<Marker> _entries;

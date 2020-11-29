@@ -11,7 +11,7 @@ class CandleSeries extends OHLCTypeSeries {
     List<Candle> entries, {
     String id,
     CandleStyle style,
-  }) : super(entries, id, style: style ?? const CandleStyle());
+  }) : super(entries, id, style: style);
 
   @override
   SeriesPainter<CandleSeries> createPainter() => CandlePainter(this);
