@@ -13,6 +13,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 import 'callbacks.dart';
 
@@ -76,8 +77,7 @@ class ChartPackage extends StatefulWidget {
 }
 
 class _ChartPackageState extends State<ChartPackage> {
-  Map<String, IndicatorSeriesBuilder> _indicators =
-      <String, IndicatorSeriesBuilder>{};
+  IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
 
   @override
   Widget build(BuildContext context) => Stack(
@@ -88,7 +88,7 @@ class _ChartPackageState extends State<ChartPackage> {
             granularity: widget.granularity,
             controller: widget.controller,
             secondarySeries: <Series>[
-              ..._indicators.values
+              ..._indicatorsRepo.indicators.values
                   .where((IndicatorSeriesBuilder indicatorBuilder) =>
                       indicatorBuilder != null)
                   .map((IndicatorSeriesBuilder indicatorBuilder) =>
@@ -111,14 +111,20 @@ class _ChartPackageState extends State<ChartPackage> {
                   builder: (
                     BuildContext context,
                   ) =>
-                      _IndicatorsDialog(
-                    ticks: widget.mainSeries.entries,
-                    indicatorsMap: _indicators,
-                    onAddIndicator: (
-                      String key,
-                      IndicatorSeriesBuilder indicatorBuilder,
-                    ) =>
-                        setState(() => _indicators[key] = indicatorBuilder),
+                      MultiProvider(
+                    providers: <Provider>[
+                      Provider<IndicatorsRepository>.value(
+                          value: _indicatorsRepo)
+                    ],
+                    child: _IndicatorsDialog(
+                      ticks: widget.mainSeries.entries,
+                      onAddIndicator: (
+                        String key,
+                        IndicatorSeriesBuilder indicatorBuilder,
+                      ) =>
+                          setState(() => _indicatorsRepo.indicators[key] =
+                              indicatorBuilder),
+                    ),
                   ),
                 );
               },
@@ -128,24 +134,33 @@ class _ChartPackageState extends State<ChartPackage> {
       );
 }
 
+class IndicatorsRepository {
+  final Map<String, IndicatorSeriesBuilder> _indicators;
+
+  Map<String, IndicatorSeriesBuilder> get indicators => _indicators;
+
+  IndicatorsRepository() : _indicators = <String, IndicatorSeriesBuilder>{};
+
+  bool isIndicatorActive(String key) => _indicators[key] != null;
+
+  IndicatorSeriesBuilder getIndicator(String key) => _indicators[key];
+}
+
 class _IndicatorsDialog extends StatefulWidget {
   const _IndicatorsDialog({
     Key key,
     this.onAddIndicator,
-    this.indicatorsMap,
     this.ticks,
   }) : super(key: key);
 
   final List<Tick> ticks;
   final OnAddIndicator onAddIndicator;
-  final Map<String, IndicatorSeriesBuilder> indicatorsMap;
 
   @override
   _IndicatorsDialogState createState() => _IndicatorsDialogState();
 }
 
 class _IndicatorsDialogState extends State<_IndicatorsDialog> {
-
   final List<IndicatorItem<Series>> indicatorItems = <IndicatorItem>[];
 
   @override
@@ -156,7 +171,6 @@ class _IndicatorsDialogState extends State<_IndicatorsDialog> {
       ..add(MAIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
-        indicatorsMap: widget.indicatorsMap,
       ));
   }
 
@@ -185,7 +199,6 @@ abstract class IndicatorItem<T extends Series> extends StatefulWidget {
     this.title,
     this.ticks,
     this.onAddIndicator,
-    this.indicatorsMap,
   }) : super(key: key);
 
   /// Title
@@ -195,8 +208,6 @@ abstract class IndicatorItem<T extends Series> extends StatefulWidget {
 
   final OnAddIndicator onAddIndicator;
 
-  final Map<String, IndicatorSeriesBuilder> indicatorsMap;
-
   @override
   _IndicatorItemState createState() => createIndicatorItemState();
 
@@ -204,9 +215,18 @@ abstract class IndicatorItem<T extends Series> extends StatefulWidget {
 }
 
 abstract class _IndicatorItemState extends State<IndicatorItem> {
-  bool _isIndicatorActive() => widget.indicatorsMap != null
-      ? widget.indicatorsMap[_getIndicatorKey()] != null
+  bool _isIndicatorActive() => indicatorsRepo.indicators != null
+      ? indicatorsRepo.indicators[_getIndicatorKey()] != null
       : false;
+
+  IndicatorsRepository indicatorsRepo;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    indicatorsRepo = Provider.of<IndicatorsRepository>(context);
+  }
 
   @override
   Widget build(BuildContext context) => ListTile(
@@ -216,14 +236,12 @@ abstract class _IndicatorItemState extends State<IndicatorItem> {
           onChanged: (bool newValue) => setState(
             () {
               if (newValue) {
-                widget.indicatorsMap[_getIndicatorKey()] =
-                    createIndicatorSeries();
                 widget.onAddIndicator?.call(
                   _getIndicatorKey(),
-                  widget.indicatorsMap[_getIndicatorKey()],
+                  createIndicatorSeries(),
                 );
               } else {
-                widget.indicatorsMap[_getIndicatorKey()] = null;
+                indicatorsRepo.indicators[_getIndicatorKey()] = null;
                 widget.onAddIndicator?.call(_getIndicatorKey(), null);
               }
             },
@@ -236,18 +254,17 @@ abstract class _IndicatorItemState extends State<IndicatorItem> {
   IndicatorSeriesBuilder createIndicatorSeries();
 }
 
+/// Moving average indicator
 class MAIndicatorItem extends IndicatorItem<MASeries> {
   MAIndicatorItem({
     Key key,
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
-    Map<String, IndicatorSeriesBuilder> indicatorsMap,
   }) : super(
           key: key,
           title: 'MAIndicator',
           ticks: ticks,
           onAddIndicator: onAddIndicator,
-          indicatorsMap: indicatorsMap,
         );
 
   @override
