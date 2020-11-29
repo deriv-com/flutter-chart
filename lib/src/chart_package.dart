@@ -138,11 +138,6 @@ class _IndicatorsDialog extends StatefulWidget {
 }
 
 class _IndicatorsDialogState extends State<_IndicatorsDialog> {
-  static final Map<String, GlobalKey<_IndicatorItemState>> keys =
-      <String, GlobalKey<_IndicatorItemState>>{
-    'MA': GlobalKey<MAIndicatorSeriesState>(),
-  };
-
   final Map<String, IndicatorSeriesBuilder> indicatorsMap =
       <String, IndicatorSeriesBuilder>{};
 
@@ -154,7 +149,6 @@ class _IndicatorsDialogState extends State<_IndicatorsDialog> {
 
     indicatorItems
       ..add(MAIndicatorItem(
-        key: keys['MA'],
         ticks: widget.ticks,
         onAddIndicator: _onAddIndicator,
       ));
