@@ -161,7 +161,7 @@ class _IndicatorsDialog extends StatefulWidget {
 }
 
 class _IndicatorsDialogState extends State<_IndicatorsDialog> {
-  final List<IndicatorItem<Series>> indicatorItems = <IndicatorItem>[];
+  final List<IndicatorItem> indicatorItems = <IndicatorItem>[];
 
   @override
   void initState() {
@@ -192,7 +192,7 @@ typedef OnAddIndicator = Function(
 );
 
 /// Indicator item in indicators dialog
-abstract class IndicatorItem<T extends Series> extends StatefulWidget {
+abstract class IndicatorItem extends StatefulWidget {
   /// Initializes
   const IndicatorItem({
     Key key,
@@ -255,7 +255,7 @@ abstract class _IndicatorItemState extends State<IndicatorItem> {
 }
 
 /// Moving average indicator
-class MAIndicatorItem extends IndicatorItem<MASeries> {
+class MAIndicatorItem extends IndicatorItem {
   MAIndicatorItem({
     Key key,
     List<Tick> ticks,

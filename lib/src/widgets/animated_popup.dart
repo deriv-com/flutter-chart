@@ -54,6 +54,7 @@ class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5))),
               child: Material(
+                color: const Color(0xFF0E0E0E),
                 child: Padding(
                   padding: const EdgeInsets.all(2),
                   child: widget.child,
