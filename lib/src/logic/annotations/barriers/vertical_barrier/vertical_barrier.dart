@@ -21,7 +21,7 @@ class VerticalBarrier extends Barrier {
           title: title,
           epoch: epoch,
           value: value,
-          style: style ?? const VerticalBarrierStyle(),
+          style: style,
           longLine: longLine,
         );
 
@@ -47,4 +47,8 @@ class VerticalBarrier extends Barrier {
 
   @override
   BarrierObject createObject() => VerticalBarrierObject(epoch, value);
+
+  @override
+  List<double> recalculateMinMax() =>
+      isOnRange ? super.recalculateMinMax() : <double>[double.nan, double.nan];
 }

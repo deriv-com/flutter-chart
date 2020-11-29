@@ -16,11 +16,9 @@ import 'horizontal_barrier.dart';
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Initializes [series]
-  HorizontalBarrierPainter(HorizontalBarrier series)
-      : _paint = Paint()..strokeWidth = 1,
-        super(series);
+  HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
 
-  final Paint _paint;
+  Paint _paint;
 
   /// Padding between lines
   static const double padding = 4;
@@ -28,8 +26,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Right margin
   static const double rightMargin = 4;
 
-  /// Arrow size
-  static const double _arrowSize = 4;
 
   /// Distance between title area and label area.
   static const double _distanceBetweenTitleAndLabel = 16;
@@ -49,10 +45,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       return;
     }
 
-    final HorizontalBarrierStyle style = series.style;
-    BarrierArrowType arrowType = BarrierArrowType.none;
+    final HorizontalBarrierStyle style = series.style ??
+        theme.horizontalBarrierStyle ??
+        const HorizontalBarrierStyle();
 
-    _paint.color = style.color;
+    _paint = Paint()
+      ..strokeWidth = 1
+      ..color = style.color;
+
+    BarrierArrowType arrowType = BarrierArrowType.none;
 
     double animatedValue;
 
@@ -171,19 +172,19 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     // Arrows.
     if (style.hasArrow) {
-      final double arrowMidX = labelArea.left - _arrowSize - 6;
+      final double arrowMidX = labelArea.left - style.arrowSize - 6;
       if (arrowType == BarrierArrowType.upward) {
         _paintUpwardArrows(
           canvas,
           center: Offset(arrowMidX, y),
-          arrowSize: _arrowSize,
+          arrowSize: style.arrowSize,
         );
       } else if (arrowType == BarrierArrowType.downward) {
         // TODO(Rustem): Rotate arrows like in `paintMarker`.
         _paintDownwardArrows(
           canvas,
           center: Offset(arrowMidX, y),
-          arrowSize: _arrowSize,
+          arrowSize: style.arrowSize,
         );
       }
     }
