@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -97,10 +98,66 @@ class _ChartPackageState extends State<ChartPackage> {
             child: IconButton(
               icon: const Icon(Icons.architecture),
               onPressed: () {
-
+                showDialog<void>(
+                  context: context,
+                  builder: (
+                    BuildContext context,
+                  ) =>
+                      _IndicatorsDialog(indicators: _indicators),
+                );
               },
             ),
           )
         ],
+      );
+}
+
+class _IndicatorsDialog extends StatefulWidget {
+  const _IndicatorsDialog({Key key, this.indicators}) : super(key: key);
+
+  final List<Series> indicators;
+
+  @override
+  _IndicatorsDialogState createState() => _IndicatorsDialogState();
+}
+
+class _IndicatorsDialogState extends State<_IndicatorsDialog> {
+  @override
+  Widget build(BuildContext context) => AnimatedPopupDialog(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: const <Widget>[
+        IndicatorItem(
+          title: 'Moving Average',
+        )
+      ],
+    ),
+  );
+}
+
+/// Indicator item in indicators dialog
+class IndicatorItem extends StatefulWidget {
+  /// Initializes
+  const IndicatorItem({Key key, this.title}) : super(key: key);
+
+  /// Title
+  final String title;
+
+  @override
+  _IndicatorItemState createState() => _IndicatorItemState();
+}
+
+class _IndicatorItemState extends State<IndicatorItem> {
+  bool _indicatorIsActive = false;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        title: Text(widget.title),
+        trailing: Checkbox(
+          value: _indicatorIsActive,
+          onChanged: (bool newValue) => setState(
+            () => _indicatorIsActive = newValue,
+          ),
+        ),
       );
 }

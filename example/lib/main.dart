@@ -354,7 +354,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             child: Stack(
               children: <Widget>[
                 ClipRect(
-                  child: Chart(
+                  child: ChartPackage(
                     mainSeries:
                         style == ChartStyle.candles && ticks is List<Candle>
                             ? CandleSeries(ticks)
@@ -362,9 +362,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 ticks,
                                 style: const LineStyle(hasArea: true),
                               ),
-                    secondarySeries: [
-                      BollingerBandSeries(ticks),
-                    ],
                     markerSeries: MarkerSeries(
                       _markers,
                       activeMarker: _activeMarker,
