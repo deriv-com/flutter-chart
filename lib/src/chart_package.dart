@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/indicators/indicators.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -89,10 +90,11 @@ class _ChartPackageState extends State<ChartPackage> {
             controller: widget.controller,
             secondarySeries: <Series>[
               ..._indicatorsRepo.indicators.values
-                  .where((IndicatorSeriesBuilder indicatorBuilder) =>
-                      indicatorBuilder != null)
-                  .map((IndicatorSeriesBuilder indicatorBuilder) =>
-                      indicatorBuilder?.call(widget.mainSeries.entries))
+                  .where((IndicatorConfig indicatorConfig) =>
+                      indicatorConfig != null)
+                  .map((IndicatorConfig indicatorConfig) => indicatorConfig
+                      ?.builder
+                      ?.call(widget.mainSeries.entries))
             ],
             markerSeries: widget.markerSeries,
             theme: widget.theme,
@@ -120,7 +122,7 @@ class _ChartPackageState extends State<ChartPackage> {
                       ticks: widget.mainSeries.entries,
                       onAddIndicator: (
                         String key,
-                        IndicatorSeriesBuilder indicatorBuilder,
+                        IndicatorConfig indicatorBuilder,
                       ) =>
                           setState(() => _indicatorsRepo.indicators[key] =
                               indicatorBuilder),
@@ -135,15 +137,15 @@ class _ChartPackageState extends State<ChartPackage> {
 }
 
 class IndicatorsRepository {
-  final Map<String, IndicatorSeriesBuilder> _indicators;
+  final Map<String, IndicatorConfig> _indicators;
 
-  Map<String, IndicatorSeriesBuilder> get indicators => _indicators;
+  Map<String, IndicatorConfig> get indicators => _indicators;
 
-  IndicatorsRepository() : _indicators = <String, IndicatorSeriesBuilder>{};
+  IndicatorsRepository() : _indicators = <String, IndicatorConfig>{};
 
   bool isIndicatorActive(String key) => _indicators[key] != null;
 
-  IndicatorSeriesBuilder getIndicator(String key) => _indicators[key];
+  IndicatorConfig getIndicator(String key) => _indicators[key];
 }
 
 class _IndicatorsDialog extends StatefulWidget {
@@ -185,11 +187,35 @@ class _IndicatorsDialogState extends State<_IndicatorsDialog> {
       );
 }
 
-typedef IndicatorSeriesBuilder = Series Function(List<Tick> ticks);
+typedef IndicatorBuilder = Series Function(List<Tick> ticks);
 typedef OnAddIndicator = Function(
   String key,
-  IndicatorSeriesBuilder indicatorBuilder,
+  IndicatorConfig indicatorBuilder,
 );
+
+/// Indicator config
+abstract class IndicatorConfig {
+  /// Initializes
+  IndicatorConfig(this.builder);
+
+  /// Indicator series builder
+  final IndicatorBuilder builder;
+}
+
+class MAIndicatorConfig extends IndicatorConfig {
+  /// Initializes
+  MAIndicatorConfig(
+    IndicatorBuilder indicatorBuilder, {
+    this.period,
+    this.type,
+  }) : super(indicatorBuilder);
+
+  /// Moving Average period
+  final int period;
+
+  /// Moving Average type
+  final MovingAverageType type;
+}
 
 /// Indicator item in indicators dialog
 abstract class IndicatorItem extends StatefulWidget {
@@ -204,21 +230,20 @@ abstract class IndicatorItem extends StatefulWidget {
   /// Title
   final String title;
 
+  /// List of entries to calculate indicator on.
   final List<Tick> ticks;
 
+  /// A callback which will be called when want to add this indicator.
   final OnAddIndicator onAddIndicator;
 
   @override
   _IndicatorItemState createState() => createIndicatorItemState();
 
+  @protected
   _IndicatorItemState createIndicatorItemState();
 }
 
 abstract class _IndicatorItemState extends State<IndicatorItem> {
-  bool _isIndicatorActive() => indicatorsRepo.indicators != null
-      ? indicatorsRepo.indicators[_getIndicatorKey()] != null
-      : false;
-
   IndicatorsRepository indicatorsRepo;
 
   @override
@@ -230,9 +255,10 @@ abstract class _IndicatorItemState extends State<IndicatorItem> {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        title: Text(widget.title),
+        subtitle: Text(widget.title),
+        title: getIndicatorOptions(),
         trailing: Checkbox(
-          value: _isIndicatorActive(),
+          value: indicatorsRepo.isIndicatorActive(_getIndicatorKey()),
           onChanged: (bool newValue) => setState(
             () {
               if (newValue) {
@@ -241,7 +267,6 @@ abstract class _IndicatorItemState extends State<IndicatorItem> {
                   createIndicatorSeries(),
                 );
               } else {
-                indicatorsRepo.indicators[_getIndicatorKey()] = null;
                 widget.onAddIndicator?.call(_getIndicatorKey(), null);
               }
             },
@@ -251,7 +276,11 @@ abstract class _IndicatorItemState extends State<IndicatorItem> {
 
   String _getIndicatorKey() => runtimeType.toString();
 
-  IndicatorSeriesBuilder createIndicatorSeries();
+  /// Returns the [IndicatorBuilder] which can be used to create the [Series] for this indicator.
+  IndicatorConfig createIndicatorSeries();
+
+  /// Creates the menu options widget for this indicator.
+  Widget getIndicatorOptions();
 }
 
 /// Moving average indicator
@@ -262,18 +291,44 @@ class MAIndicatorItem extends IndicatorItem {
     OnAddIndicator onAddIndicator,
   }) : super(
           key: key,
-          title: 'MAIndicator',
+          title: 'Moving Average',
           ticks: ticks,
           onAddIndicator: onAddIndicator,
         );
 
   @override
-  _IndicatorItemState createIndicatorItemState() => MAIndicatorSeriesState();
+  _IndicatorItemState createIndicatorItemState() => MAIndicatorItemState();
 }
 
-class MAIndicatorSeriesState extends _IndicatorItemState {
+class MAIndicatorItemState extends _IndicatorItemState {
+  int _period = 15;
+
+  MovingAverageType _type = MovingAverageType.simple;
+
   @override
-  IndicatorSeriesBuilder createIndicatorSeries() => (List<Tick> ticks) {
-        return MASeries(ticks);
-      };
+  IndicatorConfig createIndicatorSeries() => MAIndicatorConfig(
+        (List<Tick> ticks) => MASeries(ticks, period: _period, type: _type),
+      );
+
+  @override
+  Widget getIndicatorOptions() => Row(
+        children: [
+          DropdownButton<MovingAverageType>(
+            value: _type,
+            items: MovingAverageType.values
+                .map<DropdownMenuItem<MovingAverageType>>(
+                    (MovingAverageType type) =>
+                        DropdownMenuItem<MovingAverageType>(
+                          value: type,
+                          child: Text('${type.toString()}'),
+                        ))
+                .toList(),
+            onChanged: (MovingAverageType newType) => setState(
+              () {
+                _type = newType;
+              },
+            ),
+          )
+        ],
+      );
 }
