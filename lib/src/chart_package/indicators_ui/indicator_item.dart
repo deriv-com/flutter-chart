@@ -54,17 +54,22 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
           onChanged: (bool newValue) => setState(
             () {
               if (newValue) {
-                widget.onAddIndicator?.call(
-                  getIndicatorKey(),
-                  createIndicatorConfig(),
-                );
+                updateIndicator();
               } else {
-                widget.onAddIndicator?.call(getIndicatorKey(), null);
+                removeIndicator();
               }
             },
           ),
         ),
       );
+
+  void updateIndicator() => widget.onAddIndicator?.call(
+        getIndicatorKey(),
+        createIndicatorConfig(),
+      );
+
+  void removeIndicator() =>
+      widget.onAddIndicator?.call(getIndicatorKey(), null);
 
   @protected
   String getIndicatorKey() => runtimeType.toString();

@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'bollinger_bands_indicator_config.dart';
 
@@ -78,8 +77,7 @@ class BollingerBandsIndicatorItemState
                 onChanged: (MovingAverageType newType) => setState(
                   () {
                     _type = newType;
-                    widget.onAddIndicator
-                        ?.call(getIndicatorKey(), createIndicatorConfig());
+                    updateIndicator();
                   },
                 ),
               ),
@@ -100,8 +98,7 @@ class BollingerBandsIndicatorItemState
                     } else {
                       _period = 15;
                     }
-                    widget.onAddIndicator
-                        ?.call(getIndicatorKey(), createIndicatorConfig());
+                    updateIndicator();
                   },
                 ),
               )
@@ -123,8 +120,7 @@ class BollingerBandsIndicatorItemState
                     } else {
                       _standardDeviation = 2;
                     }
-                    widget.onAddIndicator
-                        ?.call(getIndicatorKey(), createIndicatorConfig());
+                    updateIndicator();
                   },
                 ),
               )
@@ -136,7 +132,7 @@ class BollingerBandsIndicatorItemState
   MovingAverageType _getCurrentType() =>
       getConfig()?.movingAverageType ?? MovingAverageType.simple;
 
-  int _getCurrentPeriod() => getConfig()?.period ?? 15;
+  int _getCurrentPeriod() => getConfig()?.period ?? 20;
 
   double _getCurrentStandardDeviation() => getConfig()?.standardDeviation ?? 2;
 }

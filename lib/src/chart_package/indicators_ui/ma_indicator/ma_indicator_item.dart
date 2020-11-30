@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_indicator_config.dart';
 
@@ -75,8 +74,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                 onChanged: (MovingAverageType newType) => setState(
                   () {
                     _type = newType;
-                    widget.onAddIndicator
-                        ?.call(getIndicatorKey(), createIndicatorConfig());
+                    updateIndicator();
                   },
                 ),
               ),
@@ -97,8 +95,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                     } else {
                       _period = 15;
                     }
-                    widget.onAddIndicator
-                        ?.call(getIndicatorKey(), createIndicatorConfig());
+                    updateIndicator();
                   },
                 ),
               )
@@ -110,5 +107,5 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   MovingAverageType _getCurrentType() =>
       getConfig()?.type ?? MovingAverageType.simple;
 
-  int _getCurrentPeriod() => getConfig()?.period ?? 15;
+  int _getCurrentPeriod() => getConfig()?.period ?? 50;
 }
