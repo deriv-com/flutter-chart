@@ -39,7 +39,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   int _lastLongPressPositionEpoch = -1;
 
   double _panSpeed = 0.08;
-  const double _closeDistance = 60;
+  static const _closeDistance = 60;
 
   GestureManagerState gestureManager;
 
@@ -106,10 +106,10 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     if (_lastLongPressPosition != null) {
       final dx = _lastLongPressPosition.dx;
 
-      if (dx < closeDistance) {
-        xxAxis.pan(-panSpeed);
-      } else if (xxAxis.width - dx < closeDistance) {
-        xxAxis.pan(panSpeed);
+      if (dx < _closeDistance) {
+        xxAxis.pan(-_panSpeed);
+      } else if (xxAxis.width - dx < _closeDistance) {
+        xxAxis.pan(_panSpeed);
       } else {
         xxAxis.pan(0);
       }
