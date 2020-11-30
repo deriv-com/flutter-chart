@@ -92,9 +92,8 @@ class _ChartPackageState extends State<ChartPackage> {
               ..._indicatorsRepo.indicators.values
                   .where((IndicatorConfig indicatorConfig) =>
                       indicatorConfig != null)
-                  .map((IndicatorConfig indicatorConfig) => indicatorConfig
-                      ?.builder
-                      ?.call(widget.mainSeries.entries))
+                  .map((IndicatorConfig indicatorConfig) =>
+                      indicatorConfig?.builder?.call(widget.mainSeries.entries))
             ],
             markerSeries: widget.markerSeries,
             theme: widget.theme,
@@ -190,7 +189,7 @@ class _IndicatorsDialogState extends State<_IndicatorsDialog> {
 typedef IndicatorBuilder = Series Function(List<Tick> ticks);
 typedef OnAddIndicator = Function(
   String key,
-  IndicatorConfig indicatorBuilder,
+  IndicatorConfig indicatorConfig,
 );
 
 /// Indicator config
@@ -243,8 +242,14 @@ abstract class IndicatorItem extends StatefulWidget {
   _IndicatorItemState createIndicatorItemState();
 }
 
-abstract class _IndicatorItemState extends State<IndicatorItem> {
+abstract class _IndicatorItemState<T extends IndicatorConfig>
+    extends State<IndicatorItem> {
   IndicatorsRepository indicatorsRepo;
+
+  /// Gets the [IndicatorConfig] of this [IndicatorItem]
+  T getConfig() => indicatorsRepo != null
+      ? indicatorsRepo?.indicators[getIndicatorKey()]
+      : null;
 
   @override
   void didChangeDependencies() {
@@ -258,26 +263,27 @@ abstract class _IndicatorItemState extends State<IndicatorItem> {
         subtitle: Text(widget.title),
         title: getIndicatorOptions(),
         trailing: Checkbox(
-          value: indicatorsRepo.isIndicatorActive(_getIndicatorKey()),
+          value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),
           onChanged: (bool newValue) => setState(
             () {
               if (newValue) {
                 widget.onAddIndicator?.call(
-                  _getIndicatorKey(),
-                  createIndicatorSeries(),
+                  getIndicatorKey(),
+                  createIndicatorConfig(),
                 );
               } else {
-                widget.onAddIndicator?.call(_getIndicatorKey(), null);
+                widget.onAddIndicator?.call(getIndicatorKey(), null);
               }
             },
           ),
         ),
       );
 
-  String _getIndicatorKey() => runtimeType.toString();
+  @protected
+  String getIndicatorKey() => runtimeType.toString();
 
-  /// Returns the [IndicatorBuilder] which can be used to create the [Series] for this indicator.
-  IndicatorConfig createIndicatorSeries();
+  /// Returns the [IndicatorConfig] which can be used to create the [Series] for this indicator.
+  IndicatorConfig createIndicatorConfig();
 
   /// Creates the menu options widget for this indicator.
   Widget getIndicatorOptions();
@@ -300,21 +306,28 @@ class MAIndicatorItem extends IndicatorItem {
   _IndicatorItemState createIndicatorItemState() => MAIndicatorItemState();
 }
 
-class MAIndicatorItemState extends _IndicatorItemState {
-  int _period = 15;
-
-  MovingAverageType _type = MovingAverageType.simple;
+class MAIndicatorItemState extends _IndicatorItemState<MAIndicatorConfig> {
+  MovingAverageType _type;
 
   @override
-  IndicatorConfig createIndicatorSeries() => MAIndicatorConfig(
-        (List<Tick> ticks) => MASeries(ticks, period: _period, type: _type),
+  IndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
+        (List<Tick> ticks) => MASeries(ticks, period: 15, type: _type),
+        period: 15,
+        type: _type,
       );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _type = _getCurrentType();
+  }
 
   @override
   Widget getIndicatorOptions() => Row(
         children: [
           DropdownButton<MovingAverageType>(
-            value: _type,
+            value: _getCurrentType(),
             items: MovingAverageType.values
                 .map<DropdownMenuItem<MovingAverageType>>(
                     (MovingAverageType type) =>
@@ -326,9 +339,14 @@ class MAIndicatorItemState extends _IndicatorItemState {
             onChanged: (MovingAverageType newType) => setState(
               () {
                 _type = newType;
+                widget.onAddIndicator
+                    ?.call(getIndicatorKey(), createIndicatorConfig());
               },
             ),
           )
         ],
       );
+
+  MovingAverageType _getCurrentType() =>
+      getConfig()?.type ?? MovingAverageType.simple;
 }
