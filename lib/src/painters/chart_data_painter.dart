@@ -65,8 +65,7 @@ class ChartDataPainter extends CustomPainter {
     return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
         topY != oldDelegate.topY ||
-        epochToCanvasX != oldDelegate.epochToCanvasX ||
-        quoteToCanvasY != oldDelegate.quoteToCanvasY ||
+        animationInfo != oldDelegate.animationInfo ||
         chartConfig != oldDelegate.chartConfig ||
         styleChanged();
   }
