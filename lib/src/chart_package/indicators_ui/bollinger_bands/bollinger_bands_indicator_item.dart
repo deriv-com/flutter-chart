@@ -1,5 +1,6 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/chart_package/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'bollinger_bands_indicator_config.dart';
 /// Moving average indicator
 class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
-  BollingerBandsIndicatorItem({
+  const BollingerBandsIndicatorItem({
     Key key,
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
@@ -23,7 +24,7 @@ class BollingerBandsIndicatorItem extends IndicatorItem {
         );
 
   @override
-  IndicatorItemState createIndicatorItemState() =>
+  IndicatorItemState<IndicatorConfig> createIndicatorItemState() =>
       BollingerBandsIndicatorItemState();
 }
 
@@ -57,10 +58,10 @@ class BollingerBandsIndicatorItemState
 
   @override
   Widget getIndicatorOptions() => Column(
-        children: [
+        children: <Widget>[
           Row(
             children: <Widget>[
-              const Text('Type: ', style: const TextStyle(fontSize: 12)),
+              const Text('Type: ', style: TextStyle(fontSize: 12)),
               DropdownButton<MovingAverageType>(
                 value: _getCurrentType(),
                 items: MovingAverageType.values
@@ -85,7 +86,7 @@ class BollingerBandsIndicatorItemState
           ),
           Row(
             children: <Widget>[
-              const Text('Period: ', style: const TextStyle(fontSize: 12)),
+              const Text('Period: ', style: TextStyle(fontSize: 12)),
               SizedBox(
                 width: 20,
                 child: TextFormField(
@@ -107,7 +108,7 @@ class BollingerBandsIndicatorItemState
           Row(
             children: <Widget>[
               const Text('Standard Deviation: ',
-                  style: const TextStyle(fontSize: 12)),
+                  style: TextStyle(fontSize: 12)),
               SizedBox(
                 width: 20,
                 child: TextFormField(
@@ -130,7 +131,7 @@ class BollingerBandsIndicatorItemState
       );
 
   MovingAverageType _getCurrentType() =>
-      getConfig()?.movingAverageType ?? MovingAverageType.simple;
+      getConfig()?.type ?? MovingAverageType.simple;
 
   int _getCurrentPeriod() => getConfig()?.period ?? 20;
 

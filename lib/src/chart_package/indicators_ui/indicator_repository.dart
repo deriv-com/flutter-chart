@@ -1,6 +1,6 @@
 import 'indicator_config.dart';
 
-/// Holds indicators that were added to the [ChartPackage] during runtime.
+/// Holds indicators that were added to the Chart during runtime.
 class IndicatorsRepository {
   /// Initializes
   IndicatorsRepository() : _indicators = <String, IndicatorConfig>{};

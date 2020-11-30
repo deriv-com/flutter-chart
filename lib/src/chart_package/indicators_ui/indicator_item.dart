@@ -26,15 +26,18 @@ abstract class IndicatorItem extends StatefulWidget {
   final OnAddIndicator onAddIndicator;
 
   @override
-  IndicatorItemState createState() => createIndicatorItemState();
+  IndicatorItemState<IndicatorConfig> createState() =>
+      createIndicatorItemState();
 
+  /// Create state object for this widget
   @protected
-  IndicatorItemState createIndicatorItemState();
+  IndicatorItemState<IndicatorConfig> createIndicatorItemState();
 }
 
 /// State class of [IndicatorItem]
 abstract class IndicatorItemState<T extends IndicatorConfig>
     extends State<IndicatorItem> {
+  /// Indicators repository
   @protected
   IndicatorsRepository indicatorsRepo;
 
@@ -63,18 +66,21 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
         ),
       );
 
+  /// Updates indicator based on its current config values.
   void updateIndicator() => widget.onAddIndicator?.call(
         getIndicatorKey(),
         createIndicatorConfig(),
       );
 
+  /// Removes this indicator.
   void removeIndicator() =>
       widget.onAddIndicator?.call(getIndicatorKey(), null);
 
+  /// Gets the key for this indicator
   @protected
   String getIndicatorKey() => runtimeType.toString();
 
-  /// Returns the [IndicatorConfig] which can be used to create the [Series] for this indicator.
+  /// Returns the [IndicatorConfig] which can be used to create the Series for this indicator.
   T createIndicatorConfig();
 
   /// Gets the [IndicatorConfig] of this [IndicatorItem]

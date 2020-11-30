@@ -5,13 +5,14 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
+import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_indicator_config.dart';
 
 /// Moving average indicator
 class MAIndicatorItem extends IndicatorItem {
   /// Initializes
-  MAIndicatorItem({
+  const MAIndicatorItem({
     Key key,
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
@@ -23,7 +24,8 @@ class MAIndicatorItem extends IndicatorItem {
         );
 
   @override
-  IndicatorItemState createIndicatorItemState() => MAIndicatorItemState();
+  IndicatorItemState<IndicatorConfig> createIndicatorItemState() =>
+      MAIndicatorItemState();
 }
 
 /// MAIndicatorItem State class
@@ -37,8 +39,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
           ticks,
           period: _period,
           type: _type,
-          style: const LineStyle(
-              color: Colors.yellowAccent, hasArea: false, thickness: 0.6),
+          style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
         ),
         period: _period,
         type: _type,
@@ -54,10 +55,10 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   @override
   Widget getIndicatorOptions() => Column(
-        children: [
+        children: <Widget>[
           Row(
             children: <Widget>[
-              const Text('Type: ', style: const TextStyle(fontSize: 12)),
+              const Text('Type: ', style: TextStyle(fontSize: 12)),
               DropdownButton<MovingAverageType>(
                 value: _getCurrentType(),
                 items: MovingAverageType.values
@@ -82,7 +83,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
           ),
           Row(
             children: <Widget>[
-              const Text('Period: ', style: const TextStyle(fontSize: 12)),
+              const Text('Period: ', style: TextStyle(fontSize: 12)),
               SizedBox(
                 width: 20,
                 child: TextFormField(

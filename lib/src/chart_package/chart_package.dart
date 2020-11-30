@@ -79,7 +79,7 @@ class ChartPackage extends StatefulWidget {
 }
 
 class _ChartPackageState extends State<ChartPackage> {
-  IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
+  final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
 
   @override
   Widget build(BuildContext context) => Stack(
@@ -99,6 +99,7 @@ class _ChartPackageState extends State<ChartPackage> {
             markerSeries: widget.markerSeries,
             theme: widget.theme,
             onCrosshairAppeared: widget.onCrosshairAppeared,
+            onVisibleAreaChanged: widget.onVisibleAreaChanged,
             isLive: widget.isLive,
             opacity: widget.opacity,
             annotations: widget.annotations,
@@ -114,7 +115,7 @@ class _ChartPackageState extends State<ChartPackage> {
                     BuildContext context,
                   ) =>
                       MultiProvider(
-                    providers: <Provider>[
+                    providers: <Provider<dynamic>>[
                       Provider<IndicatorsRepository>.value(
                           value: _indicatorsRepo)
                     ],
