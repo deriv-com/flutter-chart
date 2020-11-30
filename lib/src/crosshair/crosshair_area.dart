@@ -38,6 +38,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   Offset _lastLongPressPosition;
   int _lastLongPressPositionEpoch = -1;
 
+  double _panSpeed = 0.08;
+  const double _closeDistance = 60;
+
   GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
@@ -102,9 +105,6 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
     if (_lastLongPressPosition != null) {
       final dx = _lastLongPressPosition.dx;
-
-      final panSpeed = 0.08;
-      final closeDistance = 60;
 
       if (dx < closeDistance) {
         xxAxis.pan(-panSpeed);
