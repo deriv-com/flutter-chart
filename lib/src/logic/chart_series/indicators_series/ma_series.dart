@@ -23,12 +23,12 @@ class MASeries extends LineSeries {
     int period = 15,
     MovingAverageType type = MovingAverageType.simple,
   }) : super(
-          _getMAIndicator(entries, period, type).results,
+          getMAIndicator(entries, period, type).results,
           id: id ?? 'SMASeries-period$period-type$type',
           style: style ?? const LineStyle(thickness: 0.5),
         );
 
-  static CachedIndicator _getMAIndicator(
+  static CachedIndicator getMAIndicator(
     List<Tick> entries,
     int period,
     MovingAverageType type,

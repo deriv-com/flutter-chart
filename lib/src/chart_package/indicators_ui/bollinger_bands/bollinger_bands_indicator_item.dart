@@ -1,48 +1,48 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
-import 'ma_indicator_config.dart';
+import 'bollinger_bands_indicator_config.dart';
 
 /// Moving average indicator
-class MAIndicatorItem extends IndicatorItem {
+class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
-  MAIndicatorItem({
+  BollingerBandsIndicatorItem({
     Key key,
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
   }) : super(
           key: key,
-          title: 'Moving Average',
+          title: 'Bollinger Bands',
           ticks: ticks,
           onAddIndicator: onAddIndicator,
         );
 
   @override
-  IndicatorItemState createIndicatorItemState() => MAIndicatorItemState();
+  IndicatorItemState createIndicatorItemState() =>
+      BollingerBandsIndicatorItemState();
 }
 
-/// MAIndicatorItem State class
-class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
+/// BollingerBandsIndicatorItem State class
+class BollingerBandsIndicatorItemState
+    extends IndicatorItemState<BollingerBandsIndicatorConfig> {
   MovingAverageType _type;
   int _period;
 
   @override
-  IndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
-        (List<Tick> ticks) => MASeries(
+  IndicatorConfig createIndicatorConfig() => BollingerBandsIndicatorConfig(
+        (List<Tick> ticks) => BollingerBandSeries(
           ticks,
           period: _period,
-          type: _type,
-          style: const LineStyle(
-              color: Colors.yellowAccent, hasArea: false, thickness: 0.6),
+          movingAverageType: _type,
         ),
         period: _period,
-        type: _type,
+        movingAverageType: _type,
       );
 
   @override
@@ -108,7 +108,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
       );
 
   MovingAverageType _getCurrentType() =>
-      getConfig()?.type ?? MovingAverageType.simple;
+      getConfig()?.movingAverageType ?? MovingAverageType.simple;
 
   int _getCurrentPeriod() => getConfig()?.period ?? 15;
 }

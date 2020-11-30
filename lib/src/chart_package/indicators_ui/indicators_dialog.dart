@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/chart_package/indicators_ui/bollinger_bands/bollinger_bands_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
 
     indicatorItems
       ..add(MAIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(BollingerBandsIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ));

@@ -21,7 +21,12 @@ import 'package:flutter/material.dart';
 /// Bollinger bands series
 class BollingerBandSeries extends Series {
   ///Initializes
-  BollingerBandSeries(this.ticks, {this.period = 20, String id}) : super(id);
+  BollingerBandSeries(
+    this.ticks, {
+    this.period = 20,
+    this.movingAverageType = MovingAverageType.simple,
+    String id,
+  }) : super(id);
 
   /// Ticks to calculate bollingers for
   final List<Tick> ticks;
@@ -33,14 +38,16 @@ class BollingerBandSeries extends Series {
   /// Period
   final int period;
 
+  final MovingAverageType movingAverageType;
   @override
   SeriesPainter<Series> createPainter() {
     final Indicator closePrice = QuoteIndicator(ticks);
     final StandardDeviationIndicator standardDeviation =
         StandardDeviationIndicator(closePrice, period);
 
-    final BollingerBandsMiddleIndicator bbmSMA =
-        BollingerBandsMiddleIndicator(SMAIndicator(closePrice, period));
+    final BollingerBandsMiddleIndicator bbmSMA = BollingerBandsMiddleIndicator(
+      MASeries.getMAIndicator(ticks, period, movingAverageType),
+    );
 
     final BollingerBandsLowerIndicator bblSMA =
         BollingerBandsLowerIndicator(bbmSMA, standardDeviation);

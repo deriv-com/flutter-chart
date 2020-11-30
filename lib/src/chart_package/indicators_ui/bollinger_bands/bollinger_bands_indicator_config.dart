@@ -4,17 +4,21 @@ import '../callbacks.dart';
 import '../indicator_config.dart';
 
 /// Moving Average indicator config
-class MAIndicatorConfig extends IndicatorConfig {
+class BollingerBandsIndicatorConfig extends IndicatorConfig {
   /// Initializes
-  const MAIndicatorConfig(
+  const BollingerBandsIndicatorConfig(
     IndicatorBuilder indicatorBuilder, {
     this.period,
-    this.type,
+    this.movingAverageType,
+    this.standardDeviation,
   }) : super(indicatorBuilder);
 
   /// Moving Average period
   final int period;
 
   /// Moving Average type
-  final MovingAverageType type;
+  final MovingAverageType movingAverageType;
+
+  /// Standard Deviation value
+  final double standardDeviation;
 }
