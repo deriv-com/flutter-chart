@@ -2,7 +2,7 @@ library deriv_chart;
 
 export 'src/chart.dart';
 export 'src/chart_controller.dart';
-export 'src/chart_package.dart';
+export 'src/chart_package/chart_package.dart';
 export 'src/logic/annotations/barriers/barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
