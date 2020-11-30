@@ -490,6 +490,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                   quoteToCanvasY: _quoteToCanvasY,
                   rightBoundEpoch: _xAxis.rightBoundEpoch,
                   leftBoundEpoch: _xAxis.leftBoundEpoch,
+                  topY: _quoteToCanvasY(widget.mainSeries.maxValue),
                 ),
               ),
             ),

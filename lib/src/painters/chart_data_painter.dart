@@ -15,6 +15,7 @@ class ChartDataPainter extends CustomPainter {
     this.quoteToCanvasY,
     this.rightBoundEpoch,
     this.leftBoundEpoch,
+    this.topY,
   });
 
   /// Chart config
@@ -37,6 +38,9 @@ class ChartDataPainter extends CustomPainter {
 
   final int leftBoundEpoch;
 
+  /// Tracking topY change is sufficient, since top and bottom padding are equal.
+  final double topY;
+
   @override
   void paint(Canvas canvas, Size size) {
     dataSeries.paint(
@@ -48,7 +52,6 @@ class ChartDataPainter extends CustomPainter {
       chartConfig,
       theme,
     );
-    print('>>> paint');
   }
 
   @override
@@ -59,19 +62,13 @@ class ChartDataPainter extends CustomPainter {
         (dataSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
-    bool repaint = rightBoundEpoch != oldDelegate.rightBoundEpoch ||
+    return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
-        chartConfig != oldDelegate.chartConfig ||
+        topY != oldDelegate.topY ||
         epochToCanvasX != oldDelegate.epochToCanvasX ||
         quoteToCanvasY != oldDelegate.quoteToCanvasY ||
+        chartConfig != oldDelegate.chartConfig ||
         styleChanged();
-
-    if (repaint) {
-      print(
-          '>>> repaint ${chartConfig != oldDelegate.chartConfig ? 'config' : ''} ${styleChanged() ? 'style' : ''} ${epochToCanvasX != oldDelegate.epochToCanvasX ? 'e' : ''} ${quoteToCanvasY != oldDelegate.quoteToCanvasY ? 'e' : ''} ${visibleEntriesChanged() ? 'visibleEntries' : ''}');
-    }
-
-    return repaint;
   }
 
   @override
