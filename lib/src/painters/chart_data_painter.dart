@@ -62,10 +62,16 @@ class ChartDataPainter extends CustomPainter {
         (dataSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
+    bool visibleAnimationChanged() =>
+        dataSeries.entries.isNotEmpty &&
+        dataSeries.visibleEntries.isNotEmpty &&
+        dataSeries.entries.last == dataSeries.visibleEntries.last &&
+        animationInfo != oldDelegate.animationInfo;
+
     return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
         topY != oldDelegate.topY ||
-        animationInfo != oldDelegate.animationInfo ||
+        visibleAnimationChanged() ||
         chartConfig != oldDelegate.chartConfig ||
         styleChanged();
   }
