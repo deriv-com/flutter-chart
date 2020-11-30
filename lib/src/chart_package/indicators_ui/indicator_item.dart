@@ -38,11 +38,6 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
   @protected
   IndicatorsRepository indicatorsRepo;
 
-  /// Gets the [IndicatorConfig] of this [IndicatorItem]
-  T getConfig() => indicatorsRepo != null
-      ? indicatorsRepo?.indicators[getIndicatorKey()]
-      : null;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -75,7 +70,12 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
   String getIndicatorKey() => runtimeType.toString();
 
   /// Returns the [IndicatorConfig] which can be used to create the [Series] for this indicator.
-  IndicatorConfig createIndicatorConfig();
+  T createIndicatorConfig();
+
+  /// Gets the [IndicatorConfig] of this [IndicatorItem]
+  T getConfig() => indicatorsRepo != null
+      ? indicatorsRepo?.indicators[getIndicatorKey()]
+      : null;
 
   /// Creates the menu options widget for this indicator.
   Widget getIndicatorOptions();

@@ -33,7 +33,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   int _period;
 
   @override
-  IndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
+  MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         (List<Tick> ticks) => MASeries(
           ticks,
           period: _period,

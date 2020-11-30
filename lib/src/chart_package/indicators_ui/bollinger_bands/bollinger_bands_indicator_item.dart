@@ -36,7 +36,8 @@ class BollingerBandsIndicatorItemState
   double _standardDeviation;
 
   @override
-  IndicatorConfig createIndicatorConfig() => BollingerBandsIndicatorConfig(
+  BollingerBandsIndicatorConfig createIndicatorConfig() =>
+      BollingerBandsIndicatorConfig(
         (List<Tick> ticks) => BollingerBandSeries(ticks,
             period: _period,
             movingAverageType: _type,
