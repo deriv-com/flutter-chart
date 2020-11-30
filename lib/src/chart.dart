@@ -488,6 +488,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
                   theme: context.read<ChartTheme>(),
                   epochToCanvasX: _xAxis.xFromEpoch,
                   quoteToCanvasY: _quoteToCanvasY,
+                  rightBoundEpoch: _xAxis.rightBoundEpoch,
+                  leftBoundEpoch: _xAxis.leftBoundEpoch,
                 ),
               ),
             ),

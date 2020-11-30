@@ -13,6 +13,8 @@ class ChartDataPainter extends CustomPainter {
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
+    this.rightBoundEpoch,
+    this.leftBoundEpoch,
   });
 
   /// Chart config
@@ -26,6 +28,14 @@ class ChartDataPainter extends CustomPainter {
   final AnimationInfo animationInfo;
 
   final DataSeries dataSeries;
+
+  /*
+  For detecting chart change:
+  */
+
+  final int rightBoundEpoch;
+
+  final int leftBoundEpoch;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -43,33 +53,18 @@ class ChartDataPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(ChartDataPainter oldDelegate) {
-    // final Tick lastTick = dataSeries.entries.last;
-    // final Tick lastVisibleTick = dataSeries.visibleEntries?.last;
-
-    // final bool hasAnimatedTick = lastTick == lastVisibleTick;
-
     bool styleChanged() =>
         (dataSeries is LineSeries &&
             theme.lineStyle != oldDelegate.theme.lineStyle) ||
         (dataSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
-    bool visibleEntriesChanged() {
-      final List<Tick> visible = dataSeries.visibleEntries;
-      final List<Tick> oldVisible = oldDelegate.dataSeries.visibleEntries;
-      if (visible.isEmpty || oldVisible.isEmpty) {
-        return false;
-      }
-      return visible.isEmpty != oldVisible.isEmpty ||
-          visible.first != oldVisible.first ||
-          visible.last != oldVisible.last;
-    }
-
-    bool repaint = chartConfig != oldDelegate.chartConfig ||
+    bool repaint = rightBoundEpoch != oldDelegate.rightBoundEpoch ||
+        leftBoundEpoch != oldDelegate.leftBoundEpoch ||
+        chartConfig != oldDelegate.chartConfig ||
         epochToCanvasX != oldDelegate.epochToCanvasX ||
         quoteToCanvasY != oldDelegate.quoteToCanvasY ||
-        styleChanged() ||
-        visibleEntriesChanged();
+        styleChanged();
 
     if (repaint) {
       print(
@@ -77,8 +72,6 @@ class ChartDataPainter extends CustomPainter {
     }
 
     return repaint;
-    // ||
-    // (hasAnimatedTick && animationInfo != oldDelegate.animationInfo);
   }
 
   @override
