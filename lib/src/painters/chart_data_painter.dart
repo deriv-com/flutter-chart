@@ -16,6 +16,7 @@ class ChartDataPainter extends CustomPainter {
     this.rightBoundEpoch,
     this.leftBoundEpoch,
     this.topY,
+    this.bottomY,
   });
 
   /// Chart config
@@ -38,8 +39,9 @@ class ChartDataPainter extends CustomPainter {
 
   final int leftBoundEpoch;
 
-  /// Tracking topY change is sufficient, since top and bottom padding are equal.
   final double topY;
+
+  final double bottomY;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -71,6 +73,7 @@ class ChartDataPainter extends CustomPainter {
     return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
         topY != oldDelegate.topY ||
+        bottomY != oldDelegate.bottomY ||
         visibleAnimationChanged() ||
         chartConfig != oldDelegate.chartConfig ||
         styleChanged();
