@@ -25,6 +25,7 @@ class BollingerBandSeries extends Series {
     this.ticks, {
     this.period = 20,
     this.movingAverageType = MovingAverageType.simple,
+    this.standardDeviationFactor = 2,
     String id,
   }) : super(id);
 
@@ -39,6 +40,9 @@ class BollingerBandSeries extends Series {
   final int period;
 
   final MovingAverageType movingAverageType;
+
+  final double standardDeviationFactor;
+
   @override
   SeriesPainter<Series> createPainter() {
     final Indicator closePrice = QuoteIndicator(ticks);
@@ -49,11 +53,17 @@ class BollingerBandSeries extends Series {
       MASeries.getMAIndicator(ticks, period, movingAverageType),
     );
 
-    final BollingerBandsLowerIndicator bblSMA =
-        BollingerBandsLowerIndicator(bbmSMA, standardDeviation);
+    final BollingerBandsLowerIndicator bblSMA = BollingerBandsLowerIndicator(
+      bbmSMA,
+      standardDeviation,
+      k: standardDeviationFactor,
+    );
 
-    final BollingerBandsUpperIndicator bbuSMA =
-        BollingerBandsUpperIndicator(bbmSMA, standardDeviation);
+    final BollingerBandsUpperIndicator bbuSMA = BollingerBandsUpperIndicator(
+      bbmSMA,
+      standardDeviation,
+      k: standardDeviationFactor,
+    );
 
     _lowerSeries = LineSeries(bblSMA.results,
         style: const LineStyle(hasArea: false, color: Colors.redAccent));

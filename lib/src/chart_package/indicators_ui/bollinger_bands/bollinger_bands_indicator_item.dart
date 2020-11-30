@@ -33,16 +33,17 @@ class BollingerBandsIndicatorItemState
     extends IndicatorItemState<BollingerBandsIndicatorConfig> {
   MovingAverageType _type;
   int _period;
+  double _standardDeviation;
 
   @override
   IndicatorConfig createIndicatorConfig() => BollingerBandsIndicatorConfig(
-        (List<Tick> ticks) => BollingerBandSeries(
-          ticks,
-          period: _period,
-          movingAverageType: _type,
-        ),
+        (List<Tick> ticks) => BollingerBandSeries(ticks,
+            period: _period,
+            movingAverageType: _type,
+            standardDeviationFactor: _standardDeviation),
         period: _period,
         movingAverageType: _type,
+        standardDeviation: _standardDeviation,
       );
 
   @override
@@ -51,6 +52,7 @@ class BollingerBandsIndicatorItemState
 
     _type = _getCurrentType();
     _period = _getCurrentPeriod();
+    _standardDeviation = _getCurrentStandardDeviation();
   }
 
   @override
@@ -103,7 +105,30 @@ class BollingerBandsIndicatorItemState
                 ),
               )
             ],
-          )
+          ),
+          Row(
+            children: <Widget>[
+              const Text('Standard Deviation: ',
+                  style: const TextStyle(fontSize: 12)),
+              SizedBox(
+                width: 20,
+                child: TextFormField(
+                  style: const TextStyle(fontSize: 12),
+                  initialValue: _getCurrentStandardDeviation().toString(),
+                  keyboardType: TextInputType.number,
+                  onChanged: (String text) {
+                    if (text.isNotEmpty) {
+                      _standardDeviation = double.tryParse(text);
+                    } else {
+                      _standardDeviation = 2;
+                    }
+                    widget.onAddIndicator
+                        ?.call(getIndicatorKey(), createIndicatorConfig());
+                  },
+                ),
+              )
+            ],
+          ),
         ],
       );
 
@@ -111,4 +136,6 @@ class BollingerBandsIndicatorItemState
       getConfig()?.movingAverageType ?? MovingAverageType.simple;
 
   int _getCurrentPeriod() => getConfig()?.period ?? 15;
+
+  double _getCurrentStandardDeviation() => getConfig()?.standardDeviation ?? 2;
 }
