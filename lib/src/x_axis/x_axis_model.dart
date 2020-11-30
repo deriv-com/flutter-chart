@@ -222,7 +222,6 @@ class XAxisModel extends ChangeNotifier {
 
   void pan(double panSpeed) {
     _panSpeed = panSpeed;
-    notifyListeners();
   }
 
   /// Enables autopanning when current tick is visible.
