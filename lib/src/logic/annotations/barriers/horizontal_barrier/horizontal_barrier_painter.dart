@@ -86,6 +86,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     double y = quoteToY(animatedValue);
 
+    // Blinking dot.
+    if (style.hasBlinkingDot && dotX != null) {
+      _paintBlinkingDot(canvas, dotX, y, animationInfo);
+    }
+
     if (series.visibility ==
         HorizontalBarrierVisibility.keepBarrierLabelVisible) {
       final double labelHalfHeight = style.labelHeight / 2;
@@ -97,11 +102,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         y = size.height - labelHalfHeight;
         arrowType = BarrierArrowType.downward;
       }
-    }
-
-    // Blinking dot.
-    if (style.hasBlinkingDot && dotX != null) {
-      _paintBlinkingDot(canvas, dotX, y, animationInfo);
     }
 
     final TextPainter valuePainter = makeTextPainter(
