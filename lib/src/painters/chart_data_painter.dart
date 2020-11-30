@@ -30,7 +30,7 @@ class ChartDataPainter extends CustomPainter {
   final DataSeries dataSeries;
 
   /*
-  For detecting chart change:
+  For detecting a need of repaint:
   */
 
   final int rightBoundEpoch;
