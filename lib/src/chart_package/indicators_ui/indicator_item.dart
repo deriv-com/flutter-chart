@@ -52,7 +52,7 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
 
   @override
   Widget build(BuildContext context) => ListTile(
-        subtitle: Text(widget.title),
+        leading: Text(widget.title, style: const TextStyle(fontSize: 12)),
         title: getIndicatorOptions(),
         trailing: Checkbox(
           value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),

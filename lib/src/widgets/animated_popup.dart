@@ -48,13 +48,15 @@ class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
             vertical: 40,
           ),
           child: Card(
+            color: Colors.transparent,
             elevation: 4,
             child: Container(
               decoration: ShapeDecoration(
+                color: Colors.transparent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5))),
               child: Material(
-                color: const Color(0xFF0E0E0E),
+                color: const Color(0xFF0E0E0E).withOpacity(0.7),
                 child: Padding(
                   padding: const EdgeInsets.all(2),
                   child: widget.child,
