@@ -10,6 +10,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
+import 'package:deriv_chart/src/painters/chart_data_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -472,22 +473,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
-          Opacity(
-            opacity: widget.opacity,
-            child: CustomPaint(
-              size: canvasSize,
-              painter: ChartPainter(
-                animationInfo: AnimationInfo(
-                  currentTickPercent: _currentTickAnimation.value,
-                  blinkingPercent: _currentTickBlinkAnimation.value,
+          RepaintBoundary(
+            child: Opacity(
+              opacity: widget.opacity,
+              child: CustomPaint(
+                size: canvasSize,
+                painter: ChartDataPainter(
+                  animationInfo: AnimationInfo(
+                    currentTickPercent: _currentTickAnimation.value,
+                    blinkingPercent: _currentTickBlinkAnimation.value,
+                  ),
+                  dataSeries: widget.mainSeries,
+                  chartConfig: context.read<ChartConfig>(),
+                  theme: context.read<ChartTheme>(),
+                  epochToCanvasX: _xAxis.xFromEpoch,
+                  quoteToCanvasY: _quoteToCanvasY,
                 ),
-                chartDataList: <ChartData>[
-                  widget.mainSeries,
-                ],
-                chartConfig: context.read<ChartConfig>(),
-                theme: context.read<ChartTheme>(),
-                epochToCanvasX: _xAxis.xFromEpoch,
-                quoteToCanvasY: _quoteToCanvasY,
               ),
             ),
           ),
