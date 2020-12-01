@@ -39,7 +39,7 @@ class BollingerBandSeries extends Series {
 
   /// Initializes
   BollingerBandSeries.fromIndicator(
-    AbstractIndicator indicator, {
+    AbstractIndicator<Tick> indicator, {
     this.period = 20,
     this.movingAverageType = MovingAverageType.simple,
     this.standardDeviationFactor = 2,
@@ -60,7 +60,7 @@ class BollingerBandSeries extends Series {
   /// Standard Deviation value
   final double standardDeviationFactor;
 
-  final AbstractIndicator _fieldIndicator;
+  final AbstractIndicator<Tick> _fieldIndicator;
 
   @override
   SeriesPainter<Series> createPainter() {
@@ -84,11 +84,11 @@ class BollingerBandSeries extends Series {
     );
 
     _lowerSeries = LineSeries(bblSMA.results,
-        style: const LineStyle(hasArea: false, color: Colors.redAccent));
-    _middleSeries = LineSeries(bbmSMA.results,
-        style: const LineStyle(hasArea: false, color: Colors.white));
+        style: const LineStyle(color: Colors.redAccent));
+    _middleSeries =
+        LineSeries(bbmSMA.results, style: const LineStyle(color: Colors.white));
     _upperSeries = LineSeries(bbuSMA.results,
-        style: const LineStyle(hasArea: false, color: Colors.lightGreen));
+        style: const LineStyle(color: Colors.lightGreen));
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
@@ -129,14 +129,14 @@ class BollingerBandSeries extends Series {
     double Function(double) quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
-    ChartTheme chartTheme,
+    ChartTheme theme,
   ) {
-    _lowerSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, chartTheme);
-    _middleSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, chartTheme);
-    _upperSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, chartTheme);
+    _lowerSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _middleSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _upperSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     // TODO(ramin): call super.paint to paint the Channels fill.
   }
