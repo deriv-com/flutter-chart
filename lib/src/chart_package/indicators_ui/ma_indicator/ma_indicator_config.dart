@@ -10,6 +10,7 @@ class MAIndicatorConfig extends IndicatorConfig {
     IndicatorBuilder indicatorBuilder, {
     this.period,
     this.type,
+    this.fieldType,
   }) : super(indicatorBuilder);
 
   /// Moving Average period
@@ -17,4 +18,7 @@ class MAIndicatorConfig extends IndicatorConfig {
 
   /// Moving Average type
   final MovingAverageType type;
+
+  /// Field type
+  final String fieldType;
 }

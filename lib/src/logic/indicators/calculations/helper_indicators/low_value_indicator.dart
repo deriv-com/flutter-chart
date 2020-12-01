@@ -4,9 +4,9 @@ import 'package:deriv_chart/src/models/tick.dart';
 import '../../abstract_indicator.dart';
 
 /// A helper indicator to get the low value of a list of [Candle]
-class LowValueIndicator extends AbstractIndicator<Candle> {
+class LowValueIndicator extends AbstractIndicator<Tick> {
   /// Initializes
-  LowValueIndicator(List<Candle> candles) : super(candles);
+  LowValueIndicator(List<Tick> entries) : super(entries);
 
   @override
   Tick getValue(int index) =>

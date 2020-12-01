@@ -1,5 +1,9 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/open_value_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -33,21 +37,35 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// MA type
   @protected
   MovingAverageType type;
-  
+
+  /// Field type
+  @protected
+  String field;
+
   /// MA period
   @protected
   int period;
 
+  /// Different Field type indicator builders
+  static final Map<String, FieldIndicatorBuilder> filedIndicatorBuilders =
+      <String, FieldIndicatorBuilder>{
+    'close': (List<Tick> ticks) => CloseValueIndicator(ticks),
+    'high': (List<Tick> ticks) => HighValueIndicator(ticks),
+    'low': (List<Tick> ticks) => LowValueIndicator(ticks),
+    'open': (List<Tick> ticks) => OpenValueIndicator(ticks),
+  };
+
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
-        (List<Tick> ticks) => MASeries(
-          ticks,
+        (List<Tick> ticks) => MASeries.fromIndicator(
+          filedIndicatorBuilders[field](ticks),
           period: period,
           type: type,
           style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
         ),
         period: period,
         type: type,
+        fieldType: field,
       );
 
   @override
@@ -104,7 +122,28 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                     updateIndicator();
                   },
                 ),
-              )
+              ),
+              const SizedBox(width: 5),
+              const Text('Field: ', style: TextStyle(fontSize: 12)),
+              DropdownButton<String>(
+                value: getCurrentField(),
+                items: filedIndicatorBuilders.keys
+                    .map<DropdownMenuItem<String>>(
+                        (String fieldType) => DropdownMenuItem<String>(
+                              value: fieldType,
+                              child: Text(
+                                '$fieldType',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ))
+                    .toList(),
+                onChanged: (String newField) => setState(
+                  () {
+                    field = newField;
+                    updateIndicator();
+                  },
+                ),
+              ),
             ],
           )
         ],
@@ -114,6 +153,10 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   MovingAverageType getCurrentType() =>
       getConfig()?.type ?? MovingAverageType.simple;
+
+  /// Gets Indicator current filed type.
+  @protected
+  String getCurrentField() => getConfig()?.fieldType ?? 'close';
 
   /// Gets Indicator current period.
   @protected

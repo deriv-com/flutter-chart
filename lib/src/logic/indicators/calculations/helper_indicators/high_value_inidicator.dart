@@ -3,9 +3,9 @@ import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 /// A helper indicator to get the high value of a list of [Candle]
-class HighValueIndicator extends AbstractIndicator<Candle> {
+class HighValueIndicator extends AbstractIndicator<Tick> {
   /// Initializes
-  HighValueIndicator(List<Candle> candles) : super(candles);
+  HighValueIndicator(List<Tick> entries) : super(entries);
 
   @override
   Tick getValue(int index) =>
