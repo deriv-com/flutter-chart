@@ -88,10 +88,11 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     // Stop auto-panning to make it easier to select candle or tick.
     xAxis.disableAutoPan();
     _lastLongPressPosition = details.localPosition;
+    _lastLongPressPositionEpoch = xAxis.epochFromX(_lastLongPressPosition.dx);
     _updatePanSpeed();
 
     setState(() {
-      crosshairTick = _getClosestTick(xAxis);
+      crosshairTick = _getClosestTick();
     });
   }
 
@@ -115,7 +116,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     }
   }
 
-  Tick _getClosestTick(XAxisModel xxAxis) {
+  Tick _getClosestTick() {
     return findClosestToEpoch(
         _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
   }
@@ -141,8 +142,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Has changed
         _lastLongPressPositionEpoch = newLongPressEpoch;
-        crosshairTick = _getClosestTick(
-            _lastLongPressPosition.dx, context.watch<XAxisModel>());
+        crosshairTick = _getClosestTick();
       }
     }
 
