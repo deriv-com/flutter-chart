@@ -47,7 +47,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   int period;
 
   /// Different Field type indicator builders
-  static final Map<String, FieldIndicatorBuilder> filedIndicatorBuilders =
+  final Map<String, FieldIndicatorBuilder> filedIndicatorBuilders =
       <String, FieldIndicatorBuilder>{
     'close': (List<Tick> ticks) => CloseValueIndicator(ticks),
     'high': (List<Tick> ticks) => HighValueIndicator(ticks),

@@ -34,13 +34,16 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   @override
   BollingerBandsIndicatorConfig createIndicatorConfig() =>
       BollingerBandsIndicatorConfig(
-        (List<Tick> ticks) => BollingerBandSeries(ticks,
-            period: period,
-            movingAverageType: type,
-            standardDeviationFactor: _standardDeviation),
+        (List<Tick> ticks) => BollingerBandSeries.fromIndicator(
+          filedIndicatorBuilders[field](ticks),
+          period: period,
+          movingAverageType: type,
+          standardDeviationFactor: _standardDeviation,
+        ),
         period: period,
         movingAverageType: type,
         standardDeviation: _standardDeviation,
+        fieldType: field,
       );
 
   @override

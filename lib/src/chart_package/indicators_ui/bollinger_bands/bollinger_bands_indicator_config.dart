@@ -10,8 +10,14 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
     IndicatorBuilder indicatorBuilder, {
     int period,
     MovingAverageType movingAverageType,
+    String fieldType,
     this.standardDeviation,
-  }) : super(indicatorBuilder, period: period, type: movingAverageType);
+  }) : super(
+          indicatorBuilder,
+          period: period,
+          type: movingAverageType,
+          fieldType: fieldType,
+        );
 
   /// Standard Deviation value
   final double standardDeviation;
