@@ -1,8 +1,6 @@
 import 'package:deriv_chart/src/chart_package/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/chart_package/indicators_ui/ma_indicator/ma_indicator_item.dart';
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
@@ -55,74 +53,37 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   @override
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
+          buildMATypeMenu(),
           Row(
             children: <Widget>[
-              const Text('Type: ', style: TextStyle(fontSize: 12)),
-              DropdownButton<MovingAverageType>(
-                value: getCurrentType(),
-                items: MovingAverageType.values
-                    .map<DropdownMenuItem<MovingAverageType>>(
-                        (MovingAverageType type) =>
-                            DropdownMenuItem<MovingAverageType>(
-                              value: type,
-                              child: Text(
-                                '${getEnumValue(type)}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ))
-                    .toList(),
-                onChanged: (MovingAverageType newType) => setState(
-                  () {
-                    type = newType;
-                    updateIndicator();
-                  },
-                ),
-              ),
+              buildPeriodField(),
+              const SizedBox(width: 10),
+              buildFieldTypeMenu()
             ],
           ),
-          Row(
-            children: <Widget>[
-              const Text('Period: ', style: TextStyle(fontSize: 12)),
-              SizedBox(
-                width: 20,
-                child: TextFormField(
-                  style: const TextStyle(fontSize: 12),
-                  initialValue: getCurrentPeriod().toString(),
-                  keyboardType: TextInputType.number,
-                  onChanged: (String text) {
-                    if (text.isNotEmpty) {
-                      period = int.tryParse(text);
-                    } else {
-                      period = 15;
-                    }
-                    updateIndicator();
-                  },
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              const Text('Standard Deviation: ',
-                  style: TextStyle(fontSize: 12)),
-              SizedBox(
-                width: 20,
-                child: TextFormField(
-                  style: const TextStyle(fontSize: 12),
-                  initialValue: _getCurrentStandardDeviation().toString(),
-                  keyboardType: TextInputType.number,
-                  onChanged: (String text) {
-                    if (text.isNotEmpty) {
-                      _standardDeviation = double.tryParse(text);
-                    } else {
-                      _standardDeviation = 2;
-                    }
-                    updateIndicator();
-                  },
-                ),
-              )
-            ],
-          ),
+          _buildSDMenu(),
+        ],
+      );
+
+  Widget _buildSDMenu() => Row(
+        children: <Widget>[
+          const Text('Standard Deviation: ', style: TextStyle(fontSize: 12)),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 12),
+              initialValue: _getCurrentStandardDeviation().toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  _standardDeviation = double.tryParse(text);
+                } else {
+                  _standardDeviation = 2;
+                }
+                updateIndicator();
+              },
+            ),
+          )
         ],
       );
 

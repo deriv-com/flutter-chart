@@ -84,7 +84,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
           Row(
             children: <Widget>[
               buildPeriodField(),
-              const SizedBox(width: 5),
+              const SizedBox(width: 10),
               buildFieldTypeMenu(),
             ],
           )
