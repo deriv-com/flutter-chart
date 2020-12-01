@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_lower_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
@@ -20,16 +21,31 @@ import 'package:flutter/material.dart';
 /// Bollinger bands series
 class BollingerBandSeries extends Series {
   ///Initializes
+  ///
+  /// Close values will be chosen by default.
   BollingerBandSeries(
-    this.ticks, {
+    List<Tick> ticks, {
+    int period = 20,
+    MovingAverageType movingAverageType = MovingAverageType.simple,
+    double standardDeviationFactor = 2,
+    String id,
+  }) : this.fromIndicator(
+          CloseValueIndicator(ticks),
+          period: period,
+          movingAverageType: movingAverageType,
+          standardDeviationFactor: standardDeviationFactor,
+          id: id,
+        );
+
+  ///Initializes
+  BollingerBandSeries.fromIndicator(
+    AbstractIndicator indicator, {
     this.period = 20,
     this.movingAverageType = MovingAverageType.simple,
     this.standardDeviationFactor = 2,
     String id,
-  }) : super(id);
-
-  /// Ticks to calculate bollingers for
-  final List<Tick> ticks;
+  })  : _fieldIndicator = indicator,
+        super(id);
 
   LineSeries _lowerSeries;
   LineSeries _middleSeries;
@@ -42,14 +58,15 @@ class BollingerBandSeries extends Series {
 
   final double standardDeviationFactor;
 
+  final AbstractIndicator _fieldIndicator;
+
   @override
   SeriesPainter<Series> createPainter() {
-    final Indicator closePrice = CloseValueIndicator(ticks);
     final StandardDeviationIndicator standardDeviation =
-        StandardDeviationIndicator(closePrice, period);
+        StandardDeviationIndicator(_fieldIndicator, period);
 
     final BollingerBandsMiddleIndicator bbmSMA = BollingerBandsMiddleIndicator(
-      MASeries.getMAIndicator(ticks, period, movingAverageType),
+      MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType),
     );
 
     final BollingerBandsLowerIndicator bblSMA = BollingerBandsLowerIndicator(

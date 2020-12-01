@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
@@ -22,28 +23,43 @@ class MASeries extends LineSeries {
     LineStyle style,
     int period = 15,
     MovingAverageType type = MovingAverageType.simple,
+  }) : this.fromIndicator(
+          CloseValueIndicator(entries),
+          id: id,
+          style: style,
+          period: period,
+          type: type,
+        );
+
+  /// Initializes
+  MASeries.fromIndicator(
+    AbstractIndicator indicator, {
+    String id,
+    LineStyle style,
+    int period = 15,
+    MovingAverageType type = MovingAverageType.simple,
   }) : super(
-          getMAIndicator(entries, period, type).results,
+          getMAIndicator(indicator, period, type).results,
           id: id ?? 'SMASeries-period$period-type$type',
           style: style ?? const LineStyle(thickness: 0.5),
         );
 
   static CachedIndicator getMAIndicator(
-    List<Tick> entries,
+    AbstractIndicator indicator,
     int period,
     MovingAverageType type,
   ) {
     switch (type) {
       case MovingAverageType.exponential:
-        return EMAIndicator(CloseValueIndicator(entries), period);
+        return EMAIndicator(indicator, period);
       case MovingAverageType.weighted:
-        return WMAIndicator(CloseValueIndicator(entries), period);
+        return WMAIndicator(indicator, period);
       case MovingAverageType.hull:
-        return HMAIndicator(CloseValueIndicator(entries), period);
+        return HMAIndicator(indicator, period);
       case MovingAverageType.zeroLag:
-        return ZLEMAIndicator(CloseValueIndicator(entries), period);
+        return ZLEMAIndicator(indicator, period);
       default:
-        return SMAIndicator(CloseValueIndicator(entries), period);
+        return SMAIndicator(indicator, period);
     }
   }
 }
