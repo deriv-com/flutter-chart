@@ -74,6 +74,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
     type = getCurrentType();
     period = getCurrentPeriod();
+    field = getCurrentField();
   }
 
   @override
