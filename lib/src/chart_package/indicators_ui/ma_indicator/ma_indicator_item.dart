@@ -80,73 +80,93 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @override
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
+          buildMATypeMenu(),
           Row(
             children: <Widget>[
-              const Text('Type: ', style: TextStyle(fontSize: 12)),
-              DropdownButton<MovingAverageType>(
-                value: getCurrentType(),
-                items: MovingAverageType.values
-                    .map<DropdownMenuItem<MovingAverageType>>(
-                        (MovingAverageType type) =>
-                            DropdownMenuItem<MovingAverageType>(
-                              value: type,
-                              child: Text(
-                                '${getEnumValue(type)}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ))
-                    .toList(),
-                onChanged: (MovingAverageType newType) => setState(
-                  () {
-                    type = newType;
-                    updateIndicator();
-                  },
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              const Text('Period: ', style: TextStyle(fontSize: 12)),
-              SizedBox(
-                width: 20,
-                child: TextFormField(
-                  style: const TextStyle(fontSize: 12),
-                  initialValue: getCurrentPeriod().toString(),
-                  keyboardType: TextInputType.number,
-                  onChanged: (String text) {
-                    if (text.isNotEmpty) {
-                      period = int.tryParse(text);
-                    } else {
-                      period = 15;
-                    }
-                    updateIndicator();
-                  },
-                ),
-              ),
+              buildPeriodField(),
               const SizedBox(width: 5),
-              const Text('Field: ', style: TextStyle(fontSize: 12)),
-              DropdownButton<String>(
-                value: getCurrentField(),
-                items: filedIndicatorBuilders.keys
-                    .map<DropdownMenuItem<String>>(
-                        (String fieldType) => DropdownMenuItem<String>(
-                              value: fieldType,
-                              child: Text(
-                                '$fieldType',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ))
-                    .toList(),
-                onChanged: (String newField) => setState(
-                  () {
-                    field = newField;
-                    updateIndicator();
-                  },
-                ),
-              ),
+              buildFieldTypeMenu(),
             ],
           )
+        ],
+      );
+
+  /// Builds MA Field type menu
+  @protected
+  Widget buildFieldTypeMenu() => Row(
+        children: <Widget>[
+          const Text('Field: ', style: TextStyle(fontSize: 12)),
+          DropdownButton<String>(
+            value: getCurrentField(),
+            items: filedIndicatorBuilders.keys
+                .map<DropdownMenuItem<String>>(
+                    (String fieldType) => DropdownMenuItem<String>(
+                          value: fieldType,
+                          child: Text(
+                            '$fieldType',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ))
+                .toList(),
+            onChanged: (String newField) => setState(
+              () {
+                field = newField;
+                updateIndicator();
+              },
+            ),
+          )
+        ],
+      );
+
+  /// Builds Period TextFiled
+  @protected
+  Widget buildPeriodField() => Row(
+        children: <Widget>[
+          const Text('Period: ', style: TextStyle(fontSize: 12)),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 12),
+              initialValue: getCurrentPeriod().toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  period = int.tryParse(text);
+                } else {
+                  period = 15;
+                }
+                updateIndicator();
+              },
+            ),
+          ),
+        ],
+      );
+
+  /// Returns MA types dropdown menu
+  @protected
+  Widget buildMATypeMenu() => Row(
+        children: <Widget>[
+          const Text('Type: ', style: TextStyle(fontSize: 12)),
+          DropdownButton<MovingAverageType>(
+            value: getCurrentType(),
+            items: MovingAverageType.values
+                .map<DropdownMenuItem<MovingAverageType>>(
+                    (MovingAverageType type) =>
+                        DropdownMenuItem<MovingAverageType>(
+                          value: type,
+                          child: Text(
+                            '${getEnumValue(type)}',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ))
+                .toList(),
+            onChanged: (MovingAverageType newType) => setState(
+              () {
+                type = newType;
+                updateIndicator();
+              },
+            ),
+          ),
         ],
       );
 
