@@ -88,12 +88,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     // Stop auto-panning to make it easier to select candle or tick.
     xAxis.disableAutoPan();
     _lastLongPressPosition = details.localPosition;
-    _lastLongPressPositionEpoch = xAxis.epochFromX(_lastLongPressPosition.dx);
     _updatePanSpeed();
-
-    setState(() {
-      crosshairTick = _getClosestTick();
-    });
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
