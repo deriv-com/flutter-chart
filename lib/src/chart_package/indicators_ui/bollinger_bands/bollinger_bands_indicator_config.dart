@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.d
 
 import '../callbacks.dart';
 
-/// Moving Average indicator config
+/// Bollinger Bands Indicator Config
 class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const BollingerBandsIndicatorConfig(

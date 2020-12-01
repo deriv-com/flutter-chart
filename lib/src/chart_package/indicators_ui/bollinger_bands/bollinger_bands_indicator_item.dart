@@ -9,7 +9,7 @@ import '../callbacks.dart';
 import '../indicator_item.dart';
 import 'bollinger_bands_indicator_config.dart';
 
-/// Moving average indicator
+/// Bollinger Bands indicator item
 class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
   const BollingerBandsIndicatorItem({

@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 
 /// Bollinger bands series
 class BollingerBandSeries extends Series {
-  ///Initializes
+  /// Initializes
   ///
   /// Close values will be chosen by default.
   BollingerBandSeries(
@@ -37,7 +37,7 @@ class BollingerBandSeries extends Series {
           id: id,
         );
 
-  ///Initializes
+  /// Initializes
   BollingerBandSeries.fromIndicator(
     AbstractIndicator indicator, {
     this.period = 20,
@@ -54,8 +54,10 @@ class BollingerBandSeries extends Series {
   /// Period
   final int period;
 
+  /// Bollinger Bands Moving Average type
   final MovingAverageType movingAverageType;
 
+  /// Standard Deviation value
   final double standardDeviationFactor;
 
   final AbstractIndicator _fieldIndicator;
