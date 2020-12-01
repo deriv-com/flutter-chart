@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/chart_package/indicators_ui/indicator_config.dart';
+import 'package:deriv_chart/src/chart_package/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
@@ -29,21 +30,18 @@ class BollingerBandsIndicatorItem extends IndicatorItem {
 }
 
 /// BollingerBandsIndicatorItem State class
-class BollingerBandsIndicatorItemState
-    extends IndicatorItemState<BollingerBandsIndicatorConfig> {
-  MovingAverageType _type;
-  int _period;
+class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   double _standardDeviation;
 
   @override
   BollingerBandsIndicatorConfig createIndicatorConfig() =>
       BollingerBandsIndicatorConfig(
         (List<Tick> ticks) => BollingerBandSeries(ticks,
-            period: _period,
-            movingAverageType: _type,
+            period: period,
+            movingAverageType: type,
             standardDeviationFactor: _standardDeviation),
-        period: _period,
-        movingAverageType: _type,
+        period: period,
+        movingAverageType: type,
         standardDeviation: _standardDeviation,
       );
 
@@ -51,8 +49,6 @@ class BollingerBandsIndicatorItemState
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _type = _getCurrentType();
-    _period = _getCurrentPeriod();
     _standardDeviation = _getCurrentStandardDeviation();
   }
 
@@ -63,7 +59,7 @@ class BollingerBandsIndicatorItemState
             children: <Widget>[
               const Text('Type: ', style: TextStyle(fontSize: 12)),
               DropdownButton<MovingAverageType>(
-                value: _getCurrentType(),
+                value: getCurrentType(),
                 items: MovingAverageType.values
                     .map<DropdownMenuItem<MovingAverageType>>(
                         (MovingAverageType type) =>
@@ -77,7 +73,7 @@ class BollingerBandsIndicatorItemState
                     .toList(),
                 onChanged: (MovingAverageType newType) => setState(
                   () {
-                    _type = newType;
+                    type = newType;
                     updateIndicator();
                   },
                 ),
@@ -91,13 +87,13 @@ class BollingerBandsIndicatorItemState
                 width: 20,
                 child: TextFormField(
                   style: const TextStyle(fontSize: 12),
-                  initialValue: _getCurrentPeriod().toString(),
+                  initialValue: getCurrentPeriod().toString(),
                   keyboardType: TextInputType.number,
                   onChanged: (String text) {
                     if (text.isNotEmpty) {
-                      _period = int.tryParse(text);
+                      period = int.tryParse(text);
                     } else {
-                      _period = 15;
+                      period = 15;
                     }
                     updateIndicator();
                   },
@@ -130,10 +126,8 @@ class BollingerBandsIndicatorItemState
         ],
       );
 
-  MovingAverageType _getCurrentType() =>
-      getConfig()?.type ?? MovingAverageType.simple;
-
-  int _getCurrentPeriod() => getConfig()?.period ?? 20;
-
-  double _getCurrentStandardDeviation() => getConfig()?.standardDeviation ?? 2;
+  double _getCurrentStandardDeviation() {
+    final BollingerBandsIndicatorConfig config = getConfig();
+    return config?.standardDeviation ?? 2;
+  }
 }

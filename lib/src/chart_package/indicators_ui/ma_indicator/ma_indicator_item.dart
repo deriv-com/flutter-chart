@@ -30,27 +30,32 @@ class MAIndicatorItem extends IndicatorItem {
 
 /// MAIndicatorItem State class
 class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
-  MovingAverageType _type;
-  int _period;
+  /// MA type
+  @protected
+  MovingAverageType type;
+  
+  /// MA period
+  @protected
+  int period;
 
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         (List<Tick> ticks) => MASeries(
           ticks,
-          period: _period,
-          type: _type,
+          period: period,
+          type: type,
           style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
         ),
-        period: _period,
-        type: _type,
+        period: period,
+        type: type,
       );
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _type = _getCurrentType();
-    _period = _getCurrentPeriod();
+    type = getCurrentType();
+    period = getCurrentPeriod();
   }
 
   @override
@@ -60,7 +65,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
             children: <Widget>[
               const Text('Type: ', style: TextStyle(fontSize: 12)),
               DropdownButton<MovingAverageType>(
-                value: _getCurrentType(),
+                value: getCurrentType(),
                 items: MovingAverageType.values
                     .map<DropdownMenuItem<MovingAverageType>>(
                         (MovingAverageType type) =>
@@ -74,7 +79,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                     .toList(),
                 onChanged: (MovingAverageType newType) => setState(
                   () {
-                    _type = newType;
+                    type = newType;
                     updateIndicator();
                   },
                 ),
@@ -88,13 +93,13 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                 width: 20,
                 child: TextFormField(
                   style: const TextStyle(fontSize: 12),
-                  initialValue: _getCurrentPeriod().toString(),
+                  initialValue: getCurrentPeriod().toString(),
                   keyboardType: TextInputType.number,
                   onChanged: (String text) {
                     if (text.isNotEmpty) {
-                      _period = int.tryParse(text);
+                      period = int.tryParse(text);
                     } else {
-                      _period = 15;
+                      period = 15;
                     }
                     updateIndicator();
                   },
@@ -105,8 +110,12 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         ],
       );
 
-  MovingAverageType _getCurrentType() =>
+  /// Gets Indicator current type.
+  @protected
+  MovingAverageType getCurrentType() =>
       getConfig()?.type ?? MovingAverageType.simple;
 
-  int _getCurrentPeriod() => getConfig()?.period ?? 50;
+  /// Gets Indicator current period.
+  @protected
+  int getCurrentPeriod() => getConfig()?.period ?? 50;
 }
