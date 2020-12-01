@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/hma_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('HMA Indicator', () {
-      final HMAIndicator hma = HMAIndicator(QuoteIndicator(ticks), 9);
+      final HMAIndicator hma = HMAIndicator(CloseValueIndicator(ticks), 9);
 
       expect(roundDouble(hma.results[10].quote, 4), 86.3204);
       expect(roundDouble(hma.results[11].quote, 4), 85.3705);

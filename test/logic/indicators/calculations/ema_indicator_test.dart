@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('EMA', () {
-      EMAIndicator indicator = EMAIndicator(QuoteIndicator(ticks), 10);
+      EMAIndicator indicator = EMAIndicator(CloseValueIndicator(ticks), 10);
 
       expect(roundDouble(indicator.results[9].quote, 4), 63.6948);
       expect(roundDouble(indicator.results[10].quote, 4), 63.2649);

@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/percent_b_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/Ichimoku_indicators.dart';
@@ -59,7 +59,7 @@ void main() {
         Tick(epoch: 13, quote: 2),
       ];
 
-      SMAIndicator sma = SMAIndicator(QuoteIndicator(ticks), 3);
+      SMAIndicator sma = SMAIndicator(CloseValueIndicator(ticks), 3);
       BollingerBandsMiddleIndicator bbmSMA = BollingerBandsMiddleIndicator(sma);
 
       for (int i = 0; i < ticks.length; i++) {
@@ -86,7 +86,7 @@ void main() {
 
       final barCount = 3;
 
-      final closePrice = new QuoteIndicator(ticks);
+      final closePrice = new CloseValueIndicator(ticks);
 
       BollingerBandsMiddleIndicator bbmSMA =
           new BollingerBandsMiddleIndicator(SMAIndicator(closePrice, barCount));
@@ -149,7 +149,7 @@ void main() {
         Tick(epoch: 20, quote: 10),
       ];
 
-      final closePrice = QuoteIndicator(ticks);
+      final closePrice = CloseValueIndicator(ticks);
 
       PercentBIndicator pcb = new PercentBIndicator(closePrice, 5);
 

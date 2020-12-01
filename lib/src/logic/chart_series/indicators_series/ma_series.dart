@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/hma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
@@ -35,15 +35,15 @@ class MASeries extends LineSeries {
   ) {
     switch (type) {
       case MovingAverageType.exponential:
-        return EMAIndicator(QuoteIndicator(entries), period);
+        return EMAIndicator(CloseValueIndicator(entries), period);
       case MovingAverageType.weighted:
-        return WMAIndicator(QuoteIndicator(entries), period);
+        return WMAIndicator(CloseValueIndicator(entries), period);
       case MovingAverageType.hull:
-        return HMAIndicator(QuoteIndicator(entries), period);
+        return HMAIndicator(CloseValueIndicator(entries), period);
       case MovingAverageType.zeroLag:
-        return ZLEMAIndicator(QuoteIndicator(entries), period);
+        return ZLEMAIndicator(CloseValueIndicator(entries), period);
       default:
-        return SMAIndicator(QuoteIndicator(entries), period);
+        return SMAIndicator(CloseValueIndicator(entries), period);
     }
   }
 }

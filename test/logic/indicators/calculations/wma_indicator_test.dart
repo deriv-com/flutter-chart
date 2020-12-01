@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,7 +20,8 @@ void main() {
     });
 
     test('WMA', () {
-      WMAIndicator wmaIndicator = new WMAIndicator(QuoteIndicator(ticks), 3);
+      WMAIndicator wmaIndicator =
+          new WMAIndicator(CloseValueIndicator(ticks), 3);
 
       expect(wmaIndicator.getValue(0).quote, 1);
       expect(roundDouble(wmaIndicator.getValue(1).quote, 4), 1.6667);

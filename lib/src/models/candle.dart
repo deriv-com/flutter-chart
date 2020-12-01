@@ -2,6 +2,8 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:meta/meta.dart';
 
+import 'ohlc.dart';
+
 class Candle extends Tick {
   final int epoch;
   final double high;

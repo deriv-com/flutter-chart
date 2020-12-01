@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('SMAIndicator', () {
-      SMAIndicator smaIndicator = SMAIndicator(QuoteIndicator(ticks), 3);
+      SMAIndicator smaIndicator = SMAIndicator(CloseValueIndicator(ticks), 3);
 
       expect(1, smaIndicator.getValue(0).quote);
       expect(1.5, smaIndicator.getValue(1).quote);

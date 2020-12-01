@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('ZELMA', () {
-      ZLEMAIndicator indicator = ZLEMAIndicator(QuoteIndicator(ticks), 10);
+      ZLEMAIndicator indicator = ZLEMAIndicator(CloseValueIndicator(ticks), 10);
 
       expect(roundDouble(indicator.results[9].quote, 3), 11.909);
       expect(roundDouble(indicator.results[10].quote, 4), 8.8347);

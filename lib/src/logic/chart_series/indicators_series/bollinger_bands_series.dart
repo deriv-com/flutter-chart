@@ -6,8 +6,7 @@ import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart'
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_lower_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
@@ -45,7 +44,7 @@ class BollingerBandSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    final Indicator closePrice = QuoteIndicator(ticks);
+    final Indicator closePrice = CloseValueIndicator(ticks);
     final StandardDeviationIndicator standardDeviation =
         StandardDeviationIndicator(closePrice, period);
 
