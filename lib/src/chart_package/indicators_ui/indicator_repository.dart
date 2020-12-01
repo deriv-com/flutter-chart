@@ -10,7 +10,7 @@ class IndicatorsRepository {
   /// Gets the indicators
   Map<String, IndicatorConfig> get indicators => _indicators;
 
-  /// Whether this indicator for the give [key] is added to the chart
+  /// Whether this indicator for the given [key] is added to the chart
   bool isIndicatorActive(String key) => _indicators[key] != null;
 
   /// Gets the indicator for the given [key]

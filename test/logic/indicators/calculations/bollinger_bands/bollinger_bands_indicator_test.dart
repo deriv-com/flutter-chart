@@ -1,18 +1,13 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/percent_b_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/quote_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/hma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/Ichimoku_indicators.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -48,7 +43,6 @@ void main() {
     });
 
     test('Bollinger middle', () {
-      // 1, 2, 3, 4, 3, 4, 5, 4, 3, 3, 4, 3, 2
       final List<Tick> ticks = <Tick>[
         Tick(epoch: 1, quote: 1),
         Tick(epoch: 2, quote: 2),
