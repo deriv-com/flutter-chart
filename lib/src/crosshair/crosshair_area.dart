@@ -87,7 +87,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
     // Stop auto-panning to make it easier to select candle or tick.
     xAxis.disableAutoPan();
-    xAxis.pan(0);
+    _updatePanSpeed();
 
     setState(() {
       crosshairTick = _getClosestTick(details.localPosition.dx, xAxis);
