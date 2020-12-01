@@ -92,14 +92,14 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
-    final dx = details.localPosition.dx;
+    final double dx = details.localPosition.dx;
     _lastLongPressPosition = details.localPosition;
     _updatePanSpeed();
   }
 
   void _updatePanSpeed() {
     if (_lastLongPressPosition != null) {
-      final dx = _lastLongPressPosition.dx;
+      final double dx = _lastLongPressPosition.dx;
 
       if (dx < _closeDistance) {
         xAxis.pan(-_panSpeed);
@@ -132,7 +132,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   @override
   Widget build(BuildContext context) {
     if (_lastLongPressPosition != null) {
-      final newLongPressEpoch =
+      final int newLongPressEpoch =
           context.watch<XAxisModel>().epochFromX(_lastLongPressPosition.dx);
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Has changed
