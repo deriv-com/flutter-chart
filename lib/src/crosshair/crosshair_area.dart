@@ -97,23 +97,20 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     final dx = details.localPosition.dx;
     _lastLongPressPosition = details.localPosition;
-    // _lastLongPressPositionEpoch = xAxis.epochFromX(dx);
+    _updatePanSpeed();
   }
 
-  void _updateCrossHairTick() {
-    XAxisModel xxAxis = context.watch<XAxisModel>();
-
+  void _updatePanSpeed() {
     if (_lastLongPressPosition != null) {
       final dx = _lastLongPressPosition.dx;
 
       if (dx < _closeDistance) {
-        xxAxis.pan(-_panSpeed);
-      } else if (xxAxis.width - dx < _closeDistance) {
-        xxAxis.pan(_panSpeed);
+        xAxis.pan(-_panSpeed);
+      } else if (xAxis.width - dx < _closeDistance) {
+        xAxis.pan(_panSpeed);
       } else {
-        xxAxis.pan(0);
+        xAxis.pan(0);
       }
-      crosshairTick = _getClosestTick(dx, xxAxis);
     }
   }
 
@@ -143,7 +140,8 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Has changed
         _lastLongPressPositionEpoch = newLongPressEpoch;
-        _updateCrossHairTick();
+        crosshairTick = _getClosestTick(
+            _lastLongPressPosition.dx, context.watch<XAxisModel>());
       }
     }
 
