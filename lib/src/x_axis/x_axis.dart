@@ -151,9 +151,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             ),
             child: Padding(
               padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
-              child: ClipRect(
-                child: widget.child,
-              ),
+              child: widget.child,
             ),
           );
         },
