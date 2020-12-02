@@ -213,7 +213,6 @@ class XAxisModel extends ChangeNotifier {
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
       _scrollTo(_rightBoundEpoch + elapsedMs);
-      notifyListeners();
     }
   }
 
@@ -274,13 +273,11 @@ class XAxisModel extends ChangeNotifier {
     } else {
       _scaleWithFocalPointFixed(details);
     }
-    notifyListeners();
   }
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
     _scrollBy(-details.delta.dx);
-    notifyListeners();
   }
 
   /// Called at the end of scale and pan gestures.
@@ -304,18 +301,21 @@ class XAxisModel extends ChangeNotifier {
   void _scale(double scale) {
     _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
     onScale?.call();
+    notifyListeners();
   }
 
   void _scrollTo(int rightBoundEpoch) {
     _rightBoundEpoch = rightBoundEpoch;
     _clampRightBoundEpoch();
     onScroll?.call();
+    notifyListeners();
   }
 
   void _scrollBy(double pxShift) {
     _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
     _clampRightBoundEpoch();
     onScroll?.call();
+    notifyListeners();
   }
 
   /// Animate scrolling to current tick.
