@@ -444,114 +444,121 @@ class _ChartImplementationState extends State<_ChartImplementation>
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      final XAxisModel xAxis = context.watch<XAxisModel>();
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final XAxisModel xAxis = context.watch<XAxisModel>();
 
-      canvasSize = Size(
-        xAxis.width,
-        constraints.maxHeight,
-      );
+        canvasSize = Size(
+          xAxis.width,
+          constraints.maxHeight,
+        );
 
-      if (xAxis.rightBoundEpoch != _prevRightBoundEpoch ||
-          xAxis.leftBoundEpoch != _prevLeftBoundEpoch) {
-        _updateChartData();
-        _updateQuoteBoundTargets();
+        if (xAxis.rightBoundEpoch != _prevRightBoundEpoch ||
+            xAxis.leftBoundEpoch != _prevLeftBoundEpoch) {
+          _updateChartData();
+          _updateQuoteBoundTargets();
 
-        _prevRightBoundEpoch = xAxis.rightBoundEpoch;
-        _prevLeftBoundEpoch = xAxis.leftBoundEpoch;
-      }
+          _prevRightBoundEpoch = xAxis.rightBoundEpoch;
+          _prevLeftBoundEpoch = xAxis.leftBoundEpoch;
+        }
 
-      return Stack(
-        children: <Widget>[
-          CustomPaint(
-            size: canvasSize,
-            painter: YGridPainter(
-              gridLineQuotes: _getGridLineQuotes(),
-              pipSize: widget.pipSize,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
-            ),
-          ),
-          CustomPaint(
-            size: canvasSize,
-            painter: LoadingPainter(
-              loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
-                  ? _xAxis.width
-                  : _xAxis.xFromEpoch(
-                      widget.mainSeries.visibleEntries.first.epoch,
-                    ),
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
-            ),
-          ),
-          RepaintBoundary(
-            child: Opacity(
-              opacity: widget.opacity,
-              child: CustomPaint(
-                size: canvasSize,
-                painter: ChartDataPainter(
-                  animationInfo: AnimationInfo(
-                    currentTickPercent: _currentTickAnimation.value,
-                    blinkingPercent: _currentTickBlinkAnimation.value,
+        return AnimatedBuilder(
+          // It's enough to only listen to the top bound, since top and bottom are animated at the same time.
+          animation: _topBoundQuoteAnimationController,
+          builder: (BuildContext context, Widget child) {
+            return Stack(
+              children: <Widget>[
+                CustomPaint(
+                  size: canvasSize,
+                  painter: YGridPainter(
+                    gridLineQuotes: _getGridLineQuotes(),
+                    pipSize: widget.pipSize,
+                    quoteToCanvasY: _quoteToCanvasY,
+                    style: context.watch<ChartTheme>().gridStyle,
                   ),
-                  dataSeries: widget.mainSeries,
-                  chartConfig: context.read<ChartConfig>(),
-                  theme: context.read<ChartTheme>(),
-                  epochToCanvasX: _xAxis.xFromEpoch,
-                  quoteToCanvasY: _quoteToCanvasY,
-                  rightBoundEpoch: _xAxis.rightBoundEpoch,
-                  leftBoundEpoch: _xAxis.leftBoundEpoch,
-                  topY: _quoteToCanvasY(widget.mainSeries.maxValue),
-                  bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
                 ),
-              ),
-            ),
-          ),
-          CustomPaint(
-            size: canvasSize,
-            painter: ChartPainter(
-              animationInfo: AnimationInfo(
-                currentTickPercent: _currentTickAnimation.value,
-                blinkingPercent: _currentTickBlinkAnimation.value,
-              ),
-              chartDataList: <ChartData>[
-                if (widget.chartDataList != null) ...widget.chartDataList
+                CustomPaint(
+                  size: canvasSize,
+                  painter: LoadingPainter(
+                    loadingAnimationProgress: _loadingAnimationController.value,
+                    loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+                        ? _xAxis.width
+                        : _xAxis.xFromEpoch(
+                            widget.mainSeries.visibleEntries.first.epoch,
+                          ),
+                    epochToCanvasX: _xAxis.xFromEpoch,
+                    quoteToCanvasY: _quoteToCanvasY,
+                  ),
+                ),
+                RepaintBoundary(
+                  child: Opacity(
+                    opacity: widget.opacity,
+                    child: CustomPaint(
+                      size: canvasSize,
+                      painter: ChartDataPainter(
+                        animationInfo: AnimationInfo(
+                          currentTickPercent: _currentTickAnimation.value,
+                          blinkingPercent: _currentTickBlinkAnimation.value,
+                        ),
+                        dataSeries: widget.mainSeries,
+                        chartConfig: context.watch<ChartConfig>(),
+                        theme: context.watch<ChartTheme>(),
+                        epochToCanvasX: _xAxis.xFromEpoch,
+                        quoteToCanvasY: _quoteToCanvasY,
+                        rightBoundEpoch: _xAxis.rightBoundEpoch,
+                        leftBoundEpoch: _xAxis.leftBoundEpoch,
+                        topY: _quoteToCanvasY(widget.mainSeries.maxValue),
+                        bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
+                      ),
+                    ),
+                  ),
+                ),
+                CustomPaint(
+                  size: canvasSize,
+                  painter: ChartPainter(
+                    animationInfo: AnimationInfo(
+                      currentTickPercent: _currentTickAnimation.value,
+                      blinkingPercent: _currentTickBlinkAnimation.value,
+                    ),
+                    chartDataList: <ChartData>[
+                      if (widget.chartDataList != null) ...widget.chartDataList
+                    ],
+                    chartConfig: context.watch<ChartConfig>(),
+                    theme: context.watch<ChartTheme>(),
+                    epochToCanvasX: _xAxis.xFromEpoch,
+                    quoteToCanvasY: _quoteToCanvasY,
+                  ),
+                ),
+                if (widget.markerSeries != null)
+                  MarkerArea(
+                    markerSeries: widget.markerSeries,
+                    quoteToCanvasY: _quoteToCanvasY,
+                  ),
+                CrosshairArea(
+                  mainSeries: widget.mainSeries,
+                  pipSize: widget.pipSize,
+                  quoteToCanvasY: _quoteToCanvasY,
+                  onCrosshairAppeared: () {
+                    _isCrosshairMode = true;
+                    widget.onCrosshairAppeared?.call();
+                    _crosshairZoomOutAnimationController.forward();
+                  },
+                  onCrosshairDisappeared: () {
+                    _isCrosshairMode = false;
+                    _crosshairZoomOutAnimationController.reverse();
+                  },
+                ),
+                if (_isScrollToLastTickAvailable)
+                  Positioned(
+                    bottom: 30,
+                    right: 30 + quoteLabelsTouchAreaWidth,
+                    child: _buildScrollToLastTickButton(),
+                  ),
               ],
-              chartConfig: context.read<ChartConfig>(),
-              theme: context.read<ChartTheme>(),
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
-            ),
-          ),
-          if (widget.markerSeries != null)
-            MarkerArea(
-              markerSeries: widget.markerSeries,
-              quoteToCanvasY: _quoteToCanvasY,
-            ),
-          CrosshairArea(
-            mainSeries: widget.mainSeries,
-            pipSize: widget.pipSize,
-            quoteToCanvasY: _quoteToCanvasY,
-            onCrosshairAppeared: () {
-              _isCrosshairMode = true;
-              widget.onCrosshairAppeared?.call();
-              _crosshairZoomOutAnimationController.forward();
-            },
-            onCrosshairDisappeared: () {
-              _isCrosshairMode = false;
-              _crosshairZoomOutAnimationController.reverse();
-            },
-          ),
-          if (_isScrollToLastTickAvailable)
-            Positioned(
-              bottom: 30,
-              right: 30 + quoteLabelsTouchAreaWidth,
-              child: _buildScrollToLastTickButton(),
-            ),
-        ],
-      );
-    });
+            );
+          },
+        );
+      },
+    );
   }
 
   List<double> _getGridLineQuotes() {
