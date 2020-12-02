@@ -51,7 +51,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
 
-  List<DateTime> _gridTimestamps;
   List<String> _timeLabels;
   List<double> _xCoords;
 
@@ -139,13 +138,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       }
     }
 
-    _gridTimestamps = _noOverlapGridTimestamps;
-
-    _timeLabels = _gridTimestamps
+    _timeLabels = _noOverlapGridTimestamps
         .map<String>((DateTime time) => timeLabel(time))
         .toList();
 
-    _xCoords = _gridTimestamps
+    _xCoords = _noOverlapGridTimestamps
         .map<double>(
             (DateTime time) => _model.xFromEpoch(time.millisecondsSinceEpoch))
         .toList();
