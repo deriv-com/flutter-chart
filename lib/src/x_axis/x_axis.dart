@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/src/x_axis/grid/time_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,10 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   XAxisModel _model;
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
+
   List<DateTime> _gridTimestamps;
+  List<String> _timeLabels;
+  List<double> _xCoords;
 
   GestureManagerState gestureManager;
 
@@ -75,8 +79,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
       ..registerCallback(_model.onScaleAndPanEnd);
-
-    _updateTimestamps();
   }
 
   void _onVisibleAreaChanged() {
@@ -138,6 +140,15 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     }
 
     _gridTimestamps = _noOverlapGridTimestamps;
+
+    _timeLabels = _gridTimestamps
+        .map<String>((DateTime time) => timeLabel(time))
+        .toList();
+
+    _xCoords = _gridTimestamps
+        .map<double>(
+            (DateTime time) => _model.xFromEpoch(time.millisecondsSinceEpoch))
+        .toList();
   }
 
   @override
@@ -153,8 +164,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
           return CustomPaint(
             painter: XGridPainter(
-              gridTimestamps: _gridTimestamps,
-              epochToCanvasX: _model.xFromEpoch,
+              timeLabels: _timeLabels,
+              xCoords: _xCoords,
               style: gridStyle,
             ),
             child: Padding(
