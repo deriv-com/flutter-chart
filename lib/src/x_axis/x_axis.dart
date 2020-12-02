@@ -12,7 +12,7 @@ import 'grid/calc_time_grid.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 
-const double _minDistanceBetweenTimeGridLines = 90;
+const double _minDistanceBetweenTimeGridLines = 60;
 
 /// X-axis widget.
 ///
