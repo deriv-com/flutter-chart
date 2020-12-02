@@ -49,6 +49,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   XAxisModel _model;
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
+  List<DateTime> _gridTimestamps;
 
   GestureManagerState gestureManager;
 
@@ -74,9 +75,12 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
       ..registerCallback(_model.onScaleAndPanEnd);
+
+    _updateTimestamps();
   }
 
   void _onVisibleAreaChanged() {
+    _updateTimestamps();
     widget.onVisibleAreaChanged?.call(
       _model.leftBoundEpoch,
       _model.rightBoundEpoch,
@@ -107,6 +111,35 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  void _updateTimestamps() {
+    // Calculate time labels' timestamps for current scale.
+    final List<DateTime> timestamps = gridTimestamps(
+      timeGridInterval: timeGridInterval(
+        _model.pxFromMs,
+        minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
+      ),
+      leftBoundEpoch: _model.leftBoundEpoch,
+      rightBoundEpoch: _model.rightBoundEpoch,
+    );
+
+    // Remove labels inside time gaps.
+    // Except if the last label in the gap can fit, then keep it.
+    final List<DateTime> _noOverlapGridTimestamps = [
+      if (timestamps.isNotEmpty) timestamps.last,
+    ];
+    for (final DateTime timestamp in timestamps.reversed.skip(1)) {
+      final double distance = _model.pxBetween(
+        timestamp.millisecondsSinceEpoch,
+        _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
+      );
+      if (distance >= _minDistanceBetweenTimeGridLines) {
+        _noOverlapGridTimestamps.insert(0, timestamp);
+      }
+    }
+
+    _gridTimestamps = _noOverlapGridTimestamps;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<XAxisModel>.value(
@@ -116,36 +149,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
           // Update x-axis width.
           context.watch<XAxisModel>().width = constraints.maxWidth;
 
-          // Calculate time labels' timestamps for current scale.
-          final List<DateTime> _gridTimestamps = gridTimestamps(
-            timeGridInterval: timeGridInterval(
-              _model.pxFromMs,
-              minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
-            ),
-            leftBoundEpoch: _model.leftBoundEpoch,
-            rightBoundEpoch: _model.rightBoundEpoch,
-          );
-
-          // Remove labels inside time gaps.
-          // Except if the last label in the gap can fit, then keep it.
-          final List<DateTime> _noOverlapGridTimestamps = [
-            if (_gridTimestamps.isNotEmpty) _gridTimestamps.last,
-          ];
-          for (final DateTime timestamp in _gridTimestamps.reversed.skip(1)) {
-            final double distance = _model.pxBetween(
-              timestamp.millisecondsSinceEpoch,
-              _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
-            );
-            if (distance >= _minDistanceBetweenTimeGridLines) {
-              _noOverlapGridTimestamps.insert(0, timestamp);
-            }
-          }
-
           final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
 
           return CustomPaint(
             painter: XGridPainter(
-              gridTimestamps: _noOverlapGridTimestamps,
+              gridTimestamps: _gridTimestamps,
               epochToCanvasX: _model.xFromEpoch,
               style: gridStyle,
             ),
