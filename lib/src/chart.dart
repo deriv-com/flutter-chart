@@ -565,8 +565,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   void _scaleVertically(double dy) {
     setState(() {
-      verticalPaddingFraction =
-          ((_verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
+      verticalPaddingFraction =0.45;
+          // ((_verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
+      print("aaaaaaaaaa : $verticalPaddingFraction");
     });
   }
 
