@@ -496,22 +496,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
               ),
             ),
           ),
-          CustomPaint(
-            size: canvasSize,
-            painter: ChartPainter(
-              animationInfo: AnimationInfo(
-                currentTickPercent: _currentTickAnimation.value,
-                blinkingPercent: _currentTickBlinkAnimation.value,
-              ),
-              chartDataList: <ChartData>[
-                if (widget.chartDataList != null) ...widget.chartDataList
-              ],
-              chartConfig: context.read<ChartConfig>(),
-              theme: context.read<ChartTheme>(),
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
-            ),
-          ),
+          // CustomPaint(
+          //   size: canvasSize,
+          //   painter: ChartPainter(
+          //     animationInfo: AnimationInfo(
+          //       currentTickPercent: _currentTickAnimation.value,
+          //       blinkingPercent: _currentTickBlinkAnimation.value,
+          //     ),
+          //     chartDataList: <ChartData>[
+          //       if (widget.chartDataList != null) ...widget.chartDataList
+          //     ],
+          //     chartConfig: context.read<ChartConfig>(),
+          //     theme: context.read<ChartTheme>(),
+          //     epochToCanvasX: _xAxis.xFromEpoch,
+          //     quoteToCanvasY: _quoteToCanvasY,
+          //   ),
+          // ),
           if (widget.markerSeries != null)
             MarkerArea(
               markerSeries: widget.markerSeries,

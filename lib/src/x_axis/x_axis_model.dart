@@ -213,8 +213,8 @@ class XAxisModel extends ChangeNotifier {
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
       _scrollTo(_rightBoundEpoch + elapsedMs);
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   /// Enables autopanning when current tick is visible.
