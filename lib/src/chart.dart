@@ -239,6 +239,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
+  // To detect changes in visible area.
+  int _prevRightBoundEpoch;
+  int _prevLeftBoundEpoch;
+
   @override
   void initState() {
     super.initState();
@@ -441,13 +445,21 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
+      final XAxisModel xAxis = context.watch<XAxisModel>();
+
       canvasSize = Size(
-        context.watch<XAxisModel>().width,
+        xAxis.width,
         constraints.maxHeight,
       );
 
-      _updateChartData();
-      _updateQuoteBoundTargets();
+      if (xAxis.rightBoundEpoch != _prevRightBoundEpoch ||
+          xAxis.leftBoundEpoch != _prevLeftBoundEpoch) {
+        _updateChartData();
+        _updateQuoteBoundTargets();
+
+        _prevRightBoundEpoch = xAxis.rightBoundEpoch;
+        _prevLeftBoundEpoch = xAxis.leftBoundEpoch;
+      }
 
       return Stack(
         children: <Widget>[
@@ -496,22 +508,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
               ),
             ),
           ),
-          // CustomPaint(
-          //   size: canvasSize,
-          //   painter: ChartPainter(
-          //     animationInfo: AnimationInfo(
-          //       currentTickPercent: _currentTickAnimation.value,
-          //       blinkingPercent: _currentTickBlinkAnimation.value,
-          //     ),
-          //     chartDataList: <ChartData>[
-          //       if (widget.chartDataList != null) ...widget.chartDataList
-          //     ],
-          //     chartConfig: context.read<ChartConfig>(),
-          //     theme: context.read<ChartTheme>(),
-          //     epochToCanvasX: _xAxis.xFromEpoch,
-          //     quoteToCanvasY: _quoteToCanvasY,
-          //   ),
-          // ),
+          CustomPaint(
+            size: canvasSize,
+            painter: ChartPainter(
+              animationInfo: AnimationInfo(
+                currentTickPercent: _currentTickAnimation.value,
+                blinkingPercent: _currentTickBlinkAnimation.value,
+              ),
+              chartDataList: <ChartData>[
+                if (widget.chartDataList != null) ...widget.chartDataList
+              ],
+              chartConfig: context.read<ChartConfig>(),
+              theme: context.read<ChartTheme>(),
+              epochToCanvasX: _xAxis.xFromEpoch,
+              quoteToCanvasY: _quoteToCanvasY,
+            ),
+          ),
           if (widget.markerSeries != null)
             MarkerArea(
               markerSeries: widget.markerSeries,
