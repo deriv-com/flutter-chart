@@ -84,14 +84,14 @@ void main() {
         Tick(epoch: 13, quote: 2),
       ];
 
-      final barCount = 3;
+      final period = 3;
 
       final closePrice = new CloseValueIndicator(ticks);
 
       BollingerBandsMiddleIndicator bbmSMA =
-          new BollingerBandsMiddleIndicator(SMAIndicator(closePrice, barCount));
+          new BollingerBandsMiddleIndicator(SMAIndicator(closePrice, period));
       StandardDeviationIndicator standardDeviation =
-          new StandardDeviationIndicator(closePrice, barCount);
+          new StandardDeviationIndicator(closePrice, period);
       BollingerBandsUpperIndicator bbuSMA =
           new BollingerBandsUpperIndicator(bbmSMA, standardDeviation);
 
