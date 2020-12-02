@@ -37,7 +37,10 @@ class XGridPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(XGridPainter oldDelegate) => true;
+  bool shouldRepaint(XGridPainter oldDelegate) =>
+      timeLabels != oldDelegate.timeLabels ||
+      xCoords != oldDelegate.xCoords ||
+      style != oldDelegate.style;
 
   @override
   bool shouldRebuildSemantics(XGridPainter oldDelegate) => false;

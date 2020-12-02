@@ -162,16 +162,23 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
           final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
 
-          return CustomPaint(
-            painter: XGridPainter(
-              timeLabels: _timeLabels,
-              xCoords: _xCoords,
-              style: gridStyle,
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
-              child: widget.child,
-            ),
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              RepaintBoundary(
+                child: CustomPaint(
+                  painter: XGridPainter(
+                    timeLabels: _timeLabels,
+                    xCoords: _xCoords,
+                    style: gridStyle,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
+                child: widget.child,
+              ),
+            ],
           );
         },
       ),
