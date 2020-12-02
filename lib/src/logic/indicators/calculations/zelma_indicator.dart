@@ -10,29 +10,29 @@ class ZLEMAIndicator extends CachedIndicator {
   ///
   /// [indicator] An indicator
   ///
-  /// [barCount] Bar count.
-  ZLEMAIndicator(this.indicator, this.barCount)
-      : _k = 2 / (barCount + 1),
-        _lag = (barCount - 1) ~/ 2,
+  /// [period] Bar count.
+  ZLEMAIndicator(this.indicator, this.period)
+      : _k = 2 / (period + 1),
+        _lag = (period - 1) ~/ 2,
         super.fromIndicator(indicator);
 
   /// Indicator to calculate ZELMA on
   final Indicator indicator;
 
   /// Bar count
-  final int barCount;
+  final int period;
 
   final double _k;
   final int _lag;
 
   @override
   Tick calculate(int index) {
-    if (index + 1 < barCount) {
+    if (index + 1 < period) {
       // Starting point of the ZLEMA
-      return SMAIndicator(indicator, barCount).getValue(index);
+      return SMAIndicator(indicator, period).getValue(index);
     }
     if (index == 0) {
-      // If the barCount is bigger than the indicator's value count
+      // If the period is bigger than the indicator's value count
       return indicator.getValue(0);
     }
 

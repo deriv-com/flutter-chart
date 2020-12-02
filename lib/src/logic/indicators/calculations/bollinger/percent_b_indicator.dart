@@ -13,14 +13,14 @@ class PercentBIndicator extends CachedIndicator {
   /// Initializes
   ///
   /// [indicator] An indicator (usually close price)
-  /// [barCount]  The time frame
+  /// [period]  The time frame
   /// [k]         The K multiplier (usually 2.0)
-  PercentBIndicator(Indicator indicator, int barCount, {double k = 2})
+  PercentBIndicator(Indicator indicator, int period, {double k = 2})
       : this._(
           indicator,
-          StandardDeviationIndicator(indicator, barCount),
-          BollingerBandsMiddleIndicator(SMAIndicator(indicator, barCount)),
-          barCount,
+          StandardDeviationIndicator(indicator, period),
+          BollingerBandsMiddleIndicator(SMAIndicator(indicator, period)),
+          period,
           k,
         );
 
@@ -28,7 +28,7 @@ class PercentBIndicator extends CachedIndicator {
     this.indicator,
     StandardDeviationIndicator sd,
     BollingerBandsMiddleIndicator bbm,
-    int barCount,
+    int period,
     double k,
   )   : bbu = BollingerBandsUpperIndicator(bbm, sd, k: k),
         bbl = BollingerBandsLowerIndicator(bbm, sd, k: k),

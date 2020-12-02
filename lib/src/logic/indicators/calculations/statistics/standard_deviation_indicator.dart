@@ -13,9 +13,9 @@ class StandardDeviationIndicator extends CachedIndicator {
   /// Initializes
   ///
   /// [indicator] the indicator to calculates SD on.
-  /// [barCount]  the time frame
-  StandardDeviationIndicator(Indicator indicator, int barCount)
-      : _variance = VarianceIndicator(indicator, barCount),
+  /// [period]  the time frame
+  StandardDeviationIndicator(Indicator indicator, int period)
+      : _variance = VarianceIndicator(indicator, period),
         super.fromIndicator(indicator);
 
   @override

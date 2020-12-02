@@ -6,10 +6,10 @@ import '../cached_indicator.dart';
 /// Weighted Moving Average indicator
 class WMAIndicator extends CachedIndicator {
   /// Initializes
-  WMAIndicator(this.indicator, this.barCount) : super.fromIndicator(indicator);
+  WMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 
   /// Bar count
-  final int barCount;
+  final int period;
 
   /// Indicator
   final Indicator indicator;
@@ -20,7 +20,7 @@ class WMAIndicator extends CachedIndicator {
       return indicator.getValue(0);
     }
     double value = 0;
-    if (index - barCount < 0) {
+    if (index - period < 0) {
       for (int i = index + 1; i > 0; i--) {
         value = value + (i * (indicator.getValue(i - 1).quote));
       }
@@ -33,14 +33,14 @@ class WMAIndicator extends CachedIndicator {
 
     int actualIndex = index;
 
-    for (int i = barCount; i > 0; i--) {
+    for (int i = period; i > 0; i--) {
       value = value + (i * (indicator.getValue(actualIndex).quote));
       actualIndex--;
     }
 
     return Tick(
       epoch: getEpochOfIndex(index),
-      quote: value / ((barCount * (barCount + 1)) / 2),
+      quote: value / ((period * (period + 1)) / 2),
     );
   }
 }

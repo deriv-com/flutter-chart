@@ -8,22 +8,22 @@ import '../cached_indicator.dart';
 /// Highest value indicator
 class HighestValueIndicator extends CachedIndicator {
   /// Initializes
-  HighestValueIndicator(this.indicator, this.barCount)
+  HighestValueIndicator(this.indicator, this.period)
       : super.fromIndicator(indicator);
 
   /// Calculate Highest value on the result of this indicator
   final AbstractIndicator indicator;
 
   /// Number of elements to calculate from
-  final int barCount;
+  final int period;
 
   @override
   Tick calculate(int index) {
-    if (indicator.getValue(index).quote.isNaN && barCount != 1) {
-      return HighestValueIndicator(indicator, barCount - 1).getValue(index - 1);
+    if (indicator.getValue(index).quote.isNaN && period != 1) {
+      return HighestValueIndicator(indicator, period - 1).getValue(index - 1);
     }
 
-    final int end = max(0, index - barCount + 1);
+    final int end = max(0, index - period + 1);
     double highest = indicator.getValue(index).quote;
 
     for (int i = index - 1; i >= end; i--) {

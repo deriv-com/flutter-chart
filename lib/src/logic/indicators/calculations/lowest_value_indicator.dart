@@ -8,22 +8,22 @@ import '../cached_indicator.dart';
 /// Lowest price in a range
 class LowestValueIndicator extends CachedIndicator {
   /// Initializes
-  LowestValueIndicator(this.indicator, this.barCount)
+  LowestValueIndicator(this.indicator, this.period)
       : super(indicator.entries);
 
   /// Indicator to calculate Lowest value on
   final AbstractIndicator indicator;
 
   /// Bar count
-  final int barCount;
+  final int period;
 
   @override
   Tick calculate(int index) {
-    if (indicator.getValue(index).quote.isNaN && barCount != 1) {
-      return LowestValueIndicator(indicator, barCount - 1).getValue(index - 1);
+    if (indicator.getValue(index).quote.isNaN && period != 1) {
+      return LowestValueIndicator(indicator, period - 1).getValue(index - 1);
     }
 
-    final int end = max(0, index - barCount + 1);
+    final int end = max(0, index - period + 1);
     double lowest = indicator.getValue(index).quote;
 
     for (int i = index - 1; i >= end; i--) {

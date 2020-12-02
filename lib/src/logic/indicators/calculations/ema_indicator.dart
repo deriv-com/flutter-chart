@@ -6,14 +6,14 @@ import '../indicator.dart';
 /// Base class for Exponential Moving Average implementations.
 abstract class AbstractEMAIndicator extends CachedIndicator {
   /// Initializes
-  AbstractEMAIndicator(this.indicator, this.barCount, this.multiplier)
+  AbstractEMAIndicator(this.indicator, this.period, this.multiplier)
       : super.fromIndicator(indicator);
 
   /// Indicator to calculate EMA on.
   final Indicator indicator;
 
   /// Bar count
-  final int barCount;
+  final int period;
 
   /// Multiplier
   final double multiplier;
@@ -36,6 +36,6 @@ abstract class AbstractEMAIndicator extends CachedIndicator {
 /// EMA indicator
 class EMAIndicator extends AbstractEMAIndicator {
   /// Initializes
-  EMAIndicator(Indicator indicator, int barCount)
-      : super(indicator, barCount, (2.0 / (barCount + 1)));
+  EMAIndicator(Indicator indicator, int period)
+      : super(indicator, period, (2.0 / (period + 1)));
 }

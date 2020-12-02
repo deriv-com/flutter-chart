@@ -11,22 +11,22 @@ class VarianceIndicator extends CachedIndicator {
   /// Initializes
   ///
   /// [indicator] the indicator
-  /// [barCount]  the time frame
-  VarianceIndicator(this.indicator, this.barCount)
-      : _sma = SMAIndicator(indicator, barCount),
+  /// [period]  the time frame
+  VarianceIndicator(this.indicator, this.period)
+      : _sma = SMAIndicator(indicator, period),
         super.fromIndicator(indicator);
 
   /// Indicator
   final Indicator indicator;
 
   /// Bar count
-  final int barCount;
+  final int period;
 
   final SMAIndicator _sma;
 
   @override
   Tick calculate(int index) {
-    final int startIndex = math.max(0, index - barCount + 1);
+    final int startIndex = math.max(0, index - period + 1);
     final int numberOfObservations = index - startIndex + 1;
     double variance = 0;
     final double average = _sma.getValue(index).quote;

@@ -17,11 +17,11 @@ class AbstractIchimokuLineIndicator extends CachedIndicator {
   /// Initializes.
   ///
   /// [entries]   the data
-  /// [barCount] Bar count
-  AbstractIchimokuLineIndicator(List<Candle> entries, int barCount)
+  /// [period] Bar count
+  AbstractIchimokuLineIndicator(List<Candle> entries, int period)
       : _periodHigh =
-            HighestValueIndicator(HighValueIndicator(entries), barCount),
-        _periodLow = LowestValueIndicator(LowValueIndicator(entries), barCount),
+            HighestValueIndicator(HighValueIndicator(entries), period),
+        _periodLow = LowestValueIndicator(LowValueIndicator(entries), period),
         super(entries);
 
   /// The period high
