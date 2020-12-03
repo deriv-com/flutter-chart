@@ -478,28 +478,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                           widget.mainSeries.visibleEntries.first.epoch,
                         ),
                 ),
-                RepaintBoundary(
-                  child: Opacity(
-                    opacity: widget.opacity,
-                    child: CustomPaint(
-                      painter: ChartDataPainter(
-                        animationInfo: AnimationInfo(
-                          currentTickPercent: _currentTickAnimation.value,
-                          blinkingPercent: _currentTickBlinkAnimation.value,
-                        ),
-                        dataSeries: widget.mainSeries,
-                        chartConfig: context.watch<ChartConfig>(),
-                        theme: context.watch<ChartTheme>(),
-                        epochToCanvasX: _xAxis.xFromEpoch,
-                        quoteToCanvasY: _quoteToCanvasY,
-                        rightBoundEpoch: _xAxis.rightBoundEpoch,
-                        leftBoundEpoch: _xAxis.leftBoundEpoch,
-                        topY: _quoteToCanvasY(widget.mainSeries.maxValue),
-                        bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
-                      ),
-                    ),
-                  ),
-                ),
+                _buildChartData(),
                 CustomPaint(
                   painter: ChartPainter(
                     animationInfo: AnimationInfo(
@@ -545,6 +524,32 @@ class _ChartImplementationState extends State<_ChartImplementation>
           },
         );
       },
+    );
+  }
+
+  // Main series and indicators on top of main series.
+  Widget _buildChartData() {
+    return RepaintBoundary(
+      child: Opacity(
+        opacity: widget.opacity,
+        child: CustomPaint(
+          painter: ChartDataPainter(
+            animationInfo: AnimationInfo(
+              currentTickPercent: _currentTickAnimation.value,
+              blinkingPercent: _currentTickBlinkAnimation.value,
+            ),
+            dataSeries: widget.mainSeries,
+            chartConfig: context.read<ChartConfig>(),
+            theme: context.read<ChartTheme>(),
+            epochToCanvasX: _xAxis.xFromEpoch,
+            quoteToCanvasY: _quoteToCanvasY,
+            rightBoundEpoch: _xAxis.rightBoundEpoch,
+            leftBoundEpoch: _xAxis.leftBoundEpoch,
+            topY: _quoteToCanvasY(widget.mainSeries.maxValue),
+            bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
+          ),
+        ),
+      ),
     );
   }
 
