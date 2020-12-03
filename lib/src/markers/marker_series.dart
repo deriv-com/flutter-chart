@@ -22,11 +22,11 @@ class MarkerSeries extends Series {
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-  })  : _entries = entries.toList(),
+  })  : _entries = entries,
         super(id, style: style);
 
   /// Marker entries.
-  final List<Marker> _entries;
+  final SplayTreeSet<Marker> _entries;
 
   /// Visible marker entries.
   List<Marker> visibleEntries = <Marker>[];
@@ -48,15 +48,20 @@ class MarkerSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
+    visibleEntries = <Marker>[];
+
     if (_entries.isEmpty) {
-      visibleEntries = <Marker>[];
       return;
     }
 
     final int left = findEpochIndex(leftEpoch, _entries).ceil();
     final int right = findEpochIndex(rightEpoch, _entries).floor();
 
-    visibleEntries = _entries.sublist(left, right + 1);
+    for (int i = 0; i < _entries.length; i++) {
+      if (i >= left && i <= right) {
+        visibleEntries.add(_entries.elementAt(i));
+      }
+    }
   }
 
   @override
