@@ -42,16 +42,18 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
       return const SizedBox.shrink();
     }
 
-    return AnimatedBuilder(
-      animation: _loadingAnimationController,
-      builder: (BuildContext context, Widget child) {
-        return CustomPaint(
-          painter: LoadingPainter(
-            loadingAnimationProgress: _loadingAnimationController.value,
-            loadingRightBoundX: widget.loadingRightBoundX,
-          ),
-        );
-      },
+    return ClipRect(
+      child: AnimatedBuilder(
+        animation: _loadingAnimationController,
+        builder: (BuildContext context, Widget child) {
+          return CustomPaint(
+            painter: LoadingPainter(
+              loadingAnimationProgress: _loadingAnimationController.value,
+              loadingRightBoundX: widget.loadingRightBoundX,
+            ),
+          );
+        },
+      ),
     );
   }
 }
