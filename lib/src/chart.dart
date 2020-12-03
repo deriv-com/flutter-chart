@@ -121,10 +121,8 @@ class Chart extends StatelessWidget {
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
-                chartDataList: <ChartData>[
-                  if (secondarySeries != null) ...secondarySeries,
-                  if (annotations != null) ...annotations
-                ],
+                secondarySeries: secondarySeries,
+                annotations: annotations,
                 markerSeries: markerSeries,
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
@@ -140,28 +138,38 @@ class Chart extends StatelessWidget {
 }
 
 class _ChartImplementation extends StatefulWidget {
-  const _ChartImplementation({
+  _ChartImplementation({
     Key key,
     @required this.mainSeries,
     @required this.pipSize,
-    this.markerSeries,
     @required this.isLive,
+    this.markerSeries,
     this.opacity,
     this.controller,
     this.onCrosshairAppeared,
-    this.chartDataList,
-  }) : super(key: key);
+    this.secondarySeries,
+    this.annotations,
+  }) : super(key: key) {
+    chartDataList = <ChartData>[
+      mainSeries,
+      if (secondarySeries != null) ...secondarySeries,
+      if (annotations != null) ...annotations,
+    ];
+  }
 
   final DataSeries<Tick> mainSeries;
+  final List<Series> secondarySeries;
+  final List<ChartAnnotation<ChartObject>> annotations;
   final MarkerSeries markerSeries;
-
-  final List<ChartData> chartDataList;
   final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final ChartController controller;
 
   final bool isLive;
   final double opacity;
+
+  // Convenience list to access all chart data.
+  List<ChartData> chartDataList;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -279,20 +287,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
-    if (widget.mainSeries.id == oldChart.mainSeries.id) {
-      widget.mainSeries.didUpdate(oldChart.mainSeries);
-    }
+    for (final ChartData data in widget.chartDataList) {
+      final ChartData oldData = oldChart.chartDataList.firstWhere(
+        (ChartData d) => d.id == data.id,
+        orElse: () => null,
+      );
 
-    if (widget.chartDataList != null) {
-      for (final ChartData data in widget.chartDataList) {
-        final ChartData oldData = oldChart.chartDataList.firstWhere(
-          (ChartData d) => d.id == data.id,
-          orElse: () => null,
-        );
-
-        if (oldData != null) {
-          data.didUpdate(oldData);
-        }
+      if (oldData != null) {
+        data.didUpdate(oldData);
       }
     }
   }
@@ -379,12 +381,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _updateChartData() {
-    widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
-
-    if (widget.chartDataList != null) {
-      for (final ChartData data in widget.chartDataList) {
-        data.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
-      }
+    for (final ChartData data in widget.chartDataList) {
+      data.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
     }
   }
 
@@ -466,21 +464,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 _buildQuoteGrid(),
                 _buildLoadingAnimation(),
                 _buildChartData(),
-                CustomPaint(
-                  painter: ChartPainter(
-                    animationInfo: AnimationInfo(
-                      currentTickPercent: _currentTickAnimation.value,
-                      blinkingPercent: _currentTickBlinkAnimation.value,
-                    ),
-                    chartDataList: <ChartData>[
-                      if (widget.chartDataList != null) ...widget.chartDataList
-                    ],
-                    chartConfig: context.watch<ChartConfig>(),
-                    theme: context.watch<ChartTheme>(),
-                    epochToCanvasX: _xAxis.xFromEpoch,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                ),
+                _buildAnnotations(),
                 if (widget.markerSeries != null)
                   MarkerArea(
                     markerSeries: widget.markerSeries,
@@ -514,7 +498,26 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  CustomPaint _buildQuoteGrid() {
+  CustomPaint _buildAnnotations() {
+    return CustomPaint(
+      painter: ChartPainter(
+        animationInfo: AnimationInfo(
+          currentTickPercent: _currentTickAnimation.value,
+          blinkingPercent: _currentTickBlinkAnimation.value,
+        ),
+        chartDataList: <ChartData>[
+          // if (widget.chartDataList != null) ...widget.chartDataList
+          if (widget.annotations != null) ...widget.annotations
+        ],
+        chartConfig: context.read<ChartConfig>(),
+        theme: context.read<ChartTheme>(),
+        epochToCanvasX: _xAxis.xFromEpoch,
+        quoteToCanvasY: _quoteToCanvasY,
+      ),
+    );
+  }
+
+  Widget _buildQuoteGrid() {
     return CustomPaint(
       painter: YGridPainter(
         gridLineQuotes: _getGridLineQuotes(),
@@ -525,7 +528,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  LoadingAnimationArea _buildLoadingAnimation() {
+  Widget _buildLoadingAnimation() {
     return LoadingAnimationArea(
       loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
           ? _xAxis.width
