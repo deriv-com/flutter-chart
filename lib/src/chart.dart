@@ -470,20 +470,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                     markerSeries: widget.markerSeries,
                     quoteToCanvasY: _quoteToCanvasY,
                   ),
-                CrosshairArea(
-                  mainSeries: widget.mainSeries,
-                  pipSize: widget.pipSize,
-                  quoteToCanvasY: _quoteToCanvasY,
-                  onCrosshairAppeared: () {
-                    _isCrosshairMode = true;
-                    widget.onCrosshairAppeared?.call();
-                    _crosshairZoomOutAnimationController.forward();
-                  },
-                  onCrosshairDisappeared: () {
-                    _isCrosshairMode = false;
-                    _crosshairZoomOutAnimationController.reverse();
-                  },
-                ),
+                _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(
                     bottom: 30,
@@ -495,22 +482,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
           },
         );
       },
-    );
-  }
-
-  CustomPaint _buildAnnotations() {
-    return CustomPaint(
-      painter: ChartPainter(
-        animationInfo: AnimationInfo(
-          currentTickPercent: _currentTickAnimation.value,
-          blinkingPercent: _currentTickBlinkAnimation.value,
-        ),
-        chartDataList: widget.annotations,
-        chartConfig: context.read<ChartConfig>(),
-        theme: context.read<ChartTheme>(),
-        epochToCanvasX: _xAxis.xFromEpoch,
-        quoteToCanvasY: _quoteToCanvasY,
-      ),
     );
   }
 
@@ -559,6 +530,39 @@ class _ChartImplementationState extends State<_ChartImplementation>
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAnnotations() {
+    return CustomPaint(
+      painter: ChartPainter(
+        animationInfo: AnimationInfo(
+          currentTickPercent: _currentTickAnimation.value,
+          blinkingPercent: _currentTickBlinkAnimation.value,
+        ),
+        chartDataList: widget.annotations,
+        chartConfig: context.read<ChartConfig>(),
+        theme: context.read<ChartTheme>(),
+        epochToCanvasX: _xAxis.xFromEpoch,
+        quoteToCanvasY: _quoteToCanvasY,
+      ),
+    );
+  }
+
+  Widget _buildCrosshairArea() {
+    return CrosshairArea(
+      mainSeries: widget.mainSeries,
+      pipSize: widget.pipSize,
+      quoteToCanvasY: _quoteToCanvasY,
+      onCrosshairAppeared: () {
+        _isCrosshairMode = true;
+        widget.onCrosshairAppeared?.call();
+        _crosshairZoomOutAnimationController.forward();
+      },
+      onCrosshairDisappeared: () {
+        _isCrosshairMode = false;
+        _crosshairZoomOutAnimationController.reverse();
+      },
     );
   }
 
