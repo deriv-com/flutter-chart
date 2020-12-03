@@ -476,18 +476,25 @@ class _ChartImplementationState extends State<_ChartImplementation>
                     style: context.watch<ChartTheme>().gridStyle,
                   ),
                 ),
-                CustomPaint(
-                  size: canvasSize,
-                  painter: LoadingPainter(
-                    loadingAnimationProgress: _loadingAnimationController.value,
-                    loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
-                        ? _xAxis.width
-                        : _xAxis.xFromEpoch(
-                            widget.mainSeries.visibleEntries.first.epoch,
-                          ),
-                    epochToCanvasX: _xAxis.xFromEpoch,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
+                AnimatedBuilder(
+                  animation: _loadingAnimationController,
+                  builder: (BuildContext context, Widget child) {
+                    return CustomPaint(
+                      size: canvasSize,
+                      painter: LoadingPainter(
+                        loadingAnimationProgress:
+                            _loadingAnimationController.value,
+                        loadingRightBoundX: widget
+                                .mainSeries.visibleEntries.isEmpty
+                            ? _xAxis.width
+                            : _xAxis.xFromEpoch(
+                                widget.mainSeries.visibleEntries.first.epoch,
+                              ),
+                        epochToCanvasX: _xAxis.xFromEpoch,
+                        quoteToCanvasY: _quoteToCanvasY,
+                      ),
+                    );
+                  },
                 ),
                 RepaintBoundary(
                   child: Opacity(
