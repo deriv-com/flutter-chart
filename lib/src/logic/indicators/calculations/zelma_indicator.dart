@@ -1,11 +1,11 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../indicator.dart';
 import '../cached_indicator.dart';
+import '../indicator.dart';
 import 'sma_indicator.dart';
 
 /// Zero-lag Exponential Moving Average indicator
-class ZLEMAIndicator extends CachedIndicator {
+class ZLEMAIndicator extends CachedIndicator<Tick> {
   /// Initializes
   ///
   /// [indicator] An indicator
@@ -36,14 +36,14 @@ class ZLEMAIndicator extends CachedIndicator {
       return indicator.getValue(0);
     }
 
-    double zlemaPrev = getValue(index - 1).quote;
+    final double prevZlema = getValue(index - 1).quote;
 
     return Tick(
       epoch: getEpochOfIndex(index),
       quote: (_k *
               ((2 * (indicator.getValue(index).quote)) -
                   (indicator.getValue(index - _lag).quote))) +
-          ((1 - _k) * zlemaPrev),
+          ((1 - _k) * prevZlema),
     );
   }
 }
