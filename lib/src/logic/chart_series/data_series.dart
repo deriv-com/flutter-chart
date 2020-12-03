@@ -155,7 +155,7 @@ abstract class DataSeries<T extends Tick> extends Series {
       _prevLastEntry = oldSeries.entries.last;
     }
 
-    // Reuse visible entries if update is unnecessary.
+    // Reuse visible entries if visible area didn't change.
     _visibleEntries = oldSeries.visibleEntries;
 
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
