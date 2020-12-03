@@ -255,9 +255,12 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     Canvas canvas, {
     Offset center,
     double arrowSize,
-    double arrowThickness = 1,
   }) {
-    final Paint arrowPaint = Paint()..color = _paint.color;
+    final Paint arrowPaint = Paint()
+      ..color = _paint.color
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
 
     canvas
       ..drawPath(
@@ -265,36 +268,34 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
             center.dx,
             center.dy + arrowSize - 1,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint)
       ..drawPath(
-        getUpwardArrowPath(
-          center.dx,
-          center.dy,
-          size: arrowSize,
-          thickness: arrowThickness,
-        ),
-        arrowPaint..color = _paint.color.withOpacity(0.64),
-      )
+          getUpwardArrowPath(
+            center.dx,
+            center.dy,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.64))
       ..drawPath(
-        getUpwardArrowPath(
-          center.dx,
-          center.dy - arrowSize + 1,
-          size: arrowSize,
-          thickness: arrowThickness,
-        ),
-        arrowPaint..color = _paint.color.withOpacity(0.32),
-      );
+          getUpwardArrowPath(
+            center.dx,
+            center.dy - arrowSize + 1,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.32));
   }
 
   void _paintDownwardArrows(
     Canvas canvas, {
     Offset center,
     double arrowSize,
-    double arrowThickness = 1,
   }) {
-    final Paint arrowPaint = Paint()..color = _paint.color;
+    final Paint arrowPaint = Paint()
+      ..color = _paint.color
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
 
     canvas
       ..drawPath(
@@ -302,7 +303,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
             center.dx,
             center.dy - arrowSize + 1,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint)
       ..drawPath(
@@ -310,7 +310,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
             center.dx,
             center.dy,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.64))
       ..drawPath(
@@ -318,7 +317,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
             center.dx,
             center.dy + arrowSize - 1,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
   }
