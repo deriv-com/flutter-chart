@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/loading_animation.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -24,7 +25,6 @@ import 'logic/quote_grid.dart';
 import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
-import 'painters/loading_painter.dart';
 import 'painters/y_grid_painter.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
@@ -191,7 +191,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
-  AnimationController _loadingAnimationController;
+
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
 
@@ -301,7 +301,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   void dispose() {
     _currentTickAnimationController?.dispose();
     _currentTickBlinkingController?.dispose();
-    _loadingAnimationController?.dispose();
+
     _topBoundQuoteAnimationController?.dispose();
     _bottomBoundQuoteAnimationController?.dispose();
     _crosshairZoomOutAnimationController?.dispose();
@@ -336,13 +336,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _currentTickBlinkingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
-    );
-    _loadingAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 6),
-    );
-    _currentTickBlinkingController.repeat(reverse: true);
-    _loadingAnimationController.repeat();
+    )..repeat(reverse: true);
+
     _currentTickBlinkAnimation = CurvedAnimation(
       parent: _currentTickBlinkingController,
       curve: Curves.easeInOut,
@@ -466,6 +461,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           animation: _topBoundQuoteAnimationController,
           builder: (BuildContext context, Widget child) {
             return Stack(
+              fit: StackFit.expand,
               children: <Widget>[
                 CustomPaint(
                   size: canvasSize,
@@ -476,25 +472,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
                     style: context.watch<ChartTheme>().gridStyle,
                   ),
                 ),
-                AnimatedBuilder(
-                  animation: _loadingAnimationController,
-                  builder: (BuildContext context, Widget child) {
-                    return CustomPaint(
-                      size: canvasSize,
-                      painter: LoadingPainter(
-                        loadingAnimationProgress:
-                            _loadingAnimationController.value,
-                        loadingRightBoundX: widget
-                                .mainSeries.visibleEntries.isEmpty
-                            ? _xAxis.width
-                            : _xAxis.xFromEpoch(
-                                widget.mainSeries.visibleEntries.first.epoch,
-                              ),
-                        epochToCanvasX: _xAxis.xFromEpoch,
-                        quoteToCanvasY: _quoteToCanvasY,
-                      ),
-                    );
-                  },
+                LoadingAnimationArea(
+                  loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+                      ? _xAxis.width
+                      : _xAxis.xFromEpoch(
+                          widget.mainSeries.visibleEntries.first.epoch,
+                        ),
                 ),
                 RepaintBoundary(
                   child: Opacity(
