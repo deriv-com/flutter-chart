@@ -26,7 +26,7 @@ class GapManager {
     gaps = newGaps + gaps;
     _cumulativeSums = _calcCumulativeSums(
       newGaps,
-      startSum: _cumulativeSums.first,
+      startSum: _cumulativeSums.isNotEmpty ? _cumulativeSums.first : 0,
     );
   }
 
