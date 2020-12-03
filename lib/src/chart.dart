@@ -505,10 +505,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           currentTickPercent: _currentTickAnimation.value,
           blinkingPercent: _currentTickBlinkAnimation.value,
         ),
-        chartDataList: <ChartData>[
-          // if (widget.chartDataList != null) ...widget.chartDataList
-          if (widget.annotations != null) ...widget.annotations
-        ],
+        chartDataList: widget.annotations,
         chartConfig: context.read<ChartConfig>(),
         theme: context.read<ChartTheme>(),
         epochToCanvasX: _xAxis.xFromEpoch,
@@ -549,7 +546,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
               currentTickPercent: _currentTickAnimation.value,
               blinkingPercent: _currentTickBlinkAnimation.value,
             ),
-            dataSeries: widget.mainSeries,
+            mainSeries: widget.mainSeries,
+            secondarySeries: widget.secondarySeries,
             chartConfig: context.read<ChartConfig>(),
             theme: context.read<ChartTheme>(),
             epochToCanvasX: _xAxis.xFromEpoch,

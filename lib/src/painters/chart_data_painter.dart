@@ -9,7 +9,8 @@ class ChartDataPainter extends CustomPainter {
   ChartDataPainter({
     this.chartConfig,
     this.theme,
-    this.dataSeries,
+    this.mainSeries,
+    this.secondarySeries = const <Series>[],
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
@@ -29,7 +30,8 @@ class ChartDataPainter extends CustomPainter {
 
   final AnimationInfo animationInfo;
 
-  final DataSeries dataSeries;
+  final DataSeries mainSeries;
+  final List<Series> secondarySeries;
 
   /*
   For detecting a need of repaint:
@@ -45,7 +47,7 @@ class ChartDataPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    dataSeries.paint(
+    mainSeries.paint(
       canvas,
       size,
       epochToCanvasX,
@@ -54,20 +56,32 @@ class ChartDataPainter extends CustomPainter {
       chartConfig,
       theme,
     );
+
+    for (final Series series in secondarySeries) {
+      series.paint(
+        canvas,
+        size,
+        epochToCanvasX,
+        quoteToCanvasY,
+        animationInfo,
+        chartConfig,
+        theme,
+      );
+    }
   }
 
   @override
   bool shouldRepaint(ChartDataPainter oldDelegate) {
     bool styleChanged() =>
-        (dataSeries is LineSeries &&
+        (mainSeries is LineSeries &&
             theme.lineStyle != oldDelegate.theme.lineStyle) ||
-        (dataSeries is CandleSeries &&
+        (mainSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
     bool visibleAnimationChanged() =>
-        dataSeries.entries.isNotEmpty &&
-        dataSeries.visibleEntries.isNotEmpty &&
-        dataSeries.entries.last == dataSeries.visibleEntries.last &&
+        mainSeries.entries.isNotEmpty &&
+        mainSeries.visibleEntries.isNotEmpty &&
+        mainSeries.entries.last == mainSeries.visibleEntries.last &&
         animationInfo != oldDelegate.animationInfo;
 
     return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
