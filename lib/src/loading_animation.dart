@@ -19,6 +19,8 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
     with SingleTickerProviderStateMixin {
   AnimationController _loadingAnimationController;
 
+  bool get _isVisible => widget.loadingRightBoundX > 0;
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +38,10 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
 
   @override
   Widget build(BuildContext context) {
+    if (!_isVisible) {
+      return const SizedBox.shrink();
+    }
+
     return AnimatedBuilder(
       animation: _loadingAnimationController,
       builder: (BuildContext context, Widget child) {
