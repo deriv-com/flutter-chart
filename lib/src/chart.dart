@@ -464,7 +464,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
               fit: StackFit.expand,
               children: <Widget>[
                 CustomPaint(
-                  size: canvasSize,
                   painter: YGridPainter(
                     gridLineQuotes: _getGridLineQuotes(),
                     pipSize: widget.pipSize,
@@ -483,7 +482,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
                   child: Opacity(
                     opacity: widget.opacity,
                     child: CustomPaint(
-                      size: canvasSize,
                       painter: ChartDataPainter(
                         animationInfo: AnimationInfo(
                           currentTickPercent: _currentTickAnimation.value,
@@ -503,7 +501,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
                   ),
                 ),
                 CustomPaint(
-                  size: canvasSize,
                   painter: ChartPainter(
                     animationInfo: AnimationInfo(
                       currentTickPercent: _currentTickAnimation.value,
