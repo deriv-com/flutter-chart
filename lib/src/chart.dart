@@ -463,21 +463,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
             return Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                CustomPaint(
-                  painter: YGridPainter(
-                    gridLineQuotes: _getGridLineQuotes(),
-                    pipSize: widget.pipSize,
-                    quoteToCanvasY: _quoteToCanvasY,
-                    style: context.watch<ChartTheme>().gridStyle,
-                  ),
-                ),
-                LoadingAnimationArea(
-                  loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
-                      ? _xAxis.width
-                      : _xAxis.xFromEpoch(
-                          widget.mainSeries.visibleEntries.first.epoch,
-                        ),
-                ),
+                _buildQuoteGrid(),
+                _buildLoadingAnimation(),
                 _buildChartData(),
                 CustomPaint(
                   painter: ChartPainter(
@@ -524,6 +511,27 @@ class _ChartImplementationState extends State<_ChartImplementation>
           },
         );
       },
+    );
+  }
+
+  CustomPaint _buildQuoteGrid() {
+    return CustomPaint(
+      painter: YGridPainter(
+        gridLineQuotes: _getGridLineQuotes(),
+        pipSize: widget.pipSize,
+        quoteToCanvasY: _quoteToCanvasY,
+        style: context.read<ChartTheme>().gridStyle,
+      ),
+    );
+  }
+
+  LoadingAnimationArea _buildLoadingAnimation() {
+    return LoadingAnimationArea(
+      loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+          ? _xAxis.width
+          : _xAxis.xFromEpoch(
+              widget.mainSeries.visibleEntries.first.epoch,
+            ),
     );
   }
 
