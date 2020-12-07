@@ -11,6 +11,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
+import 'package:deriv_chart/src/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/painters/chart_data_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -444,9 +445,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _updateVisibleData();
         _updateQuoteBoundTargets();
 
-        return AnimatedBuilder(
-          // It's enough to only listen to the top bound, since top and bottom are animated at the same time.
-          animation: _topBoundQuoteAnimationController,
+        return MultipleAnimatedBuilder(
+          animations: [
+            // It's enough to only listen to the top bound, since top and bottom are animated at the same time.
+            _topBoundQuoteAnimationController,
+            _currentTickAnimation,
+            _currentTickBlinkAnimation,
+            _crosshairZoomOutAnimation,
+          ],
           builder: (BuildContext context, Widget child) {
             return Stack(
               fit: StackFit.expand,
