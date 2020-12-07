@@ -47,9 +47,8 @@ class MarkerSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    visibleEntries = <Marker>[];
-
     if (_entries.isEmpty) {
+      visibleEntries = <Marker>[];
       return;
     }
 
