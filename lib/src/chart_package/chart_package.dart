@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/chart.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
@@ -94,7 +93,7 @@ class _ChartPackageState extends State<ChartPackage> {
                   .where((IndicatorConfig indicatorConfig) =>
                       indicatorConfig != null)
                   .map((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig?.builder?.call(widget.mainSeries.entries))
+                      indicatorConfig.builder?.call(widget.mainSeries.entries))
             ],
             markerSeries: widget.markerSeries,
             theme: widget.theme,
