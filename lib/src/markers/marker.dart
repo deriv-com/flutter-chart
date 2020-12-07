@@ -11,7 +11,7 @@ enum MarkerDirection {
 }
 
 /// Chart open position marker.
-class Marker extends Tick implements Comparable {
+class Marker extends Tick implements Comparable<Marker> {
   /// Creates a marker of given direction.
   Marker({
     @required int epoch,

@@ -18,15 +18,14 @@ class MarkerSeries extends Series {
     SplayTreeSet<Marker> entries, {
     String id,
     MarkerStyle style,
-    bool sortMarkersList = true,
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-  })  : _entries = entries,
+  })  : _entries = entries.toList(),
         super(id, style: style);
 
   /// Marker entries.
-  final SplayTreeSet<Marker> _entries;
+  final List<Marker> _entries;
 
   /// Visible marker entries.
   List<Marker> visibleEntries = <Marker>[];
@@ -57,11 +56,7 @@ class MarkerSeries extends Series {
     final int left = findEpochIndex(leftEpoch, _entries).ceil();
     final int right = findEpochIndex(rightEpoch, _entries).floor();
 
-    for (int i = 0; i < _entries.length; i++) {
-      if (i >= left && i <= right) {
-        visibleEntries.add(_entries.elementAt(i));
-      }
-    }
+    visibleEntries = _entries.sublist(left, right + 1);
   }
 
   @override

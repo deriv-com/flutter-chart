@@ -30,7 +30,7 @@ Tick findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
 /// `3.5` if [epoch] is between epochs of `ticks[3]` and `ticks[4]`.
 /// `-0.5` if [epoch] is before the first tick.
 /// `9.5` if [epoch] is after the last tick and the last tick index is `9`.
-double findEpochIndex(int epoch, Iterable<Tick> ticks) {
+double findEpochIndex(int epoch, List<Tick> ticks) {
   if (ticks.isEmpty) {
     throw ArgumentError('No ticks given.');
   }
@@ -40,7 +40,7 @@ double findEpochIndex(int epoch, Iterable<Tick> ticks) {
 
   while (right - left > 1) {
     final int mid = (left + right) ~/ 2;
-    final int pivot = ticks.elementAt(mid).epoch;
+    final int pivot = ticks[mid].epoch;
     if (epoch < pivot) {
       right = mid;
     } else if (epoch > pivot) {
@@ -50,9 +50,9 @@ double findEpochIndex(int epoch, Iterable<Tick> ticks) {
     }
   }
 
-  if (left >= 0 && epoch == ticks.elementAt(left).epoch) {
+  if (left >= 0 && epoch == ticks[left].epoch) {
     return left.toDouble();
-  } else if (right < ticks.length && epoch == ticks.elementAt(right).epoch) {
+  } else if (right < ticks.length && epoch == ticks[right].epoch) {
     return right.toDouble();
   } else {
     return (left + right) / 2;
