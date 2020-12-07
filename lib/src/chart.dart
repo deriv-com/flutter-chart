@@ -247,10 +247,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
 
-  // To detect changes in visible area.
-  int _prevRightBoundEpoch;
-  int _prevLeftBoundEpoch;
-
   @override
   void initState() {
     super.initState();
@@ -380,7 +376,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
   }
 
-  void _updateChartData() {
+  void _updateVisibleData() {
     for (final ChartData data in widget.chartDataList) {
       data.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
     }
@@ -445,14 +441,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
           constraints.maxHeight,
         );
 
-        if (xAxis.rightBoundEpoch != _prevRightBoundEpoch ||
-            xAxis.leftBoundEpoch != _prevLeftBoundEpoch) {
-          _updateChartData();
-          _updateQuoteBoundTargets();
-
-          _prevRightBoundEpoch = xAxis.rightBoundEpoch;
-          _prevLeftBoundEpoch = xAxis.leftBoundEpoch;
-        }
+        _updateVisibleData();
+        _updateQuoteBoundTargets();
 
         return AnimatedBuilder(
           // It's enough to only listen to the top bound, since top and bottom are animated at the same time.
