@@ -36,6 +36,8 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   HorizontalBarrier _lastTickIndicator;
 
+  bool _needsMinMaxUpdate = false;
+
   /// Updates visible entries for this Series.
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
@@ -48,9 +50,17 @@ abstract class DataSeries<T extends Tick> extends Series {
     final int startIndex = _searchLowerIndex(leftEpoch);
     final int endIndex = _searchUpperIndex(rightEpoch);
 
-    _visibleEntries = startIndex == -1 || endIndex == -1
+    final List<T> newVisibleEntries = startIndex == -1 || endIndex == -1
         ? <T>[]
         : entries.sublist(startIndex, endIndex);
+
+    // Only recalculate min/max if visible entries have changed.
+    _needsMinMaxUpdate = newVisibleEntries.isEmpty ||
+        _visibleEntries.isEmpty ||
+        newVisibleEntries.first.epoch != _visibleEntries.first.epoch ||
+        newVisibleEntries.last.epoch != _visibleEntries.last.epoch;
+
+    _visibleEntries = newVisibleEntries;
   }
 
   /// Minimum value in [t]
@@ -75,6 +85,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Sub-classes can override this method if they calculate [minValue] & [maxValue] differently.
   @override
   List<double> recalculateMinMax() {
+    if (!_needsMinMaxUpdate) {
+      return [minValue, maxValue];
+    }
+
     if (visibleEntries.isNotEmpty) {
       double min = minValueOf(visibleEntries[0]);
       double max = maxValueOf(visibleEntries[0]);
@@ -155,8 +169,10 @@ abstract class DataSeries<T extends Tick> extends Series {
       _prevLastEntry = oldSeries.entries.last;
     }
 
-    // Reuse visible entries if visible area didn't change.
+    // Preserve old computed values in case recomputation is deemed unnecesary.
     _visibleEntries = oldSeries.visibleEntries;
+    minValueInFrame = oldSeries.minValue;
+    maxValueInFrame = oldSeries.maxValue;
 
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
   }
