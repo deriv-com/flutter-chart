@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/candle.dart';
@@ -6,8 +8,6 @@ import 'package:flutter/material.dart';
 
 /// Super-class of series with OHLC data (CandleStick, OHLC, Hollow).
 abstract class OHLCTypeSeries extends DataSeries<Candle> {
-  ChartTheme _theme;
-
   /// Initializes
   OHLCTypeSeries(
     List<Candle> entries,
@@ -16,47 +16,46 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
   }) : super(entries, id, style: style);
 
   @override
-  Widget getCrossHairInfo(Candle crossHairTick, int pipSize, ChartTheme theme) {
-    _theme = theme;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _buildLabelValue('O', crossHairTick.open, pipSize),
-            _buildLabelValue('C', crossHairTick.close, pipSize),
-          ],
-        ),
-        const SizedBox(width: 16),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _buildLabelValue('H', crossHairTick.high, pipSize),
-            _buildLabelValue('L', crossHairTick.low, pipSize),
-          ],
-        ),
-      ],
-    );
-  }
+  Widget getCrossHairInfo(
+          Candle crossHairTick, int pipSize, ChartTheme theme) =>
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _buildLabelValue('O', crossHairTick.open, pipSize, theme),
+              _buildLabelValue('C', crossHairTick.close, pipSize, theme),
+            ],
+          ),
+          const SizedBox(width: 16),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _buildLabelValue('H', crossHairTick.high, pipSize, theme),
+              _buildLabelValue('L', crossHairTick.low, pipSize, theme),
+            ],
+          ),
+        ],
+      );
 
-  Widget _buildLabelValue(String label, double value, int pipSize) => Padding(
+  Widget _buildLabelValue(
+          String label, double value, int pipSize, ChartTheme theme) =>
+      Padding(
         padding: const EdgeInsets.only(bottom: 4),
         child: Row(
           children: <Widget>[
             Text(
               label,
-              style: _theme.overLine,
+              style: theme.overLine,
             ),
             const SizedBox(width: 4),
-            _buildValue(value, pipSize),
+            Text(
+              value.toStringAsFixed(pipSize),
+              style: theme.overLine,
+            ),
           ],
         ),
-      );
-
-  Text _buildValue(double value, int pipSize) => Text(
-        value.toStringAsFixed(pipSize),
-        style: _theme.overLine,
       );
 
   @override
