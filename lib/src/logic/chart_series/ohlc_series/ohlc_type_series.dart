@@ -52,7 +52,7 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
         label,
         style: const TextStyle(
           fontSize: 12,
-          color: Colors.white70,
+          color: Colors.white,
           fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
         ),
       );

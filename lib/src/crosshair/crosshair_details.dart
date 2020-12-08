@@ -29,7 +29,7 @@ class CrosshairDetails extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _buildTimeLabel(),
-          SizedBox(height: 2),
+          SizedBox(height: 5),
           mainSeries.getCrossHairInfo(crosshairTick, pipSize),
         ],
       ),
@@ -49,7 +49,7 @@ class CrosshairDetails extends StatelessWidget {
         label,
         style: TextStyle(
           fontSize: 12,
-          color: Colors.white70,
+          color: Colors.white,
           fontFeatures: [FontFeature.tabularFigures()],
         ),
     );
