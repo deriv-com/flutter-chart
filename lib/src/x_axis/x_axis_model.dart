@@ -356,4 +356,20 @@ class XAxisModel extends ChangeNotifier {
     _updateGranularity(granularity);
     _updateEntries(entries);
   }
+
+  bool fallsInGap(DateTime gridTimestamp) {
+    if (_timeGaps != null && _timeGaps.isNotEmpty) {
+
+      print("aaaaaaa");
+      print(_timeGaps);
+      print("dddd");
+      print(gridTimestamp);
+      print(gridTimestamp.millisecondsSinceEpoch);
+
+      return _timeGaps[indexOfNearestGap(
+              _timeGaps, gridTimestamp.millisecondsSinceEpoch)]
+          .contains(gridTimestamp.millisecondsSinceEpoch);
+    } else
+      return false;
+  }
 }

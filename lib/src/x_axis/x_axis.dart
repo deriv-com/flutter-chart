@@ -128,19 +128,31 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
           // Remove labels inside time gaps.
           // Except if the last label in the gap can fit, then keep it.
-          final List<DateTime> _noOverlapGridTimestamps = [
-            if (_gridTimestamps.isNotEmpty) _gridTimestamps.last,
-          ];
-          for (final DateTime timestamp in _gridTimestamps.reversed.skip(1)) {
-            final double distance = _model.pxBetween(
-              timestamp.millisecondsSinceEpoch,
-              _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
-            );
-            if (distance >= _minDistanceBetweenTimeGridLines) {
-              _noOverlapGridTimestamps.insert(0, timestamp);
+          // final List<DateTime> _noOverlapGridTimestamps = [
+          //   if (_gridTimestamps.isNotEmpty) _gridTimestamps.last,
+          // ];
+          // for (final DateTime timestamp in _gridTimestamps.reversed.skip(1)) {
+          //   final double distance = _model.pxBetween(
+          //     timestamp.millisecondsSinceEpoch,
+          //     _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
+          //   );
+          //   if (distance >= _minDistanceBetweenTimeGridLines) {
+          //     _noOverlapGridTimestamps.insert(0, timestamp);
+          //   }
+          // }
+
+
+          List<DateTime> _noOverlapGridTimestamps=[] ;
+          for (final DateTime timestamp in _gridTimestamps) {
+            if (!_model.fallsInGap(timestamp))
+            {
+              print("xxxxxxxx");
+              _noOverlapGridTimestamps.add(timestamp);
             }
           }
 
+          // print("aaaaaaaaaaa");
+          // print(_noOverlapGridTimestamps);
           final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
 
           return CustomPaint(
