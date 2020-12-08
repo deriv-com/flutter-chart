@@ -74,6 +74,8 @@ abstract class ChartTheme {
 
   TextStyle get title;
 
+  TextStyle get overline;
+
   /// The style of the current tick indicator
   HorizontalBarrierStyle get currentTickStyle;
 

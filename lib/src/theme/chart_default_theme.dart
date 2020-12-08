@@ -67,6 +67,9 @@ abstract class ChartDefaultTheme implements ChartTheme {
   TextStyle get title => TextStyles.title;
 
   @override
+  TextStyle get overline => TextStyles.overline;
+
+  @override
   Color get brandCoralColor => BrandColors.coral;
 
   @override
