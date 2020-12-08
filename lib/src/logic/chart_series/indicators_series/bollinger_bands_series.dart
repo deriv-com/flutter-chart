@@ -109,17 +109,19 @@ class BollingerBandSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() {
-    final List<double> lowerBounds = _lowerSeries.recalculateMinMax();
-    final List<double> middleBounds = _middleSeries.recalculateMinMax();
-    final List<double> upperBounds = _upperSeries.recalculateMinMax();
-
-    // Can just use lowerBounds for min and upper for max. But to be safe we calculate min and max.
-    return <double>[
-      min(min(lowerBounds[0], middleBounds[0]), upperBounds[0]),
-      max(max(lowerBounds[1], middleBounds[1]), upperBounds[1]),
-    ];
-  }
+  List<double> recalculateMinMax() =>
+      // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
+      // But to be safe we calculate min and max. from all three series.
+      <double>[
+        min(
+          min(_lowerSeries.minValue, _middleSeries.minValue),
+          _upperSeries.minValue,
+        ),
+        max(
+          max(_lowerSeries.maxValue, _middleSeries.maxValue),
+          _upperSeries.maxValue,
+        ),
+      ];
 
   @override
   void paint(
