@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -114,7 +115,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
           enabledBorder: InputBorder.none,
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
-          hintText: 'Search assets',
+          hintText: ChartLocalization.of(context).labelSearchAssets,
         ),
       );
 

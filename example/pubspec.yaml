@@ -12,6 +12,8 @@ dependencies:
     path: ../
   vibration: ^1.4.0
   intl: ^0.16.1
+  flutter_localizations:
+    sdk: flutter
   flutter_deriv_api:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-api.git
@@ -20,6 +22,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  intl: ^0.16.1
+  flutter_localizations:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
+
+flutter_intl:
+  main_locale: en
+  enabled: true
+  class_name: ExampleLocalization

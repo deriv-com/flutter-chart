@@ -46,7 +46,7 @@ class CrosshairDetails extends StatelessWidget {
     final timeLabel = DateFormat('dd MMM yyy - HH:mm:ss').format(time);
     return Text(
       timeLabel,
-      style: _theme.overline,
+      style: _theme.overLine,
     );
   }
 }

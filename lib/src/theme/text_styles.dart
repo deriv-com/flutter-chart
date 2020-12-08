@@ -82,9 +82,9 @@ class TextStyles {
       height: 1,
       fontWeight: FontWeight.w500);
 
-  static TextStyle overline = const TextStyle(
+  static TextStyle overLine = const TextStyle(
       fontFamily: appFontFamily,
       fontSize: 10,
       height: 1.4,
-      fontWeight: FontWeight.normal);
+      fontWeight: FontWeight.w400);
 }

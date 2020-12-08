@@ -4,8 +4,8 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
-import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/create_shape_path.dart';
+import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
@@ -16,11 +16,9 @@ import 'horizontal_barrier.dart';
 /// A class for painting horizontal barriers
 class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Initializes [series]
-  HorizontalBarrierPainter(HorizontalBarrier series)
-      : _paint = Paint()..strokeWidth = 1,
-        super(series);
+  HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
 
-  final Paint _paint;
+  Paint _paint;
 
   /// Padding between lines
   static const double padding = 4;
@@ -28,8 +26,12 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Right margin
   static const double rightMargin = 4;
 
-  /// Arrow size
-  static const double _arrowSize = 5;
+
+  /// Distance between title area and label area.
+  static const double _distanceBetweenTitleAndLabel = 16;
+
+  /// Padding on both sides of the title (so that barrier line doesn't touch title text).
+  static const double _titleHorizontalPadding = 2;
 
   @override
   void onPaint({
@@ -43,16 +45,19 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       return;
     }
 
-    final HorizontalBarrierStyle style = series.style;
-    BarrierArrowType arrowType = BarrierArrowType.none;
+    final HorizontalBarrierStyle style = series.style ??
+        theme.horizontalBarrierStyle ??
+        const HorizontalBarrierStyle();
 
-    _paint.color = style.color;
+    _paint = Paint()
+      ..strokeWidth = 1
+      ..color = style.color;
+
+    BarrierArrowType arrowType = BarrierArrowType.none;
 
     double animatedValue;
 
     double dotX;
-
-    Rect titleArea;
 
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
@@ -115,6 +120,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     if (arrowType == BarrierArrowType.none) {
       final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double lineEndX = labelArea.left;
+
+      // To erase the line behind title.
+      if (series.title != null) {
+        canvas.saveLayer(
+          Rect.fromLTRB(lineStartX, y - 1, lineEndX, y + 1),
+          Paint(),
+        );
+      }
+
       if (lineStartX < lineEndX) {
         _paintLine(canvas, lineStartX, lineEndX, y, style);
       }
@@ -126,13 +140,21 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         series.title,
         style.textStyle.copyWith(color: style.color),
       );
-      titleArea = Rect.fromCenter(
-        center:
-            Offset(labelArea.left - 12 - padding - titlePainter.width / 2, y),
-        width: titlePainter.width + 4,
+      final double titleEndX = labelArea.left - _distanceBetweenTitleAndLabel;
+      final double titleAreaWidth =
+          titlePainter.width + _titleHorizontalPadding * 2;
+      final Rect titleArea = Rect.fromCenter(
+        center: Offset(titleEndX - titleAreaWidth / 2, y),
+        width: titleAreaWidth,
         height: titlePainter.height,
       );
-      canvas.drawRect(titleArea, Paint()..color = style.titleBackgroundColor);
+
+      // Erase the line behind title.
+      if (arrowType == BarrierArrowType.none) {
+        canvas.drawRect(titleArea, Paint()..blendMode = BlendMode.clear);
+        canvas.restore();
+      }
+
       paintWithTextPainter(
         canvas,
         painter: titlePainter,
@@ -149,20 +171,22 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     );
 
     // Arrows.
-    final double arrowMidX = (titleArea?.left ?? labelArea.left) - _arrowSize;
-    if (arrowType == BarrierArrowType.upward) {
-      _paintUpwardArrows(
-        canvas,
-        center: Offset(arrowMidX, y),
-        arrowSize: _arrowSize,
-      );
-    } else if (arrowType == BarrierArrowType.downward) {
-      // TODO(Rustem): Rotate arrows like in `paintMarker`.
-      _paintDownwardArrows(
-        canvas,
-        center: Offset(arrowMidX, y),
-        arrowSize: _arrowSize,
-      );
+    if (style.hasArrow) {
+      final double arrowMidX = labelArea.left - style.arrowSize - 6;
+      if (arrowType == BarrierArrowType.upward) {
+        _paintUpwardArrows(
+          canvas,
+          center: Offset(arrowMidX, y),
+          arrowSize: style.arrowSize,
+        );
+      } else if (arrowType == BarrierArrowType.downward) {
+        // TODO(Rustem): Rotate arrows like in `paintMarker`.
+        _paintDownwardArrows(
+          canvas,
+          center: Offset(arrowMidX, y),
+          arrowSize: style.arrowSize,
+        );
+      }
     }
   }
 
@@ -230,55 +254,55 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   void _paintUpwardArrows(
     Canvas canvas, {
     Offset center,
-    double arrowSize = 10,
-    double arrowThickness = 4,
+    double arrowSize,
   }) {
-    final Paint arrowPaint = Paint()..color = _paint.color;
+    final Paint arrowPaint = Paint()
+      ..color = _paint.color
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
 
     canvas
       ..drawPath(
           getUpwardArrowPath(
             center.dx,
-            center.dy + arrowSize,
+            center.dy + arrowSize - 1,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint)
       ..drawPath(
-        getUpwardArrowPath(
-          center.dx,
-          center.dy,
-          size: arrowSize,
-          thickness: arrowThickness,
-        ),
-        arrowPaint..color = _paint.color.withOpacity(0.64),
-      )
+          getUpwardArrowPath(
+            center.dx,
+            center.dy,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.64))
       ..drawPath(
-        getUpwardArrowPath(
-          center.dx,
-          center.dy - arrowSize,
-          size: arrowSize,
-          thickness: arrowThickness,
-        ),
-        arrowPaint..color = _paint.color.withOpacity(0.32),
-      );
+          getUpwardArrowPath(
+            center.dx,
+            center.dy - arrowSize + 1,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.32));
   }
 
   void _paintDownwardArrows(
     Canvas canvas, {
     Offset center,
-    double arrowSize = 10,
-    double arrowThickness = 4,
+    double arrowSize,
   }) {
-    final Paint arrowPaint = Paint()..color = _paint.color;
+    final Paint arrowPaint = Paint()
+      ..color = _paint.color
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
 
     canvas
       ..drawPath(
           getDownwardArrowPath(
             center.dx,
-            center.dy - arrowSize,
+            center.dy - arrowSize + 1,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint)
       ..drawPath(
@@ -286,15 +310,13 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
             center.dx,
             center.dy,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.64))
       ..drawPath(
           getDownwardArrowPath(
             center.dx,
-            center.dy + arrowSize,
+            center.dy + arrowSize - 1,
             size: arrowSize,
-            thickness: arrowThickness,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
   }

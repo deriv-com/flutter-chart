@@ -67,9 +67,6 @@ abstract class ChartDefaultTheme implements ChartTheme {
   TextStyle get title => TextStyles.title;
 
   @override
-  TextStyle get overline => TextStyles.overline;
-
-  @override
   Color get brandCoralColor => BrandColors.coral;
 
   @override
@@ -110,6 +107,20 @@ abstract class ChartDefaultTheme implements ChartTheme {
   MarkerStyle get markerStyle => MarkerStyle(
         upColor: accentGreenColor,
         downColor: accentRedColor,
+      );
+
+  @override
+  HorizontalBarrierStyle get horizontalBarrierStyle => HorizontalBarrierStyle(
+        color: base04Color,
+        titleBackgroundColor: base08Color,
+        textStyle: TextStyles.overLine,
+      );
+
+  @override
+  VerticalBarrierStyle get verticalBarrierStyle => VerticalBarrierStyle(
+        color: Colors.grey,
+        titleBackgroundColor: Colors.transparent,
+        textStyle: TextStyles.overLine,
       );
 
   TextStyle _getStyle({

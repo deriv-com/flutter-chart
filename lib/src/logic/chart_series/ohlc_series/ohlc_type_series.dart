@@ -46,7 +46,7 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
           children: <Widget>[
             Text(
               label,
-              style: _theme.overline,
+              style: _theme.overLine,
             ),
             const SizedBox(width: 4),
             _buildValue(value, pipSize),
@@ -56,7 +56,7 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
 
   Text _buildValue(double value, int pipSize) => Text(
         value.toStringAsFixed(pipSize),
-        style: _theme.overline,
+        style: _theme.overLine,
       );
 
   @override
