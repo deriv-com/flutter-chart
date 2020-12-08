@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/candle.dart';
