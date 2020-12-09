@@ -445,37 +445,26 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _updateVisibleData();
         _updateQuoteBoundTargets();
 
-        return MultipleAnimatedBuilder(
-          animations: [
-            // It's enough to only listen to the top bound, since top and bottom are animated at the same time.
-            _topBoundQuoteAnimationController,
-            _currentTickAnimation,
-            _currentTickBlinkAnimation,
-            _crosshairZoomOutAnimation,
+        return Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            _buildQuoteGrid(),
+            _buildLoadingAnimation(),
+            _buildChartData(),
+            _buildAnnotations(),
+            if (widget.markerSeries != null)
+              MarkerArea(
+                markerSeries: widget.markerSeries,
+                quoteToCanvasY: _quoteToCanvasY,
+              ),
+            _buildCrosshairArea(),
+            if (_isScrollToLastTickAvailable)
+              Positioned(
+                bottom: 30,
+                right: 30 + quoteLabelsTouchAreaWidth,
+                child: _buildScrollToLastTickButton(),
+              ),
           ],
-          builder: (BuildContext context, Widget child) {
-            return Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                _buildQuoteGrid(),
-                _buildLoadingAnimation(),
-                _buildChartData(),
-                _buildAnnotations(),
-                if (widget.markerSeries != null)
-                  MarkerArea(
-                    markerSeries: widget.markerSeries,
-                    quoteToCanvasY: _quoteToCanvasY,
-                  ),
-                _buildCrosshairArea(),
-                if (_isScrollToLastTickAvailable)
-                  Positioned(
-                    bottom: 30,
-                    right: 30 + quoteLabelsTouchAreaWidth,
-                    child: _buildScrollToLastTickButton(),
-                  ),
-              ],
-            );
-          },
         );
       },
     );
@@ -530,17 +519,20 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   Widget _buildAnnotations() {
-    return CustomPaint(
-      painter: ChartPainter(
-        animationInfo: AnimationInfo(
-          currentTickPercent: _currentTickAnimation.value,
-          blinkingPercent: _currentTickBlinkAnimation.value,
+    return AnimatedBuilder(
+      animation: _currentTickAnimation,
+      builder: (BuildContext context, Widget child) => CustomPaint(
+        painter: ChartPainter(
+          animationInfo: AnimationInfo(
+            currentTickPercent: _currentTickAnimation.value,
+            blinkingPercent: _currentTickBlinkAnimation.value,
+          ),
+          chartDataList: widget.annotations,
+          chartConfig: context.watch<ChartConfig>(),
+          theme: context.watch<ChartTheme>(),
+          epochToCanvasX: _xAxis.xFromEpoch,
+          quoteToCanvasY: _quoteToCanvasY,
         ),
-        chartDataList: widget.annotations,
-        chartConfig: context.read<ChartConfig>(),
-        theme: context.read<ChartTheme>(),
-        epochToCanvasX: _xAxis.xFromEpoch,
-        quoteToCanvasY: _quoteToCanvasY,
       ),
     );
   }
