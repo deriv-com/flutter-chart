@@ -26,7 +26,8 @@ class XAxis extends StatefulWidget {
     @required this.isLive,
     this.onVisibleAreaChanged,
     Key key,
-  })  : assert(child != null),
+  })
+      : assert(child != null),
         super(key: key);
 
   /// The widget below this widget in the tree.
@@ -60,20 +61,22 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
     _model = XAxisModel(
       entries: widget.entries,
-      granularity: context.read<ChartConfig>().granularity,
+      granularity: context
+          .read<ChartConfig>()
+          .granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
       onScale: _onVisibleAreaChanged,
       onScroll: _onVisibleAreaChanged,
     );
 
-    _ticker = createTicker(_model.onNewFrame)..start();
+    _ticker = createTicker(_model.onNewFrame)
+      ..start();
 
     gestureManager = context.read<GestureManagerState>()
-      ..registerCallback(_model.onScaleAndPanStart)
-      ..registerCallback(_model.onScaleUpdate)
-      ..registerCallback(_model.onPanUpdate)
-      ..registerCallback(_model.onScaleAndPanEnd);
+      ..registerCallback(_model.onScaleAndPanStart)..registerCallback(
+          _model.onScaleUpdate)..registerCallback(
+          _model.onPanUpdate)..registerCallback(_model.onScaleAndPanEnd);
   }
 
   void _onVisibleAreaChanged() {
@@ -88,7 +91,9 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
     _model.update(
       isLive: widget.isLive,
-      granularity: context.read<ChartConfig>().granularity,
+      granularity: context
+          .read<ChartConfig>()
+          .granularity,
       entries: widget.entries,
     );
   }
@@ -98,11 +103,9 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     _ticker?.dispose();
     _rightEpochAnimationController?.dispose();
 
-    gestureManager
-      ..removeCallback(_model.onScaleAndPanStart)
-      ..removeCallback(_model.onScaleUpdate)
-      ..removeCallback(_model.onPanUpdate)
-      ..removeCallback(_model.onScaleAndPanEnd);
+    gestureManager..removeCallback(_model.onScaleAndPanStart)..removeCallback(
+        _model.onScaleUpdate)..removeCallback(
+        _model.onPanUpdate)..removeCallback(_model.onScaleAndPanEnd);
 
     super.dispose();
   }
@@ -114,7 +117,9 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           // Update x-axis width.
-          context.watch<XAxisModel>().width = constraints.maxWidth;
+          context
+              .watch<XAxisModel>()
+              .width = constraints.maxWidth;
 
           // Calculate time labels' timestamps for current scale.
           final List<DateTime> _gridTimestamps = gridTimestamps(
@@ -127,33 +132,16 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
           );
 
           // Remove labels inside time gaps.
-          // Except if the last label in the gap can fit, then keep it.
-          // final List<DateTime> _noOverlapGridTimestamps = [
-          //   if (_gridTimestamps.isNotEmpty) _gridTimestamps.last,
-          // ];
-          // for (final DateTime timestamp in _gridTimestamps.reversed.skip(1)) {
-          //   final double distance = _model.pxBetween(
-          //     timestamp.millisecondsSinceEpoch,
-          //     _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
-          //   );
-          //   if (distance >= _minDistanceBetweenTimeGridLines) {
-          //     _noOverlapGridTimestamps.insert(0, timestamp);
-          //   }
-          // }
-
-
-          List<DateTime> _noOverlapGridTimestamps=[] ;
+          List<DateTime> _noOverlapGridTimestamps = [];
           for (final DateTime timestamp in _gridTimestamps) {
-            if (!_model.fallsInGap(timestamp))
-            {
-              print("xxxxxxxx");
+            if (!_model.isFallsInGap(timestamp)) {
               _noOverlapGridTimestamps.add(timestamp);
             }
           }
 
-          // print("aaaaaaaaaaa");
-          // print(_noOverlapGridTimestamps);
-          final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
+          final GridStyle gridStyle = context
+              .watch<ChartTheme>()
+              .gridStyle;
 
           return CustomPaint(
             painter: XGridPainter(
