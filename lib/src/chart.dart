@@ -471,13 +471,22 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   Widget _buildQuoteGrid() {
-    return CustomPaint(
-      painter: YGridPainter(
-        gridLineQuotes: _getGridLineQuotes(),
-        pipSize: widget.pipSize,
-        quoteToCanvasY: _quoteToCanvasY,
-        style: context.read<ChartTheme>().gridStyle,
-      ),
+    return MultipleAnimatedBuilder(
+      animations: [
+        // One bound animation is enough since they animate at the same time.
+        _topBoundQuoteAnimationController,
+        _crosshairZoomOutAnimation,
+      ],
+      builder: (BuildContext context, Widget child) {
+        return CustomPaint(
+          painter: YGridPainter(
+            gridLineQuotes: _getGridLineQuotes(),
+            pipSize: widget.pipSize,
+            quoteToCanvasY: _quoteToCanvasY,
+            style: context.watch<ChartTheme>().gridStyle,
+          ),
+        );
+      },
     );
   }
 
