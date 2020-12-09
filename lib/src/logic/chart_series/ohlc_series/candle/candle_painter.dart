@@ -8,12 +8,12 @@ import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../../chart_data.dart';
-import 'candle_series.dart';
+import '../../data_series.dart';
 
 /// A [DataPainter] for painting CandleStick data.
-class CandlePainter extends DataPainter<CandleSeries> {
+class CandlePainter extends DataPainter<DataSeries<Candle>> {
   /// Initializes
-  CandlePainter(CandleSeries series) : super(series);
+  CandlePainter(DataSeries<Candle> series) : super(series);
 
   Paint _linePaint;
   Paint _positiveCandlePaint;
