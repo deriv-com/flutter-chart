@@ -498,6 +498,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         // One bound animation is enough since they animate at the same time.
         _topBoundQuoteAnimationController,
         _crosshairZoomOutAnimation,
+        _currentTickAnimation,
       ],
       builder: (BuildContext context, Widget child) => RepaintBoundary(
         child: Opacity(
