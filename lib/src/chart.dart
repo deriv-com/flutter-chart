@@ -516,7 +516,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
             painter: ChartDataPainter(
               animationInfo: AnimationInfo(
                 currentTickPercent: _currentTickAnimation.value,
-                blinkingPercent: _currentTickBlinkAnimation.value,
               ),
               mainSeries: widget.mainSeries,
               secondarySeries: widget.secondarySeries,
@@ -536,8 +535,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   Widget _buildAnnotations() {
-    return AnimatedBuilder(
-      animation: _currentTickAnimation,
+    return MultipleAnimatedBuilder(
+      animations: [
+        _currentTickAnimation,
+        _currentTickBlinkAnimation,
+      ],
       builder: (BuildContext context, Widget child) => CustomPaint(
         painter: ChartPainter(
           animationInfo: AnimationInfo(
