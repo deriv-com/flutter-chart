@@ -22,26 +22,24 @@ class AnimatedPopupDialog extends StatefulWidget {
 class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
-  Animation<double> scaleAnimation;
+  final Curve _curve = Curves.easeOut;
 
   @override
   void initState() {
     super.initState();
 
     controller =
-        AnimationController(vsync: this, duration: widget.animationDuration);
-    scaleAnimation = CurvedAnimation(parent: controller, curve: Curves.easeOut);
-
-    controller
-      ..addListener(() {
-        setState(() {});
-      })
-      ..forward();
+        AnimationController(vsync: this, duration: widget.animationDuration)
+          ..forward();
   }
 
   @override
-  Widget build(BuildContext context) => ScaleTransition(
-        scale: scaleAnimation,
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: controller,
+        builder: (BuildContext context, Widget child) => Transform.scale(
+          scale: _curve.transform(controller.value),
+          child: child,
+        ),
         child: Container(
           margin: EdgeInsets.symmetric(
             horizontal: _calculateHorizontalPadding(context),
@@ -52,7 +50,7 @@ class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
             elevation: 4,
             child: Container(
               decoration: ShapeDecoration(
-                color: Colors.transparent,
+                  color: Colors.transparent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5))),
               child: Material(
