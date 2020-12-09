@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
@@ -33,16 +34,41 @@ class MASeries extends LineSeries {
 
   /// Initializes
   MASeries.fromIndicator(
-    AbstractIndicator indicator, {
+    this.indicator, {
     String id,
     LineStyle style,
-    int period = 15,
-    MovingAverageType type = MovingAverageType.simple,
+    this.period = 15,
+    this.type = MovingAverageType.simple,
   }) : super(
-          getMAIndicator(indicator, period, type).results,
+          indicator.entries,
           id: id ?? 'SMASeries-period$period-type$type',
           style: style ?? const LineStyle(thickness: 0.5),
-        );
+        ) {
+    print('');
+  }
+
+  final int period;
+
+  final MovingAverageType type;
+
+  final AbstractIndicator indicator;
+
+  @override
+  void initialize() {
+    super.initialize();
+
+    entries = getMAIndicator(indicator, period, type).results;
+  }
+
+  @override
+  void updateEntries(ChartData oldData, bool newTickAdded) {
+    final MASeries oldSeries = oldData;
+    if (newTickAdded) {
+      entries = oldSeries.entries;
+    } else {
+      initialize();
+    }
+  }
 
   static CachedIndicator getMAIndicator(
     AbstractIndicator indicator,

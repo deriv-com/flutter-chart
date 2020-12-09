@@ -74,4 +74,10 @@ class SampleMultiSeries extends Series {
     series2.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
+
+  @override
+  void initialize() {
+   series1.initialize();
+   series2.initialize();
+  }
 }

@@ -93,7 +93,7 @@ class _ChartPackageState extends State<ChartPackage> {
                   .where((IndicatorConfig indicatorConfig) =>
                       indicatorConfig != null)
                   .map((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig.builder?.call(widget.mainSeries.entries))
+                      indicatorConfig.builder?.call(widget.mainSeries.input))
             ],
             markerSeries: widget.markerSeries,
             theme: widget.theme,

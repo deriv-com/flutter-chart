@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -14,15 +15,15 @@ abstract class DataSeries<T extends Tick> extends Series {
   ///
   /// [entries] is the list of data to show.
   DataSeries(
-    this.entries,
+    this.input,
     String id, {
     DataSeriesStyle style,
-  }) : super(id, style: style) {
-    _initLastTickIndicator();
-  }
+  }) : super(id, style: style);
 
   /// Series entries
-  final List<T> entries;
+  final List<T> input;
+
+  List<T> entries;
 
   List<T> _visibleEntries = <T>[];
 
@@ -36,10 +37,20 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   HorizontalBarrier _lastTickIndicator;
 
+  @override
+  void initialize() {
+    entries = input;
+    _initLastTickIndicator();
+  }
+
   /// Updates visible entries for this Series.
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
+
+    if (entries == null) {
+      print('');
+    }
 
     if (entries.isEmpty) {
       return;
@@ -61,12 +72,15 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   void _initLastTickIndicator() {
     final DataSeriesStyle style = this.style;
+    if (entries == null) {
+      print('');
+    }
     if (entries.isNotEmpty && style?.lastTickStyle != null ?? false) {
       _lastTickIndicator = HorizontalBarrier(
         entries.last.quote,
         epoch: entries.last.epoch,
         style: style.lastTickStyle,
-      );
+      )..initialize();
     }
   }
 
@@ -150,12 +164,24 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Will be called by the chart when it was updated.
   @override
   void didUpdate(ChartData oldData) {
-    final DataSeries<T> oldSeries = oldData;
-    if (oldSeries.entries.isNotEmpty) {
-      _prevLastEntry = oldSeries.entries.last;
+    final DataSeries oldSeries = oldData;
+    if (oldSeries?.entries == null ?? true) {
+      initialize();
+    } else {
+      updateEntries(oldData, true);
     }
 
-    _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
+    if (oldSeries?.entries != null ?? false) {
+      if (oldSeries.entries.isNotEmpty) {
+        _prevLastEntry = oldSeries.entries.last;
+      }
+
+      _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
+    }
+  }
+
+  void updateEntries(ChartData oldData, bool newTickAdded) {
+    initialize();
   }
 
   @override

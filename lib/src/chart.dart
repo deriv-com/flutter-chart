@@ -114,7 +114,7 @@ class Chart extends StatelessWidget {
           color: chartTheme.base08Color,
           child: GestureManager(
             child: XAxis(
-              entries: mainSeries.entries,
+              entries: mainSeries.input,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               child: _ChartImplementation(
@@ -248,6 +248,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
     widget.controller?.onScrollToLastTick = (bool animate) {
       _xAxis.scrollToLastTick(animate: animate);
     };
+
+    widget.markerSeries?.initialize();
+    widget.mainSeries?.initialize();
+
+    for (final ChartData chartData in widget.chartDataList) {
+      chartData.initialize();
+    }
   }
 
   @override
@@ -274,9 +281,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
-    if (widget.mainSeries.id == oldChart.mainSeries.id) {
+    // if (widget.mainSeries.id == oldChart.mainSeries.id) {
       widget.mainSeries.didUpdate(oldChart.mainSeries);
-    }
+    // }
 
     if (widget.chartDataList != null) {
       for (final ChartData data in widget.chartDataList) {
@@ -285,9 +292,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           orElse: () => null,
         );
 
-        if (oldData != null) {
-          data.didUpdate(oldData);
-        }
+        data.didUpdate(oldData);
       }
     }
   }

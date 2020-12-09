@@ -96,9 +96,9 @@ class BollingerBandSeries extends Series {
   @override
   void didUpdate(ChartData oldData) {
     final BollingerBandSeries series = oldData;
-    _lowerSeries.didUpdate(series._lowerSeries);
-    _middleSeries.didUpdate(series._middleSeries);
-    _upperSeries.didUpdate(series._upperSeries);
+    _lowerSeries.didUpdate(series?._lowerSeries);
+    _middleSeries.didUpdate(series?._middleSeries);
+    _upperSeries.didUpdate(series?._upperSeries);
   }
 
   @override
@@ -141,5 +141,12 @@ class BollingerBandSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     // TODO(ramin): call super.paint to paint the Channels fill.
+  }
+
+  @override
+  void initialize() {
+    _lowerSeries.initialize();
+    _middleSeries.initialize();
+    _upperSeries.initialize();
   }
 }
