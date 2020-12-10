@@ -39,7 +39,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   int _lastLongPressPositionEpoch = -1;
 
   double _panSpeed = 0.08;
-  static const _closeDistance = 60.00;
+  static const double _closeDistance = 60.00;
 
   GestureManagerState gestureManager;
 
@@ -97,14 +97,14 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _updatePanSpeed() {
-    if (_lastLongPressPosition != null) {
-      if (_lastLongPressPosition < _closeDistance) {
-        xAxis.pan(-_panSpeed);
-      } else if (xAxis.width - _lastLongPressPosition < _closeDistance) {
-        xAxis.pan(_panSpeed);
-      } else {
-        xAxis.pan(0);
-      }
+    if (_lastLongPressPosition == null) return;
+
+    if (_lastLongPressPosition < _closeDistance) {
+      xAxis.pan(-_panSpeed);
+    } else if (xAxis.width - _lastLongPressPosition < _closeDistance) {
+      xAxis.pan(_panSpeed);
+    } else {
+      xAxis.pan(0);
     }
   }
 
@@ -134,7 +134,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       final int newLongPressEpoch =
           context.watch<XAxisModel>().epochFromX(_lastLongPressPosition);
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
-        // Has changed
+        // Only update closest tick if position epoch has changed.
         _lastLongPressPositionEpoch = newLongPressEpoch;
         crosshairTick = _getClosestTick();
       }
