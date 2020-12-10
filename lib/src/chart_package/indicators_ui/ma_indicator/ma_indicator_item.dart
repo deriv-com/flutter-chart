@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
@@ -60,11 +61,14 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
-        (List<Tick> ticks) => MASeries.fromIndicator(
-          filedIndicatorBuilders[field](ticks),
-          period: period,
-          type: type,
-          style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
+        // (List<Tick> ticks) => MASeries.fromIndicator(
+        //   filedIndicatorBuilders[field](ticks),
+        //   period: period,
+        //   type: type,
+        //   style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
+        // ),
+        (List<Tick> ticks) => TestMASeries(
+          filedIndicatorBuilders[field](ticks), 'TestMA'
         ),
         period: period,
         type: type,

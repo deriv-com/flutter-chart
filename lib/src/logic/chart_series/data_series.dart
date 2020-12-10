@@ -171,6 +171,10 @@ abstract class DataSeries<T extends Tick> extends Series {
       updateEntries(oldData, true);
     }
 
+    if (id == 'TestMA') {
+      print('object');
+    }
+
     if (oldSeries?.entries != null ?? false) {
       if (oldSeries.entries.isNotEmpty) {
         _prevLastEntry = oldSeries.entries.last;

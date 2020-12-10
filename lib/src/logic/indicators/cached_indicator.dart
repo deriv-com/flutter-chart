@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:deriv_chart/src/models/tick.dart';
 
 import 'abstract_indicator.dart';
@@ -8,7 +10,7 @@ import 'abstract_indicator.dart';
 abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   /// Initializes
   CachedIndicator(List<T> entries)
-      : results = List<Tick>(entries.length),
+      : results = List<Tick>(),
         super(entries) {
     _calculateValues();
   }
@@ -28,8 +30,8 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
   @override
   Tick getValue(int index) {
-    if (results[index] == null) {
-      results[index] = calculate(index);
+    if (index >= results.length) {
+      results.add(calculate(index));
     }
 
     return results[index];
