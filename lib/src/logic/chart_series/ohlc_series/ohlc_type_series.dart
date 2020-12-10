@@ -46,11 +46,13 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
             Text(
               label,
               style: theme.overLine,
+              textAlign: TextAlign.center,
             ),
             const SizedBox(width: 4),
             Text(
               value.toStringAsFixed(pipSize),
               style: theme.overLine,
+              textAlign: TextAlign.center,
             ),
           ],
         ),

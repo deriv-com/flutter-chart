@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CrosshairDetails extends StatelessWidget {
-  CrosshairDetails({
+  const CrosshairDetails({
     Key key,
     @required this.mainSeries,
     @required this.crosshairTick,
