@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/chart_package/indicators_ui/ma_indicator/ma_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 
 import '../callbacks.dart';

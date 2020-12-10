@@ -19,9 +19,9 @@ import 'indicators_ui/indicator_repository.dart';
 import 'indicators_ui/indicators_dialog.dart';
 
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
-class ChartPackage extends StatefulWidget {
+class DerivChart extends StatefulWidget {
   /// Initializes
-  const ChartPackage({
+  const DerivChart({
     Key key,
     this.mainSeries,
     this.markerSeries,
@@ -74,10 +74,10 @@ class ChartPackage extends StatefulWidget {
   final double opacity;
 
   @override
-  _ChartPackageState createState() => _ChartPackageState();
+  _DerivChartState createState() => _DerivChartState();
 }
 
-class _ChartPackageState extends State<ChartPackage> {
+class _DerivChartState extends State<DerivChart> {
   final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
 
   @override

@@ -1,8 +1,8 @@
-import 'package:deriv_chart/src/chart_package/indicators_ui/bollinger_bands/bollinger_bands_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 
+import 'bollinger_bands/bollinger_bands_indicator_item.dart';
 import 'callbacks.dart';
 import 'indicator_item.dart';
 import 'ma_indicator/ma_indicator_item.dart';
