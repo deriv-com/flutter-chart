@@ -165,6 +165,13 @@ abstract class DataSeries<T extends Tick> extends Series {
   @override
   void didUpdate(ChartData oldData) {
     final DataSeries oldSeries = oldData;
+    if (oldSeries?.entries != null ?? false) {
+      if (oldSeries.entries.isNotEmpty) {
+        _prevLastEntry = oldSeries.entries.last;
+      }
+
+      _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
+    }
     if (oldSeries?.entries == null ?? true) {
       initialize();
     } else {
@@ -173,14 +180,6 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     if (id == 'TestMA') {
       print('object');
-    }
-
-    if (oldSeries?.entries != null ?? false) {
-      if (oldSeries.entries.isNotEmpty) {
-        _prevLastEntry = oldSeries.entries.last;
-      }
-
-      _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
     }
   }
 
