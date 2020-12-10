@@ -357,12 +357,8 @@ class XAxisModel extends ChangeNotifier {
     _updateEntries(entries);
   }
 
-  bool isFallsInGap(DateTime gridTimestamp) {
-    if (_timeGaps != null && _timeGaps.isNotEmpty) {
-      return _timeGaps[indexOfNearestGap(
-              _timeGaps, gridTimestamp.millisecondsSinceEpoch)]
-          .contains(gridTimestamp.millisecondsSinceEpoch);
-    } else
-      return false;
+  bool isInGap(int epoch) {
+    if (_timeGaps == null || _timeGaps.isEmpty) return false;
+    return _timeGaps[indexOfNearestGap(_timeGaps, epoch)].contains(epoch);
   }
 }
