@@ -24,10 +24,12 @@ class GapManager {
 
   void insertInFront(List<TimeRange> newGaps) {
     gaps = newGaps + gaps;
-    _cumulativeSums = _calcCumulativeSums(
+
+    final List<int> newSums = _calcCumulativeSums(
       newGaps,
       startSum: _cumulativeSums.isNotEmpty ? _cumulativeSums.first : 0,
     );
+    _cumulativeSums = newSums + _cumulativeSums;
   }
 
   List<int> _calcCumulativeSums(List<TimeRange> gaps, {int startSum = 0}) {
