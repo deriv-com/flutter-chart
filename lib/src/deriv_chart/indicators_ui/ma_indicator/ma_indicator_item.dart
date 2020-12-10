@@ -14,7 +14,8 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_indicator_config.dart';
 
-/// Moving average indicator
+/// Moving Average indicator item in the list of indicator which provide this
+/// indicator's options menu.
 class MAIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAIndicatorItem({

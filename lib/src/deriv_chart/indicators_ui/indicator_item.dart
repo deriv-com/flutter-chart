@@ -6,7 +6,7 @@ import 'callbacks.dart';
 import 'indicator_config.dart';
 import 'indicator_repository.dart';
 
-/// Indicator item in indicators dialog
+/// Representing and indicator item in indicators list dialog.
 abstract class IndicatorItem extends StatefulWidget {
   /// Initializes
   const IndicatorItem({
