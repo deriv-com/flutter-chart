@@ -35,11 +35,11 @@ class CrosshairArea extends StatefulWidget {
 class _CrosshairAreaState extends State<CrosshairArea> {
   Tick crosshairTick;
 
-  Offset _lastLongPressPosition;
+  double _lastLongPressPosition;
   int _lastLongPressPositionEpoch = -1;
 
   double _panSpeed = 0.08;
-  static const _closeDistance = 60;
+  static const _closeDistance = 60.00;
 
   GestureManagerState gestureManager;
 
@@ -87,23 +87,20 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
     // Stop auto-panning to make it easier to select candle or tick.
     xAxis.disableAutoPan();
-    _lastLongPressPosition = details.localPosition;
+    _lastLongPressPosition = details.localPosition.dx;
     _updatePanSpeed();
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
-    final double dx = details.localPosition.dx;
-    _lastLongPressPosition = details.localPosition;
+    _lastLongPressPosition = details.localPosition.dx;
     _updatePanSpeed();
   }
 
   void _updatePanSpeed() {
     if (_lastLongPressPosition != null) {
-      final double dx = _lastLongPressPosition.dx;
-
-      if (dx < _closeDistance) {
+      if (_lastLongPressPosition < _closeDistance) {
         xAxis.pan(-_panSpeed);
-      } else if (xAxis.width - dx < _closeDistance) {
+      } else if (xAxis.width - _lastLongPressPosition < _closeDistance) {
         xAxis.pan(_panSpeed);
       } else {
         xAxis.pan(0);
@@ -132,15 +129,16 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   @override
   Widget build(BuildContext context) {
     if (_lastLongPressPosition != null) {
+      _lastLongPressPosition = _lastLongPressPosition.clamp(
+          _closeDistance, context.watch<XAxisModel>().width - _closeDistance);
       final int newLongPressEpoch =
-          context.watch<XAxisModel>().epochFromX(_lastLongPressPosition.dx);
+          context.watch<XAxisModel>().epochFromX(_lastLongPressPosition);
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Has changed
         _lastLongPressPositionEpoch = newLongPressEpoch;
         crosshairTick = _getClosestTick();
       }
     }
-
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         fit: StackFit.expand,
