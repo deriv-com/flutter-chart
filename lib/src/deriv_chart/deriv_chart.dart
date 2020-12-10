@@ -113,11 +113,8 @@ class _DerivChartState extends State<DerivChart> {
                   builder: (
                     BuildContext context,
                   ) =>
-                      MultiProvider(
-                    providers: <Provider<dynamic>>[
                       Provider<IndicatorsRepository>.value(
-                          value: _indicatorsRepo)
-                    ],
+                    value: _indicatorsRepo,
                     child: IndicatorsDialog(
                       ticks: widget.mainSeries.entries,
                       onAddIndicator: (

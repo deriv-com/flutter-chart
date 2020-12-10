@@ -8,7 +8,8 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'bollinger_bands_indicator_config.dart';
 
-/// Bollinger Bands indicator item
+/// Bollinger Bands indicator item in the list of indicator which provide this
+/// indicators options menu.
 class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
   const BollingerBandsIndicatorItem({
