@@ -130,6 +130,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
           List<DateTime> _noOverlapGridTimestamps = [];
           for (final DateTime timestamp in _gridTimestamps) {
             if (!_model.isInGap(timestamp.millisecondsSinceEpoch)) {
+              if (_noOverlapGridTimestamps.isNotEmpty &&
+                  timestamp.millisecondsSinceEpoch ==
+                      _noOverlapGridTimestamps.last.millisecondsSinceEpoch) {
+                continue;
+              }
               _noOverlapGridTimestamps.add(timestamp);
             }
           }
