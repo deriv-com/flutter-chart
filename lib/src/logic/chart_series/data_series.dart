@@ -164,26 +164,23 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Will be called by the chart when it was updated.
   @override
   void didUpdate(ChartData oldData) {
-    final DataSeries oldSeries = oldData;
+    final DataSeries<Tick> oldSeries = oldData;
     if (oldSeries?.entries != null ?? false) {
       if (oldSeries.entries.isNotEmpty) {
         _prevLastEntry = oldSeries.entries.last;
       }
+      updateEntries(oldData, true);
 
       _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
-    }
-    if (oldSeries?.entries == null ?? true) {
-      initialize();
     } else {
-      updateEntries(oldData, true);
-    }
-
-    if (id == 'TestMA') {
-      print('object');
+      initialize();
     }
   }
 
+  /// Update entries
   void updateEntries(ChartData oldData, bool newTickAdded) {
+    // Generally we set set input values for entries, but if any DataSeries is willing to reuse its previous entries
+    // can override this method without calling super.updateEntries()
     initialize();
   }
 
