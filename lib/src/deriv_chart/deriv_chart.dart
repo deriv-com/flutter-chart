@@ -119,10 +119,10 @@ class _DerivChartState extends State<DerivChart> {
                       ticks: widget.mainSeries.entries,
                       onAddIndicator: (
                         String key,
-                        IndicatorConfig indicatorBuilder,
+                        IndicatorConfig indicatorConfig,
                       ) =>
                           setState(() => _indicatorsRepo.indicators[key] =
-                              indicatorBuilder),
+                              indicatorConfig),
                     ),
                   ),
                 );
