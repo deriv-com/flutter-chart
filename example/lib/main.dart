@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:developer' as dev;
 import 'dart:math' as math;
 
@@ -85,7 +86,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Completer _requestCompleter;
 
   List<Market> _markets;
-  List<Marker> _markers = [];
+  SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
+
   ActiveMarker _activeMarker;
 
   List<ActiveSymbol> _activeSymbols;
