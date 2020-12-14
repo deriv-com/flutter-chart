@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
@@ -74,7 +76,9 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
     return CustomPaint(
       painter: ActiveMarkerPainter(
         activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker,
-        style: widget.markerSeries.style,
+        style: widget.markerSeries.style ??
+            context.watch<ChartTheme>().markerStyle ??
+            const MarkerStyle(),
         epochToX: xAxis.xFromEpoch,
         quoteToY: widget.quoteToCanvasY,
         animationProgress: _activeMarkerAnimation.value,

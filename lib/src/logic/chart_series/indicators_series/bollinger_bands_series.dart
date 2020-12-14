@@ -94,11 +94,14 @@ class BollingerBandSeries extends Series {
   }
 
   @override
-  void didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData oldData) {
     final BollingerBandSeries series = oldData;
-    _lowerSeries.didUpdate(series?._lowerSeries);
-    _middleSeries.didUpdate(series?._middleSeries);
-    _upperSeries.didUpdate(series?._upperSeries);
+
+    final bool lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
+    final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
+    final bool upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
+
+    return lowerUpdated || middleUpdated || upperUpdated;
   }
 
   @override

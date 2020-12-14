@@ -2,13 +2,19 @@ import 'package:meta/meta.dart';
 
 import 'ohlc.dart';
 
+/// Tick class
+@immutable
 class Tick implements OHLC {
-  Tick({
+  /// Initializes
+  const Tick({
     @required this.epoch,
     @required this.quote,
   });
 
+  /// Epoch of the tick
   final int epoch;
+
+  /// Tick price
   final double quote;
 
   @override
@@ -22,4 +28,11 @@ class Tick implements OHLC {
 
   @override
   double get open => quote;
+
+  @override
+  bool operator ==(covariant Tick other) =>
+      epoch == other.epoch && quote == other.quote;
+
+  @override
+  int get hashCode => super.hashCode;
 }
