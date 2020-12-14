@@ -19,7 +19,9 @@ abstract class ChartData {
   String id;
 
   /// Will be called by the chart when it was updated.
-  void didUpdate(ChartData oldData);
+  ///
+  /// Returns `true` if this chart data has changed with the chart widget update.
+  bool didUpdate(ChartData oldData);
 
   /// Updates this [ChartData] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
