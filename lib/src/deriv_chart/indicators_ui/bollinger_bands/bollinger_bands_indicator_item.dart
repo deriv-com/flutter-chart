@@ -71,11 +71,11 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
 
   Widget _buildSDMenu() => Row(
         children: <Widget>[
-          const Text('Standard Deviation: ', style: TextStyle(fontSize: 12)),
+          const Text('Standard Deviation: ', style: TextStyle(fontSize: 10)),
           SizedBox(
             width: 20,
             child: TextFormField(
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 10),
               initialValue: _getCurrentStandardDeviation().toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {

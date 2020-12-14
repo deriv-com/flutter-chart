@@ -99,7 +99,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildFieldTypeMenu() => Row(
         children: <Widget>[
-          const Text('Field: ', style: TextStyle(fontSize: 12)),
+          const Text('Field: ', style: TextStyle(fontSize: 10)),
           DropdownButton<String>(
             value: getCurrentField(),
             items: filedIndicatorBuilders.keys
@@ -108,7 +108,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                           value: fieldType,
                           child: Text(
                             '$fieldType',
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ))
                 .toList(),
@@ -126,11 +126,11 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildPeriodField() => Row(
         children: <Widget>[
-          const Text('Period: ', style: TextStyle(fontSize: 12)),
+          const Text('Period: ', style: TextStyle(fontSize: 10)),
           SizedBox(
             width: 20,
             child: TextFormField(
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 10),
               initialValue: getCurrentPeriod().toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
@@ -150,7 +150,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildMATypeMenu() => Row(
         children: <Widget>[
-          const Text('Type: ', style: TextStyle(fontSize: 12)),
+          const Text('Type: ', style: TextStyle(fontSize: 10)),
           DropdownButton<MovingAverageType>(
             value: getCurrentType(),
             items: MovingAverageType.values
@@ -160,7 +160,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                           value: type,
                           child: Text(
                             '${getEnumValue(type)}',
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ))
                 .toList(),
