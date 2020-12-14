@@ -25,8 +25,8 @@ void main() {
       ];
     });
 
-    test('SMAIndicator', () {
-      SMAIndicator smaIndicator = SMAIndicator(CloseValueIndicator(ticks), 3);
+    test('SMAIndicator calculates the correct results', () {
+      final SMAIndicator smaIndicator = SMAIndicator(CloseValueIndicator(ticks), 3);
 
       expect(1, smaIndicator.getValue(0).quote);
       expect(1.5, smaIndicator.getValue(1).quote);

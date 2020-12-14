@@ -19,9 +19,9 @@ void main() {
       ];
     });
 
-    test('WMA', () {
-      WMAIndicator wmaIndicator =
-          new WMAIndicator(CloseValueIndicator(ticks), 3);
+    test('WMAIndicator calculates the correct results', () {
+      final WMAIndicator wmaIndicator =
+          WMAIndicator(CloseValueIndicator(ticks), 3);
 
       expect(wmaIndicator.getValue(0).quote, 1);
       expect(roundDouble(wmaIndicator.getValue(1).quote, 4), 1.6667);

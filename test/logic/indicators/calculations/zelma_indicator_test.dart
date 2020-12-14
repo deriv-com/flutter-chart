@@ -25,7 +25,7 @@ void main() {
       ];
     });
 
-    test('ZELMA', () {
+    test('ZLEMAIndicator calculates the correct results', () {
       ZLEMAIndicator indicator = ZLEMAIndicator(CloseValueIndicator(ticks), 10);
 
       expect(roundDouble(indicator.results[9].quote, 3), 11.909);

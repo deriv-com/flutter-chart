@@ -4,7 +4,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('Parabolic SAR test', () {
+  test('ParabolicSarIndicator calculates the correct results', () {
     List<Candle> bars = <Candle>[
       Candle.noParam(1, 0, 75.1, 74.06, 75.11),
       Candle.noParam(2, 0, 75.9, 76.030000, 74.640000),
@@ -29,7 +29,7 @@ void main() {
       Candle.noParam(21, 0, 76.850000, 77.000000, 76.190000),
     ];
 
-    ParabolicSarIndicator sar = ParabolicSarIndicator(bars);
+    final ParabolicSarIndicator sar = ParabolicSarIndicator(bars);
 
     expect(sar.getValue(0).quote, isNaN);
     expect(roundDouble(sar.getValue(1).quote, 12), 74.640000000000);
