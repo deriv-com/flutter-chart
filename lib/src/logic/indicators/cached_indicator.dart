@@ -10,14 +10,14 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   CachedIndicator(List<T> entries)
       : results = List<Tick>(entries.length),
         super(entries) {
-    _calculateValues();
+    _calculateIndicatorValues();
   }
 
   /// Initializes from another [AbstractIndicator]
-  CachedIndicator.fromIndicator(AbstractIndicator indicator)
+  CachedIndicator.fromIndicator(AbstractIndicator<T> indicator)
       : this(indicator.entries);
 
-  void _calculateValues() {
+  void _calculateIndicatorValues() {
     for (int i = 0; i < entries.length; i++) {
       getValue(i);
     }
