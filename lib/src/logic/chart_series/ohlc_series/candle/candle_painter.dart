@@ -13,22 +13,11 @@ import 'candle_series.dart';
 /// A [DataPainter] for painting CandleStick data.
 class CandlePainter extends DataPainter<CandleSeries> {
   /// Initializes
-  CandlePainter(CandleSeries series)
-      : _linePaint = Paint()
-          // ignore: avoid_as
-          ..color = (series.style as CandleStyle).lineColor
-          ..strokeWidth = 1.2,
-        _positiveCandlePaint = Paint()
-          // ignore: avoid_as
-          ..color = (series.style as CandleStyle).positiveColor,
-        _negativeCandlePaint = Paint()
-          // ignore: avoid_as
-          ..color = (series.style as CandleStyle).negativeColor,
-        super(series);
+  CandlePainter(CandleSeries series) : super(series);
 
-  final Paint _linePaint;
-  final Paint _positiveCandlePaint;
-  final Paint _negativeCandlePaint;
+  Paint _linePaint;
+  Paint _positiveCandlePaint;
+  Paint _negativeCandlePaint;
 
   @override
   void onPaintData(
@@ -41,6 +30,16 @@ class CandlePainter extends DataPainter<CandleSeries> {
     if (series.visibleEntries.length < 2) {
       return;
     }
+
+    final CandleStyle style =
+        series.style ?? theme.candleStyle ?? const CandleStyle();
+
+    _linePaint = Paint()
+      ..color = style?.lineColor
+      ..strokeWidth = 1.2;
+
+    _positiveCandlePaint = Paint()..color = style.positiveColor;
+    _negativeCandlePaint = Paint()..color = style.negativeColor;
 
     final double intervalWidth =
         epochToX(chartConfig.granularity) - epochToX(0);

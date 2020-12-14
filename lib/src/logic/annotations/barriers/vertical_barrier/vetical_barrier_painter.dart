@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
-import 'package:deriv_chart/src/paint/paint_dot.dart';
 import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +12,7 @@ import 'package:flutter/material.dart';
 /// A class for painting horizontal barriers
 class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
   /// Initializes [series]
-  VerticalBarrierPainter(VerticalBarrier series)
-      : _paint = Paint()
-          // ignore: avoid_as
-          ..color = (series.style as BarrierStyle).color
-          ..strokeWidth = 1
-          ..style = PaintingStyle.stroke,
-        super(series);
-
-  final Paint _paint;
+  VerticalBarrierPainter(VerticalBarrier series) : super(series);
 
   @override
   void onPaint({
@@ -32,7 +23,14 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     AnimationInfo animationInfo,
   }) {
     if (series.isOnRange) {
-      final BarrierStyle style = series.style;
+      final BarrierStyle style = series.style ??
+          theme.verticalBarrierStyle ??
+          const VerticalBarrierStyle();
+
+      final Paint paint = Paint()
+        ..color = style.color
+        ..strokeWidth = 1
+        ..style = PaintingStyle.stroke;
 
       int animatedEpoch;
       double lineStartY = 0;
@@ -67,7 +65,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
             canvas, lineX, lineStartY, lineEndY, style.color, 1);
       } else {
         canvas.drawLine(
-            Offset(lineX, lineStartY), Offset(lineX, lineEndY), _paint);
+            Offset(lineX, lineStartY), Offset(lineX, lineEndY), paint);
       }
 
       _paintLineLabel(canvas, lineX, lineEndY, style);

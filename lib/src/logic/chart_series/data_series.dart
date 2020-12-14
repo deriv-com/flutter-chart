@@ -163,10 +163,18 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Will be called by the chart when it was updated.
   @override
-  void didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData oldData) {
     final DataSeries<T> oldSeries = oldData;
-    if (oldSeries.entries.isNotEmpty) {
-      _prevLastEntry = oldSeries.entries.last;
+
+    bool updated = false;
+
+    if (entries.isNotEmpty && oldSeries.entries.isNotEmpty) {
+      if (entries.last == oldSeries.entries.last) {
+        _prevLastEntry = oldSeries._prevLastEntry;
+      } else {
+        _prevLastEntry = oldSeries.entries.last;
+        updated = true;
+      }
     }
 
     // Preserve old computed values in case recomputation is deemed unnecesary.
@@ -175,6 +183,8 @@ abstract class DataSeries<T extends Tick> extends Series {
     maxValueInFrame = oldSeries.maxValue;
 
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
+
+    return updated;
   }
 
   @override

@@ -326,7 +326,7 @@ class XAxisModel extends ChangeNotifier {
     final double distance = target > _rightBoundEpoch
         ? pxBetween(_rightBoundEpoch, target)
         : pxBetween(target, _rightBoundEpoch);
-
+    _rightBoundEpoch += 1;
     _prevScrollAnimationValue = 0;
     _scrollAnimationController
       ..value = 0

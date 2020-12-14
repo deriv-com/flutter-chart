@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
@@ -13,14 +15,14 @@ import 'marker_painter.dart';
 class MarkerSeries extends Series {
   /// Initializes
   MarkerSeries(
-    List<Marker> entries, {
+    SplayTreeSet<Marker> entries, {
     String id,
     MarkerStyle style,
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-  })  : _entries = entries,
-        super(id, style: style ?? const MarkerStyle());
+  })  : _entries = entries.toList(),
+        super(id, style: style);
 
   /// Marker entries.
   final List<Marker> _entries;
@@ -41,7 +43,10 @@ class MarkerSeries extends Series {
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
 
   @override
-  void didUpdate(ChartData oldData) {}
+  // TODO(Ramin): Return correct result,
+  // We only use the result of didUpdate of the mainSeries for now to whether play the new tick animation or not,
+  // No need to check if the marker series data has changed with chart update.
+  bool didUpdate(ChartData oldData) => false;
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {

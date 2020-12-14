@@ -24,6 +24,7 @@ dev_dependencies:
 
 flutter:
   assets:
+    - assets/icons/
     - assets/icons/symbols/
 
 flutter_intl:
