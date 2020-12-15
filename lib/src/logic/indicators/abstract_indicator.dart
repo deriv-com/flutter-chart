@@ -19,4 +19,9 @@ abstract class AbstractIndicator<T extends Tick> implements Indicator {
     entries.add(t);
     return getValue(entries.length - 1);
   }
+
+  T replaceLast(T t) {
+    entries.removeLast();
+    return push(t);
+  }
 }

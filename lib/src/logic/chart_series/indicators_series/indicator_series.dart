@@ -38,7 +38,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
 
   /// Will be called by the chart when it was updated.
   @override
-  bool didUpdate(ChartData oldData, {ChartData oldMainSeries}) {
+  bool didUpdate(ChartData oldData, {Tick newChartTick}) {
     final DataSeries<Tick> oldSeries = oldData;
 
     if (oldSeries?.entries?.isNotEmpty ?? false) {
@@ -53,9 +53,17 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
 
   void updateEntries(SingleIndicatorSeries<Tick> oldSeries, bool newTickAdded) {
     if (newTickAdded) {
-      oldSeries.resultIndicator.push(input.last);
+      if (oldSeries.input.length == input.length) {
+        oldSeries.resultIndicator
+          ..invalidate(input.length - 1)
+          ..replaceLast(input.last);
+      } else {
+        oldSeries.resultIndicator.push(input.last);
+      }
       resultIndicator = oldSeries.resultIndicator;
       entries = resultIndicator.results;
+
+      print('${entries.last.quote} ${DateTime.now()}');
     } else {
       initialize();
     }

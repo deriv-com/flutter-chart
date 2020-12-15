@@ -39,4 +39,6 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
   /// Calculates the value of this indicator for the given [index]
   Tick calculate(int index);
+
+  void invalidate(int index) => results.removeAt(index);
 }
