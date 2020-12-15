@@ -6,6 +6,8 @@ import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
+import 'grid/calc_time_grid.dart';
+
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
 const double autoPanOffset = 30;
 
@@ -357,8 +359,36 @@ class XAxisModel extends ChangeNotifier {
     _updateEntries(entries);
   }
 
-  bool isInGap(int epoch) {
-    if (_timeGaps == null || _timeGaps.isEmpty) return false;
-    return _timeGaps[indexOfNearestGap(_timeGaps, epoch)].contains(epoch);
+  bool isInGap(int epoch) => _timeGaps.isEmpty
+      ? false
+      : _timeGaps[indexOfNearestGap(_timeGaps, epoch)].contains(epoch);
+
+  List<DateTime> getNoOverlapGridTimestamps() {
+    const double _minDistanceBetweenTimeGridLines = 90;
+
+    // Calculate time labels' timestamps for current scale.
+    final List<DateTime> _gridTimestamps = gridTimestamps(
+      timeGridInterval: timeGridInterval(
+        pxFromMs,
+        minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
+      ),
+      leftBoundEpoch: leftBoundEpoch,
+      rightBoundEpoch: rightBoundEpoch,
+    );
+
+    List<DateTime> _noOverlapGridTimestamps = [];
+    if (_gridTimestamps == null || _gridTimestamps.isEmpty)
+      return _noOverlapGridTimestamps;
+    for (final DateTime timestamp in _gridTimestamps) {
+      if (!isInGap(timestamp.millisecondsSinceEpoch)) {
+        if (_noOverlapGridTimestamps.isNotEmpty &&
+            timestamp.millisecondsSinceEpoch ==
+                _noOverlapGridTimestamps.last.millisecondsSinceEpoch) {
+          continue;
+        }
+        _noOverlapGridTimestamps.add(timestamp);
+      }
+    }
+    return _noOverlapGridTimestamps;
   }
 }
