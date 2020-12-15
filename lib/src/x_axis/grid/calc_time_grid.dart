@@ -12,7 +12,9 @@ List<DateTime> gridTimestamps({
   final timestamps = <DateTime>[];
   final rightBoundTime =
       DateTime.fromMillisecondsSinceEpoch(rightBoundEpoch, isUtc: true);
-
+print("aaaaa $rightBoundTime");
+print("wwwww $timeGridInterval");
+print("wwwww $leftBoundEpoch");
   var t = _gridEpochStart(timeGridInterval, leftBoundEpoch);
 
   while (t.compareTo(rightBoundTime) <= 0) {
@@ -79,6 +81,7 @@ Duration timeGridInterval(
     Duration(hours: 4),
     Duration(hours: 8),
     _day,
+    Duration(days: 2),
     _week,
     month,
   ],
