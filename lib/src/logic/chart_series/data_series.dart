@@ -30,10 +30,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Series visible entries
   List<T> get visibleEntries => _visibleEntries;
 
-  T _prevLastEntry;
-
-  /// A reference to the last entry from series previous [entries] before update
-  T get prevLastEntry => _prevLastEntry;
+  T prevLastEntry;
 
   HorizontalBarrier _lastTickIndicator;
 
@@ -47,10 +44,6 @@ abstract class DataSeries<T extends Tick> extends Series {
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
-
-    if (entries == null) {
-      print('');
-    }
 
     if (entries.isEmpty) {
       return;
@@ -167,16 +160,14 @@ abstract class DataSeries<T extends Tick> extends Series {
     final DataSeries<Tick> oldSeries = oldData;
 
     bool updated = false;
-    if (oldSeries?.entries != null ?? false) {
-      if (oldSeries.entries.isNotEmpty) {
-        updateEntries(oldData, true);
+    if (oldSeries?.entries?.isNotEmpty ?? false) {
+      entries = input;
 
-        if (entries != null && entries.last == oldSeries.entries.last) {
-          _prevLastEntry = oldSeries._prevLastEntry;
-        } else {
-          _prevLastEntry = oldSeries.entries.last;
-          updated = true;
-        }
+      if (entries != null && entries.last == oldSeries.entries.last) {
+        prevLastEntry = oldSeries.prevLastEntry;
+      } else {
+        prevLastEntry = oldSeries.entries.last;
+        updated = true;
       }
 
       _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
@@ -186,13 +177,6 @@ abstract class DataSeries<T extends Tick> extends Series {
     }
 
     return updated;
-  }
-
-  /// Update entries
-  void updateEntries(ChartData oldData, bool newTickAdded) {
-    // Generally we set set input values for entries, but if any DataSeries is willing to reuse its previous entries
-    // can override this method without calling super.updateEntries()
-    initialize();
   }
 
   @override

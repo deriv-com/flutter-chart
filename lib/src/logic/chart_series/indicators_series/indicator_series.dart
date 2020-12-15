@@ -1,4 +1,3 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -7,7 +6,9 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'ma_series.dart';
 
 /// Base class of indicator series
 abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
@@ -35,10 +36,22 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
     CachedIndicator<Tick> previousIndicator,
   );
 
+  /// Will be called by the chart when it was updated.
   @override
-  void updateEntries(ChartData oldData, bool newTickAdded) {
-    final SingleIndicatorSeries<Tick> oldSeries = oldData;
+  bool didUpdate(ChartData oldData, {ChartData oldMainSeries}) {
+    final DataSeries<Tick> oldSeries = oldData;
 
+    if (oldSeries?.entries?.isNotEmpty ?? false) {
+      prevLastEntry = oldSeries.entries.last;
+      updateEntries(oldData, true);
+    } else {
+      initialize();
+    }
+
+    return true;
+  }
+
+  void updateEntries(SingleIndicatorSeries<Tick> oldSeries, bool newTickAdded) {
     if (newTickAdded) {
       oldSeries.resultIndicator.push(input.last);
       resultIndicator = oldSeries.resultIndicator;
