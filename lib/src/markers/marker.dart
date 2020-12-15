@@ -11,7 +11,7 @@ enum MarkerDirection {
 }
 
 /// Chart open position marker.
-class Marker extends Tick {
+class Marker extends Tick implements Comparable<Marker> {
   /// Creates a marker of given direction.
   Marker({
     @required int epoch,
@@ -54,4 +54,7 @@ class Marker extends Tick {
 
   @override
   String toString() => 'Marker(epoch: $epoch, quote: $quote)';
+
+  @override
+  int compareTo(covariant Marker other) => epoch.compareTo(other.epoch);
 }

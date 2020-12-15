@@ -256,8 +256,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     _didUpdateChartData(oldChart);
 
-    _onNewTick();
-
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
     }
@@ -274,10 +272,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
-    if (widget.mainSeries.id == oldChart.mainSeries.id) {
-      widget.mainSeries.didUpdate(oldChart.mainSeries);
-    }
-
     if (widget.chartDataList != null) {
       for (final ChartData data in widget.chartDataList) {
         final ChartData oldData = oldChart.chartDataList.firstWhere(
@@ -289,6 +283,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
           data.didUpdate(oldData);
         }
       }
+    }
+
+    if (widget.mainSeries.id == oldChart.mainSeries.id &&
+        widget.mainSeries.didUpdate(oldChart.mainSeries)) {
+      _playNewTickAnimation();
     }
   }
 
@@ -304,9 +303,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.dispose();
   }
 
-  void _onNewTick() {
-    _currentTickAnimationController.reset();
-    _currentTickAnimationController.forward();
+  void _playNewTickAnimation() {
+    _currentTickAnimationController
+      ..reset()
+      ..forward();
   }
 
   void _setupAnimations() {

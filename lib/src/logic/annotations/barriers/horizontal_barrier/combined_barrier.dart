@@ -27,14 +27,14 @@ class CombinedBarrier extends HorizontalBarrier {
           tick,
           title: title,
           longLine: verticalLongLine,
-          style: verticalBarrierStyle ?? const VerticalBarrierStyle(),
+          style: verticalBarrierStyle,
         ),
         super(
           tick.quote,
           epoch: tick.epoch,
           id: id,
           longLine: horizontalLongLine,
-          style: horizontalBarrierStyle ?? const HorizontalBarrierStyle(),
+          style: horizontalBarrierStyle,
           visibility: visibility,
         );
 
@@ -52,11 +52,15 @@ class CombinedBarrier extends HorizontalBarrier {
   }
 
   @override
-  void didUpdate(ChartData oldData) {
-    super.didUpdate(oldData);
+  bool didUpdate(ChartData oldData) {
+    final bool superDidUpdated = super.didUpdate(oldData);
 
     final CombinedBarrier combinedBarrier = oldData;
-    verticalBarrier.didUpdate(combinedBarrier.verticalBarrier);
+
+    final bool verticalBarrierDidUpdated =
+        verticalBarrier.didUpdate(combinedBarrier.verticalBarrier);
+
+    return superDidUpdated || verticalBarrierDidUpdated;
   }
 
   @override

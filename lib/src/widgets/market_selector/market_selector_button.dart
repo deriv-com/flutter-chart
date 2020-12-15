@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'asset_icon_placeholder.dart';
 import 'models.dart';
-import 'symbol_svg_picture.dart';
+import 'symbol_icon.dart';
 
 /// A Button to open the market selector. The selected [Asset] should be passed as [asset]
 class MarketSelectorButton extends StatelessWidget {
@@ -39,12 +38,8 @@ class MarketSelectorButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          SymbolSvgPicture(
+          SymbolIcon(
             symbolCode: asset.name,
-            width: 32,
-            height: 32,
-            placeholderBuilder: (BuildContext context) =>
-                AssetIconPlaceholder(),
           ),
           const SizedBox(width: 8),
           Text(asset.displayName, style: textStyle),
