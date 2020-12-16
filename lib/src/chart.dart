@@ -224,7 +224,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
     final double paddingValue = padding +
         (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
             _crosshairZoomOutAnimation.value;
-    return paddingValue.clamp(_minPadding, (canvasSize.height) / 2);
+    return paddingValue.clamp(_minPadding, canvasSize.height / 2);
   }
 
   double get _topPadding => _verticalPadding;
