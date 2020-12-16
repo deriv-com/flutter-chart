@@ -1,3 +1,4 @@
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
@@ -99,7 +100,11 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildFieldTypeMenu() => Row(
         children: <Widget>[
-          const Text('Field: ', style: TextStyle(fontSize: 10)),
+          Text(
+            ChartLocalization.of(context).labelField,
+            style: TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           DropdownButton<String>(
             value: getCurrentField(),
             items: filedIndicatorBuilders.keys
@@ -126,7 +131,11 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildPeriodField() => Row(
         children: <Widget>[
-          const Text('Period: ', style: TextStyle(fontSize: 10)),
+          Text(
+            ChartLocalization.of(context).labelPeriod,
+            style: TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           SizedBox(
             width: 20,
             child: TextFormField(
@@ -150,7 +159,11 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildMATypeMenu() => Row(
         children: <Widget>[
-          const Text('Type: ', style: TextStyle(fontSize: 10)),
+          Text(
+            ChartLocalization.of(context).labelType,
+            style: TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           DropdownButton<MovingAverageType>(
             value: getCurrentType(),
             items: MovingAverageType.values

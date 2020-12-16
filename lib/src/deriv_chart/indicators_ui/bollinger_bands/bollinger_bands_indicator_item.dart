@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -71,7 +72,11 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
 
   Widget _buildSDMenu() => Row(
         children: <Widget>[
-          const Text('Standard Deviation: ', style: TextStyle(fontSize: 10)),
+          Text(
+            ChartLocalization.of(context).labelStandardDeviation,
+            style: TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           SizedBox(
             width: 20,
             child: TextFormField(
