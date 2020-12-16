@@ -35,6 +35,12 @@ class CrosshairArea extends StatefulWidget {
 class _CrosshairAreaState extends State<CrosshairArea> {
   Tick crosshairTick;
 
+  double _lastLongPressPosition;
+  int _lastLongPressPositionEpoch = -1;
+
+  double _panSpeed = 0.08;
+  static const double _closeDistance = 60.00;
+
   GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
@@ -81,36 +87,58 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
     // Stop auto-panning to make it easier to select candle or tick.
     xAxis.disableAutoPan();
-
-    setState(() {
-      crosshairTick = _getClosestTick(details.localPosition.dx);
-    });
+    _lastLongPressPosition = details.localPosition.dx;
+    _updatePanSpeed();
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
-    setState(() {
-      crosshairTick = _getClosestTick(details.localPosition.dx);
-    });
+    _lastLongPressPosition = details.localPosition.dx;
+    _updatePanSpeed();
   }
 
-  Tick _getClosestTick(double canvasX) {
-    final epoch = xAxis.epochFromX(canvasX);
-    return findClosestToEpoch(epoch, widget.mainSeries.visibleEntries);
+  void _updatePanSpeed() {
+    if (_lastLongPressPosition == null) return;
+
+    if (_lastLongPressPosition < _closeDistance) {
+      xAxis.pan(-_panSpeed);
+    } else if (xAxis.width - _lastLongPressPosition < _closeDistance) {
+      xAxis.pan(_panSpeed);
+    } else {
+      xAxis.pan(0);
+    }
+  }
+
+  Tick _getClosestTick() {
+    return findClosestToEpoch(
+        _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
 
+    xAxis.pan(0);
     xAxis.enableAutoPan();
 
     setState(() {
       crosshairTick = null;
+      _lastLongPressPosition = null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_lastLongPressPosition != null) {
+      _lastLongPressPosition = _lastLongPressPosition.clamp(
+          _closeDistance, context.watch<XAxisModel>().width - _closeDistance);
+      final int newLongPressEpoch =
+          context.watch<XAxisModel>().epochFromX(_lastLongPressPosition);
+      if (newLongPressEpoch != _lastLongPressPositionEpoch) {
+        // Only update closest tick if position epoch has changed.
+        _lastLongPressPositionEpoch = newLongPressEpoch;
+        crosshairTick = _getClosestTick();
+      }
+    }
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         fit: StackFit.expand,
