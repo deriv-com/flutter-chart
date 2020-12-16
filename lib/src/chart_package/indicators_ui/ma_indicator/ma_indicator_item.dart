@@ -68,7 +68,9 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         //   style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
         // ),
         (List<Tick> ticks) => TestMASeries(
-          filedIndicatorBuilders[field](ticks), 'TestMA'
+          filedIndicatorBuilders[field](ticks),
+          'TestMA',
+          MAOptions(period, type),
         ),
         period: period,
         type: type,
