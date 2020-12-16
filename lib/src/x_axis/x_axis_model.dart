@@ -256,9 +256,11 @@ class XAxisModel extends ChangeNotifier {
       );
 
   /// Get x position of epoch.
-  double xFromEpoch(int epoch) => epoch <= rightBoundEpoch
-      ? width - pxBetween(epoch, rightBoundEpoch)
-      : width + pxBetween(rightBoundEpoch, epoch);
+  double xFromEpoch(int epoch) {
+    return epoch <= rightBoundEpoch
+        ? width - pxBetween(epoch, rightBoundEpoch)
+        : width + pxBetween(rightBoundEpoch, epoch);
+  }
 
   /// Get epoch of x position.
   int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width + x);
@@ -364,7 +366,7 @@ class XAxisModel extends ChangeNotifier {
       : _timeGaps[indexOfNearestGap(_timeGaps, epoch)].contains(epoch);
 
   List<DateTime> getNoOverlapGridTimestamps() {
-    const double _minDistanceBetweenTimeGridLines = 90;
+    const double _minDistanceBetweenTimeGridLines = 80;
 
     // Calculate time labels' timestamps for current scale.
     final List<DateTime> _gridTimestamps = gridTimestamps(
@@ -382,13 +384,17 @@ class XAxisModel extends ChangeNotifier {
     for (final DateTime timestamp in _gridTimestamps) {
       if (!isInGap(timestamp.millisecondsSinceEpoch)) {
         if (_noOverlapGridTimestamps.isNotEmpty &&
-            timestamp.millisecondsSinceEpoch ==
-                _noOverlapGridTimestamps.last.millisecondsSinceEpoch) {
+            (xFromEpoch(timestamp.millisecondsSinceEpoch) -
+                    xFromEpoch(_noOverlapGridTimestamps
+                            .last.millisecondsSinceEpoch)
+                        .abs() <
+                10)) {
           continue;
         }
         _noOverlapGridTimestamps.add(timestamp);
       }
     }
+
     return _noOverlapGridTimestamps;
   }
 }
