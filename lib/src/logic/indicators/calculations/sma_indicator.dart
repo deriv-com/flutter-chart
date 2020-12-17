@@ -18,9 +18,6 @@ class SMAIndicator extends CachedIndicator {
 
   @override
   Tick calculate(int index) {
-
-    print('Calculating for index $index');
-
     double sum = 0.0;
     for (int i = max(0, index - period + 1); i <= index; i++) {
       sum += indicator.getValue(i).quote;

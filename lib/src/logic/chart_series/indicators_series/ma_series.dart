@@ -60,7 +60,7 @@ class MASeries extends LineSeries {
     entries = getMAIndicator(indicator, period, type).results;
   }
 
-  @override
+  // TODO(Ramin): Should be handled in SingleIndicatorSeries.
   void updateEntries(ChartData oldData, bool newTickAdded) {
     final MASeries oldSeries = oldData;
     if (newTickAdded) {

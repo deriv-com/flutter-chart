@@ -45,7 +45,10 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   bool didUpdate(ChartData oldData, {Tick newChartTick}) {
     final SingleIndicatorSeries<Tick> oldSeries = oldData;
 
-    if ((oldSeries?.options == options ?? false) &&
+    if ((oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
+            false) &&
+        (oldSeries?.input?.first == input.first ?? false) &&
+        (oldSeries?.options == options ?? false) &&
         (oldSeries?.entries?.isNotEmpty ?? false)) {
       prevLastEntry = oldSeries.entries.last;
       updateEntries(oldData, true);
@@ -56,6 +59,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
     return true;
   }
 
+  /// Updates Indicators results.
   void updateEntries(SingleIndicatorSeries<Tick> oldSeries, bool newTickAdded) {
     if (newTickAdded) {
       if (oldSeries.input.length == input.length) {
@@ -67,8 +71,6 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
       }
       resultIndicator = oldSeries.resultIndicator;
       entries = resultIndicator.results;
-
-      print('${entries.last.quote} ${DateTime.now()}');
     } else {
       initialize();
     }
