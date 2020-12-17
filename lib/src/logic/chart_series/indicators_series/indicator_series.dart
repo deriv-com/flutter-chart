@@ -6,10 +6,10 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import 'ma_series.dart';
+import 'models/indicator_options.dart';
 
 /// Base class of indicator series
 abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
@@ -87,32 +87,4 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
 
   @override
   double minValueOf(Tick t) => t.quote;
-}
-
-class TestMASeries extends SingleIndicatorSeries<Tick> {
-  TestMASeries(
-      AbstractIndicator<Tick> inputIndicator, String id, MAOptions options)
-      : super(inputIndicator, id, options);
-
-  @override
-  SeriesPainter<Series> createPainter() => LinePainter(this);
-
-  @override
-  CachedIndicator<Tick> initializeIndicator(
-    CachedIndicator<Tick> previousIndicator,
-  ) =>
-      MASeries.getMAIndicator(inputIndicator, (options as MAOptions).period,
-          (options as MAOptions).type);
-}
-
-abstract class IndicatorOptions extends Equatable {}
-
-class MAOptions extends IndicatorOptions {
-  MAOptions(this.period, this.type);
-
-  final int period;
-  final MovingAverageType type;
-
-  @override
-  List<Object> get props => [period, type];
 }

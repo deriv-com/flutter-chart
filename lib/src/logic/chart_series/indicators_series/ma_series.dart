@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
@@ -11,6 +12,10 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
 import '../line_series/line_series.dart';
+import '../series.dart';
+import '../series_painter.dart';
+import 'indicator_series.dart';
+import 'models/indicator_options.dart';
 
 /// A series which shows Moving Average data calculated from [entries].
 class MASeries extends LineSeries {
@@ -106,4 +111,20 @@ enum MovingAverageType {
 
   /// Zero-lag exponential
   zeroLag,
+}
+
+class TestMASeries extends SingleIndicatorSeries<Tick> {
+  TestMASeries(
+      AbstractIndicator<Tick> inputIndicator, String id, MAOptions options)
+      : super(inputIndicator, id, options);
+
+  @override
+  SeriesPainter<Series> createPainter() => LinePainter(this);
+
+  @override
+  CachedIndicator<Tick> initializeIndicator(
+    CachedIndicator<Tick> previousIndicator,
+  ) =>
+      MASeries.getMAIndicator(inputIndicator, (options as MAOptions).period,
+          (options as MAOptions).type);
 }
