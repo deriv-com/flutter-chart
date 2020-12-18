@@ -57,8 +57,8 @@ abstract class DataSeries<T extends Tick> extends Series {
     // Only recalculate min/max if visible entries have changed.
     _needsMinMaxUpdate = newVisibleEntries.isEmpty ||
         _visibleEntries.isEmpty ||
-        newVisibleEntries.first.epoch != _visibleEntries.first.epoch ||
-        newVisibleEntries.last.epoch != _visibleEntries.last.epoch;
+        newVisibleEntries.first != _visibleEntries.first ||
+        newVisibleEntries.last != _visibleEntries.last;
 
     _visibleEntries = newVisibleEntries;
   }
