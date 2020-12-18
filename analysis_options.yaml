@@ -1,4 +1,11 @@
 analyzer:
+  exclude:	
+    - test/**	
+    - lib/**	
+    - example/**	
+
+  strong-mode:	
+    implicit-dynamic: false
   errors:
     todo: ignore
     missing_required_param: warning
@@ -13,6 +20,7 @@ linter:
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
+    - always_specify_types
     - annotate_overrides
     - avoid_as
     - avoid_bool_literals_in_conditional_expressions
