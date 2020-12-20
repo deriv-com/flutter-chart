@@ -27,7 +27,7 @@ class CrosshairPainter extends CustomPainter {
     final y = quoteToCanvasY(crosshairTick.quote);
 
     canvas.drawLine(
-      Offset(x, 0),
+      Offset(x, 8),
       Offset(x, size.height),
       Paint()
         ..strokeWidth = 2
