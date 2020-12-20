@@ -15,13 +15,5 @@ abstract class AbstractIndicator<T extends Tick> implements Indicator {
   int getEpochOfIndex(int index) => entries[index].epoch;
 
   /// Push a new value to indicator.
-  T push(T t) {
-    entries.add(t);
-    return getValue(entries.length - 1);
-  }
-
-  T replaceLast(T t) {
-    entries.removeLast();
-    return push(t);
-  }
+  T push(T t) => getValue(entries.length - 1);
 }

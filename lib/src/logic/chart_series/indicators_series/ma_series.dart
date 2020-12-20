@@ -122,9 +122,8 @@ class TestMASeries extends SingleIndicatorSeries<Tick> {
   SeriesPainter<Series> createPainter() => LinePainter(this);
 
   @override
-  CachedIndicator<Tick> initializeIndicator(
-    CachedIndicator<Tick> previousIndicator,
-  ) =>
-      MASeries.getMAIndicator(inputIndicator, (options as MAOptions).period,
-          (options as MAOptions).type);
+  CachedIndicator<Tick> initializeIndicator() => MASeries.getMAIndicator(
+      inputIndicator,
+      (options as MAOptions).period,
+      (options as MAOptions).type);
 }

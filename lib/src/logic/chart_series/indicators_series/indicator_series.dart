@@ -1,14 +1,11 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
-import 'ma_series.dart';
 import 'models/indicator_options.dart';
 
 /// Base class of indicator series
@@ -29,16 +26,14 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   void initialize() {
     super.initialize();
 
-    resultIndicator = initializeIndicator(null);
+    resultIndicator = initializeIndicator();
+    resultIndicator.calculateValues();
     entries = resultIndicator.results;
-    print('');
   }
 
   ///
   @protected
-  CachedIndicator<Tick> initializeIndicator(
-    CachedIndicator<Tick> previousIndicator,
-  );
+  CachedIndicator<Tick> initializeIndicator();
 
   /// Will be called by the chart when it was updated.
   @override
@@ -47,6 +42,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
 
     if ((oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
             false) &&
+        (oldSeries?.input?.isNotEmpty ?? false) &&
         (oldSeries?.input?.first == input.first ?? false) &&
         (oldSeries?.options == options ?? false) &&
         (oldSeries?.entries?.isNotEmpty ?? false)) {
@@ -62,14 +58,15 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   /// Updates Indicators results.
   void updateEntries(SingleIndicatorSeries<Tick> oldSeries, bool newTickAdded) {
     if (newTickAdded) {
+      resultIndicator = initializeIndicator()
+        ..copyValuesFrom(oldSeries.resultIndicator);
+
       if (oldSeries.input.length == input.length) {
-        oldSeries.resultIndicator
-          ..invalidate(input.length - 1)
-          ..replaceLast(input.last);
-      } else {
-        oldSeries.resultIndicator.push(input.last);
+        resultIndicator.invalidate(input.length - 1);
       }
-      resultIndicator = oldSeries.resultIndicator;
+
+      resultIndicator.getValue(input.length - 1);
+
       entries = resultIndicator.results;
     } else {
       initialize();

@@ -9,19 +9,21 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   /// Initializes
   CachedIndicator(List<T> entries)
       : results = List<Tick>.generate(entries.length, (_) => null),
-        super(entries) {
-    _calculateValues();
-  }
+        super(entries);
 
   /// Initializes from another [AbstractIndicator]
   CachedIndicator.fromIndicator(AbstractIndicator<T> indicator)
       : this(indicator.entries);
 
-  void _calculateValues() {
+  void calculateValues() {
     for (int i = 0; i < entries.length; i++) {
       getValue(i);
     }
   }
+
+  void copyValuesFrom(CachedIndicator<T> other) => results
+    ..clear()
+    ..addAll(other.results);
 
   /// List of cached result.
   final List<Tick> results;
@@ -34,7 +36,6 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
     if (results[index] == null) {
       results[index] = calculate(index);
-      print('Calculated for $index ${DateTime.now()}');
     }
 
     return results[index];
@@ -47,5 +48,5 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   Tick calculate(int index);
 
   /// Invalidates a calculated indicator value for [index]
-  void invalidate(int index) => results.removeAt(index);
+  void invalidate(int index) => results[index] = null;
 }
