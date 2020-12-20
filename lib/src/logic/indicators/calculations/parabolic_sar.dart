@@ -73,8 +73,8 @@ class ParabolicSarIndicator extends CachedIndicator<Candle> {
     double priorSar = getValue(index - 1).quote;
     if (_currentTrend) {
       // if up trend
-      sar =
-          priorSar + (_accelerationFactor * ((_currentExtremePoint - priorSar)));
+      sar = priorSar +
+          (_accelerationFactor * ((_currentExtremePoint - priorSar)));
       _currentTrend = _lowPriceIndicator.getValue(index).quote > sar;
       if (!_currentTrend) {
         // check if sar touches the min price
@@ -100,8 +100,8 @@ class ParabolicSarIndicator extends CachedIndicator<Candle> {
       }
     } else {
       // downtrend
-      sar =
-          priorSar - (_accelerationFactor * ((priorSar - _currentExtremePoint)));
+      sar = priorSar -
+          (_accelerationFactor * ((priorSar - _currentExtremePoint)));
       _currentTrend = _highPriceIndicator.getValue(index).quote >= sar;
       if (_currentTrend) {
         // check if switch to up trend
@@ -134,4 +134,18 @@ class ParabolicSarIndicator extends CachedIndicator<Candle> {
       _accelerationFactor = _accelerationFactor + _accelerationIncrement;
     }
   }
+
+  @override
+  void copyValuesFrom(covariant ParabolicSarIndicator other) {
+    super.copyValuesFrom(other);
+
+    _currentTrend = other._currentTrend;
+    _accelerationFactor = other._accelerationFactor;
+    _startTrendIndex = other._startTrendIndex;
+    _currentExtremePoint = other._currentExtremePoint;
+    _minMaxExtremePoint = other._minMaxExtremePoint;
+  }
+
+  @override
+  void invalidate(int index) {}
 }

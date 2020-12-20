@@ -21,7 +21,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
     }
   }
 
-  void copyValuesFrom(CachedIndicator<T> other) => results
+  void copyValuesFrom(covariant CachedIndicator<T> other) => results
     ..clear()
     ..addAll(other.results);
 
