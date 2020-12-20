@@ -53,7 +53,7 @@ class BollingerBandSeries extends Series {
 
   GeneralSingleIndicatorSeries _lowerSeries;
 
-  // GeneralSingleIndicatorSeries _middleSeries;
+  GeneralSingleIndicatorSeries _middleSeries;
   GeneralSingleIndicatorSeries _upperSeries;
 
   /// Period
@@ -70,27 +70,27 @@ class BollingerBandSeries extends Series {
   @override
   void initialize() {
     _lowerSeries.initialize();
-    // _middleSeries.initialize();
+    _middleSeries.initialize();
     _upperSeries.initialize();
   }
 
   @override
   SeriesPainter<Series> createPainter() {
-    // final StandardDeviationIndicator standardDeviation =
-    //     StandardDeviationIndicator(_fieldIndicator, period);
-    //
-    // final BollingerBandsMiddleIndicator bbmSMA = BollingerBandsMiddleIndicator(
-    //   MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType),
-    // );
+    final StandardDeviationIndicator standardDeviation =
+        StandardDeviationIndicator(_fieldIndicator, period);
 
-    // _middleSeries = GeneralSingleIndicatorSeries(
-    //   painterCreator: (Series series) => LinePainter(series),
-    //   indicatorCreator: () => BollingerBandsMiddleIndicator(
-    //     MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType),
-    //   ),
-    //   inputIndicator: _fieldIndicator,
-    //   options: MAOptions(period, movingAverageType),
-    // );
+    final BollingerBandsMiddleIndicator bbmSMA = BollingerBandsMiddleIndicator(
+      MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType),
+    );
+
+    _middleSeries = GeneralSingleIndicatorSeries(
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => BollingerBandsMiddleIndicator(
+        MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType),
+      ),
+      inputIndicator: _fieldIndicator,
+      options: MAOptions(period, movingAverageType),
+    );
 
     _lowerSeries = GeneralSingleIndicatorSeries(
         painterCreator: (series) => LinePainter(series),
@@ -126,16 +126,16 @@ class BollingerBandSeries extends Series {
     final BollingerBandSeries series = oldData;
 
     final bool lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
-    // final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
+    final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
     final bool upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
 
-    return /*lowerUpdated ||*/ /*middleUpdated || */ upperUpdated;
+    return lowerUpdated || middleUpdated || upperUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
     _lowerSeries.update(leftEpoch, rightEpoch);
-    // _middleSeries.update(leftEpoch, rightEpoch);
+    _middleSeries.update(leftEpoch, rightEpoch);
     _upperSeries.update(leftEpoch, rightEpoch);
   }
 
@@ -144,8 +144,14 @@ class BollingerBandSeries extends Series {
       // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
       // But to be safe we calculate min and max. from all three series.
       <double>[
-        min(_upperSeries.minValue, _lowerSeries.minValue),
-        max(_upperSeries.maxValue, _lowerSeries.maxValue),
+        min(
+          min(_lowerSeries.minValue, _middleSeries.minValue),
+          _upperSeries.minValue,
+        ),
+        max(
+          max(_lowerSeries.maxValue, _middleSeries.maxValue),
+          _upperSeries.maxValue,
+        ),
       ];
 
   @override
@@ -160,8 +166,8 @@ class BollingerBandSeries extends Series {
   ) {
     _lowerSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    // _middleSeries.paint(
-    //     canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _middleSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
