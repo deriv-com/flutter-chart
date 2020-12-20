@@ -29,7 +29,6 @@ class BollingerBandsUpperIndicator extends CachedIndicator {
 
   @override
   Tick calculate(int index) {
-    print('Calculating Bollinger upper for $index');
     return Tick(
       epoch: getEpochOfIndex(index),
       quote:

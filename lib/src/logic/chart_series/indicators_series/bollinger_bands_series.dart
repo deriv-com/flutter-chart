@@ -5,11 +5,9 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/general_sin
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_lower_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
@@ -19,7 +17,6 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 /// Bollinger bands series
@@ -85,9 +82,7 @@ class BollingerBandSeries extends Series {
 
     _middleSeries = GeneralSingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => BollingerBandsMiddleIndicator(
-        MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType),
-      ),
+      indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
       options: MAOptions(period, movingAverageType),
     );
@@ -95,11 +90,8 @@ class BollingerBandSeries extends Series {
     _lowerSeries = GeneralSingleIndicatorSeries(
         painterCreator: (series) => LinePainter(series),
         indicatorCreator: () => BollingerBandsLowerIndicator(
-              BollingerBandsMiddleIndicator(
-                MASeries.getMAIndicator(
-                    _fieldIndicator, period, movingAverageType),
-              ),
-              StandardDeviationIndicator(_fieldIndicator, period),
+              bbmSMA,
+              standardDeviation,
               k: standardDeviationFactor,
             ),
         inputIndicator: _fieldIndicator,
@@ -108,11 +100,8 @@ class BollingerBandSeries extends Series {
     _upperSeries = GeneralSingleIndicatorSeries(
         painterCreator: (series) => LinePainter(series),
         indicatorCreator: () => BollingerBandsUpperIndicator(
-              BollingerBandsMiddleIndicator(
-                MASeries.getMAIndicator(
-                    _fieldIndicator, period, movingAverageType),
-              ),
-              StandardDeviationIndicator(_fieldIndicator, period),
+              bbmSMA,
+              standardDeviation,
               k: standardDeviationFactor,
             ),
         inputIndicator: _fieldIndicator,

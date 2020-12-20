@@ -36,6 +36,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
     if (results[index] == null) {
       results[index] = calculate(index);
+      // print('Calculating $runtimeType for $index  ${DateTime.now()}');
     }
 
     return results[index];
