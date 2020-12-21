@@ -74,7 +74,7 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
         children: <Widget>[
           Text(
             ChartLocalization.of(context).labelStandardDeviation,
-            style: TextStyle(fontSize: 10),
+            style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           SizedBox(

@@ -102,7 +102,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         children: <Widget>[
           Text(
             ChartLocalization.of(context).labelField,
-            style: TextStyle(fontSize: 10),
+            style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           DropdownButton<String>(
@@ -133,7 +133,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         children: <Widget>[
           Text(
             ChartLocalization.of(context).labelPeriod,
-            style: TextStyle(fontSize: 10),
+            style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           SizedBox(
