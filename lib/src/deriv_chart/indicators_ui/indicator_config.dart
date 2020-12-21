@@ -1,10 +1,10 @@
-import 'callbacks.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 
 /// Indicator config
 abstract class IndicatorConfig {
   /// Initializes
-  const IndicatorConfig(this.builder);
+  IndicatorConfig();
 
-  /// Indicator series builder
-  final IndicatorBuilder builder;
+  Series getSeries(List<Tick> ticks);
 }
