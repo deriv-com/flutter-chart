@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 
 import '../callbacks.dart';
@@ -11,6 +12,7 @@ class MAIndicatorConfig extends IndicatorConfig {
     this.period,
     this.type,
     this.fieldType,
+    this.lineStyle,
   }) : super(indicatorBuilder);
 
   /// Moving Average period
@@ -21,4 +23,7 @@ class MAIndicatorConfig extends IndicatorConfig {
 
   /// Field type
   final String fieldType;
+
+  /// MA line style
+  final LineStyle lineStyle;
 }

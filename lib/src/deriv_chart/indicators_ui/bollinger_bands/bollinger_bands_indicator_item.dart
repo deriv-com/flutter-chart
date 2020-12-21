@@ -37,23 +37,16 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   BollingerBandsIndicatorConfig createIndicatorConfig() =>
       BollingerBandsIndicatorConfig(
         (List<Tick> ticks) => BollingerBandSeries.fromIndicator(
-          filedIndicatorBuilders[field](ticks),
-          period: period,
-          movingAverageType: type,
-          standardDeviationFactor: _standardDeviation,
+          filedIndicatorBuilders[getCurrentField()](ticks),
+          period: getCurrentPeriod(),
+          movingAverageType: getCurrentType(),
+          standardDeviationFactor: _getCurrentStandardDeviation(),
         ),
-        period: period,
-        movingAverageType: type,
-        standardDeviation: _standardDeviation,
-        fieldType: field,
+        period: getCurrentPeriod(),
+        movingAverageType: getCurrentType(),
+        standardDeviation: _getCurrentStandardDeviation(),
+        fieldType: getCurrentField(),
       );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _standardDeviation = _getCurrentStandardDeviation();
-  }
 
   @override
   Widget getIndicatorOptions() => Column(
@@ -98,6 +91,6 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
 
   double _getCurrentStandardDeviation() {
     final BollingerBandsIndicatorConfig config = getConfig();
-    return config?.standardDeviation ?? 2;
+    return _standardDeviation ?? config?.standardDeviation ?? 2;
   }
 }

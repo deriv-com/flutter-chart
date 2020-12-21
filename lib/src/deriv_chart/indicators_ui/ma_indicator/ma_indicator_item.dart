@@ -24,11 +24,11 @@ class MAIndicatorItem extends IndicatorItem {
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
   }) : super(
-          key: key,
-          title: 'Moving Average',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
-        );
+    key: key,
+    title: 'Moving Average',
+    ticks: ticks,
+    onAddIndicator: onAddIndicator,
+  );
 
   @override
   IndicatorItemState<IndicatorConfig> createIndicatorItemState() =>
@@ -51,7 +51,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   /// Different Field type indicator builders
   final Map<String, FieldIndicatorBuilder> filedIndicatorBuilders =
-      <String, FieldIndicatorBuilder>{
+  <String, FieldIndicatorBuilder>{
     'close': (List<Tick> ticks) => CloseValueIndicator(ticks),
     'high': (List<Tick> ticks) => HighValueIndicator(ticks),
     'low': (List<Tick> ticks) => LowValueIndicator(ticks),
@@ -61,29 +61,23 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   };
 
   @override
-  MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
-        (List<Tick> ticks) => MASeries.fromIndicator(
-          filedIndicatorBuilders[field](ticks),
-          period: period,
-          type: type,
-          style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
-        ),
-        period: period,
-        type: type,
-        fieldType: field,
+  MAIndicatorConfig createIndicatorConfig() =>
+      MAIndicatorConfig(
+            (List<Tick> ticks) =>
+            MASeries.fromIndicator(
+              filedIndicatorBuilders[getCurrentField()](ticks),
+              period: getCurrentPeriod(),
+              type: getCurrentType(),
+              style: getCurrentLineStyle(),
+            ),
+        period: getCurrentPeriod(),
+        type: getCurrentType(),
+        fieldType: getCurrentField(),
       );
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    type = getCurrentType();
-    period = getCurrentPeriod();
-    field = getCurrentField();
-  }
-
-  @override
-  Widget getIndicatorOptions() => Column(
+  Widget getIndicatorOptions() =>
+      Column(
         children: <Widget>[
           buildMATypeMenu(),
           Row(
@@ -98,10 +92,13 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   /// Builds MA Field type menu
   @protected
-  Widget buildFieldTypeMenu() => Row(
+  Widget buildFieldTypeMenu() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelField,
+            ChartLocalization
+                .of(context)
+                .labelField,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -109,30 +106,35 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
             value: getCurrentField(),
             items: filedIndicatorBuilders.keys
                 .map<DropdownMenuItem<String>>(
-                    (String fieldType) => DropdownMenuItem<String>(
-                          value: fieldType,
-                          child: Text(
-                            '$fieldType',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ))
+                    (String fieldType) =>
+                    DropdownMenuItem<String>(
+                      value: fieldType,
+                      child: Text(
+                        '$fieldType',
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ))
                 .toList(),
-            onChanged: (String newField) => setState(
-              () {
-                field = newField;
-                updateIndicator();
-              },
-            ),
+            onChanged: (String newField) =>
+                setState(
+                      () {
+                    field = newField;
+                    updateIndicator();
+                  },
+                ),
           )
         ],
       );
 
   /// Builds Period TextFiled
   @protected
-  Widget buildPeriodField() => Row(
+  Widget buildPeriodField() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelPeriod,
+            ChartLocalization
+                .of(context)
+                .labelPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -157,10 +159,13 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   /// Returns MA types dropdown menu
   @protected
-  Widget buildMATypeMenu() => Row(
+  Widget buildMATypeMenu() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelType,
+            ChartLocalization
+                .of(context)
+                .labelType,
             style: TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -169,20 +174,21 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
             items: MovingAverageType.values
                 .map<DropdownMenuItem<MovingAverageType>>(
                     (MovingAverageType type) =>
-                        DropdownMenuItem<MovingAverageType>(
-                          value: type,
-                          child: Text(
-                            '${getEnumValue(type)}',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ))
+                    DropdownMenuItem<MovingAverageType>(
+                      value: type,
+                      child: Text(
+                        '${getEnumValue(type)}',
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ))
                 .toList(),
-            onChanged: (MovingAverageType newType) => setState(
-              () {
-                type = newType;
-                updateIndicator();
-              },
-            ),
+            onChanged: (MovingAverageType newType) =>
+                setState(
+                      () {
+                    type = newType;
+                    updateIndicator();
+                  },
+                ),
           ),
         ],
       );
@@ -190,13 +196,18 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current type.
   @protected
   MovingAverageType getCurrentType() =>
-      getConfig()?.type ?? MovingAverageType.simple;
+      type ?? getConfig()?.type ?? MovingAverageType.simple;
 
   /// Gets Indicator current filed type.
   @protected
-  String getCurrentField() => getConfig()?.fieldType ?? 'close';
+  String getCurrentField() => field ?? getConfig()?.fieldType ?? 'close';
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentPeriod() => getConfig()?.period ?? 50;
+  int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
+
+  @protected
+  LineStyle getCurrentLineStyle() =>
+      getConfig().lineStyle ??
+          const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
 }
