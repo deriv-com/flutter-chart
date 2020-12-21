@@ -44,6 +44,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
 
     if (entries.isEmpty) {
+      _visibleEntries = [];
       return;
     }
 

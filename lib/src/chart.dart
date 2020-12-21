@@ -496,7 +496,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   Widget _buildLoadingAnimation() {
     return LoadingAnimationArea(
-      loadingRightBoundX: widget.mainSeries.entries.isEmpty
+      loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
           ? _xAxis.width
           : _xAxis.xFromEpoch(
               widget.mainSeries.visibleEntries.first.epoch,
