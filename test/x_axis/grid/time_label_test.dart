@@ -1,8 +1,7 @@
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:flutter/animation.dart';
+import 'package:deriv_chart/src/logic/no_overlay_time_gaps_cal.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/x_axis/grid/time_label.dart';
-import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/models/time_range.dart';
 
 void main() {
   test('start of day -> date in format `2 Jul`', () {
@@ -25,47 +24,23 @@ void main() {
   });
 
   test('test should Remove labels inside time gaps and have overlap', () {
-    final List<Tick> entries = [
-      Candle(
-          epoch: 1607558400000,
-          high: 0,
-          low: 851.119,
-          open: 851.572,
-          close: 852.636),
-      Candle(
-          epoch: 1607644800000,
-          high: 0,
-          low: 851.119,
-          open: 851.572,
-          close: 852.636),
-      Candle(
-          epoch: 1607731200000,
-          high: 0,
-          low: 851.119,
-          open: 851.572,
-          close: 852.636),
-      Candle(
-          epoch: 1607990400000,
-          high: 0,
-          low: 851.119,
-          open: 851.572,
-          close: 852.636),
-      Candle(
-          epoch: 1608163200000,
-          high: 0,
-          low: 843.53,
-          open: 851.608,
-          close: 844.591),
+    final List<DateTime> gridTimestamps = [
+      DateTime.utc(2020, 12, 10, 0, 0, 0, 0),
+      DateTime.utc(2020, 12, 11, 0, 0, 0, 0),
+      DateTime.utc(2020, 12, 12, 0, 0, 0, 0),
+      DateTime.utc(2020, 12, 13, 0, 0, 0, 0),
+      DateTime.utc(2020, 12, 14, 0, 0, 0, 0),
+      DateTime.utc(2020, 12, 15, 0, 0, 0, 0),
+      DateTime.utc(2020, 12, 16, 0, 0, 0, 0),
+      DateTime.utc(2020, 12, 17, 0, 0, 0, 0)
     ];
 
-    final XAxisModel mockModel = XAxisModel(
-      entries: entries,
-      granularity: 8640000,
-      animationController: AnimationController.unbounded(vsync: TestVSync()),
-      isLive: false,
-    );
-
-    mockModel.width = 200;
+    List<TimeRange> gaps = [
+      TimeRange(1607567040000, 1607644800000),
+      TimeRange(1607653440000, 1607731200000),
+      TimeRange(1607739840000, 1607990400000),
+      TimeRange(1607999040000, 1608163200000)
+    ];
 
     final List<DateTime> noOverLapTimeStamps = [
       DateTime.utc(2020, 12, 10, 0, 0, 0, 0),
@@ -74,8 +49,9 @@ void main() {
       DateTime.utc(2020, 12, 15, 0, 0, 0, 0),
       DateTime.utc(2020, 12, 17, 0, 0, 0, 0)
     ];
+
     expect(
-      mockModel.getNoOverlapGridTimestamps(),
+      calculateNoOverlapGridTimestamps(gridTimestamps, gaps),
       noOverLapTimeStamps,
     );
   });

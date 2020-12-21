@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/find_gaps.dart';
+import 'package:deriv_chart/src/logic/no_overlay_time_gaps_cal.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -98,6 +99,8 @@ class XAxisModel extends ChangeNotifier {
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
+
+  void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
@@ -361,13 +364,8 @@ class XAxisModel extends ChangeNotifier {
     _updateEntries(entries);
   }
 
-  bool isInGap(int epoch) => _timeGaps.isEmpty
-      ? false
-      : _timeGaps[indexOfNearestGap(_timeGaps, epoch)].contains(epoch);
-
   List<DateTime> getNoOverlapGridTimestamps() {
     const double _minDistanceBetweenTimeGridLines = 80;
-
     // Calculate time labels' timestamps for current scale.
     final List<DateTime> _gridTimestamps = gridTimestamps(
       timeGridInterval: timeGridInterval(
@@ -377,24 +375,6 @@ class XAxisModel extends ChangeNotifier {
       leftBoundEpoch: leftBoundEpoch,
       rightBoundEpoch: rightBoundEpoch,
     );
-
-    List<DateTime> _noOverlapGridTimestamps = [];
-    if (_gridTimestamps == null || _gridTimestamps.isEmpty)
-      return _noOverlapGridTimestamps;
-    for (final DateTime timestamp in _gridTimestamps) {
-      if (!isInGap(timestamp.millisecondsSinceEpoch)) {
-        if (_noOverlapGridTimestamps.isNotEmpty &&
-            (xFromEpoch(timestamp.millisecondsSinceEpoch) -
-                    xFromEpoch(_noOverlapGridTimestamps
-                            .last.millisecondsSinceEpoch)
-                        .abs() <
-                10)) {
-          continue;
-        }
-        _noOverlapGridTimestamps.add(timestamp);
-      }
-    }
-
-    return _noOverlapGridTimestamps;
+    return calculateNoOverlapGridTimestamps(_gridTimestamps, _timeGaps);
   }
 }
