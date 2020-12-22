@@ -44,7 +44,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
 
     if (entries.isEmpty) {
-      _visibleEntries = [];
+      _visibleEntries = <T>[];
       return;
     }
 
@@ -87,7 +87,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   @override
   List<double> recalculateMinMax() {
     if (!_needsMinMaxUpdate) {
-      return [minValue, maxValue];
+      return <double>[minValue, maxValue];
     }
 
     if (visibleEntries.isNotEmpty) {
