@@ -497,6 +497,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
           ),
           CustomPaint(
             size: canvasSize,
+            painter: YGridLabelPainter(
+              gridLineQuotes: _getGridLineQuotes(),
+              pipSize: widget.pipSize,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+            ),
+          ),
+          CustomPaint(
+            size: canvasSize,
             painter: ChartPainter(
               animationInfo: AnimationInfo(
                 currentTickPercent: _currentTickAnimation.value,
@@ -509,15 +518,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
               theme: context.read<ChartTheme>(),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
-            ),
-          ),
-          CustomPaint(
-            size: canvasSize,
-            painter: YGridLabelPainter(
-              gridLineQuotes: _getGridLineQuotes(),
-              pipSize: widget.pipSize,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
             ),
           ),
           if (widget.markerSeries != null)
