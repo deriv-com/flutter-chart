@@ -24,7 +24,8 @@ import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
 import 'painters/loading_painter.dart';
-import 'painters/y_grid_painter.dart';
+import 'painters/y_grid_label_painter.dart';
+import 'painters/y_grid_line_painter.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
@@ -467,6 +468,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
               quoteToCanvasY: _quoteToCanvasY,
             ),
           ),
+          CustomPaint(
+            size: canvasSize,
+            painter: YGridLinePainter(
+              gridLineQuotes: _getGridLineQuotes(),
+              quoteToCanvasY: _quoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+            ),
+          ),
           Opacity(
             opacity: widget.opacity,
             child: CustomPaint(
@@ -504,7 +513,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           ),
           CustomPaint(
             size: canvasSize,
-            painter: YGridPainter(
+            painter: YGridLabelPainter(
               gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,

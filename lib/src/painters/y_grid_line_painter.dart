@@ -1,17 +1,13 @@
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
-import '../paint/paint_text.dart';
-
-class YGridPainter extends CustomPainter {
-  YGridPainter({
+class YGridLinePainter extends CustomPainter {
+  YGridLinePainter({
     @required this.gridLineQuotes,
-    @required this.pipSize,
     @required this.quoteToCanvasY,
     @required this.style,
   });
 
-  final int pipSize;
   final List<double> gridLineQuotes;
 
   final double Function(double) quoteToCanvasY;
@@ -23,15 +19,10 @@ class YGridPainter extends CustomPainter {
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
 
-      final TextPainter labelPainter = makeTextPainter(
-        quote.toStringAsFixed(pipSize),
-        style.yLabelStyle,
-      );
-
       canvas.drawLine(
         Offset(0, y),
         Offset(
-          size.width - labelPainter.width - style.labelHorizontalPadding * 2,
+          size.width - style.labelHorizontalPadding * 2,
           y,
         ),
         Paint()
@@ -39,19 +30,12 @@ class YGridPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = style.lineThickness,
       );
-
-      paintWithTextPainter(
-        canvas,
-        painter: labelPainter,
-        anchor: Offset(size.width - style.labelHorizontalPadding, y),
-        anchorAlignment: Alignment.centerRight,
-      );
     }
   }
 
   @override
-  bool shouldRepaint(YGridPainter oldDelegate) => true;
+  bool shouldRepaint(YGridLinePainter oldDelegate) => true;
 
   @override
-  bool shouldRebuildSemantics(YGridPainter oldDelegate) => false;
+  bool shouldRebuildSemantics(YGridLinePainter oldDelegate) => false;
 }
