@@ -30,9 +30,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
   @override
   Tick getValue(int index) {
-    if (index > results.length - 1) {
-      _growResultsBy(index - results.length + 1);
-    }
+    _growResultsForIndex(index);
 
     if (results[index] == null) {
       results[index] = calculate(index);
@@ -42,12 +40,19 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
     return results[index];
   }
 
-  void _growResultsBy(int numOfElements) =>
-      results.addAll(List<Tick>(numOfElements));
+  void _growResultsForIndex(int index) {
+    if (index > results.length - 1) {
+      results.addAll(List<Tick>(index - results.length + 1));
+    }
+  }
 
   /// Calculates the value of this indicator for the given [index]
   Tick calculate(int index);
 
   /// Invalidates a calculated indicator value for [index]
-  void invalidate(int index) => results[index] = null;
+  void invalidate(int index) {
+    _growResultsForIndex(index);
+
+    results[index] = null;
+  }
 }

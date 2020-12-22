@@ -58,7 +58,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
         (oldSeries?.options == options ?? false) &&
         (oldSeries?.entries?.isNotEmpty ?? false)) {
       prevLastEntry = oldSeries.entries.last;
-      updateEntries(oldData, true);
+      _reuseOldSeriesResult(oldSeries);
     } else {
       initialize();
     }
@@ -66,22 +66,23 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
     return true;
   }
 
-  /// Updates Indicators results.
-  void updateEntries(SingleIndicatorSeries<Tick> oldSeries, bool newTickAdded) {
-    if (newTickAdded) {
-      resultIndicator = initializeIndicator()
-        ..copyValuesFrom(oldSeries.resultIndicator);
+  void _reuseOldSeriesResult(SingleIndicatorSeries<Tick> oldSeries) {
+    resultIndicator = initializeIndicator()
+      ..copyValuesFrom(oldSeries.resultIndicator);
 
-      if (oldSeries.input.length == input.length) {
-        resultIndicator.invalidate(input.length - 1);
+    if (oldSeries.input.length == input.length) {
+      resultIndicator
+        ..invalidate(input.length - 1)
+        ..getValue(input.length - 1);
+    } else if (input.length > oldSeries.input.length) {
+      for (int i = oldSeries.input.length; i < input.length; i++) {
+        resultIndicator
+          ..invalidate(i)
+          ..getValue(i);
       }
-
-      resultIndicator.getValue(input.length - 1);
-
-      entries = resultIndicator.results;
-    } else {
-      initialize();
     }
+
+    entries = resultIndicator.results;
   }
 
   @override
