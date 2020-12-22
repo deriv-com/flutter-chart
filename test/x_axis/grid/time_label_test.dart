@@ -49,9 +49,9 @@ void main() {
       DateTime.utc(2020, 12, 15, 0, 0, 0, 0),
       DateTime.utc(2020, 12, 17, 0, 0, 0, 0)
     ];
-
+    double msPerPx = 1000;
     expect(
-      calculateNoOverlapGridTimestamps(gridTimestamps, gaps),
+      calculateNoOverlapGridTimestamps(gridTimestamps, gaps,msPerPx),
       noOverLapTimeStamps,
     );
   });

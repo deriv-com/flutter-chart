@@ -381,6 +381,6 @@ class XAxisModel extends ChangeNotifier {
       leftBoundEpoch: leftBoundEpoch,
       rightBoundEpoch: rightBoundEpoch,
     );
-    return calculateNoOverlapGridTimestamps(_gridTimestamps, _timeGaps);
+    return calculateNoOverlapGridTimestamps(_gridTimestamps, _timeGaps,_msPerPx);
   }
 }
