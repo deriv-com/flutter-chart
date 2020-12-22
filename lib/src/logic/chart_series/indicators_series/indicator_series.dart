@@ -13,15 +13,22 @@ import 'models/indicator_options.dart';
 abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   /// Initializes
   SingleIndicatorSeries(this.inputIndicator, String id, this.options)
-      : super(inputIndicator.entries, id);
+      : _inputFirstTick = inputIndicator.entries.isNotEmpty
+            ? inputIndicator.entries.first
+            : null,
+        super(inputIndicator.entries, id);
 
   /// Input indicator to calculate this indicator value on.
   final AbstractIndicator<Tick> inputIndicator;
 
   final IndicatorOptions options;
 
-  ///
+  /// Result indicator
   CachedIndicator<Tick> resultIndicator;
+
+  /// For comparison purposes.
+  /// To check whether series input list has changed entirely or not.
+  final Tick _inputFirstTick;
 
   @override
   void initialize() {
@@ -32,7 +39,9 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
     entries = resultIndicator.results;
   }
 
+  /// Initializes the [resultIndicator] whenever needed.
   ///
+  /// Will be called whenever [resultIndicator]'s previous values are not available or can't be used.
   @protected
   CachedIndicator<Tick> initializeIndicator();
 
@@ -44,7 +53,8 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
     if ((oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
             false) &&
         (oldSeries?.input?.isNotEmpty ?? false) &&
-        (oldSeries?.input?.first == input.first ?? false) &&
+        (_inputFirstTick != null &&
+            oldSeries._inputFirstTick == _inputFirstTick) &&
         (oldSeries?.options == options ?? false) &&
         (oldSeries?.entries?.isNotEmpty ?? false)) {
       prevLastEntry = oldSeries.entries.last;
