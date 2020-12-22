@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../abstract_indicator.dart';
+import '../../indicator.dart';
 import '../../cached_indicator.dart';
 import '../sma_indicator.dart';
 import 'bollinger_bands_lower_indicator.dart';
@@ -15,7 +15,7 @@ class PercentBIndicator extends CachedIndicator<Tick> {
   /// [indicator] An indicator (usually close price)
   /// [period]  The time frame
   /// [k]         The K multiplier (usually 2.0)
-  PercentBIndicator(AbstractIndicator<Tick> indicator, int period,
+  PercentBIndicator(Indicator<Tick> indicator, int period,
       {double k = 2})
       : this._(
           indicator,
@@ -36,7 +36,7 @@ class PercentBIndicator extends CachedIndicator<Tick> {
         super.fromIndicator(indicator);
 
   /// Indicator
-  final AbstractIndicator<Tick> indicator;
+  final Indicator<Tick> indicator;
 
   /// The upper indicator of the BollingerBand
   final BollingerBandsUpperIndicator bbu;

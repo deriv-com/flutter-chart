@@ -1,9 +1,9 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../abstract_indicator.dart';
+import '../../indicator.dart';
 
 /// A helper indicator to get the open value of a list of [Tick]
-class OpenValueIndicator extends AbstractIndicator<Tick> {
+class OpenValueIndicator extends Indicator<Tick> {
   /// Initializes
   OpenValueIndicator(List<Tick> entries) : super(entries);
 

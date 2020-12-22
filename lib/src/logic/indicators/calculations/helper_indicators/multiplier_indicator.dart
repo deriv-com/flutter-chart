@@ -1,15 +1,15 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../abstract_indicator.dart';
+import '../../indicator.dart';
 
 /// A helper indicator to multiply another indicator values by a [coefficient].
-class MultiplierIndicator extends AbstractIndicator<Tick> {
+class MultiplierIndicator extends Indicator<Tick> {
   /// Initializes
   MultiplierIndicator(this.indicator, this.coefficient)
       : super(indicator.entries);
 
   /// Indicator
-  final AbstractIndicator<Tick> indicator;
+  final Indicator<Tick> indicator;
 
   /// Coefficient
   final double coefficient;

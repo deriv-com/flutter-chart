@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../abstract_indicator.dart';
+import '../../indicator.dart';
 import '../../cached_indicator.dart';
 import 'bollinger_bands_middle_indicator.dart';
 
@@ -18,7 +18,7 @@ class BollingerBandsLowerIndicator extends CachedIndicator<Tick> {
       : super.fromIndicator(bbm);
 
   /// Indicator
-  final AbstractIndicator<Tick> indicator;
+  final Indicator<Tick> indicator;
 
   /// The middle indicator of the BollingerBand
   final BollingerBandsMiddleIndicator bbm;

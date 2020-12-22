@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../abstract_indicator.dart';
+import '../../indicator.dart';
 import '../../cached_indicator.dart';
 import '../sma_indicator.dart';
 
@@ -17,7 +17,7 @@ class VarianceIndicator extends CachedIndicator<Tick> {
         super.fromIndicator(indicator);
 
   /// Indicator
-  final AbstractIndicator<Tick> indicator;
+  final Indicator<Tick> indicator;
 
   /// Bar count
   final int period;

@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../cached_indicator.dart';
@@ -12,7 +12,7 @@ class WMAIndicator extends CachedIndicator<Tick> {
   final int period;
 
   /// Indicator
-  final AbstractIndicator<Tick> indicator;
+  final Indicator<Tick> indicator;
 
   @override
   Tick calculate(int index) {

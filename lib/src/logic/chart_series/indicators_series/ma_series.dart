@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
@@ -33,7 +33,7 @@ class MASeries extends LineSeries {
 
   /// Initializes
   MASeries.fromIndicator(
-    AbstractIndicator indicator, {
+    Indicator indicator, {
     String id,
     LineStyle style,
     int period = 15,
@@ -45,7 +45,7 @@ class MASeries extends LineSeries {
         );
 
   static CachedIndicator getMAIndicator(
-    AbstractIndicator indicator,
+    Indicator indicator,
     int period,
     MovingAverageType type,
   ) {

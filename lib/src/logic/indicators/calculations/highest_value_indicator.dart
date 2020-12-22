@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../abstract_indicator.dart';
+import '../indicator.dart';
 import '../cached_indicator.dart';
 
 /// Highest value indicator
@@ -12,7 +12,7 @@ class HighestValueIndicator extends CachedIndicator {
       : super.fromIndicator(indicator);
 
   /// Calculate Highest value on the result of this indicator
-  final AbstractIndicator indicator;
+  final Indicator indicator;
 
   /// Number of elements to calculate from
   final int period;

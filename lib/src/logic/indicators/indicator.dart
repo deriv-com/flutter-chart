@@ -1,9 +1,9 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
 /// Bass class of all indicators.
-abstract class AbstractIndicator<T extends Tick> {
+abstract class Indicator<T extends Tick> {
   /// Initializes
-  AbstractIndicator(this.entries);
+  Indicator(this.entries);
 
   /// List of data to calculate indicator values on.
   final List<T> entries;

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../abstract_indicator.dart';
+import '../../indicator.dart';
 import '../../cached_indicator.dart';
 import 'variance_indicator.dart';
 
@@ -12,7 +12,7 @@ class StandardDeviationIndicator extends CachedIndicator<Tick> {
   ///
   /// [indicator] the indicator to calculates SD on.
   /// [period]  the time frame
-  StandardDeviationIndicator(AbstractIndicator<Tick> indicator, int period)
+  StandardDeviationIndicator(Indicator<Tick> indicator, int period)
       : _variance = VarianceIndicator(indicator, period),
         super.fromIndicator(indicator);
 
