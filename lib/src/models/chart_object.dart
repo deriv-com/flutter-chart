@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
+
 /// Any component other than chart data (line or candle) which can take a rectangle on the chart's canvas.
+@immutable
 abstract class ChartObject {
   /// Initializes
-  ChartObject(
+  const ChartObject(
     this.leftEpoch,
     this.rightEpoch,
     this.bottomValue,
@@ -19,6 +22,16 @@ abstract class ChartObject {
 
   /// topValue
   final double topValue;
+
+  @override
+  bool operator ==(covariant ChartObject other) =>
+      leftEpoch == other.leftEpoch &&
+      rightEpoch == other.rightEpoch &&
+      topValue == other.topValue &&
+      bottomValue == other.bottomValue;
+
+  @override
+  int get hashCode => super.hashCode;
 
   /// Whether this chart object is in chart horizontal visible area.
   bool isOnEpochRange(int leftBoundEpoch, int rightBoundEpoch) =>

@@ -144,6 +144,8 @@ class XAxisModel extends ChangeNotifier {
 
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
+  double _panSpeed;
+
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
   /// Should be called after [_updateGranularity] and [_updateIsLive].
@@ -217,9 +219,13 @@ class XAxisModel extends ChangeNotifier {
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
       _scrollTo(_rightBoundEpoch + elapsedMs);
+    } else if (_panSpeed != null && _panSpeed != 0) {
+      _scrollBy(_panSpeed * elapsedMs);
     }
     notifyListeners();
   }
+
+  void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.
   void enableAutoPan() {
@@ -333,7 +339,7 @@ class XAxisModel extends ChangeNotifier {
     final double distance = target > _rightBoundEpoch
         ? pxBetween(_rightBoundEpoch, target)
         : pxBetween(target, _rightBoundEpoch);
-
+    _rightBoundEpoch += 1;
     _prevScrollAnimationValue = 0;
     _scrollAnimationController
       ..value = 0

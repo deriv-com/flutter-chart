@@ -179,6 +179,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
 
+  /// it should be at least LabelHeight/2
+  static const double _minPadding = 12;
+
   /// Duration of quote bounds animated transition.
   final quoteBoundsAnimationDuration = const Duration(milliseconds: 300);
 
@@ -218,9 +221,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double get _verticalPadding {
     final double padding = verticalPaddingFraction * canvasSize.height;
     const double minCrosshairPadding = 80;
-    return padding +
+    final double paddingValue = padding +
         (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
             _crosshairZoomOutAnimation.value;
+    return paddingValue.clamp(_minPadding, canvasSize.height / 2);
   }
 
   double get _topPadding => _verticalPadding;
@@ -256,8 +260,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
     _didUpdateChartData(oldChart);
 
-    _onNewTick();
-
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
     }
@@ -274,10 +276,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
-    if (widget.mainSeries.id == oldChart.mainSeries.id) {
-      widget.mainSeries.didUpdate(oldChart.mainSeries);
-    }
-
     if (widget.chartDataList != null) {
       for (final ChartData data in widget.chartDataList) {
         final ChartData oldData = oldChart.chartDataList.firstWhere(
@@ -289,6 +287,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
           data.didUpdate(oldData);
         }
       }
+    }
+
+    if (widget.mainSeries.id == oldChart.mainSeries.id &&
+        widget.mainSeries.didUpdate(oldChart.mainSeries)) {
+      _playNewTickAnimation();
     }
   }
 
@@ -304,9 +307,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
     super.dispose();
   }
 
-  void _onNewTick() {
-    _currentTickAnimationController.reset();
-    _currentTickAnimationController.forward();
+  void _playNewTickAnimation() {
+    _currentTickAnimationController
+      ..reset()
+      ..forward();
   }
 
   void _setupAnimations() {

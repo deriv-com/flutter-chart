@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 import 'chart_default_theme.dart';
@@ -38,4 +39,7 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
 
   @override
   Color get base08Color => LightThemeColors.base08;
+
+  @override
+  TextStyle get overLine => TextStyles.overLine;
 }
