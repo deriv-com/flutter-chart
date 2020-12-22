@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:provider/provider.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,41 +22,30 @@ class CrosshairDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints.expand(),
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment.topCenter,
-          radius: 0.35,
-          // TODO(Ramin): Add style for cross-hair when design updated
-          colors: [Color(0xFF0E0E0E), Colors.transparent],
-        ),
+      padding: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(
+        color: Color(0xFF323738),
+        borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          mainSeries.getCrossHairInfo(crosshairTick, pipSize),
-          SizedBox(height: 2),
-          _buildTimeLabel(),
+          _buildTimeLabel(context),
+          const SizedBox(height: 5),
+          mainSeries.getCrossHairInfo(
+              crosshairTick, pipSize, context.watch<ChartTheme>()),
         ],
       ),
     );
   }
 
-  Text _buildTimeLabel() {
+  Widget _buildTimeLabel(BuildContext context) {
     final time =
         DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch, isUtc: true);
-    final timeLabel = DateFormat('dd MMM yy HH:mm:ss').format(time);
-    return _buildLabel(timeLabel);
-  }
-
-  // TODO(Ramin): Add style for cross-hair when design updated
-  Text _buildLabel(String label) {
+    final timeLabel = DateFormat('dd MMM yyy - HH:mm:ss').format(time);
     return Text(
-      label,
-      style: TextStyle(
-        fontSize: 12,
-        color: Colors.white70,
-        fontFeatures: [FontFeature.tabularFigures()],
-      ),
+      timeLabel,
+      style: context.watch<ChartTheme>().overLine,
     );
   }
 }

@@ -154,12 +154,13 @@ class _CrosshairAreaState extends State<CrosshairArea> {
           ),
           if (crosshairTick != null)
             Positioned(
-              top: 0,
+              top: 8,
               bottom: 0,
               width: constraints.maxWidth,
               left: xAxis.xFromEpoch(crosshairTick.epoch) -
                   constraints.maxWidth / 2,
-              child: Center(
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: CrosshairDetails(
                   mainSeries: widget.mainSeries,
                   crosshairTick: crosshairTick,
