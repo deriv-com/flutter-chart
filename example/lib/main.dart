@@ -401,15 +401,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     controller: _controller,
                     isLive: (_symbol?.isOpen ?? false) &&
                         (_connectionBloc?.state is Connected ?? false),
+                    showLoadingAnimation: false,
                     opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                      if (!_waitingForHistory &&
-                          ticks.isNotEmpty &&
-                          leftEpoch < ticks.first.epoch) {
-                        _loadHistory(2000);
-                      }
-                    },
+                    // onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                    //   if (!_waitingForHistory &&
+                    //       ticks.isNotEmpty &&
+                    //       leftEpoch < ticks.first.epoch) {
+                    //     _loadHistory(2000);
+                    //   }
+                    // },
                   ),
                 ),
                 if (_connectionBloc != null &&
@@ -745,6 +746,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         color: const Color(0xFFCC2E3D),
         isDashed: false,
       ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
     );
 
     _tpBarrier = HorizontalBarrier(
@@ -754,6 +756,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         color: const Color(0xFF00A79E),
         isDashed: false,
       ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
     );
   }
 }
