@@ -40,7 +40,6 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
         movingAverageType: getCurrentType(),
         standardDeviation: _getCurrentStandardDeviation(),
         fieldType: getCurrentField(),
-        feildIndicatorBuilder: filedIndicatorBuilders,
       );
 
   @override

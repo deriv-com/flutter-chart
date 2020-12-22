@@ -49,23 +49,11 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   int period;
 
-  /// Different Field type indicator builders
-  final Map<String, FieldIndicatorBuilder> filedIndicatorBuilders =
-      <String, FieldIndicatorBuilder>{
-    'close': (List<Tick> ticks) => CloseValueIndicator(ticks),
-    'high': (List<Tick> ticks) => HighValueIndicator(ticks),
-    'low': (List<Tick> ticks) => LowValueIndicator(ticks),
-    'open': (List<Tick> ticks) => OpenValueIndicator(ticks),
-    'Hl/2': (List<Tick> ticks) => HL2Indicator(ticks),
-    // TODO(Ramin): Add also hlc3, hlcc4, ohlc4 Indicators.
-  };
-
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         period: getCurrentPeriod(),
         type: getCurrentType(),
         fieldType: getCurrentField(),
-        feildIndicatorBuilder: filedIndicatorBuilders,
       );
 
   @override
@@ -93,7 +81,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
           const SizedBox(width: 4),
           DropdownButton<String>(
             value: getCurrentField(),
-            items: filedIndicatorBuilders.keys
+            items: IndicatorConfig.supportedFieldTypes.keys
                 .map<DropdownMenuItem<String>>(
                     (String fieldType) => DropdownMenuItem<String>(
                           value: fieldType,
