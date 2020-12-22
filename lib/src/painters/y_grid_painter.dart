@@ -25,7 +25,7 @@ class YGridPainter extends CustomPainter {
 
       final TextPainter labelPainter = makeTextPainter(
         quote.toStringAsFixed(pipSize),
-        style.labelStyle,
+        style.yLabelStyle,
       );
 
       canvas.drawLine(
