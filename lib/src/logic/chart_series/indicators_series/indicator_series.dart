@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'models/indicator_options.dart';
@@ -74,7 +75,8 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   }
 
   @override
-  Widget getCrossHairInfo(Tick crossHairTick, int pipSize) => Text(
+  Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>
+      Text(
         '${crossHairTick.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
       );
