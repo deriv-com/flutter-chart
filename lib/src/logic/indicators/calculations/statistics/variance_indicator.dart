@@ -2,12 +2,12 @@ import 'dart:math' as math;
 
 import 'package:deriv_chart/src/models/tick.dart';
 
+import '../../abstract_indicator.dart';
 import '../../cached_indicator.dart';
-import '../../indicator.dart';
 import '../sma_indicator.dart';
 
 /// Variance indicator.
-class VarianceIndicator extends CachedIndicator {
+class VarianceIndicator extends CachedIndicator<Tick> {
   /// Initializes
   ///
   /// [indicator] the indicator
@@ -17,7 +17,7 @@ class VarianceIndicator extends CachedIndicator {
         super.fromIndicator(indicator);
 
   /// Indicator
-  final Indicator indicator;
+  final AbstractIndicator<Tick> indicator;
 
   /// Bar count
   final int period;
@@ -32,7 +32,7 @@ class VarianceIndicator extends CachedIndicator {
     final double average = _sma.getValue(index).quote;
 
     for (int i = startIndex; i <= index; i++) {
-      double pow = math.pow(indicator.getValue(i).quote - average, 2);
+      final double pow = math.pow(indicator.getValue(i).quote - average, 2);
       variance = variance + pow;
     }
 

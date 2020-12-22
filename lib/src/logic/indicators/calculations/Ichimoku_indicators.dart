@@ -5,7 +5,7 @@
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../indicator.dart';
+import '../abstract_indicator.dart';
 import '../cached_indicator.dart';
 import 'helper_indicators/high_value_inidicator.dart';
 import 'helper_indicators/low_value_indicator.dart';
@@ -13,7 +13,7 @@ import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
 /// Ichimoku abstract line indicator
-class AbstractIchimokuLineIndicator extends CachedIndicator {
+class AbstractIchimokuLineIndicator extends CachedIndicator<Tick> {
   /// Initializes.
   ///
   /// [entries]   the data
@@ -25,10 +25,10 @@ class AbstractIchimokuLineIndicator extends CachedIndicator {
         super(entries);
 
   /// The period high
-  final Indicator _periodHigh;
+  final AbstractIndicator<Tick> _periodHigh;
 
   /// The period low
-  final Indicator _periodLow;
+  final AbstractIndicator<Tick> _periodLow;
 
   @override
   Tick calculate(int index) => Tick(

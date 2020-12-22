@@ -2,16 +2,16 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
+import '../abstract_indicator.dart';
 import '../cached_indicator.dart';
-import '../indicator.dart';
 import 'helper_indicators/difference_indicator.dart';
 import 'helper_indicators/multiplier_indicator.dart';
 import 'wma_indicator.dart';
 
 /// Hull Moving Average indicator
-class HMAIndicator extends CachedIndicator {
+class HMAIndicator extends CachedIndicator<Tick> {
   /// Initializes
-  HMAIndicator(Indicator indicator, this.period)
+  HMAIndicator(AbstractIndicator<Tick> indicator, this.period)
       : _sqrtWma = WMAIndicator(
           DifferenceIndicator(
             MultiplierIndicator(WMAIndicator(indicator, period ~/ 2), 2),
@@ -24,7 +24,7 @@ class HMAIndicator extends CachedIndicator {
   /// Moving average bar count
   final int period;
 
-  WMAIndicator _sqrtWma;
+  final WMAIndicator _sqrtWma;
 
   @override
   Tick calculate(int index) => _sqrtWma.getValue(index);

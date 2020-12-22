@@ -1,9 +1,7 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import 'indicator.dart';
-
 /// Bass class of all indicators.
-abstract class AbstractIndicator<T extends Tick> implements Indicator {
+abstract class AbstractIndicator<T extends Tick> {
   /// Initializes
   AbstractIndicator(this.entries);
 
@@ -13,4 +11,7 @@ abstract class AbstractIndicator<T extends Tick> implements Indicator {
   /// Gets the epoch of the given [index]
   // TODO(Ramin): Handle indicator offset here.
   int getEpochOfIndex(int index) => entries[index].epoch;
+
+  /// Value of the indicator for the given [index].
+  Tick getValue(int index);
 }

@@ -1,16 +1,16 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
+import '../abstract_indicator.dart';
 import '../cached_indicator.dart';
-import '../indicator.dart';
 
 /// Base class for Exponential Moving Average implementations.
-abstract class AbstractEMAIndicator extends CachedIndicator {
+abstract class AbstractEMAIndicator extends CachedIndicator<Tick> {
   /// Initializes
   AbstractEMAIndicator(this.indicator, this.period, this.multiplier)
       : super.fromIndicator(indicator);
 
   /// Indicator to calculate EMA on.
-  final Indicator indicator;
+  final AbstractIndicator<Tick> indicator;
 
   /// Bar count
   final int period;
@@ -36,6 +36,6 @@ abstract class AbstractEMAIndicator extends CachedIndicator {
 /// EMA indicator
 class EMAIndicator extends AbstractEMAIndicator {
   /// Initializes
-  EMAIndicator(Indicator indicator, int period)
-      : super(indicator, period, (2.0 / (period + 1)));
+  EMAIndicator(AbstractIndicator<Tick> indicator, int period)
+      : super(indicator, period, 2.0 / (period + 1));
 }

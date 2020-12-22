@@ -1,13 +1,11 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
+import '../../abstract_indicator.dart';
 import '../../cached_indicator.dart';
-import '../../indicator.dart';
 import 'bollinger_bands_middle_indicator.dart';
 
-/// Buy - Occurs when the price line crosses from below to above the Lower Bollinger Band.
-///
-/// Sell - Occurs when the price line crosses from above to below the Upper Bollinger Band.
-class BollingerBandsUpperIndicator extends CachedIndicator {
+/// Bollinger bands upper indicator
+class BollingerBandsUpperIndicator extends CachedIndicator<Tick> {
   /// Initializes.
   ///
   ///  [bbm]       the middle band Indicator. Typically an SMAIndicator is
@@ -19,7 +17,7 @@ class BollingerBandsUpperIndicator extends CachedIndicator {
       : super.fromIndicator(deviation);
 
   /// Deviation indicator
-  final Indicator deviation;
+  final AbstractIndicator<Tick> deviation;
 
   /// The middle indicator of the BollingerBand
   final BollingerBandsMiddleIndicator bbm;

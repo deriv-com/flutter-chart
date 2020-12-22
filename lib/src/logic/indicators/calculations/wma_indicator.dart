@@ -1,10 +1,10 @@
+import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../indicator.dart';
 import '../cached_indicator.dart';
 
 /// Weighted Moving Average indicator
-class WMAIndicator extends CachedIndicator {
+class WMAIndicator extends CachedIndicator<Tick> {
   /// Initializes
   WMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 
@@ -12,7 +12,7 @@ class WMAIndicator extends CachedIndicator {
   final int period;
 
   /// Indicator
-  final Indicator indicator;
+  final AbstractIndicator<Tick> indicator;
 
   @override
   Tick calculate(int index) {

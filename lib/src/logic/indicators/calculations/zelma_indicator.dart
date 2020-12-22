@@ -1,7 +1,7 @@
+import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../cached_indicator.dart';
-import '../indicator.dart';
 import 'sma_indicator.dart';
 
 /// Zero-lag Exponential Moving Average indicator
@@ -17,7 +17,7 @@ class ZLEMAIndicator extends CachedIndicator<Tick> {
         super.fromIndicator(indicator);
 
   /// Indicator to calculate ZELMA on
-  final Indicator indicator;
+  final AbstractIndicator<Tick> indicator;
 
   /// Bar count
   final int period;
