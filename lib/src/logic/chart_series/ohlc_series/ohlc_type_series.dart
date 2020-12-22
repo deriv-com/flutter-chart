@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
@@ -15,53 +14,47 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
   }) : super(entries, id, style: style);
 
   @override
-  Widget getCrossHairInfo(Candle crossHairTick, int pipSize) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+  Widget getCrossHairInfo(
+          Candle crossHairTick, int pipSize, ChartTheme theme) =>
+      Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              _buildLabelValue('O', crossHairTick.open, pipSize),
-              _buildLabelValue('C', crossHairTick.close, pipSize),
+              _buildLabelValue('O', crossHairTick.open, pipSize, theme),
+              _buildLabelValue('C', crossHairTick.close, pipSize, theme),
             ],
           ),
           const SizedBox(width: 16),
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              _buildLabelValue('H', crossHairTick.high, pipSize),
-              _buildLabelValue('L', crossHairTick.low, pipSize),
+              _buildLabelValue('H', crossHairTick.high, pipSize, theme),
+              _buildLabelValue('L', crossHairTick.low, pipSize, theme),
             ],
           ),
         ],
       );
 
-  Widget _buildLabelValue(String label, double value, int pipSize) => Padding(
+  Widget _buildLabelValue(
+          String label, double value, int pipSize, ChartTheme theme) =>
+      Padding(
         padding: const EdgeInsets.only(bottom: 4),
         child: Row(
           children: <Widget>[
-            _buildLabel(label),
+            Text(
+              label,
+              style: theme.overLine,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(width: 4),
-            _buildValue(value, pipSize),
+            Text(
+              value.toStringAsFixed(pipSize),
+              style: theme.overLine,
+              textAlign: TextAlign.center,
+            ),
           ],
-        ),
-      );
-
-  // TODO(Ramin): Add style for cross-hair when design updated
-  Text _buildLabel(String label) => Text(
-        label,
-        style: const TextStyle(
-          fontSize: 12,
-          color: Colors.white70,
-          fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
-        ),
-      );
-
-  // TODO(Ramin): Add style for cross-hair when design updated
-  Text _buildValue(double value, int pipSize) => Text(
-        value.toStringAsFixed(pipSize),
-        style: const TextStyle(
-          fontSize: 12,
-          color: Colors.white,
-          fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
         ),
       );
 

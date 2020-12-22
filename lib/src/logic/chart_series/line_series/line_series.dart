@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -18,7 +19,8 @@ class LineSeries extends DataSeries<Tick> {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
-  Widget getCrossHairInfo(Tick crossHairTick, int pipSize) => Text(
+  Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>
+      Text(
         '${crossHairTick.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
       );
