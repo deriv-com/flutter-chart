@@ -474,124 +474,112 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  Widget _buildQuoteGrid() {
-    return MultipleAnimatedBuilder(
-      animations: [
-        // One bound animation is enough since they animate at the same time.
-        _topBoundQuoteAnimationController,
-        _crosshairZoomOutAnimation,
-      ],
-      builder: (BuildContext context, Widget child) {
-        return CustomPaint(
-          painter: YGridPainter(
-            gridLineQuotes: _getGridLineQuotes(),
-            pipSize: widget.pipSize,
-            quoteToCanvasY: _quoteToCanvasY,
-            style: context.watch<ChartTheme>().gridStyle,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildLoadingAnimation() {
-    return LoadingAnimationArea(
-      loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
-          ? _xAxis.width
-          : _xAxis.xFromEpoch(
-              widget.mainSeries.visibleEntries.first.epoch,
+  Widget _buildQuoteGrid() => MultipleAnimatedBuilder(
+        animations: [
+          // One bound animation is enough since they animate at the same time.
+          _topBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+        ],
+        builder: (BuildContext context, Widget child) {
+          return CustomPaint(
+            painter: YGridPainter(
+              gridLineQuotes: _getGridLineQuotes(),
+              pipSize: widget.pipSize,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
             ),
-    );
-  }
+          );
+        },
+      );
+
+  Widget _buildLoadingAnimation() => LoadingAnimationArea(
+        loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+            ? _xAxis.width
+            : _xAxis.xFromEpoch(
+                widget.mainSeries.visibleEntries.first.epoch,
+              ),
+      );
 
   // Main series and indicators on top of main series.
-  Widget _buildChartData() {
-    return MultipleAnimatedBuilder(
-      animations: [
-        // One bound animation is enough since they animate at the same time.
-        _topBoundQuoteAnimationController,
-        _crosshairZoomOutAnimation,
-        _currentTickAnimation,
-      ],
-      builder: (BuildContext context, Widget child) => RepaintBoundary(
-        child: Opacity(
-          opacity: widget.opacity,
-          child: CustomPaint(
-            painter: ChartDataPainter(
-              animationInfo: AnimationInfo(
-                currentTickPercent: _currentTickAnimation.value,
+  Widget _buildChartData() => MultipleAnimatedBuilder(
+        animations: [
+          // One bound animation is enough since they animate at the same time.
+          _topBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+          _currentTickAnimation,
+        ],
+        builder: (BuildContext context, Widget child) => RepaintBoundary(
+          child: Opacity(
+            opacity: widget.opacity,
+            child: CustomPaint(
+              painter: ChartDataPainter(
+                animationInfo: AnimationInfo(
+                  currentTickPercent: _currentTickAnimation.value,
+                ),
+                mainSeries: widget.mainSeries,
+                secondarySeries: widget.secondarySeries,
+                chartConfig: context.watch<ChartConfig>(),
+                theme: context.watch<ChartTheme>(),
+                epochToCanvasX: _xAxis.xFromEpoch,
+                quoteToCanvasY: _quoteToCanvasY,
+                rightBoundEpoch: _xAxis.rightBoundEpoch,
+                leftBoundEpoch: _xAxis.leftBoundEpoch,
+                topY: _quoteToCanvasY(widget.mainSeries.maxValue),
+                bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
               ),
-              mainSeries: widget.mainSeries,
-              secondarySeries: widget.secondarySeries,
-              chartConfig: context.watch<ChartConfig>(),
-              theme: context.watch<ChartTheme>(),
-              epochToCanvasX: _xAxis.xFromEpoch,
-              quoteToCanvasY: _quoteToCanvasY,
-              rightBoundEpoch: _xAxis.rightBoundEpoch,
-              leftBoundEpoch: _xAxis.leftBoundEpoch,
-              topY: _quoteToCanvasY(widget.mainSeries.maxValue),
-              bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildAnnotations() {
-    return MultipleAnimatedBuilder(
-      animations: [
-        _currentTickAnimation,
-        _currentTickBlinkAnimation,
-      ],
-      builder: (BuildContext context, Widget child) => CustomPaint(
-        painter: ChartPainter(
-          animationInfo: AnimationInfo(
-            currentTickPercent: _currentTickAnimation.value,
-            blinkingPercent: _currentTickBlinkAnimation.value,
+  Widget _buildAnnotations() => MultipleAnimatedBuilder(
+        animations: [
+          _currentTickAnimation,
+          _currentTickBlinkAnimation,
+        ],
+        builder: (BuildContext context, Widget child) => CustomPaint(
+          painter: ChartPainter(
+            animationInfo: AnimationInfo(
+              currentTickPercent: _currentTickAnimation.value,
+              blinkingPercent: _currentTickBlinkAnimation.value,
+            ),
+            chartDataList: widget.annotations,
+            chartConfig: context.watch<ChartConfig>(),
+            theme: context.watch<ChartTheme>(),
+            epochToCanvasX: _xAxis.xFromEpoch,
+            quoteToCanvasY: _quoteToCanvasY,
           ),
-          chartDataList: widget.annotations,
-          chartConfig: context.watch<ChartConfig>(),
-          theme: context.watch<ChartTheme>(),
-          epochToCanvasX: _xAxis.xFromEpoch,
-          quoteToCanvasY: _quoteToCanvasY,
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildCrosshairArea() {
-    return AnimatedBuilder(
-      animation: _crosshairZoomOutAnimation,
-      builder: (BuildContext context, Widget child) {
-        return CrosshairArea(
-          mainSeries: widget.mainSeries,
-          pipSize: widget.pipSize,
-          quoteToCanvasY: _quoteToCanvasY,
-          onCrosshairAppeared: () {
-            _isCrosshairMode = true;
-            widget.onCrosshairAppeared?.call();
-            _crosshairZoomOutAnimationController.forward();
-          },
-          onCrosshairDisappeared: () {
-            _isCrosshairMode = false;
-            _crosshairZoomOutAnimationController.reverse();
-          },
-        );
-      },
-    );
-  }
+  Widget _buildCrosshairArea() => AnimatedBuilder(
+        animation: _crosshairZoomOutAnimation,
+        builder: (BuildContext context, Widget child) {
+          return CrosshairArea(
+            mainSeries: widget.mainSeries,
+            pipSize: widget.pipSize,
+            quoteToCanvasY: _quoteToCanvasY,
+            onCrosshairAppeared: () {
+              _isCrosshairMode = true;
+              widget.onCrosshairAppeared?.call();
+              _crosshairZoomOutAnimationController.forward();
+            },
+            onCrosshairDisappeared: () {
+              _isCrosshairMode = false;
+              _crosshairZoomOutAnimationController.reverse();
+            },
+          );
+        },
+      );
 
-  List<double> _getGridLineQuotes() {
-    return gridQuotes(
-      quoteGridInterval: quoteGridInterval(_quotePerPx),
-      topBoundQuote: _topBoundQuote,
-      bottomBoundQuote: _bottomBoundQuote,
-      canvasHeight: canvasSize.height,
-      topPadding: _topPadding,
-      bottomPadding: _bottomPadding,
-    );
-  }
+  List<double> _getGridLineQuotes() => gridQuotes(
+        quoteGridInterval: quoteGridInterval(_quotePerPx),
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize.height,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
 
   void _onPanStart(ScaleStartDetails details) {
     _panStartedOnQuoteLabelsArea =
@@ -615,10 +603,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     });
   }
 
-  IconButton _buildScrollToLastTickButton() {
-    return IconButton(
-      icon: Icon(Icons.arrow_forward, color: Colors.white),
-      onPressed: _xAxis.scrollToLastTick,
-    );
-  }
+  IconButton _buildScrollToLastTickButton() => IconButton(
+        icon: Icon(Icons.arrow_forward, color: Colors.white),
+        onPressed: _xAxis.scrollToLastTick,
+      );
 }
