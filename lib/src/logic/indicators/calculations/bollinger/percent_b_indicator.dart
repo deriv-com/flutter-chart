@@ -5,7 +5,6 @@ import '../../cached_indicator.dart';
 import '../../indicator.dart';
 import '../sma_indicator.dart';
 import 'bollinger_bands_lower_indicator.dart';
-import 'bollinger_bands_middle_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 /// %B Indicator.
@@ -22,14 +21,14 @@ class PercentBIndicator extends CachedIndicator<Tick> {
   }) : this._(
           indicator,
           StandardDeviationIndicator(indicator, period),
-          BollingerBandsMiddleIndicator(SMAIndicator(indicator, period)),
+          SMAIndicator(indicator, period),
           k,
         );
 
   PercentBIndicator._(
     this.indicator,
     StandardDeviationIndicator sd,
-    BollingerBandsMiddleIndicator bbm,
+    Indicator<Tick> bbm,
     double k,
   )   : bbu = BollingerBandsUpperIndicator(bbm, sd, k: k),
         bbl = BollingerBandsLowerIndicator(bbm, sd, k: k),

@@ -1,8 +1,8 @@
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../../cached_indicator.dart';
 import 'bollinger_bands_lower_indicator.dart';
-import 'bollinger_bands_middle_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 /// Bollinger Band Width indicator.
@@ -23,7 +23,7 @@ class BollingerBandWidthIndicator extends CachedIndicator<Tick> {
   final BollingerBandsUpperIndicator bbu;
 
   /// The middle band Indicator. Typically an SMAIndicator is used.
-  final BollingerBandsMiddleIndicator bbm;
+  final Indicator<Tick> bbm;
 
   /// The lower band Indicator.
   final BollingerBandsLowerIndicator bbl;

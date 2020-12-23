@@ -1,41 +1,15 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/percent_b_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BollingerBands Indicator', () {
-    test('Bollinger middle calculates the correct results', () {
-      final List<Tick> ticks = <Tick>[
-        Tick(epoch: 1, quote: 1),
-        Tick(epoch: 2, quote: 2),
-        Tick(epoch: 3, quote: 3),
-        Tick(epoch: 4, quote: 4),
-        Tick(epoch: 5, quote: 3),
-        Tick(epoch: 6, quote: 4),
-        Tick(epoch: 7, quote: 5),
-        Tick(epoch: 8, quote: 4),
-        Tick(epoch: 9, quote: 3),
-        Tick(epoch: 10, quote: 3),
-        Tick(epoch: 11, quote: 4),
-        Tick(epoch: 12, quote: 3),
-        Tick(epoch: 13, quote: 2),
-      ];
-
-      final SMAIndicator sma = SMAIndicator(CloseValueIndicator(ticks), 3);
-      final BollingerBandsMiddleIndicator bbmSMA =
-          BollingerBandsMiddleIndicator(sma);
-
-      for (int i = 0; i < ticks.length; i++) {
-        expect(bbmSMA.getValue(i).quote, sma.getValue(i).quote);
-      }
-    });
-
     test('BollingerBandsUpperIndicator calculates the correct result', () {
       final List<Tick> ticks = <Tick>[
         Tick(epoch: 1, quote: 1),
@@ -53,12 +27,11 @@ void main() {
         Tick(epoch: 13, quote: 2),
       ];
 
-      final period = 3;
+      const int period = 3;
 
-      final closePrice = new CloseValueIndicator(ticks);
+      final Indicator<Tick> closePrice = CloseValueIndicator(ticks);
 
-      final BollingerBandsMiddleIndicator bbmSMA =
-          BollingerBandsMiddleIndicator(SMAIndicator(closePrice, period));
+      final Indicator<Tick> bbmSMA = SMAIndicator(closePrice, period);
       final StandardDeviationIndicator standardDeviation =
           StandardDeviationIndicator(closePrice, period);
       final BollingerBandsUpperIndicator bbuSMA =

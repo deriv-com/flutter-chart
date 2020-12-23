@@ -2,7 +2,6 @@ import 'package:deriv_chart/src/models/tick.dart';
 
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
-import 'bollinger_bands_middle_indicator.dart';
 
 /// Bollinger bands upper indicator
 class BollingerBandsUpperIndicator extends CachedIndicator<Tick> {
@@ -20,7 +19,7 @@ class BollingerBandsUpperIndicator extends CachedIndicator<Tick> {
   final Indicator<Tick> deviation;
 
   /// The middle indicator of the BollingerBand
-  final BollingerBandsMiddleIndicator bbm;
+  final Indicator<Tick> bbm;
 
   /// Default is 2.
   final double k;
