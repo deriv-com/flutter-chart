@@ -13,9 +13,7 @@ class YGridLabelPainter extends CustomPainter {
 
   final int pipSize;
   final List<double> gridLineQuotes;
-
   final double Function(double) quoteToCanvasY;
-
   final GridStyle style;
 
   @override

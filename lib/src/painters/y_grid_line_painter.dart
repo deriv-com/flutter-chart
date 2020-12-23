@@ -6,13 +6,13 @@ class YGridLinePainter extends CustomPainter {
     @required this.gridLineQuotes,
     @required this.quoteToCanvasY,
     @required this.style,
+    @required this.labelWidth,
   });
 
   final List<double> gridLineQuotes;
-
   final double Function(double) quoteToCanvasY;
-
   final GridStyle style;
+  final double labelWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -22,7 +22,7 @@ class YGridLinePainter extends CustomPainter {
       canvas.drawLine(
         Offset(0, y),
         Offset(
-          size.width - style.labelHorizontalPadding * 2,
+          size.width - labelWidth - style.labelHorizontalPadding * 2,
           y,
         ),
         Paint()

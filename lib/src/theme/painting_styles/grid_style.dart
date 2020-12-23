@@ -20,9 +20,9 @@ class GridStyle {
       color: Colors.white,
       shadows: <Shadow>[
         Shadow(
-          offset: Offset(0.0, 0.0),
+          offset: Offset.zero,
           blurRadius: 4.0,
-          color: Color.fromARGB(255, 0, 0, 0),
+          color: Colors.black,
         ),
       ],
       fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
@@ -52,5 +52,5 @@ class GridStyle {
 
   @override
   String toString() =>
-      '${super.toString()}$gridLineColor, ${xLabelStyle.toStringShort()}, $lineThickness';
+      '${super.toString()}$gridLineColor, ${xLabelStyle.toStringShort()},${yLabelStyle.toStringShort()}, $lineThickness';
 }

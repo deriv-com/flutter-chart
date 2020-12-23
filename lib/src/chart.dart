@@ -10,6 +10,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -441,8 +442,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
         bottomPadding: _bottomPadding,
       );
 
+  // Calculate the width of Y label
+  double _labelWidth(double text) => makeTextPainter(
+        text.toStringAsFixed(widget.pipSize),
+        context.watch<ChartTheme>().gridStyle.yLabelStyle,
+      ).width;
+
   @override
   Widget build(BuildContext context) {
+    final _gridLineQuotes = _getGridLineQuotes();
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       canvasSize = Size(
@@ -471,9 +479,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: YGridLinePainter(
-              gridLineQuotes: _getGridLineQuotes(),
+              gridLineQuotes: _gridLineQuotes,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
+              labelWidth: _labelWidth(_gridLineQuotes.first),
             ),
           ),
           Opacity(
@@ -498,7 +507,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: YGridLabelPainter(
-              gridLineQuotes: _getGridLineQuotes(),
+              gridLineQuotes: _gridLineQuotes,
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
