@@ -138,16 +138,14 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch == _maxRightBoundEpoch ||
       rightBoundEpoch == _minRightBoundEpoch;
 
-  /// Chart pan is currently being animated (without user input).
-  bool get animatingPan =>
-      _autoPanning || (_scrollAnimationController?.isAnimating ?? false);
-
   /// Current tick is visible, chart is being autoPanned.
   bool get _autoPanning =>
       _autoPanEnabled &&
       isLive &&
       rightBoundEpoch > _nowEpoch &&
       _currentTickFarEnoughFromLeftBound;
+
+  ViewingMode get _viewingMode => ViewingMode.stationary;
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _entries.isEmpty ||
