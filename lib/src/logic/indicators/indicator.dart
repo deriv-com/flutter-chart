@@ -1,6 +1,8 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-/// Bass class of all indicators.
+/// Base class of all indicators.
+///
+/// Holds common functionalities of indicators like getting epoch for an index or handling indicator's offset.
 abstract class Indicator<T extends Tick> {
   /// Initializes
   Indicator(this.entries);
