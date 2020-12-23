@@ -540,10 +540,18 @@ class _ChartImplementationState extends State<_ChartImplementation>
           ),
           if (_isScrollToLastTickAvailable)
             Positioned(
-              bottom: 30,
-              right: 30 + quoteLabelsTouchAreaWidth,
+              bottom: 0,
+              right: quoteLabelsTouchAreaWidth,
               child: _buildScrollToLastTickButton(),
             ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: IconButton(
+              icon: Icon(Icons.fullscreen_exit),
+              onPressed: () {},
+            ),
+          ),
         ],
       );
     });
