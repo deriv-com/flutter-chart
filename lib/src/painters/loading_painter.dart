@@ -6,15 +6,10 @@ class LoadingPainter extends CustomPainter {
   LoadingPainter({
     @required this.loadingAnimationProgress,
     @required this.loadingRightBoundX,
-    @required this.epochToCanvasX,
-    @required this.quoteToCanvasY,
   });
 
   final double loadingAnimationProgress;
   final double loadingRightBoundX;
-
-  final double Function(int) epochToCanvasX;
-  final double Function(double) quoteToCanvasY;
 
   bool get _isVisible => loadingRightBoundX > 0;
 

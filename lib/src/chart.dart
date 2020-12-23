@@ -45,7 +45,7 @@ class Chart extends StatelessWidget {
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
     this.isLive = false,
-    this.showLoadingAnimation = true,
+    this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
     Key key,
@@ -90,8 +90,8 @@ class Chart extends StatelessWidget {
   /// is on the newest ticks/candles.
   final bool isLive;
 
-  /// Whether the chart should show loading animation for missing data on scrolling back.
-  final bool showLoadingAnimation;
+  /// Starts in data fit mode and adds a data-fit button.
+  final bool dataFitEnabled;
 
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
@@ -132,7 +132,7 @@ class Chart extends StatelessWidget {
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
                 isLive: isLive,
-                showLoadingAnimation: showLoadingAnimation,
+                showLoadingAnimationForHistoricalData: !dataFitEnabled,
                 opacity: opacity,
               ),
             ),
@@ -150,7 +150,7 @@ class _ChartImplementation extends StatefulWidget {
     @required this.pipSize,
     this.markerSeries,
     @required this.isLive,
-    @required this.showLoadingAnimation,
+    @required this.showLoadingAnimationForHistoricalData,
     this.opacity,
     this.controller,
     this.onCrosshairAppeared,
@@ -166,7 +166,7 @@ class _ChartImplementation extends StatefulWidget {
   final ChartController controller;
 
   final bool isLive;
-  final bool showLoadingAnimation;
+  final bool showLoadingAnimationForHistoricalData;
   final double opacity;
 
   @override
@@ -470,20 +470,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
               style: context.watch<ChartTheme>().gridStyle,
             ),
           ),
-          if (widget.showLoadingAnimation)
-            CustomPaint(
-              size: canvasSize,
-              painter: LoadingPainter(
-                loadingAnimationProgress: _loadingAnimationController.value,
-                loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
-                    ? _xAxis.width
-                    : _xAxis.xFromEpoch(
-                        widget.mainSeries.visibleEntries.first.epoch,
-                      ),
-                epochToCanvasX: _xAxis.xFromEpoch,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
+          CustomPaint(
+            size: canvasSize,
+            painter: LoadingPainter(
+              loadingAnimationProgress: _loadingAnimationController.value,
+              loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+                  ? _xAxis.width
+                  : widget.showLoadingAnimationForHistoricalData
+                      ? _xAxis.xFromEpoch(
+                          widget.mainSeries.visibleEntries.first.epoch,
+                        )
+                      : 0,
             ),
+          ),
           Opacity(
             opacity: widget.opacity,
             child: CustomPaint(

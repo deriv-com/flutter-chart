@@ -1,8 +1,5 @@
 analyzer:
-  exclude:
-    - test/**
-    - lib/**
-    - example/**
+
 
   strong-mode:
     implicit-dynamic: false

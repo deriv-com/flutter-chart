@@ -401,7 +401,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     controller: _controller,
                     isLive: (_symbol?.isOpen ?? false) &&
                         (_connectionBloc?.state is Connected ?? false),
-                    showLoadingAnimation: false,
+                    dataFitEnabled: true,
                     opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     // onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
