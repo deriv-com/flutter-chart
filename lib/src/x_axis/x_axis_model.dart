@@ -26,7 +26,7 @@ enum ViewingMode {
 
   /// Keeps scrolling left or right with constant speed.
   ///
-  /// Negative speed scroll chart back, positive – forward.
+  /// Negative speed scrolls the chart back, positive scrolls forward.
   constantScrollSpeed,
 }
 
