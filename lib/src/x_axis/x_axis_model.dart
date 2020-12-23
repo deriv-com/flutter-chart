@@ -28,6 +28,9 @@ enum ViewingMode {
   ///
   /// Negative speed scrolls the chart back, positive scrolls forward.
   constantScrollSpeed,
+
+  /// Scroll and zoom only change with user gestures.
+  simple,
 }
 
 /// State and methods of chart's x-axis.
