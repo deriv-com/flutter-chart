@@ -470,19 +470,19 @@ class _ChartImplementationState extends State<_ChartImplementation>
               style: context.watch<ChartTheme>().gridStyle,
             ),
           ),
-          CustomPaint(
-            size: canvasSize,
-            painter: LoadingPainter(
-              loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
-                  ? _xAxis.width
-                  : widget.showLoadingAnimationForHistoricalData
-                      ? _xAxis.xFromEpoch(
-                          widget.mainSeries.visibleEntries.first.epoch,
-                        )
-                      : 0,
+          if (widget.showLoadingAnimationForHistoricalData ||
+              widget.mainSeries.entries.isEmpty)
+            CustomPaint(
+              size: canvasSize,
+              painter: LoadingPainter(
+                loadingAnimationProgress: _loadingAnimationController.value,
+                loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+                    ? _xAxis.width
+                    : _xAxis.xFromEpoch(
+                        widget.mainSeries.visibleEntries.first.epoch,
+                      ),
+              ),
             ),
-          ),
           Opacity(
             opacity: widget.opacity,
             child: CustomPaint(
