@@ -9,6 +9,27 @@ import 'package:flutter/material.dart';
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
 const double autoPanOffset = 30;
 
+/// Modes that control chart's zoom and scroll behaviour without user interaction.
+enum ViewingMode {
+  /// Keeps current tick visible.
+  ///
+  /// This mode is enabled when [isLive] is `true` and current tick is visible.
+  /// It works by keeping the x coordinate of `DateTime.now().millisecondsSinceEpoch` constant.
+  /// Meaning, if a line is drawn at `DateTime.now().millisecondsSinceEpoch`
+  /// on each frame in this mode, it will appear stationary.
+  followCurrentTick,
+
+  /// Keeps all of the data visible.
+  ///
+  /// This mode is used for contract details.
+  fitData,
+
+  /// Keeps scrolling left or right with constant speed.
+  ///
+  /// Negative speed scroll chart back, positive – forward.
+  constantScrollSpeed,
+}
+
 /// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
   // TODO(Rustem): Add closed contract x-axis constructor.
