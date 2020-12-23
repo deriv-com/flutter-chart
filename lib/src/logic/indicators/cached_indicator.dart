@@ -17,6 +17,7 @@ abstract class CachedIndicator<T extends Tick> extends Indicator<T> {
   CachedIndicator.fromIndicator(Indicator<T> indicator)
       : this(indicator.entries);
 
+  // TODO(Ramin): Add a method named calculateAll. Can be overridden. Some indicator might implement it in an optimal way.
   void _calculateIndicatorValues() {
     for (int i = 0; i < entries.length; i++) {
       getValue(i);
