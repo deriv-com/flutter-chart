@@ -1,8 +1,8 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/find_gaps.dart';
-import 'package:deriv_chart/src/logic/no_overlay_time_gaps_cal.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -381,6 +381,7 @@ class XAxisModel extends ChangeNotifier {
       leftBoundEpoch: leftBoundEpoch,
       rightBoundEpoch: rightBoundEpoch,
     );
-    return calculateNoOverlapGridTimestamps(_gridTimestamps, _timeGaps,_msPerPx);
+    return calculateNoOverlapGridTimestamps(
+        _gridTimestamps, _timeGaps, _msPerPx, _minDistanceBetweenTimeGridLines);
   }
 }

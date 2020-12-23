@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/no_overlay_time_gaps_cal.dart';
+import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/x_axis/grid/time_label.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
@@ -49,9 +49,12 @@ void main() {
       DateTime.utc(2020, 12, 15, 0, 0, 0, 0),
       DateTime.utc(2020, 12, 17, 0, 0, 0, 0)
     ];
+    const double minDistanceBetweenTimeGridLines = 80;
+
     double msPerPx = 1000;
     expect(
-      calculateNoOverlapGridTimestamps(gridTimestamps, gaps,msPerPx),
+      calculateNoOverlapGridTimestamps(
+          gridTimestamps, gaps, msPerPx, minDistanceBetweenTimeGridLines),
       noOverLapTimeStamps,
     );
   });
