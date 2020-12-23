@@ -465,6 +465,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
         children: <Widget>[
           CustomPaint(
             size: canvasSize,
+            painter: YGridLinePainter(
+              gridLineQuotes: _gridLineQuotes,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+              labelWidth: _labelWidth(_gridLineQuotes.first),
+            ),
+          ),
+          CustomPaint(
+            size: canvasSize,
             painter: LoadingPainter(
               loadingAnimationProgress: _loadingAnimationController.value,
               loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
@@ -474,15 +483,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
                     ),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
-            ),
-          ),
-          CustomPaint(
-            size: canvasSize,
-            painter: YGridLinePainter(
-              gridLineQuotes: _gridLineQuotes,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: _labelWidth(_gridLineQuotes.first),
             ),
           ),
           Opacity(
