@@ -145,7 +145,16 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch > _nowEpoch &&
       _currentTickFarEnoughFromLeftBound;
 
-  ViewingMode get _viewingMode => ViewingMode.stationary;
+  /// Current mode that controls chart's zooming and scrolling behaviour.
+  ViewingMode get _viewingMode {
+    if (_autoPanning) {
+      return ViewingMode.followCurrentTick;
+    }
+    if (_panSpeed != null && _panSpeed != 0) {
+      return ViewingMode.constantScrollSpeed;
+    }
+    return ViewingMode.stationary;
+  }
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _entries.isEmpty ||
@@ -229,15 +238,24 @@ class XAxisModel extends ChangeNotifier {
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Called on each frame.
-  /// Updates right panning limit and autopan if enabled.
+  /// Updates zoom and scroll based on current [_viewingMode].
   void onNewFrame(Duration _) {
-    final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
-    final elapsedMs = newNowEpoch - _nowEpoch;
+    final int newNowEpoch = DateTime.now().millisecondsSinceEpoch;
+    final int elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
-    if (_autoPanning) {
-      _scrollTo(_rightBoundEpoch + elapsedMs);
-    } else if (_panSpeed != null && _panSpeed != 0) {
-      _scrollBy(_panSpeed * elapsedMs);
+
+    switch (_viewingMode) {
+      case ViewingMode.followCurrentTick:
+        _scrollTo(_rightBoundEpoch + elapsedMs);
+        break;
+      case ViewingMode.fitData:
+        // TODO(Rustem): Handle this case.
+        break;
+      case ViewingMode.constantScrollSpeed:
+        _scrollBy(_panSpeed * elapsedMs);
+        break;
+      case ViewingMode.stationary:
+        break;
     }
     notifyListeners();
   }
