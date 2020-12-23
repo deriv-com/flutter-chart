@@ -21,14 +21,10 @@ class YGridLabelPainter extends CustomPainter {
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
 
-      final TextPainter labelPainter = makeTextPainter(
-        quote.toStringAsFixed(pipSize),
-        style.yLabelStyle,
-      );
-
-      paintWithTextPainter(
+      paintText(
         canvas,
-        painter: labelPainter,
+        text: quote.toStringAsFixed(pipSize),
+        style: style.yLabelStyle,
         anchor: Offset(size.width - style.labelHorizontalPadding, y),
         anchorAlignment: Alignment.centerRight,
       );

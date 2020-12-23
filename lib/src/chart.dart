@@ -443,14 +443,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   // Calculate the width of Y label
-  double _labelWidth(double text) => makeTextPainter(
+  double _labelWidth(double text, TextStyle style) => makeTextPainter(
         text.toStringAsFixed(widget.pipSize),
-        context.watch<ChartTheme>().gridStyle.yLabelStyle,
+        style,
       ).width;
 
   @override
   Widget build(BuildContext context) {
-    final _gridLineQuotes = _getGridLineQuotes();
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       canvasSize = Size(
@@ -466,10 +465,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: YGridLinePainter(
-              gridLineQuotes: _gridLineQuotes,
+              gridLineQuotes: _getGridLineQuotes(),
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: _labelWidth(_gridLineQuotes.first),
+              labelWidth: _labelWidth(_getGridLineQuotes().first,
+                  context.watch<ChartTheme>().gridStyle.yLabelStyle),
             ),
           ),
           CustomPaint(
@@ -507,7 +507,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: YGridLabelPainter(
-              gridLineQuotes: _gridLineQuotes,
+              gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
