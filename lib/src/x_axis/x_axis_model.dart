@@ -30,7 +30,7 @@ enum ViewingMode {
   constantScrollSpeed,
 
   /// Scroll and zoom only change with user gestures.
-  simple,
+  stationary,
 }
 
 /// State and methods of chart's x-axis.
