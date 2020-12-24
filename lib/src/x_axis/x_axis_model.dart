@@ -271,6 +271,12 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fits available data to screen.
+  void fitData() {
+    final double leftX = xFromEpoch(_firstCandleEpoch);
+    _scrollBy(leftX - dataFitPadding.left);
+  }
+
   void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.

@@ -608,7 +608,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         clipBehavior: Clip.antiAlias,
         child: IconButton(
           icon: const Icon(Icons.fullscreen_exit),
-          onPressed: () => context.read<XAxisModel>().pan(0),
+          onPressed: context.read<XAxisModel>().fitData,
         ),
       );
 }
