@@ -246,7 +246,7 @@ class XAxisModel extends ChangeNotifier {
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Called on each frame.
-  /// Updates zoom and scroll based on current [_viewingMode].
+  /// Updates zoom and scroll position based on current [_viewingMode].
   void onNewFrame(Duration _) {
     final int newNowEpoch = DateTime.now().millisecondsSinceEpoch;
     final int elapsedMs = newNowEpoch - _nowEpoch;
@@ -272,6 +272,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Fits available data to screen.
+  /// TODO: Should work for both live and closed contracts.
   void fitData() {
     final double leftX = xFromEpoch(_firstCandleEpoch);
     _scrollBy(leftX - dataFitPadding.left);
