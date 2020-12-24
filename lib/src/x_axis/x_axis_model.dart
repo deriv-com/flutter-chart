@@ -138,23 +138,22 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch == _maxRightBoundEpoch ||
       rightBoundEpoch == _minRightBoundEpoch;
 
-  /// Current tick is visible, chart is being autoPanned.
-  bool get _autoPanning =>
+  /// Current mode that controls chart's zooming and scrolling behaviour.
+  ViewingMode get _viewingMode {
+    if (_panSpeed != null && _panSpeed != 0) {
+      return ViewingMode.constantScrollSpeed;
+    }
+    if (_followCurrentTick) {
+      return ViewingMode.followCurrentTick;
+    }
+    return ViewingMode.stationary;
+  }
+
+  bool get _followCurrentTick =>
       _autoPanEnabled &&
       isLive &&
       rightBoundEpoch > _nowEpoch &&
       _currentTickFarEnoughFromLeftBound;
-
-  /// Current mode that controls chart's zooming and scrolling behaviour.
-  ViewingMode get _viewingMode {
-    if (_autoPanning) {
-      return ViewingMode.followCurrentTick;
-    }
-    if (_panSpeed != null && _panSpeed != 0) {
-      return ViewingMode.constantScrollSpeed;
-    }
-    return ViewingMode.stationary;
-  }
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _entries.isEmpty ||
