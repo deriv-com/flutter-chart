@@ -43,6 +43,7 @@ class XAxisModel extends ChangeNotifier {
     @required int granularity,
     @required AnimationController animationController,
     @required bool isLive,
+    bool startWithDataFitMode = false,
     this.onScale,
     this.onScroll,
   }) {
@@ -51,6 +52,7 @@ class XAxisModel extends ChangeNotifier {
     _msPerPx = _defaultScale;
     _isLive = isLive ?? true;
     _rightBoundEpoch = _maxRightBoundEpoch;
+    _dataFitMode = startWithDataFitMode ?? false;
 
     _updateEntries(entries);
 
@@ -103,6 +105,7 @@ class XAxisModel extends ChangeNotifier {
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
+  bool _dataFitMode;
   double _msPerPx = 1000;
   double _prevMsPerPx;
   int _granularity;
@@ -142,6 +145,9 @@ class XAxisModel extends ChangeNotifier {
   ViewingMode get _viewingMode {
     if (_panSpeed != null && _panSpeed != 0) {
       return ViewingMode.constantScrollSpeed;
+    }
+    if (_dataFitMode) {
+      return ViewingMode.fitData;
     }
     if (_followCurrentTick) {
       return ViewingMode.followCurrentTick;

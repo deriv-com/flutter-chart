@@ -121,6 +121,7 @@ class Chart extends StatelessWidget {
               entries: mainSeries.entries,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
+              startWithDataFitMode: dataFitEnabled,
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
