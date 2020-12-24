@@ -460,15 +460,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _updateChartData();
       _updateQuoteBoundTargets();
 
+      final List<double> gridLineQuotes = _getGridLineQuotes();
+
       return Stack(
         children: <Widget>[
           CustomPaint(
             size: canvasSize,
             painter: YGridLinePainter(
-              gridLineQuotes: _getGridLineQuotes(),
+              gridLineQuotes: gridLineQuotes,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: _labelWidth(_getGridLineQuotes().first,
+              labelWidth: _labelWidth(gridLineQuotes.first,
                   context.watch<ChartTheme>().gridStyle.yLabelStyle),
             ),
           ),
@@ -507,7 +509,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           CustomPaint(
             size: canvasSize,
             painter: YGridLabelPainter(
-              gridLineQuotes: _getGridLineQuotes(),
+              gridLineQuotes: gridLineQuotes,
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
