@@ -134,6 +134,7 @@ class Chart extends StatelessWidget {
                 onCrosshairAppeared: onCrosshairAppeared,
                 isLive: isLive,
                 showLoadingAnimationForHistoricalData: !dataFitEnabled,
+                showDataFitButton: dataFitEnabled,
                 opacity: opacity,
               ),
             ),
@@ -151,7 +152,8 @@ class _ChartImplementation extends StatefulWidget {
     @required this.pipSize,
     this.markerSeries,
     @required this.isLive,
-    @required this.showLoadingAnimationForHistoricalData,
+    this.showLoadingAnimationForHistoricalData = true,
+    this.showDataFitButton = false,
     this.opacity,
     this.controller,
     this.onCrosshairAppeared,
@@ -168,6 +170,8 @@ class _ChartImplementation extends StatefulWidget {
 
   final bool isLive;
   final bool showLoadingAnimationForHistoricalData;
+  final bool showDataFitButton;
+
   final double opacity;
 
   @override
@@ -544,7 +548,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
               right: quoteLabelsTouchAreaWidth,
               child: _buildScrollToLastTickButton(),
             ),
-          if (widget.mainSeries.entries.isNotEmpty)
+          if (widget.showDataFitButton && widget.mainSeries.entries.isNotEmpty)
             Positioned(
               bottom: 0,
               left: 0,
