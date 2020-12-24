@@ -552,15 +552,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
             Positioned(
               bottom: 0,
               left: 0,
-              child: Material(
-                type: MaterialType.circle,
-                color: Colors.transparent,
-                clipBehavior: Clip.antiAlias,
-                child: IconButton(
-                  icon: Icon(Icons.fullscreen_exit),
-                  onPressed: () {},
-                ),
-              ),
+              child: _buildDataFitButton(),
             ),
         ],
       );
@@ -600,15 +592,23 @@ class _ChartImplementationState extends State<_ChartImplementation>
     });
   }
 
-  Widget _buildScrollToLastTickButton() {
-    return Material(
-      type: MaterialType.circle,
-      color: Colors.transparent,
-      clipBehavior: Clip.antiAlias,
-      child: IconButton(
-        icon: Icon(Icons.arrow_forward, color: Colors.white),
-        onPressed: _xAxis.scrollToLastTick,
-      ),
-    );
-  }
+  Widget _buildScrollToLastTickButton() => Material(
+        type: MaterialType.circle,
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        child: IconButton(
+          icon: const Icon(Icons.arrow_forward),
+          onPressed: _xAxis.scrollToLastTick,
+        ),
+      );
+
+  Widget _buildDataFitButton() => Material(
+        type: MaterialType.circle,
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        child: IconButton(
+          icon: const Icon(Icons.fullscreen_exit),
+          onPressed: () {},
+        ),
+      );
 }
