@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
 const double autoPanOffset = 30;
 
+/// Padding around data used in data-fit mode.
+const EdgeInsets dataFitPadding = EdgeInsets.only(left: 10, right: 120);
+
 /// Modes that control chart's zoom and scroll behaviour without user interaction.
 enum ViewingMode {
   /// Keeps current tick visible.
@@ -255,6 +258,9 @@ class XAxisModel extends ChangeNotifier {
         break;
       case ViewingMode.fitData:
         // TODO(Rustem): Handle this case.
+        // Keep
+        // first entry epoch -> dataFitPadding.left
+        // last entry epoch -> width - dataFitPadding.right
         break;
       case ViewingMode.constantScrollSpeed:
         _scrollBy(_panSpeed * elapsedMs);
