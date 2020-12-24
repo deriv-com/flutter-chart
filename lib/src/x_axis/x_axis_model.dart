@@ -315,7 +315,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is scaling the chart.
   void onScaleUpdate(ScaleUpdateDetails details) {
-    if (_autoPanning) {
+    if (_viewingMode == ViewingMode.followCurrentTick) {
       _scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);
