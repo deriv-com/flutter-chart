@@ -543,14 +543,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
               right: quoteLabelsTouchAreaWidth,
               child: _buildScrollToLastTickButton(),
             ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: IconButton(
-              icon: Icon(Icons.fullscreen_exit),
-              onPressed: () {},
+          if (widget.mainSeries.entries.isNotEmpty)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: IconButton(
+                icon: Icon(Icons.fullscreen_exit),
+                onPressed: () {},
+              ),
             ),
-          ),
         ],
       );
     });
