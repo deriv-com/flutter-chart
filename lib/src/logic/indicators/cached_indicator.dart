@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:deriv_chart/src/models/tick.dart';
 
 import 'abstract_indicator.dart';
@@ -15,12 +17,14 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
   CachedIndicator.fromIndicator(AbstractIndicator<T> indicator)
       : this(indicator.entries);
 
+  /// Makes sure indicator's result for all [entries] are cached.
   void calculateValues() {
     for (int i = 0; i < entries.length; i++) {
       getValue(i);
     }
   }
 
+  /// Copies the result of [other] as its own.
   void copyValuesFrom(covariant CachedIndicator<T> other) => results
     ..clear()
     ..addAll(other.results);
@@ -34,7 +38,7 @@ abstract class CachedIndicator<T extends Tick> extends AbstractIndicator<T> {
 
     if (results[index] == null) {
       results[index] = calculate(index);
-      // print('Calculating $runtimeType for $index  ${DateTime.now()}');
+      dev.log('Calculating $runtimeType for $index');
     }
 
     return results[index];
