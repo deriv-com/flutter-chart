@@ -1,10 +1,13 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/find_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
+
+import 'grid/calc_time_grid.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
 const double autoPanOffset = 30;
@@ -96,6 +99,8 @@ class XAxisModel extends ChangeNotifier {
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
+
+  void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
@@ -260,9 +265,11 @@ class XAxisModel extends ChangeNotifier {
       );
 
   /// Get x position of epoch.
-  double xFromEpoch(int epoch) => epoch <= rightBoundEpoch
-      ? width - pxBetween(epoch, rightBoundEpoch)
-      : width + pxBetween(rightBoundEpoch, epoch);
+  double xFromEpoch(int epoch) {
+    return epoch <= rightBoundEpoch
+        ? width - pxBetween(epoch, rightBoundEpoch)
+        : width + pxBetween(rightBoundEpoch, epoch);
+  }
 
   /// Get epoch of x position.
   int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width + x);
@@ -361,5 +368,20 @@ class XAxisModel extends ChangeNotifier {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
+  }
+
+  List<DateTime> getNoOverlapGridTimestamps() {
+    const double _minDistanceBetweenTimeGridLines = 80;
+    // Calculate time labels' timestamps for current scale.
+    final List<DateTime> _gridTimestamps = gridTimestamps(
+      timeGridInterval: timeGridInterval(
+        pxFromMs,
+        minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
+      ),
+      leftBoundEpoch: leftBoundEpoch,
+      rightBoundEpoch: rightBoundEpoch,
+    );
+    return calculateNoOverlapGridTimestamps(
+        _gridTimestamps, _timeGaps, _msPerPx, _minDistanceBetweenTimeGridLines);
   }
 }
