@@ -34,7 +34,7 @@ void main() {
       ];
     });
 
-    test('HMA Indicator', () {
+    test('HMAIndicator calculates the correct result', () {
       final HMAIndicator hma = HMAIndicator(CloseValueIndicator(ticks), 9);
 
       expect(roundDouble(hma.results[10].quote, 4), 86.3204);

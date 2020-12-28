@@ -1,14 +1,16 @@
-import 'package:deriv_chart/src/chart_package/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/chart_package/indicators_ui/ma_indicator/ma_indicator_item.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
+import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'bollinger_bands_indicator_config.dart';
 
-/// Bollinger Bands indicator item
+/// Bollinger Bands indicator item in the list of indicator which provide this
+/// indicators options menu.
 class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
   const BollingerBandsIndicatorItem({
@@ -34,24 +36,11 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   @override
   BollingerBandsIndicatorConfig createIndicatorConfig() =>
       BollingerBandsIndicatorConfig(
-        (List<Tick> ticks) => BollingerBandSeries.fromIndicator(
-          filedIndicatorBuilders[field](ticks),
-          period: period,
-          movingAverageType: type,
-          standardDeviationFactor: _standardDeviation,
-        ),
-        period: period,
-        movingAverageType: type,
-        standardDeviation: _standardDeviation,
-        fieldType: field,
+        period: getCurrentPeriod(),
+        movingAverageType: getCurrentType(),
+        standardDeviation: _getCurrentStandardDeviation(),
+        fieldType: getCurrentField(),
       );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _standardDeviation = _getCurrentStandardDeviation();
-  }
 
   @override
   Widget getIndicatorOptions() => Column(
@@ -70,11 +59,15 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
 
   Widget _buildSDMenu() => Row(
         children: <Widget>[
-          const Text('Standard Deviation: ', style: TextStyle(fontSize: 12)),
+          Text(
+            ChartLocalization.of(context).labelStandardDeviation,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           SizedBox(
             width: 20,
             child: TextFormField(
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 10),
               initialValue: _getCurrentStandardDeviation().toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
@@ -92,6 +85,6 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
 
   double _getCurrentStandardDeviation() {
     final BollingerBandsIndicatorConfig config = getConfig();
-    return config?.standardDeviation ?? 2;
+    return _standardDeviation ?? config?.standardDeviation ?? 2;
   }
 }

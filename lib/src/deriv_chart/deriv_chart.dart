@@ -19,9 +19,9 @@ import 'indicators_ui/indicator_repository.dart';
 import 'indicators_ui/indicators_dialog.dart';
 
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
-class ChartPackage extends StatefulWidget {
+class DerivChart extends StatefulWidget {
   /// Initializes
-  const ChartPackage({
+  const DerivChart({
     Key key,
     this.mainSeries,
     this.markerSeries,
@@ -74,10 +74,10 @@ class ChartPackage extends StatefulWidget {
   final double opacity;
 
   @override
-  _ChartPackageState createState() => _ChartPackageState();
+  _DerivChartState createState() => _DerivChartState();
 }
 
-class _ChartPackageState extends State<ChartPackage> {
+class _DerivChartState extends State<DerivChart> {
   final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
 
   @override
@@ -93,7 +93,7 @@ class _ChartPackageState extends State<ChartPackage> {
                   .where((IndicatorConfig indicatorConfig) =>
                       indicatorConfig != null)
                   .map((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig.builder?.call(widget.mainSeries.input))
+                      indicatorConfig.getSeries(widget.mainSeries.input))
             ],
             markerSeries: widget.markerSeries,
             theme: widget.theme,
@@ -113,19 +113,16 @@ class _ChartPackageState extends State<ChartPackage> {
                   builder: (
                     BuildContext context,
                   ) =>
-                      MultiProvider(
-                    providers: <Provider<dynamic>>[
                       Provider<IndicatorsRepository>.value(
-                          value: _indicatorsRepo)
-                    ],
+                    value: _indicatorsRepo,
                     child: IndicatorsDialog(
                       ticks: widget.mainSeries.entries,
                       onAddIndicator: (
                         String key,
-                        IndicatorConfig indicatorBuilder,
+                        IndicatorConfig indicatorConfig,
                       ) =>
                           setState(() => _indicatorsRepo.indicators[key] =
-                              indicatorBuilder),
+                              indicatorConfig),
                     ),
                   ),
                 );

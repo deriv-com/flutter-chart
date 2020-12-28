@@ -7,10 +7,10 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indi
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_lower_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -40,7 +40,7 @@ class BollingerBandSeries extends Series {
 
   /// Initializes
   BollingerBandSeries.fromIndicator(
-    AbstractIndicator<Tick> indicator, {
+    Indicator<Tick> indicator, {
     this.period = 20,
     this.movingAverageType = MovingAverageType.simple,
     this.standardDeviationFactor = 2,
@@ -62,7 +62,7 @@ class BollingerBandSeries extends Series {
   /// Standard Deviation value
   final double standardDeviationFactor;
 
-  final AbstractIndicator<Tick> _fieldIndicator;
+  final Indicator<Tick> _fieldIndicator;
 
   @override
   void initialize() {
@@ -76,9 +76,8 @@ class BollingerBandSeries extends Series {
     final StandardDeviationIndicator standardDeviation =
         StandardDeviationIndicator(_fieldIndicator, period);
 
-    final BollingerBandsMiddleIndicator bbmSMA = BollingerBandsMiddleIndicator(
-      MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType),
-    );
+    final CachedIndicator<Tick> bbmSMA =
+        MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
 
     _middleSeries = GeneralSingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),

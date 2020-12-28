@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import 'indicator_config.dart';
@@ -8,7 +8,7 @@ import 'indicator_config.dart';
 typedef IndicatorBuilder = Series Function(List<Tick> ticks);
 
 /// A function which takes list of ticks and creates an Indicator on it.
-typedef FieldIndicatorBuilder = AbstractIndicator<Tick> Function(
+typedef FieldIndicatorBuilder = Indicator<Tick> Function(
   List<Tick> ticks,
 );
 

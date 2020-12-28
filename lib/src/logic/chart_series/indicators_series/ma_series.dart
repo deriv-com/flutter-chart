@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
@@ -57,7 +57,7 @@ class MASeries extends LineSeries {
 
   final MovingAverageType type;
 
-  final AbstractIndicator indicator;
+  final Indicator indicator;
 
   @override
   void initialize() {
@@ -77,7 +77,7 @@ class MASeries extends LineSeries {
   }
 
   static CachedIndicator getMAIndicator(
-    AbstractIndicator indicator,
+    Indicator indicator,
     int period,
     MovingAverageType type,
   ) {
@@ -115,8 +115,7 @@ enum MovingAverageType {
 }
 
 class TestMASeries extends SingleIndicatorSeries<Tick> {
-  TestMASeries(
-      AbstractIndicator<Tick> inputIndicator, String id, MAOptions options)
+  TestMASeries(Indicator<Tick> inputIndicator, String id, MAOptions options)
       : super(inputIndicator, id, options);
 
   @override

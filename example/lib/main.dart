@@ -356,7 +356,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             child: Stack(
               children: <Widget>[
                 ClipRect(
-                  child: ChartPackage(
+                  child: DerivChart(
                     mainSeries:
                         style == ChartStyle.candles && ticks is List<Candle>
                             ? CandleSeries(ticks)

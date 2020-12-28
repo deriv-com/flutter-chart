@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
         super(inputIndicator.entries, id);
 
   /// Input indicator to calculate this indicator value on.
-  final AbstractIndicator<Tick> inputIndicator;
+  final Indicator<Tick> inputIndicator;
 
   /// Indicator options
   final IndicatorOptions options;

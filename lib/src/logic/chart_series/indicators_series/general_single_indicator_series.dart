@@ -3,8 +3,8 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/indicator_s
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -15,7 +15,7 @@ class GeneralSingleIndicatorSeries extends SingleIndicatorSeries {
   GeneralSingleIndicatorSeries({
     @required this.painterCreator,
     @required this.indicatorCreator,
-    @required AbstractIndicator<Tick> inputIndicator,
+    @required Indicator<Tick> inputIndicator,
     @required IndicatorOptions options,
     String id,
   }) : super(inputIndicator, id, options);

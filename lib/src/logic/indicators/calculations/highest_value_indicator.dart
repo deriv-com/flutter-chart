@@ -2,32 +2,28 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../abstract_indicator.dart';
+import '../indicator.dart';
 import '../cached_indicator.dart';
 
-/// Highest value indicator
-class HighestValueIndicator extends CachedIndicator {
+/// Highest value in a range
+class HighestValueIndicator extends CachedIndicator<Tick> {
   /// Initializes
   HighestValueIndicator(this.indicator, this.period)
       : super.fromIndicator(indicator);
 
-  /// Calculate Highest value on the result of this indicator
-  final AbstractIndicator indicator;
+  /// Calculating highest value on the result of this indicator
+  final Indicator<Tick> indicator;
 
-  /// Number of elements to calculate from
+  /// The period
   final int period;
 
   @override
   Tick calculate(int index) {
-    if (indicator.getValue(index).quote.isNaN && period != 1) {
-      return HighestValueIndicator(indicator, period - 1).getValue(index - 1);
-    }
-
     final int end = max(0, index - period + 1);
     double highest = indicator.getValue(index).quote;
 
     for (int i = index - 1; i >= end; i--) {
-      if (highest < getValue(i).quote) {
+      if (highest < indicator.getValue(i).quote) {
         highest = indicator.getValue(i).quote;
       }
     }

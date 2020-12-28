@@ -1,9 +1,9 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../../abstract_indicator.dart';
+import '../../indicator.dart';
 
 /// Difference values between two indicators
-class DifferenceIndicator extends AbstractIndicator {
+class DifferenceIndicator extends Indicator {
   /// Initializes
   ///
   /// (first minus second)
@@ -12,10 +12,10 @@ class DifferenceIndicator extends AbstractIndicator {
   }
 
   /// First indicator
-  final AbstractIndicator first;
+  final Indicator first;
 
   /// Second indicator
-  final AbstractIndicator second;
+  final Indicator second;
 
   @override
   Tick getValue(int index) => Tick(

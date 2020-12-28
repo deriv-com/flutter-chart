@@ -1,13 +1,8 @@
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/hl2_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/open_value_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -15,7 +10,8 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_indicator_config.dart';
 
-/// Moving average indicator
+/// Moving Average indicator item in the list of indicator which provide this
+/// indicator's options menu.
 class MAIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAIndicatorItem({
@@ -48,17 +44,6 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   int period;
 
-  /// Different Field type indicator builders
-  final Map<String, FieldIndicatorBuilder> filedIndicatorBuilders =
-      <String, FieldIndicatorBuilder>{
-    'close': (List<Tick> ticks) => CloseValueIndicator(ticks),
-    'high': (List<Tick> ticks) => HighValueIndicator(ticks),
-    'low': (List<Tick> ticks) => LowValueIndicator(ticks),
-    'open': (List<Tick> ticks) => OpenValueIndicator(ticks),
-    'Hl/2': (List<Tick> ticks) => HL2Indicator(ticks),
-    // TODO(Ramin): Add also hlc3, hlcc4, ohlc4 Indicators.
-  };
-
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         // (List<Tick> ticks) => MASeries.fromIndicator(
@@ -67,24 +52,10 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         //   type: type,
         //   style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
         // ),
-        (List<Tick> ticks) => TestMASeries(
-          filedIndicatorBuilders[field](ticks),
-          'TestMA',
-          MAOptions(period, type),
-        ),
-        period: period,
-        type: type,
-        fieldType: field,
+        period: getCurrentPeriod(),
+        type: getCurrentType(),
+        fieldType: getCurrentField(),
       );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    type = getCurrentType();
-    period = getCurrentPeriod();
-    field = getCurrentField();
-  }
 
   @override
   Widget getIndicatorOptions() => Column(
@@ -104,16 +75,20 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildFieldTypeMenu() => Row(
         children: <Widget>[
-          const Text('Field: ', style: TextStyle(fontSize: 12)),
+          Text(
+            ChartLocalization.of(context).labelField,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           DropdownButton<String>(
             value: getCurrentField(),
-            items: filedIndicatorBuilders.keys
+            items: IndicatorConfig.supportedFieldTypes.keys
                 .map<DropdownMenuItem<String>>(
                     (String fieldType) => DropdownMenuItem<String>(
                           value: fieldType,
                           child: Text(
                             '$fieldType',
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ))
                 .toList(),
@@ -131,11 +106,15 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildPeriodField() => Row(
         children: <Widget>[
-          const Text('Period: ', style: TextStyle(fontSize: 12)),
+          Text(
+            ChartLocalization.of(context).labelPeriod,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           SizedBox(
             width: 20,
             child: TextFormField(
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 10),
               initialValue: getCurrentPeriod().toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
@@ -155,7 +134,11 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   Widget buildMATypeMenu() => Row(
         children: <Widget>[
-          const Text('Type: ', style: TextStyle(fontSize: 12)),
+          Text(
+            ChartLocalization.of(context).labelType,
+            style: TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
           DropdownButton<MovingAverageType>(
             value: getCurrentType(),
             items: MovingAverageType.values
@@ -165,7 +148,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                           value: type,
                           child: Text(
                             '${getEnumValue(type)}',
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ))
                 .toList(),
@@ -182,13 +165,18 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current type.
   @protected
   MovingAverageType getCurrentType() =>
-      getConfig()?.type ?? MovingAverageType.simple;
+      type ?? getConfig()?.type ?? MovingAverageType.simple;
 
   /// Gets Indicator current filed type.
   @protected
-  String getCurrentField() => getConfig()?.fieldType ?? 'close';
+  String getCurrentField() => field ?? getConfig()?.fieldType ?? 'close';
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentPeriod() => getConfig()?.period ?? 50;
+  int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
+
+  @protected
+  LineStyle getCurrentLineStyle() =>
+      getConfig().lineStyle ??
+      const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
 }

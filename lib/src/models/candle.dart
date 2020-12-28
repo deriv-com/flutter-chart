@@ -1,4 +1,3 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:meta/meta.dart';
 
@@ -57,7 +56,7 @@ class Candle extends Tick {
   String toString() =>
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
-  ///
   @override
   int get hashCode => super.hashCode;
+
 }

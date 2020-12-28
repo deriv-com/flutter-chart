@@ -18,7 +18,4 @@ class CandleSeries extends OHLCTypeSeries {
 
   @override
   SeriesPainter<DataSeries<Candle>> createPainter() => CandlePainter(this);
-
-  @override
-  void updateEntries(ChartData oldData, bool newTickAdded) => entries = input;
 }

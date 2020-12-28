@@ -49,10 +49,11 @@ class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
             color: Colors.transparent,
             elevation: 4,
             child: Container(
-              decoration: ShapeDecoration(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5))),
+              decoration: const ShapeDecoration(
+                color: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+              ),
               child: Material(
                 color: const Color(0xFF0E0E0E).withOpacity(0.5),
                 child: Padding(

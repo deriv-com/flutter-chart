@@ -1,48 +1,16 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_middle_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/percent_b_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/parabolic_sar.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/Ichimoku_indicators.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Indicators', () {
-    List<Candle> candles;
-
-    setUpAll(() {
-      candles = <Candle>[
-        Candle(epoch: 10, high: 4, low: 0.2, open: 3, close: 1),
-        Candle(epoch: 11, high: 2, low: 0.7, open: 1, close: 2),
-        Candle(epoch: 12, high: 5, low: 2, open: 4, close: 3),
-        Candle(epoch: 13, high: 6, low: 3, open: 3, close: 4),
-        Candle(epoch: 14, high: 5, low: 2, open: 4, close: 3),
-        Candle(epoch: 15, high: 7, low: 3, open: 6, close: 4),
-        Candle(epoch: 16, high: 8, low: 2, open: 4, close: 5),
-        Candle(epoch: 17, high: 6.2, low: 1, open: 5, close: 4),
-        Candle(epoch: 18, high: 3, low: 0, open: 1, close: 3),
-        Candle(epoch: 19, high: 5, low: 2.2, open: 2.8, close: 3),
-        Candle(epoch: 20, high: 6.2, low: 1, open: 5.4, close: 4),
-        Candle(epoch: 21, high: 4, low: 1, open: 2, close: 3),
-        Candle(epoch: 22, high: 6, low: 1, open: 1, close: 2),
-      ];
-    });
-
-    test('Ichimoku test', () {
-      AbstractIchimokuLineIndicator abstractIchimokuLineIndicator =
-          AbstractIchimokuLineIndicator(candles, 3);
-    });
-
-    test('Parabolic SAR', () {
-      ParabolicSarIndicator parabolicSarIndicator =
-          ParabolicSarIndicator(candles);
-    });
-
-    test('Bollinger middle', () {
+  group('BollingerBands Indicator', () {
+    test('BollingerBandsUpperIndicator calculates the correct result', () {
       final List<Tick> ticks = <Tick>[
         Tick(epoch: 1, quote: 1),
         Tick(epoch: 2, quote: 2),
@@ -59,41 +27,15 @@ void main() {
         Tick(epoch: 13, quote: 2),
       ];
 
-      SMAIndicator sma = SMAIndicator(CloseValueIndicator(ticks), 3);
-      BollingerBandsMiddleIndicator bbmSMA = BollingerBandsMiddleIndicator(sma);
+      const int period = 3;
 
-      for (int i = 0; i < ticks.length; i++) {
-        expect(bbmSMA.getValue(i).quote, sma.getValue(i).quote);
-      }
-    });
+      final Indicator<Tick> closePrice = CloseValueIndicator(ticks);
 
-    test('Bollinger uper', () {
-      final List<Tick> ticks = <Tick>[
-        Tick(epoch: 1, quote: 1),
-        Tick(epoch: 2, quote: 2),
-        Tick(epoch: 3, quote: 3),
-        Tick(epoch: 4, quote: 4),
-        Tick(epoch: 5, quote: 3),
-        Tick(epoch: 6, quote: 4),
-        Tick(epoch: 7, quote: 5),
-        Tick(epoch: 8, quote: 4),
-        Tick(epoch: 9, quote: 3),
-        Tick(epoch: 10, quote: 3),
-        Tick(epoch: 11, quote: 4),
-        Tick(epoch: 12, quote: 3),
-        Tick(epoch: 13, quote: 2),
-      ];
-
-      final period = 3;
-
-      final closePrice = new CloseValueIndicator(ticks);
-
-      BollingerBandsMiddleIndicator bbmSMA =
-          new BollingerBandsMiddleIndicator(SMAIndicator(closePrice, period));
-      StandardDeviationIndicator standardDeviation =
-          new StandardDeviationIndicator(closePrice, period);
-      BollingerBandsUpperIndicator bbuSMA =
-          new BollingerBandsUpperIndicator(bbmSMA, standardDeviation);
+      final Indicator<Tick> bbmSMA = SMAIndicator(closePrice, period);
+      final StandardDeviationIndicator standardDeviation =
+          StandardDeviationIndicator(closePrice, period);
+      final BollingerBandsUpperIndicator bbuSMA =
+          BollingerBandsUpperIndicator(bbmSMA, standardDeviation);
 
       expect(bbuSMA.k, 2);
 
@@ -108,8 +50,8 @@ void main() {
       expect(roundDouble(bbuSMA.getValue(8).quote, 3), 5.633);
       expect(roundDouble(bbuSMA.getValue(9).quote, 4), 4.2761);
 
-      BollingerBandsUpperIndicator bbuSMAwithK =
-          new BollingerBandsUpperIndicator(bbmSMA, standardDeviation, k: 1.5);
+      final BollingerBandsUpperIndicator bbuSMAwithK =
+          BollingerBandsUpperIndicator(bbmSMA, standardDeviation, k: 1.5);
 
       expect(bbuSMAwithK.k, 1.5);
 
@@ -125,7 +67,7 @@ void main() {
       expect(roundDouble(bbuSMAwithK.getValue(9).quote, 4), 4.0404);
     });
 
-    test('Bollinger Percent B', () {
+    test('Bollinger Percent B calculates the correct result', () {
       final List<Tick> ticks = <Tick>[
         Tick(epoch: 1, quote: 10),
         Tick(epoch: 2, quote: 12),
@@ -151,7 +93,7 @@ void main() {
 
       final closePrice = CloseValueIndicator(ticks);
 
-      PercentBIndicator pcb = new PercentBIndicator(closePrice, 5);
+      final PercentBIndicator pcb = PercentBIndicator(closePrice, 5);
 
       expect(pcb.results[0].quote.isNaN, isTrue);
       expect(roundDouble(pcb.results[1].quote, 2), 0.75);

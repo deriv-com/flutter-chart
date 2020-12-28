@@ -6,7 +6,7 @@ import 'callbacks.dart';
 import 'indicator_config.dart';
 import 'indicator_repository.dart';
 
-/// Indicator item in indicators dialog
+/// Representing and indicator item in indicators list dialog.
 abstract class IndicatorItem extends StatefulWidget {
   /// Initializes
   const IndicatorItem({
@@ -50,7 +50,7 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: Text(widget.title, style: const TextStyle(fontSize: 12)),
+        leading: Text(widget.title, style: const TextStyle(fontSize: 10)),
         title: getIndicatorOptions(),
         trailing: Checkbox(
           value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),

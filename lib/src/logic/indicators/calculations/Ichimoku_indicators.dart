@@ -13,7 +13,7 @@ import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
 /// Ichimoku abstract line indicator
-class AbstractIchimokuLineIndicator extends CachedIndicator {
+class AbstractIchimokuLineIndicator extends CachedIndicator<Tick> {
   /// Initializes.
   ///
   /// [entries]   the data
@@ -25,10 +25,10 @@ class AbstractIchimokuLineIndicator extends CachedIndicator {
         super(entries);
 
   /// The period high
-  final Indicator _periodHigh;
+  final Indicator<Tick> _periodHigh;
 
   /// The period low
-  final Indicator _periodLow;
+  final Indicator<Tick> _periodLow;
 
   @override
   Tick calculate(int index) => Tick(

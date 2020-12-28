@@ -2,27 +2,23 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../abstract_indicator.dart';
+import '../indicator.dart';
 import '../cached_indicator.dart';
 
-/// Lowest price in a range
-class LowestValueIndicator extends CachedIndicator {
+/// Lowest value in a range
+class LowestValueIndicator extends CachedIndicator<Tick> {
   /// Initializes
   LowestValueIndicator(this.indicator, this.period)
       : super(indicator.entries);
 
-  /// Indicator to calculate Lowest value on
-  final AbstractIndicator indicator;
+  /// Calculating lowest value on the result of this indicator
+  final Indicator<Tick> indicator;
 
-  /// Bar count
+  /// The period
   final int period;
 
   @override
   Tick calculate(int index) {
-    if (indicator.getValue(index).quote.isNaN && period != 1) {
-      return LowestValueIndicator(indicator, period - 1).getValue(index - 1);
-    }
-
     final int end = max(0, index - period + 1);
     double lowest = indicator.getValue(index).quote;
 
