@@ -23,7 +23,7 @@ class HighestValueIndicator extends CachedIndicator<Tick> {
     double highest = indicator.getValue(index).quote;
 
     for (int i = index - 1; i >= end; i--) {
-      if (highest < getValue(i).quote) {
+      if (highest < indicator.getValue(i).quote) {
         highest = indicator.getValue(i).quote;
       }
     }
