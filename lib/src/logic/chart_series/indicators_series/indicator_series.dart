@@ -2,14 +2,15 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/indicators/abstract_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'models/indicator_options.dart';
 
-/// Base class of indicator series
+/// Base class of indicator series.
+///
+/// Handles reusing result of previous indicator of the series.
 abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   /// Initializes
   SingleIndicatorSeries(this.inputIndicator, String id, this.options)
@@ -21,6 +22,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   /// Input indicator to calculate this indicator value on.
   final AbstractIndicator<Tick> inputIndicator;
 
+  /// Indicator options
   final IndicatorOptions options;
 
   /// Result indicator
@@ -28,14 +30,13 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
 
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
-  final Tick _inputFirstTick;
+  final T _inputFirstTick;
 
   @override
   void initialize() {
     super.initialize();
 
-    resultIndicator = initializeIndicator();
-    resultIndicator.calculateValues();
+    resultIndicator = initializeIndicator()..calculateValues();
     entries = resultIndicator.results;
   }
 
@@ -47,7 +48,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
 
   /// Will be called by the chart when it was updated.
   @override
-  bool didUpdate(ChartData oldData, {Tick newChartTick}) {
+  bool didUpdate(ChartData oldData) {
     final SingleIndicatorSeries<Tick> oldSeries = oldData;
 
     if ((oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??

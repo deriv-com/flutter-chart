@@ -13,7 +13,4 @@ abstract class AbstractIndicator<T extends Tick> implements Indicator {
   /// Gets the epoch of the given [index]
   // TODO(Ramin): Handle indicator offset here.
   int getEpochOfIndex(int index) => entries[index].epoch;
-
-  /// Push a new value to indicator.
-  T push(T t) => getValue(entries.length - 1);
 }
