@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 
+import '../../chart_data.dart';
+
 /// Base class of barrier
 abstract class Barrier extends ChartAnnotation<BarrierObject> {
   /// Initializes
@@ -27,4 +29,13 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
 
   /// The value that this barrier points to
   final double value;
+
+  var _shouldRepaint = false;
+
+  @override
+  bool didUpdate(ChartData oldData) =>
+      _shouldRepaint = super.didUpdate(oldData);
+
+  @override
+  bool shouldRepaint() => _shouldRepaint;
 }

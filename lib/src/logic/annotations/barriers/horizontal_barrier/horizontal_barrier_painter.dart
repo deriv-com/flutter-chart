@@ -33,6 +33,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Padding on both sides of the title (so that barrier line doesn't touch title text).
   static const double _titleHorizontalPadding = 2;
 
+
+
   @override
   void onPaint({
     Canvas canvas,

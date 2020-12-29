@@ -2,7 +2,10 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../../deriv_chart.dart';
 
 class ChartPainter extends CustomPainter {
   ChartPainter({
@@ -12,6 +15,8 @@ class ChartPainter extends CustomPainter {
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
+    this.rightEpoch,
+    this.leftEpoch,
   });
 
   /// Chart config
@@ -25,6 +30,9 @@ class ChartPainter extends CustomPainter {
   final AnimationInfo animationInfo;
 
   final List<ChartData> chartDataList;
+
+  final int rightEpoch;
+  final int leftEpoch;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -42,7 +50,14 @@ class ChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(ChartPainter oldDelegate) => true;
+  bool shouldRepaint(ChartPainter oldDelegate) {
+    for (final ChartData c in chartDataList) {
+      if (c.shouldRepaint()) return true;
+    }
+    if (rightEpoch != oldDelegate.rightEpoch ||
+        leftEpoch != oldDelegate.leftEpoch) return true;
+    return false;
+  }
 
   @override
   bool shouldRebuildSemantics(ChartPainter oldDelegate) => false;

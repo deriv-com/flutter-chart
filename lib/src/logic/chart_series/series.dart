@@ -53,6 +53,11 @@ abstract class Series implements ChartData {
     maxValueInFrame = minMaxValues[1];
   }
 
+  @override
+  bool shouldRepaint() {
+    return true;
+  }
+
   /// Calculate min/max values in updated data
   List<double> recalculateMinMax();
 

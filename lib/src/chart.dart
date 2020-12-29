@@ -492,6 +492,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
                 theme: context.read<ChartTheme>(),
                 epochToCanvasX: _xAxis.xFromEpoch,
                 quoteToCanvasY: _quoteToCanvasY,
+                leftEpoch: _xAxis.leftBoundEpoch,
+                rightEpoch: _xAxis.rightBoundEpoch,
               ),
             ),
           ),
@@ -509,6 +511,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
               theme: context.read<ChartTheme>(),
               epochToCanvasX: _xAxis.xFromEpoch,
               quoteToCanvasY: _quoteToCanvasY,
+              leftEpoch: _xAxis.leftBoundEpoch,
+              rightEpoch: _xAxis.rightBoundEpoch,
             ),
           ),
           if (widget.markerSeries != null)
