@@ -52,10 +52,14 @@ class ChartPainter extends CustomPainter {
   @override
   bool shouldRepaint(ChartPainter oldDelegate) {
     for (final ChartData c in chartDataList) {
-      if (c.shouldRepaint()) return true;
+      if (c.shouldRepaint()) {
+        return true;
+      }
     }
     if (rightEpoch != oldDelegate.rightEpoch ||
-        leftEpoch != oldDelegate.leftEpoch) return true;
+        leftEpoch != oldDelegate.leftEpoch) {
+      return true;
+    }
     return false;
   }
 
