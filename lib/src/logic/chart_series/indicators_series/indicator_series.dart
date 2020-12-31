@@ -71,7 +71,8 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
     resultIndicator = initializeIndicator()
       ..copyValuesFrom(oldSeries.resultIndicator);
 
-    if (oldSeries.input.length == input.length) {
+    if (oldSeries.input.length == input.length &&
+        oldSeries.input.last != input.last) {
       resultIndicator
         ..invalidate(input.length - 1)
         ..getValue(input.length - 1);
