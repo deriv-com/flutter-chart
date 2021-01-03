@@ -37,6 +37,9 @@ class ChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (final ChartData c in chartDataList) {
+      if(c is VerticalBarrier){
+
+      }
       c.paint(
         canvas,
         size,
@@ -52,6 +55,7 @@ class ChartPainter extends CustomPainter {
   @override
   bool shouldRepaint(ChartPainter oldDelegate) {
     for (final ChartData c in chartDataList) {
+
       if (c.shouldRepaint()) {
         return true;
       }

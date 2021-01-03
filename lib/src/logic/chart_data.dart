@@ -23,8 +23,8 @@ abstract class ChartData {
   /// Returns `true` if this chart data has changed with the chart widget update.
   bool didUpdate(ChartData oldData);
 
-
-  bool shouldRepaint();
+/// Check if data needs to repaint or not with the chart widget update.
+  bool shouldRepaint(ChartData oldData);
 
   /// Updates this [ChartData] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);

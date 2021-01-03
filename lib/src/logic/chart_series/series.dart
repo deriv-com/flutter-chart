@@ -54,7 +54,7 @@ abstract class Series implements ChartData {
   }
 
   @override
-  bool shouldRepaint() {
+  bool shouldRepaint(ChartData previous) {
     return true;
   }
 

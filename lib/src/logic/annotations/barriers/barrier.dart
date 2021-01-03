@@ -37,5 +37,5 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
       _shouldRepaint = super.didUpdate(oldData);
 
   @override
-  bool shouldRepaint() => _shouldRepaint;
+  bool shouldRepaint(ChartData oldData) => _shouldRepaint;
 }
