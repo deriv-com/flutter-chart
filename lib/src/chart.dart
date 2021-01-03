@@ -47,6 +47,7 @@ class Chart extends StatelessWidget {
     this.isLive = false,
     this.opacity = 1.0,
     this.annotations,
+    this.initialServerTime,
     Key key,
   }) : super(key: key);
 
@@ -92,6 +93,9 @@ class Chart extends StatelessWidget {
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
 
+  /// phone's time to check time difference between server time and phone time
+  final DateTime initialServerTime;
+
   @override
   Widget build(BuildContext context) {
     final ChartTheme chartTheme =
@@ -103,38 +107,40 @@ class Chart extends StatelessWidget {
       pipSize: pipSize,
       granularity: granularity,
     );
-
-    return MultiProvider(
-      providers: <SingleChildWidget>[
-        Provider<ChartTheme>.value(value: chartTheme),
-        Provider<ChartConfig>.value(value: chartConfig),
-      ],
-      child: ClipRect(
-        child: Ink(
-          color: chartTheme.base08Color,
-          child: GestureManager(
-            child: XAxis(
-              entries: mainSeries.entries,
-              onVisibleAreaChanged: onVisibleAreaChanged,
-              isLive: isLive,
-              child: _ChartImplementation(
-                controller: controller,
-                mainSeries: mainSeries,
-                chartDataList: <ChartData>[
-                  if (secondarySeries != null) ...secondarySeries,
-                  if (annotations != null) ...annotations
-                ],
-                markerSeries: markerSeries,
-                pipSize: pipSize,
-                onCrosshairAppeared: onCrosshairAppeared,
-                isLive: isLive,
-                opacity: opacity,
+    return initialServerTime == null
+        ? Container()
+        : MultiProvider(
+            providers: <SingleChildWidget>[
+              Provider<ChartTheme>.value(value: chartTheme),
+              Provider<ChartConfig>.value(value: chartConfig),
+            ],
+            child: ClipRect(
+              child: Ink(
+                color: chartTheme.base08Color,
+                child: GestureManager(
+                  child: XAxis(
+                    initialServerTime: initialServerTime,
+                    entries: mainSeries.entries,
+                    onVisibleAreaChanged: onVisibleAreaChanged,
+                    isLive: isLive,
+                    child: _ChartImplementation(
+                      controller: controller,
+                      mainSeries: mainSeries,
+                      chartDataList: <ChartData>[
+                        if (secondarySeries != null) ...secondarySeries,
+                        if (annotations != null) ...annotations
+                      ],
+                      markerSeries: markerSeries,
+                      pipSize: pipSize,
+                      onCrosshairAppeared: onCrosshairAppeared,
+                      isLive: isLive,
+                      opacity: opacity,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 }
 

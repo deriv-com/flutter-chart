@@ -21,6 +21,7 @@ class XAxis extends StatefulWidget {
     @required this.entries,
     @required this.child,
     @required this.isLive,
+    this.initialServerTime,
     this.onVisibleAreaChanged,
     Key key,
   })  : assert(child != null),
@@ -34,6 +35,9 @@ class XAxis extends StatefulWidget {
 
   /// Whether the chart is showing live data.
   final bool isLive;
+
+  /// phone's time to check time difference between server time and phone time
+  final DateTime initialServerTime;
 
   /// Callback provided by library user.
   final VisibleAreaChangedCallback onVisibleAreaChanged;
@@ -56,6 +60,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
     _model = XAxisModel(
+      initialServerTime: widget.initialServerTime,
       entries: widget.entries,
       granularity: context.read<ChartConfig>().granularity,
       animationController: _rightEpochAnimationController,
@@ -106,6 +111,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    _model.initialServerTime = widget.initialServerTime;
     return ChangeNotifierProvider<XAxisModel>.value(
       value: _model,
       child: LayoutBuilder(

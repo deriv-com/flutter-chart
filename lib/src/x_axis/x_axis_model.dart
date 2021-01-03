@@ -15,6 +15,7 @@ const double autoPanOffset = 30;
 /// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
   // TODO(Rustem): Add closed contract x-axis constructor.
+  int deltatime = 0;
 
   /// Creates x-axis model for live chart.
   XAxisModel({
@@ -22,10 +23,16 @@ class XAxisModel extends ChangeNotifier {
     @required int granularity,
     @required AnimationController animationController,
     @required bool isLive,
+    this.initialServerTime,
     this.onScale,
     this.onScroll,
   }) {
-    _nowEpoch = DateTime.now().millisecondsSinceEpoch;
+    deltatime = initialServerTime == null
+        ? 0
+        : initialServerTime.millisecondsSinceEpoch -
+            DateTime.now().millisecondsSinceEpoch;
+    _nowEpoch = DateTime.now().millisecondsSinceEpoch + deltatime;
+
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     _isLive = isLive ?? true;
@@ -62,6 +69,9 @@ class XAxisModel extends ChangeNotifier {
   // TODO(Rustem): Expose this setting
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
+
+  /// phone's time to check time difference between server time and phone time
+  DateTime initialServerTime;
 
   bool _isLive;
 
@@ -214,7 +224,7 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
   void onNewFrame(Duration _) {
-    final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
+    final newNowEpoch = DateTime.now().millisecondsSinceEpoch + deltatime;
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {

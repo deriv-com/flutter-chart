@@ -67,6 +67,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
+  DateTime serverTime;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier _slBarrier, _tpBarrier;
@@ -155,8 +156,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
         TradingTimesRequest(tradingTimes: 'today'),
       ),
       onCurrentTime: () async {
-        final ServerTime serverTime = await ServerTime.fetchTime();
-        return serverTime.time.toUtc();
+        final ServerTime _serverTime = await ServerTime.fetchTime();
+        serverTime= _serverTime.time.toUtc();
+        return serverTime;
       },
       onMarketsStatusChange: (Map<String, bool> statusChanges) {
         for (int i = 0; i < _activeSymbols.length; i++) {
@@ -357,6 +359,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               children: <Widget>[
                 ClipRect(
                   child: Chart(
+                    initialServerTime: serverTime,
                     mainSeries:
                         style == ChartStyle.candles && ticks is List<Candle>
                             ? CandleSeries(ticks)
