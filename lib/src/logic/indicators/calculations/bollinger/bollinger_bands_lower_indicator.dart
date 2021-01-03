@@ -4,7 +4,7 @@ import '../../cached_indicator.dart';
 import '../../indicator.dart';
 
 /// Bollinger bands lower indicator
-class BollingerBandsLowerIndicator extends CachedIndicator<Tick> {
+class BollingerBandsLowerIndicator extends CachedIndicator {
   /// Initializes.
   ///
   /// [k]         Defaults value to 2.
@@ -17,10 +17,10 @@ class BollingerBandsLowerIndicator extends CachedIndicator<Tick> {
       : super.fromIndicator(bbm);
 
   /// Indicator
-  final Indicator<Tick> indicator;
+  final Indicator indicator;
 
   /// The middle indicator of the BollingerBand
-  final Indicator<Tick> bbm;
+  final Indicator bbm;
 
   /// Default is 2.
   final double k;

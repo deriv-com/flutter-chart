@@ -20,13 +20,13 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
         super(inputIndicator.entries, id);
 
   /// Input indicator to calculate this indicator value on.
-  final Indicator<Tick> inputIndicator;
+  final Indicator inputIndicator;
 
   /// Indicator options
   final IndicatorOptions options;
 
   /// Result indicator
-  CachedIndicator<Tick> resultIndicator;
+  CachedIndicator resultIndicator;
 
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
@@ -44,7 +44,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   ///
   /// Will be called whenever [resultIndicator]'s previous values are not available or can't be used.
   @protected
-  CachedIndicator<Tick> initializeIndicator();
+  CachedIndicator initializeIndicator();
 
   /// Will be called by the chart when it was updated.
   @override

@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 import '../../indicator.dart';
 
 /// A helper indicator to get the [(H + L) / 2] value of a list of [Tick]
-class HL2Indicator extends Indicator<Tick> {
+class HL2Indicator extends Indicator {
   /// Initializes
   HL2Indicator(List<Tick> entries) : super(entries);
 

@@ -1,5 +1,8 @@
 /// OHLC interface
 abstract class OHLC {
+  /// Epoch
+  int get epoch;
+
   /// Open value
   double get open;
 

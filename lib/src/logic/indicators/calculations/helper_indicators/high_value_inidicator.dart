@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 /// A helper indicator to get the high value of a list of [Candle]
-class HighValueIndicator extends Indicator<Tick> {
+class HighValueIndicator extends Indicator {
   /// Initializes
   HighValueIndicator(List<Tick> entries) : super(entries);
 

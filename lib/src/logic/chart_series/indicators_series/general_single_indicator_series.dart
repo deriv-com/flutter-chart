@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/indicator.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/cupertino.dart';
 
 typedef DataPainterCreator = DataPainter Function(Series series);
@@ -15,7 +14,7 @@ class GeneralSingleIndicatorSeries extends SingleIndicatorSeries {
   GeneralSingleIndicatorSeries({
     @required this.painterCreator,
     @required this.indicatorCreator,
-    @required Indicator<Tick> inputIndicator,
+    @required Indicator inputIndicator,
     @required IndicatorOptions options,
     String id,
   }) : super(inputIndicator, id, options);
@@ -27,5 +26,5 @@ class GeneralSingleIndicatorSeries extends SingleIndicatorSeries {
   SeriesPainter<Series> createPainter() => painterCreator?.call(this);
 
   @override
-  CachedIndicator<Tick> initializeIndicator() => indicatorCreator?.call();
+  CachedIndicator initializeIndicator() => indicatorCreator?.call();
 }

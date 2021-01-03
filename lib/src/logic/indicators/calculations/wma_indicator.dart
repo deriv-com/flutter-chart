@@ -4,7 +4,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 import '../cached_indicator.dart';
 
 /// Weighted Moving Average indicator
-class WMAIndicator extends CachedIndicator<Tick> {
+class WMAIndicator extends CachedIndicator {
   /// Initializes
   WMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 
@@ -12,7 +12,7 @@ class WMAIndicator extends CachedIndicator<Tick> {
   final int period;
 
   /// Indicator
-  final Indicator<Tick> indicator;
+  final Indicator indicator;
 
   @override
   Tick calculate(int index) {

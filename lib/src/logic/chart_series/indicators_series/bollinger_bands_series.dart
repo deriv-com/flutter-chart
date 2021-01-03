@@ -40,7 +40,7 @@ class BollingerBandSeries extends Series {
 
   /// Initializes
   BollingerBandSeries.fromIndicator(
-    Indicator<Tick> indicator, {
+    Indicator indicator, {
     this.period = 20,
     this.movingAverageType = MovingAverageType.simple,
     this.standardDeviationFactor = 2,
@@ -62,7 +62,7 @@ class BollingerBandSeries extends Series {
   /// Standard Deviation value
   final double standardDeviationFactor;
 
-  final Indicator<Tick> _fieldIndicator;
+  final Indicator _fieldIndicator;
 
   @override
   void initialize() {
@@ -76,7 +76,7 @@ class BollingerBandSeries extends Series {
     final StandardDeviationIndicator standardDeviation =
         StandardDeviationIndicator(_fieldIndicator, period);
 
-    final CachedIndicator<Tick> bbmSMA =
+    final CachedIndicator bbmSMA =
         MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
 
     _middleSeries = GeneralSingleIndicatorSeries(

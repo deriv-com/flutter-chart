@@ -3,13 +3,13 @@ import 'package:deriv_chart/src/models/tick.dart';
 import '../../indicator.dart';
 
 /// A helper indicator to multiply another indicator values by a [coefficient].
-class MultiplierIndicator extends Indicator<Tick> {
+class MultiplierIndicator extends Indicator {
   /// Initializes
   MultiplierIndicator(this.indicator, this.coefficient)
       : super(indicator.entries);
 
   /// Indicator
-  final Indicator<Tick> indicator;
+  final Indicator indicator;
 
   /// Coefficient
   final double coefficient;

@@ -29,9 +29,9 @@ void main() {
 
       const int period = 3;
 
-      final Indicator<Tick> closePrice = CloseValueIndicator(ticks);
+      final Indicator closePrice = CloseValueIndicator(ticks);
 
-      final Indicator<Tick> bbmSMA = SMAIndicator(closePrice, period);
+      final Indicator bbmSMA = SMAIndicator(closePrice, period);
       final StandardDeviationIndicator standardDeviation =
           StandardDeviationIndicator(closePrice, period);
       final BollingerBandsUpperIndicator bbuSMA =
