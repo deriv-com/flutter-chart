@@ -2,17 +2,17 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../indicator.dart';
 import '../cached_indicator.dart';
+import '../indicator.dart';
 
 /// Highest value in a range
-class HighestValueIndicator extends CachedIndicator<Tick> {
+class HighestValueIndicator extends CachedIndicator {
   /// Initializes
   HighestValueIndicator(this.indicator, this.period)
       : super.fromIndicator(indicator);
 
   /// Calculating highest value on the result of this indicator
-  final Indicator<Tick> indicator;
+  final Indicator indicator;
 
   /// The period
   final int period;

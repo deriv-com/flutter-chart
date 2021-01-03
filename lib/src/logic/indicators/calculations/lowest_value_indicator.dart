@@ -2,17 +2,17 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../indicator.dart';
 import '../cached_indicator.dart';
+import '../indicator.dart';
 
 /// Lowest value in a range
-class LowestValueIndicator extends CachedIndicator<Tick> {
+class LowestValueIndicator extends CachedIndicator {
   /// Initializes
   LowestValueIndicator(this.indicator, this.period)
       : super(indicator.entries);
 
   /// Calculating lowest value on the result of this indicator
-  final Indicator<Tick> indicator;
+  final Indicator indicator;
 
   /// The period
   final int period;

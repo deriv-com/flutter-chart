@@ -4,7 +4,7 @@ import '../../cached_indicator.dart';
 import '../../indicator.dart';
 
 /// Bollinger bands upper indicator
-class BollingerBandsUpperIndicator extends CachedIndicator<Tick> {
+class BollingerBandsUpperIndicator extends CachedIndicator {
   /// Initializes.
   ///
   ///  [bbm]       the middle band Indicator. Typically an SMAIndicator is
@@ -16,10 +16,10 @@ class BollingerBandsUpperIndicator extends CachedIndicator<Tick> {
       : super.fromIndicator(deviation);
 
   /// Deviation indicator
-  final Indicator<Tick> deviation;
+  final Indicator deviation;
 
   /// The middle indicator of the BollingerBand
-  final Indicator<Tick> bbm;
+  final Indicator bbm;
 
   /// Default is 2.
   final double k;

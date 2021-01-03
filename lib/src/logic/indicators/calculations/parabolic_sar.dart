@@ -2,7 +2,7 @@
 // ** NOTE ** Not completed yet. In progress...
 // **********
 
-import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../cached_indicator.dart';
@@ -12,10 +12,10 @@ import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
 /// Parabolic Sar Indicator
-class ParabolicSarIndicator extends CachedIndicator<Candle> {
+class ParabolicSarIndicator extends CachedIndicator {
   /// Initializes
   ParabolicSarIndicator(
-    List<Candle> entries, {
+    List<OHLC> entries, {
     double aF = 0.02,
     double maxA = 0.2,
     double increment = 0.02,

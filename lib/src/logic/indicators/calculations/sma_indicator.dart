@@ -2,16 +2,16 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/models/tick.dart';
 
-import '../indicator.dart';
 import '../cached_indicator.dart';
+import '../indicator.dart';
 
 /// Simple Moving Average Indicator
-class SMAIndicator extends CachedIndicator<Tick> {
+class SMAIndicator extends CachedIndicator {
   /// Initializes
   SMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 
   /// Indicator to calculate SMA on
-  final Indicator<Tick> indicator;
+  final Indicator indicator;
 
   /// Bar count
   final int period;

@@ -6,7 +6,7 @@ import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 /// Bollinger Band Width indicator.
-class BollingerBandWidthIndicator extends CachedIndicator<Tick> {
+class BollingerBandWidthIndicator extends CachedIndicator {
   /// Initializes.
   ///
   /// [bbu] the upper band Indicator.
@@ -23,7 +23,7 @@ class BollingerBandWidthIndicator extends CachedIndicator<Tick> {
   final BollingerBandsUpperIndicator bbu;
 
   /// The middle band Indicator. Typically an SMAIndicator is used.
-  final Indicator<Tick> bbm;
+  final Indicator bbm;
 
   /// The lower band Indicator.
   final BollingerBandsLowerIndicator bbl;

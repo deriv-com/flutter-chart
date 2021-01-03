@@ -5,7 +5,7 @@ import '../cached_indicator.dart';
 import 'sma_indicator.dart';
 
 /// Zero-lag Exponential Moving Average indicator
-class ZLEMAIndicator extends CachedIndicator<Tick> {
+class ZLEMAIndicator extends CachedIndicator {
   /// Initializes
   ///
   /// [indicator] An indicator
@@ -17,7 +17,7 @@ class ZLEMAIndicator extends CachedIndicator<Tick> {
         super.fromIndicator(indicator);
 
   /// Indicator to calculate ZELMA on
-  final Indicator<Tick> indicator;
+  final Indicator indicator;
 
   /// Bar count
   final int period;
