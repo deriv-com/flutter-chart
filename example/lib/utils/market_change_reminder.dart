@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:intl/intl.dart';
 import 'package:flutter_deriv_api/api/common/models/market_model.dart';
 import 'package:flutter_deriv_api/api/common/models/submarket_model.dart';
 import 'package:flutter_deriv_api/api/common/models/symbol_model.dart';
 import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
-import 'package:intl/intl.dart';
 
 /// Markets status change callback. (List of symbols that have been changed.)
-typedef OnMarketsStatusChange = void Function(Map<String, bool> symbols);
+typedef OnMarketsStatusChanged = void Function(Map<String, bool> symbols);
 
 /// A class to remind when there is a change on market.
 ///
@@ -41,7 +41,7 @@ class MarketChangeReminder {
 
   /// Callback to get server time
   ///
-  /// If not set it will be using DateTime.now().toUTC();
+  /// If not set, `DateTime.now().toUTC()` will be used.
   final Future<DateTime> Function() onCurrentTime;
 
   /// Callback to get trading times of today
@@ -52,7 +52,7 @@ class MarketChangeReminder {
 
   /// Gets called when market status changes with the list of symbols that their
   /// open/closed status is changed.
-  final OnMarketsStatusChange onMarketsStatusChange;
+  final OnMarketsStatusChanged onMarketsStatusChange;
 
   /// List of upcoming market change times.
   ///
@@ -68,21 +68,20 @@ class MarketChangeReminder {
 
   Future<void> _fillStatusChangeMap() async {
     final DateTime now = await _getNowTime();
-
     final TradingTimes todayTradingTimes = await onTradingTimes();
 
     for (final MarketModel market in todayTradingTimes.markets) {
       for (final SubmarketModel subMarket in market.submarkets) {
         for (final SymbolModel symbol in subMarket.symbols) {
-          final List<dynamic> openTimes = symbol.times.open;
-          final List<dynamic> closeTimes = symbol.times.close;
+          final List<String> openTimes = symbol.times.open;
+          final List<String> closeTimes = symbol.times.close;
 
           final bool isOpenAllDay = openTimes.length == 1 &&
-              openTimes[0] == '00:00:00' &&
-              closeTimes[0] == '23:59:59';
+              openTimes.first == '00:00:00' &&
+              closeTimes.first == '23:59:59';
           final bool isClosedAllDay = openTimes.length == 1 &&
-              closeTimes[0] == '--' &&
-              closeTimes[0] == '--';
+              openTimes.first == '--' &&
+              closeTimes.first == '--';
 
           if (isOpenAllDay || isClosedAllDay) {
             continue;
@@ -111,6 +110,8 @@ class MarketChangeReminder {
     }
 
     final DateTime hourMinSec = _dateFormat.parse(time);
+
+    // Added 5 seconds to be sure market status has changed already.
     final DateTime statusChangeTime = DateTime.utc(
       now.year,
       now.month,
@@ -120,7 +121,8 @@ class MarketChangeReminder {
       hourMinSec.second,
     ).add(const Duration(seconds: 5));
 
-    if (now.isAfter(statusChangeTime)) {
+    if (now.isAfter(statusChangeTime) ||
+        now.isAtSameMomentAs(statusChangeTime)) {
       return;
     }
 
@@ -129,8 +131,7 @@ class MarketChangeReminder {
     statusChangeTimes[statusChangeTime][symbol] = goesOpen;
   }
 
-  /// Removes the next upcoming market change time from [statusChangeTimes] and
-  /// sets a timer for it.
+  /// Removes the next upcoming market change time from [statusChangeTimes] and sets a timer for it.
   Future<void> _setReminderTimer() async {
     _reminderTimer?.cancel();
 
@@ -151,14 +152,14 @@ class MarketChangeReminder {
         },
       );
     } else {
-      // Setting a timer to reset trading times when next day start
+      // Setting a timer to reset trading times when next day start.
       final DateTime tomorrowStart = DateTime(now.year, now.month, now.day + 1);
       _reminderTimer = Timer(tomorrowStart.difference(now), () => _init());
     }
   }
 
   Future<DateTime> _getNowTime() async =>
-      onCurrentTime != null ? await onCurrentTime() : DateTime.now().toUtc();
+      onCurrentTime == null ? DateTime.now().toUtc() : await onCurrentTime();
 
   /// Cancels current reminder timer.
   void reset() => _reminderTimer?.cancel();
