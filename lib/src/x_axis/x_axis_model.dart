@@ -382,6 +382,10 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch: rightBoundEpoch,
     );
     return calculateNoOverlapGridTimestamps(
-        _gridTimestamps, _timeGaps, _msPerPx, _minDistanceBetweenTimeGridLines);
+      _gridTimestamps,
+      _minDistanceBetweenTimeGridLines,
+      pxBetween,
+      _gapManager.isInGap,
+    );
   }
 }

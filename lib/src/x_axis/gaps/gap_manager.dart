@@ -64,4 +64,8 @@ class GapManager {
     }
     return range.duration - overlap;
   }
+
+  /// Whether given [epoch] falls into a time gap.
+  bool isInGap(int epoch) =>
+      gaps.isNotEmpty && gaps[indexOfNearestGap(gaps, epoch)].contains(epoch);
 }
