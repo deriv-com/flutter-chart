@@ -552,8 +552,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
             theme: context.watch<ChartTheme>(),
             epochToCanvasX: _xAxis.xFromEpoch,
             quoteToCanvasY: _quoteToCanvasY,
-            rightEpoch: _xAxis.rightBoundEpoch,
-            leftEpoch: _xAxis.leftBoundEpoch
           ),
         ),
       );
