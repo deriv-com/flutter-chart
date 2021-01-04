@@ -115,8 +115,11 @@ class XAxisModel extends ChangeNotifier {
   int _nowEpoch;
   int _rightBoundEpoch;
 
-  int get _firstCandleEpoch =>
+  int get _firstEntryEpoch =>
       _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
+
+  int get _lastEntryEpoch =>
+      _entries.isNotEmpty ? _entries.last.epoch : _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -129,7 +132,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
-      _shiftEpoch(_firstCandleEpoch, maxCurrentTickOffset);
+      _shiftEpoch(_firstEntryEpoch, maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch => _shiftEpoch(
@@ -274,7 +277,7 @@ class XAxisModel extends ChangeNotifier {
   /// Fits available data to screen.
   /// TODO: Should work for both live and closed contracts.
   void fitData() {
-    final double leftX = xFromEpoch(_firstCandleEpoch);
+    final double leftX = xFromEpoch(_firstEntryEpoch);
     _scrollBy(leftX - dataFitPadding.left);
   }
 
