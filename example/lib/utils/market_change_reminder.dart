@@ -112,19 +112,21 @@ class MarketChangeReminder {
     final DateTime hourMinSec = _dateFormat.parse(time);
 
     // Added 5 seconds to be sure market status has changed already.
-    final DateTime statusChangeTime = DateTime.utc(
+    DateTime statusChangeTime = DateTime.utc(
       now.year,
       now.month,
       now.day,
       hourMinSec.hour,
       hourMinSec.minute,
       hourMinSec.second,
-    ).add(const Duration(seconds: 5));
+    );
 
     if (now.isAfter(statusChangeTime) ||
         now.isAtSameMomentAs(statusChangeTime)) {
       return;
     }
+
+    statusChangeTime = statusChangeTime.add(const Duration(seconds: 5));
 
     statusChangeTimes[statusChangeTime] ??= <String, bool>{};
 
