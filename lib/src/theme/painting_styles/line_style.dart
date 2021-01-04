@@ -1,9 +1,10 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 /// Defines the style of painting line data
-class LineStyle extends DataSeriesStyle {
+class LineStyle extends DataSeriesStyle with EquatableMixin {
   /// Initializes
   const LineStyle({
     this.color = const Color(0xFF85ACB0),
@@ -23,4 +24,7 @@ class LineStyle extends DataSeriesStyle {
 
   @override
   String toString() => '${super.toString()}$color, $thickness, $hasArea';
+
+  @override
+  List<Object> get props => [color, thickness, hasArea];
 }

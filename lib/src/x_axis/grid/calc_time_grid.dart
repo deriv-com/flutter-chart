@@ -79,7 +79,10 @@ Duration timeGridInterval(
     Duration(hours: 4),
     Duration(hours: 8),
     _day,
+    Duration(days: 4),
     _week,
+    Duration(days: 14),
+    Duration(days: 21),
     month,
   ],
 }) {

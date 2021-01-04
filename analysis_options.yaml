@@ -1,7 +1,5 @@
 analyzer:
-
-
-  strong-mode:
+  strong-mode:	
     implicit-dynamic: false
   errors:
     todo: ignore
