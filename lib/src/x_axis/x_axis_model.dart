@@ -27,11 +27,11 @@ class XAxisModel extends ChangeNotifier {
     this.onScroll,
   }) {
     if (entries != null && entries.isNotEmpty) {
-      _nowEpoch = entries.map<int>((Tick e) => e.epoch).reduce(max);
+      _nowEpoch = entries.last.epoch;
     } else {
       _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     }
-
+    _nowTime = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     _isLive = isLive ?? true;
@@ -70,6 +70,9 @@ class XAxisModel extends ChangeNotifier {
   static const int defaultIntervalWidth = 20;
 
   bool _isLive;
+
+  /// for calculating time between two frames
+  int _nowTime;
 
   /// Whether the chart is live.
   bool get isLive => _isLive;
@@ -220,11 +223,12 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
   void onNewFrame(Duration _) {
-    final newNowEpoch = _entries != null && _entries.isNotEmpty
-        ? _entries.map<int>((Tick e) => e.epoch).reduce(max)
-        : DateTime.now().millisecondsSinceEpoch;
-    final elapsedMs = newNowEpoch - _nowEpoch;
-    _nowEpoch = newNowEpoch;
+    final newNowTime = DateTime.now().millisecondsSinceEpoch;
+    final elapsedMs = newNowTime - _nowTime;
+    _nowEpoch = _entries != null && _entries.isNotEmpty
+        ? _entries.last.epoch
+        : _nowEpoch + elapsedMs;
+    _nowTime = newNowTime;
     if (_autoPanning) {
       _scrollTo(_rightBoundEpoch + elapsedMs);
     } else if (_panSpeed != null && _panSpeed != 0) {
