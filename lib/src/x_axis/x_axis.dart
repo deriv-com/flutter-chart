@@ -9,11 +9,8 @@ import 'package:provider/provider.dart';
 import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
 import '../theme/chart_theme.dart';
-import 'grid/calc_time_grid.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
-
-const double _minDistanceBetweenTimeGridLines = 90;
 
 /// X-axis widget.
 ///
@@ -51,9 +48,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
 
-  List<String> _timeLabels;
-  List<double> _xCoords;
-
   GestureManagerState gestureManager;
 
   @override
@@ -81,7 +75,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   }
 
   void _onVisibleAreaChanged() {
-    _updateTimestamps();
     widget.onVisibleAreaChanged?.call(
       _model.leftBoundEpoch,
       _model.rightBoundEpoch,
@@ -112,42 +105,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _updateTimestamps() {
-    // Calculate time labels' timestamps for current scale.
-    final List<DateTime> timestamps = gridTimestamps(
-      timeGridInterval: timeGridInterval(
-        _model.pxFromMs,
-        minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
-      ),
-      leftBoundEpoch: _model.leftBoundEpoch,
-      rightBoundEpoch: _model.rightBoundEpoch,
-    );
-
-    // Remove labels inside time gaps.
-    // Except if the last label in the gap can fit, then keep it.
-    final List<DateTime> _noOverlapGridTimestamps = [
-      if (timestamps.isNotEmpty) timestamps.last,
-    ];
-    for (final DateTime timestamp in timestamps.reversed.skip(1)) {
-      final double distance = _model.pxBetween(
-        timestamp.millisecondsSinceEpoch,
-        _noOverlapGridTimestamps.first.millisecondsSinceEpoch,
-      );
-      if (distance >= _minDistanceBetweenTimeGridLines) {
-        _noOverlapGridTimestamps.insert(0, timestamp);
-      }
-    }
-
-    _timeLabels = _noOverlapGridTimestamps
-        .map<String>((DateTime time) => timeLabel(time))
-        .toList();
-
-    _xCoords = _noOverlapGridTimestamps
-        .map<double>(
-            (DateTime time) => _model.xFromEpoch(time.millisecondsSinceEpoch))
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<XAxisModel>.value(
@@ -157,6 +114,9 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
           // Update x-axis width.
           context.watch<XAxisModel>().width = constraints.maxWidth;
 
+          final List<DateTime> _noOverlapGridTimestamps =
+              _model.getNoOverlapGridTimestamps();
+
           final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
 
           return Stack(
@@ -165,8 +125,13 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
               RepaintBoundary(
                 child: CustomPaint(
                   painter: XGridPainter(
-                    timeLabels: _timeLabels,
-                    xCoords: _xCoords,
+                    timeLabels: _noOverlapGridTimestamps
+                        .map<String>((DateTime time) => timeLabel(time))
+                        .toList(),
+                    xCoords: _noOverlapGridTimestamps
+                        .map<double>((DateTime time) =>
+                            _model.xFromEpoch(time.millisecondsSinceEpoch))
+                        .toList(),
                     style: gridStyle,
                   ),
                 ),

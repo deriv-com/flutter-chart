@@ -189,6 +189,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
 
+  /// it should be at least LabelHeight/2
+  static const double _minPadding = 12;
+
   /// Duration of quote bounds animated transition.
   final quoteBoundsAnimationDuration = const Duration(milliseconds: 300);
 
@@ -228,9 +231,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
   double get _verticalPadding {
     final double padding = verticalPaddingFraction * canvasSize.height;
     const double minCrosshairPadding = 80;
-    return padding +
+    final double paddingValue = padding +
         (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
             _crosshairZoomOutAnimation.value;
+    return paddingValue.clamp(_minPadding, canvasSize.height / 2);
   }
 
   double get _topPadding => _verticalPadding;

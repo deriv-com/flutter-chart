@@ -206,5 +206,5 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements
-  Widget getCrossHairInfo(T crossHairTick, int pipSize);
+  Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
 }

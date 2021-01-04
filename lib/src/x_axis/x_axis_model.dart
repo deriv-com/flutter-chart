@@ -1,11 +1,14 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/gaps/gap_manager.dart';
 import 'package:flutter/material.dart';
+
+import 'grid/calc_time_grid.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
 const double autoPanOffset = 30;
@@ -98,6 +101,8 @@ class XAxisModel extends ChangeNotifier {
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
 
+  void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
+
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
       _shiftEpoch(_firstCandleEpoch, maxCurrentTickOffset);
@@ -139,6 +144,8 @@ class XAxisModel extends ChangeNotifier {
   double get _maxScale => _granularity / minIntervalWidth;
 
   double get _defaultScale => _granularity / defaultIntervalWidth;
+
+  double _panSpeed;
 
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
@@ -213,8 +220,12 @@ class XAxisModel extends ChangeNotifier {
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
       _scrollTo(_rightBoundEpoch + elapsedMs);
+    } else if (_panSpeed != null && _panSpeed != 0) {
+      _scrollBy(_panSpeed * elapsedMs);
     }
   }
+
+  void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.
   void enableAutoPan() {
@@ -253,9 +264,11 @@ class XAxisModel extends ChangeNotifier {
       );
 
   /// Get x position of epoch.
-  double xFromEpoch(int epoch) => epoch <= rightBoundEpoch
-      ? width - pxBetween(epoch, rightBoundEpoch)
-      : width + pxBetween(rightBoundEpoch, epoch);
+  double xFromEpoch(int epoch) {
+    return epoch <= rightBoundEpoch
+        ? width - pxBetween(epoch, rightBoundEpoch)
+        : width + pxBetween(rightBoundEpoch, epoch);
+  }
 
   /// Get epoch of x position.
   int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width + x);
@@ -355,5 +368,20 @@ class XAxisModel extends ChangeNotifier {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
+  }
+
+  List<DateTime> getNoOverlapGridTimestamps() {
+    const double _minDistanceBetweenTimeGridLines = 80;
+    // Calculate time labels' timestamps for current scale.
+    final List<DateTime> _gridTimestamps = gridTimestamps(
+      timeGridInterval: timeGridInterval(
+        pxFromMs,
+        minDistanceBetweenLines: _minDistanceBetweenTimeGridLines,
+      ),
+      leftBoundEpoch: leftBoundEpoch,
+      rightBoundEpoch: rightBoundEpoch,
+    );
+    return calculateNoOverlapGridTimestamps(
+        _gridTimestamps, _timeGaps, _msPerPx, _minDistanceBetweenTimeGridLines);
   }
 }
