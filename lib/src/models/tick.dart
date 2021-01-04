@@ -5,7 +5,7 @@ import 'ohlc.dart';
 
 /// Basic data entry.
 @immutable
-class Tick implements OHLC with EquatableMixin {
+class Tick with EquatableMixin implements OHLC {
   /// Initializes
   const Tick({
     @required this.epoch,
