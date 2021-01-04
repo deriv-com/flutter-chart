@@ -36,35 +36,41 @@ class ChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (final ChartData c in chartDataList) {
-      if(c is VerticalBarrier){
-
+    if (chartDataList != null) {
+      for (final ChartData c in chartDataList) {
+        if (c is VerticalBarrier) {}
+        c.paint(
+          canvas,
+          size,
+          epochToCanvasX,
+          quoteToCanvasY,
+          animationInfo,
+          chartConfig,
+          theme,
+        );
       }
-      c.paint(
-        canvas,
-        size,
-        epochToCanvasX,
-        quoteToCanvasY,
-        animationInfo,
-        chartConfig,
-        theme,
-      );
     }
   }
 
   @override
   bool shouldRepaint(ChartPainter oldDelegate) {
-    for (final ChartData c in chartDataList) {
-
-      if (c.shouldRepaint()) {
+    if (chartDataList == null) {
+      return true;
+    } else {
+      for (final ChartData c in chartDataList) {
+        if (oldDelegate.chartDataList != null &&
+            c.shouldRepaint(oldDelegate.chartDataList
+                .firstWhere((element) => element.id == c.id))) {
+          return true;
+        }
+      }
+      if (rightEpoch != oldDelegate.rightEpoch ||
+          leftEpoch != oldDelegate.leftEpoch) {
         return true;
       }
+
+      return false;
     }
-    if (rightEpoch != oldDelegate.rightEpoch ||
-        leftEpoch != oldDelegate.leftEpoch) {
-      return true;
-    }
-    return false;
   }
 
   @override

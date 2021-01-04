@@ -1,9 +1,10 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 /// Defines the style of painting candle data
-class CandleStyle extends DataSeriesStyle {
+class CandleStyle extends DataSeriesStyle with EquatableMixin {
   /// Initializes
   const CandleStyle({
     this.positiveColor = const Color(0xFF00A79E),
@@ -24,4 +25,7 @@ class CandleStyle extends DataSeriesStyle {
   @override
   String toString() =>
       '${super.toString()}$positiveColor, $negativeColor, $lineColor';
+
+  @override
+  List<Object> get props => [positiveColor, negativeColor, lineColor];
 }
