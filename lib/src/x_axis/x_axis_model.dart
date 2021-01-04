@@ -14,7 +14,7 @@ import 'grid/calc_time_grid.dart';
 const double autoPanOffset = 30;
 
 /// Padding around data used in data-fit mode.
-const EdgeInsets dataFitPadding = EdgeInsets.only(left: 10, right: 120);
+const EdgeInsets dataFitPadding = EdgeInsets.only(left: 16, right: 120);
 
 /// Modes that control chart's zoom and scroll behaviour without user interaction.
 enum ViewingMode {
