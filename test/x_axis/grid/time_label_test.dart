@@ -54,7 +54,11 @@ void main() {
     double msPerPx = 1000;
     expect(
       calculateNoOverlapGridTimestamps(
-          gridTimestamps, gaps, msPerPx, minDistanceBetweenTimeGridLines),
+        gridTimestamps,
+        minDistanceBetweenTimeGridLines,
+        (int leftEpoch, int rightEpoch) => (rightEpoch - leftEpoch) / msPerPx,
+        (int epoch) => gaps.any((TimeRange range) => range.contains(epoch)),
+      ),
       noOverLapTimeStamps,
     );
   });
