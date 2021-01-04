@@ -83,7 +83,7 @@ class XAxisModel extends ChangeNotifier {
 
   // TODO(Rustem): Expose this setting
   /// Scaling will not resize intervals to be smaller than this.
-  static const int minIntervalWidth = 4;
+  static const int minIntervalWidth = 1;
 
   // TODO(Rustem): Expose this setting
   /// Scaling will not resize intervals to be bigger than this.
