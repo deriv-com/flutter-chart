@@ -501,8 +501,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   Widget _buildQuoteGrid() => MultipleAnimatedBuilder(
         animations: [
-          // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
         ],
         builder: (BuildContext context, Widget child) {
@@ -528,8 +528,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // Main series and indicators on top of main series.
   Widget _buildChartData() => MultipleAnimatedBuilder(
         animations: [
-          // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
           _currentTickAnimation,
         ],
