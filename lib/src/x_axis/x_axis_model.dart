@@ -2,9 +2,10 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
-import 'package:deriv_chart/src/logic/find_gaps.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
+import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/x_axis/gaps/gap_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'grid/calc_time_grid.dart';
@@ -78,7 +79,7 @@ class XAxisModel extends ChangeNotifier {
   final VoidCallback onScroll;
 
   List<Tick> _entries;
-  List<TimeRange> _timeGaps = <TimeRange>[];
+  final GapManager _gapManager = GapManager();
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
@@ -173,7 +174,7 @@ class XAxisModel extends ChangeNotifier {
     );
 
     if (firstLoad || reload) {
-      _timeGaps = findGaps(entries, maxDiff);
+      _gapManager.replaceGaps(findGaps(entries, maxDiff));
     } else if (historyLoad) {
       // ------------- entries
       //         ----- _entries
@@ -183,7 +184,7 @@ class XAxisModel extends ChangeNotifier {
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
           entries.sublist(0, entries.length - _entries.length + 1);
-      _timeGaps = findGaps(prefix, maxDiff) + _timeGaps;
+      _gapManager.insertInFront(findGaps(prefix, maxDiff));
     }
 
     // Sublist, so that [_entries] references the old list when [entries] is modified in place.
@@ -222,7 +223,6 @@ class XAxisModel extends ChangeNotifier {
     } else if (_panSpeed != null && _panSpeed != 0) {
       _scrollBy(_panSpeed * elapsedMs);
     }
-    notifyListeners();
   }
 
   void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
@@ -247,11 +247,10 @@ class XAxisModel extends ChangeNotifier {
   double pxFromMs(int ms) => ms / _msPerPx;
 
   /// Px distance between two epochs on the x-axis.
-  double pxBetween(int leftEpoch, int rightEpoch) => timeRangePxWidth(
-        range: TimeRange(leftEpoch, rightEpoch),
-        msPerPx: _msPerPx,
-        gaps: _timeGaps,
-      );
+  ///
+  /// [leftEpoch] must be before [rightEpoch].
+  double pxBetween(int leftEpoch, int rightEpoch) =>
+      _gapManager.removeGaps(TimeRange(leftEpoch, rightEpoch)) / _msPerPx;
 
   /// Resulting epoch when given epoch value is shifted by given px amount on x-axis.
   ///
@@ -261,7 +260,7 @@ class XAxisModel extends ChangeNotifier {
         epoch: epoch,
         pxShift: pxShift,
         msPerPx: _msPerPx,
-        gaps: _timeGaps,
+        gaps: _gapManager.gaps,
       );
 
   /// Get x position of epoch.
@@ -287,13 +286,11 @@ class XAxisModel extends ChangeNotifier {
     } else {
       _scaleWithFocalPointFixed(details);
     }
-    notifyListeners();
   }
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
     _scrollBy(-details.delta.dx);
-    notifyListeners();
   }
 
   /// Called at the end of scale and pan gestures.
@@ -317,18 +314,21 @@ class XAxisModel extends ChangeNotifier {
   void _scale(double scale) {
     _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
     onScale?.call();
+    notifyListeners();
   }
 
   void _scrollTo(int rightBoundEpoch) {
     _rightBoundEpoch = rightBoundEpoch;
     _clampRightBoundEpoch();
     onScroll?.call();
+    notifyListeners();
   }
 
   void _scrollBy(double pxShift) {
     _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
     _clampRightBoundEpoch();
     onScroll?.call();
+    notifyListeners();
   }
 
   /// Animate scrolling to current tick.
@@ -382,6 +382,10 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch: rightBoundEpoch,
     );
     return calculateNoOverlapGridTimestamps(
-        _gridTimestamps, _timeGaps, _msPerPx, _minDistanceBetweenTimeGridLines);
+      _gridTimestamps,
+      _minDistanceBetweenTimeGridLines,
+      pxBetween,
+      _gapManager.isInGap,
+    );
   }
 }

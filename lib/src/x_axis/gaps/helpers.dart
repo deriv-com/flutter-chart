@@ -17,3 +17,20 @@ List<TimeRange> findGaps(List<Tick> entries, int maxDiff) {
   }
   return gaps;
 }
+
+/// Returns index of the gap in the given list, that either contains the given [epoch] or is to the left/right to it.
+int indexOfNearestGap(List<TimeRange> gaps, int epoch) {
+  int left = 0, right = gaps.length - 1;
+  while (left < right) {
+    final int mid = (left + right) ~/ 2;
+
+    if (gaps[mid].isAfter(epoch)) {
+      right = mid;
+    } else if (gaps[mid].isBefore(epoch)) {
+      left = mid + 1;
+    } else {
+      return mid;
+    }
+  }
+  return right;
+}

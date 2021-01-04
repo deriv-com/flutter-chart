@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/src/x_axis/grid/time_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -113,24 +114,33 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
           // Update x-axis width.
           context.watch<XAxisModel>().width = constraints.maxWidth;
 
-          // Remove labels inside time gaps.
-          List<DateTime> _noOverlapGridTimestamps =
+          final List<DateTime> _noOverlapGridTimestamps =
               _model.getNoOverlapGridTimestamps();
 
           final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
 
-          return CustomPaint(
-            painter: XGridPainter(
-              gridTimestamps: _noOverlapGridTimestamps,
-              epochToCanvasX: _model.xFromEpoch,
-              style: gridStyle,
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
-              child: ClipRect(
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              RepaintBoundary(
+                child: CustomPaint(
+                  painter: XGridPainter(
+                    timeLabels: _noOverlapGridTimestamps
+                        .map<String>((DateTime time) => timeLabel(time))
+                        .toList(),
+                    xCoords: _noOverlapGridTimestamps
+                        .map<double>((DateTime time) =>
+                            _model.xFromEpoch(time.millisecondsSinceEpoch))
+                        .toList(),
+                    style: gridStyle,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
                 child: widget.child,
               ),
-            ),
+            ],
           );
         },
       ),

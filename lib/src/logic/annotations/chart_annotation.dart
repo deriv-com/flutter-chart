@@ -26,6 +26,9 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   bool didUpdate(ChartData oldData) {
     final ChartAnnotation<T> oldAnnotation = oldData;
 
+    // Reuse `isOnRange` value if visible area didn't change.
+    isOnRange = oldAnnotation.isOnRange;
+
     if (annotationObject == oldAnnotation?.annotationObject ?? false) {
       previousObject = oldAnnotation?.previousObject;
       return false;
