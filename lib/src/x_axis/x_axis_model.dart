@@ -283,9 +283,9 @@ class XAxisModel extends ChangeNotifier {
   /// TODO: Should work for both live and closed contracts.
   void fitData() {
     final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
-    final double pxTargetWidth = width - dataFitPadding.horizontal;
+    final double pxTargetDataWidth = width - dataFitPadding.horizontal;
 
-    _msPerPx = (msDataDuration / pxTargetWidth).clamp(_minScale, _maxScale);
+    _msPerPx = (msDataDuration / pxTargetDataWidth).clamp(_minScale, _maxScale);
 
     final double leftX = xFromEpoch(_firstEntryEpoch);
     _scrollBy(leftX - dataFitPadding.left);
