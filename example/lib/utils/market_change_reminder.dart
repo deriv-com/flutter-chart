@@ -8,7 +8,9 @@ import 'package:flutter_deriv_api/api/common/models/symbol_model.dart';
 import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 
 /// Markets status change callback. (List of symbols that have been changed.)
-typedef OnMarketsStatusChanged = void Function(Map<String, bool> symbols);
+typedef OnMarketsStatusChanged = Future<void> Function(
+  Map<String, bool> symbols,
+);
 
 /// A class to remind when there is a change on market.
 ///
@@ -144,11 +146,11 @@ class MarketChangeReminder {
 
       _reminderTimer = Timer(
         nextStatusChangeTime.add(const Duration(seconds: 5)).difference(now),
-        () {
-          onMarketsStatusChange?.call(symbolsChanging);
+        () async {
+          await onMarketsStatusChange?.call(symbolsChanging);
 
           // Reminder for the next status change in the Queue.
-          _setReminderTimer();
+          await _setReminderTimer();
         },
       );
     } else {
