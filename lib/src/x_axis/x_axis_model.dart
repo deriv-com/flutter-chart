@@ -26,7 +26,12 @@ class XAxisModel extends ChangeNotifier {
     this.onScale,
     this.onScroll,
   }) {
-    _nowEpoch = DateTime.now().millisecondsSinceEpoch;
+    if (entries != null && entries.isNotEmpty) {
+      _nowEpoch = entries.map<int>((Tick e) => e.epoch).reduce(max);
+    } else {
+      _nowEpoch = DateTime.now().millisecondsSinceEpoch;
+    }
+
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     _isLive = isLive ?? true;
@@ -215,7 +220,9 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
   void onNewFrame(Duration _) {
-    final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
+    final newNowEpoch = _entries != null && _entries.isNotEmpty
+        ? _entries.map<int>((Tick e) => e.epoch).reduce(max)
+        : DateTime.now().millisecondsSinceEpoch;
     final elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
