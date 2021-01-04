@@ -1,10 +1,10 @@
 analyzer:
-  exclude:
-    - test/**
-    - lib/**
-    - example/**
+  exclude:	
+    - test/**	
+    - lib/**	
+    - example/**	
 
-  strong-mode:
+  strong-mode:	
     implicit-dynamic: false
   errors:
     todo: ignore

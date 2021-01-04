@@ -13,7 +13,7 @@ class TimeRange {
   final int rightEpoch;
 
   /// Time distance between left and right epochs.
-  int get msWidth => rightEpoch - leftEpoch;
+  int get duration => rightEpoch - leftEpoch;
 
   /// Returns overlap between this and [other] time range.
   /// Returns `null` if there is no overlap.

@@ -1,10 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import 'ohlc.dart';
 
-/// Tick class
+/// Basic data entry.
 @immutable
-class Tick implements OHLC {
+class Tick implements OHLC with EquatableMixin {
   /// Initializes
   const Tick({
     @required this.epoch,
@@ -29,9 +30,5 @@ class Tick implements OHLC {
   @override
   double get open => quote;
 
-  bool operator ==(covariant Tick other) =>
-      epoch == other.epoch && quote == other.quote;
-
-  @override
-  int get hashCode => super.hashCode;
+  List<Object> get props => [epoch, quote];
 }

@@ -1,8 +1,9 @@
 import 'dart:ui' show FontFeature;
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 /// For defining the style of the chart's grid. (X and Y axes)
-class GridStyle {
+class GridStyle with EquatableMixin {
   /// Initializes
   const GridStyle({
     this.gridLineColor = const Color(0xFF151717),
@@ -36,4 +37,13 @@ class GridStyle {
   @override
   String toString() =>
       '${super.toString()}$gridLineColor, ${labelStyle.toStringShort()}, $lineThickness';
+
+  @override
+  List<Object> get props => [
+        gridLineColor,
+        labelStyle,
+        labelHorizontalPadding,
+        lineThickness,
+        xLabelsAreaHeight
+      ];
 }

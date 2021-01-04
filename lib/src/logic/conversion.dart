@@ -1,22 +1,6 @@
 import 'package:deriv_chart/src/models/time_range.dart';
+import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 import 'package:meta/meta.dart';
-
-/// Returns index of the gap in the given list, that either contains the given [epoch] or is to the left/right to it.
-int indexOfNearestGap(List<TimeRange> gaps, int epoch) {
-  int left = 0, right = gaps.length - 1;
-  while (left < right) {
-    final int mid = (left + right) ~/ 2;
-
-    if (gaps[mid].isAfter(epoch)) {
-      right = mid;
-    } else if (gaps[mid].isBefore(epoch)) {
-      left = mid + 1;
-    } else {
-      return mid;
-    }
-  }
-  return right;
-}
 
 /// Returns resulting epoch when given [epoch] is shifted by [pxShift] on x-axis, skipping time gaps.
 int shiftEpochByPx({
@@ -80,21 +64,6 @@ int shiftEpochByPx({
     }
   }
   return shiftedEpoch + (remainingPxShift * msPerPx).round();
-}
-
-/// Returns pixel width of the time range minus the time gaps, which have 0 width on x-axis.
-double timeRangePxWidth({
-  @required TimeRange range,
-  @required double msPerPx,
-  @required List<TimeRange> gaps,
-}) {
-  double overlap = 0;
-
-  for (final TimeRange gap in gaps) {
-    overlap += gap.overlap(range)?.msWidth ?? 0;
-  }
-
-  return (range.msWidth - overlap) / msPerPx;
 }
 
 /// Returns canvas y-coordinate of the given quote/value.

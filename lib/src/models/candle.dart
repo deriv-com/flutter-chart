@@ -1,10 +1,10 @@
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-
 
 /// Candle class
 @immutable
-class Candle extends Tick {
+class Candle extends Tick with EquatableMixin {
   /// Initializes
   const Candle({
     @required int epoch,
@@ -46,18 +46,8 @@ class Candle extends Tick {
       );
 
   @override
-  bool operator ==(covariant Candle other) =>
-      epoch == other.epoch &&
-      open == other.open &&
-      high == other.high &&
-      low == other.low &&
-      close == other.close;
-
-  @override
   String toString() =>
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
-  @override
-  int get hashCode => super.hashCode;
-
+  List<Object> get props => [epoch, open, close, high, low];
 }

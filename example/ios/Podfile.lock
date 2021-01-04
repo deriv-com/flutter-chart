@@ -26,7 +26,7 @@ PODS:
     - Flutter
   - shared_preferences_windows (0.0.1):
     - Flutter
-  - vibration (1.7.1):
+  - vibration (1.7.3):
     - Flutter
   - vibration_web (1.6.2):
     - Flutter
@@ -99,7 +99,7 @@ SPEC CHECKSUMS:
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
   shared_preferences_windows: 36b76d6f54e76ead957e60b49e2f124b4cd3e6ae
-  vibration: 4f4ded27b9d0e21e4110ca43978f057412d28c44
+  vibration: b5a33e764c3f609a975b9dca73dce20fdde627dc
   vibration_web: 0ba303d92469ba34d71c612a228b315908d7fcd9
 
 PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
