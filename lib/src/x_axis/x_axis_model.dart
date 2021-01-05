@@ -154,7 +154,7 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch == _minRightBoundEpoch;
 
   /// Current mode that controls chart's zooming and scrolling behaviour.
-  ViewingMode get _viewingMode {
+  ViewingMode get _currentViewingMode {
     if (_panSpeed != null && _panSpeed != 0) {
       return ViewingMode.constantScrollSpeed;
     }
@@ -255,13 +255,13 @@ class XAxisModel extends ChangeNotifier {
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Called on each frame.
-  /// Updates zoom and scroll position based on current [_viewingMode].
+  /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
     final int newNowEpoch = DateTime.now().millisecondsSinceEpoch;
     final int elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
 
-    switch (_viewingMode) {
+    switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
         _scrollTo(_rightBoundEpoch + elapsedMs);
         break;
@@ -346,7 +346,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is scaling the chart.
   void onScaleUpdate(ScaleUpdateDetails details) {
-    if (_viewingMode == ViewingMode.followCurrentTick) {
+    if (_currentViewingMode == ViewingMode.followCurrentTick) {
       _scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);
