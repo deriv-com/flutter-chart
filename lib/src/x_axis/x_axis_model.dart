@@ -118,6 +118,7 @@ class XAxisModel extends ChangeNotifier {
   int _granularity;
   int _nowEpoch;
   int _rightBoundEpoch;
+  double _panSpeed;
 
   int get _firstEntryEpoch =>
       _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
@@ -153,20 +154,6 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch == _maxRightBoundEpoch ||
       rightBoundEpoch == _minRightBoundEpoch;
 
-  /// Current mode that controls chart's zooming and scrolling behaviour.
-  ViewingMode get _currentViewingMode {
-    if (_panSpeed != null && _panSpeed != 0) {
-      return ViewingMode.constantScrollSpeed;
-    }
-    if (_dataFitMode) {
-      return ViewingMode.fitData;
-    }
-    if (_followCurrentTick) {
-      return ViewingMode.followCurrentTick;
-    }
-    return ViewingMode.stationary;
-  }
-
   bool get _followCurrentTick =>
       _autoPanEnabled &&
       isLive &&
@@ -187,7 +174,45 @@ class XAxisModel extends ChangeNotifier {
 
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
-  double _panSpeed;
+  /// Whether data fit mode is enabled.
+  /// Doesn't mean it is currently active viewing mode. Check [_currentViewingMode].
+  bool get dataFitEnabled => _dataFitMode;
+
+  /// Current mode that controls chart's zooming and scrolling behaviour.
+  ViewingMode get _currentViewingMode {
+    if (_panSpeed != null && _panSpeed != 0) {
+      return ViewingMode.constantScrollSpeed;
+    }
+    if (_dataFitMode) {
+      return ViewingMode.fitData;
+    }
+    if (_followCurrentTick) {
+      return ViewingMode.followCurrentTick;
+    }
+    return ViewingMode.stationary;
+  }
+
+  /// Called on each frame.
+  /// Updates zoom and scroll position based on current [_currentViewingMode].
+  void onNewFrame(Duration _) {
+    final int newNowEpoch = DateTime.now().millisecondsSinceEpoch;
+    final int elapsedMs = newNowEpoch - _nowEpoch;
+    _nowEpoch = newNowEpoch;
+
+    switch (_currentViewingMode) {
+      case ViewingMode.followCurrentTick:
+        _scrollTo(_rightBoundEpoch + elapsedMs);
+        break;
+      case ViewingMode.fitData:
+        fitData();
+        break;
+      case ViewingMode.constantScrollSpeed:
+        _scrollBy(_panSpeed * elapsedMs);
+        break;
+      case ViewingMode.stationary:
+        break;
+    }
+  }
 
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
@@ -253,28 +278,6 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Should be called before [_updateGranularity] and [_updateEntries]
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
-
-  /// Called on each frame.
-  /// Updates zoom and scroll position based on current [_currentViewingMode].
-  void onNewFrame(Duration _) {
-    final int newNowEpoch = DateTime.now().millisecondsSinceEpoch;
-    final int elapsedMs = newNowEpoch - _nowEpoch;
-    _nowEpoch = newNowEpoch;
-
-    switch (_currentViewingMode) {
-      case ViewingMode.followCurrentTick:
-        _scrollTo(_rightBoundEpoch + elapsedMs);
-        break;
-      case ViewingMode.fitData:
-        fitData();
-        break;
-      case ViewingMode.constantScrollSpeed:
-        _scrollBy(_panSpeed * elapsedMs);
-        break;
-      case ViewingMode.stationary:
-        break;
-    }
-  }
 
   /// Fits available data to screen.
   void fitData() {
