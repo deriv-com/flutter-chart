@@ -167,11 +167,13 @@ class XAxisModel extends ChangeNotifier {
   /// Current scale value.
   double get msPerPx => _msPerPx;
 
-  /// Bounds and default for [_msPerPx].
+  /// Min value for [_msPerPx].
   double get _minScale => _granularity / maxIntervalWidth;
 
+  /// Max value for [_msPerPx].
   double get _maxScale => _granularity / minIntervalWidth;
 
+  /// Starting value for [_msPerPx].
   double get _defaultScale => _granularity / defaultIntervalWidth;
 
   /// Whether data fit mode is enabled.
@@ -205,6 +207,11 @@ class XAxisModel extends ChangeNotifier {
         break;
       case ViewingMode.fitData:
         fitData();
+
+        /// Switch to [ViewingMode.followCurrentTick] once reached zoom out limit.
+        if (_msPerPx == _minScale) {
+          disableDataFit();
+        }
         break;
       case ViewingMode.constantScrollSpeed:
         _scrollBy(_panSpeed * elapsedMs);
