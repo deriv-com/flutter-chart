@@ -339,6 +339,9 @@ class XAxisModel extends ChangeNotifier {
   void onScaleAndPanStart(ScaleStartDetails details) {
     _scrollAnimationController.stop();
     _prevMsPerPx = _msPerPx;
+
+    // Exit data fit mode.
+    _dataFitMode = false;
   }
 
   /// Called when user is scaling the chart.
