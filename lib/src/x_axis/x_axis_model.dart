@@ -266,10 +266,7 @@ class XAxisModel extends ChangeNotifier {
         _scrollTo(_rightBoundEpoch + elapsedMs);
         break;
       case ViewingMode.fitData:
-        // TODO(Rustem): Handle this case.
-        // Keep
-        // first entry epoch -> dataFitPadding.left
-        // last entry epoch -> width - dataFitPadding.right
+        fitData();
         break;
       case ViewingMode.constantScrollSpeed:
         _scrollBy(_panSpeed * elapsedMs);
