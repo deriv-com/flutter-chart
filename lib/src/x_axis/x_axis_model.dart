@@ -277,7 +277,6 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Fits available data to screen.
-  /// TODO: Should work for both live and closed contracts.
   void fitData() {
     final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
     final double pxTargetDataWidth = width - dataFitPadding.horizontal;
