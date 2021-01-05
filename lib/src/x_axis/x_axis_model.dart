@@ -293,9 +293,7 @@ class XAxisModel extends ChangeNotifier {
 
     _msPerPx =
         (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
-
-    final double leftX = xFromEpoch(_firstEntryEpoch);
-    _scrollBy(leftX - dataFitPadding.left);
+    _scrollTo(_shiftEpoch(_lastEntryEpoch, dataFitPadding.right));
   }
 
   /// Enables data fit viewing mode.
