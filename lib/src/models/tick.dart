@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+/// Basic data entry.
 @immutable
-/// Tick class
-class Tick {
+class Tick with EquatableMixin {
   /// Initializes
   const Tick({
     @required this.epoch,
@@ -16,9 +17,5 @@ class Tick {
   final double quote;
 
   @override
-  bool operator ==(covariant Tick other) =>
-      epoch == other.epoch && quote == other.quote;
-
-  @override
-  int get hashCode => super.hashCode;
+  List<Object> get props => [epoch, quote];
 }

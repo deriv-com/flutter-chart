@@ -2,42 +2,45 @@ import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
 import 'paint_x_grid.dart';
-import 'time_label.dart';
 
 /// Paints x-axis grid and labels.
 class XGridPainter extends CustomPainter {
   /// Creates x-axis painter.
   XGridPainter({
-    @required this.gridTimestamps,
-    @required this.epochToCanvasX,
+    @required this.timeLabels,
+    @required this.xCoords,
     @required this.style,
   });
 
-  /// Timestamps of vertical grid lines.
-  final List<DateTime> gridTimestamps;
+  /// Time labels.
+  final List<String> timeLabels;
 
-  /// Epoch to x-coordinate convertion function.
-  final double Function(int) epochToCanvasX;
+  /// X-coordinates of time labels.
+  final List<double> xCoords;
 
   /// Style of the grid.
   final GridStyle style;
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (timeLabels == null || xCoords == null) {
+      return;
+    }
+
     paintXGrid(
       canvas,
       size,
-      timeLabels:
-          gridTimestamps.map((DateTime time) => timeLabel(time)).toList(),
-      xCoords: gridTimestamps
-          .map((DateTime time) => epochToCanvasX(time.millisecondsSinceEpoch))
-          .toList(),
+      timeLabels: timeLabels,
+      xCoords: xCoords,
       style: style,
     );
   }
 
   @override
-  bool shouldRepaint(XGridPainter oldDelegate) => true;
+  bool shouldRepaint(XGridPainter oldDelegate) =>
+      timeLabels != oldDelegate.timeLabels ||
+      xCoords != oldDelegate.xCoords ||
+      style != oldDelegate.style;
 
   @override
   bool shouldRebuildSemantics(XGridPainter oldDelegate) => false;

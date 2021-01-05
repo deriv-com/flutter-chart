@@ -355,62 +355,59 @@ class _FullscreenChartState extends State<FullscreenChart> {
           Expanded(
             child: Stack(
               children: <Widget>[
-                ClipRect(
-                  child: Chart(
-                    mainSeries:
-                        style == ChartStyle.candles && ticks is List<Candle>
-                            ? CandleSeries(ticks)
-                            : LineSeries(ticks),
-                    secondarySeries: [
-                      MASeries(
-                        ticks,
-                        style: LineStyle(
-                          color: Colors.grey,
-                          thickness: 0.5,
-                          hasArea: false,
-                        ),
+                Chart(
+                  mainSeries:
+                      style == ChartStyle.candles && ticks is List<Candle>
+                          ? CandleSeries(ticks)
+                          : LineSeries(ticks),
+                  secondarySeries: [
+                    MASeries(
+                      ticks,
+                      style: LineStyle(
+                        color: Colors.grey,
+                        thickness: 0.5,
+                        hasArea: false,
                       ),
-                    ],
-                    markerSeries: MarkerSeries(
-                      _markers,
-                      activeMarker: _activeMarker,
                     ),
-                    annotations: ticks.length > 4
-                        ? <ChartAnnotation>[
-                            ..._sampleBarriers,
-                            if (_sl && _slBarrier != null) _slBarrier,
-                            if (_tp && _tpBarrier != null) _tpBarrier,
-                            TickIndicator(
-                              ticks.last,
-                              style: const HorizontalBarrierStyle(
-                                color: Colors.redAccent,
-                                labelShape: LabelShape.pentagon,
-                                hasBlinkingDot: true,
-                                hasArrow: false,
-                              ),
-                              visibility: HorizontalBarrierVisibility
-                                  .keepBarrierLabelVisible,
-                            ),
-                          ]
-                        : null,
-                    pipSize:
-                        _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
-                    granularity: granularity == 0
-                        ? 2000 // average ms difference between ticks
-                        : granularity * 1000,
-                    controller: _controller,
-                    isLive: (_symbol?.isOpen ?? false) &&
-                        (_connectionBloc?.state is Connected ?? false),
-                    opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
-                    onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                      if (!_waitingForHistory &&
-                          ticks.isNotEmpty &&
-                          leftEpoch < ticks.first.epoch) {
-                        _loadHistory(2000);
-                      }
-                    },
+                  ],
+                  markerSeries: MarkerSeries(
+                    _markers,
+                    activeMarker: _activeMarker,
                   ),
+                  annotations: ticks.length > 4
+                      ? <ChartAnnotation>[
+                          ..._sampleBarriers,
+                          if (_sl && _slBarrier != null) _slBarrier,
+                          if (_tp && _tpBarrier != null) _tpBarrier,
+                          TickIndicator(
+                            ticks.last,
+                            style: const HorizontalBarrierStyle(
+                              color: Colors.redAccent,
+                              labelShape: LabelShape.pentagon,
+                              hasBlinkingDot: true,
+                              hasArrow: false,
+                            ),
+                            visibility: HorizontalBarrierVisibility
+                                .keepBarrierLabelVisible,
+                          ),
+                        ]
+                      : null,
+                  pipSize: _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
+                  granularity: granularity == 0
+                      ? 2000 // average ms difference between ticks
+                      : granularity * 1000,
+                  controller: _controller,
+                  isLive: (_symbol?.isOpen ?? false) &&
+                      (_connectionBloc?.state is Connected ?? false),
+                  opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
+                  onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+                  onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                    if (!_waitingForHistory &&
+                        ticks.isNotEmpty &&
+                        leftEpoch < ticks.first.epoch) {
+                      _loadHistory(2000);
+                    }
+                  },
                 ),
                 if (_connectionBloc != null &&
                     _connectionBloc.state is! Connected)
