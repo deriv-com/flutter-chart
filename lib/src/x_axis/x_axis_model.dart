@@ -56,7 +56,7 @@ class XAxisModel extends ChangeNotifier {
   }) {
     _nowEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
-    _msPerPx = _defaultScale;
+    _msPerPx = _defaultMsPerPx;
     _isLive = isLive ?? true;
     _rightBoundEpoch = _maxRightBoundEpoch;
     _dataFitMode = startWithDataFitMode ?? false;
@@ -167,14 +167,14 @@ class XAxisModel extends ChangeNotifier {
   /// Current scale value.
   double get msPerPx => _msPerPx;
 
-  /// Min value for [_msPerPx].
-  double get _minScale => _granularity / maxIntervalWidth;
+  /// Min value for [_msPerPx]. Limits zooming in.
+  double get _minMsPerPx => _granularity / maxIntervalWidth;
 
-  /// Max value for [_msPerPx].
-  double get _maxScale => _granularity / minIntervalWidth;
+  /// Max value for [_msPerPx]. Limits zooming out.
+  double get _maxMsPerPx => _granularity / minIntervalWidth;
 
   /// Starting value for [_msPerPx].
-  double get _defaultScale => _granularity / defaultIntervalWidth;
+  double get _defaultMsPerPx => _granularity / defaultIntervalWidth;
 
   /// Whether data fit mode is enabled.
   /// Doesn't mean it is currently active viewing mode. Check [_currentViewingMode].
@@ -209,7 +209,7 @@ class XAxisModel extends ChangeNotifier {
         fitData();
 
         /// Switch to [ViewingMode.followCurrentTick] once reached zoom out limit.
-        if (_msPerPx == _minScale) {
+        if (_msPerPx == _maxMsPerPx) {
           disableDataFit();
         }
         break;
@@ -277,7 +277,7 @@ class XAxisModel extends ChangeNotifier {
   void _updateGranularity(int newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
-    _msPerPx = _defaultScale;
+    _msPerPx = _defaultMsPerPx;
     _scrollTo(_maxRightBoundEpoch);
   }
 
@@ -291,7 +291,8 @@ class XAxisModel extends ChangeNotifier {
     final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
     final double pxTargetDataWidth = width - dataFitPadding.horizontal;
 
-    _msPerPx = (msDataDuration / pxTargetDataWidth).clamp(_minScale, _maxScale);
+    _msPerPx =
+        (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
 
     final double leftX = xFromEpoch(_firstEntryEpoch);
     _scrollBy(leftX - dataFitPadding.left);
@@ -399,7 +400,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scale(double scale) {
-    _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
+    _msPerPx = (_prevMsPerPx / scale).clamp(_minMsPerPx, _maxMsPerPx);
     onScale?.call();
     notifyListeners();
   }
