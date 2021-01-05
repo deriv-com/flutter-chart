@@ -638,13 +638,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
         ),
       );
 
-  Widget _buildDataFitButton() => Material(
-        type: MaterialType.circle,
-        color: Colors.transparent,
-        clipBehavior: Clip.antiAlias,
-        child: IconButton(
-          icon: const Icon(Icons.fullscreen_exit),
-          onPressed: context.read<XAxisModel>().fitData,
-        ),
-      );
+  Widget _buildDataFitButton() {
+    final XAxisModel xAxis = context.read<XAxisModel>();
+    return Material(
+      type: MaterialType.circle,
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      child: IconButton(
+        icon: const Icon(Icons.fullscreen_exit),
+        onPressed: xAxis.dataFitEnabled ? null : xAxis.enableDataFit,
+      ),
+    );
+  }
 }

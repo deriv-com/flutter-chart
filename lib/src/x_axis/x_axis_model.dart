@@ -290,6 +290,18 @@ class XAxisModel extends ChangeNotifier {
     _scrollBy(leftX - dataFitPadding.left);
   }
 
+  /// Enables data fit viewing mode.
+  void enableDataFit() {
+    _dataFitMode = true;
+    notifyListeners();
+  }
+
+  /// Disables data fit viewing mode.
+  void disableDataFit() {
+    _dataFitMode = false;
+    notifyListeners();
+  }
+
   void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.
@@ -344,7 +356,7 @@ class XAxisModel extends ChangeNotifier {
     _prevMsPerPx = _msPerPx;
 
     // Exit data fit mode.
-    _dataFitMode = false;
+    disableDataFit();
   }
 
   /// Called when user is scaling the chart.
