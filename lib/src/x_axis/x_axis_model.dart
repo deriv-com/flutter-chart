@@ -206,7 +206,7 @@ class XAxisModel extends ChangeNotifier {
         _scrollTo(_rightBoundEpoch + elapsedMs);
         break;
       case ViewingMode.fitData:
-        fitData();
+        _fitData();
 
         /// Switch to [ViewingMode.followCurrentTick] once reached zoom out limit.
         if (_msPerPx == _maxMsPerPx) {
@@ -287,7 +287,7 @@ class XAxisModel extends ChangeNotifier {
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
   /// Fits available data to screen.
-  void fitData() {
+  void _fitData() {
     final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
     final double pxTargetDataWidth = width - dataFitPadding.horizontal;
 
