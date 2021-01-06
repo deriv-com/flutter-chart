@@ -28,18 +28,19 @@ class ChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (chartDataList != null) {
-      for (final ChartData c in chartDataList) {
-        c.paint(
-          canvas,
-          size,
-          epochToCanvasX,
-          quoteToCanvasY,
-          animationInfo,
-          chartConfig,
-          theme,
-        );
-      }
+    if (chartDataList == null) {
+      return;
+    }
+    for (final ChartData c in chartDataList) {
+      c.paint(
+        canvas,
+        size,
+        epochToCanvasX,
+        quoteToCanvasY,
+        animationInfo,
+        chartConfig,
+        theme,
+      );
     }
   }
 

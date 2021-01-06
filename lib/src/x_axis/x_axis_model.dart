@@ -219,8 +219,8 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
   void onNewFrame(Duration _) {
-    final newNowTime = DateTime.now().millisecondsSinceEpoch;
-    final elapsedMs = newNowTime - _nowTime;
+    final int newNowTime = DateTime.now().millisecondsSinceEpoch;
+    final int elapsedMs = newNowTime - _nowTime;
     _nowEpoch = _entries?.isNotEmpty ?? false
         ? _entries.last.epoch
         : _nowEpoch + elapsedMs;
