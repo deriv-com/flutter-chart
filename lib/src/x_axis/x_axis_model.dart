@@ -26,11 +26,10 @@ class XAxisModel extends ChangeNotifier {
     this.onScale,
     this.onScroll,
   }) {
-    if (entries != null && entries.isNotEmpty) {
-      _nowEpoch = entries.last.epoch;
-    } else {
-      _nowEpoch = DateTime.now().millisecondsSinceEpoch;
-    }
+    _nowEpoch = entries?.isNotEmpty ?? false
+        ? entries.last.epoch
+        : DateTime.now().millisecondsSinceEpoch;
+
     _nowTime = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
@@ -117,11 +116,8 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch => _shiftEpoch(
-        _entries == null || _entries.isEmpty || _isLive
-            ? _nowEpoch
-            : _entries.last.epoch,
-        maxCurrentTickOffset,
-      );
+      _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
+      maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -225,7 +221,7 @@ class XAxisModel extends ChangeNotifier {
   void onNewFrame(Duration _) {
     final newNowTime = DateTime.now().millisecondsSinceEpoch;
     final elapsedMs = newNowTime - _nowTime;
-    _nowEpoch = _entries != null && _entries.isNotEmpty
+    _nowEpoch = _entries?.isNotEmpty ?? false
         ? _entries.last.epoch
         : _nowEpoch + elapsedMs;
     _nowTime = newNowTime;
