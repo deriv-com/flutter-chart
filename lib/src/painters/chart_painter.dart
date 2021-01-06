@@ -11,7 +11,7 @@ class ChartPainter extends CustomPainter {
   ChartPainter({
     this.chartConfig,
     this.theme,
-    this.chartDataList,
+    this.chartData,
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
@@ -29,49 +29,27 @@ class ChartPainter extends CustomPainter {
 
   final AnimationInfo animationInfo;
 
-  final List<ChartData> chartDataList;
+  final ChartData chartData;
 
   final int rightEpoch;
   final int leftEpoch;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (chartDataList != null) {
-      for (final ChartData c in chartDataList) {
-        if (c is VerticalBarrier) {}
-        c.paint(
-          canvas,
-          size,
-          epochToCanvasX,
-          quoteToCanvasY,
-          animationInfo,
-          chartConfig,
-          theme,
-        );
-      }
-    }
+    chartData.paint(
+      canvas,
+      size,
+      epochToCanvasX,
+      quoteToCanvasY,
+      animationInfo,
+      chartConfig,
+      theme,
+    );
   }
 
   @override
-  bool shouldRepaint(ChartPainter oldDelegate) {
-    if (chartDataList == null) {
-      return true;
-    } else {
-      for (final ChartData c in chartDataList) {
-        if (oldDelegate.chartDataList != null &&
-            c.shouldRepaint(oldDelegate.chartDataList
-                .firstWhere((element) => element.id == c.id))) {
-          return true;
-        }
-      }
-      if (rightEpoch != oldDelegate.rightEpoch ||
-          leftEpoch != oldDelegate.leftEpoch) {
-        return true;
-      }
-
-      return false;
-    }
-  }
+  bool shouldRepaint(ChartPainter oldDelegate) =>
+      chartData.shouldRepaint(oldDelegate.chartData);
 
   @override
   bool shouldRebuildSemantics(ChartPainter oldDelegate) => false;

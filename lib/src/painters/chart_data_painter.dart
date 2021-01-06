@@ -78,16 +78,6 @@ class ChartDataPainter extends CustomPainter {
         (mainSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
-    bool visibleEntriesChanged() {
-      final List<Tick> current = mainSeries.visibleEntries;
-      final List<Tick> previous = oldDelegate.mainSeries.visibleEntries;
-
-      if (current.isEmpty && previous.isEmpty) return false;
-      if (current.isEmpty != previous.isEmpty) return true;
-
-      return current.first != previous.first || current.last != previous.last;
-    }
-
     bool visibleAnimationChanged() =>
         mainSeries.entries.isNotEmpty &&
         mainSeries.visibleEntries.isNotEmpty &&
@@ -98,8 +88,7 @@ class ChartDataPainter extends CustomPainter {
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
         topY != oldDelegate.topY ||
         bottomY != oldDelegate.bottomY ||
-        visibleEntriesChanged() ||
-        visibleAnimationChanged() ||
+         visibleAnimationChanged() ||
         chartConfig != oldDelegate.chartConfig ||
         styleChanged();
   }

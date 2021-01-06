@@ -6,8 +6,7 @@ import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart'
 /// Base class of chart annotations
 abstract class ChartAnnotation<T extends ChartObject> extends Series {
   /// Initializes
-  ChartAnnotation(
-    String id, {
+  ChartAnnotation(String id, {
     ChartPaintingStyle style,
   }) : super(id, style: style) {
     annotationObject = createObject();
@@ -39,9 +38,9 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   }
 
   @override
-  bool shouldRepaint(ChartData previous) {
-    return isOnRange;
-  }
+  bool shouldRepaint(ChartData previous) =>
+      super.shouldRepaint(previous) || isOnRange;
+
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) =>
