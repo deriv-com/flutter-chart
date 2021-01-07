@@ -3,4 +3,10 @@
 /// TODO: Use OHLC interface?
 ///
 /// Keep one instance for each unique `Series` or list of data with a sliding window.
-class MinMaxCalculator<T extends Tick> {}
+class MinMaxCalculator<T extends Tick> {
+  List<T> _entries;
+
+  double get min;
+
+  double get max;
+}
