@@ -4,6 +4,9 @@
 ///
 /// Keep one instance for each unique `Series` or list of data with a sliding window.
 class MinMaxCalculator<T extends Tick> {
+  /// Creates and calculates min/max immediately.
+  MinMaxCalculator(List<T> entries) : _entries = entries;
+
   List<T> _entries;
 
   double get min;
