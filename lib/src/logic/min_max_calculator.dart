@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 /// Accepts a list of entries sorted by time and calculates min/max values for that list.
 /// Reuses previous work done when visible entries are updated.
 ///
@@ -19,7 +21,17 @@ class MinMaxCalculator<T implements MinMaxCalculatorEntry> {
   double get max;
 
   /// Updates a list of visible entries and efficiently recalculates new min/max.
-  void updateVisibleEntries(List<T> newVisibleEntries) {}
+  void updateVisibleEntries(List<T> newVisibleEntries) {
+    if (_visibleEntries == null) {
+      _visibleEntries = newVisibleEntries;
+
+      _visibleEntriesCount = SplayTreeMap;
+      
+      for (final MinMaxCalculatorEntry entry in _visibleEntries) {
+        
+      }
+    }
+  }
 }
 
 /// Interface that should be implemented by all entries to `MinMaxCalculator`.
