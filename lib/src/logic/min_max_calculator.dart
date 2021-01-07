@@ -1,12 +1,16 @@
 /// Accepts a list of entries sorted by time and calculates min/max values for that list.
-/// Reuses work done when a new list is supplied.
+/// Reuses previous work done when visible entries are updated.
 ///
 /// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
 class MinMaxCalculator<T implements MinMaxCalculatorEntry> {
   /// Creates and calculates min/max immediately.
   MinMaxCalculator(List<T> visibleEntries) : _visibleEntries = visibleEntries;
 
+  /// List of current entries from which min/max is calculated.
   List<T> _visibleEntries;
+
+  /// A map that keeps track of number of occurences of `min` and `max` values for all `_visibleEntries`.
+  SplayTreeMap<double, int> _visibleEntriesCount;
 
   /// Minimum value of current visible entries.
   double get min;
@@ -14,8 +18,8 @@ class MinMaxCalculator<T implements MinMaxCalculatorEntry> {
   /// Maximum value of current visible entries.
   double get max;
 
-  /// Updates a list of entries and efficiently recalculates min/max.
-  void updateEntries(List<T> newVisibleEntries) {}
+  /// Updates a list of visible entries and efficiently recalculates new min/max.
+  void updateVisibleEntries(List<T> newVisibleEntries) {}
 }
 
 /// Interface that should be implemented by all entries to `MinMaxCalculator`.
