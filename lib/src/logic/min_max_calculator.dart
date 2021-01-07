@@ -9,8 +9,10 @@ class MinMaxCalculator<T extends Tick> {
 
   List<T> _visibleEntries;
 
+  /// Min value of current visible entries.
   double get min;
 
+  /// Max value of current visible entries.
   double get max;
 
   /// Updates a list of entries and efficiently recalculates min/max.
