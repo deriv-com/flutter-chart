@@ -18,3 +18,6 @@ class MinMaxCalculator<T extends Tick> {
   /// Updates a list of entries and efficiently recalculates min/max.
   void updateEntries(List<T> newVisibleEntries) {}
 }
+
+/// Interface that should be implemented by all entries to `MinMaxCalculator`.
+abstract class MinMaxCalculatorEntry {}
