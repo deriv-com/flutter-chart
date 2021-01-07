@@ -4,10 +4,7 @@ import 'dart:collection';
 /// Reuses previous work done when visible entries are updated.
 ///
 /// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
-class MinMaxCalculator<T implements MinMaxCalculatorEntry> {
-  /// Creates a min/max calculator for entries of given type.
-  MinMaxCalculator<T>();
-
+class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   /// List of current entries from which min/max is calculated.
   List<T> _visibleEntries;
 
@@ -26,10 +23,8 @@ class MinMaxCalculator<T implements MinMaxCalculatorEntry> {
       _visibleEntries = newVisibleEntries;
 
       _visibleEntriesCount = SplayTreeMap;
-      
-      for (final MinMaxCalculatorEntry entry in _visibleEntries) {
-        
-      }
+
+      for (final MinMaxCalculatorEntry entry in _visibleEntries) {}
     }
   }
 }
