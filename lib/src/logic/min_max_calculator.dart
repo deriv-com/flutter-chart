@@ -3,8 +3,8 @@
 ///
 /// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
 class MinMaxCalculator<T implements MinMaxCalculatorEntry> {
-  /// Creates and calculates min/max immediately.
-  MinMaxCalculator(List<T> visibleEntries) : _visibleEntries = visibleEntries;
+  /// Creates a min/max calculator for entries of given type.
+  MinMaxCalculator<T>();
 
   /// List of current entries from which min/max is calculated.
   List<T> _visibleEntries;
