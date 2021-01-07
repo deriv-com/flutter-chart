@@ -201,6 +201,7 @@ class XAxisModel extends ChangeNotifier {
     final int elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
 
+    // TODO(Rustem): Consider refactoring the switch with OOP pattern.
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
         _scrollTo(_rightBoundEpoch + elapsedMs);
