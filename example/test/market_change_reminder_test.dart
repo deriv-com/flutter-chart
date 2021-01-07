@@ -27,7 +27,7 @@ void main() {
           tradingTimesReminder.statusChangeTimes[firstMarketChangeDate];
 
       // Reminder timers will be 6:30, 7:30, 20:00, 22:00.
-      // First entry will be remove to set the first reminding timer.
+      // First entry will be removed to set the first reminding timer.
       expect(tradingTimesReminder.statusChangeTimes.length, 3);
       expect(firstMarketChangeDate, DateTime.utc(2020, 10, 10, 7, 30));
       expect(firstMarkChangeSymbols.keys.first, 'OTC_AS51');

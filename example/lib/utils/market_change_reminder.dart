@@ -69,7 +69,7 @@ class MarketChangeReminder {
   }
 
   Future<void> _fillStatusChangeMap() async {
-    final DateTime now = await _getNowTime();
+    final DateTime now = await _getCurrentTime();
     final TradingTimes todayTradingTimes = await onTradingTimes();
 
     for (final MarketModel market in todayTradingTimes.markets) {
@@ -113,7 +113,6 @@ class MarketChangeReminder {
 
     final DateTime hourMinSec = _dateFormat.parse(time);
 
-    // Added 5 seconds to be sure market status has changed already.
     final DateTime statusChangeTime = DateTime.utc(
       now.year,
       now.month,
@@ -137,7 +136,7 @@ class MarketChangeReminder {
   Future<void> _setReminderTimer() async {
     _reminderTimer?.cancel();
 
-    final DateTime now = await _getNowTime();
+    final DateTime now = await _getCurrentTime();
 
     if (statusChangeTimes.isNotEmpty) {
       final DateTime nextStatusChangeTime = statusChangeTimes.firstKey();
@@ -145,6 +144,7 @@ class MarketChangeReminder {
           statusChangeTimes.remove(nextStatusChangeTime);
 
       _reminderTimer = Timer(
+        // We add 5 seconds delay to be sure market status is actually changed.
         nextStatusChangeTime.add(const Duration(seconds: 5)).difference(now),
         () async {
           await onMarketsStatusChange?.call(symbolsChanging);
@@ -160,7 +160,7 @@ class MarketChangeReminder {
     }
   }
 
-  Future<DateTime> _getNowTime() async =>
+  Future<DateTime> _getCurrentTime() async =>
       onCurrentTime == null ? DateTime.now().toUtc() : await onCurrentTime();
 
   /// Cancels current reminder timer.
