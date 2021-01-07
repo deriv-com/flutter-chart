@@ -12,10 +12,10 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   SplayTreeMap<double, int> _visibleEntriesCount;
 
   /// Minimum value of current visible entries.
-  double get min;
+  double get min => _visibleEntriesCount?.firstKey() ?? double.nan;
 
   /// Maximum value of current visible entries.
-  double get max;
+  double get max => _visibleEntriesCount?.lastKey() ?? double.nan;
 
   /// Updates a list of visible entries and efficiently recalculates new min/max.
   void updateVisibleEntries(List<T> newVisibleEntries) {
