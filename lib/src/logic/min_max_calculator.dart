@@ -24,6 +24,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       _visibleEntries = newVisibleEntries;
 
       // for (final MinMaxCalculatorEntry entry in _visibleEntries) {}
+    } else {
+      // TODO: Reuse previous work.
     }
   }
 }
