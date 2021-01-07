@@ -2,5 +2,5 @@
 /// Reuses work done when new list is supplied.
 /// TODO: Use OHLC interface?
 ///
-/// Keep one instance for each unique `Series` or list of data with sliding window.
+/// Keep one instance for each unique `Series` or list of data with a sliding window.
 class MinMaxCalculator<T extends Tick> {}
