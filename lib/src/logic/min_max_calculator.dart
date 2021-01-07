@@ -9,7 +9,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   List<T> _visibleEntries;
 
   /// A map that keeps track of number of occurences of `min` and `max` values for all `_visibleEntries`.
-  SplayTreeMap<double, int> _visibleEntriesCount;
+  final SplayTreeMap<double, int> _visibleEntriesCount =
+      SplayTreeMap<double, int>();
 
   /// Minimum value of current visible entries.
   double get min => _visibleEntriesCount?.firstKey() ?? double.nan;
@@ -22,9 +23,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
     if (_visibleEntries == null) {
       _visibleEntries = newVisibleEntries;
 
-      _visibleEntriesCount = SplayTreeMap;
-
-      for (final MinMaxCalculatorEntry entry in _visibleEntries) {}
+      // for (final MinMaxCalculatorEntry entry in _visibleEntries) {}
     }
   }
 }
