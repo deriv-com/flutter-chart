@@ -12,4 +12,7 @@ class MinMaxCalculator<T extends Tick> {
   double get min;
 
   double get max;
+
+  /// Updates a list of entries and efficiently recalculates min/max.
+  void updateEntries(List<T> newEntries) {}
 }
