@@ -1,6 +1,5 @@
 /// Accepts a list of entries sorted by time and calculates min/max values for that list.
 /// Reuses work done when a new list is supplied.
-/// TODO: Use OHLC interface?
 ///
 /// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
 class MinMaxCalculator<T implements MinMaxCalculatorEntry> {
