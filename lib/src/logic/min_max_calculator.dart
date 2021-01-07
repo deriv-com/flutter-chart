@@ -23,7 +23,15 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
     if (_visibleEntries == null) {
       _visibleEntries = newVisibleEntries;
 
-      // for (final MinMaxCalculatorEntry entry in _visibleEntries) {}
+      for (final MinMaxCalculatorEntry entry in _visibleEntries) {
+        // Initialize keys if absent.
+        _visibleEntriesCount
+          ..putIfAbsent(entry.min, () => 0)
+          ..putIfAbsent(entry.max, () => 0);
+
+        _visibleEntriesCount[entry.min]++;
+        _visibleEntriesCount[entry.max]++;
+      }
     } else {
       // TODO: Reuse previous work.
     }
