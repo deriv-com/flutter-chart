@@ -2,17 +2,17 @@
 /// Reuses work done when a new list is supplied.
 /// TODO: Use OHLC interface?
 ///
-/// Keep one instance for each unique `Series` or list of data with a sliding window.
+/// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
 class MinMaxCalculator<T extends Tick> {
   /// Creates and calculates min/max immediately.
-  MinMaxCalculator(List<T> entries) : _entries = entries;
+  MinMaxCalculator(List<T> visibleEntries) : _visibleEntries = visibleEntries;
 
-  List<T> _entries;
+  List<T> _visibleEntries;
 
   double get min;
 
   double get max;
 
   /// Updates a list of entries and efficiently recalculates min/max.
-  void updateEntries(List<T> newEntries) {}
+  void updateEntries(List<T> newVisibleEntries) {}
 }
