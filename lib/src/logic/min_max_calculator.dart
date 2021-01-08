@@ -34,8 +34,12 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       }
     } else {
       // TODO: Reuse previous work.
+      final List<MinMaxCalculatorEntry> addedEntries =
+          <MinMaxCalculatorEntry>[];
+      final List<MinMaxCalculatorEntry> removedEntries =
+          <MinMaxCalculatorEntry>[];
 
-      // Compare and find what entries got removed/added.
+      // Compare and find what entries got removed/added by checking epochs.
       _visibleEntries;
       newVisibleEntries;
 
