@@ -56,6 +56,9 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
     List<MinMaxCalculatorEntry> listA,
     List<MinMaxCalculatorEntry> listB,
   ) {
+    if (listA.isEmpty || listB.isEmpty) {
+      return true;
+    }
     // Option A: All entries in ListA are behind entries in ListB.
     // Option B: All entries in ListA are in front of entries in ListB.
   }
