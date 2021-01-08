@@ -34,6 +34,14 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       }
     } else {
       // TODO: Reuse previous work.
+
+      // Compare and find what entries got removed/added.
+      _visibleEntries;
+      newVisibleEntries;
+
+      // Increment min/max values of added entries in the map.
+      // Decrement min/max values of removed entries in the map.
+      // If value has reached 0 while decrementing, then remove key from the map.
     }
   }
 }
