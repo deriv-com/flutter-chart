@@ -22,7 +22,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   void updateVisibleEntries(List<T> newVisibleEntries) {
     if (_visibleEntries == null) {
       _visibleEntries = newVisibleEntries;
-      // TODO: Clear map
+      _visibleEntriesCount.clear();
 
       for (final MinMaxCalculatorEntry entry in _visibleEntries) {
         // Initialize keys if absent.
