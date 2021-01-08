@@ -22,6 +22,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   void updateVisibleEntries(List<T> newVisibleEntries) {
     if (_visibleEntries == null) {
       _visibleEntries = newVisibleEntries;
+      // TODO: Clear map
 
       for (final MinMaxCalculatorEntry entry in _visibleEntries) {
         // Initialize keys if absent.
@@ -47,6 +48,15 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       // Decrement min/max values of removed entries in the map.
       // If value has reached 0 while decrementing, then remove key from the map.
     }
+  }
+
+  /// Whether there are no shared entries.
+  bool _noOverlap(
+    List<MinMaxCalculatorEntry> listA,
+    List<MinMaxCalculatorEntry> listB,
+  ) {
+    // Option A: All entries in ListA are behind entries in ListB.
+    // Option B: All entries in ListA are in front of entries in ListB.
   }
 }
 
