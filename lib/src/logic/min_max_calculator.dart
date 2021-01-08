@@ -45,8 +45,10 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
 
       // Compare and find what entries got removed/added by checking epochs.
       // Option A: All entries in `_visibleEntries` are present in `newVisibleEntries`.
+      // (Zoom out.)
 
       // Option B: All entries in `newVisibleEntries` are present in `_visibleEntries`.
+      // (Zoom in.)
 
       // Option C: Entries at the back of `_visibleEntries` are removed, while `newVisibleEntries` has added entries at the front.
       // (Scroll forward without zooming.)
