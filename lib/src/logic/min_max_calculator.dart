@@ -44,8 +44,14 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
           <MinMaxCalculatorEntry>[];
 
       // Compare and find what entries got removed/added by checking epochs.
-      _visibleEntries;
-      newVisibleEntries;
+      // Option A: All entries in `_visibleEntries` are present in `newVisibleEntries`.
+
+      // Option B: All entries in `newVisibleEntries` are present in `_visibleEntries`.
+
+      // Option C: Entries at the back of `_visibleEntries` are removed, while `newVisibleEntries` has added entries at the front.
+      // (Scroll forward without zooming.)
+
+      // Option D: Entries at the front of `_visibleEntries` are removed, while `newVisibleEntries` has added entries at the back.
 
       // Increment min/max values of added entries in the map.
       // Decrement min/max values of removed entries in the map.
