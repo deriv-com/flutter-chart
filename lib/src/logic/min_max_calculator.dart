@@ -60,6 +60,9 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       return true;
     }
     // Option A: All entries in ListA are behind entries in ListB.
+    if (listA.last.epoch < listB.first.epoch) {
+      return true;
+    }
     // Option B: All entries in ListA are in front of entries in ListB.
   }
 }
