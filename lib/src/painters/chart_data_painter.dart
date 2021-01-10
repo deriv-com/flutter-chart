@@ -57,6 +57,10 @@ class ChartDataPainter extends CustomPainter {
       theme,
     );
 
+    if (secondarySeries == null) {
+      return;
+    }
+
     for (final Series series in secondarySeries) {
       series.paint(
         canvas,
