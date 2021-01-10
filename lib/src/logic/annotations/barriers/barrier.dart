@@ -30,7 +30,7 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   /// The value that this barrier points to
   final double value;
 
-  var _shouldRepaint = false;
+  bool _shouldRepaint = false;
 
   @override
   bool didUpdate(ChartData oldData) =>

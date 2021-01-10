@@ -15,8 +15,6 @@ class ChartPainter extends CustomPainter {
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
-    this.rightEpoch,
-    this.leftEpoch,
   });
 
   /// Chart config
@@ -30,9 +28,6 @@ class ChartPainter extends CustomPainter {
   final AnimationInfo animationInfo;
 
   final ChartData chartData;
-
-  final int rightEpoch;
-  final int leftEpoch;
 
   @override
   void paint(Canvas canvas, Size size) {
