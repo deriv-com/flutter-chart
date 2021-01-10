@@ -225,6 +225,7 @@ class XAxisModel extends ChangeNotifier {
     }
   }
 
+  /// Returns [panSpeed] if not null, otherwise returns `0`
   void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.
@@ -370,6 +371,7 @@ class XAxisModel extends ChangeNotifier {
     _updateEntries(entries);
   }
 
+  /// Returns a list of timestamps without any overlap grids.
   List<DateTime> getNoOverlapGridTimestamps() {
     const double _minDistanceBetweenTimeGridLines = 80;
     // Calculate time labels' timestamps for current scale.

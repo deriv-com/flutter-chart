@@ -18,7 +18,9 @@ typedef OnAssetClicked = Function(Asset asset, bool favouriteClicked);
 /// The duration of animating the scroll to the selected item in the [MarketSelector] widget.
 const scrollToSelectedDuration = Duration.zero;
 
+/// A widget which is used to select the market of the chart.
 class MarketSelector extends StatefulWidget {
+  /// Initializes a widget which is used to select the market of the chart.
   const MarketSelector({
     Key key,
     this.onAssetClicked,
@@ -31,13 +33,16 @@ class MarketSelector extends StatefulWidget {
   /// It will be called when a symbol item [Asset] is tapped.
   final OnAssetClicked onAssetClicked;
 
+  /// A `list` of markets which the user can select from.
   final List<Market> markets;
 
+  /// The selected asset item which contains the details of the selected market.
   final Asset selectedItem;
 
-  /// [Optional] whenever it is null, it will be substituted with a list of assets that their [Asset.isFavourite] is true.
+  /// `Optional` whenever it is null, it will be substituted with a list of assets that their [Asset.isFavourite] is true.
   final List<Asset> favouriteAssets;
 
+  /// The theme of the chart which the market selector is being placed inside.
   final ChartTheme theme;
 
   @override

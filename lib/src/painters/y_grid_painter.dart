@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../paint/paint_text.dart';
 
+/// A `CustomPainter` that paints the Y axis grids.
 class YGridPainter extends CustomPainter {
+  /// Initializes a `CustomPainter` that paints the Y axis grids.
   YGridPainter({
     @required this.gridLineQuotes,
     @required this.pipSize,
@@ -11,11 +13,16 @@ class YGridPainter extends CustomPainter {
     @required this.style,
   });
 
+  /// Number of digits after decimal point in price.
   final int pipSize;
+
+  /// The list of quotes;
   final List<double> gridLineQuotes;
 
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
+  /// The style of chart's grid.'
   final GridStyle style;
 
   @override

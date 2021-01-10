@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 /// that it has reached its top scroll limit. when user is closing the [child] by over-scrolling,
 /// it will call [Navigator.pop()], to fully dismiss the [BottomSheet].
 class CustomDraggableSheet extends StatefulWidget {
+  /// Initializes a widget to manage the over-scroll to dismiss for a scrollable inside its [child]
   const CustomDraggableSheet({
     Key key,
     @required this.child,
@@ -20,6 +21,7 @@ class CustomDraggableSheet extends StatefulWidget {
   /// The duration of animation whether sheet will fling back to top or dismiss
   final Duration animationDuration;
 
+  /// The duration of the starting animation.
   final Duration introAnimationDuration;
 
   @override

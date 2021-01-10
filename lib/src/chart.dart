@@ -52,7 +52,7 @@ class Chart extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  /// Chart's main data series
+  /// Chart's main data series.
   final DataSeries<Tick> mainSeries;
 
   /// List of series to add on chart beside the [mainSeries].

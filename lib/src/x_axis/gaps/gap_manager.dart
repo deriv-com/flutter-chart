@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 
 /// Manages time gaps (closed market time) on x-axis.
 class GapManager {
+  /// The list of time gaps that the market is closed in the given time.
   List<TimeRange> gaps = [];
 
   /// Cumulative sums of gap durations from right to left.
@@ -17,11 +18,13 @@ class GapManager {
   /// 40    30    20    - [_cumulativeSums]
   List<int> _cumulativeSums = [];
 
+  /// Replaces the [gaps] with the given [newGaps],
   void replaceGaps(List<TimeRange> newGaps) {
     gaps = newGaps;
     _cumulativeSums = _calcCumulativeSums(newGaps);
   }
 
+  /// Inserts [newGaps] in start of the [gaps].
   void insertInFront(List<TimeRange> newGaps) {
     gaps = newGaps + gaps;
 

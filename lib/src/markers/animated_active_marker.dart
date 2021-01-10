@@ -20,7 +20,10 @@ class AnimatedActiveMarker extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
+  /// The marker serries that contain the active marker.
   final MarkerSeries markerSeries;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
   @override

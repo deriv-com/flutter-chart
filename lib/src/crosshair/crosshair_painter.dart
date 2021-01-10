@@ -5,7 +5,9 @@ import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart'
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
+/// The custom painter to paint the crossshair
 class CrosshairPainter extends CustomPainter {
+  /// Initializes the custom painter to paint the crossshair
   CrosshairPainter({
     @required this.mainSeries,
     @required this.crosshairTick,
@@ -13,10 +15,16 @@ class CrosshairPainter extends CustomPainter {
     @required this.quoteToCanvasY,
   });
 
-  /// Chart's main series
+  /// Chart's main series.
   final Series mainSeries;
+
+  /// The tick of the showing data.
   final Tick crosshairTick;
+
+  /// Conversion function for converting eoch to chart's canvas' X position.
   final double Function(int) epochToCanvasX;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
   @override
