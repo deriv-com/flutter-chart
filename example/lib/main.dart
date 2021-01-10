@@ -32,26 +32,24 @@ void main() {
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        ChartLocalization.delegate,
-        ExampleLocalization.delegate,
-      ],
-      supportedLocales: ExampleLocalization.delegate.supportedLocales,
-      theme: ThemeData.dark(),
-      debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          body: FullscreenChart(),
+  Widget build(BuildContext context) => MaterialApp(
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          ChartLocalization.delegate,
+          ExampleLocalization.delegate,
+        ],
+        supportedLocales: ExampleLocalization.delegate.supportedLocales,
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+        home: const SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            body: FullscreenChart(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class FullscreenChart extends StatefulWidget {
@@ -68,13 +66,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
-  List<Barrier> _sampleBarriers = <Barrier>[];
+  final List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier _slBarrier, _tpBarrier;
   bool _sl = false, _tp = false;
 
   TickHistorySubscription _tickHistorySubscription;
 
-  StreamSubscription _tickStreamSubscription;
+  StreamSubscription<TickBase> _tickStreamSubscription;
 
   ConnectionBloc _connectionBloc;
 
@@ -83,10 +81,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   MarketChangeReminder _marketsChangeReminder;
 
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
-  Completer _requestCompleter;
+  Completer<dynamic> _requestCompleter;
 
   List<Market> _markets;
-  SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
+  final SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
 
   ActiveMarker _activeMarker;
 
@@ -94,8 +92,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Asset _symbol;
 
-  ChartController _controller = ChartController();
-  PersistentBottomSheetController _bottomSheetController;
+  final ChartController _controller = ChartController();
+  PersistentBottomSheetController<void> _bottomSheetController;
 
   @override
   void initState() {
