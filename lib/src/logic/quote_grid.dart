@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// Calculates to grids for a quote.
+/// Calculates the grid lines for a quote.
 List<double> gridQuotes({
   @required double quoteGridInterval,
   @required double topBoundQuote,

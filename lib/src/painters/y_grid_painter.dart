@@ -22,7 +22,7 @@ class YGridPainter extends CustomPainter {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
-  /// The style of chart's grid.'
+  /// The style of chart's grid.
   final GridStyle style;
 
   @override

@@ -17,10 +17,10 @@ class CrosshairDetails extends StatelessWidget {
     @required this.pipSize,
   }) : super(key: key);
 
-  /// The main data series for the crosshair.
+  /// The chart's main data series.
   final DataSeries mainSeries;
 
-  /// The tick that the crosshair is in.
+  /// The basic data entry of a crosshair.
   final Tick crosshairTick;
 
   /// The size of the crosshair's pip.

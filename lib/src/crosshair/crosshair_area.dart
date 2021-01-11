@@ -11,7 +11,7 @@ import 'crosshair_painter.dart';
 
 /// Place this area on top of the chart to display candle/point details on longpress.
 class CrosshairArea extends StatefulWidget {
-  /// Place this area on top of the chart to display candle/point details on longpress.
+  /// Initializes a  widget to display candle/point details on longpress in a chart.
   CrosshairArea({
     Key key,
     @required this.mainSeries,
@@ -32,7 +32,7 @@ class CrosshairArea extends StatefulWidget {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
-  /// Called when a candle or point is longpressed
+  /// Called on longpress to show candle/point details
   final VoidCallback onCrosshairAppeared;
 
   /// Called when canlde or point is dismissed

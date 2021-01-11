@@ -14,7 +14,6 @@ class LoadingPainter extends CustomPainter {
   final double loadingAnimationProgress;
 
   /// The right bound of the loading area in X axis.
-
   final double loadingRightBoundX;
 
   @override
