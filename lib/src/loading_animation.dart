@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class LoadingAnimationArea extends StatefulWidget {
   /// Creates loading animation area.
   const LoadingAnimationArea({
-    Key key,
     @required this.loadingRightBoundX,
+    Key key,
   }) : super(key: key);
 
   final double loadingRightBoundX;
@@ -45,14 +45,12 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
     return ClipRect(
       child: AnimatedBuilder(
         animation: _loadingAnimationController,
-        builder: (BuildContext context, Widget child) {
-          return CustomPaint(
-            painter: LoadingPainter(
-              loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.loadingRightBoundX,
-            ),
-          );
-        },
+        builder: (BuildContext context, Widget child) => CustomPaint(
+          painter: LoadingPainter(
+            loadingAnimationProgress: _loadingAnimationController.value,
+            loadingRightBoundX: widget.loadingRightBoundX,
+          ),
+        ),
       ),
     );
   }

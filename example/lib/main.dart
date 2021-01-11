@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:developer' as dev;
 import 'dart:math' as math;
 
+import 'package:pedantic/pedantic.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
@@ -19,9 +20,12 @@ import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:flutter_deriv_api/state/connection/connection_bloc.dart'
+    as connection_bloc;
 import 'package:vibration/vibration.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:example/generated/l10n.dart';
+import 'package:flutter_deriv_api/api/common/models/candle_model.dart';
 
 import 'utils/misc.dart';
 
@@ -116,7 +120,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       brand: 'binary',
       endpoint: 'blue.binaryws.com',
     ))
-      ..listen((connectionState) async {
+      ..listen((connection_bloc.ConnectionState connectionState) async {
         if (connectionState is! Connected) {
           // Calling this since we show some status labels when NOT connected.
           setState(() {});
@@ -127,18 +131,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
           await _getActiveSymbols();
 
           _requestCompleter.complete();
-          _onIntervalSelected(0);
+          unawaited(_onIntervalSelected(0));
         } else {
-          _initTickStream(
-            TicksHistoryRequest(
-              ticksHistory: _symbol.name,
-              adjustStartTime: 1,
-              end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
-              start: ticks.last.epoch ~/ 1000,
-              style: granularity == 0 ? 'ticks' : 'candles',
-              granularity: granularity > 0 ? granularity : null,
+          unawaited(
+            _initTickStream(
+              TicksHistoryRequest(
+                ticksHistory: _symbol.name,
+                adjustStartTime: 1,
+                end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
+                start: ticks.last.epoch ~/ 1000,
+                style: granularity == 0 ? 'ticks' : 'candles',
+                granularity: granularity > 0 ? granularity : null,
+              ),
+              resume: true,
             ),
-            resume: true,
           );
         }
 
@@ -149,8 +155,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Future<void> _setupMarketChangeReminder() async {
     _marketsChangeReminder?.reset();
     _marketsChangeReminder = MarketChangeReminder(
-      () async => await TradingTimes.fetchTradingTimes(
-        TradingTimesRequest(tradingTimes: 'today'),
+      () async => TradingTimes.fetchTradingTimes(
+        const TradingTimesRequest(tradingTimes: 'today'),
       ),
       onCurrentTime: () async {
         final ServerTime serverTime = await ServerTime.fetchTime();
@@ -199,11 +205,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _fillMarketSelectorList() {
-    final marketTitles = <String>{};
+    final Set<String> marketTitles = <String>{};
 
-    final markets = <Market>[];
+    final List<Market> markets = <Market>[];
 
-    for (final symbol in _activeSymbols) {
+    for (final ActiveSymbol symbol in _activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
         markets.add(
@@ -211,8 +217,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
             name: symbol.market,
             displayName: symbol.marketDisplayName,
             assets: _activeSymbols
-                .where((activeSymbol) => activeSymbol.market == symbol.market)
-                .map<Asset>((activeSymbol) => Asset(
+                .where((ActiveSymbol activeSymbol) =>
+                    activeSymbol.market == symbol.market)
+                .map<Asset>((ActiveSymbol activeSymbol) => Asset(
                       market: activeSymbol.market,
                       marketDisplayName: activeSymbol.marketDisplayName,
                       subMarket: activeSymbol.submarket,
@@ -230,7 +237,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _bottomSheetController?.setState(() {});
   }
 
-  void _initTickStream(
+  Future<void> _initTickStream(
     TicksHistoryRequest request, {
     bool resume = false,
   }) async {
@@ -241,7 +248,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _tickHistorySubscription =
             await TickHistory.fetchTicksAndSubscribe(request);
 
-        final fetchedTicks =
+        final List<Tick> fetchedTicks =
             _getTicksFromResponse(_tickHistorySubscription.tickHistory);
 
         if (resume) {
@@ -260,7 +267,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       } else {
         _tickHistorySubscription = null;
 
-        final historyCandles = _getTicksFromResponse(
+        final List<Tick> historyCandles = _getTicksFromResponse(
           await TickHistory.fetchTickHistory(request),
         );
 
@@ -314,7 +321,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _onNewTick(Tick newTick) {
-    setState(() => ticks = ticks + [newTick]);
+    setState(() => ticks = ticks + <Tick>[newTick]);
   }
 
   void _onNewCandle(Candle newCandle) {
@@ -330,206 +337,202 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Color(0xFF0E0E0E),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(
-                  child: _markets == null
-                      ? SizedBox.shrink()
-                      : _buildMarketSelectorButton(),
-                ),
-                _buildChartTypeButton(),
-                _buildIntervalSelector(),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Stack(
-              children: <Widget>[
-                Chart(
-                  mainSeries:
-                      style == ChartStyle.candles && ticks is List<Candle>
-                          ? CandleSeries(ticks)
-                          : LineSeries(ticks),
-                  secondarySeries: [
-                    MASeries(
-                      ticks,
-                      style: LineStyle(
-                        color: Colors.grey,
-                        thickness: 0.5,
-                        hasArea: false,
-                      ),
-                    ),
-                  ],
-                  markerSeries: MarkerSeries(
-                    _markers,
-                    activeMarker: _activeMarker,
+  Widget build(BuildContext context) => Material(
+        color: const Color(0xFF0E0E0E),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: _markets == null
+                        ? const SizedBox.shrink()
+                        : _buildMarketSelectorButton(),
                   ),
-                  annotations: ticks.length > 4
-                      ? <ChartAnnotation>[
-                          ..._sampleBarriers,
-                          if (_sl && _slBarrier != null) _slBarrier,
-                          if (_tp && _tpBarrier != null) _tpBarrier,
-                          TickIndicator(
-                            ticks.last,
-                            style: const HorizontalBarrierStyle(
-                              color: Colors.redAccent,
-                              labelShape: LabelShape.pentagon,
-                              hasBlinkingDot: true,
-                              hasArrow: false,
-                            ),
-                            visibility: HorizontalBarrierVisibility
-                                .keepBarrierLabelVisible,
-                          ),
-                        ]
-                      : null,
-                  pipSize: _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
-                  granularity: granularity == 0
-                      ? 2000 // average ms difference between ticks
-                      : granularity * 1000,
-                  controller: _controller,
-                  isLive: (_symbol?.isOpen ?? false) &&
-                      (_connectionBloc?.state is Connected ?? false),
-                  opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
-                  onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                  onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                    if (!_waitingForHistory &&
-                        ticks.isNotEmpty &&
-                        leftEpoch < ticks.first.epoch) {
-                      _loadHistory(2000);
-                    }
-                  },
-                ),
-                if (_connectionBloc != null &&
-                    _connectionBloc.state is! Connected)
-                  Align(
-                    alignment: Alignment.center,
-                    child: _buildConnectionStatus(),
-                  ),
-              ],
+                  _buildChartTypeButton(),
+                  _buildIntervalSelector(),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RaisedButton(
-                  color: Colors.green,
-                  child: const Text('Up'),
-                  onPressed: () => _addMarker(MarkerDirection.up),
-                ),
-                RaisedButton(
-                  color: Colors.red,
-                  child: const Text('Down'),
-                  onPressed: () => _addMarker(MarkerDirection.down),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => setState(_clearMarkers),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FlatButton(
-                  child: Text('V barrier'),
-                  onPressed: () => setState(
-                    () => _sampleBarriers.add(
-                      VerticalBarrier.onTick(ticks.last,
-                          title: 'V Barrier',
-                          id: 'VBarrier${_sampleBarriers.length}',
-                          longLine: math.Random().nextBool(),
-                          style: VerticalBarrierStyle(
-                            isDashed: math.Random().nextBool(),
-                          )),
-                    ),
-                  ),
-                ),
-                FlatButton(
-                  child: Text('H barrier'),
-                  onPressed: () => setState(
-                    () => _sampleBarriers.add(
-                      HorizontalBarrier(
-                        ticks.last.quote,
-                        epoch:
-                            math.Random().nextBool() ? ticks.last.epoch : null,
-                        id: 'HBarrier${_sampleBarriers.length}',
-                        longLine: math.Random().nextBool(),
-                        visibility: HorizontalBarrierVisibility.normal,
-                        style: HorizontalBarrierStyle(
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  Chart(
+                    mainSeries:
+                        style == ChartStyle.candles && ticks is List<Candle>
+                            ? CandleSeries(ticks)
+                            : LineSeries(ticks),
+                    secondarySeries: <MASeries>[
+                      MASeries(
+                        ticks,
+                        style: const LineStyle(
                           color: Colors.grey,
-                          labelShape: LabelShape.rectangle,
-                          isDashed: math.Random().nextBool(),
+                          thickness: 0.5,
+                          hasArea: false,
+                        ),
+                      ),
+                    ],
+                    markerSeries: MarkerSeries(
+                      _markers,
+                      activeMarker: _activeMarker,
+                    ),
+                    annotations: ticks.length > 4
+                        ? <ChartAnnotation<BarrierObject>>[
+                            ..._sampleBarriers,
+                            if (_sl && _slBarrier != null) _slBarrier,
+                            if (_tp && _tpBarrier != null) _tpBarrier,
+                            TickIndicator(
+                              ticks.last,
+                              style: const HorizontalBarrierStyle(
+                                color: Colors.redAccent,
+                                labelShape: LabelShape.pentagon,
+                                hasBlinkingDot: true,
+                                hasArrow: false,
+                              ),
+                              visibility: HorizontalBarrierVisibility
+                                  .keepBarrierLabelVisible,
+                            ),
+                          ]
+                        : null,
+                    pipSize:
+                        _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
+                    granularity: granularity == 0
+                        ? 2000 // average ms difference between ticks
+                        : granularity * 1000,
+                    controller: _controller,
+                    isLive: (_symbol?.isOpen ?? false) &&
+                        (_connectionBloc?.state is Connected ?? false),
+                    opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
+                    onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
+                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                      if (!_waitingForHistory &&
+                          ticks.isNotEmpty &&
+                          leftEpoch < ticks.first.epoch) {
+                        _loadHistory(2000);
+                      }
+                    },
+                  ),
+                  if (_connectionBloc != null &&
+                      _connectionBloc.state is! Connected)
+                    Align(
+                      child: _buildConnectionStatus(),
+                    ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    color: Colors.green,
+                    child: const Text('Up'),
+                    onPressed: () => _addMarker(MarkerDirection.up),
+                  ),
+                  RaisedButton(
+                    color: Colors.red,
+                    child: const Text('Down'),
+                    onPressed: () => _addMarker(MarkerDirection.down),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => setState(_clearMarkers),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  FlatButton(
+                    child: const Text('V barrier'),
+                    onPressed: () => setState(
+                      () => _sampleBarriers.add(
+                        VerticalBarrier.onTick(ticks.last,
+                            title: 'V Barrier',
+                            id: 'VBarrier${_sampleBarriers.length}',
+                            longLine: math.Random().nextBool(),
+                            style: VerticalBarrierStyle(
+                              isDashed: math.Random().nextBool(),
+                            )),
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    child: const Text('H barrier'),
+                    onPressed: () => setState(
+                      () => _sampleBarriers.add(
+                        HorizontalBarrier(
+                          ticks.last.quote,
+                          epoch: math.Random().nextBool()
+                              ? ticks.last.epoch
+                              : null,
+                          id: 'HBarrier${_sampleBarriers.length}',
+                          longLine: math.Random().nextBool(),
+                          visibility: HorizontalBarrierVisibility.normal,
+                          style: HorizontalBarrierStyle(
+                            color: Colors.grey,
+                            isDashed: math.Random().nextBool(),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                FlatButton(
-                  child: Text('+ Both'),
-                  onPressed: () => setState(() => _sampleBarriers.add(
-                        CombinedBarrier(
-                          ticks.last,
-                          title: 'B Barrier',
-                          id: 'CBarrier${_sampleBarriers.length}',
-                          horizontalBarrierStyle: HorizontalBarrierStyle(
-                            color: Colors.grey,
-                            isDashed: true,
+                  FlatButton(
+                    child: const Text('+ Both'),
+                    onPressed: () => setState(() => _sampleBarriers.add(
+                          CombinedBarrier(
+                            ticks.last,
+                            title: 'B Barrier',
+                            id: 'CBarrier${_sampleBarriers.length}',
+                            horizontalBarrierStyle:
+                                const HorizontalBarrierStyle(
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                      )),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => setState(() {
-                    _clearBarriers();
-                  }),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              children: [
-                Expanded(
-                  child: CheckboxListTile(
-                    value: _sl,
-                    onChanged: (bool sl) => setState(() => _sl = sl),
-                    title: Text('Stop loss'),
+                        )),
                   ),
-                ),
-                Expanded(
-                  child: CheckboxListTile(
-                    value: _tp,
-                    onChanged: (bool tp) => setState(() => _tp = tp),
-                    title: Text('Take profit'),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => setState(() {
+                      _clearBarriers();
+                    }),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )
-        ],
-      ),
-    );
-  }
+            SizedBox(
+              height: 64,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: _sl,
+                      onChanged: (bool sl) => setState(() => _sl = sl),
+                      title: const Text('Stop loss'),
+                    ),
+                  ),
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: _tp,
+                      onChanged: (bool tp) => setState(() => _tp = tp),
+                      title: const Text('Take profit'),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
 
   void _addMarker(MarkerDirection direction) {
-    final lastTick = ticks.last;
-    final onTap = () {
+    final Tick lastTick = ticks.last;
+    void onTap() {
       setState(() {
         _activeMarker = ActiveMarker(
           direction: direction,
@@ -537,7 +540,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           quote: lastTick.quote,
           text: '0.00 USD',
           onTap: () {
-            print('>>> tapped active marker');
+            dev.log('>>> tapped active marker');
           },
           onTapOutside: () {
             setState(() {
@@ -546,7 +549,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
           },
         );
       });
-    };
+    }
+
     setState(() {
       _markers.add(Marker(
         direction: direction,
@@ -577,7 +581,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
-        backgroundColor: Color.fromRGBO(21, 23, 23, 1),
+        backgroundColor: const Color.fromRGBO(21, 23, 23, 1),
         asset: _symbol,
         onTap: () {
           _bottomSheetController = showBottomSheet<void>(
@@ -586,7 +590,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             builder: (BuildContext context) => MarketSelector(
               selectedItem: _symbol,
               markets: _markets,
-              onAssetClicked: (asset, favoriteClicked) {
+              onAssetClicked: (Asset asset, bool favoriteClicked) {
                 if (!favoriteClicked) {
                   Navigator.of(context).pop();
                   _symbol = asset;
@@ -598,7 +602,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         },
       );
 
-  void _loadHistory(int count) async {
+  Future<void> _loadHistory(int count) async {
     _waitingForHistory = true;
 
     final TickHistory moreData = await TickHistory.fetchTickHistory(
@@ -626,54 +630,51 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _waitingForHistory = false;
   }
 
-  IconButton _buildChartTypeButton() {
-    return IconButton(
-      icon: Icon(
-        style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
-        color: Colors.white,
-      ),
-      onPressed: () {
-        Vibration.vibrate(duration: 50);
-        setState(() {
-          if (style == ChartStyle.candles) {
-            style = ChartStyle.line;
-          } else {
-            style = ChartStyle.candles;
-          }
-        });
-      },
-    );
-  }
+  IconButton _buildChartTypeButton() => IconButton(
+        icon: Icon(
+          style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Vibration.vibrate(duration: 50);
+          setState(() {
+            if (style == ChartStyle.candles) {
+              style = ChartStyle.line;
+            } else {
+              style = ChartStyle.candles;
+            }
+          });
+        },
+      );
 
-  Widget _buildIntervalSelector() {
-    return Theme(
-      data: ThemeData.dark(),
-      child: DropdownButton<int>(
-        value: granularity,
-        items: <int>[
-          0,
-          60,
-          120,
-          180,
-          300,
-          600,
-          900,
-          1800,
-          3600,
-          7200,
-          14400,
-          28800,
-          86400,
-        ]
-            .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
-                  value: granularity,
-                  child: Text('${getGranularityLabel(granularity)}'),
-                ))
-            .toList(),
-        onChanged: _onIntervalSelected,
-      ),
-    );
-  }
+  Widget _buildIntervalSelector() => Theme(
+        data: ThemeData.dark(),
+        child: DropdownButton<int>(
+          value: granularity,
+          items: <int>[
+            0,
+            60,
+            120,
+            180,
+            300,
+            600,
+            900,
+            1800,
+            3600,
+            7200,
+            14400,
+            28800,
+            86400,
+          ]
+              .map<DropdownMenuItem<int>>(
+                  (int granularity) => DropdownMenuItem<int>(
+                        value: granularity,
+                        child: Text('${getGranularityLabel(granularity)}'),
+                      ))
+              .toList(),
+          onChanged: _onIntervalSelected,
+        ),
+      );
 
   Future<void> _onIntervalSelected(int value) async {
     if (!_requestCompleter.isCompleted) {
@@ -692,22 +693,26 @@ class _FullscreenChartState extends State<FullscreenChart> {
     } finally {
       granularity = value;
 
-      _initTickStream(TicksHistoryRequest(
-        ticksHistory: _symbol.name,
-        adjustStartTime: 1,
-        end: 'latest',
-        count: 500,
-        style: granularity == 0 ? 'ticks' : 'candles',
-        granularity: granularity > 0 ? granularity : null,
-      ));
+      unawaited(
+        _initTickStream(
+          TicksHistoryRequest(
+            ticksHistory: _symbol.name,
+            adjustStartTime: 1,
+            end: 'latest',
+            count: 500,
+            style: granularity == 0 ? 'ticks' : 'candles',
+            granularity: granularity > 0 ? granularity : null,
+          ),
+        ),
+      );
     }
   }
 
   List<Tick> _getTicksFromResponse(TickHistory tickHistory) {
-    List<Tick> candles = [];
+    List<Tick> candles = <Tick>[];
     if (tickHistory.history != null) {
-      final count = tickHistory.history.prices.length;
-      for (var i = 0; i < count; i++) {
+      final int count = tickHistory.history.prices.length;
+      for (int i = 0; i < count; i++) {
         candles.add(Tick(
           epoch: tickHistory.history.times[i].millisecondsSinceEpoch,
           quote: tickHistory.history.prices[i],
@@ -716,15 +721,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
 
     if (tickHistory.candles != null) {
-      candles = tickHistory.candles.map<Candle>((ohlc) {
-        return Candle(
-          epoch: ohlc.epoch.millisecondsSinceEpoch,
-          high: ohlc.high,
-          low: ohlc.low,
-          open: ohlc.open,
-          close: ohlc.close,
-        );
-      }).toList();
+      candles = tickHistory.candles
+          .map<Candle>((CandleModel ohlc) => Candle(
+                epoch: ohlc.epoch.millisecondsSinceEpoch,
+                high: ohlc.high,
+                low: ohlc.low,
+                open: ohlc.open,
+                close: ohlc.close,
+              ))
+          .toList();
     }
     return candles;
   }
@@ -736,8 +741,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _slBarrier = HorizontalBarrier(
       ticksMin,
       title: 'Stop loss',
-      style: HorizontalBarrierStyle(
-        color: const Color(0xFFCC2E3D),
+      style: const HorizontalBarrierStyle(
+        color: Color(0xFFCC2E3D),
         isDashed: false,
       ),
     );
@@ -745,8 +750,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _tpBarrier = HorizontalBarrier(
       ticksMax,
       title: 'Take profit',
-      style: HorizontalBarrierStyle(
-        color: const Color(0xFF00A79E),
+      style: const HorizontalBarrierStyle(
         isDashed: false,
       ),
     );

@@ -26,7 +26,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Right margin
   static const double rightMargin = 4;
 
-
   /// Distance between title area and label area.
   static const double _distanceBetweenTitleAndLabel = 16;
 
@@ -151,8 +150,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       // Erase the line behind title.
       if (arrowType == BarrierArrowType.none) {
-        canvas.drawRect(titleArea, Paint()..blendMode = BlendMode.clear);
-        canvas.restore();
+        canvas
+          ..drawRect(titleArea, Paint()..blendMode = BlendMode.clear)
+          ..restore();
       }
 
       paintWithTextPainter(

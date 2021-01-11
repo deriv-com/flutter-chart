@@ -11,18 +11,18 @@ import 'crosshair_painter.dart';
 
 /// Place this area on top of the chart to display candle/point details on longpress.
 class CrosshairArea extends StatefulWidget {
-  CrosshairArea({
-    Key key,
+  const CrosshairArea({
     @required this.mainSeries,
     // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     // TODO(Rustem): remove when chart params are provided
     @required this.pipSize,
+    Key key,
     this.onCrosshairAppeared,
     this.onCrosshairDisappeared,
   }) : super(key: key);
 
-  final DataSeries mainSeries;
+  final DataSeries<Tick> mainSeries;
   final int pipSize;
   final double Function(double) quoteToCanvasY;
   final VoidCallback onCrosshairAppeared;
@@ -38,8 +38,8 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   double _lastLongPressPosition;
   int _lastLongPressPositionEpoch = -1;
 
-  double _panSpeed = 0.08;
-  static const double _closeDistance = 60.00;
+  final double _panSpeed = 0.08;
+  static const double _closeDistance = 60;
 
   GestureManagerState gestureManager;
 
@@ -63,9 +63,11 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   void _updateCrosshairCandle() {
     if (crosshairTick == null ||
         widget.mainSeries.visibleEntries == null ||
-        widget.mainSeries.visibleEntries.isEmpty) return;
+        widget.mainSeries.visibleEntries.isEmpty) {
+      return;
+    }
 
-    final lastTick = widget.mainSeries.visibleEntries.last;
+    final Tick lastTick = widget.mainSeries.visibleEntries.last;
     if (crosshairTick.epoch == lastTick.epoch) {
       crosshairTick = lastTick;
     }
@@ -97,7 +99,9 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _updatePanSpeed() {
-    if (_lastLongPressPosition == null) return;
+    if (_lastLongPressPosition == null) {
+      return;
+    }
 
     if (_lastLongPressPosition < _closeDistance) {
       xAxis.pan(-_panSpeed);
@@ -108,17 +112,16 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     }
   }
 
-  Tick _getClosestTick() {
-    return findClosestToEpoch(
-        _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
-  }
+  Tick _getClosestTick() => findClosestToEpoch(
+      _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
 
   void _onLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
 
-    xAxis.pan(0);
-    xAxis.enableAutoPan();
+    xAxis
+      ..pan(0)
+      ..enableAutoPan();
 
     setState(() {
       crosshairTick = null;
@@ -139,37 +142,36 @@ class _CrosshairAreaState extends State<CrosshairArea> {
         crosshairTick = _getClosestTick();
       }
     }
-    return LayoutBuilder(builder: (context, constraints) {
-      return Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          CustomPaint(
-            size: Size.infinite,
-            painter: CrosshairPainter(
-              mainSeries: widget.mainSeries,
-              crosshairTick: crosshairTick,
-              epochToCanvasX: xAxis.xFromEpoch,
-              quoteToCanvasY: widget.quoteToCanvasY,
-            ),
-          ),
-          if (crosshairTick != null)
-            Positioned(
-              top: 8,
-              bottom: 0,
-              width: constraints.maxWidth,
-              left: xAxis.xFromEpoch(crosshairTick.epoch) -
-                  constraints.maxWidth / 2,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: CrosshairDetails(
-                  mainSeries: widget.mainSeries,
-                  crosshairTick: crosshairTick,
-                  pipSize: widget.pipSize,
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) => Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                CustomPaint(
+                  size: Size.infinite,
+                  painter: CrosshairPainter(
+                    mainSeries: widget.mainSeries,
+                    crosshairTick: crosshairTick,
+                    epochToCanvasX: xAxis.xFromEpoch,
+                    quoteToCanvasY: widget.quoteToCanvasY,
+                  ),
                 ),
-              ),
-            )
-        ],
-      );
-    });
+                if (crosshairTick != null)
+                  Positioned(
+                    top: 8,
+                    bottom: 0,
+                    width: constraints.maxWidth,
+                    left: xAxis.xFromEpoch(crosshairTick.epoch) -
+                        constraints.maxWidth / 2,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: CrosshairDetails(
+                        mainSeries: widget.mainSeries,
+                        crosshairTick: crosshairTick,
+                        pipSize: widget.pipSize,
+                      ),
+                    ),
+                  )
+              ],
+            ));
   }
 }

@@ -9,7 +9,8 @@ List<DateTime> calculateNoOverlapGridTimestamps(
   /// Does the given epoch fall into a time gap.
   bool Function(int) isInGap,
 ) {
-  final List<DateTime> _noOverlapGridTimestamps = [];
+  final List<DateTime> _noOverlapGridTimestamps = <DateTime>[];
+
   if (gridTimestamps == null || gridTimestamps.isEmpty) {
     return _noOverlapGridTimestamps;
   }

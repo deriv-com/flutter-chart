@@ -1,5 +1,6 @@
 library deriv_chart;
 
+export 'generated/l10n.dart';
 export 'src/chart.dart';
 export 'src/chart_controller.dart';
 export 'src/logic/annotations/barriers/barrier.dart';
@@ -12,9 +13,10 @@ export 'src/logic/chart_series/indicators_series/ma_series.dart';
 export 'src/logic/chart_series/line_series/line_series.dart';
 export 'src/logic/chart_series/ohlc_series/candle/candle_series.dart';
 export 'src/logic/chart_series/series.dart';
-export 'src/markers/marker_series.dart';
 export 'src/markers/active_marker.dart';
 export 'src/markers/marker.dart';
+export 'src/markers/marker_series.dart';
+export 'src/models/barrier_objects.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_style.dart';
 export 'src/models/tick.dart';
@@ -26,6 +28,5 @@ export 'src/theme/painting_styles/marker_style.dart';
 export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
-export 'src/widgets/market_selector/symbol_svg_picture.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
-export 'generated/l10n.dart';
+export 'src/widgets/market_selector/symbol_svg_picture.dart';

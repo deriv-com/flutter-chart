@@ -47,5 +47,5 @@ class Candle extends Tick with EquatableMixin {
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
   @override
-  List<Object> get props => [epoch, open, close, high, low];
+  List<Object> get props => <Object>[epoch, open, close, high, low];
 }

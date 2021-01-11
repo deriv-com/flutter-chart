@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'closed_tag.dart';
-import 'asset_icon_placeholder.dart';
 import 'highlighted_text.dart';
 import 'market_selector.dart';
 import 'models.dart';

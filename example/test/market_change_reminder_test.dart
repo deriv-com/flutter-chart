@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:example/utils/market_change_reminder.dart';
 import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
@@ -10,20 +10,20 @@ import 'trading_times_mock_data.dart';
 void main() {
   group('Trading times', () {
     test('Trading times reminder queue fills in the correct order', () async {
-      MarketChangeReminder tradingTimesReminder = MarketChangeReminder(
+      final MarketChangeReminder tradingTimesReminder = MarketChangeReminder(
         () => Future<TradingTimes>.value(TradingTimes.fromJson(
           jsonDecode(tradingTimesResponse)['trading_times'],
         )),
         onCurrentTime: () =>
-            Future<DateTime>.value(DateTime.utc(2020, 10, 10, 4, 0, 0)),
+            Future<DateTime>.value(DateTime.utc(2020, 10, 10, 4)),
       );
 
       await Future<void>.delayed(const Duration(milliseconds: 1));
 
-      final firstMarketChangeDate =
+      final DateTime firstMarketChangeDate =
           tradingTimesReminder.statusChangeTimes.firstKey();
 
-      final firstMarkChangeSymbols =
+      final Map<String, bool> firstMarkChangeSymbols =
           tradingTimesReminder.statusChangeTimes[firstMarketChangeDate];
 
       // First date will be remove to set the first reminding timer
@@ -32,10 +32,10 @@ void main() {
       expect(firstMarkChangeSymbols.keys.first, 'OTC_AS51');
       expect(firstMarkChangeSymbols.values.first, true);
 
-      final lastMarketChangeDate =
+      final DateTime lastMarketChangeDate =
           tradingTimesReminder.statusChangeTimes.lastKey();
 
-      final lastMarkChangeSymbols =
+      final Map<String, bool> lastMarkChangeSymbols =
           tradingTimesReminder.statusChangeTimes[lastMarketChangeDate];
 
       expect(lastMarketChangeDate, DateTime(2020, 10, 10, 22));

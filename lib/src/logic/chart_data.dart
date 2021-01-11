@@ -46,8 +46,8 @@ abstract class ChartData {
   /// [animationInfo] Contains animations progress values in this frame of painting.
   ///
   /// [ChartConfig] is the chart's config which consist of
-  ///   - [pipSize] Number of decimal digits [ChartData] must use when showing their prices.
-  ///   - [granularity] Duration of 1 candle in ms (for ticks: average ms difference between ticks).
+  ///   - `pipSize` Number of decimal digits [ChartData] must use when showing their prices.
+  ///   - `granularity` Duration of 1 candle in ms (for ticks: average ms difference between ticks).
   ///
   /// [theme] Chart's theme
   void paint(

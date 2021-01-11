@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/models/chart_object.dart';
 /// A [ChartObject] for defining position of a horizontal barrier
 class BarrierObject extends ChartObject {
   /// Initializes
-  BarrierObject(
+  const BarrierObject(
     int leftEpoch,
     int rightEpoch,
     this.value,
@@ -16,7 +16,7 @@ class BarrierObject extends ChartObject {
 /// Vertical barrier object
 class VerticalBarrierObject extends BarrierObject {
   /// Initializes
-  VerticalBarrierObject(
+  const VerticalBarrierObject(
     this.epoch,
     double value,
   ) : super(epoch, epoch, value);

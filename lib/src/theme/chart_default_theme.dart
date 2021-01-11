@@ -118,8 +118,6 @@ abstract class ChartDefaultTheme implements ChartTheme {
 
   @override
   VerticalBarrierStyle get verticalBarrierStyle => VerticalBarrierStyle(
-        color: Colors.grey,
-        titleBackgroundColor: Colors.transparent,
         textStyle: TextStyles.overLine,
       );
 

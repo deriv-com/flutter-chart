@@ -39,7 +39,7 @@ class GridStyle with EquatableMixin {
       '${super.toString()}$gridLineColor, ${labelStyle.toStringShort()}, $lineThickness';
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
         gridLineColor,
         labelStyle,
         labelHorizontalPadding,

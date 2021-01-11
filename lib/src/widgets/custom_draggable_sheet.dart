@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 /// it will call [Navigator.pop()], to fully dismiss the [BottomSheet].
 class CustomDraggableSheet extends StatefulWidget {
   const CustomDraggableSheet({
-    Key key,
     @required this.child,
+    Key key,
     this.animationDuration = const Duration(milliseconds: 100),
     this.introAnimationDuration = const Duration(milliseconds: 300),
   }) : super(key: key);
@@ -30,7 +30,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
 
-  final _sheetKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _sheetKey = GlobalKey();
 
   Size _sheetSize;
 
@@ -48,7 +48,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
         }
       });
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {
       _sheetSize = _initSizes();
       _animationController.animateTo(
         0,
@@ -67,11 +67,11 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   Widget build(BuildContext context) => AnimatedBuilder(
         key: _sheetKey,
         animation: _animationController,
-        builder: (context, child) => FractionalTranslation(
+        builder: (BuildContext context, Widget child) => FractionalTranslation(
           translation: Offset(0, _animationController.value),
           child: child,
         ),
-        child: NotificationListener(
+        child: NotificationListener<ScrollNotification>(
           onNotification: _handleScrollNotification,
           child: widget.child,
         ),
@@ -83,7 +83,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
     super.dispose();
   }
 
-  bool _handleScrollNotification(Notification notification) {
+  bool _handleScrollNotification(ScrollNotification notification) {
     if (_sheetSize != null && notification is OverscrollNotification) {
       _overScrolled = true;
       _panToBottom(notification);
@@ -100,7 +100,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   void _panToTop(ScrollUpdateNotification notification) {
-    final deltaPercent = notification.scrollDelta / _sheetSize.height;
+    final double deltaPercent = notification.scrollDelta / _sheetSize.height;
 
     if (deltaPercent > 0) {
       _updateSheetHeightBy(deltaPercent);
@@ -108,7 +108,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   void _panToBottom(OverscrollNotification notification) {
-    final deltaPercent = notification.overscroll / _sheetSize.height;
+    final double deltaPercent = notification.overscroll / _sheetSize.height;
 
     if (deltaPercent < 0) {
       _updateSheetHeightBy(deltaPercent);
@@ -116,8 +116,9 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   void _updateSheetHeightBy(double deltaPercent) {
-    _animationController.value -= deltaPercent;
-    _animationController.value = _animationController.value.clamp(0.0, 1.0);
+    _animationController
+      ..value -= deltaPercent
+      ..value = _animationController.value.clamp(0.0, 1.0);
   }
 
   void _flingToTopOrBottom() {

@@ -67,8 +67,8 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// The size of the arrow.
   ///
-  /// The arrow when barrier is out of Y-Axis range and its [HorizontalBarrier.visibility]
-  /// is [HorizontalBarrierVisibility.keepBarrierLabelVisible]
+  /// The arrow when barrier is out of Y-Axis range and its `HorizontalBarrier.visibility`
+  /// is `HorizontalBarrierVisibility.keepBarrierLabelVisible`
   final double arrowSize;
 
   /// Whether to show an arrow pointing in the direction of the barrier,

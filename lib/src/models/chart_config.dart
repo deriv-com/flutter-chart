@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
+
 /// Chart's general configuration.
+@immutable
 class ChartConfig {
   /// Initializes
   const ChartConfig({this.pipSize, this.granularity});

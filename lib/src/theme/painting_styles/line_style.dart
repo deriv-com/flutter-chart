@@ -26,5 +26,5 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   String toString() => '${super.toString()}$color, $thickness, $hasArea';
 
   @override
-  List<Object> get props => [color, thickness, hasArea];
+  List<Object> get props => <Object>[color, thickness, hasArea];
 }

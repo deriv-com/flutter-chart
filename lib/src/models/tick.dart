@@ -17,5 +17,5 @@ class Tick with EquatableMixin {
   final double quote;
 
   @override
-  List<Object> get props => [epoch, quote];
+  List<Object> get props => <Object>[epoch, quote];
 }

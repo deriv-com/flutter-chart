@@ -23,7 +23,7 @@ class AnimatedHighlight extends StatefulWidget {
 class _AnimatedHighlightState extends State<AnimatedHighlight>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-  Animation _animation;
+  Animation<double> _animation;
 
   @override
   void initState() {

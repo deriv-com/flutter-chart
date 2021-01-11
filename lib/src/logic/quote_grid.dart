@@ -8,15 +8,18 @@ List<double> gridQuotes({
   @required double topPadding,
   @required double bottomPadding,
 }) {
-  final pixelToQuote = (topBoundQuote - bottomBoundQuote) /
+  final double pixelToQuote = (topBoundQuote - bottomBoundQuote) /
       (canvasHeight - topPadding - bottomPadding);
-  final topEdgeQuote = topBoundQuote + topPadding * pixelToQuote;
-  final bottomEdgeQuote = bottomBoundQuote - bottomPadding * pixelToQuote;
-  final gridLineQuotes = <double>[];
-  for (var q = topEdgeQuote - topEdgeQuote % quoteGridInterval;
+  final double topEdgeQuote = topBoundQuote + topPadding * pixelToQuote;
+  final double bottomEdgeQuote =
+      bottomBoundQuote - bottomPadding * pixelToQuote;
+  final List<double> gridLineQuotes = <double>[];
+  for (double q = topEdgeQuote - topEdgeQuote % quoteGridInterval;
       q > bottomEdgeQuote;
       q -= quoteGridInterval) {
-    if (q < topEdgeQuote) gridLineQuotes.add(q);
+    if (q < topEdgeQuote) {
+      gridLineQuotes.add(q);
+    }
   }
   return gridLineQuotes;
 }
@@ -27,8 +30,8 @@ double quotePerPx({
   @required double yTopBound,
   @required double yBottomBound,
 }) {
-  final quoteDiff = topBoundQuote - bottomBoundQuote;
-  final pxDiff = yBottomBound - yTopBound;
+  final double quoteDiff = topBoundQuote - bottomBoundQuote;
+  final double pxDiff = yBottomBound - yTopBound;
 
   return quoteDiff / pxDiff;
 }
@@ -37,7 +40,7 @@ double quoteGridInterval(
   double quotePerPx, {
   double minDistanceBetweenLines = 60,
   // Options for quote labels value distance in Y-Axis. One of these intervals will be selected to be the distance between Y-Axis labels
-  List<double> intervals = const [
+  List<double> intervals = const <double>[
     0.000000025,
     0.00000005,
     0.0000001,
@@ -71,7 +74,7 @@ double quoteGridInterval(
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(double quoteInterval) {
-    final distanceBetweenLines = quoteInterval / quotePerPx;
+    final double distanceBetweenLines = quoteInterval / quotePerPx;
     return distanceBetweenLines >= minDistanceBetweenLines;
   }
 

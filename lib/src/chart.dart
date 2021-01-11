@@ -140,10 +140,10 @@ class Chart extends StatelessWidget {
 
 class _ChartImplementation extends StatefulWidget {
   _ChartImplementation({
-    Key key,
     @required this.mainSeries,
     @required this.pipSize,
     @required this.isLive,
+    Key key,
     this.markerSeries,
     this.opacity,
     this.controller,
@@ -193,7 +193,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   static const double _minPadding = 12;
 
   /// Duration of quote bounds animated transition.
-  final quoteBoundsAnimationDuration = const Duration(milliseconds: 300);
+  final Duration quoteBoundsAnimationDuration =
+      const Duration(milliseconds: 300);
 
   /// Top quote bound target for animated transition.
   double topBoundQuoteTarget = 60;
@@ -210,11 +211,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // TODO(Rustem): move to YAxisModel
   AnimationController _crosshairZoomOutAnimationController;
 
-  Animation _currentTickAnimation;
-  Animation _currentTickBlinkAnimation;
+  Animation<double> _currentTickAnimation;
+  Animation<double> _currentTickBlinkAnimation;
 
   // TODO(Rustem): move to YAxisModel
-  Animation _crosshairZoomOutAnimation;
+  Animation<double> _crosshairZoomOutAnimation;
 
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
@@ -440,60 +441,56 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final XAxisModel xAxis = context.watch<XAxisModel>();
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final XAxisModel xAxis = context.watch<XAxisModel>();
 
-        canvasSize = Size(
-          xAxis.width,
-          constraints.maxHeight,
-        );
+          canvasSize = Size(
+            xAxis.width,
+            constraints.maxHeight,
+          );
 
-        _updateVisibleData();
-        _updateQuoteBoundTargets();
+          _updateVisibleData();
+          _updateQuoteBoundTargets();
 
-        return Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            _buildQuoteGrid(),
-            _buildLoadingAnimation(),
-            _buildChartData(),
-            _buildAnnotations(),
-            if (widget.markerSeries != null)
-              MarkerArea(
-                markerSeries: widget.markerSeries,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
-            _buildCrosshairArea(),
-            if (_isScrollToLastTickAvailable)
-              Positioned(
-                bottom: 30,
-                right: 30 + quoteLabelsTouchAreaWidth,
-                child: _buildScrollToLastTickButton(),
-              ),
-          ],
-        );
-      },
-    );
-  }
+          return Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              _buildQuoteGrid(),
+              _buildLoadingAnimation(),
+              _buildChartData(),
+              _buildAnnotations(),
+              if (widget.markerSeries != null)
+                MarkerArea(
+                  markerSeries: widget.markerSeries,
+                  quoteToCanvasY: _quoteToCanvasY,
+                ),
+              _buildCrosshairArea(),
+              if (_isScrollToLastTickAvailable)
+                Positioned(
+                  bottom: 30,
+                  right: 30 + quoteLabelsTouchAreaWidth,
+                  child: _buildScrollToLastTickButton(),
+                ),
+            ],
+          );
+        },
+      );
 
   Widget _buildQuoteGrid() => MultipleAnimatedBuilder(
-        animations: [
+        animations: <Animation<double>>[
           // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
         ],
-        builder: (BuildContext context, Widget child) {
-          return CustomPaint(
-            painter: YGridPainter(
-              gridLineQuotes: _getGridLineQuotes(),
-              pipSize: widget.pipSize,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
-            ),
-          );
-        },
+        builder: (BuildContext context, Widget child) => CustomPaint(
+          painter: YGridPainter(
+            gridLineQuotes: _getGridLineQuotes(),
+            pipSize: widget.pipSize,
+            quoteToCanvasY: _quoteToCanvasY,
+            style: context.watch<ChartTheme>().gridStyle,
+          ),
+        ),
       );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
@@ -506,7 +503,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   // Main series and indicators on top of main series.
   Widget _buildChartData() => MultipleAnimatedBuilder(
-        animations: [
+        animations: <Animation<double>>[
           // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
@@ -537,7 +534,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   Widget _buildAnnotations() => MultipleAnimatedBuilder(
-        animations: [
+        animations: <Animation<double>>[
           _currentTickAnimation,
           _currentTickBlinkAnimation,
         ],
@@ -558,22 +555,20 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   Widget _buildCrosshairArea() => AnimatedBuilder(
         animation: _crosshairZoomOutAnimation,
-        builder: (BuildContext context, Widget child) {
-          return CrosshairArea(
-            mainSeries: widget.mainSeries,
-            pipSize: widget.pipSize,
-            quoteToCanvasY: _quoteToCanvasY,
-            onCrosshairAppeared: () {
-              _isCrosshairMode = true;
-              widget.onCrosshairAppeared?.call();
-              _crosshairZoomOutAnimationController.forward();
-            },
-            onCrosshairDisappeared: () {
-              _isCrosshairMode = false;
-              _crosshairZoomOutAnimationController.reverse();
-            },
-          );
-        },
+        builder: (BuildContext context, Widget child) => CrosshairArea(
+          mainSeries: widget.mainSeries,
+          pipSize: widget.pipSize,
+          quoteToCanvasY: _quoteToCanvasY,
+          onCrosshairAppeared: () {
+            _isCrosshairMode = true;
+            widget.onCrosshairAppeared?.call();
+            _crosshairZoomOutAnimationController.forward();
+          },
+          onCrosshairDisappeared: () {
+            _isCrosshairMode = false;
+            _crosshairZoomOutAnimationController.reverse();
+          },
+        ),
       );
 
   List<double> _getGridLineQuotes() => gridQuotes(
@@ -608,7 +603,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   IconButton _buildScrollToLastTickButton() => IconButton(
-        icon: Icon(Icons.arrow_forward, color: Colors.white),
+        icon: const Icon(Icons.arrow_forward, color: Colors.white),
         onPressed: _xAxis.scrollToLastTick,
       );
 }
