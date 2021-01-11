@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../paint/paint_text.dart';
 
+/// A class that paints a lable on the Y axis of grid.
 class YGridLabelPainter extends CustomPainter {
+  /// initializes a class that paints a lable on the Y axis of grid.
   YGridLabelPainter({
     @required this.gridLineQuotes,
     @required this.pipSize,
@@ -11,9 +13,17 @@ class YGridLabelPainter extends CustomPainter {
     @required this.style,
   });
 
+  /// Number of digits after decimal point in price.
   final int pipSize;
+
+  /// The list of quotes.
   final List<double> gridLineQuotes;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
+
+  /// The style of chart's grid.
+
   final GridStyle style;
 
   @override
