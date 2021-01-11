@@ -22,7 +22,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   /// Is this [ChartAnnotation] on the chart's epoch range
   bool isOnRange = false;
 
-  bool _shouldrepaint = false;
+  bool _shouldRepaint = false;
 
   @override
   bool didUpdate(ChartData oldData) {
@@ -33,19 +33,19 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
 
     if (annotationObject == oldAnnotation?.annotationObject ?? false) {
       previousObject = oldAnnotation?.previousObject;
-      _shouldrepaint = false;
+      _shouldRepaint = false;
     } else {
       previousObject = oldAnnotation?.annotationObject;
-      _shouldrepaint = true;
+      _shouldRepaint = true;
     }
-    return _shouldrepaint;
+    return _shouldRepaint;
   }
 
   @override
   bool shouldRepaint(ChartData previous) {
     final ChartAnnotation<T> previousAnnotation = previous;
     if (isOnRange || isOnRange != previousAnnotation.isOnRange) {
-      return _shouldrepaint;
+      return _shouldRepaint;
     }
     return false;
   }
