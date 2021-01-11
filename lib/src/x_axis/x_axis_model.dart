@@ -371,7 +371,7 @@ class XAxisModel extends ChangeNotifier {
     _updateEntries(entries);
   }
 
-  /// Returns a list of timestamps without any overlap grids.
+  /// Returns a list of timestamps in the grid without any overlaps.
   List<DateTime> getNoOverlapGridTimestamps() {
     const double _minDistanceBetweenTimeGridLines = 80;
     // Calculate time labels' timestamps for current scale.
