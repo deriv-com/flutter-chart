@@ -9,7 +9,7 @@ class Market {
     this.subMarkets,
   });
 
-  /// reates a market from a given `list` of assets.
+  /// Creates a market from a given `list` of assets.
   Market.fromAssets({
     this.name,
     this.displayName,
