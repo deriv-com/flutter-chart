@@ -22,7 +22,7 @@ class ChartPainter extends CustomPainter {
   /// The theme used to paint the chart.
   final ChartTheme theme;
 
-  /// Conversion function for converting eoch to chart's canvas' X position.
+  /// Conversion function for converting epoch to chart's canvas' X position.
   final double Function(int) epochToCanvasX;
 
   /// Conversion function for converting quote to chart's canvas' Y position.

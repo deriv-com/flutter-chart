@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 /// A widget to manage the over-scroll to dismiss for a scrollable inside its [child]
-/// that being shown by calling [showBottomSheet()]
+/// that being shown by calling [showBottomSheet()].
 ///
 /// This widget will listen to [OverscrollNotification] inside its [child] to detect
 /// that it has reached its top scroll limit. when user is closing the [child] by over-scrolling,
 /// it will call [Navigator.pop()], to fully dismiss the [BottomSheet].
 class CustomDraggableSheet extends StatefulWidget {
-  /// Initializes a widget to manage the over-scroll to dismiss for a scrollable inside its [child]
+  /// Initializes a widget to manage the over-scroll to dismiss for a scrollable inside its [child].
   const CustomDraggableSheet({
     Key key,
     @required this.child,
@@ -15,10 +15,10 @@ class CustomDraggableSheet extends StatefulWidget {
     this.introAnimationDuration = const Duration(milliseconds: 300),
   }) : super(key: key);
 
-  /// The sheet that was popped-up inside a [BottomSheet] throw calling [showBottomSheet()]
+  /// The sheet that was popped-up inside a [BottomSheet] throw calling [showBottomSheet()].
   final Widget child;
 
-  /// The duration of animation whether sheet will fling back to top or dismiss
+  /// The duration of animation whether sheet will fling back to top or dismiss.
   final Duration animationDuration;
 
   /// The duration of the starting animation.

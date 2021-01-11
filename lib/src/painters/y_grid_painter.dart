@@ -16,7 +16,7 @@ class YGridPainter extends CustomPainter {
   /// Number of digits after decimal point in price.
   final int pipSize;
 
-  /// The list of quotes;
+  /// The list of quotes.
   final List<double> gridLineQuotes;
 
   /// Conversion function for converting quote to chart's canvas' Y position.

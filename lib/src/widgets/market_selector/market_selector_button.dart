@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'models.dart';
 import 'symbol_icon.dart';
 
-/// A Button to open the market selector. The selected [Asset] should be passed as [asset]
+/// A Button to open the market selector. The selected [Asset] should be passed as [asset].
 class MarketSelectorButton extends StatelessWidget {
-  ///Creates a Button to open the market selector. The selected [Asset] should be passed as [asset]
+  ///Creates a Button to open the market selector. The selected [Asset] should be passed as [asset].
   const MarketSelectorButton({
     Key key,
     @required this.asset,
@@ -26,7 +26,7 @@ class MarketSelectorButton extends StatelessWidget {
   /// Default is set to `BorderRadius.all(Radius.circular(4.0))`
   final BorderRadius borderRadius;
 
-  /// The asset retrieved from the API
+  /// The asset retrieved from the API.
   final Asset asset;
 
   /// The text style of the asset used inside the button.
@@ -34,7 +34,7 @@ class MarketSelectorButton extends StatelessWidget {
 
   /// The duration of the fade animaiton of the button icon.
   ///
-  /// Default is set to `100` miliseconds
+  /// Default is set to `100` miliseconds.
   static const iconFadeDuration = const Duration(milliseconds: 100);
 
   @override

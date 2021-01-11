@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-/// This include all text styles according to Deriv theme guideline
+/// This include all text styles according to Deriv theme guideline.
 class TextStyles {
   static const String appFontFamily = 'IBMPlexSans';
 

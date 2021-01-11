@@ -23,19 +23,19 @@ class CrosshairArea extends StatefulWidget {
     this.onCrosshairDisappeared,
   }) : super(key: key);
 
-  /// The main series of the chart
+  /// The main series of the chart.
   final DataSeries mainSeries;
 
-  /// The size of the pip in the crosshair
+  /// The size of the pip in the crosshair.
   final int pipSize;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
-  /// Called on longpress to show candle/point details
+  /// Called on longpress to show candle/point details.
   final VoidCallback onCrosshairAppeared;
 
-  /// Called when canlde or point is dismissed
+  /// Called when canlde or point is dismissed.
   final VoidCallback onCrosshairDisappeared;
 
   @override

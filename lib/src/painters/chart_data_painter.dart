@@ -22,7 +22,7 @@ class ChartDataPainter extends CustomPainter {
     this.bottomY,
   });
 
-  /// Chart config
+  /// Chart config.
   final ChartConfig chartConfig;
 
   /// The theme used to paint the chart data.
@@ -37,7 +37,7 @@ class ChartDataPainter extends CustomPainter {
   /// Animation info where the animation progress values are in.
   final AnimationInfo animationInfo;
 
-  /// Chart's main data series
+  /// Chart's main data series.
   final DataSeries mainSeries;
 
   /// List of series to add on chart beside the [mainSeries].

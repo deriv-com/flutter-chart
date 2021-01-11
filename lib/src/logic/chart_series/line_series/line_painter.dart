@@ -11,7 +11,7 @@ import 'line_series.dart';
 
 /// A [DataPainter] for painting [LineSeries] data.
 class LinePainter extends DataPainter<LineSeries> {
-  /// Initializes
+  /// Initializes a [DataPainter] for painting [LineSeries] data.
   LinePainter(LineSeries series) : super(series);
 
   @override

@@ -5,9 +5,9 @@ import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart'
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
-/// The custom painter to paint the crossshair
+/// The custom painter to paint the crossshair.
 class CrosshairPainter extends CustomPainter {
-  /// Initializes the custom painter to paint the crossshair
+  /// Initializes the custom painter to paint the crossshair.
   CrosshairPainter({
     @required this.mainSeries,
     @required this.crosshairTick,

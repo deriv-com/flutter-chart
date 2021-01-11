@@ -30,7 +30,7 @@ void main() {
   runApp(MyApp());
 }
 
-/// The start of the application
+/// The start of the application.
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -55,9 +55,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Chart that sits in fullscreen
+/// Chart that sits in fullscreen.
 class FullscreenChart extends StatefulWidget {
-  /// Initializes a chart that sits in fullscreen
+  /// Initializes a chart that sits in fullscreen.
   const FullscreenChart({
     Key key,
   }) : super(key: key);

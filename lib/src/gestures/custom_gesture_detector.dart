@@ -92,7 +92,7 @@ class CustomGestureDetector extends StatefulWidget {
   final GestureLongPressEndCallback onLongPressEnd;
 
   /// A pointer that will trigger a tap with a primary button has stopped contacting the screen at a particular location
-  /// This triggers immediately before `onTap` in the case of the tap gesture winning. If the tap gesture did not win, `onTapCancel` is called instead..
+  /// This triggers immediately before `onTap` in the case of the tap gesture winning. If the tap gesture did not win, `onTapCancel` is called instead.
   final GestureTapUpCallback onTapUp;
 
   @override

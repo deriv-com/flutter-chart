@@ -25,12 +25,12 @@ class GestureManager extends StatefulWidget {
 class GestureManagerState extends State<GestureManager> {
   final _callbackPool = <Function>{};
 
-  /// Registers a callback funtion to the pool of functions in GestureManager
+  /// Registers a callback funtion to the pool of functions in GestureManager.
   void registerCallback(Function callback) {
     _callbackPool.add(callback);
   }
 
-  /// Removes a callback funtion from the pool of functions in GestureManager
+  /// Removes a callback funtion from the pool of functions in GestureManager.
   void removeCallback(Function callback) {
     _callbackPool.remove(callback);
   }

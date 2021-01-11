@@ -4,11 +4,11 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
 import '../line_series/line_series.dart';
 
-/// A series which shows Moving Average data calculated from [entries]
+/// A series which shows moving Average data calculated from [entries].
 class MASeries extends LineSeries {
-  /// Initializes
+  /// Initializes a series which shows shows moving Average data calculated from [entries].
   ///
-  /// [period] is the average of this number of past data which will be calculated as MA value
+  /// [period] is the average of this number of past data which will be calculated as MA value.
   MASeries(
     List<Tick> entries, {
     String id,
@@ -20,6 +20,6 @@ class MASeries extends LineSeries {
           style: style ?? LineStyle(thickness: 0.5, hasArea: false),
         );
 
-  /// Moving average period
+  /// Moving average period.
   final int period;
 }

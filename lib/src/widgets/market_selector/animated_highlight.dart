@@ -16,7 +16,7 @@ class AnimatedHighlight extends StatefulWidget {
   /// The duration of the painting animation.
   final Duration duration;
 
-  /// Play the pulse animation after this duration
+  /// Play the pulse animation after this duration.
   final Duration playAfter;
 
   @override
