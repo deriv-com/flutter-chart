@@ -9,7 +9,7 @@ class LoadingAnimationArea extends StatefulWidget {
     @required this.loadingRightBoundX,
   }) : super(key: key);
 
-  /// The right bound of the loading area in X axis.
+  ///  The right bound in the chart area when loading area is showing.
   final double loadingRightBoundX;
 
   @override
