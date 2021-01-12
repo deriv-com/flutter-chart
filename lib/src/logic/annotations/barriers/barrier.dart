@@ -29,14 +29,4 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
 
   /// The value that this barrier points to
   final double value;
-
-  bool _shouldRepaint = false;
-
-  @override
-  bool didUpdate(ChartData oldData) =>
-      _shouldRepaint = super.didUpdate(oldData);
-
-  @override
-  bool shouldRepaint(ChartData oldData) =>
-      super.shouldRepaint(oldData) || _shouldRepaint;
 }

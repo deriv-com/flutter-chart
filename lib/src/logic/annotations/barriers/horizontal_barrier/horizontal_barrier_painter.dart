@@ -33,8 +33,6 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
   /// Padding on both sides of the title (so that barrier line doesn't touch title text).
   static const double _titleHorizontalPadding = 2;
 
-
-
   @override
   void onPaint({
     Canvas canvas,
@@ -153,7 +151,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       // Erase the line behind title.
       if (arrowType == BarrierArrowType.none) {
-        canvas.drawRect(titleArea, Paint()..blendMode = BlendMode.clear);
+        canvas.drawRect(titleArea, Paint()
+          ..blendMode = BlendMode.clear);
         canvas.restore();
       }
 
@@ -192,11 +191,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
   }
 
-  void _paintLabelBackground(
-    Canvas canvas,
-    Rect rect,
-    LabelShape shape,
-  ) {
+  void _paintLabelBackground(Canvas canvas,
+      Rect rect,
+      LabelShape shape,) {
     if (shape == LabelShape.rectangle) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(rect, const Radius.circular(4)),
@@ -215,12 +212,10 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
   }
 
-  void _paintBlinkingDot(
-    Canvas canvas,
-    double dotX,
-    double y,
-    AnimationInfo animationInfo,
-  ) {
+  void _paintBlinkingDot(Canvas canvas,
+      double dotX,
+      double y,
+      AnimationInfo animationInfo,) {
     paintDot(canvas, Offset(dotX, y), Colors.redAccent);
 
     paintBlinkingGlow(
@@ -231,13 +226,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     );
   }
 
-  void _paintLine(
-    Canvas canvas,
-    double mainLineStartX,
-    double mainLineEndX,
-    double y,
-    HorizontalBarrierStyle style,
-  ) {
+  void _paintLine(Canvas canvas,
+      double mainLineStartX,
+      double mainLineEndX,
+      double y,
+      HorizontalBarrierStyle style,) {
     if (style.isDashed) {
       paintHorizontalDashedLine(
         canvas,
@@ -253,8 +246,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
   }
 
-  void _paintUpwardArrows(
-    Canvas canvas, {
+  void _paintUpwardArrows(Canvas canvas, {
     Offset center,
     double arrowSize,
   }) {
@@ -264,32 +256,28 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
-    canvas
-      ..drawPath(
-          getUpwardArrowPath(
-            center.dx,
-            center.dy + arrowSize - 1,
-            size: arrowSize,
-          ),
-          arrowPaint)
-      ..drawPath(
-          getUpwardArrowPath(
-            center.dx,
-            center.dy,
-            size: arrowSize,
-          ),
-          arrowPaint..color = _paint.color.withOpacity(0.64))
-      ..drawPath(
-          getUpwardArrowPath(
-            center.dx,
-            center.dy - arrowSize + 1,
-            size: arrowSize,
-          ),
-          arrowPaint..color = _paint.color.withOpacity(0.32));
+    canvas..drawPath(
+        getUpwardArrowPath(
+          center.dx,
+          center.dy + arrowSize - 1,
+          size: arrowSize,
+        ),
+        arrowPaint)..drawPath(
+        getUpwardArrowPath(
+          center.dx,
+          center.dy,
+          size: arrowSize,
+        ),
+        arrowPaint..color = _paint.color.withOpacity(0.64))..drawPath(
+        getUpwardArrowPath(
+          center.dx,
+          center.dy - arrowSize + 1,
+          size: arrowSize,
+        ),
+        arrowPaint..color = _paint.color.withOpacity(0.32));
   }
 
-  void _paintDownwardArrows(
-    Canvas canvas, {
+  void _paintDownwardArrows(Canvas canvas, {
     Offset center,
     double arrowSize,
   }) {
@@ -299,27 +287,24 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
-    canvas
-      ..drawPath(
-          getDownwardArrowPath(
-            center.dx,
-            center.dy - arrowSize + 1,
-            size: arrowSize,
-          ),
-          arrowPaint)
-      ..drawPath(
-          getDownwardArrowPath(
-            center.dx,
-            center.dy,
-            size: arrowSize,
-          ),
-          arrowPaint..color = _paint.color.withOpacity(0.64))
-      ..drawPath(
-          getDownwardArrowPath(
-            center.dx,
-            center.dy + arrowSize - 1,
-            size: arrowSize,
-          ),
-          arrowPaint..color = _paint.color.withOpacity(0.32));
+    canvas..drawPath(
+        getDownwardArrowPath(
+          center.dx,
+          center.dy - arrowSize + 1,
+          size: arrowSize,
+        ),
+        arrowPaint)..drawPath(
+        getDownwardArrowPath(
+          center.dx,
+          center.dy,
+          size: arrowSize,
+        ),
+        arrowPaint..color = _paint.color.withOpacity(0.64))..drawPath(
+        getDownwardArrowPath(
+          center.dx,
+          center.dy + arrowSize - 1,
+          size: arrowSize,
+        ),
+        arrowPaint..color = _paint.color.withOpacity(0.32));
   }
 }

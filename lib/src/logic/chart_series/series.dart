@@ -54,9 +54,7 @@ abstract class Series implements ChartData {
   }
 
   @override
-  bool shouldRepaint(ChartData previous) {
-    return true;
-  }
+  bool shouldRepaint(ChartData previous) => true;
 
   /// Calculate min/max values in updated data
   List<double> recalculateMinMax();
