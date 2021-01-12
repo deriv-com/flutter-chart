@@ -9,11 +9,14 @@ void main() {
 
       calculator.updateVisibleEntries(<Tick>[
         const Tick(epoch: 123, quote: 10),
-        const Tick(epoch: 192, quote: 13),
+        const Tick(epoch: 133, quote: 8),
+        const Tick(epoch: 143, quote: 13),
+        const Tick(epoch: 153, quote: 192),
+        const Tick(epoch: 163, quote: 9),
       ]);
 
-      expect(calculator.min, 10);
-      expect(calculator.max, 13);
+      expect(calculator.min, 8);
+      expect(calculator.max, 192);
     });
   });
 }
