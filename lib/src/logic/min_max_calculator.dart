@@ -45,7 +45,10 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
 
       // Compare and find what entries got removed/added by checking epochs.
       if (_visibleEntries.first.epoch < newVisibleEntries.first.epoch) {
-        // remove
+        removedEntries.addAll(
+          _visibleEntries.takeWhile((MinMaxCalculatorEntry entry) =>
+              entry.epoch < newVisibleEntries.first.epoch),
+        );
       } else {
         // add
       }
