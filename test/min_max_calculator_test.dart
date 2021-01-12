@@ -17,5 +17,26 @@ void main() {
       expect(calculator.min, 8);
       expect(calculator.max, 192);
     });
+
+    test('keeps min/max if new entries are the same', () {
+      final List<Tick> testEntries = <Tick>[
+        const Tick(epoch: 123, quote: 10),
+        const Tick(epoch: 133, quote: 8),
+        const Tick(epoch: 143, quote: 13),
+        const Tick(epoch: 153, quote: 192),
+        const Tick(epoch: 163, quote: 9),
+      ];
+
+      final MinMaxCalculator<Tick> calculator = MinMaxCalculator<Tick>()
+        ..updateVisibleEntries(testEntries);
+
+      expect(calculator.min, 8);
+      expect(calculator.max, 192);
+
+      calculator.updateVisibleEntries(testEntries);
+
+      expect(calculator.min, 8);
+      expect(calculator.max, 192);
+    });
   });
 }
