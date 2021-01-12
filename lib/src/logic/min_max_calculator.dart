@@ -54,7 +54,10 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       }
 
       if (_visibleEntries.last.epoch > newVisibleEntries.last.epoch) {
-        // remove
+        removedEntries.addAll(
+          _visibleEntries.reversed.takeWhile((MinMaxCalculatorEntry entry) =>
+              entry.epoch > newVisibleEntries.last.epoch),
+        );
       } else {
         // add
       }
