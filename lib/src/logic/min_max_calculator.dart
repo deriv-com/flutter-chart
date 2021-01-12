@@ -85,11 +85,11 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
 /// Interface that should be implemented by all entries to `MinMaxCalculator`.
 abstract class MinMaxCalculatorEntry {
   /// Epoch time of this entry.
-  int epoch;
+  int get epoch;
 
   /// Minumum value of this entry.
-  double min;
+  double get min;
 
   /// Maximum value of this entry.
-  double max;
+  double get max;
 }
