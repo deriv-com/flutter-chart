@@ -78,9 +78,17 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
         _visibleEntriesCount[entry.max]++;
       }
 
-      // Increment min/max values of added entries in the map.
-      // Decrement min/max values of removed entries in the map.
-      // If value has reached 0 while decrementing, then remove key from the map.
+      for (final MinMaxCalculatorEntry entry in removedEntries) {
+        _visibleEntriesCount[entry.min]--;
+        if (_visibleEntriesCount[entry.min] == 0) {
+          _visibleEntriesCount.remove(entry.min);
+        }
+
+        _visibleEntriesCount[entry.max]--;
+        if (_visibleEntriesCount[entry.max] == 0) {
+          _visibleEntriesCount.remove(entry.max);
+        }
+      }
     }
   }
 
