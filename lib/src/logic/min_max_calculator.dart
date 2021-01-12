@@ -68,18 +68,6 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
         );
       }
 
-      // Option A: All entries in `_visibleEntries` are present in `newVisibleEntries`.
-      // (Zoom out.)
-
-      // Option B: All entries in `newVisibleEntries` are present in `_visibleEntries`.
-      // (Zoom in.)
-
-      // Option C: Entries at the back of `_visibleEntries` are removed, while `newVisibleEntries` has added entries at the front.
-      // (Scroll forward.)
-
-      // Option D: Entries at the front of `_visibleEntries` are removed, while `newVisibleEntries` has added entries at the back.
-      // (Scroll backward.)
-
       // Increment min/max values of added entries in the map.
       // Decrement min/max values of removed entries in the map.
       // If value has reached 0 while decrementing, then remove key from the map.
