@@ -68,6 +68,16 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
         );
       }
 
+      for (final MinMaxCalculatorEntry entry in addedEntries) {
+        // Initialize keys if absent.
+        _visibleEntriesCount
+          ..putIfAbsent(entry.min, () => 0)
+          ..putIfAbsent(entry.max, () => 0);
+
+        _visibleEntriesCount[entry.min]++;
+        _visibleEntriesCount[entry.max]++;
+      }
+
       // Increment min/max values of added entries in the map.
       // Decrement min/max values of removed entries in the map.
       // If value has reached 0 while decrementing, then remove key from the map.
