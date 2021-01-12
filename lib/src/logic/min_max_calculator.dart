@@ -37,7 +37,6 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
         _visibleEntriesCount[entry.max]++;
       }
     } else {
-      // TODO: Reuse previous work.
       final List<MinMaxCalculatorEntry> addedEntries =
           <MinMaxCalculatorEntry>[];
       final List<MinMaxCalculatorEntry> removedEntries =
