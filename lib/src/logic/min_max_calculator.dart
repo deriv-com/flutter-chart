@@ -23,6 +23,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
     if (newVisibleEntries == null || newVisibleEntries.isEmpty) {
       _visibleEntriesCount.clear();
     } else if (_visibleEntries == null ||
+        _visibleEntries.isEmpty ||
         _noOverlap(_visibleEntries, newVisibleEntries)) {
       _visibleEntries = newVisibleEntries;
       _visibleEntriesCount.clear();
