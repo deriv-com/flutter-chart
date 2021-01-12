@@ -4,13 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('MinMaxCalculator', () {
-    test('initial', () {
-      final List<Tick> ticks = <Tick>[
+    test('calculates min/max on initial entries', () {
+      final calculator = MinMaxCalculator<Tick>();
+
+      calculator.updateVisibleEntries(<Tick>[
         const Tick(epoch: 123, quote: 10),
         const Tick(epoch: 192, quote: 13),
-      ];
+      ]);
 
-      final calculator = MinMaxCalculator<Tick>();
+      expect(calculator.min, 10);
+      expect(calculator.max, 13);
     });
   });
 }
