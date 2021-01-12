@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 /// Basic data entry.
 @immutable
-class Tick with EquatableMixin, MinMaxCalculatorEntry {
+class Tick with EquatableMixin implements MinMaxCalculatorEntry {
   /// Initializes
   const Tick({
     @required this.epoch,
