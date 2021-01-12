@@ -8,7 +8,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   /// List of current entries from which min/max is calculated.
   List<T> _visibleEntries;
 
-  /// A map that keeps track of number of occurences of `min` and `max` values for all `_visibleEntries`.
+  /// A map sorted by key that keeps track of number of occurences of `min` and `max` values for all `_visibleEntries`.
   final SplayTreeMap<double, int> _visibleEntriesCount =
       SplayTreeMap<double, int>();
 
@@ -46,6 +46,13 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       // Compare and find what entries got removed/added by checking epochs.
       // Option A: All entries in `_visibleEntries` are present in `newVisibleEntries`.
       // (Zoom out.)
+      _visibleEntries.first.epoch;
+      newVisibleEntries.first.epoch;
+
+      // if (_visibleEntries.first.epoch)
+
+      _visibleEntries.last.epoch;
+      newVisibleEntries.last.epoch;
 
       // Option B: All entries in `newVisibleEntries` are present in `_visibleEntries`.
       // (Zoom in.)
