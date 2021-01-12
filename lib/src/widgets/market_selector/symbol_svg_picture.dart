@@ -7,14 +7,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 String getSVGPathForAsset(String assetCode) =>
     'assets/icons/symbols/$assetCode.svg';
 
-/// Just a wrapper widget around [SvgPicture.asset()] for [MarketSelector] symbols,
+/// Just a wrapper widget around [SvgPicture.asset()] for `MarketSelector` symbols,
 /// to be usable on the Apps using this chart package.
 @Deprecated('next release')
 class SymbolSvgPicture extends StatelessWidget {
   /// Initializes
   const SymbolSvgPicture({
-    Key key,
     @required this.symbolCode,
+    Key key,
     this.bundle,
     this.width,
     this.height,
@@ -59,7 +59,7 @@ class SymbolSvgPicture extends StatelessWidget {
   /// viewBox.
   final bool allowDrawingOutsideViewBox;
 
-  /// The [Semantics.label] for this picture.
+  /// The `Semantics.label` for this picture.
   final String semanticsLabel;
 
   /// Whether to exclude this picture from semantics.

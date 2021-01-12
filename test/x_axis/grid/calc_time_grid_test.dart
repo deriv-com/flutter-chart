@@ -7,7 +7,7 @@ void main() {
   test('include timestamp on the right edge', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(milliseconds: 1000),
+        timeGridInterval: const Duration(milliseconds: 1000),
         leftBoundEpoch: 9000,
         rightBoundEpoch: 10000,
       ),
@@ -17,7 +17,7 @@ void main() {
   test('include timestamp on the left edge', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(milliseconds: 100),
+        timeGridInterval: const Duration(milliseconds: 100),
         leftBoundEpoch: 900,
         rightBoundEpoch: 1000,
       ),
@@ -27,11 +27,11 @@ void main() {
   test('timestamps for small intervals', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(milliseconds: 100),
+        timeGridInterval: const Duration(milliseconds: 100),
         leftBoundEpoch: 700,
         rightBoundEpoch: 1000,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.fromMillisecondsSinceEpoch(700, isUtc: true),
         DateTime.fromMillisecondsSinceEpoch(800, isUtc: true),
         DateTime.fromMillisecondsSinceEpoch(900, isUtc: true),
@@ -40,11 +40,11 @@ void main() {
     );
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(milliseconds: 100),
+        timeGridInterval: const Duration(milliseconds: 100),
         leftBoundEpoch: 699,
         rightBoundEpoch: 999,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.fromMillisecondsSinceEpoch(700, isUtc: true),
         DateTime.fromMillisecondsSinceEpoch(800, isUtc: true),
         DateTime.fromMillisecondsSinceEpoch(900, isUtc: true),
@@ -54,13 +54,13 @@ void main() {
   test('timestamps for 1h interval', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(hours: 1),
+        timeGridInterval: const Duration(hours: 1),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 22:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-24 22:00:00Z'),
         DateTime.parse('2020-07-24 23:00:00Z'),
         DateTime.parse('2020-07-25 00:00:00Z'),
@@ -69,13 +69,13 @@ void main() {
     );
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(hours: 1),
+        timeGridInterval: const Duration(hours: 1),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 01:10:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-24 23:00:00Z'),
         DateTime.parse('2020-07-25 00:00:00Z'),
         DateTime.parse('2020-07-25 01:00:00Z'),
@@ -85,26 +85,26 @@ void main() {
   test('timestamps for 2h interval', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(hours: 2),
+        timeGridInterval: const Duration(hours: 2),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 22:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-24 22:00:00Z'),
         DateTime.parse('2020-07-25 00:00:00Z'),
       ]),
     );
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(hours: 2),
+        timeGridInterval: const Duration(hours: 2),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 02:10:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-25 00:00:00Z'),
         DateTime.parse('2020-07-25 02:00:00Z'),
       ]),
@@ -113,13 +113,13 @@ void main() {
   test('timestamps for 4h interval', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(hours: 4),
+        timeGridInterval: const Duration(hours: 4),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 05:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 01:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-24 08:00:00Z'),
         DateTime.parse('2020-07-24 12:00:00Z'),
         DateTime.parse('2020-07-24 16:00:00Z'),
@@ -129,13 +129,13 @@ void main() {
     );
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(hours: 4),
+        timeGridInterval: const Duration(hours: 4),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 22:20:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 02:10:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-25 00:00:00Z'),
       ]),
     );
@@ -143,13 +143,13 @@ void main() {
   test('timestamps for 8h interval', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(hours: 8),
+        timeGridInterval: const Duration(hours: 8),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 19:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 19:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-25 00:00:00Z'),
         DateTime.parse('2020-07-25 08:00:00Z'),
         DateTime.parse('2020-07-25 16:00:00Z'),
@@ -159,23 +159,23 @@ void main() {
   test('timestamps for 1 day interval', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(days: 1),
+        timeGridInterval: const Duration(days: 1),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 15:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 15:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([DateTime.parse('2020-07-25 00:00:00Z')]),
+      equals(<DateTime>[DateTime.parse('2020-07-25 00:00:00Z')]),
     );
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(days: 1),
+        timeGridInterval: const Duration(days: 1),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 00:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-25 15:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-24 00:00:00Z'),
         DateTime.parse('2020-07-25 00:00:00Z'),
       ]),
@@ -184,13 +184,13 @@ void main() {
   test('timestamps for 1 week interval', () {
     expect(
       gridTimestamps(
-        timeGridInterval: Duration(days: DateTime.daysPerWeek),
+        timeGridInterval: const Duration(days: DateTime.daysPerWeek),
         leftBoundEpoch:
             DateTime.parse('2020-07-24 15:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:
             DateTime.parse('2020-07-29 15:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([DateTime.parse('2020-07-27 00:00:00Z')]),
+      equals(<DateTime>[DateTime.parse('2020-07-27 00:00:00Z')]),
     );
   });
   test('timestamps for 1 month interval', () {
@@ -202,7 +202,7 @@ void main() {
         rightBoundEpoch:
             DateTime.parse('2020-08-29 12:00:00Z').millisecondsSinceEpoch,
       ),
-      equals([
+      equals(<DateTime>[
         DateTime.parse('2020-07-01 00:00:00Z'),
         DateTime.parse('2020-08-01 00:00:00Z'),
       ]),
@@ -214,24 +214,23 @@ void main() {
     expect(
       timeGridInterval(
         (int ms) => ms / 10000000,
-        intervals: [Duration(seconds: 10)],
+        intervals: const <Duration>[Duration(seconds: 10)],
       ),
-      equals(Duration(seconds: 10)),
+      equals(const Duration(seconds: 10)),
     );
     expect(
       timeGridInterval(
         (int ms) => ms / 0.000001,
-        intervals: [Duration(seconds: 42)],
+        intervals: const <Duration>[Duration(seconds: 42)],
       ),
-      equals(Duration(seconds: 42)),
+      equals(const Duration(seconds: 42)),
     );
   });
   test('smallest given interval that satisfies [minDistanceBetweenLines]', () {
     expect(
       timeGridInterval(
         (int ms) => ms / 1000,
-        minDistanceBetweenLines: 100,
-        intervals: [
+        intervals: const <Duration>[
           Duration(seconds: 10),
           Duration(seconds: 99),
           Duration(seconds: 120),
@@ -239,26 +238,25 @@ void main() {
           Duration(seconds: 1000),
         ],
       ),
-      equals(Duration(seconds: 120)),
+      equals(const Duration(seconds: 120)),
     );
     expect(
       timeGridInterval(
         (int ms) => ms / 1000,
-        minDistanceBetweenLines: 100,
-        intervals: [
+        intervals: const <Duration>[
           Duration(seconds: 10),
           Duration(seconds: 100),
           Duration(seconds: 120),
           Duration(seconds: 200),
         ],
       ),
-      equals(Duration(seconds: 100)),
+      equals(const Duration(seconds: 100)),
     );
     expect(
       timeGridInterval(
         (int ms) => ms / 1000,
         minDistanceBetweenLines: 42,
-        intervals: [
+        intervals: const <Duration>[
           Duration(seconds: 39),
           Duration(seconds: 40),
           Duration(seconds: 41),
@@ -266,7 +264,7 @@ void main() {
           Duration(seconds: 50),
         ],
       ),
-      equals(Duration(seconds: 45)),
+      equals(const Duration(seconds: 45)),
     );
   });
 }

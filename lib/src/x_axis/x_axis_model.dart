@@ -30,7 +30,7 @@ class XAxisModel extends ChangeNotifier {
     _granularity = granularity ?? 0;
     _msPerPx = _defaultScale;
     _isLive = isLive ?? true;
-    _rightBoundEpoch = _maxRightBoundEpoch;
+    rightBoundEpoch = _maxRightBoundEpoch;
 
     _updateEntries(entries);
 
@@ -87,7 +87,9 @@ class XAxisModel extends ChangeNotifier {
   double _prevMsPerPx;
   int _granularity;
   int _nowEpoch;
-  int _rightBoundEpoch;
+
+  /// Epoch value of the rightmost chart's edge. Including quote labels area.
+  int rightBoundEpoch;
 
   int get _firstCandleEpoch =>
       _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
@@ -97,11 +99,6 @@ class XAxisModel extends ChangeNotifier {
 
   /// Epoch value of the leftmost chart's edge.
   int get leftBoundEpoch => _shiftEpoch(rightBoundEpoch, -width);
-
-  /// Epoch value of the rightmost chart's edge. Including quote labels area.
-  int get rightBoundEpoch => _rightBoundEpoch;
-
-  void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
@@ -201,7 +198,9 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Should be called before [_updateEntries] and after [_updateIsLive]
   void _updateGranularity(int newGranularity) {
-    if (newGranularity == null || _granularity == newGranularity) return;
+    if (newGranularity == null || _granularity == newGranularity) {
+      return;
+    }
     _granularity = newGranularity;
     _msPerPx = _defaultScale;
     _scrollTo(_maxRightBoundEpoch);
@@ -215,11 +214,11 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each frame.
   /// Updates right panning limit and autopan if enabled.
   void onNewFrame(Duration _) {
-    final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
-    final elapsedMs = newNowEpoch - _nowEpoch;
+    final int newNowEpoch = DateTime.now().millisecondsSinceEpoch;
+    final int elapsedMs = newNowEpoch - _nowEpoch;
     _nowEpoch = newNowEpoch;
     if (_autoPanning) {
-      _scrollTo(_rightBoundEpoch + elapsedMs);
+      _scrollTo(rightBoundEpoch + elapsedMs);
     } else if (_panSpeed != null && _panSpeed != 0) {
       _scrollBy(_panSpeed * elapsedMs);
     }
@@ -264,11 +263,9 @@ class XAxisModel extends ChangeNotifier {
       );
 
   /// Get x position of epoch.
-  double xFromEpoch(int epoch) {
-    return epoch <= rightBoundEpoch
-        ? width - pxBetween(epoch, rightBoundEpoch)
-        : width + pxBetween(rightBoundEpoch, epoch);
-  }
+  double xFromEpoch(int epoch) => epoch <= rightBoundEpoch
+      ? width - pxBetween(epoch, rightBoundEpoch)
+      : width + pxBetween(rightBoundEpoch, epoch);
 
   /// Get epoch of x position.
   int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width + x);
@@ -299,16 +296,16 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
+    final double nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
     _scale(details.scale);
-    _rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
+    rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = width - details.focalPoint.dx;
-    final focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
+    final double focalToRightBound = width - details.focalPoint.dx;
+    final int focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
     _scale(details.scale);
-    _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
+    rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
   }
 
   void _scale(double scale) {
@@ -318,14 +315,14 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scrollTo(int rightBoundEpoch) {
-    _rightBoundEpoch = rightBoundEpoch;
+    this.rightBoundEpoch = rightBoundEpoch;
     _clampRightBoundEpoch();
     onScroll?.call();
     notifyListeners();
   }
 
   void _scrollBy(double pxShift) {
-    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
+    rightBoundEpoch = _shiftEpoch(rightBoundEpoch, pxShift);
     _clampRightBoundEpoch();
     onScroll?.call();
     notifyListeners();
@@ -333,13 +330,13 @@ class XAxisModel extends ChangeNotifier {
 
   /// Animate scrolling to current tick.
   void scrollToLastTick({bool animate = true}) {
-    final duration =
+    final Duration duration =
         animate ? const Duration(milliseconds: 600) : Duration.zero;
-    final target = _maxRightBoundEpoch + duration.inMilliseconds;
-    final double distance = target > _rightBoundEpoch
-        ? pxBetween(_rightBoundEpoch, target)
-        : pxBetween(target, _rightBoundEpoch);
-    _rightBoundEpoch += 1;
+    final int target = _maxRightBoundEpoch + duration.inMilliseconds;
+    final double distance = target > rightBoundEpoch
+        ? pxBetween(rightBoundEpoch, target)
+        : pxBetween(target, rightBoundEpoch);
+    rightBoundEpoch += 1;
     _prevScrollAnimationValue = 0;
     _scrollAnimationController
       ..value = 0
@@ -360,8 +357,8 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Keeps rightBoundEpoch in the valid range
-  void _clampRightBoundEpoch() => _rightBoundEpoch =
-      _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
+  void _clampRightBoundEpoch() => rightBoundEpoch =
+      rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
 
   /// Updates the [XAxisModel] model variables.
   void update({bool isLive, int granularity, List<Tick> entries}) {

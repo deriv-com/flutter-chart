@@ -8,8 +8,8 @@ import 'sub_market_item.dart';
 /// A widget to show a market item in market selector
 class MarketItem extends StatelessWidget {
   const MarketItem({
-    Key key,
     @required this.market,
+    Key key,
     this.filterText = '',
     this.onAssetClicked,
     this.selectedItemKey,
@@ -31,7 +31,7 @@ class MarketItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ChartTheme>(context);
+    final ChartTheme theme = Provider.of<ChartTheme>(context);
     return Container(
       color: theme.base08Color,
       child: Column(

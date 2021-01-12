@@ -24,34 +24,34 @@ void main() {
   });
 
   test('test should Remove labels inside time gaps and have overlap', () {
-    final List<DateTime> gridTimestamps = [
-      DateTime.utc(2020, 12, 10, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 11, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 12, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 13, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 14, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 15, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 16, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 17, 0, 0, 0, 0)
+    final List<DateTime> gridTimestamps = <DateTime>[
+      DateTime.utc(2020, 12, 10),
+      DateTime.utc(2020, 12, 11),
+      DateTime.utc(2020, 12, 12),
+      DateTime.utc(2020, 12, 13),
+      DateTime.utc(2020, 12, 14),
+      DateTime.utc(2020, 12, 15),
+      DateTime.utc(2020, 12, 16),
+      DateTime.utc(2020, 12, 17)
     ];
 
-    List<TimeRange> gaps = [
+    final List<TimeRange> gaps = <TimeRange>[
       TimeRange(1607567040000, 1607644800000),
       TimeRange(1607653440000, 1607731200000),
       TimeRange(1607739840000, 1607990400000),
       TimeRange(1607999040000, 1608163200000)
     ];
 
-    final List<DateTime> noOverLapTimeStamps = [
-      DateTime.utc(2020, 12, 10, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 11, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 12, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 15, 0, 0, 0, 0),
-      DateTime.utc(2020, 12, 17, 0, 0, 0, 0)
+    final List<DateTime> noOverLapTimeStamps = <DateTime>[
+      DateTime.utc(2020, 12, 10),
+      DateTime.utc(2020, 12, 11),
+      DateTime.utc(2020, 12, 12),
+      DateTime.utc(2020, 12, 15),
+      DateTime.utc(2020, 12, 17)
     ];
     const double minDistanceBetweenTimeGridLines = 80;
 
-    double msPerPx = 1000;
+    const double msPerPx = 1000;
     expect(
       calculateNoOverlapGridTimestamps(
         gridTimestamps,

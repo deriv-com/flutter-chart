@@ -150,13 +150,12 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.secondarySeries,
     this.annotations,
-  }) : super(key: key) {
-    chartDataList = <ChartData>[
-      mainSeries,
-      if (secondarySeries != null) ...secondarySeries,
-      if (annotations != null) ...annotations,
-    ];
-  }
+  })  : chartDataList = <ChartData>[
+          mainSeries,
+          if (secondarySeries != null) ...secondarySeries,
+          if (annotations != null) ...annotations,
+        ],
+        super(key: key);
 
   final DataSeries<Tick> mainSeries;
   final List<Series> secondarySeries;
@@ -170,7 +169,7 @@ class _ChartImplementation extends StatefulWidget {
   final double opacity;
 
   // Convenience list to access all chart data.
-  List<ChartData> chartDataList;
+  final List<ChartData> chartDataList;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();

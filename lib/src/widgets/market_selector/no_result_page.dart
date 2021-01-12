@@ -10,9 +10,9 @@ class NoResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ChartTheme>(context);
+    final ChartTheme theme = Provider.of<ChartTheme>(context);
     return Container(
-      constraints: BoxConstraints.expand(),
+      constraints: const BoxConstraints.expand(),
       padding: const EdgeInsets.only(top: 94),
       color: theme.base08Color,
       child: Column(

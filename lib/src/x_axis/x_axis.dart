@@ -106,44 +106,43 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<XAxisModel>.value(
-      value: _model,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          // Update x-axis width.
-          context.watch<XAxisModel>().width = constraints.maxWidth;
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider<XAxisModel>.value(
+        value: _model,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            // Update x-axis width.
+            context.watch<XAxisModel>().width = constraints.maxWidth;
 
-          final List<DateTime> _noOverlapGridTimestamps =
-              _model.getNoOverlapGridTimestamps();
+            final List<DateTime> _noOverlapGridTimestamps =
+                _model.getNoOverlapGridTimestamps();
 
-          final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
+            final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
 
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              RepaintBoundary(
-                child: CustomPaint(
-                  painter: XGridPainter(
-                    timeLabels: _noOverlapGridTimestamps
-                        .map<String>((DateTime time) => timeLabel(time))
-                        .toList(),
-                    xCoords: _noOverlapGridTimestamps
-                        .map<double>((DateTime time) =>
-                            _model.xFromEpoch(time.millisecondsSinceEpoch))
-                        .toList(),
-                    style: gridStyle,
+            return Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                RepaintBoundary(
+                  child: CustomPaint(
+                    painter: XGridPainter(
+                      timeLabels: _noOverlapGridTimestamps
+                          .map<String>((DateTime time) => timeLabel(time))
+                          .toList(),
+                      xCoords: _noOverlapGridTimestamps
+                          .map<double>((DateTime time) =>
+                              _model.xFromEpoch(time.millisecondsSinceEpoch))
+                          .toList(),
+                      style: gridStyle,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
-                child: widget.child,
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
+                Padding(
+                  padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
+                  child: widget.child,
+                ),
+              ],
+            );
+          },
+        ),
+      );
 }

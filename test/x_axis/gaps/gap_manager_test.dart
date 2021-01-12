@@ -19,7 +19,7 @@ void main() {
     });
 
     test('return full duration when gaps do not overlap with range', () {
-      manager.replaceGaps([TimeRange(1000, 1100)]);
+      manager.replaceGaps(<TimeRange>[TimeRange(1000, 1100)]);
       expect(
         manager.removeGaps(TimeRange(1111, 2222)),
         equals(1111),
@@ -27,7 +27,7 @@ void main() {
     });
 
     test('return 0 when gap covers the epoch range', () {
-      manager.replaceGaps([TimeRange(250, 400)]);
+      manager.replaceGaps(<TimeRange>[TimeRange(250, 400)]);
       expect(
         manager.removeGaps(TimeRange(300, 400)),
         equals(0),
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('return duration minus gap when gap falls in the middle', () {
-      manager.replaceGaps([TimeRange(350, 360)]);
+      manager.replaceGaps(<TimeRange>[TimeRange(350, 360)]);
       expect(
         manager.removeGaps(TimeRange(300, 400)),
         equals(90),
@@ -44,7 +44,7 @@ void main() {
 
     test('return duration minus overlaps with two gaps', () {
       manager.replaceGaps(
-        [TimeRange(250, 360), TimeRange(390, 1000)],
+        <TimeRange>[TimeRange(250, 360), TimeRange(390, 1000)],
       );
       expect(
         manager.removeGaps(TimeRange(300, 400)),
@@ -54,7 +54,7 @@ void main() {
 
     test('return duration minus overlaps with many gaps', () {
       manager.replaceGaps(
-        [
+        <TimeRange>[
           TimeRange(250, 360),
           TimeRange(390, 400),
           TimeRange(420, 422),
@@ -73,7 +73,7 @@ void main() {
     test('handle inserting more gaps', () {
       manager
         ..replaceGaps(
-          [
+          <TimeRange>[
             TimeRange(250, 360),
             TimeRange(390, 400),
             TimeRange(420, 422),
@@ -83,10 +83,12 @@ void main() {
             TimeRange(2000, 3000),
           ],
         )
-        ..insertInFront([
-          TimeRange(100, 120),
-          TimeRange(150, 200),
-        ]);
+        ..insertInFront(
+          <TimeRange>[
+            TimeRange(100, 120),
+            TimeRange(150, 200),
+          ],
+        );
       expect(
         manager.removeGaps(TimeRange(300, 1000)),
         equals(519),

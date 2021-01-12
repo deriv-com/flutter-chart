@@ -30,7 +30,7 @@ class ChartDataPainter extends CustomPainter {
 
   final AnimationInfo animationInfo;
 
-  final DataSeries mainSeries;
+  final DataSeries<Tick> mainSeries;
   final List<Series> secondarySeries;
 
   /*
@@ -82,8 +82,12 @@ class ChartDataPainter extends CustomPainter {
       final List<Tick> current = mainSeries.visibleEntries;
       final List<Tick> previous = oldDelegate.mainSeries.visibleEntries;
 
-      if (current.isEmpty && previous.isEmpty) return false;
-      if (current.isEmpty != previous.isEmpty) return true;
+      if (current.isEmpty && previous.isEmpty) {
+        return false;
+      }
+      if (current.isEmpty != previous.isEmpty) {
+        return true;
+      }
 
       return current.first != previous.first || current.last != previous.last;
     }

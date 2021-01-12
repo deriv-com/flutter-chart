@@ -11,7 +11,7 @@ void main() {
           epoch: 123456,
           pxShift: 0,
           msPerPx: 1,
-          gaps: [],
+          gaps: <TimeRange>[],
         ),
         equals(123456),
       );
@@ -20,7 +20,7 @@ void main() {
           epoch: 1601140057031,
           pxShift: 0,
           msPerPx: 161472.32783279638,
-          gaps: [TimeRange(1601067600000, 1601251200000)],
+          gaps: <TimeRange>[TimeRange(1601067600000, 1601251200000)],
         ),
         equals(1601140057031),
       );
@@ -37,7 +37,7 @@ void main() {
             epoch: 123456,
             pxShift: 100,
             msPerPx: 1,
-            gaps: [],
+            gaps: <TimeRange>[],
           ),
           equals(123556));
     });
@@ -47,7 +47,7 @@ void main() {
             epoch: 123456,
             pxShift: -106,
             msPerPx: 1,
-            gaps: [],
+            gaps: <TimeRange>[],
           ),
           equals(123350));
     });
@@ -57,7 +57,7 @@ void main() {
             epoch: 999,
             pxShift: 1,
             msPerPx: 1,
-            gaps: [TimeRange(999, 1200)],
+            gaps: <TimeRange>[TimeRange(999, 1200)],
           ),
           equals(1201));
     });
@@ -67,7 +67,7 @@ void main() {
             epoch: 999,
             pxShift: 1,
             msPerPx: 1,
-            gaps: [TimeRange(900, 1200)],
+            gaps: <TimeRange>[TimeRange(900, 1200)],
           ),
           equals(1201));
     });
@@ -77,7 +77,7 @@ void main() {
             epoch: 200,
             pxShift: 100,
             msPerPx: 1,
-            gaps: [TimeRange(210, 220)],
+            gaps: <TimeRange>[TimeRange(210, 220)],
           ),
           equals(310));
     });
@@ -87,7 +87,7 @@ void main() {
             epoch: 200,
             pxShift: 100,
             msPerPx: 1,
-            gaps: [TimeRange(400, 500)],
+            gaps: <TimeRange>[TimeRange(400, 500)],
           ),
           equals(300));
     });
@@ -97,7 +97,7 @@ void main() {
             epoch: 200,
             pxShift: 100,
             msPerPx: 1,
-            gaps: [TimeRange(220, 240), TimeRange(260, 300)],
+            gaps: <TimeRange>[TimeRange(220, 240), TimeRange(260, 300)],
           ),
           equals(360));
     });
@@ -107,7 +107,7 @@ void main() {
             epoch: 200,
             pxShift: 100,
             msPerPx: 1,
-            gaps: [
+            gaps: <TimeRange>[
               TimeRange(220, 240),
               TimeRange(260, 300),
               TimeRange(360, 400),
@@ -121,7 +121,7 @@ void main() {
             epoch: 200,
             pxShift: 100,
             msPerPx: 1,
-            gaps: [
+            gaps: <TimeRange>[
               TimeRange(220, 240),
               TimeRange(260, 300),
               TimeRange(361, 400),
@@ -135,7 +135,7 @@ void main() {
           epoch: 200,
           pxShift: -50,
           msPerPx: 1,
-          gaps: [TimeRange(190, 195)],
+          gaps: <TimeRange>[TimeRange(190, 195)],
         ),
         equals(145),
       );
@@ -146,7 +146,7 @@ void main() {
           epoch: 200,
           pxShift: -50,
           msPerPx: 1,
-          gaps: [TimeRange(140, 150), TimeRange(190, 195)],
+          gaps: <TimeRange>[TimeRange(140, 150), TimeRange(190, 195)],
         ),
         equals(135),
       );
@@ -157,7 +157,7 @@ void main() {
           epoch: 1601248601086,
           pxShift: 2.181818181818187,
           msPerPx: 900000,
-          gaps: [
+          gaps: <TimeRange>[
             TimeRange(1600462800000, 1600646400000),
             TimeRange(1601067600000, 1601251200000),
           ],
