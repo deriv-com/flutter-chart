@@ -44,15 +44,20 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
           <MinMaxCalculatorEntry>[];
 
       // Compare and find what entries got removed/added by checking epochs.
+      if (_visibleEntries.first.epoch < newVisibleEntries.first.epoch) {
+        // remove
+      } else {
+        // add
+      }
+
+      if (_visibleEntries.last.epoch > newVisibleEntries.last.epoch) {
+        // remove
+      } else {
+        // add
+      }
+
       // Option A: All entries in `_visibleEntries` are present in `newVisibleEntries`.
       // (Zoom out.)
-      _visibleEntries.first.epoch;
-      newVisibleEntries.first.epoch;
-
-      // if (_visibleEntries.first.epoch)
-
-      _visibleEntries.last.epoch;
-      newVisibleEntries.last.epoch;
 
       // Option B: All entries in `newVisibleEntries` are present in `_visibleEntries`.
       // (Zoom in.)
