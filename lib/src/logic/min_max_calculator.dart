@@ -20,7 +20,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
 
   /// Updates a list of visible entries and efficiently recalculates new min/max.
   void updateVisibleEntries(List<T> newVisibleEntries) {
-    if (newVisibleEntries == null) {
+    if (newVisibleEntries == null || newVisibleEntries.isEmpty) {
       _visibleEntriesCount.clear();
     } else if (_visibleEntries == null ||
         _noOverlap(_visibleEntries, newVisibleEntries)) {
