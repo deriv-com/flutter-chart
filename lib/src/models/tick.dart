@@ -12,6 +12,7 @@ class Tick with EquatableMixin implements MinMaxCalculatorEntry {
   });
 
   /// Epoch of the tick
+  @override
   final int epoch;
 
   /// Tick price
