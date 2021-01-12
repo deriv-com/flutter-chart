@@ -55,7 +55,7 @@ void _paintTimeLabels(
         xCoords[index],
         size.height - style.xLabelsAreaHeight / 2,
       ),
-      style: style.labelStyle,
+      style: style.xLabelStyle,
     );
   });
 }

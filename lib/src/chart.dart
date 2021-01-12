@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/src/loading_animation.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -13,6 +12,8 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/painters/chart_data_painter.dart';
+import 'package:deriv_chart/src/painters/y_grid_label_painter.dart';
+import 'package:deriv_chart/src/painters/y_grid_line_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +22,13 @@ import 'package:provider/single_child_widget.dart';
 import 'callbacks.dart';
 import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
+import 'loading_animation.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
 import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
-import 'painters/y_grid_painter.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
@@ -439,6 +441,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
         bottomPadding: _bottomPadding,
       );
 
+  // Calculate the width of Y label
+  double _labelWidth(double text, TextStyle style) => makeTextPainter(
+        text.toStringAsFixed(widget.pipSize),
+        style,
+      ).width;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -453,12 +461,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _updateVisibleData();
         _updateQuoteBoundTargets();
 
+        final List<double> gridLineQuotes = _getGridLineQuotes();
+
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            _buildQuoteGrid(),
+            _buildQuoteGridLine(gridLineQuotes),
             _buildLoadingAnimation(),
             _buildChartData(),
+            _buildQuoteGridLabel(gridLineQuotes),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(
@@ -478,7 +489,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  Widget _buildQuoteGrid() => MultipleAnimatedBuilder(
+  Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
+      MultipleAnimatedBuilder(
         animations: [
           // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
@@ -486,8 +498,29 @@ class _ChartImplementationState extends State<_ChartImplementation>
         ],
         builder: (BuildContext context, Widget child) {
           return CustomPaint(
-            painter: YGridPainter(
-              gridLineQuotes: _getGridLineQuotes(),
+            painter: YGridLinePainter(
+              gridLineQuotes: gridLineQuotes,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+              labelWidth: _labelWidth(gridLineQuotes.first,
+                  context.watch<ChartTheme>().gridStyle.yLabelStyle),
+            ),
+          );
+        },
+      );
+
+  Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
+      MultipleAnimatedBuilder(
+        animations: [
+          // One bound animation is enough since they animate at the same time.
+          _topBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+        ],
+        builder: (BuildContext context, Widget child) {
+          return CustomPaint(
+            size: canvasSize,
+            painter: YGridLabelPainter(
+              gridLineQuotes: gridLineQuotes,
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,

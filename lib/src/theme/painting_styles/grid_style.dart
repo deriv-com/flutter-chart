@@ -7,11 +7,25 @@ class GridStyle with EquatableMixin {
   /// Initializes
   const GridStyle({
     this.gridLineColor = const Color(0xFF151717),
-    this.labelStyle = const TextStyle(
+    this.xLabelStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
       fontWeight: FontWeight.normal,
       color: Color(0xFFC2C2C2),
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
+    ),
+    this.yLabelStyle = const TextStyle(
+      fontSize: 10,
+      height: 1.3,
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+      shadows: <Shadow>[
+        Shadow(
+          offset: Offset.zero,
+          blurRadius: 4.0,
+          color: Colors.black,
+        ),
+      ],
       fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
     this.labelHorizontalPadding = 8,
@@ -22,8 +36,11 @@ class GridStyle with EquatableMixin {
   /// The color of the grid lines
   final Color gridLineColor;
 
-  /// The text style of the labels on time and value axes
-  final TextStyle labelStyle;
+  /// The text style of the labels on time axes
+  final TextStyle xLabelStyle;
+
+  /// The text style of the value axes
+  final TextStyle yLabelStyle;
 
   /// Padding on the sides of the text label.
   final double labelHorizontalPadding;
@@ -36,12 +53,13 @@ class GridStyle with EquatableMixin {
 
   @override
   String toString() =>
-      '${super.toString()}$gridLineColor, ${labelStyle.toStringShort()}, $lineThickness';
+      '${super.toString()}$gridLineColor, ${xLabelStyle.toStringShort()}, ${yLabelStyle.toStringShort()}, $lineThickness';
 
   @override
   List<Object> get props => [
         gridLineColor,
-        labelStyle,
+        xLabelStyle,
+        yLabelStyle,
         labelHorizontalPadding,
         lineThickness,
         xLabelsAreaHeight
