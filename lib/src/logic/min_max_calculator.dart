@@ -51,10 +51,10 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       // (Zoom in.)
 
       // Option C: Entries at the back of `_visibleEntries` are removed, while `newVisibleEntries` has added entries at the front.
-      // (Scroll forward without zooming.)
+      // (Scroll forward.)
 
       // Option D: Entries at the front of `_visibleEntries` are removed, while `newVisibleEntries` has added entries at the back.
-      // (Scroll backward without zooming.)
+      // (Scroll backward.)
 
       // Increment min/max values of added entries in the map.
       // Decrement min/max values of removed entries in the map.
