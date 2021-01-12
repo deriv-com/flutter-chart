@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('MinMaxCalculator', () {
     test('calculates min/max on initial entries', () {
-      final MinMaxCalculator calculator = MinMaxCalculator<Tick>()
+      final MinMaxCalculator<Tick> calculator = MinMaxCalculator<Tick>()
         ..updateVisibleEntries(<Tick>[
           const Tick(epoch: 123, quote: 10),
           const Tick(epoch: 133, quote: 8),
