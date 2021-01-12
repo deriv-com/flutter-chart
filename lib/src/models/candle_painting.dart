@@ -12,19 +12,19 @@ class CandlePainting {
     @required this.width,
   });
 
-  /// The center X axis of the candle.
+  /// The center X position of the candle.
   final double xCenter;
 
-  /// The high y axis of the candle.
+  /// Y position of the candle's high value.
   final double yHigh;
 
-  /// The low y axis of the candle.
+  /// Y position of the candle's low value.
   final double yLow;
 
-  /// The open y axis of the candle.
+  /// Y position of the candle's open value.
   final double yOpen;
 
-  /// The close y axis of the candle.
+  /// Y position of the candle's close value.
   final double yClose;
 
   /// The width of the candle.
