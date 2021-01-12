@@ -50,7 +50,10 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
               entry.epoch < newVisibleEntries.first.epoch),
         );
       } else {
-        // add
+        addedEntries.addAll(
+          newVisibleEntries.takeWhile((MinMaxCalculatorEntry entry) =>
+              entry.epoch > _visibleEntries.first.epoch),
+        );
       }
 
       if (_visibleEntries.last.epoch > newVisibleEntries.last.epoch) {
@@ -59,7 +62,10 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
               entry.epoch > newVisibleEntries.last.epoch),
         );
       } else {
-        // add
+        addedEntries.addAll(
+          newVisibleEntries.reversed.takeWhile((MinMaxCalculatorEntry entry) =>
+              entry.epoch < _visibleEntries.last.epoch),
+        );
       }
 
       // Option A: All entries in `_visibleEntries` are present in `newVisibleEntries`.
