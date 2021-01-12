@@ -23,7 +23,7 @@ class CrosshairDetails extends StatelessWidget {
   /// The basic data entry of a crosshair.
   final Tick crosshairTick;
 
-  /// The size of the crosshair's pip.
+  /// Number of decimal digits when showing prices.
   final int pipSize;
 
   @override
