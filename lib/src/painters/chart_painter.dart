@@ -28,6 +28,10 @@ class ChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (chartDataList == null) {
+      return;
+    }
+
     for (final ChartData c in chartDataList) {
       c.paint(
         canvas,

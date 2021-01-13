@@ -15,6 +15,9 @@ class Candle extends Tick with EquatableMixin implements MinMaxCalculatorEntry {
     @required this.close,
   }) : super(epoch: epoch, quote: close);
 
+  Candle.noParam(int epoch, double open, double close, double high, double low)
+      : this(epoch: epoch, open: open, close: close, high: high, low: low);
+
   /// High value
   final double high;
 
@@ -47,7 +50,6 @@ class Candle extends Tick with EquatableMixin implements MinMaxCalculatorEntry {
   String toString() =>
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
-  @override
   List<Object> get props => [epoch, open, close, high, low];
 
   @override

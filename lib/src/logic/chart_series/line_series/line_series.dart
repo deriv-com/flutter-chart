@@ -16,7 +16,7 @@ class LineSeries extends DataSeries<Tick> {
   }) : super(entries, id, style: style);
 
   @override
-  SeriesPainter<LineSeries> createPainter() => LinePainter(this);
+  SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
   Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>
