@@ -39,7 +39,7 @@ void main() {
       expect(calculator.max, 192);
     });
 
-    test('updates min/max if new entries are scrolled forward by 1', () {
+    test('updates min if new entries are scrolled forward by 1', () {
       final MinMaxCalculator<Tick> calculator = MinMaxCalculator<Tick>()
         ..updateVisibleEntries(<Tick>[
           const Tick(epoch: 123, quote: 11),
