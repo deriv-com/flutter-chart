@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/multiplier_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,9 +21,9 @@ void main() {
       final MultiplierIndicator indicator =
           MultiplierIndicator(lowValueIndicator, 0.2);
 
-      expect(indicator.getValue(0).quote, 12.600000000000001);
-      expect(indicator.getValue(1).quote, 14.624000000000002);
-      expect(indicator.getValue(2).quote, 14.666);
+      expect(roundDouble(indicator.getValue(0).quote, 4), 12.6);
+      expect(roundDouble(indicator.getValue(1).quote, 4), 14.624);
+      expect(roundDouble(indicator.getValue(2).quote, 4), 14.666);
     });
   });
 }

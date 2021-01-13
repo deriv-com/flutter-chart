@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/difference_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
@@ -23,8 +24,8 @@ void main() {
           DifferenceIndicator(highValueIndicator, lowValueIndicator);
 
       expect(indicator.getValue(0).quote, 4.5);
-      expect(indicator.getValue(1).quote, 2.530000000000001);
-      expect(indicator.getValue(2).quote, 2.969999999999999);
+      expect(roundDouble(indicator.getValue(1).quote, 4), 2.5300);
+      expect(roundDouble(indicator.getValue(2).quote, 4), 2.97);
     });
   });
 }

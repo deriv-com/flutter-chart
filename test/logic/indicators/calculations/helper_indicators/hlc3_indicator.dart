@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/hlc3_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,9 +18,9 @@ void main() {
     test('HLC3Indicator calculates the correct results', () {
       final HLC3Indicator indicator = HLC3Indicator(ticks);
 
-      expect(indicator.getValue(0).quote, 64.87333333333333);
-      expect(indicator.getValue(1).quote, 74.46333333333334);
-      expect(indicator.getValue(2).quote, 74.35000000000001);
+      expect(roundDouble(indicator.getValue(0).quote, 4), 64.8733);
+      expect(roundDouble(indicator.getValue(1).quote, 4), 74.4633);
+      expect(roundDouble(indicator.getValue(2).quote, 4), 74.3500);
     });
   });
 }
