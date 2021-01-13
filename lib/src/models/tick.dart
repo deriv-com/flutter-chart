@@ -2,6 +2,8 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+import 'ohlc.dart';
+
 /// Basic data entry.
 // Since we have field option in indicators menu (Close, High, Hl2, etc),
 // and since sometimes we have Tick data and sometimes Candle, We didn't want us

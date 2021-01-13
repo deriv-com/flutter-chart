@@ -4,6 +4,8 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 
+import '../../data_series.dart';
+
 /// CandleStick series
 class CandleSeries extends OHLCTypeSeries {
   /// Initializes
@@ -14,5 +16,5 @@ class CandleSeries extends OHLCTypeSeries {
   }) : super(entries, id, style: style);
 
   @override
-  SeriesPainter<CandleSeries> createPainter() => CandlePainter(this);
+  SeriesPainter<DataSeries<Candle>> createPainter() => CandlePainter(this);
 }
