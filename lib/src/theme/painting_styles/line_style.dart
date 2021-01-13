@@ -9,7 +9,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   const LineStyle({
     this.color = const Color(0xFF85ACB0),
     this.thickness = 1,
-    this.hasArea = true,
+    this.hasArea = false,
     HorizontalBarrierStyle lastTickStyle,
   }) : super(lastTickStyle: lastTickStyle);
 

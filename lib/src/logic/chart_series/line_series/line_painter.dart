@@ -7,12 +7,12 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
-import 'line_series.dart';
+import '../data_series.dart';
 
-/// A [DataPainter] for painting [LineSeries] data.
-class LinePainter extends DataPainter<LineSeries> {
-  /// Initializes a [DataPainter] for painting [LineSeries] data.
-  LinePainter(LineSeries series) : super(series);
+/// A [DataPainter] for painting line data.
+class LinePainter extends DataPainter<DataSeries<Tick>> {
+  /// Initializes
+  LinePainter(DataSeries<Tick> series) : super(series);
 
   @override
   void onPaintData(
