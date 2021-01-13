@@ -14,7 +14,7 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import '../line_series/line_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
-import 'indicator_series.dart';
+import 'abstract_single_indicator_series.dart';
 import 'models/indicator_options.dart';
 
 /// A series which shows Moving Average data calculated from [entries].
@@ -113,7 +113,7 @@ enum MovingAverageType {
   zeroLag,
 }
 
-class TestMASeries extends SingleIndicatorSeries<Tick> {
+class TestMASeries extends AbstractSingleIndicatorSeries<Tick> {
   TestMASeries(Indicator inputIndicator, String id, MAOptions options)
       : super(inputIndicator, id, options);
 

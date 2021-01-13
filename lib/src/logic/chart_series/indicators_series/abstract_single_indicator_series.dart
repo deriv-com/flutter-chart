@@ -11,9 +11,10 @@ import 'models/indicator_options.dart';
 /// Base class of indicator series.
 ///
 /// Handles reusing result of previous indicator of the series.
-abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
+abstract class AbstractSingleIndicatorSeries<T extends Tick>
+    extends DataSeries<T> {
   /// Initializes
-  SingleIndicatorSeries(this.inputIndicator, String id, this.options)
+  AbstractSingleIndicatorSeries(this.inputIndicator, String id, this.options)
       : _inputFirstTick = inputIndicator.entries.isNotEmpty
             ? inputIndicator.entries.first
             : null,
@@ -49,7 +50,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
   /// Will be called by the chart when it was updated.
   @override
   bool didUpdate(ChartData oldData) {
-    final SingleIndicatorSeries<Tick> oldSeries = oldData;
+    final AbstractSingleIndicatorSeries<Tick> oldSeries = oldData;
 
     if ((oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
             false) &&
@@ -67,7 +68,7 @@ abstract class SingleIndicatorSeries<T extends Tick> extends DataSeries<T> {
     return true;
   }
 
-  void _reuseOldSeriesResult(SingleIndicatorSeries<Tick> oldSeries) {
+  void _reuseOldSeriesResult(AbstractSingleIndicatorSeries<Tick> oldSeries) {
     resultIndicator = initializeIndicator()
       ..copyValuesFrom(oldSeries.resultIndicator);
 

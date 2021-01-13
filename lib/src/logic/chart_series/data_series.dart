@@ -76,9 +76,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   void _initLastTickIndicator() {
     final DataSeriesStyle style = this.style;
-    if (entries == null) {
-      print('');
-    }
+
     if (entries.isNotEmpty && style?.lastTickStyle != null ?? false) {
       _lastTickIndicator = HorizontalBarrier(
         entries.last.quote,

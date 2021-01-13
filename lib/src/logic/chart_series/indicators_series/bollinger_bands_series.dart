@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/general_single_indicator_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -48,10 +48,10 @@ class BollingerBandSeries extends Series {
   })  : _fieldIndicator = indicator,
         super(id);
 
-  GeneralSingleIndicatorSeries _lowerSeries;
+  SingleIndicatorSeries _lowerSeries;
 
-  GeneralSingleIndicatorSeries _middleSeries;
-  GeneralSingleIndicatorSeries _upperSeries;
+  SingleIndicatorSeries _middleSeries;
+  SingleIndicatorSeries _upperSeries;
 
   /// Period
   final int period;
@@ -79,14 +79,14 @@ class BollingerBandSeries extends Series {
     final CachedIndicator bbmSMA =
         MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
 
-    _middleSeries = GeneralSingleIndicatorSeries(
+    _middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
       options: MAOptions(period, movingAverageType),
     );
 
-    _lowerSeries = GeneralSingleIndicatorSeries(
+    _lowerSeries = SingleIndicatorSeries(
         painterCreator: (series) => LinePainter(series),
         indicatorCreator: () => BollingerBandsLowerIndicator(
               bbmSMA,
@@ -96,7 +96,7 @@ class BollingerBandSeries extends Series {
         inputIndicator: _fieldIndicator,
         options: MAOptions(period, movingAverageType));
 
-    _upperSeries = GeneralSingleIndicatorSeries(
+    _upperSeries = SingleIndicatorSeries(
         painterCreator: (series) => LinePainter(series),
         indicatorCreator: () => BollingerBandsUpperIndicator(
               bbmSMA,
