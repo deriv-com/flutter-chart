@@ -25,10 +25,9 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
     } else if (_visibleEntries == null ||
         _visibleEntries.isEmpty ||
         _noOverlap(_visibleEntries, newVisibleEntries)) {
-      _visibleEntries = newVisibleEntries;
       _visibleEntriesCount.clear();
 
-      for (final MinMaxCalculatorEntry entry in _visibleEntries) {
+      for (final MinMaxCalculatorEntry entry in newVisibleEntries) {
         _incrementCount(entry.min);
         _incrementCount(entry.max);
       }
@@ -73,6 +72,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
         _decrementCount(entry.max);
       }
     }
+
+    _visibleEntries = newVisibleEntries;
   }
 
   void _incrementCount(double value) {
