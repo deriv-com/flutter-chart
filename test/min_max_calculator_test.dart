@@ -88,5 +88,30 @@ void main() {
       expect(calculator.min, 5);
       expect(calculator.max, 49);
     });
+
+    test('updates min/max if new entries are scrolled forward by 2', () {
+      final MinMaxCalculator<Tick> calculator = MinMaxCalculator<Tick>()
+        ..updateVisibleEntries(<Tick>[
+          const Tick(epoch: 1, quote: 4),
+          const Tick(epoch: 2, quote: 290),
+          const Tick(epoch: 3, quote: 87),
+          const Tick(epoch: 4, quote: 7),
+          const Tick(epoch: 5, quote: 6),
+        ]);
+
+      expect(calculator.min, 4);
+      expect(calculator.max, 290);
+
+      calculator.updateVisibleEntries(<Tick>[
+        const Tick(epoch: 3, quote: 87),
+        const Tick(epoch: 4, quote: 7),
+        const Tick(epoch: 5, quote: 6),
+        const Tick(epoch: 6, quote: 23),
+        const Tick(epoch: 7, quote: 49),
+      ]);
+
+      expect(calculator.min, 6);
+      expect(calculator.max, 87);
+    });
   });
 }
