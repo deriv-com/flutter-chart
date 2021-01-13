@@ -69,15 +69,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       }
 
       for (final MinMaxCalculatorEntry entry in removedEntries) {
-        _visibleEntriesCount[entry.min]--;
-        if (_visibleEntriesCount[entry.min] == 0) {
-          _visibleEntriesCount.remove(entry.min);
-        }
-
-        _visibleEntriesCount[entry.max]--;
-        if (_visibleEntriesCount[entry.max] == 0) {
-          _visibleEntriesCount.remove(entry.max);
-        }
+        _decrementCount(entry.min);
+        _decrementCount(entry.max);
       }
     }
   }
@@ -85,6 +78,13 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   void _incrementCount(double value) {
     _visibleEntriesCount.putIfAbsent(value, () => 0);
     _visibleEntriesCount[value]++;
+  }
+
+  void _decrementCount(double value) {
+    _visibleEntriesCount[value]--;
+    if (_visibleEntriesCount[value] == 0) {
+      _visibleEntriesCount.remove(value);
+    }
   }
 
   /// Whether there are no shared entries.
