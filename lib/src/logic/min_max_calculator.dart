@@ -87,7 +87,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
     }
   }
 
-  /// Whether there are no shared entries.
+  /// Whether there are no shared entries between two sorted lists.
   bool _noOverlap(
     List<MinMaxCalculatorEntry> listA,
     List<MinMaxCalculatorEntry> listB,
