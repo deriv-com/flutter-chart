@@ -49,6 +49,7 @@ class Chart extends StatelessWidget {
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
     this.isLive = false,
+    this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
     Key key,
@@ -93,6 +94,9 @@ class Chart extends StatelessWidget {
   /// is on the newest ticks/candles.
   final bool isLive;
 
+  /// Starts in data fit mode and adds a data-fit button.
+  final bool dataFitEnabled;
+
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
 
@@ -121,6 +125,7 @@ class Chart extends StatelessWidget {
               entries: mainSeries.entries,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
+              startWithDataFitMode: dataFitEnabled,
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
@@ -130,6 +135,8 @@ class Chart extends StatelessWidget {
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
                 isLive: isLive,
+                showLoadingAnimationForHistoricalData: !dataFitEnabled,
+                showDataFitButton: dataFitEnabled,
                 opacity: opacity,
               ),
             ),
@@ -146,6 +153,8 @@ class _ChartImplementation extends StatefulWidget {
     @required this.mainSeries,
     @required this.pipSize,
     @required this.isLive,
+    this.showLoadingAnimationForHistoricalData = true,
+    this.showDataFitButton = false,
     this.markerSeries,
     this.opacity,
     this.controller,
@@ -169,6 +178,9 @@ class _ChartImplementation extends StatefulWidget {
   final ChartController controller;
 
   final bool isLive;
+  final bool showLoadingAnimationForHistoricalData;
+  final bool showDataFitButton;
+
   final double opacity;
 
   // Convenience list to access all chart data.
@@ -467,7 +479,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
           fit: StackFit.expand,
           children: <Widget>[
             _buildQuoteGridLine(gridLineQuotes),
-            _buildLoadingAnimation(),
+            if (widget.showLoadingAnimationForHistoricalData ||
+                widget.mainSeries.entries.isEmpty)
+              _buildLoadingAnimation(),
             _buildChartData(),
             _buildQuoteGridLabel(gridLineQuotes),
             _buildAnnotations(),
@@ -479,9 +493,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
             _buildCrosshairArea(),
             if (_isScrollToLastTickAvailable)
               Positioned(
-                bottom: 30,
-                right: 30 + quoteLabelsTouchAreaWidth,
+                bottom: 0,
+                right: quoteLabelsTouchAreaWidth,
                 child: _buildScrollToLastTickButton(),
+              ),
+            if (widget.showDataFitButton &&
+                widget.mainSeries.entries.isNotEmpty)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: _buildDataFitButton(),
               ),
           ],
         );
@@ -512,8 +533,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
         animations: [
-          // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
         ],
         builder: (BuildContext context, Widget child) {
@@ -540,8 +561,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // Main series and indicators on top of main series.
   Widget _buildChartData() => MultipleAnimatedBuilder(
         animations: [
-          // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
           _currentTickAnimation,
         ],
@@ -640,8 +661,26 @@ class _ChartImplementationState extends State<_ChartImplementation>
     });
   }
 
-  IconButton _buildScrollToLastTickButton() => IconButton(
-        icon: Icon(Icons.arrow_forward, color: Colors.white),
-        onPressed: _xAxis.scrollToLastTick,
+  Widget _buildScrollToLastTickButton() => Material(
+        type: MaterialType.circle,
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        child: IconButton(
+          icon: const Icon(Icons.arrow_forward),
+          onPressed: _xAxis.scrollToLastTick,
+        ),
       );
+
+  Widget _buildDataFitButton() {
+    final XAxisModel xAxis = context.read<XAxisModel>();
+    return Material(
+      type: MaterialType.circle,
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      child: IconButton(
+        icon: const Icon(Icons.fullscreen_exit),
+        onPressed: xAxis.dataFitEnabled ? null : xAxis.enableDataFit,
+      ),
+    );
+  }
 }
