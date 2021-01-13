@@ -191,7 +191,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
 
-  /// it should be at least LabelHeight/2.
+  /// Padding should be at least half of barrier label height.
   static const double _minPadding = 12;
 
   /// Duration of quote bounds animated transition.
