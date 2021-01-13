@@ -29,13 +29,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       _visibleEntriesCount.clear();
 
       for (final MinMaxCalculatorEntry entry in _visibleEntries) {
-        // Initialize keys if absent.
-        _visibleEntriesCount
-          ..putIfAbsent(entry.min, () => 0)
-          ..putIfAbsent(entry.max, () => 0);
-
-        _visibleEntriesCount[entry.min]++;
-        _visibleEntriesCount[entry.max]++;
+        _incrementCount(entry.min);
+        _incrementCount(entry.max);
       }
     } else {
       final List<MinMaxCalculatorEntry> addedEntries =
@@ -69,13 +64,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       }
 
       for (final MinMaxCalculatorEntry entry in addedEntries) {
-        // Initialize keys if absent.
-        _visibleEntriesCount
-          ..putIfAbsent(entry.min, () => 0)
-          ..putIfAbsent(entry.max, () => 0);
-
-        _visibleEntriesCount[entry.min]++;
-        _visibleEntriesCount[entry.max]++;
+        _incrementCount(entry.min);
+        _incrementCount(entry.max);
       }
 
       for (final MinMaxCalculatorEntry entry in removedEntries) {
@@ -90,6 +80,11 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
         }
       }
     }
+  }
+
+  void _incrementCount(double value) {
+    _visibleEntriesCount.putIfAbsent(value, () => 0);
+    _visibleEntriesCount[value]++;
   }
 
   /// Whether there are no shared entries.
