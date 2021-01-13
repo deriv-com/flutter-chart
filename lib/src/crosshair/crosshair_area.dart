@@ -26,7 +26,7 @@ class CrosshairArea extends StatefulWidget {
   /// The main series of the chart.
   final DataSeries mainSeries;
 
-  /// The size of the pip in the crosshair.
+  /// Number of decimal digits when showing prices.
   final int pipSize;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
