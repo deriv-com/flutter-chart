@@ -24,7 +24,7 @@ void main() {
           DifferenceIndicator(highValueIndicator, lowValueIndicator);
 
       expect(indicator.getValue(0).quote, 4.5);
-      expect(roundDouble(indicator.getValue(1).quote, 4), 2.5300);
+      expect(roundDouble(indicator.getValue(1).quote, 4), 2.53);
       expect(roundDouble(indicator.getValue(2).quote, 4), 2.97);
     });
   });
