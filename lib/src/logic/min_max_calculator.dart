@@ -47,7 +47,7 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
       } else {
         addedEntries.addAll(
           newVisibleEntries.takeWhile((MinMaxCalculatorEntry entry) =>
-              entry.epoch > _visibleEntries.first.epoch),
+              entry.epoch < _visibleEntries.first.epoch),
         );
       }
 
