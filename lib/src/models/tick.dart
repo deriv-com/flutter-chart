@@ -1,10 +1,18 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import 'ohlc.dart';
 
-/// Tick class
+/// Basic data entry.
+// Since we have field option in indicators menu (Close, High, Hl2, etc),
+// and since sometimes we have Tick data and sometimes Candle, We didn't want us
+// to have to check if it is a <Tick>[] use something like QuoteIndicator(ticks)
+// as input for Indicators that do the calculation and if it's a <Candle>[] use
+// Close|High|Hl2|ValueIndicator(ticks).
+// To avoid doing this check, we made Tick class comply with OHLC interface. So we
+// can use either <Tick>[] or <Candle>[] as input for Close|High|Hl2|ValueIndicators.
 @immutable
-class Tick implements OHLC {
+class Tick with EquatableMixin implements OHLC {
   /// Initializes
   const Tick({
     @required this.epoch,
@@ -29,10 +37,5 @@ class Tick implements OHLC {
   @override
   double get open => quote;
 
-  @override
-  bool operator ==(covariant Tick other) =>
-      epoch == other.epoch && quote == other.quote;
-
-  @override
-  int get hashCode => super.hashCode;
+  List<Object> get props => [epoch, quote];
 }

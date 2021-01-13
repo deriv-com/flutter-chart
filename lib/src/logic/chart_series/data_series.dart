@@ -40,21 +40,32 @@ abstract class DataSeries<T extends Tick> extends Series {
     _initLastTickIndicator();
   }
 
+  bool _needsMinMaxUpdate = false;
+
   /// Updates visible entries for this Series.
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
 
     if (entries.isEmpty) {
+      _visibleEntries = <T>[];
       return;
     }
 
     final int startIndex = _searchLowerIndex(leftEpoch);
     final int endIndex = _searchUpperIndex(rightEpoch);
 
-    _visibleEntries = startIndex == -1 || endIndex == -1
+    final List<T> newVisibleEntries = startIndex == -1 || endIndex == -1
         ? <T>[]
         : entries.sublist(startIndex, endIndex);
+
+    // Only recalculate min/max if visible entries have changed.
+    _needsMinMaxUpdate = newVisibleEntries.isEmpty ||
+        _visibleEntries.isEmpty ||
+        newVisibleEntries.first != _visibleEntries.first ||
+        newVisibleEntries.last != _visibleEntries.last;
+
+    _visibleEntries = newVisibleEntries;
   }
 
   /// Minimum value in [t]
@@ -82,6 +93,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Sub-classes can override this method if they calculate [minValue] & [maxValue] differently.
   @override
   List<double> recalculateMinMax() {
+    if (!_needsMinMaxUpdate) {
+      return <double>[minValue, maxValue];
+    }
+
     if (visibleEntries.isNotEmpty) {
       double min = minValueOf(visibleEntries[0]);
       double max = maxValueOf(visibleEntries[0]);
@@ -169,12 +184,16 @@ abstract class DataSeries<T extends Tick> extends Series {
         prevLastEntry = oldSeries.entries.last;
         updated = true;
       }
-
-      _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
     } else {
       initialize();
       updated = true;
     }
+    // Preserve old computed values in case recomputation is deemed unnecesary.
+    _visibleEntries = oldSeries.visibleEntries;
+    minValueInFrame = oldSeries.minValue;
+    maxValueInFrame = oldSeries.maxValue;
+
+    _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
 
     return updated;
   }

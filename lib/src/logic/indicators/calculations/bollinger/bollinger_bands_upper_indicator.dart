@@ -25,11 +25,9 @@ class BollingerBandsUpperIndicator extends CachedIndicator {
   final double k;
 
   @override
-  Tick calculate(int index) {
-    return Tick(
-      epoch: getEpochOfIndex(index),
-      quote:
-      bbm.getValue(index).quote + (deviation.getValue(index).quote * k),
-    );
-  }
+  Tick calculate(int index) => Tick(
+        epoch: getEpochOfIndex(index),
+        quote:
+            bbm.getValue(index).quote + (deviation.getValue(index).quote * k),
+      );
 }
