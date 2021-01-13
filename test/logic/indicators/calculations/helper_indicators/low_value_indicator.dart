@@ -1,9 +1,9 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/ohlc4_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Testing OHLC/4 indicators', () {
+  group('Testing low value indicators', () {
     List<Tick> ticks;
 
     setUpAll(() {
@@ -14,12 +14,12 @@ void main() {
       ];
     });
 
-    test('OHLC4Indicator calculates the correct results', () {
-      final OHLC4Indicator indicator = OHLC4Indicator(ticks);
+    test('LowValueIndicator calculates the correct results', () {
+      final LowValueIndicator indicator = LowValueIndicator(ticks);
 
-      expect(indicator.getValue(0).quote, 64.8425);
-      expect(indicator.getValue(1).quote, 74.2225);
-      expect(indicator.getValue(2).quote, 74.3125);
+      expect(indicator.getValue(0).quote, 63);
+      expect(indicator.getValue(1).quote, 73.12);
+      expect(indicator.getValue(2).quote, 73.33);
     });
   });
 }
