@@ -277,9 +277,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _xAxis.scrollToLastTick(animate: animate);
     };
 
-    widget.markerSeries?.initialize();
-    widget.mainSeries?.initialize();
-
     for (final ChartData chartData in widget.chartDataList) {
       chartData.initialize();
     }
