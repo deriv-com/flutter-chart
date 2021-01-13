@@ -299,7 +299,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _playNewTickAnimation();
     }
     if (widget.chartDataList != null) {
-      for (final ChartData data in widget.chartDataList) {
+      for (final ChartData data in widget.chartDataList.where(
+        // Exclude mainSeries, since its didUpdate is already called
+        (ChartData d) => d.id != widget.mainSeries.id,
+      )) {
         final ChartData oldData = oldChart.chartDataList.firstWhere(
           (ChartData d) => d.id == data.id,
           orElse: () => null,
