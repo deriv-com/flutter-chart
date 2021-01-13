@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class ChartLocalization {
   ChartLocalization();
@@ -33,11 +35,51 @@ class ChartLocalization {
     return Localizations.of<ChartLocalization>(context, ChartLocalization);
   }
 
+  /// `Field`
+  String get labelField {
+    return Intl.message(
+      'Field',
+      name: 'labelField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Period`
+  String get labelPeriod {
+    return Intl.message(
+      'Period',
+      name: 'labelPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Search assets`
   String get labelSearchAssets {
     return Intl.message(
       'Search assets',
       name: 'labelSearchAssets',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Standard Deviation`
+  String get labelStandardDeviation {
+    return Intl.message(
+      'Standard Deviation',
+      name: 'labelStandardDeviation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type`
+  String get labelType {
+    return Intl.message(
+      'Type',
+      name: 'labelType',
       desc: '',
       args: [],
     );
