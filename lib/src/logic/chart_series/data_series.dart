@@ -178,6 +178,11 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (oldSeries?.entries?.isNotEmpty ?? false) {
       entries = input;
 
+      // Preserve old computed values in case recomputation is deemed unnecesary.
+      _visibleEntries = oldSeries.visibleEntries;
+      minValueInFrame = oldSeries.minValue;
+      maxValueInFrame = oldSeries.maxValue;
+
       if (entries != null && entries.last == oldSeries.entries.last) {
         prevLastEntry = oldSeries.prevLastEntry;
       } else {
@@ -188,10 +193,6 @@ abstract class DataSeries<T extends Tick> extends Series {
       initialize();
       updated = true;
     }
-    // Preserve old computed values in case recomputation is deemed unnecesary.
-    _visibleEntries = oldSeries.visibleEntries;
-    minValueInFrame = oldSeries.minValue;
-    maxValueInFrame = oldSeries.maxValue;
 
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
 
