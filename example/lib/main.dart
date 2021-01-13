@@ -694,7 +694,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ticksHistory: _symbol.name,
         adjustStartTime: 1,
         end: 'latest',
-        count: 500,
+        count: 50,
         style: granularity == 0 ? 'ticks' : 'candles',
         granularity: granularity > 0 ? granularity : null,
       ));
@@ -738,6 +738,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         color: const Color(0xFFCC2E3D),
         isDashed: false,
       ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
     );
 
     _tpBarrier = HorizontalBarrier(
@@ -747,6 +748,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         color: const Color(0xFF00A79E),
         isDashed: false,
       ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
     );
   }
 }
