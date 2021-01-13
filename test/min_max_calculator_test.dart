@@ -213,5 +213,30 @@ void main() {
       expect(calculator.min, 20);
       expect(calculator.max, 50);
     });
+
+    test('updates min/max if new entries are zoomed out', () {
+      final MinMaxCalculator<Tick> calculator = MinMaxCalculator<Tick>()
+        ..updateVisibleEntries(<Tick>[
+          const Tick(epoch: 2, quote: 20),
+          const Tick(epoch: 3, quote: 30),
+          const Tick(epoch: 4, quote: 40),
+          const Tick(epoch: 5, quote: 50),
+        ]);
+
+      expect(calculator.min, 20);
+      expect(calculator.max, 50);
+
+      calculator.updateVisibleEntries(<Tick>[
+        const Tick(epoch: 1, quote: 10),
+        const Tick(epoch: 2, quote: 20),
+        const Tick(epoch: 3, quote: 30),
+        const Tick(epoch: 4, quote: 40),
+        const Tick(epoch: 5, quote: 50),
+        const Tick(epoch: 6, quote: 60),
+      ]);
+
+      expect(calculator.min, 10);
+      expect(calculator.max, 60);
+    });
   });
 }
