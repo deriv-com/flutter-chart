@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
@@ -11,70 +10,53 @@ import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.da
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
-import '../line_series/line_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
 import 'abstract_single_indicator_series.dart';
 import 'models/indicator_options.dart';
 
 /// A series which shows Moving Average data calculated from [entries].
-class MASeries extends LineSeries {
+class MASeries extends AbstractSingleIndicatorSeries {
   /// Initializes a series which shows shows moving Average data calculated from [entries].
   ///
   /// [period] is the average of this number of past data which will be calculated as MA value
   /// [type] The type of moving average.
   MASeries(
-    List<Tick> entries, {
+    List<Tick> entries,
+    MAOptions options, {
     String id,
     LineStyle style,
-    int period = 15,
-    MovingAverageType type = MovingAverageType.simple,
   }) : this.fromIndicator(
           CloseValueIndicator(entries),
           id: id,
+          options: options,
           style: style,
-          period: period,
-          type: type,
         );
 
   /// Initializes
   MASeries.fromIndicator(
-    this.indicator, {
+    Indicator indicator, {
     String id,
     LineStyle style,
-    this.period = 15,
-    this.type = MovingAverageType.simple,
-  }) : super(
-          indicator.entries,
-          id: id ?? 'SMASeries-period$period-type$type',
+    MAOptions options,
+  })  : _options = options,
+        super(
+          indicator,
+          id ?? 'SMASeries-period${options.period}-type${options.type}',
+          options,
           style: style ?? const LineStyle(thickness: 0.5),
-        ) {
-    print('');
-  }
+        );
 
-  final int period;
-
-  final MovingAverageType type;
-
-  final Indicator indicator;
+  final MAOptions _options;
 
   @override
-  void initialize() {
-    super.initialize();
+  SeriesPainter<Series> createPainter() => LinePainter(this);
 
-    entries = getMAIndicator(indicator, period, type).results;
-  }
+  @override
+  CachedIndicator initializeIndicator() =>
+      MASeries.getMAIndicator(inputIndicator, _options.period, _options.type);
 
-  // TODO(Ramin): Should be handled in SingleIndicatorSeries.
-  void updateEntries(ChartData oldData, bool newTickAdded) {
-    final MASeries oldSeries = oldData;
-    if (newTickAdded) {
-      entries = oldSeries.entries;
-    } else {
-      initialize();
-    }
-  }
-
+  /// Returns a moving average indicator based on [period] and its [type].
   static CachedIndicator getMAIndicator(
     Indicator indicator,
     int period,
@@ -111,18 +93,4 @@ enum MovingAverageType {
 
   /// Zero-lag exponential
   zeroLag,
-}
-
-class TestMASeries extends AbstractSingleIndicatorSeries<Tick> {
-  TestMASeries(Indicator inputIndicator, String id, MAOptions options)
-      : super(inputIndicator, id, options);
-
-  @override
-  SeriesPainter<Series> createPainter() => LinePainter(this);
-
-  @override
-  CachedIndicator initializeIndicator() => MASeries.getMAIndicator(
-      inputIndicator,
-      (options as MAOptions).period,
-      (options as MAOptions).type);
 }

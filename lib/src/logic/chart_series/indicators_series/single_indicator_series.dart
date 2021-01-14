@@ -22,7 +22,7 @@ typedef DataPainterCreator = DataPainter<DataSeries<Tick>> Function(
 ///
 /// Another approach for making single series indicators would be extending [AbstractSingleIndicatorSeries].
 /// And implement `createPainter` and `initializeIndicator` methods.
-class SingleIndicatorSeries extends AbstractSingleIndicatorSeries<Tick> {
+class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   /// Initializes
   ///
   /// [inputIndicator]  The indicator that returned indicator from [indicatorCreator]

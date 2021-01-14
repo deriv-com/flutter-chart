@@ -83,28 +83,28 @@ class BollingerBandSeries extends Series {
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
-      options: MAOptions(period, movingAverageType),
+      options: MAOptions(period, type: movingAverageType),
     );
 
     _lowerSeries = SingleIndicatorSeries(
-        painterCreator: (series) => LinePainter(series),
+        painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () => BollingerBandsLowerIndicator(
               bbmSMA,
               standardDeviation,
               k: standardDeviationFactor,
             ),
         inputIndicator: _fieldIndicator,
-        options: MAOptions(period, movingAverageType));
+        options: MAOptions(period, type: movingAverageType));
 
     _upperSeries = SingleIndicatorSeries(
-        painterCreator: (series) => LinePainter(series),
+        painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () => BollingerBandsUpperIndicator(
               bbmSMA,
               standardDeviation,
               k: standardDeviationFactor,
             ),
         inputIndicator: _fieldIndicator,
-        options: MAOptions(period, movingAverageType));
+        options: MAOptions(period, type: movingAverageType));
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }

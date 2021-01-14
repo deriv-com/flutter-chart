@@ -39,7 +39,6 @@ abstract class CachedIndicator extends Indicator {
 
     if (results[index] == null) {
       results[index] = calculate(index);
-      dev.log('Calculating $runtimeType for $index');
     }
 
     return results[index];

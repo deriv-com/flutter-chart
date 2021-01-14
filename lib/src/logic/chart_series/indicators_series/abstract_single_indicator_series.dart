@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
 import 'models/indicator_options.dart';
@@ -11,14 +12,17 @@ import 'models/indicator_options.dart';
 /// Base class of indicator series.
 ///
 /// Handles reusing result of previous indicator of the series.
-abstract class AbstractSingleIndicatorSeries<T extends Tick>
-    extends DataSeries<T> {
+abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Initializes
-  AbstractSingleIndicatorSeries(this.inputIndicator, String id, this.options)
-      : _inputFirstTick = inputIndicator.entries.isNotEmpty
+  AbstractSingleIndicatorSeries(
+    this.inputIndicator,
+    String id,
+    this.options, {
+    DataSeriesStyle style,
+  })  : _inputFirstTick = inputIndicator.entries.isNotEmpty
             ? inputIndicator.entries.first
             : null,
-        super(inputIndicator.entries, id);
+        super(inputIndicator.entries, id, style: style);
 
   /// Input indicator to calculate this indicator value on.
   final Indicator inputIndicator;
@@ -31,7 +35,7 @@ abstract class AbstractSingleIndicatorSeries<T extends Tick>
 
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
-  final T _inputFirstTick;
+  final Tick _inputFirstTick;
 
   @override
   void initialize() {
@@ -50,7 +54,7 @@ abstract class AbstractSingleIndicatorSeries<T extends Tick>
   /// Will be called by the chart when it was updated.
   @override
   bool didUpdate(ChartData oldData) {
-    final AbstractSingleIndicatorSeries<Tick> oldSeries = oldData;
+    final AbstractSingleIndicatorSeries oldSeries = oldData;
 
     if ((oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
             false) &&
@@ -68,7 +72,7 @@ abstract class AbstractSingleIndicatorSeries<T extends Tick>
     return true;
   }
 
-  void _reuseOldSeriesResult(AbstractSingleIndicatorSeries<Tick> oldSeries) {
+  void _reuseOldSeriesResult(AbstractSingleIndicatorSeries oldSeries) {
     resultIndicator = initializeIndicator()
       ..copyValuesFrom(oldSeries.resultIndicator);
 

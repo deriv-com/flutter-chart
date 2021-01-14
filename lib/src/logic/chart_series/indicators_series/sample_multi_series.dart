@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/sample_multi_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -23,8 +24,8 @@ import 'ma_series.dart';
 class SampleMultiSeries extends Series {
   /// Initializes a sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
   SampleMultiSeries(List<Tick> entries, {String id})
-      : series1 = MASeries(entries, period: 10),
-        series2 = MASeries(entries, period: 20),
+      : series1 = MASeries(entries, MAOptions(10)),
+        series2 = MASeries(entries, MAOptions(20)),
         super(id);
 
   /// Series 1.
