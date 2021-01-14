@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 import 'grid/calc_time_grid.dart';
 
-/// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
+/// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch].
 const double autoPanOffset = 30;
 
 /// Padding around data used in data-fit mode.
@@ -282,7 +282,7 @@ class XAxisModel extends ChangeNotifier {
     _scrollTo(_maxRightBoundEpoch);
   }
 
-  /// Update's chart's isLive property
+  /// Updates chart's isLive property.
   ///
   /// Should be called before [_updateGranularity] and [_updateEntries]
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
@@ -309,6 +309,7 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns [panSpeed] if not null, otherwise returns `0`.
   void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.
@@ -446,7 +447,7 @@ class XAxisModel extends ChangeNotifier {
     _scrollAnimationController.animateWith(simulation);
   }
 
-  /// Keeps rightBoundEpoch in the valid range
+  /// Keeps rightBoundEpoch in the valid range.
   void _clampRightBoundEpoch() => _rightBoundEpoch =
       _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
 
@@ -457,6 +458,7 @@ class XAxisModel extends ChangeNotifier {
     _updateEntries(entries);
   }
 
+  /// Returns a list of timestamps in the grid without any overlaps.
   List<DateTime> getNoOverlapGridTimestamps() {
     const double _minDistanceBetweenTimeGridLines = 80;
     // Calculate time labels' timestamps for current scale.

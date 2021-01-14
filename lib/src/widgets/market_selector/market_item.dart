@@ -5,8 +5,9 @@ import 'market_selector.dart';
 import 'models.dart';
 import 'sub_market_item.dart';
 
-/// A widget to show a market item in market selector
+/// A widget to show a market item in market selector.
 class MarketItem extends StatelessWidget {
+  /// Initializes a widget to show a market item in market selector.
   const MarketItem({
     Key key,
     @required this.market,
@@ -16,17 +17,20 @@ class MarketItem extends StatelessWidget {
     this.isSubMarketsCategorized = true,
   }) : super(key: key);
 
+  /// The market information of the item.
   final Market market;
 
+  /// The text to highliht in the sub market part.
   final String filterText;
 
-  /// Is used to scroll to the selected Asset item
+  /// Is used to scroll to the selected Asset item.
   final GlobalObjectKey selectedItemKey;
 
+  /// The action that appens on clicking the `AssetItem` inside the submarket part.
   final OnAssetClicked onAssetClicked;
 
   /// If true sub-markets will be shown with title on top of them,
-  /// Otherwise under [market], will be only the list of its assets. (Suitable for favourites list)
+  /// Otherwise under [market], will be only the list of its assets. (Suitable for favourites list).
   final bool isSubMarketsCategorized;
 
   @override
