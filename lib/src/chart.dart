@@ -523,8 +523,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
               gridLineQuotes: gridLineQuotes,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: _labelWidth(gridLineQuotes.first,
-                  context.watch<ChartTheme>().gridStyle.yLabelStyle),
+              labelWidth: gridLineQuotes.isNotEmpty
+                  ? _labelWidth(gridLineQuotes.first,
+                      context.watch<ChartTheme>().gridStyle.yLabelStyle)
+                  : 0,
             ),
           );
         },
