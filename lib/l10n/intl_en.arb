@@ -1,6 +1,10 @@
 {
   "@@locale": "en",
+  "labelField": "Field",
+  "labelPeriod": "Period",
   "labelSearchAssets": "Search assets",
+  "labelStandardDeviation": "Standard Deviation",
+  "labelType": "Type",
   "informNoResult": "No results for \"{text}\"",
   "warnCheckAssetSearchingText": "Try checking your spelling or use a different term"
 }

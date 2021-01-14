@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-/// Paints loading animation from screen left edge to [loadingRightBoundX]
+/// Paints loading animation from screen left edge to [loadingRightBoundX].
 void paintLoadingAnimation({
   @required Canvas canvas,
   @required Size size,

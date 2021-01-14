@@ -21,16 +21,16 @@ import 'ma_series.dart';
 ///
 /// Or we can directly implement [ChartData] interface.
 class SampleMultiSeries extends Series {
-  /// Initializes
+  /// Initializes a sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
   SampleMultiSeries(List<Tick> entries, {String id})
       : series1 = MASeries(entries, period: 10),
         series2 = MASeries(entries, period: 20),
         super(id);
 
-  /// Series 1
+  /// Series 1.
   final MASeries series1;
 
-  /// Series 2
+  /// Series 2.
   final MASeries series2;
 
   @override
