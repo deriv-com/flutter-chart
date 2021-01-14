@@ -19,7 +19,7 @@ import 'models/indicator_options.dart';
 
 /// A series which shows Moving Average data calculated from [entries].
 class MASeries extends LineSeries {
-  /// Initializes
+  /// Initializes a series which shows shows moving Average data calculated from [entries].
   ///
   /// [period] is the average of this number of past data which will be calculated as MA value
   /// [type] The type of moving average.

@@ -68,10 +68,10 @@ abstract class DataSeries<T extends Tick> extends Series {
     _visibleEntries = newVisibleEntries;
   }
 
-  /// Minimum value in [t]
+  /// Minimum value in [t].
   double minValueOf(T t);
 
-  /// Maximum value in [t]
+  /// Maximum value in [t].
   double maxValueOf(T t);
 
   void _initLastTickIndicator() {
@@ -218,6 +218,6 @@ abstract class DataSeries<T extends Tick> extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
-  /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements
+  /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements.
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
 }

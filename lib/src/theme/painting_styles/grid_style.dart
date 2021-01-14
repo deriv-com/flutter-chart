@@ -2,9 +2,9 @@ import 'dart:ui' show FontFeature;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-/// For defining the style of the chart's grid. (X and Y axes)
+/// For defining the style of the chart's grid. (X and Y axes).
 class GridStyle with EquatableMixin {
-  /// Initializes
+  /// Initializes a style for defining the style of the chart's grid.
   const GridStyle({
     this.gridLineColor = const Color(0xFF151717),
     this.xLabelStyle = const TextStyle(
@@ -33,7 +33,7 @@ class GridStyle with EquatableMixin {
     this.xLabelsAreaHeight = 24,
   });
 
-  /// The color of the grid lines
+  /// The color of the grid lines.
   final Color gridLineColor;
 
   /// The text style of the labels on time axes
@@ -45,7 +45,7 @@ class GridStyle with EquatableMixin {
   /// Padding on the sides of the text label.
   final double labelHorizontalPadding;
 
-  /// The line thickness of the grid lines
+  /// The line thickness of the grid lines.
   final double lineThickness;
 
   /// Height of the area for x-axis labels.

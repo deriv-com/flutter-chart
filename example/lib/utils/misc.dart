@@ -1,3 +1,4 @@
+/// Returns the label of a given granualirty.
 String getGranularityLabel(int granularity) {
   switch (granularity) {
     case 0:

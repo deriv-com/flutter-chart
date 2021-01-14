@@ -9,9 +9,9 @@ import 'package:deriv_chart/src/paint/paint_line.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
-/// A class for painting horizontal barriers
+/// A class for painting horizontal barriers.
 class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
-  /// Initializes [series]
+  /// Initializes [series].
   VerticalBarrierPainter(VerticalBarrier series) : super(series);
 
   @override

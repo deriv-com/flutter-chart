@@ -11,6 +11,7 @@ import 'symbol_icon.dart';
 
 /// A widget to show an asset (active symbol) item in the market selector.
 class AssetItem extends StatelessWidget {
+  /// Initializes a widget to show an asset (active symbol) item in the market selector.
   const AssetItem({
     @required this.asset,
     Key key,
@@ -19,9 +20,16 @@ class AssetItem extends StatelessWidget {
     this.iconFadeInDuration = const Duration(milliseconds: 50),
   }) : super(key: key);
 
+  /// The main asset used in the asset item.
   final Asset asset;
+
+  /// The action that appens on clicking the [AssetItem].
   final OnAssetClicked onAssetClicked;
+
+  /// The text to highlight in the asset item.
   final String filterText;
+
+  /// The time which the icon fade takes to fade.
   final Duration iconFadeInDuration;
 
   @override
