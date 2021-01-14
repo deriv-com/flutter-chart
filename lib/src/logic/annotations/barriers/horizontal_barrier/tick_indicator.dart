@@ -3,9 +3,9 @@ import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 
 import 'horizontal_barrier.dart';
 
-/// Tick indicator
+/// Tick indicator.
 class TickIndicator extends HorizontalBarrier {
-  /// Initializes
+  /// Initializes a tick indicator.
   TickIndicator(
     Tick tick, {
     String id,

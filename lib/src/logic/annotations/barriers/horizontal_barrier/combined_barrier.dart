@@ -13,7 +13,7 @@ import 'horizontal_barrier.dart';
 
 /// A barrier with both horizontal and vertical barriers.
 class CombinedBarrier extends HorizontalBarrier {
-  /// Initializes
+  /// Initializes a barrier with both horizontal and vertical barriers.
   CombinedBarrier(
     this.tick, {
     String id,

@@ -3,9 +3,9 @@ class AnimationInfo {
   /// Initializes
   const AnimationInfo({this.currentTickPercent = 1, this.blinkingPercent = 1});
 
-  /// Animation percent of current tick
+  /// Animation percent of current tick.
   final double currentTickPercent;
 
-  /// Animation percent of blinking dot in current tick
+  /// Animation percent of blinking dot in current tick.
   final double blinkingPercent;
 }

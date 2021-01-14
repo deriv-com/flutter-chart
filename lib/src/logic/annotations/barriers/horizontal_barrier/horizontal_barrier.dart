@@ -6,9 +6,9 @@ import 'package:deriv_chart/src/models/barrier_objects.dart';
 
 import 'horizontal_barrier_painter.dart';
 
-/// Horizontal barrier class
+/// Horizontal barrier class.
 class HorizontalBarrier extends Barrier {
-  /// Initializes
+  /// Initializes a horizontal barrier.
   HorizontalBarrier(
     double value, {
     int epoch,
@@ -26,7 +26,7 @@ class HorizontalBarrier extends Barrier {
           longLine: longLine,
         );
 
-  /// Barrier visibility behavior
+  /// Barrier visibility behavior.
   final HorizontalBarrierVisibility visibility;
 
   @override

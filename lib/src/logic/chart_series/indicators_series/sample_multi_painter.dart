@@ -16,7 +16,7 @@ import 'sample_multi_series.dart';
 ///
 /// In this example we only paint red lines between [SampleMultiSeries.series1] and [SampleMultiSeries.series2] entries.
 class SampleMultiPainter extends SeriesPainter<SampleMultiSeries> {
-  /// Initializes
+  /// Initializes a sample class just to represent how a custom indicator with multiple data-series can be implemented.
   SampleMultiPainter(Series series) : super(series);
 
   @override
