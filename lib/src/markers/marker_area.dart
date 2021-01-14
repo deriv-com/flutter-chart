@@ -18,7 +18,10 @@ class MarkerArea extends StatefulWidget {
   })  : assert(markerSeries != null),
         super(key: key);
 
+  /// The Series that holds the list markers.
   final MarkerSeries markerSeries;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
   @override
@@ -76,11 +79,10 @@ class _MarkerAreaState extends State<MarkerArea> {
           opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
           child: CustomPaint(
             painter: _MarkerPainter(
-              series: widget.markerSeries,
-              epochToX: xAxis.xFromEpoch,
-              quoteToY: widget.quoteToCanvasY,
-              theme: context.watch<ChartTheme>()
-            ),
+                series: widget.markerSeries,
+                epochToX: xAxis.xFromEpoch,
+                quoteToY: widget.quoteToCanvasY,
+                theme: context.watch<ChartTheme>()),
           ),
         ),
         AnimatedActiveMarker(

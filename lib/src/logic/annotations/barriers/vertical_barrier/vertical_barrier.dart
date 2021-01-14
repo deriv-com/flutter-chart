@@ -6,9 +6,9 @@ import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 
-/// Vertical barrier class
+/// Vertical barrier class.
 class VerticalBarrier extends Barrier {
-  /// Initializes
+  /// Initializes a vertical barrier class.
   VerticalBarrier(
     int epoch, {
     double value,
@@ -25,7 +25,7 @@ class VerticalBarrier extends Barrier {
           longLine: longLine,
         );
 
-  /// A vertical barrier on [Tick]'s epoch
+  /// A vertical barrier on [Tick]'s epoch.
   factory VerticalBarrier.onTick(
     Tick tick, {
     String id,

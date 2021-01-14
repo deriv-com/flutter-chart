@@ -8,7 +8,7 @@ abstract class DataSeriesStyle extends ChartPaintingStyle {
   /// This constructor enables subclasses to provide const constructors.
   const DataSeriesStyle({this.lastTickStyle});
 
-  /// Current tick style
+  /// Current tick style.
   ///
   /// If set, an indicator for the current tick of the series will be shown.
   final HorizontalBarrierStyle lastTickStyle;
