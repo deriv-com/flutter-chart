@@ -24,7 +24,11 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "informNoResult" : m0,
+    "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
+    "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
+    "labelStandardDeviation" : MessageLookupByLibrary.simpleMessage("Standard Deviation"),
+    "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
     "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
   };
 }
