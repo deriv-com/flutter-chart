@@ -1,6 +1,9 @@
+//As a practice, sort Dart imports first then Flutter and other packages then local imports and lastly relative path imports
 import 'package:flutter/material.dart';
+
 import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
+
 import 'active_marker.dart';
 import 'marker.dart';
 import 'paint_marker.dart';
@@ -57,12 +60,8 @@ class ActiveMarkerPainter extends CustomPainter {
 
     // Marker body.
     canvas.drawRRect(
-      RRect.fromRectAndRadius(markerArea, Radius.circular(style.radius)),
-      Paint()
-        ..color = activeMarker.direction == MarkerDirection.up
-            ? style.upColor
-            : style.downColor,
-    );
+        RRect.fromRectAndRadius(markerArea, Radius.circular(style.radius)),
+        Paint()..color = style.backgroundColor);
 
     // Label.
     if (animationProgress == 1) {
