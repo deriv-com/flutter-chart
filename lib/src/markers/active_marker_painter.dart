@@ -1,4 +1,3 @@
-//As a practice, sort Dart imports first then Flutter and other packages then local imports and lastly relative path imports
 import 'package:flutter/material.dart';
 
 import 'package:deriv_chart/src/paint/paint_text.dart';
