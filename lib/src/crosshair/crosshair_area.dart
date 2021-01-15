@@ -103,9 +103,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     _lastLongPressPosition = details.localPosition.dx;
-    setState(() {
-      _updatePanSpeed();
-    });
+    setState(() => _updatePanSpeed());
   }
 
   void _updatePanSpeed() {
