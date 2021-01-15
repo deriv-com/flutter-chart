@@ -9,12 +9,14 @@ class ConnectionStatusLabel extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.black26,
+  Widget build(BuildContext context) => IgnorePointer(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.black26,
+          ),
+          child: Text(text),
         ),
-        child: Text(text),
       );
 }
