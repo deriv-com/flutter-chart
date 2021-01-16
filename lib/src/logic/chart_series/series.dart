@@ -42,6 +42,9 @@ abstract class Series implements ChartData {
   @override
   double get maxValue => maxValueInFrame ?? double.nan;
 
+  @override
+  void initialize() {}
+
   /// Updates visible entries for this Series.
   @override
   void update(int leftEpoch, int rightEpoch) {

@@ -51,12 +51,6 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
-        // (List<Tick> ticks) => MASeries.fromIndicator(
-        //   filedIndicatorBuilders[field](ticks),
-        //   period: period,
-        //   type: type,
-        //   style: const LineStyle(color: Colors.yellowAccent, thickness: 0.6),
-        // ),
         period: getCurrentPeriod(),
         type: getCurrentType(),
         fieldType: getCurrentField(),

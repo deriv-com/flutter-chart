@@ -63,9 +63,4 @@ class MarkerSeries extends Series {
 
   @override
   List<double> recalculateMinMax() => <double>[double.nan, double.nan];
-
-  @override
-  void initialize() {
-    // TODO: implement initialize
-  }
 }
