@@ -20,6 +20,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     DataSeriesStyle style,
   }) : super(id, style: style) {
     _initLastTickIndicator();
+    _minMaxCalculator = MinMaxCalculator(minValueOf, maxValueOf);
   }
 
   /// Series entries
@@ -39,7 +40,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   bool _needsMinMaxUpdate = false;
 
-  final MinMaxCalculator<T> _minMaxCalculator = MinMaxCalculator<T>();
+  MinMaxCalculator _minMaxCalculator;
 
   /// Updates visible entries for this Series.
   @override
