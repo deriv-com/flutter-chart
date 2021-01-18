@@ -11,7 +11,8 @@ import 'models/indicator_options.dart';
 
 /// Base class of indicator series.
 ///
-/// Handles reusing result of previous indicator of the series.
+/// Handles reusing result of previous indicator of the series. The decision to whether it can
+/// use the result of the old series calculated values is made inside [didUpdate] method.
 abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Initializes
   AbstractSingleIndicatorSeries(

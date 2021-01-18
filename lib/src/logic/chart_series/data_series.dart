@@ -20,16 +20,33 @@ abstract class DataSeries<T extends Tick> extends Series {
     DataSeriesStyle style,
   }) : super(id, style: style);
 
-  /// Series entries
+  /// Series input list.
+  ///
+  /// This is not the list that eventually will be painted. Sub-classes have the option
+  /// to prepare their [entries] list which is the one that is painted from the [input].
   final List<T> input;
 
+  /// The list of this class that will be painted on the canvas.
   List<T> entries;
 
+  /// List of visible entries at a specific epoch range of the chart X-Axis.
+  ///
+  /// Will be updated when the epoch bounderies of the chart changes and [onUpdate] gets called.
   List<T> _visibleEntries = <T>[];
 
   /// Series visible entries
   List<T> get visibleEntries => _visibleEntries;
 
+  /// A reference to the last element of the old series of this [DataSeries] object.
+  ///
+  /// Most of the times updating a [DataSeries] class is when a new tick is added to it.
+  /// It can be updating just the last tick of the old [DataSeries] class, or adding a new tick
+  /// at the end of the list of tick. In these cases we can do animation from [prevLastEntry] to the
+  /// last tick of the new [DataSeries]. like transition from old tick to new tick in a line chart
+  /// or updating the height of candle in a candlestick chart.
+  ///
+  /// In other cases like in the first run or when the [input] list changes entirely [prevLastEntry]
+  /// will ne `null` and there will be no animation.
   T prevLastEntry;
 
   HorizontalBarrier _lastTickIndicator;
@@ -69,6 +86,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   /// Minimum value in [t].
+  ///
+  /// sub-classes can decide what will be the min/max value of a [T], this way a candlestick series
+  /// can use (high, low) values as max and min and a line chart just use the close value and then a line
+  /// chart can expand as much as it can in the vertical space since it just shows close values.
   double minValueOf(T t);
 
   /// Maximum value in [t].
