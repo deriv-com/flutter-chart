@@ -46,9 +46,10 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
     entries = resultIndicator.results;
   }
 
-  /// Initializes the [resultIndicator] whenever needed.
+  /// Initializes the [resultIndicator].
   ///
-  /// Will be called whenever [resultIndicator]'s previous values are not available or can't be used.
+  /// Will be called whenever [resultIndicator]'s previous values are not available
+  /// or its results can't be used (Like when the [input] list changes entirely).
   @protected
   CachedIndicator initializeIndicator();
 

@@ -9,7 +9,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
-/// Series with only a single list of data to show.
+/// Series with only a single list of data to paint.
 abstract class DataSeries<T extends Tick> extends Series {
   /// Initializes
   ///
