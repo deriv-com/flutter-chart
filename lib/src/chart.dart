@@ -276,10 +276,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     widget.controller?.onScrollToLastTick = (bool animate) {
       _xAxis.scrollToLastTick(animate: animate);
     };
-
-    for (final ChartData chartData in widget.chartDataList) {
-      chartData.initialize();
-    }
   }
 
   @override

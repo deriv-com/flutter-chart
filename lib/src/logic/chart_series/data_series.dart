@@ -51,7 +51,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   HorizontalBarrier _lastTickIndicator;
 
-  @override
+  /// Initializes [entries] from the [input].
   void initialize() {
     entries = input;
     _initLastTickIndicator();
@@ -62,6 +62,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Updates visible entries for this Series.
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
+    if (entries == null) {
+      initialize();
+    }
+
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
 
     if (entries.isEmpty) {
@@ -103,7 +107,7 @@ abstract class DataSeries<T extends Tick> extends Series {
         entries.last.quote,
         epoch: entries.last.epoch,
         style: style.lastTickStyle,
-      )..initialize();
+      );
     }
   }
 

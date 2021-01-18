@@ -18,10 +18,6 @@ abstract class ChartData {
   /// Doing so makes the chart able to perform live update animation.
   String id;
 
-  /// Initializes this [ChartData] for the first chart build before any chart update
-  /// from outside.
-  void initialize();
-
   /// Will be called by the chart when it was updated.
   ///
   /// Returns `true` if this chart data has changed with the chart widget update.
