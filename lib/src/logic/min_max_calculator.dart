@@ -30,8 +30,8 @@ class MinMaxCalculator {
   /// Maximum value of current visible entries.
   double get max => _visibleEntriesCount?.lastKey() ?? double.nan;
 
-  /// Efficiently recalculates new min/max.
-  void updateVisibleEntries(List<Tick> newVisibleEntries) {
+  /// Efficiently calculates new min/max by comparing previous visible entries and [newVisibleEntries].
+  void calculate(List<Tick> newVisibleEntries) {
     if (newVisibleEntries == null || newVisibleEntries.isEmpty) {
       _visibleEntriesCount.clear();
     } else if (_visibleEntries == null ||

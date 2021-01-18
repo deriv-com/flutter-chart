@@ -94,7 +94,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (!_needsMinMaxUpdate) {
       return <double>[minValue, maxValue];
     }
-    _minMaxCalculator.updateVisibleEntries(visibleEntries);
+    _minMaxCalculator.calculate(visibleEntries);
     return <double>[_minMaxCalculator.min, _minMaxCalculator.max];
   }
 
