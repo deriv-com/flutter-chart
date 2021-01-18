@@ -29,10 +29,12 @@ class CrosshairPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (crosshairTick == null) return;
+    if (crosshairTick == null) {
+      return;
+    }
 
-    final x = epochToCanvasX(crosshairTick.epoch);
-    final y = quoteToCanvasY(crosshairTick.quote);
+    final double x = epochToCanvasX(crosshairTick.epoch);
+    final double y = quoteToCanvasY(crosshairTick.quote);
 
     canvas.drawLine(
       Offset(x, 8),
@@ -41,15 +43,15 @@ class CrosshairPainter extends CustomPainter {
         ..strokeWidth = 2
         ..style = PaintingStyle.fill
         ..shader = ui.Gradient.linear(
-          Offset(0, 0),
+          const Offset(0, 0),
           Offset(0, size.height),
-          [
+          <Color>[
             // TODO(Ramin): Use theme color when cross-hair design got updated
             Colors.white.withOpacity(0.1),
             Colors.white.withOpacity(0.3),
             Colors.white.withOpacity(0.1),
           ],
-          [
+          <double>[
             0,
             0.5,
             1,
