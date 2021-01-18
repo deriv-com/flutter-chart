@@ -1,11 +1,10 @@
-import 'package:deriv_chart/src/logic/min_max_calculator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// Candle class.
 @immutable
-class Candle extends Tick with EquatableMixin implements MinMaxCalculatorEntry {
+class Candle extends Tick with EquatableMixin {
   /// Initializes a candle class.
   const Candle({
     @required int epoch,
@@ -52,10 +51,4 @@ class Candle extends Tick with EquatableMixin implements MinMaxCalculatorEntry {
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
   List<Object> get props => [epoch, open, close, high, low];
-
-  @override
-  double get min => low;
-
-  @override
-  double get max => high;
 }
