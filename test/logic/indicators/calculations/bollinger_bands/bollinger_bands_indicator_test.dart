@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('BollingerBands Indicator', () {
     test('BollingerBandsUpperIndicator calculates the correct result', () {
-      final List<Tick> ticks = <Tick>[
+      const List<Tick> ticks = <Tick>[
         Tick(epoch: 1, quote: 1),
         Tick(epoch: 2, quote: 2),
         Tick(epoch: 3, quote: 3),
@@ -68,7 +68,7 @@ void main() {
     });
 
     test('Bollinger Percent B calculates the correct result', () {
-      final List<Tick> ticks = <Tick>[
+      const List<Tick> ticks = <Tick>[
         Tick(epoch: 1, quote: 10),
         Tick(epoch: 2, quote: 12),
         Tick(epoch: 3, quote: 15),
@@ -91,7 +91,7 @@ void main() {
         Tick(epoch: 20, quote: 10),
       ];
 
-      final closePrice = CloseValueIndicator(ticks);
+      final CloseValueIndicator closePrice = CloseValueIndicator(ticks);
 
       final PercentBIndicator pcb = PercentBIndicator(closePrice, 5);
 

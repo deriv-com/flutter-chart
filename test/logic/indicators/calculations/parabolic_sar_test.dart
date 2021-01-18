@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('ParabolicSarIndicator calculates the correct results', () {
-    List<Candle> bars = <Candle>[
+    final List<Candle> bars = <Candle>[
       Candle.noParam(1, 0, 75.1, 74.06, 75.11),
       Candle.noParam(2, 0, 75.9, 76.030000, 74.640000),
       Candle.noParam(3, 0, 75.24, 76.269900, 75.060000),
@@ -26,7 +26,7 @@ void main() {
       Candle.noParam(18, 0, 76.040000, 76.460000, 75.092800),
       Candle.noParam(19, 0, 76.450000, 76.450000, 75.435000),
       Candle.noParam(20, 0, 76.260000, 76.470000, 75.840000),
-      Candle.noParam(21, 0, 76.850000, 77.000000, 76.190000),
+      Candle.noParam(21, 0, 76.850000, 77, 76.190000),
     ];
 
     final ParabolicSarIndicator sar = ParabolicSarIndicator(bars);

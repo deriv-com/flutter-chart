@@ -1,11 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/hl2_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/open_value_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +130,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         children: <Widget>[
           Text(
             ChartLocalization.of(context).labelType,
-            style: TextStyle(fontSize: 10),
+            style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           DropdownButton<MovingAverageType>(
@@ -174,6 +169,12 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
 
+  /// Returns the current `lineStyle`.
+  ///
+  /// If it is null, then it will return a default line style of:
+  /// ```
+  /// LineStyle(color: Colors.yellowAccent, thickness: 0.6);
+  /// ```
   @protected
   LineStyle getCurrentLineStyle() =>
       getConfig().lineStyle ??

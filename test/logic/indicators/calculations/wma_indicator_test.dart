@@ -9,13 +9,13 @@ void main() {
     List<Tick> ticks;
 
     setUpAll(() {
-      ticks = <Tick>[
-        Tick(epoch: 1, quote: 1.0),
-        Tick(epoch: 1, quote: 2.0),
-        Tick(epoch: 1, quote: 3.0),
-        Tick(epoch: 1, quote: 4.0),
-        Tick(epoch: 1, quote: 5.0),
-        Tick(epoch: 1, quote: 6.0),
+      ticks = const <Tick>[
+        Tick(epoch: 1, quote: 1),
+        Tick(epoch: 1, quote: 2),
+        Tick(epoch: 1, quote: 3),
+        Tick(epoch: 1, quote: 4),
+        Tick(epoch: 1, quote: 5),
+        Tick(epoch: 1, quote: 6),
       ];
     });
 

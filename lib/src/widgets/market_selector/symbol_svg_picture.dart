@@ -11,7 +11,7 @@ String getSVGPathForAsset(String assetCode) =>
 /// to be usable on the Apps using this chart package.
 @Deprecated('next release')
 class SymbolSvgPicture extends StatelessWidget {
-  /// Initializes a wrapper widget around [SvgPicture.asset()] for [MarketSelector] symbols,
+  /// Initializes a wrapper widget around [SvgPicture.asset()] for `MarketSelector` symbols,
   /// to be usable on the Apps using this chart package.
   const SymbolSvgPicture({
     @required this.symbolCode,

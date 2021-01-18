@@ -13,6 +13,7 @@ abstract class IndicatorConfig {
   /// Initializes
   const IndicatorConfig();
 
+  /// List of all [FieldIndicatorBuilder] types that an `Indicator` supports.
   static final Map<String, FieldIndicatorBuilder> supportedFieldTypes =
       <String, FieldIndicatorBuilder>{
     'close': (List<Tick> ticks) => CloseValueIndicator(ticks),
@@ -23,5 +24,6 @@ abstract class IndicatorConfig {
     // TODO(Ramin): Add also hlc3, hlcc4, ohlc4 Indicators.
   };
 
+  /// Returns the chart serries of the given [ticks].
   Series getSeries(List<Tick> ticks);
 }

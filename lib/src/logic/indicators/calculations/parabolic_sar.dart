@@ -70,11 +70,11 @@ class ParabolicSarIndicator extends CachedIndicator {
       return Tick(epoch: getEpochOfIndex(index), quote: sar);
     }
 
-    double priorSar = getValue(index - 1).quote;
+    final double priorSar = getValue(index - 1).quote;
     if (_currentTrend) {
       // if up trend
       sar =
-          priorSar + (_accelerationFactor * ((_currentExtremePoint - priorSar)));
+          priorSar + (_accelerationFactor * (_currentExtremePoint - priorSar));
       _currentTrend = _lowPriceIndicator.getValue(index).quote > sar;
       if (!_currentTrend) {
         // check if sar touches the min price
@@ -101,7 +101,7 @@ class ParabolicSarIndicator extends CachedIndicator {
     } else {
       // downtrend
       sar =
-          priorSar - (_accelerationFactor * ((priorSar - _currentExtremePoint)));
+          priorSar - (_accelerationFactor * (priorSar - _currentExtremePoint));
       _currentTrend = _highPriceIndicator.getValue(index).quote >= sar;
       if (_currentTrend) {
         // check if switch to up trend

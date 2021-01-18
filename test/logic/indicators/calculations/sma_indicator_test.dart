@@ -8,7 +8,7 @@ void main() {
     List<Tick> ticks;
 
     setUpAll(() {
-      ticks = <Tick>[
+      ticks = const <Tick>[
         Tick(epoch: 10, quote: 1),
         Tick(epoch: 11, quote: 2),
         Tick(epoch: 12, quote: 3),
@@ -26,7 +26,8 @@ void main() {
     });
 
     test('SMAIndicator calculates the correct results', () {
-      final SMAIndicator smaIndicator = SMAIndicator(CloseValueIndicator(ticks), 3);
+      final SMAIndicator smaIndicator =
+          SMAIndicator(CloseValueIndicator(ticks), 3);
 
       expect(1, smaIndicator.getValue(0).quote);
       expect(1.5, smaIndicator.getValue(1).quote);

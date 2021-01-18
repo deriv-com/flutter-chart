@@ -9,7 +9,7 @@ void main() {
     List<Tick> ticks;
 
     setUpAll(() {
-      ticks = <Tick>[
+      ticks = const <Tick>[
         Tick(epoch: 1, quote: 10),
         Tick(epoch: 1, quote: 15),
         Tick(epoch: 1, quote: 20),
@@ -26,7 +26,8 @@ void main() {
     });
 
     test('ZLEMAIndicator calculates the correct results', () {
-      ZLEMAIndicator indicator = ZLEMAIndicator(CloseValueIndicator(ticks), 10);
+      final ZLEMAIndicator indicator =
+          ZLEMAIndicator(CloseValueIndicator(ticks), 10);
 
       expect(roundDouble(indicator.results[9].quote, 3), 11.909);
       expect(roundDouble(indicator.results[10].quote, 4), 8.8347);

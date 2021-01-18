@@ -9,7 +9,7 @@ void main() {
     List<Tick> ticks;
 
     setUpAll(() {
-      ticks = <Tick>[
+      ticks = const <Tick>[
         Tick(epoch: 1, quote: 84.53),
         Tick(epoch: 2, quote: 87.39),
         Tick(epoch: 3, quote: 84.55),
