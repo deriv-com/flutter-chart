@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/logic/min_max_calculator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -13,7 +12,7 @@ import 'ohlc.dart';
 // To avoid doing this check, we made Tick class comply with OHLC interface. So we
 // can use either <Tick>[] or <Candle>[] as input for Close|High|Hl2|ValueIndicators.
 @immutable
-class Tick with EquatableMixin implements OHLC, MinMaxCalculatorEntry {
+class Tick with EquatableMixin implements OHLC {
   /// Initializes
   const Tick({
     @required this.epoch,
@@ -40,10 +39,4 @@ class Tick with EquatableMixin implements OHLC, MinMaxCalculatorEntry {
   double get open => quote;
 
   List<Object> get props => [epoch, quote];
-
-  @override
-  double get min => quote;
-
-  @override
-  double get max => quote;
 }
