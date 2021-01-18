@@ -140,6 +140,10 @@ class _MarketSelectorState extends State<MarketSelector>
 
     final List<Asset> favouritesList = <Asset>[];
 
+    if (widget.markets == null) {
+      return favouritesList;
+    }
+
     for (final Market market in widget.markets) {
       for (final SubMarket subMarket in market.subMarkets) {
         for (final Asset asset in subMarket.assets) {
