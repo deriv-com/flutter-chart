@@ -16,7 +16,7 @@ import 'no_result_page.dart';
 typedef OnAssetClicked = Function(Asset asset, bool favouriteClicked);
 
 /// The duration of animating the scroll to the selected item in the [MarketSelector] widget.
-const scrollToSelectedDuration = Duration.zero;
+const Duration scrollToSelectedDuration = Duration.zero;
 
 /// A widget which is used to select the market of the chart.
 class MarketSelector extends StatefulWidget {
@@ -69,12 +69,11 @@ class _MarketSelectorState extends State<MarketSelector>
       _selectedItemKey = GlobalObjectKey(widget.selectedItem.name);
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {
       if (widget.selectedItem != null &&
           _selectedItemKey.currentState != null) {
         Scrollable.ensureVisible(
           _selectedItemKey.currentContext,
-          duration: scrollToSelectedDuration,
           curve: Curves.easeOut,
         );
       }
@@ -125,8 +124,8 @@ class _MarketSelectorState extends State<MarketSelector>
     _marketsToDisplay = _filterText.isEmpty || widget.markets == null
         ? widget.markets
         : widget.markets
-            .where(
-                (market) => market.containsAssetWithText(lowerCaseFilterText))
+            .where((Market market) =>
+                market.containsAssetWithText(lowerCaseFilterText))
             .toList();
   }
 
@@ -139,17 +138,22 @@ class _MarketSelectorState extends State<MarketSelector>
               .toList();
     }
 
-    final List<Asset> favouritesList = [];
+    final List<Asset> favouritesList = <Asset>[];
 
-    widget.markets?.forEach((market) {
-      market.subMarkets.forEach((subMarket) {
-        subMarket.assets.forEach((asset) {
+    if (widget.markets == null) {
+      return favouritesList;
+    }
+
+    for (final Market market in widget.markets) {
+      for (final SubMarket subMarket in market.subMarkets) {
+        for (final Asset asset in subMarket.assets) {
           if (asset.isFavourite && asset.containsText(lowerCaseFilterText)) {
             favouritesList.add(asset);
           }
-        });
-      });
-    });
+        }
+      }
+    }
+
     return favouritesList;
   }
 
@@ -177,7 +181,7 @@ class _MarketSelectorState extends State<MarketSelector>
             child: Stack(
               children: <Widget>[
                 SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: <Widget>[
                       _buildFavouriteSection(favouritesList),
@@ -197,7 +201,7 @@ class _MarketSelectorState extends State<MarketSelector>
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 300),
         child: favouritesList.isEmpty
-            ? SizedBox(width: double.infinity)
+            ? const SizedBox(width: double.infinity)
             : _buildMarketItem(
                 Market.fromSubMarketAssets(
                   name: 'favourites',
@@ -215,7 +219,7 @@ class _MarketSelectorState extends State<MarketSelector>
         filterText:
             market.containsText(lowerCaseFilterText) ? '' : lowerCaseFilterText,
         market: market,
-        onAssetClicked: (asset, isFavouriteClicked) {
+        onAssetClicked: (Asset asset, bool isFavouriteClicked) {
           widget.onAssetClicked?.call(asset, isFavouriteClicked);
 
           if (isFavouriteClicked) {

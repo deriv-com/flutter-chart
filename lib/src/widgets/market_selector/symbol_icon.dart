@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'asset_icon_placeholder.dart';
 
 /// Provides the path to the PNG file located in Chart package directory.
 String getSymbolAssetPath(String assetCode) =>
     'assets/icons/symbols/$assetCode.png';
 
 /// A wrapper widget around [AssetImage] which provides image icon for the
-/// given [symbolCode].
+/// given `symbolCode`.
 class SymbolIcon extends FadeInImage {
   /// Initializes a wrapper widget around [AssetImage] which provides image icon for the
   /// given [symbolCode].
