@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../../indicator.dart';
@@ -5,7 +6,7 @@ import '../../indicator.dart';
 /// A helper indicator to get the [(H + L+ 2* C) / 4] value of a list of [Tick]
 class HLCC4Indicator extends Indicator {
   /// Initializes
-  HLCC4Indicator(List<Tick> entries) : super(entries);
+  HLCC4Indicator(List<OHLC> entries) : super(entries);
 
   @override
   Tick getValue(int index) {
