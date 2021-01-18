@@ -40,8 +40,8 @@ class MinMaxCalculator {
       _visibleEntriesCount.clear();
 
       for (final Tick entry in newVisibleEntries) {
-        _incrementCount(entry.min);
-        _incrementCount(entry.max);
+        _incrementCount(minValueOf(entry));
+        _incrementCount(maxValueOf(entry));
       }
     } else {
       final List<Tick> addedEntries = <Tick>[];
@@ -73,13 +73,13 @@ class MinMaxCalculator {
       }
 
       for (final Tick entry in addedEntries) {
-        _incrementCount(entry.min);
-        _incrementCount(entry.max);
+        _incrementCount(minValueOf(entry));
+        _incrementCount(maxValueOf(entry));
       }
 
       for (final Tick entry in removedEntries) {
-        _decrementCount(entry.min);
-        _decrementCount(entry.max);
+        _decrementCount(minValueOf(entry));
+        _decrementCount(maxValueOf(entry));
       }
     }
 
