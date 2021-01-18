@@ -1,12 +1,24 @@
 import 'dart:collection';
 
+import 'package:deriv_chart/src/models/tick.dart';
+
 /// Accepts a list of entries sorted by time and calculates min/max values for that list.
 /// Reuses previous work done when visible entries are updated.
 ///
 /// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
-class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
+class MinMaxCalculator {
+  /// Instantiate min/max calculator with [minValueOf] and [maxValueOf] functions
+  /// that return min/max respectively of the given entry.
+  MinMaxCalculator(this.minValueOf, this.maxValueOf);
+
   /// List of current entries from which min/max is calculated.
-  List<T> _visibleEntries;
+  List<Tick> _visibleEntries;
+
+  /// Returns min of entry.
+  final double Function(Tick) minValueOf;
+
+  /// Returns max of entry.
+  final double Function(Tick) maxValueOf;
 
   /// A map sorted by key that keeps track of number of occurences of `min` and `max` values for all `_visibleEntries`.
   final SplayTreeMap<double, int> _visibleEntriesCount =
@@ -18,8 +30,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
   /// Maximum value of current visible entries.
   double get max => _visibleEntriesCount?.lastKey() ?? double.nan;
 
-  /// Updates a list of visible entries and efficiently recalculates new min/max.
-  void updateVisibleEntries(List<T> newVisibleEntries) {
+  /// Efficiently recalculates new min/max.
+  void updateVisibleEntries(List<Tick> newVisibleEntries) {
     if (newVisibleEntries == null || newVisibleEntries.isEmpty) {
       _visibleEntriesCount.clear();
     } else if (_visibleEntries == null ||
@@ -27,47 +39,45 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
         _noOverlap(_visibleEntries, newVisibleEntries)) {
       _visibleEntriesCount.clear();
 
-      for (final MinMaxCalculatorEntry entry in newVisibleEntries) {
+      for (final Tick entry in newVisibleEntries) {
         _incrementCount(entry.min);
         _incrementCount(entry.max);
       }
     } else {
-      final List<MinMaxCalculatorEntry> addedEntries =
-          <MinMaxCalculatorEntry>[];
-      final List<MinMaxCalculatorEntry> removedEntries =
-          <MinMaxCalculatorEntry>[];
+      final List<Tick> addedEntries = <Tick>[];
+      final List<Tick> removedEntries = <Tick>[];
 
       // Compare and find what entries got removed/added by checking epochs.
       if (_visibleEntries.first.epoch < newVisibleEntries.first.epoch) {
         removedEntries.addAll(
-          _visibleEntries.takeWhile((MinMaxCalculatorEntry entry) =>
-              entry.epoch < newVisibleEntries.first.epoch),
+          _visibleEntries.takeWhile(
+              (Tick entry) => entry.epoch < newVisibleEntries.first.epoch),
         );
       } else {
         addedEntries.addAll(
-          newVisibleEntries.takeWhile((MinMaxCalculatorEntry entry) =>
-              entry.epoch < _visibleEntries.first.epoch),
+          newVisibleEntries.takeWhile(
+              (Tick entry) => entry.epoch < _visibleEntries.first.epoch),
         );
       }
 
       if (_visibleEntries.last.epoch > newVisibleEntries.last.epoch) {
         removedEntries.addAll(
-          _visibleEntries.reversed.takeWhile((MinMaxCalculatorEntry entry) =>
-              entry.epoch > newVisibleEntries.last.epoch),
+          _visibleEntries.reversed.takeWhile(
+              (Tick entry) => entry.epoch > newVisibleEntries.last.epoch),
         );
       } else {
         addedEntries.addAll(
-          newVisibleEntries.reversed.takeWhile((MinMaxCalculatorEntry entry) =>
-              entry.epoch > _visibleEntries.last.epoch),
+          newVisibleEntries.reversed.takeWhile(
+              (Tick entry) => entry.epoch > _visibleEntries.last.epoch),
         );
       }
 
-      for (final MinMaxCalculatorEntry entry in addedEntries) {
+      for (final Tick entry in addedEntries) {
         _incrementCount(entry.min);
         _incrementCount(entry.max);
       }
 
-      for (final MinMaxCalculatorEntry entry in removedEntries) {
+      for (final Tick entry in removedEntries) {
         _decrementCount(entry.min);
         _decrementCount(entry.max);
       }
@@ -90,8 +100,8 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
 
   /// Whether there are no shared entries between two sorted lists.
   bool _noOverlap(
-    List<MinMaxCalculatorEntry> listA,
-    List<MinMaxCalculatorEntry> listB,
+    List<Tick> listA,
+    List<Tick> listB,
   ) {
     if (listA.isEmpty || listB.isEmpty) {
       return true;
@@ -106,16 +116,4 @@ class MinMaxCalculator<T extends MinMaxCalculatorEntry> {
     }
     return false;
   }
-}
-
-/// Interface that should be implemented by all entries to `MinMaxCalculator`.
-abstract class MinMaxCalculatorEntry {
-  /// Epoch time of this entry.
-  int get epoch;
-
-  /// Minimum value of this entry.
-  double get min;
-
-  /// Maximum value of this entry.
-  double get max;
 }
