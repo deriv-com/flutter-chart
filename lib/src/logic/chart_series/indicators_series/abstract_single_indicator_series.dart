@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'models/indicator_options.dart';
 
-/// Base class of indicator series.
+/// Base class of indicator series with a single indicator.
 ///
 /// Handles reusing result of previous indicator of the series. The decision to whether it can
 /// use the result of the old series calculated values is made inside [didUpdate] method.

@@ -18,7 +18,9 @@ abstract class CachedIndicator extends Indicator {
   CachedIndicator.fromIndicator(Indicator indicator)
       : this(indicator.entries);
 
-  /// Makes sure indicator's result for all [entries] are cached.
+  // TODO(NA): Can be overridden on those indicators that can calculate
+  //  results for their entire list at once in a more optimal way.
+  /// Calculates indicator's result for all [entries] and caches them.
   void calculateValues() {
     for (int i = 0; i < entries.length; i++) {
       getValue(i);
