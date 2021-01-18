@@ -113,7 +113,7 @@ abstract class MinMaxCalculatorEntry {
   /// Epoch time of this entry.
   int get epoch;
 
-  /// Minumum value of this entry.
+  /// Minimum value of this entry.
   double get min;
 
   /// Maximum value of this entry.
