@@ -30,9 +30,9 @@ void main() {
       final LowestValueIndicator indicator =
           LowestValueIndicator(CloseValueIndicator(ticks), 10);
 
-      expect(roundDouble(indicator.results[9].quote, 4), 61.37);
-      expect(roundDouble(indicator.results[10].quote, 4), 56.37);
-      expect(roundDouble(indicator.results[11].quote, 4), 48.51);
+      expect(indicator.results[9].quote, 61.37);
+      expect(indicator.results[10].quote, 56.37);
+      expect(indicator.results[11].quote, 48.51);
     });
   });
 }

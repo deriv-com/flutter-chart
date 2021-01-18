@@ -29,9 +29,9 @@ void main() {
       final HighestValueIndicator indicator =
           HighestValueIndicator(CloseValueIndicator(ticks), 10);
 
-      expect(roundDouble(indicator.results[9].quote, 4), 64.75);
-      expect(roundDouble(indicator.results[10].quote, 4), 66.37);
-      expect(roundDouble(indicator.results[11].quote, 4), 68.51);
+      expect(indicator.results[9].quote, 64.75);
+      expect(indicator.results[10].quote, 66.37);
+      expect(indicator.results[11].quote, 68.51);
     });
   });
 }
