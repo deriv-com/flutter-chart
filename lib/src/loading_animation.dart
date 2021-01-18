@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/painters/loading_painter.dart';
 import 'package:flutter/material.dart';
 
-/// Area with loading animation.
+/// Area to show the loading animation in.
 class LoadingAnimationArea extends StatefulWidget {
   /// Creates loading animation area.
   const LoadingAnimationArea({
@@ -9,6 +9,7 @@ class LoadingAnimationArea extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
+  ///  The right bound in the chart area when loading area is showing.
   final double loadingRightBoundX;
 
   @override

@@ -9,25 +9,30 @@ import 'custom_gesture_detector.dart';
 /// This manager allows extracting features that depend on touch gestures into
 /// separate modules.
 class GestureManager extends StatefulWidget {
+  /// Initialises the top level gesture detector that allows all descendants to register/remove gesture callbacks.
   const GestureManager({
     @required this.child,
     Key key,
   })  : assert(child != null),
         super(key: key);
 
+  /// The widget below this widget in the tree.
   final Widget child;
 
   @override
   GestureManagerState createState() => GestureManagerState();
 }
 
+/// The state of the top level gesture detector that allows all descendants to register/remove gesture callbacks.
 class GestureManagerState extends State<GestureManager> {
   final Set<Function> _callbackPool = <Function>{};
 
+  /// Registers a callback funtion to the pool of functions in GestureManager.
   void registerCallback(Function callback) {
     _callbackPool.add(callback);
   }
 
+  /// Removes a callback funtion from the pool of functions in GestureManager.
   void removeCallback(Function callback) {
     _callbackPool.remove(callback);
   }

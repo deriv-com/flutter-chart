@@ -196,7 +196,7 @@ void main() {
   test('timestamps for 1 month interval', () {
     expect(
       gridTimestamps(
-        timeGridInterval: month,
+        timeGridInterval: Duration(days: 30),
         leftBoundEpoch:
             DateTime.parse('2020-06-24 08:00:00Z').millisecondsSinceEpoch,
         rightBoundEpoch:

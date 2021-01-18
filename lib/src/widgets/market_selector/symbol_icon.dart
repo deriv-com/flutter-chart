@@ -7,7 +7,8 @@ String getSymbolAssetPath(String assetCode) =>
 /// A wrapper widget around [AssetImage] which provides image icon for the
 /// given `symbolCode`.
 class SymbolIcon extends FadeInImage {
-  /// Initializes
+  /// Initializes a wrapper widget around [AssetImage] which provides image icon for the
+  /// given [symbolCode].
   SymbolIcon({
     @required String symbolCode,
     double width = 32,

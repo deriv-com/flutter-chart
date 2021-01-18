@@ -27,7 +27,7 @@ typedef OnMarketsStatusChange = void Function(Map<String, bool> symbols);
 /// until its queue becomes empty and will sets the last timer to the start of
 /// tomorrow to reset its queue.
 class MarketChangeReminder {
-  /// Initializes
+  /// Initializes a class to remind when there is a change on market.
   MarketChangeReminder(
     this.onTradingTimes, {
     this.onCurrentTime,

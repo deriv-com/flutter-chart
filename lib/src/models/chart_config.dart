@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 /// Chart's general configuration.
 @immutable
 class ChartConfig {
-  /// Initializes
+  /// Initializes chart's general configuration.
   const ChartConfig({this.pipSize, this.granularity});
 
-  /// PipSize, number of decimal digits when showing prices on the chart
+  /// PipSize, number of decimal digits when showing prices on the chart.
   final int pipSize;
 
-  /// Granularity
+  /// Granularity.
   final int granularity;
 
   @override

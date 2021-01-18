@@ -11,7 +11,8 @@ String getSVGPathForAsset(String assetCode) =>
 /// to be usable on the Apps using this chart package.
 @Deprecated('next release')
 class SymbolSvgPicture extends StatelessWidget {
-  /// Initializes
+  /// Initializes a wrapper widget around [SvgPicture.asset()] for [MarketSelector] symbols,
+  /// to be usable on the Apps using this chart package.
   const SymbolSvgPicture({
     @required this.symbolCode,
     Key key,
@@ -30,16 +31,16 @@ class SymbolSvgPicture extends StatelessWidget {
     this.colorBlendMode = BlendMode.srcIn,
   }) : super(key: key);
 
-  /// Symbol code
+  /// Symbol code.
   final String symbolCode;
 
-  /// AssetBundle
+  /// AssetBundle.
   final AssetBundle bundle;
 
-  /// Width
+  /// Width.
   final double width;
 
-  /// Height
+  /// Height.
   final double height;
 
   /// The default is [BoxFit.contain].
@@ -69,10 +70,10 @@ class SymbolSvgPicture extends StatelessWidget {
   /// Defaults to [Clip.hardEdge], and must not be null.
   final Clip clipBehavior;
 
-  /// Color
+  /// Color.
   final Color color;
 
-  /// colorBlendMode
+  /// colorBlendMode.
   /// Default is [BlendMode.srcIn]
   final BlendMode colorBlendMode;
 

@@ -1,37 +1,39 @@
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
-import '../paint/paint_text.dart';
+/// A `CustomPainter` that paints the Y axis grids.
 
-class YGridPainter extends CustomPainter {
-  YGridPainter({
+class YGridLinePainter extends CustomPainter {
+  /// Initializes `CustomPainter` that paints the Y axis grids.
+
+  YGridLinePainter({
     @required this.gridLineQuotes,
-    @required this.pipSize,
     @required this.quoteToCanvasY,
     @required this.style,
+    @required this.labelWidth,
   });
 
-  final int pipSize;
+  /// The list of quotes.
   final List<double> gridLineQuotes;
 
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
+  /// The style of chart's grid.
   final GridStyle style;
+
+  /// The width of the grid line's label
+  final double labelWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
 
-      final TextPainter labelPainter = makeTextPainter(
-        quote.toStringAsFixed(pipSize),
-        style.labelStyle,
-      );
-
       canvas.drawLine(
         Offset(0, y),
         Offset(
-          size.width - labelPainter.width - style.labelHorizontalPadding * 2,
+          size.width - labelWidth - style.labelHorizontalPadding * 2,
           y,
         ),
         Paint()
@@ -39,19 +41,12 @@ class YGridPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = style.lineThickness,
       );
-
-      paintWithTextPainter(
-        canvas,
-        painter: labelPainter,
-        anchor: Offset(size.width - style.labelHorizontalPadding, y),
-        anchorAlignment: Alignment.centerRight,
-      );
     }
   }
 
   @override
-  bool shouldRepaint(YGridPainter oldDelegate) => true;
+  bool shouldRepaint(YGridLinePainter oldDelegate) => true;
 
   @override
-  bool shouldRebuildSemantics(YGridPainter oldDelegate) => false;
+  bool shouldRebuildSemantics(YGridLinePainter oldDelegate) => false;
 }

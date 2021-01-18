@@ -34,6 +34,7 @@ void main() {
   runApp(MyApp());
 }
 
+/// The start of the application.
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -56,7 +57,9 @@ class MyApp extends StatelessWidget {
       );
 }
 
+/// Chart that sits in fullscreen.
 class FullscreenChart extends StatefulWidget {
+  /// Initializes a chart that sits in fullscreen.
   const FullscreenChart({
     Key key,
   }) : super(key: key);
@@ -358,61 +361,62 @@ class _FullscreenChartState extends State<FullscreenChart> {
             Expanded(
               child: Stack(
                 children: <Widget>[
-                  Chart(
-                    mainSeries:
-                        style == ChartStyle.candles && ticks is List<Candle>
-                            ? CandleSeries(ticks)
-                            : LineSeries(ticks),
-                    secondarySeries: <MASeries>[
-                      MASeries(
-                        ticks,
-                        style: const LineStyle(
-                          color: Colors.grey,
-                          thickness: 0.5,
-                          hasArea: false,
-                        ),
+                  ClipRect(
+                    child: DerivChart(
+                      mainSeries:
+                          style == ChartStyle.candles && ticks is List<Candle>
+                              ? CandleSeries(ticks)
+                              : LineSeries(
+                                  ticks,
+                                  style: const LineStyle(hasArea: true),
+                                ),
+                      markerSeries: MarkerSeries(
+                        _markers,
+                        activeMarker: _activeMarker,
                       ),
-                    ],
-                    markerSeries: MarkerSeries(
-                      _markers,
-                      activeMarker: _activeMarker,
-                    ),
-                    annotations: ticks.length > 4
-                        ? <ChartAnnotation<BarrierObject>>[
-                            ..._sampleBarriers,
-                            if (_sl && _slBarrier != null) _slBarrier,
-                            if (_tp && _tpBarrier != null) _tpBarrier,
-                            TickIndicator(
-                              ticks.last,
-                              style: const HorizontalBarrierStyle(
-                                color: Colors.redAccent,
-                                labelShape: LabelShape.pentagon,
-                                hasBlinkingDot: true,
-                                hasArrow: false,
+                      annotations: ticks.length > 4
+                          ? <ChartAnnotation<BarrierObject>>[
+                              ..._sampleBarriers,
+                              if (_sl && _slBarrier != null) _slBarrier,
+                              if (_tp && _tpBarrier != null) _tpBarrier,
+                              TickIndicator(
+                                ticks.last,
+                                style: const HorizontalBarrierStyle(
+                                  color: Colors.redAccent,
+                                  labelShape: LabelShape.pentagon,
+                                  hasBlinkingDot: true,
+                                  hasArrow: false,
+                                ),
+                                visibility: HorizontalBarrierVisibility
+                                    .keepBarrierLabelVisible,
                               ),
-                              visibility: HorizontalBarrierVisibility
-                                  .keepBarrierLabelVisible,
-                            ),
-                          ]
-                        : null,
-                    pipSize:
-                        _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
-                    granularity: granularity == 0
-                        ? 2000 // average ms difference between ticks
-                        : granularity * 1000,
-                    controller: _controller,
-                    isLive: (_symbol?.isOpen ?? false) &&
-                        (_connectionBloc?.state is Connected ?? false),
-                    opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
-                    onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                      if (!_waitingForHistory &&
-                          ticks.isNotEmpty &&
-                          leftEpoch < ticks.first.epoch) {
-                        _loadHistory(2000);
-                      }
-                    },
+                            ]
+                          : null,
+                      pipSize:
+                          _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
+                      granularity: granularity == 0
+                          ? 2000 // average ms difference between ticks
+                          : granularity * 1000,
+                      controller: _controller,
+                      isLive: (_symbol?.isOpen ?? false) &&
+                          (_connectionBloc?.state is Connected ?? false),
+                      opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
+                      onCrosshairAppeared: () =>
+                          Vibration.vibrate(duration: 50),
+                      onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                        if (!_waitingForHistory &&
+                            ticks.isNotEmpty &&
+                            leftEpoch < ticks.first.epoch) {
+                          _loadHistory(2000);
+                        }
+                      },
+                    ),
                   ),
+                  if (_connectionBloc != null &&
+                      _connectionBloc.state is! Connected)
+                    Align(
+                      child: _buildConnectionStatus(),
+                    ),
                   if (_connectionBloc != null &&
                       _connectionBloc.state is! Connected)
                     Align(
@@ -693,18 +697,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
     } finally {
       granularity = value;
 
-      unawaited(
-        _initTickStream(
-          TicksHistoryRequest(
-            ticksHistory: _symbol.name,
-            adjustStartTime: 1,
-            end: 'latest',
-            count: 500,
-            style: granularity == 0 ? 'ticks' : 'candles',
-            granularity: granularity > 0 ? granularity : null,
-          ),
-        ),
-      );
+      unawaited(_initTickStream(TicksHistoryRequest(
+        ticksHistory: _symbol.name,
+        adjustStartTime: 1,
+        end: 'latest',
+        count: 50,
+        style: granularity == 0 ? 'ticks' : 'candles',
+        granularity: granularity > 0 ? granularity : null,
+      )));
     }
   }
 
@@ -745,6 +745,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         color: Color(0xFFCC2E3D),
         isDashed: false,
       ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
     );
 
     _tpBarrier = HorizontalBarrier(
@@ -753,6 +754,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       style: const HorizontalBarrierStyle(
         isDashed: false,
       ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
     );
   }
 }

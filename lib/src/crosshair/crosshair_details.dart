@@ -7,7 +7,9 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// The details to show on a crasshair.
 class CrosshairDetails extends StatelessWidget {
+  /// Initializes the details to show on a crasshair.
   const CrosshairDetails({
     @required this.mainSeries,
     @required this.crosshairTick,
@@ -15,8 +17,13 @@ class CrosshairDetails extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  /// The chart's main data series.
   final DataSeries<Tick> mainSeries;
+
+  /// The basic data entry of a crosshair.
   final Tick crosshairTick;
+
+  /// Number of decimal digits when showing prices.
   final int pipSize;
 
   @override

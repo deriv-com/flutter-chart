@@ -3,10 +3,10 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 
-/// Conversion function to convert epoch value to canvas X
+/// Conversion function to convert epoch value to canvas X.
 typedef EpochToX = double Function(int);
 
-/// Conversion function to convert value(quote) value to canvas Y
+/// Conversion function to convert value(quote) value to canvas Y.
 typedef QuoteToY = double Function(double);
 
 /// Any data that the chart takes and makes it paint its self on the chart's canvas including

@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+/// Calculates the grid lines for a quote.
 List<double> gridQuotes({
   @required double quoteGridInterval,
   @required double topBoundQuote,
@@ -24,6 +25,7 @@ List<double> gridQuotes({
   return gridLineQuotes;
 }
 
+/// Calculates the quotes that can be placed per pixel.
 double quotePerPx({
   @required double topBoundQuote,
   @required double bottomBoundQuote,
@@ -36,6 +38,7 @@ double quotePerPx({
   return quoteDiff / pxDiff;
 }
 
+/// Calculates the grid interval of a quote by getting the [quotePerPx] value.
 double quoteGridInterval(
   double quotePerPx, {
   double minDistanceBetweenLines = 60,

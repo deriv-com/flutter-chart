@@ -5,7 +5,9 @@ import 'active_marker.dart';
 import 'marker.dart';
 import 'paint_marker.dart';
 
+/// Painter that paints a marker which is active.
 class ActiveMarkerPainter extends CustomPainter {
+  /// initializes a painter that paints a marker which is active.
   ActiveMarkerPainter({
     this.activeMarker,
     this.style,
@@ -14,10 +16,19 @@ class ActiveMarkerPainter extends CustomPainter {
     this.animationProgress,
   });
 
+  /// The given active marker to paint.
   final ActiveMarker activeMarker;
+
+  /// The `MarkerStyle` to paint the marker with.
   final MarkerStyle style;
+
+  /// The function that calculates an epoch's X value.
   final Function epochToX;
+
+  /// The function that calculates an quote's Y value.
   final Function quoteToY;
+
+  /// The progress value of the animation of active marker painter.
   final double animationProgress;
 
   @override

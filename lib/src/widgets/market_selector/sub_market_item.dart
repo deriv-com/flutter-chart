@@ -9,6 +9,7 @@ import 'models.dart';
 
 /// A widget to show a sub-market item under a market.
 class SubMarketItem extends StatelessWidget {
+  /// Initializes a widget to show a sub-market item under a market.
   const SubMarketItem({
     @required this.subMarket,
     Key key,
@@ -18,10 +19,19 @@ class SubMarketItem extends StatelessWidget {
     this.isCategorized = true,
   }) : super(key: key);
 
+  /// The sub-market to be shown in the widget.
   final SubMarket subMarket;
+
+  /// the filter text to be passed to the asset of the sub-market.
   final String filterText;
+
+  /// The key to be passed to the `AnimatedHighlight` widget to highlight the sub-maket item.
   final GlobalObjectKey selectedItemKey;
+
+  /// The action that appens on clicking the [AssetItem].
   final OnAssetClicked onAssetClicked;
+
+  /// Whether the [SubMarketItem] is  categorized or not.
   final bool isCategorized;
 
   @override

@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
-/// Barrier style
+/// Barrier style.
 abstract class BarrierStyle extends ChartPaintingStyle {
-  /// Initializes
+  /// Initializes a barrier style
   const BarrierStyle({
     this.color,
     this.titleBackgroundColor,
@@ -13,16 +13,16 @@ abstract class BarrierStyle extends ChartPaintingStyle {
     this.textStyle,
   });
 
-  /// Color of the barrier
+  /// Color of the barrier.
   final Color color;
 
-  /// Style of the title and value
+  /// Style of the title and value.
   final TextStyle textStyle;
 
   /// Whether barrier's line should be dashed.
   final bool isDashed;
 
-  /// Title label background color
+  /// Title label background color.
   final Color titleBackgroundColor;
 
   @override
@@ -30,9 +30,9 @@ abstract class BarrierStyle extends ChartPaintingStyle {
       '${super.toString()}$color, ${textStyle.toStringShort()}, $isDashed, $titleBackgroundColor';
 }
 
-/// Horizontal barrier style
+/// Horizontal barrier style.
 class HorizontalBarrierStyle extends BarrierStyle {
-  /// Initializes
+  /// Initializes a horizontal barrier style.
   const HorizontalBarrierStyle({
     this.labelShape = LabelShape.rectangle,
     this.labelHeight = 24,
@@ -56,7 +56,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
           textStyle: textStyle,
         );
 
-  /// Label shape
+  /// Label shape.
   final LabelShape labelShape;
 
   /// Height of label background.
@@ -79,9 +79,9 @@ class HorizontalBarrierStyle extends BarrierStyle {
   String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';
 }
 
-/// Vertical barrier style
+/// Vertical barrier style.
 class VerticalBarrierStyle extends BarrierStyle {
-  /// Initializes
+  /// Initializes a vertical barrier style.
   const VerticalBarrierStyle({
     Color color = Colors.grey,
     Color titleBackgroundColor = Colors.transparent,
@@ -103,21 +103,21 @@ class VerticalBarrierStyle extends BarrierStyle {
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).
 enum BarrierArrowType {
-  /// No arrows
+  /// No arrows.
   none,
 
-  /// Upward arrows on top of the label
+  /// Upward arrows on top of the label.
   upward,
 
-  /// Downward arrows on bottom of the label
+  /// Downward arrows on bottom of the label.
   downward,
 }
 
-/// Label shape
+/// Label shape.
 enum LabelShape {
-  /// Rectangle
+  /// Rectangle.
   rectangle,
 
-  /// pentagon
+  /// Pentagon.
   pentagon,
 }
