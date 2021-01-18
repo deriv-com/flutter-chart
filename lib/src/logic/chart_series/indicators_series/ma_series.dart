@@ -39,40 +39,36 @@ class MASeries extends AbstractSingleIndicatorSeries {
     String id,
     LineStyle style,
     MAOptions options,
-  })  : _options = options,
-        super(
+  }) : super(
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',
           options,
           style: style ?? const LineStyle(thickness: 0.5),
         );
 
-  final MAOptions _options;
-
   @override
   SeriesPainter<Series> createPainter() => LinePainter(this);
 
   @override
   CachedIndicator initializeIndicator() =>
-      MASeries.getMAIndicator(inputIndicator, _options.period, _options.type);
+      MASeries.getMAIndicator(inputIndicator, options);
 
   /// Returns a moving average indicator based on [period] and its [type].
   static CachedIndicator getMAIndicator(
     Indicator indicator,
-    int period,
-    MovingAverageType type,
+    MAOptions maOptions,
   ) {
-    switch (type) {
+    switch (maOptions.type) {
       case MovingAverageType.exponential:
-        return EMAIndicator(indicator, period);
+        return EMAIndicator(indicator, maOptions.period);
       case MovingAverageType.weighted:
-        return WMAIndicator(indicator, period);
+        return WMAIndicator(indicator, maOptions.period);
       case MovingAverageType.hull:
-        return HMAIndicator(indicator, period);
+        return HMAIndicator(indicator, maOptions.period);
       case MovingAverageType.zeroLag:
-        return ZLEMAIndicator(indicator, period);
+        return ZLEMAIndicator(indicator, maOptions.period);
       default:
-        return SMAIndicator(indicator, period);
+        return SMAIndicator(indicator, maOptions.period);
     }
   }
 }

@@ -24,8 +24,8 @@ import 'ma_series.dart';
 class SampleMultiSeries extends Series {
   /// Initializes a sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
   SampleMultiSeries(List<Tick> entries, {String id})
-      : series1 = MASeries(entries, MAOptions(10)),
-        series2 = MASeries(entries, MAOptions(20)),
+      : series1 = MASeries(entries, const MAOptions(period: 10)),
+        series2 = MASeries(entries, const MAOptions()),
         super(id);
 
   /// Series 1.
@@ -80,7 +80,7 @@ class SampleMultiSeries extends Series {
 
   @override
   void initialize() {
-   series1.initialize();
-   series2.initialize();
+    series1.initialize();
+    series2.initialize();
   }
 }
