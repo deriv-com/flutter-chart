@@ -40,6 +40,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   bool _needsMinMaxUpdate = false;
 
+  /// Utility object to help efficiently calculate new min/max when [visibleEntries] change.
   MinMaxCalculator _minMaxCalculator;
 
   /// Updates visible entries for this Series.
