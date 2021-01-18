@@ -17,11 +17,12 @@ typedef DataPainterCreator = DataPainter<DataSeries<Tick>> Function(
 
 /// Single indicator series.
 ///
-/// Can be used to make indicators by providing two functions for making the of this
-/// series painter and the indicator that will calculate the result from [inputIndicator]
+/// Can be used to make indicators series with a single [Indicator] by providing two functions,
+/// [painterCreator]    for making the [SeriesPainter] of this series and
+/// [indicatorCreator]  the indicator that will calculate the result from [inputIndicator]
 ///
 /// Another approach for making single series indicators would be extending [AbstractSingleIndicatorSeries].
-/// And implement `createPainter` and `initializeIndicator` methods.
+/// And implementing `createPainter` and `initializeIndicator` methods.
 class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   /// Initializes
   ///
