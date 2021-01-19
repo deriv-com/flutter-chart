@@ -198,17 +198,13 @@ abstract class DataSeries<T extends Tick> extends Series {
     final DataSeries<Tick> oldSeries = oldData;
 
     bool updated = false;
-    if (oldSeries?.entries?.isNotEmpty ?? false) {
-      entries = input;
+    if (isOldDataAvailable(oldSeries)) {
+      fillEntriesBasedOnOldData(oldSeries);
 
-      // Checking id in-case if the type of series classes changes, e.g. when switching mainSeries chart from Line to CandleSeries.
-      // TODO(Ramin): Consider still preserving old computed visibleEntries but for this case just run recalculateMinMax to update min max
-      if (oldData.id == id) {
-        // Preserve old computed values in case recomputation is deemed unnecesary.
-        _visibleEntries = oldSeries.visibleEntries;
-        minValueInFrame = oldSeries.minValue;
-        maxValueInFrame = oldSeries.maxValue;
-      }
+      // Preserve old computed values in case recomputation is deemed unnecesary.
+      _visibleEntries = oldSeries.visibleEntries;
+      minValueInFrame = oldSeries.minValue;
+      maxValueInFrame = oldSeries.maxValue;
 
       if (entries != null && entries.last == oldSeries.entries.last) {
         prevLastEntry = oldSeries.prevLastEntry;
@@ -225,6 +221,14 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     return updated;
   }
+
+  ///
+  void fillEntriesBasedOnOldData(covariant DataSeries<Tick> oldSeries) =>
+      entries = input;
+
+  /// Checks whether the old data of the series is available to use
+  bool isOldDataAvailable(covariant DataSeries<Tick> oldSeries) =>
+      oldSeries?.entries?.isNotEmpty ?? false;
 
   @override
   void paint(

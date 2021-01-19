@@ -300,9 +300,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
-    if (widget.mainSeries.didUpdate(oldChart.mainSeries)) {
+    if (widget.mainSeries.id == oldChart.mainSeries.id &&
+        widget.mainSeries.didUpdate(oldChart.mainSeries)) {
       _playNewTickAnimation();
     }
+
     if (widget.chartDataList != null) {
       for (final ChartData data in widget.chartDataList.where(
         // Exclude mainSeries, since its didUpdate is already called

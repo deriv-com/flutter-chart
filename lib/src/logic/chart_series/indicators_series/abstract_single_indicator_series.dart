@@ -53,28 +53,18 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   @protected
   CachedIndicator initializeIndicator();
 
-  /// Will be called by the chart when it was updated.
   @override
-  bool didUpdate(ChartData oldData) {
-    final AbstractSingleIndicatorSeries oldSeries = oldData;
+  bool isOldDataAvailable(AbstractSingleIndicatorSeries oldSeries) =>
+      super.isOldDataAvailable(oldSeries) &&
+      (oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
+          false) &&
+      (oldSeries?.input?.isNotEmpty ?? false) &&
+      (_inputFirstTick != null &&
+          oldSeries._inputFirstTick == _inputFirstTick) &&
+      (oldSeries?.options == options ?? false);
 
-    if ((oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
-            false) &&
-        (oldSeries?.input?.isNotEmpty ?? false) &&
-        (_inputFirstTick != null &&
-            oldSeries._inputFirstTick == _inputFirstTick) &&
-        (oldSeries?.options == options ?? false) &&
-        (oldSeries?.entries?.isNotEmpty ?? false)) {
-      prevLastEntry = oldSeries.entries.last;
-      _reuseOldSeriesResult(oldSeries);
-    } else {
-      initialize();
-    }
-
-    return true;
-  }
-
-  void _reuseOldSeriesResult(AbstractSingleIndicatorSeries oldSeries) {
+  @override
+  void fillEntriesBasedOnOldData(AbstractSingleIndicatorSeries oldSeries) {
     resultIndicator = initializeIndicator()
       ..copyValuesFrom(oldSeries.resultIndicator);
 

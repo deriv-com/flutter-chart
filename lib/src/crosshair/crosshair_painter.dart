@@ -11,6 +11,7 @@ class CrosshairPainter extends CustomPainter {
   CrosshairPainter({
     @required this.mainSeries,
     @required this.crosshairTick,
+
     @required this.epochToCanvasX,
     @required this.quoteToCanvasY,
   });
