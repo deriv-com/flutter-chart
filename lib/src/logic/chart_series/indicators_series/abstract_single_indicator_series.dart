@@ -68,8 +68,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
     resultIndicator = initializeIndicator()
       ..copyValuesFrom(oldSeries.resultIndicator);
 
-    if (oldSeries.input.length == input.length &&
-        oldSeries.input.last != input.last) {
+    if (oldSeries.input.length == input.length) {
       resultIndicator
         ..invalidate(input.length - 1)
         ..getValue(input.length - 1);

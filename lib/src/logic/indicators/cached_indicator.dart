@@ -15,8 +15,7 @@ abstract class CachedIndicator extends Indicator {
         super(entries);
 
   /// Initializes from another [Indicator]
-  CachedIndicator.fromIndicator(Indicator indicator)
-      : this(indicator.entries);
+  CachedIndicator.fromIndicator(Indicator indicator) : this(indicator.entries);
 
   // TODO(NA): Can be overridden on those indicators that can calculate
   //  results for their entire list at once in a more optimal way.
@@ -41,15 +40,20 @@ abstract class CachedIndicator extends Indicator {
 
     if (results[index] == null) {
       results[index] = calculate(index);
-      dev.log('$runtimeType for $index');
     }
 
     return results[index];
   }
 
   void _growResultsForIndex(int index) {
-    if (index > results.length - 1) {
-      results.addAll(List<Tick>(index - results.length + 1));
+    final int resultsCount = results.length;
+
+    if (index > resultsCount - 1) {
+      results.addAll(List<Tick>(index - resultsCount + 1));
+    }
+
+    for (int i = resultsCount; i <= index; i++) {
+      getValue(i);
     }
   }
 
