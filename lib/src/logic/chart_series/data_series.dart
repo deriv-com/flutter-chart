@@ -201,9 +201,9 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (oldSeries?.entries?.isNotEmpty ?? false) {
       entries = input;
 
-      // Checking in-case if the type of series classes changes, e.g. when switching mainSeries chart from Line to CandleSeries.
+      // Checking id in-case if the type of series classes changes, e.g. when switching mainSeries chart from Line to CandleSeries.
       // TODO(Ramin): Consider still preserving old computed visibleEntries but for this case just run recalculateMinMax to update min max
-      if (oldData.runtimeType == runtimeType) {
+      if (oldData.id == id) {
         // Preserve old computed values in case recomputation is deemed unnecesary.
         _visibleEntries = oldSeries.visibleEntries;
         minValueInFrame = oldSeries.minValue;
