@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 /// A place holder to show until SVG icons load.
 class AssetIconPlaceholder extends StatelessWidget {
-  /// Initializes
+  /// Initializes a place holder to show until SVG icons load.
   const AssetIconPlaceholder({
     Key key,
     this.size = const Size(24, 16),
     this.color = Colors.grey,
   }) : super(key: key);
 
-  /// Color
+  /// Color.
   final Color color;
 
-  /// The size of the placeholder
+  /// The size of the placeholder.
   final Size size;
 
   @override

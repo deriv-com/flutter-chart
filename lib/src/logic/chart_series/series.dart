@@ -8,9 +8,9 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
-/// Base class of all chart series
+/// Base class of all chart series.
 abstract class Series implements ChartData {
-  /// Initializes
+  /// Initializes a base class of all chart series.
   Series(this.id, {this.style}) {
     seriesPainter = createPainter();
     id = '$runtimeType${style?.toString()}${seriesPainter.runtimeType}$id';
@@ -23,22 +23,22 @@ abstract class Series implements ChartData {
   @protected
   SeriesPainter<Series> seriesPainter;
 
-  /// The painting style of this [Series]
+  /// The painting style of this [Series].
   final ChartPaintingStyle style;
 
-  /// Minimum value of this series in a visible range of the chart
+  /// Minimum value of this series in a visible range of the chart.
   @protected
   double minValueInFrame;
 
-  /// Maximum value of this series in a visible range of the chart
+  /// Maximum value of this series in a visible range of the chart.
   @protected
   double maxValueInFrame;
 
-  /// Min quote in a frame
+  /// Min quote in a frame.
   @override
   double get minValue => minValueInFrame ?? double.nan;
 
-  /// Max quote in a frame
+  /// Max quote in a frame.
   @override
   double get maxValue => maxValueInFrame ?? double.nan;
 
@@ -59,13 +59,13 @@ abstract class Series implements ChartData {
   /// Calculate min/max values in updated data
   List<double> recalculateMinMax();
 
-  /// Updates series visible data
+  /// Updates series visible data.
   void onUpdate(int leftEpoch, int rightEpoch);
 
   /// Is called whenever series is created to create its [seriesPainter] as well.
   SeriesPainter<Series> createPainter();
 
-  /// Paints [seriesPainter]'s data on the [canvas]
+  /// Paints [seriesPainter]'s data on the [canvas].
   @override
   void paint(
     Canvas canvas,

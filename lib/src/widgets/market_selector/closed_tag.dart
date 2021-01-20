@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'market_selector.dart';
 import 'models.dart';
 
-/// A tag indicating the [Asset] in [MarketSelector] is closed
+/// A tag indicating the [Asset] in [MarketSelector] is closed.
 class ClosedTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

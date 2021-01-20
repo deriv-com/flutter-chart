@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:deriv_chart/src/loading_animation.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -13,6 +12,8 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/painters/chart_data_painter.dart';
+import 'package:deriv_chart/src/painters/y_grid_label_painter.dart';
+import 'package:deriv_chart/src/painters/y_grid_line_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +22,13 @@ import 'package:provider/single_child_widget.dart';
 import 'callbacks.dart';
 import 'crosshair/crosshair_area.dart';
 import 'gestures/gesture_manager.dart';
+import 'loading_animation.dart';
 import 'logic/conversion.dart';
 import 'logic/quote_grid.dart';
 import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
-import 'painters/y_grid_painter.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
@@ -47,12 +49,13 @@ class Chart extends StatelessWidget {
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
     this.isLive = false,
+    this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
     Key key,
   }) : super(key: key);
 
-  /// Chart's main data series
+  /// Chart's main data series.
   final DataSeries<Tick> mainSeries;
 
   /// List of series to add on chart beside the [mainSeries].
@@ -91,6 +94,9 @@ class Chart extends StatelessWidget {
   /// is on the newest ticks/candles.
   final bool isLive;
 
+  /// Starts in data fit mode and adds a data-fit button.
+  final bool dataFitEnabled;
+
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
 
@@ -119,6 +125,7 @@ class Chart extends StatelessWidget {
               entries: mainSeries.entries,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
+              startWithDataFitMode: dataFitEnabled,
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
@@ -128,6 +135,8 @@ class Chart extends StatelessWidget {
                 pipSize: pipSize,
                 onCrosshairAppeared: onCrosshairAppeared,
                 isLive: isLive,
+                showLoadingAnimationForHistoricalData: !dataFitEnabled,
+                showDataFitButton: dataFitEnabled,
                 opacity: opacity,
               ),
             ),
@@ -144,6 +153,8 @@ class _ChartImplementation extends StatefulWidget {
     @required this.mainSeries,
     @required this.pipSize,
     @required this.isLive,
+    this.showLoadingAnimationForHistoricalData = true,
+    this.showDataFitButton = false,
     this.markerSeries,
     this.opacity,
     this.controller,
@@ -167,6 +178,9 @@ class _ChartImplementation extends StatefulWidget {
   final ChartController controller;
 
   final bool isLive;
+  final bool showLoadingAnimationForHistoricalData;
+  final bool showDataFitButton;
+
   final double opacity;
 
   // Convenience list to access all chart data.
@@ -189,7 +203,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
 
-  /// it should be at least LabelHeight/2
+  /// Padding should be at least half of barrier label height.
   static const double _minPadding = 12;
 
   /// Duration of quote bounds animated transition.
@@ -439,6 +453,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
         bottomPadding: _bottomPadding,
       );
 
+  // Calculate the width of Y label
+  double _labelWidth(double text, TextStyle style) => makeTextPainter(
+        text.toStringAsFixed(widget.pipSize),
+        style,
+      ).width;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -453,12 +473,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _updateVisibleData();
         _updateQuoteBoundTargets();
 
+        final List<double> gridLineQuotes = _getGridLineQuotes();
+
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            _buildQuoteGrid(),
-            _buildLoadingAnimation(),
+            _buildQuoteGridLine(gridLineQuotes),
+            if (widget.showLoadingAnimationForHistoricalData ||
+                widget.mainSeries.entries.isEmpty)
+              _buildLoadingAnimation(),
             _buildChartData(),
+            _buildQuoteGridLabel(gridLineQuotes),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(
@@ -468,9 +493,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
             _buildCrosshairArea(),
             if (_isScrollToLastTickAvailable)
               Positioned(
-                bottom: 30,
-                right: 30 + quoteLabelsTouchAreaWidth,
+                bottom: 0,
+                right: quoteLabelsTouchAreaWidth,
                 child: _buildScrollToLastTickButton(),
+              ),
+            if (widget.showDataFitButton &&
+                widget.mainSeries.entries.isNotEmpty)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: _buildDataFitButton(),
               ),
           ],
         );
@@ -478,7 +510,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  Widget _buildQuoteGrid() => MultipleAnimatedBuilder(
+  Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
+      MultipleAnimatedBuilder(
         animations: [
           // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
@@ -486,8 +519,29 @@ class _ChartImplementationState extends State<_ChartImplementation>
         ],
         builder: (BuildContext context, Widget child) {
           return CustomPaint(
-            painter: YGridPainter(
-              gridLineQuotes: _getGridLineQuotes(),
+            painter: YGridLinePainter(
+              gridLineQuotes: gridLineQuotes,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+              labelWidth: _labelWidth(gridLineQuotes.first,
+                  context.watch<ChartTheme>().gridStyle.yLabelStyle),
+            ),
+          );
+        },
+      );
+
+  Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
+      MultipleAnimatedBuilder(
+        animations: [
+          _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+        ],
+        builder: (BuildContext context, Widget child) {
+          return CustomPaint(
+            size: canvasSize,
+            painter: YGridLabelPainter(
+              gridLineQuotes: gridLineQuotes,
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
@@ -507,8 +561,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
   // Main series and indicators on top of main series.
   Widget _buildChartData() => MultipleAnimatedBuilder(
         animations: [
-          // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
           _currentTickAnimation,
         ],
@@ -614,8 +668,26 @@ class _ChartImplementationState extends State<_ChartImplementation>
     });
   }
 
-  IconButton _buildScrollToLastTickButton() => IconButton(
-        icon: Icon(Icons.arrow_forward, color: Colors.white),
-        onPressed: _xAxis.scrollToLastTick,
+  Widget _buildScrollToLastTickButton() => Material(
+        type: MaterialType.circle,
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        child: IconButton(
+          icon: const Icon(Icons.arrow_forward),
+          onPressed: _xAxis.scrollToLastTick,
+        ),
       );
+
+  Widget _buildDataFitButton() {
+    final XAxisModel xAxis = context.read<XAxisModel>();
+    return Material(
+      type: MaterialType.circle,
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      child: IconButton(
+        icon: const Icon(Icons.fullscreen_exit),
+        onPressed: xAxis.dataFitEnabled ? null : xAxis.enableDataFit,
+      ),
+    );
+  }
 }

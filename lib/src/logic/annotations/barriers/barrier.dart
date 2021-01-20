@@ -6,7 +6,7 @@ import '../../chart_data.dart';
 
 /// Base class of barrier
 abstract class Barrier extends ChartAnnotation<BarrierObject> {
-  /// Initializes
+  /// Initializes a base class of barrier.
   Barrier({
     this.epoch,
     this.value,
@@ -16,17 +16,17 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
     BarrierStyle style,
   }) : super(id ?? title, style: style);
 
-  /// Title of the barrier
+  /// Title of the barrier.
   final String title;
 
-  /// Barrier line start from screen edge or from the tick
+  /// Barrier line start from screen edge or from the tick.
   ///
   /// Will be ignored if the barrier has only an epoch or a value, and not both.
   final bool longLine;
 
-  /// Epoch of the vertical barrier
+  /// Epoch of the vertical barrier.
   final int epoch;
 
-  /// The value that this barrier points to
+  /// The value that this barrier points to.
   final double value;
 }

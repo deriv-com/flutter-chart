@@ -3,9 +3,9 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 
-/// Base class of chart annotations
+/// Base class of chart annotations.
 abstract class ChartAnnotation<T extends ChartObject> extends Series {
-  /// Initializes
+  /// Initializes a base class of chart annotations.
   ChartAnnotation(
     String id, {
     ChartPaintingStyle style,
@@ -13,13 +13,13 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
     annotationObject = createObject();
   }
 
-  /// Annotation Object
+  /// Annotation Object.
   T annotationObject;
 
-  /// Previous annotation object
+  /// Previous annotation object.
   T previousObject;
 
-  /// Is this [ChartAnnotation] on the chart's epoch range
+  /// Is this [ChartAnnotation] on the chart's epoch range.
   bool isOnRange = false;
 
   bool _shouldRepaint = false;
@@ -58,6 +58,6 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   List<double> recalculateMinMax() =>
       <double>[annotationObject.bottomValue, annotationObject.topValue];
 
-  /// Prepares the [annotationObject] of this [ChartAnnotation]
+  /// Prepares the [annotationObject] of this [ChartAnnotation].
   T createObject();
 }

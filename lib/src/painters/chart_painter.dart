@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 import '../../deriv_chart.dart';
 
+/// The `CustomPainter` which paints the chart.
 class ChartPainter extends CustomPainter {
+  /// Initializes the `CustomPainter` which paints the chart.
   ChartPainter({
     this.chartConfig,
     this.theme,
@@ -20,13 +22,19 @@ class ChartPainter extends CustomPainter {
   /// Chart config
   final ChartConfig chartConfig;
 
+  /// The theme used to paint the chart.
   final ChartTheme theme;
 
+  /// Conversion function for converting epoch to chart's canvas' X position.
   final double Function(int) epochToCanvasX;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
+  /// Animation info where the animation progress values are in.
   final AnimationInfo animationInfo;
 
+  /// The list of chart data to paint inside of the chart.
   final ChartData chartData;
 
   @override
