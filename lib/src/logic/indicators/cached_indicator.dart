@@ -12,10 +12,14 @@ abstract class CachedIndicator extends Indicator {
   /// Initializes
   CachedIndicator(List<OHLC> entries)
       : results = List<Tick>.generate(entries.length, (_) => null),
+        lastResultIndex = 0,
         super(entries);
 
   /// Initializes from another [Indicator]
   CachedIndicator.fromIndicator(Indicator indicator) : this(indicator.entries);
+
+  /// Index of the last result that is calculated.
+  int lastResultIndex;
 
   // TODO(NA): Can be overridden on those indicators that can calculate
   //  results for their entire list at once in a more optimal way.
@@ -27,9 +31,13 @@ abstract class CachedIndicator extends Indicator {
   }
 
   /// Copies the result of [other] as its own.
-  void copyValuesFrom(covariant CachedIndicator other) => results
-    ..clear()
-    ..addAll(other.results);
+  void copyValuesFrom(covariant CachedIndicator other) {
+    results
+      ..clear()
+      ..addAll(other.results);
+
+    lastResultIndex = other.lastResultIndex;
+  }
 
   /// List of cached result.
   final List<Tick> results;
@@ -42,28 +50,42 @@ abstract class CachedIndicator extends Indicator {
       results[index] = calculate(index);
     }
 
+    if (index > lastResultIndex) {
+      lastResultIndex = index;
+    }
+
     return results[index];
   }
 
-  void _growResultsForIndex(int index) {
-    final int resultsCount = results.length;
+  /// Grows the results list with null elements to cover the given [index].
+  ///
+  /// Returns number of elements that have been added to the results list.
+  int _growResultsForIndex(int index) {
+    final int oldResultsCount = results.length;
 
-    if (index > resultsCount - 1) {
-      results.addAll(List<Tick>(index - resultsCount + 1));
+    if (index > oldResultsCount - 1) {
+      results.addAll(List<Tick>(index - oldResultsCount + 1));
     }
 
-    for (int i = resultsCount; i <= index; i++) {
-      getValue(i);
-    }
+    return results.length - oldResultsCount;
   }
 
-  /// Calculates the value of this indicator for the given [index]
+  /// Calculates the value of this indicator for the given [index] without caching it.
+  /// 
+  /// Returns the result as a [Tick].
   Tick calculate(int index);
 
   /// Invalidates a calculated indicator value for [index]
   void invalidate(int index) {
     _growResultsForIndex(index);
-
     results[index] = null;
+  }
+
+  /// Recalculates indicator's value for the give [index] and caches it.
+  ///
+  /// Returns the result as a [Tick].
+  Tick refreshValueFor(int index) {
+    invalidate(index);
+    return getValue(index);
   }
 }
