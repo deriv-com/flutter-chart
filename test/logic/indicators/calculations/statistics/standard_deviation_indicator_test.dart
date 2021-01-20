@@ -19,7 +19,7 @@ void main() {
     });
 
     test(
-        'StandardDeviationIndicator should calculate the correct results from CloseValueIndicator.',
+        'StandardDeviationIndicator calculates the correct results from CloseValueIndicator.',
         () {
       final StandardDeviationIndicator indicator =
           StandardDeviationIndicator(CloseValueIndicator(ticks), 5);
