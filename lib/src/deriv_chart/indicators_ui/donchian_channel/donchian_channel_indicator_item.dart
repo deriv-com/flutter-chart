@@ -46,7 +46,7 @@ class DonchianChannelIndicatorItemState
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
           _buildHighPeriodField(),
-          // _buildLowPeriodField(),
+          _buildLowPeriodField(),
           _buildChannelFillToggle(),
         ],
       );
@@ -73,6 +73,26 @@ class DonchianChannelIndicatorItemState
           Text(
             // TODO(Rustem): use localization
             'High Period',
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: '10',
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {},
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildLowPeriodField() => Row(
+        children: <Widget>[
+          Text(
+            // TODO(Rustem): use localization
+            'Low Period',
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
