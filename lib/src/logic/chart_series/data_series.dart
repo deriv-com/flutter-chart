@@ -198,8 +198,8 @@ abstract class DataSeries<T extends Tick> extends Series {
     final DataSeries<Tick> oldSeries = oldData;
 
     bool updated = false;
-    if (isOldDataAvailable(oldSeries)) {
-      fillEntriesBasedOnOldData(oldSeries);
+    if (input.isNotEmpty && isOldDataAvailable(oldSeries)) {
+      fillEntriesFromInput(oldSeries);
 
       // Preserve old computed values in case recomputation is deemed unnecesary.
       _visibleEntries = oldSeries.visibleEntries;
@@ -222,11 +222,17 @@ abstract class DataSeries<T extends Tick> extends Series {
     return updated;
   }
 
+  /// Fills the entries that are about to be painted based on [input] and [oldSeries]
   ///
-  void fillEntriesBasedOnOldData(covariant DataSeries<Tick> oldSeries) =>
+  /// [oldSeries] is provided so this [DataSeries] class get the option to reuse it's previous data.
+  ///
+  /// Here we just assign [input] to [entries] as a normal [DataSeries] class.
+  @protected
+  void fillEntriesFromInput(covariant DataSeries<Tick> oldSeries) =>
       entries = input;
 
   /// Checks whether the old data of the series is available to use
+  @protected
   bool isOldDataAvailable(covariant DataSeries<Tick> oldSeries) =>
       oldSeries?.entries?.isNotEmpty ?? false;
 

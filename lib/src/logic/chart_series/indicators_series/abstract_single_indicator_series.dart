@@ -64,7 +64,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
       (oldSeries?.options == options ?? false);
 
   @override
-  void fillEntriesBasedOnOldData(AbstractSingleIndicatorSeries oldSeries) {
+  void fillEntriesFromInput(AbstractSingleIndicatorSeries oldSeries) {
     resultIndicator = initializeIndicator()
       ..copyValuesFrom(oldSeries.resultIndicator);
 
