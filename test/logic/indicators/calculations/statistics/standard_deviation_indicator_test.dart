@@ -5,7 +5,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standar
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('StandardDeviationIndicator should', () {
+  group('StandardDeviationIndicator', () {
     List<Tick> ticks;
 
     setUpAll(() {
@@ -13,12 +13,14 @@ void main() {
         Candle(epoch: 1, open: 64.75, close: 64.12, high: 67.5, low: 63),
         Candle(epoch: 2, open: 73.5, close: 74.62, high: 75.65, low: 73.12),
         Candle(epoch: 3, open: 74.2, close: 73.42, high: 76.3, low: 73.33),
-        Candle(epoch: 3, open: 70.12, close: 72.2, high: 73.5, low: 73.20),
-        Candle(epoch: 3, open: 73.21, close: 73.64, high: 76.3, low: 72.31),
+        Candle(epoch: 4, open: 70.12, close: 72.2, high: 73.5, low: 70.12),
+        Candle(epoch: 5, open: 73.21, close: 73.64, high: 76.3, low: 72.31),
       ];
     });
 
-    test('calculate the correct results from CloseValueIndicator.', () {
+    test(
+        'StandardDeviationIndicator should calculate the correct results from CloseValueIndicator.',
+        () {
       final StandardDeviationIndicator indicator =
           StandardDeviationIndicator(CloseValueIndicator(ticks), 5);
 
