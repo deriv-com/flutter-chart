@@ -36,10 +36,8 @@ class DonchianChannelIndicatorItemState
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>
       DonchianChannelIndicatorConfig(
-        period: 10,
-        movingAverageType: MovingAverageType.simple,
-        standardDeviation: _getCurrentStandardDeviation(),
-        fieldType: 'close',
+        highPeriod: 10,
+        lowPeriod: 10,
       );
 
   @override
@@ -62,11 +60,6 @@ class DonchianChannelIndicatorItemState
           Switch(value: false, onChanged: (bool value) {}),
         ],
       );
-
-  double _getCurrentStandardDeviation() {
-    final DonchianChannelIndicatorConfig config = getConfig();
-    return _standardDeviation ?? config?.standardDeviation ?? 2;
-  }
 
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
