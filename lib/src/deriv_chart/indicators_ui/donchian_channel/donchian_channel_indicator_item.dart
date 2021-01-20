@@ -45,8 +45,8 @@ class DonchianChannelIndicatorItemState
   @override
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
-          _buildPeriodField(),
-          _buildPeriodField(),
+          _buildHighPeriodField(),
+          // _buildLowPeriodField(),
           _buildChannelFillToggle(),
         ],
       );
@@ -68,7 +68,7 @@ class DonchianChannelIndicatorItemState
     return _standardDeviation ?? config?.standardDeviation ?? 2;
   }
 
-  Widget _buildPeriodField() => Row(
+  Widget _buildHighPeriodField() => Row(
         children: <Widget>[
           Text(
             // TODO(Rustem): use localization
