@@ -1,5 +1,4 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -30,56 +29,41 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
 }
 
 /// DonchianChannelIndicatorItem State class
-class DonchianChannelIndicatorItemState extends MAIndicatorItemState {
+class DonchianChannelIndicatorItemState
+    extends IndicatorItemState<DonchianChannelIndicatorConfig> {
   double _standardDeviation;
 
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>
       DonchianChannelIndicatorConfig(
-        period: getCurrentPeriod(),
-        movingAverageType: getCurrentType(),
+        period: 10,
+        movingAverageType: MovingAverageType.simple,
         standardDeviation: _getCurrentStandardDeviation(),
-        fieldType: getCurrentField(),
+        fieldType: 'close',
       );
 
   @override
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
-          buildMATypeMenu(),
           Row(
             children: <Widget>[
-              buildPeriodField(),
+              // buildPeriodField(),
               const SizedBox(width: 10),
-              buildFieldTypeMenu()
             ],
           ),
-          _buildSDMenu(),
+          _buildChannelFillToggle(),
         ],
       );
 
-  Widget _buildSDMenu() => Row(
+  Widget _buildChannelFillToggle() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelStandardDeviation,
+            // TODO(Rustem): use localization
+            'Channel Fill',
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentStandardDeviation().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _standardDeviation = double.tryParse(text);
-                } else {
-                  _standardDeviation = 2;
-                }
-                updateIndicator();
-              },
-            ),
-          )
+          Switch(value: false, onChanged: (bool value) {}),
         ],
       );
 
