@@ -41,6 +41,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
       ..add(BollingerBandsIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(BollingerBandsIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
       ));
   }
 
