@@ -19,7 +19,7 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
     OnAddIndicator onAddIndicator,
   }) : super(
           key: key,
-          title: 'Bollinger Bands',
+          title: 'Donchian Channel',
           ticks: ticks,
           onAddIndicator: onAddIndicator,
         );

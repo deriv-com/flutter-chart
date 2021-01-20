@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ))
-      ..add(BollingerBandsIndicatorItem(
+      ..add(DonchianChannelIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ));
