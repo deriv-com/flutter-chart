@@ -34,7 +34,7 @@ class ChartPainter extends CustomPainter {
   /// Animation info where the animation progress values are in.
   final AnimationInfo animationInfo;
 
-  /// The list of chart data to paint inside of the chart.
+  /// The chart data to paint inside of the chart.
   final ChartData chartData;
 
   @override
