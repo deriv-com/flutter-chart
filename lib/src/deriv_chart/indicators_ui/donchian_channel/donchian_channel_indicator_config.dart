@@ -1,33 +1,29 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 /// Bollinger Bands Indicator Config
-class DonchianChannelIndicatorConfig extends MAIndicatorConfig {
+class DonchianChannelIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const DonchianChannelIndicatorConfig({
-    int period,
-    MovingAverageType movingAverageType,
-    String fieldType,
-    this.standardDeviation,
-  }) : super(
-          period: period,
-          type: movingAverageType,
-          fieldType: fieldType,
-        );
+    this.highPeriod,
+    this.lowPeriod,
+  }) : super();
 
-  /// Standard Deviation value
-  final double standardDeviation;
+  // TODO: Add doc
+  final int highPeriod;
+
+  // TODO: Add doc
+  final int lowPeriod;
 
   @override
   // TODO: Replace with donchian series
   Series getSeries(List<Tick> ticks) => BollingerBandSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](ticks),
-        period: period,
-        movingAverageType: type,
-        standardDeviationFactor: standardDeviation,
+        IndicatorConfig.supportedFieldTypes['close'](ticks),
+        period: 10,
+        movingAverageType: MovingAverageType.simple,
+        standardDeviationFactor: 2,
       );
 }
