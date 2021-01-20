@@ -19,7 +19,7 @@ void main() {
     });
 
     test(
-        'VarianceIndicator calculates the correct result from CloseValueIndicator..',
+        'VarianceIndicator calculates the correct result from CloseValueIndicator.',
         () {
       final VarianceIndicator indicator =
           VarianceIndicator(CloseValueIndicator(ticks), 5);
