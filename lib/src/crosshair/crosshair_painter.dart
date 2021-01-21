@@ -43,7 +43,7 @@ class CrosshairPainter extends CustomPainter {
         ..strokeWidth = 2
         ..style = PaintingStyle.fill
         ..shader = ui.Gradient.linear(
-          const Offset(0, 0),
+          Offset.zero,
           Offset(0, size.height),
           <Color>[
             // TODO(Ramin): Use theme color when cross-hair design got updated
@@ -51,7 +51,7 @@ class CrosshairPainter extends CustomPainter {
             Colors.white.withOpacity(0.3),
             Colors.white.withOpacity(0.1),
           ],
-          <double>[
+          const <double>[
             0,
             0.5,
             1,
