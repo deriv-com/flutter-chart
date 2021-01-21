@@ -6,7 +6,6 @@ import '../../cached_indicator.dart';
 import '../../indicator.dart';
 
 
-
 /// Highest value in a range
 class ZigZagIndicator extends CachedIndicator {
   /// Initializes
@@ -21,15 +20,20 @@ class ZigZagIndicator extends CachedIndicator {
 
   @override
   Tick calculate(int index) {
-    final int end = max(0, index - distance + 1);
-    double highest = indicator.getValue(index).quote;
-
-    for (int i = index - 1; i >= end; i--) {
-      if (highest < indicator.getValue(i).quote) {
-        highest = indicator.getValue(i).quote;
+    var x = indicator
+        .getValue(index);
+    var f = x.close * (distance / 10000);
+    if (index == 0|| index==indicator.entries.length-1) {
+      return x;
+    }
+    var j=Tick(epoch: x.epoch, quote: double.nan);
+    for (int i = index + 1; i < indicator.entries.length; i++) {
+      var element = indicator.getValue(i);
+      if ((element.close - x.close).abs()>= f) {
+        j=element;
+        break;
       }
     }
-
-    return Tick(epoch: getEpochOfIndex(index), quote: highest);
+    return j;
   }
 }
