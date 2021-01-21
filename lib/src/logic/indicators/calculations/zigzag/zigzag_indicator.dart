@@ -22,7 +22,7 @@ class ZigZagIndicator extends CachedIndicator {
   Tick calculate(int index) {
     var x = indicator
         .getValue(index);
-    var f = x.close * (distance / 10000);
+    var f = x.close * (distance / 100);
     if (index == 0|| index==indicator.entries.length-1) {
       return x;
     }

@@ -1,18 +1,20 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
+import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
-import '../../chart_data.dart';
-import '../data_series.dart';
+import '../../../chart_data.dart';
+
 
 /// A [DataPainter] for painting line data.
-class LinePainter extends DataPainter<DataSeries<Tick>> {
+class ZigZagPainter extends LinePainter {
   /// Initializes
-  LinePainter(DataSeries<Tick> series) : super(series);
+  ZigZagPainter(DataSeries<Tick> series) : super(series);
 
   @override
   void onPaintData(
@@ -33,50 +35,48 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     final Path path = Path();
 
     bool isStartPointSet = false;
-
-    if (series.visibleEntries.first.quote.isNaN) {
-      var x = series.entries.indexOf(series.visibleEntries.first);
-      var y = 0.0;
-      for (int i = x - 1; i >= 0; i--) {
-        if (!series.entries[i].quote.isNaN) {
-          y = series.entries[i].quote;
+    if(series.visibleEntries.first.quote.isNaN){
+      var x=series.entries.indexOf(series.visibleEntries.first);
+      var y=0.0;
+      for(int i=x-1;i>=0;i--){
+        if(!series.entries[i].quote.isNaN){
+          y=series.entries[i].quote;
           break;
         }
       }
-      series.visibleEntries.first =
-          Tick(epoch: series.visibleEntries.first.epoch, quote: y);
+      series.visibleEntries.first=Tick(epoch: series.visibleEntries.first.epoch, quote:y);
       print(series.visibleEntries.first.quote);
     }
 
-    if (series.visibleEntries.last.quote.isNaN) {
-      var x = series.entries.indexOf(series.visibleEntries.last);
-      var y = 0.0;
-      for (int i = x + 1; i <= series.entries.length; i++) {
-        if (!series.entries[i].quote.isNaN) {
-          y = series.entries[i].quote;
+    if(series.visibleEntries.last.quote.isNaN){
+      var x=series.entries.indexOf(series.visibleEntries.last);
+      var y=0.0;
+      for(int i=x+1;i<=series.entries.length;i++){
+        if(!series.entries[i].quote.isNaN){
+          y=series.entries[i].quote;
           break;
         }
       }
-      series.visibleEntries.last =
-          Tick(epoch: series.visibleEntries.last.epoch, quote: y);
+      series.visibleEntries.last=Tick(epoch: series.visibleEntries.last.epoch, quote:y);
       print(series.visibleEntries.last.quote);
     }
 
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Tick tick = series.visibleEntries[i];
-      if (tick.quote.isNaN) {
-        continue;
-      }
-      if (!isStartPointSet) {
-        isStartPointSet = true;
-        path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
-        continue;
+
+      if(!tick.quote.isNaN){
+        if (!isStartPointSet) {
+          isStartPointSet = true;
+          path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
+          continue;
+        }
+
+        final double x = epochToX(tick.epoch);
+        final double y = quoteToY(tick.quote);
+        path.lineTo(x, y);
       }
 
-      final double x = epochToX(tick.epoch);
-      final double y = quoteToY(tick.quote);
-      path.lineTo(x, y);
     }
 
     // Adding last visible entry line to the path
@@ -99,9 +99,11 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
       path.lineTo(lastVisibleTickX, tickY);
     } else {
+
       lastVisibleTickX = epochToX(lastVisibleTick.epoch);
       path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
+
 
     canvas.drawPath(path, linePaint);
 
