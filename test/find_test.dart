@@ -1,7 +1,7 @@
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:deriv_chart/src/logic/find.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 
 void main() {
   group('findClosestToEpoch should', () {

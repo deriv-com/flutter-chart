@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indica
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 /// Bollinger Bands Indicator Config
 class BollingerBandsIndicatorConfig extends MAIndicatorConfig {

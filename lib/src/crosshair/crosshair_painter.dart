@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// The custom painter to paint the crossshair.

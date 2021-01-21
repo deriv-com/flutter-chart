@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../indicator_config.dart';
 

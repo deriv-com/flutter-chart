@@ -1,5 +1,5 @@
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import 'horizontal_barrier.dart';
 

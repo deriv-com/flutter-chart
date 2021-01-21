@@ -1,13 +1,5 @@
-import 'package:deriv_chart/src/logic/indicators/indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/hma_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../line_series/line_series.dart';
 

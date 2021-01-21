@@ -1,5 +1,5 @@
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import 'bollinger_bands/bollinger_bands_indicator_item.dart';

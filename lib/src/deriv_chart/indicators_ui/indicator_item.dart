@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
