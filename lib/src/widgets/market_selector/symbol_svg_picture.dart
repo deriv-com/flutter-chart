@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// Provides the path to the SVG file located in Chart package directory.
-@Deprecated('next release')
+@Deprecated('Next release, Use [getSymbolAssetPath() instead.]')
 String getSVGPathForAsset(String assetCode) =>
     'assets/icons/symbols/$assetCode.svg';
 
 /// Just a wrapper widget around [SvgPicture.asset()] for [MarketSelector] symbols,
 /// to be usable on the Apps using this chart package.
-@Deprecated('next release')
+@Deprecated('Next release. Use [SymbolIcon] instead')
 class SymbolSvgPicture extends StatelessWidget {
   /// Initializes a wrapper widget around [SvgPicture.asset()] for [MarketSelector] symbols,
   /// to be usable on the Apps using this chart package.
