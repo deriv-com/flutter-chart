@@ -16,11 +16,12 @@ class DonchianMiddleChannelIndicator extends CachedIndicator {
   final Indicator lowerChannel;
 
   @override
-  Tick calculate(int index) => Tick(
-        epoch: getEpochOfIndex(index),
-        quote: lowerChannel.getValue(index).quote +
-            (upperChannel.getValue(index).quote -
-                    lowerChannel.getValue(index).quote) /
-                2,
-      );
+  Tick calculate(int index) {
+    final double upper = upperChannel.getValue(index).quote;
+    final double lower = lowerChannel.getValue(index).quote;
+    return Tick(
+      epoch: getEpochOfIndex(index),
+      quote: lower + (upper - lower) / 2,
+    );
+  }
 }
