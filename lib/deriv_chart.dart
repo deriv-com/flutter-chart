@@ -28,5 +28,4 @@ export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
-export 'src/widgets/market_selector/symbol_svg_picture.dart';
 export 'src/x_axis/min_candle_duration_for_data_fit.dart';
