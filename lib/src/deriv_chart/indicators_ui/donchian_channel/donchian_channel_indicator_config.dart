@@ -1,6 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/donchian_channels_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
@@ -19,11 +19,10 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   final int lowPeriod;
 
   @override
-  // TODO: Replace with donchian series
-  Series getSeries(List<Tick> ticks) => BollingerBandSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes['close'](ticks),
-        period: 10,
-        movingAverageType: MovingAverageType.simple,
-        standardDeviationFactor: 2,
+  Series getSeries(List<Tick> ticks) =>
+      DonchianChannelsIndicatorSeries.fromIndicator(
+        IndicatorConfig.supportedFieldTypes['high'](ticks),
+        IndicatorConfig.supportedFieldTypes['low'](ticks),
+        this,
       );
 }

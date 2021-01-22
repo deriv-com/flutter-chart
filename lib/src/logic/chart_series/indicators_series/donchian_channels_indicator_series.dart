@@ -1,9 +1,10 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -17,30 +18,35 @@ class DonchianChannelsIndicatorSeries extends Series {
   /// Close values will be chosen by default.
   DonchianChannelsIndicatorSeries(
     List<Tick> ticks, {
-    int period = 20,
     String id,
   }) : this.fromIndicator(
-          CloseValueIndicator(ticks),
-          period: period,
+          HighValueIndicator(ticks),
+          LowValueIndicator(ticks),
+          const DonchianChannelIndicatorConfig(
+            highPeriod: 10,
+            lowPeriod: 10,
+          ),
           id: id,
         );
 
   /// Initializes
   DonchianChannelsIndicatorSeries.fromIndicator(
-    Indicator indicator, {
-    this.period = 20,
+    HighValueIndicator highIndicator,
+    LowValueIndicator lowIndicator,
+    this.config, {
     String id,
-  })  : _fieldIndicator = indicator,
+  })  : _highIndicator = highIndicator,
+        _lowIndicator = lowIndicator,
         super(id);
 
   LineSeries _upperChannelSeries;
   LineSeries _middleChannelSeries;
   LineSeries _lowerChannelSeries;
 
-  /// Period
-  final int period;
+  final HighValueIndicator _highIndicator;
+  final LowValueIndicator _lowIndicator;
 
-  final Indicator _fieldIndicator;
+  final DonchianChannelIndicatorConfig config;
 
   @override
   SeriesPainter<Series> createPainter() {
