@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
@@ -5,6 +6,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/lowest_value_indicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -56,24 +58,16 @@ class DonchianChannelsIndicatorSeries extends Series {
     // final CachedIndicator bbmSMA =
     //     MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
 
-    // final BollingerBandsLowerIndicator bblSMA = BollingerBandsLowerIndicator(
-    //   bbmSMA,
-    //   standardDeviation,
-    //   k: standardDeviationFactor,
-    // );
+    final LowestValueIndicator lowerChannelIndicator = LowestValueIndicator(
+      _lowIndicator,
+      config.lowPeriod,
+    );
 
-    // final BollingerBandsUpperIndicator bbuSMA = BollingerBandsUpperIndicator(
-    //   bbmSMA,
-    //   standardDeviation,
-    //   k: standardDeviationFactor,
-    // );
-
-    // _lowerSeries = LineSeries(bblSMA.results,
-    //     style: const LineStyle(color: Colors.redAccent));
-    // _middleSeries =
-    //     LineSeries(bbmSMA.results, style: const LineStyle(color: Colors.white));
-    // _upperSeries = LineSeries(bbuSMA.results,
-    //     style: const LineStyle(color: Colors.lightGreen));
+    _lowerChannelSeries = LineSeries(
+      lowerChannelIndicator.results,
+      // TODO: Move to config
+      style: const LineStyle(color: Colors.white),
+    );
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
