@@ -26,10 +26,13 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   /// Whether the area between upper and lower channel is filled.
   final bool showChannelFill;
 
+  /// Upper line style.
   final LineStyle upperLineStyle;
 
+  /// Middle line style.
   final LineStyle middleLineStyle;
 
+  /// Lower line style.
   final LineStyle lowerLineStyle;
 
   @override
