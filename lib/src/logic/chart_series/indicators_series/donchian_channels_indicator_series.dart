@@ -65,14 +65,12 @@ class DonchianChannelsIndicatorSeries extends Series {
 
     _upperChannelSeries = LineSeries(
       upperChannelIndicator.results,
-      // TODO: Move to config
-      style: const LineStyle(color: Colors.red),
+      style: config.upperLineStyle,
     );
 
     _lowerChannelSeries = LineSeries(
       lowerChannelIndicator.results,
-      // TODO: Move to config
-      style: const LineStyle(color: Colors.green),
+      style: config.lowerLineStyle,
     );
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands

@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart'
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/donchian_channels_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:flutter/material.dart';
 
 /// Bollinger Bands Indicator Config
 class DonchianChannelIndicatorConfig extends IndicatorConfig {
@@ -11,6 +12,8 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     this.highPeriod,
     this.lowPeriod,
     this.showChannelFill,
+    this.upperLineStyle = const LineStyle(color: Colors.red),
+    this.lowerLineStyle = const LineStyle(color: Colors.green),
   }) : super();
 
   /// Number of last candles used to calculate the highest value.
@@ -21,6 +24,10 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
 
   /// Whether the area between upper and lower channel is filled.
   final bool showChannelFill;
+
+  final LineStyle upperLineStyle;
+
+  final LineStyle lowerLineStyle;
 
   @override
   Series getSeries(List<Tick> ticks) =>
