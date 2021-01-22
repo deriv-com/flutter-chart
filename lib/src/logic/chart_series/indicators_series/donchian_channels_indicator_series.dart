@@ -15,7 +15,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
-/// Bollinger bands series
+/// Donchian Channels series
 class DonchianChannelsIndicatorSeries extends Series {
   /// Initializes
   ///
