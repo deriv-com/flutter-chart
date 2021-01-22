@@ -16,11 +16,9 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Donchian Channels series
-class DonchianChannelsIndicatorSeries extends Series {
+class DonchianChannelsSeries extends Series {
   /// Initializes
-  ///
-  /// Close values will be chosen by default.
-  DonchianChannelsIndicatorSeries(
+  DonchianChannelsSeries(
     List<Tick> ticks, {
     String id,
   }) : this.fromIndicator(
@@ -34,7 +32,7 @@ class DonchianChannelsIndicatorSeries extends Series {
         );
 
   /// Initializes
-  DonchianChannelsIndicatorSeries.fromIndicator(
+  DonchianChannelsSeries.fromIndicator(
     HighValueIndicator highIndicator,
     LowValueIndicator lowIndicator,
     this.config, {
@@ -89,7 +87,7 @@ class DonchianChannelsIndicatorSeries extends Series {
 
   @override
   bool didUpdate(ChartData oldData) {
-    final DonchianChannelsIndicatorSeries series = oldData;
+    final DonchianChannelsSeries series = oldData;
 
     final bool _upperChannelUpdated =
         _upperChannelSeries.didUpdate(series._upperChannelSeries);
