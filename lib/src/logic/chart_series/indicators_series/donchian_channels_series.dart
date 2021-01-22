@@ -24,10 +24,7 @@ class DonchianChannelsSeries extends Series {
   }) : this.fromIndicator(
           HighValueIndicator(ticks),
           LowValueIndicator(ticks),
-          const DonchianChannelIndicatorConfig(
-            highPeriod: 10,
-            lowPeriod: 10,
-          ),
+          const DonchianChannelIndicatorConfig(),
           id: id,
         );
 

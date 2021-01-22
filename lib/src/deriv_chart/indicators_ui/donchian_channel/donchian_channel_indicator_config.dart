@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 class DonchianChannelIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const DonchianChannelIndicatorConfig({
-    this.highPeriod,
-    this.lowPeriod,
-    this.showChannelFill,
+    this.highPeriod = 10,
+    this.lowPeriod = 10,
+    this.showChannelFill = true,
     this.upperLineStyle = const LineStyle(color: Colors.red),
     this.middleLineStyle = const LineStyle(color: Colors.white),
     this.lowerLineStyle = const LineStyle(color: Colors.green),
