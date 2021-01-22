@@ -78,8 +78,10 @@ class DonchianChannelsIndicatorSeries extends Series {
       style: config.lowerLineStyle,
     );
 
-    // TODO: add style
-    _middleChannelSeries = LineSeries(middleChannelIndicator.results);
+    _middleChannelSeries = LineSeries(
+      middleChannelIndicator.results,
+      style: config.middleLineStyle,
+    );
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }

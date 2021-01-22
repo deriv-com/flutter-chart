@@ -13,6 +13,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     this.lowPeriod,
     this.showChannelFill,
     this.upperLineStyle = const LineStyle(color: Colors.red),
+    this.middleLineStyle = const LineStyle(color: Colors.white),
     this.lowerLineStyle = const LineStyle(color: Colors.green),
   }) : super();
 
@@ -26,6 +27,8 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   final bool showChannelFill;
 
   final LineStyle upperLineStyle;
+
+  final LineStyle middleLineStyle;
 
   final LineStyle lowerLineStyle;
 
