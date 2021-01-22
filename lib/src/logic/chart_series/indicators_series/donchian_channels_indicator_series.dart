@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -19,14 +18,10 @@ class DonchianChannelsIndicatorSeries extends Series {
   DonchianChannelsIndicatorSeries(
     List<Tick> ticks, {
     int period = 20,
-    MovingAverageType movingAverageType = MovingAverageType.simple,
-    double standardDeviationFactor = 2,
     String id,
   }) : this.fromIndicator(
           CloseValueIndicator(ticks),
           period: period,
-          movingAverageType: movingAverageType,
-          standardDeviationFactor: standardDeviationFactor,
           id: id,
         );
 
@@ -34,8 +29,6 @@ class DonchianChannelsIndicatorSeries extends Series {
   DonchianChannelsIndicatorSeries.fromIndicator(
     Indicator indicator, {
     this.period = 20,
-    this.movingAverageType = MovingAverageType.simple,
-    this.standardDeviationFactor = 2,
     String id,
   })  : _fieldIndicator = indicator,
         super(id);
@@ -46,12 +39,6 @@ class DonchianChannelsIndicatorSeries extends Series {
 
   /// Period
   final int period;
-
-  /// Bollinger Bands Moving Average type
-  final MovingAverageType movingAverageType;
-
-  /// Standard Deviation value
-  final double standardDeviationFactor;
 
   final Indicator _fieldIndicator;
 
