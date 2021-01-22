@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/highest_value_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/lowest_value_indicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -52,21 +53,26 @@ class DonchianChannelsIndicatorSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    // final StandardDeviationIndicator standardDeviation =
-    //     StandardDeviationIndicator(_fieldIndicator, period);
-
-    // final CachedIndicator bbmSMA =
-    //     MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
+    final HighestValueIndicator upperChannelIndicator = HighestValueIndicator(
+      _highIndicator,
+      config.highPeriod,
+    );
 
     final LowestValueIndicator lowerChannelIndicator = LowestValueIndicator(
       _lowIndicator,
       config.lowPeriod,
     );
 
+    _upperChannelSeries = LineSeries(
+      upperChannelIndicator.results,
+      // TODO: Move to config
+      style: const LineStyle(color: Colors.red),
+    );
+
     _lowerChannelSeries = LineSeries(
       lowerChannelIndicator.results,
       // TODO: Move to config
-      style: const LineStyle(color: Colors.white),
+      style: const LineStyle(color: Colors.green),
     );
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
@@ -76,8 +82,8 @@ class DonchianChannelsIndicatorSeries extends Series {
   bool didUpdate(ChartData oldData) {
     final DonchianChannelsIndicatorSeries series = oldData;
 
-    // final bool _upperChannelUpdated =
-    //     _upperChannelSeries.didUpdate(series._upperChannelSeries);
+    final bool _upperChannelUpdated =
+        _upperChannelSeries.didUpdate(series._upperChannelSeries);
     // final bool _middleChannelUpdated =
     //     _middleChannelSeries.didUpdate(series._middleChannelSeries);
     final bool _lowerChannelUpdated =
@@ -87,12 +93,12 @@ class DonchianChannelsIndicatorSeries extends Series {
     //     _middleChannelUpdated ||
     //     _lowerChannelUpdated;
 
-    return _lowerChannelUpdated;
+    return _upperChannelUpdated || _lowerChannelUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    // _upperChannelSeries.update(leftEpoch, rightEpoch);
+    _upperChannelSeries.update(leftEpoch, rightEpoch);
     // _middleChannelSeries.update(leftEpoch, rightEpoch);
     _lowerChannelSeries.update(leftEpoch, rightEpoch);
   }
@@ -100,8 +106,7 @@ class DonchianChannelsIndicatorSeries extends Series {
   @override
   List<double> recalculateMinMax() => <double>[
         _lowerChannelSeries.minValue,
-        _lowerChannelSeries.minValue,
-        // _upperChannelSeries.maxValue,
+        _upperChannelSeries.maxValue,
       ];
 
   @override
@@ -114,8 +119,8 @@ class DonchianChannelsIndicatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    // _upperChannelSeries.paint(
-    //     canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _upperChannelSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     // _middleChannelSeries.paint(
     //     canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _lowerChannelSeries.paint(
