@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/half_difference_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/highest_value_indicator.dart';
@@ -63,6 +64,9 @@ class DonchianChannelsIndicatorSeries extends Series {
       config.lowPeriod,
     );
 
+    final HalfDifferenceIndicator middleChannelIndicator =
+        HalfDifferenceIndicator(upperChannelIndicator, lowerChannelIndicator);
+
     _upperChannelSeries = LineSeries(
       upperChannelIndicator.results,
       style: config.upperLineStyle,
@@ -72,6 +76,8 @@ class DonchianChannelsIndicatorSeries extends Series {
       lowerChannelIndicator.results,
       style: config.lowerLineStyle,
     );
+
+    _middleChannelSeries = LineSeries(middleChannelIndicator.results);
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
