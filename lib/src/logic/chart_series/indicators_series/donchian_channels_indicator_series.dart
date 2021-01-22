@@ -50,6 +50,7 @@ class DonchianChannelsIndicatorSeries extends Series {
   final HighValueIndicator _highIndicator;
   final LowValueIndicator _lowIndicator;
 
+  /// Configuration of donchian channels.
   final DonchianChannelIndicatorConfig config;
 
   @override
