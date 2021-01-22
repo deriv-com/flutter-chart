@@ -10,6 +10,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   const DonchianChannelIndicatorConfig({
     this.highPeriod,
     this.lowPeriod,
+    this.showChannelFill,
   }) : super();
 
   // TODO: Add doc
@@ -17,6 +18,9 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
 
   // TODO: Add doc
   final int lowPeriod;
+
+  /// Whether the area between upper and lower channel is filled.
+  final bool showChannelFill;
 
   @override
   Series getSeries(List<Tick> ticks) =>
