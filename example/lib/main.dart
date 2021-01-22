@@ -138,7 +138,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             TicksHistoryRequest(
               ticksHistory: _symbol.name,
               adjustStartTime: 1,
-              end: '${DateTime.now().millisecondsSinceEpoch ~/ 1000}',
+              end: 'latest',
               start: ticks.last.epoch ~/ 1000,
               style: granularity == 0 ? 'ticks' : 'candles',
               granularity: granularity > 0 ? granularity : null,
