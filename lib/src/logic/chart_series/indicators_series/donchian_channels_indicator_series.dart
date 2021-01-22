@@ -76,28 +76,33 @@ class DonchianChannelsIndicatorSeries extends Series {
   bool didUpdate(ChartData oldData) {
     final DonchianChannelsIndicatorSeries series = oldData;
 
-    final bool _upperChannelUpdated =
-        _upperChannelSeries.didUpdate(series._upperChannelSeries);
-    final bool _middleChannelUpdated =
-        _middleChannelSeries.didUpdate(series._middleChannelSeries);
+    // final bool _upperChannelUpdated =
+    //     _upperChannelSeries.didUpdate(series._upperChannelSeries);
+    // final bool _middleChannelUpdated =
+    //     _middleChannelSeries.didUpdate(series._middleChannelSeries);
     final bool _lowerChannelUpdated =
         _lowerChannelSeries.didUpdate(series._lowerChannelSeries);
 
-    return _upperChannelUpdated ||
-        _middleChannelUpdated ||
-        _lowerChannelUpdated;
+    // return _upperChannelUpdated ||
+    //     _middleChannelUpdated ||
+    //     _lowerChannelUpdated;
+
+    return _lowerChannelUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _upperChannelSeries.update(leftEpoch, rightEpoch);
-    _middleChannelSeries.update(leftEpoch, rightEpoch);
+    // _upperChannelSeries.update(leftEpoch, rightEpoch);
+    // _middleChannelSeries.update(leftEpoch, rightEpoch);
     _lowerChannelSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
-  List<double> recalculateMinMax() =>
-      <double>[_lowerChannelSeries.minValue, _upperChannelSeries.maxValue];
+  List<double> recalculateMinMax() => <double>[
+        _lowerChannelSeries.minValue,
+        _lowerChannelSeries.minValue,
+        // _upperChannelSeries.maxValue,
+      ];
 
   @override
   void paint(
@@ -109,10 +114,10 @@ class DonchianChannelsIndicatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _upperChannelSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _middleChannelSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    // _upperChannelSeries.paint(
+    //     canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    // _middleChannelSeries.paint(
+    //     canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _lowerChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
