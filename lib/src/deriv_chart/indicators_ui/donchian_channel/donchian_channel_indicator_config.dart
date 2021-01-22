@@ -16,7 +16,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   // TODO: Add doc
   final int highPeriod;
 
-  // TODO: Add doc
+  /// Number of last candles used to calculate lowest value.
   final int lowPeriod;
 
   /// Whether the area between upper and lower channel is filled.
