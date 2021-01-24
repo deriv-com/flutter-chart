@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Provides the path to the PNG file located in Chart package directory.
 String getSymbolAssetPath(String assetCode) =>
-    'assets/icons/symbols/$assetCode.png';
+    'assets/icons/symbols/${assetCode.toLowerCase()}.png';
 
 /// A wrapper widget around [AssetImage] which provides image icon for the
 /// given `symbolCode`.
