@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import 'tick.dart';
@@ -51,7 +52,6 @@ class Candle extends Tick {
   String toString() =>
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
-  // ignore_hash_and_equals
   @override
   bool operator ==(covariant Candle other) =>
       epoch == other.epoch &&
@@ -59,4 +59,7 @@ class Candle extends Tick {
       high == other.high &&
       low == other.low &&
       close == other.close;
+
+  @override
+  int get hashCode => hashValues(epoch, open, high, low, close);
 }

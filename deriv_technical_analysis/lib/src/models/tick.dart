@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 import 'ohlc.dart';
@@ -34,5 +35,5 @@ class Tick implements OHLC {
       epoch == other.epoch && quote == other.quote;
 
   @override
-  int get hashCode => super.hashCode;
+  int get hashCode => hashValues(epoch, quote);
 }
