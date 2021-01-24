@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/highest_value_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -29,9 +28,9 @@ void main() {
       final HighestValueIndicator indicator =
           HighestValueIndicator(CloseValueIndicator(ticks), 10);
 
-      expect(indicator.results[9].quote, 64.75);
-      expect(indicator.results[10].quote, 66.37);
-      expect(indicator.results[11].quote, 68.51);
+      expect(indicator.getValue(9).quote, 64.75);
+      expect(indicator.getValue(10).quote, 66.37);
+      expect(indicator.getValue(11).quote, 68.51);
     });
   });
 }
