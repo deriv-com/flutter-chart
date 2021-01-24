@@ -1,7 +1,7 @@
+import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// Super-class of series with OHLC data (CandleStick, OHLC, Hollow).

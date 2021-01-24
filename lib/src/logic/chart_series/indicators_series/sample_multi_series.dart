@@ -7,8 +7,8 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import 'ma_series.dart';

@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-
-import 'tick.dart';
 
 /// Candle class.
 @immutable
-class Candle extends Tick {
+class Candle extends Tick with EquatableMixin {
   /// Initializes a candle class.
   const Candle({
     @required int epoch,
@@ -16,20 +15,19 @@ class Candle extends Tick {
   }) : super(epoch: epoch, quote: close);
 
   /// Initializes a candle class with only the given parameters or non given.
-  const Candle.noParam(
-      int epoch, double open, double close, double high, double low)
+  Candle.noParam(int epoch, double open, double close, double high, double low)
       : this(epoch: epoch, open: open, close: close, high: high, low: low);
 
-  @override
+  /// High value
   final double high;
 
-  @override
+  /// Low value.
   final double low;
 
-  @override
+  /// Open value.
   final double open;
 
-  @override
+  /// Close value.
   final double close;
 
   /// Creates a copy of this object.
@@ -52,14 +50,5 @@ class Candle extends Tick {
   String toString() =>
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
-  @override
-  bool operator ==(covariant Candle other) =>
-      epoch == other.epoch &&
-      open == other.open &&
-      high == other.high &&
-      low == other.low &&
-      close == other.close;
-
-  @override
-  int get hashCode => hashValues(epoch, open, high, low, close);
+  List<Object> get props => [epoch, open, close, high, low];
 }

@@ -1,13 +1,13 @@
 import 'package:deriv_technical_analysis/src/indicators/indicator.dart';
-import 'package:deriv_technical_analysis/src/models/ohlc.dart';
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/data_input.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 
 /// A helper indicator which gets the close values of List of [OHLC]
-class CloseValueIndicator extends Indicator {
+class CloseValueIndicator<T extends Result> extends Indicator<T> {
   /// Initializes
-  CloseValueIndicator(List<OHLC> entries) : super(entries);
+  CloseValueIndicator(DataInput input) : super(input);
 
   @override
-  Tick getValue(int index) =>
-      Tick(epoch: getEpochOfIndex(index), quote: entries[index].close);
+  T getValue(int index) => createResultOf(
+      epoch: getEpochOfIndex(index), quote: entries[index].close);
 }

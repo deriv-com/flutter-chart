@@ -19,6 +19,5 @@ export 'src/indicators/calculations/statistics/variance_indicator.dart';
 export 'src/indicators/calculations/wma_indicator.dart';
 export 'src/indicators/calculations/zelma_indicator.dart';
 export 'src/indicators/indicator.dart';
-export 'src/models/candle.dart';
-export 'src/models/tick.dart';
-
+export 'src/models/data_input.dart' show DataInput;
+export 'src/models/models.dart' show OHLC, Result;

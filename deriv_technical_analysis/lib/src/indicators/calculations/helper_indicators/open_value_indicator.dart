@@ -1,13 +1,14 @@
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:deriv_technical_analysis/src/models/data_input.dart';
 
 import '../../indicator.dart';
 
-/// A helper indicator to get the open value of a list of [Tick]
-class OpenValueIndicator extends Indicator {
+/// A helper indicator to get the open value of a list of [DataInput]
+class OpenValueIndicator<T extends Result> extends Indicator<T> {
   /// Initializes
-  OpenValueIndicator(List<Tick> entries) : super(entries);
+  OpenValueIndicator(DataInput input) : super(input);
 
   @override
-  Tick getValue(int index) =>
-      Tick(epoch: getEpochOfIndex(index), quote: entries[index].open);
+  T getValue(int index) =>
+      createResultOf(epoch: getEpochOfIndex(index), quote: entries[index].open);
 }

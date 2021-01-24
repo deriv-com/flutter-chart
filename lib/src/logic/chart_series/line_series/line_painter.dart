@@ -2,8 +2,8 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';

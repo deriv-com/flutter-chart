@@ -1,24 +1,25 @@
 import 'dart:math';
 
-import '../../../models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
+
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
 import 'variance_indicator.dart';
 
 /// Standard deviation indicator.
-class StandardDeviationIndicator extends CachedIndicator {
+class StandardDeviationIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   ///
   /// [indicator] the indicator to calculates SD on.
   /// [period]  the time frame
-  StandardDeviationIndicator(Indicator indicator, int period)
+  StandardDeviationIndicator(Indicator<T> indicator, int period)
       : _variance = VarianceIndicator(indicator, period),
         super.fromIndicator(indicator);
 
   final VarianceIndicator _variance;
 
   @override
-  Tick calculate(int index) => Tick(
+  T calculate(int index) => createResultOf(
         epoch: getEpochOfIndex(index),
         quote: sqrt(_variance.getValue(index).quote),
       );

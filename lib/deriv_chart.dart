@@ -28,6 +28,6 @@ export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
+export 'src/models/candle.dart';
+export 'src/models/tick.dart';
 export 'src/x_axis/min_candle_duration_for_data_fit.dart';
-export 'package:deriv_technical_analysis/src/models/tick.dart';
-export 'package:deriv_technical_analysis/src/models/candle.dart';

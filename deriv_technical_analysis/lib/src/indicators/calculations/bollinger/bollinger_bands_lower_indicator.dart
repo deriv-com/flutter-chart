@@ -1,10 +1,11 @@
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
 
 /// Bollinger bands lower indicator
-class BollingerBandsLowerIndicator extends CachedIndicator {
+class BollingerBandsLowerIndicator<T extends Result>
+    extends CachedIndicator<T> {
   /// Initializes.
   ///
   /// [k]         Defaults value to 2.
@@ -26,7 +27,7 @@ class BollingerBandsLowerIndicator extends CachedIndicator {
   final double k;
 
   @override
-  Tick calculate(int index) => Tick(
+  T calculate(int index) => createResultOf(
         epoch: getEpochOfIndex(index),
         quote:
             bbm.getValue(index).quote - (indicator.getValue(index).quote * k),

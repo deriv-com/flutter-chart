@@ -1,20 +1,21 @@
-import '../models/ohlc.dart';
-import '../models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/data_input.dart';
+
+import '../models/models.dart';
 import 'indicator.dart';
 
 /// Calculates and keeps the result of indicator calculation values in [results].
 /// And decides when to calculate indicator's value for an index.
 // TODO(Ramin): Later if we require a level of caching can be added here. Right now it calculates indicator for the entire list.
-abstract class CachedIndicator extends Indicator {
+abstract class CachedIndicator<T extends Result> extends Indicator<T> {
   /// Initializes
-  CachedIndicator(List<OHLC> entries)
-      : results = List<Tick>(entries.length),
-        super(entries) {
+  CachedIndicator(DataInput input)
+      : results = List<T>(input.entries.length),
+        super(input) {
     _calculateIndicatorValues();
   }
 
   /// Initializes from another [Indicator]
-  CachedIndicator.fromIndicator(Indicator indicator) : this(indicator.entries);
+  CachedIndicator.fromIndicator(Indicator<T> indicator) : this(indicator.input);
 
   // TODO(Ramin): Add a method named calculateAll. Can be overridden. Some indicator might implement it in an optimal way.
   void _calculateIndicatorValues() {
@@ -24,10 +25,10 @@ abstract class CachedIndicator extends Indicator {
   }
 
   /// List of cached result.
-  final List<Tick> results;
+  final List<T> results;
 
   @override
-  Tick getValue(int index) {
+  T getValue(int index) {
     if (results[index] == null) {
       results[index] = calculate(index);
     }
@@ -36,5 +37,5 @@ abstract class CachedIndicator extends Indicator {
   }
 
   /// Calculates the value of this indicator for the given [index]
-  Tick calculate(int index);
+  T calculate(int index);
 }

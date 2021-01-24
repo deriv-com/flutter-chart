@@ -1,5 +1,5 @@
 import 'package:deriv_technical_analysis/src/indicators/calculations/statistics/standard_deviation_indicator.dart';
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
@@ -8,7 +8,7 @@ import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 /// %B Indicator.
-class PercentBIndicator extends CachedIndicator {
+class PercentBIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   ///
   /// [indicator] An indicator (usually close price)
@@ -38,18 +38,18 @@ class PercentBIndicator extends CachedIndicator {
   final Indicator indicator;
 
   /// The upper indicator of the BollingerBand
-  final BollingerBandsUpperIndicator bbu;
+  final BollingerBandsUpperIndicator<T> bbu;
 
   /// The lower indicator of the BollingerBand
-  final BollingerBandsLowerIndicator bbl;
+  final BollingerBandsLowerIndicator<T> bbl;
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     final double value = indicator.getValue(index).quote;
     final double upValue = bbu.getValue(index).quote;
     final double lowValue = bbl.getValue(index).quote;
 
-    return Tick(
+    return createResultOf(
       epoch: getEpochOfIndex(index),
       quote: (value - lowValue) / (upValue - lowValue),
     );

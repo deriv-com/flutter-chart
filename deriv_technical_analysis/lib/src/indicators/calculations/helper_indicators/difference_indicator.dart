@@ -1,22 +1,22 @@
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../../indicator.dart';
 
 /// Difference values between two indicators
-class DifferenceIndicator extends Indicator {
+class DifferenceIndicator<T extends Result> extends Indicator<T> {
   /// Initializes
   ///
   /// (first minus second)
-  DifferenceIndicator(this.first, this.second) : super(first.entries);
+  DifferenceIndicator(this.first, this.second) : super(first.input);
 
   /// First indicator
-  final Indicator first;
+  final Indicator<T> first;
 
   /// Second indicator
-  final Indicator second;
+  final Indicator<T> second;
 
   @override
-  Tick getValue(int index) => Tick(
+  T getValue(int index) => createResultOf(
         epoch: getEpochOfIndex(index),
         quote: first.getValue(index).quote - (second.getValue(index).quote),
       );

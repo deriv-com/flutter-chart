@@ -1,12 +1,12 @@
 import 'package:deriv_technical_analysis/src/indicators/indicator.dart';
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 
 import '../../cached_indicator.dart';
 import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 /// Bollinger Band Width indicator.
-class BollingerBandWidthIndicator extends CachedIndicator {
+class BollingerBandWidthIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes.
   ///
   /// [bbu] the upper band Indicator.
@@ -17,7 +17,7 @@ class BollingerBandWidthIndicator extends CachedIndicator {
     this.bbm,
     this.bbl, {
     this.hundred = 100,
-  }) : super(bbm.entries);
+  }) : super(bbm.input);
 
   /// The upper band Indicator.
   final BollingerBandsUpperIndicator bbu;
@@ -32,7 +32,7 @@ class BollingerBandWidthIndicator extends CachedIndicator {
   final double hundred;
 
   @override
-  Tick calculate(int index) => Tick(
+  T calculate(int index) => createResultOf(
         epoch: getEpochOfIndex(index),
         quote: ((bbu.getValue(index).quote - bbl.getValue(index).quote) /
                 bbm.getValue(index).quote) *

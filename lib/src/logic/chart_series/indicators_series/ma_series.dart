@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/models/IndicatorInput.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
@@ -16,7 +18,7 @@ class MASeries extends LineSeries {
     int period = 15,
     MovingAverageType type = MovingAverageType.simple,
   }) : this.fromIndicator(
-          CloseValueIndicator(entries),
+          CloseValueIndicator(IndicatorInput(entries)),
           id: id,
           style: style,
           period: period,
@@ -36,22 +38,22 @@ class MASeries extends LineSeries {
           style: style ?? const LineStyle(thickness: 0.5),
         );
 
-  static CachedIndicator getMAIndicator(
+  static CachedIndicator<Tick> getMAIndicator(
     Indicator indicator,
     int period,
     MovingAverageType type,
   ) {
     switch (type) {
       case MovingAverageType.exponential:
-        return EMAIndicator(indicator, period);
+        return EMAIndicator<Tick>(indicator, period);
       case MovingAverageType.weighted:
-        return WMAIndicator(indicator, period);
+        return WMAIndicator<Tick>(indicator, period);
       case MovingAverageType.hull:
-        return HMAIndicator(indicator, period);
+        return HMAIndicator<Tick>(indicator, period);
       case MovingAverageType.zeroLag:
-        return ZLEMAIndicator(indicator, period);
+        return ZLEMAIndicator<Tick>(indicator, period);
       default:
-        return SMAIndicator(indicator, period);
+        return SMAIndicator<Tick>(indicator, period);
     }
   }
 }

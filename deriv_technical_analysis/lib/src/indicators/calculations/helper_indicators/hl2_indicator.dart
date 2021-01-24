@@ -1,16 +1,17 @@
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:deriv_technical_analysis/src/models/data_input.dart';
 
 import '../../indicator.dart';
 
 /// A helper indicator to get the [(H + L) / 2] value of a list of [Tick]
-class HL2Indicator extends Indicator {
+class HL2Indicator<T extends Result> extends Indicator<T> {
   /// Initializes
-  HL2Indicator(List<Tick> entries) : super(entries);
+  HL2Indicator(DataInput input) : super(input);
 
   @override
-  Tick getValue(int index) {
-    final Tick entry = entries[index];
-    return Tick(
+  T getValue(int index) {
+    final OHLC entry = entries[index];
+    return createResultOf(
       epoch: getEpochOfIndex(index),
       quote: (entry.high + entry.low) / 2,
     );

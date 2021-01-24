@@ -5,31 +5,32 @@ import 'package:deriv_technical_analysis/src/indicators/calculations/helper_indi
 import 'package:deriv_technical_analysis/src/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/statistics/standard_deviation_indicator.dart';
 import 'package:deriv_technical_analysis/src/indicators/indicator.dart';
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/data_input.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BollingerBands Indicator', () {
     test('BollingerBandsUpperIndicator calculates the correct result', () {
-      const List<Tick> ticks = <Tick>[
-        Tick(epoch: 1, quote: 1),
-        Tick(epoch: 2, quote: 2),
-        Tick(epoch: 3, quote: 3),
-        Tick(epoch: 4, quote: 4),
-        Tick(epoch: 5, quote: 3),
-        Tick(epoch: 6, quote: 4),
-        Tick(epoch: 7, quote: 5),
-        Tick(epoch: 8, quote: 4),
-        Tick(epoch: 9, quote: 3),
-        Tick(epoch: 10, quote: 3),
-        Tick(epoch: 11, quote: 4),
-        Tick(epoch: 12, quote: 3),
-        Tick(epoch: 13, quote: 2),
+      const List<TickEntry> ticks = <TickEntry>[
+        TickEntry(epoch: 1, quote: 1),
+        TickEntry(epoch: 2, quote: 2),
+        TickEntry(epoch: 3, quote: 3),
+        TickEntry(epoch: 4, quote: 4),
+        TickEntry(epoch: 5, quote: 3),
+        TickEntry(epoch: 6, quote: 4),
+        TickEntry(epoch: 7, quote: 5),
+        TickEntry(epoch: 8, quote: 4),
+        TickEntry(epoch: 9, quote: 3),
+        TickEntry(epoch: 10, quote: 3),
+        TickEntry(epoch: 11, quote: 4),
+        TickEntry(epoch: 12, quote: 3),
+        TickEntry(epoch: 13, quote: 2),
       ];
 
       const int period = 3;
 
-      final CloseValueIndicator closePrice = CloseValueIndicator(ticks);
+      final CloseValueIndicator closePrice = CloseValueIndicator(Input(ticks));
 
       final Indicator bbmSMA = SMAIndicator(closePrice, period);
       final StandardDeviationIndicator standardDeviation =
@@ -68,30 +69,30 @@ void main() {
     });
 
     test('Bollinger Percent B calculates the correct result', () {
-      const List<Tick> ticks = <Tick>[
-        Tick(epoch: 1, quote: 10),
-        Tick(epoch: 2, quote: 12),
-        Tick(epoch: 3, quote: 15),
-        Tick(epoch: 4, quote: 14),
-        Tick(epoch: 5, quote: 17),
-        Tick(epoch: 6, quote: 20),
-        Tick(epoch: 7, quote: 21),
-        Tick(epoch: 8, quote: 20),
-        Tick(epoch: 9, quote: 20),
-        Tick(epoch: 10, quote: 19),
-        Tick(epoch: 11, quote: 20),
-        Tick(epoch: 12, quote: 17),
-        Tick(epoch: 13, quote: 12),
-        Tick(epoch: 14, quote: 12),
-        Tick(epoch: 15, quote: 9),
-        Tick(epoch: 16, quote: 8),
-        Tick(epoch: 17, quote: 9),
-        Tick(epoch: 18, quote: 10),
-        Tick(epoch: 19, quote: 9),
-        Tick(epoch: 20, quote: 10),
+      const List<TickEntry> ticks = <TickEntry>[
+        TickEntry(epoch: 1, quote: 10),
+        TickEntry(epoch: 2, quote: 12),
+        TickEntry(epoch: 3, quote: 15),
+        TickEntry(epoch: 4, quote: 14),
+        TickEntry(epoch: 5, quote: 17),
+        TickEntry(epoch: 6, quote: 20),
+        TickEntry(epoch: 7, quote: 21),
+        TickEntry(epoch: 8, quote: 20),
+        TickEntry(epoch: 9, quote: 20),
+        TickEntry(epoch: 10, quote: 19),
+        TickEntry(epoch: 11, quote: 20),
+        TickEntry(epoch: 12, quote: 17),
+        TickEntry(epoch: 13, quote: 12),
+        TickEntry(epoch: 14, quote: 12),
+        TickEntry(epoch: 15, quote: 9),
+        TickEntry(epoch: 16, quote: 8),
+        TickEntry(epoch: 17, quote: 9),
+        TickEntry(epoch: 18, quote: 10),
+        TickEntry(epoch: 19, quote: 9),
+        TickEntry(epoch: 20, quote: 10),
       ];
 
-      final Indicator closePrice = CloseValueIndicator(ticks);
+      final Indicator closePrice = CloseValueIndicator(Input(ticks));
 
       final PercentBIndicator pcb = PercentBIndicator(closePrice, 5);
 

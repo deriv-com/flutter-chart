@@ -1,10 +1,11 @@
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
 
 /// Bollinger bands upper indicator
-class BollingerBandsUpperIndicator extends CachedIndicator {
+class BollingerBandsUpperIndicator<T extends Result>
+    extends CachedIndicator<T> {
   /// Initializes.
   ///
   ///  [bbm]       the middle band Indicator. Typically an SMAIndicator is
@@ -16,16 +17,16 @@ class BollingerBandsUpperIndicator extends CachedIndicator {
       : super.fromIndicator(deviation);
 
   /// Deviation indicator
-  final Indicator deviation;
+  final Indicator<T> deviation;
 
   /// The middle indicator of the BollingerBand
-  final Indicator bbm;
+  final Indicator<T> bbm;
 
   /// Default is 2.
   final double k;
 
   @override
-  Tick calculate(int index) => Tick(
+  T calculate(int index) => createResultOf(
         epoch: getEpochOfIndex(index),
         quote:
             bbm.getValue(index).quote + (deviation.getValue(index).quote * k),

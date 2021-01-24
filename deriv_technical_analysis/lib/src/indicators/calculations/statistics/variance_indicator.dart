@@ -1,12 +1,13 @@
 import 'dart:math' as math;
 
-import '../../../models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
+
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
 import '../sma_indicator.dart';
 
 /// Variance indicator.
-class VarianceIndicator extends CachedIndicator {
+class VarianceIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   ///
   /// [indicator] the indicator
@@ -16,7 +17,7 @@ class VarianceIndicator extends CachedIndicator {
         super.fromIndicator(indicator);
 
   /// Indicator
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   /// Bar count
   final int period;
@@ -24,7 +25,7 @@ class VarianceIndicator extends CachedIndicator {
   final SMAIndicator _sma;
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     final int startIndex = math.max(0, index - period + 1);
     final int numberOfObservations = index - startIndex + 1;
     double variance = 0;
@@ -37,6 +38,6 @@ class VarianceIndicator extends CachedIndicator {
 
     variance = variance / numberOfObservations;
 
-    return Tick(epoch: getEpochOfIndex(index), quote: variance);
+    return createResultOf(epoch: getEpochOfIndex(index), quote: variance);
   }
 }

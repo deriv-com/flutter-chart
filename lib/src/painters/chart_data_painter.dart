@@ -2,8 +2,8 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.

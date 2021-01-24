@@ -1,23 +1,24 @@
 import 'dart:math';
 
-import '../../models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
+
 import '../cached_indicator.dart';
 import '../indicator.dart';
 
 /// Highest value in a range
-class HighestValueIndicator extends CachedIndicator {
+class HighestValueIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   HighestValueIndicator(this.indicator, this.period)
       : super.fromIndicator(indicator);
 
   /// Calculating highest value on the result of this indicator
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   /// The period
   final int period;
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     final int end = max(0, index - period + 1);
     double highest = indicator.getValue(index).quote;
 
@@ -27,6 +28,6 @@ class HighestValueIndicator extends CachedIndicator {
       }
     }
 
-    return Tick(epoch: getEpochOfIndex(index), quote: highest);
+    return createResultOf(epoch: getEpochOfIndex(index), quote: highest);
   }
 }

@@ -1,5 +1,4 @@
-
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 
 /// Returns a reference to candle with exact or closest epoch to [targetEpoch].
 ///

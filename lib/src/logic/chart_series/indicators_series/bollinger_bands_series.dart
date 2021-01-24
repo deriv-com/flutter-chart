@@ -5,8 +5,10 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.d
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/models/IndicatorInput.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
@@ -24,7 +26,7 @@ class BollingerBandSeries extends Series {
     double standardDeviationFactor = 2,
     String id,
   }) : this.fromIndicator(
-          CloseValueIndicator(ticks),
+          CloseValueIndicator<Tick>(IndicatorInput(ticks)),
           period: period,
           movingAverageType: movingAverageType,
           standardDeviationFactor: standardDeviationFactor,
@@ -33,7 +35,7 @@ class BollingerBandSeries extends Series {
 
   /// Initializes
   BollingerBandSeries.fromIndicator(
-    Indicator indicator, {
+    Indicator<Tick> indicator, {
     this.period = 20,
     this.movingAverageType = MovingAverageType.simple,
     this.standardDeviationFactor = 2,
@@ -58,19 +60,21 @@ class BollingerBandSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    final StandardDeviationIndicator standardDeviation =
+    final StandardDeviationIndicator<Tick> standardDeviation =
         StandardDeviationIndicator(_fieldIndicator, period);
 
-    final CachedIndicator bbmSMA =
+    final CachedIndicator<Tick> bbmSMA =
         MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
 
-    final BollingerBandsLowerIndicator bblSMA = BollingerBandsLowerIndicator(
+    final BollingerBandsLowerIndicator<Tick> bblSMA =
+        BollingerBandsLowerIndicator<Tick>(
       bbmSMA,
       standardDeviation,
       k: standardDeviationFactor,
     );
 
-    final BollingerBandsUpperIndicator bbuSMA = BollingerBandsUpperIndicator(
+    final BollingerBandsUpperIndicator bbuSMA =
+        BollingerBandsUpperIndicator<Tick>(
       bbmSMA,
       standardDeviation,
       k: standardDeviationFactor,

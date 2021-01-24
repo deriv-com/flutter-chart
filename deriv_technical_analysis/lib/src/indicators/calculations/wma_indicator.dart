@@ -1,9 +1,10 @@
-import '../../models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+
 import '../cached_indicator.dart';
 import '../indicator.dart';
 
 /// Weighted Moving Average indicator
-class WMAIndicator extends CachedIndicator {
+class WMAIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   WMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 
@@ -11,10 +12,10 @@ class WMAIndicator extends CachedIndicator {
   final int period;
 
   /// Indicator
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     if (index == 0) {
       return indicator.getValue(0);
     }
@@ -24,7 +25,7 @@ class WMAIndicator extends CachedIndicator {
         value = value + (i * (indicator.getValue(i - 1).quote));
       }
 
-      return Tick(
+      return createResultOf(
         epoch: getEpochOfIndex(index),
         quote: value / (((index + 1) * (index + 2)) / 2),
       );
@@ -37,7 +38,7 @@ class WMAIndicator extends CachedIndicator {
       actualIndex--;
     }
 
-    return Tick(
+    return createResultOf(
       epoch: getEpochOfIndex(index),
       quote: value / ((period * (period + 1)) / 2),
     );

@@ -2,8 +2,9 @@
 // ** NOTE ** Not completed yet. In progress...
 // **********
 
-import '../../models/ohlc.dart';
-import '../../models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/data_input.dart';
+
+import '../../models/models.dart';
 import '../cached_indicator.dart';
 import 'helper_indicators/high_value_inidicator.dart';
 import 'helper_indicators/low_value_indicator.dart';
@@ -11,20 +12,20 @@ import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
 /// Parabolic Sar Indicator
-class ParabolicSarIndicator extends CachedIndicator {
+class ParabolicSarIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   ParabolicSarIndicator(
-    List<OHLC> entries, {
+    DataInput input, {
     double aF = 0.02,
     double maxA = 0.2,
     double increment = 0.02,
-  })  : _highPriceIndicator = HighValueIndicator(entries),
-        _lowPriceIndicator = LowValueIndicator(entries),
+  })  : _highPriceIndicator = HighValueIndicator<T>(input),
+        _lowPriceIndicator = LowValueIndicator<T>(input),
         _maxAcceleration = maxA,
         _accelerationFactor = aF,
         _accelerationIncrement = increment,
         _accelerationStart = aF,
-        super(entries);
+        super(input);
 
   final double _maxAcceleration;
   final double _accelerationIncrement;
@@ -37,8 +38,8 @@ class ParabolicSarIndicator extends CachedIndicator {
   // index of start bar of the current trend
   int _startTrendIndex = 0;
 
-  final LowValueIndicator _lowPriceIndicator;
-  final HighValueIndicator _highPriceIndicator;
+  final LowValueIndicator<T> _lowPriceIndicator;
+  final HighValueIndicator<T> _highPriceIndicator;
 
   // the extreme point of the current calculation
   double _currentExtremePoint;
@@ -47,11 +48,11 @@ class ParabolicSarIndicator extends CachedIndicator {
   double _minMaxExtremePoint;
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     double sar = double.nan;
     if (index == 0) {
       // no trend detection possible for the first value
-      return Tick(epoch: getEpochOfIndex(index), quote: sar);
+      return createResultOf(epoch: getEpochOfIndex(index), quote: sar);
     } else if (index == 1) {
       // start trend detection
       _currentTrend = entries.first.close < (entries[index].close);
@@ -66,14 +67,14 @@ class ParabolicSarIndicator extends CachedIndicator {
       }
       _currentExtremePoint = sar;
       _minMaxExtremePoint = _currentExtremePoint;
-      return Tick(epoch: getEpochOfIndex(index), quote: sar);
+      return createResultOf(epoch: getEpochOfIndex(index), quote: sar);
     }
 
     final double priorSar = getValue(index - 1).quote;
     if (_currentTrend) {
       // if up trend
-      sar = priorSar +
-          (_accelerationFactor * (_currentExtremePoint - priorSar));
+      sar =
+          priorSar + (_accelerationFactor * (_currentExtremePoint - priorSar));
       _currentTrend = _lowPriceIndicator.getValue(index).quote > sar;
       if (!_currentTrend) {
         // check if sar touches the min price
@@ -99,8 +100,8 @@ class ParabolicSarIndicator extends CachedIndicator {
       }
     } else {
       // downtrend
-      sar = priorSar -
-          (_accelerationFactor * (priorSar - _currentExtremePoint));
+      sar =
+          priorSar - (_accelerationFactor * (priorSar - _currentExtremePoint));
       _currentTrend = _highPriceIndicator.getValue(index).quote >= sar;
       if (_currentTrend) {
         // check if switch to up trend
@@ -122,7 +123,7 @@ class ParabolicSarIndicator extends CachedIndicator {
         }
       }
     }
-    return Tick(epoch: getEpochOfIndex(index), quote: sar);
+    return createResultOf(epoch: getEpochOfIndex(index), quote: sar);
   }
 
   ///  Increments the acceleration factor.

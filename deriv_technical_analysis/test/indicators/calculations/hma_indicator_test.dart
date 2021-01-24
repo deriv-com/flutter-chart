@@ -1,41 +1,42 @@
 import 'package:deriv_technical_analysis/src/helpers/functions.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/hma_indicator.dart';
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/data_input.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Hull Moving Average', () {
-    List<Tick> ticks;
+    List<TickEntry> ticks;
 
     setUpAll(() {
-      ticks = const <Tick>[
-        Tick(epoch: 1, quote: 84.53),
-        Tick(epoch: 2, quote: 87.39),
-        Tick(epoch: 3, quote: 84.55),
-        Tick(epoch: 4, quote: 82.83),
-        Tick(epoch: 5, quote: 82.58),
-        Tick(epoch: 6, quote: 83.74),
-        Tick(epoch: 7, quote: 83.33),
-        Tick(epoch: 8, quote: 84.57),
-        Tick(epoch: 9, quote: 86.98),
-        Tick(epoch: 10, quote: 87.10),
-        Tick(epoch: 11, quote: 83.11),
-        Tick(epoch: 12, quote: 83.60),
-        Tick(epoch: 13, quote: 83.66),
-        Tick(epoch: 14, quote: 82.76),
-        Tick(epoch: 15, quote: 79.22),
-        Tick(epoch: 16, quote: 79.03),
-        Tick(epoch: 17, quote: 78.18),
-        Tick(epoch: 18, quote: 77.42),
-        Tick(epoch: 19, quote: 74.65),
-        Tick(epoch: 20, quote: 77.48),
-        Tick(epoch: 21, quote: 76.87),
+      ticks = const <TickEntry>[
+        TickEntry(epoch: 1, quote: 84.53),
+        TickEntry(epoch: 2, quote: 87.39),
+        TickEntry(epoch: 3, quote: 84.55),
+        TickEntry(epoch: 4, quote: 82.83),
+        TickEntry(epoch: 5, quote: 82.58),
+        TickEntry(epoch: 6, quote: 83.74),
+        TickEntry(epoch: 7, quote: 83.33),
+        TickEntry(epoch: 8, quote: 84.57),
+        TickEntry(epoch: 9, quote: 86.98),
+        TickEntry(epoch: 10, quote: 87.10),
+        TickEntry(epoch: 11, quote: 83.11),
+        TickEntry(epoch: 12, quote: 83.60),
+        TickEntry(epoch: 13, quote: 83.66),
+        TickEntry(epoch: 14, quote: 82.76),
+        TickEntry(epoch: 15, quote: 79.22),
+        TickEntry(epoch: 16, quote: 79.03),
+        TickEntry(epoch: 17, quote: 78.18),
+        TickEntry(epoch: 18, quote: 77.42),
+        TickEntry(epoch: 19, quote: 74.65),
+        TickEntry(epoch: 20, quote: 77.48),
+        TickEntry(epoch: 21, quote: 76.87),
       ];
     });
 
     test('HMAIndicator calculates the correct result', () {
-      final HMAIndicator hma = HMAIndicator(CloseValueIndicator(ticks), 9);
+      final HMAIndicator hma = HMAIndicator(CloseValueIndicator(Input(ticks)), 9);
 
       expect(roundDouble(hma.results[10].quote, 4), 86.3204);
       expect(roundDouble(hma.results[11].quote, 4), 85.3705);

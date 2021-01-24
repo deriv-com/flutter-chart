@@ -1,22 +1,23 @@
 import 'dart:math';
 
-import '../../models/tick.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
+
 import '../cached_indicator.dart';
 import '../indicator.dart';
 
 /// Simple Moving Average Indicator
-class SMAIndicator extends CachedIndicator {
+class SMAIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   SMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 
   /// Indicator to calculate SMA on
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   /// Bar count
   final int period;
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     double sum = 0;
     for (int i = max(0, index - period + 1); i <= index; i++) {
       sum += indicator.getValue(i).quote;
@@ -24,6 +25,9 @@ class SMAIndicator extends CachedIndicator {
 
     final int realBarCount = min(period, index + 1);
 
-    return Tick(epoch: getEpochOfIndex(index), quote: sum / realBarCount);
+    return createResultOf(
+      epoch: getEpochOfIndex(index),
+      quote: sum / realBarCount,
+    );
   }
 }

@@ -1,10 +1,11 @@
-import '../../models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+
 import '../cached_indicator.dart';
 import '../indicator.dart';
 import 'sma_indicator.dart';
 
 /// Zero-lag Exponential Moving Average indicator
-class ZLEMAIndicator extends CachedIndicator {
+class ZLEMAIndicator<T extends Result> extends CachedIndicator<T> {
   /// Initializes
   ///
   /// [indicator] An indicator
@@ -16,7 +17,7 @@ class ZLEMAIndicator extends CachedIndicator {
         super.fromIndicator(indicator);
 
   /// Indicator to calculate ZELMA on
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   /// Bar count
   final int period;
@@ -25,7 +26,7 @@ class ZLEMAIndicator extends CachedIndicator {
   final int _lag;
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     if (index + 1 < period) {
       // Starting point of the ZLEMA
       return SMAIndicator(indicator, period).getValue(index);
@@ -37,7 +38,7 @@ class ZLEMAIndicator extends CachedIndicator {
 
     final double prevZlema = getValue(index - 1).quote;
 
-    return Tick(
+    return createResultOf(
       epoch: getEpochOfIndex(index),
       quote: (_k *
               ((2 * (indicator.getValue(index).quote)) -

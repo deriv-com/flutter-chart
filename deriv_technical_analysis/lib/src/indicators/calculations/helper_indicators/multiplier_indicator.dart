@@ -1,21 +1,21 @@
-import 'package:deriv_technical_analysis/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../../indicator.dart';
 
 /// A helper indicator to multiply another indicator values by a [coefficient].
-class MultiplierIndicator extends Indicator {
+class MultiplierIndicator<T extends Result> extends Indicator<T> {
   /// Initializes
   MultiplierIndicator(this.indicator, this.coefficient)
-      : super(indicator.entries);
+      : super(indicator.input);
 
   /// Indicator
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   /// Coefficient
   final double coefficient;
 
   @override
-  Tick getValue(int index) => Tick(
+  T getValue(int index) => createResultOf(
         epoch: getEpochOfIndex(index),
         quote: indicator.getValue(index).quote * coefficient,
       );
