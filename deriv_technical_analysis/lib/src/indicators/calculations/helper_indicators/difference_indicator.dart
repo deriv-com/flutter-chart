@@ -7,9 +7,7 @@ class DifferenceIndicator extends Indicator {
   /// Initializes
   ///
   /// (first minus second)
-  DifferenceIndicator(this.first, this.second) : super(first.entries) {
-    // TODO(NA): check if first indicator is equal to second one
-  }
+  DifferenceIndicator(this.first, this.second) : super(first.entries);
 
   /// First indicator
   final Indicator first;
