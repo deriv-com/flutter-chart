@@ -28,7 +28,7 @@ class ZigZagIndicator extends CachedIndicator {
 
     ///found first not nan value of the indicator before this tick
     for (int i = index - 1; i >= 0; i--) {
-      var previousTick = indicator.getValue(i);
+      var previousTick = getValue(i);
       if (previousTick.quote.isNaN) {
         continue;
       }

@@ -33,20 +33,20 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     final Path path = Path();
 
     bool isStartPointSet = false;
-
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Tick tick = series.visibleEntries[i];
+      if (!tick.quote.isNaN) {
+        if (!isStartPointSet) {
+          isStartPointSet = true;
+          path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
+          continue;
+        }
 
-      if (!isStartPointSet) {
-        isStartPointSet = true;
-        path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
-        continue;
+        final double x = epochToX(tick.epoch);
+        final double y = quoteToY(tick.quote);
+        path.lineTo(x, y);
       }
-
-      final double x = epochToX(tick.epoch);
-      final double y = quoteToY(tick.quote);
-      path.lineTo(x, y);
     }
 
     // Adding last visible entry line to the path
