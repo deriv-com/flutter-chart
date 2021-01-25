@@ -195,7 +195,6 @@ class _CrosshairAreaState extends State<CrosshairArea> {
                 size: Size(1, constraints.maxHeight),
                 painter: const CrosshairDotPainter(),
               ),
-              onEnd: () {},
             ),
             AnimatedPositioned(
               duration: animationDuration,
