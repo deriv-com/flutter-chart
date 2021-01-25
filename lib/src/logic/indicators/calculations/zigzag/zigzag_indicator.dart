@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/models/tick.dart';
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
 
-
 /// Highest value in a range
 class ZigZagIndicator extends CachedIndicator {
   /// Initializes
@@ -20,21 +19,28 @@ class ZigZagIndicator extends CachedIndicator {
 
   @override
   Tick calculate(int index) {
-    var x = indicator.getValue(index);
-    var f = x.quote * (distance / 100);
-    if (index == 0|| index==indicator.entries.length-1) {
-      return x;
+    final Tick thisTick = indicator.getValue(index);
+
+    /// the value of zigzag indicator is the same if it's first or last tick
+    if (index == 0 || index == indicator.entries.length - 1) {
+      return thisTick;
     }
-    var j=Tick(epoch: x.epoch, quote: double.nan);
-    for (int i = index - 1; i >=0; i--) {
-      var element = indicator.getValue(i);
-      if(!element.quote.isNaN && (x.quote - element.quote).abs()>= f){
-        return x;
+
+    ///found first not nan value of the indicator before this tick
+    for (int i = index - 1; i >= 0; i--) {
+      var previousTick = indicator.getValue(i);
+      if (previousTick.quote.isNaN) {
+        continue;
       }
-      else{
-        return j;
+
+      /// if the last point have enough distance with previous one
+      final double distanceInPercent = previousTick.quote * (distance / 100);
+      if ((thisTick.quote - previousTick.quote).abs() >= distanceInPercent) {
+        return thisTick;
+      } else {
+        return Tick(epoch: thisTick.epoch, quote: double.nan);
       }
     }
-    return j;
+    return Tick(epoch: thisTick.epoch, quote: double.nan);
   }
 }
