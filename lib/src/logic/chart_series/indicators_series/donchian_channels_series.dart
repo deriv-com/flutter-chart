@@ -175,7 +175,32 @@ class DonchianChannelsSeries extends Series {
         fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
       }
 
-      for (final Tick tick in _lowerChannelSeries.visibleEntries.reversed) {
+      // Check for animated lower tick.
+      final Tick lastLowerTick = _lowerChannelSeries.entries.last;
+      final Tick lastLowerVisibleTick = _lowerChannelSeries.visibleEntries.last;
+
+      if (lastLowerTick == lastLowerVisibleTick &&
+          _lowerChannelSeries.prevLastEntry != null) {
+        lastVisibleTickX = ui.lerpDouble(
+          epochToX(_lowerChannelSeries.prevLastEntry.epoch),
+          epochToX(lastLowerTick.epoch),
+          animationInfo.currentTickPercent,
+        );
+
+        final double tickY = quoteToY(ui.lerpDouble(
+          _lowerChannelSeries.prevLastEntry.quote,
+          lastLowerTick.quote,
+          animationInfo.currentTickPercent,
+        ));
+
+        fillPath.lineTo(lastVisibleTickX, tickY);
+      } else {
+        lastVisibleTickX = epochToX(lastLowerVisibleTick.epoch);
+        fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
+      }
+
+      for (final Tick tick
+          in _lowerChannelSeries.visibleEntries.reversed.skip(1)) {
         fillPath.lineTo(
           epochToX(tick.epoch),
           quoteToY(tick.quote),
