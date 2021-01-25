@@ -141,12 +141,22 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   Duration get animationDuration {
-    if (_dragVelocity.pixelsPerSecond.dx == 0) {
+    final double dragXVelocity =
+        _dragVelocity.pixelsPerSecond.dx.abs().roundToDouble();
+
+    if (dragXVelocity == 0) {
+      return const Duration(milliseconds: 50);
+    }
+
+    if (dragXVelocity > 10000) {
+      return const Duration(milliseconds: 5);
+    }
+
+    if (dragXVelocity < 500) {
       return const Duration(milliseconds: 100);
     }
 
-    final double vel = _dragVelocity.pixelsPerSecond.dx.abs() / 100;
-    return Duration(milliseconds: 100 ~/ vel);
+    return Duration(milliseconds: 100 ~/ ((dragXVelocity ~/ 300) + 1));
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {
