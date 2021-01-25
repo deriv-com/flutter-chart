@@ -32,11 +32,13 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
 class DonchianChannelIndicatorItemState
     extends IndicatorItemState<DonchianChannelIndicatorConfig> {
   int _highPeriod;
+  int _lowPeriod;
 
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>
       DonchianChannelIndicatorConfig(
         highPeriod: _getCurrentHighPeriod(),
+        lowPeriod: _getCurrentLowPeriod(),
       );
 
   @override
@@ -104,11 +106,23 @@ class DonchianChannelIndicatorItemState
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: '10',
+              initialValue: _getCurrentLowPeriod().toString(),
               keyboardType: TextInputType.number,
-              onChanged: (String text) {},
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  _highPeriod = int.tryParse(text);
+                } else {
+                  _highPeriod = 10;
+                }
+                updateIndicator();
+              },
             ),
           ),
         ],
       );
+
+  int _getCurrentLowPeriod() {
+    final DonchianChannelIndicatorConfig config = getConfig();
+    return _lowPeriod ?? config?.lowPeriod ?? 10;
+  }
 }
