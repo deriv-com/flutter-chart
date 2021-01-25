@@ -138,14 +138,27 @@ class DonchianChannelsSeries extends Series {
           quoteToY(_upperChannelSeries.visibleEntries.first.quote),
         );
 
-      _upperChannelSeries.visibleEntries;
-      _lowerChannelSeries.visibleEntries;
+      for (final Tick tick in _upperChannelSeries.visibleEntries.skip(1)) {
+        fillPath.lineTo(
+          epochToX(tick.epoch),
+          quoteToY(tick.quote),
+        );
+      }
+
+      for (final Tick tick in _lowerChannelSeries.visibleEntries.reversed) {
+        fillPath.lineTo(
+          epochToX(tick.epoch),
+          quoteToY(tick.quote),
+        );
+      }
+
+      fillPath.close();
 
       paintFill(
         canvas,
         fillPath,
         // TODO: pass from config
-        Colors.white24,
+        Colors.white10,
       );
     }
   }
