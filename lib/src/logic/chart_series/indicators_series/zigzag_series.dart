@@ -29,7 +29,7 @@ class ZigZagSeries extends LineSeries {
   );
 
   @override
-  SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
+  SeriesPainter<DataSeries<Tick>> createPainter() => ZigZagPainter(this);
 
 
   /// Initializes

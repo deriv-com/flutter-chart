@@ -10,9 +10,8 @@ import 'package:flutter/material.dart';
 
 import '../../../chart_data.dart';
 
-
 /// A [DataPainter] for painting line data.
-class ZigZagPainter extends LinePainter {
+class ZigZagPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   ZigZagPainter(DataSeries<Tick> series) : super(series);
 
@@ -35,37 +34,63 @@ class ZigZagPainter extends LinePainter {
     final Path path = Path();
 
     bool isStartPointSet = false;
-    if(series.visibleEntries.first.quote.isNaN){
-      var x=series.entries.indexOf(series.visibleEntries.first);
-      var y=0.0;
-      for(int i=x-1;i>=0;i--){
-        if(!series.entries[i].quote.isNaN){
-          y=series.entries[i].quote;
+
+    if (series.visibleEntries.first.quote.isNaN) {
+      var x = series.entries.indexOf(series.visibleEntries.first);
+      Tick firstPoint;
+      var y = 0.0;
+      for (int i = x - 1; i >= 0; i--) {
+        if (!series.entries[i].quote.isNaN) {
+          firstPoint = series.entries[i];
+          Tick lastPoint;
+          for (int j = i + 1; j < series.entries.length; j++) {
+            if (!series.entries[j].quote.isNaN) {
+              lastPoint = series.entries[j];
+              break;
+            }
+          }
+          y = ((lastPoint.quote - firstPoint.quote) /
+                  (lastPoint.epoch - firstPoint.epoch) *
+                  (series.visibleEntries.first.epoch - lastPoint.epoch)) +
+              lastPoint.quote;
           break;
         }
       }
-      series.visibleEntries.first=Tick(epoch: series.visibleEntries.first.epoch, quote:y);
-      print(series.visibleEntries.first.quote);
+      series.visibleEntries.first =
+          Tick(epoch: series.visibleEntries.first.epoch, quote: y);
     }
 
-    if(series.visibleEntries.last.quote.isNaN){
-      var x=series.entries.indexOf(series.visibleEntries.last);
-      var y=0.0;
-      for(int i=x+1;i<=series.entries.length;i++){
-        if(!series.entries[i].quote.isNaN){
-          y=series.entries[i].quote;
+    if (series.visibleEntries.last.quote.isNaN) {
+      var x = series.entries.indexOf(series.visibleEntries.last);
+      Tick firstPoint;
+      var y = 0.0;
+      for (int i = x + 1; i <= series.entries.length; i++) {
+        if (!series.entries[i].quote.isNaN) {
+          firstPoint = series.entries[i];
+          Tick lastPoint;
+          for (int j = i - 1; j >= 0; j--) {
+            if (!series.entries[j].quote.isNaN) {
+              lastPoint = series.entries[j];
+              break;
+            }
+          }
+          y = ((lastPoint.quote - firstPoint.quote) /
+                  (lastPoint.epoch - firstPoint.epoch) *
+                  (series.visibleEntries.last.epoch - lastPoint.epoch)) +
+              lastPoint.quote;
+
           break;
         }
       }
-      series.visibleEntries.last=Tick(epoch: series.visibleEntries.last.epoch, quote:y);
-      print(series.visibleEntries.last.quote);
+      series.visibleEntries.last =
+          Tick(epoch: series.visibleEntries.last.epoch, quote: y);
     }
 
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Tick tick = series.visibleEntries[i];
 
-      if(!tick.quote.isNaN){
+      if (!tick.quote.isNaN) {
         if (!isStartPointSet) {
           isStartPointSet = true;
           path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
@@ -76,7 +101,6 @@ class ZigZagPainter extends LinePainter {
         final double y = quoteToY(tick.quote);
         path.lineTo(x, y);
       }
-
     }
 
     // Adding last visible entry line to the path
@@ -99,52 +123,10 @@ class ZigZagPainter extends LinePainter {
 
       path.lineTo(lastVisibleTickX, tickY);
     } else {
-
       lastVisibleTickX = epochToX(lastVisibleTick.epoch);
       path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
 
-
     canvas.drawPath(path, linePaint);
-
-    if (style.hasArea) {
-      _drawArea(
-        canvas,
-        size,
-        path,
-        epochToX(series.visibleEntries.first.epoch),
-        lastVisibleTickX,
-        style,
-      );
-    }
-  }
-
-  void _drawArea(
-    Canvas canvas,
-    Size size,
-    Path linePath,
-    double lineStartX,
-    double lineEndX,
-    LineStyle style,
-  ) {
-    final Paint areaPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..shader = ui.Gradient.linear(
-        const Offset(0, 0),
-        Offset(0, size.height),
-        <Color>[
-          style.color.withOpacity(0.2),
-          style.color.withOpacity(0.01),
-        ],
-      );
-
-    linePath
-      ..lineTo(
-        lineEndX,
-        size.height,
-      )
-      ..lineTo(lineStartX, size.height);
-
-    canvas.drawPath(linePath, areaPaint);
   }
 }

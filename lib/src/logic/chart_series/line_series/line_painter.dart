@@ -34,40 +34,10 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     bool isStartPointSet = false;
 
-    if (series.visibleEntries.first.quote.isNaN) {
-      var x = series.entries.indexOf(series.visibleEntries.first);
-      var y = 0.0;
-      for (int i = x - 1; i >= 0; i--) {
-        if (!series.entries[i].quote.isNaN) {
-          y = series.entries[i].quote;
-          break;
-        }
-      }
-      series.visibleEntries.first =
-          Tick(epoch: series.visibleEntries.first.epoch, quote: y);
-      print(series.visibleEntries.first.quote);
-    }
-
-    if (series.visibleEntries.last.quote.isNaN) {
-      var x = series.entries.indexOf(series.visibleEntries.last);
-      var y = 0.0;
-      for (int i = x + 1; i <= series.entries.length; i++) {
-        if (!series.entries[i].quote.isNaN) {
-          y = series.entries[i].quote;
-          break;
-        }
-      }
-      series.visibleEntries.last =
-          Tick(epoch: series.visibleEntries.last.epoch, quote: y);
-      print(series.visibleEntries.last.quote);
-    }
-
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Tick tick = series.visibleEntries[i];
-      if (tick.quote.isNaN) {
-        continue;
-      }
+
       if (!isStartPointSet) {
         isStartPointSet = true;
         path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
