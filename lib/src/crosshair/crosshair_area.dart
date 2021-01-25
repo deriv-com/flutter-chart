@@ -1,13 +1,15 @@
+import 'package:deriv_chart/src/crosshair/crosshair_dot_painter.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'crosshair_details.dart';
-import 'crosshair_painter.dart';
+import 'crosshair_line_painter.dart';
 
 /// Place this area on top of the chart to display candle/point details on longpress.
 class CrosshairArea extends StatefulWidget {
@@ -54,6 +56,14 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
+  DateTime _timer;
+  final VelocityTracker _dragVelocityTracker =
+      VelocityTracker.withKind(PointerDeviceKind.touch);
+  VelocityEstimate _dragVelocity = const VelocityEstimate(
+      confidence: 1,
+      pixelsPerSecond: Offset.zero,
+      duration: Duration.zero,
+      offset: Offset.zero);
 
   @override
   void initState() {
@@ -99,11 +109,18 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     xAxis.disableAutoPan();
     _lastLongPressPosition = details.localPosition.dx;
     _updatePanSpeed();
+    _timer = DateTime.now();
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     _lastLongPressPosition = details.localPosition.dx;
-    _updatePanSpeed();
+    setState(() => _updatePanSpeed());
+
+    final DateTime now = DateTime.now();
+    final Duration passedTime = now.difference(_timer);
+    _timer = DateTime.now();
+    _dragVelocityTracker.addPosition(passedTime, details.localPosition);
+    _dragVelocity = _dragVelocityTracker.getVelocityEstimate();
   }
 
   void _updatePanSpeed() {
@@ -123,10 +140,18 @@ class _CrosshairAreaState extends State<CrosshairArea> {
         _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
   }
 
+  Duration get animationDuration {
+    if (_dragVelocity.pixelsPerSecond.dx == 0) {
+      return const Duration(milliseconds: 100);
+    }
+
+    final double vel = _dragVelocity.pixelsPerSecond.dx.abs() / 100;
+    return Duration(milliseconds: 100 ~/ vel);
+  }
+
   void _onLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
-
     xAxis.pan(0);
     xAxis.enableAutoPan();
 
@@ -149,21 +174,31 @@ class _CrosshairAreaState extends State<CrosshairArea> {
         crosshairTick = _getClosestTick();
       }
     }
-    return LayoutBuilder(builder: (context, constraints) {
-      return Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          CustomPaint(
-            size: Size.infinite,
-            painter: CrosshairPainter(
-              mainSeries: widget.mainSeries,
-              crosshairTick: crosshairTick,
-              epochToCanvasX: xAxis.xFromEpoch,
-              quoteToCanvasY: widget.quoteToCanvasY,
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      if (crosshairTick != null) {
+        return Stack(
+          children: <Widget>[
+            AnimatedPositioned(
+              duration: animationDuration,
+              left: xAxis.xFromEpoch(crosshairTick.epoch),
+              child: CustomPaint(
+                size: Size(1, constraints.maxHeight),
+                painter: const CrosshairLinePainter(),
+              ),
             ),
-          ),
-          if (crosshairTick != null)
-            Positioned(
+            AnimatedPositioned(
+              top: widget.quoteToCanvasY(crosshairTick.quote),
+              left: xAxis.xFromEpoch(crosshairTick.epoch),
+              duration: animationDuration,
+              child: CustomPaint(
+                size: Size(1, constraints.maxHeight),
+                painter: const CrosshairDotPainter(),
+              ),
+              onEnd: () {},
+            ),
+            AnimatedPositioned(
+              duration: animationDuration,
               top: 8,
               bottom: 0,
               width: constraints.maxWidth,
@@ -177,9 +212,12 @@ class _CrosshairAreaState extends State<CrosshairArea> {
                   pipSize: widget.pipSize,
                 ),
               ),
-            )
-        ],
-      );
+            ),
+          ],
+        );
+      } else {
+        return const SizedBox.shrink();
+      }
     });
   }
 }
