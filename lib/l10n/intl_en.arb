@@ -2,6 +2,7 @@
   "@@locale": "en",
   "labelField": "Field",
   "labelPeriod": "Period",
+  "labelDistance": "Distance",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",
   "labelType": "Type",

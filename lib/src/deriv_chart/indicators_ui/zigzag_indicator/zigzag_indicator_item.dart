@@ -8,7 +8,7 @@ import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
 
-/// Moving Average indicator item in the list of indicator which provide this
+/// Zigzag indicator item in the list of indicator which provide this
 /// indicator's options menu.
 class ZigZagIndicatorItem extends IndicatorItem {
   /// Initializes
@@ -28,7 +28,7 @@ class ZigZagIndicatorItem extends IndicatorItem {
       ZigZagIndicatorItemState();
 }
 
-/// MAIndicatorItem State class
+/// ZigZagIndicatorItem State class
 class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig> {
 
   /// distance
@@ -49,7 +49,7 @@ class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig>
   Widget buildDistanceField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelPeriod,
+            ChartLocalization.of(context).labelDistance,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

@@ -14,8 +14,7 @@ import '../series_painter.dart';
 class ZigZagSeries extends LineSeries {
   /// Initializes a series which shows shows ZigZag data calculated from [entries].
   ///
-  /// [period] is the average of this number of past data which will be calculated as MA value
-  /// [type] The type of moving average.
+  /// [distance] The minimum distance in percent between two zigzag points.
   ZigZagSeries(
     List<Tick> entries, {
     String id,
@@ -36,13 +35,12 @@ class ZigZagSeries extends LineSeries {
       {String id, LineStyle style, int distance = 10})
       : super(
           ZigZagIndicator(indicator, distance).results,
-          id: id ?? 'Zigzag Indicaator',
+          id: id ?? 'Zigzag Indicator',
           style: style ?? const LineStyle(thickness: 0.9, color: Colors.blue),
         );
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-
     super.onUpdate(leftEpoch, rightEpoch);
 
     if (visibleEntries.isNotEmpty && visibleEntries != null) {

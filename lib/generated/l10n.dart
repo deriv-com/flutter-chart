@@ -55,6 +55,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Distance`
+  String get labelDistance {
+    return Intl.message(
+      'Distance',
+      name: 'labelDistance',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Search assets`
   String get labelSearchAssets {
     return Intl.message(

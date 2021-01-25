@@ -4,7 +4,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/
 
 import '../indicator_config.dart';
 
-/// Moving Average indicator config
+/// ZigZag indicator config
 class ZigZagIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const ZigZagIndicatorConfig({
@@ -12,7 +12,7 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
     this.lineStyle,
   }) : super();
 
-  /// ZigZag period
+  /// ZigZag distance in %
   final int distance;
 
 

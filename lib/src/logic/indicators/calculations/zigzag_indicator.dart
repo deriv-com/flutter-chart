@@ -5,16 +5,16 @@ import 'package:deriv_chart/src/models/tick.dart';
 import '../cached_indicator.dart';
 import '../indicator.dart';
 
-/// Highest value in a range
+/// The ZigZag Indicator that shows if value changes enough
 class ZigZagIndicator extends CachedIndicator {
   /// Initializes
   ZigZagIndicator(this.indicator, this.distance)
       : super.fromIndicator(indicator);
 
-  /// Calculating highest value on the result of this indicator
+  /// Calculating values that changes enough
   final Indicator indicator;
 
-  /// The period
+  /// The minimum distance between two point
   final int distance;
 
   @override
