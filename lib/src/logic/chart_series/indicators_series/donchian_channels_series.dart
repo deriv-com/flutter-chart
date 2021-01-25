@@ -12,6 +12,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/lowest_value_indic
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/paint/paint_fill.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -128,6 +129,24 @@ class DonchianChannelsSeries extends Series {
     _lowerChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
-    // TODO(ramin): call super.paint to paint the Channels fill.
+    if (config.showChannelFill &&
+        _upperChannelSeries.visibleEntries.isNotEmpty &&
+        _lowerChannelSeries.visibleEntries.isNotEmpty) {
+      final Path fillPath = Path()
+        ..moveTo(
+          epochToX(_upperChannelSeries.visibleEntries.first.epoch),
+          quoteToY(_upperChannelSeries.visibleEntries.first.quote),
+        );
+
+      _upperChannelSeries.visibleEntries;
+      _lowerChannelSeries.visibleEntries;
+
+      paintFill(
+        canvas,
+        fillPath,
+        // TODO: pass from config
+        Colors.white24,
+      );
+    }
   }
 }
