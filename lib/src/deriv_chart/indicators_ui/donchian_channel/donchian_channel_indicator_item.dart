@@ -31,8 +31,6 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
 /// DonchianChannelIndicatorItem State class
 class DonchianChannelIndicatorItemState
     extends IndicatorItemState<DonchianChannelIndicatorConfig> {
-  double _standardDeviation;
-
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>
       const DonchianChannelIndicatorConfig();
