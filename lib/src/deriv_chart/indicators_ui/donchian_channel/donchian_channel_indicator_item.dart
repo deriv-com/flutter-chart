@@ -35,10 +35,7 @@ class DonchianChannelIndicatorItemState
 
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>
-      DonchianChannelIndicatorConfig(
-        highPeriod: 10,
-        lowPeriod: 10,
-      );
+      const DonchianChannelIndicatorConfig();
 
   @override
   Widget getIndicatorOptions() => Column(
