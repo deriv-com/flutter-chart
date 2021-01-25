@@ -50,18 +50,23 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
 
   @override
   Widget build(BuildContext context) => ListTile(
+        contentPadding: const EdgeInsets.all(0),
         leading: Text(widget.title, style: const TextStyle(fontSize: 10)),
         title: getIndicatorOptions(),
-        trailing: Checkbox(
-          value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),
-          onChanged: (bool newValue) => setState(
-            () {
-              if (newValue) {
-                updateIndicator();
-              } else {
-                removeIndicator();
-              }
-            },
+        trailing: SizedBox(
+          height: 24.0,
+          width: 24.0,
+          child: Checkbox(
+            value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),
+            onChanged: (bool newValue) => setState(
+              () {
+                if (newValue) {
+                  updateIndicator();
+                } else {
+                  removeIndicator();
+                }
+              },
+            ),
           ),
         ),
       );
