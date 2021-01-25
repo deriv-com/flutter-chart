@@ -20,7 +20,10 @@ class AnimatedActiveMarker extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
+  /// The Series that holds the list markers.
   final MarkerSeries markerSeries;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
   @override
@@ -73,15 +76,18 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
   Widget build(BuildContext context) {
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
-    return CustomPaint(
-      painter: ActiveMarkerPainter(
-        activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker,
-        style: widget.markerSeries.style ??
-            context.watch<ChartTheme>().markerStyle ??
-            const MarkerStyle(),
-        epochToX: xAxis.xFromEpoch,
-        quoteToY: widget.quoteToCanvasY,
-        animationProgress: _activeMarkerAnimation.value,
+    return AnimatedBuilder(
+      animation: _activeMarkerAnimation,
+      builder: (BuildContext context, Widget child) => CustomPaint(
+        painter: ActiveMarkerPainter(
+          activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker,
+          style: widget.markerSeries.style ??
+              context.watch<ChartTheme>().markerStyle ??
+              const MarkerStyle(),
+          epochToX: xAxis.xFromEpoch,
+          quoteToY: widget.quoteToCanvasY,
+          animationProgress: _activeMarkerAnimation.value,
+        ),
       ),
     );
   }

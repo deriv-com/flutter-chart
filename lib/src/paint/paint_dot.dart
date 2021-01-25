@@ -13,7 +13,7 @@ void paintBlinkingGlow(
       Paint()..color = color.withAlpha(50),
     );
 
-/// Paints a dot on [center]
+/// Paints a dot on [center].
 void paintDot(
   Canvas canvas,
   Offset center,

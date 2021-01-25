@@ -2,10 +2,10 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// Candle class
+/// Candle class.
 @immutable
 class Candle extends Tick with EquatableMixin {
-  /// Initializes
+  /// Initializes a candle class.
   const Candle({
     @required int epoch,
     @required this.high,
@@ -14,22 +14,23 @@ class Candle extends Tick with EquatableMixin {
     @required this.close,
   }) : super(epoch: epoch, quote: close);
 
+  /// Initializes a candle class with only the given parameters or non given.
   Candle.noParam(int epoch, double open, double close, double high, double low)
       : this(epoch: epoch, open: open, close: close, high: high, low: low);
 
   /// High value
   final double high;
 
-  /// low value
+  /// Low value.
   final double low;
 
-  /// open value
+  /// Open value.
   final double open;
 
-  /// close value
+  /// Close value.
   final double close;
 
-  /// Creates a copy of this object
+  /// Creates a copy of this object.
   Candle copyWith({
     int epoch,
     double high,

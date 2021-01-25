@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A widget to play a pulse highlight animation on its child.
 class AnimatedHighlight extends StatefulWidget {
+  /// Initializes a widget to play a pulse highlight animation on its child.
   const AnimatedHighlight({
     @required this.child,
     Key key,
@@ -9,11 +10,13 @@ class AnimatedHighlight extends StatefulWidget {
     this.playAfter = const Duration(seconds: 1),
   }) : super(key: key);
 
+  /// The child which will get painted on.
   final Widget child;
 
+  /// The duration of the painting animation.
   final Duration duration;
 
-  /// Play the pulse animation after this duration
+  /// Play the pulse animation after this duration.
   final Duration playAfter;
 
   @override

@@ -11,10 +11,10 @@ import 'series_painter.dart';
 /// A class to paint common option of [DataSeries] data.
 abstract class DataPainter<S extends DataSeries<Tick>>
     extends SeriesPainter<S> {
-  /// Initializes series for sub-class
+  /// Initializes series for sub-class.
   DataPainter(DataSeries<Tick> series) : super(series);
 
-  /// Paints [DataSeries.visibleEntries] on the [canvas]
+  /// Paints [DataSeries.visibleEntries] on the [canvas].
   @override
   void onPaint({
     Canvas canvas,
@@ -32,7 +32,7 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
   }
 
-  /// Paints [DataSeries.visibleEntries]
+  /// Paints [DataSeries.visibleEntries].
   void onPaintData(
     Canvas canvas,
     Size size,

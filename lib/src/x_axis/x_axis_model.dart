@@ -10,8 +10,35 @@ import 'package:flutter/material.dart';
 
 import 'grid/calc_time_grid.dart';
 
-/// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch]
+/// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch].
 const double autoPanOffset = 30;
+
+/// Padding around data used in data-fit mode.
+const EdgeInsets dataFitPadding = EdgeInsets.only(left: 16, right: 120);
+
+/// Modes that control chart's zoom and scroll behaviour without user interaction.
+enum ViewingMode {
+  /// Keeps current tick visible.
+  ///
+  /// This mode is enabled when [isLive] is `true` and current tick is visible.
+  /// It works by keeping the x coordinate of `DateTime.now().millisecondsSinceEpoch` constant.
+  /// Meaning, if a line is drawn at `DateTime.now().millisecondsSinceEpoch`
+  /// on each frame in this mode, it will appear stationary.
+  followCurrentTick,
+
+  /// Keeps all of the data visible.
+  ///
+  /// This mode is used for contract details.
+  fitData,
+
+  /// Keeps scrolling left or right with constant speed.
+  ///
+  /// Negative speed scrolls the chart back, positive scrolls forward.
+  constantScrollSpeed,
+
+  /// Scroll and zoom only change with user gestures.
+  stationary,
+}
 
 /// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
@@ -23,14 +50,20 @@ class XAxisModel extends ChangeNotifier {
     @required int granularity,
     @required AnimationController animationController,
     @required bool isLive,
+    bool startWithDataFitMode = false,
     this.onScale,
     this.onScroll,
   }) {
-    _nowEpoch = DateTime.now().millisecondsSinceEpoch;
+    _nowEpoch = entries?.isNotEmpty ?? false
+        ? entries.last.epoch
+        : DateTime.now().millisecondsSinceEpoch;
+
+    _lastEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
-    _msPerPx = _defaultScale;
+    _msPerPx = _defaultMsPerPx;
     _isLive = isLive ?? true;
     _rightBoundEpoch = _maxRightBoundEpoch;
+    _dataFitMode = startWithDataFitMode ?? false;
 
     _updateEntries(entries);
 
@@ -54,7 +87,7 @@ class XAxisModel extends ChangeNotifier {
 
   // TODO(Rustem): Expose this setting
   /// Scaling will not resize intervals to be smaller than this.
-  static const int minIntervalWidth = 4;
+  static const int minIntervalWidth = 1;
 
   // TODO(Rustem): Expose this setting
   /// Scaling will not resize intervals to be bigger than this.
@@ -65,6 +98,9 @@ class XAxisModel extends ChangeNotifier {
   static const int defaultIntervalWidth = 20;
 
   bool _isLive;
+
+  /// for calculating time between two frames
+  int _lastEpoch;
 
   /// Whether the chart is live.
   bool get isLive => _isLive;
@@ -83,14 +119,19 @@ class XAxisModel extends ChangeNotifier {
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
+  bool _dataFitMode;
   double _msPerPx = 1000;
   double _prevMsPerPx;
   int _granularity;
   int _nowEpoch;
   int _rightBoundEpoch;
+  double _panSpeed;
 
-  int get _firstCandleEpoch =>
+  int get _firstEntryEpoch =>
       _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
+
+  int get _lastEntryEpoch =>
+      _entries.isNotEmpty ? _entries.last.epoch : _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -105,27 +146,19 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch =>
-      _shiftEpoch(_firstCandleEpoch, maxCurrentTickOffset);
+      _shiftEpoch(_firstEntryEpoch, maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch => _shiftEpoch(
-        _entries == null || _entries.isEmpty || _isLive
-            ? _nowEpoch
-            : _entries.last.epoch,
-        maxCurrentTickOffset,
-      );
+      _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
+      maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
       rightBoundEpoch == _maxRightBoundEpoch ||
       rightBoundEpoch == _minRightBoundEpoch;
 
-  /// Chart pan is currently being animated (without user input).
-  bool get animatingPan =>
-      _autoPanning || (_scrollAnimationController?.isAnimating ?? false);
-
-  /// Current tick is visible, chart is being autoPanned.
-  bool get _autoPanning =>
+  bool get _followCurrentTick =>
       _autoPanEnabled &&
       isLive &&
       rightBoundEpoch > _nowEpoch &&
@@ -138,14 +171,62 @@ class XAxisModel extends ChangeNotifier {
   /// Current scale value.
   double get msPerPx => _msPerPx;
 
-  /// Bounds and default for [_msPerPx].
-  double get _minScale => _granularity / maxIntervalWidth;
+  /// Min value for [_msPerPx]. Limits zooming in.
+  double get _minMsPerPx => _granularity / maxIntervalWidth;
 
-  double get _maxScale => _granularity / minIntervalWidth;
+  /// Max value for [_msPerPx]. Limits zooming out.
+  double get _maxMsPerPx => _granularity / minIntervalWidth;
 
-  double get _defaultScale => _granularity / defaultIntervalWidth;
+  /// Starting value for [_msPerPx].
+  double get _defaultMsPerPx => _granularity / defaultIntervalWidth;
 
-  double _panSpeed;
+  /// Whether data fit mode is enabled.
+  /// Doesn't mean it is currently active viewing mode. Check [_currentViewingMode].
+  bool get dataFitEnabled => _dataFitMode;
+
+  /// Current mode that controls chart's zooming and scrolling behaviour.
+  ViewingMode get _currentViewingMode {
+    if (_panSpeed != null && _panSpeed != 0) {
+      return ViewingMode.constantScrollSpeed;
+    }
+    if (_dataFitMode) {
+      return ViewingMode.fitData;
+    }
+    if (_followCurrentTick) {
+      return ViewingMode.followCurrentTick;
+    }
+    return ViewingMode.stationary;
+  }
+
+  /// Called on each frame.
+  /// Updates zoom and scroll position based on current [_currentViewingMode].
+  void onNewFrame(Duration _) {
+    final int newNowTime = DateTime.now().millisecondsSinceEpoch;
+    final int elapsedMs = newNowTime - _lastEpoch;
+    _nowEpoch = _entries?.isNotEmpty ?? false
+        ? _entries.last.epoch
+        : _nowEpoch + elapsedMs;
+    _lastEpoch = newNowTime;
+    // TODO(Rustem): Consider refactoring the switch with OOP pattern.
+    switch (_currentViewingMode) {
+      case ViewingMode.followCurrentTick:
+        _scrollTo(_rightBoundEpoch + elapsedMs);
+        break;
+      case ViewingMode.fitData:
+        _fitData();
+
+        /// Switch to [ViewingMode.followCurrentTick] once reached zoom out limit.
+        if (_msPerPx == _maxMsPerPx) {
+          disableDataFit();
+        }
+        break;
+      case ViewingMode.constantScrollSpeed:
+        _scrollBy(_panSpeed * elapsedMs);
+        break;
+      case ViewingMode.stationary:
+        break;
+    }
+  }
 
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
@@ -203,28 +284,38 @@ class XAxisModel extends ChangeNotifier {
   void _updateGranularity(int newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
-    _msPerPx = _defaultScale;
+    _msPerPx = _defaultMsPerPx;
     _scrollTo(_maxRightBoundEpoch);
   }
 
-  /// Update's chart's isLive property
+  /// Updates chart's isLive property.
   ///
   /// Should be called before [_updateGranularity] and [_updateEntries]
   void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
 
-  /// Called on each frame.
-  /// Updates right panning limit and autopan if enabled.
-  void onNewFrame(Duration _) {
-    final newNowEpoch = DateTime.now().millisecondsSinceEpoch;
-    final elapsedMs = newNowEpoch - _nowEpoch;
-    _nowEpoch = newNowEpoch;
-    if (_autoPanning) {
-      _scrollTo(_rightBoundEpoch + elapsedMs);
-    } else if (_panSpeed != null && _panSpeed != 0) {
-      _scrollBy(_panSpeed * elapsedMs);
-    }
+  /// Fits available data to screen.
+  void _fitData() {
+    final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
+    final double pxTargetDataWidth = width - dataFitPadding.horizontal;
+
+    _msPerPx =
+        (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
+    _scrollTo(_shiftEpoch(_lastEntryEpoch, dataFitPadding.right));
   }
 
+  /// Enables data fit viewing mode.
+  void enableDataFit() {
+    _dataFitMode = true;
+    notifyListeners();
+  }
+
+  /// Disables data fit viewing mode.
+  void disableDataFit() {
+    _dataFitMode = false;
+    notifyListeners();
+  }
+
+  /// Returns [panSpeed] if not null, otherwise returns `0`.
   void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.
@@ -277,11 +368,14 @@ class XAxisModel extends ChangeNotifier {
   void onScaleAndPanStart(ScaleStartDetails details) {
     _scrollAnimationController.stop();
     _prevMsPerPx = _msPerPx;
+
+    // Exit data fit mode.
+    disableDataFit();
   }
 
   /// Called when user is scaling the chart.
   void onScaleUpdate(ScaleUpdateDetails details) {
-    if (_autoPanning) {
+    if (_currentViewingMode == ViewingMode.followCurrentTick) {
       _scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);
@@ -312,7 +406,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scale(double scale) {
-    _msPerPx = (_prevMsPerPx / scale).clamp(_minScale, _maxScale);
+    _msPerPx = (_prevMsPerPx / scale).clamp(_minMsPerPx, _maxMsPerPx);
     onScale?.call();
     notifyListeners();
   }
@@ -359,7 +453,7 @@ class XAxisModel extends ChangeNotifier {
     _scrollAnimationController.animateWith(simulation);
   }
 
-  /// Keeps rightBoundEpoch in the valid range
+  /// Keeps rightBoundEpoch in the valid range.
   void _clampRightBoundEpoch() => _rightBoundEpoch =
       _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
 
@@ -370,6 +464,7 @@ class XAxisModel extends ChangeNotifier {
     _updateEntries(entries);
   }
 
+  /// Returns a list of timestamps in the grid without any overlaps.
   List<DateTime> getNoOverlapGridTimestamps() {
     const double _minDistanceBetweenTimeGridLines = 80;
     // Calculate time labels' timestamps for current scale.

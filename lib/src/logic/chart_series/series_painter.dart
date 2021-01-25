@@ -10,21 +10,21 @@ import '../chart_data.dart';
 
 /// A class responsible to paint its [series] data.
 abstract class SeriesPainter<S extends Series> {
-  /// Initializes series for sub-class
+  /// Initializes series for sub-class.
   SeriesPainter(this.series);
 
-  /// The [Series] which this [SeriesPainter] belongs to
+  /// The [Series] which this [SeriesPainter] belongs to.
   final S series;
 
-  /// Chart's config
+  /// Chart's config.
   @protected
   ChartConfig chartConfig;
 
-  /// Chart's theme
+  /// Chart's theme.
   @protected
   ChartTheme theme;
 
-  /// Sets some variables and paints this [SeriesPainter]'s data
+  /// Sets some variables and paints this [SeriesPainter]'s data.
   void paint({
     Canvas canvas,
     Size size,
@@ -46,7 +46,7 @@ abstract class SeriesPainter<S extends Series> {
     );
   }
 
-  /// Paints this [SeriesPainter]'s data
+  /// Paints this [SeriesPainter]'s data.
   void onPaint({
     Canvas canvas,
     Size size,

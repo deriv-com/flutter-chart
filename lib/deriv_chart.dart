@@ -1,5 +1,6 @@
 library deriv_chart;
 
+export 'generated/l10n.dart';
 export 'src/chart.dart';
 export 'src/chart_controller.dart';
 export 'src/deriv_chart/deriv_chart.dart';
@@ -28,6 +29,5 @@ export 'src/theme/painting_styles/marker_style.dart';
 export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
-export 'src/widgets/market_selector/symbol_svg_picture.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
-export 'generated/l10n.dart';
+export 'src/x_axis/min_candle_duration_for_data_fit.dart';

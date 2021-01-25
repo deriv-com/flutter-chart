@@ -2,8 +2,9 @@ import 'package:meta/meta.dart';
 
 const _day = Duration(days: 1);
 const _week = Duration(days: DateTime.daysPerWeek);
-const month = Duration(days: 30);
+const _month = Duration(days: 30);
 
+/// Creates a list of [DateTime] with gaps of [timeGridInterval].
 List<DateTime> gridTimestamps({
   @required Duration timeGridInterval,
   @required int leftBoundEpoch,
@@ -17,13 +18,13 @@ List<DateTime> gridTimestamps({
 
   while (t.compareTo(rightBoundTime) <= 0) {
     timestamps.add(t);
-    t = timeGridInterval == month ? _addMonth(t) : t.add(timeGridInterval);
+    t = timeGridInterval == _month ? _addMonth(t) : t.add(timeGridInterval);
   }
   return timestamps;
 }
 
 DateTime _gridEpochStart(Duration timeGridInterval, int leftBoundEpoch) {
-  if (timeGridInterval == month) {
+  if (timeGridInterval == _month) {
     return _closestFutureMonthStart(leftBoundEpoch);
   } else if (timeGridInterval == _week) {
     final t = _closestFutureDayStart(leftBoundEpoch);
@@ -60,6 +61,7 @@ DateTime _addMonth(DateTime time) {
 /// Conversion callback dependency of [timeGridInterval].
 typedef PxFromMs = double Function(int ms);
 
+/// Returns the first time interval which has the enough distance between lines.
 Duration timeGridInterval(
   PxFromMs pxFromMs, {
   double minDistanceBetweenLines = 100,
@@ -83,7 +85,7 @@ Duration timeGridInterval(
     _week,
     Duration(days: 14),
     Duration(days: 21),
-    month,
+    _month,
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(Duration interval) {
