@@ -82,12 +82,18 @@ class BollingerBandSeries extends Series {
       k: standardDeviationFactor,
     );
 
-    _lowerSeries = LineSeries(bblSMA.results,
-        style: const LineStyle(color: Colors.redAccent));
-    _middleSeries =
-        LineSeries(bbmSMA.results, style: const LineStyle(color: Colors.white));
-    _upperSeries = LineSeries(bbuSMA.results,
-        style: const LineStyle(color: Colors.lightGreen));
+    _lowerSeries = LineSeries(
+      bblSMA.results,
+      style: const LineStyle(color: Colors.redAccent),
+    );
+    _middleSeries = LineSeries(
+      bbmSMA.results,
+      style: const LineStyle(color: Colors.white),
+    );
+    _upperSeries = LineSeries(
+      bbuSMA.results,
+      style: const LineStyle(color: Colors.lightGreen),
+    );
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
