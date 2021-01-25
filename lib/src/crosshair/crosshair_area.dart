@@ -146,8 +146,8 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Only update closest tick if position epoch has changed.
         _lastLongPressPositionEpoch = newLongPressEpoch;
-        crosshairTick = _getClosestTick();
       }
+      crosshairTick = _getClosestTick();
     }
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
