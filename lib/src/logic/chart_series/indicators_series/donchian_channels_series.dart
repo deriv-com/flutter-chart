@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
@@ -138,11 +140,39 @@ class DonchianChannelsSeries extends Series {
           quoteToY(_upperChannelSeries.visibleEntries.first.quote),
         );
 
-      for (final Tick tick in _upperChannelSeries.visibleEntries.skip(1)) {
+      // Skip first (starting point) and last (can be animated).
+      for (final Tick tick in _upperChannelSeries.visibleEntries
+          .skip(1)
+          .take(_upperChannelSeries.visibleEntries.length - 2)) {
         fillPath.lineTo(
           epochToX(tick.epoch),
           quoteToY(tick.quote),
         );
+      }
+
+      // Check for animated upper tick.
+      final Tick lastUpperTick = _upperChannelSeries.entries.last;
+      final Tick lastUpperVisibleTick = _upperChannelSeries.visibleEntries.last;
+      double lastVisibleTickX;
+
+      if (lastUpperTick == lastUpperVisibleTick &&
+          _upperChannelSeries.prevLastEntry != null) {
+        lastVisibleTickX = ui.lerpDouble(
+          epochToX(_upperChannelSeries.prevLastEntry.epoch),
+          epochToX(lastUpperTick.epoch),
+          animationInfo.currentTickPercent,
+        );
+
+        final double tickY = quoteToY(ui.lerpDouble(
+          _upperChannelSeries.prevLastEntry.quote,
+          lastUpperTick.quote,
+          animationInfo.currentTickPercent,
+        ));
+
+        fillPath.lineTo(lastVisibleTickX, tickY);
+      } else {
+        lastVisibleTickX = epochToX(lastUpperVisibleTick.epoch);
+        fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
       }
 
       for (final Tick tick in _lowerChannelSeries.visibleEntries.reversed) {
