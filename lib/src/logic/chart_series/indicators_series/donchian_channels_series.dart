@@ -212,8 +212,7 @@ class DonchianChannelsSeries extends Series {
       paintFill(
         canvas,
         fillPath,
-        // TODO: pass from config
-        Colors.white10,
+        config.fillColor,
       );
     }
   }
