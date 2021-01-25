@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/zigzag/zigzag_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/zigzag_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';

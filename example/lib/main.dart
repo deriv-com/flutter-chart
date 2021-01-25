@@ -403,7 +403,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       if (!_waitingForHistory &&
                           ticks.isNotEmpty &&
                           leftEpoch < ticks.first.epoch) {
-                        _loadHistory(100);
+                        _loadHistory(2000);
                       }
                     },
                   ),
