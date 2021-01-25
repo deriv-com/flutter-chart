@@ -54,8 +54,8 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
         leading: Text(widget.title, style: const TextStyle(fontSize: 10)),
         title: getIndicatorOptions(),
         trailing: SizedBox(
-          height: 24.0,
-          width: 24.0,
+          height: 24,
+          width: 24,
           child: Checkbox(
             value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),
             onChanged: (bool newValue) => setState(
