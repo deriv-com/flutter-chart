@@ -598,19 +598,26 @@ class _ChartImplementationState extends State<_ChartImplementation>
           _currentTickAnimation,
           _currentTickBlinkAnimation,
         ],
-        builder: (BuildContext context, Widget child) => CustomPaint(
-          painter: ChartPainter(
-            animationInfo: AnimationInfo(
-              currentTickPercent: _currentTickAnimation.value,
-              blinkingPercent: _currentTickBlinkAnimation.value,
-            ),
-            chartDataList: widget.annotations,
-            chartConfig: context.watch<ChartConfig>(),
-            theme: context.watch<ChartTheme>(),
-            epochToCanvasX: _xAxis.xFromEpoch,
-            quoteToCanvasY: _quoteToCanvasY,
-          ),
-        ),
+        builder: (BuildContext context, Widget child) =>
+            Stack(fit: StackFit.expand, children: [
+          if (widget.annotations != null)
+            ...widget.annotations
+                .map((ChartData annotation) => CustomPaint(
+                      key: ValueKey<String>(annotation.id),
+                      painter: ChartPainter(
+                        animationInfo: AnimationInfo(
+                          currentTickPercent: _currentTickAnimation.value,
+                          blinkingPercent: _currentTickBlinkAnimation.value,
+                        ),
+                        chartData: annotation,
+                        chartConfig: context.watch<ChartConfig>(),
+                        theme: context.watch<ChartTheme>(),
+                        epochToCanvasX: _xAxis.xFromEpoch,
+                        quoteToCanvasY: _quoteToCanvasY,
+                      ),
+                    ))
+                .toList()
+        ]),
       );
 
   Widget _buildCrosshairArea() => AnimatedBuilder(

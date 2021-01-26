@@ -2,6 +2,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/min_max_calculator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -18,7 +19,9 @@ abstract class DataSeries<T extends Tick> extends Series {
     this.input,
     String id, {
     DataSeriesStyle style,
-  }) : super(id, style: style);
+  }) : super(id, style: style) {
+    _minMaxCalculator = MinMaxCalculator(minValueOf, maxValueOf);
+  }
 
   /// Series input list.
   ///
@@ -58,6 +61,9 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   bool _needsMinMaxUpdate = false;
+
+  /// Utility object to help efficiently calculate new min/max when [visibleEntries] change.
+  MinMaxCalculator _minMaxCalculator;
 
   /// Updates visible entries for this Series.
   @override
@@ -119,25 +125,8 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (!_needsMinMaxUpdate) {
       return <double>[minValue, maxValue];
     }
-
-    if (visibleEntries.isNotEmpty) {
-      double min = minValueOf(visibleEntries[0]);
-      double max = maxValueOf(visibleEntries[0]);
-
-      for (int i = 1; i < visibleEntries.length; i++) {
-        final T t = visibleEntries[i];
-
-        if (maxValueOf(t) > max) {
-          max = maxValueOf(t);
-        } else if (minValueOf(t) < min) {
-          min = minValueOf(t);
-        }
-      }
-
-      return <double>[min, max];
-    } else {
-      return <double>[double.nan, double.nan];
-    }
+    _minMaxCalculator.calculate(visibleEntries);
+    return <double>[_minMaxCalculator.min, _minMaxCalculator.max];
   }
 
   int _searchLowerIndex(int leftEpoch) {
@@ -235,6 +224,24 @@ abstract class DataSeries<T extends Tick> extends Series {
   @protected
   bool isOldDataAvailable(covariant DataSeries<Tick> oldSeries) =>
       oldSeries?.entries?.isNotEmpty ?? false;
+
+  @override
+  bool shouldRepaint(ChartData oldDelegate) {
+    final DataSeries oldDataSeries = oldDelegate;
+    final List<Tick> current = visibleEntries;
+    final List<Tick> previous = oldDataSeries.visibleEntries;
+
+    if (current.isEmpty && previous.isEmpty) {
+      return false;
+    }
+    if (current.isEmpty != previous.isEmpty) {
+      return true;
+    }
+
+    return current.first != previous.first ||
+        current.last != previous.last ||
+        style != oldDataSeries.style;
+  }
 
   @override
   void paint(

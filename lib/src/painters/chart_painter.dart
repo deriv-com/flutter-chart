@@ -2,7 +2,10 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../../deriv_chart.dart';
 
 /// The `CustomPainter` which paints the chart.
 class ChartPainter extends CustomPainter {
@@ -10,7 +13,7 @@ class ChartPainter extends CustomPainter {
   ChartPainter({
     this.chartConfig,
     this.theme,
-    this.chartDataList,
+    this.chartData,
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
@@ -31,30 +34,25 @@ class ChartPainter extends CustomPainter {
   /// Animation info where the animation progress values are in.
   final AnimationInfo animationInfo;
 
-  /// The list of chart data to paint inside of the chart.
-  final List<ChartData> chartDataList;
+  /// The chart data to paint inside of the chart.
+  final ChartData chartData;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (chartDataList == null) {
-      return;
-    }
-
-    for (final ChartData c in chartDataList) {
-      c.paint(
-        canvas,
-        size,
-        epochToCanvasX,
-        quoteToCanvasY,
-        animationInfo,
-        chartConfig,
-        theme,
-      );
-    }
+    chartData.paint(
+      canvas,
+      size,
+      epochToCanvasX,
+      quoteToCanvasY,
+      animationInfo,
+      chartConfig,
+      theme,
+    );
   }
 
   @override
-  bool shouldRepaint(ChartPainter oldDelegate) => true;
+  bool shouldRepaint(ChartPainter oldDelegate) =>
+      chartData.shouldRepaint(oldDelegate.chartData);
 
   @override
   bool shouldRebuildSemantics(ChartPainter oldDelegate) => false;
