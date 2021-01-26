@@ -33,12 +33,14 @@ class DonchianChannelIndicatorItemState
     extends IndicatorItemState<DonchianChannelIndicatorConfig> {
   int _highPeriod;
   int _lowPeriod;
+  bool _channelFill;
 
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>
       DonchianChannelIndicatorConfig(
         highPeriod: _getCurrentHighPeriod(),
         lowPeriod: _getCurrentLowPeriod(),
+        showChannelFill: _getCurrentFill(),
       );
 
   @override
@@ -58,9 +60,22 @@ class DonchianChannelIndicatorItemState
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
-          Switch(value: false, onChanged: (bool value) {}),
+          Switch(
+            value: _getCurrentFill(),
+            onChanged: (bool value) {
+              setState(() {
+                _channelFill = value;
+              });
+              updateIndicator();
+            },
+          ),
         ],
       );
+
+  bool _getCurrentFill() {
+    final DonchianChannelIndicatorConfig config = getConfig();
+    return _channelFill ?? config?.showChannelFill ?? true;
+  }
 
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
