@@ -54,7 +54,11 @@ class XAxisModel extends ChangeNotifier {
     this.onScale,
     this.onScroll,
   }) {
-    _nowEpoch = DateTime.now().millisecondsSinceEpoch;
+    _nowEpoch = entries?.isNotEmpty ?? false
+        ? entries.last.epoch
+        : DateTime.now().millisecondsSinceEpoch;
+
+    _lastEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultMsPerPx;
     _isLive = isLive ?? true;
@@ -94,6 +98,9 @@ class XAxisModel extends ChangeNotifier {
   static const int defaultIntervalWidth = 20;
 
   bool _isLive;
+
+  /// for calculating time between two frames
+  int _lastEpoch;
 
   /// Whether the chart is live.
   bool get isLive => _isLive;
@@ -143,11 +150,8 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch => _shiftEpoch(
-        _entries == null || _entries.isEmpty || _isLive
-            ? _nowEpoch
-            : _entries.last.epoch,
-        maxCurrentTickOffset,
-      );
+      _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
+      maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -197,10 +201,12 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each frame.
   /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
-    final int newNowEpoch = DateTime.now().millisecondsSinceEpoch;
-    final int elapsedMs = newNowEpoch - _nowEpoch;
-    _nowEpoch = newNowEpoch;
-
+    final int newNowTime = DateTime.now().millisecondsSinceEpoch;
+    final int elapsedMs = newNowTime - _lastEpoch;
+    _nowEpoch = _entries?.isNotEmpty ?? false
+        ? _entries.last.epoch
+        : _nowEpoch + elapsedMs;
+    _lastEpoch = newNowTime;
     // TODO(Rustem): Consider refactoring the switch with OOP pattern.
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
