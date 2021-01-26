@@ -123,6 +123,18 @@ class Asset {
         isFavourite: json['is_favourite'],
       );
 
+  /// Creates an [Asset] object from JSON map.
+  factory Asset.fromJson(Map<String, dynamic> json) => Asset(
+        name: json['name'],
+        displayName: json['display_name'],
+        market: json['market'],
+        marketDisplayName: json['market_display_name'],
+        subMarket: json['sub_market'],
+        subMarketDisplayName: json['sub_market_display_name'],
+        isOpen: json['is_open'],
+        isFavourite: json['is_favourite'],
+      );
+
   /// The name of the active symbol.
   final String name;
 
