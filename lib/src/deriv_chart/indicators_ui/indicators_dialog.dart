@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'bollinger_bands/bollinger_bands_indicator_item.dart';
 import 'callbacks.dart';
 import 'indicator_item.dart';
+import 'ma_env_indicator/ma_env_indicator_item.dart';
 import 'ma_indicator/ma_indicator_item.dart';
 
 /// Indicators dialog to add them to the chart.
@@ -39,6 +40,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         onAddIndicator: widget.onAddIndicator,
       ))
       ..add(BollingerBandsIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(MAEnvIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ));
