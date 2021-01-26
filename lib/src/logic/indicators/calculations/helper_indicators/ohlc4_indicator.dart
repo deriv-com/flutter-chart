@@ -3,17 +3,17 @@ import 'package:deriv_chart/src/models/tick.dart';
 
 import '../../indicator.dart';
 
-/// A helper indicator to get the [(H + L) / 2] value of a list of [Tick]
-class HL2Indicator extends Indicator {
+/// A helper indicator to get the [(O+ H + L+ C) / 4] value of a list of [Tick]
+class OHLC4Indicator extends Indicator {
   /// Initializes
-  HL2Indicator(List<OHLC> entries) : super(entries);
+  OHLC4Indicator(List<OHLC> entries) : super(entries);
 
   @override
   Tick getValue(int index) {
     final Tick entry = entries[index];
     return Tick(
       epoch: getEpochOfIndex(index),
-      quote: (entry.high + entry.low) / 2,
+      quote: (entry.open + entry.high + entry.low + entry.close) / 4,
     );
   }
 }
