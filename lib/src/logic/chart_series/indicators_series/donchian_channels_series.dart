@@ -87,14 +87,14 @@ class DonchianChannelsSeries extends Series {
 
   @override
   bool didUpdate(ChartData oldData) {
-    final DonchianChannelsSeries series = oldData;
+    final DonchianChannelsSeries oldSeries = oldData;
 
     final bool upperUpdated =
-        _upperChannelSeries.didUpdate(series._upperChannelSeries);
+        _upperChannelSeries.didUpdate(oldSeries._upperChannelSeries);
     final bool middleUpdated =
-        _middleChannelSeries.didUpdate(series._middleChannelSeries);
+        _middleChannelSeries.didUpdate(oldSeries._middleChannelSeries);
     final bool lowerUpdated =
-        _lowerChannelSeries.didUpdate(series._lowerChannelSeries);
+        _lowerChannelSeries.didUpdate(oldSeries._lowerChannelSeries);
 
     return upperUpdated || middleUpdated || lowerUpdated;
   }
