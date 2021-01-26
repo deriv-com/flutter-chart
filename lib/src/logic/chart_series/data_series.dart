@@ -189,6 +189,24 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   @override
+  bool shouldRepaint(ChartData oldDelegate) {
+    final DataSeries oldDataSeries = oldDelegate;
+    final List<Tick> current = visibleEntries;
+    final List<Tick> previous = oldDataSeries.visibleEntries;
+
+    if (current.isEmpty && previous.isEmpty) {
+      return false;
+    }
+    if (current.isEmpty != previous.isEmpty) {
+      return true;
+    }
+
+    return current.first != previous.first ||
+        current.last != previous.last ||
+        style != oldDataSeries.style;
+  }
+
+  @override
   void paint(
     Canvas canvas,
     Size size,
