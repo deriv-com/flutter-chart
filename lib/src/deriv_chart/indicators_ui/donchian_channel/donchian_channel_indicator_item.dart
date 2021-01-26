@@ -110,9 +110,9 @@ class DonchianChannelIndicatorItemState
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  _highPeriod = int.tryParse(text);
+                  _lowPeriod = int.tryParse(text);
                 } else {
-                  _highPeriod = 10;
+                  _lowPeriod = 10;
                 }
                 updateIndicator();
               },
