@@ -428,6 +428,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
       }
     }
 
+    if (minQuote == maxQuote) {
+      minQuote -= 2;
+      maxQuote += 2;
+    }
+
     if (!minQuote.isNaN && minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
       _bottomBoundQuoteAnimationController.animateTo(
