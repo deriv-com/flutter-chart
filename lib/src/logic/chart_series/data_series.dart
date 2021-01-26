@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/min_max_calculator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -19,6 +20,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     DataSeriesStyle style,
   }) : super(id, style: style) {
     _initLastTickIndicator();
+    _minMaxCalculator = MinMaxCalculator(minValueOf, maxValueOf);
   }
 
   /// Series entries
@@ -37,6 +39,9 @@ abstract class DataSeries<T extends Tick> extends Series {
   HorizontalBarrier _lastTickIndicator;
 
   bool _needsMinMaxUpdate = false;
+
+  /// Utility object to help efficiently calculate new min/max when [visibleEntries] change.
+  MinMaxCalculator _minMaxCalculator;
 
   /// Updates visible entries for this Series.
   @override
@@ -89,25 +94,8 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (!_needsMinMaxUpdate) {
       return <double>[minValue, maxValue];
     }
-
-    if (visibleEntries.isNotEmpty) {
-      double min = minValueOf(visibleEntries[0]);
-      double max = maxValueOf(visibleEntries[0]);
-
-      for (int i = 1; i < visibleEntries.length; i++) {
-        final T t = visibleEntries[i];
-
-        if (maxValueOf(t) > max) {
-          max = maxValueOf(t);
-        } else if (minValueOf(t) < min) {
-          min = minValueOf(t);
-        }
-      }
-
-      return <double>[min, max];
-    } else {
-      return <double>[double.nan, double.nan];
-    }
+    _minMaxCalculator.calculate(visibleEntries);
+    return <double>[_minMaxCalculator.min, _minMaxCalculator.max];
   }
 
   int _searchLowerIndex(int leftEpoch) {
