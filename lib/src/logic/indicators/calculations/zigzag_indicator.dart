@@ -15,7 +15,7 @@ class ZigZagIndicator extends CachedIndicator {
   final Indicator indicator;
 
   /// The minimum distance between two point
-  final int distance;
+  final double distance;
 
   @override
   Tick calculate(int index) {

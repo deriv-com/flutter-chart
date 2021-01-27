@@ -19,7 +19,7 @@ class ZigZagSeries extends LineSeries {
     List<Tick> entries, {
     String id,
     LineStyle style,
-    int distance = 10,
+        double distance = 10,
   }) : this.fromIndicator(
           CloseValueIndicator(entries),
           id: id,
@@ -32,7 +32,7 @@ class ZigZagSeries extends LineSeries {
 
   /// Initializes
   ZigZagSeries.fromIndicator(Indicator indicator,
-      {String id, LineStyle style, int distance = 10})
+      {String id, LineStyle style, double distance = 10})
       : super(
           ZigZagIndicator(indicator, distance).results,
           id: id ?? 'Zigzag Indicator',

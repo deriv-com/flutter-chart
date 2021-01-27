@@ -33,7 +33,7 @@ class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig>
 
   /// distance
   @protected
-  int distance;
+  double distance;
 
   @override
   ZigZagIndicatorConfig createIndicatorConfig() => ZigZagIndicatorConfig(
@@ -61,7 +61,7 @@ class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig>
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  distance = int.tryParse(text);
+                  distance = double.tryParse(text);
                 } else {
                   distance = 10;
                 }
@@ -76,10 +76,5 @@ class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig>
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentDistance() => distance ?? getConfig()?.distance ?? 10;
-
-  @protected
-  LineStyle getCurrentLineStyle() =>
-      getConfig().lineStyle ??
-      const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
+  double getCurrentDistance() => distance ?? getConfig()?.distance ?? 10;
 }

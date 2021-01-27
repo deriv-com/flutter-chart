@@ -13,7 +13,7 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
   }) : super();
 
   /// ZigZag distance in %
-  final int distance;
+  final double distance;
 
 
   /// ZigZag line style
