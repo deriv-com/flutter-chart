@@ -8,14 +8,15 @@ import '../indicator.dart';
 /// The ZigZag Indicator that shows if value changes enough
 class ZigZagIndicator extends CachedIndicator {
   /// Initializes
-  ZigZagIndicator(this.indicator, this.distance)
-      : super.fromIndicator(indicator);
+  ZigZagIndicator(this.indicator, double distance)
+      : _distancePercent = distance / 100,
+        super.fromIndicator(indicator);
 
   /// Calculating values that changes enough
   final Indicator indicator;
 
-  /// The minimum distance between two point
-  final double distance;
+  /// The minimum distance between two point in %
+  final double _distancePercent;
 
   @override
   Tick calculate(int index) {
@@ -34,7 +35,7 @@ class ZigZagIndicator extends CachedIndicator {
       }
 
       /// if the last point have enough distance with previous one
-      final double distanceInPercent = previousTick.quote * (distance / 100);
+      final double distanceInPercent = previousTick.quote * _distancePercent;
       if ((thisTick.quote - previousTick.quote).abs() >= distanceInPercent) {
         return thisTick;
       } else {
