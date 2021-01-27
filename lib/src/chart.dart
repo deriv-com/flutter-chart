@@ -428,6 +428,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
       }
     }
 
+    // If the minQuote and maxQuote are the same there should be a default state to show chart quotes.
     if (minQuote == maxQuote) {
       minQuote -= 2;
       maxQuote += 2;
