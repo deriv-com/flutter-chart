@@ -27,11 +27,11 @@ class MAEnvIndicatorConfig extends IndicatorConfig {
   /// Field type
   final String fieldType;
 
-  /// Shift type
+  /// Moving Average Envelope shift type
   final ShiftType shiftType;
 
   /// Moving Average Envelope shift
-  final int shift;
+  final double shift;
 
   /// MA line style
   final LineStyle lineStyle;

@@ -45,7 +45,7 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
 
   /// MA Env shift
   @protected
-  int shift;
+  double shift;
 
   /// Field ShiftType
   @protected
@@ -147,7 +147,7 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  shift = int.tryParse(text);
+                  shift = double.tryParse(text);
                 } else {
                   shift = 5;
                 }
@@ -190,7 +190,7 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
         ],
       );
 
-  /// Returns MA types dropdown menu
+  /// Returns shift types dropdown menu
   @protected
   Widget buildShiftTypeMenu() => Row(
         children: <Widget>[
@@ -213,7 +213,7 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
                 .toList(),
             onChanged: (ShiftType newType) => setState(
               () {
-                // type = newType;
+                shiftType = newType;
                 updateIndicator();
               },
             ),
@@ -243,7 +243,7 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentShift() => shift ?? getConfig()?.shift ?? 5;
+  double getCurrentShift() => shift ?? getConfig()?.shift ?? 5;
 
   @protected
   LineStyle getCurrentLineStyle() =>
