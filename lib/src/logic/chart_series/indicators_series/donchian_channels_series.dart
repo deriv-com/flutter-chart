@@ -194,7 +194,7 @@ class DonchianChannelsSeries extends Series {
         fillPath.lineTo(lastVisibleTickX, tickY);
       } else {
         lastVisibleTickX = epochToX(lastLowerVisibleTick.epoch);
-        fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
+        fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
       }
 
       for (final Tick tick
