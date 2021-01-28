@@ -36,13 +36,15 @@ class SubMarketItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ChartTheme>(context);
+    final ChartTheme theme = Provider.of<ChartTheme>(context);
 
     final List<Asset> assets = (filterText == null || filterText.isEmpty)
         ? subMarket.assets
-        : subMarket.assets.where((a) => a.containsText(filterText)).toList();
+        : subMarket.assets
+            .where((Asset a) => a.containsText(filterText))
+            .toList();
     return assets.isEmpty
-        ? SizedBox.shrink()
+        ? const SizedBox.shrink()
         : Material(
             color: theme.base07Color,
             child: Column(
@@ -70,7 +72,7 @@ class SubMarketItem extends StatelessWidget {
 
   List<Widget> _buildAssetsList(List<Asset> assets) =>
       assets.map((Asset asset) {
-        final assetItem = AssetItem(
+        final AssetItem assetItem = AssetItem(
           asset: asset,
           filterText: filterText,
           onAssetClicked: onAssetClicked,
