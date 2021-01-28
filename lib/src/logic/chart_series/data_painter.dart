@@ -12,7 +12,9 @@ import 'series_painter.dart';
 abstract class DataPainter<S extends DataSeries<Tick>>
     extends SeriesPainter<S> {
   /// Initializes series for sub-class.
-  DataPainter(DataSeries<Tick> series) : super(series);
+  DataPainter(DataSeries<Tick> series) : _dataSeries = series, super(series);
+
+  final DataSeries<Tick> _dataSeries;
 
   /// Paints [DataSeries.visibleEntries] on the [canvas].
   @override
@@ -31,6 +33,8 @@ abstract class DataPainter<S extends DataSeries<Tick>>
 
     onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
   }
+
+  int getEpochOf(Tick tick) => _dataSeries.getEpochOf(tick);
 
   /// Paints [DataSeries.visibleEntries].
   void onPaintData(
