@@ -5,38 +5,40 @@ import 'package:deriv_technical_analysis/src/indicators/calculations/helper_indi
 import 'package:deriv_technical_analysis/src/indicators/calculations/sma_indicator.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/statistics/standard_deviation_indicator.dart';
 import 'package:deriv_technical_analysis/src/indicators/indicator.dart';
-import 'package:deriv_technical_analysis/src/models/data_input.dart';
-import 'package:deriv_technical_analysis/src/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../mock_models.dart';
 
 void main() {
   group('BollingerBands Indicator', () {
     test('BollingerBandsUpperIndicator calculates the correct result', () {
-      const List<TickEntry> ticks = <TickEntry>[
-        TickEntry(epoch: 1, quote: 1),
-        TickEntry(epoch: 2, quote: 2),
-        TickEntry(epoch: 3, quote: 3),
-        TickEntry(epoch: 4, quote: 4),
-        TickEntry(epoch: 5, quote: 3),
-        TickEntry(epoch: 6, quote: 4),
-        TickEntry(epoch: 7, quote: 5),
-        TickEntry(epoch: 8, quote: 4),
-        TickEntry(epoch: 9, quote: 3),
-        TickEntry(epoch: 10, quote: 3),
-        TickEntry(epoch: 11, quote: 4),
-        TickEntry(epoch: 12, quote: 3),
-        TickEntry(epoch: 13, quote: 2),
+      const List<MockTick> ticks = <MockTick>[
+        MockTick(epoch: 1, quote: 1),
+        MockTick(epoch: 2, quote: 2),
+        MockTick(epoch: 3, quote: 3),
+        MockTick(epoch: 4, quote: 4),
+        MockTick(epoch: 5, quote: 3),
+        MockTick(epoch: 6, quote: 4),
+        MockTick(epoch: 7, quote: 5),
+        MockTick(epoch: 8, quote: 4),
+        MockTick(epoch: 9, quote: 3),
+        MockTick(epoch: 10, quote: 3),
+        MockTick(epoch: 11, quote: 4),
+        MockTick(epoch: 12, quote: 3),
+        MockTick(epoch: 13, quote: 2),
       ];
 
       const int period = 3;
 
-      final CloseValueIndicator closePrice = CloseValueIndicator(Input(ticks));
+      final CloseValueIndicator<MockResult> closePrice =
+          CloseValueIndicator<MockResult>(MockInput(ticks));
 
-      final Indicator bbmSMA = SMAIndicator(closePrice, period);
-      final StandardDeviationIndicator standardDeviation =
-          StandardDeviationIndicator(closePrice, period);
-      final BollingerBandsUpperIndicator bbuSMA =
-          BollingerBandsUpperIndicator(bbmSMA, standardDeviation);
+      final Indicator<MockResult> bbmSMA =
+          SMAIndicator<MockResult>(closePrice, period);
+      final StandardDeviationIndicator<MockResult> standardDeviation =
+          StandardDeviationIndicator<MockResult>(closePrice, period);
+      final BollingerBandsUpperIndicator<MockResult> bbuSMA =
+          BollingerBandsUpperIndicator<MockResult>(bbmSMA, standardDeviation);
 
       expect(bbuSMA.k, 2);
 
@@ -51,8 +53,9 @@ void main() {
       expect(roundDouble(bbuSMA.getValue(8).quote, 3), 5.633);
       expect(roundDouble(bbuSMA.getValue(9).quote, 4), 4.2761);
 
-      final BollingerBandsUpperIndicator bbuSMAwithK =
-          BollingerBandsUpperIndicator(bbmSMA, standardDeviation, k: 1.5);
+      final BollingerBandsUpperIndicator<MockResult> bbuSMAwithK =
+          BollingerBandsUpperIndicator<MockResult>(bbmSMA, standardDeviation,
+              k: 1.5);
 
       expect(bbuSMAwithK.k, 1.5);
 
@@ -69,32 +72,34 @@ void main() {
     });
 
     test('Bollinger Percent B calculates the correct result', () {
-      const List<TickEntry> ticks = <TickEntry>[
-        TickEntry(epoch: 1, quote: 10),
-        TickEntry(epoch: 2, quote: 12),
-        TickEntry(epoch: 3, quote: 15),
-        TickEntry(epoch: 4, quote: 14),
-        TickEntry(epoch: 5, quote: 17),
-        TickEntry(epoch: 6, quote: 20),
-        TickEntry(epoch: 7, quote: 21),
-        TickEntry(epoch: 8, quote: 20),
-        TickEntry(epoch: 9, quote: 20),
-        TickEntry(epoch: 10, quote: 19),
-        TickEntry(epoch: 11, quote: 20),
-        TickEntry(epoch: 12, quote: 17),
-        TickEntry(epoch: 13, quote: 12),
-        TickEntry(epoch: 14, quote: 12),
-        TickEntry(epoch: 15, quote: 9),
-        TickEntry(epoch: 16, quote: 8),
-        TickEntry(epoch: 17, quote: 9),
-        TickEntry(epoch: 18, quote: 10),
-        TickEntry(epoch: 19, quote: 9),
-        TickEntry(epoch: 20, quote: 10),
+      const List<MockTick> ticks = <MockTick>[
+        MockTick(epoch: 1, quote: 10),
+        MockTick(epoch: 2, quote: 12),
+        MockTick(epoch: 3, quote: 15),
+        MockTick(epoch: 4, quote: 14),
+        MockTick(epoch: 5, quote: 17),
+        MockTick(epoch: 6, quote: 20),
+        MockTick(epoch: 7, quote: 21),
+        MockTick(epoch: 8, quote: 20),
+        MockTick(epoch: 9, quote: 20),
+        MockTick(epoch: 10, quote: 19),
+        MockTick(epoch: 11, quote: 20),
+        MockTick(epoch: 12, quote: 17),
+        MockTick(epoch: 13, quote: 12),
+        MockTick(epoch: 14, quote: 12),
+        MockTick(epoch: 15, quote: 9),
+        MockTick(epoch: 16, quote: 8),
+        MockTick(epoch: 17, quote: 9),
+        MockTick(epoch: 18, quote: 10),
+        MockTick(epoch: 19, quote: 9),
+        MockTick(epoch: 20, quote: 10),
       ];
 
-      final Indicator closePrice = CloseValueIndicator(Input(ticks));
+      final Indicator<MockResult> closePrice =
+          CloseValueIndicator<MockResult>(MockInput(ticks));
 
-      final PercentBIndicator pcb = PercentBIndicator(closePrice, 5);
+      final PercentBIndicator<MockResult> pcb =
+          PercentBIndicator<MockResult>(closePrice, 5);
 
       expect(pcb.results[0].quote.isNaN, isTrue);
       expect(roundDouble(pcb.results[1].quote, 2), 0.75);
