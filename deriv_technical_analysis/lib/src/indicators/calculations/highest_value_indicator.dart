@@ -28,6 +28,6 @@ class HighestValueIndicator<T extends Result> extends CachedIndicator<T> {
       }
     }
 
-    return createResultOf(epoch: getEpochOfIndex(index), quote: highest);
+    return createResult(index: index, quote: highest);
   }
 }

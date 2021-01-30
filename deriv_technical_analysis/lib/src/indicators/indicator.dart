@@ -14,14 +14,10 @@ abstract class Indicator<T extends Result> {
   /// The entries of the [input]
   List<OHLC> get entries => input.entries;
 
-  /// Gets the epoch of the given [index]
-  // TODO(Ramin): Handle indicator offset here.
-  int getEpochOfIndex(int index) => entries[index].epoch;
-
   /// Value of the indicator for the given [index].
   T getValue(int index);
 
   /// Creates [Result] entry.
-  T createResultOf({int epoch, double quote}) =>
-      input.createResultOf(epoch, quote);
+  T createResult({int index, double quote}) =>
+      input.createResult(index, quote);
 }

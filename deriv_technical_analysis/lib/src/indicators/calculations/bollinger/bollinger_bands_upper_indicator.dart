@@ -26,8 +26,8 @@ class BollingerBandsUpperIndicator<T extends Result>
   final double k;
 
   @override
-  T calculate(int index) => createResultOf(
-        epoch: getEpochOfIndex(index),
+  T calculate(int index) => createResult(
+        index: index,
         quote:
             bbm.getValue(index).quote + (deviation.getValue(index).quote * k),
       );

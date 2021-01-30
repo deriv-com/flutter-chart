@@ -49,8 +49,8 @@ class PercentBIndicator<T extends Result> extends CachedIndicator<T> {
     final double upValue = bbu.getValue(index).quote;
     final double lowValue = bbl.getValue(index).quote;
 
-    return createResultOf(
-      epoch: getEpochOfIndex(index),
+    return createResult(
+      index: index,
       quote: (value - lowValue) / (upValue - lowValue),
     );
   }

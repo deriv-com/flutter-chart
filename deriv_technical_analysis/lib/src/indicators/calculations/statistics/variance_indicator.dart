@@ -38,6 +38,6 @@ class VarianceIndicator<T extends Result> extends CachedIndicator<T> {
 
     variance = variance / numberOfObservations;
 
-    return createResultOf(epoch: getEpochOfIndex(index), quote: variance);
+    return createResult(index: index, quote: variance);
   }
 }

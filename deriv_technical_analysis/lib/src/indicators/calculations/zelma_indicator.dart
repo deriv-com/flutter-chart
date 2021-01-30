@@ -29,7 +29,7 @@ class ZLEMAIndicator<T extends Result> extends CachedIndicator<T> {
   T calculate(int index) {
     if (index + 1 < period) {
       // Starting point of the ZLEMA
-      return SMAIndicator(indicator, period).getValue(index);
+      return SMAIndicator<T>(indicator, period).getValue(index);
     }
     if (index == 0) {
       // If the period is bigger than the indicator's value count
@@ -38,8 +38,8 @@ class ZLEMAIndicator<T extends Result> extends CachedIndicator<T> {
 
     final double prevZlema = getValue(index - 1).quote;
 
-    return createResultOf(
-      epoch: getEpochOfIndex(index),
+    return createResult(
+      index: index,
       quote: (_k *
               ((2 * (indicator.getValue(index).quote)) -
                   (indicator.getValue(index - _lag).quote))) +

@@ -5,8 +5,8 @@ abstract class DataInput {
   /// Input entries
   List<OHLC> get entries;
 
-  /// Creates [Result] entry from given [epoch] and [value].
-  Result createResultOf(int epoch, double value);
+  /// Creates [Result] entry from given [index] and [value].
+  Result createResult(int index, double value);
 }
 
 /// Indicator's input implementation.
@@ -18,5 +18,5 @@ class Input implements DataInput {
   final List<OHLC> entries;
 
   @override
-  Result createResultOf(int epoch, double value) => ResultEntry(epoch, value);
+  Result createResult(int index, double value) => ResultEntry(value);
 }

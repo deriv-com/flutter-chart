@@ -52,7 +52,7 @@ class ParabolicSarIndicator<T extends Result> extends CachedIndicator<T> {
     double sar = double.nan;
     if (index == 0) {
       // no trend detection possible for the first value
-      return createResultOf(epoch: getEpochOfIndex(index), quote: sar);
+      return createResult(index: index, quote: sar);
     } else if (index == 1) {
       // start trend detection
       _currentTrend = entries.first.close < (entries[index].close);
@@ -67,7 +67,7 @@ class ParabolicSarIndicator<T extends Result> extends CachedIndicator<T> {
       }
       _currentExtremePoint = sar;
       _minMaxExtremePoint = _currentExtremePoint;
-      return createResultOf(epoch: getEpochOfIndex(index), quote: sar);
+      return createResult(index: index, quote: sar);
     }
 
     final double priorSar = getValue(index - 1).quote;
@@ -89,10 +89,10 @@ class ParabolicSarIndicator<T extends Result> extends CachedIndicator<T> {
         _minMaxExtremePoint = _currentExtremePoint;
       } else {
         // up trend is going on
-        _currentExtremePoint =
-            HighestValueIndicator(_highPriceIndicator, index - _startTrendIndex)
-                .getValue(index)
-                .quote;
+        _currentExtremePoint = HighestValueIndicator<T>(
+          _highPriceIndicator,
+          index - _startTrendIndex,
+        ).getValue(index).quote;
         if (_currentExtremePoint > _minMaxExtremePoint) {
           incrementAcceleration();
           _minMaxExtremePoint = _currentExtremePoint;
@@ -113,17 +113,17 @@ class ParabolicSarIndicator<T extends Result> extends CachedIndicator<T> {
         _minMaxExtremePoint = _currentExtremePoint;
       } else {
         // down trend io going on
-        _currentExtremePoint =
-            LowestValueIndicator(_lowPriceIndicator, index - _startTrendIndex)
-                .getValue(index)
-                .quote;
+        _currentExtremePoint = LowestValueIndicator<T>(
+          _lowPriceIndicator,
+          index - _startTrendIndex,
+        ).getValue(index).quote;
         if (_currentExtremePoint < _minMaxExtremePoint) {
           incrementAcceleration();
           _minMaxExtremePoint = _currentExtremePoint;
         }
       }
     }
-    return createResultOf(epoch: getEpochOfIndex(index), quote: sar);
+    return createResult(index: index, quote: sar);
   }
 
   ///  Increments the acceleration factor.

@@ -19,8 +19,8 @@ class StandardDeviationIndicator<T extends Result> extends CachedIndicator<T> {
   final VarianceIndicator _variance;
 
   @override
-  T calculate(int index) => createResultOf(
-        epoch: getEpochOfIndex(index),
+  T calculate(int index) => createResult(
+        index: index,
         quote: sqrt(_variance.getValue(index).quote),
       );
 }

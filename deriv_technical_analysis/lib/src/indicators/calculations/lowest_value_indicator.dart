@@ -27,6 +27,6 @@ class LowestValueIndicator<T extends Result> extends CachedIndicator<T> {
       }
     }
 
-    return createResultOf(epoch: getEpochOfIndex(index), quote: lowest);
+    return createResult(index: index, quote: lowest);
   }
 }

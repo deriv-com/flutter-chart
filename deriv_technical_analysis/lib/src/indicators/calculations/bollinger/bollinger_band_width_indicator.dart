@@ -20,20 +20,20 @@ class BollingerBandWidthIndicator<T extends Result> extends CachedIndicator<T> {
   }) : super(bbm.input);
 
   /// The upper band Indicator.
-  final BollingerBandsUpperIndicator bbu;
+  final BollingerBandsUpperIndicator<T> bbu;
 
   /// The middle band Indicator. Typically an SMAIndicator is used.
-  final Indicator bbm;
+  final Indicator<T> bbm;
 
   /// The lower band Indicator.
-  final BollingerBandsLowerIndicator bbl;
+  final BollingerBandsLowerIndicator<T> bbl;
 
   /// Typically is 100.
   final double hundred;
 
   @override
-  T calculate(int index) => createResultOf(
-        epoch: getEpochOfIndex(index),
+  T calculate(int index) => createResult(
+        index: index,
         quote: ((bbu.getValue(index).quote - bbl.getValue(index).quote) /
                 bbm.getValue(index).quote) *
             hundred,

@@ -1,8 +1,5 @@
 /// An element of Indicator result
 abstract class Result {
-  /// Epoch
-  int get epoch;
-
   /// Quote
   double get quote;
 }
@@ -25,11 +22,7 @@ abstract class OHLC implements Result {
 /// A result model class
 class ResultEntry implements Result {
   /// Initializes
-  ResultEntry(this.epoch, this.quote);
-
-  /// Epoch
-  @override
-  final int epoch;
+  ResultEntry(this.quote);
 
   /// Quote
   @override
@@ -42,7 +35,6 @@ class TickEntry implements OHLC {
   const TickEntry({this.epoch, this.quote});
 
   /// Epoch
-  @override
   final int epoch;
 
   /// Quote

@@ -18,17 +18,17 @@ class BollingerBandsLowerIndicator<T extends Result>
       : super.fromIndicator(bbm);
 
   /// Indicator
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   /// The middle indicator of the BollingerBand
-  final Indicator bbm;
+  final Indicator<T> bbm;
 
   /// Default is 2.
   final double k;
 
   @override
-  T calculate(int index) => createResultOf(
-        epoch: getEpochOfIndex(index),
+  T calculate(int index) => createResult(
+        index: index,
         quote:
             bbm.getValue(index).quote - (indicator.getValue(index).quote * k),
       );

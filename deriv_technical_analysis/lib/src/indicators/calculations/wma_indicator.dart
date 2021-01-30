@@ -1,4 +1,4 @@
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
 
 import '../cached_indicator.dart';
 import '../indicator.dart';
@@ -25,8 +25,8 @@ class WMAIndicator<T extends Result> extends CachedIndicator<T> {
         value = value + (i * (indicator.getValue(i - 1).quote));
       }
 
-      return createResultOf(
-        epoch: getEpochOfIndex(index),
+      return createResult(
+        index: index,
         quote: value / (((index + 1) * (index + 2)) / 2),
       );
     }
@@ -38,8 +38,8 @@ class WMAIndicator<T extends Result> extends CachedIndicator<T> {
       actualIndex--;
     }
 
-    return createResultOf(
-      epoch: getEpochOfIndex(index),
+    return createResult(
+      index: index,
       quote: value / ((period * (period + 1)) / 2),
     );
   }

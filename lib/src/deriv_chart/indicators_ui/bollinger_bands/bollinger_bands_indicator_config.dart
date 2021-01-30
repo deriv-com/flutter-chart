@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indica
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 
 /// Bollinger Bands Indicator Config
 class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
@@ -23,8 +23,9 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   final double standardDeviation;
 
   @override
-  Series getSeries(List<Tick> ticks) => BollingerBandSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](ticks),
+  Series getSeries(IndicatorInput indicatorInput) =>
+      BollingerBandSeries.fromIndicator(
+        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
         period: period,
         movingAverageType: type,
         standardDeviationFactor: standardDeviation,

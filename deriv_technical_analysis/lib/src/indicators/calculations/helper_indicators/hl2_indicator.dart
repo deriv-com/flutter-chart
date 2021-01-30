@@ -11,9 +11,6 @@ class HL2Indicator<T extends Result> extends Indicator<T> {
   @override
   T getValue(int index) {
     final OHLC entry = entries[index];
-    return createResultOf(
-      epoch: getEpochOfIndex(index),
-      quote: (entry.high + entry.low) / 2,
-    );
+    return createResult(index: index, quote: (entry.high + entry.low) / 2);
   }
 }

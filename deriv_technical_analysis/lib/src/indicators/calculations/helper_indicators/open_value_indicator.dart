@@ -9,6 +9,8 @@ class OpenValueIndicator<T extends Result> extends Indicator<T> {
   OpenValueIndicator(DataInput input) : super(input);
 
   @override
-  T getValue(int index) =>
-      createResultOf(epoch: getEpochOfIndex(index), quote: entries[index].open);
+  T getValue(int index) => createResult(
+        index: index,
+        quote: entries[index].open,
+      );
 }

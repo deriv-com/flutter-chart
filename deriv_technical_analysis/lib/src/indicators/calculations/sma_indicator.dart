@@ -25,9 +25,6 @@ class SMAIndicator<T extends Result> extends CachedIndicator<T> {
 
     final int realBarCount = min(period, index + 1);
 
-    return createResultOf(
-      epoch: getEpochOfIndex(index),
-      quote: sum / realBarCount,
-    );
+    return createResult(index: index, quote: sum / realBarCount);
   }
 }

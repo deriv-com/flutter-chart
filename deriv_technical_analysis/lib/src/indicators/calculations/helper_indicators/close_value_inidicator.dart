@@ -8,6 +8,8 @@ class CloseValueIndicator<T extends Result> extends Indicator<T> {
   CloseValueIndicator(DataInput input) : super(input);
 
   @override
-  T getValue(int index) => createResultOf(
-      epoch: getEpochOfIndex(index), quote: entries[index].close);
+  T getValue(int index) => createResult(
+        index: index,
+        quote: entries[index].close,
+      );
 }
