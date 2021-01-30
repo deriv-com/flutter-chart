@@ -19,6 +19,7 @@ class Tick with EquatableMixin implements OHLC {
   });
 
   /// Epoch of the tick
+  @override
   final int epoch;
 
   /// Tick price

@@ -1,5 +1,6 @@
 import 'package:deriv_technical_analysis/src/models/data_input.dart';
 import 'package:deriv_technical_analysis/src/models/models.dart';
+import 'package:flutter/foundation.dart';
 
 /// Indicator's input mock implementation.
 class MockInput implements DataInput {
@@ -53,6 +54,15 @@ class MockOHLC extends MockTick {
   /// Initializes
   const MockOHLC(int epoch, this.open, this.close, this.high, this.low)
       : super(epoch: epoch, quote: close);
+
+  /// Initializes with name parameters.
+  const MockOHLC.withNames({
+    int epoch,
+    double open,
+    double close,
+    double high,
+    double low,
+  }) : this(epoch, open, close, high, low);
 
   @override
   final double close;

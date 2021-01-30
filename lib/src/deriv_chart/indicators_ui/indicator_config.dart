@@ -23,7 +23,12 @@ abstract class IndicatorConfig {
         OpenValueIndicator<Tick>(indicatorInput),
     'Hl/2': (IndicatorInput indicatorInput) =>
         HL2Indicator<Tick>(indicatorInput),
-    // TODO(Ramin): Add also hlc3, hlcc4, ohlc4 Indicators.
+    'HlC/3': (IndicatorInput indicatorInput) =>
+        HLC3Indicator<Tick>(indicatorInput),
+    'HlCC/4': (IndicatorInput indicatorInput) =>
+        HLCC4Indicator<Tick>(indicatorInput),
+    'OHlC/4': (IndicatorInput indicatorInput) =>
+        OHLC4Indicator<Tick>(indicatorInput),
   };
 
   /// Creates indicator [Series] for the given [indicatorInput].
