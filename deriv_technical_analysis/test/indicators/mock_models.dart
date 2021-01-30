@@ -1,6 +1,5 @@
 import 'package:deriv_technical_analysis/src/models/data_input.dart';
 import 'package:deriv_technical_analysis/src/models/models.dart';
-import 'package:flutter/foundation.dart';
 
 /// Indicator's input mock implementation.
 class MockInput implements DataInput {

@@ -5,7 +5,7 @@ abstract class Result {
 }
 
 /// OHLC interface
-abstract class OHLC implements Result {
+abstract class OHLC {
   /// Open value (first value in OHLC period)
   double get open;
 

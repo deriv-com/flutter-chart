@@ -3,7 +3,7 @@ import 'package:deriv_technical_analysis/src/models/data_input.dart';
 
 import '../../indicator.dart';
 
-/// A helper indicator to get the [(H + L) / 2] value of a list of [Tick]
+/// A helper indicator to get the [(H + L) / 2] value of a list of [OHLC]
 class HL2Indicator<T extends Result> extends Indicator<T> {
   /// Initializes
   HL2Indicator(DataInput input) : super(input);
