@@ -32,7 +32,6 @@ class MockTick implements OHLC {
   final int epoch;
 
   /// Quote
-  @override
   final double quote;
 
   @override
