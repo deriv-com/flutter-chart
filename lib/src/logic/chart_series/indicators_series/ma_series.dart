@@ -1,7 +1,13 @@
-import 'package:deriv_chart/src/models/IndicatorInput.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/ema_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/hma_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/sma_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/wma_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/zelma_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../line_series/line_series.dart';
 
@@ -18,7 +24,7 @@ class MASeries extends LineSeries {
     int period = 15,
     MovingAverageType type = MovingAverageType.simple,
   }) : this.fromIndicator(
-          CloseValueIndicator(IndicatorInput(entries)),
+          CloseValueIndicator(entries),
           id: id,
           style: style,
           period: period,
@@ -38,22 +44,22 @@ class MASeries extends LineSeries {
           style: style ?? const LineStyle(thickness: 0.5),
         );
 
-  static CachedIndicator<Tick> getMAIndicator(
+  static CachedIndicator getMAIndicator(
     Indicator indicator,
     int period,
     MovingAverageType type,
   ) {
     switch (type) {
       case MovingAverageType.exponential:
-        return EMAIndicator<Tick>(indicator, period);
+        return EMAIndicator(indicator, period);
       case MovingAverageType.weighted:
-        return WMAIndicator<Tick>(indicator, period);
+        return WMAIndicator(indicator, period);
       case MovingAverageType.hull:
-        return HMAIndicator<Tick>(indicator, period);
+        return HMAIndicator(indicator, period);
       case MovingAverageType.zeroLag:
-        return ZLEMAIndicator<Tick>(indicator, period);
+        return ZLEMAIndicator(indicator, period);
       default:
-        return SMAIndicator<Tick>(indicator, period);
+        return SMAIndicator(indicator, period);
     }
   }
 }

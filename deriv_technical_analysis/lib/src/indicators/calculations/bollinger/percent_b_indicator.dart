@@ -15,27 +15,27 @@ class PercentBIndicator<T extends Result> extends CachedIndicator<T> {
   /// [period]  The time frame
   /// [k]         The K multiplier (usually 2.0)
   PercentBIndicator(
-    Indicator indicator,
+    Indicator<T> indicator,
     int period, {
     double k = 2,
   }) : this._(
           indicator,
-          StandardDeviationIndicator(indicator, period),
-          SMAIndicator(indicator, period),
+          StandardDeviationIndicator<T>(indicator, period),
+          SMAIndicator<T>(indicator, period),
           k,
         );
 
   PercentBIndicator._(
     this.indicator,
-    StandardDeviationIndicator sd,
-    Indicator bbm,
+    StandardDeviationIndicator<T> sd,
+    Indicator<T> bbm,
     double k,
-  )   : bbu = BollingerBandsUpperIndicator(bbm, sd, k: k),
-        bbl = BollingerBandsLowerIndicator(bbm, sd, k: k),
+  )   : bbu = BollingerBandsUpperIndicator<T>(bbm, sd, k: k),
+        bbl = BollingerBandsLowerIndicator<T>(bbm, sd, k: k),
         super.fromIndicator(indicator);
 
   /// Indicator
-  final Indicator indicator;
+  final Indicator<T> indicator;
 
   /// The upper indicator of the BollingerBand
   final BollingerBandsUpperIndicator<T> bbu;

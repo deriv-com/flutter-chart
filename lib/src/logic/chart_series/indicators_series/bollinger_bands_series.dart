@@ -5,13 +5,17 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.d
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/models/IndicatorInput.dart';
+import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_lower_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/bollinger/bollinger_bands_upper_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/statistics/standard_deviation_indicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// Bollinger bands series
@@ -26,7 +30,7 @@ class BollingerBandSeries extends Series {
     double standardDeviationFactor = 2,
     String id,
   }) : this.fromIndicator(
-          CloseValueIndicator<Tick>(IndicatorInput(ticks)),
+          CloseValueIndicator(ticks),
           period: period,
           movingAverageType: movingAverageType,
           standardDeviationFactor: standardDeviationFactor,
@@ -35,7 +39,7 @@ class BollingerBandSeries extends Series {
 
   /// Initializes
   BollingerBandSeries.fromIndicator(
-    Indicator<Tick> indicator, {
+    Indicator indicator, {
     this.period = 20,
     this.movingAverageType = MovingAverageType.simple,
     this.standardDeviationFactor = 2,
@@ -60,21 +64,19 @@ class BollingerBandSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    final StandardDeviationIndicator<Tick> standardDeviation =
+    final StandardDeviationIndicator standardDeviation =
         StandardDeviationIndicator(_fieldIndicator, period);
 
-    final CachedIndicator<Tick> bbmSMA =
+    final CachedIndicator bbmSMA =
         MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
 
-    final BollingerBandsLowerIndicator<Tick> bblSMA =
-        BollingerBandsLowerIndicator<Tick>(
+    final BollingerBandsLowerIndicator bblSMA = BollingerBandsLowerIndicator(
       bbmSMA,
       standardDeviation,
       k: standardDeviationFactor,
     );
 
-    final BollingerBandsUpperIndicator bbuSMA =
-        BollingerBandsUpperIndicator<Tick>(
+    final BollingerBandsUpperIndicator bbuSMA = BollingerBandsUpperIndicator(
       bbmSMA,
       standardDeviation,
       k: standardDeviationFactor,
