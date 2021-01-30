@@ -13,7 +13,7 @@ class VarianceIndicator<T extends Result> extends CachedIndicator<T> {
   /// [indicator] the indicator
   /// [period]  the time frame
   VarianceIndicator(this.indicator, this.period)
-      : _sma = SMAIndicator(indicator, period),
+      : _sma = SMAIndicator<T>(indicator, period),
         super.fromIndicator(indicator);
 
   /// Indicator
@@ -22,7 +22,7 @@ class VarianceIndicator<T extends Result> extends CachedIndicator<T> {
   /// Bar count
   final int period;
 
-  final SMAIndicator _sma;
+  final SMAIndicator<T> _sma;
 
   @override
   T calculate(int index) {

@@ -13,10 +13,10 @@ class StandardDeviationIndicator<T extends Result> extends CachedIndicator<T> {
   /// [indicator] the indicator to calculates SD on.
   /// [period]  the time frame
   StandardDeviationIndicator(Indicator<T> indicator, int period)
-      : _variance = VarianceIndicator(indicator, period),
+      : _variance = VarianceIndicator<T>(indicator, period),
         super.fromIndicator(indicator);
 
-  final VarianceIndicator _variance;
+  final VarianceIndicator<T> _variance;
 
   @override
   T calculate(int index) => createResult(

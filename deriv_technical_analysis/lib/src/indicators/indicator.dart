@@ -8,7 +8,7 @@ abstract class Indicator<T extends Result> {
   /// Initializes
   Indicator(this.input);
 
-  /// List of data to calculate indicator values on.
+  /// [DataInput] to calculate indicator values on.
   final DataInput input;
 
   /// The entries of the [input]
@@ -17,7 +17,10 @@ abstract class Indicator<T extends Result> {
   /// Value of the indicator for the given [index].
   T getValue(int index);
 
-  /// Creates [Result] entry.
-  T createResult({int index, double quote}) =>
-      input.createResult(index, quote);
+  /// Creates a [Result] entry.
+  ///
+  /// Uses [createResult] is implemented inside [DataInput]. An implementation of
+  /// [DataInput] can be passed to this [Indicator] class which can instantiate ans return
+  /// an object of class which implements [Result].
+  T createResult({int index, double quote}) => input.createResult(index, quote);
 }
