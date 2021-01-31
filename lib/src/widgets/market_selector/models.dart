@@ -14,9 +14,9 @@ class Market {
     this.name,
     this.displayName,
     List<Asset> assets,
-  }) : subMarkets = List<SubMarket>() {
+  }) : subMarkets = <SubMarket>[] {
     final HashSet<String> subMarketTitles = HashSet<String>();
-    for (final asset in assets) {
+    for (final Asset asset in assets) {
       if (!subMarketTitles.contains(asset.subMarket)) {
         subMarketTitles.add(asset.subMarket);
         subMarkets.add(
@@ -24,7 +24,7 @@ class Market {
             name: asset.subMarket,
             displayName: asset.subMarketDisplayName,
             assets: assets
-                .where((element) => element.subMarket == asset.subMarket)
+                .where((Asset element) => element.subMarket == asset.subMarket)
                 .toList(),
           ),
         );
@@ -37,7 +37,7 @@ class Market {
     this.name,
     this.displayName,
     List<Asset> assets,
-  }) : subMarkets = List<SubMarket>() {
+  }) : subMarkets = <SubMarket>[] {
     subMarkets.add(SubMarket(
       name: name,
       displayName: displayName,
@@ -62,7 +62,7 @@ class Market {
   bool containsAssetWithText(String text) =>
       containsText(text) ||
       subMarkets.firstWhere(
-              (subMarket) => subMarket.containsAssetWithText(text),
+              (SubMarket subMarket) => subMarket.containsAssetWithText(text),
               orElse: () => null) !=
           null;
 }
@@ -94,7 +94,7 @@ class SubMarket {
   bool containsAssetWithText(String text) =>
       containsText(text) ||
       assets.firstWhere(
-              (asset) => asset.displayName.toLowerCase().contains(text),
+              (Asset asset) => asset.displayName.toLowerCase().contains(text),
               orElse: () => null) !=
           null;
 }
@@ -112,6 +112,18 @@ class Asset {
     this.isOpen = true,
     this.isFavourite = false,
   });
+
+  /// Creates an [Asset] object from JSON map.
+  factory Asset.fromJson(Map<String, dynamic> json) => Asset(
+        name: json['name'],
+        displayName: json['display_name'],
+        market: json['market'],
+        marketDisplayName: json['market_display_name'],
+        subMarket: json['sub_market'],
+        subMarketDisplayName: json['sub_market_display_name'],
+        isOpen: json['is_open'],
+        isFavourite: json['is_favourite'],
+      );
 
   /// The name of the active symbol.
   final String name;
@@ -165,18 +177,6 @@ class Asset {
         subMarketDisplayName: subMarketDisplayName ?? this.subMarketDisplayName,
         isOpen: isOpen ?? this.isOpen,
         isFavourite: isFavourite ?? this.isFavourite,
-      );
-
-  /// Creates an [Asset] object from JSON map.
-  factory Asset.fromJson(Map<String, dynamic> json) => Asset(
-        name: json['name'],
-        displayName: json['display_name'],
-        market: json['market'],
-        marketDisplayName: json['market_display_name'],
-        subMarket: json['sub_market'],
-        subMarketDisplayName: json['sub_market_display_name'],
-        isOpen: json['is_open'],
-        isFavourite: json['is_favourite'],
       );
 
   /// Converts this object to a JSON map.
