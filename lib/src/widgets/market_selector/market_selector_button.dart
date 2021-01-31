@@ -7,8 +7,8 @@ import 'symbol_icon.dart';
 class MarketSelectorButton extends StatelessWidget {
   ///Creates a Button to open the market selector. The selected [Asset] should be passed as [asset].
   const MarketSelectorButton({
-    Key key,
     @required this.asset,
+    Key key,
     this.backgroundColor,
     this.borderRadius,
     this.onTap,
@@ -35,28 +35,25 @@ class MarketSelectorButton extends StatelessWidget {
   /// The duration of the fade animaiton of the button icon.
   ///
   /// Default is set to `100` miliseconds.
-  static const iconFadeDuration = const Duration(milliseconds: 100);
+  static const Duration iconFadeDuration = Duration(milliseconds: 100);
 
   @override
-  Widget build(BuildContext context) {
-    return FlatButton(
-      padding: const EdgeInsets.all(8),
-      color: backgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            borderRadius ?? const BorderRadius.all(Radius.circular(4.0)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          SymbolIcon(
-            symbolCode: asset.name,
-          ),
-          const SizedBox(width: 8),
-          Text(asset.displayName, style: textStyle),
-        ],
-      ),
-      onPressed: onTap,
-    );
-  }
+  Widget build(BuildContext context) => FlatButton(
+        padding: const EdgeInsets.all(8),
+        color: backgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              borderRadius ?? const BorderRadius.all(Radius.circular(4)),
+        ),
+        child: Row(
+          children: <Widget>[
+            SymbolIcon(
+              symbolCode: asset.name,
+            ),
+            const SizedBox(width: 8),
+            Text(asset.displayName, style: textStyle),
+          ],
+        ),
+        onPressed: onTap,
+      );
 }
