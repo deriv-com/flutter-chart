@@ -72,10 +72,8 @@ class DonchianChannelIndicatorItemState
         ],
       );
 
-  bool _getCurrentFill() {
-    final DonchianChannelIndicatorConfig config = getConfig();
-    return _channelFill ?? config?.showChannelFill ?? true;
-  }
+bool _getCurrentFill() =>
+      _channelFill ?? getConfig()?.showChannelFill ?? true;
 
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
