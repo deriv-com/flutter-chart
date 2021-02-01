@@ -48,6 +48,11 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Utility object to help efficiently calculate new min/max when [visibleEntries] change.
   MinMaxCalculator _minMaxCalculator;
 
+  @override
+  int getMinEpoch() => entries.isNotEmpty ? getEpochOf(entries.first) : null;
+  @override
+  int getMaxEpoch() => entries.isNotEmpty ? getEpochOf(entries.last) : null;
+
   /// Gets the real epoch for the given [t].
   ///
   /// Real epoch might involve some offsets.

@@ -144,4 +144,12 @@ class BollingerBandSeries extends Series {
 
     // TODO(ramin): call super.paint to paint the Channels fill.
   }
+
+  @override
+  int getMinEpoch() =>
+      min(_lowerSeries.getMinEpoch(), _upperSeries.getMinEpoch());
+
+  @override
+  int getMaxEpoch() =>
+      max(_lowerSeries.getMaxEpoch(), _upperSeries.getMaxEpoch());
 }

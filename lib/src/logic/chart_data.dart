@@ -39,6 +39,10 @@ abstract class ChartData {
   /// [double.nan] should be returned if this [ChartData] doesn't have any element to have a maximum value.
   double get maxValue;
 
+  int get minEpoch;
+
+  int get maxEpoch;
+
   /// Paints this [ChartData] on the given [canvas].
   ///
   /// [Size] is the size of the [canvas].

@@ -14,7 +14,23 @@ abstract class Series implements ChartData {
   Series(this.id, {this.style}) {
     seriesPainter = createPainter();
     id = '$runtimeType${style?.toString()}${seriesPainter.runtimeType}$id';
+
+    _minEpoch = getMinEpoch();
+    _maxEpoch = getMaxEpoch();
   }
+
+  int _minEpoch;
+  int _maxEpoch;
+
+  @override
+  int get minEpoch => _minEpoch;
+
+  @override
+  int get maxEpoch => _maxEpoch;
+
+  int getMinEpoch();
+
+  int getMaxEpoch();
 
   @override
   String id;

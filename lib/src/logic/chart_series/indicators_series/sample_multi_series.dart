@@ -76,4 +76,10 @@ class SampleMultiSeries extends Series {
     series2.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
+
+  @override
+  int getMinEpoch() => min(series1.getMinEpoch(), series2.getMinEpoch());
+
+  @override
+  int getMaxEpoch() => max(series1.getMaxEpoch(), series2.getMaxEpoch());
 }

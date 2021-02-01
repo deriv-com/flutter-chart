@@ -24,6 +24,8 @@ class XAxis extends StatefulWidget {
     @required this.isLive,
     @required this.startWithDataFitMode,
     this.onVisibleAreaChanged,
+    this.minEpoch,
+    this.maxEpoch,
     Key key,
   })  : assert(child != null),
         super(key: key);
@@ -42,6 +44,9 @@ class XAxis extends StatefulWidget {
 
   /// Callback provided by library user.
   final VisibleAreaChangedCallback onVisibleAreaChanged;
+
+  final int minEpoch;
+  final int maxEpoch;
 
   @override
   _XAxisState createState() => _XAxisState();
@@ -68,6 +73,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       startWithDataFitMode: widget.startWithDataFitMode,
       onScale: _onVisibleAreaChanged,
       onScroll: _onVisibleAreaChanged,
+      entriesMinEpoch: widget.minEpoch,
+      entriesMaxEpoch: widget.maxEpoch,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
