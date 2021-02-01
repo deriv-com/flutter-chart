@@ -565,10 +565,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
-        loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+        loadingRightBoundX: widget.mainSeries.entries.isEmpty
             ? _xAxis.width
             : _xAxis.xFromEpoch(
-                widget.mainSeries.visibleEntries.first.epoch,
+                widget.mainSeries.entries.first.epoch,
               ),
       );
 
