@@ -2,6 +2,8 @@
   "@@locale": "en",
   "labelField": "Field",
   "labelPeriod": "Period",
+  "labelConversionLinePeriod": "Conversion Line Period",
+  "labelBaseLinePeriod": "Base Line Period",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",
   "labelType": "Type",

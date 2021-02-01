@@ -30,10 +30,73 @@ class IchimokuCloudIndicatorItem extends IndicatorItem {
 /// IchimokuCloudIndicatorItem State class
 class IchimokuCloudIndicatorItemState
     extends IndicatorItemState<IchimokuCloudIndicatorConfig> {
-  @override
-  IchimokuCloudIndicatorConfig createIndicatorConfig() =>
-      const IchimokuCloudIndicatorConfig();
+  int _baseLinePeriod = 26;
+  int _conversionLinePeriod = 9;
 
   @override
-  Widget getIndicatorOptions() => const SizedBox.shrink();
+  IchimokuCloudIndicatorConfig createIndicatorConfig() =>
+      IchimokuCloudIndicatorConfig(
+        baseLinePeriod: _baseLinePeriod,
+        conversionLinePeriod: _conversionLinePeriod,
+      );
+
+  Widget _buildConversionLinePeriodField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelConversionLinePeriod,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: _conversionLinePeriod.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  _conversionLinePeriod = int.tryParse(text);
+                } else {
+                  _conversionLinePeriod = 9;
+                }
+                updateIndicator();
+              },
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildBaseLinePeriodField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelBaseLinePeriod,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: _baseLinePeriod.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  _baseLinePeriod = int.tryParse(text);
+                } else {
+                  _baseLinePeriod = 26;
+                }
+                updateIndicator();
+              },
+            ),
+          ),
+        ],
+      );
+
+  @override
+  Widget getIndicatorOptions() => Column(
+        children: <Widget>[
+          _buildBaseLinePeriodField(),
+          _buildConversionLinePeriodField(),
+        ],
+      );
 }

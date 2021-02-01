@@ -18,6 +18,8 @@ class IchimokuCloudSeries extends Series {
   IchimokuCloudSeries(
     this.ticks, {
     String id,
+    this.conversionLinePeriod = 9,
+    this.baseLinePeriod = 26,
   }) : super(id);
 
   LineSeries _conversionLineSeries;
@@ -29,13 +31,19 @@ class IchimokuCloudSeries extends Series {
   /// List of [Tick]s to calculate IchimokuCloud on.
   final List<Tick> ticks;
 
+  /// The period to calculate the Conversion Line value.
+  final int conversionLinePeriod;
+
+  /// The period to calculate the Base Line value.
+  final int baseLinePeriod;
+
   @override
   SeriesPainter<Series> createPainter() {
     final IchimokuBaseLineIndicator baseLineIndicator =
-        IchimokuBaseLineIndicator(ticks);
+        IchimokuBaseLineIndicator(ticks, period: baseLinePeriod);
 
     final IchimokuConversionLineIndicator conversionLineIndicator =
-        IchimokuConversionLineIndicator(ticks);
+        IchimokuConversionLineIndicator(ticks, period: conversionLinePeriod);
 
     final IchimokuLaggingSpanIndicator laggingSpanIndicator =
         IchimokuLaggingSpanIndicator(ticks);

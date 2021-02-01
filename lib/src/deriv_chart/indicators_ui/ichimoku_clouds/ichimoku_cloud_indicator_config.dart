@@ -5,8 +5,21 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/ichimoku_cl
 /// Ichimoku Cloud Indicator Config
 class IchimokuCloudIndicatorConfig extends IndicatorConfig {
   /// Initializes
-  const IchimokuCloudIndicatorConfig() : super();
+  const IchimokuCloudIndicatorConfig({
+    this.baseLinePeriod = 26,
+    this.conversionLinePeriod = 9,
+  }) : super();
+
+  /// The period to calculate the Conversion Line value.
+  final int conversionLinePeriod;
+
+  /// The period to calculate the Base Line value.
+  final int baseLinePeriod;
 
   @override
-  Series getSeries(List<Tick> ticks) => IchimokuCloudSeries(ticks);
+  Series getSeries(List<Tick> ticks) => IchimokuCloudSeries(
+        ticks,
+        baseLinePeriod: baseLinePeriod,
+        conversionLinePeriod: conversionLinePeriod,
+      );
 }
