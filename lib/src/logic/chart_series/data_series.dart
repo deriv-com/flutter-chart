@@ -51,6 +51,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Gets the real epoch for the given [t].
   ///
   /// Real epoch might involve some offsets.
+  /// Should use this method here whenever want to get [Tick.epoch].
   int getEpochOf(T t) => t.epoch;
 
   /// Updates visible entries for this Series.
