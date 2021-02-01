@@ -5,7 +5,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
-/// Bollinger Bands Indicator Config
+/// Donchian Channel Indicator Config
 class DonchianChannelIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const DonchianChannelIndicatorConfig({
