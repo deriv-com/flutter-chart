@@ -104,10 +104,7 @@ class DonchianChannelIndicatorItemState
         ],
       );
 
-  int _getCurrentHighPeriod() {
-    final DonchianChannelIndicatorConfig config = getConfig();
-    return _highPeriod ?? config?.highPeriod ?? 10;
-  }
+int _getCurrentHighPeriod() => _highPeriod ?? getConfig()?.highPeriod ?? 10;
 
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[
