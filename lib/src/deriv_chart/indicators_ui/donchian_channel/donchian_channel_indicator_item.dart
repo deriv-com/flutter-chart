@@ -136,8 +136,5 @@ class DonchianChannelIndicatorItemState
         ],
       );
 
-  int _getCurrentLowPeriod() {
-    final DonchianChannelIndicatorConfig config = getConfig();
-    return _lowPeriod ?? config?.lowPeriod ?? 10;
-  }
+  int _getCurrentLowPeriod() => _lowPeriod ?? getConfig()?.lowPeriod ?? 10;
 }
