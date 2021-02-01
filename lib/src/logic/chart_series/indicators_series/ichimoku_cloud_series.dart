@@ -17,7 +17,6 @@ class IchimokuCloudSeries extends Series {
   /// Initializes
   IchimokuCloudSeries(
     this.ticks, {
-    // this.period = 52,
     String id,
   }) : super(id);
 
@@ -29,11 +28,6 @@ class IchimokuCloudSeries extends Series {
 
   /// List of [Tick]s to calculate IchimokuCloud on.
   final List<Tick> ticks;
-
-  /// Period
-  // final int period;
-
-  /// Bollinger Bands Moving Average type
 
   @override
   SeriesPainter<Series> createPainter() {
@@ -101,8 +95,7 @@ class IchimokuCloudSeries extends Series {
 
   @override
   List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
-      // But to be safe we calculate min and max. from all three series(Except SpanA because values of SpanA are always between Conversion Line and Base Line values).
+      // We Calculate min and max from all three series(Except SpanA because values of SpanA are always between Conversion Line and Base Line values).
       <double>[
         min<double>(
           min<double>(
