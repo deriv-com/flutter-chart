@@ -8,7 +8,7 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'donchian_channel_indicator_config.dart';
 
-/// Bollinger Bands indicator item in the list of indicator which provide this
+/// Donchian Channel indicator item in the list of indicator which provide this
 /// indicators options menu.
 class DonchianChannelIndicatorItem extends IndicatorItem {
   /// Initializes
