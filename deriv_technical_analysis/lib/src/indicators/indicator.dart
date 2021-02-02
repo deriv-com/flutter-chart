@@ -19,8 +19,8 @@ abstract class Indicator<T extends Result> {
 
   /// Creates a [Result] entry.
   ///
-  /// Uses [createResult] is implemented inside [DataInput]. An implementation of
-  /// [DataInput] can be passed to this [Indicator] class which can instantiate ans return
-  /// an object of class which implements [Result].
+  /// Uses [DataInput.createResult].
+  /// An implementation of [DataInput] should be passed to this class to create
+  /// the desired [T] result.
   T createResult({int index, double quote}) => input.createResult(index, quote);
 }
