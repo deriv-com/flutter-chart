@@ -1,7 +1,6 @@
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/zigzag_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
+import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +18,9 @@ class ZigZagSeries extends LineSeries {
     List<Tick> entries, {
     String id,
     LineStyle style,
-        double distance = 10,
+    double distance = 10,
   }) : this.fromIndicator(
-          CloseValueIndicator(entries),
+          entries,
           id: id,
           style: style,
           distance: distance,
@@ -31,10 +30,10 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   /// Initializes
-  ZigZagSeries.fromIndicator(Indicator indicator,
+  ZigZagSeries.fromIndicator(List<OHLC> ticks,
       {String id, LineStyle style, double distance = 10})
       : super(
-          ZigZagIndicator(indicator, distance).results,
+          ZigZagIndicator(ticks, distance).results,
           id: id ?? 'Zigzag Indicator',
           style: style ?? const LineStyle(thickness: 0.9, color: Colors.blue),
         );
@@ -45,7 +44,7 @@ class ZigZagSeries extends LineSeries {
 
     if (visibleEntries.isNotEmpty && visibleEntries != null) {
       if (visibleEntries.first.quote.isNaN) {
-        var index = entries.indexOf(visibleEntries.first);
+        final int index = entries.indexOf(visibleEntries.first);
         Tick firstPoint;
         for (int i = index - 1; i >= 0; i--) {
           if (!entries[i].quote.isNaN) {
@@ -57,7 +56,7 @@ class ZigZagSeries extends LineSeries {
       }
 
       if (visibleEntries.last.quote.isNaN) {
-        var index = entries.indexOf(visibleEntries.last);
+        final int index = entries.indexOf(visibleEntries.last);
         Tick firstPoint;
         for (int i = index + 1; i <= entries.length; i++) {
           if (!entries[i].quote.isNaN) {
