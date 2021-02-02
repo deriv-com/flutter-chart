@@ -1,8 +1,9 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_env_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 
 import '../callbacks.dart';
 import '../indicator_config.dart';
@@ -30,19 +31,7 @@ class MAEnvIndicatorItem extends IndicatorItem {
 }
 
 /// MAEnvIndicatorItem State class
-class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
-  /// MA type
-  @protected
-  MovingAverageType movingAverageType;
-
-  /// Field type
-  @protected
-  String field;
-
-  /// MA period
-  @protected
-  int period;
-
+class MAEnvIndicatorItemState extends MAIndicatorItemState {
   /// MA Env shift
   @protected
   double shift;
@@ -53,11 +42,11 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
 
   @override
   MAEnvIndicatorConfig createIndicatorConfig() => MAEnvIndicatorConfig(
-        period: getCurrentPeriod(),
-        movingAverageType: getCurrentType(),
-        fieldType: getCurrentField(),
         shiftType: getCurrentShiftType(),
         shift: getCurrentShift(),
+        fieldType: getCurrentField(),
+        period: getCurrentPeriod(),
+        movingAverageType: getCurrentType(),
       );
 
   @override
@@ -68,65 +57,6 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
           buildShiftTypeMenu(),
           buildShiftField(),
           buildMATypeMenu(),
-        ],
-      );
-
-  /// Builds MA Field type menu
-  @protected
-  Widget buildFieldTypeMenu() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelField,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          DropdownButton<String>(
-            value: getCurrentField(),
-            items: IndicatorConfig.supportedFieldTypes.keys
-                .map<DropdownMenuItem<String>>(
-                    (String fieldType) => DropdownMenuItem<String>(
-                          value: fieldType,
-                          child: Text(
-                            '$fieldType',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ))
-                .toList(),
-            onChanged: (String newField) => setState(
-              () {
-                field = newField;
-                updateIndicator();
-              },
-            ),
-          )
-        ],
-      );
-
-  /// Builds Period TextFiled
-  @protected
-  Widget buildPeriodField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelPeriod,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: getCurrentPeriod().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  period = int.tryParse(text);
-                } else {
-                  period = 15;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
         ],
       );
 
@@ -151,38 +81,6 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
                 } else {
                   shift = 5;
                 }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
-      );
-
-  /// Returns MA types dropdown menu
-  @protected
-  Widget buildMATypeMenu() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelType,
-            style: TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          DropdownButton<MovingAverageType>(
-            value: getCurrentType(),
-            items: MovingAverageType.values
-                .map<DropdownMenuItem<MovingAverageType>>(
-                    (MovingAverageType type) =>
-                        DropdownMenuItem<MovingAverageType>(
-                          value: type,
-                          child: Text(
-                            '${getEnumValue(type)}',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ))
-                .toList(),
-            onChanged: (MovingAverageType newType) => setState(
-              () {
-                movingAverageType = newType;
                 updateIndicator();
               },
             ),
@@ -223,27 +121,17 @@ class MAEnvIndicatorItemState extends IndicatorItemState<MAEnvIndicatorConfig> {
 
   /// Gets Indicator current type.
   @protected
-  MovingAverageType getCurrentType() =>
-      movingAverageType ??
-      getConfig()?.movingAverageType ??
-      MovingAverageType.simple;
-
-  /// Gets Indicator current type.
-  @protected
-  ShiftType getCurrentShiftType() =>
-      shiftType ?? getConfig()?.shiftType ?? ShiftType.percent;
-
-  /// Gets Indicator current filed type.
-  @protected
-  String getCurrentField() => field ?? getConfig()?.fieldType ?? 'close';
+  ShiftType getCurrentShiftType() {
+    final MAEnvIndicatorConfig config = getConfig();
+    return shiftType ?? config?.shiftType ?? ShiftType.percent;
+  }
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
-
-  /// Gets Indicator current period.
-  @protected
-  double getCurrentShift() => shift ?? getConfig()?.shift ?? 5;
+  double getCurrentShift() {
+    final MAEnvIndicatorConfig config = getConfig();
+    return shift ?? config?.shift ?? 5;
+  }
 
   @protected
   LineStyle getCurrentLineStyle() =>

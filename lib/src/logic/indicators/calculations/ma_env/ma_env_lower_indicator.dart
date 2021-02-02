@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_env_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 
 import '../../cached_indicator.dart';
 import '../../indicator.dart';
@@ -27,11 +28,11 @@ class MAEnvLowerIndicator extends CachedIndicator {
   @override
   Tick calculate(int index) => Tick(
         epoch: getEpochOfIndex(index),
-        quote: getShiftedValue(maEnvMiddleIndicator.getValue(index).quote),
+        quote: _getShiftedValue(maEnvMiddleIndicator.getValue(index).quote),
       );
 
   /// Calculate shifted value based on shiftType
-  double getShiftedValue(double value) => shiftType == ShiftType.percent
+  double _getShiftedValue(double value) => shiftType == ShiftType.percent
       ? value * (1 - (shift / 100))
       : value - shift;
 }

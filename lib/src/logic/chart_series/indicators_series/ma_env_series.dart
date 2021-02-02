@@ -9,7 +9,9 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 import 'package:flutter/material.dart';
+
 
 import '../../../../deriv_chart.dart';
 import '../../chart_data.dart';
@@ -77,23 +79,23 @@ class MAEnvSeries extends Series {
     final CachedIndicator smaIndicator =
         MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
 
-    final MAEnvLowerIndicator bblSMA = MAEnvLowerIndicator(
+    final MAEnvLowerIndicator maEnvLowerIndicator = MAEnvLowerIndicator(
       smaIndicator,
       shiftType,
       shift,
     );
 
-    final MAEnvUpperIndicator bbuSMA = MAEnvUpperIndicator(
+    final MAEnvUpperIndicator maEnvUpperIndicator = MAEnvUpperIndicator(
       smaIndicator,
       shiftType,
       shift,
     );
 
-    _lowerSeries = LineSeries(bblSMA.results,
+    _lowerSeries = LineSeries(maEnvLowerIndicator.results,
         style: const LineStyle(color: Colors.redAccent));
     _middleSeries = LineSeries(smaIndicator.results,
         style: const LineStyle(color: Colors.white));
-    _upperSeries = LineSeries(bbuSMA.results,
+    _upperSeries = LineSeries(maEnvUpperIndicator.results,
         style: const LineStyle(color: Colors.lightGreen));
   }
 
@@ -149,11 +151,3 @@ class MAEnvSeries extends Series {
   }
 }
 
-/// Supported types of shift.
-enum ShiftType {
-  /// Percent
-  percent,
-
-  /// Point
-  point,
-}
