@@ -17,17 +17,28 @@ class ColorButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
+    return InkWell(
+      onTap: () {},
+      child: SizedBox(
+        width: 44,
+        height: 44,
+        child: Center(
+          child: _buildColorBox(),
         ),
       ),
     );
   }
+
+  Container _buildColorBox() => Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: Colors.white,
+            width: 2,
+          ),
+        ),
+      );
 }
