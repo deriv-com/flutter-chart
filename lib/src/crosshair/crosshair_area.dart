@@ -151,15 +151,15 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       return const Duration(milliseconds: 5);
     }
 
-    if (dragXVelocity > 2000) {
+    if (dragXVelocity > 3000) {
       return const Duration(milliseconds: 5);
     }
 
     if (dragXVelocity < 500) {
-      return const Duration(milliseconds: 50);
+      return const Duration(milliseconds: 80);
     }
 
-    final double duratoinInRange = (dragXVelocity - 500) / (1500) * 45 + 5;
+    final double duratoinInRange = (dragXVelocity - 500) / (2500) * 75 + 5;
     return Duration(milliseconds: duratoinInRange.toInt());
   }
 
