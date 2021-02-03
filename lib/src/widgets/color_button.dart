@@ -16,19 +16,17 @@ class ColorButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(4),
-      onTap: onTap,
-      child: SizedBox(
-        width: 44,
-        height: 44,
-        child: Center(
-          child: _buildColorBox(),
+  Widget build(BuildContext context) => InkWell(
+        borderRadius: BorderRadius.circular(4),
+        onTap: onTap,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Center(
+            child: _buildColorBox(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Container _buildColorBox() => Container(
         width: 24,
