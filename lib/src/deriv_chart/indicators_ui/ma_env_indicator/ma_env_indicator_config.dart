@@ -12,22 +12,12 @@ import '../../../../deriv_chart.dart';
 class MAEnvIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const MAEnvIndicatorConfig({
-    this.period,
-    this.movingAverageType,
-    this.fieldType,
+    int period,
+    MovingAverageType movingAverageType,
+    String fieldType,
     this.shift,
     this.shiftType,
-    this.lineStyle,
-  }) : super();
-
-  /// Moving Average period
-  final int period;
-
-  /// Moving Average type
-  final MovingAverageType movingAverageType;
-
-  /// Field type
-  final String fieldType;
+  }) : super(period: period, type: movingAverageType, fieldType: fieldType);
 
   /// Moving Average Envelope shift type
   final ShiftType shiftType;
@@ -35,16 +25,12 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
   /// Moving Average Envelope shift
   final double shift;
 
-  /// MA line style
-  final LineStyle lineStyle;
-
   @override
   Series getSeries(List<Tick> ticks) => MAEnvSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](ticks),
         period: period,
-        movingAverageType: movingAverageType,
+        movingAverageType: type,
         shift: shift,
         shiftType: shiftType,
-        style: lineStyle,
       );
 }
