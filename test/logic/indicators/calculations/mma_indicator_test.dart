@@ -29,10 +29,10 @@ void main() {
 
       final MMAIndicator mmaIndicator = MMAIndicator(closeValueIndicator, 2);
 
-      expect(mmaIndicator.getValue(0).quote, 79.526);
-      expect(mmaIndicator.getValue(1).quote, 79.5275);
-      expect(mmaIndicator.getValue(2).quote, 79.52975);
-      expect(mmaIndicator.getValue(3).quote, 79.527375);
+      expect(mmaIndicator.results[0].quote, 79.526);
+      expect(mmaIndicator.results[1].quote, 79.5275);
+      expect(mmaIndicator.results[2].quote, 79.52975);
+      expect(mmaIndicator.results[3].quote, 79.527375);
     });
   });
 }
