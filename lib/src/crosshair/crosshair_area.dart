@@ -143,22 +143,24 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
 
   Duration get animationDuration {
-    final double dragXVelocity =
-        _dragVelocity.pixelsPerSecond.dx.abs().roundToDouble();
+    double dragXVelocity;
+
+    dragXVelocity = _dragVelocity.pixelsPerSecond.dx.abs().roundToDouble();
 
     if (dragXVelocity == 0) {
-      return const Duration(milliseconds: 50);
+      return const Duration(milliseconds: 5);
     }
 
-    if (dragXVelocity > 10000) {
+    if (dragXVelocity > 1000) {
       return const Duration(milliseconds: 5);
     }
 
     if (dragXVelocity < 500) {
-      return const Duration(milliseconds: 100);
+      return const Duration(milliseconds: 50);
     }
 
-    return Duration(milliseconds: 100 ~/ ((dragXVelocity ~/ 300) + 1));
+    final double duratoinInRange = (dragXVelocity - 500) / (500) * 45 + 5;
+    return Duration(milliseconds: duratoinInRange.toInt());
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {
