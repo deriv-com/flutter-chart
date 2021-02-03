@@ -22,7 +22,6 @@ class RSIIndicator extends CachedIndicator {
   Tick calculate(int index) {
     final Tick averageGain = _averageGainIndicator.getValue(index);
     final Tick averageLoss = _averageLossIndicator.getValue(index);
-
     if (averageLoss.quote == 0) {
       if (averageGain.quote == 0) {
         return Tick(epoch: getEpochOfIndex(index), quote: 0);
