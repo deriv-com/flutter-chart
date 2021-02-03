@@ -54,6 +54,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   @override
   Widget getIndicatorOptions() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ColorButton(
             color: Colors.red,

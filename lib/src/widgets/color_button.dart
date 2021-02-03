@@ -18,11 +18,15 @@ class ColorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 32,
-      height: 32,
+      width: 24,
+      height: 24,
       decoration: BoxDecoration(
         color: color,
-        shape: BoxShape.circle,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: Colors.white,
+          width: 2,
+        ),
       ),
     );
   }
