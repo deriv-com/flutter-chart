@@ -36,10 +36,6 @@ class ColorButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            color: Colors.white,
-            width: 2,
-          ),
         ),
       );
 }
