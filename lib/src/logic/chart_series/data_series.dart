@@ -10,13 +10,13 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
-/// Series with only a single list of data to show.
+/// Series with only a single list of data to paint.
 abstract class DataSeries<T extends Tick> extends Series {
   /// Initializes
   ///
   /// [entries] is the list of data to show.
   DataSeries(
-    this.entries,
+    this.input,
     String id, {
     DataSeriesStyle style,
   }) : super(id, style: style) {
@@ -28,20 +28,42 @@ abstract class DataSeries<T extends Tick> extends Series {
     );
   }
 
-  /// Series entries
-  final List<T> entries;
+  /// Series input list.
+  ///
+  /// This is not the list that eventually will be painted. Sub-classes have the option
+  /// to prepare their [entries] list which is the one that is painted from the [input].
+  final List<T> input;
 
+  /// The list of this class that will be painted on the canvas.
+  List<T> entries;
+
+  /// List of visible entries at a specific epoch range of the chart X-Axis.
+  ///
+  /// Will be updated when the epoch bounderies of the chart changes and [onUpdate] gets called.
   List<T> _visibleEntries = <T>[];
 
   /// Series visible entries
   List<T> get visibleEntries => _visibleEntries;
 
-  T _prevLastEntry;
-
-  /// A reference to the last entry from series previous [entries] before update
-  T get prevLastEntry => _prevLastEntry;
+  /// A reference to the last element of the old series of this [DataSeries] object.
+  ///
+  /// Most of the times updating a [DataSeries] class is when a new tick is added to it.
+  /// It can be updating just the last tick of the old [DataSeries] class, or adding a new tick
+  /// at the end of the list of tick. In these cases we can do animation from [prevLastEntry] to the
+  /// last tick of the new [DataSeries]. like transition from old tick to new tick in a line chart
+  /// or updating the height of candle in a candlestick chart.
+  ///
+  /// In other cases like in the first run or when the [input] list changes entirely [prevLastEntry]
+  /// will ne `null` and there will be no animation.
+  T prevLastEntry;
 
   HorizontalBarrier _lastTickIndicator;
+
+  /// Initializes [entries] from the [input].
+  void initialize() {
+    entries = input;
+    _initLastTickIndicator();
+  }
 
   bool _needsMinMaxUpdate = false;
 
@@ -62,6 +84,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Updates visible entries for this Series.
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
+    if (entries == null) {
+      initialize();
+    }
+
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
 
     if (entries.isEmpty) {
@@ -86,6 +112,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   /// Minimum value in [t].
+  ///
+  /// sub-classes can decide what will be the min/max value of a [T], this way a candlestick series
+  /// can use (high, low) values as max and min and a line chart just use the close value and then a line
+  /// chart can expand as much as it can in the vertical space since it just shows close values.
   double minValueOf(T t);
 
   /// Maximum value in [t].
@@ -93,6 +123,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   void _initLastTickIndicator() {
     final DataSeriesStyle style = this.style;
+
     if (entries.isNotEmpty && style?.lastTickStyle != null ?? false) {
       _lastTickIndicator = HorizontalBarrier(
         entries.last.quote,
@@ -171,28 +202,46 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Will be called by the chart when it was updated.
   @override
   bool didUpdate(ChartData oldData) {
-    final DataSeries<T> oldSeries = oldData;
+    final DataSeries<Tick> oldSeries = oldData;
 
     bool updated = false;
+    if (input.isNotEmpty && isOldDataAvailable(oldSeries)) {
+      fillEntriesFromInput(oldSeries);
 
-    if (entries.isNotEmpty && oldSeries.entries.isNotEmpty) {
-      if (entries.last == oldSeries.entries.last) {
-        _prevLastEntry = oldSeries._prevLastEntry;
+      // Preserve old computed values in case recomputation is deemed unnecesary.
+      _visibleEntries = oldSeries.visibleEntries;
+      minValueInFrame = oldSeries.minValue;
+      maxValueInFrame = oldSeries.maxValue;
+
+      if (entries != null && entries.last == oldSeries.entries.last) {
+        prevLastEntry = oldSeries.prevLastEntry;
       } else {
-        _prevLastEntry = oldSeries.entries.last;
+        prevLastEntry = oldSeries.entries.last;
         updated = true;
       }
+    } else {
+      initialize();
+      updated = true;
     }
-
-    // Preserve old computed values in case recomputation is deemed unnecesary.
-    _visibleEntries = oldSeries.visibleEntries;
-    minValueInFrame = oldSeries.minValue;
-    maxValueInFrame = oldSeries.maxValue;
 
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
 
     return updated;
   }
+
+  /// Fills the entries that are about to be painted based on [input] and [oldSeries]
+  ///
+  /// [oldSeries] is provided so this [DataSeries] class get the option to reuse it's previous data.
+  ///
+  /// Here we just assign [input] to [entries] as a normal [DataSeries] class.
+  @protected
+  void fillEntriesFromInput(covariant DataSeries<Tick> oldSeries) =>
+      entries = input;
+
+  /// Checks whether the old data of the series is available to use
+  @protected
+  bool isOldDataAvailable(covariant DataSeries<Tick> oldSeries) =>
+      oldSeries?.entries?.isNotEmpty ?? false;
 
   @override
   bool shouldRepaint(ChartData oldDelegate) {
