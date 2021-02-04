@@ -1,5 +1,5 @@
+import 'package:deriv_chart/src/widgets/chart_bottom_sheet.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_grid.dart';
-import 'package:deriv_chart/src/widgets/custom_draggable_sheet.dart';
 import 'package:flutter/material.dart';
 
 class ColorPickerSheet extends StatelessWidget {
@@ -7,7 +7,7 @@ class ColorPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomDraggableSheet(
+    return ChartBottomSheet(
       child: ColorGrid(),
     );
   }
