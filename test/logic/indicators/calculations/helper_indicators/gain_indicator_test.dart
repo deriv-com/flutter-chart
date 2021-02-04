@@ -30,10 +30,10 @@ void main() {
       final GainIndicator gainIndicator =
           GainIndicator.fromIndicator(closeValueIndicator);
 
-      expect(gainIndicator.results[0].quote, 0);
-      expect(roundDouble(gainIndicator.results[1].quote, 3), 0.003);
-      expect(roundDouble(gainIndicator.results[2].quote, 3), 0.003);
-      expect(gainIndicator.results[3].quote, 0);
+      expect(gainIndicator.getValue(0).quote, 0);
+      expect(roundDouble(gainIndicator.getValue(1).quote, 3), 0.003);
+      expect(roundDouble(gainIndicator.getValue(2).quote, 3), 0.003);
+      expect(gainIndicator.getValue(3).quote, 0);
     });
   });
 }

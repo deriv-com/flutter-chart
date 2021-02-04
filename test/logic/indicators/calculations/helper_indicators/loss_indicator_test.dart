@@ -30,10 +30,10 @@ void main() {
       final LossIndicator lossIndicator =
           LossIndicator.fromIndicator(closeValueIndicator);
 
-      expect(lossIndicator.results[0].quote, 0);
-      expect(lossIndicator.results[1].quote, 0);
-      expect(lossIndicator.results[2].quote, 0);
-      expect(roundDouble(lossIndicator.results[3].quote, 3), 0.007);
+      expect(lossIndicator.getValue(0).quote, 0);
+      expect(lossIndicator.getValue(1).quote, 0);
+      expect(lossIndicator.getValue(2).quote, 0);
+      expect(roundDouble(lossIndicator.getValue(3).quote, 3), 0.007);
     });
   });
 }
