@@ -17,7 +17,8 @@ class ColorGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
-      crossAxisCount: 3,
+      padding: const EdgeInsets.all(8),
+      crossAxisCount: 5,
       children: <Widget>[
         for (final Color color in colorOptions)
           _ColorOptionButton(
@@ -40,10 +41,16 @@ class _ColorOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 100,
-      color: color,
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color,
+        ),
+      ),
     );
   }
 }
