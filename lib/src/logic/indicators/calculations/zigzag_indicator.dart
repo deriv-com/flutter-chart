@@ -9,225 +9,117 @@ import '../indicator.dart';
 /// The ZigZag Indicator that shows if value changes enough
 class ZigZagIndicator extends CachedIndicator {
   /// Initializes
-  ZigZagIndicator(this.ticks, double distance)
+  ZigZagIndicator(this.indicator, double distance)
       : _distancePercent = distance / 100,
-        upSwingTicks = calculateSwingUpPoints(ticks),
-        downSwingTicks = calculateSwingDownPoints(ticks),
-        super(ticks);
+        firstSwingIndex = calculateFirstSwing(indicator.entries),
+        super.fromIndicator(indicator);
 
   /// Calculating values that changes enough
-  final List<OHLC> ticks;
-  List<OHLC> upSwingTicks;
-  List<OHLC> downSwingTicks;
+  final Indicator indicator;
 
   /// The minimum distance between two point in %
   final double _distancePercent;
 
-  static List<OHLC> calculateSwingUpPoints(List<OHLC> ticks) {
-    List<OHLC> swingups=[];
-    for (int index = 1; index < ticks.length-1; index++) {
-      if (ticks[index - 1].close < ticks[index].close &&
-          ticks[index + 1].close < ticks[index].close) {
-        swingups.add(ticks[index]);
+  int firstSwingIndex;
+
+  static int calculateFirstSwing(List<Tick> ticks) {
+    int firstIndex = -1;
+    if (ticks != null && ticks.isNotEmpty)
+      for (int index = 1; index < ticks.length; index++) {
+        if ((ticks[index - 1].close > ticks[index].close &&
+            ticks[index + 1].close > ticks[index].close) ||
+            (ticks[index - 1].close < ticks[index].close &&
+                ticks[index + 1].close < ticks[index].close)) {
+          firstIndex = index;
+          break;
+        }
       }
-    }
-    return swingups;
+    return firstIndex;
   }
 
-  static List<OHLC> calculateSwingDownPoints(List<OHLC> ticks) {
-    List<OHLC> swingDowns=[];
-    for (int index = 1; index < ticks.length-1; index++) {
-      if (ticks[index - 1].close > ticks[index].close &&
-          ticks[index + 1].close > ticks[index].close) {
-        swingDowns.add(ticks[index]);
-      }
-    }
-    return swingDowns;
-  }
-
-  bool isFirstSwing(int index) {
-    int fisrtIndex = -1;
-    for (int index = 1; index < ticks.length; index++) {
-      if ((ticks[index - 1].close > ticks[index].close &&
-          ticks[index + 1].close > ticks[index].close) ||
-          (ticks[index - 1].close < ticks[index].close &&
-              ticks[index + 1].close < ticks[index].close)) {
-        fisrtIndex = index;
-        break;
-      }
-    }
-    return fisrtIndex==index? true: false;
-  }
   @override
   Tick calculate(int index) {
-    final Tick thisTick = ticks[index];
-    if(index==0){
+    final Tick thisTick = indicator.entries[index];
+
+    /// if index is 0 return nan value
+    if (index == 0) {
       return Tick(epoch: thisTick.epoch, quote: double.nan);
     }
-    if (index == ticks.length - 1 || isFirstSwing(index)) {
+
+    /// if index is last index or first swing, return itself
+    if (index == indicator.entries.length - 1 || firstSwingIndex == index) {
       return thisTick;
     }
 
-    if (upSwingTicks.contains(thisTick)) {
-      for (int i = index - 1; i > 0; i--) {
-        var previousTick = ticks[i];
-        if ( getValue(i).quote.isNaN) {
-          continue;
-        }
-        if (downSwingTicks.contains(previousTick)) {
-          final double distanceInPercent = previousTick.high * _distancePercent;
-          if ((previousTick.high - thisTick.low).abs() > distanceInPercent)
-            return thisTick;
-          else {
-            return Tick(epoch: thisTick.epoch, quote: double.nan);
-          }
-        }
-      }
-    }
+    /// is the point of given index swing up
+    bool isSwingUp(int index) =>
+        indicator.entries[index - 1].close < indicator.entries[index].close &&
+            indicator.entries[index + 1].close < indicator.entries[index].close;
 
-    if (downSwingTicks.contains(thisTick)) {
+    /// is the point of given index swing down
+    bool isSwingDown(int index) =>
+        indicator.entries[index - 1].close > indicator.entries[index].close &&
+            indicator.entries[index + 1].close > indicator.entries[index].close;
+
+    /// if thee point is SwingDown or SwingUp
+    if (isSwingDown(index) || isSwingUp(index)) {
+      /// found first not nan point before this point
       for (int i = index - 1; i > 0; i--) {
-        var previousTick = ticks[i];
         if (getValue(i).quote.isNaN) {
           continue;
         }
-        if (upSwingTicks.contains(previousTick)) {
-          final double distanceInPercent = previousTick.low *
-              _distancePercent;
-          if ((previousTick.low - thisTick.high).abs() > distanceInPercent)
+        var previousTick = indicator.entries[i];
+
+        ///if this point and last point has different swings
+        if ((isSwingUp(index) && isSwingDown(i)) ||
+            (isSwingDown(index) && isSwingUp(i))) {
+          final double distanceInPercent =
+              previousTick.close * _distancePercent;
+
+          if ((previousTick.close - thisTick.close).abs() > distanceInPercent) {
             return thisTick;
+          } else {
+            return Tick(epoch: thisTick.epoch, quote: double.nan);
+          }
+        }
+
+        ///if this point and last point has similar swings down
+        else if (isSwingDown(index) && isSwingDown(i)) {
+          if (i != firstSwingIndex && thisTick.close < previousTick.close) {
+            results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
+            return thisTick;
+          } else {
+            return Tick(epoch: thisTick.epoch, quote: double.nan);
+          }
+        }
+
+        ///if this point and last point has similar swings up
+        else if (isSwingUp(index) && isSwingUp(i)) {
+          if (i != firstSwingIndex && thisTick.close > previousTick.close) {
+            results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
+            return thisTick;
+          } else if (i == firstSwingIndex) {
+            final double distanceInPercent =
+                previousTick.close * _distancePercent;
+
+            if ((previousTick.close - thisTick.close).abs() >
+                distanceInPercent) {
+              return thisTick;
+            } else {
+              return Tick(epoch: thisTick.epoch, quote: double.nan);
+            }
+          }
           else {
             return Tick(epoch: thisTick.epoch, quote: double.nan);
           }
+        }
+
+        /// if none of the conditions was true
+        else {
+          return Tick(epoch: thisTick.epoch, quote: double.nan);
         }
       }
     }
     return Tick(epoch: thisTick.epoch, quote: double.nan);
-
-    // bool isSwingUp(int index) =>
-    //     ticks[index - 1].close < ticks[index].close &&
-    //         ticks[index + 1].close < ticks[index].close;
-    //
-    // bool isSwingDown(int index) =>
-    //     ticks[index - 1].close > ticks[index].close &&
-    //         ticks[index + 1].close > ticks[index].close;
-    //
-    // if (index == ticks.length - 2) {
-    //   print("Aaaaa");
-    // }
-    //
-    // /// the value of zigzag indicator is the same if it's first or last tick
-    // if (index == ticks.length - 1) {
-    //   return thisTick;
-    // }
-    // if (index == 0) {
-    //   return Tick(epoch: thisTick.epoch, quote: double.nan);
-    // }
-    //
-    // bool isThisTickSwingDown = isSwingDown(index);
-    // bool isThisTickSwingUp = isSwingUp(index);
-    //
-    // if (isThisTickSwingDown || isThisTickSwingUp) {
-    //   ///found first not nan value of the indicator before this tick
-    //   for (int i = index - 1; i >= 0; i--) {
-    //     var previousTick = getValue(i);
-    //     if (previousTick.quote.isNaN) {
-    //       continue;
-    //     }
-    //
-    //     if (i == 0) {
-    //       if (isThisTickSwingUp) {
-    //         final double distanceInPercent = previousTick.high *
-    //             _distancePercent;
-    //         if ((previousTick.high - thisTick.low).abs() > distanceInPercent)
-    //           return thisTick;
-    //         else {
-    //           return Tick(epoch: thisTick.epoch, quote: double.nan);
-    //         }
-    //       }
-    //       else if (isThisTickSwingDown) {
-    //         final double distanceInPercent = previousTick.low *
-    //             _distancePercent;
-    //         if ((previousTick.low - thisTick.high).abs() > distanceInPercent)
-    //           return thisTick;
-    //         else {
-    //           return Tick(epoch: thisTick.epoch, quote: double.nan);
-    //         }
-    //       }
-    //     }
-    //     else if (i != 0) {
-    //       if (isThisTickSwingUp && isSwingDown(i)) {
-    //         final double distanceInPercent = previousTick.high *
-    //             _distancePercent;
-    //         if ((previousTick.high - thisTick.low).abs() > distanceInPercent)
-    //           return thisTick;
-    //         else {
-    //           return Tick(epoch: thisTick.epoch, quote: double.nan);
-    //         }
-    //       }
-    //       else if (isThisTickSwingDown && isSwingUp(i)) {
-    //         final double distanceInPercent = previousTick.low *
-    //             _distancePercent;
-    //         if ((previousTick.low - thisTick.high).abs() > distanceInPercent)
-    //           return thisTick;
-    //         else {
-    //           return Tick(epoch: thisTick.epoch, quote: double.nan);
-    //         }
-    //       }
-    //     }
-    //     else {
-    //       continue;
-    //     }
-    //   }
-    //   if (isThisTickSwingUp || isThisTickSwingDown) {
-    //     return thisTick;
-    //   }
-    // }
-    // return Tick(epoch: thisTick.epoch, quote: double.nan);
   }
-
-//   /// the value of zigzag indicator is the same if it's first or last tick
-//   if (index == 0 || index == ticks.length - 1) {
-//     return thisTick;
-//   }
-//
-//   if (isSwingUp(index) || isSwingDown(index)) {
-//     ///found first not nan value of the indicator before this tick
-//     for (int i = index - 1; i >= 0; i--) {
-//       var previousTick = getValue(i);
-//       if (previousTick.quote.isNaN) {
-//         continue;
-//       }
-//
-//       /// if the last point have enough distance with previous one
-//       final double distanceInPercent = previousTick.close * _distancePercent;
-//       if (i == 0) {
-//         if ((thisTick.close - previousTick.close).abs() >=
-//             distanceInPercent) {
-//           return thisTick;
-//         } else {
-//           return Tick(epoch: thisTick.epoch, quote: double.nan);
-//         }
-//       } else {
-//
-//         if(isThisTickSwingDown && isSwingUp(i)){
-//
-//         }
-//
-//
-//
-//         if ((isSwingUp(i) || isSwingDown(i)) &&
-//             (thisTick.close - previousTick.close).abs() >=
-//                 distanceInPercent) {
-//           return thisTick;
-//         } else {
-//           return Tick(epoch: thisTick.epoch, quote: double.nan);
-//         }
-//       }
-//     }
-//   }
-//
-//   return Tick(epoch: thisTick.epoch, quote: double.nan);
-// }
-
 }

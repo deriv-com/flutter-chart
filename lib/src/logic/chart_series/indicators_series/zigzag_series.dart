@@ -1,5 +1,7 @@
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/zigzag_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -20,7 +22,7 @@ class ZigZagSeries extends LineSeries {
     LineStyle style,
     double distance = 10,
   }) : this.fromIndicator(
-          entries,
+          CloseValueIndicator(entries),
           id: id,
           style: style,
           distance: distance,
@@ -30,10 +32,10 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   /// Initializes
-  ZigZagSeries.fromIndicator(List<OHLC> ticks,
+  ZigZagSeries.fromIndicator(Indicator indicator,
       {String id, LineStyle style, double distance = 10})
       : super(
-          ZigZagIndicator(ticks, distance).results,
+          ZigZagIndicator(indicator, distance).results,
           id: id ?? 'Zigzag Indicator',
           style: style ?? const LineStyle(thickness: 0.9, color: Colors.blue),
         );
@@ -45,26 +47,21 @@ class ZigZagSeries extends LineSeries {
     if (visibleEntries.isNotEmpty && visibleEntries != null) {
       if (visibleEntries.first.quote.isNaN) {
         final int index = entries.indexOf(visibleEntries.first);
-        Tick firstPoint;
         for (int i = index - 1; i >= 0; i--) {
           if (!entries[i].quote.isNaN) {
-            firstPoint = entries[i];
+            visibleEntries.first = entries[i];
             break;
           }
         }
-        visibleEntries.first = firstPoint;
       }
-
       if (visibleEntries.last.quote.isNaN) {
         final int index = entries.indexOf(visibleEntries.last);
-        Tick firstPoint;
         for (int i = index + 1; i <= entries.length; i++) {
           if (!entries[i].quote.isNaN) {
-            firstPoint = entries[i];
+            visibleEntries.last = entries[i];
             break;
           }
         }
-        visibleEntries.last = firstPoint;
       }
     }
   }
