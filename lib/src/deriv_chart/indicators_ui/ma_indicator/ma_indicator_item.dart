@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
@@ -60,7 +61,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
           ColorButton(
             color: Colors.red,
             onTap: () {
-              showBottomSheet<void>(
+              showModalBottomSheet<void>(
                 backgroundColor: Colors.transparent,
                 context: context,
                 builder: (BuildContext context) => ColorPickerSheet(),

@@ -13,7 +13,13 @@ class ColorGrid extends StatelessWidget {
     // LayoutBuilder(builder: ,);
     return GridView.count(
       crossAxisCount: 4,
-      children: [],
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+          color: Colors.blue,
+        ),
+      ],
     );
   }
 }
