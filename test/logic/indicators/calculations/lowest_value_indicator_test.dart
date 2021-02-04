@@ -1,6 +1,4 @@
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/highest_value_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/lowest_value_indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,9 +28,9 @@ void main() {
       final LowestValueIndicator indicator =
           LowestValueIndicator(CloseValueIndicator(ticks), 10);
 
-      expect(indicator.results[9].quote, 61.37);
-      expect(indicator.results[10].quote, 56.37);
-      expect(indicator.results[11].quote, 48.51);
+      expect(indicator.getValue(9).quote, 61.37);
+      expect(indicator.getValue(10).quote, 56.37);
+      expect(indicator.getValue(11).quote, 48.51);
     });
   });
 }

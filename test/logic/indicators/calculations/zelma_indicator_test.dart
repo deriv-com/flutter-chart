@@ -28,9 +28,9 @@ void main() {
     test('ZLEMAIndicator calculates the correct results', () {
       ZLEMAIndicator indicator = ZLEMAIndicator(CloseValueIndicator(ticks), 10);
 
-      expect(roundDouble(indicator.results[9].quote, 3), 11.909);
-      expect(roundDouble(indicator.results[10].quote, 4), 8.8347);
-      expect(roundDouble(indicator.results[11].quote, 4), 5.7739);
+      expect(roundDouble(indicator.getValue(9).quote, 3), 11.909);
+      expect(roundDouble(indicator.getValue(10).quote, 4), 8.8347);
+      expect(roundDouble(indicator.getValue(11).quote, 4), 5.7739);
     });
   });
 }
