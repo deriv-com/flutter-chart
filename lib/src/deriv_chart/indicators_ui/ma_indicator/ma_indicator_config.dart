@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 
 import '../indicator_config.dart';
 
@@ -28,8 +29,6 @@ class MAIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(List<Tick> ticks) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](ticks),
-        period: period,
-        type: type,
-        style: lineStyle,
+        options: MAOptions(period: period, type: type),
       );
 }

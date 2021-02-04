@@ -29,9 +29,9 @@ void main() {
       final EMAIndicator indicator =
           EMAIndicator(CloseValueIndicator(ticks), 10);
 
-      expect(roundDouble(indicator.results[9].quote, 4), 63.6948);
-      expect(roundDouble(indicator.results[10].quote, 4), 63.2649);
-      expect(roundDouble(indicator.results[11].quote, 4), 62.9458);
+      expect(roundDouble(indicator.getValue(9).quote, 4), 63.6948);
+      expect(roundDouble(indicator.getValue(10).quote, 4), 63.2649);
+      expect(roundDouble(indicator.getValue(11).quote, 4), 62.9458);
     });
   });
 }
