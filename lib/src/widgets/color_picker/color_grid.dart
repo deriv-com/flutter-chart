@@ -18,14 +18,32 @@ class ColorGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 3,
-      children: [
+      children: <Widget>[
         for (final Color color in colorOptions)
-          Container(
-            width: 100,
-            height: 100,
+          _ColorOptionButton(
             color: color,
           ),
       ],
+    );
+  }
+}
+
+class _ColorOptionButton extends StatelessWidget {
+  const _ColorOptionButton({
+    Key key,
+    this.color,
+    this.onTap,
+  }) : super(key: key);
+
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 100,
+      color: color,
     );
   }
 }
