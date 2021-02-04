@@ -41,17 +41,17 @@ void main() {
         9,
       );
 
-      expect(roundDouble(hma.results[10].quote, 4), 86.3204);
-      expect(roundDouble(hma.results[11].quote, 4), 85.3705);
-      expect(roundDouble(hma.results[12].quote, 4), 84.1044);
-      expect(roundDouble(hma.results[13].quote, 4), 83.0197);
-      expect(roundDouble(hma.results[14].quote, 4), 81.3913);
-      expect(roundDouble(hma.results[15].quote, 4), 79.6511);
-      expect(roundDouble(hma.results[16].quote, 4), 78.0443);
-      expect(roundDouble(hma.results[17].quote, 4), 76.8832);
-      expect(roundDouble(hma.results[18].quote, 4), 75.5363);
-      expect(roundDouble(hma.results[19].quote, 4), 75.1713);
-      expect(roundDouble(hma.results[20].quote, 4), 75.3597);
+      expect(roundDouble(hma.getValue(10).quote, 4), 86.3204);
+      expect(roundDouble(hma.getValue(11).quote, 4), 85.3705);
+      expect(roundDouble(hma.getValue(12).quote, 4), 84.1044);
+      expect(roundDouble(hma.getValue(13).quote, 4), 83.0197);
+      expect(roundDouble(hma.getValue(14).quote, 4), 81.3913);
+      expect(roundDouble(hma.getValue(15).quote, 4), 79.6511);
+      expect(roundDouble(hma.getValue(16).quote, 4), 78.0443);
+      expect(roundDouble(hma.getValue(17).quote, 4), 76.8832);
+      expect(roundDouble(hma.getValue(18).quote, 4), 75.5363);
+      expect(roundDouble(hma.getValue(19).quote, 4), 75.1713);
+      expect(roundDouble(hma.getValue(20).quote, 4), 75.3597);
     });
   });
 }

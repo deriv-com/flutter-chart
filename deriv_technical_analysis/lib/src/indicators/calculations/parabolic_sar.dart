@@ -134,4 +134,18 @@ class ParabolicSarIndicator<T extends Result> extends CachedIndicator<T> {
       _accelerationFactor = _accelerationFactor + _accelerationIncrement;
     }
   }
+
+  @override
+  void copyValuesFrom(covariant ParabolicSarIndicator<T> other) {
+    super.copyValuesFrom(other);
+
+    _currentTrend = other._currentTrend;
+    _accelerationFactor = other._accelerationFactor;
+    _startTrendIndex = other._startTrendIndex;
+    _currentExtremePoint = other._currentExtremePoint;
+    _minMaxExtremePoint = other._minMaxExtremePoint;
+  }
+
+  @override
+  void invalidate(int index) {}
 }
