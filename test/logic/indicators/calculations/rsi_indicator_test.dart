@@ -42,11 +42,11 @@ void main() {
       final RSIIndicator rsiIndicator =
           RSIIndicator.fromIndicator(closeValueIndicator, 14);
 
-      expect(rsiIndicator.results.first.quote, 0);
-      expect(roundDouble(rsiIndicator.results[14].quote, 2), 52.88);
-      expect(roundDouble(rsiIndicator.results[15].quote, 2), 65.42);
-      expect(roundDouble(rsiIndicator.results[16].quote, 2), 65.96);
-      expect(roundDouble(rsiIndicator.results[17].quote, 2), 71.28);
+      expect(rsiIndicator.getValue(0).quote, 0);
+      expect(roundDouble(rsiIndicator.getValue(14).quote, 2), 52.88);
+      expect(roundDouble(rsiIndicator.getValue(15).quote, 2), 65.42);
+      expect(roundDouble(rsiIndicator.getValue(16).quote, 2), 65.96);
+      expect(roundDouble(rsiIndicator.getValue(17).quote, 2), 71.28);
     });
   });
 }
