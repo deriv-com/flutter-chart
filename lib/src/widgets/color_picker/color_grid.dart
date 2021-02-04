@@ -5,12 +5,16 @@ import 'package:flutter/material.dart';
 class ColorGrid extends StatelessWidget {
   /// Creates a grid from given colors.
   const ColorGrid({
-    @required this.colorOptions,
+    @required this.colorSwatches,
+    @required this.colorShades,
     Key key,
   }) : super(key: key);
 
-  /// List of available color options.
-  final List<Color> colorOptions;
+  /// List of available color swatches (rows).
+  final List<MaterialColor> colorSwatches;
+
+  /// List of color shade values (columns).
+  final List<int> colorShades;
 
   // final ValueChanged<Color> onChanged;
 
@@ -18,12 +22,13 @@ class ColorGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
       padding: const EdgeInsets.all(8),
-      crossAxisCount: 5,
+      crossAxisCount: colorShades.length,
       children: <Widget>[
-        for (final Color color in colorOptions)
-          _ColorOptionButton(
-            color: color,
-          ),
+        for (final MaterialColor swatch in colorSwatches)
+          for (final int shade in colorShades)
+            _ColorOptionButton(
+              color: swatch[shade],
+            ),
       ],
     );
   }

@@ -11,23 +11,12 @@ class ColorPickerSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChartBottomSheet(
       child: ColorGrid(
-        colorOptions: [
-          Colors.red[100],
-          Colors.red[300],
-          Colors.red[500],
-          Colors.red[700],
-          Colors.red[900],
-          Colors.green[100],
-          Colors.green[300],
-          Colors.green[500],
-          Colors.green[700],
-          Colors.green[900],
-          Colors.blue[100],
-          Colors.blue[300],
-          Colors.blue[500],
-          Colors.blue[700],
-          Colors.blue[900],
+        colorSwatches: [
+          Colors.red,
+          Colors.green,
+          Colors.blue,
         ],
+        colorShades: const <int>[100, 300, 500, 700, 900],
       ),
     );
   }
