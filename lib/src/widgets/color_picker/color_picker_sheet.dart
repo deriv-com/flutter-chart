@@ -13,10 +13,14 @@ class ColorPickerSheet extends StatelessWidget {
       child: ColorGrid(
         colorSwatches: [
           Colors.red,
-          Colors.green,
-          Colors.blue,
+          Colors.pink,
+          Colors.purple,
+          Colors.lightBlue,
+          Colors.lightGreen,
+          Colors.yellow,
+          Colors.grey,
         ],
-        colorShades: const <int>[100, 300, 500, 700, 900],
+        colorShades: const <int>[100, 300, 500, 700],
       ),
     );
   }
