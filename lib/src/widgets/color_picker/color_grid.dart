@@ -17,13 +17,14 @@ class ColorGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
-      crossAxisCount: 4,
+      crossAxisCount: 3,
       children: [
-        Container(
-          width: 100,
-          height: 100,
-          color: Colors.blue,
-        ),
+        for (final Color color in colorOptions)
+          Container(
+            width: 100,
+            height: 100,
+            color: color,
+          ),
       ],
     );
   }
