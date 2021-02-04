@@ -30,13 +30,11 @@ class RSIIndicator extends CachedIndicator {
       }
     }
 
-    final Tick relativeStrength = Tick(
-        epoch: getEpochOfIndex(index),
-        quote: averageGain.quote / averageLoss.quote);
+    final double relativeStrength = averageGain.quote / averageLoss.quote;
 
     return Tick(
       epoch: getEpochOfIndex(index),
-      quote: 100 - (100 / (1 + relativeStrength.quote)),
+      quote: 100 - (100 / (1 + relativeStrength)),
     );
   }
 }
