@@ -90,11 +90,11 @@ class DonchianChannelsSeries extends Series {
     final DonchianChannelsSeries oldSeries = oldData;
 
     final bool upperUpdated =
-        _upperChannelSeries.didUpdate(oldSeries._upperChannelSeries);
+        _upperChannelSeries.didUpdate(oldSeries?._upperChannelSeries);
     final bool middleUpdated =
-        _middleChannelSeries.didUpdate(oldSeries._middleChannelSeries);
+        _middleChannelSeries.didUpdate(oldSeries?._middleChannelSeries);
     final bool lowerUpdated =
-        _lowerChannelSeries.didUpdate(oldSeries._lowerChannelSeries);
+        _lowerChannelSeries.didUpdate(oldSeries?._lowerChannelSeries);
 
     return upperUpdated || middleUpdated || lowerUpdated;
   }
