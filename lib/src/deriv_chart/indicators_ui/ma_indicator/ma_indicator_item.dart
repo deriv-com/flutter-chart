@@ -59,12 +59,20 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ColorButton(
-            color: Colors.red,
+            // TODO: Pass MA line color
+            color: Colors.red[500],
             onTap: () {
               showModalBottomSheet<void>(
                 backgroundColor: Colors.transparent,
                 context: context,
-                builder: (BuildContext context) => ColorPickerSheet(),
+                builder: (BuildContext context) => ColorPickerSheet(
+                  // TODO: Pass MA line color
+                  selectedColor: Colors.red[500],
+                  // TODO: Update MA line color
+                  onChanged: (Color selectedColor) {
+                    print('>>> $selectedColor');
+                  },
+                ),
               );
             },
           ),

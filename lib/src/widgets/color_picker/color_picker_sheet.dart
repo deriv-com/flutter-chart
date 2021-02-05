@@ -5,7 +5,17 @@ import 'package:flutter/material.dart';
 /// Color picker sheet.
 class ColorPickerSheet extends StatelessWidget {
   /// Creates color picker sheet.
-  const ColorPickerSheet({Key key}) : super(key: key);
+  const ColorPickerSheet({
+    @required this.selectedColor,
+    @required this.onChanged,
+    Key key,
+  }) : super(key: key);
+
+  /// Selected color value.
+  final Color selectedColor;
+
+  /// Called when color option is selected.
+  final ValueChanged<Color> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +31,8 @@ class ColorPickerSheet extends StatelessWidget {
           Colors.grey,
         ],
         colorShades: const <int>[100, 300, 500, 700],
-        selectedColor: Colors.red[100],
-        onChanged: (Color selectedColor) {
-          print('>>> $selectedColor');
-        },
+        selectedColor: selectedColor,
+        onChanged: onChanged,
       ),
     );
   }
