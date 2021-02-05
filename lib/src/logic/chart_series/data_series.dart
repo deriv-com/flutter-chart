@@ -261,7 +261,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     // Prevent re-animating indicators that haven't changed.
     if (animationInfo.currentTickPercent == 1) {
-      _prevLastEntry = null;
+      prevLastEntry = null;
     }
   }
 
