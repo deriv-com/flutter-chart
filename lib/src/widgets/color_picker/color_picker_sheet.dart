@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/widgets/color_picker/material_color_grid.dart';
 import 'package:flutter/material.dart';
 
 /// Color picker sheet.
-class ColorPickerSheet extends StatelessWidget {
+class ColorPickerSheet extends StatefulWidget {
   /// Creates color picker sheet.
   const ColorPickerSheet({
     @required this.selectedColor,
@@ -16,6 +16,13 @@ class ColorPickerSheet extends StatelessWidget {
 
   /// Called when color option is selected.
   final ValueChanged<Color> onChanged;
+
+  @override
+  _ColorPickerSheetState createState() => _ColorPickerSheetState();
+}
+
+class _ColorPickerSheetState extends State<ColorPickerSheet> {
+  Color _selectedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +38,12 @@ class ColorPickerSheet extends StatelessWidget {
           Colors.grey,
         ],
         colorShades: const <int>[100, 300, 500, 700],
-        selectedColor: selectedColor,
+        selectedColor: _selectedColor ?? widget.selectedColor,
         onChanged: (Color selectedColor) {
-          onChanged?.call(selectedColor);
+          setState(() {
+            _selectedColor = selectedColor;
+          });
+          widget.onChanged?.call(selectedColor);
           Navigator.pop(context);
         },
       ),
