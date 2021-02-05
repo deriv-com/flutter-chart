@@ -61,22 +61,18 @@ class _ColorOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget colorArea = DecoratedBox(
+    final Widget colorArea = DecoratedBox(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color,
       ),
     );
 
-    if (selected) {
-      colorArea = _wrapWithBorder(colorArea);
-    }
-
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
         onTap: onTap,
-        child: colorArea,
+        child: selected ? _wrapWithBorder(colorArea) : colorArea,
       ),
     );
   }
