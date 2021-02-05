@@ -201,6 +201,6 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   LineStyle getCurrentLineStyle() =>
       lineStyle ??
-      getConfig().lineStyle ??
+      getConfig()?.lineStyle ??
       const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
 }
