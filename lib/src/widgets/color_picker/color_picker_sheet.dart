@@ -21,6 +21,7 @@ class ColorPickerSheet extends StatelessWidget {
           Colors.grey,
         ],
         colorShades: const <int>[100, 300, 500, 700],
+        selectedColor: Colors.red[100],
       ),
     );
   }

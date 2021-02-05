@@ -7,6 +7,7 @@ class ColorGrid extends StatelessWidget {
   const ColorGrid({
     @required this.colorSwatches,
     @required this.colorShades,
+    @required this.selectedColor,
     Key key,
   }) : super(key: key);
 
@@ -15,6 +16,9 @@ class ColorGrid extends StatelessWidget {
 
   /// List of color shade values (columns).
   final List<int> colorShades;
+
+  /// Selected color value.
+  final Color selectedColor;
 
   // final ValueChanged<Color> onChanged;
 
@@ -28,6 +32,7 @@ class ColorGrid extends StatelessWidget {
           for (final int shade in colorShades)
             _ColorOptionButton(
               color: swatch[shade],
+              selected: swatch[shade] == selectedColor,
             ),
       ],
     );
@@ -38,10 +43,12 @@ class _ColorOptionButton extends StatelessWidget {
   const _ColorOptionButton({
     Key key,
     this.color,
+    this.selected,
     this.onTap,
   }) : super(key: key);
 
   final Color color;
+  final bool selected;
   final VoidCallback onTap;
 
   @override
@@ -49,11 +56,21 @@ class _ColorOptionButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
+        padding: selected ? const EdgeInsets.all(4) : null,
+        decoration: selected
+            ? BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  width: 4,
+                  color: Colors.white,
+                ),
+              )
+            : null,
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+          ),
         ),
       ),
     );
