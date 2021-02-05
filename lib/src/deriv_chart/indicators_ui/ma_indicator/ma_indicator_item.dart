@@ -47,11 +47,16 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   int period;
 
+  /// MA line style
+  @protected
+  LineStyle lineStyle;
+
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         period: getCurrentPeriod(),
         type: getCurrentType(),
         fieldType: getCurrentField(),
+        lineStyle: getCurrentLineStyle(),
       );
 
   @override
@@ -66,9 +71,12 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                 context: context,
                 builder: (BuildContext context) => ColorPickerSheet(
                   selectedColor: getCurrentLineStyle().color,
-                  // TODO: Update MA line color
                   onChanged: (Color selectedColor) {
-                    print('>>> $selectedColor');
+                    setState(() {
+                      lineStyle =
+                          getCurrentLineStyle().copyWith(color: selectedColor);
+                    });
+                    updateIndicator();
                   },
                 ),
               );
@@ -192,6 +200,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current line style.
   @protected
   LineStyle getCurrentLineStyle() =>
+      lineStyle ??
       getConfig().lineStyle ??
       const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
 }
