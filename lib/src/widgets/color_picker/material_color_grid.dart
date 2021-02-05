@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Body of a color picker.
 /// Insert this into any container (pop-up, bottom sheet, etc).
-class ColorGrid extends StatelessWidget {
+class MaterialColorGrid extends StatelessWidget {
   /// Creates a grid from given colors.
-  const ColorGrid({
+  const MaterialColorGrid({
     @required this.colorSwatches,
     @required this.colorShades,
     @required this.selectedColor,
