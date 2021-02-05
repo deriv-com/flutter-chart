@@ -55,21 +55,24 @@ class _ColorOptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8),
-      child: Container(
-        padding: selected ? const EdgeInsets.all(4) : null,
-        decoration: selected
-            ? BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  width: 4,
-                  color: Colors.white,
-                ),
-              )
-            : null,
+      child: GestureDetector(
+        onTap: onTap,
         child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
+          padding: selected ? const EdgeInsets.all(4) : null,
+          decoration: selected
+              ? BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 4,
+                    color: color,
+                  ),
+                )
+              : null,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color,
+            ),
           ),
         ),
       ),
