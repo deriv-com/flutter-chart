@@ -59,15 +59,13 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ColorButton(
-            // TODO: Pass MA line color
-            color: Colors.red[500],
+            color: getCurrentLineStyle().color,
             onTap: () {
               showModalBottomSheet<void>(
                 backgroundColor: Colors.transparent,
                 context: context,
                 builder: (BuildContext context) => ColorPickerSheet(
-                  // TODO: Pass MA line color
-                  selectedColor: Colors.red[500],
+                  selectedColor: getCurrentLineStyle().color,
                   // TODO: Update MA line color
                   onChanged: (Color selectedColor) {
                     print('>>> $selectedColor');
@@ -191,6 +189,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
 
+  /// Gets Indicator current line style.
   @protected
   LineStyle getCurrentLineStyle() =>
       getConfig().lineStyle ??
