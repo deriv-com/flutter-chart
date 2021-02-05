@@ -53,29 +53,32 @@ class _ColorOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget colorArea = DecoratedBox(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+    );
+
+    if (selected) {
+      colorArea = _wrapWithBorder(colorArea);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
-          padding: selected ? const EdgeInsets.all(4) : null,
-          decoration: selected
-              ? BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 4,
-                    color: color,
-                  ),
-                )
-              : null,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color,
-            ),
-          ),
-        ),
+        child: colorArea,
       ),
     );
   }
+
+  Widget _wrapWithBorder(Widget child) => Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 4, color: color),
+        ),
+        child: child,
+      );
 }
