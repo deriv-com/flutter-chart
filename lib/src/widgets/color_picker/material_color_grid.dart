@@ -37,7 +37,7 @@ class MaterialColorGrid extends StatelessWidget {
           for (final int shade in colorShades)
             _ColorOptionButton(
               color: swatch[shade],
-              selected: swatch[shade] == selectedColor,
+              selected: swatch[shade].value == selectedColor.value,
               onTap: () {
                 onChanged?.call(swatch[shade]);
               },
