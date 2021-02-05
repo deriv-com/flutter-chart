@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Body of a color picker.
+/// Grid of material color options.
+/// Columns are shades and rows are color swatches.
+///
+/// Serves as a body of a color picker.
 /// Insert this into any container (pop-up, bottom sheet, etc).
 class MaterialColorGrid extends StatelessWidget {
   /// Creates a grid from given colors.
