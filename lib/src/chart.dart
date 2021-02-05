@@ -122,7 +122,7 @@ class Chart extends StatelessWidget {
           color: chartTheme.base08Color,
           child: GestureManager(
             child: XAxis(
-              entries: mainSeries.entries,
+              entries: mainSeries.input,
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
@@ -300,20 +300,23 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
-    for (final ChartData data in widget.chartDataList) {
-      final ChartData oldData = oldChart.chartDataList.firstWhere(
-        (ChartData d) => d.id == data.id,
-        orElse: () => null,
-      );
-
-      if (oldData != null) {
-        data.didUpdate(oldData);
-      }
-    }
-
     if (widget.mainSeries.id == oldChart.mainSeries.id &&
         widget.mainSeries.didUpdate(oldChart.mainSeries)) {
       _playNewTickAnimation();
+    }
+
+    if (widget.chartDataList != null) {
+      for (final ChartData data in widget.chartDataList.where(
+        // Exclude mainSeries, since its didUpdate is already called
+        (ChartData d) => d.id != widget.mainSeries.id,
+      )) {
+        final ChartData oldData = oldChart.chartDataList.firstWhere(
+          (ChartData d) => d.id == data.id,
+          orElse: () => null,
+        );
+
+        data.didUpdate(oldData);
+      }
     }
   }
 
@@ -426,6 +429,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
         minQuote = min(widget.mainSeries.minValue, chartDataMin);
         maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
       }
+    }
+
+    // If the minQuote and maxQuote are the same there should be a default state to show chart quotes.
+    if (minQuote == maxQuote) {
+      minQuote -= 2;
+      maxQuote += 2;
     }
 
     if (!minQuote.isNaN && minQuote != bottomBoundQuoteTarget) {
@@ -595,19 +604,26 @@ class _ChartImplementationState extends State<_ChartImplementation>
           _currentTickAnimation,
           _currentTickBlinkAnimation,
         ],
-        builder: (BuildContext context, Widget child) => CustomPaint(
-          painter: ChartPainter(
-            animationInfo: AnimationInfo(
-              currentTickPercent: _currentTickAnimation.value,
-              blinkingPercent: _currentTickBlinkAnimation.value,
-            ),
-            chartDataList: widget.annotations,
-            chartConfig: context.watch<ChartConfig>(),
-            theme: context.watch<ChartTheme>(),
-            epochToCanvasX: _xAxis.xFromEpoch,
-            quoteToCanvasY: _quoteToCanvasY,
-          ),
-        ),
+        builder: (BuildContext context, Widget child) =>
+            Stack(fit: StackFit.expand, children: [
+          if (widget.annotations != null)
+            ...widget.annotations
+                .map((ChartData annotation) => CustomPaint(
+                      key: ValueKey<String>(annotation.id),
+                      painter: ChartPainter(
+                        animationInfo: AnimationInfo(
+                          currentTickPercent: _currentTickAnimation.value,
+                          blinkingPercent: _currentTickBlinkAnimation.value,
+                        ),
+                        chartData: annotation,
+                        chartConfig: context.watch<ChartConfig>(),
+                        theme: context.watch<ChartTheme>(),
+                        epochToCanvasX: _xAxis.xFromEpoch,
+                        quoteToCanvasY: _quoteToCanvasY,
+                      ),
+                    ))
+                .toList()
+        ]),
       );
 
   Widget _buildCrosshairArea() => AnimatedBuilder(

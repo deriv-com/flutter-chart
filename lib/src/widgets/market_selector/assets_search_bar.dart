@@ -80,17 +80,17 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
       );
 
   Widget _buildBackButton() => IconButton(
-        icon: Icon(Icons.arrow_back, size: 20),
+        icon: const Icon(Icons.arrow_back, size: 20),
         onPressed: () => _switchToNormalMode(),
       );
 
   Widget _buildSearchButton() => IconButton(
-        icon: Icon(Icons.search, size: 20),
+        icon: const Icon(Icons.search, size: 20),
         onPressed: () => _switchToSearchMode(),
       );
 
   Widget _buildClearButton() => IconButton(
-        icon: Icon(Icons.close, size: 20),
+        icon: const Icon(Icons.close, size: 20),
         onPressed: _textEditingController.value.text.isEmpty
             ? null
             : () {
@@ -100,7 +100,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
       );
 
   Widget _buildTextField() => TextFormField(
-        key: ValueKey<String>('search-bar-text-field'),
+        key: const ValueKey<String>('search-bar-text-field'),
         controller: _textEditingController,
         focusNode: _searchFieldFocusNode,
         onChanged: (String text) => widget.onSearchTextChanged?.call(text),
@@ -110,7 +110,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
           textStyle: _theme.subheading,
           color: _theme.base01Color,
         ),
-        decoration: new InputDecoration(
+        decoration: InputDecoration(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,

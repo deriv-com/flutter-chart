@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../../indicator.dart';
@@ -6,7 +7,7 @@ import '../../indicator.dart';
 /// A helper indicator to get the low value of a list of [Candle]
 class LowValueIndicator extends Indicator {
   /// Initializes
-  LowValueIndicator(List<Tick> entries) : super(entries);
+  LowValueIndicator(List<OHLC> entries) : super(entries);
 
   @override
   Tick getValue(int index) =>
