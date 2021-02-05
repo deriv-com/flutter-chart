@@ -22,6 +22,9 @@ class ColorPickerSheet extends StatelessWidget {
         ],
         colorShades: const <int>[100, 300, 500, 700],
         selectedColor: Colors.red[100],
+        onChanged: (Color selectedColor) {
+          print('>>> $selectedColor');
+        },
       ),
     );
   }

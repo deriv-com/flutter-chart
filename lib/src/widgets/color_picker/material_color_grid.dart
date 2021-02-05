@@ -8,6 +8,7 @@ class MaterialColorGrid extends StatelessWidget {
     @required this.colorSwatches,
     @required this.colorShades,
     @required this.selectedColor,
+    this.onChanged,
     Key key,
   }) : super(key: key);
 
@@ -20,7 +21,8 @@ class MaterialColorGrid extends StatelessWidget {
   /// Selected color value.
   final Color selectedColor;
 
-  // final ValueChanged<Color> onChanged;
+  /// Called when color option is selected.
+  final ValueChanged<Color> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,9 @@ class MaterialColorGrid extends StatelessWidget {
             _ColorOptionButton(
               color: swatch[shade],
               selected: swatch[shade] == selectedColor,
+              onTap: () {
+                onChanged?.call(swatch[shade]);
+              },
             ),
       ],
     );
