@@ -32,7 +32,10 @@ class ColorPickerSheet extends StatelessWidget {
         ],
         colorShades: const <int>[100, 300, 500, 700],
         selectedColor: selectedColor,
-        onChanged: onChanged,
+        onChanged: (Color selectedColor) {
+          onChanged?.call(selectedColor);
+          Navigator.pop(context);
+        },
       ),
     );
   }
