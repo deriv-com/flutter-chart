@@ -17,12 +17,12 @@ class ZigZagSeries extends LineSeries {
   ///
   /// [distance] The minimum distance in percent between two zigzag points.
   ZigZagSeries(
-    List<Tick> entries, {
+    List<OHLC> entries, {
     String id,
     LineStyle style,
     double distance = 10,
   }) : this.fromIndicator(
-          CloseValueIndicator(entries),
+          entries,
           id: id,
           style: style,
           distance: distance,
@@ -32,7 +32,7 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   /// Initializes
-  ZigZagSeries.fromIndicator(Indicator indicator,
+  ZigZagSeries.fromIndicator(List<OHLC> indicator,
       {String id, LineStyle style, double distance = 10})
       : super(
           ZigZagIndicator(indicator, distance).results,

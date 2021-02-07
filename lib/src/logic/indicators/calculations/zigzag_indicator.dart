@@ -11,11 +11,11 @@ class ZigZagIndicator extends CachedIndicator {
   /// Initializes
   ZigZagIndicator(this.indicator, double distance)
       : _distancePercent = distance / 100,
-        firstSwingIndex = calculateFirstSwing(indicator.entries),
-        super.fromIndicator(indicator);
+        firstSwingIndex = calculateFirstSwing(indicator),
+        super(indicator);
 
   /// Calculating values that changes enough
-  final Indicator indicator;
+  final List<OHLC> indicator;
 
   /// The minimum distance between two point in %
   final double _distancePercent;
@@ -27,7 +27,7 @@ class ZigZagIndicator extends CachedIndicator {
     if (ticks != null && ticks.isNotEmpty)
       for (int index = 1; index < ticks.length; index++) {
         if ((ticks[index - 1].close > ticks[index].close &&
-            ticks[index + 1].close > ticks[index].close) ||
+                ticks[index + 1].close > ticks[index].close) ||
             (ticks[index - 1].close < ticks[index].close &&
                 ticks[index + 1].close < ticks[index].close)) {
           firstIndex = index;
@@ -39,7 +39,7 @@ class ZigZagIndicator extends CachedIndicator {
 
   @override
   Tick calculate(int index) {
-    final Tick thisTick = indicator.entries[index];
+    final Tick thisTick = indicator[index];
 
     /// if index is 0 return nan value
     if (index == 0) {
@@ -47,19 +47,19 @@ class ZigZagIndicator extends CachedIndicator {
     }
 
     /// if index is last index or first swing, return itself
-    if (index == indicator.entries.length - 1 || firstSwingIndex == index) {
+    if (index == indicator.length - 1 || firstSwingIndex == index) {
       return thisTick;
     }
 
     /// is the point of given index swing up
     bool isSwingUp(int index) =>
-        indicator.entries[index - 1].close < indicator.entries[index].close &&
-            indicator.entries[index + 1].close < indicator.entries[index].close;
+        indicator[index - 1].close < indicator[index].close &&
+        indicator[index + 1].close < indicator[index].close;
 
     /// is the point of given index swing down
     bool isSwingDown(int index) =>
-        indicator.entries[index - 1].close > indicator.entries[index].close &&
-            indicator.entries[index + 1].close > indicator.entries[index].close;
+        indicator[index - 1].close > indicator[index].close &&
+        indicator[index + 1].close > indicator[index].close;
 
     /// if thee point is SwingDown or SwingUp
     if (isSwingDown(index) || isSwingUp(index)) {
@@ -68,7 +68,7 @@ class ZigZagIndicator extends CachedIndicator {
         if (getValue(i).quote.isNaN) {
           continue;
         }
-        var previousTick = indicator.entries[i];
+        var previousTick = indicator[i];
 
         ///if this point and last point has different swings
         if ((isSwingUp(index) && isSwingDown(i)) ||
@@ -77,7 +77,9 @@ class ZigZagIndicator extends CachedIndicator {
               previousTick.close * _distancePercent;
 
           if ((previousTick.close - thisTick.close).abs() > distanceInPercent) {
-            return thisTick;
+            return isSwingUp(index)
+                ? Tick(epoch: thisTick.epoch, quote: thisTick.high)
+                : Tick(epoch: thisTick.epoch, quote: thisTick.low);
           } else {
             return Tick(epoch: thisTick.epoch, quote: double.nan);
           }
@@ -87,7 +89,7 @@ class ZigZagIndicator extends CachedIndicator {
         else if (isSwingDown(index) && isSwingDown(i)) {
           if (i != firstSwingIndex && thisTick.close < previousTick.close) {
             results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
-            return thisTick;
+            return Tick(epoch: thisTick.epoch, quote: thisTick.low);
           } else {
             return Tick(epoch: thisTick.epoch, quote: double.nan);
           }
@@ -104,12 +106,11 @@ class ZigZagIndicator extends CachedIndicator {
 
             if ((previousTick.close - thisTick.close).abs() >
                 distanceInPercent) {
-              return thisTick;
+              return Tick(epoch: thisTick.epoch, quote: thisTick.high);
             } else {
               return Tick(epoch: thisTick.epoch, quote: double.nan);
             }
-          }
-          else {
+          } else {
             return Tick(epoch: thisTick.epoch, quote: double.nan);
           }
         }
