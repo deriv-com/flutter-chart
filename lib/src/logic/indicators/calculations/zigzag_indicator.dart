@@ -11,7 +11,7 @@ class ZigZagIndicator extends CachedIndicator {
   /// Initializes
   ZigZagIndicator(this.indicator, double distance)
       : _distancePercent = distance / 100,
-        firstSwingIndex = calculateFirstSwing(indicator),
+        _firstSwingIndex = _calculateFirstSwing(indicator),
         super(indicator);
 
   /// Calculating values that changes enough
@@ -20,9 +20,9 @@ class ZigZagIndicator extends CachedIndicator {
   /// The minimum distance between two point in %
   final double _distancePercent;
 
-  int firstSwingIndex;
+  final int _firstSwingIndex;
 
-  static int calculateFirstSwing(List<Tick> ticks) {
+  static int _calculateFirstSwing(List<Tick> ticks) {
     int firstIndex = -1;
     if (ticks != null && ticks.isNotEmpty)
       for (int index = 1; index < ticks.length; index++) {
@@ -47,7 +47,7 @@ class ZigZagIndicator extends CachedIndicator {
     }
 
     /// if index is last index or first swing, return itself
-    if (index == indicator.length - 1 || firstSwingIndex == index) {
+    if (index == indicator.length - 1 || _firstSwingIndex == index) {
       return thisTick;
     }
 
@@ -68,7 +68,7 @@ class ZigZagIndicator extends CachedIndicator {
         if (getValue(i).quote.isNaN) {
           continue;
         }
-        var previousTick = indicator[i];
+        final Tick previousTick = indicator[i];
 
         ///if this point and last point has different swings
         if ((isSwingUp(index) && isSwingDown(i)) ||
@@ -87,7 +87,7 @@ class ZigZagIndicator extends CachedIndicator {
 
         ///if this point and last point has similar swings down
         else if (isSwingDown(index) && isSwingDown(i)) {
-          if (i != firstSwingIndex && thisTick.close < previousTick.close) {
+          if (i != _firstSwingIndex && thisTick.close < previousTick.close) {
             results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
             return Tick(epoch: thisTick.epoch, quote: thisTick.low);
           } else {
@@ -97,10 +97,10 @@ class ZigZagIndicator extends CachedIndicator {
 
         ///if this point and last point has similar swings up
         else if (isSwingUp(index) && isSwingUp(i)) {
-          if (i != firstSwingIndex && thisTick.close > previousTick.close) {
+          if (i != _firstSwingIndex && thisTick.close > previousTick.close) {
             results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
             return thisTick;
-          } else if (i == firstSwingIndex) {
+          } else if (i == _firstSwingIndex) {
             final double distanceInPercent =
                 previousTick.close * _distancePercent;
 
