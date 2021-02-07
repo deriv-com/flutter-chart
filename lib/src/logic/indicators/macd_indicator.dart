@@ -11,7 +11,7 @@ class MACDIndicator extends CachedIndicator {
     Indicator indicator, {
     int shortBarcount = 12,
     int longBarCount = 26,
-  })  : assert(shortBarcount <= longBarCount),
+  })  : assert(shortBarcount < longBarCount),
         _shortTermEma = EMAIndicator(indicator, shortBarcount),
         _longTermEma = EMAIndicator(indicator, longBarCount),
         super.fromIndicator(indicator);
