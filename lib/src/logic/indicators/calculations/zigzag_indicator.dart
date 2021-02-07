@@ -99,7 +99,7 @@ class ZigZagIndicator extends CachedIndicator {
         else if (isSwingUp(index) && isSwingUp(i)) {
           if (i != _firstSwingIndex && thisTick.close > previousTick.close) {
             results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
-            return thisTick;
+            return Tick(epoch: thisTick.epoch, quote: thisTick.high);
           } else if (i == _firstSwingIndex) {
             final double distanceInPercent =
                 previousTick.close * _distancePercent;
