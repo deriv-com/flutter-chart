@@ -7,7 +7,7 @@ void main() {
   List<Tick> ticks;
 
   setUpAll(() {
-    ticks = <Tick>[
+    ticks = const <Tick>[
       Candle.noParam(02, 79.523, 79.526, 79.536, 79.522),
       Candle.noParam(03, 79.525, 79.529, 79.534, 79.522),
       Candle.noParam(04, 79.528, 79.532, 79.532, 79.518),
