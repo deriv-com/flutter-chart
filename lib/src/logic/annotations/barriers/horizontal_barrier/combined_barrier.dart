@@ -53,6 +53,10 @@ class CombinedBarrier extends HorizontalBarrier {
 
   @override
   bool didUpdate(ChartData oldData) {
+    if (oldData == null) {
+      return super.didUpdate(oldData);
+    }
+
     final bool superDidUpdated = super.didUpdate(oldData);
 
     final CombinedBarrier combinedBarrier = oldData;
