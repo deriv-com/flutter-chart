@@ -27,12 +27,12 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
   final double shift;
 
   @override
-  Series getSeries(List<Tick> ticks) =>
-      MAEnvSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](ticks),
+  Series getSeries(List<Tick> ticks) => MAEnvSeries.fromIndicator(
+      IndicatorConfig.supportedFieldTypes[fieldType](ticks),
+      maEnvOptions: MAEnvOptions(
         period: period,
-        movingAverageOption: MAOptions(period: period, type: type),
+        movingAverageType: type,
         shift: shift,
         shiftType: shiftType,
-      );
+      ));
 }

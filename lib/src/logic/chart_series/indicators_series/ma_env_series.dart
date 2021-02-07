@@ -20,49 +20,33 @@ import '../../chart_data.dart';
 import '../line_series/line_series.dart';
 import '../series_painter.dart';
 
-/// A series which shows Moving Average Envelope data calculated from [entries].
+/// A series which shows Moving Average Envelope data calculated from 'entries'.
 class MAEnvSeries extends Series {
   /// Initializes a series which shows shows moving Average data calculated from [entries].
   ///
-  /// [shiftType] The type of shifting method.
+  /// [maEnvOptions] Moving Average Envelope indicator options.
   MAEnvSeries(
     List<Tick> entries, {
     String id,
-    double shift = 5,
-    ShiftType shiftType = ShiftType.percent,
-    MAOptions movingAverageOption,
+    MAEnvOptions maEnvOptions,
   }) : this.fromIndicator(
           CloseValueIndicator(entries),
           id: id,
-          movingAverageOption: movingAverageOption,
-          shift: shift,
-          shiftType: shiftType,
+          maEnvOptions: maEnvOptions,
         );
 
   /// Initializes
   MAEnvSeries.fromIndicator(
     Indicator indicator, {
     String id,
-    this.period = 50,
-    this.movingAverageOption,
-    this.shift = 5,
-    this.shiftType = ShiftType.percent,
+    this.maEnvOptions,
   })  : _fieldIndicator = indicator,
         super(id);
 
-  /// Moving Average Envelope period
-  final int period;
-
-  /// Moving Average Envelope shift
-  final double shift;
-
-  /// Moving Average Envelope shiftType could be Percent or Point
-  final ShiftType shiftType;
-
-  /// Moving Average options
-  final MAOptions movingAverageOption;
-
   final Indicator _fieldIndicator;
+
+  /// Moving Average Envelope options
+  MAEnvOptions maEnvOptions;
 
   SingleIndicatorSeries _lowerSeries;
   SingleIndicatorSeries _middleSeries;
@@ -71,33 +55,33 @@ class MAEnvSeries extends Series {
   @override
   SeriesPainter<Series> createPainter() {
     final CachedIndicator smaIndicator =
-        MASeries.getMAIndicator(_fieldIndicator, movingAverageOption);
+        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions);
 
     _lowerSeries = SingleIndicatorSeries(
         painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () => MAEnvLowerIndicator(
               smaIndicator,
-              shiftType,
-              shift,
+              maEnvOptions.shiftType,
+              maEnvOptions.shift,
             ),
         inputIndicator: _fieldIndicator,
-        options: movingAverageOption);
+        options: maEnvOptions);
 
     _middleSeries = SingleIndicatorSeries(
         painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () => smaIndicator,
         inputIndicator: _fieldIndicator,
-        options: movingAverageOption);
+        options: maEnvOptions);
 
     _upperSeries = SingleIndicatorSeries(
         painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () => MAEnvUpperIndicator(
               smaIndicator,
-              shiftType,
-              shift,
+              maEnvOptions.shiftType,
+              maEnvOptions.shift,
             ),
         inputIndicator: _fieldIndicator,
-        options: movingAverageOption);
+        options: maEnvOptions);
   }
 
   @override
