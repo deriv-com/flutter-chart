@@ -2,7 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart'
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_env_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/ma_env_options.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
