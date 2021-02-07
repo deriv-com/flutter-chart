@@ -46,7 +46,7 @@ class BollingerBandSeries extends Series {
   SingleIndicatorSeries _middleSeries;
   SingleIndicatorSeries _upperSeries;
 
-  /// Moving Average options
+  /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
 
   final Indicator _fieldIndicator;
