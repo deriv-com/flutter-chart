@@ -48,7 +48,6 @@ abstract class CachedIndicator extends Indicator {
 
     if (results[index] == null) {
       results[index] = calculate(index);
-      dev.log('$runtimeType for $index');
     }
 
     if (index > lastResultIndex) {

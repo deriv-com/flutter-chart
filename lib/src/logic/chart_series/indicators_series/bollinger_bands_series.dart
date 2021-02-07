@@ -26,7 +26,7 @@ class BollingerBandSeries extends Series {
   /// Close values will be chosen by default.
   BollingerBandSeries(
     List<Tick> ticks, {
-    MAOptions bbOptions,
+    BollingerBandsOptions bbOptions,
     String id,
   }) : this.fromIndicator(
           CloseValueIndicator(ticks),
