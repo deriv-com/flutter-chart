@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_lower_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/indicator.dart';
@@ -26,16 +28,12 @@ class MAEnvSeries extends Series {
   MAEnvSeries(
     List<Tick> entries, {
     String id,
-    LineStyle style,
-    int period = 50,
     double shift = 5,
     ShiftType shiftType = ShiftType.percent,
     MAOptions movingAverageOption,
   }) : this.fromIndicator(
           CloseValueIndicator(entries),
           id: id,
-          style: style,
-          period: period,
           movingAverageOption: movingAverageOption,
           shift: shift,
           shiftType: shiftType,
@@ -45,16 +43,12 @@ class MAEnvSeries extends Series {
   MAEnvSeries.fromIndicator(
     Indicator indicator, {
     String id,
-    LineStyle style,
     this.period = 50,
     this.movingAverageOption,
     this.shift = 5,
     this.shiftType = ShiftType.percent,
   })  : _fieldIndicator = indicator,
-        super(
-          id ?? 'SMASeries-period$period-type$movingAverageOption',
-          style: style ?? const LineStyle(thickness: 0.5),
-        );
+        super(id);
 
   /// Moving Average Envelope period
   final int period;
@@ -70,42 +64,49 @@ class MAEnvSeries extends Series {
 
   final Indicator _fieldIndicator;
 
-  LineSeries _lowerSeries;
-  LineSeries _middleSeries;
-  LineSeries _upperSeries;
+  SingleIndicatorSeries _lowerSeries;
+  SingleIndicatorSeries _middleSeries;
+  SingleIndicatorSeries _upperSeries;
 
   @override
   SeriesPainter<Series> createPainter() {
     final CachedIndicator smaIndicator =
         MASeries.getMAIndicator(_fieldIndicator, movingAverageOption);
 
-    final MAEnvLowerIndicator maEnvLowerIndicator = MAEnvLowerIndicator(
-      smaIndicator,
-      shiftType,
-      shift,
-    );
+    _lowerSeries = SingleIndicatorSeries(
+        painterCreator: (Series series) => LinePainter(series),
+        indicatorCreator: () => MAEnvLowerIndicator(
+              smaIndicator,
+              shiftType,
+              shift,
+            ),
+        inputIndicator: _fieldIndicator,
+        options: movingAverageOption);
 
-    final MAEnvUpperIndicator maEnvUpperIndicator = MAEnvUpperIndicator(
-      smaIndicator,
-      shiftType,
-      shift,
-    );
+    _middleSeries = SingleIndicatorSeries(
+        painterCreator: (Series series) => LinePainter(series),
+        indicatorCreator: () => smaIndicator,
+        inputIndicator: _fieldIndicator,
+        options: movingAverageOption);
 
-    _lowerSeries = LineSeries(maEnvLowerIndicator.results,
-        style: const LineStyle(color: Colors.redAccent));
-    _middleSeries = LineSeries(smaIndicator.results,
-        style: const LineStyle(color: Colors.white));
-    _upperSeries = LineSeries(maEnvUpperIndicator.results,
-        style: const LineStyle(color: Colors.lightGreen));
+    _upperSeries = SingleIndicatorSeries(
+        painterCreator: (Series series) => LinePainter(series),
+        indicatorCreator: () => MAEnvUpperIndicator(
+              smaIndicator,
+              shiftType,
+              shift,
+            ),
+        inputIndicator: _fieldIndicator,
+        options: movingAverageOption);
   }
 
   @override
   bool didUpdate(ChartData oldData) {
     final MAEnvSeries series = oldData;
 
-    final bool _lowerUpdated = _lowerSeries.didUpdate(series._lowerSeries);
-    final bool _middleUpdated = _middleSeries.didUpdate(series._middleSeries);
-    final bool _upperUpdated = _upperSeries.didUpdate(series._upperSeries);
+    final bool _lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
+    final bool _middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
+    final bool _upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
 
     return _lowerUpdated || _middleUpdated || _upperUpdated;
   }
