@@ -26,7 +26,10 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   @override
   Series getSeries(List<Tick> ticks) => BollingerBandSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](ticks),
-        maOptions: MAOptions(period: period, type: type),
-        standardDeviationFactor: standardDeviation,
+        bbOptions: BollingerBandsOptions(
+          period: period,
+          movingAverageType: type,
+          standardDeviationFactor: standardDeviation,
+        ),
       );
 }

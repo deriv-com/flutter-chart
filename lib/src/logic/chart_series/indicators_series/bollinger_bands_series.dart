@@ -26,21 +26,18 @@ class BollingerBandSeries extends Series {
   /// Close values will be chosen by default.
   BollingerBandSeries(
     List<Tick> ticks, {
-    MAOptions maOptions,
-    double standardDeviationFactor = 2,
+    MAOptions bbOptions,
     String id,
   }) : this.fromIndicator(
           CloseValueIndicator(ticks),
-          maOptions: maOptions,
-          standardDeviationFactor: standardDeviationFactor,
+          bbOptions: bbOptions,
           id: id,
         );
 
   /// Initializes
   BollingerBandSeries.fromIndicator(
     Indicator indicator, {
-    this.maOptions,
-    this.standardDeviationFactor = 2,
+    this.bbOptions,
     String id,
   })  : _fieldIndicator = indicator,
         super(id);
@@ -50,10 +47,7 @@ class BollingerBandSeries extends Series {
   SingleIndicatorSeries _upperSeries;
 
   /// Moving Average options
-  final MAOptions maOptions;
-
-  /// Standard Deviation value
-  final double standardDeviationFactor;
+  final BollingerBandsOptions bbOptions;
 
   final Indicator _fieldIndicator;
 
@@ -67,16 +61,16 @@ class BollingerBandSeries extends Series {
   @override
   SeriesPainter<Series> createPainter() {
     final StandardDeviationIndicator standardDeviation =
-        StandardDeviationIndicator(_fieldIndicator, maOptions.period);
+        StandardDeviationIndicator(_fieldIndicator, bbOptions.period);
 
     final CachedIndicator bbmSMA =
-        MASeries.getMAIndicator(_fieldIndicator, maOptions);
+        MASeries.getMAIndicator(_fieldIndicator, bbOptions);
 
     _middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
-      options: maOptions,
+      options: bbOptions,
     );
 
     _lowerSeries = SingleIndicatorSeries(
@@ -84,20 +78,20 @@ class BollingerBandSeries extends Series {
         indicatorCreator: () => BollingerBandsLowerIndicator(
               bbmSMA,
               standardDeviation,
-              k: standardDeviationFactor,
+              k: bbOptions.standardDeviationFactor,
             ),
         inputIndicator: _fieldIndicator,
-        options: maOptions);
+        options: bbOptions);
 
     _upperSeries = SingleIndicatorSeries(
         painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () => BollingerBandsUpperIndicator(
               bbmSMA,
               standardDeviation,
-              k: standardDeviationFactor,
+              k: bbOptions.standardDeviationFactor,
             ),
         inputIndicator: _fieldIndicator,
-        options: maOptions);
+        options: bbOptions);
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
