@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_lower_indicator.dart';
@@ -11,14 +10,12 @@ import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../deriv_chart.dart';
 import '../../chart_data.dart';
-import '../line_series/line_series.dart';
 import '../series_painter.dart';
+import 'models/ma_env_options.dart';
 
 /// A series which shows Moving Average Envelope data calculated from 'entries'.
 class MAEnvSeries extends Series {
