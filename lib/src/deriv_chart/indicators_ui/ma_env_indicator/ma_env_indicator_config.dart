@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart'
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_env_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -26,10 +27,11 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
   final double shift;
 
   @override
-  Series getSeries(List<Tick> ticks) => MAEnvSeries.fromIndicator(
+  Series getSeries(List<Tick> ticks) =>
+      MAEnvSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](ticks),
         period: period,
-        movingAverageType: type,
+        movingAverageOption: MAOptions(period: period, type: type),
         shift: shift,
         shiftType: shiftType,
       );

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_lower_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_upper_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/indicator.dart';
@@ -12,7 +13,6 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 import 'package:flutter/material.dart';
 
-
 import '../../../../deriv_chart.dart';
 import '../../chart_data.dart';
 import '../line_series/line_series.dart';
@@ -22,8 +22,6 @@ import '../series_painter.dart';
 class MAEnvSeries extends Series {
   /// Initializes a series which shows shows moving Average data calculated from [entries].
   ///
-  /// [period] is the average of this number of past data which will be calculated as MA value
-  /// [movingAverageType] The type of moving average.
   /// [shiftType] The type of shifting method.
   MAEnvSeries(
     List<Tick> entries, {
@@ -32,14 +30,15 @@ class MAEnvSeries extends Series {
     int period = 50,
     double shift = 5,
     ShiftType shiftType = ShiftType.percent,
-    MovingAverageType movingAverageType = MovingAverageType.simple,
+    MAOptions movingAverageOption,
   }) : this.fromIndicator(
           CloseValueIndicator(entries),
           id: id,
           style: style,
           period: period,
-          movingAverageType: movingAverageType,
+          movingAverageOption: movingAverageOption,
           shift: shift,
+          shiftType: shiftType,
         );
 
   /// Initializes
@@ -48,12 +47,12 @@ class MAEnvSeries extends Series {
     String id,
     LineStyle style,
     this.period = 50,
-    this.movingAverageType = MovingAverageType.simple,
+    this.movingAverageOption,
     this.shift = 5,
     this.shiftType = ShiftType.percent,
   })  : _fieldIndicator = indicator,
         super(
-          id ?? 'SMASeries-period$period-type$movingAverageType',
+          id ?? 'SMASeries-period$period-type$movingAverageOption',
           style: style ?? const LineStyle(thickness: 0.5),
         );
 
@@ -63,10 +62,11 @@ class MAEnvSeries extends Series {
   /// Moving Average Envelope shift
   final double shift;
 
+  /// Moving Average Envelope shiftType could be Percent or Point
   final ShiftType shiftType;
 
-  /// Moving Average Envelope Moving Average type
-  final MovingAverageType movingAverageType;
+  /// Moving Average options
+  final MAOptions movingAverageOption;
 
   final Indicator _fieldIndicator;
 
@@ -77,7 +77,7 @@ class MAEnvSeries extends Series {
   @override
   SeriesPainter<Series> createPainter() {
     final CachedIndicator smaIndicator =
-        MASeries.getMAIndicator(_fieldIndicator, period, movingAverageType);
+        MASeries.getMAIndicator(_fieldIndicator, movingAverageOption);
 
     final MAEnvLowerIndicator maEnvLowerIndicator = MAEnvLowerIndicator(
       smaIndicator,
@@ -150,4 +150,3 @@ class MAEnvSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 }
-
