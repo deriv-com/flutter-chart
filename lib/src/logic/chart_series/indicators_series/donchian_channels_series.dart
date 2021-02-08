@@ -56,16 +56,18 @@ class DonchianChannelsSeries extends Series {
     final HighestValueIndicator upperChannelIndicator = HighestValueIndicator(
       _highIndicator,
       config.highPeriod,
-    );
+    )..calculateValues();
 
     final LowestValueIndicator lowerChannelIndicator = LowestValueIndicator(
       _lowIndicator,
       config.lowPeriod,
-    );
+    )..calculateValues();
 
     final DonchianMiddleChannelIndicator middleChannelIndicator =
         DonchianMiddleChannelIndicator(
-            upperChannelIndicator, lowerChannelIndicator);
+      upperChannelIndicator,
+      lowerChannelIndicator,
+    )..calculateValues();
 
     _upperChannelSeries = LineSeries(
       upperChannelIndicator.results,
