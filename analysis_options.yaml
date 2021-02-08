@@ -1,5 +1,9 @@
 analyzer:
-  strong-mode:	
+  exclude:
+    - test/**
+    - lib/**
+    - example/**
+  strong-mode:
     implicit-dynamic: false
   errors:
     todo: ignore
