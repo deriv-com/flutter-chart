@@ -2,19 +2,19 @@ import 'package:deriv_technical_analysis/src/models/data_input.dart';
 import 'package:deriv_technical_analysis/src/models/models.dart';
 
 /// Indicator's input mock implementation.
-class MockInput implements DataInput {
+class MockInput implements IndicatorDataInput {
   /// Initializes
   MockInput(this.entries);
 
   @override
-  final List<OHLC> entries;
+  final List<IndicatorOHLC> entries;
 
   @override
-  Result createResult(int index, double value) => MockResult(value);
+  IndicatorResult createResult(int index, double value) => MockResult(value);
 }
 
 /// A result model class
-class MockResult implements Result {
+class MockResult implements IndicatorResult {
   /// Initializes
   MockResult(this.quote);
 
@@ -24,7 +24,7 @@ class MockResult implements Result {
 }
 
 /// A Tick input element.
-class MockTick implements OHLC {
+class MockTick implements IndicatorOHLC {
   /// Initializer
   const MockTick({this.epoch, this.quote});
 

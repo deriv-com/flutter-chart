@@ -12,10 +12,10 @@ import 'highest_value_indicator.dart';
 import 'lowest_value_indicator.dart';
 
 /// Parabolic Sar Indicator
-class ParabolicSarIndicator<T extends Result> extends CachedIndicator<T> {
+class ParabolicSarIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   ParabolicSarIndicator(
-    DataInput input, {
+    IndicatorDataInput input, {
     double aF = 0.02,
     double maxA = 0.2,
     double increment = 0.02,

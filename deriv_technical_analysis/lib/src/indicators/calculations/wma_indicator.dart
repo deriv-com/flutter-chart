@@ -4,7 +4,7 @@ import '../cached_indicator.dart';
 import '../indicator.dart';
 
 /// Weighted Moving Average indicator
-class WMAIndicator<T extends Result> extends CachedIndicator<T> {
+class WMAIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   WMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 

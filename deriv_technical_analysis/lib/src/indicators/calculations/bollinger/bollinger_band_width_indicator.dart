@@ -6,7 +6,7 @@ import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 /// Bollinger Band Width indicator.
-class BollingerBandWidthIndicator<T extends Result> extends CachedIndicator<T> {
+class BollingerBandWidthIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes.
   ///
   /// [bbu] the upper band Indicator.

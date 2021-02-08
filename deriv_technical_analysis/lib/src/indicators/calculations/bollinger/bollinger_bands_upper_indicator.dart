@@ -4,7 +4,7 @@ import '../../cached_indicator.dart';
 import '../../indicator.dart';
 
 /// Bollinger bands upper indicator
-class BollingerBandsUpperIndicator<T extends Result>
+class BollingerBandsUpperIndicator<T extends IndicatorResult>
     extends CachedIndicator<T> {
   /// Initializes.
   ///

@@ -6,7 +6,7 @@ import '../cached_indicator.dart';
 import '../indicator.dart';
 
 /// Simple Moving Average Indicator
-class SMAIndicator<T extends Result> extends CachedIndicator<T> {
+class SMAIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   SMAIndicator(this.indicator, this.period) : super.fromIndicator(indicator);
 

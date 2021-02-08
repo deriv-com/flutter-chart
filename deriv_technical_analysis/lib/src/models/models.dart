@@ -1,11 +1,11 @@
 /// An element of Indicator result
-abstract class Result {
+abstract class IndicatorResult {
   /// Quote
   double get quote;
 }
 
 /// OHLC interface
-abstract class OHLC {
+abstract class IndicatorOHLC {
   /// Open value (first value in OHLC period)
   double get open;
 

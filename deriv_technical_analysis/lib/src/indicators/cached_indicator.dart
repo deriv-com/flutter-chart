@@ -6,9 +6,9 @@ import 'indicator.dart';
 /// Calculates and keeps the result of indicator calculation values in [results].
 /// And decides when to calculate indicator's value for an index.
 // TODO(Ramin): Later if we require a level of caching can be added here. Right now it calculates indicator for the entire list.
-abstract class CachedIndicator<T extends Result> extends Indicator<T> {
+abstract class CachedIndicator<T extends IndicatorResult> extends Indicator<T> {
   /// Initializes
-  CachedIndicator(DataInput input)
+  CachedIndicator(IndicatorDataInput input)
       : results = List<T>.generate(input.entries.length, (_) => null),
         lastResultIndex = 0,
         super(input);

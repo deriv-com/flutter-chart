@@ -3,10 +3,10 @@ import 'package:deriv_technical_analysis/src/models/models.dart';
 
 import '../../indicator.dart';
 
-/// A helper indicator to get the high value of a list of [OHLC]
-class HighValueIndicator<T extends Result> extends Indicator<T> {
+/// A helper indicator to get the high value of a list of [IndicatorOHLC]
+class HighValueIndicator<T extends IndicatorResult> extends Indicator<T> {
   /// Initializes
-  HighValueIndicator(DataInput input) : super(input);
+  HighValueIndicator(IndicatorDataInput input) : super(input);
 
   @override
   T getValue(int index) => createResult(

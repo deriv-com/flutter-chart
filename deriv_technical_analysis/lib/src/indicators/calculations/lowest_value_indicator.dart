@@ -6,7 +6,7 @@ import '../cached_indicator.dart';
 import '../indicator.dart';
 
 /// Lowest value in a range
-class LowestValueIndicator<T extends Result> extends CachedIndicator<T> {
+class LowestValueIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   LowestValueIndicator(this.indicator, this.period) : super(indicator.input);
 

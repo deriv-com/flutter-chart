@@ -9,7 +9,7 @@ import 'helper_indicators/multiplier_indicator.dart';
 import 'wma_indicator.dart';
 
 /// Hull Moving Average indicator
-class HMAIndicator<T extends Result> extends CachedIndicator<T> {
+class HMAIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   HMAIndicator(Indicator<T> indicator, this.period)
       : _sqrtWma = WMAIndicator<T>(

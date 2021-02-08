@@ -11,7 +11,7 @@ import 'package:meta/meta.dart';
 // To avoid doing this check, we made Tick class comply with OHLC interface. So we
 // can use either <Tick>[] or <Candle>[] as input for Close|High|Hl2|ValueIndicators.
 @immutable
-class Tick with EquatableMixin implements OHLC, Result {
+class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   /// Initializes
   const Tick({
     @required this.epoch,

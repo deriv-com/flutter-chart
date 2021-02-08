@@ -8,7 +8,7 @@ import 'bollinger_bands_lower_indicator.dart';
 import 'bollinger_bands_upper_indicator.dart';
 
 /// %B Indicator.
-class PercentBIndicator<T extends Result> extends CachedIndicator<T> {
+class PercentBIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   ///
   /// [indicator] An indicator (usually close price)

@@ -5,7 +5,7 @@ import '../indicator.dart';
 import 'sma_indicator.dart';
 
 /// Zero-lag Exponential Moving Average indicator
-class ZLEMAIndicator<T extends Result> extends CachedIndicator<T> {
+class ZLEMAIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   ///
   /// [indicator] An indicator

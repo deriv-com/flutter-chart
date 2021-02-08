@@ -6,7 +6,7 @@ import '../cached_indicator.dart';
 import '../indicator.dart';
 
 /// Highest value in a range
-class HighestValueIndicator<T extends Result> extends CachedIndicator<T> {
+class HighestValueIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   HighestValueIndicator(this.indicator, this.period)
       : super.fromIndicator(indicator);

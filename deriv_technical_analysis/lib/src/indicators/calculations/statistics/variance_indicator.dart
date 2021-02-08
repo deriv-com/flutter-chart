@@ -7,7 +7,7 @@ import '../../indicator.dart';
 import '../sma_indicator.dart';
 
 /// Variance indicator.
-class VarianceIndicator<T extends Result> extends CachedIndicator<T> {
+class VarianceIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   ///
   /// [indicator] the indicator

@@ -1,13 +1,13 @@
 import 'package:deriv_technical_analysis/src/models/models.dart';
 
 /// Indicators input data.
-abstract class DataInput {
+abstract class IndicatorDataInput {
   /// Input entries.
-  List<OHLC> get entries;
+  List<IndicatorOHLC> get entries;
 
-  /// Creates [Result] entry from given [index] and [value].
+  /// Creates [IndicatorResult] entry from given [index] and [value].
   ///
-  /// User of this package has the option to implement this interface and [Result]
-  /// in its own way and get a list of results in any [Result] implementation needed.
-  Result createResult(int index, double value);
+  /// User of this package has the option to implement this interface and [IndicatorResult]
+  /// in its own way and get a list of results in any [IndicatorResult] implementation needed.
+  IndicatorResult createResult(int index, double value);
 }
