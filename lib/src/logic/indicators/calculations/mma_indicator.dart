@@ -7,6 +7,6 @@ class MMAIndicator extends AbstractEMAIndicator {
   /// Initialzes a modifed moving average indicator.
   MMAIndicator(
     Indicator indicator,
-    int barCount,
-  ) : super(indicator, barCount, 1.0 / barCount);
+    int period,
+  ) : super(indicator, period, 1.0 / period);
 }

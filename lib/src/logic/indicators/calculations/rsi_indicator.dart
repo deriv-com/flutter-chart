@@ -7,12 +7,12 @@ import 'package:deriv_chart/src/models/tick.dart';
 
 /// Relative strength index indicator.
 class RSIIndicator extends CachedIndicator {
-  /// Initializes an [RSIIndicator] from the given [indicator] and [barCount].
-  RSIIndicator.fromIndicator(Indicator indicator, int barCount)
+  /// Initializes an [RSIIndicator] from the given [indicator] and [period].
+  RSIIndicator.fromIndicator(Indicator indicator, int period)
       : _averageGainIndicator =
-            MMAIndicator(GainIndicator.fromIndicator(indicator), barCount),
+            MMAIndicator(GainIndicator.fromIndicator(indicator), period),
         _averageLossIndicator =
-            MMAIndicator(LossIndicator.fromIndicator(indicator), barCount),
+            MMAIndicator(LossIndicator.fromIndicator(indicator), period),
         super.fromIndicator(indicator);
 
   final MMAIndicator _averageGainIndicator;
