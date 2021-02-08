@@ -10,6 +10,7 @@ import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../deriv_chart.dart';
@@ -55,30 +56,39 @@ class MAEnvSeries extends Series {
         MASeries.getMAIndicator(_fieldIndicator, maEnvOptions);
 
     _lowerSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => LinePainter(series),
-        indicatorCreator: () => MAEnvLowerIndicator(
-              smaIndicator,
-              maEnvOptions.shiftType,
-              maEnvOptions.shift,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: maEnvOptions);
+      painterCreator: (
+        Series series,
+      ) =>
+          LinePainter(series),
+      indicatorCreator: () => MAEnvLowerIndicator(
+        smaIndicator,
+        maEnvOptions.shiftType,
+        maEnvOptions.shift,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: maEnvOptions,
+      style: const LineStyle(color: Colors.red),
+    );
 
     _middleSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => LinePainter(series),
-        indicatorCreator: () => smaIndicator,
-        inputIndicator: _fieldIndicator,
-        options: maEnvOptions);
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => smaIndicator,
+      inputIndicator: _fieldIndicator,
+      options: maEnvOptions,
+      style: const LineStyle(color: Colors.blue),
+    );
 
     _upperSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => LinePainter(series),
-        indicatorCreator: () => MAEnvUpperIndicator(
-              smaIndicator,
-              maEnvOptions.shiftType,
-              maEnvOptions.shift,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: maEnvOptions);
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => MAEnvUpperIndicator(
+        smaIndicator,
+        maEnvOptions.shiftType,
+        maEnvOptions.shift,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: maEnvOptions,
+      style: const LineStyle(color: Colors.green),
+    );
   }
 
   @override
