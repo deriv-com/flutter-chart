@@ -79,11 +79,11 @@ void main() {
         maEnvOptions.shift,
       );
 
-      expect(maEnvLowerIndicator.getValue(0).quote, 1);
-      expect(maEnvLowerIndicator.getValue(1).quote, 2.5);
-      expect(maEnvLowerIndicator.getValue(1).quote, 2.5);
-      expect(maEnvLowerIndicator.getValue(1).quote, 2.5);
-      expect(maEnvLowerIndicator.getValue(1).quote, 2.5);
+      expect(maEnvLowerIndicator.getValue(0).quote, -4);
+      expect(maEnvLowerIndicator.getValue(1).quote, -3.5);
+      expect(maEnvLowerIndicator.getValue(2).quote, -3);
+      expect(maEnvLowerIndicator.getValue(3).quote, -2.5);
+      expect(maEnvLowerIndicator.getValue(4).quote, -2.4);
     });
   });
 }
