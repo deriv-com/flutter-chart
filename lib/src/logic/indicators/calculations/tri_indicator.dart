@@ -5,9 +5,9 @@ import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 /// True range indicator.
-class TRIIndicator extends CachedIndicator {
+class TRIndicator extends CachedIndicator {
   /// Initializes a true range indicator.
-  TRIIndicator(List<OHLC> entries) : super(entries);
+  TRIndicator(List<OHLC> entries) : super(entries);
 
   @override
   Tick calculate(int index) {
