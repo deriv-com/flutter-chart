@@ -23,6 +23,10 @@ class RSIIndicator extends CachedIndicator {
     final Tick averageGain = _averageGainIndicator.getValue(index);
     final Tick averageLoss = _averageLossIndicator.getValue(index);
     if (averageLoss.quote == 0) {
+    return averageGain.quote == 0? 
+    Tick(epoch: getEpochOfIndex(index), quote: 0): 
+    Tick(epoch: getEpochOfIndex(index), quote: 100);
+    }
       if (averageGain.quote == 0) {
         return Tick(epoch: getEpochOfIndex(index), quote: 0);
       } else {
