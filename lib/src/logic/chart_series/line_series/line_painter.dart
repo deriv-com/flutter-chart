@@ -42,7 +42,6 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
           path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
           continue;
         }
-
         final double x = epochToX(tick.epoch);
         final double y = quoteToY(tick.quote);
         path.lineTo(x, y);

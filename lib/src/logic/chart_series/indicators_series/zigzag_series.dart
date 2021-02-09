@@ -28,9 +28,6 @@ class ZigZagSeries extends LineSeries {
           distance: distance,
         );
 
-  @override
-  SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
-
   /// Initializes
   ZigZagSeries.fromIndicator(List<OHLC> indicator,
       {String id, LineStyle style, double distance = 10})
@@ -39,6 +36,9 @@ class ZigZagSeries extends LineSeries {
           id: id ?? 'Zigzag Indicator',
           style: style ?? const LineStyle(thickness: 0.9, color: Colors.blue),
         );
+
+  @override
+  SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
