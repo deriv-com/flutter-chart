@@ -11,18 +11,18 @@ class TRIndicator extends CachedIndicator {
 
   @override
   Tick calculate(int index) {
-    final double ts = entries[index].high - entries[index].low;
+    final double tickSize = entries[index].high - entries[index].low;
 
-    final double ys =
+    final double highMinusClose =
         index == 0 ? 0 : entries[index].high - entries[index].close;
-    final double yst =
+    final double closeMinusLow =
         index == 0 ? 0 : entries[index].close - entries[index].low;
 
     return max(
-      ts.abs(),
+      tickSize.abs(),
       max(
-        ys.abs(),
-        yst.abs(),
+        highMinusClose.abs(),
+        closeMinusLow.abs(),
       ),
     );
   }
