@@ -18,11 +18,14 @@ class TRIndicator extends CachedIndicator {
     final double closeMinusLow =
         index == 0 ? 0 : entries[index].close - entries[index].low;
 
-    return max(
-      tickSize.abs(),
-      max(
-        highMinusClose.abs(),
-        closeMinusLow.abs(),
+    return Tick(
+      epoch: getEpochOfIndex(index),
+      quote: max(
+        tickSize.abs(),
+        max(
+          highMinusClose.abs(),
+          closeMinusLow.abs(),
+        ),
       ),
     );
   }
