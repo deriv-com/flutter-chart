@@ -4,13 +4,14 @@ import 'package:deriv_chart/src/logic/indicators/calculations/mma_indicator.dart
 import 'package:deriv_chart/src/logic/indicators/calculations/negative_dm_indicator.dart';
 import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:flutter/foundation.dart';
 
 /// Negative Directional indicator. Part of the Directional Movement System.
 class NegativeDIIndicator extends CachedIndicator {
   ///Initializes a Negative Directional indicator.
-  NegativeDIIndicator(List<OHLC> entries, {@required int period})
-      : _avgMinusDMIndicator =
+  NegativeDIIndicator(
+    List<OHLC> entries, {
+    int period = 14,
+  })  : _avgMinusDMIndicator =
             MMAIndicator(NegativeDMIndicator(entries), period),
         _atrIndicator = ATRIndicator(entries, period: period),
         super(entries);
