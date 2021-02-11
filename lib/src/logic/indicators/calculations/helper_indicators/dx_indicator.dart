@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/adx/negative_directional_indicator.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/adx/negative_di_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/adx/positive_di_indicator.dart';
 import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -12,12 +12,11 @@ class DXIndicator extends CachedIndicator {
     List<OHLC> entries, {
     @required int period,
   })  : _positiveDIIndicator = PositiveDIIndicator(entries, period: period),
-        _negativeDIIndicator =
-            NegativeDirectionalIndicator(entries, period: period),
+        _negativeDIIndicator = NegativeDIIndicator(entries, period: period),
         super(entries);
 
   final PositiveDIIndicator _positiveDIIndicator;
-  final NegativeDirectionalIndicator _negativeDIIndicator;
+  final NegativeDIIndicator _negativeDIIndicator;
 
   @override
   Tick calculate(int index) {
