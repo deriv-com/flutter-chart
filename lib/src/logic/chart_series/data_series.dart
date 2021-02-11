@@ -258,6 +258,11 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     _lastTickIndicator?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+
+    // Prevent re-animating indicators that haven't changed.
+    if (animationInfo.currentTickPercent == 1) {
+      prevLastEntry = null;
+    }
   }
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements.
