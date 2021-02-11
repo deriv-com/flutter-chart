@@ -29,6 +29,7 @@ class MAIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(List<Tick> ticks) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](ticks),
+        style: lineStyle,
         options: MAOptions(period: period, type: type),
       );
 }
