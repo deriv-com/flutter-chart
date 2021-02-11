@@ -37,29 +37,27 @@ class _ChartBottomSheetState extends State<ChartBottomSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return CustomDraggableSheet(
-      child: Provider<ChartTheme>.value(
-        value: _theme,
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(_theme.borderRadius24),
-            topRight: Radius.circular(_theme.borderRadius24),
-          ),
-          child: Material(
-            elevation: 8,
-            color: _theme.base07Color,
-            child: Column(
-              children: <Widget>[
-                _buildTopHandle(),
-                Expanded(child: widget.child),
-              ],
+  Widget build(BuildContext context) => CustomDraggableSheet(
+        child: Provider<ChartTheme>.value(
+          value: _theme,
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(_theme.borderRadius24),
+              topRight: Radius.circular(_theme.borderRadius24),
+            ),
+            child: Material(
+              elevation: 8,
+              color: _theme.base07Color,
+              child: Column(
+                children: <Widget>[
+                  _buildTopHandle(),
+                  Expanded(child: widget.child),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildTopHandle() => Container(
         padding: EdgeInsets.symmetric(vertical: _theme.margin08),

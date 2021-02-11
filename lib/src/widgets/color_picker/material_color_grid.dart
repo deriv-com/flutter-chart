@@ -28,23 +28,21 @@ class MaterialColorGrid extends StatelessWidget {
   final ValueChanged<Color> onChanged;
 
   @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      padding: const EdgeInsets.all(8),
-      crossAxisCount: colorShades.length,
-      children: <Widget>[
-        for (final MaterialColor swatch in colorSwatches)
-          for (final int shade in colorShades)
-            _ColorOptionButton(
-              color: swatch[shade],
-              selected: swatch[shade].value == selectedColor.value,
-              onTap: () {
-                onChanged?.call(swatch[shade]);
-              },
-            ),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => GridView.count(
+        padding: const EdgeInsets.all(8),
+        crossAxisCount: colorShades.length,
+        children: <Widget>[
+          for (final MaterialColor swatch in colorSwatches)
+            for (final int shade in colorShades)
+              _ColorOptionButton(
+                color: swatch[shade],
+                selected: swatch[shade].value == selectedColor.value,
+                onTap: () {
+                  onChanged?.call(swatch[shade]);
+                },
+              ),
+        ],
+      );
 }
 
 class _ColorOptionButton extends StatelessWidget {
