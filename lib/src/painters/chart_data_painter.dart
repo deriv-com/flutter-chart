@@ -96,7 +96,17 @@ class ChartDataPainter extends CustomPainter {
         (mainSeries is LineSeries &&
             theme.lineStyle != oldDelegate.theme.lineStyle) ||
         (mainSeries is CandleSeries &&
-            theme.candleStyle != oldDelegate.theme.candleStyle);
+            theme.candleStyle != oldDelegate.theme.candleStyle) ||
+        secondarySeries.any(
+          (Series series) =>
+              series.style !=
+              oldDelegate.secondarySeries
+                  .firstWhere(
+                    (Series oldSeries) => series.id == oldSeries.id,
+                    orElse: () => null,
+                  )
+                  ?.style,
+        );
 
     bool visibleAnimationChanged() =>
         mainSeries.entries.isNotEmpty &&
