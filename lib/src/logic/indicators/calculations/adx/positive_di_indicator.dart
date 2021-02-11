@@ -7,9 +7,9 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/foundation.dart';
 
 /// Negative Directional indicator. Part of the Directional Movement System.
-class PositiveDirectionalIndicator extends CachedIndicator {
+class PositiveDIIndicator extends CachedIndicator {
   /// Initializes Negative Directional indicator.
-  PositiveDirectionalIndicator(
+  PositiveDIIndicator(
     List<OHLC> entries, {
     @required int period,
   })  : _avgPlusDMIndicator =

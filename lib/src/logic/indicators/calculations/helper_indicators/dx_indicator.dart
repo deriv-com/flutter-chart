@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
 import 'package:deriv_chart/src/logic/indicators/calculations/adx/negative_directional_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/adx/positive_directional_indicaor.dart';
+import 'package:deriv_chart/src/logic/indicators/calculations/adx/positive_di_indicator.dart';
 import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/foundation.dart';
@@ -11,13 +11,12 @@ class DXIndicator extends CachedIndicator {
   DXIndicator(
     List<OHLC> entries, {
     @required int period,
-  })  : _positiveDIIndicator =
-            PositiveDirectionalIndicator(entries, period: period),
+  })  : _positiveDIIndicator = PositiveDIIndicator(entries, period: period),
         _negativeDIIndicator =
             NegativeDirectionalIndicator(entries, period: period),
         super(entries);
 
-  final PositiveDirectionalIndicator _positiveDIIndicator;
+  final PositiveDIIndicator _positiveDIIndicator;
   final NegativeDirectionalIndicator _negativeDIIndicator;
 
   @override
