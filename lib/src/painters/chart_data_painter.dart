@@ -107,6 +107,8 @@ class ChartDataPainter extends CustomPainter {
         return false;
       } else if (isNull != wasNull) {
         return true;
+      } else if (secondarySeries.length != oldDelegate.secondarySeries.length) {
+        return true;
       }
 
       final Map<String, ChartPaintingStyle> oldStyles =
