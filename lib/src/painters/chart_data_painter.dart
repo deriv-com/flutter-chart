@@ -99,7 +99,16 @@ class ChartDataPainter extends CustomPainter {
         (mainSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
-    bool secondaryStyleChanged() {
+    bool secondarySeriesChanged() {
+      final bool isNull = secondarySeries == null;
+      final bool wasNull = oldDelegate.secondarySeries == null;
+
+      if (isNull && wasNull) {
+        return false;
+      } else if (isNull != wasNull) {
+        return true;
+      }
+
       final Map<String, ChartPaintingStyle> oldStyles =
           Map<String, ChartPaintingStyle>.fromIterable(
         oldDelegate.secondarySeries,
@@ -125,7 +134,7 @@ class ChartDataPainter extends CustomPainter {
         chartConfig != oldDelegate.chartConfig ||
         mainSeries.runtimeType != oldDelegate.mainSeries.runtimeType ||
         styleChanged() ||
-        secondaryStyleChanged();
+        secondarySeriesChanged();
   }
 
   @override
