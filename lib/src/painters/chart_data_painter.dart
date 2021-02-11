@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.
@@ -96,17 +97,19 @@ class ChartDataPainter extends CustomPainter {
         (mainSeries is LineSeries &&
             theme.lineStyle != oldDelegate.theme.lineStyle) ||
         (mainSeries is CandleSeries &&
-            theme.candleStyle != oldDelegate.theme.candleStyle) ||
-        secondarySeries.any(
-          (Series series) =>
-              series.style !=
-              oldDelegate.secondarySeries
-                  .firstWhere(
-                    (Series oldSeries) => series.id == oldSeries.id,
-                    orElse: () => null,
-                  )
-                  ?.style,
-        );
+            theme.candleStyle != oldDelegate.theme.candleStyle);
+
+    bool secondaryStyleChanged() {
+      final Map<String, ChartPaintingStyle> oldStyles =
+          Map<String, ChartPaintingStyle>.fromIterable(
+        oldDelegate.secondarySeries,
+        key: (dynamic series) => series.id,
+        value: (dynamic series) => series.style,
+      );
+      return secondarySeries.any(
+        (Series series) => series.style != oldStyles[series.id],
+      );
+    }
 
     bool visibleAnimationChanged() =>
         mainSeries.entries.isNotEmpty &&
@@ -121,7 +124,8 @@ class ChartDataPainter extends CustomPainter {
         visibleAnimationChanged() ||
         chartConfig != oldDelegate.chartConfig ||
         mainSeries.runtimeType != oldDelegate.mainSeries.runtimeType ||
-        styleChanged();
+        styleChanged() ||
+        secondaryStyleChanged();
   }
 
   @override
