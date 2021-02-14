@@ -215,16 +215,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
 
-  AnimationController _currentTickAnimationController;
   AnimationController _currentTickBlinkingController;
-
-  AnimationController _topBoundQuoteAnimationController;
-  AnimationController _bottomBoundQuoteAnimationController;
 
   // TODO(Rustem): move to YAxisModel
   AnimationController _crosshairZoomOutAnimationController;
 
-  Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
   // TODO(Rustem): move to YAxisModel
@@ -238,9 +233,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _xAxis.rightBoundEpoch < widget.mainSeries.entries.last.epoch &&
       !_isCrosshairMode;
 
-  double get _topBoundQuote => _topBoundQuoteAnimationController.value;
+  _BaseChartState get _baseChartState => _baseChartKey.currentState;
 
-  double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
+  double get _topBoundQuote =>
+      _baseChartState?._topBoundQuoteAnimationController?.value ?? 20;
+
+  double get _bottomBoundQuote =>
+      _baseChartState?._bottomBoundQuoteAnimationController?.value ?? 0;
 
   double get _verticalPadding {
     final double padding = verticalPaddingFraction * canvasSize.height;
@@ -300,11 +299,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _didUpdateChartData(_ChartImplementation oldChart) {
-    if (widget.mainSeries.id == oldChart.mainSeries.id &&
-        widget.mainSeries.didUpdate(oldChart.mainSeries)) {
-      _playNewTickAnimation();
-    }
-
     if (widget.chartDataList != null) {
       for (final ChartData data in widget.chartDataList.where(
         // Exclude mainSeries, since its didUpdate is already called
@@ -322,38 +316,16 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   @override
   void dispose() {
-    _currentTickAnimationController?.dispose();
     _currentTickBlinkingController?.dispose();
 
-    _topBoundQuoteAnimationController?.dispose();
-    _bottomBoundQuoteAnimationController?.dispose();
     _crosshairZoomOutAnimationController?.dispose();
     _clearGestures();
     super.dispose();
   }
 
-  void _playNewTickAnimation() {
-    _currentTickAnimationController
-      ..reset()
-      ..forward();
-  }
-
   void _setupAnimations() {
-    _setupCurrentTickAnimation();
     _setupBlinkingAnimation();
-    _setupBoundsAnimation();
     _setupCrosshairZoomOutAnimation();
-  }
-
-  void _setupCurrentTickAnimation() {
-    _currentTickAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _currentTickAnimation = CurvedAnimation(
-      parent: _currentTickAnimationController,
-      curve: Curves.easeOut,
-    );
   }
 
   void _setupBlinkingAnimation() {
@@ -365,19 +337,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     _currentTickBlinkAnimation = CurvedAnimation(
       parent: _currentTickBlinkingController,
       curve: Curves.easeInOut,
-    );
-  }
-
-  void _setupBoundsAnimation() {
-    _topBoundQuoteAnimationController = AnimationController.unbounded(
-      value: topBoundQuoteTarget,
-      vsync: this,
-      duration: quoteBoundsAnimationDuration,
-    );
-    _bottomBoundQuoteAnimationController = AnimationController.unbounded(
-      value: bottomBoundQuoteTarget,
-      vsync: this,
-      duration: quoteBoundsAnimationDuration,
     );
   }
 
@@ -408,51 +367,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
   }
 
-  void _updateQuoteBoundTargets() {
-    double minQuote = widget.mainSeries.minValue;
-    double maxQuote = widget.mainSeries.maxValue;
-
-    if (widget.chartDataList != null) {
-      final Iterable<ChartData> dataInAction = widget.chartDataList.where(
-        (ChartData chartData) =>
-            !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
-      );
-
-      if (dataInAction.isNotEmpty) {
-        final double chartDataMin = dataInAction
-            .map((ChartData chartData) => chartData.minValue)
-            .reduce(min);
-        final double chartDataMax = dataInAction
-            .map((ChartData chartData) => chartData.maxValue)
-            .reduce(max);
-
-        minQuote = min(widget.mainSeries.minValue, chartDataMin);
-        maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
-      }
-    }
-
-    // If the minQuote and maxQuote are the same there should be a default state to show chart quotes.
-    if (minQuote == maxQuote) {
-      minQuote -= 2;
-      maxQuote += 2;
-    }
-
-    if (!minQuote.isNaN && minQuote != bottomBoundQuoteTarget) {
-      bottomBoundQuoteTarget = minQuote;
-      _bottomBoundQuoteAnimationController.animateTo(
-        bottomBoundQuoteTarget,
-        curve: Curves.easeOut,
-      );
-    }
-    if (!maxQuote.isNaN && maxQuote != topBoundQuoteTarget) {
-      topBoundQuoteTarget = maxQuote;
-      _topBoundQuoteAnimationController.animateTo(
-        topBoundQuoteTarget,
-        curve: Curves.easeOut,
-      );
-    }
-  }
-
   double _quoteToCanvasY(double quote) => quoteToCanvasY(
         quote: quote,
         topBoundQuote: _topBoundQuote,
@@ -462,11 +376,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         bottomPadding: _bottomPadding,
       );
 
-  // Calculate the width of Y label
-  double _labelWidth(double text, TextStyle style) => makeTextPainter(
-        text.toStringAsFixed(widget.pipSize),
-        style,
-      ).width;
+  final GlobalKey _baseChartKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -480,19 +390,21 @@ class _ChartImplementationState extends State<_ChartImplementation>
         );
 
         _updateVisibleData();
-        _updateQuoteBoundTargets();
-
-        final List<double> gridLineQuotes = _getGridLineQuotes();
 
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            _buildQuoteGridLine(gridLineQuotes),
+            // _buildQuoteGridLine(gridLineQuotes),
             if (widget.showLoadingAnimationForHistoricalData ||
                 widget.mainSeries.entries.isEmpty)
               _buildLoadingAnimation(),
             _buildChartData(),
-            _buildQuoteGridLabel(gridLineQuotes),
+            // _buildQuoteGridLabel(gridLineQuotes),
+            _BaseChart(
+              key: _baseChartKey,
+              mainSeries: widget.mainSeries,
+              pipSize: widget.pipSize,
+            ),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(
@@ -519,46 +431,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
-      MultipleAnimatedBuilder(
-        animations: [
-          // One bound animation is enough since they animate at the same time.
-          _topBoundQuoteAnimationController,
-          _crosshairZoomOutAnimation,
-        ],
-        builder: (BuildContext context, Widget child) {
-          return CustomPaint(
-            painter: YGridLinePainter(
-              gridLineQuotes: gridLineQuotes,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: _labelWidth(gridLineQuotes.first,
-                  context.watch<ChartTheme>().gridStyle.yLabelStyle),
-            ),
-          );
-        },
-      );
-
-  Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
-      MultipleAnimatedBuilder(
-        animations: [
-          _topBoundQuoteAnimationController,
-          _bottomBoundQuoteAnimationController,
-          _crosshairZoomOutAnimation,
-        ],
-        builder: (BuildContext context, Widget child) {
-          return CustomPaint(
-            size: canvasSize,
-            painter: YGridLabelPainter(
-              gridLineQuotes: gridLineQuotes,
-              pipSize: widget.pipSize,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
-            ),
-          );
-        },
-      );
-
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
         loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
             ? _xAxis.width
@@ -567,43 +439,13 @@ class _ChartImplementationState extends State<_ChartImplementation>
               ),
       );
 
-  // Main series and indicators on top of main series.
-  Widget _buildChartData() => MultipleAnimatedBuilder(
-        animations: [
-          _topBoundQuoteAnimationController,
-          _bottomBoundQuoteAnimationController,
-          _crosshairZoomOutAnimation,
-          _currentTickAnimation,
-        ],
-        builder: (BuildContext context, Widget child) => RepaintBoundary(
-          child: Opacity(
-            opacity: widget.opacity,
-            child: CustomPaint(
-              painter: ChartDataPainter(
-                animationInfo: AnimationInfo(
-                  currentTickPercent: _currentTickAnimation.value,
-                ),
-                mainSeries: widget.mainSeries,
-                secondarySeries: widget.secondarySeries,
-                chartConfig: context.watch<ChartConfig>(),
-                theme: context.watch<ChartTheme>(),
-                epochToCanvasX: _xAxis.xFromEpoch,
-                quoteToCanvasY: _quoteToCanvasY,
-                rightBoundEpoch: _xAxis.rightBoundEpoch,
-                leftBoundEpoch: _xAxis.leftBoundEpoch,
-                topY: _quoteToCanvasY(widget.mainSeries.maxValue),
-                bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
-              ),
-            ),
-          ),
-        ),
-      );
-
   Widget _buildAnnotations() => MultipleAnimatedBuilder(
-        animations: [
-          _currentTickAnimation,
-          _currentTickBlinkAnimation,
-        ],
+        animations: _baseChartState != null
+            ? [
+                _baseChartState._currentTickAnimation,
+                _currentTickBlinkAnimation,
+              ]
+            : [_currentTickBlinkAnimation],
         builder: (BuildContext context, Widget child) =>
             Stack(fit: StackFit.expand, children: [
           if (widget.annotations != null)
@@ -612,7 +454,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
                       key: ValueKey<String>(annotation.id),
                       painter: ChartPainter(
                         animationInfo: AnimationInfo(
-                          currentTickPercent: _currentTickAnimation.value,
+                          currentTickPercent:
+                              _baseChartState._currentTickAnimation.value,
                           blinkingPercent: _currentTickBlinkAnimation.value,
                         ),
                         chartData: annotation,
@@ -687,6 +530,39 @@ class _ChartImplementationState extends State<_ChartImplementation>
         ),
       );
 
+  // Main series and indicators on top of main series.
+  Widget _buildChartData() => MultipleAnimatedBuilder(
+        animations: _baseChartState != null
+            ? <Listenable>[
+                _baseChartState._topBoundQuoteAnimationController,
+                _baseChartState._bottomBoundQuoteAnimationController,
+                _crosshairZoomOutAnimation,
+                _baseChartState._currentTickAnimation,
+              ]
+            : <Listenable>[
+                _crosshairZoomOutAnimation,
+              ],
+        builder: (BuildContext context, Widget child) => RepaintBoundary(
+          child: CustomPaint(
+            painter: BaseChartDataPainter(
+              animationInfo: AnimationInfo(
+                currentTickPercent:
+                    _baseChartState?._currentTickAnimation?.value ?? 0,
+              ),
+              series: widget.secondarySeries,
+              chartConfig: context.watch<ChartConfig>(),
+              theme: context.watch<ChartTheme>(),
+              epochToCanvasX: _xAxis.xFromEpoch,
+              quoteToCanvasY: _quoteToCanvasY,
+              rightBoundEpoch: _xAxis.rightBoundEpoch,
+              leftBoundEpoch: _xAxis.leftBoundEpoch,
+              topY: _quoteToCanvasY(widget.mainSeries.maxValue),
+              bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
+            ),
+          ),
+        ),
+      );
+
   Widget _buildDataFitButton() {
     final XAxisModel xAxis = context.read<XAxisModel>();
     return Material(
@@ -698,5 +574,341 @@ class _ChartImplementationState extends State<_ChartImplementation>
         onPressed: xAxis.dataFitEnabled ? null : xAxis.enableDataFit,
       ),
     );
+  }
+}
+
+class _BaseChart extends StatefulWidget {
+  const _BaseChart({
+    @required this.mainSeries,
+    @required this.pipSize,
+    Key key,
+  }) : super(key: key);
+
+  final DataSeries<Tick> mainSeries;
+  final int pipSize;
+
+  @override
+  _BaseChartState createState() => _BaseChartState();
+}
+
+class _BaseChartState extends State<_BaseChart> with TickerProviderStateMixin {
+  /// Width of the touch area for vertical zoom (on top of quote labels).
+  double quoteLabelsTouchAreaWidth = 70;
+
+  bool _panStartedOnQuoteLabelsArea = false;
+
+  Size canvasSize;
+
+  /// Fraction of the chart's height taken by top or bottom padding.
+  /// Quote scaling (drag on quote area) is controlled by this variable.
+  double verticalPaddingFraction = 0.1;
+
+  /// Padding should be at least half of barrier label height.
+  static const double _minPadding = 12;
+
+  /// Duration of quote bounds animated transition.
+  final Duration quoteBoundsAnimationDuration =
+      const Duration(milliseconds: 300);
+
+  /// Top quote bound target for animated transition.
+  double topBoundQuoteTarget = 60;
+
+  /// Bottom quote bound target for animated transition.
+  double bottomBoundQuoteTarget = 30;
+
+  AnimationController _currentTickAnimationController;
+
+  AnimationController _topBoundQuoteAnimationController;
+  AnimationController _bottomBoundQuoteAnimationController;
+
+  // TODO(Rustem): move to YAxisModel
+  AnimationController _crosshairZoomOutAnimationController;
+
+  Animation<double> _currentTickAnimation;
+
+  // TODO(Rustem): move to YAxisModel
+  Animation<double> _crosshairZoomOutAnimation;
+
+  double get _topBoundQuote => _topBoundQuoteAnimationController.value;
+
+  double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
+
+  double get _verticalPadding {
+    final double padding = verticalPaddingFraction * canvasSize.height;
+    const double minCrosshairPadding = 80;
+    final double paddingValue = padding +
+        (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
+            _crosshairZoomOutAnimation.value;
+    return paddingValue.clamp(_minPadding, canvasSize.height / 2);
+  }
+
+  double get _topPadding => _verticalPadding;
+
+  double get _bottomPadding => _verticalPadding;
+
+  double get _quotePerPx => quotePerPx(
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        yTopBound: _quoteToCanvasY(_topBoundQuote),
+        yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
+      );
+
+  GestureManagerState _gestureManager;
+
+  XAxisModel get _xAxis => context.read<XAxisModel>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _setupAnimations();
+    _setupGestures();
+  }
+
+  @override
+  void didUpdateWidget(_BaseChart oldChart) {
+    super.didUpdateWidget(oldChart);
+
+    _didUpdateChartData(oldChart);
+  }
+
+  void _didUpdateChartData(_BaseChart oldChart) {
+    if (widget.mainSeries.id == oldChart.mainSeries.id &&
+        widget.mainSeries.didUpdate(oldChart.mainSeries)) {
+      _playNewTickAnimation();
+    }
+  }
+
+  @override
+  void dispose() {
+    _currentTickAnimationController?.dispose();
+
+    _topBoundQuoteAnimationController?.dispose();
+    _bottomBoundQuoteAnimationController?.dispose();
+    _crosshairZoomOutAnimationController?.dispose();
+    _clearGestures();
+    super.dispose();
+  }
+
+  void _playNewTickAnimation() {
+    _currentTickAnimationController
+      ..reset()
+      ..forward();
+  }
+
+  void _setupAnimations() {
+    _setupCurrentTickAnimation();
+    _setupBoundsAnimation();
+    _setupCrosshairZoomOutAnimation();
+  }
+
+  void _setupCurrentTickAnimation() {
+    _currentTickAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _currentTickAnimation = CurvedAnimation(
+      parent: _currentTickAnimationController,
+      curve: Curves.easeOut,
+    );
+  }
+
+  void _setupBoundsAnimation() {
+    _topBoundQuoteAnimationController = AnimationController.unbounded(
+      value: topBoundQuoteTarget,
+      vsync: this,
+      duration: quoteBoundsAnimationDuration,
+    );
+    _bottomBoundQuoteAnimationController = AnimationController.unbounded(
+      value: bottomBoundQuoteTarget,
+      vsync: this,
+      duration: quoteBoundsAnimationDuration,
+    );
+  }
+
+  void _setupCrosshairZoomOutAnimation() {
+    _crosshairZoomOutAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+    _crosshairZoomOutAnimation = CurvedAnimation(
+      parent: _crosshairZoomOutAnimationController,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _setupGestures() {
+    _gestureManager = context.read<GestureManagerState>()
+      ..registerCallback(_onPanStart)
+      ..registerCallback(_onPanUpdate);
+  }
+
+  void _clearGestures() {
+    _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
+  }
+
+  void _updateVisibleData() =>
+      widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
+
+  void _updateQuoteBoundTargets() {
+    double minQuote = widget.mainSeries.minValue;
+    double maxQuote = widget.mainSeries.maxValue;
+
+    // If the minQuote and maxQuote are the same there should be a default state to show chart quotes.
+    if (minQuote == maxQuote) {
+      minQuote -= 2;
+      maxQuote += 2;
+    }
+
+    if (!minQuote.isNaN && minQuote != bottomBoundQuoteTarget) {
+      bottomBoundQuoteTarget = minQuote;
+      _bottomBoundQuoteAnimationController.animateTo(
+        bottomBoundQuoteTarget,
+        curve: Curves.easeOut,
+      );
+    }
+    if (!maxQuote.isNaN && maxQuote != topBoundQuoteTarget) {
+      topBoundQuoteTarget = maxQuote;
+      _topBoundQuoteAnimationController.animateTo(
+        topBoundQuoteTarget,
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  double _quoteToCanvasY(double quote) => quoteToCanvasY(
+        quote: quote,
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize.height,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
+
+  // Calculate the width of Y label
+  double _labelWidth(double text, TextStyle style) => makeTextPainter(
+        text.toStringAsFixed(widget.pipSize),
+        style,
+      ).width;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final XAxisModel xAxis = context.watch<XAxisModel>();
+
+          canvasSize = Size(
+            xAxis.width,
+            constraints.maxHeight,
+          );
+
+          _updateVisibleData();
+          _updateQuoteBoundTargets();
+
+          final List<double> gridLineQuotes = _getGridLineQuotes();
+
+          return Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              _buildQuoteGridLine(gridLineQuotes),
+              _buildChartData(),
+              _buildQuoteGridLabel(gridLineQuotes),
+            ],
+          );
+        },
+      );
+
+  Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
+      MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          // One bound animation is enough since they animate at the same time.
+          _topBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+        ],
+        builder: (BuildContext context, Widget child) => CustomPaint(
+          painter: YGridLinePainter(
+            gridLineQuotes: gridLineQuotes,
+            quoteToCanvasY: _quoteToCanvasY,
+            style: context.watch<ChartTheme>().gridStyle,
+            labelWidth: _labelWidth(gridLineQuotes.first,
+                context.watch<ChartTheme>().gridStyle.yLabelStyle),
+          ),
+        ),
+      );
+
+  Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
+      MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+        ],
+        builder: (BuildContext context, Widget child) => CustomPaint(
+          size: canvasSize,
+          painter: YGridLabelPainter(
+            gridLineQuotes: gridLineQuotes,
+            pipSize: widget.pipSize,
+            quoteToCanvasY: _quoteToCanvasY,
+            style: context.watch<ChartTheme>().gridStyle,
+          ),
+        ),
+      );
+
+  // Main series and indicators on top of main series.
+  Widget _buildChartData() => MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+          _currentTickAnimation,
+        ],
+        builder: (BuildContext context, Widget child) => RepaintBoundary(
+          child: CustomPaint(
+            painter: ChartDataPainter(
+              animationInfo: AnimationInfo(
+                currentTickPercent: _currentTickAnimation.value,
+              ),
+              mainSeries: widget.mainSeries,
+              chartConfig: context.watch<ChartConfig>(),
+              theme: context.watch<ChartTheme>(),
+              epochToCanvasX: _xAxis.xFromEpoch,
+              quoteToCanvasY: _quoteToCanvasY,
+              rightBoundEpoch: _xAxis.rightBoundEpoch,
+              leftBoundEpoch: _xAxis.leftBoundEpoch,
+              topY: _quoteToCanvasY(widget.mainSeries.maxValue),
+              bottomY: _quoteToCanvasY(widget.mainSeries.minValue),
+            ),
+          ),
+        ),
+      );
+
+  List<double> _getGridLineQuotes() => gridQuotes(
+        quoteGridInterval: quoteGridInterval(_quotePerPx),
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize.height,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
+
+  void _onPanStart(ScaleStartDetails details) {
+    _panStartedOnQuoteLabelsArea =
+        _onQuoteLabelsTouchArea(details.localFocalPoint);
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    if (_panStartedOnQuoteLabelsArea &&
+        _onQuoteLabelsTouchArea(details.localPosition)) {
+      _scaleVertically(details.delta.dy);
+    }
+  }
+
+  bool _onQuoteLabelsTouchArea(Offset position) =>
+      position.dx > _xAxis.width - quoteLabelsTouchAreaWidth;
+
+  void _scaleVertically(double dy) {
+    setState(() {
+      verticalPaddingFraction =
+          ((_verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
+    });
   }
 }
