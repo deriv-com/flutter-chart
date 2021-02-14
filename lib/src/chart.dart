@@ -205,33 +205,10 @@ class _ChartImplementation extends _BaseChart {
 }
 
 class _ChartImplementationState extends _BaseChartState<_ChartImplementation> {
-  /// Width of the touch area for vertical zoom (on top of quote labels).
-  double quoteLabelsTouchAreaWidth = 70;
-
-  bool _panStartedOnQuoteLabelsArea = false;
-
-  Size canvasSize;
-
-  /// Fraction of the chart's height taken by top or bottom padding.
-  /// Quote scaling (drag on quote area) is controlled by this variable.
-  double verticalPaddingFraction = 0.1;
-
   /// Padding should be at least half of barrier label height.
   static const double _minPadding = 12;
 
-  /// Duration of quote bounds animated transition.
-  final quoteBoundsAnimationDuration = const Duration(milliseconds: 300);
-
-  /// Top quote bound target for animated transition.
-  double topBoundQuoteTarget = 60;
-
-  /// Bottom quote bound target for animated transition.
-  double bottomBoundQuoteTarget = 30;
-
   AnimationController _currentTickBlinkingController;
-
-  // TODO(Rustem): move to YAxisModel
-  AnimationController _crosshairZoomOutAnimationController;
 
   Animation _currentTickBlinkAnimation;
 
@@ -242,35 +219,6 @@ class _ChartImplementationState extends _BaseChartState<_ChartImplementation> {
       widget.mainSeries.entries.isNotEmpty &&
       _xAxis.rightBoundEpoch < widget.mainSeries.entries.last.epoch &&
       !_isCrosshairMode;
-
-  double get _topBoundQuote => _topBoundQuoteAnimationController?.value ?? 20;
-
-  double get _bottomBoundQuote =>
-      _bottomBoundQuoteAnimationController?.value ?? 0;
-
-  double get _verticalPadding {
-    final double padding = verticalPaddingFraction * canvasSize.height;
-    const double minCrosshairPadding = 80;
-    final double paddingValue = padding +
-        (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
-            _crosshairZoomOutAnimation.value;
-    return paddingValue.clamp(_minPadding, canvasSize.height / 2);
-  }
-
-  double get _topPadding => _verticalPadding;
-
-  double get _bottomPadding => _verticalPadding;
-
-  double get _quotePerPx => quotePerPx(
-        topBoundQuote: _topBoundQuote,
-        bottomBoundQuote: _bottomBoundQuote,
-        yTopBound: _quoteToCanvasY(_topBoundQuote),
-        yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
-      );
-
-  GestureManagerState _gestureManager;
-
-  XAxisModel get _xAxis => context.read<XAxisModel>();
 
   @override
   void initState() {
