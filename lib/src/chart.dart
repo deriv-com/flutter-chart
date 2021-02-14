@@ -161,7 +161,7 @@ class Chart extends StatelessWidget {
   }
 }
 
-class _ChartImplementation extends StatefulWidget {
+class _ChartImplementation extends _BaseChart {
   _ChartImplementation({
     Key key,
     @required this.mainSeries,
@@ -175,7 +175,7 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.secondarySeries,
     this.annotations,
-  }) : super(key: key) {
+  }) : super(key: key, mainSeries: mainSeries, pipSize: pipSize) {
     chartDataList = <ChartData>[
       mainSeries,
       if (secondarySeries != null) ...secondarySeries,
@@ -204,8 +204,7 @@ class _ChartImplementation extends StatefulWidget {
   _ChartImplementationState createState() => _ChartImplementationState();
 }
 
-class _ChartImplementationState extends State<_ChartImplementation>
-    with TickerProviderStateMixin {
+class _ChartImplementationState extends _BaseChartState<_ChartImplementation> {
   /// Width of the touch area for vertical zoom (on top of quote labels).
   double quoteLabelsTouchAreaWidth = 70;
 
@@ -236,9 +235,6 @@ class _ChartImplementationState extends State<_ChartImplementation>
 
   Animation _currentTickBlinkAnimation;
 
-  // TODO(Rustem): move to YAxisModel
-  Animation _crosshairZoomOutAnimation;
-
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
@@ -247,13 +243,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
       _xAxis.rightBoundEpoch < widget.mainSeries.entries.last.epoch &&
       !_isCrosshairMode;
 
-  _BaseChartState get _baseChartState => _baseChartKey.currentState;
-
-  double get _topBoundQuote =>
-      _baseChartState?._topBoundQuoteAnimationController?.value ?? 20;
+  double get _topBoundQuote => _topBoundQuoteAnimationController?.value ?? 20;
 
   double get _bottomBoundQuote =>
-      _baseChartState?._bottomBoundQuoteAnimationController?.value ?? 0;
+      _bottomBoundQuoteAnimationController?.value ?? 0;
 
   double get _verticalPadding {
     final double padding = verticalPaddingFraction * canvasSize.height;
@@ -312,7 +305,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
   }
 
-  void _didUpdateChartData(_ChartImplementation oldChart) {
+  void _didUpdateChartData(covariant _ChartImplementation oldChart) {
+    super._didUpdateChartData(oldChart);
     if (widget.chartDataList != null) {
       for (final ChartData data in widget.chartDataList.where(
         // Exclude mainSeries, since its didUpdate is already called
@@ -338,6 +332,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _setupAnimations() {
+    super._setupAnimations();
     _setupBlinkingAnimation();
     _setupCrosshairZoomOutAnimation();
   }
@@ -354,43 +349,28 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  void _setupCrosshairZoomOutAnimation() {
-    _crosshairZoomOutAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    );
-    _crosshairZoomOutAnimation = CurvedAnimation(
-      parent: _crosshairZoomOutAnimationController,
-      curve: Curves.easeInOut,
-    );
-  }
+  // void _setupCrosshairZoomOutAnimation() {
+  //   _crosshairZoomOutAnimationController = AnimationController(
+  //     vsync: this,
+  //     duration: const Duration(milliseconds: 150),
+  //   );
+  //   _crosshairZoomOutAnimation = CurvedAnimation(
+  //     parent: _crosshairZoomOutAnimationController,
+  //     curve: Curves.easeInOut,
+  //   );
+  // }
 
-  void _setupGestures() {
-    _gestureManager = context.read<GestureManagerState>()
-      ..registerCallback(_onPanStart)
-      ..registerCallback(_onPanUpdate);
-  }
-
-  void _clearGestures() {
-    _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
-  }
+  // void _clearGestures() {
+  //   _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
+  // }
 
   void _updateVisibleData() {
+    // super._updateVisibleData();
+
     for (final ChartData data in widget.chartDataList) {
       data.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
     }
   }
-
-  double _quoteToCanvasY(double quote) => quoteToCanvasY(
-        quote: quote,
-        topBoundQuote: _topBoundQuote,
-        bottomBoundQuote: _bottomBoundQuote,
-        canvasHeight: canvasSize.height,
-        topPadding: _topPadding,
-        bottomPadding: _bottomPadding,
-      );
-
-  final GlobalKey _baseChartKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -412,13 +392,9 @@ class _ChartImplementationState extends State<_ChartImplementation>
             if (widget.showLoadingAnimationForHistoricalData ||
                 widget.mainSeries.entries.isEmpty)
               _buildLoadingAnimation(),
-            _buildChartData(),
+            _buildSeries(),
             // _buildQuoteGridLabel(gridLineQuotes),
-            _BaseChart(
-              key: _baseChartKey,
-              mainSeries: widget.mainSeries,
-              pipSize: widget.pipSize,
-            ),
+             super.build(context),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(
@@ -454,12 +430,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   Widget _buildAnnotations() => MultipleAnimatedBuilder(
-        animations: _baseChartState != null
-            ? [
-                _baseChartState._currentTickAnimation,
-                _currentTickBlinkAnimation,
-              ]
-            : [_currentTickBlinkAnimation],
+        animations: [
+          _currentTickAnimation,
+          _currentTickBlinkAnimation,
+        ],
         builder: (BuildContext context, Widget child) =>
             Stack(fit: StackFit.expand, children: [
           if (widget.annotations != null)
@@ -468,8 +442,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
                       key: ValueKey<String>(annotation.id),
                       painter: ChartPainter(
                         animationInfo: AnimationInfo(
-                          currentTickPercent:
-                              _baseChartState._currentTickAnimation.value,
+                          currentTickPercent: _currentTickAnimation.value,
                           blinkingPercent: _currentTickBlinkAnimation.value,
                         ),
                         chartData: annotation,
@@ -545,23 +518,17 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   // Main series and indicators on top of main series.
-  Widget _buildChartData() => MultipleAnimatedBuilder(
-        animations: _baseChartState != null
-            ? <Listenable>[
-                _baseChartState._topBoundQuoteAnimationController,
-                _baseChartState._bottomBoundQuoteAnimationController,
-                _crosshairZoomOutAnimation,
-                _baseChartState._currentTickAnimation,
-              ]
-            : <Listenable>[
-                _crosshairZoomOutAnimation,
-              ],
+  Widget _buildSeries() => MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          _topBoundQuoteAnimationController,
+          _bottomBoundQuoteAnimationController,
+          _crosshairZoomOutAnimation,
+        ],
         builder: (BuildContext context, Widget child) => RepaintBoundary(
           child: CustomPaint(
             painter: BaseChartDataPainter(
               animationInfo: AnimationInfo(
-                currentTickPercent:
-                    _baseChartState?._currentTickAnimation?.value ?? 0,
+                currentTickPercent: _currentTickAnimation.value,
               ),
               series: widget.secondarySeries,
               chartConfig: context.watch<ChartConfig>(),
@@ -602,10 +569,11 @@ class _BaseChart extends StatefulWidget {
   final int pipSize;
 
   @override
-  _BaseChartState createState() => _BaseChartState();
+  _BaseChartState createState() => _BaseChartState<_BaseChart>();
 }
 
-class _BaseChartState extends State<_BaseChart> with TickerProviderStateMixin {
+class _BaseChartState<T extends _BaseChart> extends State<T>
+    with TickerProviderStateMixin {
   /// Width of the touch area for vertical zoom (on top of quote labels).
   double quoteLabelsTouchAreaWidth = 70;
 
@@ -843,8 +811,10 @@ class _BaseChartState extends State<_BaseChart> with TickerProviderStateMixin {
             gridLineQuotes: gridLineQuotes,
             quoteToCanvasY: _quoteToCanvasY,
             style: context.watch<ChartTheme>().gridStyle,
-            labelWidth: gridLineQuotes.isNotEmpty ? _labelWidth(gridLineQuotes.first,
-                context.watch<ChartTheme>().gridStyle.yLabelStyle) : 40,
+            labelWidth: gridLineQuotes.isNotEmpty
+                ? _labelWidth(gridLineQuotes.first,
+                    context.watch<ChartTheme>().gridStyle.yLabelStyle)
+                : 40,
           ),
         ),
       );
