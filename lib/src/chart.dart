@@ -148,8 +148,10 @@ class Chart extends StatelessWidget {
                     ...secondarySeries
                         .map((Series series) => Expanded(
                             flex: 1,
-                            child: _BaseChart(
-                                mainSeries: series, pipSize: pipSize)))
+                            child: _BasicChart(
+                              mainSeries: series,
+                              pipSize: pipSize,
+                            )))
                         .toList()
                 ],
               ),
@@ -161,7 +163,7 @@ class Chart extends StatelessWidget {
   }
 }
 
-class _ChartImplementation extends _BaseChart {
+class _ChartImplementation extends _BasicChart {
   _ChartImplementation({
     Key key,
     @required this.mainSeries,
@@ -204,7 +206,7 @@ class _ChartImplementation extends _BaseChart {
   _ChartImplementationState createState() => _ChartImplementationState();
 }
 
-class _ChartImplementationState extends _BaseChartState<_ChartImplementation> {
+class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
   /// Padding should be at least half of barrier label height.
   static const double _minPadding = 12;
 
@@ -533,8 +535,8 @@ class _ChartImplementationState extends _BaseChartState<_ChartImplementation> {
   }
 }
 
-class _BaseChart extends StatefulWidget {
-  const _BaseChart({
+class _BasicChart extends StatefulWidget {
+  const _BasicChart({
     @required this.mainSeries,
     @required this.pipSize,
     Key key,
@@ -544,10 +546,10 @@ class _BaseChart extends StatefulWidget {
   final int pipSize;
 
   @override
-  _BaseChartState createState() => _BaseChartState<_BaseChart>();
+  _BasicChartState createState() => _BasicChartState<_BasicChart>();
 }
 
-class _BaseChartState<T extends _BaseChart> extends State<T>
+class _BasicChartState<T extends _BasicChart> extends State<T>
     with TickerProviderStateMixin {
   /// Width of the touch area for vertical zoom (on top of quote labels).
   double quoteLabelsTouchAreaWidth = 70;
@@ -623,13 +625,13 @@ class _BaseChartState<T extends _BaseChart> extends State<T>
   }
 
   @override
-  void didUpdateWidget(_BaseChart oldChart) {
+  void didUpdateWidget(_BasicChart oldChart) {
     super.didUpdateWidget(oldChart);
 
     _didUpdateChartData(oldChart);
   }
 
-  void _didUpdateChartData(_BaseChart oldChart) {
+  void _didUpdateChartData(_BasicChart oldChart) {
     if (widget.mainSeries.id == oldChart.mainSeries.id &&
         widget.mainSeries.didUpdate(oldChart.mainSeries)) {
       _playNewTickAnimation();
