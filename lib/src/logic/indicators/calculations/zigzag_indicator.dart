@@ -71,15 +71,22 @@ class ZigZagIndicator extends CachedIndicator {
         final Tick previousTick = indicator[i];
 
         ///if this point and last point has different swings
-        if ((isSwingUp(index) && isSwingDown(i)) ||
-            (isSwingDown(index) && isSwingUp(i))) {
-          final double distanceInPercent =
-              previousTick.close * _distancePercent;
+        if (isSwingUp(index) && isSwingDown(i)) {
+          final double distanceInPercent = previousTick.low * _distancePercent;
 
-          if ((previousTick.close - thisTick.close).abs() > distanceInPercent) {
-            return isSwingUp(index)
-                ? Tick(epoch: thisTick.epoch, quote: thisTick.high)
-                : Tick(epoch: thisTick.epoch, quote: thisTick.low);
+          if ((previousTick.low - thisTick.high).abs() > distanceInPercent) {
+            return Tick(epoch: thisTick.epoch, quote: thisTick.high);
+          } else {
+            return Tick(epoch: thisTick.epoch, quote: double.nan);
+          }
+        }
+
+        ///if this point and last point has different swings
+        else if (isSwingDown(index) && isSwingUp(i)) {
+          final double distanceInPercent = previousTick.high * _distancePercent;
+
+          if ((previousTick.high - thisTick.low).abs() > distanceInPercent) {
+            return Tick(epoch: thisTick.epoch, quote: thisTick.low);
           } else {
             return Tick(epoch: thisTick.epoch, quote: double.nan);
           }
@@ -87,9 +94,18 @@ class ZigZagIndicator extends CachedIndicator {
 
         ///if this point and last point has similar swings down
         else if (isSwingDown(index) && isSwingDown(i)) {
-          if (i != _firstSwingIndex && thisTick.close < previousTick.close) {
+          if (i != _firstSwingIndex && thisTick.low < previousTick.low) {
             results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
             return Tick(epoch: thisTick.epoch, quote: thisTick.low);
+          } else if (i == _firstSwingIndex) {
+            final double distanceInPercent =
+                previousTick.low * _distancePercent;
+
+            if ((previousTick.low - thisTick.low).abs() > distanceInPercent) {
+              return Tick(epoch: thisTick.epoch, quote: thisTick.low);
+            } else {
+              return Tick(epoch: thisTick.epoch, quote: double.nan);
+            }
           } else {
             return Tick(epoch: thisTick.epoch, quote: double.nan);
           }
@@ -97,15 +113,14 @@ class ZigZagIndicator extends CachedIndicator {
 
         ///if this point and last point has similar swings up
         else if (isSwingUp(index) && isSwingUp(i)) {
-          if (i != _firstSwingIndex && thisTick.close > previousTick.close) {
+          if (i != _firstSwingIndex && thisTick.high > previousTick.high) {
             results[i] = Tick(epoch: previousTick.epoch, quote: double.nan);
             return Tick(epoch: thisTick.epoch, quote: thisTick.high);
           } else if (i == _firstSwingIndex) {
             final double distanceInPercent =
-                previousTick.close * _distancePercent;
+                previousTick.high * _distancePercent;
 
-            if ((previousTick.close - thisTick.close).abs() >
-                distanceInPercent) {
+            if ((previousTick.high - thisTick.high).abs() > distanceInPercent) {
               return Tick(epoch: thisTick.epoch, quote: thisTick.high);
             } else {
               return Tick(epoch: thisTick.epoch, quote: double.nan);

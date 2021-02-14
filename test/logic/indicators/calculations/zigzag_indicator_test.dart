@@ -35,7 +35,6 @@ void main() {
       expect(indicator.getValue(2).quote.isNaN, true);
       expect(indicator.getValue(3).quote.isNaN, true);
       expect(indicator.getValue(5).quote, 65);
-      expect(indicator.getValue(7).quote.isNaN, true);
       expect(indicator.getValue(10).quote, 60);
       expect(indicator.getValue(11).quote, 62.51);
     });

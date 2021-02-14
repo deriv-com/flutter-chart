@@ -41,28 +41,28 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
-  void onUpdate(int leftEpoch, int rightEpoch) {
-    super.onUpdate(leftEpoch, rightEpoch);
-
-    if (visibleEntries.isNotEmpty && visibleEntries != null) {
-      if (visibleEntries.first.quote.isNaN) {
-        final int index = entries.indexOf(visibleEntries.first);
-        for (int i = index - 1; i >= 0; i--) {
-          if (!entries[i].quote.isNaN) {
-            visibleEntries.first = entries[i];
-            break;
-          }
-        }
-      }
-      if (visibleEntries.last.quote.isNaN) {
-        final int index = entries.indexOf(visibleEntries.last);
-        for (int i = index + 1; i <= entries.length; i++) {
-          if (!entries[i].quote.isNaN) {
-            visibleEntries.last = entries[i];
-            break;
-          }
+  List<Tick> getVisibleEntries(int startIndex, int endIndex) {
+    int firstIndex = startIndex;
+    int lastIndex = endIndex;
+    if (startIndex == -1 || endIndex == -1) {
+      return <Tick>[];
+    }
+    if (entries[startIndex].quote.isNaN) {
+      for (int i = startIndex - 1; i >= 0; i--) {
+        if (!entries[i].quote.isNaN) {
+          firstIndex = i;
+          break;
         }
       }
     }
+    if (entries[endIndex - 1].quote.isNaN) {
+      for (int i = endIndex + 1; i < entries.length; i++) {
+        if (!entries[i].quote.isNaN) {
+          lastIndex = i + 1;
+          break;
+        }
+      }
+    }
+    return entries.sublist(firstIndex, lastIndex);
   }
 }
