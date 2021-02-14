@@ -5,7 +5,7 @@ String getSymbolAssetPath(String assetCode) =>
     'assets/icons/symbols/${assetCode.toLowerCase()}.png';
 
 /// A wrapper widget around [AssetImage] which provides image icon for the
-/// given [symbolCode].
+/// given `symbolCode`.
 class SymbolIcon extends FadeInImage {
   /// Initializes a wrapper widget around [AssetImage] which provides image icon for the
   /// given [symbolCode].

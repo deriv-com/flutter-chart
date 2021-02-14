@@ -46,6 +46,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
       ..add(ZigZagIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(DonchianChannelIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
       ));
   }
 
