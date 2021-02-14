@@ -35,7 +35,7 @@ class ChartDataPainter extends BaseChartDataPainter {
         );
 
   /// Chart's main data series.
-  final DataSeries mainSeries;
+  final Series mainSeries;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -63,10 +63,12 @@ class ChartDataPainter extends BaseChartDataPainter {
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
     bool visibleAnimationChanged() =>
+        true /*
         mainSeries.entries.isNotEmpty &&
         mainSeries.visibleEntries.isNotEmpty &&
         mainSeries.entries.last == mainSeries.visibleEntries.last &&
-        animationInfo != oldDelegate.animationInfo;
+        animationInfo != oldDelegate.animationInfo*/
+        ;
 
     return super.shouldRepaint(oldDelegate) ||
         visibleAnimationChanged() ||

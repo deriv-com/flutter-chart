@@ -126,18 +126,32 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
-              child: _ChartImplementation(
-                controller: controller,
-                mainSeries: mainSeries,
-                secondarySeries: secondarySeries,
-                annotations: annotations,
-                markerSeries: markerSeries,
-                pipSize: pipSize,
-                onCrosshairAppeared: onCrosshairAppeared,
-                isLive: isLive,
-                showLoadingAnimationForHistoricalData: !dataFitEnabled,
-                showDataFitButton: dataFitEnabled,
-                opacity: opacity,
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: _ChartImplementation(
+                      controller: controller,
+                      mainSeries: mainSeries,
+                      secondarySeries: secondarySeries,
+                      annotations: annotations,
+                      markerSeries: markerSeries,
+                      pipSize: pipSize,
+                      onCrosshairAppeared: onCrosshairAppeared,
+                      isLive: isLive,
+                      showLoadingAnimationForHistoricalData: !dataFitEnabled,
+                      showDataFitButton: dataFitEnabled,
+                      opacity: opacity,
+                    ),
+                  ),
+                  if (secondarySeries.isNotEmpty)
+                    ...secondarySeries
+                        .map((Series series) => Expanded(
+                            flex: 1,
+                            child: _BaseChart(
+                                mainSeries: series, pipSize: pipSize)))
+                        .toList()
+                ],
               ),
             ),
           ),
@@ -584,7 +598,7 @@ class _BaseChart extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
-  final DataSeries<Tick> mainSeries;
+  final Series mainSeries;
   final int pipSize;
 
   @override
@@ -829,8 +843,8 @@ class _BaseChartState extends State<_BaseChart> with TickerProviderStateMixin {
             gridLineQuotes: gridLineQuotes,
             quoteToCanvasY: _quoteToCanvasY,
             style: context.watch<ChartTheme>().gridStyle,
-            labelWidth: _labelWidth(gridLineQuotes.first,
-                context.watch<ChartTheme>().gridStyle.yLabelStyle),
+            labelWidth: gridLineQuotes.isNotEmpty ? _labelWidth(gridLineQuotes.first,
+                context.watch<ChartTheme>().gridStyle.yLabelStyle) : 40,
           ),
         ),
       );
