@@ -394,7 +394,7 @@ class _ChartImplementationState extends _BaseChartState<_ChartImplementation> {
               _buildLoadingAnimation(),
             _buildSeries(),
             // _buildQuoteGridLabel(gridLineQuotes),
-             super.build(context),
+            super.build(context),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(
@@ -555,6 +555,33 @@ class _ChartImplementationState extends _BaseChartState<_ChartImplementation> {
         onPressed: xAxis.dataFitEnabled ? null : xAxis.enableDataFit,
       ),
     );
+  }
+
+  @override
+  List<double> getSeriesMinMaxValue() {
+    final List<double> minMaxValues = super.getSeriesMinMaxValue();
+    double minQuote = minMaxValues[0];
+    double maxQuote = minMaxValues[1];
+
+    if (widget.chartDataList != null) {
+      final Iterable<ChartData> dataInAction = widget.chartDataList.where(
+        (ChartData chartData) =>
+            !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
+      );
+
+      if (dataInAction.isNotEmpty) {
+        final double chartDataMin = dataInAction
+            .map((ChartData chartData) => chartData.minValue)
+            .reduce(min);
+        final double chartDataMax = dataInAction
+            .map((ChartData chartData) => chartData.maxValue)
+            .reduce(max);
+
+        minQuote = min(widget.mainSeries.minValue, chartDataMin);
+        maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
+      }
+    }
+    return <double>[minQuote, maxQuote];
   }
 }
 
@@ -732,9 +759,13 @@ class _BaseChartState<T extends _BaseChart> extends State<T>
   void _updateVisibleData() =>
       widget.mainSeries.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
 
+  List<double> getSeriesMinMaxValue() =>
+      <double>[widget.mainSeries.minValue, widget.mainSeries.maxValue];
+
   void _updateQuoteBoundTargets() {
-    double minQuote = widget.mainSeries.minValue;
-    double maxQuote = widget.mainSeries.maxValue;
+    final List<double> minMaxValues = getSeriesMinMaxValue();
+    double minQuote = minMaxValues[0];
+    double maxQuote = minMaxValues[1];
 
     // If the minQuote and maxQuote are the same there should be a default state to show chart quotes.
     if (minQuote == maxQuote) {
