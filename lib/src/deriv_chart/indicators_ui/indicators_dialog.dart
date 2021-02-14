@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'bollinger_bands/bollinger_bands_indicator_item.dart';
 import 'callbacks.dart';
+import 'donchian_channel/donchian_channel_indicator_item.dart';
 import 'indicator_item.dart';
 import 'ma_indicator/ma_indicator_item.dart';
 
