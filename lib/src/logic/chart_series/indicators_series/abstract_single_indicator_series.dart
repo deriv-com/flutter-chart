@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
@@ -22,12 +23,15 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   })  : _inputFirstTick = inputIndicator.entries.isNotEmpty
             ? inputIndicator.entries.first
             : null,
+        _indicatorInputData = inputIndicator.input,
         super(inputIndicator.entries, id, style: style);
 
   /// Input indicator to calculate this indicator value on.
   ///
   /// Input data might be a result of another [Indicator]. For example [CloseValueIndicator] or [HL2Indicator].
   final Indicator<Tick> inputIndicator;
+
+  final IndicatorInput _indicatorInputData;
 
   /// The offset of this indicator.
   ///
@@ -61,6 +65,10 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
   final Tick _inputFirstTick;
+
+  @override
+  int getEpochOf(Tick t) =>
+      super.getEpochOf(t) + offset * _indicatorInputData.granularity;
 
   @override
   void initialize() {

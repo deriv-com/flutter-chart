@@ -68,9 +68,6 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return SMAIndicator<Tick>(indicator, maOptions.period);
     }
   }
-
-  @override
-  int getEpochOf(Tick t) => super.getEpochOf(t) + (20) * 1000;
 }
 
 /// Supported types of moving average.

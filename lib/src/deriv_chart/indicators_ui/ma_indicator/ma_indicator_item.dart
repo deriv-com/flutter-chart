@@ -66,7 +66,8 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
               const SizedBox(width: 10),
               buildFieldTypeMenu(),
             ],
-          )
+          ),
+          buildOffsetField(),
         ],
       );
 
@@ -132,30 +133,30 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Builds offset TextFiled
   @protected
   Widget buildOffsetField() => Row(
-    children: <Widget>[
-      Text(
-        ChartLocalization.of(context).offset,
-        style: const TextStyle(fontSize: 10),
-      ),
-      const SizedBox(width: 4),
-      SizedBox(
-        width: 20,
-        child: TextFormField(
-          style: const TextStyle(fontSize: 10),
-          initialValue: getCurrentPeriod().toString(),
-          keyboardType: TextInputType.number,
-          onChanged: (String text) {
-            if (text.isNotEmpty) {
-              offset = int.tryParse(text);
-            } else {
-              offset = 0;
-            }
-            updateIndicator();
-          },
-        ),
-      ),
-    ],
-  );
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).offset,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: getCurrentOffset().toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  offset = int.tryParse(text);
+                } else {
+                  offset = 0;
+                }
+                updateIndicator();
+              },
+            ),
+          ),
+        ],
+      );
 
   /// Returns MA types dropdown menu
   @protected
