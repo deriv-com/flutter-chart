@@ -1,16 +1,14 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
-import 'package:deriv_chart/src/models/ohlc.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 /// True range indicator.
-class TRIndicator extends CachedIndicator {
+class TRIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes a true range indicator.
-  TRIndicator(List<OHLC> entries) : super(entries);
+  TRIndicator(IndicatorDataInput input) : super(input);
 
   @override
-  Tick calculate(int index) {
+  T calculate(int index) {
     final double tickSize = entries[index].high - entries[index].low;
 
     final double highMinusClose =
@@ -18,8 +16,8 @@ class TRIndicator extends CachedIndicator {
     final double closeMinusLow =
         index == 0 ? 0 : entries[index].close - entries[index].low;
 
-    return Tick(
-      epoch: getEpochOfIndex(index),
+    return createResult(
+      index: index,
       quote: max(
         tickSize.abs(),
         max(
