@@ -13,18 +13,19 @@ import 'models/indicator_options.dart';
 class MASeries extends AbstractSingleIndicatorSeries {
   /// Initializes a series which shows shows moving Average data calculated from [entries].
   ///
-  /// [period] is the average of this number of past data which will be calculated as MA value
-  /// [type] The type of moving average.
+  /// [options]   Options of this [MASeries].
   MASeries(
     IndicatorInput indicatorInput,
     MAOptions options, {
     String id,
     LineStyle style,
+    int offset,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           id: id,
           options: options,
           style: style,
+          offset: offset,
         );
 
   /// Initializes
@@ -33,11 +34,13 @@ class MASeries extends AbstractSingleIndicatorSeries {
     String id,
     LineStyle style,
     MAOptions options,
+    int offset,
   }) : super(
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',
           options,
           style: style ?? const LineStyle(thickness: 0.5),
+          offset: offset ?? 0,
         );
 
   @override
@@ -47,7 +50,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
   CachedIndicator<Tick> initializeIndicator() =>
       MASeries.getMAIndicator(inputIndicator, options);
 
-  /// Returns a moving average indicator based on [period] and its [type].
+  /// Returns a moving average indicator based on [maOptions] values.
   static CachedIndicator<Tick> getMAIndicator(
     Indicator<Tick> indicator,
     MAOptions maOptions,

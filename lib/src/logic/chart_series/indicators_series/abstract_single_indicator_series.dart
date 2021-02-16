@@ -37,14 +37,14 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// |    *            (Tick3) (Tick4)    *
   /// | (Tick1)    *             *
   /// |         (Tick2)   *
-  ///  -------------------------------------------
+  ///  ------------------------------------------->
   ///
-  /// Indicator's data with [offset] = 1 will like:
+  /// Indicator's data with [offset] = 1 will be like:
   /// |                                 (Tick5)
   /// |            *    (Tick3) (Tick4)          *
   /// | (Tick1)            *              *
   /// |         (Tick2)           *
-  ///  -------------------------------------------
+  ///  ------------------------------------------->
   final int offset;
 
   /// Indicator options
