@@ -43,7 +43,7 @@ commands:
       - run:
           name: Run tests in deriv_techincal_analysis
           command: |
-                cd deriv_techincal_analysis
+                cd deriv_technical_analysis/
                 flutter test
                 cd ..
 
