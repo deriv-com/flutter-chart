@@ -3,6 +3,7 @@
   "labelField": "Field",
   "labelPeriod": "Period",
   "labelShift": "Shift",
+  "labelBandsCount": "Bands Count",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",
   "labelType": "Type",

@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "informNoResult" : m0,
+    "labelBandsCount" : MessageLookupByLibrary.simpleMessage("Bands Count"),
     "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
