@@ -1,5 +1,7 @@
-import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:deriv_technical_analysis/src/models/models.dart';
+
+import '../../cached_indicator.dart';
+import '../../indicator.dart';
 
 /// Calculates the value for donchian middle channel.
 class DonchianMiddleChannelIndicator<T extends IndicatorResult>

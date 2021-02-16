@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/foundation.dart';
 
 import '../data_series.dart';
@@ -34,7 +35,8 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
     @required Indicator<Tick> inputIndicator,
     @required IndicatorOptions options,
     String id,
-  }) : super(inputIndicator, id, options);
+    DataSeriesStyle style,
+  }) : super(inputIndicator, id, options, style: style);
 
   /// Function which will be called to get the painter object of this class.
   final DataPainterCreator painterCreator;
