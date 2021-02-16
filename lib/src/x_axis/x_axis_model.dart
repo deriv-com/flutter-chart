@@ -42,8 +42,6 @@ enum ViewingMode {
 
 /// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
-  // TODO(Rustem): Add closed contract x-axis constructor.
-
   /// Creates x-axis model for live chart.
   XAxisModel({
     @required List<Tick> entries,
