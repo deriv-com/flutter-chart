@@ -205,7 +205,7 @@ class XAxisModel extends ChangeNotifier {
         ? _entries.last.epoch
         : _nowEpoch + elapsedMs;
     _lastEpoch = newNowTime;
-    // TODO(Rustem): Consider refactoring the switch with OOP pattern.
+    // TODO: Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
         _scrollTo(_rightBoundEpoch + elapsedMs);
