@@ -1,6 +1,6 @@
-import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_shift_typs.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
-import '../../../../../deriv_chart.dart';
+import '../ma_series.dart';
 import 'indicator_options.dart';
 
 /// Moving Average Envelope indicator options.
