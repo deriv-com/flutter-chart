@@ -2,20 +2,19 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_lower_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ma_env/ma_env_upper_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../deriv_chart.dart';
 import '../../chart_data.dart';
+import '../series.dart';
 import '../series_painter.dart';
+import 'ma_series.dart';
 import 'models/ma_env_options.dart';
 
 /// A series which shows Moving Average Envelope data calculated from 'entries'.
@@ -24,11 +23,11 @@ class MAEnvSeries extends Series {
   ///
   /// [maEnvOptions] Moving Average Envelope indicator options.
   MAEnvSeries(
-    List<Tick> entries, {
+    IndicatorInput indicatorInput, {
     String id,
     MAEnvOptions maEnvOptions,
   }) : this.fromIndicator(
-          CloseValueIndicator(entries),
+          CloseValueIndicator(indicatorInput),
           id: id,
           maEnvOptions: maEnvOptions,
         );
@@ -52,7 +51,7 @@ class MAEnvSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    final CachedIndicator smaIndicator =
+    final CachedIndicator<Tick> smaIndicator =
         MASeries.getMAIndicator(_fieldIndicator, maEnvOptions);
 
     _lowerSeries = SingleIndicatorSeries(
@@ -60,7 +59,7 @@ class MAEnvSeries extends Series {
         Series series,
       ) =>
           LinePainter(series),
-      indicatorCreator: () => MAEnvLowerIndicator(
+      indicatorCreator: () => MAEnvLowerIndicator<Tick>(
         smaIndicator,
         maEnvOptions.shiftType,
         maEnvOptions.shift,
@@ -89,6 +88,8 @@ class MAEnvSeries extends Series {
       options: maEnvOptions,
       style: const LineStyle(color: Colors.green),
     );
+
+    return null;
   }
 
   @override

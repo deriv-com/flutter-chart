@@ -3,9 +3,8 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_si
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/foundation.dart';
 
@@ -33,7 +32,7 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   SingleIndicatorSeries({
     @required this.painterCreator,
     @required this.indicatorCreator,
-    @required Indicator inputIndicator,
+    @required Indicator<Tick> inputIndicator,
     @required IndicatorOptions options,
     String id,
     DataSeriesStyle style,
@@ -43,11 +42,11 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   final DataPainterCreator painterCreator;
 
   /// Function which will be called to get the indicator that will eventually calculate the result.
-  final CachedIndicator Function() indicatorCreator;
+  final CachedIndicator<Tick> Function() indicatorCreator;
 
   @override
   SeriesPainter<Series> createPainter() => painterCreator?.call(this);
 
   @override
-  CachedIndicator initializeIndicator() => indicatorCreator?.call();
+  CachedIndicator<Tick> initializeIndicator() => indicatorCreator?.call();
 }
