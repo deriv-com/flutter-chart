@@ -22,10 +22,10 @@ class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
     int firstIndex = -1;
     if (ticks != null && ticks.isNotEmpty) {
       for (int index = 1; index < ticks.length; index++) {
-        if ((ticks[index - 1].close > ticks[index].close &&
-                ticks[index + 1].close > ticks[index].close) ||
-            (ticks[index - 1].close < ticks[index].close &&
-                ticks[index + 1].close < ticks[index].close)) {
+        if ((ticks[index - 1].low > ticks[index].low &&
+                ticks[index + 1].low > ticks[index].low) ||
+            (ticks[index - 1].high < ticks[index].high &&
+                ticks[index + 1].high < ticks[index].high)) {
           firstIndex = index;
           break;
         }
@@ -43,20 +43,22 @@ class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
       return createResult(index: index, quote: double.nan);
     }
 
-    /// if index is last index or first swing, return itself
-    if (index == inputs.entries.length - 1 || _firstSwingIndex == index) {
-      return createResult(index: index, quote: thisTick.close);
-    }
-
     /// is the point of given index swing up
     bool isSwingUp(int index) =>
-        inputs.entries[index - 1].close < inputs.entries[index].close &&
-        inputs.entries[index + 1].close < inputs.entries[index].close;
+        inputs.entries[index - 1].high < inputs.entries[index].high &&
+        inputs.entries[index + 1].high < inputs.entries[index].high;
 
     /// is the point of given index swing down
     bool isSwingDown(int index) =>
-        inputs.entries[index - 1].close > inputs.entries[index].close &&
-        inputs.entries[index + 1].close > inputs.entries[index].close;
+        inputs.entries[index - 1].low > inputs.entries[index].low &&
+        inputs.entries[index + 1].low > inputs.entries[index].low;
+
+    /// if index is last index or first swing, return itself
+    if (index == inputs.entries.length - 1 || _firstSwingIndex == index) {
+      return isSwingUp(index)
+          ? createResult(index: index, quote: thisTick.high)
+          : createResult(index: index, quote: thisTick.low);
+    }
 
     /// if thee point is SwingDown or SwingUp
     if (isSwingDown(index) || isSwingUp(index)) {
