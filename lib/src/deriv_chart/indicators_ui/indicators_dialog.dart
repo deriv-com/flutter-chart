@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'bollinger_bands/bollinger_bands_indicator_item.dart';
 import 'callbacks.dart';
 import 'indicator_item.dart';
+import 'ma_env_indicator/ma_env_indicator_item.dart';
 import 'ma_indicator/ma_indicator_item.dart';
 
 /// Indicators dialog to add them to the chart.
@@ -39,6 +41,14 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         onAddIndicator: widget.onAddIndicator,
       ))
       ..add(BollingerBandsIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(DonchianChannelIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(MAEnvIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ));
