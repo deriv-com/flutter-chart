@@ -40,6 +40,12 @@ commands:
       - run:
           name: Run the application tests
           command: flutter test --coverage
+      - run:
+          name: Run tests in deriv_techincal_analysis
+          command: |
+                cd deriv_techincal_analysis
+                flutter test
+                cd ..
 
       - run:
           name: Upload coverage
