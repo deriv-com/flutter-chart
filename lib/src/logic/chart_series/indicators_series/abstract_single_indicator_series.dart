@@ -23,15 +23,13 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   })  : _inputFirstTick = inputIndicator.entries.isNotEmpty
             ? inputIndicator.entries.first
             : null,
-        _indicatorInputData = inputIndicator.input,
+        _inputIndicatorData = inputIndicator.input,
         super(inputIndicator.entries, id, style: style);
 
   /// Input indicator to calculate this indicator value on.
   ///
   /// Input data might be a result of another [Indicator]. For example [CloseValueIndicator] or [HL2Indicator].
   final Indicator<Tick> inputIndicator;
-
-  final IndicatorInput _indicatorInputData;
 
   /// The offset of this indicator.
   ///
@@ -66,9 +64,11 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// To check whether series input list has changed entirely or not.
   final Tick _inputFirstTick;
 
+  final IndicatorInput _inputIndicatorData;
+
   @override
   int getEpochOf(Tick t) =>
-      super.getEpochOf(t) + offset * _indicatorInputData.granularity;
+      super.getEpochOf(t) + offset * _inputIndicatorData.granularity;
 
   @override
   void initialize() {

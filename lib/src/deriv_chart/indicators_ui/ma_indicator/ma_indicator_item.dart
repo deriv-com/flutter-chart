@@ -139,20 +139,18 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: getCurrentOffset().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  offset = int.tryParse(text);
-                } else {
-                  offset = 0;
-                }
-                updateIndicator();
+          Expanded(
+            child: Slider(
+              value: getCurrentOffset().toDouble(),
+              onChanged: (double value) {
+                setState(() {
+                  offset = value.toInt();
+                  updateIndicator();
+                });
               },
+              divisions: 100,
+              max: 100,
+              label: '${getCurrentOffset()}',
             ),
           ),
         ],
