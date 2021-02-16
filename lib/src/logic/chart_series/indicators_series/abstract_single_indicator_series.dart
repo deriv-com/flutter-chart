@@ -18,6 +18,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
     String id,
     this.options, {
     DataSeriesStyle style,
+    this.offset = 0,
   })  : _inputFirstTick = inputIndicator.entries.isNotEmpty
             ? inputIndicator.entries.first
             : null,
@@ -27,6 +28,24 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   ///
   /// Input data might be a result of another [Indicator]. For example [CloseValueIndicator] or [HL2Indicator].
   final Indicator<Tick> inputIndicator;
+
+  /// The offset of this indicator.
+  ///
+  /// Indicator's data will be shifted by this number of tick while they are being painted.
+  /// For example if we consider `*`s as indicator data on the chart below with default [offset] = 0:
+  /// |                                 (Tick5)
+  /// |    *            (Tick3) (Tick4)    *
+  /// | (Tick1)    *             *
+  /// |         (Tick2)   *
+  ///  -------------------------------------------
+  ///
+  /// Indicator's data with [offset] = 1 will like:
+  /// |                                 (Tick5)
+  /// |            *    (Tick3) (Tick4)          *
+  /// | (Tick1)            *              *
+  /// |         (Tick2)           *
+  ///  -------------------------------------------
+  final int offset;
 
   /// Indicator options
   ///
