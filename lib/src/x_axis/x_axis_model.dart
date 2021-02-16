@@ -326,7 +326,7 @@ class XAxisModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Returns [panSpeed] if not null, otherwise returns `0`.
+  /// Sets [panSpeed] if input not null, otherwise sets to `0`.
   void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
 
   /// Enables autopanning when current tick is visible.

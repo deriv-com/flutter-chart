@@ -8,7 +8,7 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +23,9 @@ import 'ma_series.dart';
 /// Or we can directly implement [ChartData] interface.
 class SampleMultiSeries extends Series {
   /// Initializes a sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
-  SampleMultiSeries(List<Tick> entries, {String id})
-      : series1 = MASeries(entries, const MAOptions(period: 10)),
-        series2 = MASeries(entries, const MAOptions()),
+  SampleMultiSeries(IndicatorInput indicatorInput, {String id})
+      : series1 = MASeries(indicatorInput, const MAOptions(period: 10)),
+        series2 = MASeries(indicatorInput, const MAOptions()),
         super(id);
 
   /// Series 1.
