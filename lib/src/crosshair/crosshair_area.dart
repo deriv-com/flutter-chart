@@ -1,13 +1,15 @@
+import 'package:deriv_chart/src/crosshair/crosshair_dot_painter.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'crosshair_details.dart';
-import 'crosshair_painter.dart';
+import 'crosshair_line_painter.dart';
 
 /// Place this area on top of the chart to display candle/point details on longpress.
 class CrosshairArea extends StatefulWidget {
@@ -54,6 +56,14 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
+  DateTime _timer;
+  final VelocityTracker _dragVelocityTracker =
+      VelocityTracker.withKind(PointerDeviceKind.touch);
+  VelocityEstimate _dragVelocity = const VelocityEstimate(
+      confidence: 1,
+      pixelsPerSecond: Offset.zero,
+      duration: Duration.zero,
+      offset: Offset.zero);
 
   @override
   void initState() {
@@ -101,11 +111,18 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     xAxis.disableAutoPan();
     _lastLongPressPosition = details.localPosition.dx;
     _updatePanSpeed();
+    _timer = DateTime.now();
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
     _lastLongPressPosition = details.localPosition.dx;
     setState(() => _updatePanSpeed());
+
+    final DateTime now = DateTime.now();
+    final Duration passedTime = now.difference(_timer);
+    _timer = DateTime.now();
+    _dragVelocityTracker.addPosition(passedTime, details.localPosition);
+    _dragVelocity = _dragVelocityTracker.getVelocityEstimate();
   }
 
   void _updatePanSpeed() {
@@ -124,6 +141,27 @@ class _CrosshairAreaState extends State<CrosshairArea> {
 
   Tick _getClosestTick() => findClosestToEpoch(
       _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
+
+  Duration get animationDuration {
+    double dragXVelocity;
+
+    dragXVelocity = _dragVelocity.pixelsPerSecond.dx.abs().roundToDouble();
+
+    if (dragXVelocity == 0) {
+      return const Duration(milliseconds: 5);
+    }
+
+    if (dragXVelocity > 3000) {
+      return const Duration(milliseconds: 5);
+    }
+
+    if (dragXVelocity < 500) {
+      return const Duration(milliseconds: 80);
+    }
+
+    final double duratoinInRange = (dragXVelocity - 500) / (2500) * 75 + 5;
+    return Duration(milliseconds: duratoinInRange.toInt());
+  }
 
   void _onLongPressEnd(LongPressEndDetails details) {
     // TODO(Rustem): ask yAxisModel to zoom in
@@ -153,35 +191,48 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       crosshairTick = _getClosestTick();
     }
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) => Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                CustomPaint(
-                  size: Size.infinite,
-                  painter: CrosshairPainter(
-                    mainSeries: widget.mainSeries,
-                    crosshairTick: crosshairTick,
-                    epochToCanvasX: xAxis.xFromEpoch,
-                    quoteToCanvasY: widget.quoteToCanvasY,
-                  ),
+        builder: (BuildContext context, BoxConstraints constraints) {
+      if (crosshairTick != null) {
+        return Stack(
+          children: <Widget>[
+            AnimatedPositioned(
+              duration: animationDuration,
+              left: xAxis.xFromEpoch(crosshairTick.epoch),
+              child: CustomPaint(
+                size: Size(1, constraints.maxHeight),
+                painter: const CrosshairLinePainter(),
+              ),
+            ),
+            AnimatedPositioned(
+              top: widget.quoteToCanvasY(crosshairTick.quote),
+              left: xAxis.xFromEpoch(crosshairTick.epoch),
+              duration: animationDuration,
+              child: CustomPaint(
+                size: Size(1, constraints.maxHeight),
+                painter: const CrosshairDotPainter(),
+              ),
+            ),
+            AnimatedPositioned(
+              duration: animationDuration,
+              top: 8,
+              bottom: 0,
+              width: constraints.maxWidth,
+              left: xAxis.xFromEpoch(crosshairTick.epoch) -
+                  constraints.maxWidth / 2,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: CrosshairDetails(
+                  mainSeries: widget.mainSeries,
+                  crosshairTick: crosshairTick,
+                  pipSize: widget.pipSize,
                 ),
-                if (crosshairTick != null)
-                  Positioned(
-                    top: 8,
-                    bottom: 0,
-                    width: constraints.maxWidth,
-                    left: xAxis.xFromEpoch(crosshairTick.epoch) -
-                        constraints.maxWidth / 2,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: CrosshairDetails(
-                        mainSeries: widget.mainSeries,
-                        crosshairTick: crosshairTick,
-                        pipSize: widget.pipSize,
-                      ),
-                    ),
-                  )
-              ],
-            ));
+              ),
+            ),
+          ],
+        );
+      } else {
+        return const SizedBox.shrink();
+      }
+    });
   }
 }

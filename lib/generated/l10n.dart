@@ -55,11 +55,11 @@ class ChartLocalization {
     );
   }
 
-  /// `Distance`
-  String get labelDistance {
+  /// `Shift`
+  String get labelShift {
     return Intl.message(
-      'Distance',
-      name: 'labelDistance',
+      'Shift',
+      name: 'labelShift',
       desc: '',
       args: [],
     );
@@ -90,6 +90,16 @@ class ChartLocalization {
     return Intl.message(
       'Type',
       name: 'labelType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shift Type`
+  String get labelShiftType {
+    return Intl.message(
+      'Shift Type',
+      name: 'labelShiftType',
       desc: '',
       args: [],
     );
