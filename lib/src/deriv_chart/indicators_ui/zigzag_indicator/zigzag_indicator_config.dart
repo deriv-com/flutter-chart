@@ -20,7 +20,7 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
   final LineStyle lineStyle;
 
   @override
-  Series getSeries(List<OHLC> ticks) => ZigZagSeries.fromIndicator(
+  Series getSeries(List<OHLC> ticks) => ZigZagSeries(
         ticks,
         distance: distance,
         style: lineStyle,

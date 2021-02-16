@@ -19,18 +19,8 @@ class ZigZagSeries extends LineSeries {
     String id,
     LineStyle style,
     double distance = 10,
-  }) : this.fromIndicator(
-          entries,
-          id: id,
-          style: style,
-          distance: distance,
-        );
-
-  /// Initializes
-  ZigZagSeries.fromIndicator(List<OHLC> indicator,
-      {String id, LineStyle style, double distance = 10})
-      : super(
-          ZigZagIndicator(indicator, distance).results,
+  }) : super(
+          ZigZagIndicator(entries, distance).results,
           id: id ?? 'Zigzag Indicator',
           style: style ?? const LineStyle(thickness: 0.9, color: Colors.blue),
         );
