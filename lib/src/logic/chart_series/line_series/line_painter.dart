@@ -32,6 +32,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     final Path path = Path();
 
+    double lastVisibleTickX;
     bool isStartPointSet = false;
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
@@ -42,16 +43,16 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
           path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
           continue;
         }
-        final double x = epochToX(tick.epoch);
+       lastVisibleTickX= epochToX(tick.epoch);
         final double y = quoteToY(tick.quote);
-        path.lineTo(x, y);
+        path.lineTo(lastVisibleTickX, y);
       }
     }
 
     // Adding last visible entry line to the path
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
-    double lastVisibleTickX;
+
 
     if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
       lastVisibleTickX = ui.lerpDouble(

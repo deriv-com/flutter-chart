@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:deriv_chart/src/models/ohlc.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 
 import '../cached_indicator.dart';
-import '../indicator.dart';
 
 /// The ZigZag Indicator that shows if value changes enough
 class ZigZagIndicator extends CachedIndicator {
@@ -12,7 +9,9 @@ class ZigZagIndicator extends CachedIndicator {
   ZigZagIndicator(this.indicator, double distance)
       : _distancePercent = distance / 100,
         _firstSwingIndex = _calculateFirstSwing(indicator),
-        super(indicator);
+        super(indicator) {
+    calculateValues();
+  }
 
   /// Calculating values that changes enough
   final List<OHLC> indicator;

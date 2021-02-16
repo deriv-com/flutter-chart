@@ -97,7 +97,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   List<T> getVisibleEntries(int startIndex, int endIndex) =>
       startIndex == -1 || endIndex == -1
           ? <T>[]
-          : entries.sublist(startIndex, endIndex - 1);
+          : entries.sublist(startIndex, endIndex);
 
   /// Minimum value in [t].
   ///
