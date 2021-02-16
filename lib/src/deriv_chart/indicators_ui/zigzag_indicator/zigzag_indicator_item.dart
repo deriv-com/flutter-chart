@@ -48,7 +48,7 @@ class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig>
   Widget buildDistanceField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelStandardDeviation,
+            ChartLocalization.of(context).labelDistance,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
