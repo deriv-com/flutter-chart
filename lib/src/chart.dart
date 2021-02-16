@@ -718,7 +718,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
 ///
 int getMaxValueFromChartData(List<ChartData> chartData) {
   final maxEpochs = chartData
-      .map((ChartData c) => c.maxEpoch)
+      .map((ChartData c) => c.getMaxEpoch())
       .where((int epoch) => epoch != null);
 
   return maxEpochs.isNotEmpty
@@ -729,7 +729,7 @@ int getMaxValueFromChartData(List<ChartData> chartData) {
 ///
 int getMinValueFromChartData(List<ChartData> chartData) {
   final minEpochs = chartData
-      .map((ChartData c) => c.minEpoch)
+      .map((ChartData c) => c.getMinEpoch())
       .where((int epoch) => epoch != null);
 
   return minEpochs.isNotEmpty
