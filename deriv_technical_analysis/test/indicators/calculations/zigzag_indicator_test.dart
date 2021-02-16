@@ -26,7 +26,7 @@ void main() {
 
     test('ZigZagIndicator calculates the correct results', () {
       final ZigZagIndicator<MockResult> indicator =
-          ZigZagIndicator(MockInput(ticks), 1);
+          ZigZagIndicator<MockResult>(MockInput(ticks), 1);
 
       expect(indicator.getValue(0).quote.isNaN, true);
       expect(indicator.getValue(1).quote, 65.79);

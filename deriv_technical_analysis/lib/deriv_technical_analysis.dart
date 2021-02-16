@@ -27,7 +27,7 @@ export 'src/indicators/calculations/statistics/standard_deviation_indicator.dart
 export 'src/indicators/calculations/statistics/variance_indicator.dart';
 export 'src/indicators/calculations/wma_indicator.dart';
 export 'src/indicators/calculations/zelma_indicator.dart';
+export 'src/indicators/calculations/zigzag_indicator.dart';
 export 'src/indicators/indicator.dart';
 export 'src/models/data_input.dart' show IndicatorDataInput;
 export 'src/models/models.dart' show IndicatorOHLC, IndicatorResult;
-export 'src/indicators/calculations/zigzag_indicator.dart';

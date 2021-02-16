@@ -1,6 +1,7 @@
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+
 /// The ZigZag Indicator that shows if value changes enough
-class ZigZagIndicator <T extends IndicatorResult>  extends CachedIndicator<T> {
+class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
   ZigZagIndicator(this.inputs, double distance)
       : _distancePercent = distance / 100,
@@ -19,7 +20,7 @@ class ZigZagIndicator <T extends IndicatorResult>  extends CachedIndicator<T> {
 
   static int _calculateFirstSwing(List<IndicatorOHLC> ticks) {
     int firstIndex = -1;
-    if (ticks != null && ticks.isNotEmpty)
+    if (ticks != null && ticks.isNotEmpty) {
       for (int index = 1; index < ticks.length; index++) {
         if ((ticks[index - 1].close > ticks[index].close &&
                 ticks[index + 1].close > ticks[index].close) ||
@@ -29,6 +30,7 @@ class ZigZagIndicator <T extends IndicatorResult>  extends CachedIndicator<T> {
           break;
         }
       }
+    }
     return firstIndex;
   }
 
@@ -97,7 +99,7 @@ class ZigZagIndicator <T extends IndicatorResult>  extends CachedIndicator<T> {
                 previousTick.low * _distancePercent;
 
             if ((previousTick.low - thisTick.low).abs() > distanceInPercent) {
-              return createResult(index:index, quote: thisTick.low);
+              return createResult(index: index, quote: thisTick.low);
             } else {
               return createResult(index: index, quote: double.nan);
             }
