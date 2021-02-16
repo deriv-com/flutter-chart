@@ -25,7 +25,7 @@ abstract class AbstractEMAIndicator<T extends IndicatorResult>
       return indicator.getValue(0);
     }
 
-    final double prevValue = getValue(index - 1).quote;
+    final prevValue = getValue(index - 1).quote;
     return createResult(
       index: index,
       quote: ((indicator.getValue(index).quote - prevValue) * multiplier) +
