@@ -72,6 +72,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   @override
   int getMinEpoch() => entries.isNotEmpty ? getEpochOf(entries.first) : null;
+
   @override
   int getMaxEpoch() => entries.isNotEmpty ? getEpochOf(entries.last) : null;
 

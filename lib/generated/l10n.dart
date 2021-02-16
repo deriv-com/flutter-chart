@@ -55,6 +55,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Offset`
+  String get offset {
+    return Intl.message(
+      'Offset',
+      name: 'offset',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shift`
   String get labelShift {
     return Intl.message(

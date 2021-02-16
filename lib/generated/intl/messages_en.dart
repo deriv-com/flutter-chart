@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelShiftType" : MessageLookupByLibrary.simpleMessage("Shift Type"),
     "labelStandardDeviation" : MessageLookupByLibrary.simpleMessage("Standard Deviation"),
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
+    "offset" : MessageLookupByLibrary.simpleMessage("Offset"),
     "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
   };
 }

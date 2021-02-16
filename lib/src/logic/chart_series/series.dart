@@ -28,8 +28,10 @@ abstract class Series implements ChartData {
   @override
   int get maxEpoch => _maxEpoch;
 
+  /// Minimum epoch
   int getMinEpoch();
 
+  /// Maximum epoch
   int getMaxEpoch();
 
   @override

@@ -44,11 +44,16 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   int period;
 
+  /// MA period
+  @protected
+  int offset;
+
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         period: getCurrentPeriod(),
         type: getCurrentType(),
         fieldType: getCurrentField(),
+        offset: getCurrentOffset(),
       );
 
   @override
@@ -124,6 +129,34 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         ],
       );
 
+  /// Builds offset TextFiled
+  @protected
+  Widget buildOffsetField() => Row(
+    children: <Widget>[
+      Text(
+        ChartLocalization.of(context).offset,
+        style: const TextStyle(fontSize: 10),
+      ),
+      const SizedBox(width: 4),
+      SizedBox(
+        width: 20,
+        child: TextFormField(
+          style: const TextStyle(fontSize: 10),
+          initialValue: getCurrentPeriod().toString(),
+          keyboardType: TextInputType.number,
+          onChanged: (String text) {
+            if (text.isNotEmpty) {
+              offset = int.tryParse(text);
+            } else {
+              offset = 0;
+            }
+            updateIndicator();
+          },
+        ),
+      ),
+    ],
+  );
+
   /// Returns MA types dropdown menu
   @protected
   Widget buildMATypeMenu() => Row(
@@ -168,6 +201,10 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current period.
   @protected
   int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
+
+  /// Gets Indicator current period.
+  @protected
+  int getCurrentOffset() => offset ?? getConfig()?.offset ?? 0;
 
   /// Creates Line style
   @protected
