@@ -8,7 +8,6 @@ abstract class Indicator<T extends IndicatorResult> {
   /// Initializes
   Indicator(this.input);
 
-  /// [IndicatorDataInput] to calculate indicator values on.
   final IndicatorDataInput input;
 
   /// The entries of the [input]
