@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
@@ -29,15 +31,16 @@ class RainbowIndicatorItem extends IndicatorItem {
       RainbowIndicatorItemState();
 }
 
-/// BollingerBandsIndicatorItem State class
+/// Rainbow IndicatorItem State class
 class RainbowIndicatorItemState extends MAIndicatorItemState {
-  /// MA Env shift
+  /// Rainbow MA bands count
   @protected
   int bandsCount;
 
   @override
   MAIndicatorConfig createIndicatorConfig() => RainbowIndicatorConfig(
         bandsCount: getCurrentBandsCount(),
+        rainbowColors: getCurrentRainbowColors(),
         period: getCurrentPeriod(),
         movingAverageType: getCurrentType(),
         fieldType: getCurrentField(),
@@ -87,5 +90,14 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   int getCurrentBandsCount() {
     final RainbowIndicatorConfig config = getConfig();
     return bandsCount ?? config?.bandsCount ?? 10;
+  }
+
+  @protected
+  List<Color> getCurrentRainbowColors() {
+    List<Color> rainbow = [];
+    for (int i = 0; i < getCurrentBandsCount(); i++) {
+      rainbow.add(Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+    }
+    return rainbow;
   }
 }
