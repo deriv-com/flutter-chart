@@ -112,6 +112,12 @@ class Chart extends StatelessWidget {
       granularity: granularity,
     );
 
+    final List<ChartData> chartDataList = <ChartData>[
+      mainSeries,
+      if (secondarySeries != null) ...secondarySeries,
+      if (annotations != null) ...annotations,
+    ];
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: chartTheme),
@@ -126,16 +132,8 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
-              minEpoch: getMinValueFromChartData(<ChartData>[
-                mainSeries,
-                if (secondarySeries != null) ...secondarySeries,
-                if (annotations != null) ...annotations,
-              ]),
-              maxEpoch: getMaxValueFromChartData(<ChartData>[
-                mainSeries,
-                if (secondarySeries != null) ...secondarySeries,
-                if (annotations != null) ...annotations,
-              ]),
+              minEpoch: getMinValueFromChartData(chartDataList),
+              maxEpoch: getMaxValueFromChartData(chartDataList),
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
@@ -171,13 +169,12 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.secondarySeries,
     this.annotations,
-  }) : super(key: key) {
-    chartDataList = <ChartData>[
-      mainSeries,
-      if (secondarySeries != null) ...secondarySeries,
-      if (annotations != null) ...annotations,
-    ];
-  }
+  })  : chartDataList = <ChartData>[
+          mainSeries,
+          if (secondarySeries != null) ...secondarySeries,
+          if (annotations != null) ...annotations,
+        ],
+        super(key: key);
 
   final DataSeries<Tick> mainSeries;
   final List<Series> secondarySeries;
@@ -194,7 +191,7 @@ class _ChartImplementation extends StatefulWidget {
   final double opacity;
 
   // Convenience list to access all chart data.
-  List<ChartData> chartDataList;
+  final List<ChartData> chartDataList;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -715,24 +712,24 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 }
 
-///
+/// Gets the max epoch from a list of [ChartData].
 int getMaxValueFromChartData(List<ChartData> chartData) {
-  final maxEpochs = chartData
+  final List<int> maxEpochs = chartData
       .map((ChartData c) => c.getMaxEpoch())
       .where((int epoch) => epoch != null);
 
   return maxEpochs.isNotEmpty
-      ? maxEpochs.reduce((value, element) => max(value, element))
+      ? maxEpochs.reduce((int current, int next) => max(current, next))
       : null;
 }
 
-///
+/// Gets the min epoch from a list of [ChartData].
 int getMinValueFromChartData(List<ChartData> chartData) {
-  final minEpochs = chartData
+  final List<int> minEpochs = chartData
       .map((ChartData c) => c.getMinEpoch())
       .where((int epoch) => epoch != null);
 
   return minEpochs.isNotEmpty
-      ? minEpochs.reduce((value, element) => min(value, element))
+      ? minEpochs.reduce((int current, int next) => min(current, next))
       : null;
 }
