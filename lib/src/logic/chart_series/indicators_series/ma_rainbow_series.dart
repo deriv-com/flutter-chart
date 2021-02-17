@@ -30,7 +30,7 @@ class RainbowSeries extends Series {
     RainbowOptions rainbowOptions,
   }) : this.fromIndicator(
           CloseValueIndicator(indicatorInput),
-    rainbowColors: rainbowColors,
+          rainbowColors: rainbowColors,
           id: id,
           rainbowOptions: rainbowOptions,
         );
@@ -54,7 +54,6 @@ class RainbowSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-
     /// check if we have color for every band
     final bool useColors = rainbowColors?.length == rainbowOptions.bandsCount;
 
@@ -93,8 +92,12 @@ class RainbowSeries extends Series {
   bool didUpdate(ChartData oldData) {
     final RainbowSeries series = oldData;
 
+    if (series == null) {
+      return false;
+    }
+
     for (int i = 0; i < _rainbowSeries.length; i++) {
-      if (_rainbowSeries[i].didUpdate(series?._rainbowSeries[i])) {
+      if (_rainbowSeries[i].didUpdate(series._rainbowSeries[i])) {
         return true;
       }
     }
