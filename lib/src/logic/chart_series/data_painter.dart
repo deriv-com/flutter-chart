@@ -34,7 +34,9 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
   }
 
-  /// Gets the epoch value for the give [tick].
+  /// Gets the real epoch value for the given [tick].
+  ///
+  /// Real epoch might be shifted forward or backward to support offset.
   int getEpochOf(Tick tick) => _dataSeries.getEpochOf(tick);
 
   /// Paints [DataSeries.visibleEntries].

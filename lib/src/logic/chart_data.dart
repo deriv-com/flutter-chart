@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 /// Conversion function to convert epoch value to canvas X.
 typedef EpochToX = double Function(int);
@@ -83,15 +84,15 @@ extension ChartDataListExtension on Iterable<ChartData> {
       _getEpochWithPredicate((ChartData c) => c.getMaxEpoch(), max);
 
   int _getEpochWithPredicate(
-    int Function(ChartData) epochPredicate,
-    int Function(int, int) compareEpochs,
+    int Function(ChartData) getEpoch,
+    int Function(int, int) comparePredicate,
   ) {
-    final Iterable<int> maxEpochs = map((ChartData c) => epochPredicate(c))
-        .where((int epoch) => epoch != null);
+    final Iterable<int> maxEpochs =
+        map((ChartData c) => getEpoch(c)).where((int epoch) => epoch != null);
 
     return maxEpochs.isNotEmpty
         ? maxEpochs
-            .reduce((int current, int next) => compareEpochs(current, next))
+            .reduce((int current, int next) => comparePredicate(current, next))
         : null;
   }
 }
