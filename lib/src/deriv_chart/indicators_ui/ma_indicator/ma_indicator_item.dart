@@ -158,7 +158,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         children: <Widget>[
           Text(
             ChartLocalization.of(context).labelType,
-            style: TextStyle(fontSize: 10),
+            style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           DropdownButton<MovingAverageType>(

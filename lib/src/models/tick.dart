@@ -1,7 +1,6 @@
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-
-import 'ohlc.dart';
 
 /// Basic data entry.
 // Since we have field option in indicators menu (Close, High, Hl2, etc),
@@ -12,7 +11,7 @@ import 'ohlc.dart';
 // To avoid doing this check, we made Tick class comply with OHLC interface. So we
 // can use either <Tick>[] or <Candle>[] as input for Close|High|Hl2|ValueIndicators.
 @immutable
-class Tick with EquatableMixin implements OHLC {
+class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   /// Initializes
   const Tick({
     @required this.epoch,
@@ -20,10 +19,10 @@ class Tick with EquatableMixin implements OHLC {
   });
 
   /// Epoch of the tick
-  @override
   final int epoch;
 
   /// Tick price
+  @override
   final double quote;
 
   @override

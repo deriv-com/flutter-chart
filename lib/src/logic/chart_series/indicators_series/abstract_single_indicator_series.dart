@@ -1,11 +1,8 @@
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
-import 'package:deriv_chart/src/logic/indicators/cached_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/hl2_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/close_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import 'models/indicator_options.dart';
@@ -29,7 +26,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Input indicator to calculate this indicator value on.
   ///
   /// Input data might be a result of another [Indicator]. For example [CloseValueIndicator] or [HL2Indicator].
-  final Indicator inputIndicator;
+  final Indicator<Tick> inputIndicator;
 
   /// Indicator options
   ///
@@ -40,7 +37,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Result indicator
   ///
   /// Entries of [resultIndicator] will be the data that will be painted for this series.
-  CachedIndicator resultIndicator;
+  CachedIndicator<Tick> resultIndicator;
 
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
@@ -59,7 +56,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Will be called whenever [resultIndicator]'s previous values are not available
   /// or its results can't be used (Like when the [input] list changes entirely).
   @protected
-  CachedIndicator initializeIndicator();
+  CachedIndicator<Tick> initializeIndicator();
 
   @override
   bool isOldDataAvailable(AbstractSingleIndicatorSeries oldSeries) =>

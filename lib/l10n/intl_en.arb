@@ -2,9 +2,11 @@
   "@@locale": "en",
   "labelField": "Field",
   "labelPeriod": "Period",
+  "labelShift": "Shift",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",
   "labelType": "Type",
+  "labelShiftType": "Shift Type",
   "informNoResult": "No results for \"{text}\"",
   "warnCheckAssetSearchingText": "Try checking your spelling or use a different term"
 }
