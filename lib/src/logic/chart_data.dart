@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Conversion function to convert epoch value to canvas X.
@@ -41,10 +41,10 @@ abstract class ChartData {
   /// [double.nan] should be returned if this [ChartData] doesn't have any element to have a maximum value.
   double get maxValue;
 
-  /// Minimum epoch
+  /// Minimum epoch of this [ChartData] on the chart's X-Axis.
   int getMinEpoch();
 
-  /// Maximum epoch
+  /// Maximum epoch of this [ChartData] on the chart's X-Axis.
   int getMaxEpoch();
 
   /// Paints this [ChartData] on the given [canvas].
@@ -57,8 +57,8 @@ abstract class ChartData {
   /// [animationInfo] Contains animations progress values in this frame of painting.
   ///
   /// [ChartConfig] is the chart's config which consist of
-  ///   - [pipSize] Number of decimal digits [ChartData] must use when showing their prices.
-  ///   - [granularity] Duration of 1 candle in ms (for ticks: average ms difference between ticks).
+  ///   - `pipSize` Number of decimal digits [ChartData] must use when showing their prices.
+  ///   - `granularity` Duration of 1 candle in ms (for ticks: average ms difference between ticks).
   ///
   /// [theme] Chart's theme
   void paint(
@@ -75,22 +75,23 @@ abstract class ChartData {
 /// An extension on an Iterable of [ChartData].
 extension ChartDataListExtension on Iterable<ChartData> {
   /// Gets the minimum of [ChartData.getMinEpoch]s.
-  int getMinEpoch() {
-    final Iterable<int> minEpochs = map((ChartData c) => c.getMinEpoch())
-        .where((int epoch) => epoch != null);
-
-    return minEpochs.isNotEmpty
-        ? minEpochs.reduce((int current, int next) => min(current, next))
-        : null;
-  }
+  int getMinEpoch() =>
+      _getEpochWithPredicate((ChartData c) => c.getMinEpoch(), min);
 
   /// Gets the maximum of [ChartData.getMaxEpoch]s.
-  int getMaxEpoch() {
-    final Iterable<int> maxEpochs = map((ChartData c) => c.getMaxEpoch())
+  int getMaxEpoch() =>
+      _getEpochWithPredicate((ChartData c) => c.getMaxEpoch(), max);
+
+  int _getEpochWithPredicate(
+    int Function(ChartData) epochPredicate,
+    int Function(int, int) compareEpochs,
+  ) {
+    final Iterable<int> maxEpochs = map((ChartData c) => epochPredicate(c))
         .where((int epoch) => epoch != null);
 
     return maxEpochs.isNotEmpty
-        ? maxEpochs.reduce((int current, int next) => max(current, next))
+        ? maxEpochs
+            .reduce((int current, int next) => compareEpochs(current, next))
         : null;
   }
 }
