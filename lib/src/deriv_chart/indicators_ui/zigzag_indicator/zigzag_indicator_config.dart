@@ -20,7 +20,7 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => ZigZagSeries(
-    indicatorInput,
+        indicatorInput,
         distance: distance,
         style: lineStyle,
       );

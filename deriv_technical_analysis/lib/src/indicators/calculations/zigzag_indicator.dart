@@ -38,38 +38,43 @@ class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   T calculate(int index) {
     final IndicatorOHLC thisTick = inputs.entries[index];
 
-    /// if index is 0 return nan value
+    // if index is 0 return nan value
     if (index == 0) {
       return createResult(index: index, quote: double.nan);
     }
 
-    /// is the point of given index swing up
+    // is the point of given index swing up
     bool isSwingUp(int index) =>
         inputs.entries[index - 1].high < inputs.entries[index].high &&
         inputs.entries[index + 1].high < inputs.entries[index].high;
 
-    /// is the point of given index swing down
+    // is the point of given index swing down
     bool isSwingDown(int index) =>
         inputs.entries[index - 1].low > inputs.entries[index].low &&
         inputs.entries[index + 1].low > inputs.entries[index].low;
 
-    /// if index is last index or first swing, return itself
-    if (index == inputs.entries.length - 1 || _firstSwingIndex == index) {
+    // if index is first swing, return itself
+    if (_firstSwingIndex == index) {
       return isSwingUp(index)
           ? createResult(index: index, quote: thisTick.high)
           : createResult(index: index, quote: thisTick.low);
     }
 
-    /// if thee point is SwingDown or SwingUp
+    // if index is last index, return itself
+    if (index == inputs.entries.length - 1) {
+      return createResult(index: index, quote: thisTick.close);
+    }
+
+    // if thee point is SwingDown or SwingUp
     if (isSwingDown(index) || isSwingUp(index)) {
-      /// found first not nan point before this point
+      // found first not nan point before this point
       for (int i = index - 1; i > 0; i--) {
         if (getValue(i).quote.isNaN) {
           continue;
         }
         final IndicatorOHLC previousTick = inputs.entries[i];
 
-        ///if this point and last point has different swings
+        // if this point and last point has different swings
         if (isSwingUp(index) && isSwingDown(i)) {
           final double distanceInPercent = previousTick.low * _distancePercent;
 
@@ -80,7 +85,7 @@ class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
           }
         }
 
-        ///if this point and last point has different swings
+        // if this point and last point has different swings
         else if (isSwingDown(index) && isSwingUp(i)) {
           final double distanceInPercent = previousTick.high * _distancePercent;
 
@@ -91,7 +96,7 @@ class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
           }
         }
 
-        ///if this point and last point has similar swings down
+        // if this point and last point has similar swings down
         else if (isSwingDown(index) && isSwingDown(i)) {
           if (i != _firstSwingIndex && thisTick.low < previousTick.low) {
             results[i] = createResult(index: i, quote: double.nan);
@@ -110,7 +115,7 @@ class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
           }
         }
 
-        ///if this point and last point has similar swings up
+        // if this point and last point has similar swings up
         else if (isSwingUp(index) && isSwingUp(i)) {
           if (i != _firstSwingIndex && thisTick.high > previousTick.high) {
             results[i] = createResult(index: i, quote: double.nan);
@@ -129,7 +134,7 @@ class ZigZagIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
           }
         }
 
-        /// if none of the conditions was true
+        // if none of the conditions was true
         else {
           return createResult(index: index, quote: double.nan);
         }

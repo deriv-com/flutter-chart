@@ -1,9 +1,9 @@
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 
 import 'bollinger_bands/bollinger_bands_indicator_item.dart';
+import 'zigzag_indicator/zigzag_indicator_item.dart';
 import 'callbacks.dart';
 import 'donchian_channel/donchian_channel_indicator_item.dart';
 import 'indicator_item.dart';
