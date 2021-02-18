@@ -6,7 +6,9 @@ import 'ema_indicator.dart';
 /// Smoothed Moving Average indicator.
 class SMMAIndicator<T extends IndicatorResult> extends AbstractEMAIndicator<T> {
   /// Initialize a Smoothed Moving Average indicator.
-  SMMAIndicator(Indicator<T> indicator,
-      int period,
-      double smooth,) : super(indicator, period, smooth / period);
+  SMMAIndicator(
+    Indicator<T> indicator,
+    int period,
+    double smoothing,
+  ) : super(indicator, period, smoothing / period);
 }
