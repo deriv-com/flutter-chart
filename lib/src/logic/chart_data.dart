@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -68,4 +70,27 @@ abstract class ChartData {
     ChartConfig chartConfig,
     ChartTheme theme,
   );
+}
+
+/// An extension on an Iterable of [ChartData].
+extension ChartDataListExtension on Iterable<ChartData> {
+  /// Gets the minimum of [ChartData.getMinEpoch]s.
+  int getMinEpoch() {
+    final Iterable<int> minEpochs = map((ChartData c) => c.getMinEpoch())
+        .where((int epoch) => epoch != null);
+
+    return minEpochs.isNotEmpty
+        ? minEpochs.reduce((int current, int next) => min(current, next))
+        : null;
+  }
+
+  /// Gets the maximum of [ChartData.getMaxEpoch]s.
+  int getMaxEpoch() {
+    final Iterable<int> maxEpochs = map((ChartData c) => c.getMaxEpoch())
+        .where((int epoch) => epoch != null);
+
+    return maxEpochs.isNotEmpty
+        ? maxEpochs.reduce((int current, int next) => max(current, next))
+        : null;
+  }
 }

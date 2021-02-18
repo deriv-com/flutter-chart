@@ -132,8 +132,8 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
-              minEpoch: getMinValueFromChartData(chartDataList),
-              maxEpoch: getMaxValueFromChartData(chartDataList),
+              minEpoch: chartDataList.getMinEpoch(),
+              maxEpoch: chartDataList.getMaxEpoch(),
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
@@ -296,8 +296,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
 
     _xAxis.update(
-        entriesMinEpoch: getMinValueFromChartData(widget.chartDataList),
-        entriesMaxEpoch: getMaxValueFromChartData(widget.chartDataList));
+        entriesMinEpoch: widget.chartDataList.getMinEpoch(),
+        entriesMaxEpoch: widget.chartDataList.getMaxEpoch());
   }
 
   void _updateBlinkingAnimationStatus() {
@@ -710,26 +710,4 @@ class _ChartImplementationState extends State<_ChartImplementation>
       ),
     );
   }
-}
-
-/// Gets the max epoch from a list of [ChartData].
-int getMaxValueFromChartData(List<ChartData> chartData) {
-  final List<int> maxEpochs = chartData
-      .map((ChartData c) => c.getMaxEpoch())
-      .where((int epoch) => epoch != null);
-
-  return maxEpochs.isNotEmpty
-      ? maxEpochs.reduce((int current, int next) => max(current, next))
-      : null;
-}
-
-/// Gets the min epoch from a list of [ChartData].
-int getMinValueFromChartData(List<ChartData> chartData) {
-  final List<int> minEpochs = chartData
-      .map((ChartData c) => c.getMinEpoch())
-      .where((int epoch) => epoch != null);
-
-  return minEpochs.isNotEmpty
-      ? minEpochs.reduce((int current, int next) => min(current, next))
-      : null;
 }
