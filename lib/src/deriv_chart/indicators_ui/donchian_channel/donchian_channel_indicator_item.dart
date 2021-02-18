@@ -55,8 +55,7 @@ class DonchianChannelIndicatorItemState
   Widget _buildChannelFillToggle() => Row(
         children: <Widget>[
           Text(
-            // TODO(Rustem): use localization
-            'Channel Fill',
+            ChartLocalization.of(context).labelChannelFill,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -72,7 +71,7 @@ class DonchianChannelIndicatorItemState
         ],
       );
 
-bool _getCurrentFill() =>
+  bool _getCurrentFill() =>
       _channelFill ?? getConfig()?.showChannelFill ?? true;
 
   Widget _buildHighPeriodField() => Row(
@@ -102,7 +101,7 @@ bool _getCurrentFill() =>
         ],
       );
 
-int _getCurrentHighPeriod() => _highPeriod ?? getConfig()?.highPeriod ?? 10;
+  int _getCurrentHighPeriod() => _highPeriod ?? getConfig()?.highPeriod ?? 10;
 
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[

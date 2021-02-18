@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "labelChannelFill": "Channel Fill",
   "labelField": "Field",
   "labelPeriod": "Period",
   "labelSearchAssets": "Search assets",
