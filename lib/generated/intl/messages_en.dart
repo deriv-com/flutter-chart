@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLowPeriod" : MessageLookupByLibrary.simpleMessage("Low Period"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
+    "labelShift" : MessageLookupByLibrary.simpleMessage("Shift"),
+    "labelShiftType" : MessageLookupByLibrary.simpleMessage("Shift Type"),
     "labelStandardDeviation" : MessageLookupByLibrary.simpleMessage("Standard Deviation"),
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
     "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")

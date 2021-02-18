@@ -85,6 +85,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Shift`
+  String get labelShift {
+    return Intl.message(
+      'Shift',
+      name: 'labelShift',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Search assets`
   String get labelSearchAssets {
     return Intl.message(
@@ -110,6 +120,16 @@ class ChartLocalization {
     return Intl.message(
       'Type',
       name: 'labelType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shift Type`
+  String get labelShiftType {
+    return Intl.message(
+      'Shift Type',
+      name: 'labelShiftType',
       desc: '',
       args: [],
     );
