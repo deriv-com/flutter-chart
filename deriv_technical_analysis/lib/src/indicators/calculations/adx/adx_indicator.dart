@@ -2,7 +2,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/helper_indicators/dx_indicator.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/mma_indicator.dart';
 
-//TODO(Amir): Test adx visually.
+// TODO(mohammad-fs): test ADX indicator visually.
 /// Average Directional Movement. Part of the Directional Movement System.
 class ADXIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes an Average Directional Movement. Part of the Directional Movement System.

@@ -1,5 +1,5 @@
 import 'package:deriv_technical_analysis/src/helpers/functions.dart';
-import 'package:deriv_technical_analysis/src/indicators/calculations/negative_dm_indicator.dart';
+import 'package:deriv_technical_analysis/src/indicators/calculations/helper_indicators/negative_dm_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../mock_models.dart';
