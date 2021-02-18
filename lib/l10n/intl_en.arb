@@ -3,6 +3,8 @@
   "labelChannelFill": "Channel Fill",
   "labelField": "Field",
   "labelPeriod": "Period",
+  "labelHighPeriod": "High Period",
+  "labelLowPeriod": "Low Period",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",
   "labelType": "Type",

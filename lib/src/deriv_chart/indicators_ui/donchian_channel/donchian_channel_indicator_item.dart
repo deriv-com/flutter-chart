@@ -77,8 +77,7 @@ class DonchianChannelIndicatorItemState
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
           Text(
-            // TODO(Rustem): use localization
-            'High Period',
+            ChartLocalization.of(context).labelHighPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -106,8 +105,7 @@ class DonchianChannelIndicatorItemState
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[
           Text(
-            // TODO(Rustem): use localization
-            'Low Period',
+            ChartLocalization.of(context).labelLowPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
