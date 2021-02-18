@@ -1,15 +1,15 @@
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/helper_indicators/dx_indicator.dart';
 import 'package:deriv_technical_analysis/src/indicators/calculations/mma_indicator.dart';
-import 'package:flutter/foundation.dart';
 
+//TODO(Amir): Test adx visually.
 /// Average Directional Movement. Part of the Directional Movement System.
 class ADXIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes an Average Directional Movement. Part of the Directional Movement System.
   ADXIndicator(
     IndicatorDataInput entries, {
-    @required int diPeriod,
-    @required int adxPeriod,
+    int diPeriod = 14,
+    int adxPeriod = 14,
   })  : _averageDXIndicator = MMAIndicator<T>(
             DXIndicator<T>(entries, period: diPeriod), adxPeriod),
         super(entries);

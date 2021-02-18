@@ -12,9 +12,9 @@ class TRIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
     final double tickSize = entries[index].high - entries[index].low;
 
     final double highMinusClose =
-        index == 0 ? 0 : entries[index].high - entries[index].close;
+        index == 0 ? 0 : entries[index].high - entries[index - 1].close;
     final double closeMinusLow =
-        index == 0 ? 0 : entries[index].close - entries[index].low;
+        index == 0 ? 0 : entries[index - 1].close - entries[index].low;
 
     return createResult(
       index: index,
