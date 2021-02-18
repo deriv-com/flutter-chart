@@ -1,5 +1,5 @@
 import 'package:deriv_technical_analysis/src/helpers/functions.dart';
-import 'package:deriv_technical_analysis/src/indicators/calculations/adx/Negative_di_indicator.dart';
+import 'package:deriv_technical_analysis/src/indicators/calculations/adx/negative_di_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../mock_models.dart';
