@@ -15,9 +15,9 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 ///
 /// Here to fix that whenever we want to calculate the result for last index we
 /// make a backup for those internal variables and after calculating we reset them.
-class ReusableParabolicSar extends ParabolicSarIndicator<Tick> {
+class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   /// Initializes
-  ReusableParabolicSar(
+  ReusableParabolicSarIndicator(
     IndicatorInput indicatorInput, {
     double aF = 0.02,
     double maxA = 0.2,
@@ -54,7 +54,7 @@ class ReusableParabolicSar extends ParabolicSarIndicator<Tick> {
   }
 
   @override
-  void copyValuesFrom(covariant ReusableParabolicSar other) {
+  void copyValuesFrom(covariant ReusableParabolicSarIndicator other) {
     super.copyValuesFrom(other);
 
     if (entries.length > other.entries.length) {
