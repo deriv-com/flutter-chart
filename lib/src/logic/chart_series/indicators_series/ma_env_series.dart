@@ -144,8 +144,8 @@ class MAEnvSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => _middleSeries.getMaxEpoch();
+  int get maxEpoch => _middleSeries.maxEpoch;
 
   @override
-  int getMinEpoch() => _middleSeries.getMinEpoch();
+  int get minEpoch => _middleSeries.minEpoch;
 }

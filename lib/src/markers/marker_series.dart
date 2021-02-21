@@ -66,8 +66,8 @@ class MarkerSeries extends Series {
   List<double> recalculateMinMax() => <double>[double.nan, double.nan];
 
   @override
-  int getMaxEpoch() => _entries.isNotEmpty ? _entries.last.epoch : null;
+  int get maxEpoch => _entries.isNotEmpty ? _entries.last.epoch : null;
 
   @override
-  int getMinEpoch() => _entries.isNotEmpty ? _entries?.first?.epoch : null;
+  int get minEpoch => _entries.isNotEmpty ? _entries?.first?.epoch : null;
 }
