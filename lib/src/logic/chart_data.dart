@@ -81,10 +81,10 @@ abstract class ChartData {
 /// An extension on Iterable with [ChartData] elements.
 extension ChartDataListExtension on Iterable<ChartData> {
   /// Gets the minimum of [ChartData.minEpoch]s.
-  int getMinEpoch() => _getEpochWithPredicate((ChartData c) => c.minEpoch, min);
+  int get minEpoch => _getEpochWithPredicate((ChartData c) => c.minEpoch, min);
 
   /// Gets the maximum of [ChartData.maxEpoch]s.
-  int getMaxEpoch() => _getEpochWithPredicate((ChartData c) => c.maxEpoch, max);
+  int get maxEpoch => _getEpochWithPredicate((ChartData c) => c.maxEpoch, max);
 
   int _getEpochWithPredicate(
     int Function(ChartData) getEpoch,
