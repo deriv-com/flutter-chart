@@ -53,7 +53,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         period: getCurrentPeriod(),
         type: getCurrentType(),
         fieldType: getCurrentField(),
-        offset: getCurrentOffset(),
+        offset: currentOffset,
       );
 
   @override
@@ -141,7 +141,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
           const SizedBox(width: 4),
           Expanded(
             child: Slider(
-              value: getCurrentOffset().toDouble(),
+              value: currentOffset.toDouble(),
               onChanged: (double value) {
                 setState(() {
                   offset = value.toInt();
@@ -150,7 +150,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
               },
               divisions: 100,
               max: 100,
-              label: '${getCurrentOffset()}',
+              label: '$currentOffset',
             ),
           ),
         ],
@@ -203,7 +203,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentOffset() => offset ?? getConfig()?.offset ?? 0;
+  int get currentOffset => offset ?? getConfig()?.offset ?? 0;
 
   /// Creates Line style
   @protected
