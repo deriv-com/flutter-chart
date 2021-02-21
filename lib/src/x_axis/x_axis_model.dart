@@ -51,8 +51,8 @@ class XAxisModel extends ChangeNotifier {
     @required AnimationController animationController,
     @required bool isLive,
     bool startWithDataFitMode = false,
-    int entriesMinEpoch,
-    int entriesMaxEpoch,
+    int minEpoch,
+    int maxEpoch,
     this.onScale,
     this.onScroll,
   }) {
@@ -60,8 +60,8 @@ class XAxisModel extends ChangeNotifier {
         ? entries.last.epoch
         : DateTime.now().millisecondsSinceEpoch;
 
-    _entriesMinEpoch = entriesMinEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
-    _entriesMaxEpoch = entriesMaxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
+    _minEpoch = minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
+    _maxEpoch = maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
 
     _lastEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
@@ -121,7 +121,7 @@ class XAxisModel extends ChangeNotifier {
 
   List<Tick> _entries;
 
-  int _entriesMinEpoch, _entriesMaxEpoch;
+  int _minEpoch, _maxEpoch;
 
   final GapManager _gapManager = GapManager();
   AnimationController _scrollAnimationController;
@@ -136,10 +136,10 @@ class XAxisModel extends ChangeNotifier {
   double _panSpeed;
 
   int get _firstEntryEpoch =>
-      _entriesMinEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
+      _minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
 
   int get _lastEntryEpoch =>
-      _entriesMaxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
+      _maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -480,8 +480,8 @@ class XAxisModel extends ChangeNotifier {
     _updateGranularity(granularity);
     _updateEntries(entries);
 
-    _entriesMinEpoch = entriesMinEpoch ?? _entriesMinEpoch;
-    _entriesMaxEpoch = entriesMaxEpoch ?? _entriesMaxEpoch;
+    _minEpoch = entriesMinEpoch ?? _minEpoch;
+    _maxEpoch = entriesMaxEpoch ?? _maxEpoch;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.

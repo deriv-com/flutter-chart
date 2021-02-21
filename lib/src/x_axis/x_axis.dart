@@ -73,8 +73,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       startWithDataFitMode: widget.startWithDataFitMode,
       onScale: _onVisibleAreaChanged,
       onScroll: _onVisibleAreaChanged,
-      entriesMinEpoch: widget.minEpoch,
-      entriesMaxEpoch: widget.maxEpoch,
+      minEpoch: widget.minEpoch,
+      maxEpoch: widget.maxEpoch,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
