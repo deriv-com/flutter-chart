@@ -46,12 +46,12 @@ abstract class ChartData {
   ///
   /// The chart calls this on any of its [ChartData]s and gets their minimum epoch
   /// then sets its X-Axis leftmost scroll limit based on them.
-  int get minEpoch;
+  int getMinEpoch();
 
   /// Maximum epoch of this [ChartData] on the chart's X-Axis.
   ///
-  /// The chart uses it same as [minEpoch] to determine its rightmost scroll limit.
-  int get maxEpoch;
+  /// The chart uses it same as [getMinEpoch] to determine its rightmost scroll limit.
+  int getMaxEpoch();
 
   /// Paints this [ChartData] on the given [canvas].
   ///
@@ -80,11 +80,13 @@ abstract class ChartData {
 
 /// An extension on Iterable with [ChartData] elements.
 extension ChartDataListExtension on Iterable<ChartData> {
-  /// Gets the minimum of [ChartData.minEpoch]s.
-  int getMinEpoch() => _getEpochWithPredicate((ChartData c) => c.minEpoch, min);
+  /// Gets the minimum of [ChartData.getMinEpoch]s.
+  int getMinEpoch() =>
+      _getEpochWithPredicate((ChartData c) => c.getMinEpoch(), min);
 
-  /// Gets the maximum of [ChartData.maxEpoch]s.
-  int getMaxEpoch() => _getEpochWithPredicate((ChartData c) => c.maxEpoch, max);
+  /// Gets the maximum of [ChartData.getMaxEpoch]s.
+  int getMaxEpoch() =>
+      _getEpochWithPredicate((ChartData c) => c.getMaxEpoch(), max);
 
   int _getEpochWithPredicate(
     int Function(ChartData) getEpoch,

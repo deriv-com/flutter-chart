@@ -218,14 +218,14 @@ class DonchianChannelsSeries extends Series {
   }
 
   @override
-  int get maxEpoch => max(
-        _lowerChannelSeries.maxEpoch,
+  int getMaxEpoch() => max(
+        _lowerChannelSeries.getMaxEpoch(),
         max(
-          _middleChannelSeries.maxEpoch,
-          _upperChannelSeries.maxEpoch,
+          _middleChannelSeries.getMaxEpoch(),
+          _upperChannelSeries.getMaxEpoch(),
         ),
       );
 
   @override
-  int get minEpoch => _lowerChannelSeries.minEpoch;
+  int getMinEpoch() => _lowerChannelSeries.getMinEpoch();
 }

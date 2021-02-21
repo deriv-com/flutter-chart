@@ -145,8 +145,10 @@ class BollingerBandSeries extends Series {
   }
 
   @override
-  int get minEpoch => min(_lowerSeries.minEpoch, _upperSeries.minEpoch);
+  int getMinEpoch() =>
+      min(_lowerSeries.getMinEpoch(), _upperSeries.getMinEpoch());
 
   @override
-  int get maxEpoch => max(_lowerSeries.maxEpoch, _upperSeries.maxEpoch);
+  int getMaxEpoch() =>
+      max(_lowerSeries.getMaxEpoch(), _upperSeries.getMaxEpoch());
 }

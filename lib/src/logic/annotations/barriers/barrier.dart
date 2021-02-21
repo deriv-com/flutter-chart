@@ -31,8 +31,8 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   final double value;
 
   @override
-  int get maxEpoch => epoch;
+  int getMaxEpoch() => epoch;
 
   @override
-  int get minEpoch => epoch;
+  int getMinEpoch() => epoch;
 }

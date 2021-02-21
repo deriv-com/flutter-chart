@@ -70,10 +70,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   MinMaxCalculator _minMaxCalculator;
 
   @override
-  int get minEpoch => input.isNotEmpty ? getEpochOf(input.first) : null;
+  int getMinEpoch() => input.isNotEmpty ? getEpochOf(input.first) : null;
 
   @override
-  int get maxEpoch => input.isNotEmpty ? getEpochOf(input.last) : null;
+  int getMaxEpoch() => input.isNotEmpty ? getEpochOf(input.last) : null;
 
   /// Gets the real epoch for the given [t].
   ///
