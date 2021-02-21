@@ -14,9 +14,9 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
   /// Initializes
   ParabolicSARSeries(
     this._indicatorInput,
+    ParabolicSAROptions options, {
     String id,
-    ParabolicSAROptions options,
-  )   : _options = options,
+  })  : _options = options,
         super(CloseValueIndicator<Tick>(_indicatorInput), id, options);
 
   final IndicatorInput _indicatorInput;
