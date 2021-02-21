@@ -296,8 +296,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
 
     _xAxis.update(
-      entriesMinEpoch: widget.chartDataList.getMinEpoch(),
-      entriesMaxEpoch: widget.chartDataList.getMaxEpoch(),
+      minEpoch: widget.chartDataList.getMinEpoch(),
+      maxEpoch: widget.chartDataList.getMaxEpoch(),
     );
   }
 

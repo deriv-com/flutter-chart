@@ -135,11 +135,9 @@ class XAxisModel extends ChangeNotifier {
   int _rightBoundEpoch;
   double _panSpeed;
 
-  int get _firstEntryEpoch =>
-      _minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
+  int get _firstEntryEpoch => _minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
 
-  int get _lastEntryEpoch =>
-      _maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
+  int get _lastEntryEpoch => _maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -473,15 +471,15 @@ class XAxisModel extends ChangeNotifier {
     bool isLive,
     int granularity,
     List<Tick> entries,
-    int entriesMinEpoch,
-    int entriesMaxEpoch,
+    int minEpoch,
+    int maxEpoch,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
 
-    _minEpoch = entriesMinEpoch ?? _minEpoch;
-    _maxEpoch = entriesMaxEpoch ?? _maxEpoch;
+    _minEpoch = minEpoch ?? _minEpoch;
+    _maxEpoch = maxEpoch ?? _maxEpoch;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.
