@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/parabolic_sar_options.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/logic/chart_series/scatter/scatter_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -24,7 +24,7 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
   final ParabolicSAROptions _options;
 
   @override
-  SeriesPainter<Series> createPainter() => LinePainter(this);
+  SeriesPainter<Series> createPainter() => ScatterPainter(this);
 
   @override
   CachedIndicator<Tick> initializeIndicator() => ReusableParabolicSarIndicator(
