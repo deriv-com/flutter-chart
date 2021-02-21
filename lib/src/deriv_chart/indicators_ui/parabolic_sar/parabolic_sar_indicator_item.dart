@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -59,8 +60,8 @@ class ParabolicSARIndicatorItemState
   @protected
   Widget buildMaxAccelerationFactorField() => Row(
         children: <Widget>[
-          const Text(
-            'Max Acceleration',
+          Text(
+            'Max AF: ${getCurrentMaxAccelerationFactor().toStringAsFixed(2)}',
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -69,13 +70,12 @@ class ParabolicSARIndicatorItemState
               value: getCurrentMaxAccelerationFactor(),
               onChanged: (double value) {
                 setState(() {
-                  maxAccelerationFactor = value;
+                  maxAccelerationFactor = roundDouble(value, 2);
                   updateIndicator();
                 });
               },
-              divisions: 100,
+              divisions: 10000,
               max: 100,
-              label: '${getCurrentMaxAccelerationFactor()}',
             ),
           ),
         ],
@@ -85,8 +85,8 @@ class ParabolicSARIndicatorItemState
   @protected
   Widget buildMinAccelerationFactorField() => Row(
         children: <Widget>[
-          const Text(
-            'Min Acceleration',
+          Text(
+            'Min AF: ${getCurrentMinAccelerationFactor().toStringAsFixed(2)}',
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -95,18 +95,16 @@ class ParabolicSARIndicatorItemState
               value: getCurrentMinAccelerationFactor(),
               onChanged: (double value) {
                 setState(() {
-                  minAccelerationFactor = value;
+                  minAccelerationFactor = roundDouble(value, 2);
                   updateIndicator();
                 });
               },
-              divisions: 100,
+              divisions: 10000,
               max: 100,
-              label: '${getCurrentMinAccelerationFactor()}',
             ),
           ),
         ],
       );
-
 
   /// Gets Indicator current minAccelerationFactor.
   @protected

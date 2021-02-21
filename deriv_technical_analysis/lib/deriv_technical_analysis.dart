@@ -1,5 +1,6 @@
 library deriv_technical_analysis;
 
+export 'src/helpers/functions.dart';
 export 'src/indicators/cached_indicator.dart';
 export 'src/indicators/calculations/bollinger/bollinger_band_width_indicator.dart';
 export 'src/indicators/calculations/bollinger/bollinger_bands_lower_indicator.dart';
