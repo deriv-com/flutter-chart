@@ -97,15 +97,16 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   @override
   int getCurrentPeriod() => period ?? getConfig()?.period ?? 2;
 
+  /// Calculate the color of Rainbow and return list of colors
   @protected
   List<Color> getCurrentRainbowColors() {
     final int bands = getCurrentBandsCount();
-    final int minHue = 240, maxHue = 0;
-    List<Color> rainbow = [];
+    const int minHue = 240, maxHue = 0;
+    final List<Color> rainbow = <Color>[];
     for (int i = 0; i < bands; i++) {
       final double curPercent = i / bands;
       final HSLColor bandColor = HSLColor.fromAHSL(
-          1, ((curPercent * (maxHue - minHue)) + minHue), 1, 0.5);
+          1, (curPercent * (maxHue - minHue)) + minHue, 1, 0.5);
       rainbow.add(bandColor.toColor());
     }
     return rainbow;
