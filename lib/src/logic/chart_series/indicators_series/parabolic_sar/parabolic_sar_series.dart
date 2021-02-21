@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/parabolic_sar_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -15,15 +15,21 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
   ParabolicSARSeries(
     this._indicatorInput,
     String id,
-    IndicatorOptions options,
-  ) : super(CloseValueIndicator<Tick>(_indicatorInput), id, options);
+    ParabolicSAROptions options,
+  )   : _options = options,
+        super(CloseValueIndicator<Tick>(_indicatorInput), id, options);
 
   final IndicatorInput _indicatorInput;
+
+  final ParabolicSAROptions _options;
 
   @override
   SeriesPainter<Series> createPainter() => LinePainter(this);
 
   @override
-  CachedIndicator<Tick> initializeIndicator() =>
-      ReusableParabolicSarIndicator(_indicatorInput);
+  CachedIndicator<Tick> initializeIndicator() => ReusableParabolicSarIndicator(
+        _indicatorInput,
+        aF: _options.minAccelerationFactor,
+        maxA: _options.maxAccelerationFactor,
+      );
 }

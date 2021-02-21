@@ -13,8 +13,8 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 /// the result for the last index when tha chart's last tick gets updated that
 /// would make [ParabolicSarIndicator] internal variables to become incorrect.
 ///
-/// Here to fix that whenever we want to calculate the result for last index we
-/// make a backup for those internal variables and after calculating we reset them.
+/// Here to fix that whenever we want to calculate the result for the last index
+/// we make a backup for those internal variables and after calculating we reset them.
 class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   /// Initializes
   ReusableParabolicSarIndicator(
