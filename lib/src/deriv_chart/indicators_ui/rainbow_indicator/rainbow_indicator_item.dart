@@ -75,8 +75,8 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
             min: 1,
             max: 20,
             divisions: 20,
-            label: "${getCurrentBandsCount()}",
-            onChanged: (value) {
+            label: '${getCurrentBandsCount()}',
+            onChanged: (double value) {
               setState(() {
                 bandsCount = value.toInt();
               });
@@ -94,17 +94,17 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   }
 
   /// Gets Indicator current period.
-  @protected
+  @override
   int getCurrentPeriod() => period ?? getConfig()?.period ?? 2;
 
   @protected
   List<Color> getCurrentRainbowColors() {
     final int bands = getCurrentBandsCount();
-    var minHue = 240, maxHue = 0;
+    final int minHue = 240, maxHue = 0;
     List<Color> rainbow = [];
     for (int i = 0; i < bands; i++) {
-      double curPercent = i / bands;
-      var bandColor = HSLColor.fromAHSL(
+      final double curPercent = i / bands;
+      final HSLColor bandColor = HSLColor.fromAHSL(
           1, ((curPercent * (maxHue - minHue)) + minHue), 1, 0.5);
       rainbow.add(bandColor.toColor());
     }

@@ -3,7 +3,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import '../ma_series.dart';
 import 'indicator_options.dart';
 
-/// Moving Average Envelope indicator options.
+/// Rainbow indicator options.
 class RainbowOptions extends MAOptions {
   /// Initializes
   const RainbowOptions({
@@ -12,7 +12,7 @@ class RainbowOptions extends MAOptions {
     MovingAverageType movingAverageType,
   }) : super(period: period, type: movingAverageType);
 
-  /// Shift value
+  /// number of rainbow bands
   final int bandsCount;
 
   @override
