@@ -132,8 +132,8 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
-              minEpoch: chartDataList.minEpoch,
-              maxEpoch: chartDataList.maxEpoch,
+              minEpoch: chartDataList.getMinEpoch(),
+              maxEpoch: chartDataList.getMaxEpoch(),
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
@@ -296,8 +296,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
     }
 
     _xAxis.update(
-      entriesMinEpoch: widget.chartDataList.minEpoch,
-      entriesMaxEpoch: widget.chartDataList.maxEpoch,
+      entriesMinEpoch: widget.chartDataList.getMinEpoch(),
+      entriesMaxEpoch: widget.chartDataList.getMaxEpoch(),
     );
   }
 
