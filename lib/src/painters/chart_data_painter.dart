@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -7,13 +8,82 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.
-class ChartDataPainter extends CustomPainter {
+class ChartDataPainter extends BaseChartDataPainter {
   /// Initializes a `CustomPainter` which paints the chart data inside the chart.
   ChartDataPainter({
+    ChartConfig chartConfig,
+    ChartTheme theme,
+    this.mainSeries,
+    List<Series> secondarySeries = const <Series>[],
+    AnimationInfo animationInfo,
+    EpochToX epochToCanvasX,
+    QuoteToY quoteToCanvasY,
+    int rightBoundEpoch,
+    int leftBoundEpoch,
+    double topY,
+    double bottomY,
+  }) : super(
+          chartConfig: chartConfig,
+          theme: theme,
+          series: secondarySeries,
+          animationInfo: animationInfo,
+          epochToCanvasX: epochToCanvasX,
+          quoteToCanvasY: quoteToCanvasY,
+          rightBoundEpoch: rightBoundEpoch,
+          leftBoundEpoch: leftBoundEpoch,
+          topY: topY,
+          bottomY: bottomY,
+        );
+
+  /// Chart's main data series.
+  final Series mainSeries;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    mainSeries.paint(
+      canvas,
+      size,
+      epochToCanvasX,
+      quoteToCanvasY,
+      animationInfo,
+      chartConfig,
+      theme,
+    );
+
+    super.paint(canvas, size);
+  }
+
+  @override
+  bool shouldRepaint(covariant ChartDataPainter oldDelegate) {
+    bool styleChanged() =>
+        (mainSeries is LineSeries && oldDelegate.mainSeries is CandleSeries) ||
+        (mainSeries is CandleSeries && oldDelegate.mainSeries is LineSeries) ||
+        (mainSeries is LineSeries &&
+            theme.lineStyle != oldDelegate.theme.lineStyle) ||
+        (mainSeries is CandleSeries &&
+            theme.candleStyle != oldDelegate.theme.candleStyle);
+
+    bool visibleAnimationChanged() =>
+        true /*
+        mainSeries.entries.isNotEmpty &&
+        mainSeries.visibleEntries.isNotEmpty &&
+        mainSeries.entries.last == mainSeries.visibleEntries.last &&
+        animationInfo != oldDelegate.animationInfo*/
+        ;
+
+    return super.shouldRepaint(oldDelegate) ||
+        visibleAnimationChanged() ||
+        styleChanged();
+  }
+}
+
+/// A `CustomPainter` which paints the chart data inside the chart.
+class BaseChartDataPainter extends CustomPainter {
+  /// Initializes a `CustomPainter` which paints the chart data inside the chart.
+  BaseChartDataPainter({
     this.chartConfig,
     this.theme,
-    this.mainSeries,
-    this.secondarySeries = const <Series>[],
+    this.series = const <Series>[],
     this.animationInfo,
     this.epochToCanvasX,
     this.quoteToCanvasY,
@@ -38,17 +108,8 @@ class ChartDataPainter extends CustomPainter {
   /// Animation info where the animation progress values are in.
   final AnimationInfo animationInfo;
 
-  /// Chart's main data series.
-  final DataSeries mainSeries;
-
-  /// List of series to add on chart beside the [mainSeries].
-  ///
-  /// Useful for adding on-chart indicators.
-  final List<Series> secondarySeries;
-
-  /*
-  For detecting a need of repaint:
-  */
+  /// Series classes to paint
+  final List<Series> series;
 
   /// The right bound epoch of a chart.
   final int rightBoundEpoch;
@@ -64,21 +125,11 @@ class ChartDataPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    mainSeries.paint(
-      canvas,
-      size,
-      epochToCanvasX,
-      quoteToCanvasY,
-      animationInfo,
-      chartConfig,
-      theme,
-    );
-
-    if (secondarySeries == null) {
+    if (series == null) {
       return;
     }
 
-    for (final Series series in secondarySeries) {
+    for (final Series series in series) {
       series.paint(
         canvas,
         size,
@@ -92,30 +143,14 @@ class ChartDataPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(ChartDataPainter oldDelegate) {
-    bool styleChanged() =>
-        (mainSeries is LineSeries && oldDelegate.mainSeries is CandleSeries) ||
-        (mainSeries is CandleSeries && oldDelegate.mainSeries is LineSeries) ||
-        (mainSeries is LineSeries &&
-            theme.lineStyle != oldDelegate.theme.lineStyle) ||
-        (mainSeries is CandleSeries &&
-            theme.candleStyle != oldDelegate.theme.candleStyle);
-
-    bool visibleAnimationChanged() =>
-        mainSeries.entries.isNotEmpty &&
-        mainSeries.visibleEntries.isNotEmpty &&
-        mainSeries.entries.last == mainSeries.visibleEntries.last &&
-        animationInfo != oldDelegate.animationInfo;
-
-    return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
-        leftBoundEpoch != oldDelegate.leftBoundEpoch ||
-        topY != oldDelegate.topY ||
-        bottomY != oldDelegate.bottomY ||
-         visibleAnimationChanged() ||
-        chartConfig != oldDelegate.chartConfig ||
-        styleChanged();
-  }
+  bool shouldRebuildSemantics(covariant BaseChartDataPainter oldDelegate) =>
+      false;
 
   @override
-  bool shouldRebuildSemantics(ChartDataPainter oldDelegate) => false;
+  bool shouldRepaint(covariant BaseChartDataPainter oldDelegate) =>
+      rightBoundEpoch != oldDelegate.rightBoundEpoch ||
+      leftBoundEpoch != oldDelegate.leftBoundEpoch ||
+      topY != oldDelegate.topY ||
+      bottomY != oldDelegate.bottomY ||
+      chartConfig != oldDelegate.chartConfig;
 }
