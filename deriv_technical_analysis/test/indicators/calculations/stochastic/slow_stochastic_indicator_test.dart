@@ -1,5 +1,5 @@
 import 'package:deriv_technical_analysis/src/helpers/functions.dart';
-import 'package:deriv_technical_analysis/src/indicators/calculations/stochastic/fast_stochastic_indicator.dart';
+import 'package:deriv_technical_analysis/src/indicators/calculations/stochastic/slow_stochastic_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../mock_models.dart';
@@ -41,21 +41,20 @@ void main() {
     ];
   });
 
-  group('Fast Stochastic Indicator test.', () {
+  group('Slow Stochastic Indicator test.', () {
     test(
-        'Fast Stochastic Indicator should caclulate the correct results from the given ticks.',
+        'Slow Stochastic Indicator should caclulate the correct results from the given ticks.',
         () {
-      final FastStochasticIndicator<MockResult> fastStochasticIndicator =
-          FastStochasticIndicator<MockResult>(MockInput(ticks));
+      final SlowStochasticIndicator<MockResult> slowStochasticIndicator =
+          SlowStochasticIndicator<MockResult>(
+        MockInput(ticks),
+      );
 
-      expect(roundDouble(fastStochasticIndicator.getValue(21).quote, 2), 69.98);
-      expect(roundDouble(fastStochasticIndicator.getValue(22).quote, 2), 73.09);
-      expect(roundDouble(fastStochasticIndicator.getValue(23).quote, 2), 73.45);
-      expect(roundDouble(fastStochasticIndicator.getValue(24).quote, 2), 61.2);
-      expect(roundDouble(fastStochasticIndicator.getValue(25).quote, 2), 60.92);
-      expect(roundDouble(fastStochasticIndicator.getValue(26).quote, 2), 40.58);
-      expect(roundDouble(fastStochasticIndicator.getValue(27).quote, 2), 40.58);
-      expect(roundDouble(fastStochasticIndicator.getValue(28).quote, 2), 66.91);
+      expect(roundDouble(slowStochasticIndicator.getValue(24).quote, 2), 69.25);
+      expect(roundDouble(slowStochasticIndicator.getValue(25).quote, 2), 65.19);
+      expect(roundDouble(slowStochasticIndicator.getValue(26).quote, 2), 54.23);
+      expect(roundDouble(slowStochasticIndicator.getValue(27).quote, 2), 47.36);
+      expect(roundDouble(slowStochasticIndicator.getValue(28).quote, 2), 49.36);
     });
   });
 }
