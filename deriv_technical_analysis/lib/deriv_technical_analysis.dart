@@ -22,6 +22,7 @@ export 'src/indicators/calculations/lowest_value_indicator.dart';
 export 'src/indicators/calculations/ma_env/ma_env_lower_indicator.dart';
 export 'src/indicators/calculations/ma_env/ma_env_shift_typs.dart';
 export 'src/indicators/calculations/ma_env/ma_env_upper_indicator.dart';
+export 'src/indicators/calculations/parabolic_sar.dart';
 export 'src/indicators/calculations/sma_indicator.dart';
 export 'src/indicators/calculations/statistics/standard_deviation_indicator.dart';
 export 'src/indicators/calculations/statistics/variance_indicator.dart';
