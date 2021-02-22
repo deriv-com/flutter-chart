@@ -31,13 +31,13 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Indicator options
   ///
   /// It's used for comparison purpose to check whether this indicator series options has changed and
-  /// It needs to recalculate [resultIndicator]'s values.
+  /// It needs to recalculate [_resultIndicator]'s values.
   final IndicatorOptions options;
 
   /// Result indicator
   ///
-  /// Entries of [resultIndicator] will be the data that will be painted for this series.
-  CachedIndicator<Tick> resultIndicator;
+  /// Entries of [_resultIndicator] will be the data that will be painted for this series.
+  CachedIndicator<Tick> _resultIndicator;
 
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
@@ -47,13 +47,13 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   void initialize() {
     super.initialize();
 
-    resultIndicator = initializeIndicator()..calculateValues();
-    entries = resultIndicator.results;
+    _resultIndicator = initializeIndicator()..calculateValues();
+    entries = _resultIndicator.results;
   }
 
-  /// Initializes the [resultIndicator].
+  /// Initializes the [_resultIndicator].
   ///
-  /// Will be called whenever [resultIndicator]'s previous values are not available
+  /// Will be called whenever [_resultIndicator]'s previous values are not available
   /// or its results can't be used (Like when the [input] list changes entirely).
   @protected
   CachedIndicator<Tick> initializeIndicator();
@@ -70,28 +70,28 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
 
   @override
   void fillEntriesFromInput(AbstractSingleIndicatorSeries oldSeries) {
-    resultIndicator = initializeIndicator()
-      ..copyValuesFrom(oldSeries.resultIndicator);
+    _resultIndicator = initializeIndicator()
+      ..copyValuesFrom(oldSeries._resultIndicator);
 
     if (oldSeries.input.length == input.length) {
       if (oldSeries.input.last != input.last) {
         // We're on granularity > 1 tick. Last tick of the input has been updated. Recalculating its indicator value.
-        resultIndicator.refreshValueFor(input.length - 1);
+        _resultIndicator.refreshValueFor(input.length - 1);
       } else {
         // To cover the cases when chart's ticks list has changed but both old ticks and new ticks are to the same reference.
         // And we can't detect if new ticks was added or not. But we calculate indicator's values for those indices that are null.
-        for (int i = resultIndicator.lastResultIndex; i < input.length; i++) {
-          resultIndicator.refreshValueFor(i);
+        for (int i = _resultIndicator.lastResultIndex; i < input.length; i++) {
+          _resultIndicator.refreshValueFor(i);
         }
       }
     } else if (input.length > oldSeries.input.length) {
       // Some new ticks has been added. Calculating indicator's value for new ticks.
       for (int i = oldSeries.input.length; i < input.length; i++) {
-        resultIndicator.refreshValueFor(i);
+        _resultIndicator.refreshValueFor(i);
       }
     }
 
-    entries = resultIndicator.results;
+    entries = _resultIndicator.results;
   }
 
   @override

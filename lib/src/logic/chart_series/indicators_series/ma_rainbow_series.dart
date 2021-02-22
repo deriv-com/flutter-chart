@@ -10,7 +10,9 @@ import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
@@ -54,28 +56,30 @@ class RainbowSeries extends Series {
   SeriesPainter<Series> createPainter() {
     /// check if we have color for every band
     final bool useColors = rainbowColors?.length == rainbowOptions.bandsCount;
-
+    final List<Indicator<Tick>> indicators = <Indicator<Tick>>[];
     for (int i = 0; i < rainbowOptions.bandsCount; i++) {
       if (i == 0) {
+        indicators
+            .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions));
         _rainbowSeries.add(SingleIndicatorSeries(
           painterCreator: (
             Series series,
           ) =>
               LinePainter(series),
-          indicatorCreator: () =>
-              MASeries.getMAIndicator(_fieldIndicator, rainbowOptions),
+          indicatorCreator: () => indicators[0],
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
           style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
         ));
       } else {
+        indicators
+            .add(MASeries.getMAIndicator(indicators[i - 1], rainbowOptions));
         _rainbowSeries.add(SingleIndicatorSeries(
           painterCreator: (
             Series series,
           ) =>
               LinePainter(series),
-          indicatorCreator: () => MASeries.getMAIndicator(
-              _rainbowSeries[i - 1].resultIndicator, rainbowOptions),
+          indicatorCreator: () => indicators[i],
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
           style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
