@@ -14,8 +14,6 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../deriv_chart.dart';
-
 /// Rainbow series
 class RainbowSeries extends Series {
   /// Initializes a series which shows shows Rainbow Series data calculated from [entries].
@@ -49,8 +47,8 @@ class RainbowSeries extends Series {
 
   final List<SingleIndicatorSeries> _rainbowSeries = <SingleIndicatorSeries>[];
 
-  ///colors of rainbow bands
-  List<Color> rainbowColors;
+  /// colors of rainbow bands
+  final List<Color> rainbowColors;
 
   @override
   SeriesPainter<Series> createPainter() {
@@ -92,13 +90,15 @@ class RainbowSeries extends Series {
     final RainbowSeries oldRainbowSeries = oldData;
     if (oldRainbowSeries == null) {
       return false;
+    } else if (oldRainbowSeries._rainbowSeries.length !=
+        _rainbowSeries.length) {
+      return true;
     }
+
     bool needUpdate = false;
-    if (oldRainbowSeries._rainbowSeries.length == _rainbowSeries.length) {
-      for (int i = 0; i < _rainbowSeries.length; i++) {
-        if (_rainbowSeries[i].didUpdate(oldRainbowSeries._rainbowSeries[i])) {
-          needUpdate = true;
-        }
+    for (int i = 0; i < _rainbowSeries.length; i++) {
+      if (_rainbowSeries[i].didUpdate(oldRainbowSeries._rainbowSeries[i])) {
+        needUpdate = true;
       }
     }
     return needUpdate;
@@ -115,12 +115,12 @@ class RainbowSeries extends Series {
   List<double> recalculateMinMax() =>
       // To be safe we calculate min and max. from all series inside rainbow.
       <double>[
-        getMinValue(),
-        getMaxValue(),
+        _getMinValue(),
+        _getMaxValue(),
       ];
 
   /// Returns minimum value of all series
-  double getMinValue() {
+  double _getMinValue() {
     final List<double> minValues = <double>[];
     for (final SingleIndicatorSeries series in _rainbowSeries) {
       minValues.add(series.minValue);
@@ -129,7 +129,7 @@ class RainbowSeries extends Series {
   }
 
   /// Returns maximum value of all series
-  double getMaxValue() {
+  double _getMaxValue() {
     final List<double> maxValues = <double>[];
     for (final SingleIndicatorSeries series in _rainbowSeries) {
       maxValues.add(series.maxValue);
