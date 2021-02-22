@@ -1,4 +1,3 @@
-// Aroon Down indicator.
 import 'dart:math';
 
 import '../../../../deriv_technical_analysis.dart';
@@ -6,8 +5,8 @@ import '../../../../deriv_technical_analysis.dart';
 /// Aroon Up Indicator
 class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes a gain indicator from the given [maxValueIndicator].
-  ///  @param minValueIndicator the indicator for the min price (default
-  ///                       {@link LowValueIndicator})
+  ///  @param maxValueIndicator the indicator for the max price (default
+  ///                       {@link HighValueIndicator})
   AroonUpIndicator.fromIndicator(this.maxValueIndicator, this.barCount)
       :
         // + 1 needed for last possible iteration in loop
@@ -15,10 +14,10 @@ class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
             HighestValueIndicator<T>(maxValueIndicator, barCount + 1),
         super.fromIndicator(maxValueIndicator);
 
-  /// Indicator to calculate Aroon Down on.
+  /// Indicator to calculate Aroon up on.
   final Indicator<T> maxValueIndicator;
 
-  /// Indicator to calculate Aroon Down on.
+  /// Indicator to calculate highest value.
   final Indicator<T> highestValueIndicator;
 
   /// bar Count
