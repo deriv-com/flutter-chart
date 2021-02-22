@@ -10,26 +10,21 @@ class FastStochasticIndicator<T extends IndicatorResult>
     CloseValueIndicator<T> indicator,
     int period = 14,
   })  : _indicator = indicator ?? CloseValueIndicator<T>(input),
-        _highValueIndicator = HighValueIndicator<T>(input),
-        _lowValueIndicator = LowValueIndicator<T>(input),
-        _period = period,
+        _highestValueIndicator =
+            HighestValueIndicator<T>(HighValueIndicator<T>(input), period),
+        _lowestValueIndicator =
+            LowestValueIndicator<T>(LowValueIndicator<T>(input), period),
         super(input);
 
-  final int _period;
-
-  final HighValueIndicator<T> _highValueIndicator;
-  final LowValueIndicator<T> _lowValueIndicator;
+  final HighestValueIndicator<T> _highestValueIndicator;
+  final LowestValueIndicator<T> _lowestValueIndicator;
   final Indicator<T> _indicator;
 
   @override
   T calculate(int index) {
-    final HighestValueIndicator<T> highestHigh =
-        HighestValueIndicator<T>(_highValueIndicator, _period);
-    final LowestValueIndicator<T> lowestLow =
-        LowestValueIndicator<T>(_lowValueIndicator, _period);
-
-    final double highestHighQuote = highestHigh.getValue(index).quote;
-    final double lowestLowQuote = lowestLow.getValue(index).quote;
+    final double highestHighQuote =
+        _highestValueIndicator.getValue(index).quote;
+    final double lowestLowQuote = _lowestValueIndicator.getValue(index).quote;
 
     final double kPercent =
         ((_indicator.getValue(index).quote - lowestLowQuote) /
