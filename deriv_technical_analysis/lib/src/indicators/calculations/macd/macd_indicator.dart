@@ -1,7 +1,7 @@
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 // TODO(mohammadamir-fs): test macd visually.
-/// Moving Average Convergance Divergence Indicator
+/// Moving Average Convergance Divergence Indicator.
 class MACDIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Creates a  Moving average convergance divergance indicator from a given indicator,
   /// with short term ema set to `12` periods and long term ema set to `26` periods as default.
