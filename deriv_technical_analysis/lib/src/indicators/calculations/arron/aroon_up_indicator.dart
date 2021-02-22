@@ -10,9 +10,9 @@ class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   ///                       {@link LowValueIndicator})
   AroonUpIndicator.fromIndicator(this.maxValueIndicator, this.barCount)
       :
-  // + 1 needed for last possible iteration in loop
+        // + 1 needed for last possible iteration in loop
         highestValueIndicator =
-        HighestValueIndicator<T>(maxValueIndicator, barCount + 1),
+            HighestValueIndicator<T>(maxValueIndicator, barCount + 1),
         super.fromIndicator(maxValueIndicator);
 
   /// Indicator to calculate Aroon Down on.
@@ -26,7 +26,6 @@ class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
 
   @override
   T calculate(int index) {
-    // if(maxValueIndicator.entries[index].)
     // Getting the number of bars since the highest close price
     final int endIndex = max(0, index - barCount);
     int nbBars = 0;
@@ -37,7 +36,6 @@ class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
       }
       nbBars++;
     }
-
     return createResult(
         index: index, quote: (barCount - nbBars) / barCount * 100);
   }
