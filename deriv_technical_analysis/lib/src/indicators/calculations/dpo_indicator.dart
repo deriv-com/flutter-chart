@@ -7,26 +7,23 @@ import '../indicator.dart';
 /// Detrended Price Oscillator Indicator
 class DPOIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes
-  DPOIndicator(this.indicator, this.barCount)
-      : sma = SMAIndicator<T>(indicator, barCount),
-        timeShift = (barCount ~/ 2) + 1,
+  DPOIndicator(this.indicator, {int period = 14})
+      : _sma = SMAIndicator<T>(indicator, period),
+        _timeShift = (period ~/ 2) + 1,
         super.fromIndicator(indicator);
 
   /// Indicator to calculate SMA on
   final Indicator<T> indicator;
 
   /// Simple Moving Average Indicator
-  final SMAIndicator<T> sma;
-
-  /// Bar count
-  final int barCount;
+  final SMAIndicator<T> _sma;
 
   /// time shift of sma
-  final int timeShift;
+  final int _timeShift;
 
   @override
   T calculate(int index) => createResult(
       index: index,
       quote: indicator.getValue(index).quote -
-          sma.getValue(index - timeShift).quote);
+          _sma.getValue(index - _timeShift).quote);
 }
