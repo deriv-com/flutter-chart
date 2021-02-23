@@ -107,7 +107,7 @@ void main() {
     test('Detrended Price Oscillator should calculates the correct results',
         () {
       final DPOIndicator<MockResult> dpoIndicator = DPOIndicator<MockResult>(
-          CloseValueIndicator<MockResult>(MockInput(ticks)), 9);
+          CloseValueIndicator<MockResult>(MockInput(ticks)), period: 9);
 
       expect(roundDouble(dpoIndicator.getValue(9).quote, 4), 0.112);
       expect(roundDouble(dpoIndicator.getValue(10).quote, 4), -0.02);
