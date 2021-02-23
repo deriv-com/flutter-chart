@@ -10,9 +10,11 @@ class AroonOscillatorIndicator<T extends IndicatorResult>
   AroonOscillatorIndicator.fromIndicator(IndicatorDataInput indicatorDataInput,
       {int period = 14})
       : _upChannel = AroonDownIndicator<T>.fromIndicator(
-            LowValueIndicator<T>(indicatorDataInput), period),
+            LowValueIndicator<T>(indicatorDataInput),
+            period: period),
         _downChannel = AroonUpIndicator<T>.fromIndicator(
-            HighValueIndicator<T>(indicatorDataInput), period),
+            HighValueIndicator<T>(indicatorDataInput),
+            period: period),
         super(indicatorDataInput);
 
   /// Aroon up channel indicator.
@@ -25,9 +27,6 @@ class AroonOscillatorIndicator<T extends IndicatorResult>
   T calculate(int index) {
     final double upper = _upChannel.getValue(index).quote;
     final double lower = _downChannel.getValue(index).quote;
-    return createResult(
-      index: index,
-      quote: upper - lower,
-    );
+    return createResult(index: index, quote: upper - lower);
   }
 }

@@ -11,8 +11,8 @@ class AroonDownIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes a gain indicator from the given [minValueIndicator].
   /// minValueIndicator the indicator for the min price
   /// (default is LowValueIndicator)
-  AroonDownIndicator.fromIndicator(this.minValueIndicator, this.period)
-      :
+  AroonDownIndicator.fromIndicator(this.minValueIndicator, {int period = 14})
+      : _period = period,
         // + 1 needed for last possible iteration in loop
         _lowestValueIndicator =
             LowestValueIndicator<T>(minValueIndicator, period + 1),
@@ -25,12 +25,12 @@ class AroonDownIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   final Indicator<T> _lowestValueIndicator;
 
   /// The period
-  final int period;
+  final int _period;
 
   @override
   T calculate(int index) {
     // Getting the number of bars since the lowest close price
-    final int endIndex = max(0, index - period);
+    final int endIndex = max(0, index - _period);
     int nbBars = 0;
     for (int i = index; i > endIndex; i--) {
       if (minValueIndicator.getValue(i).quote ==
@@ -40,6 +40,6 @@ class AroonDownIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
       nbBars++;
     }
     return createResult(
-        index: index, quote: ((period - nbBars) / period) * 100);
+        index: index, quote: ((_period - nbBars) / _period) * 100);
   }
 }

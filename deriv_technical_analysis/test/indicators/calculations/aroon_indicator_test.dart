@@ -35,13 +35,12 @@ void main() {
       ];
     });
     test('Aroon Down Indicator calculates the correct result', () {
-      const int period = 5;
       final LowValueIndicator<MockResult> lowValueIndicator =
           LowValueIndicator<MockResult>(MockInput(candles));
 
       final AroonDownIndicator<MockResult> aroonDownIndicator =
-          AroonDownIndicator<MockResult>.fromIndicator(
-              lowValueIndicator, period);
+          AroonDownIndicator<MockResult>.fromIndicator(lowValueIndicator,
+              period: 5);
 
       expect(aroonDownIndicator.getValue(19).quote, 80);
       expect(aroonDownIndicator.getValue(18).quote, 100);
@@ -61,13 +60,12 @@ void main() {
     });
 
     test('Aroon Up Indicator calculates the correct result', () {
-      const int period = 5;
       final HighValueIndicator<MockResult> highValueIndicator =
           HighValueIndicator<MockResult>(MockInput(candles));
 
       final AroonUpIndicator<MockResult> aroonUpIndicator =
-          AroonUpIndicator<MockResult>.fromIndicator(
-              highValueIndicator, period);
+          AroonUpIndicator<MockResult>.fromIndicator(highValueIndicator,
+              period: 5);
 
       expect(aroonUpIndicator.getValue(19).quote, 0);
       expect(aroonUpIndicator.getValue(18).quote, 20);

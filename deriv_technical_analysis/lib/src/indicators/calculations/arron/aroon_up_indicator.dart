@@ -7,8 +7,8 @@ class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   /// Initializes a gain indicator from the given [maxValueIndicator].
   /// maxValueIndicator the indicator for the max price
   /// (default is HighValueIndicator)
-  AroonUpIndicator.fromIndicator(this.maxValueIndicator, this.period)
-      :
+  AroonUpIndicator.fromIndicator(this.maxValueIndicator, {int period = 14})
+      : _period = period,
         // + 1 needed for last possible iteration in loop
         _highestValueIndicator =
             HighestValueIndicator<T>(maxValueIndicator, period + 1),
@@ -21,12 +21,12 @@ class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
   final Indicator<T> _highestValueIndicator;
 
   /// The period
-  final int period;
+  final int _period;
 
   @override
   T calculate(int index) {
     // Getting the number of bars since the highest close price
-    final int endIndex = max(0, index - period);
+    final int endIndex = max(0, index - _period);
     int nbBars = 0;
     for (int i = index; i > endIndex; i--) {
       if (maxValueIndicator.getValue(i).quote ==
@@ -35,6 +35,7 @@ class AroonUpIndicator<T extends IndicatorResult> extends CachedIndicator<T> {
       }
       nbBars++;
     }
-    return createResult(index: index, quote: (period - nbBars) / period * 100);
+    return createResult(
+        index: index, quote: (_period - nbBars) / _period * 100);
   }
 }
