@@ -35,13 +35,13 @@ void main() {
       ];
     });
     test('Aroon Down Indicator calculates the correct result', () {
-      const int barCount = 5;
+      const int period = 5;
       final LowValueIndicator<MockResult> lowValueIndicator =
           LowValueIndicator<MockResult>(MockInput(candles));
 
       final AroonDownIndicator<MockResult> aroonDownIndicator =
           AroonDownIndicator<MockResult>.fromIndicator(
-              lowValueIndicator, barCount);
+              lowValueIndicator, period);
 
       expect(aroonDownIndicator.getValue(19).quote, 80);
       expect(aroonDownIndicator.getValue(18).quote, 100);
@@ -61,13 +61,13 @@ void main() {
     });
 
     test('Aroon Up Indicator calculates the correct result', () {
-      const int barCount = 5;
+      const int period = 5;
       final HighValueIndicator<MockResult> highValueIndicator =
           HighValueIndicator<MockResult>(MockInput(candles));
 
       final AroonUpIndicator<MockResult> aroonUpIndicator =
           AroonUpIndicator<MockResult>.fromIndicator(
-              highValueIndicator, barCount);
+              highValueIndicator, period);
 
       expect(aroonUpIndicator.getValue(19).quote, 0);
       expect(aroonUpIndicator.getValue(18).quote, 20);
@@ -87,10 +87,9 @@ void main() {
     });
 
     test('Aroon Oscillator Indicator calculates the correct result', () {
-      const int barCount = 5;
       final AroonOscillatorIndicator<MockResult> aroonOscillatorIndicator =
-          AroonOscillatorIndicator<MockResult>.fromIndicator(
-              MockInput(candles), barCount);
+          AroonOscillatorIndicator<MockResult>.fromIndicator(MockInput(candles),
+              period: 5);
 
       expect(aroonOscillatorIndicator.getValue(19).quote, 80);
       expect(aroonOscillatorIndicator.getValue(18).quote, 80);
