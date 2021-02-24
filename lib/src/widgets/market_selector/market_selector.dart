@@ -1,7 +1,6 @@
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/widgets/chart_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'assets_search_bar.dart';
 import 'market_item.dart';
@@ -66,8 +65,6 @@ class _MarketSelectorState extends State<MarketSelector>
   /// Is used to scroll to the selected symbol(Asset).
   GlobalObjectKey? _selectedItemKey;
 
-  ChartTheme _theme;
-
   @override
   void initState() {
     super.initState();
@@ -85,15 +82,6 @@ class _MarketSelectorState extends State<MarketSelector>
         );
       }
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _theme = widget.theme ?? Theme.of(context).brightness == Brightness.dark
-        ? ChartDefaultDarkTheme()
-        : ChartDefaultLightTheme();
   }
 
   @override
