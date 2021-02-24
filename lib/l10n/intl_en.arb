@@ -1,7 +1,10 @@
 {
   "@@locale": "en",
+  "labelChannelFill": "Channel Fill",
   "labelField": "Field",
   "labelPeriod": "Period",
+  "labelHighPeriod": "High Period",
+  "labelLowPeriod": "Low Period",
   "labelShift": "Shift",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",

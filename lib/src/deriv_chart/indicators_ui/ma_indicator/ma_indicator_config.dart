@@ -32,5 +32,6 @@ class MAIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
         options: MAOptions(period: period, type: type),
+        style: lineStyle,
       );
 }
