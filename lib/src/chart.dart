@@ -587,7 +587,6 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
   AnimationController _crosshairZoomOutAnimationController;
   Animation _crosshairZoomOutAnimation;
   bool _isCrosshairMode = false;
-
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;

@@ -149,7 +149,7 @@ class BaseChartDataPainter extends CustomPainter {
     //     (mainSeries is CandleSeries &&
     //         theme.candleStyle != oldDelegate.theme.candleStyle);
 
-    bool secondarySeriesChanged() {
+    bool seriesChanged() {
       final bool isNull = series == null;
       final bool wasNull = oldDelegate.series == null;
 
@@ -182,10 +182,14 @@ class BaseChartDataPainter extends CustomPainter {
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
         topY != oldDelegate.topY ||
         bottomY != oldDelegate.bottomY ||
-        // visibleAnimationChanged() ||
         chartConfig != oldDelegate.chartConfig ||
-        // mainSeries.runtimeType != oldDelegate.mainSeries.runtimeType ||
-        // styleChanged() ||
-        secondarySeriesChanged();
+        seriesChanged();
   }
+
+  // bool visibleAnimationChanged() =>
+  //     mainSeries.entries.isNotEmpty &&
+  //     mainSeries.visibleEntries.isNotEmpty &&
+  //     mainSeries.entries.last == mainSeries.visibleEntries.last &&
+  //     animationInfo != oldDelegate.animationInfo;
+
 }
