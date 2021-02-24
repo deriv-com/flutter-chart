@@ -1,8 +1,10 @@
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:flutter/material.dart';
 
 import '../series.dart';
 import '../series_painter.dart';
@@ -37,7 +39,9 @@ class MASeries extends AbstractSingleIndicatorSeries {
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',
           options,
-          style: style ?? const LineStyle(thickness: 0.5),
+          style: style ??
+              const LineStyle(
+                  thickness: 0.5, lastTickStyle: HorizontalBarrierStyle(color: Colors.pink,hasLine: false)),
         );
 
   @override

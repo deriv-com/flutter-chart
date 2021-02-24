@@ -13,7 +13,7 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
     String id,
     this.title,
     this.longLine,
-    BarrierStyle style,
+    BarrierStyle style, this.hasLine,
   }) : super(id ?? title, style: style);
 
   /// Title of the barrier.
@@ -23,6 +23,9 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   ///
   /// Will be ignored if the barrier has only an epoch or a value, and not both.
   final bool longLine;
+
+  /// Will be ignored if the barrier has only an epoch or a value, and not both.
+  final bool hasLine;
 
   /// Epoch of the vertical barrier.
   final int epoch;

@@ -117,7 +117,11 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     // Line.
     if (arrowType == BarrierArrowType.none) {
-      final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
+      final double lineStartX = series.hasLine
+          ? series.longLine
+              ? 0
+              : (dotX ?? 0)
+          : size.width;
       final double lineEndX = labelArea.left;
 
       // To erase the line behind title.

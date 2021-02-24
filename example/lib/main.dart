@@ -365,7 +365,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
                             ? CandleSeries(ticks)
                             : LineSeries(
                                 ticks,
-                                style: const LineStyle(hasArea: true),
+                                style: const LineStyle(
+                                  hasArea: true,
+                                ),
                               ),
                     markerSeries: MarkerSeries(
                       _markers,

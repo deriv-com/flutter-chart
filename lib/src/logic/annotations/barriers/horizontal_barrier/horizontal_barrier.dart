@@ -24,6 +24,7 @@ class HorizontalBarrier extends Barrier {
           value: value,
           style: style,
           longLine: longLine,
+          hasLine: style.hasLine,
         );
 
   /// Barrier visibility behavior.

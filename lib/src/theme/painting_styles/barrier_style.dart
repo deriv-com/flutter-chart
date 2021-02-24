@@ -37,6 +37,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     this.labelShape = LabelShape.rectangle,
     this.labelHeight = 24,
     Color color = const Color(0xFF00A79E),
+    this.hasLine=true,
     Color titleBackgroundColor = const Color(0xFF0E0E0E),
     bool isDashed = true,
     this.hasBlinkingDot = false,
@@ -74,6 +75,8 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Whether to show an arrow pointing in the direction of the barrier,
   /// when the barrier is outside the y-axis range and visibility is set to `HorizontalBarrierVisibility.keepBarrierLabelVisible`.
   final bool hasArrow;
+
+  final bool hasLine;
 
   @override
   String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';

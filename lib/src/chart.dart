@@ -491,8 +491,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
             if (widget.showLoadingAnimationForHistoricalData ||
                 widget.mainSeries.entries.isEmpty)
               _buildLoadingAnimation(),
-            _buildChartData(),
             _buildQuoteGridLabel(gridLineQuotes),
+            _buildChartData(),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(

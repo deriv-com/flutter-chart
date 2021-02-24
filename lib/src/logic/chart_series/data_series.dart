@@ -111,6 +111,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (entries.isNotEmpty && style?.lastTickStyle != null ?? false) {
       _lastTickIndicator = HorizontalBarrier(
         entries.last.quote,
+        longLine: false,
         epoch: entries.last.epoch,
         style: style.lastTickStyle,
       );
@@ -205,7 +206,7 @@ abstract class DataSeries<T extends Tick> extends Series {
       initialize();
       updated = true;
     }
-
+    _initLastTickIndicator();
     _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
 
     return updated;
