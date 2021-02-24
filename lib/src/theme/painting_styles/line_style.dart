@@ -22,6 +22,18 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   /// Whether the line series has area or not.
   final bool hasArea;
 
+  /// Creates a copy of this object.
+  LineStyle copyWith({
+    Color color,
+    double thickness,
+    bool hasArea,
+  }) =>
+      LineStyle(
+        color: color ?? this.color,
+        thickness: thickness ?? this.thickness,
+        hasArea: hasArea ?? this.hasArea,
+      );
+
   @override
   String toString() => '${super.toString()}$color, $thickness, $hasArea';
 
