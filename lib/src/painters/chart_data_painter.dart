@@ -1,9 +1,9 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.
@@ -62,8 +62,8 @@ class ChartDataPainter extends BaseChartDataPainter {
         (mainSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
-    bool visibleAnimationChanged() =>
-        true /*
+    bool visibleAnimationChanged() => mainSeries.shouldRepaint(oldDelegate
+            .mainSeries) /*
         mainSeries.entries.isNotEmpty &&
         mainSeries.visibleEntries.isNotEmpty &&
         mainSeries.entries.last == mainSeries.visibleEntries.last &&
@@ -142,14 +142,50 @@ class BaseChartDataPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRebuildSemantics(covariant BaseChartDataPainter oldDelegate) =>
-      false;
+  bool shouldRepaint(BaseChartDataPainter oldDelegate) {
+    // bool styleChanged() =>
+    //     (mainSeries is LineSeries &&
+    //         theme.lineStyle != oldDelegate.theme.lineStyle) ||
+    //     (mainSeries is CandleSeries &&
+    //         theme.candleStyle != oldDelegate.theme.candleStyle);
 
-  @override
-  bool shouldRepaint(covariant BaseChartDataPainter oldDelegate) =>
-      rightBoundEpoch != oldDelegate.rightBoundEpoch ||
-      leftBoundEpoch != oldDelegate.leftBoundEpoch ||
-      topY != oldDelegate.topY ||
-      bottomY != oldDelegate.bottomY ||
-      chartConfig != oldDelegate.chartConfig;
+    bool secondarySeriesChanged() {
+      final bool isNull = series == null;
+      final bool wasNull = oldDelegate.series == null;
+
+      if (isNull && wasNull) {
+        return false;
+      } else if (isNull != wasNull) {
+        return true;
+      } else if (series.length != oldDelegate.series.length) {
+        return true;
+      }
+
+      final Map<String, ChartPaintingStyle> oldStyles =
+          Map<String, ChartPaintingStyle>.fromIterable(
+        oldDelegate.series,
+        key: (dynamic series) => series.id,
+        value: (dynamic series) => series.style,
+      );
+      return series.any(
+        (Series series) => series.style != oldStyles[series.id],
+      );
+    }
+
+    // bool visibleAnimationChanged() =>
+    //     mainSeries.entries.isNotEmpty &&
+    //     mainSeries.visibleEntries.isNotEmpty &&
+    //     mainSeries.entries.last == mainSeries.visibleEntries.last &&
+    //     animationInfo != oldDelegate.animationInfo;
+
+    return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
+        leftBoundEpoch != oldDelegate.leftBoundEpoch ||
+        topY != oldDelegate.topY ||
+        bottomY != oldDelegate.bottomY ||
+        // visibleAnimationChanged() ||
+        chartConfig != oldDelegate.chartConfig ||
+        // mainSeries.runtimeType != oldDelegate.mainSeries.runtimeType ||
+        // styleChanged() ||
+        secondarySeriesChanged();
+  }
 }

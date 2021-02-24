@@ -580,13 +580,13 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
 
-  // TODO(Rustem): move to YAxisModel
+  Animation _currentTickAnimation;
+  Animation _currentTickBlinkAnimation;
+
+  // Crosshair related state.
   AnimationController _crosshairZoomOutAnimationController;
-
-  Animation<double> _currentTickAnimation;
-
-  // TODO(Rustem): move to YAxisModel
-  Animation<double> _crosshairZoomOutAnimation;
+  Animation _crosshairZoomOutAnimation;
+  bool _isCrosshairMode = false;
 
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
@@ -787,17 +787,19 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
           _topBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
         ],
-        builder: (BuildContext context, Widget child) => CustomPaint(
-          painter: YGridLinePainter(
-            gridLineQuotes: gridLineQuotes,
-            quoteToCanvasY: _quoteToCanvasY,
-            style: context.watch<ChartTheme>().gridStyle,
-            labelWidth: gridLineQuotes.isNotEmpty
-                ? _labelWidth(gridLineQuotes.first,
-                    context.watch<ChartTheme>().gridStyle.yLabelStyle)
-                : 40,
-          ),
-        ),
+        builder: (BuildContext context, Widget child) {
+          return CustomPaint(
+            painter: YGridLinePainter(
+              gridLineQuotes: gridLineQuotes,
+              quoteToCanvasY: _quoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+              labelWidth: (gridLineQuotes?.isNotEmpty ?? false)
+                  ? _labelWidth(gridLineQuotes.first,
+                      context.watch<ChartTheme>().gridStyle.yLabelStyle)
+                  : 0,
+            ),
+          );
+        },
       );
 
   Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
