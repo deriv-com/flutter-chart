@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.
@@ -94,12 +95,33 @@ class ChartDataPainter extends CustomPainter {
   @override
   bool shouldRepaint(ChartDataPainter oldDelegate) {
     bool styleChanged() =>
-        (mainSeries is LineSeries && oldDelegate.mainSeries is CandleSeries) ||
-        (mainSeries is CandleSeries && oldDelegate.mainSeries is LineSeries) ||
         (mainSeries is LineSeries &&
             theme.lineStyle != oldDelegate.theme.lineStyle) ||
         (mainSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
+
+    bool secondarySeriesChanged() {
+      final bool isNull = secondarySeries == null;
+      final bool wasNull = oldDelegate.secondarySeries == null;
+
+      if (isNull && wasNull) {
+        return false;
+      } else if (isNull != wasNull) {
+        return true;
+      } else if (secondarySeries.length != oldDelegate.secondarySeries.length) {
+        return true;
+      }
+
+      final Map<String, ChartPaintingStyle> oldStyles =
+          Map<String, ChartPaintingStyle>.fromIterable(
+        oldDelegate.secondarySeries,
+        key: (dynamic series) => series.id,
+        value: (dynamic series) => series.style,
+      );
+      return secondarySeries.any(
+        (Series series) => series.style != oldStyles[series.id],
+      );
+    }
 
     bool visibleAnimationChanged() =>
         mainSeries.entries.isNotEmpty &&
@@ -111,9 +133,11 @@ class ChartDataPainter extends CustomPainter {
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
         topY != oldDelegate.topY ||
         bottomY != oldDelegate.bottomY ||
-         visibleAnimationChanged() ||
+        visibleAnimationChanged() ||
         chartConfig != oldDelegate.chartConfig ||
-        styleChanged();
+        mainSeries.runtimeType != oldDelegate.mainSeries.runtimeType ||
+        styleChanged() ||
+        secondarySeriesChanged();
   }
 
   @override

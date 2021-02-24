@@ -42,8 +42,6 @@ enum ViewingMode {
 
 /// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
-  // TODO(Rustem): Add closed contract x-axis constructor.
-
   /// Creates x-axis model for live chart.
   XAxisModel({
     @required List<Tick> entries,
@@ -85,20 +83,20 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
-  // TODO(Rustem): Expose this setting
+  // TODO: Allow customization of this setting.
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
   static const double maxCurrentTickOffset = 150;
 
-  // TODO(Rustem): Expose this setting
+  // TODO: Allow customization of this setting.
   /// Scaling will not resize intervals to be smaller than this.
   static const int minIntervalWidth = 1;
 
-  // TODO(Rustem): Expose this setting
+  // TODO: Allow customization of this setting.
   /// Scaling will not resize intervals to be bigger than this.
   static const int maxIntervalWidth = 80;
 
-  // TODO(Rustem): Expose this setting
+  // TODO: Allow customization of this setting.
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
 
@@ -213,7 +211,7 @@ class XAxisModel extends ChangeNotifier {
         ? _entries.last.epoch
         : _nowEpoch + elapsedMs;
     _lastEpoch = newNowTime;
-    // TODO(Rustem): Consider refactoring the switch with OOP pattern.
+    // TODO: Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
         _scrollTo(_rightBoundEpoch + elapsedMs);

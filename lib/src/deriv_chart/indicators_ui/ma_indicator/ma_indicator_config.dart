@@ -37,5 +37,6 @@ class MAIndicatorConfig extends IndicatorConfig {
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
         options: MAOptions(period: period, type: type),
         offset: offset,
+        style: lineStyle,
       );
 }

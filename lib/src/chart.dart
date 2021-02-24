@@ -228,16 +228,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
 
-  // TODO(Rustem): move to YAxisModel
-  AnimationController _crosshairZoomOutAnimationController;
-
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
-  // TODO(Rustem): move to YAxisModel
+  // Crosshair related state.
+  AnimationController _crosshairZoomOutAnimationController;
   Animation _crosshairZoomOutAnimation;
-
-  // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
   bool get _isScrollToLastTickAvailable =>
@@ -544,8 +540,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
               gridLineQuotes: gridLineQuotes,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: _labelWidth(gridLineQuotes.first,
-                  context.watch<ChartTheme>().gridStyle.yLabelStyle),
+              labelWidth: (gridLineQuotes?.isNotEmpty ?? false)
+                  ? _labelWidth(gridLineQuotes.first,
+                      context.watch<ChartTheme>().gridStyle.yLabelStyle)
+                  : 0,
             ),
           );
         },

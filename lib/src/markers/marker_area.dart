@@ -12,7 +12,6 @@ class MarkerArea extends StatefulWidget {
   /// Initializes marker area.
   const MarkerArea({
     @required this.markerSeries,
-    // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     Key key,
   })  : assert(markerSeries != null),
