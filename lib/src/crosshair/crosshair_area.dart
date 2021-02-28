@@ -16,9 +16,7 @@ class CrosshairArea extends StatefulWidget {
   /// Initializes a  widget to display candle/point details on longpress in a chart.
   const CrosshairArea({
     @required this.mainSeries,
-    // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
-    // TODO(Rustem): remove when chart params are provided
     @required this.pipSize,
     Key key,
     this.onCrosshairAppeared,
@@ -103,8 +101,6 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _onLongPressStart(LongPressStartDetails details) {
-    // TODO(Rustem): ask yAxisModel to zoom out
-    // TODO(Rustem): call callback that was passed to chart
     widget.onCrosshairAppeared?.call();
 
     // Stop auto-panning to make it easier to select candle or tick.
@@ -164,7 +160,6 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {
-    // TODO(Rustem): ask yAxisModel to zoom in
     widget.onCrosshairDisappeared?.call();
 
     xAxis

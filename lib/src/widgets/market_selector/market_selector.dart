@@ -1,9 +1,6 @@
-import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
-import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/widgets/custom_draggable_sheet.dart';
+import 'package:deriv_chart/src/widgets/chart_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'assets_search_bar.dart';
 import 'market_item.dart';
@@ -59,8 +56,6 @@ class _MarketSelectorState extends State<MarketSelector>
   /// Is used to scroll to the selected symbol(Asset).
   GlobalObjectKey _selectedItemKey;
 
-  ChartTheme _theme;
-
   @override
   void initState() {
     super.initState();
@@ -81,41 +76,19 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _theme = widget.theme ?? Theme.of(context).brightness == Brightness.dark
-        ? ChartDefaultDarkTheme()
-        : ChartDefaultLightTheme();
-  }
-
-  @override
   Widget build(BuildContext context) {
     _fillMarketsList();
 
-    return CustomDraggableSheet(
-      child: Provider<ChartTheme>.value(
-        value: _theme,
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(_theme.borderRadius24),
-            topRight: Radius.circular(_theme.borderRadius24),
+    return ChartBottomSheet(
+      theme: widget.theme,
+      child: Column(
+        children: <Widget>[
+          AssetsSearchBar(
+            onSearchTextChanged: (String text) =>
+                setState(() => _filterText = text),
           ),
-          child: Material(
-            elevation: 8,
-            color: _theme.base07Color,
-            child: Column(
-              children: <Widget>[
-                _buildTopHandle(),
-                AssetsSearchBar(
-                  onSearchTextChanged: (String text) =>
-                      setState(() => _filterText = text),
-                ),
-                _buildMarketsList(),
-              ],
-            ),
-          ),
-        ),
+          _buildMarketsList(),
+        ],
       ),
     );
   }
@@ -156,21 +129,6 @@ class _MarketSelectorState extends State<MarketSelector>
 
     return favouritesList;
   }
-
-  Widget _buildTopHandle() => Container(
-        padding: EdgeInsets.symmetric(vertical: _theme.margin08),
-        width: double.infinity,
-        child: Center(
-          child: Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: _theme.base05Color,
-              borderRadius: BorderRadius.circular(_theme.borderRadius04),
-            ),
-          ),
-        ),
-      );
 
   Widget _buildMarketsList() {
     final List<Asset> favouritesList = _getFavouritesList();

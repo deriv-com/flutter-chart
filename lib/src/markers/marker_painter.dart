@@ -35,8 +35,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         canvas,
         center,
         style.entryMarkerStyle,
-        // TODO(Rustem): Provide chart background color from theme.
-        Colors.black,
+        theme.base08Color,
       );
     }
 
