@@ -1,3 +1,4 @@
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
 import 'package:deriv_chart/src/models/tick.dart';
@@ -55,8 +56,7 @@ class DonchianChannelIndicatorItemState
   Widget _buildChannelFillToggle() => Row(
         children: <Widget>[
           Text(
-            // TODO(Rustem): use localization
-            'Channel Fill',
+            ChartLocalization.of(context).labelChannelFill,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -72,14 +72,13 @@ class DonchianChannelIndicatorItemState
         ],
       );
 
-bool _getCurrentFill() =>
+  bool _getCurrentFill() =>
       _channelFill ?? getConfig()?.showChannelFill ?? true;
 
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
           Text(
-            // TODO(Rustem): use localization
-            'High Period',
+            ChartLocalization.of(context).labelHighPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -102,13 +101,12 @@ bool _getCurrentFill() =>
         ],
       );
 
-int _getCurrentHighPeriod() => _highPeriod ?? getConfig()?.highPeriod ?? 10;
+  int _getCurrentHighPeriod() => _highPeriod ?? getConfig()?.highPeriod ?? 10;
 
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[
           Text(
-            // TODO(Rustem): use localization
-            'Low Period',
+            ChartLocalization.of(context).labelLowPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
