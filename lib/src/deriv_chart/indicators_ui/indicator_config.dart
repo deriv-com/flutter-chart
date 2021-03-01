@@ -22,10 +22,10 @@ abstract class IndicatorConfig {
     }
   }
 
-  /// Unique name for this indicator. Used as key in key-value storage.
+  /// Unique name for this indicator. Serves as key in key-value storage.
   String get name;
 
-  /// Serialization to JSON. Used as value in key-value storage.
+  /// Serialization to JSON. Serves as value in key-value storage.
   Map<String, dynamic> toJson();
 
   /// Indicators supported field types
