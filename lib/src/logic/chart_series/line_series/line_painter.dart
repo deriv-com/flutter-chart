@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -34,6 +35,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     double lastVisibleTickX;
     bool isStartPointSet = false;
+
     // Adding visible entries line to the path except the last which might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
       final Tick tick = series.visibleEntries[i];
@@ -56,8 +58,8 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     if (!lastVisibleTick.quote.isNaN) {
       if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
-          epochToX(series.prevLastEntry.epoch),
-          epochToX(lastTick.epoch),
+          epochToX(getEpochOf(series.prevLastEntry)),
+          epochToX(getEpochOf(lastTick)),
           animationInfo.currentTickPercent,
         );
 
@@ -69,10 +71,11 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
         path.lineTo(lastVisibleTickX, tickY);
       } else {
-        lastVisibleTickX = epochToX(lastVisibleTick.epoch);
+        lastVisibleTickX = epochToX(getEpochOf(lastVisibleTick));
         path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
       }
     }
+
     canvas.drawPath(path, linePaint);
 
     if (style.hasArea) {
@@ -80,7 +83,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         canvas,
         size,
         path,
-        epochToX(series.visibleEntries.first.epoch),
+        epochToX(getEpochOf(series.visibleEntries.first)),
         lastVisibleTickX,
         style,
       );

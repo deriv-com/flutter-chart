@@ -79,8 +79,8 @@ class SampleMultiSeries extends Series {
   }
 
   @override
-  void initialize() {
-    series1.initialize();
-    series2.initialize();
-  }
+  int getMinEpoch() => min(series1.getMinEpoch(), series2.getMinEpoch());
+
+  @override
+  int getMaxEpoch() => max(series1.getMaxEpoch(), series2.getMaxEpoch());
 }

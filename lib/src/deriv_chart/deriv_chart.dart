@@ -95,7 +95,10 @@ class _DerivChartState extends State<DerivChart> {
                       indicatorConfig != null)
                   .map((IndicatorConfig indicatorConfig) =>
                       indicatorConfig.getSeries(
-                        IndicatorInput(widget.mainSeries.input),
+                        IndicatorInput(
+                          widget.mainSeries.input,
+                          widget.granularity,
+                        ),
                       ))
             ],
             markerSeries: widget.markerSeries,

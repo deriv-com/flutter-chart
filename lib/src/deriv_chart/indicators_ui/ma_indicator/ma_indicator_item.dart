@@ -47,6 +47,10 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   int period;
 
+  /// MA period
+  @protected
+  int offset;
+
   /// MA line style
   @protected
   LineStyle lineStyle;
@@ -56,6 +60,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         period: getCurrentPeriod(),
         type: getCurrentType(),
         fieldType: getCurrentField(),
+        offset: currentOffset,
         lineStyle: getCurrentLineStyle(),
       );
 
@@ -89,7 +94,8 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
               const SizedBox(width: 10),
               buildFieldTypeMenu(),
             ],
-          )
+          ),
+          buildOffsetField(),
         ],
       );
 
@@ -152,6 +158,32 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
         ],
       );
 
+  /// Builds offset TextFiled
+  @protected
+  Widget buildOffsetField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelOffset,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Slider(
+              value: currentOffset.toDouble(),
+              onChanged: (double value) {
+                setState(() {
+                  offset = value.toInt();
+                  updateIndicator();
+                });
+              },
+              divisions: 100,
+              max: 100,
+              label: '$currentOffset',
+            ),
+          ),
+        ],
+      );
+
   /// Returns MA types dropdown menu
   @protected
   Widget buildMATypeMenu() => Row(
@@ -196,6 +228,10 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current period.
   @protected
   int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
+
+  /// Gets Indicator current period.
+  @protected
+  int get currentOffset => offset ?? getConfig()?.offset ?? 0;
 
   /// Gets Indicator current line style.
   @protected
