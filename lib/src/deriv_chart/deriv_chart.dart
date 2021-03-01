@@ -89,10 +89,19 @@ class _DerivChartState extends State<DerivChart> {
             pipSize: widget.pipSize,
             granularity: widget.granularity,
             controller: widget.controller,
-            secondarySeries: <Series>[
+            overlaySeries: <Series>[
               ..._indicatorsRepo.indicators.values
                   .where((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig != null)
+                      indicatorConfig != null && indicatorConfig.isOverlay)
+                  .map((IndicatorConfig indicatorConfig) =>
+                      indicatorConfig.getSeries(
+                        IndicatorInput(widget.mainSeries.input),
+                      ))
+            ],
+            oscillatorSeries: <Series>[
+              ..._indicatorsRepo.indicators.values
+                  .where((IndicatorConfig indicatorConfig) =>
+                      indicatorConfig != null && !indicatorConfig.isOverlay)
                   .map((IndicatorConfig indicatorConfig) =>
                       indicatorConfig.getSeries(
                         IndicatorInput(widget.mainSeries.input),

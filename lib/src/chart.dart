@@ -14,10 +14,12 @@ import 'package:deriv_chart/src/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/painters/y_grid_label_painter.dart';
 import 'package:deriv_chart/src/painters/y_grid_line_painter.dart';
+import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:deriv_chart/src/paint/paint_text.dart';
 
 import 'callbacks.dart';
 import 'crosshair/crosshair_area.dart';
@@ -28,7 +30,6 @@ import 'logic/quote_grid.dart';
 import 'markers/marker_area.dart';
 import 'models/tick.dart';
 import 'painters/chart_painter.dart';
-import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'theme/chart_default_dark_theme.dart';
 import 'theme/chart_default_light_theme.dart';
 import 'theme/chart_theme.dart';
@@ -43,7 +44,8 @@ class Chart extends StatelessWidget {
     @required this.pipSize,
     @required this.granularity,
     this.controller,
-    this.secondarySeries,
+    this.overlaySeries,
+    this.oscillatorSeries,
     this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
@@ -58,10 +60,11 @@ class Chart extends StatelessWidget {
   /// Chart's main data series.
   final DataSeries<Tick> mainSeries;
 
-  /// List of series to add on chart beside the [mainSeries].
-  ///
-  /// Useful for adding on-chart indicators.
-  final List<Series> secondarySeries;
+  /// List of overlay indicator series to add on chart beside the [mainSeries].
+  final List<Series> overlaySeries;
+
+  /// List of oscillator indicator series to add on chart seperate from the [mainSeries].
+  final List<Series> oscillatorSeries;
 
   /// Open position marker series.
   final MarkerSeries markerSeries;
@@ -127,13 +130,13 @@ class Chart extends StatelessWidget {
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
               child: Column(
-                children: [
+                children: <Widget>[
                   Expanded(
                     flex: 4,
                     child: _ChartImplementation(
                       controller: controller,
                       mainSeries: mainSeries,
-                      secondarySeries: secondarySeries,
+                      overlaySeries: overlaySeries,
                       annotations: annotations,
                       markerSeries: markerSeries,
                       pipSize: pipSize,
@@ -144,12 +147,11 @@ class Chart extends StatelessWidget {
                       opacity: opacity,
                     ),
                   ),
-                  if (secondarySeries.isNotEmpty)
-                    ...secondarySeries
+                  if (oscillatorSeries.isNotEmpty)
+                    ...oscillatorSeries
                         .map((Series series) => Expanded(
-                            flex: 1,
-                            child: _BasicChart(
-                              mainSeries: series,
+                                child: _BottomChart(
+                              series: series,
                               pipSize: pipSize,
                             )))
                         .toList()
@@ -165,31 +167,30 @@ class Chart extends StatelessWidget {
 
 class _ChartImplementation extends _BasicChart {
   _ChartImplementation({
-    Key key,
-    @required this.mainSeries,
-    @required this.pipSize,
+    @required DataSeries<Tick> mainSeries,
+    @required int pipSize,
     @required this.isLive,
+    Key key,
     this.showLoadingAnimationForHistoricalData = true,
     this.showDataFitButton = false,
     this.markerSeries,
     this.opacity,
     this.controller,
     this.onCrosshairAppeared,
-    this.secondarySeries,
+    this.overlaySeries,
     this.annotations,
-  }) : super(key: key, mainSeries: mainSeries, pipSize: pipSize) {
-    chartDataList = <ChartData>[
-      mainSeries,
-      if (secondarySeries != null) ...secondarySeries,
-      if (annotations != null) ...annotations,
-    ];
-  }
+  })  : _mainSeries = mainSeries,
+        chartDataList = <ChartData>[
+          mainSeries,
+          if (overlaySeries != null) ...overlaySeries,
+          if (annotations != null) ...annotations,
+        ],
+        super(key: key, mainSeries: mainSeries, pipSize: pipSize);
 
-  final DataSeries<Tick> mainSeries;
-  final List<Series> secondarySeries;
+  final List<Series> overlaySeries;
+  final DataSeries<Tick> _mainSeries;
   final List<ChartAnnotation<ChartObject>> annotations;
   final MarkerSeries markerSeries;
-  final int pipSize;
   final VoidCallback onCrosshairAppeared;
   final ChartController controller;
 
@@ -200,7 +201,7 @@ class _ChartImplementation extends _BasicChart {
   final double opacity;
 
   // Convenience list to access all chart data.
-  List<ChartData> chartDataList;
+  final List<ChartData> chartDataList;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -208,18 +209,17 @@ class _ChartImplementation extends _BasicChart {
 
 class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
   /// Padding should be at least half of barrier label height.
-  static const double _minPadding = 12;
 
   AnimationController _currentTickBlinkingController;
 
-  Animation _currentTickBlinkAnimation;
+  Animation<double> _currentTickBlinkAnimation;
 
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
   bool get _isScrollToLastTickAvailable =>
-      widget.mainSeries.entries.isNotEmpty &&
-      _xAxis.rightBoundEpoch < widget.mainSeries.entries.last.epoch &&
+      widget._mainSeries.entries.isNotEmpty &&
+      _xAxis.rightBoundEpoch < widget._mainSeries.entries.last.epoch &&
       !_isCrosshairMode;
 
   @override
@@ -255,6 +255,7 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
     }
   }
 
+  @override
   void _didUpdateChartData(covariant _ChartImplementation oldChart) {
     super._didUpdateChartData(oldChart);
     if (widget.chartDataList != null) {
@@ -281,6 +282,7 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
     super.dispose();
   }
 
+  @override
   void _setupAnimations() {
     super._setupAnimations();
     _setupBlinkingAnimation();
@@ -299,21 +301,7 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
     );
   }
 
-  // void _setupCrosshairZoomOutAnimation() {
-  //   _crosshairZoomOutAnimationController = AnimationController(
-  //     vsync: this,
-  //     duration: const Duration(milliseconds: 150),
-  //   );
-  //   _crosshairZoomOutAnimation = CurvedAnimation(
-  //     parent: _crosshairZoomOutAnimationController,
-  //     curve: Curves.easeInOut,
-  //   );
-  // }
-
-  // void _clearGestures() {
-  //   _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
-  // }
-
+  @override
   void _updateVisibleData() {
     // super._updateVisibleData();
 
@@ -323,69 +311,68 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final XAxisModel xAxis = context.watch<XAxisModel>();
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final XAxisModel xAxis = context.watch<XAxisModel>();
 
-        canvasSize = Size(
-          xAxis.width,
-          constraints.maxHeight,
-        );
+          canvasSize = Size(
+            xAxis.width,
+            constraints.maxHeight,
+          );
 
-        _updateVisibleData();
+          _updateVisibleData();
 
-        return Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            // _buildQuoteGridLine(gridLineQuotes),
-            if (widget.showLoadingAnimationForHistoricalData ||
-                widget.mainSeries.entries.isEmpty)
-              _buildLoadingAnimation(),
-            _buildSeries(),
-            // _buildQuoteGridLabel(gridLineQuotes),
-            super.build(context),
-            _buildAnnotations(),
-            if (widget.markerSeries != null)
-              MarkerArea(
-                markerSeries: widget.markerSeries,
-                quoteToCanvasY: _quoteToCanvasY,
-              ),
-            _buildCrosshairArea(),
-            if (_isScrollToLastTickAvailable)
-              Positioned(
-                bottom: 0,
-                right: quoteLabelsTouchAreaWidth,
-                child: _buildScrollToLastTickButton(),
-              ),
-            if (widget.showDataFitButton &&
-                widget.mainSeries.entries.isNotEmpty)
-              Positioned(
-                bottom: 0,
-                left: 0,
-                child: _buildDataFitButton(),
-              ),
-          ],
-        );
-      },
-    );
-  }
+          return Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              // _buildQuoteGridLine(gridLineQuotes),
+
+              if (widget.showLoadingAnimationForHistoricalData ||
+                  widget._mainSeries.entries.isEmpty)
+                _buildLoadingAnimation(),
+              // _buildQuoteGridLabel(gridLineQuotes),
+              super.build(context),
+              _buildSeries(),
+              _buildAnnotations(),
+              if (widget.markerSeries != null)
+                MarkerArea(
+                  markerSeries: widget.markerSeries,
+                  quoteToCanvasY: _quoteToCanvasY,
+                ),
+              _buildCrosshairArea(),
+              if (_isScrollToLastTickAvailable)
+                Positioned(
+                  bottom: 0,
+                  right: quoteLabelsTouchAreaWidth,
+                  child: _buildScrollToLastTickButton(),
+                ),
+              if (widget.showDataFitButton &&
+                  widget._mainSeries.entries.isNotEmpty)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: _buildDataFitButton(),
+                ),
+            ],
+          );
+        },
+      );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
-        loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+        loadingRightBoundX: widget._mainSeries.visibleEntries.isEmpty
             ? _xAxis.width
             : _xAxis.xFromEpoch(
-                widget.mainSeries.visibleEntries.first.epoch,
+                widget._mainSeries.visibleEntries.first.epoch,
               ),
       );
 
   Widget _buildAnnotations() => MultipleAnimatedBuilder(
-        animations: [
+        animations: <Animation<double>>[
           _currentTickAnimation,
           _currentTickBlinkAnimation,
         ],
         builder: (BuildContext context, Widget child) =>
-            Stack(fit: StackFit.expand, children: [
+            Stack(fit: StackFit.expand, children: <Widget>[
           if (widget.annotations != null)
             ...widget.annotations
                 .map((ChartData annotation) => CustomPaint(
@@ -408,24 +395,23 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
 
   Widget _buildCrosshairArea() => AnimatedBuilder(
         animation: _crosshairZoomOutAnimation,
-        builder: (BuildContext context, Widget child) {
-          return CrosshairArea(
-            mainSeries: widget.mainSeries,
-            pipSize: widget.pipSize,
-            quoteToCanvasY: _quoteToCanvasY,
-            onCrosshairAppeared: () {
-              _isCrosshairMode = true;
-              widget.onCrosshairAppeared?.call();
-              _crosshairZoomOutAnimationController.forward();
-            },
-            onCrosshairDisappeared: () {
-              _isCrosshairMode = false;
-              _crosshairZoomOutAnimationController.reverse();
-            },
-          );
-        },
+        builder: (BuildContext context, Widget child) => CrosshairArea(
+          mainSeries: widget.mainSeries,
+          pipSize: widget.pipSize,
+          quoteToCanvasY: _quoteToCanvasY,
+          onCrosshairAppeared: () {
+            _isCrosshairMode = true;
+            widget.onCrosshairAppeared?.call();
+            _crosshairZoomOutAnimationController.forward();
+          },
+          onCrosshairDisappeared: () {
+            _isCrosshairMode = false;
+            _crosshairZoomOutAnimationController.reverse();
+          },
+        ),
       );
 
+  @override
   List<double> _getGridLineQuotes() => gridQuotes(
         quoteGridInterval: quoteGridInterval(_quotePerPx),
         topBoundQuote: _topBoundQuote,
@@ -435,11 +421,13 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
         bottomPadding: _bottomPadding,
       );
 
+  @override
   void _onPanStart(ScaleStartDetails details) {
     _panStartedOnQuoteLabelsArea =
         _onQuoteLabelsTouchArea(details.localFocalPoint);
   }
 
+  @override
   void _onPanUpdate(DragUpdateDetails details) {
     if (_panStartedOnQuoteLabelsArea &&
         _onQuoteLabelsTouchArea(details.localPosition)) {
@@ -447,9 +435,11 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
     }
   }
 
+  @override
   bool _onQuoteLabelsTouchArea(Offset position) =>
       position.dx > _xAxis.width - quoteLabelsTouchAreaWidth;
 
+  @override
   void _scaleVertically(double dy) {
     setState(() {
       verticalPaddingFraction =
@@ -480,7 +470,7 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
               animationInfo: AnimationInfo(
                 currentTickPercent: _currentTickAnimation.value,
               ),
-              series: widget.secondarySeries,
+              series: widget.overlaySeries,
               chartConfig: context.watch<ChartConfig>(),
               theme: context.watch<ChartTheme>(),
               epochToCanvasX: _xAxis.xFromEpoch,
@@ -535,6 +525,51 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
   }
 }
 
+class _BottomChart extends _BasicChart {
+  const _BottomChart({
+    @required Series series,
+    @required int pipSize,
+    Key key,
+  }) : super(key: key, mainSeries: series, pipSize: pipSize);
+
+  @override
+  _BottomChartState createState() => _BottomChartState();
+}
+
+class _BottomChartState extends _BasicChartState<_BottomChart> {
+  @override
+  List<double> _getGridLineQuotes() => gridQuotes(
+        quoteGridInterval: quoteGridInterval(_quotePerPx),
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize.height,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
+  @override
+  Widget build(BuildContext context) {
+    final ChartDefaultTheme theme =
+        Theme.of(context).brightness == Brightness.dark
+            ? ChartDefaultDarkTheme()
+            : ChartDefaultLightTheme();
+    return Stack(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Divider(
+              color: theme.base01Color,
+            ),
+            Expanded(
+              child: super.build(context),
+            ),
+            Container(),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class _BasicChart extends StatefulWidget {
   const _BasicChart({
     @required this.mainSeries,
@@ -546,7 +581,8 @@ class _BasicChart extends StatefulWidget {
   final int pipSize;
 
   @override
-  _BasicChartState createState() => _BasicChartState<_BasicChart>();
+  _BasicChartState<_BasicChart> createState() =>
+      _BasicChartState<_BasicChart>();
 }
 
 class _BasicChartState<T extends _BasicChart> extends State<T>
@@ -563,7 +599,7 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
   double verticalPaddingFraction = 0.1;
 
   /// Padding should be at least half of barrier label height.
-  static const double _minPadding = 12;
+  static const double _minPadding = 10;
 
   /// Duration of quote bounds animated transition.
   final Duration quoteBoundsAnimationDuration =
@@ -580,13 +616,11 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
 
-  Animation _currentTickAnimation;
-  Animation _currentTickBlinkAnimation;
+  Animation<double> _currentTickAnimation;
 
   // Crosshair related state.
   AnimationController _crosshairZoomOutAnimationController;
-  Animation _crosshairZoomOutAnimation;
-  bool _isCrosshairMode = false;
+  Animation<double> _crosshairZoomOutAnimation;
   double get _topBoundQuote => _topBoundQuoteAnimationController.value;
 
   double get _bottomBoundQuote => _bottomBoundQuoteAnimationController.value;
@@ -786,19 +820,17 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
           _topBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
         ],
-        builder: (BuildContext context, Widget child) {
-          return CustomPaint(
-            painter: YGridLinePainter(
-              gridLineQuotes: gridLineQuotes,
-              quoteToCanvasY: _quoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: (gridLineQuotes?.isNotEmpty ?? false)
-                  ? _labelWidth(gridLineQuotes.first,
-                      context.watch<ChartTheme>().gridStyle.yLabelStyle)
-                  : 0,
-            ),
-          );
-        },
+        builder: (BuildContext context, Widget child) => CustomPaint(
+          painter: YGridLinePainter(
+            gridLineQuotes: gridLineQuotes,
+            quoteToCanvasY: _quoteToCanvasY,
+            style: context.watch<ChartTheme>().gridStyle,
+            labelWidth: (gridLineQuotes?.isNotEmpty ?? false)
+                ? _labelWidth(gridLineQuotes.first,
+                    context.watch<ChartTheme>().gridStyle.yLabelStyle)
+                : 0,
+          ),
+        ),
       );
 
   Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
