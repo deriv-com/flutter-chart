@@ -1,7 +1,11 @@
 {
   "@@locale": "en",
+  "labelChannelFill": "Channel Fill",
   "labelField": "Field",
   "labelPeriod": "Period",
+  "labelOffset": "Offset",
+  "labelHighPeriod": "High Period",
+  "labelLowPeriod": "Low Period",
   "labelShift": "Shift",
   "labelBandsCount": "Bands Count",
   "labelSearchAssets": "Search assets",

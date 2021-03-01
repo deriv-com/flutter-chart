@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
@@ -18,15 +19,35 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
     String id,
     this.options, {
     DataSeriesStyle style,
+    this.offset = 0,
   })  : _inputFirstTick = inputIndicator.entries.isNotEmpty
             ? inputIndicator.entries.first
             : null,
+        _inputIndicatorData = inputIndicator.input,
         super(inputIndicator.entries, id, style: style);
 
   /// Input indicator to calculate this indicator value on.
   ///
   /// Input data might be a result of another [Indicator]. For example [CloseValueIndicator] or [HL2Indicator].
   final Indicator<Tick> inputIndicator;
+
+  /// The offset of this indicator.
+  ///
+  /// Indicator's data will be shifted by this number of tick while they are being painted.
+  /// For example if we consider `*`s as indicator data on the chart below with default [offset] = 0:
+  /// |                                 (Tick5)
+  /// |    *            (Tick3) (Tick4)    *
+  /// | (Tick1)    *             *
+  /// |         (Tick2)   *
+  ///  ------------------------------------------->
+  ///
+  /// Indicator's data with [offset] = 1 will be like:
+  /// |                                 (Tick5)
+  /// |            *    (Tick3) (Tick4)          *
+  /// | (Tick1)            *              *
+  /// |         (Tick2)           *
+  ///  ------------------------------------------->
+  final int offset;
 
   /// Indicator options
   ///
@@ -42,6 +63,12 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
   final Tick _inputFirstTick;
+
+  final IndicatorInput _inputIndicatorData;
+
+  @override
+  int getEpochOf(Tick t) =>
+      super.getEpochOf(t) + offset * _inputIndicatorData.granularity;
 
   @override
   void initialize() {
