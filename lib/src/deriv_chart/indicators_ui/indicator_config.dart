@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
+
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -10,22 +12,23 @@ abstract class IndicatorConfig {
   /// Initializes
   const IndicatorConfig();
 
-  /// Create a concrete indicator config implementation from JSON.
+  /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
     if (!json.containsKey('name')) {
       throw ArgumentError.value(json, 'json', 'Missing indicator name.');
     }
 
     switch (json['name']) {
+      case MAIndicatorConfig.name:
+        return MAIndicatorConfig.fromJson(json);
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
     }
   }
 
-  /// Unique name for this indicator. Serves as key in key-value storage.
-  String get name;
-
   /// Serialization to JSON. Serves as value in key-value storage.
+  ///
+  /// Must specify indicator `name`.
   Map<String, dynamic> toJson();
 
   /// Indicators supported field types

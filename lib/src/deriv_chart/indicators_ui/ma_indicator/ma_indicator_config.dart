@@ -16,6 +16,25 @@ class MAIndicatorConfig extends IndicatorConfig {
     this.lineStyle,
   }) : super();
 
+  /// Initializes from JSON.
+  MAIndicatorConfig.fromJson(Map<String, dynamic> json)
+      : period = json['period'],
+        // TODO: Parse type
+        type = null,
+        fieldType = json['field_type'],
+        // TODO: Parse style
+        lineStyle = null;
+
+  /// Unique name for this indicator. Serves as key in key-value storage.
+  static const String name = 'ma';
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'name': name,
+        'period': period,
+        'field_type': fieldType,
+      };
+
   /// Moving Average period
   final int period;
 
