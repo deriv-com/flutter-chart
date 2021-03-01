@@ -10,7 +10,7 @@ abstract class IndicatorConfig {
   /// Initializes
   const IndicatorConfig();
 
-  /// Create a concrete indicator config implementation based on JSON.
+  /// Create a concrete indicator config implementation from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
     if (!json.containsKey('name')) {
       throw ArgumentError.value(json, 'json', 'Missing indicator name.');
