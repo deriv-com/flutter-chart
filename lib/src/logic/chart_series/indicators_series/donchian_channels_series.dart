@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -215,4 +216,16 @@ class DonchianChannelsSeries extends Series {
       );
     }
   }
+
+  @override
+  int getMaxEpoch() => max(
+        _lowerChannelSeries.getMaxEpoch(),
+        max(
+          _middleChannelSeries.getMaxEpoch(),
+          _upperChannelSeries.getMaxEpoch(),
+        ),
+      );
+
+  @override
+  int getMinEpoch() => _lowerChannelSeries.getMinEpoch();
 }

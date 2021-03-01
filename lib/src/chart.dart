@@ -112,6 +112,12 @@ class Chart extends StatelessWidget {
       granularity: granularity,
     );
 
+    final List<ChartData> chartDataList = <ChartData>[
+      mainSeries,
+      if (secondarySeries != null) ...secondarySeries,
+      if (annotations != null) ...annotations,
+    ];
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: chartTheme),
@@ -126,6 +132,8 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
+              minEpoch: chartDataList.getMinEpoch(),
+              maxEpoch: chartDataList.getMaxEpoch(),
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
@@ -161,13 +169,12 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.secondarySeries,
     this.annotations,
-  }) : super(key: key) {
-    chartDataList = <ChartData>[
-      mainSeries,
-      if (secondarySeries != null) ...secondarySeries,
-      if (annotations != null) ...annotations,
-    ];
-  }
+  })  : chartDataList = <ChartData>[
+          mainSeries,
+          if (secondarySeries != null) ...secondarySeries,
+          if (annotations != null) ...annotations,
+        ],
+        super(key: key);
 
   final DataSeries<Tick> mainSeries;
   final List<Series> secondarySeries;
@@ -184,7 +191,7 @@ class _ChartImplementation extends StatefulWidget {
   final double opacity;
 
   // Convenience list to access all chart data.
-  List<ChartData> chartDataList;
+  final List<ChartData> chartDataList;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -283,6 +290,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
     }
+
+    _xAxis.update(
+      minEpoch: widget.chartDataList.getMinEpoch(),
+      maxEpoch: widget.chartDataList.getMaxEpoch(),
+    );
   }
 
   void _updateBlinkingAnimationStatus() {
@@ -558,10 +570,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
-        loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+        loadingRightBoundX: widget.mainSeries.entries.isEmpty
             ? _xAxis.width
             : _xAxis.xFromEpoch(
-                widget.mainSeries.visibleEntries.first.epoch,
+                widget.mainSeries.entries.first.epoch,
               ),
       );
 

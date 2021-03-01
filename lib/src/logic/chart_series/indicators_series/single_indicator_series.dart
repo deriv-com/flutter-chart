@@ -29,6 +29,7 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   /// [inputIndicator]  The indicator that returned indicator from [indicatorCreator]
   ///                   will calculate the its results on.
   /// [options]         The options of indicator.
+  /// [offset]          The offset of this indicator. Shift indicator's data by this number forward/backward.
   SingleIndicatorSeries({
     @required this.painterCreator,
     @required this.indicatorCreator,
@@ -36,7 +37,8 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
     @required IndicatorOptions options,
     String id,
     DataSeriesStyle style,
-  }) : super(inputIndicator, id, options, style: style);
+    int offset = 0,
+  }) : super(inputIndicator, id, options, style: style, offset: offset);
 
   /// Function which will be called to get the painter object of this class.
   final DataPainterCreator painterCreator;

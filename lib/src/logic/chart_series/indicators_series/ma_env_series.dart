@@ -27,20 +27,20 @@ class MAEnvSeries extends Series {
     String id,
     MAEnvOptions maEnvOptions,
   }) : this.fromIndicator(
-          CloseValueIndicator(indicatorInput),
+          CloseValueIndicator<Tick>(indicatorInput),
           id: id,
           maEnvOptions: maEnvOptions,
         );
 
   /// Initializes
   MAEnvSeries.fromIndicator(
-    Indicator indicator, {
+    Indicator<Tick> indicator, {
     String id,
     this.maEnvOptions,
   })  : _fieldIndicator = indicator,
         super(id);
 
-  final Indicator _fieldIndicator;
+  final Indicator<Tick> _fieldIndicator;
 
   /// Moving Average Envelope options
   MAEnvOptions maEnvOptions;
@@ -79,7 +79,7 @@ class MAEnvSeries extends Series {
 
     _upperSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => MAEnvUpperIndicator(
+      indicatorCreator: () => MAEnvUpperIndicator<Tick>(
         smaIndicator,
         maEnvOptions.shiftType,
         maEnvOptions.shift,
@@ -142,4 +142,10 @@ class MAEnvSeries extends Series {
     _upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
+
+  @override
+  int getMaxEpoch() => _middleSeries.getMaxEpoch();
+
+  @override
+  int getMinEpoch() => _middleSeries.getMinEpoch();
 }

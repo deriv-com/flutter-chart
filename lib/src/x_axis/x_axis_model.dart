@@ -49,12 +49,17 @@ class XAxisModel extends ChangeNotifier {
     @required AnimationController animationController,
     @required bool isLive,
     bool startWithDataFitMode = false,
+    int minEpoch,
+    int maxEpoch,
     this.onScale,
     this.onScroll,
   }) {
     _nowEpoch = entries?.isNotEmpty ?? false
         ? entries.last.epoch
         : DateTime.now().millisecondsSinceEpoch;
+
+    _minEpoch = minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
+    _maxEpoch = maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
 
     _lastEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
@@ -113,6 +118,9 @@ class XAxisModel extends ChangeNotifier {
   final VoidCallback onScroll;
 
   List<Tick> _entries;
+
+  int _minEpoch, _maxEpoch;
+
   final GapManager _gapManager = GapManager();
   AnimationController _scrollAnimationController;
   double _prevScrollAnimationValue;
@@ -125,11 +133,9 @@ class XAxisModel extends ChangeNotifier {
   int _rightBoundEpoch;
   double _panSpeed;
 
-  int get _firstEntryEpoch =>
-      _entries.isNotEmpty ? _entries.first.epoch : _nowEpoch;
+  int get _firstEntryEpoch => _minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
 
-  int get _lastEntryEpoch =>
-      _entries.isNotEmpty ? _entries.last.epoch : _nowEpoch;
+  int get _lastEntryEpoch => _maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -148,7 +154,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch => _shiftEpoch(
-      _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
+      _entries?.isNotEmpty ?? false ? _lastEntryEpoch : _nowEpoch,
       maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
@@ -230,6 +236,9 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Should be called after [_updateGranularity] and [_updateIsLive].
   void _updateEntries(List<Tick> entries) {
+    if (entries == null) {
+      return;
+    }
     final bool firstLoad = _entries == null;
 
     final bool tickLoad = !firstLoad &&
@@ -456,10 +465,19 @@ class XAxisModel extends ChangeNotifier {
       _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
 
   /// Updates the [XAxisModel] model variables.
-  void update({bool isLive, int granularity, List<Tick> entries}) {
+  void update({
+    bool isLive,
+    int granularity,
+    List<Tick> entries,
+    int minEpoch,
+    int maxEpoch,
+  }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
+
+    _minEpoch = minEpoch ?? _minEpoch;
+    _maxEpoch = maxEpoch ?? _maxEpoch;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.
