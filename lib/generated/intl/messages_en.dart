@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
     "labelHighPeriod" : MessageLookupByLibrary.simpleMessage("High Period"),
     "labelLowPeriod" : MessageLookupByLibrary.simpleMessage("Low Period"),
+    "labelOffset" : MessageLookupByLibrary.simpleMessage("Offset"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
     "labelShift" : MessageLookupByLibrary.simpleMessage("Shift"),

@@ -65,6 +65,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Offset`
+  String get labelOffset {
+    return Intl.message(
+      'Offset',
+      name: 'labelOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `High Period`
   String get labelHighPeriod {
     return Intl.message(
