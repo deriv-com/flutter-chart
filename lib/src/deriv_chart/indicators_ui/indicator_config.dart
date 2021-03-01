@@ -10,6 +10,24 @@ abstract class IndicatorConfig {
   /// Initializes
   const IndicatorConfig();
 
+  /// Create a concrete indicator config implementation based on JSON.
+  factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
+    if (!json.containsKey('name')) {
+      throw ArgumentError.value(json, 'json', 'Missing indicator name.');
+    }
+
+    switch (json['name']) {
+      default:
+        throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
+    }
+  }
+
+  /// Unique name for this indicator. Used as key in key-value storage.
+  String get name;
+
+  /// Serialization to JSON. Used as value in key-value storage.
+  Map<String, dynamic> toJson();
+
   /// Indicators supported field types
   static final Map<String, FieldIndicatorBuilder> supportedFieldTypes =
       <String, FieldIndicatorBuilder>{
