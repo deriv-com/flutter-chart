@@ -557,13 +557,26 @@ class _BottomChartState extends _BasicChartState<_BottomChart> {
         Column(
           children: <Widget>[
             Divider(
-              color: theme.base01Color,
+              color: theme.brandGreenishColor,
             ),
             Expanded(
               child: super.build(context),
             ),
-            Container(),
           ],
+        ),
+        Positioned(
+          top: 15,
+          left: 10,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: theme.base01Color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(2),
+            ),
+            child: Text(
+              widget.mainSeries.runtimeType.toString(),
+            ),
+          ),
         ),
       ],
     );
