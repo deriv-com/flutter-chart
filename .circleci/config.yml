@@ -41,12 +41,6 @@ commands:
           name: Run the application tests
           command: flutter test --coverage
       - run:
-          name: Run deriv_techincal_analysis tests
-          command: |
-                cd deriv_technical_analysis/
-                flutter test
-                cd ..
-      - run:
           name: Upload coverage
           command: |
                 sudo gem install coveralls-lcov

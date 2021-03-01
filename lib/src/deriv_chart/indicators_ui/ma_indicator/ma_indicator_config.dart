@@ -14,6 +14,7 @@ class MAIndicatorConfig extends IndicatorConfig {
     this.type,
     this.fieldType,
     this.lineStyle,
+    this.offset = 0,
   }) : super();
 
   /// Moving Average period
@@ -28,9 +29,14 @@ class MAIndicatorConfig extends IndicatorConfig {
   /// MA line style
   final LineStyle lineStyle;
 
+  /// The offset of this indicator.
+  final int offset;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
         options: MAOptions(period: period, type: type),
+        offset: offset,
+        style: lineStyle,
       );
 }

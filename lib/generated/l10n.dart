@@ -35,6 +35,16 @@ class ChartLocalization {
     return Localizations.of<ChartLocalization>(context, ChartLocalization);
   }
 
+  /// `Channel Fill`
+  String get labelChannelFill {
+    return Intl.message(
+      'Channel Fill',
+      name: 'labelChannelFill',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Field`
   String get labelField {
     return Intl.message(
@@ -50,6 +60,36 @@ class ChartLocalization {
     return Intl.message(
       'Period',
       name: 'labelPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Offset`
+  String get labelOffset {
+    return Intl.message(
+      'Offset',
+      name: 'labelOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `High Period`
+  String get labelHighPeriod {
+    return Intl.message(
+      'High Period',
+      name: 'labelHighPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Low Period`
+  String get labelLowPeriod {
+    return Intl.message(
+      'Low Period',
+      name: 'labelLowPeriod',
       desc: '',
       args: [],
     );
