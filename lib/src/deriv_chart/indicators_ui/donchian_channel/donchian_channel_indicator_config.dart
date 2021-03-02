@@ -17,7 +17,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     this.middleLineStyle = const LineStyle(color: Colors.white),
     this.lowerLineStyle = const LineStyle(color: Colors.green),
     this.fillColor = Colors.white12,
-  }) : super(isOverlay: false);
+  }) : super();
 
   /// Number of last candles used to calculate the highest value.
   final int highPeriod;
