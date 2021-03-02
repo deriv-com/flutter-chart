@@ -22,8 +22,6 @@ dependencies:
       path: packages/deriv_technical_analysis
       ref: dev
 
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
