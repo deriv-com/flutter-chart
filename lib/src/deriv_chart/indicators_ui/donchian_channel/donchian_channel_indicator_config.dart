@@ -17,7 +17,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     this.middleLineStyle = const LineStyle(color: Colors.white),
     this.lowerLineStyle = const LineStyle(color: Colors.green),
     this.fillColor = Colors.white12,
-  }) : super();
+  }) : super(isOverlay: false);
 
   /// Number of last candles used to calculate the highest value.
   final int highPeriod;
@@ -41,7 +41,8 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   final Color fillColor;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) => DonchianChannelsSeries.fromIndicator(
+  Series getSeries(IndicatorInput indicatorInput) =>
+      DonchianChannelsSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes['high'](indicatorInput),
         IndicatorConfig.supportedFieldTypes['low'](indicatorInput),
         this,

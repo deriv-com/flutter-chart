@@ -527,6 +527,9 @@ class _BottomChart extends _BasicChart {
 
 class _BottomChartState extends _BasicChartState<_BottomChart> {
   @override
+  void calculateGridLineQuotes() => gridLineQuotes = const <double>[];
+
+  @override
   Widget build(BuildContext context) {
     final ChartDefaultTheme theme =
         Theme.of(context).brightness == Brightness.dark
@@ -587,6 +590,7 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
 
   Size canvasSize;
 
+  /// The model to use to calculate gridline quotes
   YAxisModel yAxisModel;
 
   /// Fraction of the chart's height taken by top or bottom padding.
@@ -605,6 +609,9 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
 
   /// Bottom quote bound target for animated transition.
   double bottomBoundQuoteTarget = 30;
+
+  /// Calculated quotes for showing the the grid line.
+  List<double> gridLineQuotes;
 
   AnimationController _currentTickAnimationController;
 
@@ -668,6 +675,8 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
     _clearGestures();
     super.dispose();
   }
+
+  void calculateGridLineQuotes() => gridLineQuotes = yAxisModel.gridQuotes();
 
   void _playNewTickAnimation() {
     _currentTickAnimationController
@@ -799,9 +808,7 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
 
           _updateVisibleData();
           _updateQuoteBoundTargets();
-
-          final List<double> gridLineQuotes = yAxisModel.gridQuotes();
-
+          calculateGridLineQuotes();
           return Stack(
             fit: StackFit.expand,
             children: <Widget>[
