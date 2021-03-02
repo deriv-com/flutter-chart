@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -49,6 +50,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         onAddIndicator: widget.onAddIndicator,
       ))
       ..add(MAEnvIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(AlligatorIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ));
