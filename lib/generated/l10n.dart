@@ -165,6 +165,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Bands Count`
+  String get labelBandsCount {
+    return Intl.message(
+      'Bands Count',
+      name: 'labelBandsCount',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Search assets`
   String get labelSearchAssets {
     return Intl.message(

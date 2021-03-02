@@ -490,17 +490,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _updateVisibleData();
         _updateQuoteBoundTargets();
 
-        final List<double> gridLineQuotes = _getGridLineQuotes();
-
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            _buildQuoteGridLine(gridLineQuotes),
+            _buildQuoteGridLine(),
             if (widget.showLoadingAnimationForHistoricalData ||
                 widget.mainSeries.entries.isEmpty)
               _buildLoadingAnimation(),
             _buildChartData(),
-            _buildQuoteGridLabel(gridLineQuotes),
+            _buildQuoteGridLabel(),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(
@@ -527,14 +525,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
-      MultipleAnimatedBuilder(
+  Widget _buildQuoteGridLine() => MultipleAnimatedBuilder(
         animations: [
           // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
         ],
         builder: (BuildContext context, Widget child) {
+          final List<double> gridLineQuotes = _getGridLineQuotes();
           return CustomPaint(
             painter: YGridLinePainter(
               gridLineQuotes: gridLineQuotes,
@@ -549,8 +547,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
         },
       );
 
-  Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
-      MultipleAnimatedBuilder(
+  Widget _buildQuoteGridLabel() => MultipleAnimatedBuilder(
         animations: [
           _topBoundQuoteAnimationController,
           _bottomBoundQuoteAnimationController,
@@ -560,7 +557,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           return CustomPaint(
             size: canvasSize,
             painter: YGridLabelPainter(
-              gridLineQuotes: gridLineQuotes,
+              gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
