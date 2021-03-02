@@ -231,7 +231,7 @@ class AlligatorIndicatorItemState
   @protected
   int get currentTeethPeriod => _teethPeriod ?? getConfig()?.teethPeriod ?? 8;
 
-  /// Gets current jaw period.
+  /// Gets current lips period.
   @protected
   int get currentLipsPeriod => _lipsPeriod ?? getConfig()?.lipsPeriod ?? 5;
 
