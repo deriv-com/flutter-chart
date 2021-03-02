@@ -18,23 +18,23 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.lipsOffset = 3,
   }) : super();
 
-  /// Number of last candles used to calculate the highest value.
-  final int jawPeriod;
-
-  /// Number of last candles used to calculate the lowest value.
-  final int teethPeriod;
-
-  /// Whether the area between upper and lower channel is filled.
-  final int lipsPeriod;
-
-  /// Upper line style.
+  /// Shift to future in jaw series
   final int jawOffset;
 
-  /// Middle line style.
+  /// Smoothing period for jaw series
+  final int jawPeriod;
+
+  /// Shift to future in teeth series
   final int teethOffset;
 
-  /// Lower line style.
+  /// Smoothing period for teeth series
+  final int teethPeriod;
+
+  /// Shift to future in lips series
   final int lipsOffset;
+
+  /// Smoothing period for lips series
+  final int lipsPeriod;
 
 
   @override
