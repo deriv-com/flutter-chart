@@ -16,11 +16,11 @@ class AlligatorIndicatorItem extends IndicatorItem {
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
   }) : super(
-    key: key,
-    title: 'Alligator',
-    ticks: ticks,
-    onAddIndicator: onAddIndicator,
-  );
+          key: key,
+          title: 'Alligator',
+          ticks: ticks,
+          onAddIndicator: onAddIndicator,
+        );
 
   @override
   IndicatorItemState<IndicatorConfig> createIndicatorItemState() =>
@@ -38,8 +38,7 @@ class AlligatorIndicatorItemState
   int _lipsPeriod;
 
   @override
-  AlligatorIndicatorConfig createIndicatorConfig() =>
-      AlligatorIndicatorConfig(
+  AlligatorIndicatorConfig createIndicatorConfig() => AlligatorIndicatorConfig(
         jawPeriod: currentJawPeriod,
         jawOffset: currentJawOffset,
         teethPeriod: currentTeethPeriod,
@@ -49,8 +48,7 @@ class AlligatorIndicatorItemState
       );
 
   @override
-  Widget getIndicatorOptions() =>
-      Column(
+  Widget getIndicatorOptions() => Column(
         children: <Widget>[
           buildJawPeriodField(),
           buildJawOffsetField(),
@@ -63,13 +61,10 @@ class AlligatorIndicatorItemState
 
   /// Builds jaw offset
   @protected
-  Widget buildJawOffsetField() =>
-      Row(
+  Widget buildJawOffsetField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization
-                .of(context)
-                .labelOffset,
+            ChartLocalization.of(context).labelJawOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -90,16 +85,12 @@ class AlligatorIndicatorItemState
         ],
       );
 
-
   /// Builds jaw period
   @protected
-  Widget buildJawPeriodField() =>
-      Row(
+  Widget buildJawPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization
-                .of(context)
-                .labelPeriod,
+            ChartLocalization.of(context).labelJawPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -120,16 +111,12 @@ class AlligatorIndicatorItemState
         ],
       );
 
-
   /// Builds teeth offset
   @protected
-  Widget buildTeethOffsetField() =>
-      Row(
+  Widget buildTeethOffsetField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization
-                .of(context)
-                .labelOffset,
+            ChartLocalization.of(context).labelTeethOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -150,16 +137,12 @@ class AlligatorIndicatorItemState
         ],
       );
 
-
   /// Builds teeth period
   @protected
-  Widget buildTeethPeriodField() =>
-      Row(
+  Widget buildTeethPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization
-                .of(context)
-                .labelPeriod,
+            ChartLocalization.of(context).labelTeethPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -180,16 +163,12 @@ class AlligatorIndicatorItemState
         ],
       );
 
-
   /// Builds lips offset
   @protected
-  Widget buildLipsOffsetField() =>
-      Row(
+  Widget buildLipsOffsetField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization
-                .of(context)
-                .labelOffset,
+            ChartLocalization.of(context).labelLipsOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -210,16 +189,12 @@ class AlligatorIndicatorItemState
         ],
       );
 
-
   /// Builds lips period
   @protected
-  Widget buildLipsPeriodField() =>
-      Row(
+  Widget buildLipsPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization
-                .of(context)
-                .labelPeriod,
+            ChartLocalization.of(context).labelLipsPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

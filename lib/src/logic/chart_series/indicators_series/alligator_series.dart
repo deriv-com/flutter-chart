@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/alligator_options.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -16,20 +15,18 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import '../series.dart';
 import '../series_painter.dart';
-import 'ma_series.dart';
 
-
-/// A series which shows Moving Average Envelope data calculated from 'entries'.
+/// A series which shows Alligator Series data calculated from 'entries'.
 class AlligatorSeries extends Series {
-  /// Initializes a series which shows shows moving Average data calculated from [entries].
+  /// Initializes a series which shows shows Alligator data calculated from [indicatorInput].
   ///
-  /// [maEnvOptions] Moving Average Envelope indicator options.
+  /// [alligatorOptions] Alligator indicator options.
   AlligatorSeries(
     IndicatorInput indicatorInput, {
     String id,
     AlligatorOptions alligatorOptions,
   }) : this.fromIndicator(
-          CloseValueIndicator<Tick>(indicatorInput),
+          HL2Indicator<Tick>(indicatorInput),
           id: id,
           alligatorOptions: alligatorOptions,
         );
@@ -44,7 +41,7 @@ class AlligatorSeries extends Series {
 
   final Indicator<Tick> _fieldIndicator;
 
-  /// Moving Average Envelope options
+  /// Alligator options
   AlligatorOptions alligatorOptions;
 
   SingleIndicatorSeries _jawSeries;
@@ -58,8 +55,8 @@ class AlligatorSeries extends Series {
         Series series,
       ) =>
           LinePainter(series),
-      indicatorCreator: () => SMMAIndicator(
-          _fieldIndicator, alligatorOptions.jawPeriod,alligatorOptions.jawOffset.toDouble()),
+      indicatorCreator: () =>
+          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.jawPeriod),
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.blue),
@@ -71,8 +68,8 @@ class AlligatorSeries extends Series {
         Series series,
       ) =>
           LinePainter(series),
-      indicatorCreator: () => SMMAIndicator(
-          _fieldIndicator, alligatorOptions.teethPeriod,alligatorOptions.teethOffset.toDouble()),
+      indicatorCreator: () =>
+          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.teethPeriod),
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.red),
@@ -84,8 +81,8 @@ class AlligatorSeries extends Series {
         Series series,
       ) =>
           LinePainter(series),
-      indicatorCreator: () => SMMAIndicator(
-          _fieldIndicator, alligatorOptions.lipsPeriod,alligatorOptions.lipsOffset.toDouble()),
+      indicatorCreator: () =>
+          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.lipsPeriod),
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.green),
@@ -99,11 +96,11 @@ class AlligatorSeries extends Series {
   bool didUpdate(ChartData oldData) {
     final AlligatorSeries series = oldData;
 
-    final bool _lowerUpdated = _jawSeries.didUpdate(series?._jawSeries);
-    final bool _middleUpdated = _teethSeries.didUpdate(series?._teethSeries);
-    final bool _upperUpdated = _lipsSeries.didUpdate(series?._lipsSeries);
+    final bool _jawUpdated = _jawSeries.didUpdate(series?._jawSeries);
+    final bool _teethUpdated = _teethSeries.didUpdate(series?._teethSeries);
+    final bool _lipsUpdated = _lipsSeries.didUpdate(series?._lipsSeries);
 
-    return _lowerUpdated || _middleUpdated || _upperUpdated;
+    return _jawUpdated || _teethUpdated || _lipsUpdated;
   }
 
   @override
@@ -114,10 +111,7 @@ class AlligatorSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
-      // But to be safe we calculate min and max. from all three series.
-      <double>[
+  List<double> recalculateMinMax() => <double>[
         min(
           min(_jawSeries.minValue, _teethSeries.minValue),
           _lipsSeries.minValue,
@@ -147,14 +141,18 @@ class AlligatorSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => max(
-        max(_jawSeries?.getMaxEpoch(), _teethSeries?.getMaxEpoch()),
-        _lipsSeries.getMaxEpoch(),
-      );
+  int getMaxEpoch() => _jawSeries.entries == null
+      ? null
+      : max(
+          max(_jawSeries?.getMaxEpoch(), _teethSeries?.getMaxEpoch()),
+          _lipsSeries?.getMaxEpoch(),
+        );
 
   @override
-  int getMinEpoch() => min(
-        min(_jawSeries?.getMinEpoch(), _teethSeries?.getMinEpoch()),
-        _lipsSeries?.getMinEpoch(),
-      );
+  int getMinEpoch() => _jawSeries.entries == null
+      ? null
+      : min(
+          min(_jawSeries?.getMinEpoch(), _teethSeries?.getMinEpoch()),
+          _lipsSeries?.getMinEpoch(),
+        );
 }
