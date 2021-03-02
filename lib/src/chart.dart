@@ -225,7 +225,6 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
   @override
   void initState() {
     super.initState();
-
     _setupAnimations();
     _setupGestures();
 
@@ -412,16 +411,6 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
       );
 
   @override
-  List<double> _getGridLineQuotes() => gridQuotes(
-        quoteGridInterval: quoteGridInterval(_quotePerPx),
-        topBoundQuote: _topBoundQuote,
-        bottomBoundQuote: _bottomBoundQuote,
-        canvasHeight: canvasSize.height,
-        topPadding: _topPadding,
-        bottomPadding: _bottomPadding,
-      );
-
-  @override
   void _onPanStart(ScaleStartDetails details) {
     _panStartedOnQuoteLabelsArea =
         _onQuoteLabelsTouchArea(details.localFocalPoint);
@@ -538,15 +527,6 @@ class _BottomChart extends _BasicChart {
 
 class _BottomChartState extends _BasicChartState<_BottomChart> {
   @override
-  List<double> _getGridLineQuotes() => gridQuotes(
-        quoteGridInterval: quoteGridInterval(_quotePerPx),
-        topBoundQuote: _topBoundQuote,
-        bottomBoundQuote: _bottomBoundQuote,
-        canvasHeight: canvasSize.height,
-        topPadding: _topPadding,
-        bottomPadding: _bottomPadding,
-      );
-  @override
   Widget build(BuildContext context) {
     final ChartDefaultTheme theme =
         Theme.of(context).brightness == Brightness.dark
@@ -607,6 +587,8 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
 
   Size canvasSize;
 
+  YAxisModel yAxisModel;
+
   /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   double verticalPaddingFraction = 0.1;
@@ -651,13 +633,6 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
 
   double get _bottomPadding => _verticalPadding;
 
-  double get _quotePerPx => quotePerPx(
-        topBoundQuote: _topBoundQuote,
-        bottomBoundQuote: _bottomBoundQuote,
-        yTopBound: _quoteToCanvasY(_topBoundQuote),
-        yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
-      );
-
   GestureManagerState _gestureManager;
 
   XAxisModel get _xAxis => context.read<XAxisModel>();
@@ -665,7 +640,6 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
   @override
   void initState() {
     super.initState();
-
     _setupAnimations();
     _setupGestures();
   }
@@ -699,6 +673,18 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
     _currentTickAnimationController
       ..reset()
       ..forward();
+  }
+
+  void _setupYAxisModel() {
+    yAxisModel = YAxisModel(
+      yTopBound: _quoteToCanvasY(_topBoundQuote),
+      yBottomBound: _quoteToCanvasY(_bottomBoundQuote),
+      topBoundQuote: _topBoundQuote,
+      bottomBoundQuote: _bottomBoundQuote,
+      canvasHeight: canvasSize.height,
+      topPadding: _topPadding,
+      bottomPadding: _bottomPadding,
+    );
   }
 
   void _setupAnimations() {
@@ -809,11 +795,12 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
             xAxis.width,
             constraints.maxHeight,
           );
+          _setupYAxisModel();
 
           _updateVisibleData();
           _updateQuoteBoundTargets();
 
-          final List<double> gridLineQuotes = _getGridLineQuotes();
+          final List<double> gridLineQuotes = yAxisModel.gridQuotes();
 
           return Stack(
             fit: StackFit.expand,
@@ -890,15 +877,6 @@ class _BasicChartState<T extends _BasicChart> extends State<T>
             ),
           ),
         ),
-      );
-
-  List<double> _getGridLineQuotes() => gridQuotes(
-        quoteGridInterval: quoteGridInterval(_quotePerPx),
-        topBoundQuote: _topBoundQuote,
-        bottomBoundQuote: _bottomBoundQuote,
-        canvasHeight: canvasSize.height,
-        topPadding: _topPadding,
-        bottomPadding: _bottomPadding,
       );
 
   void _onPanStart(ScaleStartDetails details) {
