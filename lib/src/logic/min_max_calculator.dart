@@ -4,7 +4,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 
 /// Accepts a list of entries sorted by time and calculates min/max values for that list.
 /// Reuses previous work done when visible entries are updated.
-///
+/// minor change
 /// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
 class MinMaxCalculator {
   /// Instantiate min/max calculator with [minValueOf] and [maxValueOf] functions
