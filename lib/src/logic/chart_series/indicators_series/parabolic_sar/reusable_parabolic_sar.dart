@@ -16,7 +16,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 /// Here to fix that whenever we want to calculate the result for the last index
 /// we make a backup for those internal variables and after calculating we reset them.
 class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
-  /// Initializes
+  /// Initializes PSAR indicator.
   ReusableParabolicSarIndicator(
     IndicatorInput indicatorInput, {
     double aF = 0.02,
