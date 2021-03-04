@@ -5,6 +5,8 @@
   "labelPeriod": "Period",
   "labelHighPeriod": "High Period",
   "labelLowPeriod": "Low Period",
+  "labelOverBoughtPrice": "Over Bought Price",
+  "labelOverSoldPrice": "Over Sold Price",
   "labelShift": "Shift",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",

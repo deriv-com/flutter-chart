@@ -184,7 +184,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Will be called by the chart when it was updated.
   @override
   bool didUpdate(ChartData oldData) {
-    final DataSeries<Tick> oldSeries = oldData;
+    final DataSeries oldSeries = oldData;
 
     bool updated = false;
     if (input.isNotEmpty && isOldDataAvailable(oldSeries)) {
@@ -227,7 +227,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   @override
   bool shouldRepaint(ChartData oldDelegate) {
-    final DataSeries oldDataSeries = oldDelegate;
+    final DataSeries<T> oldDataSeries = oldDelegate;
     final List<Tick> current = visibleEntries;
     final List<Tick> previous = oldDataSeries.visibleEntries;
 

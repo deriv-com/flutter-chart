@@ -12,7 +12,18 @@ import '../data_series.dart';
 /// A [DataPainter] for painting line data.
 class LinePainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
-  LinePainter(DataSeries<Tick> series) : super(series);
+  LinePainter(
+    DataSeries<Tick> series, {
+    LineStyle horizontalLineStyle,
+    List<double> horizontalLines = const <double>[],
+  })  : _horizontalLines = horizontalLines,
+        _horizontalLineStyle = horizontalLineStyle,
+        super(series);
+
+  final List<double> _horizontalLines;
+  final LineStyle _horizontalLineStyle;
+
+  double _lastVisibleTickX;
 
   @override
   void onPaintData(
@@ -30,6 +41,52 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
+    final Path path = createPath(epochToX, quoteToY, animationInfo);
+
+    paintHorizontalLines(canvas, quoteToY, size);
+
+    addChannelFill(path);
+
+    canvas.drawPath(path, linePaint);
+
+    if (style.hasArea) {
+      _drawArea(
+        canvas,
+        size,
+        path,
+        epochToX(series.visibleEntries.first.epoch),
+        _lastVisibleTickX,
+        style,
+      );
+    }
+  }
+
+  /// Paints the horizontal lines if the [series] have any.
+  void paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
+    final LineStyle horizontalLineStyle =
+        _horizontalLineStyle ?? theme.lineStyle ?? const LineStyle();
+    final Paint horizontalLinePaint = Paint()
+      ..color = horizontalLineStyle.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = horizontalLineStyle.thickness;
+
+    for (final double line in _horizontalLines) {
+      canvas.drawLine(Offset(0, quoteToY(line)),
+          Offset(size.width, quoteToY(line)), horizontalLinePaint);
+    }
+  }
+
+  /// Adds channel fill incase the data series has one.
+  void addChannelFill(
+    Path path,
+  ) {}
+
+  /// Creates the path of the given [series] and returns it.
+  Path createPath(
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+  ) {
     final Path path = Path();
 
     bool isStartPointSet = false;
@@ -49,7 +106,15 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       path.lineTo(x, y);
     }
 
-    // Adding last visible entry line to the path
+    _lastVisibleTickX =
+        calculateLastVisibleTick(epochToX, animationInfo, quoteToY, path);
+
+    return path;
+  }
+
+  /// calculates the last visible tick's `dx`.
+  double calculateLastVisibleTick(EpochToX epochToX,
+      AnimationInfo animationInfo, QuoteToY quoteToY, ui.Path path) {
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
     double lastVisibleTickX;
@@ -73,18 +138,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
 
-    canvas.drawPath(path, linePaint);
-
-    if (style.hasArea) {
-      _drawArea(
-        canvas,
-        size,
-        path,
-        epochToX(series.visibleEntries.first.epoch),
-        lastVisibleTickX,
-        style,
-      );
-    }
+    return lastVisibleTickX;
   }
 
   void _drawArea(

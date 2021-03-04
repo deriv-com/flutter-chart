@@ -120,43 +120,41 @@ class Chart extends StatelessWidget {
         Provider<ChartTheme>.value(value: chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
       ],
-      child: ClipRect(
-        child: Ink(
-          color: chartTheme.base08Color,
-          child: GestureManager(
-            child: XAxis(
-              entries: mainSeries.input,
-              onVisibleAreaChanged: onVisibleAreaChanged,
-              isLive: isLive,
-              startWithDataFitMode: dataFitEnabled,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 4,
-                    child: _ChartImplementation(
-                      controller: controller,
-                      mainSeries: mainSeries,
-                      overlaySeries: overlaySeries,
-                      annotations: annotations,
-                      markerSeries: markerSeries,
-                      pipSize: pipSize,
-                      onCrosshairAppeared: onCrosshairAppeared,
-                      isLive: isLive,
-                      showLoadingAnimationForHistoricalData: !dataFitEnabled,
-                      showDataFitButton: dataFitEnabled,
-                      opacity: opacity,
-                    ),
+      child: Ink(
+        color: chartTheme.base08Color,
+        child: GestureManager(
+          child: XAxis(
+            entries: mainSeries.input,
+            onVisibleAreaChanged: onVisibleAreaChanged,
+            isLive: isLive,
+            startWithDataFitMode: dataFitEnabled,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 3,
+                  child: _ChartImplementation(
+                    controller: controller,
+                    mainSeries: mainSeries,
+                    overlaySeries: overlaySeries,
+                    annotations: annotations,
+                    markerSeries: markerSeries,
+                    pipSize: pipSize,
+                    onCrosshairAppeared: onCrosshairAppeared,
+                    isLive: isLive,
+                    showLoadingAnimationForHistoricalData: !dataFitEnabled,
+                    showDataFitButton: dataFitEnabled,
+                    opacity: opacity,
                   ),
-                  if (oscillatorSeries.isNotEmpty)
-                    ...oscillatorSeries
-                        .map((Series series) => Expanded(
-                                child: _BottomChart(
-                              series: series,
-                              pipSize: pipSize,
-                            )))
-                        .toList()
-                ],
-              ),
+                ),
+                if (oscillatorSeries.isNotEmpty)
+                  ...oscillatorSeries
+                      .map((Series series) => Expanded(
+                              child: _BottomChart(
+                            series: series,
+                            pipSize: pipSize,
+                          )))
+                      .toList()
+              ],
             ),
           ),
         ),
@@ -535,33 +533,38 @@ class _BottomChartState extends _BasicChartState<_BottomChart> {
         Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
-    return Stack(
-      children: <Widget>[
-        Column(
+    return ClipRRect(
+      child: ClipRect(
+        child: Stack(
           children: <Widget>[
-            Divider(
-              color: theme.brandGreenishColor,
+            Column(
+              children: <Widget>[
+                Divider(
+                  color: theme.brandGreenishColor,
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: super.build(context),
+                ),
+              ],
             ),
-            Expanded(
-              child: super.build(context),
+            Positioned(
+              top: 15,
+              left: 10,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: theme.base01Color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                child: Text(
+                  widget.mainSeries.runtimeType.toString(),
+                ),
+              ),
             ),
           ],
         ),
-        Positioned(
-          top: 15,
-          left: 10,
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: theme.base01Color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(2),
-            ),
-            child: Text(
-              widget.mainSeries.runtimeType.toString(),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

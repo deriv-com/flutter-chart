@@ -85,6 +85,26 @@ class ChartLocalization {
     );
   }
 
+  /// `Over Bought Price`
+  String get labelOverBoughtPrice {
+    return Intl.message(
+      'Over Bought Price',
+      name: 'labelOverBoughtPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Over Sold Price`
+  String get labelOverSoldPrice {
+    return Intl.message(
+      'Over Sold Price',
+      name: 'labelOverSoldPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shift`
   String get labelShift {
     return Intl.message(
