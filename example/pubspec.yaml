@@ -19,9 +19,6 @@ dependencies:
       url: git@github.com:regentmarkets/flutter-deriv-api.git
       ref: dev
 
-#dependency_overrides:
-#  intl: ^0.16.1
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
