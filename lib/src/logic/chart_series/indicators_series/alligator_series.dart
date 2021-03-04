@@ -36,6 +36,9 @@ class AlligatorSeries extends Series {
     Indicator<Tick> indicator, {
     String id,
     this.alligatorOptions,
+    this.jawOffset = 8,
+    this.teethOffset = 5,
+    this.lipsOffset = 3,
   })  : _fieldIndicator = indicator,
         super(id);
 
@@ -47,6 +50,15 @@ class AlligatorSeries extends Series {
   SingleIndicatorSeries _jawSeries;
   SingleIndicatorSeries _teethSeries;
   SingleIndicatorSeries _lipsSeries;
+
+  /// Shift to future in jaw series
+  final int jawOffset;
+
+  /// Shift to future in teeth series
+  final int teethOffset;
+
+  /// Shift to future in lips series
+  final int lipsOffset;
 
   @override
   SeriesPainter<Series> createPainter() {
@@ -60,7 +72,7 @@ class AlligatorSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.blue),
-      offset: alligatorOptions.jawOffset,
+      offset: jawOffset,
     );
 
     _teethSeries = SingleIndicatorSeries(
@@ -73,7 +85,7 @@ class AlligatorSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.red),
-      offset: alligatorOptions.teethOffset,
+      offset: teethOffset,
     );
 
     _lipsSeries = SingleIndicatorSeries(
@@ -86,7 +98,7 @@ class AlligatorSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.green),
-      offset: alligatorOptions.lipsOffset,
+      offset: lipsOffset,
     );
 
     return null;

@@ -36,14 +36,14 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
   /// Smoothing period for lips series
   final int lipsPeriod;
 
-
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       AlligatorSeries.fromIndicator(
         CloseValueIndicator<Tick>(indicatorInput),
-        alligatorOptions: AlligatorOptions(jawOffset: jawOffset,
-            teethOffset: teethOffset,
-            lipsOffset: lipsOffset,
+        jawOffset: jawOffset,
+        teethOffset: teethOffset,
+        lipsOffset: lipsOffset,
+        alligatorOptions: AlligatorOptions(
             jawPeriod: jawPeriod,
             teethPeriod: teethPeriod,
             lipsPeriod: lipsPeriod),
