@@ -26,8 +26,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-dependency_overrides:
-  intl: ^0.16.1
+#dependency_overrides:
+#  intl: ^0.16.1
 
 flutter:
   assets:
