@@ -84,3 +84,15 @@ enum MovingAverageType {
   /// Zero-lag exponential
   zeroLag,
 }
+
+/// Parses `MovingAverageType` enum from string generated with `toString`.
+///
+/// Source: https://stackoverflow.com/questions/27236629/what-is-the-best-way-to-serialize-deserialize-darts-new-enum-with-json
+MovingAverageType parseMovingAverageType(String string) {
+  for (final MovingAverageType type in MovingAverageType.values) {
+    if (type.toString() == string) {
+      return type;
+    }
+  }
+  return null;
+}

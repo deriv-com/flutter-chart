@@ -19,8 +19,8 @@ class MAIndicatorConfig extends IndicatorConfig {
   /// Initializes from JSON.
   MAIndicatorConfig.fromJson(Map<String, dynamic> json)
       : period = json['period'],
-        // TODO: Parse type
-        type = null,
+        type = parseMovingAverageType(json['type'] ?? '') ??
+            MovingAverageType.simple,
         fieldType = json['field_type'],
         // TODO: Parse style
         lineStyle = null;
@@ -32,6 +32,7 @@ class MAIndicatorConfig extends IndicatorConfig {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'name': name,
         'period': period,
+        'type': type.toString(),
         'field_type': fieldType,
       };
 
