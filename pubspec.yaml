@@ -21,7 +21,7 @@ dependencies:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
       ref: dev
-  shared_preferences: ^2.0.3
+  shared_preferences: <1.0.0
 
 
 
