@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -97,11 +98,11 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
       if (!isStartPointSet) {
         isStartPointSet = true;
-        path.moveTo(epochToX(tick.epoch), quoteToY(tick.quote));
+        path.moveTo(epochToX(getEpochOf(tick)), quoteToY(tick.quote));
         continue;
       }
 
-      final double x = epochToX(tick.epoch);
+      final double x = epochToX(getEpochOf(tick));
       final double y = quoteToY(tick.quote);
       path.lineTo(x, y);
     }
@@ -121,8 +122,8 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
       lastVisibleTickX = ui.lerpDouble(
-        epochToX(series.prevLastEntry.epoch),
-        epochToX(lastTick.epoch),
+        epochToX(getEpochOf(series.prevLastEntry)),
+        epochToX(getEpochOf(lastTick)),
         animationInfo.currentTickPercent,
       );
 
@@ -134,7 +135,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
       path.lineTo(lastVisibleTickX, tickY);
     } else {
-      lastVisibleTickX = epochToX(lastVisibleTick.epoch);
+      lastVisibleTickX = epochToX(getEpochOf(lastVisibleTick));
       path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
 

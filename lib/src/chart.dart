@@ -115,6 +115,13 @@ class Chart extends StatelessWidget {
       granularity: granularity,
     );
 
+    final List<ChartData> chartDataList = <ChartData>[
+      mainSeries,
+      if (overlaySeries != null) ...overlaySeries,
+      if (oscillatorSeries != null) ...oscillatorSeries,
+      if (annotations != null) ...annotations,
+    ];
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: chartTheme),

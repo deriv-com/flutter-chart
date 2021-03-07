@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         onAddIndicator: widget.onAddIndicator,
       ))
       ..add(DonchianChannelIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(RainbowIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ))

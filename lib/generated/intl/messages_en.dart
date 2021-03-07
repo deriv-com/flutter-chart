@@ -24,10 +24,12 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "informNoResult" : m0,
+    "labelBandsCount" : MessageLookupByLibrary.simpleMessage("Bands Count"),
     "labelChannelFill" : MessageLookupByLibrary.simpleMessage("Channel Fill"),
     "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
     "labelHighPeriod" : MessageLookupByLibrary.simpleMessage("High Period"),
     "labelLowPeriod" : MessageLookupByLibrary.simpleMessage("Low Period"),
+    "labelOffset" : MessageLookupByLibrary.simpleMessage("Offset"),
     "labelOverBoughtPrice" : MessageLookupByLibrary.simpleMessage("Over Bought Price"),
     "labelOverSoldPrice" : MessageLookupByLibrary.simpleMessage("Over Sold Price"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),

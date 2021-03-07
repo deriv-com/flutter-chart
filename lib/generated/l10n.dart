@@ -65,6 +65,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Offset`
+  String get labelOffset {
+    return Intl.message(
+      'Offset',
+      name: 'labelOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `High Period`
   String get labelHighPeriod {
     return Intl.message(
@@ -110,6 +120,16 @@ class ChartLocalization {
     return Intl.message(
       'Shift',
       name: 'labelShift',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bands Count`
+  String get labelBandsCount {
+    return Intl.message(
+      'Bands Count',
+      name: 'labelBandsCount',
       desc: '',
       args: [],
     );

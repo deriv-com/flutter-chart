@@ -92,4 +92,10 @@ class RSISeries extends Series {
     _rsiSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
+
+  @override
+  int getMaxEpoch() => _rsiSeries.getMaxEpoch();
+
+  @override
+  int getMinEpoch() => _rsiSeries.getMinEpoch();
 }
