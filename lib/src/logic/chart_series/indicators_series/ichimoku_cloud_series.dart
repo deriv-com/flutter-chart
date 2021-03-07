@@ -3,13 +3,9 @@ import 'dart:math';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ichimoku/ichimoku_base_line_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ichimoku/ichimoku_conversion_line_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ichimoku/ichimoku_lagging_span_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ichimoku/ichimoku_span_a_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/ichimoku/ichimoku_span_b_indicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// Ichimoku Cloud series
@@ -29,7 +25,7 @@ class IchimokuCloudSeries extends Series {
   LineSeries _spanBSeries;
 
   /// List of [Tick]s to calculate IchimokuCloud on.
-  final List<Tick> ticks;
+  final IndicatorDataInput ticks;
 
   /// The period to calculate the Conversion Line value.
   final int conversionLinePeriod;
@@ -39,20 +35,23 @@ class IchimokuCloudSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    final IchimokuBaseLineIndicator baseLineIndicator =
-        IchimokuBaseLineIndicator(ticks, period: baseLinePeriod);
+    final IchimokuBaseLineIndicator<Tick> baseLineIndicator =
+        IchimokuBaseLineIndicator<Tick>(ticks, period: baseLinePeriod);
 
-    final IchimokuConversionLineIndicator conversionLineIndicator =
-        IchimokuConversionLineIndicator(ticks, period: conversionLinePeriod);
+    final IchimokuConversionLineIndicator<Tick> conversionLineIndicator =
+        IchimokuConversionLineIndicator<Tick>(ticks,
+            period: conversionLinePeriod);
 
-    final IchimokuLaggingSpanIndicator laggingSpanIndicator =
-        IchimokuLaggingSpanIndicator(ticks);
+    final IchimokuLaggingSpanIndicator<Tick> laggingSpanIndicator =
+        IchimokuLaggingSpanIndicator<Tick>(ticks);
 
-    final IchimokuSpanAIndicator spanAIndicator = IchimokuSpanAIndicator(ticks,
-        conversionLineIndicator: conversionLineIndicator,
-        baseLineIndicator: baseLineIndicator);
+    final IchimokuSpanAIndicator<Tick> spanAIndicator =
+        IchimokuSpanAIndicator<Tick>(ticks,
+            conversionLineIndicator: conversionLineIndicator,
+            baseLineIndicator: baseLineIndicator);
 
-    final IchimokuSpanBIndicator spanBIndicator = IchimokuSpanBIndicator(ticks);
+    final IchimokuSpanBIndicator<Tick> spanBIndicator =
+        IchimokuSpanBIndicator<Tick>(ticks);
 
     _conversionLineSeries = LineSeries(conversionLineIndicator.results,
         style: const LineStyle(color: Colors.indigo));
@@ -144,5 +143,17 @@ class IchimokuCloudSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     // TODO(ramin): call super.paint to paint the Channels fill.
+  }
+
+  @override
+  int getMaxEpoch() {
+    // TODO: implement getMaxEpoch
+    throw UnimplementedError();
+  }
+
+  @override
+  int getMinEpoch() {
+    // TODO: implement getMinEpoch
+    throw UnimplementedError();
   }
 }
