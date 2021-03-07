@@ -13,7 +13,7 @@ abstract class Series implements ChartData {
   /// Initializes a base class of all chart series.
   Series(this.id, {this.style}) {
     seriesPainter = createPainter();
-    id = '$runtimeType${style?.toString()}${seriesPainter.runtimeType}$id';
+    id = '$runtimeType${seriesPainter.runtimeType}$id';
   }
 
   @override

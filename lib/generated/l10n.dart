@@ -35,6 +35,16 @@ class ChartLocalization {
     return Localizations.of<ChartLocalization>(context, ChartLocalization);
   }
 
+  /// `Channel Fill`
+  String get labelChannelFill {
+    return Intl.message(
+      'Channel Fill',
+      name: 'labelChannelFill',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Field`
   String get labelField {
     return Intl.message(
@@ -75,6 +85,56 @@ class ChartLocalization {
     );
   }
 
+  /// `Offset`
+  String get labelOffset {
+    return Intl.message(
+      'Offset',
+      name: 'labelOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `High Period`
+  String get labelHighPeriod {
+    return Intl.message(
+      'High Period',
+      name: 'labelHighPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Low Period`
+  String get labelLowPeriod {
+    return Intl.message(
+      'Low Period',
+      name: 'labelLowPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shift`
+  String get labelShift {
+    return Intl.message(
+      'Shift',
+      name: 'labelShift',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bands Count`
+  String get labelBandsCount {
+    return Intl.message(
+      'Bands Count',
+      name: 'labelBandsCount',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Search assets`
   String get labelSearchAssets {
     return Intl.message(
@@ -100,6 +160,16 @@ class ChartLocalization {
     return Intl.message(
       'Type',
       name: 'labelType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shift Type`
+  String get labelShiftType {
+    return Intl.message(
+      'Shift Type',
+      name: 'labelShiftType',
       desc: '',
       args: [],
     );

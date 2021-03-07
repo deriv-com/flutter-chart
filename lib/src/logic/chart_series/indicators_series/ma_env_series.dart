@@ -1,100 +1,106 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
-import 'models/bollinger_bands_options.dart';
+import '../../chart_data.dart';
+import '../series.dart';
+import '../series_painter.dart';
+import 'ma_series.dart';
+import 'models/ma_env_options.dart';
 
-/// Bollinger bands series
-class BollingerBandSeries extends Series {
-  /// Initializes
+/// A series which shows Moving Average Envelope data calculated from 'entries'.
+class MAEnvSeries extends Series {
+  /// Initializes a series which shows shows moving Average data calculated from [entries].
   ///
-  /// Close values will be chosen by default.
-  BollingerBandSeries(
+  /// [maEnvOptions] Moving Average Envelope indicator options.
+  MAEnvSeries(
     IndicatorInput indicatorInput, {
-    BollingerBandsOptions bbOptions,
     String id,
+    MAEnvOptions maEnvOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
-          bbOptions: bbOptions,
           id: id,
+          maEnvOptions: maEnvOptions,
         );
 
   /// Initializes
-  BollingerBandSeries.fromIndicator(
+  MAEnvSeries.fromIndicator(
     Indicator<Tick> indicator, {
-    this.bbOptions,
     String id,
+    this.maEnvOptions,
   })  : _fieldIndicator = indicator,
         super(id);
+
+  final Indicator<Tick> _fieldIndicator;
+
+  /// Moving Average Envelope options
+  MAEnvOptions maEnvOptions;
 
   SingleIndicatorSeries _lowerSeries;
   SingleIndicatorSeries _middleSeries;
   SingleIndicatorSeries _upperSeries;
 
-  /// Bollinger bands options
-  final BollingerBandsOptions bbOptions;
-
-  final Indicator<Tick> _fieldIndicator;
-
   @override
   SeriesPainter<Series> createPainter() {
-    final StandardDeviationIndicator<Tick> standardDeviation =
-        StandardDeviationIndicator<Tick>(_fieldIndicator, bbOptions.period);
+    final CachedIndicator<Tick> smaIndicator =
+        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions);
 
-    final CachedIndicator<Tick> bbmSMA =
-        MASeries.getMAIndicator(_fieldIndicator, bbOptions);
+    _lowerSeries = SingleIndicatorSeries(
+      painterCreator: (
+        Series series,
+      ) =>
+          LinePainter(series),
+      indicatorCreator: () => MAEnvLowerIndicator<Tick>(
+        smaIndicator,
+        maEnvOptions.shiftType,
+        maEnvOptions.shift,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: maEnvOptions,
+      style: const LineStyle(color: Colors.red),
+    );
 
     _middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => bbmSMA,
+      indicatorCreator: () => smaIndicator,
       inputIndicator: _fieldIndicator,
-      options: bbOptions,
+      options: maEnvOptions,
+      style: const LineStyle(color: Colors.blue),
     );
 
-    _lowerSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => LinePainter(series),
-        indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
-              bbmSMA,
-              standardDeviation,
-              k: bbOptions.standardDeviationFactor,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: bbOptions);
-
     _upperSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => LinePainter(series),
-        indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
-              bbmSMA,
-              standardDeviation,
-              k: bbOptions.standardDeviationFactor,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: bbOptions);
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => MAEnvUpperIndicator<Tick>(
+        smaIndicator,
+        maEnvOptions.shiftType,
+        maEnvOptions.shift,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: maEnvOptions,
+      style: const LineStyle(color: Colors.green),
+    );
 
-    return null; // TODO(ramin): return the painter that paints Channel Fill between bands
+    return null;
   }
 
   @override
   bool didUpdate(ChartData oldData) {
-    final BollingerBandSeries series = oldData;
+    final MAEnvSeries series = oldData;
 
-    final bool lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
-    final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
-    final bool upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
+    final bool _lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
+    final bool _middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
+    final bool _upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
 
-    return lowerUpdated || middleUpdated || upperUpdated;
+    return _lowerUpdated || _middleUpdated || _upperUpdated;
   }
 
   @override
@@ -135,15 +141,11 @@ class BollingerBandSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-
-    // TODO(ramin): call super.paint to paint the Channels fill.
   }
 
   @override
-  int getMinEpoch() =>
-      min(_lowerSeries.getMinEpoch(), _upperSeries.getMinEpoch());
+  int getMaxEpoch() => _middleSeries.getMaxEpoch();
 
   @override
-  int getMaxEpoch() =>
-      max(_lowerSeries.getMaxEpoch(), _upperSeries.getMaxEpoch());
+  int getMinEpoch() => _middleSeries.getMinEpoch();
 }

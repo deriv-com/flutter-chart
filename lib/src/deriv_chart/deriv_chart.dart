@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,12 @@ class _DerivChartState extends State<DerivChart> {
                   .where((IndicatorConfig indicatorConfig) =>
                       indicatorConfig != null)
                   .map((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig.getSeries(widget.mainSeries.input))
+                      indicatorConfig.getSeries(
+                        IndicatorInput(
+                          widget.mainSeries.input,
+                          widget.granularity,
+                        ),
+                      ))
             ],
             markerSeries: widget.markerSeries,
             theme: widget.theme,

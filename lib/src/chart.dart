@@ -112,6 +112,12 @@ class Chart extends StatelessWidget {
       granularity: granularity,
     );
 
+    final List<ChartData> chartDataList = <ChartData>[
+      mainSeries,
+      if (secondarySeries != null) ...secondarySeries,
+      if (annotations != null) ...annotations,
+    ];
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: chartTheme),
@@ -126,6 +132,8 @@ class Chart extends StatelessWidget {
               onVisibleAreaChanged: onVisibleAreaChanged,
               isLive: isLive,
               startWithDataFitMode: dataFitEnabled,
+              minEpoch: chartDataList.getMinEpoch(),
+              maxEpoch: chartDataList.getMaxEpoch(),
               child: _ChartImplementation(
                 controller: controller,
                 mainSeries: mainSeries,
@@ -161,13 +169,12 @@ class _ChartImplementation extends StatefulWidget {
     this.onCrosshairAppeared,
     this.secondarySeries,
     this.annotations,
-  }) : super(key: key) {
-    chartDataList = <ChartData>[
-      mainSeries,
-      if (secondarySeries != null) ...secondarySeries,
-      if (annotations != null) ...annotations,
-    ];
-  }
+  })  : chartDataList = <ChartData>[
+          mainSeries,
+          if (secondarySeries != null) ...secondarySeries,
+          if (annotations != null) ...annotations,
+        ],
+        super(key: key);
 
   final DataSeries<Tick> mainSeries;
   final List<Series> secondarySeries;
@@ -184,7 +191,7 @@ class _ChartImplementation extends StatefulWidget {
   final double opacity;
 
   // Convenience list to access all chart data.
-  List<ChartData> chartDataList;
+  final List<ChartData> chartDataList;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -221,16 +228,12 @@ class _ChartImplementationState extends State<_ChartImplementation>
   AnimationController _topBoundQuoteAnimationController;
   AnimationController _bottomBoundQuoteAnimationController;
 
-  // TODO(Rustem): move to YAxisModel
-  AnimationController _crosshairZoomOutAnimationController;
-
   Animation _currentTickAnimation;
   Animation _currentTickBlinkAnimation;
 
-  // TODO(Rustem): move to YAxisModel
+  // Crosshair related state.
+  AnimationController _crosshairZoomOutAnimationController;
   Animation _crosshairZoomOutAnimation;
-
-  // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
   bool get _isScrollToLastTickAvailable =>
@@ -287,6 +290,11 @@ class _ChartImplementationState extends State<_ChartImplementation>
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
     }
+
+    _xAxis.update(
+      minEpoch: widget.chartDataList.getMinEpoch(),
+      maxEpoch: widget.chartDataList.getMaxEpoch(),
+    );
   }
 
   void _updateBlinkingAnimationStatus() {
@@ -482,17 +490,15 @@ class _ChartImplementationState extends State<_ChartImplementation>
         _updateVisibleData();
         _updateQuoteBoundTargets();
 
-        final List<double> gridLineQuotes = _getGridLineQuotes();
-
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            _buildQuoteGridLine(gridLineQuotes),
+            _buildQuoteGridLine(),
             if (widget.showLoadingAnimationForHistoricalData ||
                 widget.mainSeries.entries.isEmpty)
               _buildLoadingAnimation(),
             _buildChartData(),
-            _buildQuoteGridLabel(gridLineQuotes),
+            _buildQuoteGridLabel(),
             _buildAnnotations(),
             if (widget.markerSeries != null)
               MarkerArea(
@@ -519,28 +525,29 @@ class _ChartImplementationState extends State<_ChartImplementation>
     );
   }
 
-  Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
-      MultipleAnimatedBuilder(
+  Widget _buildQuoteGridLine() => MultipleAnimatedBuilder(
         animations: [
           // One bound animation is enough since they animate at the same time.
           _topBoundQuoteAnimationController,
           _crosshairZoomOutAnimation,
         ],
         builder: (BuildContext context, Widget child) {
+          final List<double> gridLineQuotes = _getGridLineQuotes();
           return CustomPaint(
             painter: YGridLinePainter(
               gridLineQuotes: gridLineQuotes,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
-              labelWidth: _labelWidth(gridLineQuotes.first,
-                  context.watch<ChartTheme>().gridStyle.yLabelStyle),
+              labelWidth: (gridLineQuotes?.isNotEmpty ?? false)
+                  ? _labelWidth(gridLineQuotes.first,
+                      context.watch<ChartTheme>().gridStyle.yLabelStyle)
+                  : 0,
             ),
           );
         },
       );
 
-  Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
-      MultipleAnimatedBuilder(
+  Widget _buildQuoteGridLabel() => MultipleAnimatedBuilder(
         animations: [
           _topBoundQuoteAnimationController,
           _bottomBoundQuoteAnimationController,
@@ -550,7 +557,7 @@ class _ChartImplementationState extends State<_ChartImplementation>
           return CustomPaint(
             size: canvasSize,
             painter: YGridLabelPainter(
-              gridLineQuotes: gridLineQuotes,
+              gridLineQuotes: _getGridLineQuotes(),
               pipSize: widget.pipSize,
               quoteToCanvasY: _quoteToCanvasY,
               style: context.watch<ChartTheme>().gridStyle,
@@ -560,10 +567,10 @@ class _ChartImplementationState extends State<_ChartImplementation>
       );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
-        loadingRightBoundX: widget.mainSeries.visibleEntries.isEmpty
+        loadingRightBoundX: widget.mainSeries.entries.isEmpty
             ? _xAxis.width
             : _xAxis.xFromEpoch(
-                widget.mainSeries.visibleEntries.first.epoch,
+                widget.mainSeries.entries.first.epoch,
               ),
       );
 

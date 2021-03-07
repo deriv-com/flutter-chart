@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
 import 'package:deriv_chart/src/markers/active_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import 'marker_painter.dart';
 
@@ -63,4 +64,10 @@ class MarkerSeries extends Series {
 
   @override
   List<double> recalculateMinMax() => <double>[double.nan, double.nan];
+
+  @override
+  int getMaxEpoch() => _entries.isNotEmpty ? _entries.last.epoch : null;
+
+  @override
+  int getMinEpoch() => _entries.isNotEmpty ? _entries?.first?.epoch : null;
 }

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -6,35 +7,32 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/donchian/donchian_middle_channel_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/high_value_inidicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/helper_indicators/low_value_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/highest_value_indicator.dart';
-import 'package:deriv_chart/src/logic/indicators/calculations/lowest_value_indicator.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_fill.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// Donchian Channels series
 class DonchianChannelsSeries extends Series {
   /// Initializes
   DonchianChannelsSeries(
-    List<Tick> ticks, {
+    IndicatorInput indicatorInput, {
     String id,
   }) : this.fromIndicator(
-          HighValueIndicator(ticks),
-          LowValueIndicator(ticks),
+          HighValueIndicator<Tick>(indicatorInput),
+          LowValueIndicator<Tick>(indicatorInput),
           const DonchianChannelIndicatorConfig(),
           id: id,
         );
 
   /// Initializes
   DonchianChannelsSeries.fromIndicator(
-    HighValueIndicator highIndicator,
-    LowValueIndicator lowIndicator,
+    HighValueIndicator<Tick> highIndicator,
+    LowValueIndicator<Tick> lowIndicator,
     this.config, {
     String id,
   })  : _highIndicator = highIndicator,
@@ -45,26 +43,28 @@ class DonchianChannelsSeries extends Series {
   LineSeries _middleChannelSeries;
   LineSeries _lowerChannelSeries;
 
-  final HighValueIndicator _highIndicator;
-  final LowValueIndicator _lowIndicator;
+  final HighValueIndicator<Tick> _highIndicator;
+  final LowValueIndicator<Tick> _lowIndicator;
 
   /// Configuration of donchian channels.
   final DonchianChannelIndicatorConfig config;
 
   @override
   SeriesPainter<Series> createPainter() {
-    final HighestValueIndicator upperChannelIndicator = HighestValueIndicator(
+    final HighestValueIndicator<Tick> upperChannelIndicator =
+        HighestValueIndicator<Tick>(
       _highIndicator,
       config.highPeriod,
     )..calculateValues();
 
-    final LowestValueIndicator lowerChannelIndicator = LowestValueIndicator(
+    final LowestValueIndicator<Tick> lowerChannelIndicator =
+        LowestValueIndicator<Tick>(
       _lowIndicator,
       config.lowPeriod,
     )..calculateValues();
 
-    final DonchianMiddleChannelIndicator middleChannelIndicator =
-        DonchianMiddleChannelIndicator(
+    final DonchianMiddleChannelIndicator<Tick> middleChannelIndicator =
+        DonchianMiddleChannelIndicator<Tick>(
       upperChannelIndicator,
       lowerChannelIndicator,
     )..calculateValues();
@@ -216,4 +216,16 @@ class DonchianChannelsSeries extends Series {
       );
     }
   }
+
+  @override
+  int getMaxEpoch() => max(
+        _lowerChannelSeries.getMaxEpoch(),
+        max(
+          _middleChannelSeries.getMaxEpoch(),
+          _upperChannelSeries.getMaxEpoch(),
+        ),
+      );
+
+  @override
+  int getMinEpoch() => _lowerChannelSeries.getMinEpoch();
 }

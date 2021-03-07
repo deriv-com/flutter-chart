@@ -15,7 +15,6 @@ class AnimatedActiveMarker extends StatefulWidget {
   /// Initializes active marker.
   const AnimatedActiveMarker({
     @required this.markerSeries,
-    // TODO(Rustem): remove when yAxisModel is provided
     @required this.quoteToCanvasY,
     Key key,
   }) : super(key: key);

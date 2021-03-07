@@ -2,7 +2,7 @@ version: 2.1
 executors:
   flutter_executor:
     docker:
-      - image: cirrusci/flutter:stable
+      - image: cirrusci/flutter:1.22.6
     environment:
       _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
 
@@ -40,7 +40,6 @@ commands:
       - run:
           name: Run the application tests
           command: flutter test --coverage
-
       - run:
           name: Upload coverage
           command: |
