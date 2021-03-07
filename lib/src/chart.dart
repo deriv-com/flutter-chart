@@ -127,41 +127,45 @@ class Chart extends StatelessWidget {
         Provider<ChartTheme>.value(value: chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
       ],
-      child: Ink(
-        color: chartTheme.base08Color,
-        child: GestureManager(
-          child: XAxis(
-            entries: mainSeries.input,
-            onVisibleAreaChanged: onVisibleAreaChanged,
-            isLive: isLive,
-            startWithDataFitMode: dataFitEnabled,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: _ChartImplementation(
-                    controller: controller,
-                    mainSeries: mainSeries,
-                    overlaySeries: overlaySeries,
-                    annotations: annotations,
-                    markerSeries: markerSeries,
-                    pipSize: pipSize,
-                    onCrosshairAppeared: onCrosshairAppeared,
-                    isLive: isLive,
-                    showLoadingAnimationForHistoricalData: !dataFitEnabled,
-                    showDataFitButton: dataFitEnabled,
-                    opacity: opacity,
+      child: ClipRect(
+        child: Ink(
+          color: chartTheme.base08Color,
+          child: GestureManager(
+            child: XAxis(
+              maxEpoch: chartDataList.getMaxEpoch(),
+              minEpoch: chartDataList.getMinEpoch(),
+              entries: mainSeries.input,
+              onVisibleAreaChanged: onVisibleAreaChanged,
+              isLive: isLive,
+              startWithDataFitMode: dataFitEnabled,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 3,
+                    child: _ChartImplementation(
+                      controller: controller,
+                      mainSeries: mainSeries,
+                      overlaySeries: overlaySeries,
+                      annotations: annotations,
+                      markerSeries: markerSeries,
+                      pipSize: pipSize,
+                      onCrosshairAppeared: onCrosshairAppeared,
+                      isLive: isLive,
+                      showLoadingAnimationForHistoricalData: !dataFitEnabled,
+                      showDataFitButton: dataFitEnabled,
+                      opacity: opacity,
+                    ),
                   ),
-                ),
-                if (oscillatorSeries.isNotEmpty)
-                  ...oscillatorSeries
-                      .map((Series series) => Expanded(
-                              child: _BottomChart(
-                            series: series,
-                            pipSize: pipSize,
-                          )))
-                      .toList()
-              ],
+                  if (oscillatorSeries.isNotEmpty)
+                    ...oscillatorSeries
+                        .map((Series series) => Expanded(
+                                child: _BottomChart(
+                              series: series,
+                              pipSize: pipSize,
+                            )))
+                        .toList()
+                ],
+              ),
             ),
           ),
         ),
@@ -247,6 +251,11 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
     if (widget.isLive != oldChart.isLive) {
       _updateBlinkingAnimationStatus();
     }
+
+    _xAxis.update(
+      minEpoch: widget.chartDataList.getMinEpoch(),
+      maxEpoch: widget.chartDataList.getMaxEpoch(),
+    );
   }
 
   void _updateBlinkingAnimationStatus() {
@@ -307,7 +316,7 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
 
   @override
   void _updateVisibleData() {
-    // super._updateVisibleData();
+    super._updateVisibleData();
 
     for (final ChartData data in widget.chartDataList) {
       data.update(_xAxis.leftBoundEpoch, _xAxis.rightBoundEpoch);
