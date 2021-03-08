@@ -21,7 +21,7 @@ class MAIndicatorConfig extends IndicatorConfig {
   final int period;
 
   /// Moving Average type
-  final MovingAverageType type;
+  final String type;
 
   /// Field type
   final String fieldType;

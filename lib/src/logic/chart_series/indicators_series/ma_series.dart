@@ -9,6 +9,12 @@ import '../series_painter.dart';
 import 'abstract_single_indicator_series.dart';
 import 'models/indicator_options.dart';
 
+
+/// A function which takes list of ticks and period and creates MA Indicator on it.
+typedef MAIndicatorBuilder = CachedIndicator<Tick> Function(
+    Indicator<Tick> indicatorInput,
+    MAOptions maOptions,
+    );
 /// A series which shows Moving Average data calculated from [entries].
 class MASeries extends AbstractSingleIndicatorSeries {
   /// Initializes a series which shows shows moving Average data calculated from [entries].
@@ -48,42 +54,20 @@ class MASeries extends AbstractSingleIndicatorSeries {
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>
-      MASeries.getMAIndicator(inputIndicator, options);
+     supportedMATypes[(options as MAOptions).type](inputIndicator,options);
 
-  /// Returns a moving average indicator based on [maOptions] values.
-  static CachedIndicator<Tick> getMAIndicator(
-    Indicator<Tick> indicator,
-    MAOptions maOptions,
-  ) {
-    switch (maOptions.type) {
-      case MovingAverageType.exponential:
-        return EMAIndicator<Tick>(indicator, maOptions.period);
-      case MovingAverageType.weighted:
-        return WMAIndicator<Tick>(indicator, maOptions.period);
-      case MovingAverageType.hull:
-        return HMAIndicator<Tick>(indicator, maOptions.period);
-      case MovingAverageType.zeroLag:
-        return ZLEMAIndicator<Tick>(indicator, maOptions.period);
-      default:
-        return SMAIndicator<Tick>(indicator, maOptions.period);
-    }
-  }
-}
-
-/// Supported types of moving average.
-enum MovingAverageType {
-  /// Simple
-  simple,
-
-  /// Exponential
-  exponential,
-
-  /// Weighted
-  weighted,
-
-  /// Hull
-  hull,
-
-  /// Zero-lag exponential
-  zeroLag,
+  /// Indicators supported Moving Average types
+  static final Map<String, MAIndicatorBuilder> supportedMATypes =
+  <String, MAIndicatorBuilder>{
+    'simple': (Indicator<Tick> indicator, MAOptions maOptions) =>
+        SMAIndicator<Tick>(indicator, maOptions.period),
+    'exponential': (Indicator<Tick> indicator,  MAOptions maOptions) =>
+        EMAIndicator<Tick>(indicator, maOptions.period),
+    'weighted': (Indicator<Tick> indicator,  MAOptions maOptions) =>
+        WMAIndicator<Tick>(indicator, maOptions.period),
+    'hull': (Indicator<Tick> indicator,  MAOptions maOptions) =>
+        HMAIndicator<Tick>(indicator, maOptions.period),
+    'zeroLag': (Indicator<Tick> indicator,  MAOptions maOptions) =>
+        ZLEMAIndicator<Tick>(indicator, maOptions.period),
+  };
 }

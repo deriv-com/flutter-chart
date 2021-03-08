@@ -13,7 +13,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const MAEnvIndicatorConfig({
     int period,
-    MovingAverageType movingAverageType,
+    String movingAverageType,
     String fieldType,
     this.shift,
     this.shiftType,

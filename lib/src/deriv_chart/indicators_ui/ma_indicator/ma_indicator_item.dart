@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -37,7 +36,7 @@ class MAIndicatorItem extends IndicatorItem {
 class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// MA type
   @protected
-  MovingAverageType type;
+  String type;
 
   /// Field type
   @protected
@@ -193,20 +192,19 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
-          DropdownButton<MovingAverageType>(
+          DropdownButton<String>(
             value: getCurrentType(),
-            items: MovingAverageType.values
-                .map<DropdownMenuItem<MovingAverageType>>(
-                    (MovingAverageType type) =>
-                        DropdownMenuItem<MovingAverageType>(
+            items: MASeries.supportedMATypes.keys
+                .map<DropdownMenuItem<String>>(
+                    (String type) => DropdownMenuItem<String>(
                           value: type,
                           child: Text(
-                            '${getEnumValue(type)}',
+                            '${type}',
                             style: const TextStyle(fontSize: 10),
                           ),
                         ))
                 .toList(),
-            onChanged: (MovingAverageType newType) => setState(
+            onChanged: (String newType) => setState(
               () {
                 type = newType;
                 updateIndicator();
@@ -218,8 +216,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   /// Gets Indicator current type.
   @protected
-  MovingAverageType getCurrentType() =>
-      type ?? getConfig()?.type ?? MovingAverageType.simple;
+  String getCurrentType() => type ?? getConfig()?.type ?? 'simple';
 
   /// Gets Indicator current filed type.
   @protected

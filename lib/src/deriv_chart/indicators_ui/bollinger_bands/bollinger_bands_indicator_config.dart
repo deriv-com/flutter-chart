@@ -11,7 +11,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const BollingerBandsIndicatorConfig({
     int period,
-    MovingAverageType movingAverageType,
+    String movingAverageType,
     String fieldType,
     this.standardDeviation,
   }) : super(

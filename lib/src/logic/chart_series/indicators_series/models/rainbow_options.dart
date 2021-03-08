@@ -1,6 +1,3 @@
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
-
-import '../ma_series.dart';
 import 'indicator_options.dart';
 
 /// Rainbow indicator options.
@@ -9,7 +6,7 @@ class RainbowOptions extends MAOptions {
   const RainbowOptions({
     this.bandsCount = 10,
     int period,
-    MovingAverageType movingAverageType,
+    String movingAverageType,
   }) : super(period: period, type: movingAverageType);
 
   /// number of rainbow bands

@@ -16,13 +16,13 @@ abstract class IndicatorOptions extends Equatable {
 /// Moving Average indicator options
 class MAOptions extends IndicatorOptions {
   /// Initializes
-  const MAOptions({this.period = 20, this.type = MovingAverageType.simple});
+  const MAOptions({this.period = 20, this.type = 'simple'});
 
   /// The average of this number of past data which will be calculated as MA value.
   final int period;
 
   /// Moving average type
-  final MovingAverageType type;
+  final String type;
 
   @override
   List<Object> get props => <Object>[period, type];

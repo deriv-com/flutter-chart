@@ -1,4 +1,3 @@
-import '../ma_series.dart';
 import 'indicator_options.dart';
 
 /// Bollinger Bands indicator options.
@@ -7,7 +6,7 @@ class BollingerBandsOptions extends MAOptions {
   const BollingerBandsOptions({
     this.standardDeviationFactor = 2,
     int period,
-    MovingAverageType movingAverageType,
+    String movingAverageType,
   }) : super(period: period, type: movingAverageType);
 
   /// Standard Deviation value

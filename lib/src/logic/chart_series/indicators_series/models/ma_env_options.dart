@@ -1,6 +1,5 @@
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
-import '../ma_series.dart';
 import 'indicator_options.dart';
 
 /// Moving Average Envelope indicator options.
@@ -10,7 +9,7 @@ class MAEnvOptions extends MAOptions {
     this.shift = 5,
     this.shiftType,
     int period,
-    MovingAverageType movingAverageType,
+    String movingAverageType,
   }) : super(period: period, type: movingAverageType);
 
   /// Shift value

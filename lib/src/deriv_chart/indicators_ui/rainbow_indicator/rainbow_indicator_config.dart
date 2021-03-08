@@ -14,7 +14,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const RainbowIndicatorConfig({
     int period,
-    MovingAverageType movingAverageType,
+    String movingAverageType,
     String fieldType,
     this.bandsCount,
     this.rainbowColors,
