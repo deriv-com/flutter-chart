@@ -44,8 +44,8 @@ class ParabolicSARIndicatorItemState
 
   @override
   ParabolicSARConfig createIndicatorConfig() => ParabolicSARConfig(
-        minAccelerationFactor: getCurrentMinAccelerationFactor(),
-        maxAccelerationFactor: getCurrentMaxAccelerationFactor(),
+        minAccelerationFactor: currentMinAccelerationFactor,
+        maxAccelerationFactor: currentMaxAccelerationFactor,
       );
 
   @override
@@ -61,13 +61,13 @@ class ParabolicSARIndicatorItemState
   Widget buildMaxAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
-            'Max AF: ${getCurrentMaxAccelerationFactor().toStringAsFixed(2)}',
+            'Max AF: ${currentMaxAccelerationFactor.toStringAsFixed(2)}',
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           Expanded(
             child: Slider(
-              value: getCurrentMaxAccelerationFactor(),
+              value: currentMaxAccelerationFactor,
               onChanged: (double value) {
                 setState(() {
                   maxAccelerationFactor = roundDouble(value, 2);
@@ -86,13 +86,13 @@ class ParabolicSARIndicatorItemState
   Widget buildMinAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
-            'Min AF: ${getCurrentMinAccelerationFactor().toStringAsFixed(2)}',
+            'Min AF: ${currentMinAccelerationFactor.toStringAsFixed(2)}',
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           Expanded(
             child: Slider(
-              value: getCurrentMinAccelerationFactor(),
+              value: currentMinAccelerationFactor,
               onChanged: (double value) {
                 setState(() {
                   minAccelerationFactor = roundDouble(value, 2);
@@ -108,12 +108,12 @@ class ParabolicSARIndicatorItemState
 
   /// Gets Indicator current minAccelerationFactor.
   @protected
-  double getCurrentMinAccelerationFactor() =>
+  double get currentMinAccelerationFactor =>
       minAccelerationFactor ?? getConfig()?.minAccelerationFactor ?? 0.02;
 
   /// Gets Indicator current minAccelerationFactor.
   @protected
-  double getCurrentMaxAccelerationFactor() =>
+  double get currentMaxAccelerationFactor =>
       maxAccelerationFactor ?? getConfig()?.maxAccelerationFactor ?? 0.2;
 
   /// Creates Line style
