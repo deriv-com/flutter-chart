@@ -1,8 +1,8 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/rsi_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/rsi_series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// RSI Indicator configurations.
@@ -10,6 +10,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const RSIIndicatorConfig({
     this.period = 14,
+    this.fieldType = 'close',
     this.overBoughtPrice = 80,
     this.overSoldPrice = 20,
     this.lineStyle = const LineStyle(color: Colors.white),
@@ -39,7 +40,13 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// The RSI horizontal lines style(overBought and overSold).
   final LineStyle mainHorizontalLinesStyle;
 
+  /// Field type
+  final String fieldType;
+
   @override
-  Series getSeries(IndicatorInput indicatorInput) =>
-      RSISeries.fromIndicator(CloseValueIndicator<Tick>(indicatorInput), this);
+  Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
+        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        this,
+        rsiOptions: RSIOptions(period: period),
+      );
 }

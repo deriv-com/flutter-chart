@@ -34,18 +34,21 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   int _period;
   int _overBoughtPrice;
   int _overSoldPrice;
+  String _field;
 
   @override
   RSIIndicatorConfig createIndicatorConfig() => RSIIndicatorConfig(
         period: _getCurrentPeriod(),
         overBoughtPrice: _getCurrentOverBoughtPrice(),
         overSoldPrice: _getCurrentOverSoldPrice(),
+        fieldType: _getCurrentField(),
       );
 
   @override
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
           _buildPeriodField(),
+          _buildFieldTypeMenu(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
         ],
@@ -78,6 +81,37 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       );
 
   int _getCurrentPeriod() => _period ?? getConfig()?.period ?? 14;
+
+  Widget _buildFieldTypeMenu() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelField,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          DropdownButton<String>(
+            value: _getCurrentField(),
+            items: IndicatorConfig.supportedFieldTypes.keys
+                .map<DropdownMenuItem<String>>(
+                    (String fieldType) => DropdownMenuItem<String>(
+                          value: fieldType,
+                          child: Text(
+                            '$fieldType',
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ))
+                .toList(),
+            onChanged: (String newField) => setState(
+              () {
+                _field = newField;
+                updateIndicator();
+              },
+            ),
+          )
+        ],
+      );
+
+  String _getCurrentField() => _field ?? getConfig()?.fieldType ?? 'close';
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[

@@ -1,6 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/rsi_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -19,9 +20,11 @@ class RSISeries extends Series {
   RSISeries(
     IndicatorInput indicatorInput, {
     String id,
+    RSIOptions rsiOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           const RSIIndicatorConfig(),
+          rsiOptions: rsiOptions,
           id: id,
         );
 
@@ -29,6 +32,7 @@ class RSISeries extends Series {
   RSISeries.fromIndicator(
     CloseValueIndicator<Tick> closeIndicator,
     this.config, {
+    @required this.rsiOptions,
     String id,
   })  : _closeIndicator = closeIndicator,
         super(id);
@@ -40,11 +44,14 @@ class RSISeries extends Series {
   /// Configuration of RSI.
   final RSIIndicatorConfig config;
 
+  /// Options for RSI Indicator.
+  final RSIOptions rsiOptions;
+
   @override
   SeriesPainter<Series> createPainter() {
     final RSIIndicator<Tick> rsiIndicator = RSIIndicator<Tick>.fromIndicator(
       _closeIndicator,
-      config.period,
+      rsiOptions.period,
     )..calculateValues();
 
     _rsiSeries = OscillatorLineSeries(
