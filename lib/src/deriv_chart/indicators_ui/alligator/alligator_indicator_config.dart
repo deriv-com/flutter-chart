@@ -4,7 +4,6 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/alligator_s
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 /// Bollinger Bands Indicator Config
 class AlligatorIndicatorConfig extends IndicatorConfig {
@@ -37,15 +36,15 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
   final int lipsPeriod;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) =>
-      AlligatorSeries.fromIndicator(
-        CloseValueIndicator<Tick>(indicatorInput),
+  Series getSeries(IndicatorInput indicatorInput) => AlligatorSeries(
+        indicatorInput,
         jawOffset: jawOffset,
         teethOffset: teethOffset,
         lipsOffset: lipsOffset,
         alligatorOptions: AlligatorOptions(
-            jawPeriod: jawPeriod,
-            teethPeriod: teethPeriod,
-            lipsPeriod: lipsPeriod),
+          jawPeriod: jawPeriod,
+          teethPeriod: teethPeriod,
+          lipsPeriod: lipsPeriod,
+        ),
       );
 }
