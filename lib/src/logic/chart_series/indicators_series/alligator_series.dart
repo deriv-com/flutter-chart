@@ -24,11 +24,12 @@ class AlligatorSeries extends Series {
   AlligatorSeries(
     IndicatorInput indicatorInput, {
     String id,
-        this.alligatorOptions,
-        this.jawOffset = 8,
-        this.teethOffset = 5,
-        this.lipsOffset = 3,
-  }) : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),super(id);
+    this.alligatorOptions,
+    this.jawOffset = 8,
+    this.teethOffset = 5,
+    this.lipsOffset = 3,
+  })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
+        super(id);
 
   final Indicator<Tick> _fieldIndicator;
 
