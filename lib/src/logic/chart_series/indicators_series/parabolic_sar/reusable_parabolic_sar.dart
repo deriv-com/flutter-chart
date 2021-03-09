@@ -64,9 +64,9 @@ class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
       currentExtremePoint = other.currentExtremePoint;
       minMaxExtremePoint = other.minMaxExtremePoint;
 
-      invalidate(entries.length - 1);
-      final Tick resultForLastIndex = super.calculate(entries.length - 1);
-      results[entries.length - 1] = resultForLastIndex;
+      invalidate(entries.length - 2);
+      final Tick resultForLastIndex = super.calculate(entries.length - 2);
+      results[entries.length - 2] = resultForLastIndex;
     } else {
       currentTrend = other._backupCurrentTrendT;
       accelerationFactor = other._backupAccelerationFactor;
