@@ -26,27 +26,27 @@ class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
 
   // Backup for PSAR internal variables.
   double _backupAccelerationFactor;
-  bool _backupCurrentTrendT;
-  int _backupStartTrendIndexT;
-  double _backupCurrentExtremePointT;
-  double _backupMinMaxExtremePointT;
+  bool _backupCurrentTrend;
+  int _backupStartTrendIndex;
+  double _backupCurrentExtremePoint;
+  double _backupMinMaxExtremePoint;
 
   @override
   Tick calculate(int index) {
     if (index == entries.length - 1) {
       _backupAccelerationFactor = accelerationFactor;
-      _backupCurrentTrendT = currentTrend;
-      _backupStartTrendIndexT = startTrendIndex;
-      _backupCurrentExtremePointT = currentExtremePoint;
-      _backupMinMaxExtremePointT = minMaxExtremePoint;
+      _backupCurrentTrend = currentTrend;
+      _backupStartTrendIndex = startTrendIndex;
+      _backupCurrentExtremePoint = currentExtremePoint;
+      _backupMinMaxExtremePoint = minMaxExtremePoint;
 
       final Tick result = super.calculate(index);
 
       accelerationFactor = _backupAccelerationFactor;
-      currentTrend = _backupCurrentTrendT;
-      startTrendIndex = _backupStartTrendIndexT;
-      currentExtremePoint = _backupCurrentExtremePointT;
-      minMaxExtremePoint = _backupMinMaxExtremePointT;
+      currentTrend = _backupCurrentTrend;
+      startTrendIndex = _backupStartTrendIndex;
+      currentExtremePoint = _backupCurrentExtremePoint;
+      minMaxExtremePoint = _backupMinMaxExtremePoint;
       return result;
     }
 
@@ -56,23 +56,16 @@ class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   @override
   void copyValuesFrom(covariant ReusableParabolicSarIndicator other) {
     super.copyValuesFrom(other);
+    currentTrend = other._backupCurrentTrend;
+    accelerationFactor = other._backupAccelerationFactor;
+    startTrendIndex = other._backupStartTrendIndex;
+    currentExtremePoint = other._backupCurrentExtremePoint;
+    minMaxExtremePoint = other._backupMinMaxExtremePoint;
 
     if (entries.length > other.entries.length) {
-      currentTrend = other.currentTrend;
-      accelerationFactor = other.accelerationFactor;
-      startTrendIndex = other.startTrendIndex;
-      currentExtremePoint = other.currentExtremePoint;
-      minMaxExtremePoint = other.minMaxExtremePoint;
-
       invalidate(entries.length - 2);
       final Tick resultForLastIndex = super.calculate(entries.length - 2);
       results[entries.length - 2] = resultForLastIndex;
-    } else {
-      currentTrend = other._backupCurrentTrendT;
-      accelerationFactor = other._backupAccelerationFactor;
-      startTrendIndex = other._backupStartTrendIndexT;
-      currentExtremePoint = other._backupCurrentExtremePointT;
-      minMaxExtremePoint = other._backupMinMaxExtremePointT;
     }
   }
 }
