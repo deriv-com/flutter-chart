@@ -142,18 +142,26 @@ class AlligatorSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => _jawSeries.entries == null
-      ? null
-      : max(
-          max(_jawSeries?.getMaxEpoch(), _teethSeries?.getMaxEpoch()),
-          _lipsSeries?.getMaxEpoch(),
-        );
+  int getMaxEpoch() {
+    final int jawSeriesMax = _jawSeries?.getMaxEpoch();
+    final int teethSeriesMax = _teethSeries?.getMaxEpoch();
+    final int lipsSeriesMax = _lipsSeries?.getMaxEpoch();
+    return (jawSeriesMax != null &&
+            teethSeriesMax != null &&
+            lipsSeriesMax != null)
+        ? max(jawSeriesMax, max(teethSeriesMax, lipsSeriesMax))
+        : null;
+  }
 
   @override
-  int getMinEpoch() => _jawSeries.entries == null
-      ? null
-      : min(
-          min(_jawSeries?.getMinEpoch(), _teethSeries?.getMinEpoch()),
-          _lipsSeries?.getMinEpoch(),
-        );
+  int getMinEpoch() {
+    final int jawSeriesMin = _jawSeries?.getMinEpoch();
+    final int teethSeriesMin = _teethSeries?.getMinEpoch();
+    final int lipsSeriesMin = _lipsSeries?.getMinEpoch();
+    return (jawSeriesMin != null &&
+            teethSeriesMin != null &&
+            lipsSeriesMin != null)
+        ? min(jawSeriesMin, min(teethSeriesMin, lipsSeriesMin))
+        : null;
+  }
 }
