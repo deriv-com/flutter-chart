@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/fractals_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -37,6 +38,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
     super.initState();
 
     indicatorItems
+      ..add(FractalsIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
       ..add(MAIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
