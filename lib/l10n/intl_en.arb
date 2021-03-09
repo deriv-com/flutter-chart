@@ -6,6 +6,8 @@
   "labelOffset": "Offset",
   "labelHighPeriod": "High Period",
   "labelLowPeriod": "Low Period",
+  "labelMaxAF": "Max AF",
+  "labelMinAF": "Min AF",
   "labelShift": "Shift",
   "labelBandsCount": "Bands Count",
   "labelSearchAssets": "Search assets",

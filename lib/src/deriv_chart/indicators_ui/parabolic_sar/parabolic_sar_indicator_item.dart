@@ -1,9 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -56,17 +53,17 @@ class ParabolicSARIndicatorItemState
         ],
       );
 
-  ///
+  /// Max AF widget.
   @protected
   Widget buildMaxAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
-            'Max AF: ${currentMaxAccelerationFactor.toStringAsFixed(2)}',
+            ChartLocalization.of(context).labelMaxAF,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           SizedBox(
-            width: 20,
+            width: 30,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
               initialValue: currentMaxAccelerationFactor.toString(),
@@ -84,17 +81,17 @@ class ParabolicSARIndicatorItemState
         ],
       );
 
-  ///
+  /// Min AF widget.
   @protected
   Widget buildMinAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
-            'Min AF: ${currentMinAccelerationFactor.toStringAsFixed(2)}',
+            ChartLocalization.of(context).labelMinAF,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           SizedBox(
-            width: 20,
+            width: 30,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
               initialValue: currentMinAccelerationFactor.toString(),
