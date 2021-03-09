@@ -3,18 +3,20 @@ import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
-/// A version of Parabolic SAR indicator specifically to be usable in [AbstractSingleIndicatorSeries].
+/// A version of Parabolic SAR indicator specifically to be suitable for
+/// [AbstractSingleIndicatorSeries].
 ///
 /// In [AbstractSingleIndicatorSeries] for better performance when a new tick is
-/// added or the last tick gets updated we don't recalculate all the indicators
-/// results and just for the new tick.
-/// If we were in granularities other than `1 tick` mode, calculating result for
-/// the last index for the first time is no problem but when we want to update
+/// added or the last tick gets updated, we don't recalculate indicator's result
+/// for all indices and just for the last tick.
+/// If we were in granularities other than `1 tick` mode, calculating the result
+/// of the last index for the first time is no problem but when we want to update
 /// the result for the last index when tha chart's last tick gets updated that
 /// would make [ParabolicSarIndicator] internal variables to become incorrect.
 ///
-/// Here to fix that whenever we want to calculate the result for the last index
-/// we make a backup for those internal variables and after calculating we reset them.
+/// Here to fix it, whenever we want to calculate the result for the last index
+/// we make a backup of those internal variables and after calculating the result
+/// we reset them.
 class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   /// Initializes PSAR indicator.
   ReusableParabolicSarIndicator(
