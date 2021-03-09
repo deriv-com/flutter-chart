@@ -65,17 +65,20 @@ class ParabolicSARIndicatorItemState
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
-          Expanded(
-            child: Slider(
-              value: currentMaxAccelerationFactor,
-              onChanged: (double value) {
-                setState(() {
-                  maxAccelerationFactor = roundDouble(value, 2);
-                  updateIndicator();
-                });
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: currentMaxAccelerationFactor.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  maxAccelerationFactor = double.tryParse(text);
+                } else {
+                  maxAccelerationFactor = 0.2;
+                }
+                updateIndicator();
               },
-              divisions: 10000,
-              max: 100,
             ),
           ),
         ],
@@ -90,17 +93,20 @@ class ParabolicSARIndicatorItemState
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
-          Expanded(
-            child: Slider(
-              value: currentMinAccelerationFactor,
-              onChanged: (double value) {
-                setState(() {
-                  minAccelerationFactor = roundDouble(value, 2);
-                  updateIndicator();
-                });
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: currentMinAccelerationFactor.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  minAccelerationFactor = double.tryParse(text);
+                } else {
+                  minAccelerationFactor = 0.02;
+                }
+                updateIndicator();
               },
-              divisions: 10000,
-              max: 100,
             ),
           ),
         ],
