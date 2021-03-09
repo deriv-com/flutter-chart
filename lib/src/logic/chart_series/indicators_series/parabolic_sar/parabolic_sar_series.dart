@@ -8,7 +8,7 @@ import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../abstract_single_indicator_series.dart';
-import 'reusable_parabolic_sar.dart';
+import 'custom_parabolic_sar_indicator.dart';
 
 /// Parabolic SAR series class.
 class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
@@ -34,7 +34,7 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
   SeriesPainter<Series> createPainter() => ScatterPainter(this);
 
   @override
-  CachedIndicator<Tick> initializeIndicator() => ReusableParabolicSarIndicator(
+  CachedIndicator<Tick> initializeIndicator() => CustomParabolicSarIndicator(
         _indicatorInput,
         accelerationStart: _options.minAccelerationFactor,
         maxAcceleration: _options.maxAccelerationFactor,

@@ -17,9 +17,9 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 /// Here to fix it, whenever we want to calculate the result for the last index
 /// we make a backup of those internal variables and after calculating the result
 /// we reset them.
-class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
+class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   /// Initializes PSAR indicator.
-  ReusableParabolicSarIndicator(
+  CustomParabolicSarIndicator(
     IndicatorInput indicatorInput, {
     double accelerationStart = 0.02,
     double maxAcceleration = 0.2,
@@ -61,7 +61,7 @@ class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   }
 
   @override
-  void copyValuesFrom(covariant ReusableParabolicSarIndicator other) {
+  void copyValuesFrom(covariant CustomParabolicSarIndicator other) {
     super.copyValuesFrom(other);
     currentTrend = other._backupCurrentTrend;
     accelerationFactor = other._backupAccelerationFactor;
