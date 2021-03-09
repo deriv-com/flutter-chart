@@ -18,6 +18,18 @@ class ScatterStyle extends DataSeriesStyle {
   /// Dot radius.
   final double radius;
 
+  /// Creates a copy of this object.
+  ScatterStyle copyWith({
+    Color color,
+    double radius,
+    HorizontalBarrierStyle lastTickStyle,
+  }) =>
+      ScatterStyle(
+        color: color ?? this.color,
+        radius: radius ?? this.radius,
+        lastTickStyle: lastTickStyle ?? this.lastTickStyle,
+      );
+
   @override
   String toString() => '${super.toString()}$color, $radius';
 }

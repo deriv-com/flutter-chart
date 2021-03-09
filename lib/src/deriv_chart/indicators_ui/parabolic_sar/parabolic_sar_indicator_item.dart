@@ -1,6 +1,9 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
+import 'package:deriv_chart/src/widgets/color_picker/color_button.dart';
+import 'package:deriv_chart/src/widgets/color_picker/color_picker_sheet.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -39,18 +42,49 @@ class ParabolicSARIndicatorItemState
   @protected
   double maxAccelerationFactor;
 
+  /// Scatter points style
+  @protected
+  ScatterStyle scatterStyle;
+
   @override
   ParabolicSARConfig createIndicatorConfig() => ParabolicSARConfig(
         minAccelerationFactor: currentMinAccelerationFactor,
         maxAccelerationFactor: currentMaxAccelerationFactor,
+        scatterStyle: currentScatterStyle,
       );
 
   @override
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
-          buildMinAccelerationFactorField(),
+          Row(
+            children: <Widget>[
+              buildMinAccelerationFactorField(),
+              _buildColorButton(),
+            ],
+          ),
           buildMaxAccelerationFactorField(),
         ],
+      );
+
+  ColorButton _buildColorButton() => ColorButton(
+        color: currentScatterStyle.color,
+        onTap: () {
+          showModalBottomSheet<void>(
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext context) => ColorPickerSheet(
+              selectedColor: currentScatterStyle.color,
+              onChanged: (Color selectedColor) {
+                setState(() {
+                  scatterStyle = currentScatterStyle.copyWith(
+                    color: selectedColor,
+                  );
+                });
+                updateIndicator();
+              },
+            ),
+          );
+        },
       );
 
   /// Max AF widget.
@@ -121,7 +155,8 @@ class ParabolicSARIndicatorItemState
 
   /// Creates Line style
   @protected
-  LineStyle getCurrentLineStyle() =>
-      getConfig().lineStyle ??
-      const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
+  ScatterStyle get currentScatterStyle =>
+      scatterStyle ??
+      getConfig()?.scatterStyle ??
+      const ScatterStyle(color: Colors.yellowAccent);
 }

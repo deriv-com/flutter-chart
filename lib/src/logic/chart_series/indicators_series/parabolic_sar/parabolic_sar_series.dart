@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../abstract_single_indicator_series.dart';
@@ -15,9 +16,15 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
   ParabolicSARSeries(
     this._indicatorInput,
     ParabolicSAROptions options, {
+    ScatterStyle style,
     String id,
   })  : _options = options,
-        super(CloseValueIndicator<Tick>(_indicatorInput), id, options);
+        super(
+          CloseValueIndicator<Tick>(_indicatorInput),
+          id,
+          options,
+          style: style,
+        );
 
   final IndicatorInput _indicatorInput;
 

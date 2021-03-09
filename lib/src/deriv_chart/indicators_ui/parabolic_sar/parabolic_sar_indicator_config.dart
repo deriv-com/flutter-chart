@@ -3,30 +3,32 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/parabolic_s
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 
 import '../indicator_config.dart';
 
-/// Moving Average indicator config
+/// Parabolic SAR indicator config.
 class ParabolicSARConfig extends IndicatorConfig {
-  /// Initializes
+  /// Initializes.
   const ParabolicSARConfig({
     this.minAccelerationFactor,
     this.maxAccelerationFactor,
-    this.lineStyle,
+    this.scatterStyle,
   }) : super();
 
-  /// Min minAccelerationFactor
+  /// Min minAccelerationFactor.
   final double minAccelerationFactor;
 
-  /// Min minAccelerationFactor
+  /// Min minAccelerationFactor.
   final double maxAccelerationFactor;
 
-  /// MA line style
-  final LineStyle lineStyle;
+  /// Scatter points style.
+  final ScatterStyle scatterStyle;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => ParabolicSARSeries(
         indicatorInput,
         ParabolicSAROptions(minAccelerationFactor, maxAccelerationFactor),
+        style: scatterStyle,
       );
 }
