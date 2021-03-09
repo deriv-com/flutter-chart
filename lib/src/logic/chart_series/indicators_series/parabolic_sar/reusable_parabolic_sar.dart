@@ -19,10 +19,15 @@ class ReusableParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   /// Initializes PSAR indicator.
   ReusableParabolicSarIndicator(
     IndicatorInput indicatorInput, {
-    double aF = 0.02,
-    double maxA = 0.2,
-    double increment = 0.02,
-  }) : super(indicatorInput, aF: aF, maxA: maxA, increment: increment);
+    double accelerationStart = 0.02,
+    double maxAcceleration = 0.2,
+    double accelerationIncrement = 0.02,
+  }) : super(
+          indicatorInput,
+          accelerationStart: accelerationStart,
+          maxAcceleration: maxAcceleration,
+          accelerationIncrement: accelerationIncrement,
+        );
 
   // Backup for PSAR internal variables.
   double _backupAccelerationFactor;

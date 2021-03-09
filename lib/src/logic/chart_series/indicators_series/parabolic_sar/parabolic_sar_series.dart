@@ -29,7 +29,7 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
   @override
   CachedIndicator<Tick> initializeIndicator() => ReusableParabolicSarIndicator(
         _indicatorInput,
-        aF: _options.minAccelerationFactor,
-        maxA: _options.maxAccelerationFactor,
+        accelerationStart: _options.minAccelerationFactor,
+        maxAcceleration: _options.maxAccelerationFactor,
       );
 }
