@@ -34,23 +34,17 @@ class ParabolicSARIndicatorItem extends IndicatorItem {
 /// ParabolicSARIndicatorItem State class
 class ParabolicSARIndicatorItemState
     extends IndicatorItemState<ParabolicSARConfig> {
-  /// Min AccelerationFactor
-  @protected
-  double minAccelerationFactor;
+  double _minAccelerationFactor;
 
-  /// Min AccelerationFactor
-  @protected
-  double maxAccelerationFactor;
+  double _maxAccelerationFactor;
 
-  /// Scatter points style
-  @protected
-  ScatterStyle scatterStyle;
+  ScatterStyle _scatterStyle;
 
   @override
   ParabolicSARConfig createIndicatorConfig() => ParabolicSARConfig(
-        minAccelerationFactor: currentMinAccelerationFactor,
-        maxAccelerationFactor: currentMaxAccelerationFactor,
-        scatterStyle: currentScatterStyle,
+        minAccelerationFactor: _currentMinAccelerationFactor,
+        maxAccelerationFactor: _currentMaxAccelerationFactor,
+        scatterStyle: _currentScatterStyle,
       );
 
   @override
@@ -58,25 +52,25 @@ class ParabolicSARIndicatorItemState
         children: <Widget>[
           Row(
             children: <Widget>[
-              buildMinAccelerationFactorField(),
+              _buildMinAccelerationFactorField(),
               _buildColorButton(),
             ],
           ),
-          buildMaxAccelerationFactorField(),
+          _buildMaxAccelerationFactorField(),
         ],
       );
 
   ColorButton _buildColorButton() => ColorButton(
-        color: currentScatterStyle.color,
+        color: _currentScatterStyle.color,
         onTap: () {
           showModalBottomSheet<void>(
             backgroundColor: Colors.transparent,
             context: context,
             builder: (BuildContext context) => ColorPickerSheet(
-              selectedColor: currentScatterStyle.color,
+              selectedColor: _currentScatterStyle.color,
               onChanged: (Color selectedColor) {
                 setState(() {
-                  scatterStyle = currentScatterStyle.copyWith(
+                  _scatterStyle = _currentScatterStyle.copyWith(
                     color: selectedColor,
                   );
                 });
@@ -87,9 +81,7 @@ class ParabolicSARIndicatorItemState
         },
       );
 
-  /// Max AF widget.
-  @protected
-  Widget buildMaxAccelerationFactorField() => Row(
+  Widget _buildMaxAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
             ChartLocalization.of(context).labelMaxAF,
@@ -100,13 +92,13 @@ class ParabolicSARIndicatorItemState
             width: 30,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: currentMaxAccelerationFactor.toString(),
+              initialValue: _currentMaxAccelerationFactor.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  maxAccelerationFactor = double.tryParse(text);
+                  _maxAccelerationFactor = double.tryParse(text);
                 } else {
-                  maxAccelerationFactor = 0.2;
+                  _maxAccelerationFactor = 0.2;
                 }
                 updateIndicator();
               },
@@ -115,9 +107,7 @@ class ParabolicSARIndicatorItemState
         ],
       );
 
-  /// Min AF widget.
-  @protected
-  Widget buildMinAccelerationFactorField() => Row(
+  Widget _buildMinAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
             ChartLocalization.of(context).labelMinAF,
@@ -128,13 +118,13 @@ class ParabolicSARIndicatorItemState
             width: 30,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: currentMinAccelerationFactor.toString(),
+              initialValue: _currentMinAccelerationFactor.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  minAccelerationFactor = double.tryParse(text);
+                  _minAccelerationFactor = double.tryParse(text);
                 } else {
-                  minAccelerationFactor = 0.02;
+                  _minAccelerationFactor = 0.02;
                 }
                 updateIndicator();
               },
@@ -143,20 +133,14 @@ class ParabolicSARIndicatorItemState
         ],
       );
 
-  /// Gets Indicator current minAccelerationFactor.
-  @protected
-  double get currentMinAccelerationFactor =>
-      minAccelerationFactor ?? getConfig()?.minAccelerationFactor ?? 0.02;
+  double get _currentMinAccelerationFactor =>
+      _minAccelerationFactor ?? getConfig()?.minAccelerationFactor ?? 0.02;
 
-  /// Gets Indicator current minAccelerationFactor.
-  @protected
-  double get currentMaxAccelerationFactor =>
-      maxAccelerationFactor ?? getConfig()?.maxAccelerationFactor ?? 0.2;
+  double get _currentMaxAccelerationFactor =>
+      _maxAccelerationFactor ?? getConfig()?.maxAccelerationFactor ?? 0.2;
 
-  /// Creates Line style
-  @protected
-  ScatterStyle get currentScatterStyle =>
-      scatterStyle ??
+  ScatterStyle get _currentScatterStyle =>
+      _scatterStyle ??
       getConfig()?.scatterStyle ??
       const ScatterStyle(color: Colors.yellowAccent);
 }
