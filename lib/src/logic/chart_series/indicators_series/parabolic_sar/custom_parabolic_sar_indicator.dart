@@ -6,17 +6,18 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 /// A version of Parabolic SAR indicator specifically to be suitable for
 /// [AbstractSingleIndicatorSeries].
 ///
-/// In [AbstractSingleIndicatorSeries] for better performance when a new tick is
+/// In [AbstractSingleIndicatorSeries] for better performance, when a new tick is
 /// added or the last tick gets updated, we don't recalculate indicator's result
 /// for all indices and just for the last tick.
 /// If we were in granularities other than `1 tick` mode, calculating the result
-/// of the last index for the first time is no problem but when we want to update
-/// the result for the last index when tha chart's last tick gets updated that
-/// would make [ParabolicSarIndicator] internal variables to become incorrect.
+/// of the last index for the first time is no problem but when the chart's last
+/// tick gets updated and after we update the result for this index, internal
+/// variables of [ParabolicSarIndicator] become incorrect.
+/// (e.g. [accelerationFactor])
 ///
 /// Here to fix it, whenever we want to calculate the result for the last index
 /// we make a backup of those internal variables and after calculating the result
-/// we reset them.
+/// we reset them to backup values.
 class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   /// Initializes PSAR indicator.
   CustomParabolicSarIndicator(
