@@ -1,7 +1,11 @@
 import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/ichimoku_clouds_options.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -13,45 +17,49 @@ class IchimokuCloudSeries extends Series {
   /// Initializes
   IchimokuCloudSeries(
     this.ticks, {
+    @required this.ichimokuCloudOptions,
+    @required this.config,
     String id,
-    this.conversionLinePeriod = 9,
-    this.baseLinePeriod = 26,
   }) : super(id);
 
   LineSeries _conversionLineSeries;
   LineSeries _baseLineSeries;
-  LineSeries _laggingSpanSeries;
-  LineSeries _spanASeries;
-  LineSeries _spanBSeries;
+  SingleIndicatorSeries _laggingSpanSeries;
+  SingleIndicatorSeries _spanASeries;
+  SingleIndicatorSeries _spanBSeries;
 
   /// List of [Tick]s to calculate IchimokuCloud on.
   final IndicatorDataInput ticks;
 
-  /// The period to calculate the Conversion Line value.
-  final int conversionLinePeriod;
+  /// Ichimoku Clouds Configuration.
+  IchimokuCloudIndicatorConfig config;
 
-  /// The period to calculate the Base Line value.
-  final int baseLinePeriod;
+  /// Ichimoku Clouds Options.
+  IchimokuCloudOptions ichimokuCloudOptions;
 
   @override
   SeriesPainter<Series> createPainter() {
     final IchimokuBaseLineIndicator<Tick> baseLineIndicator =
-        IchimokuBaseLineIndicator<Tick>(ticks, period: baseLinePeriod);
+        IchimokuBaseLineIndicator<Tick>(ticks,
+            period: ichimokuCloudOptions.baseLinePeriod)
+          ..calculateValues();
 
     final IchimokuConversionLineIndicator<Tick> conversionLineIndicator =
         IchimokuConversionLineIndicator<Tick>(ticks,
-            period: conversionLinePeriod);
+            period: ichimokuCloudOptions.conversionLinePeriod)
+          ..calculateValues();
 
     final IchimokuLaggingSpanIndicator<Tick> laggingSpanIndicator =
-        IchimokuLaggingSpanIndicator<Tick>(ticks);
+        IchimokuLaggingSpanIndicator<Tick>(ticks)..calculateValues();
 
     final IchimokuSpanAIndicator<Tick> spanAIndicator =
         IchimokuSpanAIndicator<Tick>(ticks,
             conversionLineIndicator: conversionLineIndicator,
-            baseLineIndicator: baseLineIndicator);
+            baseLineIndicator: baseLineIndicator)
+          ..calculateValues();
 
     final IchimokuSpanBIndicator<Tick> spanBIndicator =
-        IchimokuSpanBIndicator<Tick>(ticks);
+        IchimokuSpanBIndicator<Tick>(ticks)..calculateValues();
 
     _conversionLineSeries = LineSeries(conversionLineIndicator.results,
         style: const LineStyle(color: Colors.indigo));
@@ -59,14 +67,39 @@ class IchimokuCloudSeries extends Series {
     _baseLineSeries = LineSeries(baseLineIndicator.results,
         style: const LineStyle(color: Colors.redAccent));
 
-    _laggingSpanSeries = LineSeries(laggingSpanIndicator.results,
-        style: const LineStyle(color: Colors.lime));
+    // TODO(mohammadamir-fs): add offset to line painter
+    _laggingSpanSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => laggingSpanIndicator,
+      inputIndicator: laggingSpanIndicator,
+      options: ichimokuCloudOptions,
+      offset: config.laggingSpanOffset,
+      style: const LineStyle(
+        color: Colors.lime,
+      ),
+    );
 
-    _spanASeries = LineSeries(spanAIndicator.results,
-        style: const LineStyle(color: Colors.lightGreenAccent));
+    _spanASeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => spanAIndicator,
+      inputIndicator: spanAIndicator,
+      options: ichimokuCloudOptions,
+      offset: ichimokuCloudOptions.baseLinePeriod,
+      style: const LineStyle(
+        color: Colors.green,
+      ),
+    );
 
-    _spanBSeries = LineSeries(spanBIndicator.results,
-        style: const LineStyle(color: Colors.red));
+    _spanBSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => spanBIndicator,
+      inputIndicator: spanBIndicator,
+      options: ichimokuCloudOptions,
+      offset: ichimokuCloudOptions.baseLinePeriod,
+      style: const LineStyle(
+        color: Colors.red,
+      ),
+    );
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
@@ -76,13 +109,13 @@ class IchimokuCloudSeries extends Series {
     final IchimokuCloudSeries series = oldData;
 
     final bool conversionLineUpdated =
-        _conversionLineSeries.didUpdate(series._conversionLineSeries);
+        _conversionLineSeries.didUpdate(series?._conversionLineSeries);
     final bool baseLineUpdated =
-        _baseLineSeries.didUpdate(series._baseLineSeries);
+        _baseLineSeries.didUpdate(series?._baseLineSeries);
     final bool laggingSpanUpdated =
-        _laggingSpanSeries.didUpdate(series._laggingSpanSeries);
-    final bool spanAUpdated = _spanASeries.didUpdate(series._spanASeries);
-    final bool spanBUpdated = _spanBSeries.didUpdate(series._spanBSeries);
+        _laggingSpanSeries.didUpdate(series?._laggingSpanSeries);
+    final bool spanAUpdated = _spanASeries.didUpdate(series?._spanASeries);
+    final bool spanBUpdated = _spanBSeries.didUpdate(series?._spanBSeries);
 
     return conversionLineUpdated ||
         baseLineUpdated ||
@@ -101,24 +134,27 @@ class IchimokuCloudSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() =>
-      // We Calculate min and max from all three series(Except SpanA because values of SpanA are always between Conversion Line and Base Line values).
-      <double>[
-        min<double>(
-          min<double>(
-            min<double>(
-                _conversionLineSeries.minValue, _baseLineSeries.minValue),
-            _laggingSpanSeries.minValue,
+  List<double> recalculateMinMax() => <double>[
+        min(
+          min(
+            min(
+              min(_conversionLineSeries.minValue, _baseLineSeries.minValue),
+              _laggingSpanSeries.minValue,
+            ),
+            _spanBSeries.minValue,
           ),
-          _spanBSeries.minValue,
+          _spanASeries.minValue,
         ),
         max(
-            max<double>(
-              max<double>(
-                  _conversionLineSeries.maxValue, _baseLineSeries.maxValue),
+          max(
+            max(
+              max(_conversionLineSeries.maxValue, _baseLineSeries.maxValue),
               _laggingSpanSeries.maxValue,
             ),
-            _spanBSeries.maxValue),
+            _spanBSeries.maxValue,
+          ),
+          _spanASeries.maxValue,
+        )
       ];
 
   @override
@@ -147,13 +183,64 @@ class IchimokuCloudSeries extends Series {
 
   @override
   int getMaxEpoch() {
-    // TODO: implement getMaxEpoch
-    throw UnimplementedError();
+    final double maxConversionLine =
+        _conversionLineSeries.getMaxEpoch()?.toDouble() ??
+            double.negativeInfinity;
+    final double maxBaseLine =
+        _baseLineSeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
+    final double maxLaggingSpan =
+        _laggingSpanSeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
+    final double maxSpanALine =
+        _spanASeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
+    final double maxSpanBLine =
+        _spanBSeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
+    final double maximum = max<double>(
+      max<double>(
+        max<double>(
+          max<double>(
+            maxConversionLine,
+            maxBaseLine,
+          ),
+          maxLaggingSpan,
+        ),
+        maxSpanALine,
+      ),
+      maxSpanBLine,
+    );
+    if (maximum == double.negativeInfinity) {
+      return null;
+    }
+    return maximum.toInt();
   }
 
   @override
   int getMinEpoch() {
-    // TODO: implement getMinEpoch
-    throw UnimplementedError();
+    final double minConversionLine =
+        _conversionLineSeries.getMinEpoch()?.toDouble() ?? double.infinity;
+    final double minBaseLine =
+        _baseLineSeries.getMinEpoch()?.toDouble() ?? double.infinity;
+    final double minLaggingSpan =
+        _laggingSpanSeries.getMinEpoch()?.toDouble() ?? double.infinity;
+    final double minSpanALine =
+        _spanASeries.getMinEpoch()?.toDouble() ?? double.infinity;
+    final double minSpanBLine =
+        _spanBSeries.getMinEpoch()?.toDouble() ?? double.infinity;
+    final double minimum = min<double>(
+      min<double>(
+        min<double>(
+          min<double>(
+            minConversionLine,
+            minBaseLine,
+          ),
+          minLaggingSpan,
+        ),
+        minSpanALine,
+      ),
+      minSpanBLine,
+    );
+    if (minimum == double.infinity) {
+      return null;
+    }
+    return minimum.toInt();
   }
 }

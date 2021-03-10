@@ -85,11 +85,31 @@ class ChartLocalization {
     );
   }
 
+  /// `Leading Span B Period`
+  String get labelSpanBPeriod {
+    return Intl.message(
+      'Leading Span B Period',
+      name: 'labelSpanBPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Offset`
   String get labelOffset {
     return Intl.message(
       'Offset',
       name: 'labelOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lagging Span Offset`
+  String get labelLaggingSpanOffset {
+    return Intl.message(
+      'Lagging Span Offset',
+      name: 'labelLaggingSpanOffset',
       desc: '',
       args: [],
     );

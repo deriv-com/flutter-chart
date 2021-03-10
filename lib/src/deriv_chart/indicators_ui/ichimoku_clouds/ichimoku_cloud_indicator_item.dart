@@ -32,12 +32,16 @@ class IchimokuCloudIndicatorItemState
     extends IndicatorItemState<IchimokuCloudIndicatorConfig> {
   int _baseLinePeriod = 26;
   int _conversionLinePeriod = 9;
+  int _spanBPeriod = 52;
+  int _laggingSpanOffset = -26;
 
   @override
   IchimokuCloudIndicatorConfig createIndicatorConfig() =>
       IchimokuCloudIndicatorConfig(
         baseLinePeriod: _baseLinePeriod,
         conversionLinePeriod: _conversionLinePeriod,
+        laggingSpanOffset: _laggingSpanOffset,
+        spanBPeriod: _spanBPeriod,
       );
 
   Widget _buildConversionLinePeriodField() => Row(
@@ -92,11 +96,63 @@ class IchimokuCloudIndicatorItemState
         ],
       );
 
+  Widget _buildSpanBPeriodField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelSpanBPeriod,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: _spanBPeriod.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  _spanBPeriod = int.tryParse(text);
+                } else {
+                  _spanBPeriod = 26;
+                }
+                updateIndicator();
+              },
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildOffsetField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelLaggingSpanOffset,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Slider(
+              value: _laggingSpanOffset.abs().toDouble(),
+              onChanged: (double value) {
+                setState(() {
+                  _laggingSpanOffset = value.toInt() * -1;
+                  updateIndicator();
+                });
+              },
+              divisions: 100,
+              max: 100,
+              label: '${_laggingSpanOffset.abs()}',
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
           _buildBaseLinePeriodField(),
           _buildConversionLinePeriodField(),
+          _buildSpanBPeriodField(),
+          _buildOffsetField(),
         ],
       );
 }
