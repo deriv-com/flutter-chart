@@ -1,8 +1,10 @@
 analyzer:
   exclude:
-    - test/**
-    - lib/**
-    - example/**
+    # - test/**
+    # - lib/**
+    # - example/**
+    - example/lib/generated/**
+    - lib/generated/**
   strong-mode:
     implicit-dynamic: false
   errors:
