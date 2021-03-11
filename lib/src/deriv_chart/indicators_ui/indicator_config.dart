@@ -21,6 +21,7 @@ abstract class IndicatorConfig {
     switch (json[nameKey]) {
       case MAIndicatorConfig.name:
         return MAIndicatorConfig.fromJson(json);
+      // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
     }
