@@ -1,4 +1,3 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/helpers/color_converter.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';
@@ -16,8 +15,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
     this.color = const Color(0xFF85ACB0),
     this.thickness = 1,
     this.hasArea = false,
-    HorizontalBarrierStyle lastTickStyle,
-  }) : super(lastTickStyle: lastTickStyle);
+  });
 
   /// Initializes from JSON.
   factory LineStyle.fromJson(Map<String, dynamic> json) =>
