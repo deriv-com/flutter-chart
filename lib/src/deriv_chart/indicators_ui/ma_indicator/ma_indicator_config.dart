@@ -28,8 +28,8 @@ class MAIndicatorConfig extends IndicatorConfig {
   static const String name = 'moving_average';
 
   @override
-  Map<String, dynamic> toJson() =>
-      _$MAIndicatorConfigToJson(this)..putIfAbsent('name', () => name);
+  Map<String, dynamic> toJson() => _$MAIndicatorConfigToJson(this)
+    ..putIfAbsent(IndicatorConfig.nameKey, () => name);
 
   /// Moving Average period
   final int period;

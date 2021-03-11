@@ -14,11 +14,11 @@ abstract class IndicatorConfig {
 
   /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
-    if (!json.containsKey('name')) {
+    if (!json.containsKey(nameKey)) {
       throw ArgumentError.value(json, 'json', 'Missing indicator name.');
     }
 
-    switch (json['name']) {
+    switch (json[nameKey]) {
       case MAIndicatorConfig.name:
         return MAIndicatorConfig.fromJson(json);
       default:
@@ -26,9 +26,12 @@ abstract class IndicatorConfig {
     }
   }
 
+  /// Key of indicator name property in JSON.
+  static const String nameKey = 'name';
+
   /// Serialization to JSON. Serves as value in key-value storage.
   ///
-  /// Must specify indicator `name`.
+  /// Must specify indicator `name` with `nameKey`.
   Map<String, dynamic> toJson();
 
   /// Indicators supported field types
