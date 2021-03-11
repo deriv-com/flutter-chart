@@ -24,11 +24,12 @@ class MAIndicatorConfig extends IndicatorConfig {
   factory MAIndicatorConfig.fromJson(Map<String, dynamic> json) =>
       _$MAIndicatorConfigFromJson(json);
 
-  /// Unique name for this indicator. Serves as key in key-value storage.
-  static const String name = 'ma';
+  /// Unique name for this indicator.
+  static const String name = 'moving_average';
 
   @override
-  Map<String, dynamic> toJson() => _$MAIndicatorConfigToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MAIndicatorConfigToJson(this)..putIfAbsent('name', () => name);
 
   /// Moving Average period
   final int period;
