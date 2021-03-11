@@ -3,7 +3,6 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart'
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/donchian_channels_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 /// Donchian Channel Indicator Config
@@ -41,7 +40,8 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   final Color fillColor;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) => DonchianChannelsSeries.fromIndicator(
+  Series getSeries(IndicatorInput indicatorInput) =>
+      DonchianChannelsSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes['high'](indicatorInput),
         IndicatorConfig.supportedFieldTypes['low'](indicatorInput),
         this,
