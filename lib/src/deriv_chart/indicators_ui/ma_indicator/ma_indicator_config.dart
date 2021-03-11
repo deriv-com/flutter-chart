@@ -3,10 +3,14 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../indicator_config.dart';
 
+part 'ma_indicator_config.g.dart';
+
 /// Moving Average indicator config
+@JsonSerializable()
 class MAIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const MAIndicatorConfig({
@@ -17,24 +21,14 @@ class MAIndicatorConfig extends IndicatorConfig {
   }) : super();
 
   /// Initializes from JSON.
-  MAIndicatorConfig.fromJson(Map<String, dynamic> json)
-      : period = json['period'],
-        type = parseMovingAverageType(json['type'] ?? '') ??
-            MovingAverageType.simple,
-        fieldType = json['field_type'],
-        // TODO: Parse style
-        lineStyle = null;
+  factory MAIndicatorConfig.fromJson(Map<String, dynamic> json) =>
+      _$MAIndicatorConfigFromJson(json);
 
   /// Unique name for this indicator. Serves as key in key-value storage.
   static const String name = 'ma';
 
   @override
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'period': period,
-        'type': type.toString(),
-        'field_type': fieldType,
-      };
+  Map<String, dynamic> toJson() => _$MAIndicatorConfigToJson(this);
 
   /// Moving Average period
   final int period;
