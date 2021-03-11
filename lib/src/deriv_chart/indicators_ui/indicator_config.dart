@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -21,6 +22,8 @@ abstract class IndicatorConfig {
     switch (json[nameKey]) {
       case MAIndicatorConfig.name:
         return MAIndicatorConfig.fromJson(json);
+      case DonchianChannelIndicatorConfig.name:
+        return DonchianChannelIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
