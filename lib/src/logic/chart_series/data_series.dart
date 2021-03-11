@@ -19,6 +19,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     this.input,
     String id, {
     DataSeriesStyle style,
+    this.lastTickIndicatorStyle,
   }) : super(id, style: style) {
     _minMaxCalculator = MinMaxCalculator(minValueOf, maxValueOf);
   }
@@ -51,6 +52,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// In other cases like in the first run or when the [input] list changes entirely [prevLastEntry]
   /// will ne `null` and there will be no animation.
   T prevLastEntry;
+
+  /// Style of a last tick indicator.
+  /// `null` if indicator is absent.
+  final HorizontalBarrierStyle lastTickIndicatorStyle;
 
   HorizontalBarrier _lastTickIndicator;
 
@@ -106,13 +111,11 @@ abstract class DataSeries<T extends Tick> extends Series {
   double maxValueOf(T t);
 
   void _initLastTickIndicator() {
-    final DataSeriesStyle style = this.style;
-
-    if (entries.isNotEmpty && style?.lastTickStyle != null ?? false) {
+    if (entries.isNotEmpty && lastTickIndicatorStyle != null) {
       _lastTickIndicator = HorizontalBarrier(
         entries.last.quote,
         epoch: entries.last.epoch,
-        style: style.lastTickStyle,
+        style: lastTickIndicatorStyle,
       );
     }
   }
