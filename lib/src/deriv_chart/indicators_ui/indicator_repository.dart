@@ -40,6 +40,16 @@ class IndicatorsRepository {
     await _writeToPrefs();
   }
 
+  /// Updates indicator at index and updates storage.
+  Future<void> updateAt(int index, IndicatorConfig indicatorConfig) async {
+    if (index < 0 || index >= _indicators.length) {
+      return;
+    }
+
+    _indicators[index] = indicatorConfig;
+    await _writeToPrefs();
+  }
+
   Future<void> _writeToPrefs() async {
     if (_prefs != null) {
       await _prefs.setStringList(
