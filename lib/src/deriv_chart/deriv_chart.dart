@@ -99,13 +99,11 @@ class _DerivChartState extends State<DerivChart> {
             granularity: widget.granularity,
             controller: widget.controller,
             secondarySeries: <Series>[
-              ..._indicatorsRepo.indicators.values
-                  .where((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig != null)
-                  .map((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig.getSeries(
-                        IndicatorInput(widget.mainSeries.input),
-                      ))
+              for (final IndicatorConfig indicatorConfig
+                  in _indicatorsRepo.indicators)
+                indicatorConfig.getSeries(
+                  IndicatorInput(widget.mainSeries.input),
+                )
             ],
             markerSeries: widget.markerSeries,
             theme: widget.theme,
