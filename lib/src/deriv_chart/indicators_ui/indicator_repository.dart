@@ -1,18 +1,32 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'indicator_config.dart';
+
+const String indicatorsKey = 'indicators';
 
 /// Holds indicators that were added to the Chart during runtime.
 class IndicatorsRepository {
   /// Initializes
-  IndicatorsRepository() : _indicators = <String, IndicatorConfig>{};
+  IndicatorsRepository() : _indicators = <IndicatorConfig>[];
 
-  final Map<String, IndicatorConfig> _indicators;
+  final List<IndicatorConfig> _indicators;
 
-  /// Gets the indicators
-  Map<String, IndicatorConfig> get indicators => _indicators;
+  /// List of indicators.
+  List<IndicatorConfig> get indicators => _indicators;
 
-  /// Whether this indicator for the given [key] is added to the chart
-  bool isIndicatorActive(String key) => _indicators[key] != null;
+  /// Loads user selected indicators from shared preferences.
+  void loadFromPrefs(SharedPreferences prefs) {
+    if (prefs.containsKey(indicatorsKey)) {
+      final List<String> strings = prefs.getStringList(indicatorsKey);
 
-  /// Gets the indicator for the given [key]
-  IndicatorConfig getIndicator(String key) => _indicators[key];
+      for (final String string in strings) {
+        final IndicatorConfig indicatorConfig =
+            IndicatorConfig.fromJson(jsonDecode(string));
+
+        // TODO: Add config to repo
+      }
+    }
+  }
 }

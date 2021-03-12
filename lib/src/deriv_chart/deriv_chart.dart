@@ -21,8 +21,6 @@ import 'indicators_ui/indicator_config.dart';
 import 'indicators_ui/indicator_repository.dart';
 import 'indicators_ui/indicators_dialog.dart';
 
-const String indicatorsKey = 'indicators';
-
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
 class DerivChart extends StatefulWidget {
   /// Initializes
@@ -84,26 +82,12 @@ class DerivChart extends StatefulWidget {
 
 class _DerivChartState extends State<DerivChart> {
   final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
-  SharedPreferences _prefs;
 
   @override
   Future<void> initState() async {
     super.initState();
-    _prefs = await SharedPreferences.getInstance();
-    readFromPrefs();
-  }
-
-  void readFromPrefs() {
-    if (_prefs.containsKey(indicatorsKey)) {
-      final List<String> strings = _prefs.getStringList(indicatorsKey);
-
-      for (final String string in strings) {
-        final IndicatorConfig indicatorConfig =
-            IndicatorConfig.fromJson(jsonDecode(string));
-
-        // TODO: Add config to repo
-      }
-    }
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _indicatorsRepo.loadFromPrefs(prefs);
   }
 
   @override
