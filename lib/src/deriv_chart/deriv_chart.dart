@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/chart.dart';
@@ -127,10 +126,7 @@ class _DerivChartState extends State<DerivChart> {
                     value: _indicatorsRepo,
                     child: IndicatorsDialog(
                       ticks: widget.mainSeries.entries,
-                      onAddIndicator: (
-                        String key,
-                        IndicatorConfig indicatorConfig,
-                      ) =>
+                      onAddIndicator: (IndicatorConfig indicatorConfig) =>
                           setState(() => _indicatorsRepo.add(indicatorConfig)),
                     ),
                   ),
