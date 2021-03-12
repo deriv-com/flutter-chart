@@ -24,12 +24,12 @@ class IndicatorsRepository {
 
     if (prefs.containsKey(indicatorsKey)) {
       final List<String> strings = prefs.getStringList(indicatorsKey);
+      _indicators.clear();
 
       for (final String string in strings) {
         final IndicatorConfig indicatorConfig =
             IndicatorConfig.fromJson(jsonDecode(string));
-
-        // TODO: Add config to repo
+        _indicators.add(indicatorConfig);
       }
     }
   }
