@@ -53,33 +53,13 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
         contentPadding: const EdgeInsets.all(0),
         leading: Text(widget.title, style: const TextStyle(fontSize: 10)),
         title: getIndicatorOptions(),
-        trailing: SizedBox(
-          height: 24,
-          width: 24,
-          child: Checkbox(
-            value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),
-            onChanged: (bool newValue) => setState(
-              () {
-                if (newValue) {
-                  updateIndicator();
-                } else {
-                  removeIndicator();
-                }
-              },
-            ),
-          ),
+        trailing: IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            widget.onAddIndicator?.call(createIndicatorConfig());
+          },
         ),
       );
-
-  /// Updates indicator based on its current config values.
-  void updateIndicator() => widget.onAddIndicator?.call(
-        getIndicatorKey(),
-        createIndicatorConfig(),
-      );
-
-  /// Removes this indicator.
-  void removeIndicator() =>
-      widget.onAddIndicator?.call(getIndicatorKey(), null);
 
   /// Gets the key for this indicator
   @protected
