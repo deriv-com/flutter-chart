@@ -11,7 +11,7 @@ abstract class IndicatorItem extends StatefulWidget {
   const IndicatorItem({
     Key key,
     this.title,
-    this.indicatorConfig,
+    this.config,
     this.updateIndicator,
     this.deleteIndicator,
   }) : super(key: key);
@@ -19,10 +19,14 @@ abstract class IndicatorItem extends StatefulWidget {
   /// Title
   final String title;
 
-  final IndicatorConfig indicatorConfig;
+  /// Contains indicator configuration.
+  final IndicatorConfig config;
 
-  final Function updateIndicator;
-  final Function deleteIndicator;
+  /// Called when config values were updated.
+  final UpdateIndicator updateIndicator;
+
+  /// Called when user removed indicator.
+  final VoidCallback deleteIndicator;
 
   @override
   IndicatorItemState<IndicatorConfig> createState() =>
@@ -67,11 +71,6 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
 
   /// Returns the [IndicatorConfig] which can be used to create the Series for this indicator.
   T createIndicatorConfig();
-
-  /// Gets the [IndicatorConfig] of this [IndicatorItem]
-  T getConfig() => indicatorsRepo != null
-      ? indicatorsRepo?.indicators[getIndicatorKey()]
-      : null;
 
   /// Creates the menu options widget for this indicator.
   Widget getIndicatorOptions();

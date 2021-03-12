@@ -45,8 +45,16 @@ class IndicatorsRepository {
     if (index < 0 || index >= _indicators.length) {
       return;
     }
-
     _indicators[index] = indicatorConfig;
+    await _writeToPrefs();
+  }
+
+  /// Removes indicator at index from repository and updates storage.
+  Future<void> removeAt(int index) async {
+    if (index < 0 || index >= _indicators.length) {
+      return;
+    }
+    _indicators.removeAt(index);
     await _writeToPrefs();
   }
 

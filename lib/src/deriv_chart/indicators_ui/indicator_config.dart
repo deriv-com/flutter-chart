@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:flutter/material.dart';
 
 import 'callbacks.dart';
 
@@ -64,5 +65,8 @@ abstract class IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput);
 
   /// Creates indicator UI.
-  IndicatorItem getItem();
+  IndicatorItem getItem(
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
+  );
 }

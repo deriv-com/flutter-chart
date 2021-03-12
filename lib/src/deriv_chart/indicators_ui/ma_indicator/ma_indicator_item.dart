@@ -1,9 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_button.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_picker_sheet.dart';
@@ -20,11 +18,15 @@ class MAIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAIndicatorItem({
     Key key,
-    MAIndicatorConfig indicatorConfig,
+    MAIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Moving Average',
-          indicatorConfig: indicatorConfig,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override

@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
@@ -5,6 +6,7 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../indicator_config.dart';
@@ -53,5 +55,13 @@ class MAIndicatorConfig extends IndicatorConfig {
       );
 
   @override
-  IndicatorItem getItem() => MAIndicatorItem(indicatorConfig: this);
+  IndicatorItem getItem(
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
+  ) =>
+      MAIndicatorItem(
+        config: this,
+        updateIndicator: updateIndicator,
+        deleteIndicator: deleteIndicator,
+      );
 }

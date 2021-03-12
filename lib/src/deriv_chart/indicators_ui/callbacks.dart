@@ -13,5 +13,5 @@ typedef FieldIndicatorBuilder = Indicator<Tick> Function(
   IndicatorInput indicatorInput,
 );
 
-/// Callback to add a new indicator with [indicatorConfig].
-typedef OnAddIndicator = Function(IndicatorConfig indicatorConfig);
+/// Callback to update indicator with new [indicatorConfig].
+typedef UpdateIndicator = Function(IndicatorConfig indicatorConfig);

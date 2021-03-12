@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_repository.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,11 @@ class IndicatorsDialog extends StatelessWidget {
         shrinkWrap: true,
         itemCount: repo.indicators.length,
         itemBuilder: (BuildContext context, int index) =>
-            repo.indicators[index].getItem(),
+            repo.indicators[index].getItem(
+          (IndicatorConfig updatedConfig) =>
+              repo.updateAt(index, updatedConfig),
+          () => repo.removeAt(index),
+        ),
       ),
     );
   }
