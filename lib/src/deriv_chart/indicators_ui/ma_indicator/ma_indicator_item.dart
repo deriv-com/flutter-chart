@@ -188,20 +188,24 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current type.
   @protected
   MovingAverageType getCurrentType() =>
-      type ?? getConfig()?.type ?? MovingAverageType.simple;
+      type ??
+      (widget.config as MAIndicatorConfig)?.type ??
+      MovingAverageType.simple;
 
   /// Gets Indicator current filed type.
   @protected
-  String getCurrentField() => field ?? getConfig()?.fieldType ?? 'close';
+  String getCurrentField() =>
+      field ?? (widget.config as MAIndicatorConfig)?.fieldType ?? 'close';
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
+  int getCurrentPeriod() =>
+      period ?? (widget.config as MAIndicatorConfig)?.period ?? 50;
 
   /// Gets Indicator current line style.
   @protected
   LineStyle getCurrentLineStyle() =>
       lineStyle ??
-      getConfig()?.lineStyle ??
+      (widget.config as MAIndicatorConfig)?.lineStyle ??
       const LineStyle(color: Colors.yellow, thickness: 0.6);
 }
