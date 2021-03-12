@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'indicator_config.dart';
 
+/// Storage key of saved indicators.
 const String indicatorsKey = 'indicators';
 
 /// Holds indicators that were added to the Chart during runtime.
