@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:deriv_chart/src/chart.dart';
@@ -13,11 +14,14 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../callbacks.dart';
 import 'indicators_ui/indicator_config.dart';
 import 'indicators_ui/indicator_repository.dart';
 import 'indicators_ui/indicators_dialog.dart';
+
+const String indicatorsKey = 'indicators';
 
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
 class DerivChart extends StatefulWidget {
@@ -80,6 +84,27 @@ class DerivChart extends StatefulWidget {
 
 class _DerivChartState extends State<DerivChart> {
   final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
+  SharedPreferences _prefs;
+
+  @override
+  Future<void> initState() async {
+    super.initState();
+    _prefs = await SharedPreferences.getInstance();
+    readFromPrefs();
+  }
+
+  void readFromPrefs() {
+    if (_prefs.containsKey(indicatorsKey)) {
+      final List<String> strings = _prefs.getStringList(indicatorsKey);
+
+      for (final String string in strings) {
+        final IndicatorConfig indicatorConfig =
+            IndicatorConfig.fromJson(jsonDecode(string));
+
+        // TODO: Add config to repo
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) => Stack(
