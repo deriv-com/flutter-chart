@@ -13,7 +13,8 @@ abstract class IndicatorItem extends StatefulWidget {
     Key key,
     this.title,
     this.ticks,
-    this.onAddIndicator,
+    this.updateIndicator,
+    this.deleteIndicator,
   }) : super(key: key);
 
   /// Title
@@ -22,8 +23,8 @@ abstract class IndicatorItem extends StatefulWidget {
   /// List of entries to calculate indicator on.
   final List<Tick> ticks;
 
-  /// A callback which will be called when want to add this indicator.
-  final OnAddIndicator onAddIndicator;
+  final Function updateIndicator;
+  final Function deleteIndicator;
 
   @override
   IndicatorItemState<IndicatorConfig> createState() =>
@@ -54,16 +55,17 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
         leading: Text(widget.title, style: const TextStyle(fontSize: 10)),
         title: getIndicatorOptions(),
         trailing: IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            widget.onAddIndicator?.call(createIndicatorConfig());
-          },
+          icon: const Icon(Icons.delete),
+          onPressed: removeIndicator,
         ),
       );
 
-  /// Gets the key for this indicator
-  @protected
-  String getIndicatorKey() => runtimeType.toString();
+  /// Updates indicator based on its current config values.
+  void updateIndicator() =>
+      widget.updateIndicator?.call(createIndicatorConfig());
+
+  /// Removes this indicator.
+  void removeIndicator() => widget.deleteIndicator.call();
 
   /// Returns the [IndicatorConfig] which can be used to create the Series for this indicator.
   T createIndicatorConfig();
