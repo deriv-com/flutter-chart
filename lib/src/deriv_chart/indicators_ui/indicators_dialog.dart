@@ -4,6 +4,8 @@ import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import './ma_indicator/ma_indicator_config.dart';
+
 /// Indicators dialog with selected indicators.
 class IndicatorsDialog extends StatelessWidget {
   @override
@@ -11,15 +13,25 @@ class IndicatorsDialog extends StatelessWidget {
     final IndicatorsRepository repo = context.watch<IndicatorsRepository>();
 
     return AnimatedPopupDialog(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: repo.indicators.length,
-        itemBuilder: (BuildContext context, int index) =>
-            repo.indicators[index].getItem(
-          (IndicatorConfig updatedConfig) =>
-              repo.updateAt(index, updatedConfig),
-          () => repo.removeAt(index),
-        ),
+      child: Column(
+        children: [
+          RaisedButton(
+            child: const Text('Add Moving Average'),
+            onPressed: () => repo.add(MAIndicatorConfig()),
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: repo.indicators.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  repo.indicators[index].getItem(
+                (IndicatorConfig updatedConfig) =>
+                    repo.updateAt(index, updatedConfig),
+                () => repo.removeAt(index),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

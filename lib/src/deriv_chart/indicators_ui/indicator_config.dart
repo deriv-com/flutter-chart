@@ -24,8 +24,8 @@ abstract class IndicatorConfig {
     switch (json[nameKey]) {
       case MAIndicatorConfig.name:
         return MAIndicatorConfig.fromJson(json);
-      case DonchianChannelIndicatorConfig.name:
-        return DonchianChannelIndicatorConfig.fromJson(json);
+      // case DonchianChannelIndicatorConfig.name:
+      //   return DonchianChannelIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
