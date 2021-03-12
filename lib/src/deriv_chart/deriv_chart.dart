@@ -124,11 +124,7 @@ class _DerivChartState extends State<DerivChart> {
                   ) =>
                       Provider<IndicatorsRepository>.value(
                     value: _indicatorsRepo,
-                    child: IndicatorsDialog(
-                      ticks: widget.mainSeries.entries,
-                      onAddIndicator: (IndicatorConfig indicatorConfig) =>
-                          setState(() => _indicatorsRepo.add(indicatorConfig)),
-                    ),
+                    child: IndicatorsDialog(),
                   ),
                 );
               },
