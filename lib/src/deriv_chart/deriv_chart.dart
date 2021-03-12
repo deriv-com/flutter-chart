@@ -131,8 +131,7 @@ class _DerivChartState extends State<DerivChart> {
                         String key,
                         IndicatorConfig indicatorConfig,
                       ) =>
-                          setState(() => _indicatorsRepo.indicators[key] =
-                              indicatorConfig),
+                          setState(() => _indicatorsRepo.add(indicatorConfig)),
                     ),
                   ),
                 );

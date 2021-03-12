@@ -13,12 +13,15 @@ class IndicatorsRepository {
   IndicatorsRepository() : _indicators = <IndicatorConfig>[];
 
   final List<IndicatorConfig> _indicators;
+  SharedPreferences _prefs;
 
   /// List of indicators.
   List<IndicatorConfig> get indicators => _indicators;
 
   /// Loads user selected indicators from shared preferences.
   void loadFromPrefs(SharedPreferences prefs) {
+    _prefs = prefs;
+
     if (prefs.containsKey(indicatorsKey)) {
       final List<String> strings = prefs.getStringList(indicatorsKey);
 
@@ -28,6 +31,23 @@ class IndicatorsRepository {
 
         // TODO: Add config to repo
       }
+    }
+  }
+
+  /// Adds new indicator and updates storage.
+  Future<void> add(IndicatorConfig indicatorConfig) async {
+    _indicators.add(indicatorConfig);
+    await _writeToPrefs();
+  }
+
+  Future<void> _writeToPrefs() async {
+    if (_prefs != null) {
+      await _prefs.setStringList(
+        indicatorsKey,
+        _indicators
+            .map((IndicatorConfig config) => jsonEncode(config))
+            .toList(),
+      );
     }
   }
 }
