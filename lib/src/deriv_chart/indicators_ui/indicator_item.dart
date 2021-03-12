@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +11,7 @@ abstract class IndicatorItem extends StatefulWidget {
   const IndicatorItem({
     Key key,
     this.title,
-    this.ticks,
+    this.indicatorConfig,
     this.updateIndicator,
     this.deleteIndicator,
   }) : super(key: key);
@@ -20,8 +19,7 @@ abstract class IndicatorItem extends StatefulWidget {
   /// Title
   final String title;
 
-  /// List of entries to calculate indicator on.
-  final List<Tick> ticks;
+  final IndicatorConfig indicatorConfig;
 
   final Function updateIndicator;
   final Function deleteIndicator;

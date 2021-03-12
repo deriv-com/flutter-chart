@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -61,4 +62,7 @@ abstract class IndicatorConfig {
 
   /// Creates indicator [Series] for the given [indicatorInput].
   Series getSeries(IndicatorInput indicatorInput);
+
+  /// Creates indicator UI.
+  IndicatorItem getItem();
 }

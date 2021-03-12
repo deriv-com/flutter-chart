@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -49,4 +51,7 @@ class MAIndicatorConfig extends IndicatorConfig {
         options: MAOptions(period: period, type: type),
         style: lineStyle,
       );
+
+  @override
+  IndicatorItem getItem() => MAIndicatorItem(indicatorConfig: this);
 }
