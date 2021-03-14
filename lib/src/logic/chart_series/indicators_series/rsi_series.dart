@@ -1,8 +1,10 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/rsi_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
@@ -15,7 +17,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 /// RSI series.
-class RSISeries extends Series {
+class RSISeries extends AbstractSingleIndicatorSeries {
   /// Initializes an RSI Indicator.
   RSISeries(
     IndicatorInput indicatorInput, {
@@ -28,18 +30,18 @@ class RSISeries extends Series {
           id: id,
         );
 
-  /// Initializes an RSI Indicator from the given [closeIndicator].
+  /// Initializes an RSI Indicator from the given [inputIndicator].
   RSISeries.fromIndicator(
-    CloseValueIndicator<Tick> closeIndicator,
+    Indicator<Tick> inputIndicator,
     this.config, {
     @required this.rsiOptions,
     String id,
-  })  : _closeIndicator = closeIndicator,
-        super(id);
+  })  : _closeIndicator = inputIndicator,
+        super(inputIndicator, id, rsiOptions);
 
   LineSeries _rsiSeries;
 
-  final CloseValueIndicator<Tick> _closeIndicator;
+  final Indicator<Tick> _closeIndicator;
 
   /// Configuration of RSI.
   final RSIIndicatorConfig config;
@@ -63,7 +65,13 @@ class RSISeries extends Series {
       bottomHorizontalLine: config.overSoldPrice,
     );
 
-    return null;
+    return OscillatorLinePainter(
+      this,
+      bottomHorizontalLine: config.overSoldPrice,
+      mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+      secondaryHorizontalLinesStyle: config.zeroHorizontalLinesStyle,
+      topHorizontalLine: config.overBoughtPrice,
+    );
   }
 
   @override
@@ -105,4 +113,11 @@ class RSISeries extends Series {
 
   @override
   int getMinEpoch() => _rsiSeries.getMinEpoch();
+
+  @override
+  CachedIndicator<Tick> initializeIndicator() =>
+      RSIIndicator<Tick>.fromIndicator(
+        _closeIndicator,
+        rsiOptions.period,
+      );
 }
