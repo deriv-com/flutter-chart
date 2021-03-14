@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_si
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/rsi_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -36,12 +35,12 @@ class RSISeries extends AbstractSingleIndicatorSeries {
     this.config, {
     @required this.rsiOptions,
     String id,
-  })  : _closeIndicator = inputIndicator,
+  })  : _inputIndicator = inputIndicator,
         super(inputIndicator, id, rsiOptions);
 
   LineSeries _rsiSeries;
 
-  final Indicator<Tick> _closeIndicator;
+  final Indicator<Tick> _inputIndicator;
 
   /// Configuration of RSI.
   final RSIIndicatorConfig config;
@@ -50,29 +49,13 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   final RSIOptions rsiOptions;
 
   @override
-  SeriesPainter<Series> createPainter() {
-    final RSIIndicator<Tick> rsiIndicator = RSIIndicator<Tick>.fromIndicator(
-      _closeIndicator,
-      rsiOptions.period,
-    )..calculateValues();
-
-    _rsiSeries = OscillatorLineSeries(
-      rsiIndicator.results,
-      style: config.lineStyle,
-      mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
-      secondaryHorizontalLinesStyle: config.zeroHorizontalLinesStyle,
-      topHorizontalLine: config.overBoughtPrice,
-      bottomHorizontalLine: config.overSoldPrice,
-    );
-
-    return OscillatorLinePainter(
-      this,
-      bottomHorizontalLine: config.overSoldPrice,
-      mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
-      secondaryHorizontalLinesStyle: config.zeroHorizontalLinesStyle,
-      topHorizontalLine: config.overBoughtPrice,
-    );
-  }
+  SeriesPainter<Series> createPainter() => OscillatorLinePainter(
+        this,
+        bottomHorizontalLine: config.overSoldPrice,
+        mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+        secondaryHorizontalLinesStyle: config.zeroHorizontalLinesStyle,
+        topHorizontalLine: config.overBoughtPrice,
+      );
 
   @override
   bool didUpdate(ChartData oldData) {
@@ -117,7 +100,7 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   @override
   CachedIndicator<Tick> initializeIndicator() =>
       RSIIndicator<Tick>.fromIndicator(
-        _closeIndicator,
+        _inputIndicator,
         rsiOptions.period,
       );
 }
