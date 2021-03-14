@@ -549,37 +549,36 @@ class _BottomChartState extends _BasicChartState<_BottomChart> {
         Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
-    return ClipRRect(
-      child: ClipRect(
-        child: Stack(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Divider(
-                  color: theme.brandGreenishColor,
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: super.build(context),
-                ),
-              ],
-            ),
-            Positioned(
-              top: 15,
-              left: 10,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: theme.base01Color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                child: Text(
-                  widget.mainSeries.runtimeType.toString(),
-                ),
+    return ClipRect(
+      child: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              const SizedBox(height: 5),
+              Divider(
+                color: theme.brandGreenishColor,
+              ),
+              const SizedBox(height: 30),
+              Expanded(
+                child: super.build(context),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 15,
+            left: 10,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: theme.base01Color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: Text(
+                widget.mainSeries.runtimeType.toString(),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
