@@ -22,8 +22,8 @@ class IchimokuCloudSeries extends Series {
     String id,
   }) : super(id);
 
-  LineSeries _conversionLineSeries;
-  LineSeries _baseLineSeries;
+  SingleIndicatorSeries _conversionLineSeries;
+  SingleIndicatorSeries _baseLineSeries;
   SingleIndicatorSeries _laggingSpanSeries;
   SingleIndicatorSeries _spanASeries;
   SingleIndicatorSeries _spanBSeries;
@@ -39,39 +39,52 @@ class IchimokuCloudSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
+    final CloseValueIndicator<Tick> closeValueIndicator =
+        CloseValueIndicator<Tick>(ticks);
     final IchimokuBaseLineIndicator<Tick> baseLineIndicator =
         IchimokuBaseLineIndicator<Tick>(ticks,
-            period: ichimokuCloudOptions.baseLinePeriod)
-          ..calculateValues();
+            period: ichimokuCloudOptions.baseLinePeriod);
 
     final IchimokuConversionLineIndicator<Tick> conversionLineIndicator =
         IchimokuConversionLineIndicator<Tick>(ticks,
-            period: ichimokuCloudOptions.conversionLinePeriod)
-          ..calculateValues();
+            period: ichimokuCloudOptions.conversionLinePeriod);
 
     final IchimokuLaggingSpanIndicator<Tick> laggingSpanIndicator =
-        IchimokuLaggingSpanIndicator<Tick>(ticks)..calculateValues();
+        IchimokuLaggingSpanIndicator<Tick>(ticks);
 
     final IchimokuSpanAIndicator<Tick> spanAIndicator =
         IchimokuSpanAIndicator<Tick>(ticks,
             conversionLineIndicator: conversionLineIndicator,
-            baseLineIndicator: baseLineIndicator)
-          ..calculateValues();
+            baseLineIndicator: baseLineIndicator);
 
     final IchimokuSpanBIndicator<Tick> spanBIndicator =
-        IchimokuSpanBIndicator<Tick>(ticks)..calculateValues();
+        IchimokuSpanBIndicator<Tick>(ticks);
 
-    _conversionLineSeries = LineSeries(conversionLineIndicator.results,
-        style: const LineStyle(color: Colors.indigo));
+    _conversionLineSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => conversionLineIndicator,
+      inputIndicator: closeValueIndicator,
+      options: ichimokuCloudOptions,
+      style: const LineStyle(
+        color: Colors.indigo,
+      ),
+    );
 
-    _baseLineSeries = LineSeries(baseLineIndicator.results,
-        style: const LineStyle(color: Colors.redAccent));
+    _baseLineSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () => baseLineIndicator,
+      inputIndicator: closeValueIndicator,
+      options: ichimokuCloudOptions,
+      style: const LineStyle(
+        color: Colors.redAccent,
+      ),
+    );
 
     // TODO(mohammadamir-fs): add offset to line painter
     _laggingSpanSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => laggingSpanIndicator,
-      inputIndicator: laggingSpanIndicator,
+      inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: config.laggingSpanOffset,
       style: const LineStyle(
@@ -82,7 +95,7 @@ class IchimokuCloudSeries extends Series {
     _spanASeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => spanAIndicator,
-      inputIndicator: spanAIndicator,
+      inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
       style: const LineStyle(
@@ -93,7 +106,7 @@ class IchimokuCloudSeries extends Series {
     _spanBSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => spanBIndicator,
-      inputIndicator: spanBIndicator,
+      inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
       style: const LineStyle(
@@ -134,28 +147,53 @@ class IchimokuCloudSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() => <double>[
+  List<double> recalculateMinMax() {
+    double conversionLineMin = _conversionLineSeries.minValue;
+    double conversionLineMax = _conversionLineSeries.maxValue;
+
+    double baseLineMin = _baseLineSeries.minValue;
+    double baseLineMax = _baseLineSeries.maxValue;
+
+    double spanAMin = _spanASeries.minValue;
+    double spanAMax = _spanASeries.maxValue;
+
+    double spanBMin = _spanBSeries.minValue;
+    double spanBMax = _spanBSeries.maxValue;
+
+    double laggingSpanMin = _laggingSpanSeries.minValue;
+    double laggingSpanMax = _laggingSpanSeries.maxValue;
+
+    if (laggingSpanMin.isNaN) {
+      laggingSpanMin = double.infinity;
+    }
+
+    if (laggingSpanMax.isNaN) {
+      laggingSpanMax = double.negativeInfinity;
+    }
+
+    return <double>[
+      min(
         min(
           min(
-            min(
-              min(_conversionLineSeries.minValue, _baseLineSeries.minValue),
-              _laggingSpanSeries.minValue,
-            ),
-            _spanBSeries.minValue,
+            min(_conversionLineSeries.minValue, _baseLineSeries.minValue),
+            laggingSpanMin,
           ),
-          _spanASeries.minValue,
+          _spanBSeries.minValue,
         ),
+        _spanASeries.minValue,
+      ),
+      max(
         max(
           max(
-            max(
-              max(_conversionLineSeries.maxValue, _baseLineSeries.maxValue),
-              _laggingSpanSeries.maxValue,
-            ),
-            _spanBSeries.maxValue,
+            max(_conversionLineSeries.maxValue, _baseLineSeries.maxValue),
+            laggingSpanMax,
           ),
-          _spanASeries.maxValue,
-        )
-      ];
+          _spanBSeries.maxValue,
+        ),
+        _spanASeries.maxValue,
+      )
+    ];
+  }
 
   @override
   void paint(
