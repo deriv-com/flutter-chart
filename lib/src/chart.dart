@@ -417,14 +417,20 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _updateQuoteBoundTargets() {
-    double minQuote = widget.mainSeries.minValue;
-    double maxQuote = widget.mainSeries.maxValue;
+    double minQuote = widget.mainSeries.minValue.isNaN
+        ? double.infinity
+        : widget.mainSeries.minValue;
+    double maxQuote = widget.mainSeries.maxValue.isNaN
+        ? double.negativeInfinity
+        : widget.mainSeries.maxValue;
 
     if (widget.chartDataList != null) {
-      final Iterable<ChartData> dataInAction = widget.chartDataList.where(
-        (ChartData chartData) =>
-            !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
-      );
+      final List<ChartData> dataInAction = widget.chartDataList
+          .where(
+            (ChartData chartData) =>
+                !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
+          )
+          .toList();
 
       if (dataInAction.isNotEmpty) {
         final double chartDataMin = dataInAction
@@ -434,8 +440,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
             .map((ChartData chartData) => chartData.maxValue)
             .reduce(max);
 
-        minQuote = min(widget.mainSeries.minValue, chartDataMin);
-        maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
+        minQuote = min(minQuote, chartDataMin);
+        maxQuote = max(maxQuote, chartDataMax);
       }
     }
 
