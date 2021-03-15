@@ -171,28 +171,32 @@ class IchimokuCloudSeries extends Series {
       laggingSpanMax = double.negativeInfinity;
     }
 
-    return <double>[
-      min(
-        min(
-          min(
-            min(_conversionLineSeries.minValue, _baseLineSeries.minValue),
-            laggingSpanMin,
-          ),
-          _spanBSeries.minValue,
-        ),
-        _spanASeries.minValue,
-      ),
-      max(
-        max(
-          max(
-            max(_conversionLineSeries.maxValue, _baseLineSeries.maxValue),
-            laggingSpanMax,
-          ),
-          _spanBSeries.maxValue,
-        ),
-        _spanASeries.maxValue,
-      )
-    ];
+    if (conversionLineMax.isNaN) {
+      conversionLineMax = double.negativeInfinity;
+    }
+
+    if (conversionLineMin.isNaN) {
+      conversionLineMin = double.infinity;
+    }
+
+    if (baseLineMin.isNaN) {
+      baseLineMin = double.infinity;
+    }
+
+    if (baseLineMax.isNaN) {
+      baseLineMax = double.negativeInfinity;
+    }
+
+    final double minimum = min(
+        min(min(min(conversionLineMin, baseLineMin), laggingSpanMin),
+            _spanBSeries.minValue),
+        _spanASeries.minValue);
+    final double maximum = max(
+        max(max(max(conversionLineMax, baseLineMax), laggingSpanMax),
+            _spanBSeries.maxValue),
+        _spanASeries.maxValue);
+    print(minimum);
+    return <double>[minimum, maximum];
   }
 
   @override
