@@ -424,32 +424,6 @@ class _ChartImplementationState extends _BasicChartState<_ChartImplementation> {
         ),
       );
 
-  @override
-  void _onPanStart(ScaleStartDetails details) {
-    _panStartedOnQuoteLabelsArea =
-        _onQuoteLabelsTouchArea(details.localFocalPoint);
-  }
-
-  @override
-  void _onPanUpdate(DragUpdateDetails details) {
-    if (_panStartedOnQuoteLabelsArea &&
-        _onQuoteLabelsTouchArea(details.localPosition)) {
-      _scaleVertically(details.delta.dy);
-    }
-  }
-
-  @override
-  bool _onQuoteLabelsTouchArea(Offset position) =>
-      position.dx > _xAxis.width - quoteLabelsTouchAreaWidth;
-
-  @override
-  void _scaleVertically(double dy) {
-    setState(() {
-      verticalPaddingFraction =
-          ((_verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
-    });
-  }
-
   Widget _buildScrollToLastTickButton() => Material(
         type: MaterialType.circle,
         color: Colors.transparent,
