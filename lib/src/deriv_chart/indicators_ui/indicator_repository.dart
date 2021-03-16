@@ -22,18 +22,21 @@ class IndicatorsRepository {
   void loadFromPrefs(SharedPreferences prefs) {
     _prefs = prefs;
 
-    if (prefs.containsKey(indicatorsKey)) {
-      final List<String> strings = prefs.getStringList(indicatorsKey);
-      _indicators.clear();
+    if (!prefs.containsKey(indicatorsKey)) {
+      // No saved indicators.
+      return;
+    }
 
-      for (final String string in strings) {
-        try {
-          final IndicatorConfig indicatorConfig =
-              IndicatorConfig.fromJson(jsonDecode(string));
-          _indicators.add(indicatorConfig);
-        } catch (e) {
-          // Failed to parse indicator.
-        }
+    final List<String> strings = prefs.getStringList(indicatorsKey);
+    _indicators.clear();
+
+    for (final String string in strings) {
+      try {
+        final IndicatorConfig indicatorConfig =
+            IndicatorConfig.fromJson(jsonDecode(string));
+        _indicators.add(indicatorConfig);
+      } catch (e) {
+        // Failed to parse indicator.
       }
     }
   }
