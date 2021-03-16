@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -417,20 +418,14 @@ class _ChartImplementationState extends State<_ChartImplementation>
   }
 
   void _updateQuoteBoundTargets() {
-    double minQuote = widget.mainSeries.minValue.isNaN
-        ? double.infinity
-        : widget.mainSeries.minValue;
-    double maxQuote = widget.mainSeries.maxValue.isNaN
-        ? double.negativeInfinity
-        : widget.mainSeries.maxValue;
+    double minQuote = widget.mainSeries.minValue;
+    double maxQuote = widget.mainSeries.maxValue;
 
     if (widget.chartDataList != null) {
-      final List<ChartData> dataInAction = widget.chartDataList
-          .where(
-            (ChartData chartData) =>
-                !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
-          )
-          .toList();
+      final Iterable<ChartData> dataInAction = widget.chartDataList.where(
+        (ChartData chartData) =>
+            !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
+      );
 
       if (dataInAction.isNotEmpty) {
         final double chartDataMin = dataInAction
@@ -440,8 +435,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
             .map((ChartData chartData) => chartData.maxValue)
             .reduce(max);
 
-        minQuote = min(minQuote, chartDataMin);
-        maxQuote = max(maxQuote, chartDataMax);
+        minQuote = safeMin(minQuote, chartDataMin);
+        maxQuote = safeMax(maxQuote, chartDataMax);
       }
     }
 
