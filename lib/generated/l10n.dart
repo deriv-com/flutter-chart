@@ -95,6 +95,46 @@ class ChartLocalization {
     );
   }
 
+  /// `Lagging Span Offset`
+  String get labelLaggingSpanOffset {
+    return Intl.message(
+      'Lagging Span Offset',
+      name: 'labelLaggingSpanOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jaw Period`
+  String get labelJawPeriod {
+    return Intl.message(
+      'Jaw Period',
+      name: 'labelJawPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Teeth Period`
+  String get labelTeethPeriod {
+    return Intl.message(
+      'Teeth Period',
+      name: 'labelTeethPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lips Period`
+  String get labelLipsPeriod {
+    return Intl.message(
+      'Lips Period',
+      name: 'labelLipsPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Offset`
   String get labelOffset {
     return Intl.message(
@@ -105,11 +145,31 @@ class ChartLocalization {
     );
   }
 
-  /// `Lagging Span Offset`
-  String get labelLaggingSpanOffset {
+  /// `Jaw Offset`
+  String get labelJawOffset {
     return Intl.message(
-      'Lagging Span Offset',
-      name: 'labelLaggingSpanOffset',
+      'Jaw Offset',
+      name: 'labelJawOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Teeth Offset`
+  String get labelTeethOffset {
+    return Intl.message(
+      'Teeth Offset',
+      name: 'labelTeethOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lips Offset`
+  String get labelLipsOffset {
+    return Intl.message(
+      'Lips Offset',
+      name: 'labelLipsOffset',
       desc: '',
       args: [],
     );

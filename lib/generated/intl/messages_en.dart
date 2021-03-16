@@ -30,7 +30,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelConversionLinePeriod" : MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
     "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
     "labelHighPeriod" : MessageLookupByLibrary.simpleMessage("High Period"),
+    "labelJawOffset" : MessageLookupByLibrary.simpleMessage("Jaw Offset"),
+    "labelJawPeriod" : MessageLookupByLibrary.simpleMessage("Jaw Period"),
     "labelLaggingSpanOffset" : MessageLookupByLibrary.simpleMessage("Lagging Span Offset"),
+    "labelLipsOffset" : MessageLookupByLibrary.simpleMessage("Lips Offset"),
+    "labelLipsPeriod" : MessageLookupByLibrary.simpleMessage("Lips Period"),
     "labelLowPeriod" : MessageLookupByLibrary.simpleMessage("Low Period"),
     "labelOffset" : MessageLookupByLibrary.simpleMessage("Offset"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
@@ -39,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelShiftType" : MessageLookupByLibrary.simpleMessage("Shift Type"),
     "labelSpanBPeriod" : MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
     "labelStandardDeviation" : MessageLookupByLibrary.simpleMessage("Standard Deviation"),
+    "labelTeethOffset" : MessageLookupByLibrary.simpleMessage("Teeth Offset"),
+    "labelTeethPeriod" : MessageLookupByLibrary.simpleMessage("Teeth Period"),
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
     "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
   };
