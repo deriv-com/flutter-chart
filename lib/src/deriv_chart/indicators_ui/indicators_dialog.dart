@@ -19,11 +19,11 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
 
     return AnimatedPopupDialog(
       child: Column(
-        children: [
+        children: <Widget>[
           RaisedButton(
             child: const Text('Add Moving Average'),
             onPressed: () async {
-              await repo.add(MAIndicatorConfig());
+              await repo.add(const MAIndicatorConfig());
               setState(() {});
             },
           ),
