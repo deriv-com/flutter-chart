@@ -13,6 +13,8 @@ class IndicatorsDialog extends StatefulWidget {
 }
 
 class _IndicatorsDialogState extends State<IndicatorsDialog> {
+  IndicatorConfig _selectedIndicator;
+
   @override
   Widget build(BuildContext context) {
     final IndicatorsRepository repo = context.watch<IndicatorsRepository>();
@@ -24,6 +26,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DropdownButton<IndicatorConfig>(
+                value: _selectedIndicator,
                 hint: const Text('Select indicator'),
                 items: [
                   const DropdownMenuItem<IndicatorConfig>(
@@ -31,7 +34,11 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     value: MAIndicatorConfig(),
                   ),
                 ],
-                onChanged: (IndicatorConfig config) {},
+                onChanged: (IndicatorConfig config) {
+                  setState(() {
+                    _selectedIndicator = config;
+                  });
+                },
               ),
               const SizedBox(width: 16),
               RaisedButton(
