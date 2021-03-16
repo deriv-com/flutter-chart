@@ -43,10 +43,12 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
               const SizedBox(width: 16),
               RaisedButton(
                 child: const Text('Add'),
-                onPressed: () async {
-                  await repo.add(const MAIndicatorConfig());
-                  setState(() {});
-                },
+                onPressed: _selectedIndicator != null
+                    ? () async {
+                        await repo.add(_selectedIndicator);
+                        setState(() {});
+                      }
+                    : null,
               ),
             ],
           ),
