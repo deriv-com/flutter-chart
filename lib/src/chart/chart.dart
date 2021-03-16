@@ -21,20 +21,20 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:deriv_chart/src/paint/paint_text.dart';
 
-import 'callbacks.dart';
-import 'crosshair/crosshair_area.dart';
-import 'gestures/gesture_manager.dart';
-import 'loading_animation.dart';
-import 'logic/conversion.dart';
-import 'logic/quote_grid.dart';
-import 'markers/marker_area.dart';
-import 'models/tick.dart';
-import 'painters/chart_painter.dart';
-import 'theme/chart_default_dark_theme.dart';
-import 'theme/chart_default_light_theme.dart';
-import 'theme/chart_theme.dart';
-import 'x_axis/x_axis.dart';
-import 'x_axis/x_axis_model.dart';
+import '../callbacks.dart';
+import '../crosshair/crosshair_area.dart';
+import '../gestures/gesture_manager.dart';
+import '../loading_animation.dart';
+import '../logic/conversion.dart';
+import '../logic/quote_grid.dart';
+import '../markers/marker_area.dart';
+import '../models/tick.dart';
+import '../painters/chart_painter.dart';
+import '../theme/chart_default_dark_theme.dart';
+import '../theme/chart_default_light_theme.dart';
+import '../theme/chart_theme.dart';
+import '../x_axis/x_axis.dart';
+import '../x_axis/x_axis_model.dart';
 
 /// Interactive chart widget.
 class Chart extends StatelessWidget {
@@ -528,8 +528,8 @@ class _BottomChartState extends _BasicChartState<_BottomChart> {
         children: <Widget>[
           Column(
             children: <Widget>[
-              const SizedBox(height: 5),
               Divider(
+                height: 1,
                 color: theme.brandGreenishColor,
               ),
               const SizedBox(height: 30),
