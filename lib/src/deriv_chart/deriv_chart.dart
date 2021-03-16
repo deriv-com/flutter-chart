@@ -83,8 +83,12 @@ class _DerivChartState extends State<DerivChart> {
   final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
+    loadSavedIndicators();
+  }
+
+  Future<void> loadSavedIndicators() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     _indicatorsRepo.loadFromPrefs(prefs);
   }
