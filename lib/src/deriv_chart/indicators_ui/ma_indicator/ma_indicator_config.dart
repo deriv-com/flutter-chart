@@ -18,11 +18,16 @@ part 'ma_indicator_config.g.dart';
 class MAIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const MAIndicatorConfig({
-    this.period,
-    this.type,
-    this.fieldType,
-    this.lineStyle,
-  }) : super();
+    int period,
+    MovingAverageType type,
+    String fieldType,
+    LineStyle lineStyle,
+  })  : period = period ?? 50,
+        type = type ?? MovingAverageType.simple,
+        fieldType = fieldType ?? 'close',
+        lineStyle =
+            lineStyle ?? const LineStyle(color: Colors.yellow, thickness: 0.6),
+        super();
 
   /// Initializes from JSON.
   factory MAIndicatorConfig.fromJson(Map<String, dynamic> json) =>

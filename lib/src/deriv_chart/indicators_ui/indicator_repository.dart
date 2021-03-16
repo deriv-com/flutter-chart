@@ -27,9 +27,13 @@ class IndicatorsRepository {
       _indicators.clear();
 
       for (final String string in strings) {
-        final IndicatorConfig indicatorConfig =
-            IndicatorConfig.fromJson(jsonDecode(string));
-        _indicators.add(indicatorConfig);
+        try {
+          final IndicatorConfig indicatorConfig =
+              IndicatorConfig.fromJson(jsonDecode(string));
+          _indicators.add(indicatorConfig);
+        } catch (e) {
+          // Failed to parse indicator.
+        }
       }
     }
   }
