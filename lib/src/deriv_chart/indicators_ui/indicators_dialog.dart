@@ -7,7 +7,12 @@ import 'package:provider/provider.dart';
 import './ma_indicator/ma_indicator_config.dart';
 
 /// Indicators dialog with selected indicators.
-class IndicatorsDialog extends StatelessWidget {
+class IndicatorsDialog extends StatefulWidget {
+  @override
+  _IndicatorsDialogState createState() => _IndicatorsDialogState();
+}
+
+class _IndicatorsDialogState extends State<IndicatorsDialog> {
   @override
   Widget build(BuildContext context) {
     final IndicatorsRepository repo = context.watch<IndicatorsRepository>();
@@ -17,7 +22,10 @@ class IndicatorsDialog extends StatelessWidget {
         children: [
           RaisedButton(
             child: const Text('Add Moving Average'),
-            onPressed: () => repo.add(MAIndicatorConfig()),
+            onPressed: () async {
+              await repo.add(MAIndicatorConfig());
+              setState(() {});
+            },
           ),
           Expanded(
             child: ListView.builder(
@@ -27,7 +35,10 @@ class IndicatorsDialog extends StatelessWidget {
                   repo.indicators[index].getItem(
                 (IndicatorConfig updatedConfig) =>
                     repo.updateAt(index, updatedConfig),
-                () => repo.removeAt(index),
+                () async {
+                  await repo.removeAt(index);
+                  setState(() {});
+                },
               ),
             ),
           ),
