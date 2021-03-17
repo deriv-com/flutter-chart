@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
@@ -27,6 +28,8 @@ abstract class IndicatorConfig {
         return MAIndicatorConfig.fromJson(json);
       case MAEnvIndicatorConfig.name:
         return MAEnvIndicatorConfig.fromJson(json);
+      case BollingerBandsIndicatorConfig.name:
+        return BollingerBandsIndicatorConfig.fromJson(json);
       case DonchianChannelIndicatorConfig.name:
         return DonchianChannelIndicatorConfig.fromJson(json);
       // Add new indicators here.
