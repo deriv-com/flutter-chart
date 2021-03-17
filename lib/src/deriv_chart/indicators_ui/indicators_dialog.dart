@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_repository.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -32,6 +33,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Moving average'),
                     value: MAIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Donchian channel'),
+                    value: DonchianChannelIndicatorConfig(),
                   ),
                 ],
                 onChanged: (IndicatorConfig config) {
