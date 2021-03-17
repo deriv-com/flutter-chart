@@ -44,6 +44,16 @@ class IchimokuCloudIndicatorItemState
         spanBPeriod: _currentSpanBPeriod,
       );
 
+  @override
+  Widget getIndicatorOptions() => Column(
+        children: <Widget>[
+          _buildBaseLinePeriodField(),
+          _buildConversionLinePeriodField(),
+          _buildSpanBPeriodField(),
+          _buildOffsetField(),
+        ],
+      );
+
   Widget _buildConversionLinePeriodField() => Row(
         children: <Widget>[
           Text(
@@ -143,16 +153,6 @@ class IchimokuCloudIndicatorItemState
               label: '${_currentLaggingSpanOffset.abs()}',
             ),
           ),
-        ],
-      );
-
-  @override
-  Widget getIndicatorOptions() => Column(
-        children: <Widget>[
-          _buildBaseLinePeriodField(),
-          _buildConversionLinePeriodField(),
-          _buildSpanBPeriodField(),
-          _buildOffsetField(),
         ],
       );
 
