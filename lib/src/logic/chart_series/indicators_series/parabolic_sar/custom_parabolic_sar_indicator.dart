@@ -34,7 +34,7 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
 
   // Backup for PSAR internal variables.
   double _backupAccelerationFactor;
-  bool _backupCurrentTrend;
+  bool _backupIsUptrend;
   int _backupStartTrendIndex;
   double _backupCurrentExtremePoint;
   double _backupMinMaxExtremePoint;
@@ -43,7 +43,7 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   Tick calculate(int index) {
     if (index == entries.length - 1) {
       _backupAccelerationFactor = accelerationFactor;
-      _backupCurrentTrend = currentTrend;
+      _backupIsUptrend = isUptrend;
       _backupStartTrendIndex = startTrendIndex;
       _backupCurrentExtremePoint = currentExtremePoint;
       _backupMinMaxExtremePoint = minMaxExtremePoint;
@@ -51,7 +51,7 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
       final Tick result = super.calculate(index);
 
       accelerationFactor = _backupAccelerationFactor;
-      currentTrend = _backupCurrentTrend;
+      isUptrend = _backupIsUptrend;
       startTrendIndex = _backupStartTrendIndex;
       currentExtremePoint = _backupCurrentExtremePoint;
       minMaxExtremePoint = _backupMinMaxExtremePoint;
@@ -64,7 +64,7 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   @override
   void copyValuesFrom(covariant CustomParabolicSarIndicator other) {
     super.copyValuesFrom(other);
-    currentTrend = other._backupCurrentTrend;
+    isUptrend = other._backupIsUptrend;
     accelerationFactor = other._backupAccelerationFactor;
     startTrendIndex = other._backupStartTrendIndex;
     currentExtremePoint = other._backupCurrentExtremePoint;
