@@ -1,3 +1,6 @@
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_env_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
@@ -5,19 +8,37 @@ import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/ma_e
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../indicator_config.dart';
 
+part 'ma_env_indicator_config.g.dart';
+
 /// Moving Average Envelope Indicator Config
+@JsonSerializable()
 class MAEnvIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const MAEnvIndicatorConfig({
     int period,
     MovingAverageType movingAverageType,
     String fieldType,
-    this.shift,
-    this.shiftType,
-  }) : super(period: period, type: movingAverageType, fieldType: fieldType);
+    double shift,
+    ShiftType shiftType,
+  })  : shift = shift ?? 5,
+        shiftType = shiftType ?? ShiftType.percent,
+        super(period: period, type: movingAverageType, fieldType: fieldType);
+
+  /// Initializes from JSON.
+  factory MAEnvIndicatorConfig.fromJson(Map<String, dynamic> json) =>
+      _$MAEnvIndicatorConfigFromJson(json);
+
+  /// Unique name for this indicator.
+  static const String name = 'moving_envelope_average';
+
+  @override
+  Map<String, dynamic> toJson() => _$MAEnvIndicatorConfigToJson(this)
+    ..putIfAbsent(IndicatorConfig.nameKey, () => name);
 
   /// Moving Average Envelope shift type
   final ShiftType shiftType;
@@ -34,4 +55,15 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
         shift: shift,
         shiftType: shiftType,
       ));
+
+  @override
+  IndicatorItem getItem(
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
+  ) =>
+      MAEnvIndicatorItem(
+        config: this,
+        updateIndicator: updateIndicator,
+        deleteIndicator: deleteIndicator,
+      );
 }
