@@ -54,8 +54,8 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     child: Text('Alligator'),
                     value: AlligatorIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
-                    child: Text('Rainbow'),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: const Text('Rainbow'),
                     value: RainbowIndicatorConfig(),
                   ),
                 ],

@@ -236,7 +236,8 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
 
   /// Gets Indicator current period.
   @protected
-  int get currentOffset => offset ?? getConfig()?.offset ?? 0;
+  int get currentOffset =>
+      offset ?? (widget.config as MAIndicatorConfig)?.offset ?? 0;
 
   /// Gets Indicator current line style.
   @protected
