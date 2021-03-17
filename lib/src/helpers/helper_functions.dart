@@ -7,34 +7,30 @@ String getEnumValue<T>(T t) =>
 
 /// Returns a safe minimum with considering each value other than `double.nan`.
 double safeMin(double a, double b) {
-  if (a.isNaN) {
-    if (b.isNaN) {
-      return double.nan;
-    }
+  final List<double> compareValues = _checkNan(a, b);
 
-    return b;
-  }
-
-  if (b.isNaN) {
-    return a;
-  }
-
-  return min(a, b);
+  return compareValues.reduce(min);
 }
 
 /// Returns a safe maximum with considering each value other than `double.nan`.
 double safeMax(double a, double b) {
+  final List<double> compareValues = _checkNan(a, b);
+
+  return compareValues.reduce(max);
+}
+
+List<double> _checkNan(double a, double b) {
   if (a.isNaN) {
     if (b.isNaN) {
-      return double.nan;
+      return const <double>[double.nan, double.nan];
     }
 
-    return b;
+    return <double>[b, b];
   }
 
   if (b.isNaN) {
-    return a;
+    return <double>[a, a];
   }
 
-  return max(a, b);
+  return <double>[a, b];
 }
