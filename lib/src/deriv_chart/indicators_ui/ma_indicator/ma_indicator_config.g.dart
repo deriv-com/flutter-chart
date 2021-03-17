@@ -14,6 +14,7 @@ MAIndicatorConfig _$MAIndicatorConfigFromJson(Map<String, dynamic> json) {
     lineStyle: json['lineStyle'] == null
         ? null
         : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    offset: json['offset'] as int,
   );
 }
 
@@ -23,6 +24,7 @@ Map<String, dynamic> _$MAIndicatorConfigToJson(MAIndicatorConfig instance) =>
       'type': _$MovingAverageTypeEnumMap[instance.type],
       'fieldType': instance.fieldType,
       'lineStyle': instance.lineStyle,
+      'offset': instance.offset,
     };
 
 T _$enumDecode<T>(
