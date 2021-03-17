@@ -123,7 +123,7 @@ class IchimokuCloudSeries extends Series {
       ..add(_spanASeries)
       ..add(_spanBSeries);
 
-    return null; // TODO(ramin): return the painter that paints Channel Fill between bands
+    return null;
   }
 
   @override
@@ -131,13 +131,16 @@ class IchimokuCloudSeries extends Series {
     final IchimokuCloudSeries series = oldData;
 
     final bool conversionLineUpdated =
-        _conversionLineSeries.didUpdate(series?._conversionLineSeries);
+        _conversionLineSeries?.didUpdate(series?._conversionLineSeries) ??
+            false;
     final bool baseLineUpdated =
-        _baseLineSeries.didUpdate(series?._baseLineSeries);
+        _baseLineSeries?.didUpdate(series?._baseLineSeries) ?? false;
     final bool laggingSpanUpdated =
-        _laggingSpanSeries.didUpdate(series?._laggingSpanSeries);
-    final bool spanAUpdated = _spanASeries.didUpdate(series?._spanASeries);
-    final bool spanBUpdated = _spanBSeries.didUpdate(series?._spanBSeries);
+        _laggingSpanSeries?.didUpdate(series?._laggingSpanSeries) ?? false;
+    final bool spanAUpdated =
+        _spanASeries?.didUpdate(series?._spanASeries) ?? false;
+    final bool spanBUpdated =
+        _spanBSeries?.didUpdate(series?._spanBSeries) ?? false;
 
     return conversionLineUpdated ||
         baseLineUpdated ||
@@ -193,65 +196,20 @@ class IchimokuCloudSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() {
-    final double maxConversionLine =
-        _conversionLineSeries.getMaxEpoch()?.toDouble() ??
-            double.negativeInfinity;
-    final double maxBaseLine =
-        _baseLineSeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
-    final double maxLaggingSpan =
-        _laggingSpanSeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
-    final double maxSpanALine =
-        _spanASeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
-    final double maxSpanBLine =
-        _spanBSeries.getMaxEpoch()?.toDouble() ?? double.negativeInfinity;
-    final double maximum = max<double>(
-      max<double>(
-        max<double>(
-          max<double>(
-            maxConversionLine,
-            maxBaseLine,
-          ),
-          maxLaggingSpan,
-        ),
-        maxSpanALine,
-      ),
-      maxSpanBLine,
-    );
-    if (maximum == double.negativeInfinity) {
-      return null;
-    }
-    return maximum.toInt();
-  }
+  int getMaxEpoch() => <ChartData>[
+        _conversionLineSeries,
+        _baseLineSeries,
+        _laggingSpanSeries,
+        _spanASeries,
+        _spanBSeries,
+      ].getMaxEpoch();
 
   @override
-  int getMinEpoch() {
-    final double minConversionLine =
-        _conversionLineSeries.getMinEpoch()?.toDouble() ?? double.infinity;
-    final double minBaseLine =
-        _baseLineSeries.getMinEpoch()?.toDouble() ?? double.infinity;
-    final double minLaggingSpan =
-        _laggingSpanSeries.getMinEpoch()?.toDouble() ?? double.infinity;
-    final double minSpanALine =
-        _spanASeries.getMinEpoch()?.toDouble() ?? double.infinity;
-    final double minSpanBLine =
-        _spanBSeries.getMinEpoch()?.toDouble() ?? double.infinity;
-    final double minimum = min<double>(
-      min<double>(
-        min<double>(
-          min<double>(
-            minConversionLine,
-            minBaseLine,
-          ),
-          minLaggingSpan,
-        ),
-        minSpanALine,
-      ),
-      minSpanBLine,
-    );
-    if (minimum == double.infinity) {
-      return null;
-    }
-    return minimum.toInt();
-  }
+  int getMinEpoch() => <ChartData>[
+        _conversionLineSeries,
+        _baseLineSeries,
+        _laggingSpanSeries,
+        _spanASeries,
+        _spanBSeries,
+      ].getMinEpoch();
 }
