@@ -24,15 +24,23 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "informNoResult" : m0,
+    "labelBandsCount" : MessageLookupByLibrary.simpleMessage("Bands Count"),
     "labelChannelFill" : MessageLookupByLibrary.simpleMessage("Channel Fill"),
     "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
     "labelHighPeriod" : MessageLookupByLibrary.simpleMessage("High Period"),
+    "labelJawOffset" : MessageLookupByLibrary.simpleMessage("Jaw Offset"),
+    "labelJawPeriod" : MessageLookupByLibrary.simpleMessage("Jaw Period"),
+    "labelLipsOffset" : MessageLookupByLibrary.simpleMessage("Lips Offset"),
+    "labelLipsPeriod" : MessageLookupByLibrary.simpleMessage("Lips Period"),
     "labelLowPeriod" : MessageLookupByLibrary.simpleMessage("Low Period"),
+    "labelOffset" : MessageLookupByLibrary.simpleMessage("Offset"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
     "labelShift" : MessageLookupByLibrary.simpleMessage("Shift"),
     "labelShiftType" : MessageLookupByLibrary.simpleMessage("Shift Type"),
     "labelStandardDeviation" : MessageLookupByLibrary.simpleMessage("Standard Deviation"),
+    "labelTeethOffset" : MessageLookupByLibrary.simpleMessage("Teeth Offset"),
+    "labelTeethPeriod" : MessageLookupByLibrary.simpleMessage("Teeth Period"),
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
     "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
   };

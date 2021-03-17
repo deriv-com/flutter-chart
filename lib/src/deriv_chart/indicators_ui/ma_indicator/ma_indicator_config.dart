@@ -22,9 +22,11 @@ class MAIndicatorConfig extends IndicatorConfig {
     MovingAverageType type,
     String fieldType,
     LineStyle lineStyle,
+    int offset,
   })  : period = period ?? 50,
         type = type ?? MovingAverageType.simple,
         fieldType = fieldType ?? 'close',
+        offset = offset ?? 0,
         lineStyle =
             lineStyle ?? const LineStyle(color: Colors.yellow, thickness: 0.6),
         super();
@@ -52,10 +54,14 @@ class MAIndicatorConfig extends IndicatorConfig {
   /// MA line style
   final LineStyle lineStyle;
 
+  /// The offset of this indicator.
+  final int offset;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
         options: MAOptions(period: period, type: type),
+        offset: offset,
         style: lineStyle,
       );
 

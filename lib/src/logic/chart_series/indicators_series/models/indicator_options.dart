@@ -18,7 +18,7 @@ class MAOptions extends IndicatorOptions {
   /// Initializes
   const MAOptions({this.period = 20, this.type = MovingAverageType.simple});
 
-  /// Period
+  /// The average of this number of past data which will be calculated as MA value.
   final int period;
 
   /// Moving average type

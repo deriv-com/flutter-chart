@@ -21,7 +21,11 @@ abstract class DataSeries<T extends Tick> extends Series {
     DataSeriesStyle style,
     this.lastTickIndicatorStyle,
   }) : super(id, style: style) {
-    _minMaxCalculator = MinMaxCalculator(minValueOf, maxValueOf);
+    _minMaxCalculator = MinMaxCalculator(
+      minValueOf,
+      maxValueOf,
+      epochOf: getEpochOf,
+    );
   }
 
   /// Series input list.
@@ -70,6 +74,18 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Utility object to help efficiently calculate new min/max when [visibleEntries] change.
   MinMaxCalculator _minMaxCalculator;
 
+  @override
+  int getMinEpoch() => input.isNotEmpty ? getEpochOf(input.first) : null;
+
+  @override
+  int getMaxEpoch() => input.isNotEmpty ? getEpochOf(input.last) : null;
+
+  /// Gets the real epoch for the given [t].
+  ///
+  /// Real epoch might involve some offsets.
+  /// Should use this method here whenever want to get the epoch of a [T].
+  int getEpochOf(T t) => t.epoch;
+
   /// Updates visible entries for this Series.
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
@@ -114,7 +130,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (entries.isNotEmpty && lastTickIndicatorStyle != null) {
       _lastTickIndicator = HorizontalBarrier(
         entries.last.quote,
-        epoch: entries.last.epoch,
+        epoch: getEpochOf(entries.last),
         style: lastTickIndicatorStyle,
       );
     }
@@ -133,9 +149,9 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   int _searchLowerIndex(int leftEpoch) {
-    if (leftEpoch < entries[0].epoch) {
+    if (leftEpoch < getEpochOf(entries[0])) {
       return 0;
-    } else if (leftEpoch > entries[entries.length - 1].epoch) {
+    } else if (leftEpoch > getEpochOf(entries[entries.length - 1])) {
       return -1;
     }
 
@@ -150,9 +166,9 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   int _searchUpperIndex(int rightEpoch) {
-    if (rightEpoch < entries[0].epoch) {
+    if (rightEpoch < getEpochOf(entries[0])) {
       return -1;
-    } else if (rightEpoch > entries[entries.length - 1].epoch) {
+    } else if (rightEpoch > getEpochOf(entries[entries.length - 1])) {
       return entries.length;
     }
 
@@ -172,16 +188,18 @@ abstract class DataSeries<T extends Tick> extends Series {
     while (lo <= hi) {
       final int mid = (hi + lo) ~/ 2;
 
-      if (epoch < entries[mid].epoch) {
+      if (epoch < getEpochOf(entries[mid])) {
         hi = mid - 1;
-      } else if (epoch > entries[mid].epoch) {
+      } else if (epoch > getEpochOf(entries[mid])) {
         lo = mid + 1;
       } else {
         return mid;
       }
     }
 
-    return (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
+    return (getEpochOf(entries[lo]) - epoch) < (epoch - getEpochOf(entries[hi]))
+        ? lo
+        : hi;
   }
 
   /// Will be called by the chart when it was updated.

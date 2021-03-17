@@ -65,6 +65,76 @@ class ChartLocalization {
     );
   }
 
+  /// `Jaw Period`
+  String get labelJawPeriod {
+    return Intl.message(
+      'Jaw Period',
+      name: 'labelJawPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Teeth Period`
+  String get labelTeethPeriod {
+    return Intl.message(
+      'Teeth Period',
+      name: 'labelTeethPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lips Period`
+  String get labelLipsPeriod {
+    return Intl.message(
+      'Lips Period',
+      name: 'labelLipsPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Offset`
+  String get labelOffset {
+    return Intl.message(
+      'Offset',
+      name: 'labelOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jaw Offset`
+  String get labelJawOffset {
+    return Intl.message(
+      'Jaw Offset',
+      name: 'labelJawOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Teeth Offset`
+  String get labelTeethOffset {
+    return Intl.message(
+      'Teeth Offset',
+      name: 'labelTeethOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lips Offset`
+  String get labelLipsOffset {
+    return Intl.message(
+      'Lips Offset',
+      name: 'labelLipsOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `High Period`
   String get labelHighPeriod {
     return Intl.message(
@@ -90,6 +160,16 @@ class ChartLocalization {
     return Intl.message(
       'Shift',
       name: 'labelShift',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bands Count`
+  String get labelBandsCount {
+    return Intl.message(
+      'Bands Count',
+      name: 'labelBandsCount',
       desc: '',
       args: [],
     );
