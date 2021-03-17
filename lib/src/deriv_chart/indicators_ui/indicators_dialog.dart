@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donch
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_repository.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Alligator'),
                     value: AlligatorIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Rainbow'),
+                    value: RainbowIndicatorConfig(),
                   ),
                 ],
                 onChanged: (IndicatorConfig config) {
