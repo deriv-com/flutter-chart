@@ -38,10 +38,10 @@ class IchimokuCloudIndicatorItemState
   @override
   IchimokuCloudIndicatorConfig createIndicatorConfig() =>
       IchimokuCloudIndicatorConfig(
-        baseLinePeriod: _baseLinePeriod,
-        conversionLinePeriod: _conversionLinePeriod,
-        laggingSpanOffset: _laggingSpanOffset,
-        spanBPeriod: _spanBPeriod,
+        baseLinePeriod: _currentBaseLinePeriod,
+        conversionLinePeriod: _currentConversionLinePeriod,
+        laggingSpanOffset: _currentLaggingSpanOffset,
+        spanBPeriod: _currentSpanBPeriod,
       );
 
   Widget _buildConversionLinePeriodField() => Row(
@@ -55,7 +55,7 @@ class IchimokuCloudIndicatorItemState
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _conversionLinePeriod.toString(),
+              initialValue: _currentConversionLinePeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -81,7 +81,7 @@ class IchimokuCloudIndicatorItemState
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _baseLinePeriod.toString(),
+              initialValue: _currentBaseLinePeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -107,7 +107,7 @@ class IchimokuCloudIndicatorItemState
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _spanBPeriod.toString(),
+              initialValue: _currentSpanBPeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -131,7 +131,7 @@ class IchimokuCloudIndicatorItemState
           const SizedBox(width: 4),
           Expanded(
             child: Slider(
-              value: _laggingSpanOffset.abs().toDouble(),
+              value: _currentLaggingSpanOffset.abs().toDouble(),
               onChanged: (double value) {
                 setState(() {
                   _laggingSpanOffset = value.toInt() * -1;
@@ -140,7 +140,7 @@ class IchimokuCloudIndicatorItemState
               },
               divisions: 100,
               max: 100,
-              label: '${_laggingSpanOffset.abs()}',
+              label: '${_currentLaggingSpanOffset.abs()}',
             ),
           ),
         ],
@@ -155,4 +155,12 @@ class IchimokuCloudIndicatorItemState
           _buildOffsetField(),
         ],
       );
+
+  int get _currentBaseLinePeriod =>
+      _baseLinePeriod ?? getConfig()?.baseLinePeriod ?? 26;
+  int get _currentConversionLinePeriod =>
+      _conversionLinePeriod ?? getConfig()?.conversionLinePeriod ?? 9;
+  int get _currentSpanBPeriod => _spanBPeriod ?? getConfig()?.spanBPeriod ?? 52;
+  int get _currentLaggingSpanOffset =>
+      _laggingSpanOffset ?? getConfig()?.laggingSpanOffset ?? -26;
 }
