@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/ichimoku_clouds_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
@@ -27,6 +28,7 @@ class IchimokuCloudSeries extends Series {
   SingleIndicatorSeries _laggingSpanSeries;
   SingleIndicatorSeries _spanASeries;
   SingleIndicatorSeries _spanBSeries;
+  final List<SingleIndicatorSeries> _ichimokuSeries = <SingleIndicatorSeries>[];
 
   /// List of [Tick]s to calculate IchimokuCloud on.
   final IndicatorDataInput ticks;
@@ -114,6 +116,13 @@ class IchimokuCloudSeries extends Series {
       ),
     );
 
+    _ichimokuSeries
+      ..add(_conversionLineSeries)
+      ..add(_baseLineSeries)
+      ..add(_laggingSpanSeries)
+      ..add(_spanASeries)
+      ..add(_spanBSeries);
+
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
 
@@ -148,55 +157,15 @@ class IchimokuCloudSeries extends Series {
 
   @override
   List<double> recalculateMinMax() {
-    double conversionLineMin = _conversionLineSeries.minValue;
-    double conversionLineMax = _conversionLineSeries.maxValue;
+    final double minValue = _ichimokuSeries
+        .map((SingleIndicatorSeries series) => series.minValue)
+        .reduce(safeMin);
 
-    double baseLineMin = _baseLineSeries.minValue;
-    double baseLineMax = _baseLineSeries.maxValue;
+    final double maxValue = _ichimokuSeries
+        .map((SingleIndicatorSeries series) => series.maxValue)
+        .reduce(safeMax);
 
-    double spanAMin = _spanASeries.minValue;
-    double spanAMax = _spanASeries.maxValue;
-
-    double spanBMin = _spanBSeries.minValue;
-    double spanBMax = _spanBSeries.maxValue;
-
-    double laggingSpanMin = _laggingSpanSeries.minValue;
-    double laggingSpanMax = _laggingSpanSeries.maxValue;
-
-    if (laggingSpanMin.isNaN) {
-      laggingSpanMin = double.infinity;
-    }
-
-    if (laggingSpanMax.isNaN) {
-      laggingSpanMax = double.negativeInfinity;
-    }
-
-    if (conversionLineMax.isNaN) {
-      conversionLineMax = double.negativeInfinity;
-    }
-
-    if (conversionLineMin.isNaN) {
-      conversionLineMin = double.infinity;
-    }
-
-    if (baseLineMin.isNaN) {
-      baseLineMin = double.infinity;
-    }
-
-    if (baseLineMax.isNaN) {
-      baseLineMax = double.negativeInfinity;
-    }
-
-    final double minimum = min(
-        min(min(min(conversionLineMin, baseLineMin), laggingSpanMin),
-            _spanBSeries.minValue),
-        _spanASeries.minValue);
-    final double maximum = max(
-        max(max(max(conversionLineMax, baseLineMax), laggingSpanMax),
-            _spanBSeries.maxValue),
-        _spanASeries.maxValue);
-    print(minimum);
-    return <double>[minimum, maximum];
+    return <double>[minValue, maxValue];
   }
 
   @override
