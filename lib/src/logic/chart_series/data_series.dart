@@ -20,11 +20,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     String id, {
     DataSeriesStyle style,
   }) : super(id, style: style) {
-    _minMaxCalculator = MinMaxCalculator(
-      minValueOf,
-      maxValueOf,
-      epochOf: getEpochOf,
-    );
+    _minMaxCalculator = MinMaxCalculator(minValueOf, maxValueOf);
   }
 
   /// Series input list.
