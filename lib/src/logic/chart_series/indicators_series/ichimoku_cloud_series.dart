@@ -196,20 +196,8 @@ class IchimokuCloudSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => <ChartData>[
-        _conversionLineSeries,
-        _baseLineSeries,
-        _laggingSpanSeries,
-        _spanASeries,
-        _spanBSeries,
-      ].getMaxEpoch();
+  int getMaxEpoch() => _ichimokuSeries.getMaxEpoch();
 
   @override
-  int getMinEpoch() => <ChartData>[
-        _conversionLineSeries,
-        _baseLineSeries,
-        _laggingSpanSeries,
-        _spanASeries,
-        _spanBSeries,
-      ].getMinEpoch();
+  int getMinEpoch() => _ichimokuSeries.getMinEpoch();
 }
