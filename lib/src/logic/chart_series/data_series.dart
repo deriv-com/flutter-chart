@@ -258,7 +258,10 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     return current.first != previous.first ||
         current.last != previous.last ||
-        style != oldDataSeries.style;
+        style != oldDataSeries.style ||
+        (entries.isNotEmpty &&
+            visibleEntries.isNotEmpty &&
+            entries.last == visibleEntries.last);
   }
 
   @override
