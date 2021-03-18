@@ -51,7 +51,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   double verticalPaddingFraction = 0.1;
 
   /// Padding should be at least half of barrier label height.
-  static const double _minPadding = 10;
+  static const double minPadding = 10;
 
   /// Duration of quote bounds animated transition.
   final Duration quoteBoundsAnimationDuration =
@@ -77,27 +77,23 @@ class BasicChartState<T extends BasicChart> extends State<T>
   /// The animation of the current tick.
   Animation<double> currentTickAnimation;
 
-  /// Crosshair related state.
-  AnimationController crosshairZoomOutAnimationController;
-
-  /// The current animation value of crosshair zoom out.
-  Animation<double> crosshairZoomOutAnimation;
   double get _topBoundQuote => topBoundQuoteAnimationController.value;
 
   double get _bottomBoundQuote => bottomBoundQuoteAnimationController.value;
 
-  double get _verticalPadding {
+  /// Vertical padding in pixel.
+  double get verticalPadding {
     final double padding = verticalPaddingFraction * canvasSize.height;
     const double minCrosshairPadding = 80;
-    final double paddingValue = padding +
+    final double paddingValue = padding /*+
         (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
-            crosshairZoomOutAnimation.value;
-    return paddingValue.clamp(_minPadding, canvasSize.height / 2);
+            crosshairZoomOutAnimation.value*/;
+    return paddingValue.clamp(minPadding, canvasSize.height / 2);
   }
 
-  double get _topPadding => _verticalPadding;
+  double get _topPadding => verticalPadding;
 
-  double get _bottomPadding => _verticalPadding;
+  double get _bottomPadding => verticalPadding;
 
   GestureManagerState _gestureManager;
 
@@ -138,7 +134,6 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
     topBoundQuoteAnimationController?.dispose();
     bottomBoundQuoteAnimationController?.dispose();
-    crosshairZoomOutAnimationController?.dispose();
     _clearGestures();
     super.dispose();
   }
@@ -168,7 +163,6 @@ class BasicChartState<T extends BasicChart> extends State<T>
   void setupAnimations() {
     _setupCurrentTickAnimation();
     _setupBoundsAnimation();
-    _setupCrosshairZoomOutAnimation();
   }
 
   void _setupCurrentTickAnimation() {
@@ -195,16 +189,6 @@ class BasicChartState<T extends BasicChart> extends State<T>
     );
   }
 
-  void _setupCrosshairZoomOutAnimation() {
-    crosshairZoomOutAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    );
-    crosshairZoomOutAnimation = CurvedAnimation(
-      parent: crosshairZoomOutAnimationController,
-      curve: Curves.easeInOut,
-    );
-  }
 
   void _clearGestures() {
     _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
@@ -288,11 +272,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
-        animations: <Listenable>[
-          // One bound animation is enough since they animate at the same time.
-          topBoundQuoteAnimationController,
-          crosshairZoomOutAnimation,
-        ],
+        animations: getQuoteGridAnimations(),
         builder: (BuildContext context, Widget child) => CustomPaint(
           painter: YGridLinePainter(
             gridLineQuotes: gridLineQuotes,
@@ -306,13 +286,30 @@ class BasicChartState<T extends BasicChart> extends State<T>
         ),
       );
 
+  ///
+  List<Listenable> getQuoteGridAnimations() => <Listenable>[
+        // One bound animation is enough since they animate at the same time.
+        topBoundQuoteAnimationController,
+        // crosshairZoomOutAnimation,
+      ];
+
+  ///
+  List<Listenable> getQuoteLabelAnimations() => <Listenable>[
+    topBoundQuoteAnimationController,
+    bottomBoundQuoteAnimationController,
+    // crosshairZoomOutAnimation,
+  ];
+
+  List<Listenable> getChartDataAnimations() => <Listenable>[
+    topBoundQuoteAnimationController,
+    bottomBoundQuoteAnimationController,
+    // crosshairZoomOutAnimation,
+    currentTickAnimation,
+  ];
+
   Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
-        animations: <Listenable>[
-          topBoundQuoteAnimationController,
-          bottomBoundQuoteAnimationController,
-          crosshairZoomOutAnimation,
-        ],
+        animations: getQuoteLabelAnimations(),
         builder: (BuildContext context, Widget child) => CustomPaint(
           size: canvasSize,
           painter: YGridLabelPainter(
@@ -326,12 +323,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   // Main series and indicators on top of main series.
   Widget _buildChartData() => MultipleAnimatedBuilder(
-        animations: <Listenable>[
-          topBoundQuoteAnimationController,
-          bottomBoundQuoteAnimationController,
-          crosshairZoomOutAnimation,
-          currentTickAnimation,
-        ],
+        animations: getChartDataAnimations(),
         builder: (BuildContext context, Widget child) => RepaintBoundary(
           child: CustomPaint(
             painter: ChartDataPainter(
@@ -370,7 +362,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   void _scaleVertically(double dy) {
     setState(() {
       verticalPaddingFraction =
-          ((_verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
+          ((verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
     });
   }
 }

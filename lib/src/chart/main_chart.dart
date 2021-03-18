@@ -88,6 +88,23 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       xAxis.rightBoundEpoch < widget._mainSeries.entries.last.epoch &&
       !_isCrosshairMode;
 
+  /// Crosshair related state.
+  AnimationController crosshairZoomOutAnimationController;
+
+  /// The current animation value of crosshair zoom out.
+  Animation<double> crosshairZoomOutAnimation;
+
+  @override
+  double get verticalPadding {
+    final double padding = verticalPaddingFraction * canvasSize.height;
+    const double minCrosshairPadding = 80;
+    final double paddingValue = padding +
+        (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
+            crosshairZoomOutAnimation.value;
+    return paddingValue.clamp(
+        BasicChartState.minPadding, canvasSize.height / 2);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -144,6 +161,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   @override
   void dispose() {
     _currentTickBlinkingController?.dispose();
+    crosshairZoomOutAnimationController?.dispose();
     super.dispose();
   }
 
@@ -151,7 +169,31 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   void setupAnimations() {
     super.setupAnimations();
     _setupBlinkingAnimation();
+    _setupCrosshairZoomOutAnimation();
   }
+
+  void _setupCrosshairZoomOutAnimation() {
+    crosshairZoomOutAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+    crosshairZoomOutAnimation = CurvedAnimation(
+      parent: crosshairZoomOutAnimationController,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  List<Listenable> getQuoteGridAnimations() =>
+      super.getQuoteGridAnimations()..add(crosshairZoomOutAnimation);
+
+  @override
+  List<Listenable> getQuoteLabelAnimations() =>
+      super.getQuoteLabelAnimations()..add(crosshairZoomOutAnimation);
+
+  @override
+  List<Listenable> getChartDataAnimations() =>
+      super.getChartDataAnimations()..add(crosshairZoomOutAnimation);
 
   void _setupBlinkingAnimation() {
     _currentTickBlinkingController = AnimationController(
