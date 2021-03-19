@@ -26,10 +26,8 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
     String fieldType,
     int bandsCount,
   })  : bandsCount = bandsCount ?? 10,
-        rainbowColors = const <Color>[],
-        super(period: period, type: movingAverageType, fieldType: fieldType) {
-    rainbowColors.addAll(_getRainbowColors(bandsCount));
-  }
+        rainbowColors = _getRainbowColors(bandsCount ?? 10),
+        super(period: period, type: movingAverageType, fieldType: fieldType);
 
   /// Initializes from JSON.
   factory RainbowIndicatorConfig.fromJson(Map<String, dynamic> json) =>
