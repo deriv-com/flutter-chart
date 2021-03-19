@@ -1,8 +1,11 @@
 analyzer:
   exclude:
-    # - test/**
-    # - lib/**
-    # - example/**
+    # Remove these later:
+    - test/**
+    - lib/**
+    - example/**
+
+    # Keep these:
     - example/lib/generated/**
     - lib/generated/**
   strong-mode:
