@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
@@ -15,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'callbacks.dart';
 
 /// Indicator config
+@immutable
 abstract class IndicatorConfig {
   /// Initializes
   const IndicatorConfig();
@@ -51,6 +54,14 @@ abstract class IndicatorConfig {
   ///
   /// Must specify indicator `name` with `nameKey`.
   Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(dynamic other) =>
+      other is IndicatorConfig &&
+      jsonEncode(other.toJson()) == jsonEncode(toJson());
+
+  @override
+  int get hashCode => jsonEncode(toJson()).hashCode;
 
   /// Indicators supported field types
   static final Map<String, FieldIndicatorBuilder> supportedFieldTypes =
