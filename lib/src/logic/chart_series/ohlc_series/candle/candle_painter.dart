@@ -48,7 +48,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
 
     // Painting visible candles except the last one that might be animated.
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
-      final Candle candle = series.visibleEntries[i];
+      final Candle candle = series.visibleEntries.entries[i];
 
       _paintCandle(
         canvas,

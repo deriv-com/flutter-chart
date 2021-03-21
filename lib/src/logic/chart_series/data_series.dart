@@ -35,10 +35,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// List of visible entries at a specific epoch range of the chart X-Axis.
   ///
   /// Will be updated when the epoch bounderies of the chart changes and [onUpdate] gets called.
-  List<T> _visibleEntries = <T>[];
+  VisibleEntries<T> _visibleEntries = VisibleEntries<T>.empty();
 
   /// Series visible entries
-  List<T> get visibleEntries => _visibleEntries;
+  VisibleEntries<T> get visibleEntries => _visibleEntries;
 
   /// A reference to the last element of the old series of this [DataSeries] object.
   ///
@@ -87,16 +87,21 @@ abstract class DataSeries<T extends Tick> extends Series {
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
 
     if (entries.isEmpty) {
-      _visibleEntries = <T>[];
+      _visibleEntries = VisibleEntries<T>.empty();
       return;
     }
 
     final int startIndex = _searchLowerIndex(leftEpoch);
     final int endIndex = _searchUpperIndex(rightEpoch);
 
-    final List<T> newVisibleEntries = startIndex == -1 || endIndex == -1
-        ? <T>[]
-        : entries.sublist(startIndex, endIndex);
+    final VisibleEntries<T> newVisibleEntries =
+        startIndex == -1 || endIndex == -1
+            ? VisibleEntries<T>.empty()
+            : VisibleEntries<T>(
+                entries.sublist(startIndex, endIndex),
+                startIndex,
+                endIndex,
+              );
 
     // Only recalculate min/max if visible entries have changed.
     _needsMinMaxUpdate = newVisibleEntries.isEmpty ||
@@ -137,7 +142,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (!_needsMinMaxUpdate) {
       return <double>[minValue, maxValue];
     }
-    _minMaxCalculator.calculate(visibleEntries);
+    _minMaxCalculator.calculate(visibleEntries.entries);
     return <double>[_minMaxCalculator.min, _minMaxCalculator.max];
   }
 
@@ -241,9 +246,9 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   @override
   bool shouldRepaint(ChartData oldDelegate) {
-    final DataSeries oldDataSeries = oldDelegate;
-    final List<Tick> current = visibleEntries;
-    final List<Tick> previous = oldDataSeries.visibleEntries;
+    final DataSeries<T> oldDataSeries = oldDelegate;
+    final VisibleEntries<Tick> current = visibleEntries;
+    final VisibleEntries<Tick> previous = oldDataSeries.visibleEntries;
 
     if (current.isEmpty && previous.isEmpty) {
       return false;
@@ -281,4 +286,38 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements.
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
+}
+
+/// Model class to hold visible entries of [DataSeries] and keep track of their
+/// [start] and [end] indices.
+class VisibleEntries<T> {
+  /// Initializes.
+  const VisibleEntries(this.entries, this.start, this.end);
+
+  /// Initializes an empty visible entries.
+  VisibleEntries.empty() : this(<T>[], -1, -1);
+
+  /// Whether visible entries are empty.
+  bool get isEmpty => entries.isEmpty;
+
+  /// Whether visible entries are NOT empty.
+  bool get isNotEmpty => entries.isNotEmpty;
+
+  /// Visible entries.
+  final List<T> entries;
+
+  /// Start index of visible entries.
+  final int start;
+
+  /// End index of visible entries.
+  final int end;
+
+  /// First item in visible entries.
+  T get first => entries.first;
+
+  /// Last item in visible entries.
+  T get last => entries.last;
+
+  /// The length of [entries].
+  int get length => entries.length;
 }
