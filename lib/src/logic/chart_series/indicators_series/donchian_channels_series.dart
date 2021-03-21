@@ -131,90 +131,90 @@ class DonchianChannelsSeries extends Series {
     _lowerChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
-    if (config.showChannelFill &&
-        _upperChannelSeries.visibleEntries.isNotEmpty &&
-        _lowerChannelSeries.visibleEntries.isNotEmpty) {
-      final Path fillPath = Path()
-        ..moveTo(
-          epochToX(_upperChannelSeries.visibleEntries.first.epoch),
-          quoteToY(_upperChannelSeries.visibleEntries.first.quote),
-        );
-
-      // Skip first (starting point) and last (can be animated).
-      for (final Tick tick in _upperChannelSeries.visibleEntries
-          .skip(1)
-          .take(_upperChannelSeries.visibleEntries.length - 2)) {
-        fillPath.lineTo(
-          epochToX(tick.epoch),
-          quoteToY(tick.quote),
-        );
-      }
-
-      // Check for animated upper tick.
-      final Tick lastUpperTick = _upperChannelSeries.entries.last;
-      final Tick lastUpperVisibleTick = _upperChannelSeries.visibleEntries.last;
-      double lastVisibleTickX;
-
-      if (lastUpperTick == lastUpperVisibleTick &&
-          _upperChannelSeries.prevLastEntry != null) {
-        lastVisibleTickX = ui.lerpDouble(
-          epochToX(_upperChannelSeries.prevLastEntry.epoch),
-          epochToX(lastUpperTick.epoch),
-          animationInfo.currentTickPercent,
-        );
-
-        final double tickY = quoteToY(ui.lerpDouble(
-          _upperChannelSeries.prevLastEntry.quote,
-          lastUpperTick.quote,
-          animationInfo.currentTickPercent,
-        ));
-
-        fillPath.lineTo(lastVisibleTickX, tickY);
-      } else {
-        lastVisibleTickX = epochToX(lastUpperVisibleTick.epoch);
-        fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
-      }
-
-      // Check for animated lower tick.
-      final Tick lastLowerTick = _lowerChannelSeries.entries.last;
-      final Tick lastLowerVisibleTick = _lowerChannelSeries.visibleEntries.last;
-
-      if (lastLowerTick == lastLowerVisibleTick &&
-          _lowerChannelSeries.prevLastEntry != null) {
-        lastVisibleTickX = ui.lerpDouble(
-          epochToX(_lowerChannelSeries.prevLastEntry.epoch),
-          epochToX(lastLowerTick.epoch),
-          animationInfo.currentTickPercent,
-        );
-
-        final double tickY = quoteToY(ui.lerpDouble(
-          _lowerChannelSeries.prevLastEntry.quote,
-          lastLowerTick.quote,
-          animationInfo.currentTickPercent,
-        ));
-
-        fillPath.lineTo(lastVisibleTickX, tickY);
-      } else {
-        lastVisibleTickX = epochToX(lastLowerVisibleTick.epoch);
-        fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
-      }
-
-      for (final Tick tick
-          in _lowerChannelSeries.visibleEntries.reversed.skip(1)) {
-        fillPath.lineTo(
-          epochToX(tick.epoch),
-          quoteToY(tick.quote),
-        );
-      }
-
-      fillPath.close();
-
-      paintFill(
-        canvas,
-        fillPath,
-        config.fillColor,
-      );
-    }
+    // if (config.showChannelFill &&
+    //     _upperChannelSeries.visibleEntries.isNotEmpty &&
+    //     _lowerChannelSeries.visibleEntries.isNotEmpty) {
+    //   final Path fillPath = Path()
+    //     ..moveTo(
+    //       epochToX(_upperChannelSeries.visibleEntries.first.epoch),
+    //       quoteToY(_upperChannelSeries.visibleEntries.first.quote),
+    //     );
+    //
+    //   // Skip first (starting point) and last (can be animated).
+    //   for (final Tick tick in _upperChannelSeries.visibleEntries
+    //       .skip(1)
+    //       .take(_upperChannelSeries.visibleEntries.length - 2)) {
+    //     fillPath.lineTo(
+    //       epochToX(tick.epoch),
+    //       quoteToY(tick.quote),
+    //     );
+    //   }
+    //
+    //   // Check for animated upper tick.
+    //   final Tick lastUpperTick = _upperChannelSeries.entries.last;
+    //   final Tick lastUpperVisibleTick = _upperChannelSeries.visibleEntries.last;
+    //   double lastVisibleTickX;
+    //
+    //   if (lastUpperTick == lastUpperVisibleTick &&
+    //       _upperChannelSeries.prevLastEntry != null) {
+    //     lastVisibleTickX = ui.lerpDouble(
+    //       epochToX(_upperChannelSeries.prevLastEntry.epoch),
+    //       epochToX(lastUpperTick.epoch),
+    //       animationInfo.currentTickPercent,
+    //     );
+    //
+    //     final double tickY = quoteToY(ui.lerpDouble(
+    //       _upperChannelSeries.prevLastEntry.quote,
+    //       lastUpperTick.quote,
+    //       animationInfo.currentTickPercent,
+    //     ));
+    //
+    //     fillPath.lineTo(lastVisibleTickX, tickY);
+    //   } else {
+    //     lastVisibleTickX = epochToX(lastUpperVisibleTick.epoch);
+    //     fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
+    //   }
+    //
+    //   // Check for animated lower tick.
+    //   final Tick lastLowerTick = _lowerChannelSeries.entries.last;
+    //   final Tick lastLowerVisibleTick = _lowerChannelSeries.visibleEntries.last;
+    //
+    //   if (lastLowerTick == lastLowerVisibleTick &&
+    //       _lowerChannelSeries.prevLastEntry != null) {
+    //     lastVisibleTickX = ui.lerpDouble(
+    //       epochToX(_lowerChannelSeries.prevLastEntry.epoch),
+    //       epochToX(lastLowerTick.epoch),
+    //       animationInfo.currentTickPercent,
+    //     );
+    //
+    //     final double tickY = quoteToY(ui.lerpDouble(
+    //       _lowerChannelSeries.prevLastEntry.quote,
+    //       lastLowerTick.quote,
+    //       animationInfo.currentTickPercent,
+    //     ));
+    //
+    //     fillPath.lineTo(lastVisibleTickX, tickY);
+    //   } else {
+    //     lastVisibleTickX = epochToX(lastLowerVisibleTick.epoch);
+    //     fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
+    //   }
+    //
+    //   for (final Tick tick
+    //       in _lowerChannelSeries.visibleEntries.reversed.skip(1)) {
+    //     fillPath.lineTo(
+    //       epochToX(tick.epoch),
+    //       quoteToY(tick.quote),
+    //     );
+    //   }
+    //
+    //   fillPath.close();
+    //
+    //   paintFill(
+    //     canvas,
+    //     fillPath,
+    //     config.fillColor,
+    //   );
+    // }
   }
 
   @override

@@ -67,16 +67,16 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   final IndicatorInput _inputIndicatorData;
 
   @override
-  int getEpochOf(Tick t) {
-    // if (entries != null) {
-    //   final int targetIndex = entries.indexOf(t) + offset;
-    //
-    //   if (targetIndex >= 0 && targetIndex < entries.length) {
-    //     return entries[targetIndex].epoch;
-    //   }
-    // }
+  int getEpochOf(Tick t, int index) {
+    if (entries != null) {
+      final int targetIndex = index + offset;
 
-    return super.getEpochOf(t) + offset * _inputIndicatorData.granularity;
+      if (targetIndex >= 0 && targetIndex < entries.length) {
+        return entries[targetIndex].epoch;
+      }
+    }
+
+    return super.getEpochOf(t, index) + offset * _inputIndicatorData.granularity;
   }
 
   @override

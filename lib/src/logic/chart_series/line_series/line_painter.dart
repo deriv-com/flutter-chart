@@ -36,16 +36,21 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     bool isStartPointSet = false;
 
     // Adding visible entries line to the path except the last which might be animated.
-    for (int i = 0; i < series.visibleEntries.length - 1; i++) {
-      final Tick tick = series.visibleEntries[i];
+    for (int i = series.visibleEntries.start;
+        i < series.visibleEntries.end - 1;
+        i++) {
+      final Tick tick = series.entries[i];
 
       if (!isStartPointSet) {
         isStartPointSet = true;
-        path.moveTo(epochToX(getEpochOf(tick)), quoteToY(tick.quote));
+        path.moveTo(
+          epochToX(getEpochOf(tick, i)),
+          quoteToY(tick.quote),
+        );
         continue;
       }
 
-      final double x = epochToX(getEpochOf(tick));
+      final double x = epochToX(getEpochOf(tick, i));
       final double y = quoteToY(tick.quote);
       path.lineTo(x, y);
     }
@@ -57,20 +62,23 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
       lastVisibleTickX = ui.lerpDouble(
-        epochToX(getEpochOf(series.prevLastEntry)),
-        epochToX(getEpochOf(lastTick)),
+        epochToX(
+          getEpochOf(series.prevLastEntry.entry, series.prevLastEntry.index),
+        ),
+        epochToX(getEpochOf(lastTick, series.entries.length - 1)),
         animationInfo.currentTickPercent,
       );
 
       final double tickY = quoteToY(ui.lerpDouble(
-        series.prevLastEntry.quote,
+        series.prevLastEntry.entry.quote,
         lastTick.quote,
         animationInfo.currentTickPercent,
       ));
 
       path.lineTo(lastVisibleTickX, tickY);
     } else {
-      lastVisibleTickX = epochToX(getEpochOf(lastVisibleTick));
+      lastVisibleTickX =
+          epochToX(getEpochOf(lastVisibleTick, series.visibleEntries.end - 1));
       path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
     }
 
@@ -81,7 +89,9 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         canvas,
         size,
         path,
-        epochToX(getEpochOf(series.visibleEntries.first)),
+        epochToX(
+          getEpochOf(series.visibleEntries.first, series.visibleEntries.start),
+        ),
         lastVisibleTickX,
         style,
       );

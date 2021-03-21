@@ -50,7 +50,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   ///
   /// In other cases like in the first run or when the [input] list changes entirely [prevLastEntry]
   /// will ne `null` and there will be no animation.
-  T prevLastEntry;
+  IndexedEntry<T> prevLastEntry;
 
   HorizontalBarrier _lastTickIndicator;
 
@@ -66,16 +66,17 @@ abstract class DataSeries<T extends Tick> extends Series {
   MinMaxCalculator _minMaxCalculator;
 
   @override
-  int getMinEpoch() => input.isNotEmpty ? getEpochOf(input.first) : null;
+  int getMinEpoch() => input.isNotEmpty ? getEpochOf(input.first, 0) : null;
 
   @override
-  int getMaxEpoch() => input.isNotEmpty ? getEpochOf(input.last) : null;
+  int getMaxEpoch() =>
+      input.isNotEmpty ? getEpochOf(input.last, input.length - 1) : null;
 
   /// Gets the real epoch for the given [t].
   ///
   /// Real epoch might involve some offsets.
   /// Should use this method here whenever want to get the epoch of a [T].
-  int getEpochOf(T t) => t.epoch;
+  int getEpochOf(T t, int index) => t.epoch;
 
   /// Updates visible entries for this Series.
   @override
@@ -128,7 +129,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (entries.isNotEmpty && style?.lastTickStyle != null ?? false) {
       _lastTickIndicator = HorizontalBarrier(
         entries.last.quote,
-        epoch: getEpochOf(entries.last),
+        epoch: getEpochOf(entries.last, entries.length - 1),
         style: style.lastTickStyle,
       );
     }
@@ -147,9 +148,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   int _searchLowerIndex(int leftEpoch) {
-    if (leftEpoch < getEpochOf(entries[0])) {
+    if (leftEpoch < getEpochOf(entries[0], 0)) {
       return 0;
-    } else if (leftEpoch > getEpochOf(entries[entries.length - 1])) {
+    } else if (leftEpoch >
+        getEpochOf(entries[entries.length - 1], entries.length - 1)) {
       return -1;
     }
 
@@ -164,9 +166,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   int _searchUpperIndex(int rightEpoch) {
-    if (rightEpoch < getEpochOf(entries[0])) {
+    if (rightEpoch < getEpochOf(entries[0], 0)) {
       return -1;
-    } else if (rightEpoch > getEpochOf(entries[entries.length - 1])) {
+    } else if (rightEpoch >
+        getEpochOf(entries[entries.length - 1], entries.length - 1)) {
       return entries.length;
     }
 
@@ -186,16 +189,17 @@ abstract class DataSeries<T extends Tick> extends Series {
     while (lo <= hi) {
       final int mid = (hi + lo) ~/ 2;
 
-      if (epoch < getEpochOf(entries[mid])) {
+      if (epoch < getEpochOf(entries[mid], mid)) {
         hi = mid - 1;
-      } else if (epoch > getEpochOf(entries[mid])) {
+      } else if (epoch > getEpochOf(entries[mid], mid)) {
         lo = mid + 1;
       } else {
         return mid;
       }
     }
 
-    return (getEpochOf(entries[lo]) - epoch) < (epoch - getEpochOf(entries[hi]))
+    return (getEpochOf(entries[lo], lo) - epoch) <
+            (epoch - getEpochOf(entries[hi], hi))
         ? lo
         : hi;
   }
@@ -217,7 +221,10 @@ abstract class DataSeries<T extends Tick> extends Series {
       if (entries != null && entries.last == oldSeries.entries.last) {
         prevLastEntry = oldSeries.prevLastEntry;
       } else {
-        prevLastEntry = oldSeries.entries.last;
+        prevLastEntry = IndexedEntry<T>(
+          oldSeries.entries.last,
+          oldSeries.entries.length - 1,
+        );
         updated = true;
       }
     } else {
@@ -320,4 +327,17 @@ class VisibleEntries<T> {
 
   /// The length of [entries].
   int get length => entries.length;
+}
+
+/// A model class to hold an Entry of type [T] and its index in the whole list of
+/// entries.
+class IndexedEntry<T> {
+  /// Initializes
+  const IndexedEntry(this.entry, this.index);
+
+  /// The entry.
+  final T entry;
+
+  /// Index of the [entry].
+  final int index;
 }

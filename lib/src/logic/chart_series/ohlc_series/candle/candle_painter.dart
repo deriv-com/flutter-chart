@@ -70,7 +70,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     CandlePainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
-      final Candle prevLastCandle = series.prevLastEntry;
+      final Candle prevLastCandle = series.prevLastEntry.entry;
 
       final double animatedYClose = quoteToY(ui.lerpDouble(
         prevLastCandle.close,
