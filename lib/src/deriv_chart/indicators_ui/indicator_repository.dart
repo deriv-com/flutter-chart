@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'indicator_config.dart';
@@ -8,7 +9,7 @@ import 'indicator_config.dart';
 const String indicatorsKey = 'indicators';
 
 /// Holds indicators that were added to the Chart during runtime.
-class IndicatorsRepository {
+class IndicatorsRepository extends ChangeNotifier {
   /// Initializes
   IndicatorsRepository() : _indicators = <IndicatorConfig>[];
 
@@ -39,12 +40,14 @@ class IndicatorsRepository {
         // Failed to parse indicator.
       }
     }
+    notifyListeners();
   }
 
   /// Adds new indicator and updates storage.
   Future<void> add(IndicatorConfig indicatorConfig) async {
     _indicators.add(indicatorConfig);
     await _writeToPrefs();
+    notifyListeners();
   }
 
   /// Updates indicator at index and updates storage.
@@ -54,6 +57,7 @@ class IndicatorsRepository {
     }
     _indicators[index] = indicatorConfig;
     await _writeToPrefs();
+    notifyListeners();
   }
 
   /// Removes indicator at index from repository and updates storage.
@@ -63,6 +67,7 @@ class IndicatorsRepository {
     }
     _indicators.removeAt(index);
     await _writeToPrefs();
+    notifyListeners();
   }
 
   Future<void> _writeToPrefs() async {

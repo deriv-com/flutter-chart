@@ -94,51 +94,57 @@ class _DerivChartState extends State<DerivChart> {
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
-        children: <Widget>[
-          Chart(
-            mainSeries: widget.mainSeries,
-            pipSize: widget.pipSize,
-            granularity: widget.granularity,
-            controller: widget.controller,
-            secondarySeries: <Series>[
-              ..._indicatorsRepo.indicators
-                  .where((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig != null)
-                  .map((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig.getSeries(
-                        IndicatorInput(
-                          widget.mainSeries.input,
-                          widget.granularity,
-                        ),
-                      ))
-            ],
-            markerSeries: widget.markerSeries,
-            theme: widget.theme,
-            onCrosshairAppeared: widget.onCrosshairAppeared,
-            onVisibleAreaChanged: widget.onVisibleAreaChanged,
-            isLive: widget.isLive,
-            opacity: widget.opacity,
-            annotations: widget.annotations,
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: IconButton(
-              icon: const Icon(Icons.architecture),
-              onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (
-                    BuildContext context,
-                  ) =>
-                      Provider<IndicatorsRepository>.value(
-                    value: _indicatorsRepo,
-                    child: IndicatorsDialog(),
-                  ),
-                );
-              },
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider<IndicatorsRepository>.value(
+        value: _indicatorsRepo,
+        builder: (BuildContext context, Widget child) => Stack(
+          children: <Widget>[
+            Chart(
+              mainSeries: widget.mainSeries,
+              pipSize: widget.pipSize,
+              granularity: widget.granularity,
+              controller: widget.controller,
+              secondarySeries: <Series>[
+                ...context
+                    .watch<IndicatorsRepository>()
+                    .indicators
+                    .where((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig != null)
+                    .map((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig.getSeries(
+                          IndicatorInput(
+                            widget.mainSeries.input,
+                            widget.granularity,
+                          ),
+                        ))
+              ],
+              markerSeries: widget.markerSeries,
+              theme: widget.theme,
+              onCrosshairAppeared: widget.onCrosshairAppeared,
+              onVisibleAreaChanged: widget.onVisibleAreaChanged,
+              isLive: widget.isLive,
+              opacity: widget.opacity,
+              annotations: widget.annotations,
             ),
-          )
-        ],
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                icon: const Icon(Icons.architecture),
+                onPressed: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (
+                      BuildContext context,
+                    ) =>
+                        ChangeNotifierProvider<IndicatorsRepository>.value(
+                      value: _indicatorsRepo,
+                      child: IndicatorsDialog(),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       );
 }
