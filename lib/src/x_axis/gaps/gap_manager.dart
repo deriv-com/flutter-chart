@@ -2,6 +2,14 @@ import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 
 /// Manages time gaps (closed market time) on x-axis.
+///
+/// Time gaps are calculated outside and passed to `GapManager` with `insertInFront`
+/// or `replaceGaps` in case of reload (e.g. opening new market).
+///
+/// `GapManager` is responsible for keeping a sorted list of `gaps`
+/// and providing efficient utility functions `removeGaps` and `isInGap`.
+///
+/// Both of these functions have O(log N) time complexity, where N is a number of gaps.
 class GapManager {
   /// The list of times that the market is closed.
   List<TimeRange> gaps = [];
@@ -47,6 +55,8 @@ class GapManager {
   }
 
   /// Duration of [range] on x-axis without gaps.
+  ///
+  /// O(log N) time complexity, where N is a number of gaps.
   int removeGaps(TimeRange range) {
     if (gaps.isEmpty) {
       return range.duration;
@@ -69,6 +79,8 @@ class GapManager {
   }
 
   /// Whether given [epoch] falls into a time gap.
+  ///
+  /// O(log N) time complexity, where N is a number of gaps.
   bool isInGap(int epoch) =>
       gaps.isNotEmpty && gaps[indexOfNearestGap(gaps, epoch)].contains(epoch);
 }
