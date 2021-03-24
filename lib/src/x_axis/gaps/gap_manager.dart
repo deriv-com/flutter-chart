@@ -54,7 +54,7 @@ class GapManager {
 
   /// Duration of [range] on x-axis without time gaps.
   ///
-  /// O(log N) time complexity, where N is a number of time gaps.
+  /// Has O(log N) time complexity, where N is a number of time gaps.
   int removeGaps(TimeRange range) {
     if (gaps.isEmpty) {
       return range.duration;
@@ -81,7 +81,7 @@ class GapManager {
 
   /// Whether given [epoch] falls into a time gap.
   ///
-  /// O(log N) time complexity, where N is a number of gaps.
+  /// Has O(log N) time complexity, where N is a number of time gaps.
   bool isInGap(int epoch) =>
       gaps.isNotEmpty && gaps[indexOfNearestGap(gaps, epoch)].contains(epoch);
 }
