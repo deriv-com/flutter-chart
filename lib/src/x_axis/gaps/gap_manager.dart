@@ -8,8 +8,6 @@ import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 ///
 /// `GapManager` is responsible for keeping a sorted list of `gaps`
 /// and providing efficient utility functions `removeGaps` and `isInGap`.
-///
-/// Both of these functions have O(log N) time complexity, where N is a number of gaps.
 class GapManager {
   /// The list of times that the market is closed.
   List<TimeRange> gaps = [];
@@ -54,9 +52,9 @@ class GapManager {
     return sums;
   }
 
-  /// Duration of [range] on x-axis without gaps.
+  /// Duration of [range] on x-axis without time gaps.
   ///
-  /// O(log N) time complexity, where N is a number of gaps.
+  /// O(log N) time complexity, where N is a number of time gaps.
   int removeGaps(TimeRange range) {
     if (gaps.isEmpty) {
       return range.duration;
@@ -65,6 +63,7 @@ class GapManager {
     final int left = indexOfNearestGap(gaps, range.leftEpoch);
     final int right = indexOfNearestGap(gaps, range.rightEpoch);
 
+    // Overlap of `range` with `gaps`.
     int overlap = 0;
 
     overlap += gaps[left].overlap(range)?.duration ?? 0;
@@ -73,6 +72,8 @@ class GapManager {
     }
 
     if (left + 1 < right) {
+      // This is where `_cumulativeSums` comes in handy.
+      // Calculating total duration of `gaps` sublist is constant time now.
       overlap += _cumulativeSums[left + 1] - _cumulativeSums[right];
     }
     return range.duration - overlap;
