@@ -233,14 +233,9 @@ class DonchianChannelsSeries extends Series {
     }
   }
 
+  // min/max epoch for all 3 channels are equal, using only `_loweChannelSeries` min/max.
   @override
-  int getMaxEpoch() => max(
-        _lowerChannelSeries.getMaxEpoch(),
-        max(
-          _middleChannelSeries.getMaxEpoch(),
-          _upperChannelSeries.getMaxEpoch(),
-        ),
-      );
+  int getMaxEpoch() => _lowerChannelSeries.getMaxEpoch();
 
   @override
   int getMinEpoch() => _lowerChannelSeries.getMinEpoch();
