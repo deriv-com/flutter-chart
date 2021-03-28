@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "informNoResult" : m0,
     "labelBandsCount" : MessageLookupByLibrary.simpleMessage("Bands Count"),
     "labelChannelFill" : MessageLookupByLibrary.simpleMessage("Channel Fill"),
+    "labelDistance" : MessageLookupByLibrary.simpleMessage("Distance"),
     "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
     "labelHighPeriod" : MessageLookupByLibrary.simpleMessage("High Period"),
     "labelJawOffset" : MessageLookupByLibrary.simpleMessage("Jaw Offset"),

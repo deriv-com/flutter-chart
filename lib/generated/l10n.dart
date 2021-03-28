@@ -235,6 +235,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Distance`
+  String get labelDistance {
+    return Intl.message(
+      'Distance',
+      name: 'labelDistance',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No results for "{text}"`
   String informNoResult(Object text) {
     return Intl.message(
