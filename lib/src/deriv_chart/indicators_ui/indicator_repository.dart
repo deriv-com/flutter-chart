@@ -56,7 +56,7 @@ class IndicatorsRepository extends ChangeNotifier {
       return;
     }
     _indicators[index] = indicatorConfig;
-    await _writeToPrefs();
+    _writeToPrefs(); // ignore: unawaited_futures
     notifyListeners();
   }
 
@@ -66,7 +66,7 @@ class IndicatorsRepository extends ChangeNotifier {
       return;
     }
     _indicators.removeAt(index);
-    await _writeToPrefs();
+    _writeToPrefs(); // ignore: unawaited_futures
     notifyListeners();
   }
 
