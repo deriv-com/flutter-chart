@@ -43,16 +43,17 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       final Tick tick = series.entries[i];
 
       if (!tick.quote.isNaN) {
+        lastVisibleTickX = epochToX(getEpochOf(tick, i));
+
         if (!isStartPointSet) {
           isStartPointSet = true;
           path.moveTo(
-            epochToX(getEpochOf(tick, i)),
+            lastVisibleTickX,
             quoteToY(tick.quote),
           );
           continue;
         }
 
-        lastVisibleTickX = epochToX(getEpochOf(tick, i));
         final double y = quoteToY(tick.quote);
         path.lineTo(lastVisibleTickX, y);
       }
@@ -80,9 +81,8 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
         path.lineTo(lastVisibleTickX, tickY);
       } else {
-        lastVisibleTickX =
-            epochToX(
-                getEpochOf(lastVisibleTick, series.visibleEntries.end - 1));
+        lastVisibleTickX = epochToX(
+            getEpochOf(lastVisibleTick, series.visibleEntries.end - 1));
         path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
       }
     }
