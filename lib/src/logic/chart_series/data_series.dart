@@ -49,7 +49,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// or updating the height of candle in a candlestick chart.
   ///
   /// In other cases like in the first run or when the [input] list changes entirely [prevLastEntry]
-  /// will ne `null` and there will be no animation.
+  /// will be `null` and there will be no animation.
   IndexedEntry<T> prevLastEntry;
 
   HorizontalBarrier _lastTickIndicator;
@@ -303,10 +303,10 @@ abstract class DataSeries<T extends Tick> extends Series {
 }
 
 /// Model class to hold visible entries of [DataSeries] and keep track of their
-/// [start] and [end] indices.
+/// [startIndex] and [endIndex] indices.
 class VisibleEntries<T> {
   /// Initializes.
-  const VisibleEntries(this.entries, this.start, this.end);
+  const VisibleEntries(this.entries, this.startIndex, this.endIndex);
 
   /// Initializes an empty visible entries.
   VisibleEntries.empty() : this(<T>[], -1, -1);
@@ -321,10 +321,10 @@ class VisibleEntries<T> {
   final List<T> entries;
 
   /// Start index of visible entries.
-  final int start;
+  final int startIndex;
 
   /// End index of visible entries.
-  final int end;
+  final int endIndex;
 
   /// First item in visible entries.
   T get first => entries.first;

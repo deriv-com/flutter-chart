@@ -138,7 +138,7 @@ class DonchianChannelsSeries extends Series {
         ..moveTo(
           epochToX(_upperChannelSeries.getEpochOf(
             _upperChannelSeries.visibleEntries.first,
-            _upperChannelSeries.visibleEntries.start,
+            _upperChannelSeries.visibleEntries.startIndex,
           )),
           quoteToY(_upperChannelSeries.visibleEntries.first.quote),
         );
@@ -148,8 +148,8 @@ class DonchianChannelsSeries extends Series {
           .skip(1)
           .take(_upperChannelSeries.visibleEntries.length - 2)) {}
 
-      for (int i = _upperChannelSeries.visibleEntries.start + 1;
-          i < _upperChannelSeries.visibleEntries.end - 1;
+      for (int i = _upperChannelSeries.visibleEntries.startIndex + 1;
+          i < _upperChannelSeries.visibleEntries.endIndex - 1;
           i++) {
         final Tick tick = _upperChannelSeries.entries[i];
         fillPath.lineTo(
@@ -213,8 +213,8 @@ class DonchianChannelsSeries extends Series {
         fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
       }
 
-      for (int i = _lowerChannelSeries.visibleEntries.end - 1;
-          i >= _lowerChannelSeries.visibleEntries.start;
+      for (int i = _lowerChannelSeries.visibleEntries.endIndex - 1;
+          i >= _lowerChannelSeries.visibleEntries.startIndex;
           i--) {
         final Tick tick = _lowerChannelSeries.entries[i];
         fillPath.lineTo(
