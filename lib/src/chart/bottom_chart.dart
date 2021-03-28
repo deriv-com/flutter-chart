@@ -35,7 +35,8 @@ class _BottomChartState extends BasicChartState<BottomChart> {
           Column(
             children: <Widget>[
               Divider(
-                height: 1,
+                height: 0.5,
+                thickness: 1,
                 color: theme.brandGreenishColor,
               ),
               const SizedBox(height: 30),
