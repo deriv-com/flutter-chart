@@ -119,6 +119,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       AnimationInfo animationInfo, QuoteToY quoteToY, ui.Path path) {
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
+    double lastVisibleTickX;
 
     if (!lastVisibleTick.quote.isNaN) {
       if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
