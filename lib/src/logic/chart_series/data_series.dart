@@ -10,6 +10,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
+import 'indexed_entry.dart';
 import 'visible_entries.dart';
 
 /// Series with only a single list of data to paint.
@@ -302,17 +303,4 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements.
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
-}
-
-/// A model class to hold an Entry of type [T] and its index in the whole list of
-/// entries.
-class IndexedEntry<T> {
-  /// Initializes
-  const IndexedEntry(this.entry, this.index);
-
-  /// The entry.
-  final T entry;
-
-  /// Index of the [entry].
-  final int index;
 }
