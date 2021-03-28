@@ -7,6 +7,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import '../data_series.dart';
 import '../line_series/line_series.dart';
 import '../series_painter.dart';
+import '../visible_entries.dart';
 
 /// A series which shows ZigZag data calculated from [entries].
 class ZigZagSeries extends LineSeries {

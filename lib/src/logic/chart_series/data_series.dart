@@ -10,6 +10,8 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:flutter/material.dart';
 
+import 'visible_entries.dart';
+
 /// Series with only a single list of data to paint.
 abstract class DataSeries<T extends Tick> extends Series {
   /// Initializes
@@ -300,40 +302,6 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements.
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
-}
-
-/// Model class to hold visible entries of [DataSeries] and keep track of their
-/// [startIndex] and [endIndex] indices.
-class VisibleEntries<T> {
-  /// Initializes.
-  const VisibleEntries(this.entries, this.startIndex, this.endIndex);
-
-  /// Initializes an empty visible entries.
-  VisibleEntries.empty() : this(<T>[], -1, -1);
-
-  /// Whether visible entries are empty.
-  bool get isEmpty => entries.isEmpty;
-
-  /// Whether visible entries are NOT empty.
-  bool get isNotEmpty => entries.isNotEmpty;
-
-  /// Visible entries.
-  final List<T> entries;
-
-  /// Start index of visible entries.
-  final int startIndex;
-
-  /// End index of visible entries.
-  final int endIndex;
-
-  /// First item in visible entries.
-  T get first => entries.first;
-
-  /// Last item in visible entries.
-  T get last => entries.last;
-
-  /// The length of [entries].
-  int get length => entries.length;
 }
 
 /// A model class to hold an Entry of type [T] and its index in the whole list of
