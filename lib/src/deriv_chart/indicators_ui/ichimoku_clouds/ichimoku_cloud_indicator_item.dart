@@ -73,7 +73,9 @@ class IchimokuCloudIndicatorItemState
                 } else {
                   _conversionLinePeriod = 9;
                 }
-                updateIndicator();
+                setState(() {
+                  updateIndicator();
+                });
               },
             ),
           ),
@@ -99,7 +101,9 @@ class IchimokuCloudIndicatorItemState
                 } else {
                   _baseLinePeriod = 26;
                 }
-                updateIndicator();
+                setState(() {
+                  updateIndicator();
+                });
               },
             ),
           ),
@@ -125,7 +129,9 @@ class IchimokuCloudIndicatorItemState
                 } else {
                   _spanBPeriod = 26;
                 }
-                updateIndicator();
+                setState(() {
+                  updateIndicator();
+                });
               },
             ),
           ),
