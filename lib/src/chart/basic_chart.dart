@@ -84,10 +84,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   /// Vertical padding in pixel.
   double get verticalPadding {
     final double padding = verticalPaddingFraction * canvasSize.height;
-    const double minCrosshairPadding = 80;
-    final double paddingValue = padding /*+
-        (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
-            crosshairZoomOutAnimation.value*/;
+    final double paddingValue = padding;
     return paddingValue.clamp(minPadding, canvasSize.height / 2);
   }
 
@@ -189,7 +186,6 @@ class BasicChartState<T extends BasicChart> extends State<T>
     );
   }
 
-
   void _clearGestures() {
     _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
   }
@@ -286,26 +282,24 @@ class BasicChartState<T extends BasicChart> extends State<T>
         ),
       );
 
-  ///
+  /// Returns a list of animation controllers to animate the top quote grid.
   List<Listenable> getQuoteGridAnimations() => <Listenable>[
         // One bound animation is enough since they animate at the same time.
         topBoundQuoteAnimationController,
-        // crosshairZoomOutAnimation,
       ];
 
-  ///
+  /// Returns a list of animation controllers for animating the quote label.
   List<Listenable> getQuoteLabelAnimations() => <Listenable>[
-    topBoundQuoteAnimationController,
-    bottomBoundQuoteAnimationController,
-    // crosshairZoomOutAnimation,
-  ];
+        topBoundQuoteAnimationController,
+        bottomBoundQuoteAnimationController,
+      ];
 
+  /// Returns a list of animation controllers to animate the chart data inside the chart.
   List<Listenable> getChartDataAnimations() => <Listenable>[
-    topBoundQuoteAnimationController,
-    bottomBoundQuoteAnimationController,
-    // crosshairZoomOutAnimation,
-    currentTickAnimation,
-  ];
+        topBoundQuoteAnimationController,
+        bottomBoundQuoteAnimationController,
+        currentTickAnimation,
+      ];
 
   Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
