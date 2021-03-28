@@ -96,13 +96,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     final int endIndex = _searchUpperIndex(rightEpoch);
 
     final VisibleEntries<T> newVisibleEntries =
-        startIndex == -1 || endIndex == -1
-            ? VisibleEntries<T>.empty()
-            : VisibleEntries<T>(
-                entries.sublist(startIndex, endIndex),
-                startIndex,
-                endIndex,
-              );
+        getVisibleEntries(startIndex, endIndex);
 
     // Only recalculate min/max if visible entries have changed.
     _needsMinMaxUpdate = newVisibleEntries.isEmpty ||
@@ -112,6 +106,17 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     _visibleEntries = newVisibleEntries;
   }
+
+  /// Creates visible entries based on [startIndex] and [endIndex].
+  @protected
+  VisibleEntries<T> getVisibleEntries(int startIndex, int endIndex) =>
+      startIndex == -1 || endIndex == -1
+          ? VisibleEntries<T>.empty()
+          : VisibleEntries<T>(
+              entries.sublist(startIndex, endIndex),
+              startIndex,
+              endIndex,
+            );
 
   /// Minimum value in [t].
   ///
