@@ -40,16 +40,16 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Series visible entries
   VisibleEntries<T> get visibleEntries => _visibleEntries;
 
-  /// A reference to the last element of the old series of this [DataSeries] object.
+  /// A reference to the last element of the previous version of this [DataSeries].
   ///
-  /// Most of the times updating a [DataSeries] class is when a new tick is added to it.
-  /// It can be updating just the last tick of the old [DataSeries] class, or adding a new tick
-  /// at the end of the list of tick. In these cases we can do animation from [prevLastEntry] to the
-  /// last tick of the new [DataSeries]. like transition from old tick to new tick in a line chart
-  /// or updating the height of candle in a candlestick chart.
+  /// Most of the times updating a [DataSeries] class is when the last tick is changed.
+  /// It can be just updating the last tick of the old [DataSeries] object, or adding a new tick
+  /// to the end of the list. In these cases we can do an animation from [prevLastEntry] to the
+  /// last tick of the new [DataSeries]. like a transition animation from the old tick to the
+  /// new tick in a line chart or updating the height of the candle in a candlestick chart.
   ///
-  /// In other cases like in the first run or when the [input] list changes entirely [prevLastEntry]
-  /// will be `null` and there will be no animation.
+  /// In other cases like in the first run or when the [input] list changes entirely,
+  /// [prevLastEntry] will be `null` and there will be no animations.
   IndexedEntry<T> prevLastEntry;
 
   HorizontalBarrier _lastTickIndicator;
