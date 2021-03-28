@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelBaseLinePeriod" : MessageLookupByLibrary.simpleMessage("Base Line Period"),
     "labelChannelFill" : MessageLookupByLibrary.simpleMessage("Channel Fill"),
     "labelConversionLinePeriod" : MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
+    "labelDistance" : MessageLookupByLibrary.simpleMessage("Distance"),
     "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
     "labelHighPeriod" : MessageLookupByLibrary.simpleMessage("High Period"),
     "labelJawOffset" : MessageLookupByLibrary.simpleMessage("Jaw Offset"),

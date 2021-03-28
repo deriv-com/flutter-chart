@@ -22,6 +22,7 @@
   "labelStandardDeviation": "Standard Deviation",
   "labelType": "Type",
   "labelShiftType": "Shift Type",
+  "labelDistance": "Distance",
   "informNoResult": "No results for \"{text}\"",
   "warnCheckAssetSearchingText": "Try checking your spelling or use a different term"
 }
