@@ -101,7 +101,8 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
     // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
-      _paintBlinkingDot(canvas, dotX, y, animationInfo);
+      _paintBlinkingDot(canvas, dotX, y, animationInfo,
+          style.blinkingDotColor ?? style.color);
     }
 
     final TextPainter valuePainter = makeTextPainter(
@@ -217,14 +218,15 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     double dotX,
     double y,
     AnimationInfo animationInfo,
+    Color color,
   ) {
-    paintDot(canvas, Offset(dotX, y), Colors.redAccent);
+    paintDot(canvas, Offset(dotX, y), color);
 
     paintBlinkingGlow(
       canvas,
       Offset(dotX, y),
       animationInfo.blinkingPercent,
-      Colors.redAccent,
+      color,
     );
   }
 
