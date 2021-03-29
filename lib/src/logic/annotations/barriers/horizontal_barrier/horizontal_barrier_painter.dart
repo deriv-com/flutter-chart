@@ -151,8 +151,9 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
 
       // Erase the line behind title.
       if (arrowType == BarrierArrowType.none) {
-        canvas.drawRect(titleArea, Paint()..blendMode = BlendMode.clear);
-        canvas.restore();
+        canvas
+          ..drawRect(titleArea, Paint()..blendMode = BlendMode.clear)
+          ..restore();
       }
 
       paintWithTextPainter(
@@ -180,7 +181,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           arrowSize: style.arrowSize,
         );
       } else if (arrowType == BarrierArrowType.downward) {
-        // TODO: Rotate arrows like in `paintMarker` instead of defining two identical paths only different in rotation.
+        // TODO(Anonymous): Rotate arrows like in `paintMarker` instead of defining two identical paths only different in rotation.
         _paintDownwardArrows(
           canvas,
           center: Offset(arrowMidX, y),
