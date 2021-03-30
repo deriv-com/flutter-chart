@@ -5,7 +5,7 @@ class RSIOptions extends IndicatorOptions {
   /// Initializes an RSI indicator options.
   const RSIOptions({this.period = 14});
 
-  /// number of rainbow bands
+  /// The period to calculate rsi Indicator on.
   final int period;
 
   @override
