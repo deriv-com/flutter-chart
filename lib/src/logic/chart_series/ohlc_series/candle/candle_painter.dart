@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
+import 'package:deriv_chart/src/logic/chart_series/indexed_entry.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/candle_painting.dart';
@@ -47,14 +48,16 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     final double candleWidth = intervalWidth * 0.6;
 
     // Painting visible candles except the last one that might be animated.
-    for (int i = 0; i < series.visibleEntries.length - 1; i++) {
-      final Candle candle = series.visibleEntries.entries[i];
+    for (int i = series.visibleEntries.startIndex;
+        i < series.visibleEntries.endIndex - 1;
+        i++) {
+      final Candle candle = series.entries[i];
 
       _paintCandle(
         canvas,
         CandlePainting(
           width: candleWidth,
-          xCenter: epochToX(candle.epoch),
+          xCenter: epochToX(getEpochOf(candle, i)),
           yHigh: quoteToY(candle.high),
           yLow: quoteToY(candle.low),
           yOpen: quoteToY(candle.open),
@@ -70,30 +73,30 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     CandlePainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
-      final Candle prevLastCandle = series.prevLastEntry.entry;
+      final IndexedEntry<Candle> prevLastCandle = series.prevLastEntry;
 
       final double animatedYClose = quoteToY(ui.lerpDouble(
-        prevLastCandle.close,
+        prevLastCandle.entry.close,
         lastCandle.close,
         animationInfo.currentTickPercent,
       ));
 
       final double xCenter = ui.lerpDouble(
-        epochToX(prevLastCandle.epoch),
-        epochToX(lastCandle.epoch),
+        epochToX(getEpochOf(prevLastCandle.entry, prevLastCandle.index)),
+        epochToX(getEpochOf(lastCandle, series.entries.length - 1)),
         animationInfo.currentTickPercent,
       );
 
       lastCandlePainting = CandlePainting(
         xCenter: xCenter,
-        yHigh: lastCandle.high > prevLastCandle.high
+        yHigh: lastCandle.high > prevLastCandle.entry.high
             // In this case we don't update high-low line to avoid instant change of its
             // height (ahead of animation). Candle close value animation will cover the line.
-            ? quoteToY(prevLastCandle.high)
+            ? quoteToY(prevLastCandle.entry.high)
             : quoteToY(lastCandle.high),
-        yLow: lastCandle.low < prevLastCandle.low
+        yLow: lastCandle.low < prevLastCandle.entry.low
             // Same as comment above.
-            ? quoteToY(prevLastCandle.low)
+            ? quoteToY(prevLastCandle.entry.low)
             : quoteToY(lastCandle.low),
         yOpen: quoteToY(lastCandle.open),
         yClose: animatedYClose,
@@ -101,7 +104,8 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
       );
     } else {
       lastCandlePainting = CandlePainting(
-        xCenter: epochToX(lastVisibleCandle.epoch),
+        xCenter: epochToX(
+            getEpochOf(lastVisibleCandle, series.visibleEntries.endIndex - 1)),
         yHigh: quoteToY(lastVisibleCandle.high),
         yLow: quoteToY(lastVisibleCandle.low),
         yOpen: quoteToY(lastVisibleCandle.open),

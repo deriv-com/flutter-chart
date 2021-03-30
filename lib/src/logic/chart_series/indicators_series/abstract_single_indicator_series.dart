@@ -72,7 +72,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
       final int targetIndex = index + offset;
 
       if (targetIndex >= 0 && targetIndex < entries.length) {
-        // Instead of doing `super.getEpochOf(t, index) + offset * _inputIndicatorData.granularity`
+        // Instead of doing `super.getEpochOf(t, index) + offset * granularity`
         // for all indices, for those that are in the range of `entries` we should use the epoch of `index + offset`.
         // Meaning that if the offset was `2`, for the tick in index `1`, we should use the epoch of index 3.
         // This is because of time gaps that some chart data might have,
