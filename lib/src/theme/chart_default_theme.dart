@@ -19,34 +19,34 @@ abstract class ChartDefaultTheme implements ChartTheme {
       <TextStyle, Map<Color, TextStyle>>{};
 
   @override
-  double get margin04 => Dimens.margin04;
+  double get margin04Chart => Dimens.margin04;
 
   @override
-  double get margin08 => Dimens.margin08;
+  double get margin08Chart => Dimens.margin08;
 
   @override
-  double get margin12 => Dimens.margin12;
+  double get margin12Chart => Dimens.margin12;
 
   @override
-  double get margin16 => Dimens.margin16;
+  double get margin16Chart => Dimens.margin16;
 
   @override
-  double get margin24 => Dimens.margin24;
+  double get margin24Chart => Dimens.margin24;
 
   @override
-  double get margin32 => Dimens.margin32;
+  double get margin32Chart => Dimens.margin32;
 
   @override
-  double get borderRadius04 => Dimens.borderRadius04;
+  double get borderRadius04Chart => Dimens.borderRadius04;
 
   @override
-  double get borderRadius08 => Dimens.borderRadius08;
+  double get borderRadius08Chart => Dimens.borderRadius08;
 
   @override
-  double get borderRadius16 => Dimens.borderRadius16;
+  double get borderRadius16Chart => Dimens.borderRadius16;
 
   @override
-  double get borderRadius24 => Dimens.borderRadius24;
+  double get borderRadius24Chart => Dimens.borderRadius24;
 
   @override
   String get fontFamily => TextStyles.appFontFamily;

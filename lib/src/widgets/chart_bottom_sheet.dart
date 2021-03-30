@@ -42,8 +42,8 @@ class _ChartBottomSheetState extends State<ChartBottomSheet> {
           value: _theme,
           child: ClipRRect(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(_theme.borderRadius24),
-              topRight: Radius.circular(_theme.borderRadius24),
+              topLeft: Radius.circular(_theme.borderRadius24Chart),
+              topRight: Radius.circular(_theme.borderRadius24Chart),
             ),
             child: Material(
               elevation: 8,
@@ -60,7 +60,7 @@ class _ChartBottomSheetState extends State<ChartBottomSheet> {
       );
 
   Widget _buildTopHandle() => Container(
-        padding: EdgeInsets.symmetric(vertical: _theme.margin08),
+        padding: EdgeInsets.symmetric(vertical: _theme.margin08Chart),
         width: double.infinity,
         child: Center(
           child: Container(
@@ -68,7 +68,7 @@ class _ChartBottomSheetState extends State<ChartBottomSheet> {
             height: 4,
             decoration: BoxDecoration(
               color: _theme.base05Color,
-              borderRadius: BorderRadius.circular(_theme.borderRadius04),
+              borderRadius: BorderRadius.circular(_theme.borderRadius04Chart),
             ),
           ),
         ),

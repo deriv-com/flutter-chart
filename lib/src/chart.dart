@@ -103,9 +103,9 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ChartTheme chartTheme =
-        theme ?? Theme.of(context).brightness == Brightness.dark
+        theme ?? (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
-            : ChartDefaultLightTheme();
+            : ChartDefaultLightTheme());
 
     final ChartConfig chartConfig = ChartConfig(
       pipSize: pipSize,

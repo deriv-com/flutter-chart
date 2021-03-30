@@ -42,25 +42,25 @@ abstract class ChartTheme {
 
   Color get base08Color;
 
-  double get margin04;
+  double get margin04Chart;
 
-  double get margin08;
+  double get margin08Chart;
 
-  double get margin12;
+  double get margin12Chart;
 
-  double get margin16;
+  double get margin16Chart;
 
-  double get margin24;
+  double get margin24Chart;
 
-  double get margin32;
+  double get margin32Chart;
 
-  double get borderRadius04;
+  double get borderRadius04Chart;
 
-  double get borderRadius08;
+  double get borderRadius08Chart;
 
-  double get borderRadius16;
+  double get borderRadius16Chart;
 
-  double get borderRadius24;
+  double get borderRadius24Chart;
 
   TextStyle get caption2;
 
