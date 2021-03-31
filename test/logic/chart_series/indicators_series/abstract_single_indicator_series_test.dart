@@ -91,7 +91,7 @@ void main() {
         expect(maSeries.getEpochOf(visibleEntries[4], 4), 6000);
       });
 
-      test('All entries are visible and offset is +1', () {
+      test('All entries are visible and offset is -1', () {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(1000, 5000);
 
@@ -168,7 +168,7 @@ void main() {
         expect(maSeries.getEpochOf(visibleEntries[5], 5), 11000);
       });
 
-      test('All entries are visible and offset is +1', () {
+      test('All entries are visible and offset is -1', () {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(1000, 10000);
 
