@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -113,12 +114,12 @@ class AlligatorSeries extends Series {
 
   @override
   List<double> recalculateMinMax() => <double>[
-        min(
-          min(_jawSeries.minValue, _teethSeries.minValue),
+        safeMin(
+          safeMin(_jawSeries.minValue, _teethSeries.minValue),
           _lipsSeries.minValue,
         ),
-        max(
-          max(_jawSeries.maxValue, _teethSeries.maxValue),
+        safeMax(
+          safeMax(_jawSeries.maxValue, _teethSeries.maxValue),
           _lipsSeries.maxValue,
         ),
       ];
