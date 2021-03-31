@@ -57,10 +57,23 @@ void main() {
         final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
-        // Visible entries are indices [1, 2, 3].
+        // Visible entries are in indices [1, 2, 3].
         expect(maSeries.getEpochOf(visibleEntries[0], 1), entries[2].epoch);
         expect(maSeries.getEpochOf(visibleEntries[1], 2), entries[3].epoch);
         expect(maSeries.getEpochOf(visibleEntries[2], 3), entries[4].epoch);
+      });
+
+      test('A portion of entries are visible and offset is -1', () {
+        final MockMASeries maSeries = MockMASeries(input, offset: -1)
+          ..update(2000, 4000);
+
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> entries = input.entries;
+
+        // Visible entries are in indices [1, 2, 3].
+        expect(maSeries.getEpochOf(visibleEntries[0], 1), entries[0].epoch);
+        expect(maSeries.getEpochOf(visibleEntries[1], 2), entries[1].epoch);
+        expect(maSeries.getEpochOf(visibleEntries[2], 3), entries[2].epoch);
       });
 
       test('All entries are visible and offset is +1', () {
@@ -76,6 +89,21 @@ void main() {
         expect(maSeries.getEpochOf(visibleEntries[2], 2), entries[3].epoch);
         expect(maSeries.getEpochOf(visibleEntries[3], 3), entries[4].epoch);
         expect(maSeries.getEpochOf(visibleEntries[4], 4), 6000);
+      });
+
+      test('All entries are visible and offset is +1', () {
+        final MockMASeries maSeries = MockMASeries(input, offset: -1)
+          ..update(1000, 5000);
+
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> entries = input.entries;
+
+        // All entries are visible.
+        expect(maSeries.getEpochOf(visibleEntries[0], 0), 0);
+        expect(maSeries.getEpochOf(visibleEntries[1], 1), entries[0].epoch);
+        expect(maSeries.getEpochOf(visibleEntries[2], 2), entries[1].epoch);
+        expect(maSeries.getEpochOf(visibleEntries[3], 3), entries[2].epoch);
+        expect(maSeries.getEpochOf(visibleEntries[4], 4), entries[3].epoch);
       });
     });
 
@@ -103,7 +131,7 @@ void main() {
         final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
-        // Visible entries are indices [1, 2, 3, 4].
+        // Visible entries are in indices [1, 2, 3, 4].
         expect(maSeries.getEpochOf(visibleEntries[0], 1), entries[2].epoch);
         expect(maSeries.getEpochOf(visibleEntries[1], 2), entries[3].epoch);
         expect(maSeries.getEpochOf(visibleEntries[2], 3), entries[4].epoch);
