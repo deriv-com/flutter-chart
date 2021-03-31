@@ -79,9 +79,9 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
         return entries[targetIndex].epoch;
       } else if (targetIndex >= entries.length) {
         // Sometimes there might be market gaps even between entry in this index
-        // and first/last indices. In these cases `epoch + offset * granularity`
-        // will be wrong. Instead we use the epoch of the last/first index +/- the
-        // estimation of remaining offset using `first/lastEpoch + remainingOffset * granularity`.
+        // and first/last index. In these cases `epoch + offset * granularity`
+        // will be still wrong. Instead we use the epoch of the last/first index +/-
+        // the estimation of remaining offset in epoch, using `first/lastEpoch + remainingOffset * granularity`.
         final int remainingOffset = targetIndex - entries.length + 1;
         return entries.last.epoch +
             remainingOffset * _inputIndicatorData.granularity;
