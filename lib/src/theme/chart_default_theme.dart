@@ -82,6 +82,10 @@ abstract class ChartDefaultTheme implements ChartTheme {
           textStyle: caption2,
           color: base03Color,
         ),
+        yLabelStyle: textStyle(
+          textStyle: caption2,
+          color: base03Color,
+        ),
       );
 
   @override
