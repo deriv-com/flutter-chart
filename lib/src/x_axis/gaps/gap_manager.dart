@@ -2,6 +2,12 @@ import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 
 /// Manages time gaps (closed market time) on x-axis.
+///
+/// `GapManager` is responsible for keeping a sorted list of `gaps`
+/// and providing efficient utility functions `removeGaps` and `isInGap`.
+///
+/// Time gaps are calculated outside and passed to `GapManager` with `insertInFront`
+/// or `replaceGaps` in case of reload (e.g. opening new market).
 class GapManager {
   /// The list of times that the market is closed.
   List<TimeRange> gaps = [];
@@ -46,7 +52,9 @@ class GapManager {
     return sums;
   }
 
-  /// Duration of [range] on x-axis without gaps.
+  /// Duration of [range] on x-axis without time gaps.
+  ///
+  /// Has O(log N) time complexity, where N is a number of time gaps.
   int removeGaps(TimeRange range) {
     if (gaps.isEmpty) {
       return range.duration;
@@ -55,6 +63,7 @@ class GapManager {
     final int left = indexOfNearestGap(gaps, range.leftEpoch);
     final int right = indexOfNearestGap(gaps, range.rightEpoch);
 
+    // Overlap of `range` with `gaps`.
     int overlap = 0;
 
     overlap += gaps[left].overlap(range)?.duration ?? 0;
@@ -63,12 +72,16 @@ class GapManager {
     }
 
     if (left + 1 < right) {
+      // This is where `_cumulativeSums` comes in handy.
+      // Calculating total duration of `gaps` sublist is constant time now.
       overlap += _cumulativeSums[left + 1] - _cumulativeSums[right];
     }
     return range.duration - overlap;
   }
 
   /// Whether given [epoch] falls into a time gap.
+  ///
+  /// Has O(log N) time complexity, where N is a number of time gaps.
   bool isInGap(int epoch) =>
       gaps.isNotEmpty && gaps[indexOfNearestGap(gaps, epoch)].contains(epoch);
 }
