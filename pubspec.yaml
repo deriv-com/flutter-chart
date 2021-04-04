@@ -10,17 +10,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.16.1
+  intl: ^0.17.0
   flutter_localizations:
     sdk: flutter
-  provider: ^4.3.1
+  provider: ^5.0.0
   flutter_svg: ^0.19.0
-  equatable: ^1.2.5
+  equatable: ^2.0.0
   deriv_technical_analysis:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: git@github.com:samin-fs/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: dev
+      ref: samin/migrate_to_null_safety
 
 dev_dependencies:
   flutter_test:

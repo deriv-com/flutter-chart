@@ -20,7 +20,7 @@ class ZigZagSeries extends LineSeries {
     LineStyle style,
     double distance = 10,
   }) : super(
-          ZigZagIndicator<Tick>(entries, distance).calculateValues(),
+          entries.entries/*ZigZagIndicator<Tick>(entries, distance).calculateValues()*/,
           id: id ?? 'Zigzag Indicator',
           style: style ?? const LineStyle(thickness: 0.9, color: Colors.blue),
         );

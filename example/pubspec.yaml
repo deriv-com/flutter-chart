@@ -11,18 +11,18 @@ dependencies:
   deriv_chart:
     path: ../
   vibration: ^1.4.0
-  intl: ^0.16.1
+  intl: ^0.17.0
   flutter_localizations:
     sdk: flutter
   flutter_deriv_api:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-api.git
-      ref: dev
+      url: git@github.com:hamed-fs/flutter-deriv-api.git
+      ref: hamed/migrate_to_flutter_version_2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  intl: ^0.16.1
+  intl: ^0.17.0
   flutter_localizations:
     sdk: flutter
 
