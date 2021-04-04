@@ -36,9 +36,7 @@ class BollingerBandSeries extends Series {
     this.bbOptions,
     String id,
   })  : _fieldIndicator = indicator,
-        super(id) {
-    _innerSeries = <Series>[_lowerSeries, _middleSeries, _upperSeries];
-  }
+        super(id);
 
   SingleIndicatorSeries _lowerSeries;
   SingleIndicatorSeries _middleSeries;
@@ -49,7 +47,7 @@ class BollingerBandSeries extends Series {
 
   final Indicator<Tick> _fieldIndicator;
 
-  List<Series> _innerSeries;
+  final List<Series> _innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series> createPainter() {
@@ -85,6 +83,8 @@ class BollingerBandSeries extends Series {
             ),
         inputIndicator: _fieldIndicator,
         options: bbOptions);
+
+    _innerSeries..add(_lowerSeries)..add(_middleSeries)..add(_upperSeries);
 
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
