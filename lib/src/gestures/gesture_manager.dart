@@ -36,7 +36,7 @@ class GestureManagerState extends State<GestureManager> {
   }
 
   void _callAll<T extends Function>(dynamic details) {
-    _callbackPool.whereType<T>().forEach((f) => f.call(details));
+    _callbackPool.whereType<T>().forEach((f) => f(details));
   }
 
   @override
