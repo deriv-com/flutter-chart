@@ -30,11 +30,11 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               DropdownButton<IndicatorConfig>(
                 value: _selectedIndicator,
                 hint: const Text('Select indicator'),
-                items: [
+                items: <DropdownMenuItem<IndicatorConfig>>[
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Moving average'),
                     value: MAIndicatorConfig(),
