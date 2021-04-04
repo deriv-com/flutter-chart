@@ -42,7 +42,7 @@ class IndicatorsRepository extends ChangeNotifier {
   /// Adds new indicator and updates storage.
   Future<void> add(IndicatorConfig indicatorConfig) async {
     _indicators.add(indicatorConfig);
-    await _writeToPrefs();
+    _writeToPrefs(); // ignore: unawaited_futures
     notifyListeners();
   }
 
