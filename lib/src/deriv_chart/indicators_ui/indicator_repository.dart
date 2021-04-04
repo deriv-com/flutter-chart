@@ -39,30 +39,30 @@ class IndicatorsRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Adds new indicator and updates storage.
-  Future<void> add(IndicatorConfig indicatorConfig) async {
+  /// Adds a new indicator and updates storage.
+  void add(IndicatorConfig indicatorConfig) {
     _indicators.add(indicatorConfig);
-    _writeToPrefs(); // ignore: unawaited_futures
+    _writeToPrefs();
     notifyListeners();
   }
 
-  /// Updates indicator at index and updates storage.
-  Future<void> updateAt(int index, IndicatorConfig indicatorConfig) async {
+  /// Updates indicator at [index] and updates storage.
+  void updateAt(int index, IndicatorConfig indicatorConfig) {
     if (index < 0 || index >= _indicators.length) {
       return;
     }
     _indicators[index] = indicatorConfig;
-    _writeToPrefs(); // ignore: unawaited_futures
+    _writeToPrefs();
     notifyListeners();
   }
 
-  /// Removes indicator at index from repository and updates storage.
-  Future<void> removeAt(int index) async {
+  /// Removes indicator at [index] from repository and updates storage.
+  void removeAt(int index) {
     if (index < 0 || index >= _indicators.length) {
       return;
     }
     _indicators.removeAt(index);
-    _writeToPrefs(); // ignore: unawaited_futures
+    _writeToPrefs();
     notifyListeners();
   }
 
