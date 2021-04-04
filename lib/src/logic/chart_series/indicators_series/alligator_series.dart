@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/fractals_series/arrow_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -40,6 +41,9 @@ class AlligatorSeries extends Series {
   SingleIndicatorSeries _teethSeries;
   SingleIndicatorSeries _lipsSeries;
 
+  SingleIndicatorSeries _bullishSeries;
+  SingleIndicatorSeries _bearishSeries;
+
   /// Shift to future in jaw series
   final int jawOffset;
 
@@ -51,44 +55,70 @@ class AlligatorSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    _jawSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
-          LinePainter(series),
-      indicatorCreator: () =>
-          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.jawPeriod),
-      inputIndicator: _fieldIndicator,
-      options: alligatorOptions,
-      style: const LineStyle(color: Colors.blue),
-      offset: jawOffset,
-    );
+    if (alligatorOptions.showLines) {
+      _jawSeries = SingleIndicatorSeries(
+        painterCreator: (
+          Series series,
+        ) =>
+            LinePainter(series),
+        indicatorCreator: () =>
+        _fieldIndicator,
+            // MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.jawPeriod),
+        inputIndicator: _fieldIndicator,
+        options: alligatorOptions,
+        style: const LineStyle(color: Colors.blue),
+        offset: jawOffset,
+      );
 
-    _teethSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
-          LinePainter(series),
-      indicatorCreator: () =>
-          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.teethPeriod),
-      inputIndicator: _fieldIndicator,
-      options: alligatorOptions,
-      style: const LineStyle(color: Colors.red),
-      offset: teethOffset,
-    );
+      _teethSeries = SingleIndicatorSeries(
+        painterCreator: (
+          Series series,
+        ) =>
+            LinePainter(series),
+        indicatorCreator: () =>
+            MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.teethPeriod,),
+        inputIndicator: _fieldIndicator,
+        options: alligatorOptions,
+        style: const LineStyle(color: Colors.red),
+        offset: teethOffset,
+      );
 
-    _lipsSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
-          LinePainter(series),
-      indicatorCreator: () =>
-          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.lipsPeriod),
-      inputIndicator: _fieldIndicator,
-      options: alligatorOptions,
-      style: const LineStyle(color: Colors.green),
-      offset: lipsOffset,
-    );
+      _lipsSeries = SingleIndicatorSeries(
+        painterCreator: (
+          Series series,
+        ) =>
+            LinePainter(series),
+        indicatorCreator: () =>
+            MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.lipsPeriod),
+        inputIndicator: _fieldIndicator,
+        options: alligatorOptions,
+        style: const LineStyle(color: Colors.green),
+        offset: lipsOffset,
+      );
+    }
+
+    if (alligatorOptions.showFractal) {
+      _bearishSeries = SingleIndicatorSeries(
+        painterCreator: (
+          Series series,
+        ) =>
+            ArrowPainter(series, isUpward: true),
+        indicatorCreator: () => BearishIndicator<Tick>(_fieldIndicator),
+        inputIndicator: _fieldIndicator,
+        options: alligatorOptions,
+        style: const LineStyle(color: Colors.amber),
+      );
+      _bullishSeries = SingleIndicatorSeries(
+        painterCreator: (
+          Series series,
+        ) =>
+            ArrowPainter(series, isUpward: false),
+        indicatorCreator: () => BullishIndicator<Tick>(_fieldIndicator),
+        inputIndicator: _fieldIndicator,
+        options: alligatorOptions,
+        style: const LineStyle(color: Colors.amber),
+      );
+    }
 
     return null;
   }
@@ -97,30 +127,47 @@ class AlligatorSeries extends Series {
   bool didUpdate(ChartData oldData) {
     final AlligatorSeries series = oldData;
 
-    final bool _jawUpdated = _jawSeries.didUpdate(series?._jawSeries);
-    final bool _teethUpdated = _teethSeries.didUpdate(series?._teethSeries);
-    final bool _lipsUpdated = _lipsSeries.didUpdate(series?._lipsSeries);
+    final bool _jawUpdated = _jawSeries?.didUpdate(series?._jawSeries) ?? false;
+    final bool _teethUpdated =
+        _teethSeries?.didUpdate(series?._teethSeries) ?? false;
+    final bool _lipsUpdated =
+        _lipsSeries?.didUpdate(series?._lipsSeries) ?? false;
 
-    return _jawUpdated || _teethUpdated || _lipsUpdated;
+    final bool _bearishUpdated =
+        _bearishSeries?.didUpdate(series?._bearishSeries) ?? false;
+    final bool _bullishUpdated =
+        _bullishSeries?.didUpdate(series?._bullishSeries) ?? false;
+
+    return _jawUpdated ||
+        _teethUpdated ||
+        _lipsUpdated ||
+        _bullishUpdated ||
+        _bearishUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _jawSeries.update(leftEpoch, rightEpoch);
-    _teethSeries.update(leftEpoch, rightEpoch);
-    _lipsSeries.update(leftEpoch, rightEpoch);
+    if (_jawSeries != null && _teethSeries != null && _lipsSeries != null) {
+      _jawSeries?.update(leftEpoch, rightEpoch);
+      _teethSeries?.update(leftEpoch, rightEpoch);
+      _lipsSeries?.update(leftEpoch, rightEpoch);
+    }
+    // _bullishSeries?.update(leftEpoch, rightEpoch);
+    // _bearishSeries?.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
-        min(
-          min(_jawSeries.minValue, _teethSeries.minValue),
-          _lipsSeries.minValue,
-        ),
-        max(
-          max(_jawSeries.maxValue, _teethSeries.maxValue),
-          _lipsSeries.maxValue,
-        ),
+        <ChartData>[
+          _jawSeries,
+          _teethSeries,
+          _lipsSeries,
+        ].getMinValue(),
+        <ChartData>[
+          _jawSeries,
+          _teethSeries,
+          _lipsSeries,
+        ].getMaxValue()
       ];
 
   @override
@@ -133,35 +180,24 @@ class AlligatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _jawSeries.paint(
+    _jawSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _teethSeries.paint(
+    _teethSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _lipsSeries.paint(
+    _lipsSeries?.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _bearishSeries?.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _bullishSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
-  int getMaxEpoch() {
-    final int jawSeriesMax = _jawSeries?.getMaxEpoch();
-    final int teethSeriesMax = _teethSeries?.getMaxEpoch();
-    final int lipsSeriesMax = _lipsSeries?.getMaxEpoch();
-    return (jawSeriesMax != null &&
-            teethSeriesMax != null &&
-            lipsSeriesMax != null)
-        ? max(jawSeriesMax, max(teethSeriesMax, lipsSeriesMax))
-        : null;
-  }
+  int getMaxEpoch() =>
+      <ChartData>[_jawSeries, _teethSeries, _lipsSeries]?.getMaxEpoch();
 
   @override
-  int getMinEpoch() {
-    final int jawSeriesMin = _jawSeries?.getMinEpoch();
-    final int teethSeriesMin = _teethSeries?.getMinEpoch();
-    final int lipsSeriesMin = _lipsSeries?.getMinEpoch();
-    return (jawSeriesMin != null &&
-            teethSeriesMin != null &&
-            lipsSeriesMin != null)
-        ? min(jawSeriesMin, min(teethSeriesMin, lipsSeriesMin))
-        : null;
-  }
+  int getMinEpoch() =>
+      <ChartData>[_jawSeries, _teethSeries, _lipsSeries]?.getMinEpoch();
 }
+

@@ -16,11 +16,11 @@ class AlligatorIndicatorItem extends IndicatorItem {
     List<Tick> ticks,
     OnAddIndicator onAddIndicator,
   }) : super(
-          key: key,
-          title: 'Alligator',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
-        );
+    key: key,
+    title: 'Alligator',
+    ticks: ticks,
+    onAddIndicator: onAddIndicator,
+  );
 
   @override
   IndicatorItemState<IndicatorConfig> createIndicatorItemState() =>
@@ -36,19 +36,25 @@ class AlligatorIndicatorItemState
   int _teethPeriod;
   int _lipsOffset;
   int _lipsPeriod;
+  bool _showLines;
+  bool _showFractal;
 
   @override
-  AlligatorIndicatorConfig createIndicatorConfig() => AlligatorIndicatorConfig(
+  AlligatorIndicatorConfig createIndicatorConfig() =>
+      AlligatorIndicatorConfig(
         jawPeriod: currentJawPeriod,
         jawOffset: currentJawOffset,
         teethPeriod: currentTeethPeriod,
         teethOffset: currentTeethOffset,
         lipsPeriod: currentLipsPeriod,
         lipsOffset: currentLipsOffset,
+        showLines: currentShowLines,
+        showFractal: currentShowFractals,
       );
 
   @override
-  Widget getIndicatorOptions() => Column(
+  Widget getIndicatorOptions() =>
+      Column(
         children: <Widget>[
           buildJawPeriodField(),
           buildJawOffsetField(),
@@ -56,15 +62,50 @@ class AlligatorIndicatorItemState
           buildTeethOffsetField(),
           buildLipsPeriodField(),
           buildLipsOffsetField(),
+          buildShowLinesField(),
+          buildShowFractalField(),
         ],
+      );
+
+  /// Builds show lines option
+  @protected
+  Widget buildShowLinesField() =>
+      Switch(
+        value: currentShowLines,
+        onChanged: (bool value) {
+          setState(() {
+            _showLines = value;
+          });
+          updateIndicator();
+        },
+        activeTrackColor: Colors.lightGreenAccent,
+        activeColor: Colors.green,
+      );
+
+  /// Builds show fractal indicator option
+  @protected
+  Widget buildShowFractalField() =>
+      Switch(
+        value: currentShowFractals,
+        onChanged: (bool value) {
+          setState(() {
+            _showFractal = value;
+          });
+          updateIndicator();
+        },
+        activeTrackColor: Colors.lightGreenAccent,
+        activeColor: Colors.green,
       );
 
   /// Builds jaw offset
   @protected
-  Widget buildJawOffsetField() => Row(
+  Widget buildJawOffsetField() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelJawOffset,
+            ChartLocalization
+                .of(context)
+                .labelJawOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -74,8 +115,8 @@ class AlligatorIndicatorItemState
               onChanged: (double value) {
                 setState(() {
                   _jawOffset = value.toInt();
-                  updateIndicator();
                 });
+                updateIndicator();
               },
               divisions: 100,
               max: 100,
@@ -87,10 +128,13 @@ class AlligatorIndicatorItemState
 
   /// Builds jaw period
   @protected
-  Widget buildJawPeriodField() => Row(
+  Widget buildJawPeriodField() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelJawPeriod,
+            ChartLocalization
+                .of(context)
+                .labelJawPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -113,10 +157,13 @@ class AlligatorIndicatorItemState
 
   /// Builds teeth offset
   @protected
-  Widget buildTeethOffsetField() => Row(
+  Widget buildTeethOffsetField() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelTeethOffset,
+            ChartLocalization
+                .of(context)
+                .labelTeethOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -139,10 +186,13 @@ class AlligatorIndicatorItemState
 
   /// Builds teeth period
   @protected
-  Widget buildTeethPeriodField() => Row(
+  Widget buildTeethPeriodField() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelTeethPeriod,
+            ChartLocalization
+                .of(context)
+                .labelTeethPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -152,8 +202,8 @@ class AlligatorIndicatorItemState
               onChanged: (double value) {
                 setState(() {
                   _teethPeriod = value.toInt();
-                  updateIndicator();
                 });
+                updateIndicator();
               },
               divisions: 100,
               max: 100,
@@ -165,10 +215,13 @@ class AlligatorIndicatorItemState
 
   /// Builds lips offset
   @protected
-  Widget buildLipsOffsetField() => Row(
+  Widget buildLipsOffsetField() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelLipsOffset,
+            ChartLocalization
+                .of(context)
+                .labelLipsOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -178,8 +231,8 @@ class AlligatorIndicatorItemState
               onChanged: (double value) {
                 setState(() {
                   _lipsOffset = value.toInt();
-                  updateIndicator();
                 });
+                updateIndicator();
               },
               divisions: 100,
               max: 100,
@@ -191,10 +244,13 @@ class AlligatorIndicatorItemState
 
   /// Builds lips period
   @protected
-  Widget buildLipsPeriodField() => Row(
+  Widget buildLipsPeriodField() =>
+      Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelLipsPeriod,
+            ChartLocalization
+                .of(context)
+                .labelLipsPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -204,8 +260,8 @@ class AlligatorIndicatorItemState
               onChanged: (double value) {
                 setState(() {
                   _lipsPeriod = value.toInt();
-                  updateIndicator();
                 });
+                updateIndicator();
               },
               divisions: 100,
               max: 100,
@@ -238,4 +294,13 @@ class AlligatorIndicatorItemState
   /// Gets current lips offset.
   @protected
   int get currentLipsOffset => _lipsOffset ?? getConfig()?.lipsOffset ?? 3;
+
+  /// Gets current show lines.
+  @protected
+  bool get currentShowLines => _showLines ?? getConfig()?.showLines ?? true;
+
+  /// Gets current show Fractal indicator.
+  @protected
+  bool get currentShowFractals =>
+      _showFractal ?? getConfig()?.showFractal ?? false;
 }

@@ -63,7 +63,7 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     canvas.drawPath(
         getUpwardArrowPath(
           x,
-          y + arrowSize - 10,
+          y + arrowSize - 15,
           size: arrowSize,
         ),
         arrowPaint);
@@ -73,7 +73,7 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     Canvas canvas, {
     double x,
     double y,
-    double arrowSize,
+    double arrowSize = 10,
   }) {
     final LineStyle style =
         series.style ?? theme.lineStyle ?? const LineStyle();
@@ -86,7 +86,7 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     canvas.drawPath(
         getDownwardArrowPath(
           x,
-          y - arrowSize + 20,
+          y - arrowSize + 15,
           size: arrowSize,
         ),
         arrowPaint);
