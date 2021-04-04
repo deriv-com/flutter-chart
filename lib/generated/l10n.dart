@@ -244,6 +244,26 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Show Lines`
+  String get labelShowLines {
+    return Intl.message(
+      'Show Lines',
+      name: 'labelShowLines',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Fractals`
+  String get labelShowFractals {
+    return Intl.message(
+      'Show Fractals',
+      name: 'labelShowFractals',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
