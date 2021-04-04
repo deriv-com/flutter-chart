@@ -30,7 +30,7 @@ class AlligatorSeries extends Series {
     this.teethOffset = 5,
     this.lipsOffset = 3,
   })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
-        _indicatorInput=indicatorInput,
+        _indicatorInput = indicatorInput,
         super(id);
 
   final Indicator<Tick> _fieldIndicator;
@@ -76,8 +76,10 @@ class AlligatorSeries extends Series {
           Series series,
         ) =>
             LinePainter(series),
-        indicatorCreator: () =>
-            MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.teethPeriod,),
+        indicatorCreator: () => MMAIndicator<Tick>(
+          _fieldIndicator,
+          alligatorOptions.teethPeriod,
+        ),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
         style: const LineStyle(color: Colors.red),
