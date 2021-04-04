@@ -26,20 +26,20 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     AnimationInfo animationInfo,
   ) {
     for (int i = 0; i < series.visibleEntries.length - 1; i++) {
-      final Tick tick = series.visibleEntries[i];
+      final Tick tick = series.visibleEntries.entries[i];
       if (tick.quote.isNaN) {
         continue;
       }
       if (isUpward) {
         _paintUpwardArrows(
           canvas,
-          x: epochToX(getEpochOf(tick)),
+          x: epochToX(getEpochOf(tick,i)),
           y: quoteToY(tick.quote),
         );
       } else {
         _paintDownwardArrows(
           canvas,
-          x: epochToX(getEpochOf(tick)),
+          x: epochToX(getEpochOf(tick,i)),
           y: quoteToY(tick.quote),
         );
       }
@@ -63,7 +63,7 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     canvas.drawPath(
         getUpwardArrowPath(
           x,
-          y + arrowSize - 15,
+          y + arrowSize - 5,
           size: arrowSize,
         ),
         arrowPaint);
@@ -86,7 +86,7 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     canvas.drawPath(
         getDownwardArrowPath(
           x,
-          y - arrowSize + 15,
+          y - arrowSize + 5,
           size: arrowSize,
         ),
         arrowPaint);

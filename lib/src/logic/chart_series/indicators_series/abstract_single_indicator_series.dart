@@ -67,8 +67,34 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   final IndicatorInput _inputIndicatorData;
 
   @override
-  int getEpochOf(Tick t) =>
-      super.getEpochOf(t) + offset * _inputIndicatorData.granularity;
+  int getEpochOf(Tick t, int index) {
+    if (entries != null) {
+      final int targetIndex = index + offset;
+
+      if (targetIndex >= 0 && targetIndex < entries.length) {
+        // Instead of doing `epoch + offset * granularity` for all indices, for
+        // those that are in the range of `entries` we should use the epoch of `index + offset`.
+        // Meaning that if the offset was `2`, for the tick in index `1`, we should
+        // use the epoch of index 3. This is because of time gaps that some chart data might have,
+        return entries[targetIndex].epoch;
+      } else if (targetIndex >= entries.length) {
+        // Sometimes there might be market gaps even between entry in this index
+        // and first/last index. In these cases `epoch + offset * granularity`
+        // will be still wrong. Instead we use the epoch of the last/first index +/-
+        // the estimation of remaining offset in epoch, using `first/lastEpoch + remainingOffset * granularity`.
+        final int remainingOffset = targetIndex - entries.length + 1;
+        return entries.last.epoch +
+            remainingOffset * _inputIndicatorData.granularity;
+      } else {
+        return entries.first.epoch +
+            targetIndex * _inputIndicatorData.granularity;
+      }
+    }
+
+    // Default calculation using `epoch + offset * granularity`.
+    return super.getEpochOf(t, index) +
+        offset * _inputIndicatorData.granularity;
+  }
 
   @override
   void initialize() {

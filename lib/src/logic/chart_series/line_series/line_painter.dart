@@ -33,45 +33,58 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     final Path path = Path();
 
+    double lastVisibleTickX;
     bool isStartPointSet = false;
 
     // Adding visible entries line to the path except the last which might be animated.
-    for (int i = 0; i < series.visibleEntries.length - 1; i++) {
-      final Tick tick = series.visibleEntries[i];
+    for (int i = series.visibleEntries.startIndex;
+        i < series.visibleEntries.endIndex - 1;
+        i++) {
+      final Tick tick = series.entries[i];
 
-      if (!isStartPointSet) {
-        isStartPointSet = true;
-        path.moveTo(epochToX(getEpochOf(tick)), quoteToY(tick.quote));
-        continue;
+      if (!tick.quote.isNaN) {
+        lastVisibleTickX = epochToX(getEpochOf(tick, i));
+
+        if (!isStartPointSet) {
+          isStartPointSet = true;
+          path.moveTo(
+            lastVisibleTickX,
+            quoteToY(tick.quote),
+          );
+          continue;
+        }
+
+        final double y = quoteToY(tick.quote);
+        path.lineTo(lastVisibleTickX, y);
       }
-
-      final double x = epochToX(getEpochOf(tick));
-      final double y = quoteToY(tick.quote);
-      path.lineTo(x, y);
     }
 
     // Adding last visible entry line to the path
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
-    double lastVisibleTickX;
 
-    if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
-      lastVisibleTickX = ui.lerpDouble(
-        epochToX(getEpochOf(series.prevLastEntry)),
-        epochToX(getEpochOf(lastTick)),
-        animationInfo.currentTickPercent,
-      );
+    if (!lastVisibleTick.quote.isNaN) {
+      if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
+        lastVisibleTickX = ui.lerpDouble(
+          epochToX(
+            getEpochOf(series.prevLastEntry.entry, series.prevLastEntry.index),
+          ),
+          epochToX(getEpochOf(lastTick, series.entries.length - 1)),
+          animationInfo.currentTickPercent,
+        );
 
-      final double tickY = quoteToY(ui.lerpDouble(
-        series.prevLastEntry.quote,
-        lastTick.quote,
-        animationInfo.currentTickPercent,
-      ));
+        final double tickY = quoteToY(ui.lerpDouble(
+          series.prevLastEntry.entry.quote,
+          lastTick.quote,
+          animationInfo.currentTickPercent,
+        ));
 
-      path.lineTo(lastVisibleTickX, tickY);
-    } else {
-      lastVisibleTickX = epochToX(getEpochOf(lastVisibleTick));
-      path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
+        path.lineTo(lastVisibleTickX, tickY);
+      } else {
+        lastVisibleTickX = epochToX(
+            getEpochOf(lastVisibleTick, series.visibleEntries.endIndex - 1));
+        path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
+      }
     }
 
     canvas.drawPath(path, linePaint);
@@ -81,7 +94,10 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         canvas,
         size,
         path,
-        epochToX(getEpochOf(series.visibleEntries.first)),
+        epochToX(
+          getEpochOf(
+              series.visibleEntries.first, series.visibleEntries.startIndex),
+        ),
         lastVisibleTickX,
         style,
       );
