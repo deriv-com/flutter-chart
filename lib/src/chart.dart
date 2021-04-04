@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -434,8 +435,8 @@ class _ChartImplementationState extends State<_ChartImplementation>
             .map((ChartData chartData) => chartData.maxValue)
             .reduce(max);
 
-        minQuote = min(widget.mainSeries.minValue, chartDataMin);
-        maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
+        minQuote = safeMin(minQuote, chartDataMin);
+        maxQuote = safeMax(maxQuote, chartDataMax);
       }
     }
 
