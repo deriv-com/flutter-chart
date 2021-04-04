@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/crosshair/crosshair_area.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/loading_animation.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -387,8 +388,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
             .map((ChartData chartData) => chartData.maxValue)
             .reduce(max);
 
-        minQuote = min(widget.mainSeries.minValue, chartDataMin);
-        maxQuote = max(widget.mainSeries.maxValue, chartDataMax);
+        minQuote = safeMin(minQuote, chartDataMin);
+        maxQuote = safeMax(maxQuote, chartDataMax);
       }
     }
     return <double>[minQuote, maxQuote];

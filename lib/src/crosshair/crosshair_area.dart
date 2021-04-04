@@ -136,7 +136,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   Tick _getClosestTick() => findClosestToEpoch(
-      _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries);
+      _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries.entries);
 
   Duration get animationDuration {
     double dragXVelocity;

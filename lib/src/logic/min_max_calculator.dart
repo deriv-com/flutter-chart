@@ -9,13 +9,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 class MinMaxCalculator {
   /// Instantiate min/max calculator with [minValueOf] and [maxValueOf] functions
   /// that return min/max respectively of the given entry.
-  ///
-  /// [epochOf] Returns the epoch of entry
-  MinMaxCalculator(
-    this.minValueOf,
-    this.maxValueOf, {
-    int Function(Tick) epochOf,
-  }) : _epochOf = epochOf ?? ((Tick tick) => tick.epoch);
+  MinMaxCalculator(this.minValueOf, this.maxValueOf);
 
   /// List of current entries from which min/max is calculated.
   List<Tick> _visibleEntries;
@@ -25,8 +19,6 @@ class MinMaxCalculator {
 
   /// Returns max of entry.
   final double Function(Tick) maxValueOf;
-
-  final int Function(Tick) _epochOf;
 
   /// A map sorted by key that keeps track of number of occurences of `min` and `max` values for all `_visibleEntries`.
   final SplayTreeMap<double, int> _visibleEntriesCount =
@@ -56,27 +48,27 @@ class MinMaxCalculator {
       final List<Tick> removedEntries = <Tick>[];
 
       // Compare and find what entries got removed/added by checking epochs.
-      if (_epochOf(_visibleEntries.first) < _epochOf(newVisibleEntries.first)) {
+      if (_visibleEntries.first.epoch < newVisibleEntries.first.epoch) {
         removedEntries.addAll(
-          _visibleEntries.takeWhile((Tick entry) =>
-              _epochOf(entry) < _epochOf(newVisibleEntries.first)),
+          _visibleEntries.takeWhile(
+              (Tick entry) => entry.epoch < newVisibleEntries.first.epoch),
         );
       } else {
         addedEntries.addAll(
-          newVisibleEntries.takeWhile((Tick entry) =>
-              _epochOf(entry) < _epochOf(_visibleEntries.first)),
+          newVisibleEntries.takeWhile(
+              (Tick entry) => entry.epoch < _visibleEntries.first.epoch),
         );
       }
 
-      if (_epochOf(_visibleEntries.last) > _epochOf(newVisibleEntries.last)) {
+      if (_visibleEntries.last.epoch > newVisibleEntries.last.epoch) {
         removedEntries.addAll(
-          _visibleEntries.reversed.takeWhile((Tick entry) =>
-              _epochOf(entry) > _epochOf(newVisibleEntries.last)),
+          _visibleEntries.reversed.takeWhile(
+              (Tick entry) => entry.epoch > newVisibleEntries.last.epoch),
         );
       } else {
         addedEntries.addAll(
           newVisibleEntries.reversed.takeWhile(
-              (Tick entry) => _epochOf(entry) > _epochOf(_visibleEntries.last)),
+              (Tick entry) => entry.epoch > _visibleEntries.last.epoch),
         );
       }
 
@@ -115,11 +107,11 @@ class MinMaxCalculator {
       return true;
     }
     // Option A: All entries in ListA are behind entries in ListB.
-    if (_epochOf(listA.last) < _epochOf(listB.first)) {
+    if (listA.last.epoch < listB.first.epoch) {
       return true;
     }
     // Option B: All entries in ListA are in front of entries in ListB.
-    if (_epochOf(listA.first) > _epochOf(listB.last)) {
+    if (listA.first.epoch > listB.last.epoch) {
       return true;
     }
     return false;
