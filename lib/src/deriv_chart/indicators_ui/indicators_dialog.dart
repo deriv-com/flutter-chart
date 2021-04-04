@@ -6,7 +6,9 @@ import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 
 import 'bollinger_bands/bollinger_bands_indicator_item.dart';
+import 'zigzag_indicator/zigzag_indicator_item.dart';
 import 'callbacks.dart';
+import 'donchian_channel/donchian_channel_indicator_item.dart';
 import 'indicator_item.dart';
 import 'ma_env_indicator/ma_env_indicator_item.dart';
 import 'ma_indicator/ma_indicator_item.dart';
@@ -43,6 +45,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         onAddIndicator: widget.onAddIndicator,
       ))
       ..add(BollingerBandsIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(ZigZagIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ))
