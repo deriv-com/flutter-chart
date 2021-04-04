@@ -7,6 +7,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import '../data_series.dart';
 import '../line_series/line_series.dart';
 import '../series_painter.dart';
+import '../visible_entries.dart';
 
 /// A series which shows ZigZag data calculated from [entries].
 class ZigZagSeries extends LineSeries {
@@ -28,11 +29,11 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
-  List<Tick> getVisibleEntries(int startIndex, int endIndex) {
+  VisibleEntries<Tick> getVisibleEntries(int startIndex, int endIndex) {
     int firstIndex = startIndex;
     int lastIndex = endIndex;
     if (startIndex == -1 || endIndex == -1) {
-      return <Tick>[];
+      return VisibleEntries<Tick>.empty();
     }
     if (entries[startIndex].quote.isNaN) {
       for (int i = startIndex - 1; i >= 0; i--) {
@@ -50,6 +51,10 @@ class ZigZagSeries extends LineSeries {
         }
       }
     }
-    return entries.sublist(firstIndex, lastIndex);
+    return VisibleEntries<Tick>(
+      entries.sublist(firstIndex, lastIndex),
+      startIndex,
+      endIndex,
+    );
   }
 }

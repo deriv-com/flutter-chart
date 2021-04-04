@@ -136,16 +136,24 @@ class DonchianChannelsSeries extends Series {
         _lowerChannelSeries.visibleEntries.isNotEmpty) {
       final Path fillPath = Path()
         ..moveTo(
-          epochToX(_upperChannelSeries.visibleEntries.first.epoch),
+          epochToX(_upperChannelSeries.getEpochOf(
+            _upperChannelSeries.visibleEntries.first,
+            _upperChannelSeries.visibleEntries.startIndex,
+          )),
           quoteToY(_upperChannelSeries.visibleEntries.first.quote),
         );
 
       // Skip first (starting point) and last (can be animated).
-      for (final Tick tick in _upperChannelSeries.visibleEntries
+      for (final Tick tick in _upperChannelSeries.visibleEntries.entries
           .skip(1)
-          .take(_upperChannelSeries.visibleEntries.length - 2)) {
+          .take(_upperChannelSeries.visibleEntries.length - 2)) {}
+
+      for (int i = _upperChannelSeries.visibleEntries.startIndex + 1;
+          i < _upperChannelSeries.visibleEntries.endIndex - 1;
+          i++) {
+        final Tick tick = _upperChannelSeries.entries[i];
         fillPath.lineTo(
-          epochToX(tick.epoch),
+          epochToX(_upperChannelSeries.getEpochOf(tick, i)),
           quoteToY(tick.quote),
         );
       }
@@ -158,13 +166,16 @@ class DonchianChannelsSeries extends Series {
       if (lastUpperTick == lastUpperVisibleTick &&
           _upperChannelSeries.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
-          epochToX(_upperChannelSeries.prevLastEntry.epoch),
+          epochToX(_upperChannelSeries.getEpochOf(
+            _upperChannelSeries.prevLastEntry.entry,
+            _upperChannelSeries.prevLastEntry.index,
+          )),
           epochToX(lastUpperTick.epoch),
           animationInfo.currentTickPercent,
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _upperChannelSeries.prevLastEntry.quote,
+          _upperChannelSeries.prevLastEntry.entry.quote,
           lastUpperTick.quote,
           animationInfo.currentTickPercent,
         ));
@@ -182,13 +193,16 @@ class DonchianChannelsSeries extends Series {
       if (lastLowerTick == lastLowerVisibleTick &&
           _lowerChannelSeries.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
-          epochToX(_lowerChannelSeries.prevLastEntry.epoch),
+          epochToX(_lowerChannelSeries.getEpochOf(
+            _lowerChannelSeries.prevLastEntry.entry,
+            _lowerChannelSeries.prevLastEntry.index,
+          )),
           epochToX(lastLowerTick.epoch),
           animationInfo.currentTickPercent,
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _lowerChannelSeries.prevLastEntry.quote,
+          _lowerChannelSeries.prevLastEntry.entry.quote,
           lastLowerTick.quote,
           animationInfo.currentTickPercent,
         ));
@@ -199,10 +213,12 @@ class DonchianChannelsSeries extends Series {
         fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
       }
 
-      for (final Tick tick
-          in _lowerChannelSeries.visibleEntries.reversed.skip(1)) {
+      for (int i = _lowerChannelSeries.visibleEntries.endIndex - 1;
+          i >= _lowerChannelSeries.visibleEntries.startIndex;
+          i--) {
+        final Tick tick = _lowerChannelSeries.entries[i];
         fillPath.lineTo(
-          epochToX(tick.epoch),
+          epochToX(_lowerChannelSeries.getEpochOf(tick, i)),
           quoteToY(tick.quote),
         );
       }
@@ -217,14 +233,9 @@ class DonchianChannelsSeries extends Series {
     }
   }
 
+  // min/max epoch for all 3 channels are equal, using only `_loweChannelSeries` min/max.
   @override
-  int getMaxEpoch() => max(
-        _lowerChannelSeries.getMaxEpoch(),
-        max(
-          _middleChannelSeries.getMaxEpoch(),
-          _upperChannelSeries.getMaxEpoch(),
-        ),
-      );
+  int getMaxEpoch() => _lowerChannelSeries.getMaxEpoch();
 
   @override
   int getMinEpoch() => _lowerChannelSeries.getMinEpoch();
