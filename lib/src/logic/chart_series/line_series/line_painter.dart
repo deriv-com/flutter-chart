@@ -14,15 +14,8 @@ import '../data_series.dart';
 class LinePainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   LinePainter(
-    DataSeries<Tick> series, {
-    LineStyle horizontalLineStyle,
-    List<double> horizontalLines = const <double>[],
-  })  : _horizontalLines = horizontalLines,
-        _horizontalLineStyle = horizontalLineStyle,
-        super(series);
-
-  final List<double> _horizontalLines;
-  final LineStyle _horizontalLineStyle;
+    DataSeries<Tick> series,
+  ) : super(series);
 
   double _lastVisibleTickX;
 
@@ -44,9 +37,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     final Path path = createPath(epochToX, quoteToY, animationInfo);
 
-    paintHorizontalLines(canvas, quoteToY, size);
-
-    paintLine(canvas, path, linePaint);
+    paintLines(canvas, path, linePaint);
 
     if (style.hasArea) {
       _drawArea(
@@ -60,24 +51,9 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     }
   }
 
-  /// Paints the horizontal lines if the [series] have any.
-  void paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
-    final LineStyle horizontalLineStyle =
-        _horizontalLineStyle ?? theme.lineStyle ?? const LineStyle();
-    final Paint horizontalLinePaint = Paint()
-      ..color = horizontalLineStyle.color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = horizontalLineStyle.thickness;
-
-    for (final double line in _horizontalLines) {
-      canvas.drawLine(Offset(0, quoteToY(line)),
-          Offset(size.width, quoteToY(line)), horizontalLinePaint);
-    }
-  }
-
   /// Paints the line on the given canvas.
   /// We can add channel fill here in the subclasses.
-  void paintLine(
+  void paintLines(
     Canvas canvas,
     Path path,
     Paint linePaint,

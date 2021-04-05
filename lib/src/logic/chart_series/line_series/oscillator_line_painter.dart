@@ -4,6 +4,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
@@ -23,17 +24,18 @@ class OscillatorLinePainter extends LinePainter {
     List<double> secondaryHorizontalLines = const <double>[],
   })  : _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
         _topHorizontalLine = topHorizontalLine,
+        _secondaryHorizontalLines = secondaryHorizontalLines,
+        _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
         _bottomHorizontalLine = bottomHorizontalLine,
         super(
           series,
-          horizontalLines: secondaryHorizontalLines,
-          horizontalLineStyle: secondaryHorizontalLinesStyle,
         );
 
   final double _topHorizontalLine;
   final double _bottomHorizontalLine;
   final LineStyle _mainHorizontalLinesStyle;
-
+  final List<double> _secondaryHorizontalLines;
+  final LineStyle _secondaryHorizontalLinesStyle;
   Path _topHorizontalLinePath;
   Path _bottomHorizontalLinePath;
 
@@ -42,6 +44,19 @@ class OscillatorLinePainter extends LinePainter {
 
   /// Right margin.
   static const double rightMargin = 4;
+
+  @override
+  void onPaintData(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+  ) {
+    super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
+
+    _paintHorizontalLines(canvas, quoteToY, size);
+  }
 
   void _paintLabelBackground(
     Canvas canvas,
@@ -58,9 +73,8 @@ class OscillatorLinePainter extends LinePainter {
     );
   }
 
-  @override
-  void paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
-    super.paintHorizontalLines(canvas, quoteToY, size);
+  void _paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
+    _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
     final Paint paint = Paint()
       ..color = _mainHorizontalLinesStyle.color
@@ -81,6 +95,25 @@ class OscillatorLinePainter extends LinePainter {
       ..drawPath(_topHorizontalLinePath, paint)
       ..drawPath(_bottomHorizontalLinePath, paint);
 
+    _paintLabels(size, quoteToY, canvas);
+  }
+
+  void _paintSecondaryHorizontalLines(
+      Canvas canvas, QuoteToY quoteToY, Size size) {
+    final LineStyle horizontalLineStyle =
+        _secondaryHorizontalLinesStyle ?? theme.lineStyle ?? const LineStyle();
+    final Paint horizontalLinePaint = Paint()
+      ..color = horizontalLineStyle.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = horizontalLineStyle.thickness;
+
+    for (final double line in _secondaryHorizontalLines) {
+      canvas.drawLine(Offset(0, quoteToY(line)),
+          Offset(size.width, quoteToY(line)), horizontalLinePaint);
+    }
+  }
+
+  void _paintLabels(Size size, QuoteToY quoteToY, Canvas canvas) {
     final HorizontalBarrierStyle style = HorizontalBarrierStyle(
       textStyle: TextStyle(
         fontSize: 10,

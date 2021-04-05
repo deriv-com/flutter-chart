@@ -11,21 +11,14 @@ class LineSeries extends DataSeries<Tick> {
   /// Initializes a line series.
   LineSeries(
     List<Tick> entries, {
-    List<double> horizontalLines = const <double>[],
     String id,
     LineStyle style,
-    LineStyle horizontalLinesStyle,
-  })  : _horizontalLines = horizontalLines,
-        _horizontalLinesStyle = horizontalLinesStyle,
-        super(entries, id, style: style);
-
-  final List<double> _horizontalLines;
-  final LineStyle _horizontalLinesStyle;
+  }) : super(entries, id, style: style);
 
   @override
-  SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this,
-      horizontalLines: _horizontalLines,
-      horizontalLineStyle: _horizontalLinesStyle);
+  SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(
+        this,
+      );
 
   @override
   Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>

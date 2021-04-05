@@ -25,8 +25,6 @@ class OscillatorLineSeries extends LineSeries {
           entries,
           id: id,
           style: style,
-          horizontalLines: secondaryHorizontalLines,
-          horizontalLinesStyle: secondaryHorizontalLinesStyle,
         );
 
   final List<double> _secondaryHorizontalLines;
