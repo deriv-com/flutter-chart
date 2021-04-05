@@ -46,9 +46,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     paintHorizontalLines(canvas, quoteToY, size);
 
-    addChannelFill(path);
-
-    canvas.drawPath(path, linePaint);
+    paintLine(canvas, path, linePaint);
 
     if (style.hasArea) {
       _drawArea(
@@ -77,10 +75,15 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     }
   }
 
-  /// Adds channel fill incase the data series has one.
-  void addChannelFill(
+  /// Paints the line on the given canvas.
+  /// We can add channel fill here in the subclasses.
+  void paintLine(
+    Canvas canvas,
     Path path,
-  ) {}
+    Paint linePaint,
+  ) {
+    canvas.drawPath(path, linePaint);
+  }
 
   /// Creates the path of the given [series] and returns it.
   Path createPath(
