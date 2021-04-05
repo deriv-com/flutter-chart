@@ -31,7 +31,12 @@ class RSISeries extends AbstractSingleIndicatorSeries {
     @required this.rsiOptions,
     String id,
   })  : _inputIndicator = inputIndicator,
-        super(inputIndicator, id, rsiOptions);
+        super(
+          inputIndicator,
+          id ?? 'RSIIndicator',
+          rsiOptions,
+          style: config.lineStyle,
+        );
 
   final Indicator<Tick> _inputIndicator;
 
@@ -45,9 +50,9 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   SeriesPainter<Series> createPainter() => OscillatorLinePainter(
         this,
         bottomHorizontalLine: config.overSoldPrice,
+        topHorizontalLine: config.overBoughtPrice,
         mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
         secondaryHorizontalLinesStyle: config.zeroHorizontalLinesStyle,
-        topHorizontalLine: config.overBoughtPrice,
       );
 
   @override
