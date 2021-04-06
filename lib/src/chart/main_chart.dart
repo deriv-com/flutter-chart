@@ -229,38 +229,40 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
           updateVisibleData();
 
-          return Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              // _buildQuoteGridLine(gridLineQuotes),
+          return ClipRect(
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                // _buildQuoteGridLine(gridLineQuotes),
 
-              if (widget.showLoadingAnimationForHistoricalData ||
-                  widget._mainSeries.entries.isEmpty)
-                _buildLoadingAnimation(),
-              // _buildQuoteGridLabel(gridLineQuotes),
-              super.build(context),
-              _buildSeries(),
-              _buildAnnotations(),
-              if (widget.markerSeries != null)
-                MarkerArea(
-                  markerSeries: widget.markerSeries,
-                  quoteToCanvasY: chartQuoteToCanvasY,
-                ),
-              _buildCrosshairArea(),
-              if (_isScrollToLastTickAvailable)
-                Positioned(
-                  bottom: 0,
-                  right: quoteLabelsTouchAreaWidth,
-                  child: _buildScrollToLastTickButton(),
-                ),
-              if (widget.showDataFitButton &&
-                  widget._mainSeries.entries.isNotEmpty)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: _buildDataFitButton(),
-                ),
-            ],
+                if (widget.showLoadingAnimationForHistoricalData ||
+                    widget._mainSeries.entries.isEmpty)
+                  _buildLoadingAnimation(),
+                // _buildQuoteGridLabel(gridLineQuotes),
+                super.build(context),
+                _buildSeries(),
+                _buildAnnotations(),
+                if (widget.markerSeries != null)
+                  MarkerArea(
+                    markerSeries: widget.markerSeries,
+                    quoteToCanvasY: chartQuoteToCanvasY,
+                  ),
+                _buildCrosshairArea(),
+                if (_isScrollToLastTickAvailable)
+                  Positioned(
+                    bottom: 0,
+                    right: quoteLabelsTouchAreaWidth,
+                    child: _buildScrollToLastTickButton(),
+                  ),
+                if (widget.showDataFitButton &&
+                    widget._mainSeries.entries.isNotEmpty)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: _buildDataFitButton(),
+                  ),
+              ],
+            ),
           );
         },
       );
