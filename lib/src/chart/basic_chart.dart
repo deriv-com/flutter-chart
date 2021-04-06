@@ -43,6 +43,11 @@ class BasicChartState<T extends BasicChart> extends State<T>
   /// The canvas size to draw the chart series and other options inside.
   Size canvasSize;
 
+  /// Chart widget's position on the screen.
+  Offset chartPosition;
+
+  final GlobalKey _key = GlobalKey();
+
   /// The model to use to calculate grid line quotes
   YAxisModel yAxisModel;
 
@@ -102,6 +107,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
     super.initState();
     setupAnimations();
     _setupGestures();
+    _updateChartPosition();
   }
 
   void _setupGestures() {
@@ -115,6 +121,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
     super.didUpdateWidget(oldWidget);
 
     didUpdateChartData(oldWidget);
+    _updateChartPosition();
   }
 
   /// Whether the chart data did update or not.
@@ -243,6 +250,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
+        key: _key,
         builder: (BuildContext context, BoxConstraints constraints) {
           final XAxisModel xAxis = context.watch<XAxisModel>();
 
@@ -250,6 +258,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
             xAxis.width,
             constraints.maxHeight,
           );
+
           _setupYAxisModel();
 
           updateVisibleData();
@@ -339,19 +348,27 @@ class BasicChartState<T extends BasicChart> extends State<T>
       );
 
   void _onPanStart(ScaleStartDetails details) {
-    _panStartedOnQuoteLabelsArea =
-        _onQuoteLabelsTouchArea(details.localFocalPoint);
+    _panStartedOnQuoteLabelsArea = _onQuoteLabelsTouchArea(details.focalPoint);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     if (_panStartedOnQuoteLabelsArea &&
-        _onQuoteLabelsTouchArea(details.localPosition)) {
+        _onQuoteLabelsTouchArea(details.globalPosition)) {
       _scaleVertically(details.delta.dy);
     }
   }
 
+  void _updateChartPosition() =>
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final RenderBox box = _key.currentContext.findRenderObject();
+        final Offset position = box.localToGlobal(Offset.zero);
+        chartPosition = Offset(position.dx, position.dy);
+      });
+
   bool _onQuoteLabelsTouchArea(Offset position) =>
-      position.dx > xAxis.width - quoteLabelsTouchAreaWidth;
+      position.dx > (xAxis.width - quoteLabelsTouchAreaWidth) &&
+      position.dy > chartPosition.dy &&
+      position.dy < chartPosition.dy + canvasSize.height;
 
   void _scaleVertically(double dy) {
     setState(() {
