@@ -114,44 +114,42 @@ class Chart extends StatelessWidget {
         Provider<ChartTheme>.value(value: chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
       ],
-      child: ClipRect(
-        child: Ink(
-          color: chartTheme.base08Color,
-          child: GestureManager(
-            child: XAxis(
-              maxEpoch: chartDataList.getMaxEpoch(),
-              minEpoch: chartDataList.getMinEpoch(),
-              entries: mainSeries.input,
-              onVisibleAreaChanged: onVisibleAreaChanged,
-              isLive: isLive,
-              startWithDataFitMode: dataFitEnabled,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 3,
-                    child: MainChart(
-                      controller: controller,
-                      mainSeries: mainSeries,
-                      overlaySeries: overlaySeries,
-                      annotations: annotations,
-                      markerSeries: markerSeries,
-                      pipSize: pipSize,
-                      onCrosshairAppeared: onCrosshairAppeared,
-                      isLive: isLive,
-                      showLoadingAnimationForHistoricalData: !dataFitEnabled,
-                      showDataFitButton: dataFitEnabled,
-                    ),
+      child: Ink(
+        color: chartTheme.base08Color,
+        child: GestureManager(
+          child: XAxis(
+            maxEpoch: chartDataList.getMaxEpoch(),
+            minEpoch: chartDataList.getMinEpoch(),
+            entries: mainSeries.input,
+            onVisibleAreaChanged: onVisibleAreaChanged,
+            isLive: isLive,
+            startWithDataFitMode: dataFitEnabled,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 3,
+                  child: MainChart(
+                    controller: controller,
+                    mainSeries: mainSeries,
+                    overlaySeries: overlaySeries,
+                    annotations: annotations,
+                    markerSeries: markerSeries,
+                    pipSize: pipSize,
+                    onCrosshairAppeared: onCrosshairAppeared,
+                    isLive: isLive,
+                    showLoadingAnimationForHistoricalData: !dataFitEnabled,
+                    showDataFitButton: dataFitEnabled,
                   ),
-                  if (oscillatorSeries.isNotEmpty)
-                    ...oscillatorSeries
-                        .map((Series series) => Expanded(
-                                child: BottomChart(
-                              series: series,
-                              pipSize: pipSize,
-                            )))
-                        .toList()
-                ],
-              ),
+                ),
+                if (oscillatorSeries.isNotEmpty)
+                  ...oscillatorSeries
+                      .map((Series series) => Expanded(
+                              child: BottomChart(
+                            series: series,
+                            pipSize: pipSize,
+                          )))
+                      .toList()
+              ],
             ),
           ),
         ),

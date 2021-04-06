@@ -228,7 +228,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           );
 
           updateVisibleData();
-
+          // TODO(mohammadamir-fs): Remove Extra ClipRect.
           return ClipRect(
             child: Stack(
               fit: StackFit.expand,
