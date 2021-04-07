@@ -175,6 +175,26 @@ class ChartLocalization {
     );
   }
 
+  /// `Max AF`
+  String get labelMaxAF {
+    return Intl.message(
+      'Max AF',
+      name: 'labelMaxAF',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min AF`
+  String get labelMinAF {
+    return Intl.message(
+      'Min AF',
+      name: 'labelMinAF',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Shift`
   String get labelShift {
     return Intl.message(
