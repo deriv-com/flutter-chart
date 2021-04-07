@@ -141,7 +141,7 @@ class Chart extends StatelessWidget {
                     showDataFitButton: dataFitEnabled,
                   ),
                 ),
-                if (oscillatorSeries.isNotEmpty)
+                if (oscillatorSeries?.isNotEmpty ?? false)
                   ...oscillatorSeries
                       .map((Series series) => Expanded(
                               child: BottomChart(
