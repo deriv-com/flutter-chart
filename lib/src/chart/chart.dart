@@ -32,7 +32,7 @@ class Chart extends StatelessWidget {
     @required this.granularity,
     this.controller,
     this.overlaySeries,
-    this.oscillatorSeries,
+    this.bottomSeries,
     this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
@@ -50,8 +50,8 @@ class Chart extends StatelessWidget {
   /// List of overlay indicator series to add on chart beside the [mainSeries].
   final List<Series> overlaySeries;
 
-  /// List of oscillator indicator series to add on chart separate from the [mainSeries].
-  final List<Series> oscillatorSeries;
+  /// List of bottom indicator series to add on chart separate from the [mainSeries].
+  final List<Series> bottomSeries;
 
   /// Open position marker series.
   final MarkerSeries markerSeries;
@@ -105,7 +105,7 @@ class Chart extends StatelessWidget {
     final List<ChartData> chartDataList = <ChartData>[
       mainSeries,
       if (overlaySeries != null) ...overlaySeries,
-      if (oscillatorSeries != null) ...oscillatorSeries,
+      if (bottomSeries != null) ...bottomSeries,
       if (annotations != null) ...annotations,
     ];
 
@@ -141,8 +141,8 @@ class Chart extends StatelessWidget {
                     showDataFitButton: dataFitEnabled,
                   ),
                 ),
-                if (oscillatorSeries?.isNotEmpty ?? false)
-                  ...oscillatorSeries
+                if (bottomSeries?.isNotEmpty ?? false)
+                  ...bottomSeries
                       .map((Series series) => Expanded(
                               child: BottomChart(
                             series: series,
