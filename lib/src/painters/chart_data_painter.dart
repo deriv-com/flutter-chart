@@ -62,13 +62,8 @@ class ChartDataPainter extends BaseChartDataPainter {
         (mainSeries is CandleSeries &&
             theme.candleStyle != oldDelegate.theme.candleStyle);
 
-    bool visibleAnimationChanged() => mainSeries.shouldRepaint(oldDelegate
-            .mainSeries) /*
-        mainSeries.entries.isNotEmpty &&
-        mainSeries.visibleEntries.isNotEmpty &&
-        mainSeries.entries.last == mainSeries.visibleEntries.last &&
-        animationInfo != oldDelegate.animationInfo*/
-        ;
+    bool visibleAnimationChanged() =>
+        mainSeries.shouldRepaint(oldDelegate.mainSeries);
 
     return super.shouldRepaint(oldDelegate) ||
         visibleAnimationChanged() ||
@@ -143,12 +138,6 @@ class BaseChartDataPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(BaseChartDataPainter oldDelegate) {
-    // bool styleChanged() =>
-    //     (mainSeries is LineSeries &&
-    //         theme.lineStyle != oldDelegate.theme.lineStyle) ||
-    //     (mainSeries is CandleSeries &&
-    //         theme.candleStyle != oldDelegate.theme.candleStyle);
-
     bool seriesChanged() {
       final bool isNull = series == null;
       final bool wasNull = oldDelegate.series == null;
@@ -172,12 +161,6 @@ class BaseChartDataPainter extends CustomPainter {
       );
     }
 
-    // bool visibleAnimationChanged() =>
-    //     mainSeries.entries.isNotEmpty &&
-    //     mainSeries.visibleEntries.isNotEmpty &&
-    //     mainSeries.entries.last == mainSeries.visibleEntries.last &&
-    //     animationInfo != oldDelegate.animationInfo;
-
     return rightBoundEpoch != oldDelegate.rightBoundEpoch ||
         leftBoundEpoch != oldDelegate.leftBoundEpoch ||
         topY != oldDelegate.topY ||
@@ -185,11 +168,4 @@ class BaseChartDataPainter extends CustomPainter {
         chartConfig != oldDelegate.chartConfig ||
         seriesChanged();
   }
-
-  // bool visibleAnimationChanged() =>
-  //     mainSeries.entries.isNotEmpty &&
-  //     mainSeries.visibleEntries.isNotEmpty &&
-  //     mainSeries.entries.last == mainSeries.visibleEntries.last &&
-  //     animationInfo != oldDelegate.animationInfo;
-
 }
