@@ -133,10 +133,6 @@ class XAxisModel extends ChangeNotifier {
   int _rightBoundEpoch;
   double _panSpeed;
 
-  int get _firstEntryEpoch => _minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
-
-  int get _lastEntryEpoch => _maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
-
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
 
@@ -149,13 +145,10 @@ class XAxisModel extends ChangeNotifier {
   void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
-  int get _minRightBoundEpoch =>
-      _shiftEpoch(_firstEntryEpoch, maxCurrentTickOffset);
+  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => _shiftEpoch(
-      _entries?.isNotEmpty ?? false ? _lastEntryEpoch : _nowEpoch,
-      maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -302,12 +295,18 @@ class XAxisModel extends ChangeNotifier {
 
   /// Fits available data to screen.
   void _fitData() {
-    final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
-    final double pxTargetDataWidth = width - dataFitPadding.horizontal;
+    if (_entries.isNotEmpty) {
+      int _firstEntryEpoch = _entries?.first?.epoch ?? _nowEpoch;
 
-    _msPerPx =
-        (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
-    _scrollTo(_shiftEpoch(_lastEntryEpoch, dataFitPadding.right));
+      int _lastEntryEpoch = _entries?.last?.epoch ?? _nowEpoch;
+
+      final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
+      final double pxTargetDataWidth = width - dataFitPadding.horizontal;
+
+      _msPerPx =
+          (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
+      _scrollTo(_shiftEpoch(_lastEntryEpoch, dataFitPadding.right));
+    }
   }
 
   /// Enables data fit viewing mode.
