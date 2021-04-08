@@ -101,7 +101,7 @@ class _DerivChartState extends State<DerivChart> {
                         ),
                       ))
             ],
-            oscillatorSeries: <Series>[
+            bottomSeries: <Series>[
               ..._indicatorsRepo.indicators.values
                   .where((IndicatorConfig indicatorConfig) =>
                       indicatorConfig != null && !indicatorConfig.isOverlay)
