@@ -34,6 +34,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelLipsOffset" : MessageLookupByLibrary.simpleMessage("Lips Offset"),
     "labelLipsPeriod" : MessageLookupByLibrary.simpleMessage("Lips Period"),
     "labelLowPeriod" : MessageLookupByLibrary.simpleMessage("Low Period"),
+    "labelMaxAF" : MessageLookupByLibrary.simpleMessage("Max AF"),
+    "labelMinAF" : MessageLookupByLibrary.simpleMessage("Min AF"),
     "labelOffset" : MessageLookupByLibrary.simpleMessage("Offset"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
