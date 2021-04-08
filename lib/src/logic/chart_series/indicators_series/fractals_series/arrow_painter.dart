@@ -11,11 +11,13 @@ import 'package:flutter/material.dart';
 /// A [DataPainter] for painting arrow data.
 class ArrowPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
-  ArrowPainter(DataSeries<Tick> series, {@required this.isUpward})
+  ArrowPainter(DataSeries<Tick> series, {@required this.isUpward = false})
       : super(series);
 
   ///show arrow is upward or downward
-  bool isUpward = false;
+  final bool isUpward;
+
+  Paint arrowPaint;
 
   @override
   void onPaintData(
@@ -25,6 +27,14 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
+    final LineStyle style =
+        series.style ?? theme.lineStyle ?? const LineStyle();
+
+    arrowPaint = Paint()
+      ..color = style.color
+      ..style = PaintingStyle.fill
+      ..strokeWidth = style.thickness;
+
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {
@@ -54,14 +64,6 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     double y,
     double arrowSize = 10,
   }) {
-    final LineStyle style =
-        series.style ?? theme.lineStyle ?? const LineStyle();
-
-    final Paint arrowPaint = Paint()
-      ..color = style.color
-      ..style = PaintingStyle.fill
-      ..strokeWidth = style.thickness;
-
     canvas.drawPath(
         getUpwardArrowPath(
           x,
@@ -77,14 +79,6 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     double y,
     double arrowSize = 10,
   }) {
-    final LineStyle style =
-        series.style ?? theme.lineStyle ?? const LineStyle();
-
-    final Paint arrowPaint = Paint()
-      ..color = style.color
-      ..style = PaintingStyle.fill
-      ..strokeWidth = style.thickness;
-
     canvas.drawPath(
         getDownwardArrowPath(
           x,

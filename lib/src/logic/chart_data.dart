@@ -111,7 +111,7 @@ extension ChartDataListExtension on Iterable<ChartData> {
       return minValues.isEmpty
           ? double.nan
           : minValues
-              .reduce((double value, double element) => min(value, element));
+              .reduce(min);
     }
     return double.nan;
   }
@@ -126,7 +126,7 @@ extension ChartDataListExtension on Iterable<ChartData> {
       return maxValues.isEmpty
           ? double.nan
           : maxValues
-              .reduce((double value, double element) => max(value, element));
+              .reduce(max);
     }
     return double.nan;
   }

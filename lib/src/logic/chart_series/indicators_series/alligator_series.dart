@@ -150,11 +150,9 @@ class AlligatorSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    if (_jawSeries != null && _teethSeries != null && _lipsSeries != null) {
-      _jawSeries?.update(leftEpoch, rightEpoch);
-      _teethSeries?.update(leftEpoch, rightEpoch);
-      _lipsSeries?.update(leftEpoch, rightEpoch);
-    }
+    _jawSeries?.update(leftEpoch, rightEpoch);
+    _teethSeries?.update(leftEpoch, rightEpoch);
+    _lipsSeries?.update(leftEpoch, rightEpoch);
     _bullishSeries?.update(leftEpoch, rightEpoch);
     _bearishSeries?.update(leftEpoch, rightEpoch);
   }
