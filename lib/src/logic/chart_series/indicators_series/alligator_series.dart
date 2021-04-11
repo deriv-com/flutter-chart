@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import '../series.dart';
 import '../series_painter.dart';
+import 'fractals_series/custom_bearish_indicator.dart';
 
 /// A series which shows Alligator Series data calculated from 'entries'.
 class AlligatorSeries extends Series {
@@ -106,7 +107,7 @@ class AlligatorSeries extends Series {
           Series series,
         ) =>
             ArrowPainter(series, isUpward: true),
-        indicatorCreator: () => BearishIndicator<Tick>(_indicatorInput),
+        indicatorCreator: () => CustomBearishIndicator(_indicatorInput),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
         style: const LineStyle(color: Colors.redAccent),
