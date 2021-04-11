@@ -34,6 +34,7 @@ class DerivChart extends StatefulWidget {
     this.theme,
     this.annotations,
     this.isLive,
+    this.dataFitEnabled = false,
     this.opacity = 1.0,
   }) : super(key: key);
 
@@ -71,6 +72,9 @@ class DerivChart extends StatefulWidget {
   /// is on the newest ticks/candles.
   final bool isLive;
 
+  /// Starts in data fit mode and adds a data-fit button.
+  final bool dataFitEnabled;
+
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
 
@@ -106,6 +110,7 @@ class _DerivChartState extends State<DerivChart> {
             onCrosshairAppeared: widget.onCrosshairAppeared,
             onVisibleAreaChanged: widget.onVisibleAreaChanged,
             isLive: widget.isLive,
+            dataFitEnabled: widget.dataFitEnabled,
             opacity: widget.opacity,
             annotations: widget.annotations,
           ),
