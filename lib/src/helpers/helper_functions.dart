@@ -34,3 +34,20 @@ List<double> _checkNan(double a, double b) {
 
   return <double>[a, b];
 }
+
+/// Returns the given [duration] in H:MM:SS format.
+String durationToString(Duration duration) {
+  final String seconds = _twoDigitDuration(duration.inSeconds.remainder(60));
+  final String minutes = _twoDigitDuration(duration.inMinutes.remainder(60));
+
+  final String hours = duration.inHours.toString();
+
+  // remove the hour part if there isn't any
+  if (hours == '0') {
+    return '$minutes:$seconds';
+  } else {
+    return '$hours:$minutes:$seconds';
+  }
+}
+
+String _twoDigitDuration(int duration) => duration.toString().padLeft(2, '0');
