@@ -296,11 +296,9 @@ class XAxisModel extends ChangeNotifier {
   /// Fits available data to screen.
   void _fitData() {
     if (_entries.isNotEmpty) {
-      final int firstEntryEpoch = _entries?.first?.epoch ?? _nowEpoch;
-
       final int lastEntryEpoch = _entries?.last?.epoch ?? _nowEpoch;
 
-      final int msDataDuration = lastEntryEpoch - firstEntryEpoch;
+      final int msDataDuration = _entries.length * granularity;
       final double pxTargetDataWidth = width - dataFitPadding.horizontal;
 
       _msPerPx =
