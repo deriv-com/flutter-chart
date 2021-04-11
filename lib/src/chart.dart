@@ -41,7 +41,6 @@ class Chart extends StatelessWidget {
   /// Creates chart that expands to available space.
   const Chart({
     @required this.mainSeries,
-    @required this.pipSize,
     @required this.granularity,
     this.controller,
     this.secondarySeries,
@@ -52,6 +51,7 @@ class Chart extends StatelessWidget {
     this.isLive = false,
     this.dataFitEnabled = false,
     this.opacity = 1.0,
+    this.pipSize = 4,
     this.annotations,
     Key key,
   }) : super(key: key);

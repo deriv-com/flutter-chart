@@ -23,19 +23,19 @@ import 'indicators_ui/indicators_dialog.dart';
 class DerivChart extends StatefulWidget {
   /// Initializes
   const DerivChart({
-    Key key,
-    this.mainSeries,
+    @required this.mainSeries,
+    @required this.granularity,
     this.markerSeries,
     this.controller,
-    this.pipSize,
-    this.granularity,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
     this.theme,
-    this.annotations,
     this.isLive,
-    this.dataFitEnabled = false,
+    this.dataFitEnabled,
+    this.annotations,
     this.opacity = 1.0,
+    this.pipSize = 4,
+    Key key,
   }) : super(key: key);
 
   /// Chart's main data series
