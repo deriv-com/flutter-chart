@@ -24,7 +24,7 @@ abstract class ChartData {
   /// Will be called by the chart when it was updated.
   ///
   /// Returns `true` if this chart data has changed with the chart widget update.
-  bool didUpdate(covariant ChartData oldData);
+  bool didUpdate(ChartData oldData);
 
   /// Checks if this ChartData needs to repaint with the chart widget's new frame.
   bool shouldRepaint(ChartData oldData);
