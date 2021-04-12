@@ -38,10 +38,12 @@ class HorizontalBarrierStyle extends BarrierStyle {
     this.labelHeight = 24,
     Color color = const Color(0xFF00A79E),
     Color titleBackgroundColor = const Color(0xFF0E0E0E),
+    this.secondaryBackgroundColor = const Color(0xFF607D8B),
     bool isDashed = true,
     this.hasBlinkingDot = false,
     this.arrowSize = 5,
     this.hasArrow = true,
+    this.hasLine = true,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -74,6 +76,12 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Whether to show an arrow pointing in the direction of the barrier,
   /// when the barrier is outside the y-axis range and visibility is set to `HorizontalBarrierVisibility.keepBarrierLabelVisible`.
   final bool hasArrow;
+
+  /// Whether to draw a horizontal line to the current tick from the y-axis grid to the
+  final bool hasLine;
+
+  /// Color used to paint a second background of label if needed under the initial color.
+  final Color secondaryBackgroundColor;
 
   @override
   String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';

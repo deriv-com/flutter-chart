@@ -314,6 +314,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         low: newTick.low,
         open: newTick.open,
         close: newTick.close,
+        currentEpochTime: newTick.epoch.millisecondsSinceEpoch,
       ));
     }
   }
@@ -376,17 +377,28 @@ class _FullscreenChartState extends State<FullscreenChart> {
                             ..._sampleBarriers,
                             if (_sl && _slBarrier != null) _slBarrier,
                             if (_tp && _tpBarrier != null) _tpBarrier,
-                            TickIndicator(
-                              ticks.last,
-                              style: const HorizontalBarrierStyle(
-                                color: Colors.redAccent,
-                                labelShape: LabelShape.pentagon,
-                                hasBlinkingDot: true,
-                                hasArrow: false,
+                            if (ticks.last is Candle)
+                              CandleIndicator(
+                                ticks.last,
+                                granularity: granularity,
+                                style: const HorizontalBarrierStyle(
+                                  color: Colors.red,
+                                  hasBlinkingDot: true,
+                                  labelShape: LabelShape.pentagon,
+                                ),
                               ),
-                              visibility: HorizontalBarrierVisibility
-                                  .keepBarrierLabelVisible,
-                            ),
+                            if (ticks.last is! Candle)
+                              TickIndicator(
+                                ticks.last,
+                                style: const HorizontalBarrierStyle(
+                                  color: Colors.redAccent,
+                                  labelShape: LabelShape.pentagon,
+                                  hasBlinkingDot: true,
+                                  hasArrow: false,
+                                ),
+                                visibility: HorizontalBarrierVisibility
+                                    .keepBarrierLabelVisible,
+                              ),
                           ]
                         : null,
                     pipSize:
@@ -724,6 +736,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           low: ohlc.low,
           open: ohlc.open,
           close: ohlc.close,
+          currentEpochTime: ohlc.epoch.millisecondsSinceEpoch,
         );
       }).toList();
     }

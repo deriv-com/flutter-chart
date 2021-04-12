@@ -1,5 +1,15 @@
+import 'dart:async';
+
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
+import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/candle_indicator_painter.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
+import 'package:flutter/foundation.dart';
 
 import 'horizontal_barrier.dart';
 
@@ -22,4 +32,61 @@ class TickIndicator extends HorizontalBarrier {
           visibility: visibility,
           longLine: false,
         );
+}
+
+/// Indicator for showing the candle current value and remaining time (optional).
+class CandleIndicator extends HorizontalBarrier {
+  /// Initializes a candle indicator.
+  CandleIndicator(
+    this.candle, {
+    @required this.granularity,
+    String id,
+    HorizontalBarrierStyle style = const HorizontalBarrierStyle(),
+    HorizontalBarrierVisibility visibility =
+        HorizontalBarrierVisibility.keepBarrierLabelVisible,
+  }) : super(
+          candle.quote,
+          epoch: candle.epoch,
+          id: id,
+          style: style,
+          visibility: visibility,
+          longLine: false,
+        ) {
+    _startTimer();
+  }
+
+  ///the given candle
+  Candle candle;
+
+  /// Average ms difference between two consecutive ticks.
+  int granularity;
+
+  Timer _timer;
+
+  Duration _timerDuration;
+
+  void _startTimer() {
+    _timerDuration = Duration(
+        milliseconds:
+            granularity * 1000 - (candle.currentEpochTime - candle.epoch));
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _timerDuration = Duration(seconds: _timerDuration.inSeconds - 1);
+      print(
+          '${_timer.hashCode}====>$_timerDuration, current: ${candle.currentEpochTime}, epoch: ${candle.epoch}');
+    });
+  }
+
+  @override
+  bool didUpdate(ChartData oldData) {
+    if (oldData is CandleIndicator) {
+      oldData._timer.cancel();
+    }
+    return super.didUpdate(oldData);
+  }
+
+  @override
+  SeriesPainter<Series> createPainter() => CandleIndicatorPainter(
+        this,
+        // timerValue: durationToString(_timerDuration),
+      );
 }
