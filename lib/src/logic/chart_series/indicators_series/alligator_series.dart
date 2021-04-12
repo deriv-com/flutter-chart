@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/fractals_series/arrow_painter.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/fractals_series/custom_bullish_indicator.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -117,7 +118,7 @@ class AlligatorSeries extends Series {
           Series series,
         ) =>
             ArrowPainter(series, isUpward: false),
-        indicatorCreator: () => BullishIndicator<Tick>(_indicatorInput),
+        indicatorCreator: () => CustomBullishIndicator(_indicatorInput),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
         style: const LineStyle(color: Colors.redAccent),
