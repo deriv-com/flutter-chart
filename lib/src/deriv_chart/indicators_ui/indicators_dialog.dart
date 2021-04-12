@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/fcb_indicator/fcb_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -72,7 +73,11 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
       ..add(AlligatorIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
-      ));
+      ))
+      ..add(FractalChaosBandIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      )) ;
   }
 
   @override
