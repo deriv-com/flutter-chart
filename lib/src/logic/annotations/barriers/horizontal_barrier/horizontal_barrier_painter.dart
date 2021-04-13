@@ -14,9 +14,10 @@ import 'package:flutter/material.dart';
 import 'horizontal_barrier.dart';
 
 /// A class for painting horizontal barriers.
-class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
+class HorizontalBarrierPainter<T extends HorizontalBarrier>
+    extends SeriesPainter<T> {
   /// Initializes [series].
-  HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
+  HorizontalBarrierPainter(T series) : super(series);
 
   Paint _paint;
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/candle_indicator_painter.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -51,9 +50,7 @@ class CandleIndicator extends HorizontalBarrier {
           style: style,
           visibility: visibility,
           longLine: false,
-        ) {
-    _startTimer();
-  }
+        );
 
   ///the given candle
   Candle candle;
@@ -63,18 +60,17 @@ class CandleIndicator extends HorizontalBarrier {
 
   Timer _timer;
 
-  Duration _timerDuration;
+  Duration timerDuration;
 
   void _startTimer() {
-    _timerDuration = Duration(
+    timerDuration = Duration(
         milliseconds:
             granularity * 1000 - (candle.currentEpochTime - candle.epoch));
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!_timerDuration.inSeconds.isNegative) {
-        _timerDuration = Duration(seconds: _timerDuration.inSeconds - 1);
+      if (!timerDuration.inSeconds.isNegative) {
+        timerDuration = Duration(seconds: timerDuration.inSeconds - 1);
+        _timer.cancel();
       }
-      print(
-          '${_timer.hashCode}====>$_timerDuration, current: ${candle.currentEpochTime}, epoch: ${candle.epoch}');
     });
   }
 
@@ -82,6 +78,9 @@ class CandleIndicator extends HorizontalBarrier {
   bool didUpdate(ChartData oldData) {
     if (oldData is CandleIndicator) {
       oldData._timer.cancel();
+      _startTimer();
+    } else {
+      _startTimer();
     }
 
     return super.didUpdate(oldData);
@@ -90,6 +89,5 @@ class CandleIndicator extends HorizontalBarrier {
   @override
   SeriesPainter<Series> createPainter() => CandleIndicatorPainter(
         this,
-        timerValue: durationToString(_timerDuration),
       );
 }

@@ -15,12 +15,11 @@ import 'package:flutter/material.dart';
 import 'horizontal_barrier.dart';
 
 /// A class for painting horizontal barriers.
-class CandleIndicatorPainter extends HorizontalBarrierPainter {
+class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
   /// Initializes [series].
   CandleIndicatorPainter(
-    CandleIndicator series, {
-    @required this.timerValue,
-  }) : super(series);
+    CandleIndicator series,
+  ) : super(series);
 
   Paint _paint;
 
@@ -29,8 +28,6 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter {
 
   /// Right margin.
   static const double rightMargin = 4;
-
-  final String timerValue;
 
   @override
   void onPaint({
@@ -87,8 +84,12 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter {
       style.textStyle,
     );
 
+    String timerString = '00:00';
+
+    timerString = durationToString(series.timerDuration);
+
     final TextPainter timerPainter = makeTextPainter(
-      timerValue,
+      timerString,
       style.textStyle,
     );
 
