@@ -106,11 +106,11 @@ class FractalChaosBandSeries extends Series {
   int getMaxEpoch() => <ChartData>[
         _fcbLowSeries,
         _fcbHighSeries,
-      ]?.getMaxEpoch();
+      ].getMaxEpoch();
 
   @override
   int getMinEpoch() => <ChartData>[
         _fcbLowSeries,
         _fcbHighSeries,
-      ]?.getMinEpoch();
+      ].getMinEpoch();
 }

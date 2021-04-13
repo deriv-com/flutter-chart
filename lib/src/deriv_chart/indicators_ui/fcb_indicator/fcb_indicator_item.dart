@@ -14,7 +14,7 @@ import '../indicator_config.dart';
 
 /// Rainbow indicator item in the list of indicator which provide this
 /// indicators options menu.
-class   FractalChaosBandIndicatorItem extends IndicatorItem {
+class FractalChaosBandIndicatorItem extends IndicatorItem {
   /// Initializes
   const FractalChaosBandIndicatorItem({
     Key key,
@@ -33,43 +33,47 @@ class   FractalChaosBandIndicatorItem extends IndicatorItem {
 }
 
 /// Rainbow IndicatorItem State class
-class FractalChaosBandIndicatorItemState extends IndicatorItemState<FractalChaosBandIndicatorConfig> {
+class FractalChaosBandIndicatorItemState
+    extends IndicatorItemState<FractalChaosBandIndicatorConfig> {
   /// Rainbow MA bands count
   @protected
   bool _channelFill;
 
   @override
-  FractalChaosBandIndicatorConfig createIndicatorConfig() => FractalChaosBandIndicatorConfig(
-    channelFill: currentChannelFill,
+  FractalChaosBandIndicatorConfig createIndicatorConfig() =>
+      FractalChaosBandIndicatorConfig(
+        channelFill: currentChannelFill,
       );
 
   @override
-  Widget getIndicatorOptions() =>  buildShowChannelFillField();
+  Widget getIndicatorOptions() => Container();
+
+  // TODO: will add this option after apply the channel fill
   /// Builds show lines option
   @protected
   Widget buildShowChannelFillField() => Row(
-    children: <Widget>[
-      Text(
-        ChartLocalization.of(context).labelLipsPeriod,
-        style: const TextStyle(fontSize: 10),
-      ),
-      const SizedBox(width: 4),
-      Switch(
-        value: currentChannelFill,
-        onChanged: (bool value) {
-          setState(() {
-            _channelFill = value;
-          });
-          updateIndicator();
-        },
-        activeTrackColor: Colors.lightGreenAccent,
-        activeColor: Colors.green,
-      )
-    ],
-  );
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelLipsPeriod,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: currentChannelFill,
+            onChanged: (bool value) {
+              setState(() {
+                _channelFill = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          )
+        ],
+      );
 
   /// Gets current show lines.
   @protected
-  bool get currentChannelFill => _channelFill ?? getConfig()?.channelFill ?? false;
-
+  bool get currentChannelFill =>
+      _channelFill ?? getConfig()?.channelFill ?? false;
 }
