@@ -86,7 +86,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
 
     String timerString = '00:00';
 
-    timerString = durationToString(series.timerDuration);
+    timerString = durationToString(series?.timerDuration ?? const Duration());
 
     final TextPainter timerPainter = makeTextPainter(
       timerString,

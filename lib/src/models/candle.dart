@@ -75,6 +75,5 @@ class Candle extends Tick with EquatableMixin {
         close,
         high,
         low,
-        currentEpochTime,
       ];
 }

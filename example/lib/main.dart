@@ -336,209 +336,208 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Color(0xFF0E0E0E),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(
-                  child: _markets == null
-                      ? SizedBox.shrink()
-                      : _buildMarketSelectorButton(),
-                ),
-                _buildChartTypeButton(),
-                _buildIntervalSelector(),
-              ],
+  Widget build(BuildContext context) => Material(
+        color: const Color(0xFF0E0E0E),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: _markets == null
+                        ? const SizedBox.shrink()
+                        : _buildMarketSelectorButton(),
+                  ),
+                  _buildChartTypeButton(),
+                  _buildIntervalSelector(),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Stack(
-              children: <Widget>[
-                ClipRect(
-                  child: DerivChart(
-                    mainSeries:
-                        style == ChartStyle.candles && ticks is List<Candle>
-                            ? CandleSeries(ticks)
-                            : LineSeries(
-                                ticks,
-                                style: const LineStyle(hasArea: true),
-                              ),
-                    markerSeries: MarkerSeries(
-                      _markers,
-                      activeMarker: _activeMarker,
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  ClipRect(
+                    child: DerivChart(
+                      mainSeries:
+                          style == ChartStyle.candles && ticks is List<Candle>
+                              ? CandleSeries(ticks)
+                              : LineSeries(
+                                  ticks,
+                                  style: const LineStyle(hasArea: true),
+                                ),
+                      markerSeries: MarkerSeries(
+                        _markers,
+                        activeMarker: _activeMarker,
+                      ),
+                      annotations: ticks.length > 4
+                          ? <ChartAnnotation>[
+                              ..._sampleBarriers,
+                              if (_sl && _slBarrier != null) _slBarrier,
+                              if (_tp && _tpBarrier != null) _tpBarrier,
+                              if (ticks.last is Candle)
+                                CandleIndicator(
+                                  ticks.last,
+                                  granularity: granularity,
+                                  style: const HorizontalBarrierStyle(
+                                    color: Colors.red,
+                                    hasBlinkingDot: true,
+                                    labelShape: LabelShape.pentagon,
+                                  ),
+                                ),
+                              if (ticks.last is! Candle)
+                                TickIndicator(
+                                  ticks.last,
+                                  style: const HorizontalBarrierStyle(
+                                    color: Colors.redAccent,
+                                    labelShape: LabelShape.pentagon,
+                                    hasBlinkingDot: true,
+                                    hasArrow: false,
+                                  ),
+                                  visibility: HorizontalBarrierVisibility
+                                      .keepBarrierLabelVisible,
+                                ),
+                            ]
+                          : null,
+                      pipSize:
+                          _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
+                      granularity: granularity == 0
+                          ? 2000 // average ms difference between ticks
+                          : granularity * 1000,
+                      controller: _controller,
+                      isLive: (_symbol?.isOpen ?? false) &&
+                          (_connectionBloc?.state is Connected ?? false),
+                      opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
+                      onCrosshairAppeared: () =>
+                          Vibration.vibrate(duration: 50),
+                      onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                        if (!_waitingForHistory &&
+                            ticks.isNotEmpty &&
+                            leftEpoch < ticks.first.epoch) {
+                          _loadHistory(500);
+                        }
+                      },
                     ),
-                    annotations: ticks.length > 4
-                        ? <ChartAnnotation>[
-                            ..._sampleBarriers,
-                            if (_sl && _slBarrier != null) _slBarrier,
-                            if (_tp && _tpBarrier != null) _tpBarrier,
-                            if (ticks.last is Candle)
-                              CandleIndicator(
-                                ticks.last,
-                                granularity: granularity,
-                                style: const HorizontalBarrierStyle(
-                                  color: Colors.red,
-                                  hasBlinkingDot: true,
-                                  labelShape: LabelShape.pentagon,
-                                ),
-                              ),
-                            if (ticks.last is! Candle)
-                              TickIndicator(
-                                ticks.last,
-                                style: const HorizontalBarrierStyle(
-                                  color: Colors.redAccent,
-                                  labelShape: LabelShape.pentagon,
-                                  hasBlinkingDot: true,
-                                  hasArrow: false,
-                                ),
-                                visibility: HorizontalBarrierVisibility
-                                    .keepBarrierLabelVisible,
-                              ),
-                          ]
-                        : null,
-                    pipSize:
-                        _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
-                    granularity: granularity == 0
-                        ? 2000 // average ms difference between ticks
-                        : granularity * 1000,
-                    controller: _controller,
-                    isLive: (_symbol?.isOpen ?? false) &&
-                        (_connectionBloc?.state is Connected ?? false),
-                    opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
-                    onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                      if (!_waitingForHistory &&
-                          ticks.isNotEmpty &&
-                          leftEpoch < ticks.first.epoch) {
-                        _loadHistory(500);
-                      }
-                    },
                   ),
-                ),
-                if (_connectionBloc != null &&
-                    _connectionBloc.state is! Connected)
-                  Align(
-                    alignment: Alignment.center,
-                    child: _buildConnectionStatus(),
+                  if (_connectionBloc != null &&
+                      _connectionBloc.state is! Connected)
+                    Align(
+                      alignment: Alignment.center,
+                      child: _buildConnectionStatus(),
+                    ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RaisedButton(
+                    color: Colors.green,
+                    child: const Text('Up'),
+                    onPressed: () => _addMarker(MarkerDirection.up),
                   ),
-              ],
+                  RaisedButton(
+                    color: Colors.red,
+                    child: const Text('Down'),
+                    onPressed: () => _addMarker(MarkerDirection.down),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => setState(_clearMarkers),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RaisedButton(
-                  color: Colors.green,
-                  child: const Text('Up'),
-                  onPressed: () => _addMarker(MarkerDirection.up),
-                ),
-                RaisedButton(
-                  color: Colors.red,
-                  child: const Text('Down'),
-                  onPressed: () => _addMarker(MarkerDirection.down),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => setState(_clearMarkers),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FlatButton(
-                  child: Text('V barrier'),
-                  onPressed: () => setState(
-                    () => _sampleBarriers.add(
-                      VerticalBarrier.onTick(ticks.last,
-                          title: 'V Barrier',
-                          id: 'VBarrier${_sampleBarriers.length}',
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FlatButton(
+                    child: Text('V barrier'),
+                    onPressed: () => setState(
+                      () => _sampleBarriers.add(
+                        VerticalBarrier.onTick(ticks.last,
+                            title: 'V Barrier',
+                            id: 'VBarrier${_sampleBarriers.length}',
+                            longLine: math.Random().nextBool(),
+                            style: VerticalBarrierStyle(
+                              isDashed: math.Random().nextBool(),
+                            )),
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    child: Text('H barrier'),
+                    onPressed: () => setState(
+                      () => _sampleBarriers.add(
+                        HorizontalBarrier(
+                          ticks.last.quote,
+                          epoch: math.Random().nextBool()
+                              ? ticks.last.epoch
+                              : null,
+                          id: 'HBarrier${_sampleBarriers.length}',
                           longLine: math.Random().nextBool(),
-                          style: VerticalBarrierStyle(
+                          visibility: HorizontalBarrierVisibility.normal,
+                          style: HorizontalBarrierStyle(
+                            color: Colors.grey,
+                            labelShape: LabelShape.rectangle,
                             isDashed: math.Random().nextBool(),
-                          )),
-                    ),
-                  ),
-                ),
-                FlatButton(
-                  child: Text('H barrier'),
-                  onPressed: () => setState(
-                    () => _sampleBarriers.add(
-                      HorizontalBarrier(
-                        ticks.last.quote,
-                        epoch:
-                            math.Random().nextBool() ? ticks.last.epoch : null,
-                        id: 'HBarrier${_sampleBarriers.length}',
-                        longLine: math.Random().nextBool(),
-                        visibility: HorizontalBarrierVisibility.normal,
-                        style: HorizontalBarrierStyle(
-                          color: Colors.grey,
-                          labelShape: LabelShape.rectangle,
-                          isDashed: math.Random().nextBool(),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                FlatButton(
-                  child: Text('+ Both'),
-                  onPressed: () => setState(() => _sampleBarriers.add(
-                        CombinedBarrier(
-                          ticks.last,
-                          title: 'B Barrier',
-                          id: 'CBarrier${_sampleBarriers.length}',
-                          horizontalBarrierStyle: HorizontalBarrierStyle(
-                            color: Colors.grey,
-                            isDashed: true,
+                  FlatButton(
+                    child: Text('+ Both'),
+                    onPressed: () => setState(() => _sampleBarriers.add(
+                          CombinedBarrier(
+                            ticks.last,
+                            title: 'B Barrier',
+                            id: 'CBarrier${_sampleBarriers.length}',
+                            horizontalBarrierStyle: HorizontalBarrierStyle(
+                              color: Colors.grey,
+                              isDashed: true,
+                            ),
                           ),
-                        ),
-                      )),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => setState(() {
-                    _clearBarriers();
-                  }),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              children: [
-                Expanded(
-                  child: CheckboxListTile(
-                    value: _sl,
-                    onChanged: (bool sl) => setState(() => _sl = sl),
-                    title: Text('Stop loss'),
+                        )),
                   ),
-                ),
-                Expanded(
-                  child: CheckboxListTile(
-                    value: _tp,
-                    onChanged: (bool tp) => setState(() => _tp = tp),
-                    title: Text('Take profit'),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => setState(() {
+                      _clearBarriers();
+                    }),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )
-        ],
-      ),
-    );
-  }
+            SizedBox(
+              height: 64,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: _sl,
+                      onChanged: (bool sl) => setState(() => _sl = sl),
+                      title: Text('Stop loss'),
+                    ),
+                  ),
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: _tp,
+                      onChanged: (bool tp) => setState(() => _tp = tp),
+                      title: Text('Take profit'),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
 
   void _addMarker(MarkerDirection direction) {
     final lastTick = ticks.last;
