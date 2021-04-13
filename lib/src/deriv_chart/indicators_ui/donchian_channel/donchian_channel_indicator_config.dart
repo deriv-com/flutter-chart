@@ -41,7 +41,8 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   final Color fillColor;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) => DonchianChannelsSeries.fromIndicator(
+  Series getSeries(IndicatorInput indicatorInput) =>
+      DonchianChannelsSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes['high'](indicatorInput),
         IndicatorConfig.supportedFieldTypes['low'](indicatorInput),
         this,
