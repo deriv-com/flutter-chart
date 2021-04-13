@@ -69,7 +69,6 @@ class CandleIndicator extends HorizontalBarrier {
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!timerDuration.inSeconds.isNegative) {
         timerDuration = Duration(seconds: timerDuration.inSeconds - 1);
-        _timer.cancel();
       }
     });
   }
