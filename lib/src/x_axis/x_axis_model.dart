@@ -298,6 +298,7 @@ class XAxisModel extends ChangeNotifier {
     if (_entries.isNotEmpty) {
       final int lastEntryEpoch = _entries?.last?.epoch ?? _nowEpoch;
 
+      // `entries.length * granularity` gives ms duration with market gaps excluded.
       final int msDataDuration = _entries.length * granularity;
       final double pxTargetDataWidth = width - dataFitPadding.horizontal;
 
