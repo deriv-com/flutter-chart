@@ -41,7 +41,7 @@ class FractalChaosBandSeries extends Series {
       ) =>
           LinePainter(series),
       indicatorCreator: () =>
-          FractalChaosBandHighIndicator<Tick>(indicatorInput),
+          FCBHighIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
@@ -51,7 +51,7 @@ class FractalChaosBandSeries extends Series {
       ) =>
           LinePainter(series),
       indicatorCreator: () =>
-          FractalChaosBandLowIndicator<Tick>(indicatorInput),
+          FCBLowIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
