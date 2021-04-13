@@ -11,12 +11,13 @@ import 'package:flutter/material.dart';
 /// A [DataPainter] for painting arrow data.
 class ArrowPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
-  ArrowPainter(DataSeries<Tick> series, {@required this.isUpward = false})
+  ArrowPainter(DataSeries<Tick> series, {this.isUpward = false})
       : super(series);
 
-  ///show arrow is upward or downward
+  /// Show arrow is upward or downward
   final bool isUpward;
 
+  /// Paint the arrow on the canvas
   Paint arrowPaint;
 
   @override
@@ -60,8 +61,8 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
 
   void _paintUpwardArrows(
     Canvas canvas, {
-    double x,
-    double y,
+    @required double x,
+    @required double y,
     double arrowSize = 10,
   }) {
     canvas.drawPath(
@@ -75,8 +76,8 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
 
   void _paintDownwardArrows(
     Canvas canvas, {
-    double x,
-    double y,
+    @required double x,
+    @required double y,
     double arrowSize = 10,
   }) {
     canvas.drawPath(
