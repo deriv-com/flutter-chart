@@ -32,8 +32,8 @@ class RSIIndicatorItem extends IndicatorItem {
 /// RSIItem State class
 class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   int _period;
-  int _overBoughtPrice;
-  int _overSoldPrice;
+  double _overBoughtPrice;
+  double _overSoldPrice;
   String _field;
 
   @override
@@ -128,7 +128,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  _overBoughtPrice = int.tryParse(text);
+                  _overBoughtPrice = double.tryParse(text);
                 } else {
                   _overBoughtPrice = 80;
                 }
@@ -157,7 +157,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  _overSoldPrice = int.tryParse(text);
+                  _overSoldPrice = double.tryParse(text);
                 } else {
                   _overSoldPrice = 20;
                 }
