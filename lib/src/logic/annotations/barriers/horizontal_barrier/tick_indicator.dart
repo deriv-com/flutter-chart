@@ -70,7 +70,9 @@ class CandleIndicator extends HorizontalBarrier {
         milliseconds:
             granularity * 1000 - (candle.currentEpochTime - candle.epoch));
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _timerDuration = Duration(seconds: _timerDuration.inSeconds - 1);
+      if (!_timerDuration.inSeconds.isNegative) {
+        _timerDuration = Duration(seconds: _timerDuration.inSeconds - 1);
+      }
       print(
           '${_timer.hashCode}====>$_timerDuration, current: ${candle.currentEpochTime}, epoch: ${candle.epoch}');
     });
@@ -81,12 +83,13 @@ class CandleIndicator extends HorizontalBarrier {
     if (oldData is CandleIndicator) {
       oldData._timer.cancel();
     }
+
     return super.didUpdate(oldData);
   }
 
   @override
   SeriesPainter<Series> createPainter() => CandleIndicatorPainter(
         this,
-        // timerValue: durationToString(_timerDuration),
+        timerValue: durationToString(_timerDuration),
       );
 }

@@ -18,11 +18,9 @@ import 'horizontal_barrier.dart';
 class CandleIndicatorPainter extends HorizontalBarrierPainter {
   /// Initializes [series].
   CandleIndicatorPainter(
-    CandleIndicator series,
-    /* {
+    CandleIndicator series, {
     @required this.timerValue,
-  } */
-  ) : super(series);
+  }) : super(series);
 
   Paint _paint;
 
@@ -32,7 +30,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter {
   /// Right margin.
   static const double rightMargin = 4;
 
-  // final String timerValue;
+  final String timerValue;
 
   @override
   void onPaint({
@@ -90,8 +88,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter {
     );
 
     final TextPainter timerPainter = makeTextPainter(
-      // timerValue,
-      '00:21',
+      timerValue,
       style.textStyle,
     );
 
