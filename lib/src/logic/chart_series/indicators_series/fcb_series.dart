@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/fcb_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -40,8 +37,7 @@ class FractalChaosBandSeries extends Series {
         Series series,
       ) =>
           LinePainter(series),
-      indicatorCreator: () =>
-          FCBHighIndicator<Tick>(indicatorInput),
+      indicatorCreator: () => FCBHighIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
@@ -50,8 +46,7 @@ class FractalChaosBandSeries extends Series {
         Series series,
       ) =>
           LinePainter(series),
-      indicatorCreator: () =>
-          FCBLowIndicator<Tick>(indicatorInput),
+      indicatorCreator: () => FCBLowIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
