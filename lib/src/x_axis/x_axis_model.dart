@@ -434,9 +434,14 @@ class XAxisModel extends ChangeNotifier {
 
   /// Animate scrolling to current tick.
   void scrollToLastTick({bool animate = true}) {
-    final duration =
+    final Duration duration =
         animate ? const Duration(milliseconds: 600) : Duration.zero;
-    final target = _maxRightBoundEpoch + duration.inMilliseconds;
+    final int target = _shiftEpoch(
+            // _lastEntryEpoch will be removed later.
+            _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
+            maxCurrentTickOffset) +
+        duration.inMilliseconds;
+
     final double distance = target > _rightBoundEpoch
         ? pxBetween(_rightBoundEpoch, target)
         : pxBetween(target, _rightBoundEpoch);
