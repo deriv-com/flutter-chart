@@ -119,7 +119,8 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
       (oldSeries?.input?.isNotEmpty ?? false) &&
       (_inputFirstTick != null &&
           oldSeries._inputFirstTick == _inputFirstTick) &&
-      (oldSeries?.options == options ?? false || oldSeries?.options == null && options==null );
+      (oldSeries?.options == options ??
+          false || oldSeries?.options == null && options == null);
 
   @override
   void fillEntriesFromInput(AbstractSingleIndicatorSeries oldSeries) {

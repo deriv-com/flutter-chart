@@ -61,10 +61,7 @@ class AlligatorSeries extends Series {
   SeriesPainter<Series> createPainter() {
     if (alligatorOptions.showLines) {
       _jawSeries = SingleIndicatorSeries(
-        painterCreator: (
-          Series series,
-        ) =>
-            LinePainter(series),
+        painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () =>
             MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.jawPeriod),
         inputIndicator: _fieldIndicator,
@@ -117,7 +114,7 @@ class AlligatorSeries extends Series {
         painterCreator: (
           Series series,
         ) =>
-            ArrowPainter(series, isUpward: false),
+            ArrowPainter(series),
         indicatorCreator: () => CustomBullishIndicator(_indicatorInput),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,

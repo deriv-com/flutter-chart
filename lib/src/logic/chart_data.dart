@@ -122,7 +122,7 @@ extension ChartDataListExtension on Iterable<ChartData> {
     if (chartData != null) {
       final Iterable<double> maxValues = chartData
           .where((ChartData c) => c != null && !c.maxValue.isNaN)
-          .map((e) => e.maxValue);
+          .map((ChartData e) => e.maxValue);
       return maxValues.isEmpty
           ? double.nan
           : maxValues
