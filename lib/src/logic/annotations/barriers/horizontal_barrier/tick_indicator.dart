@@ -82,10 +82,8 @@ class CandleIndicator extends HorizontalBarrier {
   bool didUpdate(ChartData oldData) {
     if (oldData is CandleIndicator) {
       oldData._timer.cancel();
-      _startTimer();
-    } else {
-      _startTimer();
     }
+    _startTimer();
 
     return super.didUpdate(oldData);
   }
