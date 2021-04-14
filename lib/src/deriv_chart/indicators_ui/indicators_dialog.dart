@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_repository.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
@@ -62,6 +63,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('ZigZag'),
                     value: ZigZagIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Ichimoku Clouds'),
+                    value: IchimokuCloudIndicatorConfig(),
                   ),
                   // Add new indicators here.
                 ],

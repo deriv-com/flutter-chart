@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
@@ -44,6 +45,8 @@ abstract class IndicatorConfig {
         return RainbowIndicatorConfig.fromJson(json);
       case ZigZagIndicatorConfig.name:
         return ZigZagIndicatorConfig.fromJson(json);
+      case IchimokuCloudIndicatorConfig.name:
+        return IchimokuCloudIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
