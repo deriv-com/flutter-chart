@@ -21,7 +21,7 @@ class FractalChaosBandSeries extends Series {
   FractalChaosBandSeries(
     this.indicatorInput, {
     String id,
-    FractalChaosBandOptions options,
+    bool channelFill,
   }) : super(id);
 
   ///input data
@@ -33,19 +33,13 @@ class FractalChaosBandSeries extends Series {
   @override
   SeriesPainter<Series> createPainter() {
     _fcbHighSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
-          LinePainter(series),
+      painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => FCBHighIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
     _fcbLowSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
-          LinePainter(series),
+      painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => FCBLowIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),

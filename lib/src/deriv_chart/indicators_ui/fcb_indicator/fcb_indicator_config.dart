@@ -16,5 +16,5 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       FractalChaosBandSeries(indicatorInput,
-          options: FractalChaosBandOptions(channelFill: channelFill));
+         channelFill: channelFill);
 }
