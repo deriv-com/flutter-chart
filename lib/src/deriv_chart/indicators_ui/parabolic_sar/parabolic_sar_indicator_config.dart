@@ -18,9 +18,9 @@ part 'parabolic_sar_indicator_config.g.dart';
 class ParabolicSARConfig extends IndicatorConfig {
   /// Initializes.
   const ParabolicSARConfig({
-    this.minAccelerationFactor,
-    this.maxAccelerationFactor,
-    this.scatterStyle,
+    this.minAccelerationFactor = 0.02,
+    this.maxAccelerationFactor = 0.2,
+    this.scatterStyle = const ScatterStyle(),
   }) : super();
 
   /// Initializes from JSON.
