@@ -54,18 +54,18 @@ class CandleIndicator extends HorizontalBarrier {
         );
 
   /// The given candle.
-  Candle candle;
+  final Candle candle;
 
   /// Average ms difference between two consecutive ticks.
-  int granularity;
-
-  Timer _timer;
+  final int granularity;
 
   /// The time duration left on the timer to show.
   Duration timerDuration;
 
   /// Wether to show the candle close time timer or not.
   final bool showTimer;
+
+  Timer _timer;
 
   void _startTimer() {
     timerDuration = Duration(
