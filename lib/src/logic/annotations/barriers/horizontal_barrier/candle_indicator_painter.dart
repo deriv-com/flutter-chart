@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
@@ -117,10 +116,11 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
     );
 
     super.onPaint(
-        canvas: canvas,
-        size: size,
-        epochToX: epochToX,
-        quoteToY: quoteToY,
-        animationInfo: animationInfo);
+      canvas: canvas,
+      size: size,
+      epochToX: epochToX,
+      quoteToY: quoteToY,
+      animationInfo: animationInfo,
+    );
   }
 }
