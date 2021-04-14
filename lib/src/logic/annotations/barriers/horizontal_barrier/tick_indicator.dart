@@ -60,6 +60,7 @@ class CandleIndicator extends HorizontalBarrier {
 
   Timer _timer;
 
+  /// The time duration left on the timer to show.
   Duration timerDuration;
 
   void _startTimer() {
