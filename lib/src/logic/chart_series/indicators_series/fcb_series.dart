@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/fcb_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
