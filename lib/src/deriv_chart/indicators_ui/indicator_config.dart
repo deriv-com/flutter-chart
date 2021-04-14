@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimo
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 
@@ -47,6 +48,8 @@ abstract class IndicatorConfig {
         return ZigZagIndicatorConfig.fromJson(json);
       case IchimokuCloudIndicatorConfig.name:
         return IchimokuCloudIndicatorConfig.fromJson(json);
+      case ParabolicSARConfig.name:
+        return ParabolicSARConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
