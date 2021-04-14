@@ -33,26 +33,24 @@ void main() {
 /// The start of the application.
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        ChartLocalization.delegate,
-        ExampleLocalization.delegate,
-      ],
-      supportedLocales: ExampleLocalization.delegate.supportedLocales,
-      theme: ThemeData.dark(),
-      debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          body: FullscreenChart(),
+  Widget build(BuildContext context) => MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          ChartLocalization.delegate,
+          ExampleLocalization.delegate,
+        ],
+        supportedLocales: ExampleLocalization.delegate.supportedLocales,
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+        home: const SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            body: FullscreenChart(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 /// Chart that sits in fullscreen.
@@ -70,6 +68,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
+  bool _showTimer = false;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier _slBarrier, _tpBarrier;
@@ -349,6 +348,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ? const SizedBox.shrink()
                         : _buildMarketSelectorButton(),
                   ),
+                  _buildTimerCheckBox(),
                   _buildChartTypeButton(),
                   _buildIntervalSelector(),
                 ],
@@ -379,6 +379,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                 CandleIndicator(
                                   ticks.last,
                                   granularity: granularity,
+                                  showTimer: _showTimer,
                                   style: const HorizontalBarrierStyle(
                                     color: Colors.red,
                                     hasBlinkingDot: true,
@@ -638,24 +639,36 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _waitingForHistory = false;
   }
 
-  IconButton _buildChartTypeButton() {
-    return IconButton(
-      icon: Icon(
-        style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
-        color: Colors.white,
-      ),
-      onPressed: () {
-        Vibration.vibrate(duration: 50);
-        setState(() {
-          if (style == ChartStyle.candles) {
-            style = ChartStyle.line;
-          } else {
-            style = ChartStyle.candles;
-          }
-        });
-      },
-    );
-  }
+  Row _buildTimerCheckBox() => Row(
+        children: <Widget>[
+          const Icon(Icons.timer),
+          Checkbox(
+            value: _showTimer,
+            onChanged: (check) {
+              setState(() {
+                _showTimer = check;
+              });
+            },
+          ),
+        ],
+      );
+
+  IconButton _buildChartTypeButton() => IconButton(
+        icon: Icon(
+          style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Vibration.vibrate(duration: 50);
+          setState(() {
+            if (style == ChartStyle.candles) {
+              style = ChartStyle.line;
+            } else {
+              style = ChartStyle.candles;
+            }
+          });
+        },
+      );
 
   Widget _buildIntervalSelector() {
     return Theme(

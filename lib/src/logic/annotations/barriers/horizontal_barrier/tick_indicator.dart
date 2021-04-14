@@ -39,6 +39,7 @@ class CandleIndicator extends HorizontalBarrier {
   CandleIndicator(
     this.candle, {
     @required this.granularity,
+    this.showTimer = false,
     String id,
     HorizontalBarrierStyle style = const HorizontalBarrierStyle(),
     HorizontalBarrierVisibility visibility =
@@ -52,7 +53,7 @@ class CandleIndicator extends HorizontalBarrier {
           longLine: false,
         );
 
-  ///the given candle
+  /// The given candle.
   Candle candle;
 
   /// Average ms difference between two consecutive ticks.
@@ -62,6 +63,9 @@ class CandleIndicator extends HorizontalBarrier {
 
   /// The time duration left on the timer to show.
   Duration timerDuration;
+
+  /// Wether to show the candle close time timer or not.
+  final bool showTimer;
 
   void _startTimer() {
     timerDuration = Duration(

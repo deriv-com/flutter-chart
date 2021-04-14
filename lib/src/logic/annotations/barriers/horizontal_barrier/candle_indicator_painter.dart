@@ -40,6 +40,30 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
       return;
     }
 
+    if (series.showTimer) {
+      _paintTimer(
+        canvas,
+        size,
+        quoteToY,
+        animationInfo,
+      );
+    }
+
+    super.onPaint(
+      canvas: canvas,
+      size: size,
+      epochToX: epochToX,
+      quoteToY: quoteToY,
+      animationInfo: animationInfo,
+    );
+  }
+
+  void _paintTimer(
+    Canvas canvas,
+    Size size,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+  ) {
     final HorizontalBarrierStyle style = series.style ??
         theme.horizontalBarrierStyle ??
         const HorizontalBarrierStyle();
@@ -113,14 +137,6 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
       canvas,
       painter: timerPainter,
       anchor: labelArea.center,
-    );
-
-    super.onPaint(
-      canvas: canvas,
-      size: size,
-      epochToX: epochToX,
-      quoteToY: quoteToY,
-      animationInfo: animationInfo,
     );
   }
 }
