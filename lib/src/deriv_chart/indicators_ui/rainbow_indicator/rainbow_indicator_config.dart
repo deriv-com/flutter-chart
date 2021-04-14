@@ -27,7 +27,11 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
     int bandsCount,
   })  : bandsCount = bandsCount ?? 10,
         rainbowColors = _getRainbowColors(bandsCount ?? 10),
-        super(period: period, type: movingAverageType, fieldType: fieldType);
+        super(
+          period: period,
+          movingAverageType: movingAverageType,
+          fieldType: fieldType,
+        );
 
   /// Initializes from JSON.
   factory RainbowIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -65,7 +69,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
         rainbowColors: rainbowColors,
         rainbowOptions: RainbowOptions(
           period: period,
-          movingAverageType: type,
+          movingAverageType: movingAverageType,
           bandsCount: bandsCount,
         ),
       );

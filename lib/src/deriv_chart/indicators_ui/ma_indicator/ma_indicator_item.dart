@@ -59,7 +59,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         period: getCurrentPeriod(),
-        type: getCurrentType(),
+        movingAverageType: getCurrentType(),
         fieldType: getCurrentField(),
         offset: currentOffset,
         lineStyle: getCurrentLineStyle(),
@@ -221,7 +221,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @protected
   MovingAverageType getCurrentType() =>
       type ??
-      (widget.config as MAIndicatorConfig)?.type ??
+      (widget.config as MAIndicatorConfig)?.movingAverageType ??
       MovingAverageType.simple;
 
   /// Gets Indicator current filed type.

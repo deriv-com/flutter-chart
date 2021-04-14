@@ -27,7 +27,10 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
     ShiftType shiftType,
   })  : shift = shift ?? 5,
         shiftType = shiftType ?? ShiftType.percent,
-        super(period: period, type: movingAverageType, fieldType: fieldType);
+        super(
+            period: period,
+            movingAverageType: movingAverageType,
+            fieldType: fieldType);
 
   /// Initializes from JSON.
   factory MAEnvIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -51,7 +54,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
       IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
       maEnvOptions: MAEnvOptions(
         period: period,
-        movingAverageType: type,
+        movingAverageType: movingAverageType,
         shift: shift,
         shiftType: shiftType,
       ));

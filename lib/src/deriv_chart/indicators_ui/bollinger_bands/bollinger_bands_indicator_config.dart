@@ -25,7 +25,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   })  : standardDeviation = standardDeviation ?? 2,
         super(
           period: period,
-          type: movingAverageType,
+          movingAverageType: movingAverageType,
           fieldType: fieldType,
         );
 
@@ -49,7 +49,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
         bbOptions: BollingerBandsOptions(
           period: period,
-          movingAverageType: type,
+          movingAverageType: movingAverageType,
           standardDeviationFactor: standardDeviation,
         ),
       );

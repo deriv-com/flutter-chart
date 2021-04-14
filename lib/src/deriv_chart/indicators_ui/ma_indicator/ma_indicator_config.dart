@@ -19,12 +19,12 @@ class MAIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const MAIndicatorConfig({
     int period,
-    MovingAverageType type,
+    MovingAverageType movingAverageType,
     String fieldType,
     LineStyle lineStyle,
     int offset,
   })  : period = period ?? 50,
-        type = type ?? MovingAverageType.simple,
+        movingAverageType = movingAverageType ?? MovingAverageType.simple,
         fieldType = fieldType ?? 'close',
         offset = offset ?? 0,
         lineStyle =
@@ -46,7 +46,7 @@ class MAIndicatorConfig extends IndicatorConfig {
   final int period;
 
   /// Moving Average type
-  final MovingAverageType type;
+  final MovingAverageType movingAverageType;
 
   /// Field type
   final String fieldType;
@@ -60,7 +60,7 @@ class MAIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
-        options: MAOptions(period: period, type: type),
+        options: MAOptions(period: period, type: movingAverageType),
         offset: offset,
         style: lineStyle,
       );

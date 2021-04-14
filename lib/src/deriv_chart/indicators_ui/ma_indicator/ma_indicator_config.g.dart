@@ -9,7 +9,8 @@ part of 'ma_indicator_config.dart';
 MAIndicatorConfig _$MAIndicatorConfigFromJson(Map<String, dynamic> json) {
   return MAIndicatorConfig(
     period: json['period'] as int,
-    type: _$enumDecodeNullable(_$MovingAverageTypeEnumMap, json['type']),
+    movingAverageType: _$enumDecodeNullable(
+        _$MovingAverageTypeEnumMap, json['movingAverageType']),
     fieldType: json['fieldType'] as String,
     lineStyle: json['lineStyle'] == null
         ? null
@@ -21,7 +22,8 @@ MAIndicatorConfig _$MAIndicatorConfigFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$MAIndicatorConfigToJson(MAIndicatorConfig instance) =>
     <String, dynamic>{
       'period': instance.period,
-      'type': _$MovingAverageTypeEnumMap[instance.type],
+      'movingAverageType':
+          _$MovingAverageTypeEnumMap[instance.movingAverageType],
       'fieldType': instance.fieldType,
       'lineStyle': instance.lineStyle,
       'offset': instance.offset,
