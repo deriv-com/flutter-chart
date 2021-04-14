@@ -89,7 +89,5 @@ class CandleIndicator extends HorizontalBarrier {
   }
 
   @override
-  SeriesPainter<Series> createPainter() => CandleIndicatorPainter(
-        this,
-      );
+  SeriesPainter<Series> createPainter() => CandleIndicatorPainter(this);
 }
