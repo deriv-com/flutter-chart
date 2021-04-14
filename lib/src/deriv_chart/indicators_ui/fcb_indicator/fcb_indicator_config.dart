@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/fcb_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/fcb_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 
