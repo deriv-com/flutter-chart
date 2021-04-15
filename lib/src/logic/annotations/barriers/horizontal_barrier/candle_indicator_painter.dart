@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 
 import 'horizontal_barrier.dart';
 
-/// A class for painting horizontal barriers.
+/// A class for painting candle indicators.
 class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
   /// Initializes [series].
   CandleIndicatorPainter(
