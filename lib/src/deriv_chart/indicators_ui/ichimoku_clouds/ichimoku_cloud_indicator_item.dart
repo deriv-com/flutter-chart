@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -32,10 +31,10 @@ class IchimokuCloudIndicatorItem extends IndicatorItem {
 /// IchimokuCloudIndicatorItem State class
 class IchimokuCloudIndicatorItemState
     extends IndicatorItemState<IchimokuCloudIndicatorConfig> {
-  int _baseLinePeriod = 26;
-  int _conversionLinePeriod = 9;
-  int _spanBPeriod = 52;
-  int _laggingSpanOffset = -26;
+  int _baseLinePeriod;
+  int _conversionLinePeriod;
+  int _spanBPeriod;
+  int _laggingSpanOffset;
 
   @override
   IchimokuCloudIndicatorConfig createIndicatorConfig() =>
