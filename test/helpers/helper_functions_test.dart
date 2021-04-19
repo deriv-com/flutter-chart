@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -21,6 +22,15 @@ void main() {
       expect(safeMax(10, double.nan), 10);
       expect(safeMax(double.nan, 5), 5);
       expect(safeMax(10, 5), 10);
+    });
+  });
+
+  group('CalculateTextColor', () {
+    test(
+        'CalculateTextColor calculates the correct color for the given brightness',
+        () {
+      expect(calculateTextColor(Colors.black), Colors.white);
+      expect(calculateTextColor(Colors.white), Colors.black);
     });
   });
 }

@@ -1,17 +1,20 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_item.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 
 import 'bollinger_bands/bollinger_bands_indicator_item.dart';
-import 'zigzag_indicator/zigzag_indicator_item.dart';
 import 'callbacks.dart';
 import 'donchian_channel/donchian_channel_indicator_item.dart';
+import 'ichimoku_clouds/ichimoku_cloud_indicator_item.dart';
 import 'indicator_item.dart';
 import 'ma_env_indicator/ma_env_indicator_item.dart';
 import 'ma_indicator/ma_indicator_item.dart';
+import 'zigzag_indicator/zigzag_indicator_item.dart';
 
 /// Indicators dialog to add them to the chart.
 class IndicatorsDialog extends StatefulWidget {
@@ -48,6 +51,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ))
+      ..add(IchimokuCloudIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
       ..add(ZigZagIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
@@ -61,6 +68,14 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
         onAddIndicator: widget.onAddIndicator,
       ))
       ..add(MAEnvIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(RSIIndicatorItem(
+        ticks: widget.ticks,
+        onAddIndicator: widget.onAddIndicator,
+      ))
+      ..add(ParabolicSARIndicatorItem(
         ticks: widget.ticks,
         onAddIndicator: widget.onAddIndicator,
       ))
