@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/src/chart.dart';
+import 'package:deriv_chart/src/chart/chart.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -119,12 +119,26 @@ class _DerivChartState extends State<DerivChart> {
               pipSize: widget.pipSize,
               granularity: widget.granularity,
               controller: widget.controller,
-              secondarySeries: <Series>[
+              overlaySeries: <Series>[
                 ...context
                     .watch<IndicatorsRepository>()
                     .indicators
                     .where((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig != null)
+                        indicatorConfig != null && indicatorConfig.isOverlay)
+                    .map((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig.getSeries(
+                          IndicatorInput(
+                            widget.mainSeries.input,
+                            widget.granularity,
+                          ),
+                        ))
+              ],
+              bottomSeries: <Series>[
+                ...context
+                    .watch<IndicatorsRepository>()
+                    .indicators
+                    .where((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig != null && !indicatorConfig.isOverlay)
                     .map((IndicatorConfig indicatorConfig) =>
                         indicatorConfig.getSeries(
                           IndicatorInput(

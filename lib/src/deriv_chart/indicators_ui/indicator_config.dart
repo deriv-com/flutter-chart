@@ -23,7 +23,13 @@ import 'callbacks.dart';
 @immutable
 abstract class IndicatorConfig {
   /// Initializes
-  const IndicatorConfig();
+  const IndicatorConfig({
+    this.isOverlay = true,
+  });
+
+  /// Whether the indicator is an overlay on the main chart or displays on a seperate chart.
+  /// Default is set to `true`.
+  final bool isOverlay;
 
   /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
