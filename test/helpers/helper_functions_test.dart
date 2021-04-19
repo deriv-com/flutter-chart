@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -44,6 +45,15 @@ void main() {
       const Duration time = Duration(minutes: 4, seconds: 15);
 
       expect(durationToString(time), '04:15');
+    });
+
+    group('CalculateTextColor', () {
+      test(
+          'CalculateTextColor calculates the correct color for the given brightness',
+          () {
+        expect(calculateTextColor(Colors.black), Colors.white);
+        expect(calculateTextColor(Colors.white), Colors.black);
+      });
     });
   });
 }

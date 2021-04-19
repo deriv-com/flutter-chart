@@ -13,7 +13,11 @@ import '../data_series.dart';
 /// A [DataPainter] for painting line data.
 class LinePainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
-  LinePainter(DataSeries<Tick> series) : super(series);
+  LinePainter(
+    DataSeries<Tick> series,
+  ) : super(series);
+
+  double _lastVisibleTickX;
 
   @override
   void onPaintData(
@@ -31,6 +35,38 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
+    final Path path = createPath(epochToX, quoteToY, animationInfo);
+
+    paintLines(canvas, path, linePaint);
+
+    if (style.hasArea) {
+      _drawArea(
+        canvas,
+        size,
+        path,
+        epochToX(series.visibleEntries.first.epoch),
+        _lastVisibleTickX,
+        style,
+      );
+    }
+  }
+
+  /// Paints the line on the given canvas.
+  /// We can add channel fill here in the subclasses.
+  void paintLines(
+    Canvas canvas,
+    Path path,
+    Paint linePaint,
+  ) {
+    canvas.drawPath(path, linePaint);
+  }
+
+  /// Creates the path of the given [series] and returns it.
+  Path createPath(
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+  ) {
     final Path path = Path();
 
     double lastVisibleTickX;
@@ -59,9 +95,18 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       }
     }
 
-    // Adding last visible entry line to the path
+    _lastVisibleTickX =
+        calculateLastVisibleTick(epochToX, animationInfo, quoteToY, path);
+
+    return path;
+  }
+
+  /// calculates the last visible tick's `dx`.
+  double calculateLastVisibleTick(EpochToX epochToX,
+      AnimationInfo animationInfo, QuoteToY quoteToY, ui.Path path) {
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
+    double lastVisibleTickX;
 
     if (!lastVisibleTick.quote.isNaN) {
       if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
@@ -87,21 +132,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       }
     }
 
-    canvas.drawPath(path, linePaint);
-
-    if (style.hasArea) {
-      _drawArea(
-        canvas,
-        size,
-        path,
-        epochToX(
-          getEpochOf(
-              series.visibleEntries.first, series.visibleEntries.startIndex),
-        ),
-        lastVisibleTickX,
-        style,
-      );
-    }
+    return lastVisibleTickX;
   }
 
   void _drawArea(

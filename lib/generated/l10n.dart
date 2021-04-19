@@ -65,6 +65,46 @@ class ChartLocalization {
     );
   }
 
+  /// `Conversion Line Period`
+  String get labelConversionLinePeriod {
+    return Intl.message(
+      'Conversion Line Period',
+      name: 'labelConversionLinePeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Base Line Period`
+  String get labelBaseLinePeriod {
+    return Intl.message(
+      'Base Line Period',
+      name: 'labelBaseLinePeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leading Span B Period`
+  String get labelSpanBPeriod {
+    return Intl.message(
+      'Leading Span B Period',
+      name: 'labelSpanBPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lagging Span Offset`
+  String get labelLaggingSpanOffset {
+    return Intl.message(
+      'Lagging Span Offset',
+      name: 'labelLaggingSpanOffset',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Jaw Period`
   String get labelJawPeriod {
     return Intl.message(
@@ -150,6 +190,26 @@ class ChartLocalization {
     return Intl.message(
       'Low Period',
       name: 'labelLowPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Over Bought Price`
+  String get labelOverBoughtPrice {
+    return Intl.message(
+      'Over Bought Price',
+      name: 'labelOverBoughtPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Over Sold Price`
+  String get labelOverSoldPrice {
+    return Intl.message(
+      'Over Sold Price',
+      name: 'labelOverSoldPrice',
       desc: '',
       args: [],
     );
