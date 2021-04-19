@@ -268,11 +268,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
-        loadingRightBoundX: widget._mainSeries.visibleEntries.isEmpty
+        loadingRightBoundX: widget._mainSeries.input.isEmpty
             ? xAxis.width
-            : xAxis.xFromEpoch(
-                widget._mainSeries.visibleEntries.first.epoch,
-              ),
+            : xAxis.xFromEpoch(widget._mainSeries.input.first.epoch),
       );
 
   Widget _buildAnnotations() => MultipleAnimatedBuilder(
