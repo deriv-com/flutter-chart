@@ -43,8 +43,8 @@ class Candle extends Tick with EquatableMixin {
   @override
   final double close;
 
-  /// The current time value of candle.
-  final int currentEpochTime;
+  /// The current time value of candle (it is the current time of the candle rather than start of it).
+  final int currentEpoch;
 
   /// Creates a copy of this object.
   Candle copyWith({

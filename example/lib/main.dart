@@ -639,18 +639,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _waitingForHistory = false;
   }
 
-  Row _buildTimerCheckBox() => Row(
-        children: <Widget>[
-          const Icon(Icons.timer),
-          Checkbox(
-            value: _showTimer,
-            onChanged: (check) {
-              setState(() {
-                _showTimer = check;
-              });
-            },
-          ),
-        ],
+  Widget _buildTimerCheckBox() => IconButton(
+        icon: const Icon(Icons.timer),
+        color: _showTimer ? Colors.white : Colors.white30,
+        onPressed: () => setState(() => _showTimer = !_showTimer),
       );
 
   IconButton _buildChartTypeButton() => IconButton(
