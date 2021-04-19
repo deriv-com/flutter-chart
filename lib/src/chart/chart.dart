@@ -139,6 +139,7 @@ class Chart extends StatelessWidget {
                     isLive: isLive,
                     showLoadingAnimationForHistoricalData: !dataFitEnabled,
                     showDataFitButton: dataFitEnabled,
+                    opacity: opacity,
                   ),
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)

@@ -34,13 +34,19 @@ class MainChart extends BasicChart {
     this.onCrosshairAppeared,
     this.overlaySeries,
     this.annotations,
+    double opacity = 1,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
           mainSeries,
           if (overlaySeries != null) ...overlaySeries,
           if (annotations != null) ...annotations,
         ],
-        super(key: key, mainSeries: mainSeries, pipSize: pipSize);
+        super(
+          key: key,
+          mainSeries: mainSeries,
+          pipSize: pipSize,
+          opacity: opacity,
+        );
 
   /// The indicator series that are displayed on the main chart.
   final List<Series> overlaySeries;
