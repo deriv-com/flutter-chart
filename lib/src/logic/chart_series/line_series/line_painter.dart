@@ -35,7 +35,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    final Path path = createPath(epochToX, quoteToY, animationInfo);
+    final Path path = createPath(series, epochToX, quoteToY, animationInfo);
 
     paintLines(canvas, path, linePaint);
 
@@ -63,6 +63,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
   /// Creates the path of the given [series] and returns it.
   Path createPath(
+    DataSeries<Tick> series,
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
