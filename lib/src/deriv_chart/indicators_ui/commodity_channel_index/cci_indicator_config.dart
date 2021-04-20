@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 /// Commodity Channel Index Indicator configurations.
 class CCIIndicatorConfig extends IndicatorConfig {
-  /// Initializes
+  /// Initializes.
   const CCIIndicatorConfig({
     this.period = 20,
     this.overboughtValue = 100,
@@ -19,13 +19,13 @@ class CCIIndicatorConfig extends IndicatorConfig {
   /// The period to calculate the average gain and loss.
   final int period;
 
-  /// Overbought value
+  /// Overbought value.
   final double overboughtValue;
 
-  /// Oversold value
+  /// Oversold value.
   final double oversoldValue;
 
-  /// The RSI line style.
+  /// The CCI line style.
   final LineStyle lineStyle;
 
   @override

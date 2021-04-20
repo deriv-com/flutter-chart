@@ -1,5 +1,4 @@
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/commodity_channel_index/cci_indicator_config.dart';
 
 import 'package:deriv_chart/src/models/tick.dart';
@@ -96,7 +95,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
                 if (text.isNotEmpty) {
                   _overboughtValue = double.tryParse(text);
                 } else {
-                  _overboughtValue = 80;
+                  _overboughtValue = 100;
                 }
                 updateIndicator();
               },
@@ -125,7 +124,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
                 if (text.isNotEmpty) {
                   _oversoldValue = double.tryParse(text);
                 } else {
-                  _oversoldValue = 20;
+                  _oversoldValue = -100;
                 }
                 updateIndicator();
               },
