@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -49,6 +48,8 @@ class MAEnvSeries extends Series {
   SingleIndicatorSeries _middleSeries;
   SingleIndicatorSeries _upperSeries;
 
+  final List<Series> _innerSeries = <Series>[];
+
   @override
   SeriesPainter<Series> createPainter() {
     final CachedIndicator<Tick> smaIndicator =
@@ -89,6 +90,8 @@ class MAEnvSeries extends Series {
       style: const LineStyle(color: Colors.green),
     );
 
+    _innerSeries..add(_lowerSeries)..add(_middleSeries)..add(_upperSeries);
+
     return null;
   }
 
@@ -114,15 +117,14 @@ class MAEnvSeries extends Series {
   List<double> recalculateMinMax() =>
       // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
       // But to be safe we calculate min and max. from all three series.
+      // TODO(Ramin): Maybe later we can have these code and getMin/MaxEpochs in a parent class for Indicators like MAEnv, Ichimoku, Bollinger, etc
       <double>[
-        min(
-          min(_lowerSeries.minValue, _middleSeries.minValue),
-          _upperSeries.minValue,
-        ),
-        max(
-          max(_lowerSeries.maxValue, _middleSeries.maxValue),
-          _upperSeries.maxValue,
-        ),
+        _innerSeries
+            .map((Series series) => series.minValue)
+            .reduce((double a, double b) => safeMin(a, b)),
+        _innerSeries
+            .map((Series series) => series.maxValue)
+            .reduce((double a, double b) => safeMax(a, b)),
       ];
 
   @override
@@ -144,8 +146,8 @@ class MAEnvSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => _middleSeries.getMaxEpoch();
+  int getMaxEpoch() => _innerSeries.getMaxEpoch();
 
   @override
-  int getMinEpoch() => _middleSeries.getMinEpoch();
+  int getMinEpoch() => _innerSeries.getMinEpoch();
 }

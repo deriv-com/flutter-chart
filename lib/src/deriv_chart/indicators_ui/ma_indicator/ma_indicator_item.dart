@@ -2,7 +2,6 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_button.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_picker_sheet.dart';
@@ -19,13 +18,15 @@ class MAIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    MAIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Moving Average',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -58,7 +59,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
         period: getCurrentPeriod(),
-        type: getCurrentType(),
+        movingAverageType: getCurrentType(),
         fieldType: getCurrentField(),
         offset: currentOffset,
         lineStyle: getCurrentLineStyle(),
@@ -219,24 +220,29 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current type.
   @protected
   MovingAverageType getCurrentType() =>
-      type ?? getConfig()?.type ?? MovingAverageType.simple;
+      type ??
+      (widget.config as MAIndicatorConfig)?.movingAverageType ??
+      MovingAverageType.simple;
 
   /// Gets Indicator current filed type.
   @protected
-  String getCurrentField() => field ?? getConfig()?.fieldType ?? 'close';
+  String getCurrentField() =>
+      field ?? (widget.config as MAIndicatorConfig)?.fieldType ?? 'close';
 
   /// Gets Indicator current period.
   @protected
-  int getCurrentPeriod() => period ?? getConfig()?.period ?? 50;
+  int getCurrentPeriod() =>
+      period ?? (widget.config as MAIndicatorConfig)?.period ?? 50;
 
   /// Gets Indicator current period.
   @protected
-  int get currentOffset => offset ?? getConfig()?.offset ?? 0;
+  int get currentOffset =>
+      offset ?? (widget.config as MAIndicatorConfig)?.offset ?? 0;
 
   /// Gets Indicator current line style.
   @protected
   LineStyle getCurrentLineStyle() =>
       lineStyle ??
-      getConfig()?.lineStyle ??
+      (widget.config as MAIndicatorConfig)?.lineStyle ??
       const LineStyle(color: Colors.yellow, thickness: 0.6);
 }

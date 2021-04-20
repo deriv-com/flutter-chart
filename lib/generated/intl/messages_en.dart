@@ -51,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelTeethOffset" : MessageLookupByLibrary.simpleMessage("Teeth Offset"),
     "labelTeethPeriod" : MessageLookupByLibrary.simpleMessage("Teeth Period"),
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
-    "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
+    "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term."),
+    "warnFailedLoadingIndicators" : MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
   };
 }
