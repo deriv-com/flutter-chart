@@ -313,7 +313,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         low: newTick.low,
         open: newTick.open,
         close: newTick.close,
-        currentEpochTime: newTick.epoch.millisecondsSinceEpoch,
+        currentEpoch: newTick.epoch.millisecondsSinceEpoch,
       ));
     }
   }
@@ -740,7 +740,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           low: ohlc.low,
           open: ohlc.open,
           close: ohlc.close,
-          currentEpochTime: ohlc.epoch.millisecondsSinceEpoch,
+          currentEpoch: ohlc.epoch.millisecondsSinceEpoch,
         );
       }).toList();
     }

@@ -70,7 +70,7 @@ class CandleIndicator extends HorizontalBarrier {
   void _startTimer() {
     timerDuration = Duration(
         milliseconds:
-            granularity * 1000 - (candle.currentEpochTime - candle.epoch));
+            granularity * 1000 - (candle.currentEpoch - candle.epoch));
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (timerDuration.inSeconds > 0) {
         timerDuration = Duration(seconds: timerDuration.inSeconds - 1);
