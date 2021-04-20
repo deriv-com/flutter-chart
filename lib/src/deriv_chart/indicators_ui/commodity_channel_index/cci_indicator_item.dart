@@ -68,7 +68,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
                 if (text.isNotEmpty) {
                   _period = int.tryParse(text);
                 } else {
-                  _period = 14;
+                  _period = 20;
                 }
                 updateIndicator();
               },
@@ -77,7 +77,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         ],
       );
 
-  int _getCurrentPeriod() => _period ?? getConfig()?.period ?? 14;
+  int _getCurrentPeriod() => _period ?? getConfig()?.period ?? 20;
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
@@ -106,7 +106,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double _getCurrentOverBoughtPrice() =>
-      _overBoughtPrice ?? getConfig()?.overBoughtPrice ?? 80;
+      _overBoughtPrice ?? getConfig()?.overBoughtPrice ?? 100;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -135,5 +135,5 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double _getCurrentOverSoldPrice() =>
-      _overSoldPrice ?? getConfig()?.overSoldPrice ?? 20;
+      _overSoldPrice ?? getConfig()?.overSoldPrice ?? -100;
 }
