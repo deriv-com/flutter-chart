@@ -1,97 +1,120 @@
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_item.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_item.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_item.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_item.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_repository.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'bollinger_bands/bollinger_bands_indicator_item.dart';
-import 'callbacks.dart';
-import 'donchian_channel/donchian_channel_indicator_item.dart';
-import 'ichimoku_clouds/ichimoku_cloud_indicator_item.dart';
-import 'indicator_item.dart';
-import 'ma_env_indicator/ma_env_indicator_item.dart';
-import 'ma_indicator/ma_indicator_item.dart';
-import 'zigzag_indicator/zigzag_indicator_item.dart';
+import './ma_indicator/ma_indicator_config.dart';
 
-/// Indicators dialog to add them to the chart.
+/// Indicators dialog with selected indicators.
 class IndicatorsDialog extends StatefulWidget {
-  /// Initializes
-  const IndicatorsDialog({
-    Key key,
-    this.onAddIndicator,
-    this.ticks,
-  }) : super(key: key);
-
-  /// List of chart ticks
-  final List<Tick> ticks;
-
-  /// Callback which will be called when an specific indicator was added.
-  final OnAddIndicator onAddIndicator;
-
   @override
   _IndicatorsDialogState createState() => _IndicatorsDialogState();
 }
 
 class _IndicatorsDialogState extends State<IndicatorsDialog> {
-  final List<IndicatorItem> indicatorItems = <IndicatorItem>[];
+  IndicatorConfig _selectedIndicator;
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    final IndicatorsRepository repo = context.watch<IndicatorsRepository>();
 
-    indicatorItems
-      ..add(MAIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(BollingerBandsIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(IchimokuCloudIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(ZigZagIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(DonchianChannelIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(RainbowIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(MAEnvIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(RSIIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(ParabolicSARIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ))
-      ..add(AlligatorIndicatorItem(
-        ticks: widget.ticks,
-        onAddIndicator: widget.onAddIndicator,
-      ));
+    return AnimatedPopupDialog(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              DropdownButton<IndicatorConfig>(
+                value: _selectedIndicator,
+                hint: const Text('Select indicator'),
+                items: <DropdownMenuItem<IndicatorConfig>>[
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Moving average'),
+                    value: MAIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Moving average envelope'),
+                    value: MAEnvIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Bollinger bands'),
+                    value: BollingerBandsIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Donchian channel'),
+                    value: DonchianChannelIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Alligator'),
+                    value: AlligatorIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: const Text('Rainbow'),
+                    value: RainbowIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('ZigZag'),
+                    value: ZigZagIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Ichimoku Clouds'),
+                    value: IchimokuCloudIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Parabolic SAR'),
+                    value: ParabolicSARConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('RSI'),
+                    value: RSIIndicatorConfig(),
+                  ),
+                  // Add new indicators here.
+                ],
+                onChanged: (IndicatorConfig config) {
+                  setState(() {
+                    _selectedIndicator = config;
+                  });
+                },
+              ),
+              const SizedBox(width: 16),
+              RaisedButton(
+                child: const Text('Add'),
+                onPressed: _selectedIndicator != null
+                    ? () async {
+                        await repo.add(_selectedIndicator);
+                        setState(() {});
+                      }
+                    : null,
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: repo.indicators.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  repo.indicators[index].getItem(
+                (IndicatorConfig updatedConfig) =>
+                    repo.updateAt(index, updatedConfig),
+                () async {
+                  await repo.removeAt(index);
+                  setState(() {});
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  Widget build(BuildContext context) => AnimatedPopupDialog(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: indicatorItems.length,
-          itemBuilder: (BuildContext context, int index) =>
-              indicatorItems[index],
-        ),
-      );
 }
