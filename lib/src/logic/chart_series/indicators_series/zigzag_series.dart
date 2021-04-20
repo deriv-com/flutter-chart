@@ -53,8 +53,8 @@ class ZigZagSeries extends LineSeries {
     }
     return VisibleEntries<Tick>(
       entries.sublist(firstIndex, lastIndex),
-      startIndex,
-      endIndex,
+      firstIndex,
+      lastIndex,
     );
   }
 }

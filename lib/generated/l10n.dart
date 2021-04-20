@@ -315,11 +315,21 @@ class ChartLocalization {
     );
   }
 
-  /// `Try checking your spelling or use a different term`
+  /// `Try checking your spelling or use a different term.`
   String get warnCheckAssetSearchingText {
     return Intl.message(
-      'Try checking your spelling or use a different term',
+      'Try checking your spelling or use a different term.',
       name: 'warnCheckAssetSearchingText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load indicators.`
+  String get warnFailedLoadingIndicators {
+    return Intl.message(
+      'Failed to load indicators.',
+      name: 'warnFailedLoadingIndicators',
       desc: '',
       args: [],
     );
