@@ -32,14 +32,14 @@ class CCIIndicatorItem extends IndicatorItem {
 /// CCIItem State class
 class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   int _period;
-  double _overBoughtPrice;
-  double _overSoldPrice;
+  double _overboughtValue;
+  double _oversoldValue;
 
   @override
   CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
-        period: _getCurrentPeriod(),
-        overBoughtPrice: _getCurrentOverBoughtPrice(),
-        overSoldPrice: _getCurrentOverSoldPrice(),
+        period: _currentPeriod,
+        overboughtValue: _currentOverBoughtPrice,
+        oversoldValue: _currentOverSoldPrice,
       );
 
   @override
@@ -62,7 +62,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentPeriod().toString(),
+              initialValue: _currentPeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -77,7 +77,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         ],
       );
 
-  int _getCurrentPeriod() => _period ?? getConfig()?.period ?? 20;
+  int get _currentPeriod => _period ?? getConfig()?.period ?? 20;
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
@@ -90,13 +90,13 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverBoughtPrice().toString(),
+              initialValue: _currentOverBoughtPrice.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  _overBoughtPrice = double.tryParse(text);
+                  _overboughtValue = double.tryParse(text);
                 } else {
-                  _overBoughtPrice = 80;
+                  _overboughtValue = 80;
                 }
                 updateIndicator();
               },
@@ -105,8 +105,8 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         ],
       );
 
-  double _getCurrentOverBoughtPrice() =>
-      _overBoughtPrice ?? getConfig()?.overBoughtPrice ?? 100;
+  double get _currentOverBoughtPrice =>
+      _overboughtValue ?? getConfig()?.overboughtValue ?? 100;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -119,13 +119,13 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverSoldPrice().toString(),
+              initialValue: _currentOverSoldPrice.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  _overSoldPrice = double.tryParse(text);
+                  _oversoldValue = double.tryParse(text);
                 } else {
-                  _overSoldPrice = 20;
+                  _oversoldValue = 20;
                 }
                 updateIndicator();
               },
@@ -134,6 +134,6 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         ],
       );
 
-  double _getCurrentOverSoldPrice() =>
-      _overSoldPrice ?? getConfig()?.overSoldPrice ?? -100;
+  double get _currentOverSoldPrice =>
+      _oversoldValue ?? getConfig()?.oversoldValue ?? -100;
 }

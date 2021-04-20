@@ -11,19 +11,19 @@ class CCIIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const CCIIndicatorConfig({
     this.period = 20,
-    this.overBoughtPrice = 100,
-    this.overSoldPrice = -100,
+    this.overboughtValue = 100,
+    this.oversoldValue = -100,
     this.lineStyle = const LineStyle(color: Colors.white),
   }) : super(isOverlay: false);
 
   /// The period to calculate the average gain and loss.
   final int period;
 
-  /// The price to show the over bought line.
-  final double overBoughtPrice;
+  /// Overbought value
+  final double overboughtValue;
 
-  /// The price to show the over sold line.
-  final double overSoldPrice;
+  /// Oversold value
+  final double oversoldValue;
 
   /// The RSI line style.
   final LineStyle lineStyle;
@@ -32,5 +32,7 @@ class CCIIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => CCISeries(
         indicatorInput,
         CCIOptions(period),
+        overboughtValue: overboughtValue,
+        oversoldValue: oversoldValue,
       );
 }
