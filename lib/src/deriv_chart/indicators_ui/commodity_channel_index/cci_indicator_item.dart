@@ -26,11 +26,11 @@ class CCIIndicatorItem extends IndicatorItem {
 
   @override
   IndicatorItemState<IndicatorConfig> createIndicatorItemState() =>
-      RSIIndicatorItemState();
+      CCIIndicatorItemState();
 }
 
 /// CCIItem State class
-class RSIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
+class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   int _period;
   double _overBoughtPrice;
   double _overSoldPrice;
@@ -78,7 +78,6 @@ class RSIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   int _getCurrentPeriod() => _period ?? getConfig()?.period ?? 14;
-
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[

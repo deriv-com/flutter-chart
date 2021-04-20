@@ -27,9 +27,7 @@ class OscillatorLinePainter extends LinePainter {
         _secondaryHorizontalLines = secondaryHorizontalLines,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
         _bottomHorizontalLine = bottomHorizontalLine,
-        super(
-          series,
-        );
+        super(series);
 
   final double _topHorizontalLine;
   final double _bottomHorizontalLine;
