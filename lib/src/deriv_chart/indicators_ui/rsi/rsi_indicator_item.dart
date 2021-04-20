@@ -2,7 +2,6 @@ import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -15,13 +14,15 @@ class RSIIndicatorItem extends IndicatorItem {
   /// Initializes
   const RSIIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    RSIIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'RSI',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -80,7 +81,8 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
         ],
       );
 
-  int _getCurrentPeriod() => _period ?? getConfig()?.period ?? 14;
+  int _getCurrentPeriod() =>
+      _period ?? (widget.config as RSIIndicatorConfig)?.period ?? 14;
 
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[
@@ -111,7 +113,8 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
         ],
       );
 
-  String _getCurrentField() => _field ?? getConfig()?.fieldType ?? 'close';
+  String _getCurrentField() =>
+      _field ?? (widget.config as RSIIndicatorConfig)?.fieldType ?? 'close';
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
@@ -140,7 +143,9 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       );
 
   double _getCurrentOverBoughtPrice() =>
-      _overBoughtPrice ?? getConfig()?.overBoughtPrice ?? 80;
+      _overBoughtPrice ??
+      (widget.config as RSIIndicatorConfig)?.overBoughtPrice ??
+      80;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -169,5 +174,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       );
 
   double _getCurrentOverSoldPrice() =>
-      _overSoldPrice ?? getConfig()?.overSoldPrice ?? 20;
+      _overSoldPrice ??
+      (widget.config as RSIIndicatorConfig)?.overSoldPrice ??
+      20;
 }

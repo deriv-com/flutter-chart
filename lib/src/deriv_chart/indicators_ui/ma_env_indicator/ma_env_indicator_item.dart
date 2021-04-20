@@ -1,7 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +16,15 @@ class MAEnvIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAEnvIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    MAEnvIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'MA Envelope Indicator',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -123,19 +124,19 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
   /// Gets Indicator current type.
   @protected
   ShiftType getCurrentShiftType() {
-    final MAEnvIndicatorConfig config = getConfig();
+    final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
     return shiftType ?? config?.shiftType ?? ShiftType.percent;
   }
 
   /// Gets Indicator current period.
   @protected
   double getCurrentShift() {
-    final MAEnvIndicatorConfig config = getConfig();
+    final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
     return shift ?? config?.shift ?? 5;
   }
 
   @protected
   LineStyle getCurrentLineStyle() =>
-      getConfig().lineStyle ??
+      (widget.config as MAEnvIndicatorConfig).lineStyle ??
       const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
 }

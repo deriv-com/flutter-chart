@@ -18,6 +18,10 @@ dependencies:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
       ref: dev
+  
+  # Store state:
+  shared_preferences: <1.0.0
+  json_annotation: ">=3.0.0 <4.0.0"
 
   equatable: ^2.0.5
   intl: ^0.18.0
