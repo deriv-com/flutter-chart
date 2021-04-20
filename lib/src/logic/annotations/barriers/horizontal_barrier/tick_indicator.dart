@@ -51,7 +51,9 @@ class CandleIndicator extends HorizontalBarrier {
           style: style,
           visibility: visibility,
           longLine: false,
-        );
+        ) {
+    _startTimer();
+  }
 
   /// The given candle.
   final Candle candle;
@@ -83,7 +85,6 @@ class CandleIndicator extends HorizontalBarrier {
     if (oldData is CandleIndicator) {
       oldData._timer.cancel();
     }
-    _startTimer();
 
     return super.didUpdate(oldData);
   }
