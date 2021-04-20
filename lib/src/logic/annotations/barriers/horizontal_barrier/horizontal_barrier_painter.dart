@@ -102,7 +102,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
     // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
-      _paintBlinkingDot(canvas, dotX, y, animationInfo);
+      _paintBlinkingDot(canvas, dotX, y, animationInfo,
+          style.blinkingDotColor ?? style.color ?? Colors.redAccent);
     }
 
     final TextPainter valuePainter = makeTextPainter(
@@ -181,7 +182,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
           arrowSize: style.arrowSize,
         );
       } else if (arrowType == BarrierArrowType.downward) {
-        // TODO: Rotate arrows like in `paintMarker` instead of defining two identical paths only different in rotation.
+        // TODO(Anonymous): Rotate arrows like in `paintMarker` instead of defining two identical paths only different in rotation.
         _paintDownwardArrows(
           canvas,
           center: Offset(arrowMidX, y),
@@ -218,14 +219,15 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     double dotX,
     double y,
     AnimationInfo animationInfo,
+    Color color,
   ) {
-    paintDot(canvas, Offset(dotX, y), Colors.redAccent);
+    paintDot(canvas, Offset(dotX, y), color);
 
     paintBlinkingGlow(
       canvas,
       Offset(dotX, y),
       animationInfo.blinkingPercent,
-      Colors.redAccent,
+      color,
     );
   }
 
