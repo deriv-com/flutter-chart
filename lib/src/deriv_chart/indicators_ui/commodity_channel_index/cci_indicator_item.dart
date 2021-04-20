@@ -1,7 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/commodity_channel_index/cci_indicator_config.dart';
 
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -14,13 +13,15 @@ class CCIIndicatorItem extends IndicatorItem {
   /// Initializes
   const CCIIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    CCIIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
-          title: 'CCI',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          title: 'Commodity Channel Index',
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -76,7 +77,9 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         ],
       );
 
-  int get _currentPeriod => _period ?? getConfig()?.period ?? 20;
+  // TODO(Ramin): use generic type in widget class as well for the config.
+  int get _currentPeriod =>
+      _period ?? (widget.config as CCIIndicatorConfig)?.period ?? 20;
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
@@ -105,7 +108,9 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double get _currentOverBoughtPrice =>
-      _overboughtValue ?? getConfig()?.overboughtValue ?? 100;
+      _overboughtValue ??
+      (widget.config as CCIIndicatorConfig)?.overboughtValue ??
+      100;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -134,5 +139,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double get _currentOverSoldPrice =>
-      _oversoldValue ?? getConfig()?.oversoldValue ?? -100;
+      _oversoldValue ??
+      (widget.config as CCIIndicatorConfig)?.oversoldValue ??
+      -100;
 }

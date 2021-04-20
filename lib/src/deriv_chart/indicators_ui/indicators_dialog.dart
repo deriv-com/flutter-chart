@@ -80,7 +80,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     value: RSIIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
-                    child: Text('CCI'),
+                    child: Text('Commodity Channel Index'),
                     value: CCIIndicatorConfig(),
                   ),
                   // Add new indicators here.
