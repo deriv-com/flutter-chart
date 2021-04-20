@@ -1,4 +1,3 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/cci_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_painter.dart';
@@ -6,7 +5,9 @@ import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:flutter/material.dart';
 
 /// Commodity Channel Index series.
 class CCISeries extends AbstractSingleIndicatorSeries {
@@ -22,8 +23,8 @@ class CCISeries extends AbstractSingleIndicatorSeries {
     CCIOptions options, {
     this.overboughtValue = 100,
     this.oversoldValue = -100,
-    this.overBoughtLineStyle = const LineStyle(),
-    this.oversoldLineStyle = const LineStyle(),
+    this.overBoughtLineStyle = const LineStyle(color: Colors.white),
+    this.oversoldLineStyle = const LineStyle(color: Colors.white),
     LineStyle cciLineStyle = const LineStyle(),
     String id,
   })  : _options = options,
