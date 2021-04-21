@@ -27,6 +27,8 @@ class CCISeries extends AbstractSingleIndicatorSeries {
         const LineStyle(color: Colors.white, thickness: 0.5),
     this.oversoldLineStyle =
         const LineStyle(color: Colors.white, thickness: 0.5),
+    this.zeroHorizontalLineStyle =
+        const LineStyle(color: Colors.white, thickness: 0.5),
     LineStyle cciLineStyle = const LineStyle(),
     String id,
   })  : _options = options,
@@ -53,6 +55,9 @@ class CCISeries extends AbstractSingleIndicatorSeries {
   /// LineStyle of oversold line
   final LineStyle oversoldLineStyle;
 
+  /// The RSI zero horizontal line style.
+  final LineStyle zeroHorizontalLineStyle;
+
   @override
   SeriesPainter<Series> createPainter() => OscillatorLinePainter(
         this,
@@ -60,7 +65,7 @@ class CCISeries extends AbstractSingleIndicatorSeries {
         bottomHorizontalLine: oversoldValue,
         topHorizontalLineStyle: overBoughtLineStyle,
         bottomHorizontalLineStyle: oversoldLineStyle,
-        secondaryHorizontalLinesStyle: oversoldLineStyle,
+        secondaryHorizontalLinesStyle: zeroHorizontalLineStyle,
       );
 
   @override

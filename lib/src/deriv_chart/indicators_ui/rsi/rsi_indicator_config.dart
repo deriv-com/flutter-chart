@@ -22,15 +22,9 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.overBoughtPrice = 80,
     this.overSoldPrice = 20,
     this.lineStyle = const LineStyle(color: Colors.white),
-    this.zeroHorizontalLineStyle = const LineStyle(
-      color: Colors.red,
-    ),
-    this.topHorizontalLineStyle = const LineStyle(
-      color: Colors.white,
-    ),
-    this.bottomHorizontalLinesStyle = const LineStyle(
-      color: Colors.white,
-    ),
+    this.zeroHorizontalLineStyle = const LineStyle(color: Colors.red),
+    this.topHorizontalLineStyle = const LineStyle(color: Colors.white),
+    this.bottomHorizontalLinesStyle = const LineStyle(color: Colors.white),
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
