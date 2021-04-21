@@ -1,25 +1,53 @@
 import 'package:meta/meta.dart';
 
-/// Calculates the grid lines for a quote.
-List<double> gridQuotes({
-  @required double quoteGridInterval,
-  @required double topBoundQuote,
-  @required double bottomBoundQuote,
-  @required double canvasHeight,
-  @required double topPadding,
-  @required double bottomPadding,
-}) {
-  final pixelToQuote = (topBoundQuote - bottomBoundQuote) /
-      (canvasHeight - topPadding - bottomPadding);
-  final topEdgeQuote = topBoundQuote + topPadding * pixelToQuote;
-  final bottomEdgeQuote = bottomBoundQuote - bottomPadding * pixelToQuote;
-  final gridLineQuotes = <double>[];
-  for (var q = topEdgeQuote - topEdgeQuote % quoteGridInterval;
-      q > bottomEdgeQuote;
-      q -= quoteGridInterval) {
-    if (q < topEdgeQuote) gridLineQuotes.add(q);
+///A Model for calculating the grid intervals and quotes.
+class YAxisModel {
+  ///Initializes a Model for calculating the grid intervals and quotes.
+  YAxisModel({
+    @required double topBoundQuote,
+    @required double bottomBoundQuote,
+    @required double yTopBound,
+    @required double yBottomBound,
+    @required double canvasHeight,
+    @required double topPadding,
+    @required double bottomPadding,
+  })  : _quoteGridInterval = quoteGridInterval(
+          quotePerPx(
+              yTopBound: yTopBound,
+              yBottomBound: yBottomBound,
+              bottomBoundQuote: bottomBoundQuote,
+              topBoundQuote: topBoundQuote),
+        ),
+        _topBoundQuote = topBoundQuote,
+        _bottomBoundQuote = bottomBoundQuote,
+        _canvasHeight = canvasHeight,
+        _topPadding = topPadding,
+        _bottomPadding = bottomPadding;
+
+  final double _quoteGridInterval;
+  final double _topBoundQuote;
+  final double _bottomBoundQuote;
+  final double _canvasHeight;
+  final double _topPadding;
+  final double _bottomPadding;
+
+  /// Calculates the grid lines for a quote.
+  List<double> gridQuotes() {
+    final double pixelToQuote = (_topBoundQuote - _bottomBoundQuote) /
+        (_canvasHeight - _topPadding - _bottomPadding);
+    final double topEdgeQuote = _topBoundQuote + _topPadding * pixelToQuote;
+    final double bottomEdgeQuote =
+        _bottomBoundQuote - _bottomPadding * pixelToQuote;
+    final List<double> gridLineQuotes = <double>[];
+    for (double q = topEdgeQuote - topEdgeQuote % _quoteGridInterval;
+        q > bottomEdgeQuote;
+        q -= _quoteGridInterval) {
+      if (q < topEdgeQuote) {
+        gridLineQuotes.add(q);
+      }
+    }
+    return gridLineQuotes;
   }
-  return gridLineQuotes;
 }
 
 /// Calculates the quotes that can be placed per pixel.
@@ -29,8 +57,8 @@ double quotePerPx({
   @required double yTopBound,
   @required double yBottomBound,
 }) {
-  final quoteDiff = topBoundQuote - bottomBoundQuote;
-  final pxDiff = yBottomBound - yTopBound;
+  final double quoteDiff = topBoundQuote - bottomBoundQuote;
+  final double pxDiff = yBottomBound - yTopBound;
 
   return quoteDiff / pxDiff;
 }
@@ -40,7 +68,10 @@ double quoteGridInterval(
   double quotePerPx, {
   double minDistanceBetweenLines = 60,
   // Options for quote labels value distance in Y-Axis. One of these intervals will be selected to be the distance between Y-Axis labels
-  List<double> intervals = const [
+  List<double> intervals = const <double>[
+    0.0000000025,
+    0.000000001,
+    0.000000005,
     0.000000025,
     0.00000005,
     0.0000001,
@@ -59,6 +90,7 @@ double quoteGridInterval(
     0.25,
     0.5,
     1,
+    2,
     2.5,
     5,
     10,
@@ -74,7 +106,7 @@ double quoteGridInterval(
   ],
 }) {
   bool hasEnoughDistanceBetweenLines(double quoteInterval) {
-    final distanceBetweenLines = quoteInterval / quotePerPx;
+    final double distanceBetweenLines = quoteInterval / quotePerPx;
     return distanceBetweenLines >= minDistanceBetweenLines;
   }
 

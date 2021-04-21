@@ -1,6 +1,4 @@
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_button.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_picker_sheet.dart';
@@ -17,13 +15,15 @@ class ParabolicSARIndicatorItem extends IndicatorItem {
   /// Initializes
   const ParabolicSARIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    ParabolicSARConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
-          title: 'Parabolic SAR',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          title: 'ParabolicSAR',
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -133,14 +133,19 @@ class ParabolicSARIndicatorItemState
         ],
       );
 
+  // TODO(Ramin): use generic type to avoid casting
   double get _currentMinAccelerationFactor =>
-      _minAccelerationFactor ?? getConfig()?.minAccelerationFactor ?? 0.02;
+      _minAccelerationFactor ??
+      (widget.config as ParabolicSARConfig)?.minAccelerationFactor ??
+      0.02;
 
   double get _currentMaxAccelerationFactor =>
-      _maxAccelerationFactor ?? getConfig()?.maxAccelerationFactor ?? 0.2;
+      _maxAccelerationFactor ??
+      (widget.config as ParabolicSARConfig)?.maxAccelerationFactor ??
+      0.2;
 
   ScatterStyle get _currentScatterStyle =>
       _scatterStyle ??
-      getConfig()?.scatterStyle ??
+      (widget.config as ParabolicSARConfig)?.scatterStyle ??
       const ScatterStyle(color: Colors.yellowAccent);
 }

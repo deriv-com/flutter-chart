@@ -22,7 +22,7 @@ class NoResultPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Icon(Icons.search, size: 96, color: theme.base05Color),
-          SizedBox(height: theme.margin16),
+          SizedBox(height: theme.margin16Chart),
           Text(
             ChartLocalization.of(context).informNoResult(text),
             style: theme.textStyle(
@@ -30,7 +30,7 @@ class NoResultPage extends StatelessWidget {
               color: theme.base03Color,
             ),
           ),
-          SizedBox(height: theme.margin08),
+          SizedBox(height: theme.margin08Chart),
           Text(
             ChartLocalization.of(context).warnCheckAssetSearchingText,
             style: theme.textStyle(

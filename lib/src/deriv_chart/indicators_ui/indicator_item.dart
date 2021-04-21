@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,18 +11,22 @@ abstract class IndicatorItem extends StatefulWidget {
   const IndicatorItem({
     Key key,
     this.title,
-    this.ticks,
-    this.onAddIndicator,
+    this.config,
+    this.updateIndicator,
+    this.deleteIndicator,
   }) : super(key: key);
 
   /// Title
   final String title;
 
-  /// List of entries to calculate indicator on.
-  final List<Tick> ticks;
+  /// Contains indicator configuration.
+  final IndicatorConfig config;
 
-  /// A callback which will be called when want to add this indicator.
-  final OnAddIndicator onAddIndicator;
+  /// Called when config values were updated.
+  final UpdateIndicator updateIndicator;
+
+  /// Called when user removed indicator.
+  final VoidCallback deleteIndicator;
 
   @override
   IndicatorItemState<IndicatorConfig> createState() =>
@@ -53,45 +56,21 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
         contentPadding: const EdgeInsets.all(0),
         leading: Text(widget.title, style: const TextStyle(fontSize: 10)),
         title: getIndicatorOptions(),
-        trailing: SizedBox(
-          height: 24,
-          width: 24,
-          child: Checkbox(
-            value: indicatorsRepo.isIndicatorActive(getIndicatorKey()),
-            onChanged: (bool newValue) => setState(
-              () {
-                if (newValue) {
-                  updateIndicator();
-                } else {
-                  removeIndicator();
-                }
-              },
-            ),
-          ),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: removeIndicator,
         ),
       );
 
   /// Updates indicator based on its current config values.
-  void updateIndicator() => widget.onAddIndicator?.call(
-        getIndicatorKey(),
-        createIndicatorConfig(),
-      );
+  void updateIndicator() =>
+      widget.updateIndicator?.call(createIndicatorConfig());
 
   /// Removes this indicator.
-  void removeIndicator() =>
-      widget.onAddIndicator?.call(getIndicatorKey(), null);
-
-  /// Gets the key for this indicator
-  @protected
-  String getIndicatorKey() => runtimeType.toString();
+  void removeIndicator() => widget.deleteIndicator.call();
 
   /// Returns the [IndicatorConfig] which can be used to create the Series for this indicator.
   T createIndicatorConfig();
-
-  /// Gets the [IndicatorConfig] of this [IndicatorItem]
-  T getConfig() => indicatorsRepo != null
-      ? indicatorsRepo?.indicators[getIndicatorKey()]
-      : null;
 
   /// Creates the menu options widget for this indicator.
   Widget getIndicatorOptions();

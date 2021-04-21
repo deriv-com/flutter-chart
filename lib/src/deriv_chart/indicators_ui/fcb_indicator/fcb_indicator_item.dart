@@ -18,13 +18,15 @@ class FractalChaosBandIndicatorItem extends IndicatorItem {
   /// Initializes
   const FractalChaosBandIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    FractalChaosBandIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Fractal Chaos Band Indicator',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -75,5 +77,7 @@ class FractalChaosBandIndicatorItemState
   /// Gets current show lines.
   @protected
   bool get currentChannelFill =>
-      _channelFill ?? getConfig()?.channelFill ?? false;
+      _channelFill ??
+      (widget.config as FractalChaosBandIndicatorConfig)?.channelFill ??
+      false;
 }
