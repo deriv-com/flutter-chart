@@ -19,11 +19,13 @@ class OscillatorLinePainter extends LinePainter {
     DataSeries<Tick> series, {
     double topHorizontalLine,
     double bottomHorizontalLine,
-    LineStyle mainHorizontalLinesStyle,
+    LineStyle topHorizontalLineStyle,
+    LineStyle bottomHorizontalLineStyle,
     LineStyle secondaryHorizontalLinesStyle,
     List<double> secondaryHorizontalLines = const <double>[],
-  })  : _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
+  })  : _topHorizontalLineStyle = topHorizontalLineStyle,
         _topHorizontalLine = topHorizontalLine,
+        _bottomHorizontalLineStyle = bottomHorizontalLineStyle,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
         _bottomHorizontalLine = bottomHorizontalLine,
@@ -31,7 +33,8 @@ class OscillatorLinePainter extends LinePainter {
 
   final double _topHorizontalLine;
   final double _bottomHorizontalLine;
-  final LineStyle _mainHorizontalLinesStyle;
+  final LineStyle _topHorizontalLineStyle;
+  final LineStyle _bottomHorizontalLineStyle;
   final List<double> _secondaryHorizontalLines;
   final LineStyle _secondaryHorizontalLinesStyle;
   Path _topHorizontalLinePath;
@@ -60,11 +63,12 @@ class OscillatorLinePainter extends LinePainter {
     Canvas canvas,
     Rect rect,
     LabelShape shape,
+    LineStyle lineStyle,
   ) {
     final Paint paint = Paint()
-      ..color = _mainHorizontalLinesStyle.color
+      ..color = lineStyle.color
       ..style = PaintingStyle.fill
-      ..strokeWidth = _mainHorizontalLinesStyle.thickness;
+      ..strokeWidth = lineStyle.thickness;
     canvas.drawRRect(
       RRect.fromRectAndRadius(rect, const Radius.circular(4)),
       paint,
@@ -74,10 +78,15 @@ class OscillatorLinePainter extends LinePainter {
   void _paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
     _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
-    final Paint paint = Paint()
-      ..color = _mainHorizontalLinesStyle.color
+    final Paint topLineHorizontalLinePaint = Paint()
+      ..color = _topHorizontalLineStyle.color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = _mainHorizontalLinesStyle.thickness;
+      ..strokeWidth = _topHorizontalLineStyle.thickness;
+
+    final Paint bottomLineHorizontalLinePaint = Paint()
+      ..color = _bottomHorizontalLineStyle.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _bottomHorizontalLineStyle.thickness;
 
     _topHorizontalLinePath = Path();
     _bottomHorizontalLinePath = Path();
@@ -90,8 +99,8 @@ class OscillatorLinePainter extends LinePainter {
         size.width, quoteToY(_bottomHorizontalLine));
 
     canvas
-      ..drawPath(_topHorizontalLinePath, paint)
-      ..drawPath(_bottomHorizontalLinePath, paint);
+      ..drawPath(_topHorizontalLinePath, topLineHorizontalLinePaint)
+      ..drawPath(_bottomHorizontalLinePath, bottomLineHorizontalLinePaint);
 
     _paintLabels(size, quoteToY, canvas);
   }
@@ -112,21 +121,28 @@ class OscillatorLinePainter extends LinePainter {
   }
 
   void _paintLabels(Size size, QuoteToY quoteToY, Canvas canvas) {
-    final HorizontalBarrierStyle style = HorizontalBarrierStyle(
+    final HorizontalBarrierStyle topStyle = HorizontalBarrierStyle(
       textStyle: TextStyle(
         fontSize: 10,
-        color: calculateTextColor(_mainHorizontalLinesStyle.color),
+        color: calculateTextColor(_topHorizontalLineStyle.color),
+      ),
+    );
+
+    final HorizontalBarrierStyle bottomStyle = HorizontalBarrierStyle(
+      textStyle: TextStyle(
+        fontSize: 10,
+        color: calculateTextColor(_bottomHorizontalLineStyle.color),
       ),
     );
 
     final TextPainter topValuePainter = makeTextPainter(
       _topHorizontalLine.toStringAsFixed(0),
-      style.textStyle,
+      topStyle.textStyle,
     );
 
     final TextPainter bottomValuePainter = makeTextPainter(
       _bottomHorizontalLine.toStringAsFixed(0),
-      style.textStyle,
+      bottomStyle.textStyle,
     );
 
     final Rect topLabelArea = Rect.fromCenter(
@@ -134,7 +150,7 @@ class OscillatorLinePainter extends LinePainter {
           size.width - rightMargin - padding - topValuePainter.width / 2,
           quoteToY(_topHorizontalLine)),
       width: topValuePainter.width + padding * 2,
-      height: style.labelHeight,
+      height: topStyle.labelHeight,
     );
 
     final Rect bottomLabelArea = Rect.fromCenter(
@@ -142,11 +158,13 @@ class OscillatorLinePainter extends LinePainter {
           size.width - rightMargin - padding - bottomValuePainter.width / 2,
           quoteToY(_bottomHorizontalLine)),
       width: bottomValuePainter.width + padding * 2,
-      height: style.labelHeight,
+      height: bottomStyle.labelHeight,
     );
 
-    _paintLabelBackground(canvas, bottomLabelArea, style.labelShape);
-    _paintLabelBackground(canvas, topLabelArea, style.labelShape);
+    _paintLabelBackground(
+        canvas, topLabelArea, topStyle.labelShape, _topHorizontalLineStyle);
+    _paintLabelBackground(canvas, bottomLabelArea, bottomStyle.labelShape,
+        _bottomHorizontalLineStyle);
     paintWithTextPainter(
       canvas,
       painter: topValuePainter,

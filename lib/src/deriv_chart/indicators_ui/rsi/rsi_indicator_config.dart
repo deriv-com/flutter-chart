@@ -22,10 +22,13 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.overBoughtPrice = 80,
     this.overSoldPrice = 20,
     this.lineStyle = const LineStyle(color: Colors.white),
-    this.zeroHorizontalLinesStyle = const LineStyle(
+    this.zeroHorizontalLineStyle = const LineStyle(
       color: Colors.red,
     ),
-    this.mainHorizontalLinesStyle = const LineStyle(
+    this.topHorizontalLineStyle = const LineStyle(
+      color: Colors.white,
+    ),
+    this.bottomHorizontalLinesStyle = const LineStyle(
       color: Colors.white,
     ),
   }) : super(isOverlay: false);
@@ -54,10 +57,13 @@ class RSIIndicatorConfig extends IndicatorConfig {
   final LineStyle lineStyle;
 
   /// The RSI zero horizontal line style.
-  final LineStyle zeroHorizontalLinesStyle;
+  final LineStyle zeroHorizontalLineStyle;
 
-  /// The RSI horizontal lines style(overBought and overSold).
-  final LineStyle mainHorizontalLinesStyle;
+  /// The RSI horizontal lines style(overBought).
+  final LineStyle topHorizontalLineStyle;
+
+  /// The RSI horizontal lines style( overSold).
+  final LineStyle bottomHorizontalLinesStyle;
 
   /// Field type
   final String fieldType;

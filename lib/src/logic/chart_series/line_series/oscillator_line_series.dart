@@ -15,10 +15,12 @@ class OscillatorLineSeries extends LineSeries {
     LineStyle style,
     String id,
     LineStyle secondaryHorizontalLinesStyle,
-    LineStyle mainHorizontalLinesStyle,
+    LineStyle topHorizontalLineStyle,
+    LineStyle bottomHorizontalLineStyle,
   })  : _topHorizontalLine = topHorizontalLine,
         _bottomHorizontalLine = bottomHorizontalLine,
-        _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
+        _topHorizontalLineStyle = topHorizontalLineStyle,
+        _bottomHorizontalLineStyle = bottomHorizontalLineStyle,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         super(
@@ -31,13 +33,15 @@ class OscillatorLineSeries extends LineSeries {
   final double _topHorizontalLine;
   final double _bottomHorizontalLine;
   final LineStyle _secondaryHorizontalLinesStyle;
-  final LineStyle _mainHorizontalLinesStyle;
+  final LineStyle _topHorizontalLineStyle;
+  final LineStyle _bottomHorizontalLineStyle;
 
   @override
   SeriesPainter<DataSeries<Tick>> createPainter() => OscillatorLinePainter(
         this,
         bottomHorizontalLine: _bottomHorizontalLine,
-        mainHorizontalLinesStyle: _mainHorizontalLinesStyle,
+        topHorizontalLineStyle: _topHorizontalLineStyle,
+        bottomHorizontalLineStyle: _bottomHorizontalLineStyle,
         secondaryHorizontalLines: _secondaryHorizontalLines,
         secondaryHorizontalLinesStyle: _secondaryHorizontalLinesStyle,
         topHorizontalLine: _topHorizontalLine,
