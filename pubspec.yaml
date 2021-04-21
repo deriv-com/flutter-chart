@@ -22,14 +22,14 @@ dependencies:
       ref: samin/migrate_to_null_safety
 
   # Store state:
-  shared_preferences: <1.0.0
+  shared_preferences: ^2.0.5
   json_annotation: ^4.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner:
-  json_serializable: ^4.0.1
+  build_runner: ^2.0.0
+  json_serializable: ^4.1.1
 
 flutter:
   assets:
