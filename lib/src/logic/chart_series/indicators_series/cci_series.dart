@@ -58,7 +58,8 @@ class CCISeries extends AbstractSingleIndicatorSeries {
         this,
         topHorizontalLine: overboughtValue,
         bottomHorizontalLine: oversoldValue,
-        mainHorizontalLinesStyle: oversoldLineStyle,
+        topHorizontalLineStyle: overBoughtLineStyle,
+        bottomHorizontalLineStyle: oversoldLineStyle,
         secondaryHorizontalLinesStyle: oversoldLineStyle,
       );
 
