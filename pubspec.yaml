@@ -22,9 +22,15 @@ dependencies:
       path: packages/deriv_technical_analysis
       ref: samin/migrate_to_null_safety
 
+  # Store state:
+  shared_preferences: <1.0.0
+  json_annotation: ">=3.0.0 <4.0.0"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner:
+  json_serializable:
 
 flutter:
   assets:

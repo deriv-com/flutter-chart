@@ -1,8 +1,13 @@
 analyzer:
   exclude:
+    # Remove these later:
 #    - test/**
 #    - lib/**
 #    - example/**
+
+    # Keep these:
+    - example/lib/generated/**
+    - lib/generated/**
   strong-mode:
     implicit-dynamic: false
   errors:
@@ -11,6 +16,7 @@ analyzer:
     missing_return: warning
     # https://github.com/flutter/flutter/pull/24528
     sdk_version_async_exported_from_core: ignore
+    no_duplicate_case_values: error
 
 linter:
   rules:

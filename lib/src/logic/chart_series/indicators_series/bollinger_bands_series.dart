@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/ma_series.dart';
@@ -48,6 +47,8 @@ class BollingerBandSeries extends Series {
 
   final Indicator<Tick> _fieldIndicator;
 
+  final List<Series> _innerSeries = <Series>[];
+
   @override
   SeriesPainter<Series> createPainter() {
     final StandardDeviationIndicator<Tick> standardDeviation =
@@ -83,6 +84,8 @@ class BollingerBandSeries extends Series {
         inputIndicator: _fieldIndicator,
         options: bbOptions);
 
+    _innerSeries..add(_lowerSeries)..add(_middleSeries)..add(_upperSeries);
+
     return null; // TODO(ramin): return the painter that paints Channel Fill between bands
   }
 
@@ -109,14 +112,12 @@ class BollingerBandSeries extends Series {
       // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
       // But to be safe we calculate min and max. from all three series.
       <double>[
-        min(
-          min(_lowerSeries.minValue, _middleSeries.minValue),
-          _upperSeries.minValue,
-        ),
-        max(
-          max(_lowerSeries.maxValue, _middleSeries.maxValue),
-          _upperSeries.maxValue,
-        ),
+        _innerSeries
+            .map((Series series) => series.minValue)
+            .reduce((double a, double b) => safeMin(a, b)),
+        _innerSeries
+            .map((Series series) => series.maxValue)
+            .reduce((double a, double b) => safeMax(a, b)),
       ];
 
   @override
@@ -140,10 +141,8 @@ class BollingerBandSeries extends Series {
   }
 
   @override
-  int getMinEpoch() =>
-      min(_lowerSeries.getMinEpoch(), _upperSeries.getMinEpoch());
+  int getMinEpoch() => _innerSeries.getMinEpoch();
 
   @override
-  int getMaxEpoch() =>
-      max(_lowerSeries.getMaxEpoch(), _upperSeries.getMaxEpoch());
+  int getMaxEpoch() => _innerSeries.getMaxEpoch();
 }

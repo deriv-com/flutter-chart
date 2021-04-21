@@ -392,7 +392,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0
-                        ? 2000 // average ms difference between ticks
+                        ? 1500 // average ms difference between ticks
                         : granularity * 1000,
                     controller: _controller,
                     isLive: (_symbol?.isOpen ?? false) &&
@@ -697,7 +697,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ticksHistory: _symbol.name,
         adjustStartTime: 1,
         end: 'latest',
-        count: 200,
+        count: 500,
         style: granularity == 0 ? 'ticks' : 'candles',
         granularity: granularity > 0 ? granularity : null,
       ));
