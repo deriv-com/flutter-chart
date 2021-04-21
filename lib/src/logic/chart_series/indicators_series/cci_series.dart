@@ -23,8 +23,10 @@ class CCISeries extends AbstractSingleIndicatorSeries {
     CCIOptions options, {
     this.overboughtValue = 100,
     this.oversoldValue = -100,
-    this.overBoughtLineStyle = const LineStyle(color: Colors.white),
-    this.oversoldLineStyle = const LineStyle(color: Colors.white),
+    this.overBoughtLineStyle =
+        const LineStyle(color: Colors.white, thickness: 0.5),
+    this.oversoldLineStyle =
+        const LineStyle(color: Colors.white, thickness: 0.5),
     LineStyle cciLineStyle = const LineStyle(),
     String id,
   })  : _options = options,
