@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -14,13 +13,15 @@ class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
   const BollingerBandsIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    BollingerBandsIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Bollinger Bands',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -83,7 +84,8 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
       );
 
   double _getCurrentStandardDeviation() {
-    final BollingerBandsIndicatorConfig config = getConfig();
+    final BollingerBandsIndicatorConfig config =
+        (widget.config as BollingerBandsIndicatorConfig);
     return _standardDeviation ?? config?.standardDeviation ?? 2;
   }
 }

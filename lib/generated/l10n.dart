@@ -195,6 +195,26 @@ class ChartLocalization {
     );
   }
 
+  /// `Over Bought Price`
+  String get labelOverBoughtPrice {
+    return Intl.message(
+      'Over Bought Price',
+      name: 'labelOverBoughtPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Over Sold Price`
+  String get labelOverSoldPrice {
+    return Intl.message(
+      'Over Sold Price',
+      name: 'labelOverSoldPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Max AF`
   String get labelMaxAF {
     return Intl.message(
@@ -295,11 +315,21 @@ class ChartLocalization {
     );
   }
 
-  /// `Try checking your spelling or use a different term`
+  /// `Try checking your spelling or use a different term.`
   String get warnCheckAssetSearchingText {
     return Intl.message(
-      'Try checking your spelling or use a different term',
+      'Try checking your spelling or use a different term.',
       name: 'warnCheckAssetSearchingText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load indicators.`
+  String get warnFailedLoadingIndicators {
+    return Intl.message(
+      'Failed to load indicators.',
+      name: 'warnFailedLoadingIndicators',
       desc: '',
       args: [],
     );

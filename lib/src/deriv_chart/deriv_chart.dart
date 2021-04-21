@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/chart.dart';
+import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/chart/chart.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -10,9 +11,11 @@ import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../callbacks.dart';
 import 'indicators_ui/indicator_config.dart';
@@ -82,59 +85,95 @@ class _DerivChartState extends State<DerivChart> {
   final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
 
   @override
-  Widget build(BuildContext context) => Stack(
-        children: <Widget>[
-          Chart(
-            mainSeries: widget.mainSeries,
-            pipSize: widget.pipSize,
-            granularity: widget.granularity,
-            controller: widget.controller,
-            secondarySeries: <Series>[
-              ..._indicatorsRepo.indicators.values
-                  .where((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig != null)
-                  .map((IndicatorConfig indicatorConfig) =>
-                      indicatorConfig.getSeries(
-                        IndicatorInput(
-                          widget.mainSeries.input,
-                          widget.granularity,
-                        ),
-                      ))
-            ],
-            markerSeries: widget.markerSeries,
-            theme: widget.theme,
-            onCrosshairAppeared: widget.onCrosshairAppeared,
-            onVisibleAreaChanged: widget.onVisibleAreaChanged,
-            isLive: widget.isLive,
-            opacity: widget.opacity,
-            annotations: widget.annotations,
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: IconButton(
-              icon: const Icon(Icons.architecture),
-              onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (
-                    BuildContext context,
-                  ) =>
-                      Provider<IndicatorsRepository>.value(
-                    value: _indicatorsRepo,
-                    child: IndicatorsDialog(
-                      ticks: widget.mainSeries.entries,
-                      onAddIndicator: (
-                        String key,
-                        IndicatorConfig indicatorConfig,
-                      ) =>
-                          setState(() => _indicatorsRepo.indicators[key] =
-                              indicatorConfig),
-                    ),
+  void initState() {
+    super.initState();
+    loadSavedIndicators();
+  }
+
+  Future<void> loadSavedIndicators() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      _indicatorsRepo.loadFromPrefs(prefs);
+    } on Exception {
+      // ignore: unawaited_futures
+      showDialog<void>(
+          context: context,
+          builder: (BuildContext context) => AnimatedPopupDialog(
+                child: Center(
+                  child: Text(
+                    ChartLocalization.of(context).warnFailedLoadingIndicators,
                   ),
-                );
-              },
+                ),
+              ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider<IndicatorsRepository>.value(
+        value: _indicatorsRepo,
+        builder: (BuildContext context, Widget child) => Stack(
+          children: <Widget>[
+            Chart(
+              mainSeries: widget.mainSeries,
+              pipSize: widget.pipSize,
+              granularity: widget.granularity,
+              controller: widget.controller,
+              overlaySeries: <Series>[
+                ...context
+                    .watch<IndicatorsRepository>()
+                    .indicators
+                    .where((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig != null && indicatorConfig.isOverlay)
+                    .map((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig.getSeries(
+                          IndicatorInput(
+                            widget.mainSeries.input,
+                            widget.granularity,
+                          ),
+                        ))
+              ],
+              bottomSeries: <Series>[
+                ...context
+                    .watch<IndicatorsRepository>()
+                    .indicators
+                    .where((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig != null && !indicatorConfig.isOverlay)
+                    .map((IndicatorConfig indicatorConfig) =>
+                        indicatorConfig.getSeries(
+                          IndicatorInput(
+                            widget.mainSeries.input,
+                            widget.granularity,
+                          ),
+                        ))
+              ],
+              markerSeries: widget.markerSeries,
+              theme: widget.theme,
+              onCrosshairAppeared: widget.onCrosshairAppeared,
+              onVisibleAreaChanged: widget.onVisibleAreaChanged,
+              isLive: widget.isLive,
+              opacity: widget.opacity,
+              annotations: widget.annotations,
             ),
-          )
-        ],
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                icon: const Icon(Icons.architecture),
+                onPressed: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (
+                      BuildContext context,
+                    ) =>
+                        ChangeNotifierProvider<IndicatorsRepository>.value(
+                      value: _indicatorsRepo,
+                      child: IndicatorsDialog(),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       );
 }

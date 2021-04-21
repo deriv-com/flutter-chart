@@ -43,9 +43,9 @@ class MarketItem extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(
-              top: theme.margin24,
-              left: theme.margin08,
-              bottom: theme.margin08,
+              top: theme.margin24Chart,
+              left: theme.margin08Chart,
+              bottom: theme.margin08Chart,
             ),
             child: Text(
               market.displayName ?? '',

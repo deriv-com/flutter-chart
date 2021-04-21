@@ -40,6 +40,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelMaxAF" : MessageLookupByLibrary.simpleMessage("Max AF"),
     "labelMinAF" : MessageLookupByLibrary.simpleMessage("Min AF"),
     "labelOffset" : MessageLookupByLibrary.simpleMessage("Offset"),
+    "labelOverBoughtPrice" : MessageLookupByLibrary.simpleMessage("Over Bought Price"),
+    "labelOverSoldPrice" : MessageLookupByLibrary.simpleMessage("Over Sold Price"),
     "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
     "labelShift" : MessageLookupByLibrary.simpleMessage("Shift"),
@@ -49,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelTeethOffset" : MessageLookupByLibrary.simpleMessage("Teeth Offset"),
     "labelTeethPeriod" : MessageLookupByLibrary.simpleMessage("Teeth Period"),
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
-    "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term")
+    "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term."),
+    "warnFailedLoadingIndicators" : MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
   };
 }

@@ -40,6 +40,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     Color titleBackgroundColor = const Color(0xFF0E0E0E),
     bool isDashed = true,
     this.hasBlinkingDot = false,
+    this.blinkingDotColor,
     this.arrowSize = 5,
     this.hasArrow = true,
     TextStyle textStyle = const TextStyle(
@@ -64,6 +65,9 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// Whether to have a blinking dot animation where barrier and chart data are intersected.
   final bool hasBlinkingDot;
+
+  /// The color of blinking dot.
+  final Color blinkingDotColor;
 
   /// The size of the arrow.
   ///
