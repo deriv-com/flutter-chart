@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer' as dev;
+
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
@@ -5,6 +8,7 @@ import 'package:deriv_chart/src/x_axis/grid/time_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:screen_state/screen_state.dart';
 
 import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
@@ -57,11 +61,16 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
 
+  final Screen _screen = Screen();
+  StreamSubscription<ScreenStateEvent> _subscription;
+
   GestureManagerState gestureManager;
 
   @override
   void initState() {
     super.initState();
+
+    startScreenListening();
 
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
@@ -86,6 +95,22 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       ..registerCallback(_model.onScaleAndPanEnd);
   }
 
+  void onData(ScreenStateEvent event) {
+    _model.scrollToLastTick();
+  }
+
+  void startScreenListening() {
+    try {
+      _subscription = _screen.screenStateStream.listen(onData);
+    } on ScreenStateException catch (exception) {
+      dev.log(exception.toString());
+    }
+  }
+
+  void stopScreenListening() {
+    _subscription.cancel();
+  }
+
   void _onVisibleAreaChanged() {
     widget.onVisibleAreaChanged?.call(
       _model.leftBoundEpoch,
@@ -107,6 +132,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   void dispose() {
     _ticker?.dispose();
     _rightEpochAnimationController?.dispose();
+    stopScreenListening();
 
     gestureManager
       ..removeCallback(_model.onScaleAndPanStart)
