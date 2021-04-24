@@ -20,12 +20,11 @@ part 'bollinger_bands_indicator_config.g.dart';
 class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const BollingerBandsIndicatorConfig({
-    int period,
-    MovingAverageType movingAverageType,
-    String fieldType,
-    double standardDeviation,
-  })  : standardDeviation = standardDeviation ?? 2,
-        super(
+    int period = 50,
+    MovingAverageType movingAverageType = MovingAverageType.simple,
+    String fieldType = 'close',
+    this.standardDeviation = 2,
+  }) : super(
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,

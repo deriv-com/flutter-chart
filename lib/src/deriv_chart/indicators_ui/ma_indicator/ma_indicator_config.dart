@@ -20,18 +20,12 @@ part 'ma_indicator_config.g.dart';
 class MAIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const MAIndicatorConfig({
-    int period,
-    MovingAverageType movingAverageType,
-    String fieldType,
-    LineStyle lineStyle,
-    int offset,
-  })  : period = period ?? 50,
-        movingAverageType = movingAverageType ?? MovingAverageType.simple,
-        fieldType = fieldType ?? 'close',
-        offset = offset ?? 0,
-        lineStyle =
-            lineStyle ?? const LineStyle(color: Colors.yellow, thickness: 0.6),
-        super();
+    this.period = 50,
+    this.movingAverageType = MovingAverageType.simple,
+    this.fieldType = 'close',
+    this.lineStyle = const LineStyle(color: Colors.yellow, thickness: 0.6),
+    this.offset = 0,
+  }) : super();
 
   /// Initializes from JSON.
   factory MAIndicatorConfig.fromJson(Map<String, dynamic> json) =>
