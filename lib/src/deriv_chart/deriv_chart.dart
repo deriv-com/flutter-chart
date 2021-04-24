@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/generated/l10n.dart';
@@ -28,17 +26,17 @@ import 'indicators_ui/indicators_dialog.dart';
 class DerivChart extends StatefulWidget {
   /// Initializes
   const DerivChart({
-    Key key,
-    this.mainSeries,
+    Key? key,
+    required this.mainSeries,
+    required this.granularity,
     this.markerSeries,
     this.controller,
-    this.pipSize,
-    this.granularity,
+    this.pipSize = 4,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
     this.theme,
     this.annotations,
-    this.isLive,
+    this.isLive = false,
     this.opacity = 1.0,
   }) : super(key: key);
 
@@ -46,10 +44,10 @@ class DerivChart extends StatefulWidget {
   final DataSeries<Tick> mainSeries;
 
   /// Open position marker series.
-  final MarkerSeries markerSeries;
+  final MarkerSeries? markerSeries;
 
   /// Chart's controller
-  final ChartController controller;
+  final ChartController? controller;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -59,16 +57,16 @@ class DerivChart extends StatefulWidget {
   final int granularity;
 
   /// Called when crosshair details appear after long press.
-  final VoidCallback onCrosshairAppeared;
+  final VoidCallback? onCrosshairAppeared;
 
   /// Called when chart is scrolled or zoomed.
-  final VisibleAreaChangedCallback onVisibleAreaChanged;
+  final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
   /// Chart's theme.
-  final ChartTheme theme;
+  final ChartTheme? theme;
 
   /// Chart's annotations
-  final List<ChartAnnotation<ChartObject>> annotations;
+  final List<ChartAnnotation<ChartObject>>? annotations;
 
   /// Whether the chart should be showing live data or not.
   ///
@@ -114,7 +112,7 @@ class _DerivChartState extends State<DerivChart> {
   Widget build(BuildContext context) =>
       ChangeNotifierProvider<IndicatorsRepository>.value(
         value: _indicatorsRepo,
-        builder: (BuildContext context, Widget child) => Stack(
+        builder: (BuildContext context, _) => Stack(
           children: <Widget>[
             Chart(
               mainSeries: widget.mainSeries,
@@ -126,7 +124,7 @@ class _DerivChartState extends State<DerivChart> {
                     .watch<IndicatorsRepository>()
                     .indicators
                     .where((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig != null && indicatorConfig.isOverlay)
+                        indicatorConfig.isOverlay)
                     .map((IndicatorConfig indicatorConfig) =>
                         indicatorConfig.getSeries(
                           IndicatorInput(
@@ -140,7 +138,7 @@ class _DerivChartState extends State<DerivChart> {
                     .watch<IndicatorsRepository>()
                     .indicators
                     .where((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig != null && !indicatorConfig.isOverlay)
+                        !indicatorConfig.isOverlay)
                     .map((IndicatorConfig indicatorConfig) =>
                         indicatorConfig.getSeries(
                           IndicatorInput(
