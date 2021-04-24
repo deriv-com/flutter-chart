@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 class MaterialColorGrid extends StatelessWidget {
   /// Creates a grid from given colors.
   const MaterialColorGrid({
-    @required this.colorSwatches,
-    @required this.colorShades,
-    @required this.selectedColor,
+    required this.colorSwatches,
+    required this.colorShades,
+    required this.selectedColor,
     this.onChanged,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// List of available color swatches (rows).
@@ -25,7 +25,7 @@ class MaterialColorGrid extends StatelessWidget {
   final Color selectedColor;
 
   /// Called when color option is selected.
-  final ValueChanged<Color> onChanged;
+  final ValueChanged<Color>? onChanged;
 
   @override
   Widget build(BuildContext context) => GridView.count(
@@ -35,10 +35,10 @@ class MaterialColorGrid extends StatelessWidget {
           for (final MaterialColor swatch in colorSwatches)
             for (final int shade in colorShades)
               _ColorOptionButton(
-                color: swatch[shade],
-                selected: swatch[shade].value == selectedColor.value,
+                color: swatch[shade]!,
+                selected: swatch[shade]!.value == selectedColor.value,
                 onTap: () {
-                  onChanged?.call(swatch[shade]);
+                  onChanged?.call(swatch[shade]!);
                 },
               ),
         ],
@@ -47,15 +47,15 @@ class MaterialColorGrid extends StatelessWidget {
 
 class _ColorOptionButton extends StatelessWidget {
   const _ColorOptionButton({
-    Key key,
-    this.color,
-    this.selected,
+    required this.color,
+    Key? key,
+    this.selected = false,
     this.onTap,
   }) : super(key: key);
 
   final Color color;
   final bool selected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

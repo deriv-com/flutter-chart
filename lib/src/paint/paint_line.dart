@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 
 /// Paints a horizontal dashed-line for the given parameters.

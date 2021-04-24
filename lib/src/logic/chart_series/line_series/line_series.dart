@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';

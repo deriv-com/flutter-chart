@@ -1,3 +1,5 @@
+// @dart=2.9
+
 library deriv_chart;
 
 export 'generated/l10n.dart';

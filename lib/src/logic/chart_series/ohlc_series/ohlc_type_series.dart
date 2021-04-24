@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/candle.dart';

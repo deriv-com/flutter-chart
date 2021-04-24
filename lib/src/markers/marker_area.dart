@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';

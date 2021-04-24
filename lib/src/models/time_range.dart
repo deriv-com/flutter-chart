@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:math';
 
 /// Representation of a time range on x-axis.

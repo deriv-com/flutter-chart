@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

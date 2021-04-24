@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_item.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/parabolic_sar_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/parabolic_sar/parabolic_sar_series.dart';

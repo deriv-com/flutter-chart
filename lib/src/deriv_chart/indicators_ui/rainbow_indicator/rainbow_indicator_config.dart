@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:ui';
 
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';

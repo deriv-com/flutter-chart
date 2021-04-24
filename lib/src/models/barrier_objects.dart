@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/models/chart_object.dart';
 
 /// A [ChartObject] for defining position of a horizontal barrier.

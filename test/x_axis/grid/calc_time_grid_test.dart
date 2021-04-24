@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:deriv_chart/src/x_axis/grid/calc_time_grid.dart';

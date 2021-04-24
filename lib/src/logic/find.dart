@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/models/tick.dart';
 
 /// Returns a reference to candle with exact or closest epoch to [targetEpoch].

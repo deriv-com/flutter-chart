@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:flutter_test/flutter_test.dart';
 

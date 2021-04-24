@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../ma_series.dart';

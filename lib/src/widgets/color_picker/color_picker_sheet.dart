@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 class ColorPickerSheet extends StatefulWidget {
   /// Creates color picker sheet.
   const ColorPickerSheet({
-    @required this.selectedColor,
-    @required this.onChanged,
-    Key key,
+    required this.selectedColor,
+    required this.onChanged,
+    Key? key,
   }) : super(key: key);
 
   /// Selected color value.
@@ -22,7 +22,7 @@ class ColorPickerSheet extends StatefulWidget {
 }
 
 class _ColorPickerSheetState extends State<ColorPickerSheet> {
-  Color _selectedColor;
+  Color? _selectedColor;
 
   @override
   Widget build(BuildContext context) => ChartBottomSheet(

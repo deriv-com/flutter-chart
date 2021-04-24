@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:ui';
 
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';

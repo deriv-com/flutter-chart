@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:collection';
 
 /// A class to keep a market's information.

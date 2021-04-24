@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';

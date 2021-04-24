@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/painters/loading_painter.dart';
 import 'package:flutter/material.dart';
 

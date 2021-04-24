@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';

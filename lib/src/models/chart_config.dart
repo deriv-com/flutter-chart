@@ -1,4 +1,7 @@
 /// Chart's general configuration.
+
+// @dart=2.9
+
 class ChartConfig {
   /// Initializes chart's general configuration.
   const ChartConfig({this.pipSize, this.granularity});

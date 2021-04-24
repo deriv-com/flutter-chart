@@ -1,4 +1,7 @@
 /// Calculate time labels' from [gridTimestamps] without any overlaps.
+
+// @dart=2.9
+
 List<DateTime> calculateNoOverlapGridTimestamps(
   List<DateTime> gridTimestamps,
   double minDistanceBetweenTimeGridLines,

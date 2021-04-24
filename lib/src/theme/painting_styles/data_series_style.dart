@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 
 /// Indicates the chart's data painting style, including whether its line, candle, etc

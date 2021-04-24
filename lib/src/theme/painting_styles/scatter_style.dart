@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/helpers/color_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';

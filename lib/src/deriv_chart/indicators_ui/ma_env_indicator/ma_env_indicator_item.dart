@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';

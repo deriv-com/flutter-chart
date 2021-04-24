@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';

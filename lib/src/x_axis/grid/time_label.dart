@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:intl/intl.dart' show DateFormat;
 
 /// Returns the time label for the given [time].

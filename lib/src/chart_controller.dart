@@ -1,4 +1,7 @@
 /// ScrollToLastTick callback.
+
+// @dart=2.9
+
 typedef OnScrollToLastTick = Function(bool);
 
 /// Chart widget's controller.

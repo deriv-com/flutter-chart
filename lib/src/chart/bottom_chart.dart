@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';

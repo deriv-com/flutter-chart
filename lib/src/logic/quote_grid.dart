@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:meta/meta.dart';
 
 ///A Model for calculating the grid intervals and quotes.

@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
+// @dart=2.9
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';

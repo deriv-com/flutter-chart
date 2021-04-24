@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/foundation.dart';
 
 /// Any component other than chart data (line or candle) which can take a rectangle on the chart's canvas.

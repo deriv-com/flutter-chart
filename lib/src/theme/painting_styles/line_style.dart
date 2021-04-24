@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/helpers/color_converter.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';

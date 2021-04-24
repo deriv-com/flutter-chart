@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 

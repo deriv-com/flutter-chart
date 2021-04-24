@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'indicator_options.dart';
 
 /// Alligator indicator options.

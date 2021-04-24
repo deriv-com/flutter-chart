@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_button.dart';

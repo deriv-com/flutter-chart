@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import '../ma_series.dart';
 import 'indicator_options.dart';
 

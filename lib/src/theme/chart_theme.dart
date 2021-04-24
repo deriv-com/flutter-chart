@@ -1,4 +1,7 @@
 // ignore_for_file: public_member_api_docs
+
+// @dart=2.9
+
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:meta/meta.dart';
 
 const _day = Duration(days: 1);

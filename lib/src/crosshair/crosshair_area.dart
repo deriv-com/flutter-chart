@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/src/crosshair/crosshair_dot_painter.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';

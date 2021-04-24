@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
