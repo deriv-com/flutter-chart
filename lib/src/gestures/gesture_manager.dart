@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,7 @@ import 'custom_gesture_detector.dart';
 /// separate modules.
 class GestureManager extends StatefulWidget {
   /// Initialises the top level gesture detector that allows all descendants to register/remove gesture callbacks.
-  GestureManager({Key key, @required this.child})
+  GestureManager({Key? key, required this.child})
       : assert(child != null),
         super(key: key);
 
