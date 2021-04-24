@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/helpers/color_converter.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';
@@ -37,9 +35,9 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
 
   /// Creates a copy of this object.
   LineStyle copyWith({
-    Color color,
-    double thickness,
-    bool hasArea,
+    Color? color,
+    double? thickness,
+    bool? hasArea,
   }) =>
       LineStyle(
         color: color ?? this.color,

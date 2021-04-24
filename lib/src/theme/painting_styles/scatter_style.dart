@@ -1,10 +1,7 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/helpers/color_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'barrier_style.dart';
 import 'data_series_style.dart';
 
 part 'scatter_style.g.dart';
@@ -34,9 +31,8 @@ class ScatterStyle extends DataSeriesStyle {
 
   /// Creates a copy of this object.
   ScatterStyle copyWith({
-    Color color,
-    double radius,
-    HorizontalBarrierStyle lastTickStyle,
+    Color? color,
+    double? radius,
   }) =>
       ScatterStyle(
         color: color ?? this.color,

@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
@@ -15,10 +15,10 @@ import '../indicator_item.dart';
 class RSIIndicatorItem extends IndicatorItem {
   /// Initializes
   const RSIIndicatorItem({
-    Key key,
-    RSIIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    RSIIndicatorConfig config = const RSIIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'RSI',
@@ -34,10 +34,10 @@ class RSIIndicatorItem extends IndicatorItem {
 
 /// RSIItem State class
 class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
-  int _period;
-  double _overBoughtPrice;
-  double _overSoldPrice;
-  String _field;
+  int? _period;
+  double? _overBoughtPrice;
+  double? _overSoldPrice;
+  String? _field;
 
   @override
   RSIIndicatorConfig createIndicatorConfig() => RSIIndicatorConfig(
@@ -105,7 +105,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
                           ),
                         ))
                 .toList(),
-            onChanged: (String newField) => setState(
+            onChanged: (String? newField) => setState(
               () {
                 _field = newField;
                 updateIndicator();

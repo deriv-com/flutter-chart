@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
@@ -19,10 +19,10 @@ import 'ma_indicator_config.dart';
 class MAIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAIndicatorItem({
-    Key key,
-    MAIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    MAIndicatorConfig config = const MAIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'Moving Average',
@@ -40,23 +40,23 @@ class MAIndicatorItem extends IndicatorItem {
 class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// MA type
   @protected
-  MovingAverageType type;
+  MovingAverageType? type;
 
   /// Field type
   @protected
-  String field;
+  String? field;
 
   /// MA period
   @protected
-  int period;
+  int? period;
 
   /// MA period
   @protected
-  int offset;
+  int? offset;
 
   /// MA line style
   @protected
-  LineStyle lineStyle;
+  LineStyle? lineStyle;
 
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
@@ -123,7 +123,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                           ),
                         ))
                 .toList(),
-            onChanged: (String newField) => setState(
+            onChanged: (String? newField) => setState(
               () {
                 field = newField;
                 updateIndicator();
@@ -209,7 +209,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                           ),
                         ))
                 .toList(),
-            onChanged: (MovingAverageType newType) => setState(
+            onChanged: (MovingAverageType? newType) => setState(
               () {
                 type = newType;
                 updateIndicator();

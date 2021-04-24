@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
@@ -13,10 +13,10 @@ import '../indicator_item.dart';
 class AlligatorIndicatorItem extends IndicatorItem {
   /// Initializes
   const AlligatorIndicatorItem({
-    Key key,
-    AlligatorIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    AlligatorIndicatorConfig config = const AlligatorIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'Alligator',
@@ -33,12 +33,12 @@ class AlligatorIndicatorItem extends IndicatorItem {
 /// AlligatorIndicatorItem State class
 class AlligatorIndicatorItemState
     extends IndicatorItemState<AlligatorIndicatorConfig> {
-  int _jawOffset;
-  int _jawPeriod;
-  int _teethOffset;
-  int _teethPeriod;
-  int _lipsOffset;
-  int _lipsPeriod;
+  int? _jawOffset;
+  int? _jawPeriod;
+  int? _teethOffset;
+  int? _teethPeriod;
+  int? _lipsOffset;
+  int? _lipsPeriod;
 
   @override
   AlligatorIndicatorConfig createIndicatorConfig() => AlligatorIndicatorConfig(

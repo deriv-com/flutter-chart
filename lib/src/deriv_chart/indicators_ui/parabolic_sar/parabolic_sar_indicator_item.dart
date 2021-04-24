@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
@@ -16,10 +16,10 @@ import 'parabolic_sar_indicator_config.dart';
 class ParabolicSARIndicatorItem extends IndicatorItem {
   /// Initializes
   const ParabolicSARIndicatorItem({
-    Key key,
-    ParabolicSARConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    ParabolicSARConfig config = const ParabolicSARConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'ParabolicSAR',
@@ -36,11 +36,11 @@ class ParabolicSARIndicatorItem extends IndicatorItem {
 /// ParabolicSARIndicatorItem State class
 class ParabolicSARIndicatorItemState
     extends IndicatorItemState<ParabolicSARConfig> {
-  double _minAccelerationFactor;
+  double? _minAccelerationFactor;
 
-  double _maxAccelerationFactor;
+  double? _maxAccelerationFactor;
 
-  ScatterStyle _scatterStyle;
+  ScatterStyle? _scatterStyle;
 
   @override
   ParabolicSARConfig createIndicatorConfig() => ParabolicSARConfig(

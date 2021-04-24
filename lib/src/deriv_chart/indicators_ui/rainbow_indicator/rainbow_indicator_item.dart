@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
@@ -16,10 +16,10 @@ import '../indicator_config.dart';
 class RainbowIndicatorItem extends IndicatorItem {
   /// Initializes
   const RainbowIndicatorItem({
-    Key key,
-    RainbowIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    required RainbowIndicatorConfig config,
+    Key? key,
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'Rainbow Indicator',
@@ -37,7 +37,7 @@ class RainbowIndicatorItem extends IndicatorItem {
 class RainbowIndicatorItemState extends MAIndicatorItemState {
   /// Rainbow MA bands count
   @protected
-  int bandsCount;
+  int? bandsCount;
 
   @override
   MAIndicatorConfig createIndicatorConfig() => RainbowIndicatorConfig(

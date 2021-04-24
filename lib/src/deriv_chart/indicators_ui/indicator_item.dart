@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +11,9 @@ import 'indicator_repository.dart';
 abstract class IndicatorItem extends StatefulWidget {
   /// Initializes
   const IndicatorItem({
-    Key key,
-    this.title,
-    this.config,
+    Key? key,
+    required this.title,
+    required this.config,
     this.updateIndicator,
     this.deleteIndicator,
   }) : super(key: key);
@@ -25,10 +25,10 @@ abstract class IndicatorItem extends StatefulWidget {
   final IndicatorConfig config;
 
   /// Called when config values were updated.
-  final UpdateIndicator updateIndicator;
+  final UpdateIndicator? updateIndicator;
 
   /// Called when user removed indicator.
-  final VoidCallback deleteIndicator;
+  final VoidCallback? deleteIndicator;
 
   @override
   IndicatorItemState<IndicatorConfig> createState() =>
@@ -44,7 +44,7 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
     extends State<IndicatorItem> {
   /// Indicators repository
   @protected
-  IndicatorsRepository indicatorsRepo;
+  late IndicatorsRepository indicatorsRepo;
 
   @override
   void didChangeDependencies() {
@@ -69,7 +69,7 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
       widget.updateIndicator?.call(createIndicatorConfig());
 
   /// Removes this indicator.
-  void removeIndicator() => widget.deleteIndicator.call();
+  void removeIndicator() => widget.deleteIndicator!.call();
 
   /// Returns the [IndicatorConfig] which can be used to create the Series for this indicator.
   T createIndicatorConfig();

@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
@@ -14,10 +14,11 @@ import 'bollinger_bands_indicator_config.dart';
 class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
   const BollingerBandsIndicatorItem({
-    Key key,
-    BollingerBandsIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    BollingerBandsIndicatorConfig config =
+        const BollingerBandsIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'Bollinger Bands',
@@ -33,7 +34,7 @@ class BollingerBandsIndicatorItem extends IndicatorItem {
 
 /// BollingerBandsIndicatorItem State class
 class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
-  double _standardDeviation;
+  double? _standardDeviation;
 
   @override
   BollingerBandsIndicatorConfig createIndicatorConfig() =>

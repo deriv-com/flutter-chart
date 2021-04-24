@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
@@ -15,10 +15,11 @@ import 'donchian_channel_indicator_config.dart';
 class DonchianChannelIndicatorItem extends IndicatorItem {
   /// Initializes
   const DonchianChannelIndicatorItem({
-    Key key,
-    DonchianChannelIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    DonchianChannelIndicatorConfig config =
+        const DonchianChannelIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'Donchian Channel',
@@ -35,9 +36,9 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
 /// DonchianChannelIndicatorItem State class
 class DonchianChannelIndicatorItemState
     extends IndicatorItemState<DonchianChannelIndicatorConfig> {
-  int _highPeriod;
-  int _lowPeriod;
-  bool _channelFill;
+  int? _highPeriod;
+  int? _lowPeriod;
+  bool? _channelFill;
 
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>

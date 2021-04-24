@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
@@ -55,7 +55,7 @@ class MAIndicatorConfig extends IndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         options: MAOptions(period: period, type: movingAverageType),
         offset: offset,
         style: lineStyle,

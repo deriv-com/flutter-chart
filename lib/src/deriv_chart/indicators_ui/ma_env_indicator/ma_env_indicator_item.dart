@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
@@ -17,10 +17,10 @@ import 'ma_env_indicator_config.dart';
 class MAEnvIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAEnvIndicatorItem({
-    Key key,
-    MAEnvIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    MAEnvIndicatorConfig config = const MAEnvIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'MA Envelope Indicator',
@@ -38,11 +38,11 @@ class MAEnvIndicatorItem extends IndicatorItem {
 class MAEnvIndicatorItemState extends MAIndicatorItemState {
   /// MA Env shift
   @protected
-  double shift;
+  double? shift;
 
   /// Field ShiftType
   @protected
-  ShiftType shiftType;
+  ShiftType? shiftType;
 
   @override
   MAEnvIndicatorConfig createIndicatorConfig() => MAEnvIndicatorConfig(
@@ -113,7 +113,7 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
                           ),
                         ))
                 .toList(),
-            onChanged: (ShiftType newType) => setState(
+            onChanged: (ShiftType? newType) => setState(
               () {
                 shiftType = newType;
                 updateIndicator();

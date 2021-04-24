@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
@@ -8,6 +6,7 @@ import 'package:deriv_chart/src/helpers/color_converter.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/donchian_channels_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -63,8 +62,10 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       DonchianChannelsSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes['high'](indicatorInput),
-        IndicatorConfig.supportedFieldTypes['low'](indicatorInput),
+        IndicatorConfig.supportedFieldTypes['high']!(indicatorInput)
+            as HighValueIndicator<Tick>,
+        IndicatorConfig.supportedFieldTypes['low']!(indicatorInput)
+            as LowValueIndicator<Tick>,
         this,
       );
 

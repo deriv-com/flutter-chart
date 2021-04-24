@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
@@ -13,10 +13,10 @@ import '../indicator_item.dart';
 class IchimokuCloudIndicatorItem extends IndicatorItem {
   /// Initializes
   const IchimokuCloudIndicatorItem({
-    Key key,
-    IchimokuCloudIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    IchimokuCloudIndicatorConfig config = const IchimokuCloudIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'Ichimoku',
@@ -33,10 +33,10 @@ class IchimokuCloudIndicatorItem extends IndicatorItem {
 /// IchimokuCloudIndicatorItem State class
 class IchimokuCloudIndicatorItemState
     extends IndicatorItemState<IchimokuCloudIndicatorConfig> {
-  int _baseLinePeriod;
-  int _conversionLinePeriod;
-  int _spanBPeriod;
-  int _laggingSpanOffset;
+  int? _baseLinePeriod;
+  int? _conversionLinePeriod;
+  int? _spanBPeriod;
+  int? _laggingSpanOffset;
 
   @override
   IchimokuCloudIndicatorConfig createIndicatorConfig() =>

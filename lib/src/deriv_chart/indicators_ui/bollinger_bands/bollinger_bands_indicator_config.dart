@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
@@ -47,7 +47,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       BollingerBandSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         bbOptions: BollingerBandsOptions(
           period: period,
           movingAverageType: movingAverageType,

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
@@ -24,7 +22,7 @@ class IndicatorsDialog extends StatefulWidget {
 }
 
 class _IndicatorsDialogState extends State<IndicatorsDialog> {
-  IndicatorConfig _selectedIndicator;
+  IndicatorConfig? _selectedIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +80,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   ),
                   // Add new indicators here.
                 ],
-                onChanged: (IndicatorConfig config) {
+                onChanged: (IndicatorConfig? config) {
                   setState(() {
                     _selectedIndicator = config;
                   });
@@ -93,7 +91,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
                     ? () async {
-                        await repo.add(_selectedIndicator);
+                        repo.add(_selectedIndicator!);
                         setState(() {});
                       }
                     : null,
@@ -109,7 +107,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 (IndicatorConfig updatedConfig) =>
                     repo.updateAt(index, updatedConfig),
                 () async {
-                  await repo.removeAt(index);
+                  repo.removeAt(index);
                   setState(() {});
                 },
               ),

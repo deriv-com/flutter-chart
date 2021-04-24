@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
@@ -52,7 +52,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => MAEnvSeries.fromIndicator(
-      IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+      IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
       maEnvOptions: MAEnvOptions(
         period: period,
         movingAverageType: movingAverageType,

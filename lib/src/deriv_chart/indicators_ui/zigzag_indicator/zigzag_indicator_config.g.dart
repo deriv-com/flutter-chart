@@ -1,7 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// @dart=2.9
-
 part of 'zigzag_indicator_config.dart';
 
 // **************************************************************************
@@ -11,10 +9,8 @@ part of 'zigzag_indicator_config.dart';
 ZigZagIndicatorConfig _$ZigZagIndicatorConfigFromJson(
     Map<String, dynamic> json) {
   return ZigZagIndicatorConfig(
-    distance: (json['distance'] as num)?.toDouble(),
-    lineStyle: json['lineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    distance: (json['distance'] as num).toDouble(),
+    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
   );
 }
 

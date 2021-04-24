@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
@@ -66,7 +66,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,
         rsiOptions: RSIOptions(period: period),
       );

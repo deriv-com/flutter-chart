@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
@@ -13,10 +13,10 @@ import '../indicator_item.dart';
 class ZigZagIndicatorItem extends IndicatorItem {
   /// Initializes
   const ZigZagIndicatorItem({
-    Key key,
-    ZigZagIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    ZigZagIndicatorConfig config = const ZigZagIndicatorConfig(),
+    UpdateIndicator? updateIndicator,
+    VoidCallback? deleteIndicator,
   }) : super(
           key: key,
           title: 'ZigZag',
@@ -35,7 +35,7 @@ class ZigZagIndicatorItemState
     extends IndicatorItemState<ZigZagIndicatorConfig> {
   /// distance
   @protected
-  double distance;
+  double? distance;
 
   @override
   ZigZagIndicatorConfig createIndicatorConfig() => ZigZagIndicatorConfig(

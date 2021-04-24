@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'dart:ui';
 
@@ -66,7 +66,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       RainbowSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         rainbowColors: rainbowColors,
         rainbowOptions: RainbowOptions(
           period: period,
