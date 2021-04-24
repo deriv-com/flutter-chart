@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -13,17 +11,17 @@ import 'package:intl/intl.dart';
 class CrosshairDetails extends StatelessWidget {
   /// Initializes the details to show on a crasshair.
   const CrosshairDetails({
-    @required this.mainSeries,
-    @required this.crosshairTick,
-    @required this.pipSize,
-    Key key,
+    required this.mainSeries,
+    required this.crosshairTick,
+    this.pipSize = 4,
+    Key? key,
   }) : super(key: key);
 
   /// The chart's main data series.
-  final DataSeries<Tick> mainSeries;
+  final DataSeries<Tick?> mainSeries;
 
   /// The basic data entry of a crosshair.
-  final Tick crosshairTick;
+  final Tick? crosshairTick;
 
   /// Number of decimal digits when showing prices.
   final int pipSize;
@@ -48,7 +46,7 @@ class CrosshairDetails extends StatelessWidget {
 
   Widget _buildTimeLabel(BuildContext context) {
     final DateTime time =
-        DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch, isUtc: true);
+        DateTime.fromMillisecondsSinceEpoch(crosshairTick!.epoch, isUtc: true);
     final String timeLabel = DateFormat('dd MMM yyy - HH:mm:ss').format(time);
     return Text(
       timeLabel,
