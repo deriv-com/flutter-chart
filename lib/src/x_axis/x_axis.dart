@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_state/screen_state.dart';
-import 'package:is_lock_screen/is_lock_screen.dart';
 
 import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
@@ -101,13 +100,16 @@ class _XAxisState extends State<XAxis>
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed &&
+        _model.currentViewingMode == ViewingMode.followCurrentTick) {
       _model.scrollToLastTick();
     }
   }
 
   void onData(ScreenStateEvent event) {
-    _model.scrollToLastTick();
+    if (_model.currentViewingMode == ViewingMode.followCurrentTick) {
+      _model.scrollToLastTick();
+    }
   }
 
   void startScreenListening() {
