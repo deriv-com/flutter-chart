@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -16,8 +14,8 @@ import 'package:meta/meta.dart';
 class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   /// Initializes
   const Tick({
-    @required this.epoch,
-    @required this.quote,
+    required this.epoch,
+    required this.quote,
   });
 
   /// Epoch of the tick
@@ -40,5 +38,5 @@ class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   double get open => quote;
 
   @override
-  List<Object> get props => <Object>[epoch, quote];
+  List<Object?> get props => <Object>[epoch, quote];
 }

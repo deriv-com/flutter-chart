@@ -1,7 +1,5 @@
 /// A class that hold animation progress values.
 
-// @dart=2.9
-
 class AnimationInfo {
   /// Initializes
   const AnimationInfo({this.currentTickPercent = 1, this.blinkingPercent = 1});
