@@ -1,14 +1,13 @@
 /// ScrollToLastTick callback.
 
-// @dart=2.9
-
 typedef OnScrollToLastTick = Function(bool);
 
 /// Chart widget's controller.
 class ChartController {
   /// Called to scroll the current display chart to last tick.
-  OnScrollToLastTick onScrollToLastTick;
+  OnScrollToLastTick? onScrollToLastTick;
 
   /// Scroll chart visible area to the newest data.
-  void scrollToLastTick({bool animate}) => onScrollToLastTick?.call(animate);
+  void scrollToLastTick({bool animate = false}) =>
+      onScrollToLastTick?.call(animate);
 }
