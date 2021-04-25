@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs
 
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 /// Deriv branding colors, these colors should not be changed. It can be called

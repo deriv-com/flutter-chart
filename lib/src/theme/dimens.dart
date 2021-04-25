@@ -4,8 +4,6 @@
 /// In case of a theme change, use IDE refactoring technique to rename the value
 /// So it can be reflected wherever it is used with ease.
 
-// @dart=2.9
-
 class Dimens {
   /// Tiny margin.
   static const double margin04 = 4;

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
@@ -9,10 +7,16 @@ import 'package:flutter/material.dart';
 abstract class BarrierStyle extends ChartPaintingStyle {
   /// Initializes a barrier style
   const BarrierStyle({
-    this.color,
-    this.titleBackgroundColor,
-    this.isDashed,
-    this.textStyle,
+    this.color = const Color(0xFF00A79E),
+    this.titleBackgroundColor = const Color(0xFF0E0E0E),
+    this.isDashed = true,
+    this.textStyle = const TextStyle(
+      fontSize: 10,
+      height: 1.3,
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
+    ),
   });
 
   /// Color of the barrier.
@@ -42,7 +46,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     Color titleBackgroundColor = const Color(0xFF0E0E0E),
     bool isDashed = true,
     this.hasBlinkingDot = false,
-    this.blinkingDotColor,
+    Color? blinkingDotColor,
     this.arrowSize = 5,
     this.hasArrow = true,
     TextStyle textStyle = const TextStyle(
@@ -52,7 +56,8 @@ class HorizontalBarrierStyle extends BarrierStyle {
       color: Colors.white,
       fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
-  }) : super(
+  })  : blinkingDotColor = blinkingDotColor ?? color,
+        super(
           color: color,
           titleBackgroundColor: titleBackgroundColor,
           isDashed: isDashed,
