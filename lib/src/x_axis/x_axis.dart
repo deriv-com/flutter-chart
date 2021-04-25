@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_state/screen_state.dart';
+import 'package:is_lock_screen/is_lock_screen.dart';
 
 import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
@@ -56,7 +57,8 @@ class XAxis extends StatefulWidget {
   _XAxisState createState() => _XAxisState();
 }
 
-class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
+class _XAxisState extends State<XAxis>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   XAxisModel _model;
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
@@ -71,6 +73,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.initState();
 
     startScreenListening();
+    WidgetsBinding.instance.addObserver(this);
 
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
@@ -93,6 +96,14 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
       ..registerCallback(_model.onScaleAndPanEnd);
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      _model.scrollToLastTick();
+    }
   }
 
   void onData(ScreenStateEvent event) {
@@ -144,44 +155,43 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<XAxisModel>.value(
-      value: _model,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          // Update x-axis width.
-          context.watch<XAxisModel>().width = constraints.maxWidth;
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider<XAxisModel>.value(
+        value: _model,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            // Update x-axis width.
+            context.watch<XAxisModel>().width = constraints.maxWidth;
 
-          final List<DateTime> _noOverlapGridTimestamps =
-              _model.getNoOverlapGridTimestamps();
+            final List<DateTime> _noOverlapGridTimestamps =
+                _model.getNoOverlapGridTimestamps();
 
-          final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
+            final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
 
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              RepaintBoundary(
-                child: CustomPaint(
-                  painter: XGridPainter(
-                    timeLabels: _noOverlapGridTimestamps
-                        .map<String>((DateTime time) => timeLabel(time))
-                        .toList(),
-                    xCoords: _noOverlapGridTimestamps
-                        .map<double>((DateTime time) =>
-                            _model.xFromEpoch(time.millisecondsSinceEpoch))
-                        .toList(),
-                    style: gridStyle,
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                RepaintBoundary(
+                  child: CustomPaint(
+                    painter: XGridPainter(
+                      timeLabels: _noOverlapGridTimestamps
+                          .map<String>((DateTime time) => timeLabel(time))
+                          .toList(),
+                      xCoords: _noOverlapGridTimestamps
+                          .map<double>((DateTime time) =>
+                              _model.xFromEpoch(time.millisecondsSinceEpoch))
+                          .toList(),
+                      style: gridStyle,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
-                child: widget.child,
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
+                Padding(
+                  padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
+                  child: widget.child,
+                ),
+              ],
+            );
+          },
+        ),
+      );
 }
