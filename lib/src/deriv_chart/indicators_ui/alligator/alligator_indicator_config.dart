@@ -1,11 +1,19 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/alligator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'alligator_indicator_config.g.dart';
 
 /// Bollinger Bands Indicator Config
+@JsonSerializable()
 class AlligatorIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const AlligatorIndicatorConfig({
@@ -18,6 +26,17 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.showLines=true,
     this.showFractal=false,
   }) : super();
+
+  /// Initializes from JSON.
+  factory AlligatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>
+      _$AlligatorIndicatorConfigFromJson(json);
+
+  /// Unique name for this indicator.
+  static const String name = 'alligator';
+
+  @override
+  Map<String, dynamic> toJson() => _$AlligatorIndicatorConfigToJson(this)
+    ..putIfAbsent(IndicatorConfig.nameKey, () => name);
 
   /// Shift to future in jaw series
   final int jawOffset;
@@ -56,5 +75,16 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
           showLines: showLines,
           showFractal: showFractal,
         ),
+      );
+
+  @override
+  IndicatorItem getItem(
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
+  ) =>
+      AlligatorIndicatorItem(
+        config: this,
+        updateIndicator: updateIndicator,
+        deleteIndicator: deleteIndicator,
       );
 }

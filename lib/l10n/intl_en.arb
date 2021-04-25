@@ -16,6 +16,8 @@
   "labelLipsOffset": "Lips Offset",
   "labelHighPeriod": "High Period",
   "labelLowPeriod": "Low Period",
+  "labelOverBoughtPrice": "Over Bought Price",
+  "labelOverSoldPrice": "Over Sold Price",
   "labelMaxAF": "Max AF",
   "labelMinAF": "Min AF",
   "labelShift": "Shift",
@@ -28,5 +30,6 @@
   "informNoResult": "No results for \"{text}\"",
   "warnCheckAssetSearchingText": "Try checking your spelling or use a different term",
   "labelShowLines": "Show Lines",
-  "labelShowFractals": "Show Fractals"
+  "labelShowFractals": "Show Fractals",
+  "warnFailedLoadingIndicators": "Failed to load indicators."
 }

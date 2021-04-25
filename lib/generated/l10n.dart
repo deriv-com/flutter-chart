@@ -195,6 +195,26 @@ class ChartLocalization {
     );
   }
 
+  /// `Over Bought Price`
+  String get labelOverBoughtPrice {
+    return Intl.message(
+      'Over Bought Price',
+      name: 'labelOverBoughtPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Over Sold Price`
+  String get labelOverSoldPrice {
+    return Intl.message(
+      'Over Sold Price',
+      name: 'labelOverSoldPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Max AF`
   String get labelMaxAF {
     return Intl.message(
@@ -320,6 +340,16 @@ class ChartLocalization {
     return Intl.message(
       'Show Fractals',
       name: 'labelShowFractals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load indicators.`
+  String get warnFailedLoadingIndicators {
+    return Intl.message(
+      'Failed to load indicators.',
+      name: 'warnFailedLoadingIndicators',
       desc: '',
       args: [],
     );

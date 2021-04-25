@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -13,13 +12,15 @@ class IchimokuCloudIndicatorItem extends IndicatorItem {
   /// Initializes
   const IchimokuCloudIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    IchimokuCloudIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
-          title: 'Ichimoku Cloud',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          title: 'Ichimoku',
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -30,10 +31,10 @@ class IchimokuCloudIndicatorItem extends IndicatorItem {
 /// IchimokuCloudIndicatorItem State class
 class IchimokuCloudIndicatorItemState
     extends IndicatorItemState<IchimokuCloudIndicatorConfig> {
-  int _baseLinePeriod = 26;
-  int _conversionLinePeriod = 9;
-  int _spanBPeriod = 52;
-  int _laggingSpanOffset = -26;
+  int _baseLinePeriod;
+  int _conversionLinePeriod;
+  int _spanBPeriod;
+  int _laggingSpanOffset;
 
   @override
   IchimokuCloudIndicatorConfig createIndicatorConfig() =>
@@ -162,11 +163,24 @@ class IchimokuCloudIndicatorItemState
         ],
       );
 
+  // TOdO(Ramin): Add generic type to avoid casting.
   int get _currentBaseLinePeriod =>
-      _baseLinePeriod ?? getConfig()?.baseLinePeriod ?? 26;
+      _baseLinePeriod ??
+      (widget.config as IchimokuCloudIndicatorConfig)?.baseLinePeriod ??
+      26;
+
   int get _currentConversionLinePeriod =>
-      _conversionLinePeriod ?? getConfig()?.conversionLinePeriod ?? 9;
-  int get _currentSpanBPeriod => _spanBPeriod ?? getConfig()?.spanBPeriod ?? 52;
+      _conversionLinePeriod ??
+      (widget.config as IchimokuCloudIndicatorConfig)?.conversionLinePeriod ??
+      9;
+
+  int get _currentSpanBPeriod =>
+      _spanBPeriod ??
+      (widget.config as IchimokuCloudIndicatorConfig)?.spanBPeriod ??
+      52;
+
   int get _currentLaggingSpanOffset =>
-      _laggingSpanOffset ?? getConfig()?.laggingSpanOffset ?? -26;
+      _laggingSpanOffset ??
+      (widget.config as IchimokuCloudIndicatorConfig)?.laggingSpanOffset ??
+      -26;
 }

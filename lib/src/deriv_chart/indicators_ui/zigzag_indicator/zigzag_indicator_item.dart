@@ -1,6 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -13,13 +12,15 @@ class ZigZagIndicatorItem extends IndicatorItem {
   /// Initializes
   const ZigZagIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    ZigZagIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'ZigZag',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -28,8 +29,8 @@ class ZigZagIndicatorItem extends IndicatorItem {
 }
 
 /// ZigZagIndicatorItem State class
-class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig> {
-
+class ZigZagIndicatorItemState
+    extends IndicatorItemState<ZigZagIndicatorConfig> {
   /// distance
   @protected
   double distance;
@@ -41,7 +42,6 @@ class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig>
 
   @override
   Widget getIndicatorOptions() => buildDistanceField();
-
 
   /// Builds distance TextFiled
   @protected
@@ -71,9 +71,8 @@ class ZigZagIndicatorItemState extends IndicatorItemState<ZigZagIndicatorConfig>
         ],
       );
 
-
-
   /// Gets Indicator current period.
   @protected
-  double getCurrentDistance() => distance ?? getConfig()?.distance ?? 10;
+  double getCurrentDistance() =>
+      distance ?? (widget.config as ZigZagIndicatorConfig)?.distance ?? 10;
 }

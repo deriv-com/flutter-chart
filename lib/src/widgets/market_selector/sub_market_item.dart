@@ -53,8 +53,8 @@ class SubMarketItem extends StatelessWidget {
                 if (isCategorized)
                   Container(
                     margin: EdgeInsets.only(
-                      top: theme.margin16,
-                      left: theme.margin08,
+                      top: theme.margin16Chart,
+                      left: theme.margin08Chart,
                     ),
                     child: Text(
                       subMarket.displayName,

@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_config.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -17,13 +15,15 @@ class RainbowIndicatorItem extends IndicatorItem {
   /// Initializes
   const RainbowIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    RainbowIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Rainbow Indicator',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -40,7 +40,6 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   @override
   MAIndicatorConfig createIndicatorConfig() => RainbowIndicatorConfig(
         bandsCount: getCurrentBandsCount(),
-        rainbowColors: getCurrentRainbowColors(),
         period: getCurrentPeriod(),
         movingAverageType: getCurrentType(),
         fieldType: getCurrentField(),
@@ -89,26 +88,13 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   /// Gets Indicator current period.
   @protected
   int getCurrentBandsCount() {
-    final RainbowIndicatorConfig config = getConfig();
+    final RainbowIndicatorConfig config =
+        (widget.config as RainbowIndicatorConfig);
     return bandsCount ?? config?.bandsCount ?? 10;
   }
 
   /// Gets Indicator current period.
   @override
-  int getCurrentPeriod() => period ?? getConfig()?.period ?? 2;
-
-  /// Calculate the color of Rainbow and return list of colors
-  @protected
-  List<Color> getCurrentRainbowColors() {
-    final int bands = getCurrentBandsCount();
-    const int minHue = 240, maxHue = 0;
-    final List<Color> rainbow = <Color>[];
-    for (int i = 0; i < bands; i++) {
-      final double curPercent = i / bands;
-      final HSLColor bandColor = HSLColor.fromAHSL(
-          1, (curPercent * (maxHue - minHue)) + minHue, 1, 0.5);
-      rainbow.add(bandColor.toColor());
-    }
-    return rainbow;
-  }
+  int getCurrentPeriod() =>
+      period ?? (widget.config as RainbowIndicatorConfig)?.period ?? 2;
 }
