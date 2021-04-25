@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
@@ -9,10 +7,10 @@ class YGridLinePainter extends CustomPainter {
   /// Initializes `CustomPainter` that paints the Y axis grids.
 
   YGridLinePainter({
-    @required this.gridLineQuotes,
-    @required this.quoteToCanvasY,
-    @required this.style,
-    @required this.labelWidth,
+    required this.gridLineQuotes,
+    required this.quoteToCanvasY,
+    required this.style,
+    required this.labelWidth,
   });
 
   /// The list of quotes.

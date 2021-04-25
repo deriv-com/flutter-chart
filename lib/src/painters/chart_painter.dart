@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -13,12 +11,12 @@ import '../../deriv_chart.dart';
 class ChartPainter extends CustomPainter {
   /// Initializes the `CustomPainter` which paints the chart.
   ChartPainter({
-    this.chartConfig,
-    this.theme,
-    this.chartData,
-    this.animationInfo,
-    this.epochToCanvasX,
-    this.quoteToCanvasY,
+    required this.chartConfig,
+    required this.theme,
+    required this.chartData,
+    required this.epochToCanvasX,
+    required this.quoteToCanvasY,
+    this.animationInfo = const AnimationInfo(),
   });
 
   /// Chart config
@@ -28,10 +26,10 @@ class ChartPainter extends CustomPainter {
   final ChartTheme theme;
 
   /// Conversion function for converting epoch to chart's canvas' X position.
-  final double Function(int) epochToCanvasX;
+  final EpochToX epochToCanvasX;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
-  final double Function(double) quoteToCanvasY;
+  final QuoteToY quoteToCanvasY;
 
   /// Animation info where the animation progress values are in.
   final AnimationInfo animationInfo;

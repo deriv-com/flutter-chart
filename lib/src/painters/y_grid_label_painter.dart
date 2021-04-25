@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
@@ -9,10 +7,10 @@ import '../paint/paint_text.dart';
 class YGridLabelPainter extends CustomPainter {
   /// initializes a class that paints a lable on the Y axis of grid.
   YGridLabelPainter({
-    @required this.gridLineQuotes,
-    @required this.pipSize,
-    @required this.quoteToCanvasY,
-    @required this.style,
+    required this.gridLineQuotes,
+    required this.pipSize,
+    required this.quoteToCanvasY,
+    required this.style,
   });
 
   /// Number of digits after decimal point in price.
