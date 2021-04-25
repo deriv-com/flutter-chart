@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 /// A widget to show a highlighted substring inside a text.
@@ -10,7 +8,7 @@ class HighLightedText extends StatelessWidget {
   ///Initializes a widget to show a highlighted substring inside a text.
   const HighLightedText(
     this.text, {
-    Key key,
+    Key? key,
     this.highlightText = '',
     this.style = const TextStyle(fontSize: 14, color: Color(0xFFC2C2C2)),
     this.highlightStyle = const TextStyle(

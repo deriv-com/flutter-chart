@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 /// Provides the path to the PNG file located in Chart package directory.
@@ -12,7 +10,7 @@ class SymbolIcon extends FadeInImage {
   /// Initializes a wrapper widget around [AssetImage] which provides image icon for the
   /// given [symbolCode].
   SymbolIcon({
-    @required String symbolCode,
+    required String symbolCode,
     double width = 32,
     double height = 32,
     Duration fadeDuration = const Duration(milliseconds: 50),

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +12,8 @@ import 'symbol_icon.dart';
 class AssetItem extends StatelessWidget {
   /// Initializes a widget to show an asset (active symbol) item in the market selector.
   const AssetItem({
-    @required this.asset,
-    Key key,
+    required this.asset,
+    Key? key,
     this.filterText = '',
     this.onAssetClicked,
     this.iconFadeInDuration = const Duration(milliseconds: 50),
@@ -25,7 +23,7 @@ class AssetItem extends StatelessWidget {
   final Asset asset;
 
   /// The action that appens on clicking the [AssetItem].
-  final OnAssetClicked onAssetClicked;
+  final OnAssetClicked? onAssetClicked;
 
   /// The text to highlight in the asset item.
   final String filterText;
@@ -55,7 +53,7 @@ class AssetItem extends StatelessWidget {
               style: theme.textStyle(
                 textStyle: theme.body1,
                 color: theme.base03Color,
-              ),
+              )!,
             ),
           ),
           if (!asset.isOpen) ClosedTag(),

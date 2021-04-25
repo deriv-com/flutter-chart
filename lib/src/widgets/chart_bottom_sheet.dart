@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
@@ -11,31 +9,32 @@ import 'package:provider/provider.dart';
 class ChartBottomSheet extends StatefulWidget {
   /// Creates a bottom sheet container for [child].
   const ChartBottomSheet({
-    @required this.child,
+    required this.child,
     this.theme,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Body of bottom sheet container.
   final Widget child;
 
   /// The theme of the chart which the bottom sheet is being placed inside.
-  final ChartTheme theme;
+  final ChartTheme? theme;
 
   @override
   _ChartBottomSheetState createState() => _ChartBottomSheetState();
 }
 
 class _ChartBottomSheetState extends State<ChartBottomSheet> {
-  ChartTheme _theme;
+  late ChartTheme _theme;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _theme = widget.theme ?? Theme.of(context).brightness == Brightness.dark
-        ? ChartDefaultDarkTheme()
-        : ChartDefaultLightTheme();
+    _theme = widget.theme ??
+        (Theme.of(context).brightness == Brightness.dark
+            ? ChartDefaultDarkTheme()
+            : ChartDefaultLightTheme());
   }
 
   @override

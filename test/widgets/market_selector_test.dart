@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
@@ -10,10 +8,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() {
   group('Test different scenarios that might break the [MarketSelector] widget',
       () {
-    Asset r50;
-    Asset r25Favourite;
-    SubMarket r50SubMarket;
-    SubMarket r25SubMarket;
+    Asset? r50;
+    Asset? r25Favourite;
+    SubMarket? r50SubMarket;
+    SubMarket? r25SubMarket;
 
     setUp(() {
       r50 = Asset(
@@ -35,12 +33,12 @@ void main() {
       r50SubMarket = SubMarket(
         name: 'smart',
         displayName: 'Smart',
-        assets: <Asset>[r50],
+        assets: <Asset?>[r50],
       );
       r25SubMarket = SubMarket(
         name: 'smart2',
         displayName: 'Smart2',
-        assets: <Asset>[r25Favourite],
+        assets: <Asset?>[r25Favourite],
       );
     });
 
@@ -309,18 +307,18 @@ void main() {
     });
 
     test('Asset class toJson <-> fromJson conversion', () {
-      final Map<String, dynamic> r50JSON = r50.toJson();
+      final Map<String, dynamic> r50JSON = r50!.toJson();
 
       final Asset r50Copy = Asset.fromJson(r50JSON);
 
-      expect(r50.name, r50Copy.name);
-      expect(r50.displayName, r50Copy.displayName);
-      expect(r50.market, r50Copy.market);
-      expect(r50.marketDisplayName, r50Copy.marketDisplayName);
-      expect(r50.subMarket, r50Copy.subMarket);
-      expect(r50.subMarketDisplayName, r50Copy.subMarketDisplayName);
-      expect(r50.isOpen, r50Copy.isOpen);
-      expect(r50.isFavourite, r50Copy.isFavourite);
+      expect(r50!.name, r50Copy.name);
+      expect(r50!.displayName, r50Copy.displayName);
+      expect(r50!.market, r50Copy.market);
+      expect(r50!.marketDisplayName, r50Copy.marketDisplayName);
+      expect(r50!.subMarket, r50Copy.subMarket);
+      expect(r50!.subMarketDisplayName, r50Copy.subMarketDisplayName);
+      expect(r50!.isOpen, r50Copy.isOpen);
+      expect(r50!.isFavourite, r50Copy.isFavourite);
     });
   });
 }

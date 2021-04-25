@@ -1,21 +1,19 @@
-// @dart=2.9
-
 import 'dart:collection';
 
 /// A class to keep a market's information.
 class Market {
   /// Creates a class to keep a market's information.
   Market({
-    this.name,
-    this.displayName,
-    this.subMarkets,
-  });
+    required this.subMarkets,
+    this.name = '',
+    String? displayName,
+  }) : displayName = displayName ?? name;
 
   /// Creates a market from a given `list` of assets.
   Market.fromAssets({
-    this.name,
-    this.displayName,
-    List<Asset> assets,
+    required this.name,
+    required this.displayName,
+    required List<Asset> assets,
   }) : subMarkets = <SubMarket>[] {
     final HashSet<String> subMarketTitles = HashSet<String>();
     for (final Asset asset in assets) {
@@ -36,9 +34,9 @@ class Market {
 
   /// Creates one market with one submarket from the given assets.
   Market.fromSubMarketAssets({
-    this.name,
-    this.displayName,
-    List<Asset> assets,
+    required this.name,
+    required this.displayName,
+    required List<Asset?> assets,
   }) : subMarkets = <SubMarket>[] {
     subMarkets.add(SubMarket(
       name: name,
@@ -54,17 +52,16 @@ class Market {
   final String displayName;
 
   /// The list of submarkets that go under this market.
-  final List<SubMarket> subMarkets;
+  final List<SubMarket?> subMarkets;
 
   /// Checks if the [displayName] contains the given `text`
-  bool containsText(String text) =>
-      displayName?.toLowerCase()?.contains(text) ?? false;
+  bool containsText(String text) => displayName.toLowerCase().contains(text);
 
   /// Returns true if any asset under this market contains the [text].
   bool containsAssetWithText(String text) =>
       containsText(text) ||
       subMarkets.firstWhere(
-              (SubMarket subMarket) => subMarket.containsAssetWithText(text),
+              (SubMarket? subMarket) => subMarket!.containsAssetWithText(text),
               orElse: () => null) !=
           null;
 }
@@ -72,12 +69,11 @@ class Market {
 /// A class to keep a sub-market's information.
 class SubMarket {
   /// Creates a class to keep a sub-market's information.
-
   SubMarket({
-    this.name,
-    this.displayName,
-    this.assets,
-  });
+    required this.name,
+    required this.assets,
+    String? displayName,
+  }) : displayName = displayName ?? name;
 
   /// The name of the sub-market.
   final String name;
@@ -86,17 +82,16 @@ class SubMarket {
   final String displayName;
 
   /// The list of assets given from api with the information of each sub-market.
-  final List<Asset> assets;
+  final List<Asset?> assets;
 
   /// Checks if the [displayName] contains the given `text`.
-  bool containsText(String text) =>
-      displayName?.toLowerCase()?.contains(text) ?? false;
+  bool containsText(String text) => displayName.toLowerCase().contains(text);
 
   /// Returns true if any asset under this sub-market contains the [text].
   bool containsAssetWithText(String text) =>
       containsText(text) ||
       assets.firstWhere(
-              (Asset asset) => asset.displayName.toLowerCase().contains(text),
+              (Asset? asset) => asset!.displayName.toLowerCase().contains(text),
               orElse: () => null) !=
           null;
 }
@@ -105,15 +100,17 @@ class SubMarket {
 class Asset {
   /// Initializes a class representing an active symbol retrieved from the API.
   Asset({
-    this.name,
-    this.displayName,
-    this.market,
-    this.marketDisplayName,
-    this.subMarket,
-    this.subMarketDisplayName,
+    required this.name,
+    this.market = '',
+    this.subMarket = '',
+    String? displayName,
+    String? marketDisplayName,
+    String? subMarketDisplayName,
     this.isOpen = true,
     this.isFavourite = false,
-  });
+  })  : displayName = displayName ?? name,
+        marketDisplayName = marketDisplayName ?? market,
+        subMarketDisplayName = subMarketDisplayName ?? subMarket;
 
   /// Creates an [Asset] object from JSON map.
   factory Asset.fromJson(Map<String, dynamic> json) => Asset(
@@ -153,22 +150,21 @@ class Asset {
 
   /// Checks if the [displayName] contains the given `text`.
 
-  bool containsText(String text) =>
-      displayName?.toLowerCase()?.contains(text) ?? false;
+  bool containsText(String text) => displayName.toLowerCase().contains(text);
 
   /// Toggles the is [isFavourite] property of the class.
   void toggleFavourite() => isFavourite = !isFavourite;
 
   /// Copies the class with changes to given attributes.
   Asset copyWith({
-    String name,
-    String displayName,
-    String market,
-    String marketDisplayName,
-    String subMarket,
-    String subMarketDisplayName,
-    bool isOpen,
-    bool isFavourite,
+    String? name,
+    String? displayName,
+    String? market,
+    String? marketDisplayName,
+    String? subMarket,
+    String? subMarketDisplayName,
+    bool? isOpen,
+    bool? isFavourite,
   }) =>
       Asset(
         name: name ?? this.name,

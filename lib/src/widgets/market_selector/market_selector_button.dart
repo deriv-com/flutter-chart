@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,17 +10,17 @@ import 'symbol_icon.dart';
 class MarketSelectorButton extends StatelessWidget {
   /// Creates a Button to open the market selector. The selected [Asset] should be passed as [asset].
   const MarketSelectorButton({
-    @required this.asset,
-    Key key,
-    this.backgroundColor,
-    this.borderRadius,
+    required this.asset,
+    Key? key,
+    this.backgroundColor = const Color.fromRGBO(21, 23, 23, 1),
+    this.borderRadius = const BorderRadius.all(Radius.circular(4)),
     this.onTap,
     this.textStyle = const TextStyle(fontSize: 14, color: Colors.white),
     this.theme,
   }) : super(key: key);
 
   /// Called when the market selector button is clicked.
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   /// The color of the button.
   final Color backgroundColor;
@@ -46,7 +44,7 @@ class MarketSelectorButton extends StatelessWidget {
   /// Chart's theme.
   ///
   /// If not specified, [ChartDefaultDarkTheme] will be used.
-  final ChartTheme theme;
+  final ChartTheme? theme;
 
   @override
   Widget build(BuildContext context) => Provider<ChartTheme>.value(
@@ -55,8 +53,7 @@ class MarketSelectorButton extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           color: backgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius:
-                borderRadius ?? const BorderRadius.all(Radius.circular(4)),
+            borderRadius: borderRadius,
           ),
           child: Row(
             children: <Widget>[

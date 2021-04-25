@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/widgets/chart_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +19,7 @@ const Duration scrollToSelectedDuration = Duration.zero;
 class MarketSelector extends StatefulWidget {
   /// Initializes a widget which is used to select the market of the chart.
   const MarketSelector({
-    Key key,
+    Key? key,
     this.onAssetClicked,
     this.markets,
     this.selectedItem,
@@ -30,19 +28,19 @@ class MarketSelector extends StatefulWidget {
   }) : super(key: key);
 
   /// It will be called when a symbol item [Asset] is tapped.
-  final OnAssetClicked onAssetClicked;
+  final OnAssetClicked? onAssetClicked;
 
   /// A `list` of markets which the user can select from.
-  final List<Market> markets;
+  final List<Market>? markets;
 
   /// The selected asset item which contains the details of the selected market.
-  final Asset selectedItem;
+  final Asset? selectedItem;
 
   /// `Optional` whenever it is null, it will be substituted with a list of assets that their [Asset.isFavourite] is true.
-  final List<Asset> favouriteAssets;
+  final List<Asset?>? favouriteAssets;
 
   /// The theme of the chart which the market selector is being placed inside.
-  final ChartTheme theme;
+  final ChartTheme? theme;
 
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
@@ -56,21 +54,21 @@ class _MarketSelectorState extends State<MarketSelector>
   String _filterText = '';
 
   /// Is used to scroll to the selected symbol(Asset).
-  GlobalObjectKey _selectedItemKey;
+  GlobalObjectKey? _selectedItemKey;
 
   @override
   void initState() {
     super.initState();
 
     if (widget.selectedItem != null) {
-      _selectedItemKey = GlobalObjectKey(widget.selectedItem.name);
+      _selectedItemKey = GlobalObjectKey(widget.selectedItem!.name);
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (widget.selectedItem != null &&
-          _selectedItemKey.currentState != null) {
+          _selectedItemKey!.currentState != null) {
         Scrollable.ensureVisible(
-          _selectedItemKey.currentContext,
+          _selectedItemKey!.currentContext!,
           curve: Curves.easeOut,
         );
       }
@@ -97,33 +95,37 @@ class _MarketSelectorState extends State<MarketSelector>
 
   void _fillMarketsList() {
     _marketsToDisplay = _filterText.isEmpty || widget.markets == null
-        ? widget.markets
-        : widget.markets
+        ? widget.markets!
+        : widget.markets!
             .where((Market market) =>
                 market.containsAssetWithText(lowerCaseFilterText))
             .toList();
   }
 
-  List<Asset> _getFavouritesList() {
+  List<Asset?> _getFavouritesList() {
     if (widget.favouriteAssets != null) {
       return _filterText.isEmpty
-          ? widget.favouriteAssets
-          : widget.favouriteAssets
-              .map((Asset asset) => asset.containsText(lowerCaseFilterText))
-              .toList();
+          ? widget.favouriteAssets as List<Asset?>
+          : widget.favouriteAssets!
+              .map((Asset? asset) => asset!.containsText(lowerCaseFilterText))
+              .toList() as List<Asset?>;
     }
 
-    final List<Asset> favouritesList = <Asset>[];
+    final List<Asset?> favouritesList = <Asset?>[];
 
     if (widget.markets == null) {
       return favouritesList;
     }
 
-    for (final Market market in widget.markets) {
-      for (final SubMarket subMarket in market.subMarkets) {
-        for (final Asset asset in subMarket.assets) {
-          if (asset.isFavourite && asset.containsText(lowerCaseFilterText)) {
-            favouritesList.add(asset);
+    for (final Market market in widget.markets!) {
+      for (final SubMarket? subMarket in market.subMarkets) {
+        if (subMarket != null) {
+          for (final Asset? asset in subMarket.assets) {
+            if (asset != null &&
+                asset.isFavourite &&
+                asset.containsText(lowerCaseFilterText)) {
+              favouritesList.add(asset);
+            }
           }
         }
       }
@@ -133,9 +135,9 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   Widget _buildMarketsList() {
-    final List<Asset> favouritesList = _getFavouritesList();
+    final List<Asset?> favouritesList = _getFavouritesList();
 
-    return widget.markets == null || widget.markets.isEmpty
+    return widget.markets == null || widget.markets!.isEmpty
         ? const Expanded(child: Center(child: Text('No asset is available!')))
         : Expanded(
             child: Stack(
@@ -156,7 +158,7 @@ class _MarketSelectorState extends State<MarketSelector>
           );
   }
 
-  Widget _buildFavouriteSection(List<Asset> favouritesList) => AnimatedSize(
+  Widget _buildFavouriteSection(List<Asset?> favouritesList) => AnimatedSize(
         vsync: this,
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 300),
