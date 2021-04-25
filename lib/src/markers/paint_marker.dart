@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'marker.dart';

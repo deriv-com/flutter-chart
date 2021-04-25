@@ -1,23 +1,20 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 import 'package:deriv_chart/src/paint/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
 import 'active_marker.dart';
-import 'marker.dart';
 import 'paint_marker.dart';
 
 /// Painter that paints a marker which is active.
 class ActiveMarkerPainter extends CustomPainter {
   /// initializes a painter that paints a marker which is active.
   ActiveMarkerPainter({
-    this.activeMarker,
-    this.style,
-    this.epochToX,
-    this.quoteToY,
-    this.animationProgress,
+    required this.activeMarker,
+    required this.epochToX,
+    required this.quoteToY,
+    this.style = const MarkerStyle(),
+    this.animationProgress = 1,
   });
 
   /// The given active marker to paint.
@@ -37,7 +34,7 @@ class ActiveMarkerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (activeMarker == null || animationProgress == 0) {
+    if (animationProgress == 0) {
       return;
     }
 

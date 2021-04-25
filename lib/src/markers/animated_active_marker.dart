@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +14,9 @@ const Duration animationDuration = Duration(milliseconds: 250);
 class AnimatedActiveMarker extends StatefulWidget {
   /// Initializes active marker.
   const AnimatedActiveMarker({
-    @required this.markerSeries,
-    @required this.quoteToCanvasY,
-    Key key,
+    required this.markerSeries,
+    required this.quoteToCanvasY,
+    Key? key,
   }) : super(key: key);
 
   /// The Series that holds the list markers.
@@ -33,9 +31,9 @@ class AnimatedActiveMarker extends StatefulWidget {
 
 class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
     with SingleTickerProviderStateMixin {
-  ActiveMarker _prevActiveMarker;
-  AnimationController _activeMarkerController;
-  Animation<double> _activeMarkerAnimation;
+  ActiveMarker? _prevActiveMarker;
+  late AnimationController _activeMarkerController;
+  late Animation<double> _activeMarkerAnimation;
 
   @override
   void initState() {
@@ -53,8 +51,8 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
   @override
   void didUpdateWidget(AnimatedActiveMarker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final ActiveMarker activeMarker = widget.markerSeries.activeMarker;
-    final ActiveMarker prevActiveMarker = oldWidget.markerSeries.activeMarker;
+    final ActiveMarker? activeMarker = widget.markerSeries.activeMarker;
+    final ActiveMarker? prevActiveMarker = oldWidget.markerSeries.activeMarker;
     final bool activeMarkerChanged = activeMarker != prevActiveMarker;
 
     if (activeMarkerChanged) {
@@ -79,10 +77,10 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
 
     return AnimatedBuilder(
       animation: _activeMarkerAnimation,
-      builder: (BuildContext context, Widget child) => CustomPaint(
+      builder: (BuildContext context, Widget? child) => CustomPaint(
         painter: ActiveMarkerPainter(
-          activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker,
-          style: widget.markerSeries.style ??
+          activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker!,
+          style: widget.markerSeries.style as MarkerStyle? ??
               context.watch<ChartTheme>().markerStyle ??
               const MarkerStyle(),
           epochToX: xAxis.xFromEpoch,

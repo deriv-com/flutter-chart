@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
@@ -19,32 +17,33 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
 
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   }) {
-    final MarkerStyle style =
-        series.style ?? theme.markerStyle ?? const MarkerStyle();
+    final MarkerStyle style = series.style as MarkerStyle? ??
+        theme!.markerStyle ??
+        const MarkerStyle();
 
     if (series.entryTick != null) {
       final Offset center = Offset(
-        epochToX(series.entryTick.epoch),
-        quoteToY(series.entryTick.quote),
+        epochToX(series.entryTick!.epoch),
+        quoteToY(series.entryTick!.quote),
       );
       paintEntryMarker(
         canvas,
         center,
         style.entryMarkerStyle,
-        theme.base08Color,
+        theme!.base08Color,
       );
     }
 
     if (series.exitTick != null) {
       final Offset center = Offset(
-        epochToX(series.exitTick.epoch),
-        quoteToY(series.exitTick.quote),
+        epochToX(series.exitTick!.epoch),
+        quoteToY(series.exitTick!.quote),
       );
       paintExitMarker(canvas, center, style.exitMarkerStyle);
     }

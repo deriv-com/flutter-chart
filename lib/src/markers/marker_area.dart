@@ -1,6 +1,5 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
@@ -13,11 +12,10 @@ import 'marker.dart';
 class MarkerArea extends StatefulWidget {
   /// Initializes marker area.
   const MarkerArea({
-    @required this.markerSeries,
-    @required this.quoteToCanvasY,
-    Key key,
-  })  : assert(markerSeries != null),
-        super(key: key);
+    required this.markerSeries,
+    required this.quoteToCanvasY,
+    Key? key,
+  }) : super(key: key);
 
   /// The Series that holds the list markers.
   final MarkerSeries markerSeries;
@@ -30,7 +28,7 @@ class MarkerArea extends StatefulWidget {
 }
 
 class _MarkerAreaState extends State<MarkerArea> {
-  GestureManagerState gestureManager;
+  late GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
 
@@ -51,10 +49,10 @@ class _MarkerAreaState extends State<MarkerArea> {
     final MarkerSeries series = widget.markerSeries;
 
     if (series.activeMarker != null) {
-      if (series.activeMarker.tapArea.contains(details.localPosition)) {
-        series.activeMarker.onTap?.call();
+      if (series.activeMarker!.tapArea.contains(details.localPosition)) {
+        series.activeMarker!.onTap?.call();
       } else {
-        series.activeMarker.onTapOutside?.call();
+        series.activeMarker!.onTapOutside?.call();
       }
       return;
     }
@@ -97,15 +95,15 @@ class _MarkerAreaState extends State<MarkerArea> {
 
 class _MarkerPainter extends CustomPainter {
   _MarkerPainter({
-    this.series,
-    this.epochToX,
-    this.quoteToY,
-    this.theme,
+    required this.series,
+    required this.epochToX,
+    required this.quoteToY,
+    required this.theme,
   });
 
   final MarkerSeries series;
-  final Function epochToX;
-  final Function quoteToY;
+  final EpochToX epochToX;
+  final QuoteToY quoteToY;
   final ChartTheme theme;
 
   @override
