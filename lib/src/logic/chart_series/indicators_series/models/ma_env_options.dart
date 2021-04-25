@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 import '../ma_series.dart';
@@ -10,9 +8,9 @@ class MAEnvOptions extends MAOptions {
   /// Initializes
   const MAEnvOptions({
     this.shift = 5,
-    this.shiftType,
-    int period,
-    MovingAverageType movingAverageType,
+    this.shiftType = ShiftType.percent,
+    int period = 50,
+    MovingAverageType movingAverageType = MovingAverageType.simple,
   }) : super(period: period, type: movingAverageType);
 
   /// Shift value

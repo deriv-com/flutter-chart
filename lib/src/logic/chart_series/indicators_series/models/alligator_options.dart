@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'indicator_options.dart';
 
 /// Alligator indicator options.
@@ -21,9 +19,5 @@ class AlligatorOptions extends IndicatorOptions {
   final int lipsPeriod;
 
   @override
-  List<Object> get props => <Object>[
-        jawPeriod,
-        teethPeriod,
-        lipsPeriod,
-      ];
+  List<Object> get props => <Object>[jawPeriod, teethPeriod, lipsPeriod];
 }
