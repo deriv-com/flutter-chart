@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 /// Paints a blinking semi-transparent glow around [center].
