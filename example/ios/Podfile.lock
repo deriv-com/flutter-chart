@@ -11,11 +11,15 @@ PODS:
     - Flutter
   - flutter_webview_plugin (0.0.1):
     - Flutter
+  - is_lock_screen (1.0.0):
+    - Flutter
   - path_provider_linux (0.0.1):
     - Flutter
   - path_provider_windows (0.0.1):
     - Flutter
   - Reachability (3.2)
+  - screen_state (0.0.1):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_linux (0.0.1):
@@ -38,8 +42,10 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_deriv_api (from `.symlinks/plugins/flutter_deriv_api/ios`)
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
+  - is_lock_screen (from `.symlinks/plugins/is_lock_screen/ios`)
   - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
   - path_provider_windows (from `.symlinks/plugins/path_provider_windows/ios`)
+  - screen_state (from `.symlinks/plugins/screen_state/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_linux (from `.symlinks/plugins/shared_preferences_linux/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
@@ -65,10 +71,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_deriv_api/ios"
   flutter_webview_plugin:
     :path: ".symlinks/plugins/flutter_webview_plugin/ios"
+  is_lock_screen:
+    :path: ".symlinks/plugins/is_lock_screen/ios"
   path_provider_linux:
     :path: ".symlinks/plugins/path_provider_linux/ios"
   path_provider_windows:
     :path: ".symlinks/plugins/path_provider_windows/ios"
+  screen_state:
+    :path: ".symlinks/plugins/screen_state/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   shared_preferences_linux:
@@ -91,9 +101,11 @@ SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_deriv_api: 9e29abd7cc5091b72303f9c8be549618415f1437
   flutter_webview_plugin: ed9e8a6a96baf0c867e90e1bce2673913eeac694
+  is_lock_screen: 3312dcce52245e965b893a7886bb1b260ed51472
   path_provider_linux: 4d630dc393e1f20364f3e3b4a2ff41d9674a84e4
   path_provider_windows: a2b81600c677ac1959367280991971cb9a1edb3b
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  screen_state: a7ae251997e97f3f001839df09b57313b0ddef18
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   shared_preferences_linux: afefbfe8d921e207f01ede8b60373d9e3b566b78
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
