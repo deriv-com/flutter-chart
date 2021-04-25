@@ -48,7 +48,7 @@ class VerticalBarrier extends Barrier {
   SeriesPainter<Series> createPainter() => VerticalBarrierPainter(this);
 
   @override
-  BarrierObject createObject() => VerticalBarrierObject(epoch, value);
+  BarrierObject createObject() => VerticalBarrierObject(epoch, value: value);
 
   @override
   List<double> recalculateMinMax() =>

@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 /// The required painting properties of a candle.
 class CandlePainting {
   /// Initialzes the required painting properties of a candle.
-  CandlePainting({
+  const CandlePainting({
     @required this.xCenter,
     @required this.yHigh,
     @required this.yLow,

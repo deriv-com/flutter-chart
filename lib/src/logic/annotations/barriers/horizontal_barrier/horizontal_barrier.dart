@@ -43,7 +43,7 @@ class HorizontalBarrier extends Barrier {
           : <double>[double.nan, double.nan];
 
   @override
-  BarrierObject createObject() => BarrierObject(epoch, null, value);
+  BarrierObject createObject() => BarrierObject(leftEpoch: epoch, value: value);
 }
 
 /// Horizontal barrier visibility behavior and whether it contributes in defining

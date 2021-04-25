@@ -39,5 +39,6 @@ class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   @override
   double get open => quote;
 
-  List<Object> get props => [epoch, quote];
+  @override
+  List<Object> get props => <Object>[epoch, quote];
 }

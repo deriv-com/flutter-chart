@@ -22,15 +22,19 @@ class Candle extends Tick with EquatableMixin {
       : this(epoch: epoch, open: open, close: close, high: high, low: low);
 
   /// High value
+  @override
   final double high;
 
   /// Low value.
+  @override
   final double low;
 
   /// Open value.
+  @override
   final double open;
 
   /// Close value.
+  @override
   final double close;
 
   /// Creates a copy of this object.
@@ -53,5 +57,6 @@ class Candle extends Tick with EquatableMixin {
   String toString() =>
       'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
 
-  List<Object> get props => [epoch, open, close, high, low];
+  @override
+  List<Object> get props => <Object>[epoch, open, close, high, low];
 }

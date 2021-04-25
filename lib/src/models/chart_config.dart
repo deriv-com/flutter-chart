@@ -1,7 +1,9 @@
-/// Chart's general configuration.
-
 // @dart=2.9
 
+import 'package:flutter/cupertino.dart';
+
+/// Chart's general configuration.
+@immutable
 class ChartConfig {
   /// Initializes chart's general configuration.
   const ChartConfig({this.pipSize, this.granularity});
