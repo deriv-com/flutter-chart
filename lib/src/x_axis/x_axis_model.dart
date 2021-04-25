@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:math';
 
 import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
@@ -46,22 +44,24 @@ enum ViewingMode {
 class XAxisModel extends ChangeNotifier {
   /// Creates x-axis model for live chart.
   XAxisModel({
-    @required List<Tick> entries,
-    @required int granularity,
-    @required AnimationController animationController,
-    @required bool isLive,
+    required List<Tick> entries,
+    required int granularity,
+    required AnimationController animationController,
+    required bool isLive,
     bool startWithDataFitMode = false,
-    int minEpoch,
-    int maxEpoch,
+    int? minEpoch,
+    int? maxEpoch,
     this.onScale,
     this.onScroll,
   }) {
-    _nowEpoch = entries?.isNotEmpty ?? false
+    _nowEpoch = entries.isNotEmpty
         ? entries.last.epoch
         : DateTime.now().millisecondsSinceEpoch;
 
-    _minEpoch = minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
-    _maxEpoch = maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
+    _minEpoch =
+        minEpoch ?? (entries.isNotEmpty ? entries.first.epoch : _nowEpoch);
+    _maxEpoch =
+        maxEpoch ?? (entries.isNotEmpty ? entries.last.epoch : _nowEpoch);
 
     _lastEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
@@ -102,38 +102,38 @@ class XAxisModel extends ChangeNotifier {
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
 
-  bool _isLive;
+  late bool _isLive;
 
   /// for calculating time between two frames
-  int _lastEpoch;
+  late int _lastEpoch;
 
   /// Whether the chart is live.
   bool get isLive => _isLive;
 
   /// Canvas width.
-  double width;
+  double? width;
 
   /// Called on scale.
-  final VoidCallback onScale;
+  final VoidCallback? onScale;
 
   /// Called on scroll.
-  final VoidCallback onScroll;
+  final VoidCallback? onScroll;
 
-  List<Tick> _entries;
+  List<Tick>? _entries;
 
-  int _minEpoch, _maxEpoch;
+  int? _minEpoch, _maxEpoch;
 
   final GapManager _gapManager = GapManager();
-  AnimationController _scrollAnimationController;
-  double _prevScrollAnimationValue;
+  late AnimationController _scrollAnimationController;
+  double? _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
-  bool _dataFitMode;
+  late bool _dataFitMode;
   double _msPerPx = 1000;
-  double _prevMsPerPx;
-  int _granularity;
-  int _nowEpoch;
-  int _rightBoundEpoch;
-  double _panSpeed;
+  double? _prevMsPerPx;
+  late int _granularity;
+  late int _nowEpoch;
+  late int _rightBoundEpoch;
+  double _panSpeed = 0;
 
   int get _firstEntryEpoch => _minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
 
@@ -143,7 +143,7 @@ class XAxisModel extends ChangeNotifier {
   int get granularity => _granularity;
 
   /// Epoch value of the leftmost chart's edge.
-  int get leftBoundEpoch => _shiftEpoch(rightBoundEpoch, -width);
+  int get leftBoundEpoch => _shiftEpoch(rightBoundEpoch, -width!);
 
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
@@ -171,8 +171,8 @@ class XAxisModel extends ChangeNotifier {
       _currentTickFarEnoughFromLeftBound;
 
   bool get _currentTickFarEnoughFromLeftBound =>
-      _entries.isEmpty ||
-      _entries.last.epoch > _shiftEpoch(leftBoundEpoch, autoPanOffset);
+      _entries!.isEmpty ||
+      _entries!.last.epoch > _shiftEpoch(leftBoundEpoch, autoPanOffset);
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -209,8 +209,8 @@ class XAxisModel extends ChangeNotifier {
   void onNewFrame(Duration _) {
     final int newNowTime = DateTime.now().millisecondsSinceEpoch;
     final int elapsedMs = newNowTime - _lastEpoch;
-    _nowEpoch = _entries?.isNotEmpty ?? false
-        ? _entries.last.epoch
+    _nowEpoch = (_entries?.isNotEmpty ?? false)
+        ? _entries!.last.epoch
         : _nowEpoch + elapsedMs;
     _lastEpoch = newNowTime;
     // TODO: Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
@@ -237,7 +237,7 @@ class XAxisModel extends ChangeNotifier {
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
   /// Should be called after [_updateGranularity] and [_updateIsLive].
-  void _updateEntries(List<Tick> entries) {
+  void _updateEntries(List<Tick>? entries) {
     if (entries == null) {
       return;
     }
@@ -245,14 +245,14 @@ class XAxisModel extends ChangeNotifier {
 
     final bool tickLoad = !firstLoad &&
         entries.length >= 2 &&
-        _entries.isNotEmpty &&
-        entries[entries.length - 2] == _entries.last;
+        _entries!.isNotEmpty &&
+        entries[entries.length - 2] == _entries!.last;
 
     final bool historyLoad = !firstLoad &&
         entries.isNotEmpty &&
-        _entries.isNotEmpty &&
-        entries.first != _entries.first &&
-        entries.last == _entries.last;
+        _entries!.isNotEmpty &&
+        entries.first != _entries!.first &&
+        entries.last == _entries!.last;
 
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
@@ -273,7 +273,7 @@ class XAxisModel extends ChangeNotifier {
       //        AB
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
-          entries.sublist(0, entries.length - _entries.length + 1);
+          entries.sublist(0, entries.length - _entries!.length + 1);
       _gapManager.insertInFront(findGaps(prefix, maxDiff));
     }
 
@@ -290,7 +290,7 @@ class XAxisModel extends ChangeNotifier {
   /// Resets scale and pan on granularity change.
   ///
   /// Should be called before [_updateEntries] and after [_updateIsLive]
-  void _updateGranularity(int newGranularity) {
+  void _updateGranularity(int? newGranularity) {
     if (newGranularity == null || _granularity == newGranularity) return;
     _granularity = newGranularity;
     _msPerPx = _defaultMsPerPx;
@@ -300,12 +300,12 @@ class XAxisModel extends ChangeNotifier {
   /// Updates chart's isLive property.
   ///
   /// Should be called before [_updateGranularity] and [_updateEntries]
-  void _updateIsLive(bool isLive) => _isLive = isLive ?? true;
+  void _updateIsLive(bool? isLive) => _isLive = isLive ?? true;
 
   /// Fits available data to screen.
   void _fitData() {
     final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
-    final double pxTargetDataWidth = width - dataFitPadding.horizontal;
+    final double pxTargetDataWidth = width! - dataFitPadding.horizontal;
 
     _msPerPx =
         (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
@@ -366,12 +366,12 @@ class XAxisModel extends ChangeNotifier {
   /// Get x position of epoch.
   double xFromEpoch(int epoch) {
     return epoch <= rightBoundEpoch
-        ? width - pxBetween(epoch, rightBoundEpoch)
-        : width + pxBetween(rightBoundEpoch, epoch);
+        ? width! - pxBetween(epoch, rightBoundEpoch)
+        : width! + pxBetween(rightBoundEpoch, epoch);
   }
 
   /// Get epoch of x position.
-  int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width + x);
+  int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width! + x);
 
   /// Called at the start of scale and pan gestures.
   void onScaleAndPanStart(ScaleStartDetails details) {
@@ -408,14 +408,14 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = width - details.focalPoint.dx;
+    final focalToRightBound = width! - details.focalPoint.dx;
     final focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
     _scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
   }
 
   void _scale(double scale) {
-    _msPerPx = (_prevMsPerPx / scale).clamp(_minMsPerPx, _maxMsPerPx);
+    _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
     onScale?.call();
     notifyListeners();
   }
@@ -440,7 +440,7 @@ class XAxisModel extends ChangeNotifier {
         animate ? const Duration(milliseconds: 600) : Duration.zero;
     final int target = _shiftEpoch(
             // _lastEntryEpoch will be removed later.
-            _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
+            (_entries?.isNotEmpty ?? false) ? _entries!.last.epoch : _nowEpoch,
             maxCurrentTickOffset) +
         duration.inMilliseconds;
 
@@ -473,11 +473,11 @@ class XAxisModel extends ChangeNotifier {
 
   /// Updates the [XAxisModel] model variables.
   void update({
-    bool isLive,
-    int granularity,
-    List<Tick> entries,
-    int minEpoch,
-    int maxEpoch,
+    bool? isLive,
+    int? granularity,
+    List<Tick>? entries,
+    int? minEpoch,
+    int? maxEpoch,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 
 /// Minimum candle duration with which [entriesDuration] can fit into available width in data fit mode.

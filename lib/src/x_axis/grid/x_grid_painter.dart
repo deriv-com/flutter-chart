@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
@@ -9,9 +7,9 @@ import 'paint_x_grid.dart';
 class XGridPainter extends CustomPainter {
   /// Creates x-axis painter.
   XGridPainter({
-    @required this.timeLabels,
-    @required this.xCoords,
-    @required this.style,
+    required this.timeLabels,
+    required this.xCoords,
+    required this.style,
   });
 
   /// Time labels.
