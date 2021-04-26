@@ -28,13 +28,13 @@ abstract class SeriesPainter<S extends Series> {
 
   /// Sets some variables and paints this [SeriesPainter]'s data.
   void paint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
-    ChartConfig chartConfig,
-    ChartTheme theme,
+    Canvas/*!*/ canvas,
+    Size/*!*/ size,
+    EpochToX/*!*/ epochToX,
+    QuoteToY/*!*/ quoteToY,
+    AnimationInfo/*!*/ animationInfo,
+    ChartConfig/*!*/ chartConfig,
+    ChartTheme/*!*/ theme,
   }) {
     this.chartConfig = chartConfig;
     this.theme = theme;
@@ -50,10 +50,10 @@ abstract class SeriesPainter<S extends Series> {
 
   /// Paints this [SeriesPainter]'s data.
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    Canvas/*!*/ canvas,
+    Size/*!*/ size,
+    EpochToX/*!*/ epochToX,
+    QuoteToY/*!*/ quoteToY,
+    AnimationInfo/*!*/ animationInfo,
   });
 }

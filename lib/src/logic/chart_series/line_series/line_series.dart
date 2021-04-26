@@ -15,7 +15,7 @@ class LineSeries extends DataSeries<Tick> {
     List<Tick> entries, {
     String id,
     LineStyle style,
-  }) : super(entries, id, style: style);
+  }) : super(entries, id: id, style: style);
 
   @override
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(
@@ -30,8 +30,8 @@ class LineSeries extends DataSeries<Tick> {
       );
 
   @override
-  double maxValueOf(Tick t) => t.quote;
+  double maxValueOf(Tick/*!*/ t) => t.quote;
 
   @override
-  double minValueOf(Tick t) => t.quote;
+  double minValueOf(Tick/*!*/ t) => t.quote;
 }

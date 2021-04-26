@@ -21,22 +21,22 @@ class MASeries extends AbstractSingleIndicatorSeries {
     MAOptions options, {
     String id,
     LineStyle style,
-    int offset,
+    int offset = 0,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
+          options,
           id: id,
-          options: options,
           style: style,
           offset: offset,
         );
 
   /// Initializes
   MASeries.fromIndicator(
-    Indicator<Tick> indicator, {
+    Indicator<Tick> indicator,
+    MAOptions options, {
     String id,
     LineStyle style,
-    MAOptions options,
-    int offset,
+    int offset = 0,
   }) : super(
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',

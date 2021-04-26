@@ -17,10 +17,10 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
   @override
   void onPaintData(
     Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    Size/*!*/ size,
+    EpochToX/*!*/ epochToX,
+    QuoteToY/*!*/ quoteToY,
+    AnimationInfo/*!*/ animationInfo,
   ) {
     final ScatterStyle style = series.style ?? const ScatterStyle();
 

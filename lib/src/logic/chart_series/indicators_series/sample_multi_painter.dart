@@ -23,11 +23,11 @@ class SampleMultiPainter extends SeriesPainter<SampleMultiSeries> {
 
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    Canvas/*!*/ canvas,
+    Size/*!*/ size,
+    EpochToX/*!*/ epochToX,
+    QuoteToY/*!*/ quoteToY,
+    AnimationInfo/*!*/ animationInfo,
   }) {
     // Painting red lines in-between two lines of series showing an area.
     for (int i = 0;

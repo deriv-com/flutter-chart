@@ -32,7 +32,9 @@ class AlligatorSeries extends Series {
     this.teethOffset = 5,
     this.lipsOffset = 3,
   })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
-        super(id);
+        super(
+          id ?? 'Alligator$alligatorOptions$jawOffset$teethOffset$lipsOffset',
+        );
 
   final Indicator<Tick> _fieldIndicator;
 
@@ -109,9 +111,9 @@ class AlligatorSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _jawSeries.update(leftEpoch, rightEpoch);
-    _teethSeries.update(leftEpoch, rightEpoch);
-    _lipsSeries.update(leftEpoch, rightEpoch);
+    _jawSeries?.update(leftEpoch, rightEpoch);
+    _teethSeries?.update(leftEpoch, rightEpoch);
+    _lipsSeries?.update(leftEpoch, rightEpoch);
   }
 
   @override
@@ -136,11 +138,11 @@ class AlligatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _jawSeries.paint(
+    _jawSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _teethSeries.paint(
+    _teethSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _lipsSeries.paint(
+    _lipsSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 

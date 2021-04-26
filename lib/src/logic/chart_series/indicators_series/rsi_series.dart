@@ -18,7 +18,7 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   RSISeries(
     IndicatorInput indicatorInput, {
     String id,
-    RSIOptions rsiOptions,
+    RSIOptions/*!*/ rsiOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           const RSIIndicatorConfig(),

@@ -56,7 +56,7 @@ class MAIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
-        options: MAOptions(period: period, type: movingAverageType),
+        MAOptions(period: period, type: movingAverageType),
         offset: offset,
         style: lineStyle,
       );

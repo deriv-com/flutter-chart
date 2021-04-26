@@ -24,7 +24,7 @@ class BollingerBandSeries extends Series {
   /// Close values will be chosen by default.
   BollingerBandSeries(
     IndicatorInput indicatorInput, {
-    BollingerBandsOptions bbOptions,
+    @required BollingerBandsOptions bbOptions,
     String id,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
@@ -35,21 +35,21 @@ class BollingerBandSeries extends Series {
   /// Initializes
   BollingerBandSeries.fromIndicator(
     Indicator<Tick> indicator, {
-    this.bbOptions,
+    @required this.bbOptions,
     String id,
   })  : _fieldIndicator = indicator,
-        super(id);
+        super(id ?? 'Bollinger$bbOptions');
 
-  SingleIndicatorSeries _lowerSeries;
-  SingleIndicatorSeries _middleSeries;
-  SingleIndicatorSeries _upperSeries;
+  /*late*/SingleIndicatorSeries _lowerSeries;
+  /*late*/SingleIndicatorSeries _middleSeries;
+  /*late*/SingleIndicatorSeries _upperSeries;
 
   /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
 
   final Indicator<Tick> _fieldIndicator;
 
-  final List<Series> _innerSeries = <Series>[];
+  final List<Series/*!*/> _innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series> createPainter() {

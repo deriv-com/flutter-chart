@@ -28,7 +28,7 @@ class SampleMultiSeries extends Series {
   SampleMultiSeries(IndicatorInput indicatorInput, {String id})
       : series1 = MASeries(indicatorInput, const MAOptions(period: 10)),
         series2 = MASeries(indicatorInput, const MAOptions()),
-        super(id);
+        super(id ?? 'SampleMultiSeries');
 
   /// Series 1.
   final MASeries series1;

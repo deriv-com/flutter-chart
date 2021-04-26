@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 /// Conversion function to convert epoch value to canvas X.
-typedef EpochToX = double Function(int);
+typedef EpochToX = double Function(int /*!*/);
 
 /// Conversion function to convert value(quote) value to canvas Y.
-typedef QuoteToY = double Function(double);
+typedef QuoteToY = double Function(double /*!*/);
 
 /// Any data that the chart takes and makes it paint its self on the chart's canvas including
 /// Line, CandleStick data, Markers, barriers etc..
@@ -21,7 +21,7 @@ abstract class ChartData {
   ///
   /// [id] is used to recognize an old [ChartData] with its new version after chart being updated.
   /// Doing so makes the chart able to perform live update animation.
-  String id;
+  String /*!*/ id;
 
   /// Will be called by the chart when it was updated.
   ///
@@ -94,8 +94,9 @@ extension ChartDataListExtension on Iterable<ChartData> {
     int Function(ChartData) getEpoch,
     int Function(int, int) epochComparator,
   ) {
-    final Iterable<int> maxEpochs =
-        map((ChartData c) => getEpoch(c)).where((int epoch) => epoch != null);
+    final Iterable<int> maxEpochs = where((ChartData c) => c != null)
+        .map((ChartData c) => getEpoch(c))
+        .where((int epoch) => epoch != null);
 
     return maxEpochs.isNotEmpty
         ? maxEpochs

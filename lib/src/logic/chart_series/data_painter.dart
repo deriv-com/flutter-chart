@@ -21,11 +21,11 @@ abstract class DataPainter<S extends DataSeries<Tick>>
   /// Paints [DataSeries.visibleEntries] on the [canvas].
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    Canvas/*!*/ canvas,
+    Size/*!*/ size,
+    EpochToX/*!*/ epochToX,
+    QuoteToY/*!*/ quoteToY,
+    AnimationInfo/*!*/ animationInfo,
   }) {
     final DataSeries<Tick> series = this.series;
 

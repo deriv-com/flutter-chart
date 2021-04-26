@@ -26,7 +26,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
             ? inputIndicator.entries.first
             : null,
         _inputIndicatorData = inputIndicator.input,
-        super(inputIndicator.entries, id, style: style);
+        super(inputIndicator.entries, id: id, style: style);
 
   /// Input indicator to calculate this indicator value on.
   ///
@@ -69,7 +69,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   final IndicatorInput _inputIndicatorData;
 
   @override
-  int getEpochOf(Tick t, int index) {
+  int getEpochOf(Tick/*!*/ t, int index) {
     if (entries != null) {
       final int targetIndex = index + offset;
 
@@ -150,15 +150,15 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   }
 
   @override
-  Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>
+  Widget getCrossHairInfo(Tick/*!*/ crossHairTick, int pipSize, ChartTheme theme) =>
       Text(
         '${crossHairTick.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
       );
 
   @override
-  double maxValueOf(Tick t) => t.quote;
+  double maxValueOf(Tick/*!*/ t) => t.quote;
 
   @override
-  double minValueOf(Tick t) => t.quote;
+  double minValueOf(Tick/*!*/ t) => t.quote;
 }

@@ -21,8 +21,8 @@ abstract class DataSeries<T extends Tick> extends Series {
   ///
   /// [entries] is the list of data to show.
   DataSeries(
-    this.input,
-    String id, {
+    this.input, {
+    String/*!*/ id,
     DataSeriesStyle style,
     this.lastTickIndicatorStyle,
   }) : super(id, style: style) {
@@ -36,7 +36,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   final List<T> input;
 
   /// The list of this class that will be painted on the canvas.
-  List<T> entries;
+  /*late*/ List<T> entries;
 
   /// List of visible entries at a specific epoch range of the chart X-Axis.
   ///

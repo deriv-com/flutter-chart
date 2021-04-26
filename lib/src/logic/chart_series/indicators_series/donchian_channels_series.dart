@@ -39,7 +39,8 @@ class DonchianChannelsSeries extends Series {
     String id,
   })  : _highIndicator = highIndicator,
         _lowIndicator = lowIndicator,
-        super(id);
+        // TODO(Ramin): define DonchianChannelOptions class
+        super(id ?? 'Donchian$config');
 
   LineSeries _upperChannelSeries;
   LineSeries _middleChannelSeries;
@@ -120,8 +121,8 @@ class DonchianChannelsSeries extends Series {
   void paint(
     Canvas canvas,
     Size size,
-    double Function(int) epochToX,
-    double Function(double) quoteToY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,

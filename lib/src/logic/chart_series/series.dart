@@ -59,7 +59,7 @@ abstract class Series implements ChartData {
   bool shouldRepaint(ChartData previous) => true;
 
   /// Calculate min/max values in updated data
-  List<double> recalculateMinMax();
+  List<double/*!*/> recalculateMinMax();
 
   /// Updates series visible data.
   void onUpdate(int leftEpoch, int rightEpoch);
@@ -73,7 +73,7 @@ abstract class Series implements ChartData {
     Canvas canvas,
     Size size,
     double Function(int) epochToX,
-    double Function(double) quoteToY,
+    double Function(double/*!*/) quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,

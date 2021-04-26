@@ -39,16 +39,16 @@ class MAEnvSeries extends Series {
     String id,
     this.maEnvOptions,
   })  : _fieldIndicator = indicator,
-        super(id);
+        super(id ?? 'MAEnv$maEnvOptions');
 
   final Indicator<Tick> _fieldIndicator;
 
   /// Moving Average Envelope options
   MAEnvOptions maEnvOptions;
 
-  SingleIndicatorSeries _lowerSeries;
-  SingleIndicatorSeries _middleSeries;
-  SingleIndicatorSeries _upperSeries;
+  /*late*/SingleIndicatorSeries _lowerSeries;
+  /*late*/SingleIndicatorSeries _middleSeries;
+  /*late*/SingleIndicatorSeries _upperSeries;
 
   final List<Series> _innerSeries = <Series>[];
 

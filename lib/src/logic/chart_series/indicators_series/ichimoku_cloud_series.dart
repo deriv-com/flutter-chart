@@ -23,13 +23,13 @@ class IchimokuCloudSeries extends Series {
     @required this.ichimokuCloudOptions,
     @required this.config,
     String id,
-  }) : super(id);
+  }) : super(id ?? 'Ichimoku$ichimokuCloudOptions');
 
-  SingleIndicatorSeries _conversionLineSeries;
-  SingleIndicatorSeries _baseLineSeries;
-  SingleIndicatorSeries _laggingSpanSeries;
-  SingleIndicatorSeries _spanASeries;
-  SingleIndicatorSeries _spanBSeries;
+  /*late*/SingleIndicatorSeries _conversionLineSeries;
+  /*late*/SingleIndicatorSeries _baseLineSeries;
+  /*late*/SingleIndicatorSeries _laggingSpanSeries;
+  /*late*/SingleIndicatorSeries _spanASeries;
+  /*late*/SingleIndicatorSeries _spanBSeries;
   final List<SingleIndicatorSeries> _ichimokuSeries = <SingleIndicatorSeries>[];
 
   /// List of [Tick]s to calculate IchimokuCloud on.

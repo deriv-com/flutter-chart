@@ -41,7 +41,7 @@ class RainbowSeries extends Series {
     this.rainbowOptions,
   })
       : _fieldIndicator = indicator,
-        super(id);
+        super(id ?? 'MARainbow$rainbowOptions');
 
   final Indicator<Tick> _fieldIndicator;
 
