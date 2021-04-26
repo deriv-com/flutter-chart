@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_single_indicator_series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -35,11 +33,11 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
         );
 
   // Backup for PSAR internal variables.
-  double _backupAccelerationFactor;
-  bool _backupIsUptrend;
-  int _backupStartTrendIndex;
-  double _backupCurrentExtremePoint;
-  double _backupMinMaxExtremePoint;
+  double? _backupAccelerationFactor;
+  bool? _backupIsUptrend;
+  int? _backupStartTrendIndex;
+  double? _backupCurrentExtremePoint;
+  double? _backupMinMaxExtremePoint;
 
   @override
   Tick calculate(int index) {
@@ -52,11 +50,11 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
 
       final Tick result = super.calculate(index);
 
-      accelerationFactor = _backupAccelerationFactor;
-      isUptrend = _backupIsUptrend;
-      startTrendIndex = _backupStartTrendIndex;
-      currentExtremePoint = _backupCurrentExtremePoint;
-      minMaxExtremePoint = _backupMinMaxExtremePoint;
+      accelerationFactor = _backupAccelerationFactor!;
+      isUptrend = _backupIsUptrend!;
+      startTrendIndex = _backupStartTrendIndex!;
+      currentExtremePoint = _backupCurrentExtremePoint!;
+      minMaxExtremePoint = _backupMinMaxExtremePoint!;
       return result;
     }
 
@@ -66,11 +64,11 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   @override
   void copyValuesFrom(covariant CustomParabolicSarIndicator other) {
     super.copyValuesFrom(other);
-    isUptrend = other._backupIsUptrend;
-    accelerationFactor = other._backupAccelerationFactor;
-    startTrendIndex = other._backupStartTrendIndex;
-    currentExtremePoint = other._backupCurrentExtremePoint;
-    minMaxExtremePoint = other._backupMinMaxExtremePoint;
+    isUptrend = other._backupIsUptrend!;
+    accelerationFactor = other._backupAccelerationFactor!;
+    startTrendIndex = other._backupStartTrendIndex!;
+    currentExtremePoint = other._backupCurrentExtremePoint!;
+    minMaxExtremePoint = other._backupMinMaxExtremePoint!;
 
     if (entries.length > other.entries.length) {
       for (int i = other.entries.length - 1; i < entries.length - 1; i++) {

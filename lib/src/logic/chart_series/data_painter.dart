@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -11,23 +9,25 @@ import 'data_series.dart';
 import 'series_painter.dart';
 
 /// A class to paint common option of [DataSeries] data.
-abstract class DataPainter<S extends DataSeries<Tick>>
+abstract class DataPainter<S extends DataSeries<Tick?>>
     extends SeriesPainter<S> {
   /// Initializes series for sub-class.
-  DataPainter(DataSeries<Tick> series) : _dataSeries = series, super(series);
+  DataPainter(DataSeries<Tick?> series)
+      : _dataSeries = series,
+        super(series as S);
 
-  final DataSeries<Tick> _dataSeries;
+  final DataSeries<Tick?> _dataSeries;
 
   /// Paints [DataSeries.visibleEntries] on the [canvas].
   @override
   void onPaint({
-    Canvas/*!*/ canvas,
-    Size/*!*/ size,
-    EpochToX/*!*/ epochToX,
-    QuoteToY/*!*/ quoteToY,
-    AnimationInfo/*!*/ animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   }) {
-    final DataSeries<Tick> series = this.series;
+    final DataSeries<Tick?> series = this.series;
 
     if (series.visibleEntries.isEmpty) {
       return;

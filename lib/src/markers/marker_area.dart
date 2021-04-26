@@ -2,6 +2,8 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -108,7 +110,15 @@ class _MarkerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    series.paint(canvas, size, epochToX, quoteToY, null, null, theme);
+    series.paint(
+      canvas,
+      size,
+      epochToX,
+      quoteToY,
+      const AnimationInfo(),
+      const ChartConfig(granularity: 1000),
+      theme,
+    );
   }
 
   @override

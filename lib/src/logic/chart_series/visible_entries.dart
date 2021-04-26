@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 
 /// Model class to hold visible entries of [DataSeries] and keep track of their

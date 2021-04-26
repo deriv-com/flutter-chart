@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_painter.dart';
@@ -11,13 +9,13 @@ class OscillatorLineSeries extends LineSeries {
   /// Initializes an Oscillator line series.
   OscillatorLineSeries(
     List<Tick> entries, {
-    @required double topHorizontalLine,
-    @required double bottomHorizontalLine,
+    required double topHorizontalLine,
+    required double bottomHorizontalLine,
     List<double> secondaryHorizontalLines = const <double>[],
-    LineStyle style,
-    String id,
-    LineStyle secondaryHorizontalLinesStyle,
-    LineStyle mainHorizontalLinesStyle,
+    LineStyle? style,
+    required String id,
+    LineStyle? secondaryHorizontalLinesStyle,
+    LineStyle? mainHorizontalLinesStyle,
   })  : _topHorizontalLine = topHorizontalLine,
         _bottomHorizontalLine = bottomHorizontalLine,
         _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
@@ -32,8 +30,8 @@ class OscillatorLineSeries extends LineSeries {
   final List<double> _secondaryHorizontalLines;
   final double _topHorizontalLine;
   final double _bottomHorizontalLine;
-  final LineStyle _secondaryHorizontalLinesStyle;
-  final LineStyle _mainHorizontalLinesStyle;
+  final LineStyle? _secondaryHorizontalLinesStyle;
+  final LineStyle? _mainHorizontalLinesStyle;
 
   @override
   SeriesPainter<DataSeries<Tick>> createPainter() => OscillatorLinePainter(

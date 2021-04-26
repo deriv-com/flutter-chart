@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -18,8 +16,8 @@ class ZigZagSeries extends LineSeries {
   /// [distance] The minimum distance in percent between two zigzag points.
   ZigZagSeries(
     IndicatorDataInput entries, {
-    String id,
-    LineStyle style,
+    String? id,
+    LineStyle? style,
     double distance = 10,
   }) : super(
           ZigZagIndicator<Tick>(entries, distance).calculateValues(),
@@ -31,30 +29,32 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
-  VisibleEntries<Tick> getVisibleEntries(int startIndex, int endIndex) {
+  VisibleEntries<Tick?> getVisibleEntries(int startIndex, int endIndex) {
     int firstIndex = startIndex;
     int lastIndex = endIndex;
-    if (startIndex == -1 || endIndex == -1) {
+    if (entries == null || startIndex < 0 || endIndex >= entries!.length) {
       return VisibleEntries<Tick>.empty();
     }
-    if (entries[startIndex].quote.isNaN) {
+    if (entries![startIndex]!.quote.isNaN) {
       for (int i = startIndex - 1; i >= 0; i--) {
-        if (!entries[i].quote.isNaN) {
+        final Tick? entry = entries![i];
+        if (entry != null && !entry.quote.isNaN) {
           firstIndex = i;
           break;
         }
       }
     }
-    if (entries[endIndex - 1].quote.isNaN) {
-      for (int i = endIndex + 1; i < entries.length; i++) {
-        if (!entries[i].quote.isNaN) {
+    if (entries![endIndex - 1]?.quote.isNaN ?? false) {
+      for (int i = endIndex + 1; i < entries!.length; i++) {
+        final Tick? entry = entries![i];
+        if (entry != null && !entry.quote.isNaN) {
           lastIndex = i + 1;
           break;
         }
       }
     }
-    return VisibleEntries<Tick>(
-      entries.sublist(firstIndex, lastIndex),
+    return VisibleEntries<Tick?>(
+      entries!.sublist(firstIndex, lastIndex),
       firstIndex,
       lastIndex,
     );

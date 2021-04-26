@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -16,10 +14,10 @@ import '../data_series.dart';
 class LinePainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   LinePainter(
-    DataSeries<Tick> series,
+    DataSeries<Tick?> series,
   ) : super(series);
 
-  double _lastVisibleTickX;
+  double? _lastVisibleTickX;
 
   @override
   void onPaintData(
@@ -29,8 +27,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final LineStyle style =
-        series.style ?? theme.lineStyle ?? const LineStyle();
+    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
 
     final Paint linePaint = Paint()
       ..color = style.color
@@ -47,7 +44,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         size,
         path,
         epochToX(series.visibleEntries.first.epoch),
-        _lastVisibleTickX,
+        _lastVisibleTickX!,
         style,
       );
     }
@@ -71,6 +68,10 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   ) {
     final Path path = Path();
 
+    if (series.entries == null) {
+      return path;
+    }
+
     double lastVisibleTickX;
     bool isStartPointSet = false;
 
@@ -78,7 +79,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {
-      final Tick tick = series.entries[i];
+      final Tick tick = series.entries![i];
 
       if (!tick.quote.isNaN) {
         lastVisibleTickX = epochToX(getEpochOf(tick, i));
@@ -98,35 +99,40 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     }
 
     _lastVisibleTickX =
-        calculateLastVisibleTick(epochToX, animationInfo, quoteToY, path);
+        _calculateLastVisibleTick(epochToX, animationInfo, quoteToY, path);
 
     return path;
   }
 
   /// calculates the last visible tick's `dx`.
-  double calculateLastVisibleTick(EpochToX epochToX,
-      AnimationInfo animationInfo, QuoteToY quoteToY, ui.Path path) {
-    final Tick lastTick = series.entries.last;
+  double? _calculateLastVisibleTick(
+    EpochToX epochToX,
+    AnimationInfo animationInfo,
+    QuoteToY quoteToY,
+    ui.Path path,
+  ) {
+    final Tick lastTick = series.entries!.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
-    double lastVisibleTickX;
+    double? lastVisibleTickX;
 
     if (!lastVisibleTick.quote.isNaN) {
       if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
           epochToX(
-            getEpochOf(series.prevLastEntry.entry, series.prevLastEntry.index),
+            getEpochOf(
+                series.prevLastEntry!.entry, series.prevLastEntry!.index),
           ),
-          epochToX(getEpochOf(lastTick, series.entries.length - 1)),
+          epochToX(getEpochOf(lastTick, series.entries!.length - 1)),
           animationInfo.currentTickPercent,
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          series.prevLastEntry.entry.quote,
+          series.prevLastEntry!.entry.quote,
           lastTick.quote,
           animationInfo.currentTickPercent,
-        ));
+        )!);
 
-        path.lineTo(lastVisibleTickX, tickY);
+        path.lineTo(lastVisibleTickX!, tickY);
       } else {
         lastVisibleTickX = epochToX(
             getEpochOf(lastVisibleTick, series.visibleEntries.endIndex - 1));

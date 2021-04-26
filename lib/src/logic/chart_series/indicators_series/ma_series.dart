@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -19,8 +17,8 @@ class MASeries extends AbstractSingleIndicatorSeries {
   MASeries(
     IndicatorInput indicatorInput,
     MAOptions options, {
-    String id,
-    LineStyle style,
+    String? id,
+    LineStyle? style,
     int offset = 0,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
@@ -34,8 +32,8 @@ class MASeries extends AbstractSingleIndicatorSeries {
   MASeries.fromIndicator(
     Indicator<Tick> indicator,
     MAOptions options, {
-    String id,
-    LineStyle style,
+    String? id,
+    LineStyle? style,
     int offset = 0,
   }) : super(
           indicator,
@@ -50,7 +48,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>
-      MASeries.getMAIndicator(inputIndicator, options);
+      MASeries.getMAIndicator(inputIndicator, options as MAOptions);
 
   /// Returns a moving average indicator based on [maOptions] values.
   static CachedIndicator<Tick> getMAIndicator(

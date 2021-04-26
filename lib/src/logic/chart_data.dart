@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:math';
 
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -9,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 /// Conversion function to convert epoch value to canvas X.
-typedef EpochToX = double Function(int /*!*/);
+typedef EpochToX = double Function(int);
 
 /// Conversion function to convert value(quote) value to canvas Y.
-typedef QuoteToY = double Function(double /*!*/);
+typedef QuoteToY = double Function(double);
 
 /// Any data that the chart takes and makes it paint its self on the chart's canvas including
 /// Line, CandleStick data, Markers, barriers etc..
@@ -21,15 +19,15 @@ abstract class ChartData {
   ///
   /// [id] is used to recognize an old [ChartData] with its new version after chart being updated.
   /// Doing so makes the chart able to perform live update animation.
-  String /*!*/ id;
+  late String id;
 
   /// Will be called by the chart when it was updated.
   ///
   /// Returns `true` if this chart data has changed with the chart widget update.
-  bool didUpdate(ChartData oldData);
+  bool didUpdate(ChartData? oldData);
 
   /// Checks if this ChartData needs to repaint with the chart widget's new frame.
-  bool shouldRepaint(ChartData oldData);
+  bool shouldRepaint(ChartData? oldData);
 
   /// Updates this [ChartData] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
@@ -48,12 +46,12 @@ abstract class ChartData {
   ///
   /// The chart calls this on any of its [ChartData]s and gets their minimum epoch
   /// then sets its X-Axis leftmost scroll limit based on them.
-  int getMinEpoch();
+  int? getMinEpoch();
 
   /// Maximum epoch of this [ChartData] on the chart's X-Axis.
   ///
   /// The chart uses it same as [getMinEpoch] to determine its rightmost scroll limit.
-  int getMaxEpoch();
+  int? getMaxEpoch();
 
   /// Paints this [ChartData] on the given [canvas].
   ///
@@ -83,24 +81,24 @@ abstract class ChartData {
 /// An extension on Iterable with [ChartData] elements.
 extension ChartDataListExtension on Iterable<ChartData> {
   /// Gets the minimum of [ChartData.getMinEpoch]s.
-  int getMinEpoch() =>
-      _getEpochWithPredicate((ChartData c) => c.getMinEpoch(), min);
+  int? getMinEpoch() => _getEpochWithPredicate(
+      (ChartData c) => c.getMinEpoch(), min as int Function(int?, int?));
 
   /// Gets the maximum of [ChartData.getMaxEpoch]s.
-  int getMaxEpoch() =>
-      _getEpochWithPredicate((ChartData c) => c.getMaxEpoch(), max);
+  int? getMaxEpoch() => _getEpochWithPredicate(
+      (ChartData c) => c.getMaxEpoch(), max as int Function(int?, int?));
 
-  int _getEpochWithPredicate(
-    int Function(ChartData) getEpoch,
-    int Function(int, int) epochComparator,
+  int? _getEpochWithPredicate(
+    int? Function(ChartData) getEpoch,
+    int Function(int?, int?) epochComparator,
   ) {
-    final Iterable<int> maxEpochs = where((ChartData c) => c != null)
+    final Iterable<int?> maxEpochs = where((ChartData c) => c != null)
         .map((ChartData c) => getEpoch(c))
-        .where((int epoch) => epoch != null);
+        .where((int? epoch) => epoch != null);
 
     return maxEpochs.isNotEmpty
         ? maxEpochs
-            .reduce((int current, int next) => epochComparator(current, next))
+            .reduce((int? current, int? next) => epochComparator(current, next))
         : null;
   }
 }

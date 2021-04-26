@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:math';
 
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
@@ -16,6 +14,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
+import '../data_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
 
@@ -26,7 +25,7 @@ class AlligatorSeries extends Series {
   /// [alligatorOptions] Alligator indicator options.
   AlligatorSeries(
     IndicatorInput indicatorInput, {
-    String id,
+    String? id,
     this.alligatorOptions,
     this.jawOffset = 8,
     this.teethOffset = 5,
@@ -39,11 +38,11 @@ class AlligatorSeries extends Series {
   final Indicator<Tick> _fieldIndicator;
 
   /// Alligator options
-  AlligatorOptions alligatorOptions;
+  AlligatorOptions? alligatorOptions;
 
-  SingleIndicatorSeries _jawSeries;
-  SingleIndicatorSeries _teethSeries;
-  SingleIndicatorSeries _lipsSeries;
+  SingleIndicatorSeries? _jawSeries;
+  SingleIndicatorSeries? _teethSeries;
+  SingleIndicatorSeries? _lipsSeries;
 
   /// Shift to future in jaw series
   final int jawOffset;
@@ -55,14 +54,14 @@ class AlligatorSeries extends Series {
   final int lipsOffset;
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     _jawSeries = SingleIndicatorSeries(
       painterCreator: (
         Series series,
       ) =>
-          LinePainter(series),
+          LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () =>
-          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.jawPeriod),
+          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.jawPeriod),
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.blue),
@@ -73,9 +72,9 @@ class AlligatorSeries extends Series {
       painterCreator: (
         Series series,
       ) =>
-          LinePainter(series),
+          LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () =>
-          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.teethPeriod),
+          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.teethPeriod),
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.red),
@@ -86,9 +85,9 @@ class AlligatorSeries extends Series {
       painterCreator: (
         Series series,
       ) =>
-          LinePainter(series),
+          LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () =>
-          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.lipsPeriod),
+          MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.lipsPeriod),
       inputIndicator: _fieldIndicator,
       options: alligatorOptions,
       style: const LineStyle(color: Colors.green),
@@ -99,12 +98,14 @@ class AlligatorSeries extends Series {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final AlligatorSeries series = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final AlligatorSeries? series = oldData as AlligatorSeries;
 
-    final bool _jawUpdated = _jawSeries.didUpdate(series?._jawSeries);
-    final bool _teethUpdated = _teethSeries.didUpdate(series?._teethSeries);
-    final bool _lipsUpdated = _lipsSeries.didUpdate(series?._lipsSeries);
+    final bool _jawUpdated = _jawSeries?.didUpdate(series?._jawSeries) ?? false;
+    final bool _teethUpdated =
+        _teethSeries?.didUpdate(series?._teethSeries) ?? false;
+    final bool _lipsUpdated =
+        _lipsSeries?.didUpdate(series?._lipsSeries) ?? false;
 
     return _jawUpdated || _teethUpdated || _lipsUpdated;
   }
@@ -119,12 +120,12 @@ class AlligatorSeries extends Series {
   @override
   List<double> recalculateMinMax() => <double>[
         safeMin(
-          safeMin(_jawSeries.minValue, _teethSeries.minValue),
-          _lipsSeries.minValue,
+          safeMin(_jawSeries!.minValue, _teethSeries!.minValue),
+          _lipsSeries!.minValue,
         ),
         safeMax(
-          safeMax(_jawSeries.maxValue, _teethSeries.maxValue),
-          _lipsSeries.maxValue,
+          safeMax(_jawSeries!.maxValue, _teethSeries!.maxValue),
+          _lipsSeries!.maxValue,
         ),
       ];
 
@@ -147,10 +148,10 @@ class AlligatorSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() {
-    final int jawSeriesMax = _jawSeries?.getMaxEpoch();
-    final int teethSeriesMax = _teethSeries?.getMaxEpoch();
-    final int lipsSeriesMax = _lipsSeries?.getMaxEpoch();
+  int? getMaxEpoch() {
+    final int? jawSeriesMax = _jawSeries?.getMaxEpoch();
+    final int? teethSeriesMax = _teethSeries?.getMaxEpoch();
+    final int? lipsSeriesMax = _lipsSeries?.getMaxEpoch();
     return (jawSeriesMax != null &&
             teethSeriesMax != null &&
             lipsSeriesMax != null)
@@ -159,10 +160,10 @@ class AlligatorSeries extends Series {
   }
 
   @override
-  int getMinEpoch() {
-    final int jawSeriesMin = _jawSeries?.getMinEpoch();
-    final int teethSeriesMin = _teethSeries?.getMinEpoch();
-    final int lipsSeriesMin = _lipsSeries?.getMinEpoch();
+  int? getMinEpoch() {
+    final int? jawSeriesMin = _jawSeries?.getMinEpoch();
+    final int? teethSeriesMin = _teethSeries?.getMinEpoch();
+    final int? lipsSeriesMin = _lipsSeries?.getMinEpoch();
     return (jawSeriesMin != null &&
             teethSeriesMin != null &&
             lipsSeriesMin != null)

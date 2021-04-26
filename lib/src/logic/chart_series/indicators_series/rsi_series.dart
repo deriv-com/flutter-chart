@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_single_indicator_series.dart';
@@ -17,8 +15,8 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   /// Initializes an RSI Indicator.
   RSISeries(
     IndicatorInput indicatorInput, {
-    String id,
-    RSIOptions/*!*/ rsiOptions,
+    String? id,
+    required RSIOptions rsiOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           const RSIIndicatorConfig(),
@@ -30,8 +28,8 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   RSISeries.fromIndicator(
     Indicator<Tick> inputIndicator,
     this.config, {
-    @required this.rsiOptions,
-    String id,
+    required this.rsiOptions,
+    String? id,
   })  : _inputIndicator = inputIndicator,
         super(
           inputIndicator,

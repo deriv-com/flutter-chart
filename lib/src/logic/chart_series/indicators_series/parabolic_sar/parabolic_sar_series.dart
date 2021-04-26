@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/parabolic_sar_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/scatter/scatter_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -18,8 +16,8 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
   ParabolicSARSeries(
     this._indicatorInput,
     ParabolicSAROptions options, {
-    ScatterStyle style,
-    String id,
+    ScatterStyle? style,
+    String? id,
   })  : _options = options,
         super(
           CloseValueIndicator<Tick>(_indicatorInput),

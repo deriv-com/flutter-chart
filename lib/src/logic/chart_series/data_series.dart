@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
@@ -16,17 +14,20 @@ import 'indexed_entry.dart';
 import 'visible_entries.dart';
 
 /// Series with only a single list of data to paint.
-abstract class DataSeries<T extends Tick> extends Series {
+abstract class DataSeries<T extends Tick?> extends Series {
   /// Initializes
   ///
   /// [entries] is the list of data to show.
   DataSeries(
     this.input, {
-    String/*!*/ id,
-    DataSeriesStyle style,
+    required String id,
+    DataSeriesStyle? style,
     this.lastTickIndicatorStyle,
   }) : super(id, style: style) {
-    _minMaxCalculator = MinMaxCalculator(minValueOf, maxValueOf);
+    _minMaxCalculator = MinMaxCalculator(
+      minValueOf as double Function(Tick),
+      maxValueOf as double Function(Tick),
+    );
   }
 
   /// Series input list.
@@ -36,7 +37,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   final List<T> input;
 
   /// The list of this class that will be painted on the canvas.
-  /*late*/ List<T> entries;
+  List<T>? entries;
 
   /// List of visible entries at a specific epoch range of the chart X-Axis.
   ///
@@ -56,13 +57,13 @@ abstract class DataSeries<T extends Tick> extends Series {
   ///
   /// In other cases like in the first run or when the [input] list changes entirely,
   /// [prevLastEntry] will be `null` and there will be no animations.
-  IndexedEntry<T> prevLastEntry;
+  IndexedEntry<T>? prevLastEntry;
 
   /// Style of a last tick indicator.
   /// `null` if indicator is absent.
-  final HorizontalBarrierStyle lastTickIndicatorStyle;
+  final HorizontalBarrierStyle? lastTickIndicatorStyle;
 
-  HorizontalBarrier _lastTickIndicator;
+  HorizontalBarrier? _lastTickIndicator;
 
   /// Initializes [entries] from the [input].
   void initialize() {
@@ -73,13 +74,13 @@ abstract class DataSeries<T extends Tick> extends Series {
   bool _needsMinMaxUpdate = false;
 
   /// Utility object to help efficiently calculate new min/max when [visibleEntries] change.
-  MinMaxCalculator _minMaxCalculator;
+  late MinMaxCalculator _minMaxCalculator;
 
   @override
-  int getMinEpoch() => input.isNotEmpty ? getEpochOf(input.first, 0) : null;
+  int? getMinEpoch() => input.isNotEmpty ? getEpochOf(input.first, 0) : null;
 
   @override
-  int getMaxEpoch() =>
+  int? getMaxEpoch() =>
       input.isNotEmpty ? getEpochOf(input.last, input.length - 1) : null;
 
   /// Gets the real epoch for the given [t].
@@ -88,7 +89,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Should use this method here whenever want to get the epoch of a [T].
   ///
   /// [index] should the index of [t] in [entries].
-  int getEpochOf(T t, int index) => t.epoch;
+  int getEpochOf(T t, int index) => t!.epoch;
 
   /// Updates visible entries for this Series.
   @override
@@ -99,13 +100,13 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     _lastTickIndicator?.onUpdate(leftEpoch, rightEpoch);
 
-    if (entries.isEmpty) {
+    if (entries!.isEmpty) {
       _visibleEntries = VisibleEntries<T>.empty();
       return;
     }
 
-    final int startIndex = _searchLowerIndex(leftEpoch);
-    final int endIndex = _searchUpperIndex(rightEpoch);
+    final int startIndex = _searchLowerIndex(leftEpoch, entries!);
+    final int endIndex = _searchUpperIndex(rightEpoch, entries!);
 
     final VisibleEntries<T> newVisibleEntries =
         getVisibleEntries(startIndex, endIndex);
@@ -122,10 +123,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Creates visible entries based on [startIndex] and [endIndex].
   @protected
   VisibleEntries<T> getVisibleEntries(int startIndex, int endIndex) =>
-      startIndex == -1 || endIndex == -1
+      entries == null || startIndex == -1 || endIndex == -1
           ? VisibleEntries<T>.empty()
           : VisibleEntries<T>(
-              entries.sublist(startIndex, endIndex),
+              entries!.sublist(startIndex, endIndex),
               startIndex,
               endIndex,
             );
@@ -141,10 +142,10 @@ abstract class DataSeries<T extends Tick> extends Series {
   double maxValueOf(T t);
 
   void _initLastTickIndicator() {
-    if (entries.isNotEmpty && lastTickIndicatorStyle != null) {
+    if ((entries?.isNotEmpty ?? false) && lastTickIndicatorStyle != null) {
       _lastTickIndicator = HorizontalBarrier(
-        entries.last.quote,
-        epoch: getEpochOf(entries.last, entries.length - 1),
+        entries!.last!.quote,
+        epoch: getEpochOf(entries!.last, entries!.length - 1),
         style: lastTickIndicatorStyle,
       );
     }
@@ -162,7 +163,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     return <double>[_minMaxCalculator.min, _minMaxCalculator.max];
   }
 
-  int _searchLowerIndex(int leftEpoch) {
+  int _searchLowerIndex(int leftEpoch, List<T> entries) {
     if (leftEpoch < getEpochOf(entries[0], 0)) {
       return 0;
     } else if (leftEpoch >
@@ -170,7 +171,7 @@ abstract class DataSeries<T extends Tick> extends Series {
       return -1;
     }
 
-    final int closest = _findClosestIndex(leftEpoch);
+    final int closest = _findClosestIndex(leftEpoch, entries);
 
     final int index = closest <= leftEpoch
         ? closest
@@ -180,7 +181,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     return index - 1 < 0 ? index : index - 1;
   }
 
-  int _searchUpperIndex(int rightEpoch) {
+  int _searchUpperIndex(int rightEpoch, List<T> entries) {
     if (rightEpoch < getEpochOf(entries[0], 0)) {
       return -1;
     } else if (rightEpoch >
@@ -188,7 +189,7 @@ abstract class DataSeries<T extends Tick> extends Series {
       return entries.length;
     }
 
-    final int closest = _findClosestIndex(rightEpoch);
+    final int closest = _findClosestIndex(rightEpoch, entries);
 
     final int index = closest >= rightEpoch
         ? closest
@@ -197,7 +198,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   }
 
   // Binary search to find closest index to the [epoch].
-  int _findClosestIndex(int epoch) {
+  int _findClosestIndex(int epoch, List<T> entries) {
     int lo = 0;
     int hi = entries.length - 1;
 
@@ -221,24 +222,26 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Will be called by the chart when it was updated.
   @override
-  bool didUpdate(ChartData oldData) {
-    final DataSeries<Tick> oldSeries = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final DataSeries<Tick> oldSeries = oldData as DataSeries<Tick>;
 
     bool updated = false;
     if (input.isNotEmpty && isOldDataAvailable(oldSeries)) {
       fillEntriesFromInput(oldSeries);
 
       // Preserve old computed values in case recomputation is deemed unnecesary.
-      _visibleEntries = oldSeries.visibleEntries;
+      _visibleEntries = oldSeries.visibleEntries as VisibleEntries<T>;
       minValueInFrame = oldSeries.minValue;
       maxValueInFrame = oldSeries.maxValue;
 
-      if (entries != null && entries.last == oldSeries.entries.last) {
-        prevLastEntry = oldSeries.prevLastEntry;
-      } else {
+      if (entries != null &&
+          oldSeries.entries != null &&
+          entries!.last == oldSeries.entries!.last) {
+        prevLastEntry = oldSeries.prevLastEntry as IndexedEntry<T>?;
+      } else if (oldSeries.entries != null) {
         prevLastEntry = IndexedEntry<T>(
-          oldSeries.entries.last,
-          oldSeries.entries.length - 1,
+          oldSeries.entries!.last as T,
+          oldSeries.entries!.length - 1,
         );
         updated = true;
       }
@@ -258,19 +261,19 @@ abstract class DataSeries<T extends Tick> extends Series {
   ///
   /// Here we just assign [input] to [entries] as a normal [DataSeries] class.
   @protected
-  void fillEntriesFromInput(covariant DataSeries<Tick> oldSeries) =>
+  void fillEntriesFromInput(covariant DataSeries<Tick?> oldSeries) =>
       entries = input;
 
   /// Checks whether the old data of the series is available to use
   @protected
-  bool isOldDataAvailable(covariant DataSeries<Tick> oldSeries) =>
-      oldSeries?.entries?.isNotEmpty ?? false;
+  bool isOldDataAvailable(covariant DataSeries<Tick?> oldSeries) =>
+      oldSeries.entries?.isNotEmpty ?? false;
 
   @override
-  bool shouldRepaint(ChartData oldDelegate) {
-    final DataSeries<T> oldDataSeries = oldDelegate;
-    final VisibleEntries<Tick> current = visibleEntries;
-    final VisibleEntries<Tick> previous = oldDataSeries.visibleEntries;
+  bool shouldRepaint(ChartData? oldDelegate) {
+    final DataSeries<T> oldDataSeries = oldDelegate as DataSeries<T>;
+    final VisibleEntries<Tick?> current = visibleEntries;
+    final VisibleEntries<Tick?> previous = oldDataSeries.visibleEntries;
 
     if (current.isEmpty && previous.isEmpty) {
       return false;
@@ -282,9 +285,9 @@ abstract class DataSeries<T extends Tick> extends Series {
     return current.first != previous.first ||
         current.last != previous.last ||
         style != oldDataSeries.style ||
-        (entries.isNotEmpty &&
+        ((entries?.isNotEmpty ?? false) &&
             visibleEntries.isNotEmpty &&
-            entries.last == visibleEntries.last);
+            entries?.last == visibleEntries.last);
   }
 
   @override

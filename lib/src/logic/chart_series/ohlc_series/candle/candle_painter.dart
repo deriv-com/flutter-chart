@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
@@ -18,9 +16,9 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
   /// Initializes
   CandlePainter(DataSeries<Candle> series) : super(series);
 
-  Paint _linePaint;
-  Paint _positiveCandlePaint;
-  Paint _negativeCandlePaint;
+  late Paint _linePaint;
+  late Paint _positiveCandlePaint;
+  late Paint _negativeCandlePaint;
 
   @override
   void onPaintData(
@@ -30,15 +28,14 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    if (series.visibleEntries.length < 2) {
+    if (series.entries == null || series.visibleEntries.length < 2) {
       return;
     }
 
-    final CandleStyle style =
-        series.style ?? theme.candleStyle ?? const CandleStyle();
+    final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
     _linePaint = Paint()
-      ..color = style?.lineColor
+      ..color = style.lineColor
       ..strokeWidth = 1.2;
 
     _positiveCandlePaint = Paint()..color = style.positiveColor;
@@ -53,7 +50,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {
-      final Candle candle = series.entries[i];
+      final Candle candle = series.entries![i];
 
       _paintCandle(
         canvas,
@@ -69,25 +66,25 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     }
 
     // Painting last visible candle
-    final Candle lastCandle = series.entries.last;
+    final Candle lastCandle = series.entries!.last;
     final Candle lastVisibleCandle = series.visibleEntries.last;
 
     CandlePainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
-      final IndexedEntry<Candle> prevLastCandle = series.prevLastEntry;
+      final IndexedEntry<Candle> prevLastCandle = series.prevLastEntry!;
 
       final double animatedYClose = quoteToY(ui.lerpDouble(
         prevLastCandle.entry.close,
         lastCandle.close,
         animationInfo.currentTickPercent,
-      ));
+      )!);
 
       final double xCenter = ui.lerpDouble(
         epochToX(getEpochOf(prevLastCandle.entry, prevLastCandle.index)),
-        epochToX(getEpochOf(lastCandle, series.entries.length - 1)),
+        epochToX(getEpochOf(lastCandle, series.entries!.length - 1)),
         animationInfo.currentTickPercent,
-      );
+      )!;
 
       lastCandlePainting = CandlePainting(
         xCenter: xCenter,

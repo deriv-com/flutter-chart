@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -20,21 +18,21 @@ abstract class SeriesPainter<S extends Series> {
 
   /// Chart's config.
   @protected
-  ChartConfig chartConfig;
+  late ChartConfig chartConfig;
 
   /// Chart's theme.
   @protected
-  ChartTheme theme;
+  late ChartTheme theme;
 
   /// Sets some variables and paints this [SeriesPainter]'s data.
   void paint({
-    Canvas/*!*/ canvas,
-    Size/*!*/ size,
-    EpochToX/*!*/ epochToX,
-    QuoteToY/*!*/ quoteToY,
-    AnimationInfo/*!*/ animationInfo,
-    ChartConfig/*!*/ chartConfig,
-    ChartTheme/*!*/ theme,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
+    required ChartConfig chartConfig,
+    required ChartTheme theme,
   }) {
     this.chartConfig = chartConfig;
     this.theme = theme;
@@ -50,10 +48,10 @@ abstract class SeriesPainter<S extends Series> {
 
   /// Paints this [SeriesPainter]'s data.
   void onPaint({
-    Canvas/*!*/ canvas,
-    Size/*!*/ size,
-    EpochToX/*!*/ epochToX,
-    QuoteToY/*!*/ quoteToY,
-    AnimationInfo/*!*/ animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   });
 }

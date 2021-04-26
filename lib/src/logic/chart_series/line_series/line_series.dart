@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -9,13 +7,13 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 /// Line series.
-class LineSeries extends DataSeries<Tick> {
+class LineSeries extends DataSeries<Tick?> {
   /// Initializes a line series.
   LineSeries(
-    List<Tick> entries, {
-    String id,
-    LineStyle style,
-  }) : super(entries, id: id, style: style);
+    List<Tick?> entries, {
+    String? id,
+    LineStyle? style,
+  }) : super(entries, id: id ?? 'LineSeries', style: style);
 
   @override
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(
@@ -23,15 +21,15 @@ class LineSeries extends DataSeries<Tick> {
       );
 
   @override
-  Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>
+  Widget getCrossHairInfo(Tick? crossHairTick, int pipSize, ChartTheme theme) =>
       Text(
-        '${crossHairTick.quote.toStringAsFixed(pipSize)}',
+        '${crossHairTick!.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
       );
 
   @override
-  double maxValueOf(Tick/*!*/ t) => t.quote;
+  double maxValueOf(Tick? t) => t?.quote ?? double.nan;
 
   @override
-  double minValueOf(Tick/*!*/ t) => t.quote;
+  double minValueOf(Tick? t) => t?.quote ?? double.nan;
 }

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
@@ -13,6 +11,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
+import '../data_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
 import 'ma_series.dart';
@@ -25,8 +24,8 @@ class MAEnvSeries extends Series {
   /// [maEnvOptions] Moving Average Envelope indicator options.
   MAEnvSeries(
     IndicatorInput indicatorInput, {
-    String id,
-    MAEnvOptions maEnvOptions,
+    String? id,
+    MAEnvOptions? maEnvOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           id: id,
@@ -36,7 +35,7 @@ class MAEnvSeries extends Series {
   /// Initializes
   MAEnvSeries.fromIndicator(
     Indicator<Tick> indicator, {
-    String id,
+    String? id,
     this.maEnvOptions,
   })  : _fieldIndicator = indicator,
         super(id ?? 'MAEnv$maEnvOptions');
@@ -44,28 +43,28 @@ class MAEnvSeries extends Series {
   final Indicator<Tick> _fieldIndicator;
 
   /// Moving Average Envelope options
-  MAEnvOptions maEnvOptions;
+  MAEnvOptions? maEnvOptions;
 
-  /*late*/SingleIndicatorSeries _lowerSeries;
-  /*late*/SingleIndicatorSeries _middleSeries;
-  /*late*/SingleIndicatorSeries _upperSeries;
+  late SingleIndicatorSeries _lowerSeries;
+  late SingleIndicatorSeries _middleSeries;
+  late SingleIndicatorSeries _upperSeries;
 
   final List<Series> _innerSeries = <Series>[];
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     final CachedIndicator<Tick> smaIndicator =
-        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions);
+        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!);
 
     _lowerSeries = SingleIndicatorSeries(
       painterCreator: (
         Series series,
       ) =>
-          LinePainter(series),
+          LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () => MAEnvLowerIndicator<Tick>(
         smaIndicator,
-        maEnvOptions.shiftType,
-        maEnvOptions.shift,
+        maEnvOptions!.shiftType,
+        maEnvOptions!.shift,
       ),
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
@@ -73,7 +72,8 @@ class MAEnvSeries extends Series {
     );
 
     _middleSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () => smaIndicator,
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
@@ -81,11 +81,12 @@ class MAEnvSeries extends Series {
     );
 
     _upperSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () => MAEnvUpperIndicator<Tick>(
         smaIndicator,
-        maEnvOptions.shiftType,
-        maEnvOptions.shift,
+        maEnvOptions!.shiftType,
+        maEnvOptions!.shift,
       ),
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
@@ -98,8 +99,8 @@ class MAEnvSeries extends Series {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final MAEnvSeries series = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final MAEnvSeries? series = oldData as MAEnvSeries;
 
     final bool _lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
     final bool _middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
@@ -148,8 +149,8 @@ class MAEnvSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => _innerSeries.getMaxEpoch();
+  int? getMaxEpoch() => _innerSeries.getMaxEpoch();
 
   @override
-  int getMinEpoch() => _innerSeries.getMinEpoch();
+  int? getMinEpoch() => _innerSeries.getMinEpoch();
 }
