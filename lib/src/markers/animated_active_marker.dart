@@ -73,6 +73,10 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
 
   @override
   Widget build(BuildContext context) {
+    if ((widget.markerSeries.activeMarker ?? _prevActiveMarker) == null) {
+      return const SizedBox.shrink();
+    }
+
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
     return AnimatedBuilder(

@@ -82,23 +82,23 @@ abstract class ChartData {
 extension ChartDataListExtension on Iterable<ChartData> {
   /// Gets the minimum of [ChartData.getMinEpoch]s.
   int? getMinEpoch() => _getEpochWithPredicate(
-      (ChartData c) => c.getMinEpoch(), min as int Function(int?, int?));
+      (ChartData c) => c.getMinEpoch(), (int a, int b) => min<int>(a, b));
 
   /// Gets the maximum of [ChartData.getMaxEpoch]s.
   int? getMaxEpoch() => _getEpochWithPredicate(
-      (ChartData c) => c.getMaxEpoch(), max as int Function(int?, int?));
+      (ChartData c) => c.getMaxEpoch(), (int a, int b) => max<int>(a, b));
 
   int? _getEpochWithPredicate(
     int? Function(ChartData) getEpoch,
-    int Function(int?, int?) epochComparator,
+    int Function(int, int) epochComparator,
   ) {
-    final Iterable<int?> maxEpochs = where((ChartData c) => c != null)
-        .map((ChartData c) => getEpoch(c))
-        .where((int? epoch) => epoch != null);
+    final Iterable<int?> maxEpochs =
+        map((ChartData c) => getEpoch(c)).where((int? epoch) => epoch != null);
 
     return maxEpochs.isNotEmpty
-        ? maxEpochs
-            .reduce((int? current, int? next) => epochComparator(current, next))
+        ? maxEpochs.reduce(
+            (int? current, int? next) => epochComparator(current!, next!),
+          )
         : null;
   }
 }
