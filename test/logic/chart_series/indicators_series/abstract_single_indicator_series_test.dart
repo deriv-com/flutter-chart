@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
@@ -18,7 +16,7 @@ class MockOptions extends IndicatorOptions {
 class MockMASeries extends AbstractSingleIndicatorSeries {
   MockMASeries(
     IndicatorInput input, {
-    int offset,
+    int offset = 0,
   }) : super(
           CloseValueIndicator<Tick>(input),
           'MOCK_MA_SERIES',
@@ -27,7 +25,7 @@ class MockMASeries extends AbstractSingleIndicatorSeries {
         );
 
   @override
-  SeriesPainter<Series> createPainter() => LinePainter(this);
+  SeriesPainter<Series>? createPainter() => null;
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>
@@ -38,7 +36,7 @@ void main() {
   group('Abstract Single indicator series getEpochOf', () {
     group('''getEpochOf returns correct result 
         when there is offset and NO market gaps''', () {
-      IndicatorInput input;
+      late IndicatorInput input;
       setUp(() {
         input = IndicatorInput(
           const <Tick>[
@@ -56,7 +54,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(2000, 4000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3].
@@ -69,7 +67,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(2000, 4000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3].
@@ -82,7 +80,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(1000, 5000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.
@@ -97,7 +95,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(1000, 5000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.
@@ -111,7 +109,7 @@ void main() {
 
     group('''getEpochOf returns correct result 
         when there is offset and there is market gaps''', () {
-      IndicatorInput input;
+      late IndicatorInput input;
       setUp(() {
         input = IndicatorInput(
           const <Tick>[
@@ -130,7 +128,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(2000, 9000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3, 4].
@@ -144,7 +142,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(2000, 9000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3, 4].
@@ -158,7 +156,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(1000, 10000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.
@@ -174,7 +172,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(1000, 10000);
 
-        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.

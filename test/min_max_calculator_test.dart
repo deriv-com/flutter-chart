@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/min_max_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';

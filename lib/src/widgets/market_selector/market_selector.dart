@@ -49,7 +49,7 @@ class MarketSelector extends StatefulWidget {
 class _MarketSelectorState extends State<MarketSelector>
     with SingleTickerProviderStateMixin {
   /// List of markets after applying the [_filterText].
-  List<Market> _marketsToDisplay = <Market>[];
+  List<Market>? _marketsToDisplay;
 
   String _filterText = '';
 
@@ -95,7 +95,7 @@ class _MarketSelectorState extends State<MarketSelector>
 
   void _fillMarketsList() {
     _marketsToDisplay = _filterText.isEmpty || widget.markets == null
-        ? widget.markets!
+        ? widget.markets
         : widget.markets!
             .where((Market market) =>
                 market.containsAssetWithText(lowerCaseFilterText))
@@ -137,7 +137,9 @@ class _MarketSelectorState extends State<MarketSelector>
   Widget _buildMarketsList() {
     final List<Asset?> favouritesList = _getFavouritesList();
 
-    return widget.markets == null || widget.markets!.isEmpty
+    return widget.markets == null ||
+            widget.markets!.isEmpty ||
+            _marketsToDisplay == null
         ? const Expanded(child: Center(child: Text('No asset is available!')))
         : Expanded(
             child: Stack(
@@ -147,12 +149,12 @@ class _MarketSelectorState extends State<MarketSelector>
                   child: Column(
                     children: <Widget>[
                       _buildFavouriteSection(favouritesList),
-                      ..._marketsToDisplay
+                      ..._marketsToDisplay!
                           .map((Market market) => _buildMarketItem(market))
                     ],
                   ),
                 ),
-                if (_marketsToDisplay.isEmpty) NoResultPage(text: _filterText),
+                if (_marketsToDisplay!.isEmpty) NoResultPage(text: _filterText),
               ],
             ),
           );

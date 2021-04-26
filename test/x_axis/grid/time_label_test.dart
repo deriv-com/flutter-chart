@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/x_axis/grid/time_label.dart';

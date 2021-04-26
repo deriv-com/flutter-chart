@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  ChartTheme chartTheme;
+  late ChartTheme chartTheme;
 
   setUp(() {
     chartTheme = ChartDefaultDarkTheme();
