@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
@@ -18,44 +16,46 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
 
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   }) {
     if (series.isOnRange) {
-      final BarrierStyle style = series.style ??
-          theme.verticalBarrierStyle ??
-          const VerticalBarrierStyle();
+      final BarrierStyle style =
+          series.style as BarrierStyle? ?? theme.verticalBarrierStyle;
 
       final Paint paint = Paint()
         ..color = style.color
         ..strokeWidth = 1
         ..style = PaintingStyle.stroke;
 
-      int animatedEpoch;
+      int? animatedEpoch;
       double lineStartY = 0;
-      double dotY;
+      double? dotY;
 
       if (series.previousObject == null) {
         animatedEpoch = series.epoch;
         if (series.value != null) {
-          dotY = quoteToY(series.value);
+          dotY = quoteToY(series.value!);
         }
       } else {
-        final VerticalBarrierObject prevObject = series.previousObject;
+        final VerticalBarrierObject prevObject =
+            series.previousObject as VerticalBarrierObject;
         animatedEpoch = lerpDouble(prevObject.epoch.toDouble(), series.epoch,
-                animationInfo.currentTickPercent)
+                animationInfo.currentTickPercent)!
             .toInt();
 
         if (series.annotationObject.value != null && prevObject.value != null) {
-          dotY = quoteToY(lerpDouble(prevObject.value,
-              series.annotationObject.value, animationInfo.currentTickPercent));
+          dotY = quoteToY(lerpDouble(
+              prevObject.value,
+              series.annotationObject.value,
+              animationInfo.currentTickPercent)!);
         }
       }
 
-      final double lineX = epochToX(animatedEpoch);
+      final double lineX = epochToX(animatedEpoch!);
       final double lineEndY = size.height - 20;
 
       if (dotY != null && !series.longLine) {

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
@@ -10,16 +8,16 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   /// Initializes a base class of chart annotations.
   ChartAnnotation(
     String id, {
-    ChartPaintingStyle style,
+    ChartPaintingStyle? style,
   }) : super(id, style: style) {
     annotationObject = createObject();
   }
 
   /// Annotation Object.
-  T annotationObject;
+  late T annotationObject;
 
   /// Previous annotation object.
-  T previousObject;
+  T? previousObject;
 
   /// Is this [ChartAnnotation] on the chart's epoch range.
   bool isOnRange = false;
@@ -27,8 +25,8 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   bool _shouldRepaint = false;
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final ChartAnnotation<T> oldAnnotation = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final ChartAnnotation<T>? oldAnnotation = oldData as ChartAnnotation<T>?;
 
     if (annotationObject == oldAnnotation?.annotationObject ?? false) {
       previousObject = oldAnnotation?.previousObject;
@@ -41,9 +39,10 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   }
 
   @override
-  bool shouldRepaint(ChartData previous) {
-    final ChartAnnotation<T> previousAnnotation = previous;
-    if (isOnRange || isOnRange != previousAnnotation.isOnRange) {
+  bool shouldRepaint(ChartData? previous) {
+    final ChartAnnotation<T>? previousAnnotation =
+        previous as ChartAnnotation<T>?;
+    if (isOnRange || isOnRange != previousAnnotation!.isOnRange) {
       return _shouldRepaint;
     }
     return false;
@@ -54,8 +53,10 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
       isOnRange = annotationObject.isOnEpochRange(leftEpoch, rightEpoch);
 
   @override
-  List<double> recalculateMinMax() =>
-      <double>[annotationObject.bottomValue, annotationObject.topValue];
+  List<double> recalculateMinMax() => <double>[
+        annotationObject.bottomValue ?? double.nan,
+        annotationObject.topValue ?? double.nan
+      ];
 
   /// Prepares the [annotationObject] of this [ChartAnnotation].
   T createObject();

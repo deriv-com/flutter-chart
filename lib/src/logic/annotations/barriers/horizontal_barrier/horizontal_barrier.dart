@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/logic/annotations/barriers/barrier.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -13,11 +11,11 @@ class HorizontalBarrier extends Barrier {
   /// Initializes a horizontal barrier.
   HorizontalBarrier(
     double value, {
-    int epoch,
-    String id,
-    String title,
+    int? epoch,
+    String? id,
+    String? title,
     bool longLine = true,
-    HorizontalBarrierStyle style,
+    HorizontalBarrierStyle? style,
     this.visibility = HorizontalBarrierVisibility.keepBarrierLabelVisible,
   }) : super(
           id: id,

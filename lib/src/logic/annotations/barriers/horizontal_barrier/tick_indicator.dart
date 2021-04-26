@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 
@@ -10,8 +8,8 @@ class TickIndicator extends HorizontalBarrier {
   /// Initializes a tick indicator.
   TickIndicator(
     Tick tick, {
-    String id,
-    HorizontalBarrierStyle style,
+    String? id,
+    HorizontalBarrierStyle? style,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
   }) : super(
           tick.quote,

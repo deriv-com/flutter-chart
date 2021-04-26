@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/annotations/barriers/barrier.dart';
 import 'package:deriv_chart/src/logic/annotations/barriers/vertical_barrier/vetical_barrier_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -13,10 +11,10 @@ class VerticalBarrier extends Barrier {
   /// Initializes a vertical barrier class.
   VerticalBarrier(
     int epoch, {
-    double value,
-    String id,
-    String title,
-    BarrierStyle style,
+    double? value,
+    String? id,
+    String? title,
+    BarrierStyle? style,
     bool longLine = true,
   }) : super(
           id: id,
@@ -30,10 +28,10 @@ class VerticalBarrier extends Barrier {
   /// A vertical barrier on [Tick]'s epoch.
   factory VerticalBarrier.onTick(
     Tick tick, {
-    String id,
-    String title,
-    BarrierStyle style,
-    bool longLine,
+    String? id,
+    String? title,
+    BarrierStyle? style,
+    bool longLine = true,
   }) =>
       VerticalBarrier(
         tick.epoch,
@@ -41,14 +39,14 @@ class VerticalBarrier extends Barrier {
         id: id,
         title: title,
         style: style,
-        longLine: longLine ?? true,
+        longLine: longLine,
       );
 
   @override
   SeriesPainter<Series> createPainter() => VerticalBarrierPainter(this);
 
   @override
-  BarrierObject createObject() => VerticalBarrierObject(epoch, value: value);
+  BarrierObject createObject() => VerticalBarrierObject(epoch!, value: value);
 
   @override
   List<double> recalculateMinMax() =>

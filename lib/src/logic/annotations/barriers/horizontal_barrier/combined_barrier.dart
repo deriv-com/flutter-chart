@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
@@ -18,12 +16,12 @@ class CombinedBarrier extends HorizontalBarrier {
   /// Initializes a barrier with both horizontal and vertical barriers.
   CombinedBarrier(
     this.tick, {
-    String id,
-    String title,
+    String? id,
+    String? title,
     bool verticalLongLine = true,
     bool horizontalLongLine = false,
-    HorizontalBarrierStyle horizontalBarrierStyle,
-    VerticalBarrierStyle verticalBarrierStyle,
+    HorizontalBarrierStyle? horizontalBarrierStyle,
+    VerticalBarrierStyle? verticalBarrierStyle,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
   })  : verticalBarrier = VerticalBarrier.onTick(
           tick,
@@ -54,14 +52,14 @@ class CombinedBarrier extends HorizontalBarrier {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData? oldData) {
     if (oldData == null) {
       return super.didUpdate(oldData);
     }
 
     final bool superDidUpdated = super.didUpdate(oldData);
 
-    final CombinedBarrier combinedBarrier = oldData;
+    final CombinedBarrier combinedBarrier = oldData as CombinedBarrier;
 
     final bool verticalBarrierDidUpdated =
         verticalBarrier.didUpdate(combinedBarrier.verticalBarrier);

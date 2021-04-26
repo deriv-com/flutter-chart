@@ -1,10 +1,6 @@
-// @dart=2.9
-
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
-
-import '../../chart_data.dart';
 
 /// Base class of barrier
 abstract class Barrier extends ChartAnnotation<BarrierObject> {
@@ -12,14 +8,14 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   Barrier({
     this.epoch,
     this.value,
-    String id,
+    String? id,
     this.title,
-    this.longLine,
-    BarrierStyle style,
-  }) : super(id ?? title, style: style);
+    this.longLine = true,
+    BarrierStyle? style,
+  }) : super(id ?? 'Barrier', style: style);
 
   /// Title of the barrier.
-  final String title;
+  final String? title;
 
   /// Barrier line start from screen edge or from the tick.
   ///
@@ -27,14 +23,14 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   final bool longLine;
 
   /// Epoch of the vertical barrier.
-  final int epoch;
+  final int? epoch;
 
   /// The value that this barrier points to.
-  final double value;
+  final double? value;
 
   @override
-  int getMaxEpoch() => epoch;
+  int? getMaxEpoch() => epoch;
 
   @override
-  int getMinEpoch() => epoch;
+  int? getMinEpoch() => epoch;
 }
