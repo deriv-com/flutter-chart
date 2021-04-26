@@ -52,7 +52,6 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   }
 
   /// Paints the line on the given canvas.
-  /// We can add channel fill here in the subclasses.
   void paintLines(
     Canvas canvas,
     Path path,
