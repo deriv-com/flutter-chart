@@ -86,11 +86,10 @@ class _MarkerAreaState extends State<MarkerArea> {
                 theme: context.watch<ChartTheme>()),
           ),
         ),
-        if (widget.markerSeries.activeMarker != null)
-          AnimatedActiveMarker(
-            markerSeries: widget.markerSeries,
-            quoteToCanvasY: widget.quoteToCanvasY,
-          ),
+        AnimatedActiveMarker(
+          markerSeries: widget.markerSeries,
+          quoteToCanvasY: widget.quoteToCanvasY,
+        ),
       ],
     );
   }

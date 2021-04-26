@@ -81,7 +81,7 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
 
     return AnimatedBuilder(
       animation: _activeMarkerAnimation,
-      builder: (BuildContext context, Widget? child) => CustomPaint(
+      builder: (BuildContext context, _) => CustomPaint(
         painter: ActiveMarkerPainter(
           activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker!,
           style: widget.markerSeries.style as MarkerStyle? ??
