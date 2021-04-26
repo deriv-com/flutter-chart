@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
 import 'package:flutter/material.dart';
@@ -221,40 +219,30 @@ class AlligatorIndicatorItemState
   /// Gets current jaw offset.
   @protected
   int get currentJawOffset =>
-      _jawOffset ?? (widget.config as AlligatorIndicatorConfig)?.jawOffset ?? 8;
+      _jawOffset ?? (widget.config as AlligatorIndicatorConfig).jawOffset;
 
   /// Gets current jaw period.
   @protected
   int get currentJawPeriod =>
-      _jawPeriod ??
-      (widget.config as AlligatorIndicatorConfig)?.jawPeriod ??
-      13;
+      _jawPeriod ?? (widget.config as AlligatorIndicatorConfig).jawPeriod;
 
   /// Gets current teeth offset.
   @protected
   int get currentTeethOffset =>
-      _teethOffset ??
-      (widget.config as AlligatorIndicatorConfig)?.teethOffset ??
-      5;
+      _teethOffset ?? (widget.config as AlligatorIndicatorConfig).teethOffset;
 
   /// Gets current teeth period.
   @protected
   int get currentTeethPeriod =>
-      _teethPeriod ??
-      (widget.config as AlligatorIndicatorConfig)?.teethPeriod ??
-      8;
+      _teethPeriod ?? (widget.config as AlligatorIndicatorConfig).teethPeriod;
 
   /// Gets current lips period.
   @protected
   int get currentLipsPeriod =>
-      _lipsPeriod ??
-      (widget.config as AlligatorIndicatorConfig)?.lipsPeriod ??
-      5;
+      _lipsPeriod ?? (widget.config as AlligatorIndicatorConfig).lipsPeriod;
 
   /// Gets current lips offset.
   @protected
   int get currentLipsOffset =>
-      _lipsOffset ??
-      (widget.config as AlligatorIndicatorConfig)?.lipsOffset ??
-      3;
+      _lipsOffset ?? (widget.config as AlligatorIndicatorConfig).lipsOffset;
 }

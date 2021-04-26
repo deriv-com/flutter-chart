@@ -101,7 +101,7 @@ class OscillatorLinePainter extends LinePainter {
   void _paintSecondaryHorizontalLines(
       Canvas canvas, QuoteToY quoteToY, Size size) {
     final LineStyle horizontalLineStyle =
-        _secondaryHorizontalLinesStyle ?? theme.lineStyle ?? const LineStyle();
+        _secondaryHorizontalLinesStyle ?? theme.lineStyle;
     final Paint horizontalLinePaint = Paint()
       ..color = horizontalLineStyle.color
       ..style = PaintingStyle.stroke

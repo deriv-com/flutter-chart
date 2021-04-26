@@ -78,8 +78,7 @@ class DonchianChannelIndicatorItemState
 
   bool _getCurrentFill() =>
       _channelFill ??
-      (widget.config as DonchianChannelIndicatorConfig)?.showChannelFill ??
-      true;
+      (widget.config as DonchianChannelIndicatorConfig).showChannelFill;
 
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
@@ -109,8 +108,7 @@ class DonchianChannelIndicatorItemState
 
   int _getCurrentHighPeriod() =>
       _highPeriod ??
-      (widget.config as DonchianChannelIndicatorConfig)?.highPeriod ??
-      10;
+      (widget.config as DonchianChannelIndicatorConfig).highPeriod;
 
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[
@@ -140,6 +138,5 @@ class DonchianChannelIndicatorItemState
 
   int _getCurrentLowPeriod() =>
       _lowPeriod ??
-      (widget.config as DonchianChannelIndicatorConfig)?.lowPeriod ??
-      10;
+      (widget.config as DonchianChannelIndicatorConfig).lowPeriod;
 }

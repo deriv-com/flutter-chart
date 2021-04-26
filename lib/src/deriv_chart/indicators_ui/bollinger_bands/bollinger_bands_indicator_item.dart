@@ -89,6 +89,6 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   double _getCurrentStandardDeviation() {
     final BollingerBandsIndicatorConfig config =
         (widget.config as BollingerBandsIndicatorConfig);
-    return _standardDeviation ?? config?.standardDeviation ?? 2;
+    return _standardDeviation ?? config.standardDeviation;
   }
 }

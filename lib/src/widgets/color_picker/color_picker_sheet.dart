@@ -42,7 +42,7 @@ class _ColorPickerSheetState extends State<ColorPickerSheet> {
             setState(() {
               _selectedColor = selectedColor;
             });
-            widget.onChanged?.call(selectedColor);
+            widget.onChanged.call(selectedColor);
             Navigator.pop(context);
           },
         ),

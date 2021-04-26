@@ -23,9 +23,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
   }) {
-    final MarkerStyle style = series.style as MarkerStyle? ??
-        theme!.markerStyle ??
-        const MarkerStyle();
+    final MarkerStyle style = series.style as MarkerStyle? ?? theme.markerStyle;
 
     if (series.entryTick != null) {
       final Offset center = Offset(
@@ -36,7 +34,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         canvas,
         center,
         style.entryMarkerStyle,
-        theme!.base08Color,
+        theme.base08Color,
       );
     }
 

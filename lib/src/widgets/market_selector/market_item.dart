@@ -48,7 +48,7 @@ class MarketItem extends StatelessWidget {
               bottom: theme.margin08Chart,
             ),
             child: Text(
-              market.displayName ?? '',
+              market.displayName,
               style: theme.textStyle(
                 textStyle: theme.body2,
                 color: theme.base01Color,

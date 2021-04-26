@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_item.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
@@ -127,18 +125,17 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
   @protected
   ShiftType getCurrentShiftType() {
     final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
-    return shiftType ?? config?.shiftType ?? ShiftType.percent;
+    return shiftType ?? config.shiftType;
   }
 
   /// Gets Indicator current period.
   @protected
   double getCurrentShift() {
     final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
-    return shift ?? config?.shift ?? 5;
+    return shift ?? config.shift;
   }
 
   @protected
   LineStyle getCurrentLineStyle() =>
-      (widget.config as MAEnvIndicatorConfig).lineStyle ??
-      const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
+      (widget.config as MAEnvIndicatorConfig).lineStyle;
 }

@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
@@ -84,7 +82,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       );
 
   int _getCurrentPeriod() =>
-      _period ?? (widget.config as RSIIndicatorConfig)?.period ?? 14;
+      _period ?? (widget.config as RSIIndicatorConfig).period;
 
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[
@@ -116,7 +114,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       );
 
   String _getCurrentField() =>
-      _field ?? (widget.config as RSIIndicatorConfig)?.fieldType ?? 'close';
+      _field ?? (widget.config as RSIIndicatorConfig).fieldType;
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
@@ -145,9 +143,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       );
 
   double _getCurrentOverBoughtPrice() =>
-      _overBoughtPrice ??
-      (widget.config as RSIIndicatorConfig)?.overBoughtPrice ??
-      80;
+      _overBoughtPrice ?? (widget.config as RSIIndicatorConfig).overBoughtPrice;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -176,7 +172,5 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       );
 
   double _getCurrentOverSoldPrice() =>
-      _overSoldPrice ??
-      (widget.config as RSIIndicatorConfig)?.overSoldPrice ??
-      20;
+      _overSoldPrice ?? (widget.config as RSIIndicatorConfig).overSoldPrice;
 }

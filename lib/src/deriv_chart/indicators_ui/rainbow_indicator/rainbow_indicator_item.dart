@@ -92,11 +92,11 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   int getCurrentBandsCount() {
     final RainbowIndicatorConfig config =
         (widget.config as RainbowIndicatorConfig);
-    return bandsCount ?? config?.bandsCount ?? 10;
+    return bandsCount ?? config.bandsCount;
   }
 
   /// Gets Indicator current period.
   @override
   int getCurrentPeriod() =>
-      period ?? (widget.config as RainbowIndicatorConfig)?.period ?? 2;
+      period ?? (widget.config as RainbowIndicatorConfig).period;
 }

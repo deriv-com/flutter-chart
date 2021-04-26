@@ -40,7 +40,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
           id ?? 'SMASeries-period${options.period}-type${options.type}',
           options,
           style: style ?? const LineStyle(thickness: 0.5),
-          offset: offset ?? 0,
+          offset: offset,
         );
 
   @override

@@ -76,5 +76,5 @@ class ZigZagIndicatorItemState
   /// Gets Indicator current period.
   @protected
   double getCurrentDistance() =>
-      distance ?? (widget.config as ZigZagIndicatorConfig)?.distance ?? 10;
+      distance ?? (widget.config as ZigZagIndicatorConfig).distance;
 }

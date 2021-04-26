@@ -53,7 +53,7 @@ class AssetItem extends StatelessWidget {
               style: theme.textStyle(
                 textStyle: theme.body1,
                 color: theme.base03Color,
-              )!,
+              ),
             ),
           ),
           if (!asset.isOpen) ClosedTag(),

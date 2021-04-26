@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:flutter/material.dart';
@@ -168,21 +166,17 @@ class IchimokuCloudIndicatorItemState
   // TOdO(Ramin): Add generic type to avoid casting.
   int get _currentBaseLinePeriod =>
       _baseLinePeriod ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.baseLinePeriod ??
-      26;
+      (widget.config as IchimokuCloudIndicatorConfig).baseLinePeriod;
 
   int get _currentConversionLinePeriod =>
       _conversionLinePeriod ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.conversionLinePeriod ??
-      9;
+      (widget.config as IchimokuCloudIndicatorConfig).conversionLinePeriod;
 
   int get _currentSpanBPeriod =>
       _spanBPeriod ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.spanBPeriod ??
-      52;
+      (widget.config as IchimokuCloudIndicatorConfig).spanBPeriod;
 
   int get _currentLaggingSpanOffset =>
       _laggingSpanOffset ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.laggingSpanOffset ??
-      -26;
+      (widget.config as IchimokuCloudIndicatorConfig).laggingSpanOffset;
 }

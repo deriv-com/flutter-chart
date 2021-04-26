@@ -64,11 +64,11 @@ class XAxisModel extends ChangeNotifier {
         maxEpoch ?? (entries.isNotEmpty ? entries.last.epoch : _nowEpoch);
 
     _lastEpoch = DateTime.now().millisecondsSinceEpoch;
-    _granularity = granularity ?? 0;
+    _granularity = granularity;
     _msPerPx = _defaultMsPerPx;
-    _isLive = isLive ?? true;
+    _isLive = isLive;
     _rightBoundEpoch = _maxRightBoundEpoch;
-    _dataFitMode = startWithDataFitMode ?? false;
+    _dataFitMode = startWithDataFitMode;
 
     _updateEntries(entries);
 
@@ -325,7 +325,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Sets [panSpeed] if input not null, otherwise sets to `0`.
-  void pan(double panSpeed) => _panSpeed = panSpeed ?? 0;
+  void pan(double panSpeed) => _panSpeed = panSpeed;
 
   /// Enables autopanning when current tick is visible.
   void enableAutoPan() {

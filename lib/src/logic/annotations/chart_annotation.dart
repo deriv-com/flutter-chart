@@ -28,7 +28,7 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   bool didUpdate(ChartData? oldData) {
     final ChartAnnotation<T>? oldAnnotation = oldData as ChartAnnotation<T>?;
 
-    if (annotationObject == oldAnnotation?.annotationObject ?? false) {
+    if (annotationObject == oldAnnotation?.annotationObject) {
       previousObject = oldAnnotation?.previousObject;
       _shouldRepaint = false;
     } else {
