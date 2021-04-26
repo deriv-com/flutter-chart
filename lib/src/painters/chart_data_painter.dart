@@ -119,10 +119,6 @@ class BaseChartDataPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (series == null) {
-      return;
-    }
-
     for (final Series series in series) {
       series.paint(
         canvas,

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
@@ -29,9 +27,9 @@ import 'main_chart.dart';
 class Chart extends StatelessWidget {
   /// Creates chart that expands to available space.
   const Chart({
-    @required this.mainSeries,
-    @required this.pipSize,
-    @required this.granularity,
+    required this.mainSeries,
+    required this.granularity,
+    this.pipSize = 4,
     this.controller,
     this.overlaySeries,
     this.bottomSeries,
@@ -43,23 +41,23 @@ class Chart extends StatelessWidget {
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Chart's main data series.
   final DataSeries<Tick> mainSeries;
 
   /// List of overlay indicator series to add on chart beside the [mainSeries].
-  final List<Series> overlaySeries;
+  final List<Series>? overlaySeries;
 
   /// List of bottom indicator series to add on chart separate from the [mainSeries].
-  final List<Series> bottomSeries;
+  final List<Series>? bottomSeries;
 
   /// Open position marker series.
-  final MarkerSeries markerSeries;
+  final MarkerSeries? markerSeries;
 
   /// Chart's controller
-  final ChartController controller;
+  final ChartController? controller;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -69,16 +67,16 @@ class Chart extends StatelessWidget {
   final int granularity;
 
   /// Called when crosshair details appear after long press.
-  final VoidCallback onCrosshairAppeared;
+  final VoidCallback? onCrosshairAppeared;
 
   /// Called when chart is scrolled or zoomed.
-  final VisibleAreaChangedCallback onVisibleAreaChanged;
+  final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
   /// Chart's theme.
-  final ChartTheme theme;
+  final ChartTheme? theme;
 
   /// Chart's annotations
-  final List<ChartAnnotation<ChartObject>> annotations;
+  final List<ChartAnnotation<ChartObject>>? annotations;
 
   /// Whether the chart should be showing live data or not.
   ///
@@ -94,8 +92,8 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChartTheme chartTheme =
-        theme ?? (Theme.of(context).brightness == Brightness.dark
+    final ChartTheme chartTheme = theme ??
+        (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
 
@@ -106,9 +104,9 @@ class Chart extends StatelessWidget {
 
     final List<ChartData> chartDataList = <ChartData>[
       mainSeries,
-      if (overlaySeries != null) ...overlaySeries,
-      if (bottomSeries != null) ...bottomSeries,
-      if (annotations != null) ...annotations,
+      if (overlaySeries != null) ...overlaySeries!,
+      if (bottomSeries != null) ...bottomSeries!,
+      if (annotations != null) ...annotations!,
     ];
 
     return MultiProvider(
@@ -145,7 +143,7 @@ class Chart extends StatelessWidget {
                   ),
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)
-                  ...bottomSeries
+                  ...bottomSeries!
                       .map((Series series) => Expanded(
                               child: BottomChart(
                             series: series,
