@@ -266,8 +266,8 @@ abstract class DataSeries<T extends Tick?> extends Series {
 
   /// Checks whether the old data of the series is available to use
   @protected
-  bool isOldDataAvailable(covariant DataSeries<Tick?> oldSeries) =>
-      oldSeries.entries?.isNotEmpty ?? false;
+  bool isOldDataAvailable(covariant DataSeries<Tick?>? oldSeries) =>
+      oldSeries?.entries?.isNotEmpty ?? false;
 
   @override
   bool shouldRepaint(ChartData? oldDelegate) {

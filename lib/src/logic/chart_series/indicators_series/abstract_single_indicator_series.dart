@@ -112,8 +112,9 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick?> {
   CachedIndicator<Tick> initializeIndicator();
 
   @override
-  bool isOldDataAvailable(covariant AbstractSingleIndicatorSeries oldSeries) =>
+  bool isOldDataAvailable(covariant AbstractSingleIndicatorSeries? oldSeries) =>
       super.isOldDataAvailable(oldSeries) &&
+      (oldSeries != null) &&
       (oldSeries.inputIndicator.runtimeType == inputIndicator.runtimeType) &&
       (oldSeries.input.isNotEmpty) &&
       (_inputFirstTick != null &&
