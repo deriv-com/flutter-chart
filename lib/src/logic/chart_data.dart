@@ -108,10 +108,7 @@ extension ChartDataListExtension on Iterable<ChartData> {
       final Iterable<double> minValues = chartData
           .where((ChartData c) => c != null && !c.minValue.isNaN)
           .map((ChartData e) => e.minValue);
-      return minValues.isEmpty
-          ? double.nan
-          : minValues
-              .reduce(min);
+      return minValues.isEmpty ? double.nan : minValues.reduce(min);
     }
     return double.nan;
   }
@@ -122,11 +119,8 @@ extension ChartDataListExtension on Iterable<ChartData> {
     if (chartData != null) {
       final Iterable<double> maxValues = chartData
           .where((ChartData c) => c != null && !c.maxValue.isNaN)
-          .map((ChartData e) => e.maxValue);
-      return maxValues.isEmpty
-          ? double.nan
-          : maxValues
-              .reduce(max);
+          .map((e) => e.maxValue);
+      return maxValues.isEmpty ? double.nan : maxValues.reduce(max);
     }
     return double.nan;
   }
