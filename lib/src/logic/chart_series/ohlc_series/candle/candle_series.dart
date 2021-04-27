@@ -11,9 +11,9 @@ class CandleSeries extends OHLCTypeSeries {
   /// Initializes
   CandleSeries(
     List<Candle> entries, {
-    required String id,
+    String? id,
     CandleStyle? style,
-  }) : super(entries, id, style: style);
+  }) : super(entries, id ?? 'CandleSeries', style: style);
 
   @override
   SeriesPainter<DataSeries<Candle>> createPainter() => CandlePainter(this);
