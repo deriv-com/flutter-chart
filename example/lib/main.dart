@@ -69,17 +69,17 @@ class FullscreenChart extends StatefulWidget {
 class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
-  int granularity = 0;
+  int/*!*/ granularity = 0;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier _slBarrier, _tpBarrier;
-  bool _sl = false, _tp = false;
+  bool/*!*/ _sl = false, _tp = false;
 
   TickHistorySubscription _tickHistorySubscription;
 
   StreamSubscription _tickStreamSubscription;
 
-  ConnectionBloc _connectionBloc;
+  /*late*/ConnectionBloc _connectionBloc;
 
   bool _waitingForHistory = false;
 
@@ -95,7 +95,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   List<ActiveSymbol> _activeSymbols;
 
-  Asset _symbol;
+  Asset _symbol = Asset(name: 'R_50');
 
   ChartController _controller = ChartController();
   PersistentBottomSheetController _bottomSheetController;
