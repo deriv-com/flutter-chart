@@ -8,7 +8,6 @@ import 'package:deriv_chart/src/x_axis/grid/time_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:screen_state/screen_state.dart';
 
 import '../callbacks.dart';
 import '../gestures/gesture_manager.dart';
@@ -62,16 +61,12 @@ class _XAxisState extends State<XAxis>
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
 
-  final Screen _screen = Screen();
-  StreamSubscription<ScreenStateEvent> _subscription;
-
   GestureManagerState gestureManager;
 
   @override
   void initState() {
     super.initState();
 
-    startScreenListening();
     WidgetsBinding.instance.addObserver(this);
 
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
@@ -102,26 +97,10 @@ class _XAxisState extends State<XAxis>
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed &&
         _model.currentViewingMode == ViewingMode.followCurrentTick) {
-      _model.scrollToLastTick();
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _model.scrollToLastTick();
+      });
     }
-  }
-
-  void onData(ScreenStateEvent event) {
-    if (_model.currentViewingMode == ViewingMode.followCurrentTick) {
-      _model.scrollToLastTick();
-    }
-  }
-
-  void startScreenListening() {
-    try {
-      _subscription = _screen.screenStateStream.listen(onData);
-    } on ScreenStateException catch (exception) {
-      dev.log(exception.toString());
-    }
-  }
-
-  void stopScreenListening() {
-    _subscription.cancel();
   }
 
   void _onVisibleAreaChanged() {
@@ -145,7 +124,6 @@ class _XAxisState extends State<XAxis>
   void dispose() {
     _ticker?.dispose();
     _rightEpochAnimationController?.dispose();
-    stopScreenListening();
 
     gestureManager
       ..removeCallback(_model.onScaleAndPanStart)
