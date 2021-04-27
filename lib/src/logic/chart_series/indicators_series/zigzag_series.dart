@@ -29,13 +29,13 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
-  VisibleEntries<Tick?> getVisibleEntries(int startIndex, int endIndex) {
+  VisibleEntries<Tick> getVisibleEntries(int startIndex, int endIndex) {
     int firstIndex = startIndex;
     int lastIndex = endIndex;
     if (entries == null || startIndex < 0 || endIndex >= entries!.length) {
       return VisibleEntries<Tick>.empty();
     }
-    if (entries![startIndex]!.quote.isNaN) {
+    if (entries![startIndex].quote.isNaN) {
       for (int i = startIndex - 1; i >= 0; i--) {
         final Tick? entry = entries![i];
         if (entry != null && !entry.quote.isNaN) {
@@ -53,7 +53,7 @@ class ZigZagSeries extends LineSeries {
         }
       }
     }
-    return VisibleEntries<Tick?>(
+    return VisibleEntries<Tick>(
       entries!.sublist(firstIndex, lastIndex),
       firstIndex,
       lastIndex,

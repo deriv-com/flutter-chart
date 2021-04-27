@@ -33,7 +33,7 @@ class FractalChaosBandSeries extends Series {
   SeriesPainter<Series>? createPainter() {
     _fcbHighSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       // Using SMA temporarily until TA's migration branch gets updated.
       indicatorCreator: () =>
           SMAIndicator<Tick>(CloseValueIndicator<Tick>(indicatorInput), 10),
@@ -42,7 +42,7 @@ class FractalChaosBandSeries extends Series {
     );
     _fcbLowSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
           SMAIndicator<Tick>(CloseValueIndicator<Tick>(indicatorInput), 10),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),

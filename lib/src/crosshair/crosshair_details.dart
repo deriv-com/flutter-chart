@@ -18,10 +18,10 @@ class CrosshairDetails extends StatelessWidget {
   }) : super(key: key);
 
   /// The chart's main data series.
-  final DataSeries<Tick?> mainSeries;
+  final DataSeries<Tick> mainSeries;
 
   /// The basic data entry of a crosshair.
-  final Tick? crosshairTick;
+  final Tick crosshairTick;
 
   /// Number of decimal digits when showing prices.
   final int pipSize;

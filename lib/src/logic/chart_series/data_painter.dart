@@ -9,14 +9,14 @@ import 'data_series.dart';
 import 'series_painter.dart';
 
 /// A class to paint common option of [DataSeries] data.
-abstract class DataPainter<S extends DataSeries<Tick?>>
+abstract class DataPainter<S extends DataSeries<Tick>>
     extends SeriesPainter<S> {
   /// Initializes series for sub-class.
-  DataPainter(DataSeries<Tick?> series)
+  DataPainter(DataSeries<Tick> series)
       : _dataSeries = series,
         super(series as S);
 
-  final DataSeries<Tick?> _dataSeries;
+  final DataSeries<Tick> _dataSeries;
 
   /// Paints [DataSeries.visibleEntries] on the [canvas].
   @override
@@ -27,7 +27,7 @@ abstract class DataPainter<S extends DataSeries<Tick?>>
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
   }) {
-    final DataSeries<Tick?> series = this.series;
+    final DataSeries<Tick> series = this.series;
 
     if (series.visibleEntries.isEmpty) {
       return;

@@ -16,7 +16,7 @@ import 'package:flutter/painting.dart';
 class OscillatorLinePainter extends LinePainter {
   /// Initializes an Oscillator line painter.
   OscillatorLinePainter(
-    DataSeries<Tick?> series, {
+    DataSeries<Tick> series, {
     double? topHorizontalLine,
     double? bottomHorizontalLine,
     LineStyle? mainHorizontalLinesStyle,

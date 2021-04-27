@@ -14,7 +14,7 @@ import 'indexed_entry.dart';
 import 'visible_entries.dart';
 
 /// Series with only a single list of data to paint.
-abstract class DataSeries<T extends Tick?> extends Series {
+abstract class DataSeries<T extends Tick> extends Series {
   /// Initializes
   ///
   /// [entries] is the list of data to show.
@@ -89,7 +89,7 @@ abstract class DataSeries<T extends Tick?> extends Series {
   /// Should use this method here whenever want to get the epoch of a [T].
   ///
   /// [index] should the index of [t] in [entries].
-  int getEpochOf(T t, int index) => t!.epoch;
+  int getEpochOf(T t, int index) => t.epoch;
 
   /// Updates visible entries for this Series.
   @override
@@ -261,19 +261,19 @@ abstract class DataSeries<T extends Tick?> extends Series {
   ///
   /// Here we just assign [input] to [entries] as a normal [DataSeries] class.
   @protected
-  void fillEntriesFromInput(covariant DataSeries<Tick?> oldSeries) =>
+  void fillEntriesFromInput(covariant DataSeries<Tick> oldSeries) =>
       entries = input;
 
   /// Checks whether the old data of the series is available to use
   @protected
-  bool isOldDataAvailable(covariant DataSeries<Tick?>? oldSeries) =>
+  bool isOldDataAvailable(covariant DataSeries<Tick>? oldSeries) =>
       oldSeries?.entries?.isNotEmpty ?? false;
 
   @override
   bool shouldRepaint(ChartData? oldDelegate) {
     final DataSeries<T> oldDataSeries = oldDelegate as DataSeries<T>;
-    final VisibleEntries<Tick?> current = visibleEntries;
-    final VisibleEntries<Tick?> previous = oldDataSeries.visibleEntries;
+    final VisibleEntries<Tick> current = visibleEntries;
+    final VisibleEntries<Tick> previous = oldDataSeries.visibleEntries;
 
     if (current.isEmpty && previous.isEmpty) {
       return false;

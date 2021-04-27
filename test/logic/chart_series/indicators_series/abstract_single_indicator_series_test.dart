@@ -54,7 +54,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(2000, 4000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3].
@@ -67,7 +67,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(2000, 4000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3].
@@ -80,7 +80,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(1000, 5000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.
@@ -95,7 +95,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(1000, 5000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.
@@ -128,7 +128,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(2000, 9000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3, 4].
@@ -142,7 +142,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(2000, 9000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // Visible entries are in indices [1, 2, 3, 4].
@@ -156,7 +156,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: 1)
           ..update(1000, 10000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.
@@ -172,7 +172,7 @@ void main() {
         final MockMASeries maSeries = MockMASeries(input, offset: -1)
           ..update(1000, 10000);
 
-        final List<Tick?> visibleEntries = maSeries.visibleEntries.entries;
+        final List<Tick> visibleEntries = maSeries.visibleEntries.entries;
         final List<Tick> entries = input.entries;
 
         // All entries are visible.

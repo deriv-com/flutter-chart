@@ -14,7 +14,7 @@ import '../data_series.dart';
 class LinePainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   LinePainter(
-    DataSeries<Tick?> series,
+    DataSeries<Tick> series,
   ) : super(series);
 
   double? _lastVisibleTickX;

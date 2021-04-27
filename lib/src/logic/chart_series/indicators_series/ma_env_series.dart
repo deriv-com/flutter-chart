@@ -60,7 +60,7 @@ class MAEnvSeries extends Series {
       painterCreator: (
         Series series,
       ) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => MAEnvLowerIndicator<Tick>(
         smaIndicator,
         maEnvOptions!.shiftType,
@@ -73,7 +73,7 @@ class MAEnvSeries extends Series {
 
     _middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => smaIndicator,
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
@@ -82,7 +82,7 @@ class MAEnvSeries extends Series {
 
     _upperSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => MAEnvUpperIndicator<Tick>(
         smaIndicator,
         maEnvOptions!.shiftType,

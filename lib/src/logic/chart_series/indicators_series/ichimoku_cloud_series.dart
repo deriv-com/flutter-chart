@@ -66,7 +66,7 @@ class IchimokuCloudSeries extends Series {
 
     _conversionLineSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => conversionLineIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
@@ -77,7 +77,7 @@ class IchimokuCloudSeries extends Series {
 
     _baseLineSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => baseLineIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
@@ -89,7 +89,7 @@ class IchimokuCloudSeries extends Series {
     // TODO(mohammadamir-fs): add offset to line painter
     _laggingSpanSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => laggingSpanIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
@@ -101,7 +101,7 @@ class IchimokuCloudSeries extends Series {
 
     _spanASeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => spanAIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
@@ -113,7 +113,7 @@ class IchimokuCloudSeries extends Series {
 
     _spanBSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => spanBIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,

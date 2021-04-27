@@ -12,7 +12,7 @@ import 'models/indicator_options.dart';
 ///
 /// Handles reusing result of previous indicator of the series. The decision to whether it can
 /// use the result of the old series calculated values is made inside [didUpdate] method.
-abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick?> {
+abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Initializes
   AbstractSingleIndicatorSeries(
     this.inputIndicator,
@@ -67,7 +67,7 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick?> {
   final IndicatorInput _inputIndicatorData;
 
   @override
-  int getEpochOf(Tick? t, int index) {
+  int getEpochOf(Tick t, int index) {
     if (entries != null) {
       final int targetIndex = index + offset;
 
@@ -76,17 +76,17 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick?> {
         // those that are in the range of `entries` we should use the epoch of `index + offset`.
         // Meaning that if the offset was `2`, for the tick in index `1`, we should
         // use the epoch of index 3. This is because of time gaps that some chart data might have,
-        return entries![targetIndex]!.epoch;
+        return entries![targetIndex].epoch;
       } else if (targetIndex >= entries!.length) {
         // Sometimes there might be market gaps even between entry in this index
         // and first/last index. In these cases `epoch + offset * granularity`
         // will be still wrong. Instead we use the epoch of the last/first index +/-
         // the estimation of remaining offset in epoch, using `first/lastEpoch + remainingOffset * granularity`.
         final int remainingOffset = targetIndex - entries!.length + 1;
-        return entries!.last!.epoch +
+        return entries!.last.epoch +
             remainingOffset * _inputIndicatorData.granularity;
       } else {
-        return entries!.first!.epoch +
+        return entries!.first.epoch +
             targetIndex * _inputIndicatorData.granularity;
       }
     }

@@ -60,7 +60,7 @@ class BollingerBandSeries extends Series {
 
     _middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
       options: bbOptions,
@@ -68,7 +68,7 @@ class BollingerBandSeries extends Series {
 
     _lowerSeries = SingleIndicatorSeries(
         painterCreator: (Series series) =>
-            LinePainter(series as DataSeries<Tick?>),
+            LinePainter(series as DataSeries<Tick>),
         indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
               bbmSMA,
               standardDeviation,
@@ -79,7 +79,7 @@ class BollingerBandSeries extends Series {
 
     _upperSeries = SingleIndicatorSeries(
         painterCreator: (Series series) =>
-            LinePainter(series as DataSeries<Tick?>),
+            LinePainter(series as DataSeries<Tick>),
         indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
               bbmSMA,
               standardDeviation,

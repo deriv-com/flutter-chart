@@ -10,7 +10,7 @@ import '../data_series.dart';
 /// A [DataPainter] for painting scatter.
 class ScatterPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
-  ScatterPainter(DataSeries<Tick?> series) : super(series);
+  ScatterPainter(DataSeries<Tick> series) : super(series);
 
   @override
   void onPaintData(

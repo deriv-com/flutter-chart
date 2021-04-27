@@ -222,7 +222,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
                 alignment: Alignment.topCenter,
                 child: CrosshairDetails(
                   mainSeries: widget.mainSeries,
-                  crosshairTick: crosshairTick,
+                  crosshairTick: crosshairTick!,
                   pipSize: widget.pipSize,
                 ),
               ),

@@ -67,7 +67,7 @@ class RainbowSeries extends Series {
           painterCreator: (
             Series series,
           ) =>
-              LinePainter(series as DataSeries<Tick?>),
+              LinePainter(series as DataSeries<Tick>),
           indicatorCreator: () => indicators[0] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
@@ -80,7 +80,7 @@ class RainbowSeries extends Series {
           painterCreator: (
             Series series,
           ) =>
-              LinePainter(series as DataSeries<Tick?>),
+              LinePainter(series as DataSeries<Tick>),
           indicatorCreator: () => indicators[i] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,

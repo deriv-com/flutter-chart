@@ -57,7 +57,7 @@ class AlligatorSeries extends Series {
   SeriesPainter<Series>? createPainter() {
     _jawSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
           MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.jawPeriod),
       inputIndicator: _fieldIndicator,
@@ -68,7 +68,7 @@ class AlligatorSeries extends Series {
 
     _teethSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
           MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.teethPeriod),
       inputIndicator: _fieldIndicator,
@@ -79,7 +79,7 @@ class AlligatorSeries extends Series {
 
     _lipsSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick?>),
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
           MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.lipsPeriod),
       inputIndicator: _fieldIndicator,

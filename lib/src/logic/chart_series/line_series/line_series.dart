@@ -7,10 +7,10 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 /// Line series.
-class LineSeries extends DataSeries<Tick?> {
+class LineSeries extends DataSeries<Tick> {
   /// Initializes a line series.
   LineSeries(
-    List<Tick?> entries, {
+    List<Tick> entries, {
     String? id,
     LineStyle? style,
   }) : super(entries, id: id ?? 'LineSeries', style: style);
