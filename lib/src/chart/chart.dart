@@ -96,10 +96,12 @@ class Chart extends StatefulWidget {
 
 class _ChartState extends State<Chart> with WidgetsBindingObserver {
   bool _followCurrentTick;
+  ChartController _controller;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    _controller = widget.controller ?? ChartController();
     super.initState();
   }
 
@@ -142,7 +144,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 Expanded(
                   flex: 3,
                   child: MainChart(
-                    controller: widget.controller,
+                    controller: _controller,
                     mainSeries: widget.mainSeries,
                     overlaySeries: widget.overlaySeries,
                     annotations: widget.annotations,
@@ -189,7 +191,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed && _followCurrentTick) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        widget.controller.onScrollToLastTick(false);
+        _controller.onScrollToLastTick(false);
       });
     }
   }
@@ -202,11 +204,18 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
   @override
   void didUpdateWidget(covariant Chart oldWidget) {
+    // if controller is set
+    if (widget.controller != null) {
+      _controller = widget.controller;
+    }
+
+    //check if entire entries changes(market or granularity changes)
+    // scroll to last tick
     if (widget.mainSeries.entries != null &&
         widget.mainSeries.entries.isNotEmpty) {
       if (widget.mainSeries.entries.first.epoch !=
           oldWidget.mainSeries.entries.first.epoch) {
-        widget.controller.onScrollToLastTick(false);
+        _controller.onScrollToLastTick(false);
       }
     }
     super.didUpdateWidget(oldWidget);
