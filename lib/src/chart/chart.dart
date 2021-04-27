@@ -176,6 +176,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
   void _onVisibleAreaChanged(int leftBoundEpoch, int rightBoundEpoch) {
     widget.onVisibleAreaChanged?.call(leftBoundEpoch, rightBoundEpoch);
+
+    // detect what is current viewing mode before lock the screen
     if (widget.mainSeries.entries != null &&
         widget.mainSeries.entries.isNotEmpty) {
       if (rightBoundEpoch > widget.mainSeries.entries.last.epoch) {
@@ -189,6 +191,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
+
+    //scroll to last tick when screen is on
     if (state == AppLifecycleState.resumed && _followCurrentTick) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _controller.onScrollToLastTick(false);
