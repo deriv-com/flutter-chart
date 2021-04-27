@@ -34,7 +34,7 @@ class DerivChart extends StatefulWidget {
     this.onVisibleAreaChanged,
     this.theme,
     this.isLive,
-    this.dataFitEnabled,
+    this.dataFitEnabled = false,
     this.annotations,
     this.opacity = 1.0,
     this.pipSize = 4,
