@@ -12,7 +12,7 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
     this.title,
     this.longLine = true,
     BarrierStyle? style,
-  }) : super(id ?? 'Barrier', style: style);
+  }) : super(id ?? '$title$style$longLine', style: style);
 
   /// Title of the barrier.
   final String? title;
