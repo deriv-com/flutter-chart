@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:developer' as dev;
-
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
@@ -55,8 +52,7 @@ class XAxis extends StatefulWidget {
   _XAxisState createState() => _XAxisState();
 }
 
-class _XAxisState extends State<XAxis>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
+class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   XAxisModel _model;
   Ticker _ticker;
   AnimationController _rightEpochAnimationController;
@@ -66,8 +62,6 @@ class _XAxisState extends State<XAxis>
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addObserver(this);
 
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
 
@@ -90,17 +84,6 @@ class _XAxisState extends State<XAxis>
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
       ..registerCallback(_model.onScaleAndPanEnd);
-  }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed &&
-        _model.currentViewingMode == ViewingMode.followCurrentTick) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _model.scrollToLastTick();
-      });
-    }
   }
 
   void _onVisibleAreaChanged() {
