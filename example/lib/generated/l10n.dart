@@ -14,9 +14,14 @@ import 'intl/messages_all.dart';
 
 class ExampleLocalization {
   ExampleLocalization();
-  
-  static ExampleLocalization current;
-  
+
+  static ExampleLocalization? _current;
+
+  static ExampleLocalization get current {
+    assert(_current != null, 'No instance of ExampleLocalization was loaded. Try to initialize the ExampleLocalization delegate before accessing ExampleLocalization.current.');
+    return _current!;
+  }
+
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
 
@@ -25,13 +30,20 @@ class ExampleLocalization {
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      ExampleLocalization.current = ExampleLocalization();
-      
-      return ExampleLocalization.current;
+      final instance = ExampleLocalization();
+      ExampleLocalization._current = instance;
+ 
+      return instance;
     });
   } 
 
   static ExampleLocalization of(BuildContext context) {
+    final instance = ExampleLocalization.maybeOf(context);
+    assert(instance != null, 'No instance of ExampleLocalization present in the widget tree. Did you add ExampleLocalization.delegate in localizationsDelegates?');
+    return instance!;
+  }
+
+  static ExampleLocalization? maybeOf(BuildContext context) {
     return Localizations.of<ExampleLocalization>(context, ExampleLocalization);
   }
 
@@ -56,11 +68,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ExampleLocalization>
   bool shouldReload(AppLocalizationDelegate old) => false;
 
   bool _isSupported(Locale locale) {
-    if (locale != null) {
-      for (var supportedLocale in supportedLocales) {
-        if (supportedLocale.languageCode == locale.languageCode) {
-          return true;
-        }
+    for (var supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode) {
+        return true;
       }
     }
     return false;

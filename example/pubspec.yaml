@@ -23,6 +23,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   intl: ^0.17.0
+  intl_utils: ^2.0.0
   flutter_localizations:
     sdk: flutter
 
