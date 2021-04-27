@@ -24,7 +24,7 @@ import 'bottom_chart.dart';
 import 'main_chart.dart';
 
 /// Interactive chart widget.
-class Chart extends StatelessWidget {
+class Chart extends StatefulWidget {
   /// Creates chart that expands to available space.
   const Chart({
     @required this.mainSeries,
@@ -91,22 +91,35 @@ class Chart extends StatelessWidget {
   final double opacity;
 
   @override
+  State<StatefulWidget> createState() => _ChartState();
+}
+
+class _ChartState extends State<Chart> with WidgetsBindingObserver {
+  bool _followCurrentTick;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final ChartTheme chartTheme =
-        theme ?? (Theme.of(context).brightness == Brightness.dark
+    final ChartTheme chartTheme = widget.theme ??
+        (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
 
     final ChartConfig chartConfig = ChartConfig(
-      pipSize: pipSize,
-      granularity: granularity,
+      pipSize: widget.pipSize,
+      granularity: widget.granularity,
     );
 
     final List<ChartData> chartDataList = <ChartData>[
-      mainSeries,
-      if (overlaySeries != null) ...overlaySeries,
-      if (bottomSeries != null) ...bottomSeries,
-      if (annotations != null) ...annotations,
+      widget.mainSeries,
+      if (widget.overlaySeries != null) ...widget.overlaySeries,
+      if (widget.bottomSeries != null) ...widget.bottomSeries,
+      if (widget.annotations != null) ...widget.annotations,
     ];
 
     return MultiProvider(
@@ -120,34 +133,35 @@ class Chart extends StatelessWidget {
           child: XAxis(
             maxEpoch: chartDataList.getMaxEpoch(),
             minEpoch: chartDataList.getMinEpoch(),
-            entries: mainSeries.input,
-            onVisibleAreaChanged: onVisibleAreaChanged,
-            isLive: isLive,
-            startWithDataFitMode: dataFitEnabled,
+            entries: widget.mainSeries.input,
+            onVisibleAreaChanged: _onVisibleAreaChanged,
+            isLive: widget.isLive,
+            startWithDataFitMode: widget.dataFitEnabled,
             child: Column(
               children: <Widget>[
                 Expanded(
                   flex: 3,
                   child: MainChart(
-                    controller: controller,
-                    mainSeries: mainSeries,
-                    overlaySeries: overlaySeries,
-                    annotations: annotations,
-                    markerSeries: markerSeries,
-                    pipSize: pipSize,
-                    onCrosshairAppeared: onCrosshairAppeared,
-                    isLive: isLive,
-                    showLoadingAnimationForHistoricalData: !dataFitEnabled,
-                    showDataFitButton: dataFitEnabled,
-                    opacity: opacity,
+                    controller: widget.controller,
+                    mainSeries: widget.mainSeries,
+                    overlaySeries: widget.overlaySeries,
+                    annotations: widget.annotations,
+                    markerSeries: widget.markerSeries,
+                    pipSize: widget.pipSize,
+                    onCrosshairAppeared: widget.onCrosshairAppeared,
+                    isLive: widget.isLive,
+                    showLoadingAnimationForHistoricalData:
+                        !widget.dataFitEnabled,
+                    showDataFitButton: widget.dataFitEnabled,
+                    opacity: widget.opacity,
                   ),
                 ),
-                if (bottomSeries?.isNotEmpty ?? false)
-                  ...bottomSeries
+                if (widget.bottomSeries?.isNotEmpty ?? false)
+                  ...widget.bottomSeries
                       .map((Series series) => Expanded(
                               child: BottomChart(
                             series: series,
-                            pipSize: pipSize,
+                            pipSize: widget.pipSize,
                           )))
                       .toList()
               ],
@@ -156,5 +170,33 @@ class Chart extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onVisibleAreaChanged(int leftBoundEpoch, int rightBoundEpoch) {
+    widget.onVisibleAreaChanged?.call(leftBoundEpoch, rightBoundEpoch);
+    if (widget.mainSeries.entries != null &&
+        widget.mainSeries.entries.isNotEmpty) {
+      if (rightBoundEpoch > widget.mainSeries.entries.last.epoch) {
+        _followCurrentTick = true;
+      } else {
+        _followCurrentTick = false;
+      }
+    }
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed && _followCurrentTick) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        widget.controller.onScrollToLastTick(false);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
