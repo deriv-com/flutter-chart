@@ -1,6 +1,8 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/fcb_indicator/fcb_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/fcb_indicator/fcb_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_repository.dart';
@@ -77,6 +79,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('RSI'),
                     value: RSIIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('FCB'),
+                    value: FractalChaosBandIndicatorConfig(),
                   ),
                   // Add new indicators here.
                 ],

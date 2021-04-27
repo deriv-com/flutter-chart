@@ -121,7 +121,7 @@ class XAxisModel extends ChangeNotifier {
 
   List<Tick>? _entries;
 
-  int? _minEpoch, _maxEpoch;
+  late int _minEpoch, _maxEpoch;
 
   final GapManager _gapManager = GapManager();
   late AnimationController _scrollAnimationController;
@@ -135,10 +135,6 @@ class XAxisModel extends ChangeNotifier {
   late int _rightBoundEpoch;
   double _panSpeed = 0;
 
-  int get _firstEntryEpoch => _minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
-
-  int get _lastEntryEpoch => _maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
-
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
 
@@ -151,13 +147,10 @@ class XAxisModel extends ChangeNotifier {
   void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
-  int get _minRightBoundEpoch =>
-      _shiftEpoch(_firstEntryEpoch, maxCurrentTickOffset);
+  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch!, maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => _shiftEpoch(
-      _entries?.isNotEmpty ?? false ? _lastEntryEpoch : _nowEpoch,
-      maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch!, maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -304,12 +297,17 @@ class XAxisModel extends ChangeNotifier {
 
   /// Fits available data to screen.
   void _fitData() {
-    final int msDataDuration = _lastEntryEpoch - _firstEntryEpoch;
-    final double pxTargetDataWidth = width! - dataFitPadding.horizontal;
+    if (width != null && (_entries?.isNotEmpty ?? false)) {
+      final int lastEntryEpoch = _entries?.last.epoch ?? _nowEpoch;
 
-    _msPerPx =
-        (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
-    _scrollTo(_shiftEpoch(_lastEntryEpoch, dataFitPadding.right));
+      // `entries.length * granularity` gives ms duration with market gaps excluded.
+      final int msDataDuration = _entries!.length * granularity;
+      final double pxTargetDataWidth = width! - dataFitPadding.horizontal;
+
+      _msPerPx =
+          (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
+      _scrollTo(_shiftEpoch(lastEntryEpoch, dataFitPadding.right));
+    }
   }
 
   /// Enables data fit viewing mode.

@@ -56,9 +56,7 @@ class AlligatorSeries extends Series {
   @override
   SeriesPainter<Series>? createPainter() {
     _jawSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
+      painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () =>
           MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.jawPeriod),
@@ -69,9 +67,7 @@ class AlligatorSeries extends Series {
     );
 
     _teethSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
+      painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () =>
           MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.teethPeriod),
@@ -82,9 +78,7 @@ class AlligatorSeries extends Series {
     );
 
     _lipsSeries = SingleIndicatorSeries(
-      painterCreator: (
-        Series series,
-      ) =>
+      painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick?>),
       indicatorCreator: () =>
           MMAIndicator<Tick>(_fieldIndicator, alligatorOptions!.lipsPeriod),

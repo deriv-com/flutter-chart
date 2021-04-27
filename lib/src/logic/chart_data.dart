@@ -101,4 +101,18 @@ extension ChartDataListExtension on Iterable<ChartData> {
           )
         : null;
   }
+
+  /// Gets the minimum of [ChartData.minValue]s.
+  double getMinValue() {
+    final Iterable<double> minValues = where((ChartData c) => !c.minValue.isNaN)
+        .map((ChartData c) => c.minValue);
+    return minValues.isEmpty ? double.nan : minValues.reduce(min);
+  }
+
+  /// Gets the maximum of [ChartData.maxValue]s.
+  double getMaxValue() {
+    final Iterable<double> maxValues = where((ChartData c) => !c.maxValue.isNaN)
+        .map((ChartData c) => c.maxValue);
+    return maxValues.isEmpty ? double.nan : maxValues.reduce(max);
+  }
 }
