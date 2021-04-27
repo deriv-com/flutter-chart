@@ -163,9 +163,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         data.didUpdate(oldData);
       }
     }
-    if (widget.chartDataList.isNotEmpty && oldChart.chartDataList.isNotEmpty){
-
-    }
   }
 
   @override
