@@ -1,7 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -15,13 +14,15 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
   /// Initializes
   const DonchianChannelIndicatorItem({
     Key key,
-    List<Tick> ticks,
-    OnAddIndicator onAddIndicator,
+    DonchianChannelIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Donchian Channel',
-          ticks: ticks,
-          onAddIndicator: onAddIndicator,
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
         );
 
   @override
@@ -73,7 +74,9 @@ class DonchianChannelIndicatorItemState
       );
 
   bool _getCurrentFill() =>
-      _channelFill ?? getConfig()?.showChannelFill ?? true;
+      _channelFill ??
+      (widget.config as DonchianChannelIndicatorConfig)?.showChannelFill ??
+      true;
 
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
@@ -101,7 +104,10 @@ class DonchianChannelIndicatorItemState
         ],
       );
 
-  int _getCurrentHighPeriod() => _highPeriod ?? getConfig()?.highPeriod ?? 10;
+  int _getCurrentHighPeriod() =>
+      _highPeriod ??
+      (widget.config as DonchianChannelIndicatorConfig)?.highPeriod ??
+      10;
 
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[
@@ -129,5 +135,8 @@ class DonchianChannelIndicatorItemState
         ],
       );
 
-  int _getCurrentLowPeriod() => _lowPeriod ?? getConfig()?.lowPeriod ?? 10;
+  int _getCurrentLowPeriod() =>
+      _lowPeriod ??
+      (widget.config as DonchianChannelIndicatorConfig)?.lowPeriod ??
+      10;
 }

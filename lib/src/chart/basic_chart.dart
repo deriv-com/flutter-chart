@@ -19,6 +19,7 @@ class BasicChart extends StatefulWidget {
   const BasicChart({
     @required this.mainSeries,
     @required this.pipSize,
+    this.opacity = 1,
     Key key,
   }) : super(key: key);
 
@@ -27,6 +28,9 @@ class BasicChart extends StatefulWidget {
 
   /// The pip size of to paint marker labels.
   final int pipSize;
+
+  /// The opacity of the chart's data.
+  final double opacity;
 
   @override
   BasicChartState<BasicChart> createState() => BasicChartState<BasicChart>();
@@ -328,20 +332,23 @@ class BasicChartState<T extends BasicChart> extends State<T>
   Widget _buildChartData() => MultipleAnimatedBuilder(
         animations: getChartDataAnimations(),
         builder: (BuildContext context, Widget child) => RepaintBoundary(
-          child: CustomPaint(
-            painter: ChartDataPainter(
-              animationInfo: AnimationInfo(
-                currentTickPercent: currentTickAnimation.value,
+          child: Opacity(
+            opacity: widget.opacity,
+            child: CustomPaint(
+              painter: ChartDataPainter(
+                animationInfo: AnimationInfo(
+                  currentTickPercent: currentTickAnimation.value,
+                ),
+                mainSeries: widget.mainSeries,
+                chartConfig: context.watch<ChartConfig>(),
+                theme: context.watch<ChartTheme>(),
+                epochToCanvasX: xAxis.xFromEpoch,
+                quoteToCanvasY: chartQuoteToCanvasY,
+                rightBoundEpoch: xAxis.rightBoundEpoch,
+                leftBoundEpoch: xAxis.leftBoundEpoch,
+                topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
+                bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
               ),
-              mainSeries: widget.mainSeries,
-              chartConfig: context.watch<ChartConfig>(),
-              theme: context.watch<ChartTheme>(),
-              epochToCanvasX: xAxis.xFromEpoch,
-              quoteToCanvasY: chartQuoteToCanvasY,
-              rightBoundEpoch: xAxis.rightBoundEpoch,
-              leftBoundEpoch: xAxis.leftBoundEpoch,
-              topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
-              bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
             ),
           ),
         ),

@@ -1,4 +1,3 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,7 @@ class CandleStyle extends DataSeriesStyle with EquatableMixin {
     this.positiveColor = const Color(0xFF00A79E),
     this.negativeColor = const Color(0xFFCC2E3D),
     this.lineColor = const Color(0xFF6E6E6E),
-    HorizontalBarrierStyle lastTickStyle,
-  }) : super(lastTickStyle: lastTickStyle);
+  });
 
   /// Color of candles in which the price moved HIGHER during their period.
   final Color positiveColor;

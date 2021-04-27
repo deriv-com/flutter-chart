@@ -35,7 +35,7 @@ class AssetItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChartTheme theme = Provider.of<ChartTheme>(context);
     return ListTile(
-      contentPadding: EdgeInsets.only(left: theme.margin12),
+      contentPadding: EdgeInsets.only(left: theme.margin12Chart),
       leading: _buildAssetIcon(),
       title: _buildAssetTitle(theme),
       onTap: () => onAssetClicked?.call(asset, false),
