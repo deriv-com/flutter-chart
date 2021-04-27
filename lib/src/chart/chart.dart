@@ -199,4 +199,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
+  @override
+  void didUpdateWidget(covariant Chart oldWidget) {
+    if (widget.mainSeries.entries != null &&
+        widget.mainSeries.entries.isNotEmpty) {
+      if (widget.mainSeries.entries.first.epoch !=
+          oldWidget.mainSeries.entries.first.epoch) {
+        widget.controller.onScrollToLastTick(false);
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 }
