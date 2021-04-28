@@ -107,9 +107,11 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
       style.textStyle,
     );
 
-    String timerString = '00:00';
+    String timerString = '--:--';
 
-    timerString = durationToString(series?.timerDuration ?? const Duration());
+    if (series.candle.currentEpoch != series.candle.epoch) {
+      timerString = durationToString(series?.timerDuration ?? const Duration());
+    }
 
     final TextPainter timerPainter = makeTextPainter(
       timerString,
