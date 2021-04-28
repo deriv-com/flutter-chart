@@ -97,21 +97,23 @@ class Chart extends StatefulWidget {
 class _ChartState extends State<Chart> with WidgetsBindingObserver {
   bool _followCurrentTick;
   ChartController _controller;
-  final ChartTheme chartTheme;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _controller = widget.controller ?? ChartController();
-    chartTheme = widget.theme ??
-        (Theme.of(context).brightness == Brightness.dark
-            ? ChartDefaultDarkTheme()
-            : ChartDefaultLightTheme());
   }
 
   @override
   Widget build(BuildContext context) {
+    final ChartTheme chartTheme = widget.theme ??
+        (Theme
+            .of(context)
+            .brightness == Brightness.dark
+            ? ChartDefaultDarkTheme()
+            : ChartDefaultLightTheme());
+
     final ChartConfig chartConfig = ChartConfig(
       pipSize: widget.pipSize,
       granularity: widget.granularity,
@@ -153,15 +155,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairAppeared: widget.onCrosshairAppeared,
                     isLive: widget.isLive,
                     showLoadingAnimationForHistoricalData:
-                        !widget.dataFitEnabled,
+                    !widget.dataFitEnabled,
                     showDataFitButton: widget.dataFitEnabled,
                     opacity: widget.opacity,
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
                   ...widget.bottomSeries
-                      .map((Series series) => Expanded(
-                              child: BottomChart(
+                      .map((Series series) =>
+                      Expanded(
+                          child: BottomChart(
                             series: series,
                             pipSize: widget.pipSize,
                           )))
