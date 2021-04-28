@@ -102,15 +102,17 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _initChartController();
+  }
+
+  void _initChartController() {
     _controller = widget.controller ?? ChartController();
   }
 
   @override
   Widget build(BuildContext context) {
     final ChartTheme chartTheme = widget.theme ??
-        (Theme
-            .of(context)
-            .brightness == Brightness.dark
+        (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
 
@@ -155,16 +157,15 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairAppeared: widget.onCrosshairAppeared,
                     isLive: widget.isLive,
                     showLoadingAnimationForHistoricalData:
-                    !widget.dataFitEnabled,
+                        !widget.dataFitEnabled,
                     showDataFitButton: widget.dataFitEnabled,
                     opacity: widget.opacity,
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
                   ...widget.bottomSeries
-                      .map((Series series) =>
-                      Expanded(
-                          child: BottomChart(
+                      .map((Series series) => Expanded(
+                              child: BottomChart(
                             series: series,
                             pipSize: widget.pipSize,
                           )))
@@ -214,10 +215,9 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     super.didUpdateWidget(oldWidget);
 
     // if controller is set
-    if (widget.controller != null) {
-      _controller = widget.controller;
+    if (widget.controller != oldWidget.controller) {
+      _initChartController();
     }
-
     //check if entire entries changes(market or granularity changes)
     // scroll to last tick
     if (widget.mainSeries.entries != null &&
