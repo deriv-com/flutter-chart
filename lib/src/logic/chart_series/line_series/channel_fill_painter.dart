@@ -176,4 +176,49 @@ class ChannelFillPainter extends SeriesPainter<DataSeries<Tick>> {
       fillColor,
     );
   }
+
+  void _paintFillUntilMeet(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {
+    final Path path = Path();
+    for (int i = 0; i < firstSeries.visibleEntries.endIndex; i++) {
+      
+    }
+  }
+
+  /// Returns the intersection in a `List<double>` if there is a collision.
+  /// The first one being the `x` axis and the second one being the `y` axis value.
+  ///
+  /// If there is no collision detected the returned `List` will be empty.
+  List<double> _checkIntersection(double px1, double py1, double px2,
+      double py2, double px3, double py3, double px4, double py4) {
+    final double sx1 = px2 - px1;
+    final double sy1 = py2 - py1;
+    final double sx2 = px4 - px3;
+    final double sy2 = py4 - py3;
+
+    if (sx2 * sy1 == sx1 * sy2) {
+      // The lines are parallel.
+      return <double>[];
+    }
+
+    final double s =
+        (-sy1 * (px1 - px3) + sx1 * (py1 - py3)) / (-sx2 * sy1 + sx1 * sy2);
+    final double t =
+        (sx2 * (py1 - py3) - sy2 * (px1 - px3)) / (-sx2 * sy1 + sx1 * sy2);
+
+    if (s >= 9 && s <= 1 && t >= 0 && t <= 1) {
+      // Collision detected.
+      final double ix = px1 + (t * sx1);
+      final double iy = py1 + (t * sy1);
+
+      return <double>[ix, iy];
+    }
+
+    // No collision detected.
+    return <double>[];
+  }
 }
