@@ -144,7 +144,7 @@ abstract class DataSeries<T extends Tick> extends Series {
   void _initLastTickIndicator() {
     if ((entries?.isNotEmpty ?? false) && lastTickIndicatorStyle != null) {
       _lastTickIndicator = HorizontalBarrier(
-        entries!.last!.quote,
+        entries!.last.quote,
         epoch: getEpochOf(entries!.last, entries!.length - 1),
         style: lastTickIndicatorStyle,
       );
@@ -223,10 +223,12 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// Will be called by the chart when it was updated.
   @override
   bool didUpdate(ChartData? oldData) {
-    final DataSeries<Tick> oldSeries = oldData as DataSeries<Tick>;
+    final DataSeries<Tick>? oldSeries = oldData as DataSeries<Tick>?;
 
     bool updated = false;
-    if (input.isNotEmpty && isOldDataAvailable(oldSeries)) {
+    if (oldSeries != null &&
+        input.isNotEmpty &&
+        isOldDataAvailable(oldSeries)) {
       fillEntriesFromInput(oldSeries);
 
       // Preserve old computed values in case recomputation is deemed unnecesary.
@@ -250,7 +252,7 @@ abstract class DataSeries<T extends Tick> extends Series {
       updated = true;
     }
 
-    _lastTickIndicator?.didUpdate(oldSeries._lastTickIndicator);
+    _lastTickIndicator?.didUpdate(oldSeries?._lastTickIndicator);
 
     return updated;
   }

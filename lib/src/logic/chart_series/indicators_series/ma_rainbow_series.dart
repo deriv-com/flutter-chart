@@ -93,7 +93,7 @@ class RainbowSeries extends Series {
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final RainbowSeries? oldRainbowSeries = oldData as RainbowSeries;
+    final RainbowSeries? oldRainbowSeries = oldData as RainbowSeries?;
     if (oldRainbowSeries == null) {
       return false;
     } else if (oldRainbowSeries._rainbowSeries.length !=

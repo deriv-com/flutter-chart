@@ -44,7 +44,7 @@ class ZigZagSeries extends LineSeries {
         }
       }
     }
-    if (entries![endIndex - 1]?.quote.isNaN ?? false) {
+    if (entries![endIndex - 1].quote.isNaN) {
       for (int i = endIndex + 1; i < entries!.length; i++) {
         final Tick? entry = entries![i];
         if (entry != null && !entry.quote.isNaN) {

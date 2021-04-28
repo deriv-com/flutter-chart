@@ -135,7 +135,7 @@ class IchimokuCloudSeries extends Series {
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final IchimokuCloudSeries? series = oldData as IchimokuCloudSeries;
+    final IchimokuCloudSeries? series = oldData as IchimokuCloudSeries?;
 
     final bool conversionLineUpdated =
         _conversionLineSeries.didUpdate(series?._conversionLineSeries);

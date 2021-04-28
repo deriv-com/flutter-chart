@@ -147,10 +147,10 @@ class XAxisModel extends ChangeNotifier {
   void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
-  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch!, maxCurrentTickOffset);
+  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch!, maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>

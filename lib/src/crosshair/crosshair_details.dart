@@ -46,7 +46,7 @@ class CrosshairDetails extends StatelessWidget {
 
   Widget _buildTimeLabel(BuildContext context) {
     final DateTime time =
-        DateTime.fromMillisecondsSinceEpoch(crosshairTick!.epoch, isUtc: true);
+        DateTime.fromMillisecondsSinceEpoch(crosshairTick.epoch, isUtc: true);
     final String timeLabel = DateFormat('dd MMM yyy - HH:mm:ss').format(time);
     return Text(
       timeLabel,

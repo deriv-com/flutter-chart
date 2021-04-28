@@ -90,7 +90,8 @@ class DonchianChannelsSeries extends Series {
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final DonchianChannelsSeries? oldSeries = oldData as DonchianChannelsSeries;
+    final DonchianChannelsSeries? oldSeries =
+        oldData as DonchianChannelsSeries?;
 
     final bool upperUpdated =
         _upperChannelSeries.didUpdate(oldSeries?._upperChannelSeries);
@@ -146,7 +147,7 @@ class DonchianChannelsSeries extends Series {
             _upperChannelSeries.visibleEntries.first,
             _upperChannelSeries.visibleEntries.startIndex,
           )),
-          quoteToY(_upperChannelSeries.visibleEntries.first!.quote),
+          quoteToY(_upperChannelSeries.visibleEntries.first.quote),
         );
 
       for (int i = _upperChannelSeries.visibleEntries.startIndex + 1;
@@ -168,8 +169,7 @@ class DonchianChannelsSeries extends Series {
       double? lastVisibleTickX;
 
       if (lastUpperTick == lastUpperVisibleTick &&
-          _upperChannelSeries.prevLastEntry != null &&
-          _upperChannelSeries.prevLastEntry!.entry != null) {
+          _upperChannelSeries.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
           epochToX(_upperChannelSeries.getEpochOf(
             _upperChannelSeries.prevLastEntry!.entry,
@@ -180,7 +180,7 @@ class DonchianChannelsSeries extends Series {
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _upperChannelSeries.prevLastEntry!.entry!.quote,
+          _upperChannelSeries.prevLastEntry!.entry.quote,
           lastUpperTick.quote,
           animationInfo.currentTickPercent,
         )!);
@@ -209,7 +209,7 @@ class DonchianChannelsSeries extends Series {
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _lowerChannelSeries.prevLastEntry!.entry!.quote,
+          _lowerChannelSeries.prevLastEntry!.entry.quote,
           lastLowerTick.quote,
           animationInfo.currentTickPercent,
         )!);

@@ -54,7 +54,7 @@ class FractalChaosBandSeries extends Series {
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final FractalChaosBandSeries? series = oldData as FractalChaosBandSeries;
+    final FractalChaosBandSeries? series = oldData as FractalChaosBandSeries?;
     final bool _fcbHighUpdated =
         _fcbHighSeries.didUpdate(series?._fcbHighSeries);
     final bool _fcbLowUpdated = _fcbLowSeries.didUpdate(series?._fcbLowSeries);

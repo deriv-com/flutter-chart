@@ -21,15 +21,15 @@ class LineSeries extends DataSeries<Tick> {
       );
 
   @override
-  Widget getCrossHairInfo(Tick? crossHairTick, int pipSize, ChartTheme theme) =>
+  Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>
       Text(
-        '${crossHairTick!.quote.toStringAsFixed(pipSize)}',
+        '${crossHairTick.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
       );
 
   @override
-  double maxValueOf(Tick? t) => t?.quote ?? double.nan;
+  double maxValueOf(Tick t) => t.quote;
 
   @override
-  double minValueOf(Tick? t) => t?.quote ?? double.nan;
+  double minValueOf(Tick t) => t.quote;
 }

@@ -95,7 +95,7 @@ class BollingerBandSeries extends Series {
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final BollingerBandSeries? series = oldData as BollingerBandSeries;
+    final BollingerBandSeries? series = oldData as BollingerBandSeries?;
 
     final bool lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
     final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);

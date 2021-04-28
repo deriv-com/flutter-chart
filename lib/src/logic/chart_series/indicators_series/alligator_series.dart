@@ -93,7 +93,7 @@ class AlligatorSeries extends Series {
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final AlligatorSeries? series = oldData as AlligatorSeries;
+    final AlligatorSeries? series = oldData as AlligatorSeries?;
 
     final bool _jawUpdated = _jawSeries?.didUpdate(series?._jawSeries) ?? false;
     final bool _teethUpdated =

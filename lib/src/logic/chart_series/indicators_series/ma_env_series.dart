@@ -100,7 +100,7 @@ class MAEnvSeries extends Series {
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final MAEnvSeries? series = oldData as MAEnvSeries;
+    final MAEnvSeries? series = oldData as MAEnvSeries?;
 
     final bool _lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
     final bool _middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
