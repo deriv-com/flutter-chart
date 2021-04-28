@@ -131,6 +131,10 @@ class Asset {
   /// The displaying name of the active symbol.
   final String displayName;
 
+
+
+
+
   /// The name of the active symbol's market.
   final String market;
 
