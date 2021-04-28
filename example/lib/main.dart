@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
 class FullscreenChart extends StatefulWidget {
   /// Initializes a chart that sits in fullscreen.
   const FullscreenChart({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -69,36 +69,36 @@ class FullscreenChart extends StatefulWidget {
 class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
-  int/*!*/ granularity = 0;
+  int granularity = 0;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
-  HorizontalBarrier _slBarrier, _tpBarrier;
-  bool/*!*/ _sl = false, _tp = false;
+  HorizontalBarrier? _slBarrier, _tpBarrier;
+  bool _sl = false, _tp = false;
 
-  TickHistorySubscription _tickHistorySubscription;
+  TickHistorySubscription? _tickHistorySubscription;
 
-  StreamSubscription _tickStreamSubscription;
+  StreamSubscription? _tickStreamSubscription;
 
-  /*late*/ConnectionBloc _connectionBloc;
+  late ConnectionBloc _connectionBloc;
 
   bool _waitingForHistory = false;
 
-  MarketChangeReminder _marketsChangeReminder;
+  MarketChangeReminder? _marketsChangeReminder;
 
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
-  Completer _requestCompleter;
+  late Completer _requestCompleter;
 
-  List<Market> _markets;
+  List<Market>? _markets;
   SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
 
-  ActiveMarker _activeMarker;
+  ActiveMarker? _activeMarker;
 
-  List<ActiveSymbol> _activeSymbols;
+  late List<ActiveSymbol> _activeSymbols;
 
   Asset _symbol = Asset(name: 'R_50');
 
   ChartController _controller = ChartController();
-  PersistentBottomSheetController _bottomSheetController;
+  PersistentBottomSheetController? _bottomSheetController;
 
   @override
   void initState() {
@@ -110,7 +110,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   @override
   void dispose() {
     _tickStreamSubscription?.cancel();
-    _connectionBloc?.close();
+    _connectionBloc.close();
     _bottomSheetController?.close();
     super.dispose();
   }
@@ -159,24 +159,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
       ),
       onCurrentTime: () async {
         final ServerTime serverTime = await ServerTime.fetchTime();
-        return serverTime.time.toUtc();
+        return serverTime.time!.toUtc();
       },
-      onMarketsStatusChange: (Map<String, bool> statusChanges) {
+      onMarketsStatusChange: (Map<String?, bool>? statusChanges) {
         for (int i = 0; i < _activeSymbols.length; i++) {
-          if (statusChanges[_activeSymbols[i].symbol] != null) {
+          if (statusChanges![_activeSymbols[i].symbol!] != null) {
             _activeSymbols[i] = _activeSymbols[i].copyWith(
-              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
+              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol!],
             );
           }
         }
 
         _fillMarketSelectorList();
 
-        if (statusChanges[_symbol.name] != null) {
+        if (statusChanges![_symbol.name] != null) {
           _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
 
           // Request for tick stream if symbol is changing from closed to open.
-          if (statusChanges[_symbol.name]) {
+          if (statusChanges[_symbol.name]!) {
             _onIntervalSelected(granularity);
           }
         }
@@ -189,22 +189,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
       const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic'),
     );
 
-    final ActiveSymbol firstOpenSymbol = _activeSymbols
-        .firstWhere((ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen);
+    final ActiveSymbol firstOpenSymbol = _activeSymbols.firstWhere(
+        (ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen!);
 
     _symbol = Asset(
-      name: firstOpenSymbol.symbol,
+      name: firstOpenSymbol.symbol!,
       displayName: firstOpenSymbol.displayName,
-      market: firstOpenSymbol.market,
-      subMarket: firstOpenSymbol.submarket,
-      isOpen: firstOpenSymbol.exchangeIsOpen,
+      market: firstOpenSymbol.market!,
+      subMarket: firstOpenSymbol.submarket!,
+      isOpen: firstOpenSymbol.exchangeIsOpen!,
     );
 
     _fillMarketSelectorList();
   }
 
   void _fillMarketSelectorList() {
-    final marketTitles = <String>{};
+    final marketTitles = <String?>{};
 
     final markets = <Market>[];
 
@@ -213,18 +213,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
         marketTitles.add(symbol.market);
         markets.add(
           Market.fromAssets(
-            name: symbol.market,
-            displayName: symbol.marketDisplayName,
+            name: symbol.market!,
+            displayName: symbol.marketDisplayName!,
             assets: _activeSymbols
                 .where((activeSymbol) => activeSymbol.market == symbol.market)
                 .map<Asset>((activeSymbol) => Asset(
-                      market: activeSymbol.market,
+                      market: activeSymbol.market!,
                       marketDisplayName: activeSymbol.marketDisplayName,
-                      subMarket: activeSymbol.submarket,
-                      name: activeSymbol.symbol,
+                      subMarket: activeSymbol.submarket!,
+                      name: activeSymbol.symbol!,
                       displayName: activeSymbol.displayName,
                       subMarketDisplayName: activeSymbol.submarketDisplayName,
-                      isOpen: activeSymbol.exchangeIsOpen,
+                      isOpen: activeSymbol.exchangeIsOpen!,
                     ))
                 .toList(),
           ),
@@ -232,7 +232,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }
     }
     setState(() => _markets = markets);
-    _bottomSheetController?.setState(() {});
+    _bottomSheetController?.setState!(() {});
   }
 
   void _initTickStream(
@@ -247,7 +247,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             await TickHistory.fetchTicksAndSubscribe(request);
 
         final fetchedTicks =
-            _getTicksFromResponse(_tickHistorySubscription.tickHistory);
+            _getTicksFromResponse(_tickHistorySubscription!.tickHistory!);
 
         if (resume) {
           // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping ticks
@@ -261,7 +261,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         }
 
         _tickStreamSubscription =
-            _tickHistorySubscription.tickStream.listen(_handleTickStream);
+            _tickHistorySubscription!.tickStream!.listen(_handleTickStream);
       } else {
         _tickHistorySubscription = null;
 
@@ -274,11 +274,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _updateSampleSLAndTP();
 
-      WidgetsBinding.instance.addPostFrameCallback(
+      WidgetsBinding.instance!.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
       );
     } on TickException catch (e) {
-      dev.log(e.message, error: e);
+      dev.log(e.message!, error: e);
     } finally {
       _completeRequest();
     }
@@ -297,23 +297,23 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
   }
 
-  void _handleTickStream(TickBase newTick) {
+  void _handleTickStream(TickBase? newTick) {
     if (!_requestCompleter.isCompleted || newTick == null) {
       return;
     }
 
     if (newTick is api_tick.Tick) {
       _onNewTick(Tick(
-        epoch: newTick.epoch.millisecondsSinceEpoch,
-        quote: newTick.quote,
+        epoch: newTick.epoch!.millisecondsSinceEpoch,
+        quote: newTick.quote!,
       ));
     } else if (newTick is OHLC) {
       _onNewCandle(Candle(
-        epoch: newTick.openTime.millisecondsSinceEpoch,
-        high: newTick.high,
-        low: newTick.low,
-        open: newTick.open,
-        close: newTick.close,
+        epoch: newTick.openTime!.millisecondsSinceEpoch,
+        high: newTick.high!,
+        low: newTick.low!,
+        open: newTick.open!,
+        close: newTick.close!,
       ));
     }
   }
@@ -325,8 +325,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _onNewCandle(Candle newCandle) {
     final List<Candle> previousCandles =
         ticks.isNotEmpty && ticks.last.epoch == newCandle.epoch
-            ? ticks.sublist(0, ticks.length - 1)
-            : ticks;
+            ? ticks.sublist(0, ticks.length - 1) as List<Candle>
+            : ticks as List<Candle>;
 
     setState(() {
       // Don't modify candles in place, otherwise Chart's didUpdateWidget won't see the difference.
@@ -361,21 +361,21 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 ClipRect(
                   child: DerivChart(
                     mainSeries:
-                        style == ChartStyle.candles && ticks is List<Candle>
-                            ? CandleSeries(ticks)
+                        (style == ChartStyle.candles && ticks is List<Candle>
+                            ? CandleSeries(ticks as List<Candle>)
                             : LineSeries(
                                 ticks,
                                 style: const LineStyle(hasArea: true),
-                              ),
+                              )) as DataSeries<Tick>,
                     markerSeries: MarkerSeries(
                       _markers,
                       activeMarker: _activeMarker,
                     ),
-                    annotations: ticks.length > 4
+                    annotations: (ticks.length > 4
                         ? <ChartAnnotation>[
                             ..._sampleBarriers,
-                            if (_sl && _slBarrier != null) _slBarrier,
-                            if (_tp && _tpBarrier != null) _tpBarrier,
+                            if (_sl && _slBarrier != null) _slBarrier!,
+                            if (_tp && _tpBarrier != null) _tpBarrier!,
                             TickIndicator(
                               ticks.last,
                               style: const HorizontalBarrierStyle(
@@ -388,16 +388,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   .keepBarrierLabelVisible,
                             ),
                           ]
-                        : null,
+                        : null),
                     pipSize:
                         _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                     granularity: granularity == 0
                         ? 1500 // average ms difference between ticks
                         : granularity * 1000,
                     controller: _controller,
-                    isLive: (_symbol?.isOpen ?? false) &&
-                        (_connectionBloc?.state is Connected ?? false),
-                    opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
+                    isLive: (_symbol.isOpen) &&
+                        (_connectionBloc.state is Connected),
+                    opacity: _symbol.isOpen ? 1.0 : 0.5,
                     onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
                     onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
                       if (!_waitingForHistory &&
@@ -509,14 +509,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 Expanded(
                   child: CheckboxListTile(
                     value: _sl,
-                    onChanged: (bool sl) => setState(() => _sl = sl),
+                    onChanged: (bool? sl) => setState(() => _sl = sl!),
                     title: Text('Stop loss'),
                   ),
                 ),
                 Expanded(
                   child: CheckboxListTile(
                     value: _tp,
-                    onChanged: (bool tp) => setState(() => _tp = tp),
+                    onChanged: (bool? tp) => setState(() => _tp = tp!),
                     title: Text('Take profit'),
                   ),
                 ),
@@ -676,7 +676,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  Future<void> _onIntervalSelected(int value) async {
+  Future<void> _onIntervalSelected(int? value) async {
     if (!_requestCompleter.isCompleted) {
       return;
     }
@@ -691,7 +691,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _completeRequest();
       dev.log(e.toString(), error: e);
     } finally {
-      granularity = value;
+      granularity = value!;
 
       _initTickStream(TicksHistoryRequest(
         ticksHistory: _symbol.name,
@@ -707,23 +707,23 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> _getTicksFromResponse(TickHistory tickHistory) {
     List<Tick> candles = [];
     if (tickHistory.history != null) {
-      final count = tickHistory.history.prices.length;
+      final count = tickHistory.history!.prices!.length;
       for (var i = 0; i < count; i++) {
         candles.add(Tick(
-          epoch: tickHistory.history.times[i].millisecondsSinceEpoch,
-          quote: tickHistory.history.prices[i],
+          epoch: tickHistory.history!.times![i]!.millisecondsSinceEpoch,
+          quote: tickHistory.history!.prices![i]!,
         ));
       }
     }
 
     if (tickHistory.candles != null) {
-      candles = tickHistory.candles.map<Candle>((ohlc) {
+      candles = tickHistory.candles!.map<Candle>((ohlc) {
         return Candle(
-          epoch: ohlc.epoch.millisecondsSinceEpoch,
-          high: ohlc.high,
-          low: ohlc.low,
-          open: ohlc.open,
-          close: ohlc.close,
+          epoch: ohlc!.epoch!.millisecondsSinceEpoch,
+          high: ohlc.high!,
+          low: ohlc.low!,
+          open: ohlc.open!,
+          close: ohlc.close!,
         );
       }).toList();
     }
