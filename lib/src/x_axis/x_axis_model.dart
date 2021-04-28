@@ -178,11 +178,11 @@ class XAxisModel extends ChangeNotifier {
   double get _defaultMsPerPx => _granularity / defaultIntervalWidth;
 
   /// Whether data fit mode is enabled.
-  /// Doesn't mean it is currently active viewing mode. Check [currentViewingMode].
+  /// Doesn't mean it is currently active viewing mode. Check [_currentViewingMode].
   bool get dataFitEnabled => _dataFitMode;
 
   /// Current mode that controls chart's zooming and scrolling behaviour.
-  ViewingMode get currentViewingMode {
+  ViewingMode get _currentViewingMode {
     if (_panSpeed != null && _panSpeed != 0) {
       return ViewingMode.constantScrollSpeed;
     }
@@ -196,7 +196,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Called on each frame.
-  /// Updates zoom and scroll position based on current [currentViewingMode].
+  /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
     final int newNowTime = DateTime.now().millisecondsSinceEpoch;
     final int elapsedMs = newNowTime - _lastEpoch;
@@ -205,7 +205,7 @@ class XAxisModel extends ChangeNotifier {
         : _nowEpoch + elapsedMs;
     _lastEpoch = newNowTime;
     // TODO: Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
-    switch (currentViewingMode) {
+    switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
         _scrollTo(_rightBoundEpoch + elapsedMs);
         break;
@@ -380,7 +380,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is scaling the chart.
   void onScaleUpdate(ScaleUpdateDetails details) {
-    if (currentViewingMode == ViewingMode.followCurrentTick) {
+    if (_currentViewingMode == ViewingMode.followCurrentTick) {
       _scaleWithNowFixed(details);
     } else {
       _scaleWithFocalPointFixed(details);

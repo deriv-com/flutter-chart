@@ -108,7 +108,9 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final ChartTheme chartTheme = widget.theme ??
-        (Theme.of(context).brightness == Brightness.dark
+        (Theme
+            .of(context)
+            .brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
 
@@ -153,15 +155,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairAppeared: widget.onCrosshairAppeared,
                     isLive: widget.isLive,
                     showLoadingAnimationForHistoricalData:
-                        !widget.dataFitEnabled,
+                    !widget.dataFitEnabled,
                     showDataFitButton: widget.dataFitEnabled,
                     opacity: widget.opacity,
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
                   ...widget.bottomSeries
-                      .map((Series series) => Expanded(
-                              child: BottomChart(
+                      .map((Series series) =>
+                      Expanded(
+                          child: BottomChart(
                             series: series,
                             pipSize: widget.pipSize,
                           )))
@@ -208,6 +211,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
   @override
   void didUpdateWidget(covariant Chart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
     // if controller is set
     if (widget.controller != null) {
       _controller = widget.controller;
@@ -222,6 +227,5 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         _controller.onScrollToLastTick(false);
       }
     }
-    super.didUpdateWidget(oldWidget);
   }
 }
