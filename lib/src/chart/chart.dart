@@ -97,6 +97,7 @@ class Chart extends StatefulWidget {
 class _ChartState extends State<Chart> with WidgetsBindingObserver {
   bool _followCurrentTick;
   ChartController _controller;
+  ChartTheme _chartTheme;
 
   @override
   void initState() {
@@ -105,17 +106,25 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     _initChartController();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _initChartTheme();
+  }
+
   void _initChartController() {
     _controller = widget.controller ?? ChartController();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final ChartTheme chartTheme = widget.theme ??
+  void _initChartTheme() {
+    _chartTheme = widget.theme ??
         (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final ChartConfig chartConfig = ChartConfig(
       pipSize: widget.pipSize,
       granularity: widget.granularity,
@@ -130,11 +139,11 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     return MultiProvider(
       providers: <SingleChildWidget>[
-        Provider<ChartTheme>.value(value: chartTheme),
+        Provider<ChartTheme>.value(value: _chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
       ],
       child: Ink(
-        color: chartTheme.base08Color,
+        color: _chartTheme.base08Color,
         child: GestureManager(
           child: XAxis(
             maxEpoch: chartDataList.getMaxEpoch(),
@@ -217,6 +226,9 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     // if controller is set
     if (widget.controller != oldWidget.controller) {
       _initChartController();
+    }
+    if (widget.theme != oldWidget.theme) {
+      _initChartTheme();
     }
     //check if entire entries changes(market or granularity changes)
     // scroll to last tick
