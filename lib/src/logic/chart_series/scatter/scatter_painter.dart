@@ -34,9 +34,9 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex;
         i++) {
-      final Tick? tick = series.entries![i];
+      final Tick tick = series.entries![i];
 
-      if (tick != null && !tick.quote.isNaN) {
+      if (!tick.quote.isNaN) {
         final double x = epochToX(getEpochOf(tick, i));
         final double y = quoteToY(tick.quote);
         canvas.drawCircle(Offset(x, y), style.radius, dotPaint);

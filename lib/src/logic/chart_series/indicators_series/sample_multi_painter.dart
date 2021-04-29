@@ -32,17 +32,15 @@ class SampleMultiPainter extends SeriesPainter<SampleMultiSeries> {
         i < series.series1.visibleEntries.length &&
             i < series.series2.visibleEntries.length;
         i++) {
-      final Tick? s1Entry = series.series1.visibleEntries.entries[i];
-      final Tick? s2Entry = series.series2.visibleEntries.entries[i];
-      if (s1Entry != null && s2Entry != null) {
-        canvas.drawLine(
-            Offset(epochToX(s1Entry.epoch), quoteToY(s1Entry.quote)),
-            Offset(epochToX(s2Entry.epoch), quoteToY(s2Entry.quote)),
-            Paint()
-              ..color = Colors.red
-              ..strokeWidth = 1
-              ..style = PaintingStyle.stroke);
-      }
+      final Tick s1Entry = series.series1.visibleEntries.entries[i];
+      final Tick s2Entry = series.series2.visibleEntries.entries[i];
+      canvas.drawLine(
+          Offset(epochToX(s1Entry.epoch), quoteToY(s1Entry.quote)),
+          Offset(epochToX(s2Entry.epoch), quoteToY(s2Entry.quote)),
+          Paint()
+            ..color = Colors.red
+            ..strokeWidth = 1
+            ..style = PaintingStyle.stroke);
     }
   }
 }
