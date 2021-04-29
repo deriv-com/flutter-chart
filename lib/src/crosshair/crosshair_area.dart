@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/src/crosshair/crosshair_dot_painter.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -61,11 +59,10 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       VelocityTracker.withKind(PointerDeviceKind.touch);
 
   VelocityEstimate _dragVelocity = const VelocityEstimate(
-    confidence: 1,
-    pixelsPerSecond: Offset.zero,
-    duration: Duration.zero,
-    offset: Offset.zero,
-  );
+      confidence: 1,
+      pixelsPerSecond: Offset.zero,
+      duration: Duration.zero,
+      offset: Offset.zero);
 
   @override
   void initState() {
@@ -83,9 +80,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _updateCrosshairCandle() {
-    if (crosshairTick == null ||
-        widget.mainSeries.visibleEntries == null ||
-        widget.mainSeries.visibleEntries.isEmpty) {
+    if (crosshairTick == null || widget.mainSeries.visibleEntries.isEmpty) {
       return;
     }
 
@@ -115,14 +110,16 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
-    _lastLongPressPosition = details.localPosition.dx;
-    setState(() => _updatePanSpeed());
+    if (_timer != null) {
+      _lastLongPressPosition = details.localPosition.dx;
+      setState(() => _updatePanSpeed());
 
-    final DateTime now = DateTime.now();
-    final Duration passedTime = now.difference(_timer!);
-    _timer = DateTime.now();
-    _dragVelocityTracker.addPosition(passedTime, details.localPosition);
-    _dragVelocity = _dragVelocityTracker.getVelocityEstimate()!;
+      final DateTime now = DateTime.now();
+      final Duration passedTime = now.difference(_timer!);
+      _timer = DateTime.now();
+      _dragVelocityTracker.addPosition(passedTime, details.localPosition);
+      _dragVelocity = _dragVelocityTracker.getVelocityEstimate()!;
+    }
   }
 
   void _updatePanSpeed() {

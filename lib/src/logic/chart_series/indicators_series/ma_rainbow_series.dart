@@ -64,9 +64,7 @@ class RainbowSeries extends Series {
         indicators
             .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions!));
         _rainbowSeries.add(SingleIndicatorSeries(
-          painterCreator: (
-            Series series,
-          ) =>
+          painterCreator: (Series series) =>
               LinePainter(series as DataSeries<Tick>),
           indicatorCreator: () => indicators[0] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
@@ -77,9 +75,7 @@ class RainbowSeries extends Series {
         indicators
             .add(MASeries.getMAIndicator(indicators[i - 1], rainbowOptions!));
         _rainbowSeries.add(SingleIndicatorSeries(
-          painterCreator: (
-            Series series,
-          ) =>
+          painterCreator: (Series series) =>
               LinePainter(series as DataSeries<Tick>),
           indicatorCreator: () => indicators[i] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
@@ -145,14 +141,13 @@ class RainbowSeries extends Series {
 
   @override
   void paint(
-    Canvas canvas,
-    Size size,
-    double Function(int) epochToX,
-    double Function(double) quoteToY,
-    AnimationInfo animationInfo,
-    ChartConfig chartConfig,
-    ChartTheme theme,
-  ) {
+      Canvas canvas,
+      Size size,
+      double Function(int) epochToX,
+      double Function(double) quoteToY,
+      AnimationInfo animationInfo,
+      ChartConfig chartConfig,
+      ChartTheme theme) {
     for (final SingleIndicatorSeries series in _rainbowSeries) {
       series.paint(
         canvas,

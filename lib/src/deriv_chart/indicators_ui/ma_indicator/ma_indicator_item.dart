@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
@@ -222,8 +220,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current type.
   @protected
   MovingAverageType getCurrentType() =>
-      type ??
-      (widget.config as MAIndicatorConfig).movingAverageType;
+      type ?? (widget.config as MAIndicatorConfig).movingAverageType;
 
   /// Gets Indicator current filed type.
   @protected
@@ -243,6 +240,5 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current line style.
   @protected
   LineStyle getCurrentLineStyle() =>
-      lineStyle ??
-      (widget.config as MAIndicatorConfig).lineStyle;
+      lineStyle ?? (widget.config as MAIndicatorConfig).lineStyle;
 }

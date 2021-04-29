@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
@@ -47,7 +45,6 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
 
   /// The period to calculate the Base Line value.
   final int laggingSpanOffset;
-
 
   @override
   Series getSeries(IndicatorInput indicatorInput) =>

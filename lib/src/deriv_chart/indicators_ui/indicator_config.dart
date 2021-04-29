@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';

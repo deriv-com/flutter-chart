@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
@@ -137,6 +135,5 @@ class DonchianChannelIndicatorItemState
       );
 
   int _getCurrentLowPeriod() =>
-      _lowPeriod ??
-      (widget.config as DonchianChannelIndicatorConfig).lowPeriod;
+      _lowPeriod ?? (widget.config as DonchianChannelIndicatorConfig).lowPeriod;
 }

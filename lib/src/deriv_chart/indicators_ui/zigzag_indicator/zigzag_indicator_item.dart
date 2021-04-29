@@ -1,5 +1,3 @@
-
-
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 import 'package:flutter/material.dart';
