@@ -12,11 +12,11 @@ environment:
 dependencies:
   collection: ^1.15.0-nullsafety.4
   deriv_technical_analysis:
-    path: ../flutter-deriv-packages/packages/deriv_technical_analysis
-#    git:
-#      url: git@github.com:samin-fs/flutter-deriv-packages.git
-#      path: packages/deriv_technical_analysis
-#      ref: samin/migrate_to_null_safety
+#    path: ../flutter-deriv-packages/packages/deriv_technical_analysis
+    git:
+      url: git@github.com:raminvakili-fs/flutter-deriv-packages.git
+      path: packages/deriv_technical_analysis
+      ref: ramin/fix_indicators_result_migration
   equatable: ^2.0.0
   flutter:
     sdk: flutter
