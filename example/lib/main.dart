@@ -189,9 +189,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
       const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic'),
     );
 
-    print("Aaaaaaaaaa");
-    print(_activeSymbols);
-
     final ActiveSymbol firstOpenSymbol = _activeSymbols
         .firstWhere((ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen);
 
@@ -210,8 +207,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
     final marketTitles = <String>{};
 
     final markets = <Market>[];
-
-
 
     for (final symbol in _activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
