@@ -25,9 +25,9 @@ class RainbowSeries extends Series {
   /// [rainbowOptions] Rainbow indicator options.
   RainbowSeries(
     IndicatorInput indicatorInput, {
+    required RainbowOptions rainbowOptions,
     List<Color>? rainbowColors,
     String? id,
-    RainbowOptions? rainbowOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           rainbowColors: rainbowColors,
@@ -38,16 +38,16 @@ class RainbowSeries extends Series {
   /// Initializes
   RainbowSeries.fromIndicator(
     Indicator<Tick> indicator, {
+    required this.rainbowOptions,
     this.rainbowColors,
     String? id,
-    this.rainbowOptions,
   })  : _fieldIndicator = indicator,
         super(id ?? 'MARainbow$rainbowOptions');
 
   final Indicator<Tick> _fieldIndicator;
 
   /// Rainbow options
-  RainbowOptions? rainbowOptions;
+  RainbowOptions rainbowOptions;
 
   final List<SingleIndicatorSeries> _rainbowSeries = <SingleIndicatorSeries>[];
 
@@ -57,12 +57,12 @@ class RainbowSeries extends Series {
   @override
   SeriesPainter<Series>? createPainter() {
     /// check if we have color for every band
-    final bool useColors = rainbowColors?.length == rainbowOptions!.bandsCount;
+    final bool useColors = rainbowColors?.length == rainbowOptions.bandsCount;
     final List<Indicator<Tick>> indicators = <Indicator<Tick>>[];
-    for (int i = 0; i < rainbowOptions!.bandsCount; i++) {
+    for (int i = 0; i < rainbowOptions.bandsCount; i++) {
       if (i == 0) {
         indicators
-            .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions!));
+            .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions));
         _rainbowSeries.add(SingleIndicatorSeries(
           painterCreator: (Series series) =>
               LinePainter(series as DataSeries<Tick>),
@@ -73,7 +73,7 @@ class RainbowSeries extends Series {
         ));
       } else {
         indicators
-            .add(MASeries.getMAIndicator(indicators[i - 1], rainbowOptions!));
+            .add(MASeries.getMAIndicator(indicators[i - 1], rainbowOptions));
         _rainbowSeries.add(SingleIndicatorSeries(
           painterCreator: (Series series) =>
               LinePainter(series as DataSeries<Tick>),
