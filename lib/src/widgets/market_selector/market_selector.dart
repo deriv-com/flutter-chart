@@ -65,10 +65,8 @@ class _MarketSelectorState extends State<MarketSelector>
     }
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (widget.selectedItem != null &&
-          _selectedItemKey != null &&
-          _selectedItemKey!.currentContext != null &&
-          _selectedItemKey!.currentState != null) {
+      if (_selectedItemKey != null &&
+          _selectedItemKey!.currentContext != null) {
         Scrollable.ensureVisible(
           _selectedItemKey!.currentContext!,
           curve: Curves.easeOut,
