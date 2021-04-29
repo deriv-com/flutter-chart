@@ -162,8 +162,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
         return serverTime.time!.toUtc();
       },
       onMarketsStatusChange: (Map<String?, bool>? statusChanges) {
+        if (statusChanges == null) {
+          return;
+        }
+
         for (int i = 0; i < _activeSymbols.length; i++) {
-          if (statusChanges![_activeSymbols[i].symbol!] != null) {
+          if (statusChanges[_activeSymbols[i].symbol!] != null) {
             _activeSymbols[i] = _activeSymbols[i].copyWith(
               exchangeIsOpen: statusChanges[_activeSymbols[i].symbol!],
             );
@@ -172,7 +176,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
         _fillMarketSelectorList();
 
-        if (statusChanges![_symbol.name] != null) {
+        if (statusChanges[_symbol.name] != null) {
           _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
 
           // Request for tick stream if symbol is changing from closed to open.
@@ -691,7 +695,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _completeRequest();
       dev.log(e.toString(), error: e);
     } finally {
-      granularity = value!;
+      granularity = value ?? 0;
 
       _initTickStream(TicksHistoryRequest(
         ticksHistory: _symbol.name,
