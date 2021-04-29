@@ -236,7 +236,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }
     }
     setState(() => _markets = markets);
-    _bottomSheetController?.setState!(() {});
+    _bottomSheetController?.setState?.call(() {});
   }
 
   void _initTickStream(
