@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_in
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/commodity_channel_index/cci_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/fcb_indicator/fcb_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
@@ -62,6 +63,8 @@ abstract class IndicatorConfig {
         return RSIIndicatorConfig.fromJson(json);
       case CCIIndicatorConfig.name:
         return CCIIndicatorConfig.fromJson(json);
+      case FractalChaosBandIndicatorConfig.name:
+        return FractalChaosBandIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');

@@ -100,4 +100,28 @@ extension ChartDataListExtension on Iterable<ChartData> {
             .reduce((int current, int next) => epochComparator(current, next))
         : null;
   }
+
+  /// Gets the minimum of [ChartData.minValue]s.
+  double getMinValue() {
+    final List<ChartData> chartData = this;
+    if (chartData != null) {
+      final Iterable<double> minValues = chartData
+          .where((ChartData c) => c != null && !c.minValue.isNaN)
+          .map((ChartData e) => e.minValue);
+      return minValues.isEmpty ? double.nan : minValues.reduce(min);
+    }
+    return double.nan;
+  }
+
+  /// Gets the maximum of [ChartData.maxValue]s.
+  double getMaxValue() {
+    final List<ChartData> chartData = this;
+    if (chartData != null) {
+      final Iterable<double> maxValues = chartData
+          .where((ChartData c) => c != null && !c.maxValue.isNaN)
+          .map((e) => e.maxValue);
+      return maxValues.isEmpty ? double.nan : maxValues.reduce(max);
+    }
+    return double.nan;
+  }
 }
