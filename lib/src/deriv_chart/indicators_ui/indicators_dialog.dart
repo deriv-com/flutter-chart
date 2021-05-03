@@ -112,7 +112,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   repo.indicators[index].getItem(
                 (IndicatorConfig updatedConfig) =>
                     repo.updateAt(index, updatedConfig),
-                () async {
+                () {
                   repo.removeAt(index);
                   setState(() {});
                 },
