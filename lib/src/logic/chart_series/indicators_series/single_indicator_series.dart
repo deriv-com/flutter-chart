@@ -34,7 +34,7 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
     @required this.painterCreator,
     @required this.indicatorCreator,
     @required Indicator<Tick> inputIndicator,
-    @required IndicatorOptions options,
+    IndicatorOptions options,
     String id,
     DataSeriesStyle style,
     int offset = 0,

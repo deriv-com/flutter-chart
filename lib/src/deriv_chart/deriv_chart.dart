@@ -26,18 +26,19 @@ import 'indicators_ui/indicators_dialog.dart';
 class DerivChart extends StatefulWidget {
   /// Initializes
   const DerivChart({
-    Key key,
-    this.mainSeries,
+    @required this.mainSeries,
+    @required this.granularity,
     this.markerSeries,
     this.controller,
-    this.pipSize,
-    this.granularity,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
     this.theme,
-    this.annotations,
     this.isLive,
+    this.dataFitEnabled = false,
+    this.annotations,
     this.opacity = 1.0,
+    this.pipSize = 4,
+    Key key,
   }) : super(key: key);
 
   /// Chart's main data series
@@ -73,6 +74,9 @@ class DerivChart extends StatefulWidget {
   /// In case of being true the chart will keep auto-scrolling when its visible area
   /// is on the newest ticks/candles.
   final bool isLive;
+
+  /// Starts in data fit mode and adds a data-fit button.
+  final bool dataFitEnabled;
 
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
@@ -152,6 +156,7 @@ class _DerivChartState extends State<DerivChart> {
               onCrosshairAppeared: widget.onCrosshairAppeared,
               onVisibleAreaChanged: widget.onVisibleAreaChanged,
               isLive: widget.isLive,
+              dataFitEnabled: widget.dataFitEnabled,
               opacity: widget.opacity,
               annotations: widget.annotations,
             ),
