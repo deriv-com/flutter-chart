@@ -178,7 +178,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
     if (_lastLongPressPosition != null) {
       _lastLongPressPosition = _lastLongPressPosition!.clamp(
           _closeDistance, context.watch<XAxisModel>().width! - _closeDistance);
-      final int? newLongPressEpoch =
+      final int newLongPressEpoch =
           context.watch<XAxisModel>().epochFromX(_lastLongPressPosition!);
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Only update closest tick if position epoch has changed.

@@ -96,7 +96,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
               RaisedButton(
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
-                    ? () async {
+                    ? () {
                         repo.add(_selectedIndicator!);
                         setState(() {});
                       }

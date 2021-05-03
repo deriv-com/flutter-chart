@@ -286,7 +286,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           currentTickAnimation,
           _currentTickBlinkAnimation,
         ],
-        builder: (BuildContext context, Widget? child) =>
+        builder: (BuildContext context, _) =>
             Stack(fit: StackFit.expand, children: <Widget>[
           if (widget.annotations != null)
             ...widget.annotations!
@@ -310,7 +310,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   Widget _buildCrosshairArea() => AnimatedBuilder(
         animation: crosshairZoomOutAnimation,
-        builder: (BuildContext context, Widget? child) => CrosshairArea(
+        builder: (BuildContext context, _) => CrosshairArea(
           mainSeries: widget.mainSeries as DataSeries<Tick>,
           pipSize: widget.pipSize,
           quoteToCanvasY: chartQuoteToCanvasY,
