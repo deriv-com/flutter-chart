@@ -16,8 +16,8 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
     Key? key,
     DonchianChannelIndicatorConfig config =
         const DonchianChannelIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Donchian Channel',

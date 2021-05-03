@@ -14,8 +14,8 @@ class FractalChaosBandIndicatorItem extends IndicatorItem {
     Key? key,
     FractalChaosBandIndicatorConfig config =
         const FractalChaosBandIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Fractal Chaos Band Indicator',

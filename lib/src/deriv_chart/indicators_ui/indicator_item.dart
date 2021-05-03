@@ -12,8 +12,8 @@ abstract class IndicatorItem extends StatefulWidget {
     Key? key,
     required this.title,
     required this.config,
-    this.updateIndicator,
-    this.deleteIndicator,
+    required this.updateIndicator,
+    required this.deleteIndicator,
   }) : super(key: key);
 
   /// Title
@@ -23,10 +23,10 @@ abstract class IndicatorItem extends StatefulWidget {
   final IndicatorConfig config;
 
   /// Called when config values were updated.
-  final UpdateIndicator? updateIndicator;
+  final UpdateIndicator updateIndicator;
 
   /// Called when user removed indicator.
-  final VoidCallback? deleteIndicator;
+  final VoidCallback deleteIndicator;
 
   @override
   IndicatorItemState<IndicatorConfig> createState() =>
@@ -64,10 +64,10 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
 
   /// Updates indicator based on its current config values.
   void updateIndicator() =>
-      widget.updateIndicator?.call(createIndicatorConfig());
+      widget.updateIndicator.call(createIndicatorConfig());
 
   /// Removes this indicator.
-  void removeIndicator() => widget.deleteIndicator!.call();
+  void removeIndicator() => widget.deleteIndicator.call();
 
   /// Returns the [IndicatorConfig] which can be used to create the Series for this indicator.
   T createIndicatorConfig();

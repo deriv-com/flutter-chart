@@ -13,8 +13,8 @@ class ZigZagIndicatorItem extends IndicatorItem {
   const ZigZagIndicatorItem({
     Key? key,
     ZigZagIndicatorConfig config = const ZigZagIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'ZigZag',

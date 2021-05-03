@@ -19,8 +19,8 @@ class MAIndicatorItem extends IndicatorItem {
   const MAIndicatorItem({
     Key? key,
     MAIndicatorConfig config = const MAIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Moving Average',

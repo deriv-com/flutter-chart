@@ -15,8 +15,8 @@ class RSIIndicatorItem extends IndicatorItem {
   const RSIIndicatorItem({
     Key? key,
     RSIIndicatorConfig config = const RSIIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'RSI',

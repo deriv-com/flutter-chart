@@ -13,8 +13,8 @@ class IchimokuCloudIndicatorItem extends IndicatorItem {
   const IchimokuCloudIndicatorItem({
     Key? key,
     IchimokuCloudIndicatorConfig config = const IchimokuCloudIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Ichimoku',

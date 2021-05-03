@@ -16,8 +16,8 @@ class RainbowIndicatorItem extends IndicatorItem {
   const RainbowIndicatorItem({
     required RainbowIndicatorConfig config,
     Key? key,
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Rainbow Indicator',

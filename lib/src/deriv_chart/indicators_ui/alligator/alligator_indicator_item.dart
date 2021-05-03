@@ -13,8 +13,8 @@ class AlligatorIndicatorItem extends IndicatorItem {
   const AlligatorIndicatorItem({
     Key? key,
     AlligatorIndicatorConfig config = const AlligatorIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Alligator',

@@ -17,8 +17,8 @@ class MAEnvIndicatorItem extends IndicatorItem {
   const MAEnvIndicatorItem({
     Key? key,
     MAEnvIndicatorConfig config = const MAEnvIndicatorConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'MA Envelope Indicator',

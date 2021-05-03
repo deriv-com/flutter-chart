@@ -16,8 +16,8 @@ class ParabolicSARIndicatorItem extends IndicatorItem {
   const ParabolicSARIndicatorItem({
     Key? key,
     ParabolicSARConfig config = const ParabolicSARConfig(),
-    UpdateIndicator? updateIndicator,
-    VoidCallback? deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'ParabolicSAR',
