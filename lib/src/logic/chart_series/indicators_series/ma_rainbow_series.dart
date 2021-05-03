@@ -26,7 +26,7 @@ class RainbowSeries extends Series {
   RainbowSeries(
     IndicatorInput indicatorInput, {
     required RainbowOptions rainbowOptions,
-    List<Color>? rainbowColors,
+    List<Color> rainbowColors = const <Color>[],
     String? id,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
@@ -39,7 +39,7 @@ class RainbowSeries extends Series {
   RainbowSeries.fromIndicator(
     Indicator<Tick> indicator, {
     required this.rainbowOptions,
-    this.rainbowColors,
+    this.rainbowColors = const <Color>[],
     String? id,
   })  : _fieldIndicator = indicator,
         super(id ?? 'MARainbow$rainbowOptions');
@@ -52,12 +52,12 @@ class RainbowSeries extends Series {
   final List<SingleIndicatorSeries> _rainbowSeries = <SingleIndicatorSeries>[];
 
   /// colors of rainbow bands
-  final List<Color>? rainbowColors;
+  final List<Color> rainbowColors;
 
   @override
   SeriesPainter<Series>? createPainter() {
     /// check if we have color for every band
-    final bool useColors = rainbowColors?.length == rainbowOptions.bandsCount;
+    final bool useColors = rainbowColors.length == rainbowOptions.bandsCount;
     final List<Indicator<Tick>> indicators = <Indicator<Tick>>[];
     for (int i = 0; i < rainbowOptions.bandsCount; i++) {
       if (i == 0) {
@@ -69,7 +69,7 @@ class RainbowSeries extends Series {
           indicatorCreator: () => indicators[0] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
-          style: LineStyle(color: useColors ? rainbowColors![i] : Colors.red),
+          style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
         ));
       } else {
         indicators
@@ -80,7 +80,7 @@ class RainbowSeries extends Series {
           indicatorCreator: () => indicators[i] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
-          style: LineStyle(color: useColors ? rainbowColors![i] : Colors.red),
+          style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
         ));
       }
     }

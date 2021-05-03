@@ -185,7 +185,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Current mode that controls chart's zooming and scrolling behaviour.
   ViewingMode get _currentViewingMode {
-    if (_panSpeed != null && _panSpeed != 0) {
+    if (_panSpeed != 0) {
       return ViewingMode.constantScrollSpeed;
     }
     if (_dataFitMode) {

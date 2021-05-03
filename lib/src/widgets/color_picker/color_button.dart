@@ -5,7 +5,7 @@ class ColorButton extends StatelessWidget {
   /// Creates a button of color.
   const ColorButton({
     required this.color,
-    this.onTap,
+    required this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -13,7 +13,7 @@ class ColorButton extends StatelessWidget {
   final Color color;
 
   /// Tap callback.
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) => InkWell(
