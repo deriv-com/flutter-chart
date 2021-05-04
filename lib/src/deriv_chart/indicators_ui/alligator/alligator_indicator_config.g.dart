@@ -15,6 +15,8 @@ AlligatorIndicatorConfig _$AlligatorIndicatorConfigFromJson(
     jawOffset: json['jawOffset'] as int,
     teethOffset: json['teethOffset'] as int,
     lipsOffset: json['lipsOffset'] as int,
+    showLines: json['showLines'] as bool,
+    showFractal: json['showFractal'] as bool,
   );
 }
 
@@ -27,4 +29,6 @@ Map<String, dynamic> _$AlligatorIndicatorConfigToJson(
       'teethPeriod': instance.teethPeriod,
       'lipsOffset': instance.lipsOffset,
       'lipsPeriod': instance.lipsPeriod,
+      'showLines': instance.showLines,
+      'showFractal': instance.showFractal,
     };
