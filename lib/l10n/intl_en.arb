@@ -28,6 +28,8 @@
   "labelShiftType": "Shift Type",
   "labelDistance": "Distance",
   "informNoResult": "No results for \"{text}\"",
-  "warnCheckAssetSearchingText": "Try checking your spelling or use a different term.",
+  "warnCheckAssetSearchingText": "Try checking your spelling or use a different term",
+  "labelShowLines": "Show Lines",
+  "labelShowFractals": "Show Fractals",
   "warnFailedLoadingIndicators": "Failed to load indicators."
 }

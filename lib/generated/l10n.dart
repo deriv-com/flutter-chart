@@ -327,11 +327,31 @@ class ChartLocalization {
     );
   }
 
-  /// `Try checking your spelling or use a different term.`
+  /// `Try checking your spelling or use a different term`
   String get warnCheckAssetSearchingText {
     return Intl.message(
-      'Try checking your spelling or use a different term.',
+      'Try checking your spelling or use a different term',
       name: 'warnCheckAssetSearchingText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Lines`
+  String get labelShowLines {
+    return Intl.message(
+      'Show Lines',
+      name: 'labelShowLines',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Fractals`
+  String get labelShowFractals {
+    return Intl.message(
+      'Show Fractals',
+      name: 'labelShowFractals',
       desc: '',
       args: [],
     );

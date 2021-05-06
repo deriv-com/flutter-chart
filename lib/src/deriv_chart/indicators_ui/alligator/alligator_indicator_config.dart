@@ -23,6 +23,8 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.jawOffset = 8,
     this.teethOffset = 5,
     this.lipsOffset = 3,
+    this.showLines=true,
+    this.showFractal=false,
   }) : super();
 
   /// Initializes from JSON.
@@ -54,6 +56,12 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
   /// Smoothing period for lips series
   final int lipsPeriod;
 
+  /// show alligator lins  or not
+  final bool showLines;
+
+  /// show fractal indicator or not
+  final bool showFractal;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => AlligatorSeries(
         indicatorInput,
@@ -64,6 +72,8 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
           jawPeriod: jawPeriod,
           teethPeriod: teethPeriod,
           lipsPeriod: lipsPeriod,
+          showLines: showLines,
+          showFractal: showFractal,
         ),
       );
 

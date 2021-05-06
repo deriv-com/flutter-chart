@@ -79,7 +79,7 @@ abstract class ChartData {
 }
 
 /// An extension on Iterable with [ChartData] elements.
-extension ChartDataListExtension on Iterable<ChartData> {
+extension ChartDataListExtension on Iterable<ChartData?> {
   /// Gets the minimum of [ChartData.getMinEpoch]s.
   int? getMinEpoch() => _getEpochWithPredicate(
       (ChartData c) => c.getMinEpoch(), (int a, int b) => min<int>(a, b));
@@ -92,8 +92,9 @@ extension ChartDataListExtension on Iterable<ChartData> {
     int? Function(ChartData) getEpoch,
     int Function(int, int) epochComparator,
   ) {
-    final Iterable<int?> maxEpochs =
-        map((ChartData c) => getEpoch(c)).where((int? epoch) => epoch != null);
+    final Iterable<int?> maxEpochs = where((ChartData? c) => c != null)
+        .map((ChartData? c) => getEpoch(c!))
+        .where((int? epoch) => epoch != null);
 
     return maxEpochs.isNotEmpty
         ? maxEpochs.reduce(
@@ -104,15 +105,17 @@ extension ChartDataListExtension on Iterable<ChartData> {
 
   /// Gets the minimum of [ChartData.minValue]s.
   double getMinValue() {
-    final Iterable<double> minValues = where((ChartData c) => !c.minValue.isNaN)
-        .map((ChartData c) => c.minValue);
+    final Iterable<double> minValues =
+        where((ChartData? c) => c != null && !c.minValue.isNaN)
+            .map((ChartData? c) => c!.minValue);
     return minValues.isEmpty ? double.nan : minValues.reduce(min);
   }
 
   /// Gets the maximum of [ChartData.maxValue]s.
   double getMaxValue() {
-    final Iterable<double> maxValues = where((ChartData c) => !c.maxValue.isNaN)
-        .map((ChartData c) => c.maxValue);
+    final Iterable<double> maxValues =
+        where((ChartData? c) => c != null && !c.maxValue.isNaN)
+            .map((ChartData? c) => c!.maxValue);
     return maxValues.isEmpty ? double.nan : maxValues.reduce(max);
   }
 }
