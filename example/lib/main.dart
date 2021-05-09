@@ -88,7 +88,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
   late Completer _requestCompleter;
 
-  List<Market>? _markets;
+  List<Market> _markets = <Market>[];
   SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
 
   ActiveMarker? _activeMarker;

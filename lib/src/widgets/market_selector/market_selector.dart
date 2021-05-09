@@ -21,7 +21,7 @@ class MarketSelector extends StatefulWidget {
   const MarketSelector({
     Key? key,
     required this.onAssetClicked,
-    this.markets,
+    required this.markets,
     this.selectedItem,
     this.favouriteAssets,
     this.theme,
@@ -31,7 +31,7 @@ class MarketSelector extends StatefulWidget {
   final OnAssetClicked onAssetClicked;
 
   /// A `list` of markets which the user can select from.
-  final List<Market>? markets;
+  final List<Market> markets;
 
   /// The selected asset item which contains the details of the selected market.
   final Asset? selectedItem;
@@ -94,9 +94,9 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   void _fillMarketsList() {
-    _marketsToDisplay = _filterText.isEmpty || widget.markets == null
+    _marketsToDisplay = _filterText.isEmpty
         ? widget.markets
-        : widget.markets!
+        : widget.markets
             .where((Market market) =>
                 market.containsAssetWithText(lowerCaseFilterText))
             .toList();
@@ -113,11 +113,7 @@ class _MarketSelectorState extends State<MarketSelector>
 
     final List<Asset?> favouritesList = <Asset?>[];
 
-    if (widget.markets == null) {
-      return favouritesList;
-    }
-
-    for (final Market market in widget.markets!) {
+    for (final Market market in widget.markets) {
       for (final SubMarket? subMarket in market.subMarkets) {
         if (subMarket != null) {
           for (final Asset? asset in subMarket.assets) {
@@ -137,9 +133,7 @@ class _MarketSelectorState extends State<MarketSelector>
   Widget _buildMarketsList() {
     final List<Asset?> favouritesList = _getFavouritesList();
 
-    return widget.markets == null ||
-            widget.markets!.isEmpty ||
-            _marketsToDisplay == null
+    return widget.markets.isEmpty || _marketsToDisplay == null
         ? const Expanded(child: Center(child: Text('No asset is available!')))
         : Expanded(
             child: Stack(
