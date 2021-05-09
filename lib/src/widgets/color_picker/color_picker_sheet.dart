@@ -27,16 +27,6 @@ class _ColorPickerSheetState extends State<ColorPickerSheet> {
   @override
   Widget build(BuildContext context) => ChartBottomSheet(
         child: MaterialColorGrid(
-          colorSwatches: const <MaterialColor>[
-            Colors.red,
-            Colors.pink,
-            Colors.purple,
-            Colors.lightBlue,
-            Colors.lightGreen,
-            Colors.yellow,
-            Colors.grey,
-          ],
-          colorShades: const <int>[100, 300, 500, 700],
           selectedColor: _selectedColor ?? widget.selectedColor,
           onChanged: (Color selectedColor) {
             setState(() {

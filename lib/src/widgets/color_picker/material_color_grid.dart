@@ -8,10 +8,18 @@ import 'package:flutter/material.dart';
 class MaterialColorGrid extends StatelessWidget {
   /// Creates a grid from given colors.
   const MaterialColorGrid({
-    required this.colorSwatches,
-    required this.colorShades,
     required this.selectedColor,
-    this.onChanged,
+    required this.onChanged,
+    this.colorSwatches = const <MaterialColor>[
+      Colors.red,
+      Colors.pink,
+      Colors.purple,
+      Colors.lightBlue,
+      Colors.lightGreen,
+      Colors.yellow,
+      Colors.grey,
+    ],
+    this.colorShades = const <int>[100, 300, 500, 700],
     Key? key,
   }) : super(key: key);
 
@@ -25,7 +33,7 @@ class MaterialColorGrid extends StatelessWidget {
   final Color selectedColor;
 
   /// Called when color option is selected.
-  final ValueChanged<Color>? onChanged;
+  final ValueChanged<Color> onChanged;
 
   @override
   Widget build(BuildContext context) => GridView.count(
@@ -38,7 +46,7 @@ class MaterialColorGrid extends StatelessWidget {
                 color: swatch[shade]!,
                 selected: swatch[shade]!.value == selectedColor.value,
                 onTap: () {
-                  onChanged?.call(swatch[shade]!);
+                  onChanged.call(swatch[shade]!);
                 },
               ),
         ],
