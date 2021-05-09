@@ -182,7 +182,7 @@ class _CrosshairAreaState extends State<CrosshairArea> {
           context.watch<XAxisModel>().epochFromX(_lastLongPressPosition!);
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Only update closest tick if position epoch has changed.
-        _lastLongPressPositionEpoch = newLongPressEpoch!;
+        _lastLongPressPositionEpoch = newLongPressEpoch;
       }
       crosshairTick = _getClosestTick();
     }
