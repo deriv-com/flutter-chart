@@ -348,8 +348,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ? const SizedBox.shrink()
                         : _buildMarketSelectorButton(),
                   ),
-                  _buildTimerCheckBox(),
-                  _buildChartTypeButton(),
+                  Column(
+                    children: [
+                      _buildTimerCheckBox(),
+                      _buildChartTypeButton(),
+                    ],
+                  ),
                   _buildIntervalSelector(),
                 ],
               ),
