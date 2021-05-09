@@ -15,7 +15,7 @@ class AssetItem extends StatelessWidget {
     required this.asset,
     Key? key,
     this.filterText = '',
-    this.onAssetClicked,
+    required this.onAssetClicked,
     this.iconFadeInDuration = const Duration(milliseconds: 50),
   }) : super(key: key);
 
@@ -23,7 +23,7 @@ class AssetItem extends StatelessWidget {
   final Asset asset;
 
   /// The action that appens on clicking the [AssetItem].
-  final OnAssetClicked? onAssetClicked;
+  final OnAssetClicked onAssetClicked;
 
   /// The text to highlight in the asset item.
   final String filterText;
@@ -38,7 +38,7 @@ class AssetItem extends StatelessWidget {
       contentPadding: EdgeInsets.only(left: theme.margin12Chart),
       leading: _buildAssetIcon(),
       title: _buildAssetTitle(theme),
-      onTap: () => onAssetClicked?.call(asset, false),
+      onTap: () => onAssetClicked.call(asset, false),
       trailing: _buildFavouriteIcon(theme),
     );
   }
@@ -68,7 +68,7 @@ class AssetItem extends StatelessWidget {
               asset.isFavourite ? theme.accentYellowColor : theme.base04Color,
           size: 20,
         ),
-        onPressed: () => onAssetClicked?.call(asset, true),
+        onPressed: () => onAssetClicked.call(asset, true),
       );
 
   Widget _buildAssetIcon() => SymbolIcon(symbolCode: asset.name);

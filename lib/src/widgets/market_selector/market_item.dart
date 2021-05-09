@@ -12,7 +12,7 @@ class MarketItem extends StatelessWidget {
     required this.market,
     Key? key,
     this.filterText = '',
-    this.onAssetClicked,
+    required this.onAssetClicked,
     this.selectedItemKey,
     this.isSubMarketsCategorized = true,
   }) : super(key: key);
@@ -27,7 +27,7 @@ class MarketItem extends StatelessWidget {
   final GlobalObjectKey? selectedItemKey;
 
   /// The action that appens on clicking the `AssetItem` inside the submarket part.
-  final OnAssetClicked? onAssetClicked;
+  final OnAssetClicked onAssetClicked;
 
   /// If true sub-markets will be shown with title on top of them,
   /// Otherwise under [market], will be only the list of its assets. (Suitable for favourites list).

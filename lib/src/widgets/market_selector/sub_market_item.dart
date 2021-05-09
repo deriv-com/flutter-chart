@@ -15,7 +15,7 @@ class SubMarketItem extends StatelessWidget {
     Key? key,
     this.filterText = '',
     this.selectedItemKey,
-    this.onAssetClicked,
+    required this.onAssetClicked,
     this.isCategorized = true,
   }) : super(key: key);
 
@@ -29,7 +29,7 @@ class SubMarketItem extends StatelessWidget {
   final GlobalObjectKey? selectedItemKey;
 
   /// The action that appens on clicking the [AssetItem].
-  final OnAssetClicked? onAssetClicked;
+  final OnAssetClicked onAssetClicked;
 
   /// Whether the [SubMarketItem] is  categorized or not.
   final bool isCategorized;
