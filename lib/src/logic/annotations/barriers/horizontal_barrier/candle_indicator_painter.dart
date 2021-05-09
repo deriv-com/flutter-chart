@@ -111,6 +111,10 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
 
     if (series.candle.currentEpoch != series.candle.epoch) {
       timerString = durationToString(series?.timerDuration ?? const Duration());
+    } else {
+      timerString = durationToString(Duration(
+          milliseconds:
+              DateTime.now().millisecondsSinceEpoch - series.candle.epoch));
     }
 
     final TextPainter timerPainter = makeTextPainter(
