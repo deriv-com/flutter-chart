@@ -71,9 +71,5 @@ class AssetItem extends StatelessWidget {
         onPressed: () => onAssetClicked?.call(asset, true),
       );
 
-  Widget _buildAssetIcon() => SymbolIcon(
-        width: 24,
-        height: 24,
-        symbolCode: asset.name,
-      );
+  Widget _buildAssetIcon() => SymbolIcon(symbolCode: asset.name);
 }
