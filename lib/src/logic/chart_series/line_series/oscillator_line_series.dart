@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 /// Oscillator Line Series.
 class OscillatorLineSeries extends LineSeries {
@@ -12,10 +13,12 @@ class OscillatorLineSeries extends LineSeries {
     required double topHorizontalLine,
     required double bottomHorizontalLine,
     List<double> secondaryHorizontalLines = const <double>[],
-    LineStyle? style,
-    required String id,
-    LineStyle? secondaryHorizontalLinesStyle,
-    LineStyle? mainHorizontalLinesStyle,
+    LineStyle style = const LineStyle(),
+    String? id,
+    LineStyle? secondaryHorizontalLinesStyle =
+        const LineStyle(color: Colors.white60),
+    LineStyle? mainHorizontalLinesStyle =
+        const LineStyle(color: Colors.blueGrey),
   })  : _topHorizontalLine = topHorizontalLine,
         _bottomHorizontalLine = bottomHorizontalLine,
         _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
