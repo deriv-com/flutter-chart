@@ -382,22 +382,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     double minQuote = minMaxValues[0];
     double maxQuote = minMaxValues[1];
 
-    final Iterable<ChartData> dataInAction = widget.chartDataList.where(
-      (ChartData chartData) =>
-          !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
-    );
-
-    if (dataInAction.isNotEmpty) {
-      final double chartDataMin = dataInAction
-          .map((ChartData chartData) => chartData.minValue)
-          .reduce(min);
-      final double chartDataMax = dataInAction
-          .map((ChartData chartData) => chartData.maxValue)
-          .reduce(max);
-
-      minQuote = safeMin(minQuote, chartDataMin);
-      maxQuote = safeMax(maxQuote, chartDataMax);
-    }
+    minQuote = safeMin(minQuote, widget.chartDataList.getMinValue());
+    maxQuote = safeMax(maxQuote, widget.chartDataList.getMaxValue());
     return <double>[minQuote, maxQuote];
   }
 }
