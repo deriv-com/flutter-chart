@@ -50,7 +50,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
         }
       });
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
       _sheetSize = _initSizes();
       _animationController.animateTo(
         0,

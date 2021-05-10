@@ -64,7 +64,7 @@ class _MarketSelectorState extends State<MarketSelector>
       _selectedItemKey = GlobalObjectKey(widget.selectedItem!.name);
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
       if (_selectedItemKey != null &&
           _selectedItemKey!.currentContext != null) {
         Scrollable.ensureVisible(

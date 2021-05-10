@@ -370,7 +370,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   }
 
   void _updateChartPosition() =>
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
         final RenderBox box =
             _key.currentContext!.findRenderObject() as RenderBox;
         final Offset position = box.localToGlobal(Offset.zero);
