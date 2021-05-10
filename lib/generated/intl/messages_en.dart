@@ -46,12 +46,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
     "labelShift" : MessageLookupByLibrary.simpleMessage("Shift"),
     "labelShiftType" : MessageLookupByLibrary.simpleMessage("Shift Type"),
+    "labelShowFractals" : MessageLookupByLibrary.simpleMessage("Show Fractals"),
+    "labelShowLines" : MessageLookupByLibrary.simpleMessage("Show Lines"),
     "labelSpanBPeriod" : MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
     "labelStandardDeviation" : MessageLookupByLibrary.simpleMessage("Standard Deviation"),
     "labelTeethOffset" : MessageLookupByLibrary.simpleMessage("Teeth Offset"),
     "labelTeethPeriod" : MessageLookupByLibrary.simpleMessage("Teeth Period"),
     "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
-    "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term."),
+    "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term"),
     "warnFailedLoadingIndicators" : MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
   };
 }
