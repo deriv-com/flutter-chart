@@ -28,14 +28,16 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   bool didUpdate(ChartData oldData) {
     final ChartAnnotation<T> oldAnnotation = oldData;
 
-    if (annotationObject == oldAnnotation?.annotationObject ?? false) {
-      previousObject = oldAnnotation?.previousObject;
-      _shouldRepaint = false;
-    } else {
-      previousObject = oldAnnotation?.annotationObject;
-      _shouldRepaint = true;
-    }
-    return _shouldRepaint;
+    // This if condition was to avoid breaking anootation animation.
+    // A temporarily workaround to find a better solution later.
+    // if (annotationObject == oldAnnotation?.annotationObject ?? false) {
+    //   previousObject = oldAnnotation?.previousObject;
+    //   _shouldRepaint = false;
+    // } else {
+    //
+    previousObject = oldAnnotation?.annotationObject;
+    // }
+    return _shouldRepaint = true;
   }
 
   @override
