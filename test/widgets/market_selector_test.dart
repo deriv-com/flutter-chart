@@ -8,10 +8,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() {
   group('Test different scenarios that might break the [MarketSelector] widget',
       () {
-    Asset? r50;
-    Asset? r25Favourite;
-    SubMarket? r50SubMarket;
-    SubMarket? r25SubMarket;
+    late Asset r50;
+    late Asset r25Favourite;
+    late SubMarket r50SubMarket;
+    late SubMarket r25SubMarket;
 
     setUp(() {
       r50 = Asset(
@@ -307,18 +307,18 @@ void main() {
     });
 
     test('Asset class toJson <-> fromJson conversion', () {
-      final Map<String, dynamic> r50JSON = r50!.toJson();
+      final Map<String, dynamic> r50JSON = r50.toJson();
 
       final Asset r50Copy = Asset.fromJson(r50JSON);
 
-      expect(r50!.name, r50Copy.name);
-      expect(r50!.displayName, r50Copy.displayName);
-      expect(r50!.market, r50Copy.market);
-      expect(r50!.marketDisplayName, r50Copy.marketDisplayName);
-      expect(r50!.subMarket, r50Copy.subMarket);
-      expect(r50!.subMarketDisplayName, r50Copy.subMarketDisplayName);
-      expect(r50!.isOpen, r50Copy.isOpen);
-      expect(r50!.isFavourite, r50Copy.isFavourite);
+      expect(r50.name, r50Copy.name);
+      expect(r50.displayName, r50Copy.displayName);
+      expect(r50.market, r50Copy.market);
+      expect(r50.marketDisplayName, r50Copy.marketDisplayName);
+      expect(r50.subMarket, r50Copy.subMarket);
+      expect(r50.subMarketDisplayName, r50Copy.subMarketDisplayName);
+      expect(r50.isOpen, r50Copy.isOpen);
+      expect(r50.isFavourite, r50Copy.isFavourite);
     });
   });
 }
