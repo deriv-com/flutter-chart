@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/settings_page.dart';
+import 'package:example/utils/endpoints_helper.dart';
 import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
@@ -780,7 +781,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
     return ConnectionInformation(
       appId: preferences.getString('appID') ?? defaultAppID,
       brand: 'deriv',
-      endpoint: preferences.getString('endpoint') ?? defaultEndpoint,
+      endpoint:
+          generateEndpointUrl(endpoint: preferences.getString('endpoint')) ??
+              defaultEndpoint,
     );
   }
 }
