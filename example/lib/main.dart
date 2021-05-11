@@ -4,6 +4,7 @@ import 'dart:developer' as dev;
 import 'dart:math' as math;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:example/settings_page.dart';
 import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:example/generated/l10n.dart';
@@ -67,6 +69,9 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
+  static const String defaultAppID = '1089';
+  static const String defaultEndpoint = 'blue.binaryws.com';
+
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
@@ -116,10 +121,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
     _connectionBloc = ConnectionBloc(ConnectionInformation(
-      appId: '23789',
+      appId: preferences.getString('appID') ?? defaultAppID,
       brand: 'deriv',
-      endpoint: 'www.binaryqa10.com',
+      endpoint: preferences.getString('endpoint') ?? defaultEndpoint,
     ))
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
@@ -422,6 +429,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                IconButton(
+                    icon: Icon(Icons.settings),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                            builder: (_) => SettingsPage(
+                                  defaultAppID: defaultAppID,
+                                  defaultEndpoint: defaultEndpoint,
+                                )),
+                      );
+                    }),
                 RaisedButton(
                   color: Colors.green,
                   child: const Text('Up'),
