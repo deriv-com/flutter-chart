@@ -48,7 +48,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   Size? canvasSize;
 
   /// Chart widget's position on the screen.
-  Offset chartPosition = Offset.zero;
+  Offset? chartPosition;
 
   final GlobalKey _key = GlobalKey();
 
@@ -378,9 +378,10 @@ class BasicChartState<T extends BasicChart> extends State<T>
       });
 
   bool _onQuoteLabelsTouchArea(Offset position) =>
+      chartPosition != null &&
       position.dx > (xAxis.width! - quoteLabelsTouchAreaWidth) &&
-      position.dy > chartPosition.dy &&
-      position.dy < chartPosition.dy + canvasSize!.height;
+      position.dy > chartPosition!.dy &&
+      position.dy < chartPosition!.dy + canvasSize!.height;
 
   void _scaleVertically(double dy) {
     setState(() {
