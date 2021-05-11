@@ -1,7 +1,11 @@
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
+import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
+import 'package:flutter/material.dart';
 
 /// Base class of chart annotations.
 abstract class ChartAnnotation<T extends ChartObject> extends Series {
@@ -28,16 +32,14 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   bool didUpdate(ChartData oldData) {
     final ChartAnnotation<T> oldAnnotation = oldData;
 
-    // This if condition was to avoid breaking anootation animation.
-    // A temporarily workaround to find a better solution later.
-    // if (annotationObject == oldAnnotation?.annotationObject ?? false) {
-    //   previousObject = oldAnnotation?.previousObject;
-    //   _shouldRepaint = false;
-    // } else {
-    //
-    previousObject = oldAnnotation?.annotationObject;
-    // }
-    return _shouldRepaint = true;
+    if (annotationObject == oldAnnotation?.annotationObject ?? false) {
+      previousObject = oldAnnotation?.previousObject;
+      _shouldRepaint = false;
+    } else {
+      previousObject = oldAnnotation?.annotationObject;
+      _shouldRepaint = true;
+    }
+    return _shouldRepaint;
   }
 
   @override
@@ -47,6 +49,25 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
       return _shouldRepaint;
     }
     return false;
+  }
+
+  @override
+  void paint(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme theme,
+  ) {
+    super.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+
+    // Prevent re-animating annotation that haven't changed.
+    if (animationInfo.currentTickPercent == 1) {
+      previousObject = null;
+    }
   }
 
   @override
