@@ -195,7 +195,7 @@ void main() {
           ChartLocalization.delegate,
         ],
         supportedLocales: ChartLocalization.delegate.supportedLocales,
-        home: MarketSelector(),
+        home: MarketSelector(markets: [],),
       ));
 
       await tester.pumpAndSettle();

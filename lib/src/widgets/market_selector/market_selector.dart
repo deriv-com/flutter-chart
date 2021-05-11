@@ -20,15 +20,15 @@ class MarketSelector extends StatefulWidget {
   /// Initializes a widget which is used to select the market of the chart.
   const MarketSelector({
     Key? key,
-    required this.onAssetClicked,
     required this.markets,
+    this.onAssetClicked,
     this.selectedItem,
     this.favouriteAssets,
     this.theme,
   }) : super(key: key);
 
   /// It will be called when a symbol item [Asset] is tapped.
-  final OnAssetClicked onAssetClicked;
+  final OnAssetClicked? onAssetClicked;
 
   /// A `list` of markets which the user can select from.
   final List<Market> markets;
@@ -178,7 +178,7 @@ class _MarketSelectorState extends State<MarketSelector>
             market.containsText(lowerCaseFilterText) ? '' : lowerCaseFilterText,
         market: market,
         onAssetClicked: (Asset asset, bool isFavouriteClicked) {
-          widget.onAssetClicked.call(asset, isFavouriteClicked);
+          widget.onAssetClicked?.call(asset, isFavouriteClicked);
 
           if (isFavouriteClicked) {
             setState(() {
