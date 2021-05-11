@@ -4,7 +4,7 @@ executors:
     docker:
       - image: cirrusci/flutter:stable
     environment:
-      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
 
 commands:
   prepare_enviroment:
