@@ -121,13 +121,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    _connectionBloc = ConnectionBloc(ConnectionInformation(
-      appId: preferences.getString('appID') ?? defaultAppID,
-      brand: 'deriv',
-      endpoint: preferences.getString('endpoint') ?? defaultEndpoint,
-    ))
+    _connectionBloc = ConnectionBloc(await _getConnectionInfoFromPrefs())
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
           // Calling this since we show some status labels when NOT connected.
@@ -431,14 +425,21 @@ class _FullscreenChartState extends State<FullscreenChart> {
               children: [
                 IconButton(
                     icon: Icon(Icons.settings),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
+                    onPressed: () async {
+                      final bool settingChanged =
+                          await Navigator.of(context).push(
+                        MaterialPageRoute<bool>(
                             builder: (_) => SettingsPage(
                                   defaultAppID: defaultAppID,
                                   defaultEndpoint: defaultEndpoint,
                                 )),
                       );
+
+                      if (settingChanged) {
+                        // reconnect to new config
+                        _connectionBloc.add(
+                            Reconfigure(await _getConnectionInfoFromPrefs()));
+                      }
                     }),
                 RaisedButton(
                   color: Colors.green,
@@ -770,6 +771,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
         isDashed: false,
       ),
       visibility: HorizontalBarrierVisibility.forceToStayOnRange,
+    );
+  }
+
+  Future<ConnectionInformation> _getConnectionInfoFromPrefs() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    return ConnectionInformation(
+      appId: preferences.getString('appID') ?? defaultAppID,
+      brand: 'deriv',
+      endpoint: preferences.getString('endpoint') ?? defaultEndpoint,
     );
   }
 }

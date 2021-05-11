@@ -44,11 +44,12 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) => WillPopScope(
-      onWillPop: () async => true,
+      onWillPop: () async {
+        Navigator.of(context).pop<bool>(true);
+        return false;
+      },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Setting'),
-        ),
+        appBar: AppBar(title: const Text('Setting')),
         body: PreferencePage(
           <Widget>[
             PreferenceTitle('Endpoint'),
