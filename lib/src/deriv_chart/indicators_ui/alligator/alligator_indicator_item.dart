@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -37,6 +38,8 @@ class AlligatorIndicatorItemState
   int _teethPeriod;
   int _lipsOffset;
   int _lipsPeriod;
+  bool _showLines;
+  bool _showFractal;
 
   @override
   AlligatorIndicatorConfig createIndicatorConfig() => AlligatorIndicatorConfig(
@@ -46,6 +49,8 @@ class AlligatorIndicatorItemState
         teethOffset: currentTeethOffset,
         lipsPeriod: currentLipsPeriod,
         lipsOffset: currentLipsOffset,
+        showLines: currentShowLines,
+        showFractal: currentShowFractals,
       );
 
   @override
@@ -57,6 +62,54 @@ class AlligatorIndicatorItemState
           buildTeethOffsetField(),
           buildLipsPeriodField(),
           buildLipsOffsetField(),
+          buildShowLinesField(),
+          buildShowFractalField(),
+        ],
+      );
+
+  /// Builds show lines option
+  @protected
+  Widget buildShowLinesField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelShowLines,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: currentShowLines,
+            onChanged: (bool value) {
+              setState(() {
+                _showLines = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          )
+        ],
+      );
+
+  /// Builds show fractal indicator option
+  @protected
+  Widget buildShowFractalField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelShowFractals,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: currentShowFractals,
+            onChanged: (bool value) {
+              setState(() {
+                _showFractal = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          ),
         ],
       );
 
@@ -255,4 +308,18 @@ class AlligatorIndicatorItemState
       _lipsOffset ??
       (widget.config as AlligatorIndicatorConfig)?.lipsOffset ??
       3;
+
+  /// Gets current show lines.
+  @protected
+  bool get currentShowLines =>
+      _showLines ??
+      (widget.config as AlligatorIndicatorConfig)?.showLines ??
+      true;
+
+  /// Gets current show Fractal indicator.
+  @protected
+  bool get currentShowFractals =>
+      _showFractal ??
+      (widget.config as AlligatorIndicatorConfig)?.showFractal ??
+      false;
 }

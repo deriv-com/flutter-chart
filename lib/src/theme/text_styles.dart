@@ -41,7 +41,7 @@ class TextStyles {
   static TextStyle body2 = const TextStyle(
       fontFamily: appFontFamily,
       fontSize: 14,
-      height: 1.3,
+      height: 1.4,
       fontWeight: FontWeight.w500);
 
   static TextStyle body1Bold = const TextStyle(
