@@ -39,6 +39,7 @@ class CandleIndicator extends HorizontalBarrier {
   CandleIndicator(
     this.candle, {
     @required this.granularity,
+    @required this.serverTime,
     this.showTimer = false,
     String id,
     HorizontalBarrierStyle style = const HorizontalBarrierStyle(),
@@ -58,6 +59,9 @@ class CandleIndicator extends HorizontalBarrier {
   /// The given candle.
   final Candle candle;
 
+  /// The current time of the server.
+  final DateTime serverTime;
+
   /// Average ms difference between two consecutive ticks.
   final int granularity;
 
@@ -70,9 +74,15 @@ class CandleIndicator extends HorizontalBarrier {
   Timer _timer;
 
   void _startTimer() {
+    if (serverTime == null) {
+      timerDuration = null;
+      return;
+    }
+
     timerDuration = Duration(
-        milliseconds:
-            granularity * 1000 - (candle.currentEpoch - candle.epoch));
+        milliseconds: granularity * 1000 -
+            (serverTime.millisecondsSinceEpoch - candle.epoch));
+
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (timerDuration.inSeconds > 0) {
         timerDuration = Duration(seconds: timerDuration.inSeconds - 1);
