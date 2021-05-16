@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/crosshair/crosshair_dot_painter.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/find.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'crosshair_details.dart';
+import 'crosshair_dot_painter.dart';
 import 'crosshair_line_painter.dart';
 
 /// Place this area on top of the chart to display candle/point details on longpress.

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/crosshair/crosshair_area.dart';
+import 'package:deriv_chart/src/components/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/loading_animation.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
