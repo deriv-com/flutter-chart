@@ -127,6 +127,17 @@ For painting markers we have a **MarkerPainter** class extends from `CustomPaint
 
 ***The data that are in Visible area between **rightBoundEpoch**, **leftBoundEpoch**, **topBoundEpoch**, **bottomBoundEpoch** will painting by these methods.***
 
+# Cross-hair
+We have a `StatefulWidget` **CrosshairArea** that place this area on top of the chart to display candle/point details on longpress.
+It contains three other StatelessWidgets named **CrosshairDetails** (The details to show on a crasshair) and **CrosshairLinePainter** (A custom painter to paint the crossshair `line`) and **CrosshairDotPainter** (A custom painter to paint the crossshair `dot`).
+
+When `onLongPressStart` is starts, `onCrosshairAppeared` Called to show candle/point details then we stop auto-panning to make it easier to select candle or tick, and show the longpress point details on chart.
+also we start a timer to tarck the user scrolling speed.
+In `updatePanSpeed` method, we update the pan speed and scroll when crosshair point closes to edages. In normal cases, when crosshair point not clos to edages, in `onLongPressStart` we make pan speed 0 to avoid scrolling, but when user getting close to edgs we need to scroll chart, so, `updatePanSpeed` will help us.
+
+In `onLongPressUpdate` we call `updatePanSpeed`, then we calculate how much time passed between `onLongPressStart` and `onLongPressUpdate`, and calculate the animation speed based on this time(using VelocityTracker), then we animate with that speed between two diffreent point that user scroll to show the crossHair.
+
+In `onLongPressEnd`, `onCrosshairDisappeare` Called when canlde or point is dismissed and auto-panning starts again and [crosshairTick] will clear.
 
 # Update chart data
 when the list of data changes(by scrolling, zooming, or receiving new data) we need to update the chart.
