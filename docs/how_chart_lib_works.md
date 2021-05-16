@@ -61,7 +61,7 @@ Scrolling in the chart happens by updating **msPerPx**.
 
 
 
-# Painting data
+# *Painting data*
 
 
 ## Data classes
@@ -71,13 +71,42 @@ Scrolling in the chart happens by updating **msPerPx**.
 we have abstract class named **ChartData** that represent data that the chart takes and makes it paint its self on the chart's canvas including: *Line*, *Candle* data, *Markers*, *barriers* etc..
 **ChartData** has a `paint` method that Paints this [ChartData] on the given [canvas].
 
-**DataSeries** is a Super class of any data series that has one list of sorted data to paint (by epoch).
-  **LineSeries**, **CandleSeries**, **OHLCSeries**, indicator series like **MASeries**(for moving average), **RSISeries**, are all subclasses of DataSeries directly or not.
+**DataSeries** is a Super class of any data series that has ***one*** list of sorted data to paint (by epoch).
+  **LineSeries**, **CandleSeries**, **OHLCSeries**,AbstractSingleIndicatorSeries(all indicator series that shows onlu one data series like **MASeries**(for moving average), **RSISeries** are extends from it) are all subclasses of DataSeries directly or not.
  To share common functionality of painting **ChartData** we have class **DataSeries**.
 
 **Series** is Base class of all chart series painting.
+The series that have ***more than one*** list of sorted data to paint (like AlligatorIndicatorSeries) are extends from **Series** and have some SingleIndicatorSeries inside.
 
-## Pinter classes
+### ChartObject
+Any component other than chart data (line or candle) which can take a rectangle on the chart's canvas.
+it has `isOnEpochRange` and `isOnValueRange` method that shows Whether this chart object is in chart horizontal or vetical visible area or not.
+
+### BarrierObject
+A **ChartObject** for defining position of a horizontal or vertical barrier.
+
+### Chart annotations
+annotations are the shapes without any data sequence that added to chart, like **Barriers**.
+**ChartAnnotation** is a Base class of chart annotations that extends from **Series**.
+
+### Barriers
+**Barrier** is a base class of barrier. it has title, epoch and value.
+we have two kind of barriesrs: **VerticalBarrier** and **HorizontalBarrier**.
+**VerticalBarrier**: is a verical line in the chart that draws on specificate time stamp. it's exetends from **Barrier** class.
+**HorizontalBarrier**: is a horizental line that draws on specificate value(price).
+
+**TickIndicator** is a subclass of **HorizontalBarrier** to show the current tick lable and horizental line. it has its own default configuration like **HorizontalBarrierVisibility** type.
+The reason that we have **TickIndicator** is to recognizing the diffrence between **HorizontalBarrier** and **TickIndicator** if the user did not define the id for them.
+
+To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
+they have `createPainter` object to paint the **BarrierObject** that creats in their `createObject` method.
+
+
+### Markers
+**MarkerSeries** extends from **Series** to show the markers that added to chart.
+
+
+# Pinter classes
 
 ![plot](data_painters.png)
 
@@ -89,6 +118,14 @@ Other painters like **LinePainter**( A [DataPainter] for painting line data), **
 
 **DataPainter** has a method called `onPaint` that calls `onPaintData`. actually paints happens in `onPaintData` that is override by each painter. for example **LinePainter** paints line in `onPaintData` method and **CandlePainter** paints Candles and `onPaintData` method. `onPaint` is be a place where **DataPainters**  need to do some common things before do their painting.
 
+for painting Barriers that they don't have `DataSeries`, we have **VerticalBarrierPainter** and **HorizontalBarrierPainter** extends from **SeriesPainter**.
+They override `onPaint` method to draw Vertical/Horizontal Barrier.
+
+We have a `StatefulWidget` named **MarkerArea** to draw markers inside it.
+**MarkerArea** is a Layer with markers.
+For painting markers we have a **MarkerPainter** class extends from `CustomPainter`.
+
+***The data that are in Visible area between **rightBoundEpoch**, **leftBoundEpoch**, **topBoundEpoch**, **bottomBoundEpoch** will painting by these methods.***
 
 
 # Update chart data
