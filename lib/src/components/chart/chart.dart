@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/callbacks.dart';
+import 'package:deriv_chart/src/components/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';

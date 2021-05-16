@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/annotations/barriers/vertical_barrier/vertical_barrier.dart';
+import 'package:deriv_chart/src/components/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';

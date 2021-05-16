@@ -1,5 +1,4 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/min_max_calculator.dart';
@@ -38,7 +37,7 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// List of visible entries at a specific epoch range of the chart X-Axis.
   ///
-  /// Will be updated when the epoch bounderies of the chart changes and [onUpdate] gets called.
+  /// Will be updated when the epoch boundaries of the chart changes and [onUpdate] gets called.
   VisibleEntries<T> _visibleEntries = VisibleEntries<T>.empty();
 
   /// Series visible entries
@@ -226,7 +225,7 @@ abstract class DataSeries<T extends Tick> extends Series {
     if (input.isNotEmpty && isOldDataAvailable(oldSeries)) {
       fillEntriesFromInput(oldSeries);
 
-      // Preserve old computed values in case recomputation is deemed unnecesary.
+      // Preserve old computed values in case recomputation is deemed unnecessary.
       _visibleEntries = oldSeries.visibleEntries;
       minValueInFrame = oldSeries.minValue;
       maxValueInFrame = oldSeries.maxValue;
