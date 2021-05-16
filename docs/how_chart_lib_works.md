@@ -65,6 +65,9 @@ Scrolling in the chart happens by updating **msPerPx**.
 
 
 ## Data classes
+
+![plot](data_series.png)
+
 we have abstract class named **ChartData** that represent data that the chart takes and makes it paint its self on the chart's canvas including: *Line*, *Candle* data, *Markers*, *barriers* etc..
 **ChartData** has a `paint` method that Paints this [ChartData] on the given [canvas].
 
@@ -85,24 +88,24 @@ Other painters like **LinePainter**( A [DataPainter] for painting line data), **
 
 
 
-# Update chart data 
+# Update chart data
 when the list of data changes(by scrolling, zooming, or receiving new data) we need to update the chart.
 There is 3 steps that the chart requires to do when these variables change in order to update its components(including mainSeries, indicators, Barrier, markers, ... ).
 
 1. The chart goes through its components and notifies them about the change. Each of these components then update their visible data inside the new (leftEpoch, rightEpoch) range.
  Then they can determine what are their min/max value (quote/price).
- 
+
 2. The chart then asks from every components their min/max values through their `minValue` and `maxValue` getters to calculate the overall min/max of its Y-Axis range.
  Any component that is not willing to be included in defining the Y-Axis range can return `double.NaN` values as its  min/max.
   then if this component had any element outside of the chart's Y-Axis range that element will be invisible.
-  
+
 3. The conversion functions always return the converted x, y values based on the updated variables (Left/right bound epoch, min/max quote, top/bottom padding).
  The chart will pass these conversion functions along with a reference to its canvas and some other variables to ChartData class to paint their visible data.
-  
 
 
-  
-  
-  
+
+
+
+
 
 
