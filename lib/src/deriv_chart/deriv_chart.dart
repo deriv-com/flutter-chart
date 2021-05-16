@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/src/chart/chart.dart';
+import 'package:deriv_chart/src/components/chart/chart.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';

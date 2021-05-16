@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/callbacks.dart';
+import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
@@ -8,18 +10,16 @@ import 'package:deriv_chart/src/markers/marker_series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
+import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/x_axis/x_axis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../callbacks.dart';
-import '../gestures/gesture_manager.dart';
-import '../models/tick.dart';
-import '../theme/chart_default_dark_theme.dart';
-import '../theme/chart_default_light_theme.dart';
-import '../theme/chart_theme.dart';
-import '../x_axis/x_axis.dart';
 import 'bottom_chart.dart';
 import 'main_chart.dart';
 
@@ -92,8 +92,8 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChartTheme chartTheme =
-        theme ?? (Theme.of(context).brightness == Brightness.dark
+    final ChartTheme chartTheme = theme ??
+        (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
 
