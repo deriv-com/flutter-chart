@@ -1,4 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/line_series/line_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/ohlc_series/candle/candle_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';

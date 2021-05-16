@@ -1,8 +1,8 @@
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/fcb_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/fcb_indicator/fcb_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/fcb_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -17,16 +17,16 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const FractalChaosBandIndicatorConfig({this.channelFill}) : super();
 
+  /// Initializes from JSON.
+  factory FractalChaosBandIndicatorConfig.fromJson(Map<String, dynamic> json) =>
+      _$FractalChaosBandIndicatorConfigFromJson(json);
+
   /// if it's true the channel between two lines will be filled
   final bool channelFill;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
-      FractalChaosBandSeries(indicatorInput, channelFill: channelFill);
-
-  /// Initializes from JSON.
-  factory FractalChaosBandIndicatorConfig.fromJson(Map<String, dynamic> json) =>
-      _$FractalChaosBandIndicatorConfigFromJson(json);
+      FractalChaosBandSeries(indicatorInput);
 
   /// Unique name for this indicator.
   static const String name = 'fcb';

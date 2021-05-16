@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/markers/marker.dart';
 import 'package:deriv_chart/src/paint/paint_entry_marker.dart';

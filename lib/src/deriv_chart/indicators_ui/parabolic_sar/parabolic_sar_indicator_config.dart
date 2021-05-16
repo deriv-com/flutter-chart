@@ -1,7 +1,7 @@
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/models/parabolic_sar_options.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/parabolic_sar/parabolic_sar_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_item.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/parabolic_sar_options.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/parabolic_sar/parabolic_sar_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:flutter/foundation.dart';
@@ -52,9 +52,9 @@ class ParabolicSARConfig extends IndicatorConfig {
 
   @override
   IndicatorItem getItem(
-      UpdateIndicator updateIndicator,
-      VoidCallback deleteIndicator,
-      ) =>
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
+  ) =>
       ParabolicSARIndicatorItem(
         config: this,
         updateIndicator: updateIndicator,

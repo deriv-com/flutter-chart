@@ -1,6 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 
 import 'horizontal_barrier_painter.dart';

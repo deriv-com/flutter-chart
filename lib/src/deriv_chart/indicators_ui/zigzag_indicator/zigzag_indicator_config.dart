@@ -1,8 +1,9 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/zigzag_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_item.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/zigzag_series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';

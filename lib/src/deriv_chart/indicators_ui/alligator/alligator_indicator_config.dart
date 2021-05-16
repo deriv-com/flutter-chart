@@ -1,11 +1,10 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/alligator_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/alligator_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/alligator_options.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -23,8 +22,8 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.jawOffset = 8,
     this.teethOffset = 5,
     this.lipsOffset = 3,
-    this.showLines=true,
-    this.showFractal=false,
+    this.showLines = true,
+    this.showFractal = false,
   }) : super();
 
   /// Initializes from JSON.

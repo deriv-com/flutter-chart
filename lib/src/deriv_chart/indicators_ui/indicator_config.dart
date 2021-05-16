@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
@@ -13,7 +14,6 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rain
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
@@ -28,10 +28,6 @@ abstract class IndicatorConfig {
   const IndicatorConfig({
     this.isOverlay = true,
   });
-
-  /// Whether the indicator is an overlay on the main chart or displays on a seperate chart.
-  /// Default is set to `true`.
-  final bool isOverlay;
 
   /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
@@ -67,6 +63,10 @@ abstract class IndicatorConfig {
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
     }
   }
+
+  /// Whether the indicator is an overlay on the main chart or displays on a separate chart.
+  /// Default is set to `true`.
+  final bool isOverlay;
 
   /// Key of indicator name property in JSON.
   static const String nameKey = 'name';

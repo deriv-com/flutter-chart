@@ -1,15 +1,15 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// The details to show on a crasshair.
+/// The details to show on a crosshair.
 class CrosshairDetails extends StatelessWidget {
-  /// Initializes the details to show on a crasshair.
+  /// Initializes the details to show on a crosshair.
   const CrosshairDetails({
     @required this.mainSeries,
     @required this.crosshairTick,

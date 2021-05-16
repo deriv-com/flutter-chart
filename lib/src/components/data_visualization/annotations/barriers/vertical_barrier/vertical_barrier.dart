@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/components/data_visualization/annotations/barriers/barrier.dart';
-import 'package:deriv_chart/src/components/data_visualization/annotations/barriers/vertical_barrier/vetical_barrier_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/components/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier_painter.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/barrier_objects.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';

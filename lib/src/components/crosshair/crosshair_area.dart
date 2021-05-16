@@ -1,5 +1,5 @@
+import 'package:deriv_chart/src/components/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
@@ -35,7 +35,7 @@ class CrosshairArea extends StatefulWidget {
   /// Called on longpress to show candle/point details.
   final VoidCallback onCrosshairAppeared;
 
-  /// Called when canlde or point is dismissed.
+  /// Called when candle or point is dismissed.
   final VoidCallback onCrosshairDisappeared;
 
   @override
@@ -155,8 +155,8 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       return const Duration(milliseconds: 80);
     }
 
-    final double duratoinInRange = (dragXVelocity - 500) / (2500) * 75 + 5;
-    return Duration(milliseconds: duratoinInRange.toInt());
+    final double durationInRange = (dragXVelocity - 500) / (2500) * 75 + 5;
+    return Duration(milliseconds: durationInRange.toInt());
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {

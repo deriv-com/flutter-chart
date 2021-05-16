@@ -1,8 +1,9 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/abstract_single_indicator_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/abstract_single_indicator_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:deriv_technical_analysis/src/indicators/cached_indicator.dart';

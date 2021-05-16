@@ -1,8 +1,8 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/ichimoku_cloud_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/models/ichimoku_clouds_options.dart';
+import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/ichimoku_cloud_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/ichimoku_clouds_options.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -45,7 +45,6 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
 
   /// The period to calculate the Base Line value.
   final int laggingSpanOffset;
-
 
   @override
   Series getSeries(IndicatorInput indicatorInput) =>

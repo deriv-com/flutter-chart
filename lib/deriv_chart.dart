@@ -10,11 +10,6 @@ export 'src/components/data_visualization/annotations/barriers/horizontal_barrie
 export 'src/components/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 export 'src/components/data_visualization/annotations/chart_annotation.dart';
 export 'src/deriv_chart/deriv_chart.dart';
-export 'src/logic/chart_series/indicators_series/bollinger_bands_series.dart';
-export 'src/logic/chart_series/indicators_series/ma_series.dart';
-export 'src/logic/chart_series/line_series/line_series.dart';
-export 'src/logic/chart_series/ohlc_series/candle/candle_series.dart';
-export 'src/logic/chart_series/series.dart';
 export 'src/markers/active_marker.dart';
 export 'src/markers/marker.dart';
 export 'src/markers/marker_series.dart';
