@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Check if [str] input contains only a-z letters and 0-9 numbers
 bool hasOnlySmallLettersAndNumberInput(String str) =>
@@ -42,10 +43,32 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  String _initialAppID;
+  String _initialEndpoint;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) async {
+      final SharedPreferences preferences =
+          await SharedPreferences.getInstance();
+      _initialAppID = preferences.getString('appID') ?? widget.defaultAppID;
+      _initialEndpoint =
+          preferences.getString('endpoint') ?? widget.defaultEndpoint;
+    });
+  }
+
   @override
   Widget build(BuildContext context) => WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pop<bool>(true);
+        final SharedPreferences preferences =
+            await SharedPreferences.getInstance();
+        final String appID = preferences.getString('appID');
+        final String endpoint =
+            _initialEndpoint = preferences.getString('endpoint');
+        Navigator.of(context)
+            .pop<bool>(appID != _initialAppID || endpoint != _initialEndpoint);
         return false;
       },
       child: Scaffold(
