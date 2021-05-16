@@ -1,5 +1,6 @@
-import 'package:deriv_chart/src/painters/loading_painter.dart';
 import 'package:flutter/material.dart';
+
+import 'components/custom_painters/loading_painter.dart';
 
 /// Area to show the loading animation in.
 class LoadingAnimationArea extends StatefulWidget {
@@ -46,14 +47,12 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
     return ClipRect(
       child: AnimatedBuilder(
         animation: _loadingAnimationController,
-        builder: (BuildContext context, Widget child) {
-          return CustomPaint(
-            painter: LoadingPainter(
-              loadingAnimationProgress: _loadingAnimationController.value,
-              loadingRightBoundX: widget.loadingRightBoundX,
-            ),
-          );
-        },
+        builder: (BuildContext context, Widget child) => CustomPaint(
+          painter: LoadingPainter(
+            loadingAnimationProgress: _loadingAnimationController.value,
+            loadingRightBoundX: widget.loadingRightBoundX,
+          ),
+        ),
       ),
     );
   }

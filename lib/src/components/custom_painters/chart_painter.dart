@@ -2,10 +2,7 @@ import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../deriv_chart.dart';
 
 /// The `CustomPainter` which paints the chart.
 class ChartPainter extends CustomPainter {

@@ -1,4 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/components/custom_painters/chart_data_painter.dart';
+import 'package:deriv_chart/src/components/custom_painters/y_grid_label_painter.dart';
+import 'package:deriv_chart/src/components/custom_painters/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/quote_grid.dart';
@@ -6,9 +9,6 @@ import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/paint/paint_text.dart';
-import 'package:deriv_chart/src/painters/chart_data_painter.dart';
-import 'package:deriv_chart/src/painters/y_grid_label_painter.dart';
-import 'package:deriv_chart/src/painters/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
