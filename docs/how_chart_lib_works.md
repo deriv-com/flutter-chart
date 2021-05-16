@@ -78,6 +78,9 @@ we have abstract class named **ChartData** that represent data that the chart ta
 **Series** is Base class of all chart series painting.
 
 ## Pinter classes
+
+![plot](data_painters.png)
+
 **SeriesPainter** is a abstarct class responsible to paint its [series] data.
 
 We have a abstract class named **DataPainter** that is extends from **SeriesPainter**  and it is a class to paint common option of [DataSeries] data.
