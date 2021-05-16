@@ -437,9 +437,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       );
 
                       if (settingChanged) {
+                        _requestCompleter = Completer<dynamic>();
+                        _tickStreamSubscription?.cancel();
+                        ticks.clear();
                         // reconnect to new config
                         _connectionBloc.add(
                             Reconfigure(await _getConnectionInfoFromPrefs()));
+
+
+                        WidgetsFlutterBinding.ensureInitialized()
+                            .addPostFrameCallback((_) {
+                          _connectionBloc.add(Reconnect());
+                        });
                       }
                     }),
                 RaisedButton(
