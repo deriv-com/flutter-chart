@@ -43,32 +43,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String _initialAppID;
-  String _initialEndpoint;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) async {
-      final SharedPreferences preferences =
-          await SharedPreferences.getInstance();
-      _initialAppID = preferences.getString('appID') ?? widget.defaultAppID;
-      _initialEndpoint =
-          preferences.getString('endpoint') ?? widget.defaultEndpoint;
-    });
-  }
+  bool _hasChanged = false;
 
   @override
   Widget build(BuildContext context) => WillPopScope(
       onWillPop: () async {
-        final SharedPreferences preferences =
-            await SharedPreferences.getInstance();
-        final String appID = preferences.getString('appID');
-        final String endpoint =
-            _initialEndpoint = preferences.getString('endpoint');
-        Navigator.of(context)
-            .pop<bool>(appID != _initialAppID || endpoint != _initialEndpoint);
+        Navigator.of(context).pop<bool>(_hasChanged);
         return false;
       },
       child: Scaffold(
@@ -80,17 +60,21 @@ class _SettingsPageState extends State<SettingsPage> {
               'Endpoint',
               'endpoint',
               defaultVal: widget.defaultEndpoint,
-              validator: (String value) =>
-                  hasOnlySmallLettersAndNumberInput(value)
-                      ? null
-                      : 'Invalid endpoint',
+              validator: (String value) {
+                _hasChanged = true;
+                return hasOnlySmallLettersAndNumberInput(value)
+                    ? null
+                    : 'Invalid endpoint';
+              },
             ),
             TextFieldPreference(
               'AppID',
               'appID',
               defaultVal: widget.defaultAppID,
-              validator: (String value) =>
-                  hasOnlyNumberInput(value) ? null : 'Invalid AppID',
+              validator: (String value) {
+                _hasChanged = true;
+                return hasOnlyNumberInput(value) ? null : 'Invalid AppID';
+              }
             ),
           ],
         ),
