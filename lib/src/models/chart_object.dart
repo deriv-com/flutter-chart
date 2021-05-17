@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 /// Any component other than chart data (line or candle) which can take a rectangle on the chart's canvas.
 @immutable

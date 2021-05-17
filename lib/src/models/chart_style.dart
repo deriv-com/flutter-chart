@@ -1,5 +1,4 @@
 /// Differnet types of chart.
-
 enum ChartStyle {
   /// Used to show the chart with lines.
   line,

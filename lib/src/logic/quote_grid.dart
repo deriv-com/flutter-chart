@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 ///A Model for calculating the grid intervals and quotes.
 class YAxisModel {
   ///Initializes a Model for calculating the grid intervals and quotes.

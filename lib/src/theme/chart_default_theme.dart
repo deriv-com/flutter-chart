@@ -78,8 +78,14 @@ abstract class ChartDefaultTheme implements ChartTheme {
   @override
   GridStyle get gridStyle => GridStyle(
         gridLineColor: base07Color,
-        xLabelStyle: textStyle(textStyle: caption2, color: base03Color),
-        yLabelStyle: textStyle(textStyle: caption2, color: base03Color),
+        xLabelStyle: textStyle(
+          textStyle: caption2,
+          color: base03Color,
+        ),
+        yLabelStyle: textStyle(
+          textStyle: caption2,
+          color: base03Color,
+        ),
       );
 
   @override
