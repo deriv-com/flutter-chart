@@ -6,7 +6,7 @@ import 'package:deriv_chart/src/components/data_visualization/annotations/chart_
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/components/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/markers/marker_series.dart';
+import 'package:deriv_chart/src/components/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';

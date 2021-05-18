@@ -5,8 +5,6 @@ import 'package:deriv_chart/src/components/data_visualization/chart_series/serie
 import 'package:deriv_chart/src/components/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/logic/find.dart';
-import 'package:deriv_chart/src/markers/marker.dart';
-import 'package:deriv_chart/src/markers/active_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
 import 'marker_painter.dart';

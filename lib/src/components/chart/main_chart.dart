@@ -6,10 +6,10 @@ import 'package:deriv_chart/src/components/custom_painters/chart_data_painter.da
 import 'package:deriv_chart/src/components/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/components/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/components/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/loading_animation.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/markers/marker_area.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';

@@ -11,10 +11,10 @@ export 'src/components/data_visualization/annotations/barriers/vertical_barrier/
 export 'src/components/data_visualization/annotations/chart_annotation.dart';
 export 'src/components/data_visualization/chart_series/line_series/line_series.dart';
 export 'src/components/data_visualization/chart_series/ohlc_series/candle/candle_series.dart';
+export 'src/components/data_visualization/markers/active_marker.dart';
+export 'src/components/data_visualization/markers/marker.dart';
+export 'src/components/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/deriv_chart.dart';
-export 'src/markers/active_marker.dart';
-export 'src/markers/marker.dart';
-export 'src/markers/marker_series.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_style.dart';
 export 'src/models/tick.dart';
