@@ -383,32 +383,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                       ..._sampleBarriers,
                                       if (_sl && _slBarrier != null) _slBarrier,
                                       if (_tp && _tpBarrier != null) _tpBarrier,
-                                      if (ticks.last is Candle)
-                                        if (snapshot.hasData)
-                                          CandleIndicator(
-                                            ticks.last,
-                                            serverTime: snapshot.data.time,
-                                            granularity: granularity,
-                                            showTimer: _showTimer,
-                                            style: const HorizontalBarrierStyle(
-                                              color: Colors.red,
-                                              hasBlinkingDot: true,
-                                              labelShape: LabelShape.pentagon,
-                                            ),
-                                          ),
                                       if (!snapshot.hasData)
-                                        CandleIndicator(
-                                          ticks.last,
-                                          serverTime: DateTime.now(),
-                                          granularity: granularity,
-                                          showTimer: _showTimer,
-                                          style: const HorizontalBarrierStyle(
-                                            color: Colors.red,
-                                            hasBlinkingDot: true,
-                                            labelShape: LabelShape.pentagon,
-                                          ),
-                                        ),
-                                      if (ticks.last is! Candle)
                                         TickIndicator(
                                           ticks.last,
                                           style: const HorizontalBarrierStyle(
