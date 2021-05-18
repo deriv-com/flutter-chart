@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/components/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import '../callbacks.dart';
-import '../gestures/gesture_manager.dart';
 import '../theme/chart_theme.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';

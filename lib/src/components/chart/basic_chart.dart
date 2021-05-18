@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/components/custom_painters/chart_data_painter.da
 import 'package:deriv_chart/src/components/custom_painters/y_grid_label_painter.dart';
 import 'package:deriv_chart/src/components/custom_painters/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/components/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/quote_grid.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
