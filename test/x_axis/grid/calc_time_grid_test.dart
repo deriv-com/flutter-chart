@@ -1,6 +1,5 @@
+import 'package:deriv_chart/src/components/x_axis/grid/calc_time_grid.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:deriv_chart/src/x_axis/grid/calc_time_grid.dart';
 
 void main() {
   // Timestamps.

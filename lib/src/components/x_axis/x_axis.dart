@@ -1,14 +1,14 @@
+import 'package:deriv_chart/src/callbacks.dart';
 import 'package:deriv_chart/src/components/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
-import 'package:deriv_chart/src/x_axis/grid/time_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import '../callbacks.dart';
-import '../theme/chart_theme.dart';
+import 'grid/time_label.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 

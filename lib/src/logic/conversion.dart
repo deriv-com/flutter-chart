@@ -1,5 +1,5 @@
+import 'package:deriv_chart/src/components/x_axis/gaps/helpers.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
-import 'package:deriv_chart/src/x_axis/gaps/helpers.dart';
 import 'package:meta/meta.dart';
 
 /// Returns resulting epoch when given [epoch] is shifted by [pxShift] on x-axis, skipping time gaps.

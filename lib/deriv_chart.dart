@@ -14,6 +14,7 @@ export 'src/components/data_visualization/chart_series/ohlc_series/candle/candle
 export 'src/components/data_visualization/markers/active_marker.dart';
 export 'src/components/data_visualization/markers/marker.dart';
 export 'src/components/data_visualization/markers/marker_series.dart';
+export 'src/components/x_axis/min_candle_duration_for_data_fit.dart';
 export 'src/deriv_chart/deriv_chart.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_style.dart';
@@ -30,4 +31,3 @@ export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
-export 'src/x_axis/min_candle_duration_for_data_fit.dart';

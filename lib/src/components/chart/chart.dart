@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/components/data_visualization/chart_series/serie
 import 'package:deriv_chart/src/components/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/components/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/components/x_axis/x_axis.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
@@ -14,7 +15,6 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/x_axis/x_axis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';

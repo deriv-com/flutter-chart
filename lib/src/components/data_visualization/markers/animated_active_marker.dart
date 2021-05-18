@@ -1,8 +1,8 @@
+import 'package:deriv_chart/src/components/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:deriv_chart/src/x_axis/x_axis_model.dart';
 import 'active_marker.dart';
 import 'active_marker_painter.dart';
 import 'marker_series.dart';
