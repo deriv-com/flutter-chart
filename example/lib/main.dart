@@ -348,12 +348,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         ? const SizedBox.shrink()
                         : _buildMarketSelectorButton(),
                   ),
-                  Column(
-                    children: [
-                      _buildTimerCheckBox(),
-                      _buildChartTypeButton(),
-                    ],
-                  ),
+                  _buildChartTypeButton(),
                   _buildIntervalSelector(),
                 ],
               ),
@@ -639,12 +634,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     _waitingForHistory = false;
   }
-
-  Widget _buildTimerCheckBox() => IconButton(
-        icon: const Icon(Icons.timer),
-        color: _showTimer ? Colors.white : Colors.white30,
-        onPressed: () => setState(() => _showTimer = !_showTimer),
-      );
 
   IconButton _buildChartTypeButton() => IconButton(
         icon: Icon(
