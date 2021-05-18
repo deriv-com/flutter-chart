@@ -139,6 +139,16 @@ In `onLongPressUpdate` we call `updatePanSpeed`, then we calculate how much time
 
 In `onLongPressEnd`, `onCrosshairDisappeare` Called when canlde or point is dismissed and auto-panning starts again and [crosshairTick] will clear.
 
+
+# Theme
+Chart has its own default dark and light themes that switch depending on Theme.of(context).brightness value. If user supply his/her own theme, he/she would have to handle switching him/herself.
+
+`chart_theme` is the interface, `chart_default_theme` is a default implementation of the `chart_theme` which is instantiated and used inside the `Chart` widget if no theme is passed from the app to the `Chart` widget.
+
+`painting_styles` are some style classes which is used to specify how certain components of the chart should be styled. like `barrier_style` contains style parameters of barriers.
+
+
+
 # Update chart data
 when the list of data changes(by scrolling, zooming, or receiving new data) we need to update the chart.
 There is 3 steps that the chart requires to do when these variables change in order to update its components(including mainSeries, indicators, Barrier, markers, ... ).
@@ -152,6 +162,19 @@ There is 3 steps that the chart requires to do when these variables change in or
 
 3. The conversion functions always return the converted x, y values based on the updated variables (Left/right bound epoch, min/max quote, top/bottom padding).
  The chart will pass these conversion functions along with a reference to its canvas and some other variables to ChartData class to paint their visible data.
+
+# Widgets
+## Market Selector Widget
+The widget that we have included it in the chart project to be accessable inside any other project which is going to use the chart, because this widget is supposed to show the asset (symbols) list to be shown by the chart.
+
+
+## AnimatedPopupDialog
+AnimatedPopupDialog is just a warrper widget to warpe around anything we want to show as a dialog.
+
+## CustomDraggableSheet
+CustomDraggableSheet is a wrapper widget  to be used combined with bottom sheet that makes to give the widget inbside the bottom sheet the behavior that we want.
+
+
 
 
 
