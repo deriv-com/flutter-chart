@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:collection/collection.dart' show IterableExtension;
 
 /// A class to keep a market's information.
 class Market {
@@ -60,9 +61,8 @@ class Market {
   /// Returns true if any asset under this market contains the [text].
   bool containsAssetWithText(String text) =>
       containsText(text) ||
-      subMarkets.firstWhere(
-              (SubMarket? subMarket) => subMarket!.containsAssetWithText(text),
-              orElse: () => null) !=
+      subMarkets.firstWhereOrNull((SubMarket? subMarket) =>
+              subMarket!.containsAssetWithText(text)) !=
           null;
 }
 
@@ -90,9 +90,8 @@ class SubMarket {
   /// Returns true if any asset under this sub-market contains the [text].
   bool containsAssetWithText(String text) =>
       containsText(text) ||
-      assets.firstWhere(
-              (Asset? asset) => asset!.displayName.toLowerCase().contains(text),
-              orElse: () => null) !=
+      assets.firstWhereOrNull((Asset? asset) =>
+              asset!.displayName.toLowerCase().contains(text)) !=
           null;
 }
 
