@@ -289,9 +289,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
-        ticks.clear();
-        _clearMarkers();
-        _clearBarriers();
         ticks = fetchedCandles;
       });
 
@@ -687,7 +684,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     _requestCompleter = Completer<dynamic>();
 
-    setState(() => ticks.clear());
+    setState(() {
+      ticks.clear();
+      _clearMarkers();
+      _clearBarriers();
+    });
 
     try {
       await _tickHistorySubscription?.unsubscribe();
