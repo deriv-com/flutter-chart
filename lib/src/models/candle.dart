@@ -18,14 +18,14 @@ class Candle extends Tick with EquatableMixin {
 
   /// Initializes a candle class with only the given parameters or non given.
   const Candle.noParam(int epoch, double open, double close, double high,
-      double low, int currentEpochTime)
+      double low, int currentEpoch)
       : this(
           epoch: epoch,
           open: open,
           close: close,
           high: high,
           low: low,
-          currentEpoch: currentEpochTime,
+          currentEpoch: currentEpoch,
         );
 
   /// High value
