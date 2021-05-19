@@ -30,7 +30,7 @@ class Candle extends Tick with EquatableMixin {
           close: close,
           high: high,
           low: low,
-          currentEpoch: currentEpoch ?? epoch,
+          currentEpoch: currentEpoch,
         );
 
   /// High value
