@@ -447,7 +447,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
                         WidgetsFlutterBinding.ensureInitialized()
                             .addPostFrameCallback((_) {
-                          _connectionBloc.add(Reconnect());
+                          _connectionBloc.add(Connect());
                         });
                       }
                     }),
