@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/paint/paint_loading.dart';
+import 'package:deriv_chart/src/helpers/paint_functions/paint_loading.dart';
 import 'package:flutter/material.dart';
 
 /// The painter that paints loading on the given area.

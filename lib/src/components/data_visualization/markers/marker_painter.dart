@@ -1,9 +1,9 @@
 import 'package:deriv_chart/src/components/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/components/data_visualization/markers/marker.dart';
+import 'package:deriv_chart/src/helpers/paint_functions/paint_entry_marker.dart';
+import 'package:deriv_chart/src/helpers/paint_functions/paint_exit_marker.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/paint/paint_entry_marker.dart';
-import 'package:deriv_chart/src/paint/paint_exit_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
