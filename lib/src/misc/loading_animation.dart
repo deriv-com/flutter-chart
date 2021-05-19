@@ -1,6 +1,5 @@
+import 'package:deriv_chart/src/components/custom_painters/loading_painter.dart';
 import 'package:flutter/material.dart';
-
-import 'components/custom_painters/loading_painter.dart';
 
 /// Area to show the loading animation in.
 class LoadingAnimationArea extends StatefulWidget {

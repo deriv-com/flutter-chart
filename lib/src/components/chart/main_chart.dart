@@ -9,12 +9,12 @@ import 'package:deriv_chart/src/components/data_visualization/chart_series/serie
 import 'package:deriv_chart/src/components/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/components/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
-import 'package:deriv_chart/src/loading_animation.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/misc/loading_animation.dart';
+import 'package:deriv_chart/src/misc/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
-import 'package:deriv_chart/src/multiple_animated_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

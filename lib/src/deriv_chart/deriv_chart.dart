@@ -1,12 +1,13 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/components/chart/chart.dart';
 import 'package:deriv_chart/src/components/data_visualization/annotations/chart_annotation.dart';
-import 'package:deriv_chart/src/chart_controller.dart';
 import 'package:deriv_chart/src/components/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/components/data_visualization/markers/marker_series.dart';
+import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -17,7 +18,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../callbacks.dart';
 import 'indicators_ui/indicator_config.dart';
 import 'indicators_ui/indicator_repository.dart';
 import 'indicators_ui/indicators_dialog.dart';

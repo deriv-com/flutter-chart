@@ -8,9 +8,9 @@ import 'package:deriv_chart/src/components/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/logic/quote_grid.dart';
+import 'package:deriv_chart/src/misc/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/multiple_animated_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

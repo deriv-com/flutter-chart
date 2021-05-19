@@ -1,5 +1,5 @@
-import 'package:deriv_chart/src/callbacks.dart';
 import 'package:deriv_chart/src/components/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -133,7 +133,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
             return Stack(
               fit: StackFit.expand,
-              children: [
+              children: <Widget>[
                 RepaintBoundary(
                   child: CustomPaint(
                     painter: XGridPainter(
