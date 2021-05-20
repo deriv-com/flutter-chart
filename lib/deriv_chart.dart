@@ -1,7 +1,6 @@
 library deriv_chart;
 
 export 'generated/l10n.dart';
-export 'src/components/chart/chart.dart';
 export 'src/components/data_visualization/annotations/barriers/barrier.dart';
 export 'src/components/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/components/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
@@ -14,7 +13,6 @@ export 'src/components/data_visualization/markers/active_marker.dart';
 export 'src/components/data_visualization/markers/marker.dart';
 export 'src/components/data_visualization/markers/marker_series.dart';
 export 'src/components/x_axis/min_candle_duration_for_data_fit.dart';
-export 'src/deriv_chart/deriv_chart.dart';
 export 'src/misc/chart_controller.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_style.dart';
@@ -27,6 +25,8 @@ export 'src/theme/painting_styles/candle_style.dart';
 export 'src/theme/painting_styles/grid_style.dart';
 export 'src/theme/painting_styles/line_style.dart';
 export 'src/theme/painting_styles/marker_style.dart';
+export 'src/top_layer/chart/chart.dart';
+export 'src/top_layer/deriv_chart/deriv_chart.dart';
 export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
