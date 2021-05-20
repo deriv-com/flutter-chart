@@ -1,6 +1,6 @@
-import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/callbacks.dart';

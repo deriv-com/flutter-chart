@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/components/crosshair/crosshair_area.dart';
-import 'package:deriv_chart/src/components/custom_painters/chart_data_painter.dart';
-import 'package:deriv_chart/src/components/custom_painters/chart_painter.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/data_series.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/components/data_visualization/markers/marker_area.dart';
-import 'package:deriv_chart/src/components/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/middle_layer/crosshair/crosshair_area.dart';
+import 'package:deriv_chart/src/middle_layer/custom_painters/chart_data_painter.dart';
+import 'package:deriv_chart/src/middle_layer/custom_painters/chart_painter.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/data_series.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/markers/marker_area.dart';
+import 'package:deriv_chart/src/middle_layer/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/misc/loading_animation.dart';
 import 'package:deriv_chart/src/misc/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';

@@ -1,13 +1,11 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/components/data_visualization/annotations/chart_annotation.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/data_series.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/components/data_visualization/markers/marker_series.dart';
-import 'package:deriv_chart/src/components/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/components/x_axis/x_axis.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/data_series.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/middle_layer/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/middle_layer/x_axis/x_axis.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/chart_object.dart';

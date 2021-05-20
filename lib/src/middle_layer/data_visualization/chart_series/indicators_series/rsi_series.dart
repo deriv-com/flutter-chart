@@ -1,0 +1,65 @@
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
+import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
+import 'package:flutter/material.dart';
+
+import '../series.dart';
+import '../series_painter.dart';
+import 'abstract_single_indicator_series.dart';
+import 'models/rsi_options.dart';
+
+/// RSI series.
+class RSISeries extends AbstractSingleIndicatorSeries {
+  /// Initializes an RSI Indicator.
+  RSISeries(
+    IndicatorInput indicatorInput, {
+    String id,
+    RSIOptions rsiOptions,
+  }) : this.fromIndicator(
+          CloseValueIndicator<Tick>(indicatorInput),
+          const RSIIndicatorConfig(),
+          rsiOptions: rsiOptions,
+          id: id,
+        );
+
+  /// Initializes an RSI Indicator from the given [inputIndicator].
+  RSISeries.fromIndicator(
+    Indicator<Tick> inputIndicator,
+    this.config, {
+    @required this.rsiOptions,
+    String id,
+  })  : _inputIndicator = inputIndicator,
+        super(
+          inputIndicator,
+          id ?? 'RSIIndicator',
+          rsiOptions,
+          style: config.lineStyle,
+        );
+
+  final Indicator<Tick> _inputIndicator;
+
+  /// Configuration of RSI.
+  final RSIIndicatorConfig config;
+
+  /// Options for RSI Indicator.
+  final RSIOptions rsiOptions;
+
+  @override
+  SeriesPainter<Series> createPainter() => OscillatorLinePainter(
+        this,
+        bottomHorizontalLine: config.overSoldPrice,
+        topHorizontalLine: config.overBoughtPrice,
+        mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+        secondaryHorizontalLinesStyle: config.zeroHorizontalLinesStyle,
+      );
+
+  @override
+  CachedIndicator<Tick> initializeIndicator() =>
+      RSIIndicator<Tick>.fromIndicator(
+        _inputIndicator,
+        rsiOptions.period,
+      );
+}

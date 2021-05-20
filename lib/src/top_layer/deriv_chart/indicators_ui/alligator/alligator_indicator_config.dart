@@ -1,6 +1,6 @@
-import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/alligator_series.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
-import 'package:deriv_chart/src/components/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/alligator_series.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
+import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/indicator_config.dart';

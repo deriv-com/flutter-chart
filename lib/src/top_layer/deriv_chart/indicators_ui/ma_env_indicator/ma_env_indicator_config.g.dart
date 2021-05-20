@@ -8,6 +8,10 @@ part of 'ma_env_indicator_config.dart';
 
 MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(Map<String, dynamic> json) {
   return MAEnvIndicatorConfig(
+    period: json['period'] as int,
+    movingAverageType: _$enumDecodeNullable(
+        _$MovingAverageTypeEnumMap, json['movingAverageType']),
+    fieldType: json['fieldType'] as String,
     shift: (json['shift'] as num)?.toDouble(),
     shiftType: _$enumDecodeNullable(_$ShiftTypeEnumMap, json['shiftType']),
   );
@@ -16,6 +20,10 @@ MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
         MAEnvIndicatorConfig instance) =>
     <String, dynamic>{
+      'period': instance.period,
+      'movingAverageType':
+          _$MovingAverageTypeEnumMap[instance.movingAverageType],
+      'fieldType': instance.fieldType,
       'shiftType': _$ShiftTypeEnumMap[instance.shiftType],
       'shift': instance.shift,
     };
@@ -51,6 +59,14 @@ T _$enumDecodeNullable<T>(
   }
   return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
+
+const _$MovingAverageTypeEnumMap = {
+  MovingAverageType.simple: 'simple',
+  MovingAverageType.exponential: 'exponential',
+  MovingAverageType.weighted: 'weighted',
+  MovingAverageType.hull: 'hull',
+  MovingAverageType.zeroLag: 'zeroLag',
+};
 
 const _$ShiftTypeEnumMap = {
   ShiftType.percent: 'percent',

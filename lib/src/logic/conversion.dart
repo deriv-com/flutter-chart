@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/components/x_axis/gaps/helpers.dart';
+import 'package:deriv_chart/src/middle_layer/x_axis/gaps/helpers.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:meta/meta.dart';
 
