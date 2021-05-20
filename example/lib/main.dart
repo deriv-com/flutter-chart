@@ -117,9 +117,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<void> _connectToAPI() async {
     _connectionBloc = ConnectionBloc(ConnectionInformation(
-      appId: '23789',
+      appId: '1089',
       brand: 'deriv',
-      endpoint: 'qa10.deriv.dev',
+      endpoint: 'blue.binaryws.com',
     ))
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
