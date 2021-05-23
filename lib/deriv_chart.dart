@@ -1,6 +1,7 @@
 library deriv_chart;
 
 export 'generated/l10n.dart';
+export 'src/deriv_chart/deriv_chart.dart';
 export 'src/middle_layer/data_visualization/annotations/barriers/barrier.dart';
 export 'src/middle_layer/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/middle_layer/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
@@ -26,7 +27,6 @@ export 'src/theme/painting_styles/grid_style.dart';
 export 'src/theme/painting_styles/line_style.dart';
 export 'src/theme/painting_styles/marker_style.dart';
 export 'src/top_layer/chart/chart.dart';
-export 'src/top_layer/deriv_chart/deriv_chart.dart';
 export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';

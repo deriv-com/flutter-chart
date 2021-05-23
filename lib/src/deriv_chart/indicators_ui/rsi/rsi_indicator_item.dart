@@ -1,12 +1,12 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
+import 'rsi_indicator_config.dart';
 
 /// RSI indicator item in the list of indicator which provide this
 /// indicators options menu.

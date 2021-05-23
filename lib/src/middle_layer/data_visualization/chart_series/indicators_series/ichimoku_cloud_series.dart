@@ -1,11 +1,11 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 

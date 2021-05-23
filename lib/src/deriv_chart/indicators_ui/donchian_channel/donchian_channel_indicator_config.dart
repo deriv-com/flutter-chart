@@ -3,11 +3,11 @@ import 'package:deriv_chart/src/helpers/color_converter.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/donchian_channels_series.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
-import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../indicator_config.dart';
+import '../indicator_item.dart';
 import 'donchian_channel_indicator_item.dart';
 
 part 'donchian_channel_indicator_config.g.dart';

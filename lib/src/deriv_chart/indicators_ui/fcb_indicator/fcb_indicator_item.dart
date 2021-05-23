@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
 import '../indicator_config.dart';
+import '../indicator_item.dart';
 import 'fcb_indicator_config.dart';
 
 /// Rainbow indicator item in the list of indicator which provide this

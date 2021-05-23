@@ -1,10 +1,10 @@
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/src/top_layer/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
+import 'zigzag_indicator_config.dart';
 
 /// Zigzag indicator item in the list of indicator which provide this
 /// indicator's options menu.
