@@ -57,6 +57,23 @@ Chart(
 );
 ```
 
+## Styling Line/CandleSeries
+
+You can change the appereance of Line/CandleSeries by giving `Style`to them.
+
+```dart
+Chart(
+  mainSeries: CandleSeries(
+    [candle1, candle2], 
+    style: CandleStyle(
+        positiveColor: Colors.green, 
+        negativColor: Colors.red
+    ),
+  ),
+  ...
+);
+```
+
 ### Indicators
 
 To add more series with same y-scale supply them as an array to `overlaySeries` parameter.
