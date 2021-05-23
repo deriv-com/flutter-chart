@@ -74,7 +74,8 @@ class CandleIndicator extends HorizontalBarrier {
   Timer _timer;
 
   void _startTimer() {
-    if (serverTime == null) {
+    if (serverTime == null ||
+        serverTime.millisecondsSinceEpoch - candle.epoch >= granularity) {
       timerDuration = null;
       return;
     }
