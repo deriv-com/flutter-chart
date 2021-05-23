@@ -164,7 +164,29 @@ Chart(
 ### Theme
 
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
-You can supply your own theme, but then you would have to handle switching yourself. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
+You can supply your own theme, but then you would have to handle switching yourself. To do so create you own theme class which either implements `ChartTheme` or extends `ChartDefaultDarkTheme`/`ChartDefaultLightTheme` and override only those properties that you need to be different and then pass it to the `Chart` widget. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
+
+```dart
+class CustomTheme extends ChartDefaultDarkTheme {
+  @override
+  GridStyle get gridStyle => GridStyle(
+        gridLineColor: Colors.yellow,
+        xLabelStyle: textStyle(
+          textStyle: caption2,
+          color: Colors.yellow,
+          fontSize: 13,
+        ),
+      );
+}
+```
+
+```dart
+Chart(
+    ...
+    theme: customTheme /*instance of your custom theme*/,
+    ...
+)
+```
 
 ### Localization
 
