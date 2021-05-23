@@ -1,8 +1,8 @@
 import 'package:deriv_chart/src/add_ons/indicators_ui/ma_indicator/ma_indicator_config.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/ma_env_series.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/models/ma_env_options.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_env_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/ma_env_options.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/middle_layer/x_axis/grid/calc_time_grid.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/calc_time_grid.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

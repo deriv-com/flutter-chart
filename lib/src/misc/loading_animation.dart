@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/middle_layer/custom_painters/loading_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/loading_painter.dart';
 import 'package:flutter/material.dart';
 
 /// Area to show the loading animation in.

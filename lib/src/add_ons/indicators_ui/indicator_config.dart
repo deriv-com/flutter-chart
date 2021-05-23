@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';

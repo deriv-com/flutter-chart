@@ -1,6 +1,6 @@
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/models/parabolic_sar_options.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/parabolic_sar/parabolic_sar_series.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/parabolic_sar_options.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/parabolic_sar/parabolic_sar_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:flutter/foundation.dart';

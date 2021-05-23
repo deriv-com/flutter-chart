@@ -1,6 +1,6 @@
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/ichimoku_cloud_series.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/models/ichimoku_clouds_options.dart';
-import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ichimoku_cloud_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/ichimoku_clouds_options.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';

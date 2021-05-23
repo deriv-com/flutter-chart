@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/middle_layer/x_axis/gaps/gap_manager.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/gaps/gap_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:deriv_chart/src/models/time_range.dart';
