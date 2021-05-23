@@ -1,5 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:deriv_chart/src/logic/chart_data.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/single_indicator_series.dart';

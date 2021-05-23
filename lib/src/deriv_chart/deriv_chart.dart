@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_repository.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/series.dart';
@@ -18,9 +21,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'chart/chart.dart';
-import 'indicators_ui/indicator_config.dart';
-import 'indicators_ui/indicator_repository.dart';
-import 'indicators_ui/indicators_dialog.dart';
 
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
 class DerivChart extends StatefulWidget {

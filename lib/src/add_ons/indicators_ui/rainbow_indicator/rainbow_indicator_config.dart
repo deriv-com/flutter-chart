@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/ma_rainbow_series.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/indicators_series/models/rainbow_options.dart';

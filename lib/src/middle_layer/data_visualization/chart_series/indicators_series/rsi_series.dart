@@ -1,5 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/middle_layer/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
