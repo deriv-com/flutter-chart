@@ -1,7 +1,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/regentmarkets/flutter-chart/badge.svg?branch=pull/7&t=AA56dN)](https://coveralls.io/github/regentmarkets/flutter-chart?branch=pull/7)
 
 # flutter-chart
-A financial chart library for Flutter mobile apps
+A financial chart library for Flutter mobile apps.
 
 ## Getting Started
 
@@ -59,12 +59,12 @@ Chart(
 
 ### Indicators
 
-To add more series with same y-scale supply them as an array to `secondarySeries` parameter.
+To add more series with same y-scale supply them as an array to `overlaySeries` parameter.
 
 ```dart
 Chart(
   mainSeries: LineSeries([candle1, candle2]),
-  secondarySeries: [
+  overlaySeries: [
     MASeries(candles),
   ],
   pipSize: 4,
@@ -173,4 +173,20 @@ When you want to change the locale of the chart,use this code:
 
 ```dart
 ChartLocalization.load(locale);
+```
+
+### DerivChart
+
+A wrapper around our chart widget to manage adding/removing indicator and saving/restoring selected indicator on `SharedPreferences`.
+
+## Usage:
+
+All other previouse properties from `Chart` widget are available here, except `overlaySeries` that is managed internally.
+
+```Dart
+DerivChart(
+   mainSeries: ...,
+   annotations .
+   ...
+)
 ```
