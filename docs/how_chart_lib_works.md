@@ -69,10 +69,16 @@ Scrolling in the chart happens by updating **msPerPx**.
 ![plot](data_series.png)
 
 we have abstract class named **ChartData** that represent data that the chart takes and makes it paint its self on the chart's canvas including: *Line*, *Candle* data, *Markers*, *barriers* etc..
-**ChartData** has a `paint` method that Paints this [ChartData] on the given [canvas].
+A **ChartData** can be anything that shows some data on the chart. The chart can take a bunch of ChartData objects and for these objects the chart goes through some steps until they finally get painted on it's canvas:
+
+Notify them about the x-axis visible range via calling update() method
+getting each ChartData's min/max values after they have updated their visible data and value range.
+Defining y-axis min/max value after knowing all the chart data's value ranges.
+Calling paint() method on every ChartData to paint them on the canvas.
+
 
 **DataSeries** is a Super class of any data series that has ***one*** list of sorted data to paint (by epoch).
-  **LineSeries**, **CandleSeries**, **OHLCSeries**,AbstractSingleIndicatorSeries(all indicator series that shows onlu one data series like **MASeries**(for moving average), **RSISeries** are extends from it) are all subclasses of DataSeries directly or not.
+  **LineSeries**, **CandleSeries**, **OHLCSeries**,AbstractSingleIndicatorSeries(all indicator series that shows only one sequential data like **MASeries**(for moving average), **RSISeries** are extends from it) are all subclasses of DataSeries directly or not.
  To share common functionality of painting **ChartData** we have class **DataSeries**.
 
 **Series** is Base class of all chart series painting.
@@ -162,6 +168,29 @@ There is 3 steps that the chart requires to do when these variables change in or
 
 3. The conversion functions always return the converted x, y values based on the updated variables (Left/right bound epoch, min/max quote, top/bottom padding).
  The chart will pass these conversion functions along with a reference to its canvas and some other variables to ChartData class to paint their visible data.
+
+# BasicChart
+**BasicChart** is an StatefulWidget that other charts extend from.
+
+# MainChart
+**MainChart** extends from **BasicChart** that is a main chart to display in the chart widget.
+
+# BottomChart
+Sometimes we need to show two chart in the screen, for example for showing bottom indicators, in that case, we use **BottomChart** that is extends from **BasicChart** to show secound chart widget.
+
+![plot](basic-chart.png)
+
+# Chart
+**Chart** is an interactive chart widget that is contain **MainChart** and **BottomChart**.
+both **MainChart** and **BottomChart** are using same **XAxis** but they have different YAxis.
+
+# DerivChart
+**DerivChart** is a wrapper around the **Chart** which handles adding indicators to the chart.
+
+*if you want to have indicators in chart, you should use ***DerivChart** insteaad of **Chart****
+
+![plot](deriv-chart.png)
+
 
 # Widgets
 ## Market Selector Widget
