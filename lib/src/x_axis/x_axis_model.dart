@@ -447,6 +447,9 @@ class XAxisModel extends ChangeNotifier {
         : pxBetween(target, _rightBoundEpoch);
     _rightBoundEpoch += 1;
     _prevScrollAnimationValue = 0;
+    if (_scrollAnimationController.isAnimating) {
+      _scrollAnimationController.stop();
+    }
     _scrollAnimationController
       ..value = 0
       ..animateTo(
