@@ -57,7 +57,7 @@ Chart(
 );
 ```
 
-## Styling Line/CandleSeries
+#### Styling Line/CandleSeries
 
 You can change the appereance of Line/CandleSeries by giving `Style`to them.
 
@@ -218,7 +218,7 @@ ChartLocalization.load(locale);
 
 A wrapper around our chart widget to manage adding/removing indicator and saving/restoring selected indicator on `SharedPreferences`.
 
-## Usage:
+#### Usage:
 
 All other previouse properties from `Chart` widget are available here, except `overlaySeries` that is managed internally.
 
