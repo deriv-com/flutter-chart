@@ -229,3 +229,20 @@ DerivChart(
    ...
 )
 ```
+
+## ChartController
+
+Can be provided and passed to the chart to control some behaviours of the chart.
+For now there is only the ability to call `scrollToLastTick` make the chart's scroll position to point to the most recent data.
+
+```dart
+final ChartController _controller = ChartController();
+
+....
+
+Chart(
+    controller: _controller
+)
+```
+
+and whenever you want to make the chart to scroll to the most recent data, `_controller.scrollToLastTick()` can be called.
