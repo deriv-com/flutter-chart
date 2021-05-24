@@ -76,13 +76,25 @@ Chart(
 
 ### Indicators
 
-To add more series with same y-scale supply them as an array to `overlaySeries` parameter.
+To add more series like indicators with the same y-scale supply them as an array to `overlaySeries` parameter.
 
 ```dart
 Chart(
   mainSeries: LineSeries([candle1, candle2]),
   overlaySeries: [
-    MASeries(candles),
+    MASeries(IndicatorInput(candles, granularity)),
+  ],
+  pipSize: 4,
+);
+```
+
+Bottom indicators which have different Y-scale than the main chart can be passed as `bottomSeries` parameter to the Chart.
+
+```dart
+Chart(
+  mainSeries: LineSeries([candle1, candle2]),
+  bottomSeries: [
+    RSISeries(IndicatorInput(candles, granularity)),
   ],
   pipSize: 4,
 );
