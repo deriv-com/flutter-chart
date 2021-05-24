@@ -1,7 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'crosshair_details.dart';
 import 'crosshair_dot_painter.dart';
 import 'crosshair_line_painter.dart';
+import 'find.dart';
 
 /// Place this area on top of the chart to display candle/point details on longpress.
 class CrosshairArea extends StatefulWidget {

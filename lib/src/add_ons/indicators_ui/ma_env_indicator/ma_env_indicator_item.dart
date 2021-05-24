@@ -1,6 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/ma_indicator/ma_indicator_item.dart';
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';

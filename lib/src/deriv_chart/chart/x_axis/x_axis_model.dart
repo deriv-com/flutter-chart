@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
-import 'package:deriv_chart/src/logic/conversion.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
+import 'functions/calc_no_overlay_time_gaps.dart';
 import 'gaps/gap_manager.dart';
 import 'gaps/helpers.dart';
 import 'grid/calc_time_grid.dart';

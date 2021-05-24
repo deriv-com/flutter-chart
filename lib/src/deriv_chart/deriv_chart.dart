@@ -10,7 +10,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
-import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -21,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'chart/chart.dart';
+import 'chart/data_visualization/models/chart_object.dart';
 
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
 class DerivChart extends StatefulWidget {

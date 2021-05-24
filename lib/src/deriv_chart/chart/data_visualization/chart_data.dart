@@ -1,10 +1,11 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+import 'models/animation_info.dart';
 
 /// Conversion function to convert epoch value to canvas X.
 typedef EpochToX = double Function(int);

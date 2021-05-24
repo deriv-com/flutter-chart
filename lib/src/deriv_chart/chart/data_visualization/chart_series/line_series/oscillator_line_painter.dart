@@ -1,14 +1,14 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/helpers/paint_functions/paint_text.dart';
-import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
+import '../../chart_data.dart';
 import '../data_series.dart';
 import 'line_painter.dart';
 

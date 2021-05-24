@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/logic/calc_no_overlay_time_gaps.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/functions/calc_no_overlay_time_gaps.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/time_label.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:deriv_chart/src/models/time_range.dart';

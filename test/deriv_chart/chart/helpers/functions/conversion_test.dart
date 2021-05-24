@@ -1,6 +1,6 @@
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:deriv_chart/src/logic/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 
 void main() {

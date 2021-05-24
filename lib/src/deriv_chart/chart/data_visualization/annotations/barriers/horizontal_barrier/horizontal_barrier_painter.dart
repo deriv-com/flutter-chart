@@ -1,16 +1,16 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/helpers/paint_functions/create_shape_path.dart';
-import 'package:deriv_chart/src/helpers/paint_functions/paint_dot.dart';
-import 'package:deriv_chart/src/helpers/paint_functions/paint_line.dart';
-import 'package:deriv_chart/src/helpers/paint_functions/paint_text.dart';
-import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/models/animation_info.dart';
-import 'package:deriv_chart/src/models/barrier_objects.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
+import '../../../chart_data.dart';
 import 'horizontal_barrier.dart';
 
 /// A class for painting horizontal barriers.

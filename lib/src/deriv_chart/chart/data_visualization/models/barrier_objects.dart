@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/models/chart_object.dart';
+import 'chart_object.dart';
 
 /// A [ChartObject] for defining position of a horizontal barrier.
 class BarrierObject extends ChartObject {

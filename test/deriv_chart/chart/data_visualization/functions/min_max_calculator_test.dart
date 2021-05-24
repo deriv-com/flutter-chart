@@ -1,5 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/logic/min_max_calculator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/min_max_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 double minValueOf(Tick t) => t.quote;

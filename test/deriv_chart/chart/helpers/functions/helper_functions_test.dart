@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

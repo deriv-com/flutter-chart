@@ -1,6 +1,5 @@
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/quote_grid.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:deriv_chart/src/logic/quote_grid.dart';
 
 void main() {
   group('gridQuotes should', () {

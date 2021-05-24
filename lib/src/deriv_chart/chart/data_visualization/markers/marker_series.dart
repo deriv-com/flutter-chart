@@ -1,12 +1,12 @@
 import 'dart:collection';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/logic/find.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
+import '../chart_data.dart';
 import 'marker_painter.dart';
 
 /// Marker series

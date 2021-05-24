@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 

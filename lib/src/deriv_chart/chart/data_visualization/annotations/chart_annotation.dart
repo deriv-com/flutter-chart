@@ -1,11 +1,12 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/models/chart_object.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
+
+import '../chart_data.dart';
 
 /// Base class of chart annotations.
 abstract class ChartAnnotation<T extends ChartObject> extends Series {

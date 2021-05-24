@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/models/barrier_objects.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 
 import '../chart_annotation.dart';

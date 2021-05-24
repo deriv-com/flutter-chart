@@ -1,12 +1,12 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/candle_painting.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
+import '../../../chart_data.dart';
 import '../../data_painter.dart';
 import '../../data_series.dart';
 import '../../indexed_entry.dart';

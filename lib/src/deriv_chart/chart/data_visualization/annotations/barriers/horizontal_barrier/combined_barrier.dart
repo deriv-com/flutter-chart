@@ -1,14 +1,14 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier.dart';
-import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
+import '../../../chart_data.dart';
 import 'horizontal_barrier.dart';
 
 /// A barrier with both horizontal and vertical barriers.
