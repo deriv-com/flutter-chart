@@ -178,6 +178,28 @@ Chart(
 );
 ```
 
+#### Styling
+
+The appearance of `Barriers` can also be changed by passing custom styles.
+
+```dart
+HorizontalBarrier(
+      ...
+      style: HorizontalBarrierStyle(
+        color: const Color(0xFF00A79E),
+        isDashed: false,
+      ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
+    )
+```
+
+#### Horizontal Barrier's Visibility
+
+A `HorizontalBarrier` can have three different behaivours when it has a value that is not in the chart's Y-Axis value range.
+  - `normal`: Won't force the chart to keep the barrier in its Y-Axis range, if the barrier was out of range it will go off the screen.
+  - `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond Y-Axis range.
+  - `forceToStayOnRange`: Will force the chart to keep this barrier in its Y-Axis range by widening its range to cover its value.
+
 ### Theme
 
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
@@ -216,11 +238,11 @@ ChartLocalization.load(locale);
 
 ### DerivChart
 
-A wrapper around our chart widget to manage adding/removing indicator and saving/restoring selected indicator on `SharedPreferences`.
+A wrapper around our chart widget which provides the UI for managing adding/removing indicator and saving/restoring selected ones on storage.
 
 #### Usage:
 
-All other previouse properties from `Chart` widget are available here, except `overlaySeries` that is managed internally.
+All other previous properties from `Chart` widget are available here, except `overlaySeries` that is managed internally.
 
 ```Dart
 DerivChart(
@@ -233,7 +255,7 @@ DerivChart(
 ## ChartController
 
 Can be provided and passed to the chart to control some behaviours of the chart.
-For now there is only the ability to call `scrollToLastTick` make the chart's scroll position to point to the most recent data.
+For now there is only the ability and it's calling `scrollToLastTick` whicks makes the chart's scroll position to point to the most recent data.
 
 ```dart
 final ChartController _controller = ChartController();
