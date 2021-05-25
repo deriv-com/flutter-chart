@@ -250,7 +250,7 @@ ChartLocalization.load(locale);
 
 ### DerivChart
 
-A wrapper around our chart widget which provides the UI for managing adding/removing indicator and saving/restoring selected ones on storage.
+A wrapper around the `chart` widget which provides the UI to add/remove indicators and to manage saving/restoring selected ones on storage.
 
 #### Usage:
 
@@ -267,7 +267,7 @@ DerivChart(
 ## ChartController
 
 Can be provided and passed to the chart to control some behaviours of the chart.
-For now there is only the ability and it's calling `scrollToLastTick` whicks makes the chart's scroll position to point to the most recent data.
+For now there is only one method `scrollToLastTick` whicks makes the chart's scroll position to point to the most recent data.
 
 ```dart
 final ChartController _controller = ChartController();
@@ -279,4 +279,4 @@ Chart(
 )
 ```
 
-and whenever you want to make the chart to scroll to the most recent data, `_controller.scrollToLastTick()` can be called.
+and whenever you want to do that, `_controller.scrollToLastTick()` can be called.
