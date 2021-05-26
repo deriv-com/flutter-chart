@@ -18,6 +18,7 @@ import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
+import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
@@ -131,10 +132,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
         }
 
         if (ticks.isEmpty) {
-          await _getActiveSymbols();
+          try {
+            await _getActiveSymbols();
 
-          _requestCompleter.complete();
-          _onIntervalSelected(0);
+            if (!_requestCompleter.isCompleted) {
+              _requestCompleter.complete();
+            }
+            _onIntervalSelected(0);
+          } on APIBaseException catch (e) {
+            showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text(
+                  e.message,
+                  style: const TextStyle(fontSize: 10),
+                ),
+              ),
+            );
+          }
         } else {
           _initTickStream(
             TicksHistoryRequest(
@@ -443,7 +458,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         // reconnect to new config
                         _connectionBloc.add(
                             Reconfigure(await _getConnectionInfoFromPrefs()));
-
 
                         WidgetsFlutterBinding.ensureInitialized()
                             .addPostFrameCallback((_) {
