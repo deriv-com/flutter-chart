@@ -254,7 +254,7 @@ A wrapper around the `chart` widget which provides the UI to add/remove indicato
 
 #### Usage:
 
-All other previous properties from `Chart` widget are available here, except `overlaySeries` that is managed internally.
+All of the properties from the `Chart` widget are available here as well, except `overlaySeries`, `bottomSeries` that are managed internally.
 
 ```Dart
 DerivChart(
