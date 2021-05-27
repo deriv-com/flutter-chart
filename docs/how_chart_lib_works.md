@@ -1,6 +1,6 @@
 # Market data
 The market data(input data of chart) is a list of *Ticks* or *OHLC*.
-- A **Tick** data each element has two properties, epoch (time-stamp) and quote (price).
+- A **Tick** data element has two properties, epoch (time-stamp) and quote (price).
 - An **OHLC** (candle) data which shows the price changes in a period of time, each candle element has five properties, epoch (time-stamp) and open, close, high, low price values.
 These four values respectively represent starting, ending, highest and lowest price in that timeframe.
 
@@ -16,7 +16,8 @@ this widget has  X-Axis and Y-Axis enabled by default.
 # X-Axis
 X-Axis coordination system works with *rightBoundEpoch* and *msPerPx* variables.
 1. **rightBoundEpoch**: The time-stamp of the chart screen right edge.
-   we initially set it to point to `maxRightBoundEpoch`, The last Tick/OHLC epoch on closed markets or current time on open markets, plus a constant offset.
+   We initially set it to point to `maxRightBoundEpoch`, The last Tick/OHLC epoch on closed markets, or the last element of the series (overlay/bottom) that has the most positive offset plus a constant offset in pixel (maxCurrentTickOffset).
+
 
 2. **msPerPx**: which specifies each pixel of the chart screen horizontally consists of how many milliseconds.
 
