@@ -56,16 +56,12 @@ class XAxisModel extends ChangeNotifier {
   }) {
     _nowEpoch = entries?.isNotEmpty ?? false
         ? entries.last.epoch
-        : DateTime
-        .now()
-        .millisecondsSinceEpoch;
+        : DateTime.now().millisecondsSinceEpoch;
 
     _minEpoch = minEpoch ?? _entries?.first?.epoch ?? _nowEpoch;
     _maxEpoch = maxEpoch ?? _entries?.last?.epoch ?? _nowEpoch;
 
-    _lastEpoch = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    _lastEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity ?? 0;
     _msPerPx = _defaultMsPerPx;
     _isLive = isLive ?? true;
@@ -157,17 +153,17 @@ class XAxisModel extends ChangeNotifier {
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
       rightBoundEpoch == _maxRightBoundEpoch ||
-          rightBoundEpoch == _minRightBoundEpoch;
+      rightBoundEpoch == _minRightBoundEpoch;
 
   bool get _followCurrentTick =>
       _autoPanEnabled &&
-          isLive &&
-          rightBoundEpoch > _nowEpoch &&
-          _currentTickFarEnoughFromLeftBound;
+      isLive &&
+      rightBoundEpoch > _nowEpoch &&
+      _currentTickFarEnoughFromLeftBound;
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _entries.isEmpty ||
-          _entries.last.epoch > _shiftEpoch(leftBoundEpoch, autoPanOffset);
+      _entries.last.epoch > _shiftEpoch(leftBoundEpoch, autoPanOffset);
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -202,9 +198,7 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each frame.
   /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
-    final int newNowTime = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    final int newNowTime = DateTime.now().millisecondsSinceEpoch;
     final int elapsedMs = newNowTime - _lastEpoch;
     _nowEpoch = _entries?.isNotEmpty ?? false
         ? _entries.last.epoch
@@ -270,7 +264,7 @@ class XAxisModel extends ChangeNotifier {
       //        AB
       // include B in prefix to detect gaps between A and B
       final List<Tick> prefix =
-      entries.sublist(0, entries.length - _entries.length + 1);
+          entries.sublist(0, entries.length - _entries.length + 1);
       _gapManager.insertInFront(findGaps(prefix, maxDiff));
     }
 
@@ -358,8 +352,7 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Positive [pxShift] is shifting epoch into the future,
   /// and negative [pxShift] into the past.
-  int _shiftEpoch(int epoch, double pxShift) =>
-      shiftEpochByPx(
+  int _shiftEpoch(int epoch, double pxShift) => shiftEpochByPx(
         epoch: epoch,
         pxShift: pxShift,
         msPerPx: _msPerPx,
@@ -442,11 +435,11 @@ class XAxisModel extends ChangeNotifier {
   /// Animate scrolling to current tick.
   void scrollToLastTick({bool animate = true}) {
     final Duration duration =
-    animate ? const Duration(milliseconds: 600) : Duration.zero;
+        animate ? const Duration(milliseconds: 600) : Duration.zero;
     final int target = _shiftEpoch(
-      // _lastEntryEpoch will be removed later.
-        _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
-        maxCurrentTickOffset) +
+            // _lastEntryEpoch will be removed later.
+            _entries?.isNotEmpty ?? false ? _entries.last.epoch : _nowEpoch,
+            maxCurrentTickOffset) +
         duration.inMilliseconds;
 
     final double distance = target > _rightBoundEpoch
