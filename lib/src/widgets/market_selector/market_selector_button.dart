@@ -15,7 +15,7 @@ class MarketSelectorButton extends StatelessWidget {
     this.backgroundColor,
     this.borderRadius,
     this.onTap,
-    this.textStyle = const TextStyle(fontSize: 14, color: Colors.white),
+    this.textStyle = const TextStyle(fontSize: 12, color: Colors.white),
     this.theme,
   }) : super(key: key);
 

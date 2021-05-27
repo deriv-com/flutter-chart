@@ -43,24 +43,34 @@ class IchimokuCloudSeries extends Series {
   SeriesPainter<Series> createPainter() {
     final CloseValueIndicator<Tick> closeValueIndicator =
         CloseValueIndicator<Tick>(ticks);
+
     final IchimokuBaseLineIndicator<Tick> baseLineIndicator =
-        IchimokuBaseLineIndicator<Tick>(ticks,
-            period: ichimokuCloudOptions.baseLinePeriod);
+        IchimokuBaseLineIndicator<Tick>(
+      ticks,
+      period: ichimokuCloudOptions.baseLinePeriod,
+    );
 
     final IchimokuConversionLineIndicator<Tick> conversionLineIndicator =
-        IchimokuConversionLineIndicator<Tick>(ticks,
-            period: ichimokuCloudOptions.conversionLinePeriod);
+        IchimokuConversionLineIndicator<Tick>(
+      ticks,
+      period: ichimokuCloudOptions.conversionLinePeriod,
+    );
 
     final IchimokuLaggingSpanIndicator<Tick> laggingSpanIndicator =
         IchimokuLaggingSpanIndicator<Tick>(ticks);
 
     final IchimokuSpanAIndicator<Tick> spanAIndicator =
-        IchimokuSpanAIndicator<Tick>(ticks,
-            conversionLineIndicator: conversionLineIndicator,
-            baseLineIndicator: baseLineIndicator);
+        IchimokuSpanAIndicator<Tick>(
+      ticks,
+      conversionLineIndicator: conversionLineIndicator,
+      baseLineIndicator: baseLineIndicator,
+    );
 
     final IchimokuSpanBIndicator<Tick> spanBIndicator =
-        IchimokuSpanBIndicator<Tick>(ticks);
+        IchimokuSpanBIndicator<Tick>(
+      ticks,
+      period: ichimokuCloudOptions.leadingSpanBPeriod,
+    );
 
     _conversionLineSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
