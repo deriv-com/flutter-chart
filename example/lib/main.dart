@@ -140,7 +140,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             }
             _onIntervalSelected(0);
           } on APIBaseException catch (e) {
-            showDialog(
+            await showDialog<void>(
               context: context,
               builder: (_) => AlertDialog(
                 title: Text(
