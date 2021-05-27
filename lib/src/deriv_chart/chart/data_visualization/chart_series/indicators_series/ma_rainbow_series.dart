@@ -63,10 +63,7 @@ class RainbowSeries extends Series {
         indicators
             .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions));
         _rainbowSeries.add(SingleIndicatorSeries(
-          painterCreator: (
-            Series series,
-          ) =>
-              LinePainter(series),
+          painterCreator: (Series series) => LinePainter(series),
           indicatorCreator: () => indicators[0],
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
