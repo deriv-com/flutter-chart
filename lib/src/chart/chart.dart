@@ -24,7 +24,7 @@ import 'bottom_chart.dart';
 import 'main_chart.dart';
 
 /// Interactive chart widget.
-class Chart extends StatelessWidget {
+class Chart extends StatefulWidget {
   /// Creates chart that expands to available space.
   const Chart({
     required this.mainSeries,
@@ -91,63 +91,92 @@ class Chart extends StatelessWidget {
   final double opacity;
 
   @override
-  Widget build(BuildContext context) {
-    final ChartTheme chartTheme = theme ??
+  State<StatefulWidget> createState() => _ChartState();
+}
+
+class _ChartState extends State<Chart> with WidgetsBindingObserver {
+  bool? _followCurrentTick;
+  late ChartController _controller;
+  late ChartTheme _chartTheme;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsFlutterBinding.ensureInitialized().addObserver(this);
+    _initChartController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _initChartTheme();
+  }
+
+  void _initChartController() {
+    _controller = widget.controller ?? ChartController();
+  }
+
+  void _initChartTheme() {
+    _chartTheme = widget.theme ??
         (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final ChartConfig chartConfig = ChartConfig(
-      pipSize: pipSize,
-      granularity: granularity,
+      pipSize: widget.pipSize,
+      granularity: widget.granularity,
     );
 
     final List<ChartData> chartDataList = <ChartData>[
-      mainSeries,
-      if (overlaySeries != null) ...overlaySeries!,
-      if (bottomSeries != null) ...bottomSeries!,
-      if (annotations != null) ...annotations!,
+      widget.mainSeries,
+      if (widget.overlaySeries != null) ...widget.overlaySeries!,
+      if (widget.bottomSeries != null) ...widget.bottomSeries!,
+      if (widget.annotations != null) ...widget.annotations!,
     ];
 
     return MultiProvider(
       providers: <SingleChildWidget>[
-        Provider<ChartTheme>.value(value: chartTheme),
+        Provider<ChartTheme>.value(value: _chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
       ],
       child: Ink(
-        color: chartTheme.base08Color,
+        color: _chartTheme.base08Color,
         child: GestureManager(
           child: XAxis(
             maxEpoch: chartDataList.getMaxEpoch(),
             minEpoch: chartDataList.getMinEpoch(),
-            entries: mainSeries.input,
-            onVisibleAreaChanged: onVisibleAreaChanged,
-            isLive: isLive,
-            startWithDataFitMode: dataFitEnabled,
+            entries: widget.mainSeries.input,
+            onVisibleAreaChanged: _onVisibleAreaChanged,
+            isLive: widget.isLive,
+            startWithDataFitMode: widget.dataFitEnabled,
             child: Column(
               children: <Widget>[
                 Expanded(
                   flex: 3,
                   child: MainChart(
-                    controller: controller,
-                    mainSeries: mainSeries,
-                    overlaySeries: overlaySeries,
-                    annotations: annotations,
-                    markerSeries: markerSeries,
-                    pipSize: pipSize,
-                    onCrosshairAppeared: onCrosshairAppeared,
-                    isLive: isLive,
-                    showLoadingAnimationForHistoricalData: !dataFitEnabled,
-                    showDataFitButton: dataFitEnabled,
-                    opacity: opacity,
+                    controller: _controller,
+                    mainSeries: widget.mainSeries,
+                    overlaySeries: widget.overlaySeries,
+                    annotations: widget.annotations,
+                    markerSeries: widget.markerSeries,
+                    pipSize: widget.pipSize,
+                    onCrosshairAppeared: widget.onCrosshairAppeared,
+                    isLive: widget.isLive,
+                    showLoadingAnimationForHistoricalData:
+                        !widget.dataFitEnabled,
+                    showDataFitButton: widget.dataFitEnabled,
+                    opacity: widget.opacity,
                   ),
                 ),
-                if (bottomSeries?.isNotEmpty ?? false)
-                  ...bottomSeries!
+                if (widget.bottomSeries?.isNotEmpty ?? false)
+                  ...widget.bottomSeries!
                       .map((Series series) => Expanded(
                               child: BottomChart(
                             series: series,
-                            pipSize: pipSize,
+                            pipSize: widget.pipSize,
                           )))
                       .toList()
               ],
@@ -156,5 +185,62 @@ class Chart extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onVisibleAreaChanged(int leftBoundEpoch, int rightBoundEpoch) {
+    widget.onVisibleAreaChanged?.call(leftBoundEpoch, rightBoundEpoch);
+
+    // detect what is current viewing mode before lock the screen
+    if (widget.mainSeries.entries != null &&
+        widget.mainSeries.entries!.isNotEmpty) {
+      if (rightBoundEpoch > widget.mainSeries.entries!.last.epoch) {
+        _followCurrentTick = true;
+      } else {
+        _followCurrentTick = false;
+      }
+    }
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    //scroll to last tick when screen is on
+    if (state == AppLifecycleState.resumed &&
+        _followCurrentTick != null &&
+        _followCurrentTick!) {
+      WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
+        _controller.onScrollToLastTick?.call(false);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsFlutterBinding.ensureInitialized().removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant Chart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // if controller is set
+    if (widget.controller != oldWidget.controller) {
+      _initChartController();
+    }
+    if (widget.theme != oldWidget.theme) {
+      _initChartTheme();
+    }
+
+    //check if entire entries changes(market or granularity changes)
+    // scroll to last tick
+    if (widget.mainSeries.entries != null &&
+        widget.mainSeries.entries!.isNotEmpty) {
+      if (widget.mainSeries.entries!.first.epoch !=
+          oldWidget.mainSeries.entries!.first.epoch) {
+        _controller.onScrollToLastTick?.call(false);
+      }
+    }
   }
 }
