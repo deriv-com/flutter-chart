@@ -109,7 +109,7 @@ They have the `createPainter` object to paint the **BarrierObject** that gets in
 **MarkerSeries** extends from **Series** to show the markers that are added to the chart.
 
 
-# Pinter classes
+# Painter classes
 
 ![plot](data_painters.png)
 
@@ -130,6 +130,22 @@ For painting markers we have the **MarkerPainter** class extends from `CustomPai
 
 ***The data that are in Visible area between **rightBoundEpoch**, **leftBoundEpoch**, **topBoundEpoch**, **bottomBoundEpoch** will be painted by these methods.***
 
+
+# Painting chart data
+when the list of data changes(by scrolling, zooming, or receiving new data) we need to update the chart.
+There are 3 steps that the chart requires to do when these variables change in order to update its components(including mainSeries, indicators, Barrier, markers, ... ).
+
+1. The chart goes through its components and notifies them about the change. Each of these components then updates their visible data inside the new (leftEpoch, rightEpoch) range.
+ Then they can determine what are their min/max value (quote/price).
+
+2. The chart then asks every component their min/max values through their `minValue` and `maxValue` getters to calculate the overall min/max of its Y-Axis range.
+ Any component that is not willing to be included in defining the Y-Axis range can return `double.NaN` values as its min/max.
+ Then if this component had any element outside of the chart's Y-Axis range that element will be invisible.
+
+3. The conversion functions always return the converted x, y values based on the updated variables (Left/right bound epoch, min/max quote, top/bottom padding).
+ The chart will pass these conversion functions along with a reference to its canvas and some other variables to ChartData class to paint their visible data.
+
+
 # Cross-hair
 We have a `StatefulWidget` **CrosshairArea** that places this area on top of the chart to display candle/point details on longpress.
 It contains three other StatelessWidgets named **CrosshairDetails** (The details to show on a crosshair) and **CrosshairLinePainter** (A custom painter to paint the crosshair `line`) and **CrosshairDotPainter** (A custom painter to paint the crosshair `dot`).
@@ -146,21 +162,6 @@ Chart has its own default dark and light themes that switch depending on Theme.o
 
 `painting_styles` are some style classes that are used to specify how certain components of the chart should be styled. e.g. `barrier_style` contains style parameters of barriers.
 
-
-
-# Painting chart data
-when the list of data changes(by scrolling, zooming, or receiving new data) we need to update the chart.
-There are 3 steps that the chart requires to do when these variables change in order to update its components(including mainSeries, indicators, Barrier, markers, ... ).
-
-1. The chart goes through its components and notifies them about the change. Each of these components then updates their visible data inside the new (leftEpoch, rightEpoch) range.
- Then they can determine what are their min/max value (quote/price).
-
-2. The chart then asks every component their min/max values through their `minValue` and `maxValue` getters to calculate the overall min/max of its Y-Axis range.
- Any component that is not willing to be included in defining the Y-Axis range can return `double.NaN` values as its min/max.
- Then if this component had any element outside of the chart's Y-Axis range that element will be invisible.
-
-3. The conversion functions always return the converted x, y values based on the updated variables (Left/right bound epoch, min/max quote, top/bottom padding).
- The chart will pass these conversion functions along with a reference to its canvas and some other variables to ChartData class to paint their visible data.
 
 # BasicChart
 **BasicChart** is a StatefulWidget that other charts extend from.
@@ -179,7 +180,7 @@ Both **MainChart** and **BottomChart** are using the same **XAxis** but they hav
 # DerivChart
 **DerivChart** is a wrapper around the **Chart** which handles adding indicators to the chart.
 
-*if you want to have indicators in chart, you should use ***DerivChart** insteaad of **Chart****
+*if you want to have indicators in the chart, you should use ***DerivChart** instead of **Chart****
 
 ![plot](deriv-chart.png)
 
@@ -187,7 +188,6 @@ Both **MainChart** and **BottomChart** are using the same **XAxis** but they hav
 # Widgets
 ## Market Selector Widget
 The widget that we have included it in the chart project to be accessable inside any other project which is going to use the chart, because this widget is supposed to show the asset (symbols) list to be shown by the chart.
-
 
 ## AnimatedPopupDialog
 AnimatedPopupDialog is just a wrapper widget to wrap around any widget to show as a dialog. The dialog will pop up with animation.
