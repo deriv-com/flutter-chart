@@ -59,7 +59,7 @@ Chart(
 
 #### Styling Line/CandleSeries
 
-You can change the appereance of Line/CandleSeries by giving `Style`to them.
+You can change the appearance of Line/CandleSeries by giving `style`to them.
 
 ```dart
 Chart(
@@ -76,7 +76,7 @@ Chart(
 
 ### Indicators
 
-To add more series like indicators with the same y-scale supply them as an array to `overlaySeries` parameter.
+To add more series, like indicators with the same y-scale supply them as an array to the `overlaySeries` parameter.
 
 ```dart
 Chart(
@@ -88,7 +88,7 @@ Chart(
 );
 ```
 
-Bottom indicators which have different Y-scale than the main chart can be passed as `bottomSeries` parameter to the Chart.
+Bottom indicators which have a different Y-scale than the main chart can be passed as the `bottomSeries` parameter to the Chart.
 
 ```dart
 Chart(
@@ -207,15 +207,15 @@ HorizontalBarrier(
 
 #### Horizontal Barrier's Visibility
 
-A `HorizontalBarrier` can have three different behaivours when it has a value that is not in the chart's Y-Axis value range.
+A `HorizontalBarrier` can have three different behaviors when it has a value that is not in the chart's Y-Axis value range.
   - `normal`: Won't force the chart to keep the barrier in its Y-Axis range, if the barrier was out of range it will go off the screen.
-  - `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond Y-Axis range.
+  - `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond the Y-Axis range.
   - `forceToStayOnRange`: Will force the chart to keep this barrier in its Y-Axis range by widening its range to cover its value.
 
 ### Theme
 
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
-You can supply your own theme, but then you would have to handle switching yourself. To do so create you own theme class which either implements `ChartTheme` or extends `ChartDefaultDarkTheme`/`ChartDefaultLightTheme` and override only those properties that you need to be different and then pass it to the `Chart` widget. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
+You can supply your theme, but then you would have to handle switching yourself. To do so create you own theme class which either implements `ChartTheme` or extends `ChartDefaultDarkTheme`/`ChartDefaultLightTheme` and override only those properties that you need to be different and then pass it to the `Chart` widget. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
 
 ```dart
 class CustomTheme extends ChartDefaultDarkTheme {
@@ -266,8 +266,8 @@ DerivChart(
 
 ## ChartController
 
-Can be provided and passed to the chart to control some behaviours of the chart.
-For now there is only one method `scrollToLastTick` whicks makes the chart's scroll position to point to the most recent data.
+Can be provided and passed to the chart to control some behaviors of the chart.
+For now, there is only one method `scrollToLastTick` whichs makes the chart's scroll position to point to the most recent data.
 
 ```dart
 final ChartController _controller = ChartController();
