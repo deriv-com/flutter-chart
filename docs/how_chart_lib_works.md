@@ -66,16 +66,11 @@ Zooming in the chart happens by updating **msPerPx**.
 # *Painting data*
 
 
-## Data classes
+## Data Visualisation
 
 ![plot](data_series.png)
 We have an abstract class named **ChartData** that represents any type of data that the chart takes and makes it paint its self on the chart's canvas including *Line*, *Candle* data, *Markers*, *barriers*, etc.
-A **ChartData** can be anything that shows some data on the chart. The chart can take a bunch of ChartData objects and for these objects the chart goes through some steps until they finally get painted on it's canvas:
-
-Notify them about the x-axis visible range via calling update() method
-getting each ChartData's min/max values after they have updated their visible data and value range.
-Defining y-axis min/max value after knowing all the chart data's value ranges.
-Calling paint() method on every ChartData to paint them on the canvas.
+A **ChartData** can be anything that shows some data on the chart. The chart can take a bunch of ChartData objects and paint them on its canvas.
 
 
 **DataSeries** is a Super class of any data series that has ***one*** list of sorted data to paint (by epoch).
@@ -153,7 +148,7 @@ Chart has its own default dark and light themes that switch depending on Theme.o
 
 
 
-# Update chart data
+# Painting chart data
 when the list of data changes(by scrolling, zooming, or receiving new data) we need to update the chart.
 There are 3 steps that the chart requires to do when these variables change in order to update its components(including mainSeries, indicators, Barrier, markers, ... ).
 
