@@ -39,7 +39,7 @@ class YGridLinePainter extends CustomPainter {
           y,
         ),
         Paint()
-          ..color = quote == 0 ? const Color(0xFF6E6E6E) : style.gridLineColor
+          ..color = quote == 0 ? const Color(0xFF3E3E3E) : style.gridLineColor
           ..style = PaintingStyle.stroke
           ..strokeWidth = style.lineThickness,
       );
