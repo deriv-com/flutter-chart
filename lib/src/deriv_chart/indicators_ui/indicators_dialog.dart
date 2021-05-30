@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_repository.d
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_env_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -83,6 +84,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Price Rate Of Changes'),
+                    value: ROCIndicatorConfig(),
                   ),
                   // Add new indicators here.
                 ],

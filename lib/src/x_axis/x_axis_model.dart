@@ -243,7 +243,8 @@ class XAxisModel extends ChangeNotifier {
         entries.isNotEmpty &&
         _entries.isNotEmpty &&
         entries.first != _entries.first &&
-        entries.last == _entries.last;
+        entries.last == _entries.last &&
+        _entries.length < entries.length;
 
     final bool reload = !firstLoad && !tickLoad && !historyLoad;
 
