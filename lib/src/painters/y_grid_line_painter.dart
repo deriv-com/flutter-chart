@@ -1,3 +1,5 @@
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +39,7 @@ class YGridLinePainter extends CustomPainter {
           y,
         ),
         Paint()
-          ..color = style.gridLineColor
+          ..color = quote == 0 ? const Color(0xFF6E6E6E) : style.gridLineColor
           ..style = PaintingStyle.stroke
           ..strokeWidth = style.lineThickness,
       );

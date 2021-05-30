@@ -9,11 +9,13 @@ import 'basic_chart.dart';
 /// The chart to add the bottom indicators too.
 class BottomChart extends BasicChart {
   /// Initializes a bottom chart.
-  const BottomChart({
+  BottomChart({
     @required Series series,
     @required int pipSize,
+    this.hasZeroLine = true,
     Key key,
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
+  bool hasZeroLine;
 
   @override
   _BottomChartState createState() => _BottomChartState();
@@ -21,7 +23,8 @@ class BottomChart extends BasicChart {
 
 class _BottomChartState extends BasicChartState<BottomChart> {
   @override
-  void calculateGridLineQuotes() => gridLineQuotes = const <double>[];
+  void calculateGridLineQuotes() => gridLineQuotes =
+      widget.hasZeroLine ? const <double>[0] : const <double>[];
 
   @override
   Widget build(BuildContext context) {
