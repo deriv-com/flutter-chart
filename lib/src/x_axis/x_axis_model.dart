@@ -466,8 +466,12 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Keeps rightBoundEpoch in the valid range.
-  void _clampRightBoundEpoch() => _rightBoundEpoch =
-      _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
+  void _clampRightBoundEpoch() {
+    if (_minRightBoundEpoch <= _maxRightBoundEpoch) {
+      _rightBoundEpoch =
+          _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
+    }
+  }
 
   /// Updates the [XAxisModel] model variables.
   void update({
