@@ -128,7 +128,7 @@ We have a `StatefulWidget` named **MarkerArea** to draw markers inside it.
 **MarkerArea** is a Layer with markers.
 For painting markers we have the **MarkerPainter** class extends from `CustomPainter`.
 
-***The data that are in Visible area between **rightBoundEpoch**, **leftBoundEpoch** and **topBoundEpoch**, **bottomBoundEpoch** will be painted based on these vis.***
+***The data in Visible area are between **rightBoundEpoch**, **leftBoundEpoch** and **topBoundEpoch**, **bottomBoundEpoch**, will be painted by these painters.***
 
 
 # Painting chart data
