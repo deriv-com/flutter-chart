@@ -1,5 +1,5 @@
+import 'package:deriv_chart/src/logic/chart_series/data_painters/scatter_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/parabolic_sar_options.dart';
-import 'package:deriv_chart/src/logic/chart_series/scatter/scatter_painter.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
