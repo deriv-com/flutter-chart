@@ -2,6 +2,7 @@
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
@@ -102,6 +103,12 @@ abstract class ChartDefaultTheme implements ChartTheme {
         positiveColor: accentGreenColor,
         negativeColor: accentRedColor,
         lineColor: base04Color,
+      );
+
+  @override
+  BarStyle get barStyle => BarStyle(
+        positiveColor: accentGreenColor,
+        negativeColor: accentRedColor,
       );
 
   @override

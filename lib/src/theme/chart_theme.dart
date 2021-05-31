@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,9 @@ abstract class ChartTheme {
 
   /// The painting styles of candlestick chart.
   CandleStyle get candleStyle;
+
+  /// The painting styles of histogram bar.
+  BarStyle get barStyle;
 
   /// The painting styles of line chart.
   LineStyle get lineStyle;
