@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/bottom_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/roc/roc_indicator_item.dart';
@@ -12,21 +13,21 @@ import '../callbacks.dart';
 
 part 'roc_indicator_config.g.dart';
 
-/// PRC Indicator configurations.
+/// ROC Indicator configurations.
 @JsonSerializable()
-class ROCIndicatorConfig extends IndicatorConfig {
+class ROCIndicatorConfig extends BottomIndicatorConfig {
   /// Initializes
   const ROCIndicatorConfig({
     this.period = 14,
     this.fieldType = 'close',
-  }) : super(isOverlay: false);
+  }) : super(hasZeroLine: true);
 
   /// Initializes from JSON.
   factory ROCIndicatorConfig.fromJson(Map<String, dynamic> json) =>
       _$ROCIndicatorConfigFromJson(json);
 
   /// Unique name for this indicator.
-  static const String name = 'PRC';
+  static const String name = 'ROC';
 
   @override
   Map<String, dynamic> toJson() => _$ROCIndicatorConfigToJson(this)
@@ -39,7 +40,7 @@ class ROCIndicatorConfig extends IndicatorConfig {
   final String fieldType;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) => ROCSeries.fromIndicator(
+  Series getSeries(IndicatorInput indicatorInput) => ROCSeries(
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
         this,
         rocOptions: ROCOptions(period: period),

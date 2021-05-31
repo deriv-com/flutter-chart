@@ -10,6 +10,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_env_indicator/ma_en
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 
@@ -25,13 +26,7 @@ import 'callbacks.dart';
 @immutable
 abstract class IndicatorConfig {
   /// Initializes
-  const IndicatorConfig({
-    this.isOverlay = true,
-  });
-
-  /// Whether the indicator is an overlay on the main chart or displays on a seperate chart.
-  /// Default is set to `true`.
-  final bool isOverlay;
+  const IndicatorConfig();
 
   /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
@@ -62,6 +57,8 @@ abstract class IndicatorConfig {
         return RSIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case ROCIndicatorConfig.name:
+        return ROCIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');

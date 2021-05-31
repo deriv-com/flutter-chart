@@ -12,20 +12,8 @@ import 'package:flutter/material.dart';
 
 /// ROC series.
 class ROCSeries extends AbstractSingleIndicatorSeries {
-  /// Initializes an ROC Indicator.
-  ROCSeries(
-    IndicatorInput indicatorInput, {
-    String id,
-    ROCOptions rocOptions,
-  }) : this.fromIndicator(
-          CloseValueIndicator<Tick>(indicatorInput),
-          const ROCIndicatorConfig(),
-          rocOptions: rocOptions,
-          id: id,
-        );
-
   /// Initializes an ROC Indicator from the given [inputIndicator].
-  ROCSeries.fromIndicator(
+  ROCSeries(
     Indicator<Tick> inputIndicator,
     this.config, {
     @required this.rocOptions,

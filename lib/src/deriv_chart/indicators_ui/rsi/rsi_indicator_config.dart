@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/bottom_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_item.dart';
@@ -14,7 +15,7 @@ part 'rsi_indicator_config.g.dart';
 
 /// RSI Indicator configurations.
 @JsonSerializable()
-class RSIIndicatorConfig extends IndicatorConfig {
+class RSIIndicatorConfig extends BottomIndicatorConfig {
   /// Initializes
   const RSIIndicatorConfig({
     this.period = 14,
@@ -28,7 +29,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.mainHorizontalLinesStyle = const LineStyle(
       color: Colors.white,
     ),
-  }) : super(isOverlay: false);
+  }) : super();
 
   /// Initializes from JSON.
   factory RSIIndicatorConfig.fromJson(Map<String, dynamic> json) =>

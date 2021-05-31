@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
+import 'package:deriv_chart/src/logic/chart_series/bottom_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
@@ -51,7 +52,7 @@ class Chart extends StatefulWidget {
   final List<Series> overlaySeries;
 
   /// List of bottom indicator series to add on chart separate from the [mainSeries].
-  final List<Series> bottomSeries;
+  final List<BottomSeries> bottomSeries;
 
   /// Open position marker series.
   final MarkerSeries markerSeries;
@@ -118,7 +119,9 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
   void _initChartTheme() {
     _chartTheme = widget.theme ??
-        (Theme.of(context).brightness == Brightness.dark
+        (Theme
+            .of(context)
+            .brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
   }
@@ -166,17 +169,19 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairAppeared: widget.onCrosshairAppeared,
                     isLive: widget.isLive,
                     showLoadingAnimationForHistoricalData:
-                        !widget.dataFitEnabled,
+                    !widget.dataFitEnabled,
                     showDataFitButton: widget.dataFitEnabled,
                     opacity: widget.opacity,
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
                   ...widget.bottomSeries
-                      .map((Series series) => Expanded(
-                              child: BottomChart(
-                            series: series,
+                      .map((BottomSeries series) =>
+                      Expanded(
+                          child: BottomChart(
+                            series: series.series,
                             pipSize: widget.pipSize,
+                            hasZeroLine: series.hasZeroLine,
                           )))
                       .toList()
               ],

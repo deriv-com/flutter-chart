@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/chart/chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/bottom_indicator_config.dart';
 import 'package:deriv_chart/src/logic/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/chart_controller.dart';
+import 'package:deriv_chart/src/logic/chart_series/bottom_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/data_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
 import 'package:deriv_chart/src/markers/marker_series.dart';
@@ -128,7 +130,8 @@ class _DerivChartState extends State<DerivChart> {
                     .watch<IndicatorsRepository>()
                     .indicators
                     .where((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig != null && indicatorConfig.isOverlay)
+                        indicatorConfig != null &&
+                        indicatorConfig is! BottomIndicatorConfig)
                     .map((IndicatorConfig indicatorConfig) =>
                         indicatorConfig.getSeries(
                           IndicatorInput(
@@ -137,19 +140,22 @@ class _DerivChartState extends State<DerivChart> {
                           ),
                         ))
               ],
-              bottomSeries: <Series>[
+              bottomSeries: <BottomSeries>[
                 ...context
                     .watch<IndicatorsRepository>()
                     .indicators
-                    .where((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig != null && !indicatorConfig.isOverlay)
-                    .map((IndicatorConfig indicatorConfig) =>
+                    .whereType<BottomIndicatorConfig>()
+                    .map(
+                      (BottomIndicatorConfig indicatorConfig) => BottomSeries(
                         indicatorConfig.getSeries(
                           IndicatorInput(
                             widget.mainSeries.input,
                             widget.granularity,
                           ),
-                        ))
+                        ),
+                        hasZeroLine: indicatorConfig.hasZeroLine,
+                      ),
+                    )
               ],
               markerSeries: widget.markerSeries,
               theme: widget.theme,

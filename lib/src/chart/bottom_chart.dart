@@ -15,6 +15,8 @@ class BottomChart extends BasicChart {
     this.hasZeroLine = true,
     Key key,
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
+
+  ///true if we need to show a zero line
   bool hasZeroLine;
 
   @override
