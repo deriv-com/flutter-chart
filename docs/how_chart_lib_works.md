@@ -74,27 +74,27 @@ A **ChartData** can be anything that shows some data on the chart. The chart can
 
 
 **DataSeries** is a Super class of any data series that has ***one*** list of sorted data to paint (by epoch).
-  **LineSeries**, **CandleSeries**, **OHLCSeries**,AbstractSingleIndicatorSeries(all indicator series that shows only one sequential data like **MASeries**(for moving average), **RSISeries** are extends from it) are all subclasses of DataSeries directly or not.
- To share common functionality of painting **ChartData** we have class **DataSeries**.
+  **LineSeries**, **CandleSeries**, **OHLCSeries**,AbstractSingleIndicatorSeries(all indicator series that shows only one sequential data like **MASeries**(for moving average), **RSISeries**) are all subclasses of DataSeries directly or not.
+**DataSeries** holds the common functionalities of managing this list of sorted data.
 
 **Series** is the Base class of all chart series paintings.
 The series that have ***more than one*** list of sorted data to paint (like AlligatorIndicatorSeries) extend from **Series** and have some SingleIndicatorSeries inside.
 
 
 ### ChartObject
-Any component other than chart data (line or candle) which can take a rectangle on the chart's canvas.
+Any component which can take a rectangle area on the chart's canvas.
 It has `isOnEpochRange` and `isOnValueRange` method that shows whether this chart object is in chart horizontal or vertical visible area or not.
 
 ### BarrierObject
 A **ChartObject** for defining position of a horizontal or vertical barrier.
 
 ### Chart annotations
-Annotations are the shapes without any data sequence that added to the chart, like **Barriers**.
+Annotations are ChartData without any sequential data that added to the chart, like **Barriers**.
 **ChartAnnotation** is a Base class of chart annotations that extends from **Series**.
 
 ### Barriers
 **Barrier** is a base class of barrier. Its properties are title, epoch and value.
-We have two kinds of barriesrs: **VerticalBarrier** and **HorizontalBarrier**.
+We have two kinds of barriers: **VerticalBarrier** and **HorizontalBarrier**.
 **VerticalBarrier**: is a vertical line in the chart that draws on a specific timestamp. It extends from the **Barrier** class.
 **HorizontalBarrier**: is a horizontal line that draws on a specific value(price).
 
@@ -121,14 +121,14 @@ Other painters like **LinePainter**( A [DataPainter] for painting line data), **
 
 **DataPainter** has a method called `onPaint` that calls `onPaintData`. It actually paints what's inside `onPaintData` that is overridden by each painter. for example **LinePainter** paints line in `onPaintData` method and **CandlePainter** paints Candles and `onPaintData` method. `onPaint` is a method where **DataPainters**  need to do some common things before painting.
 
-For painting Barriers that don't have `DataSeries`, we have **VerticalBarrierPainter** and **HorizontalBarrierPainter** that extend from **SeriesPainter**.
+For painting Barriers, we have **VerticalBarrierPainter** and **HorizontalBarrierPainter** that also extend from **SeriesPainter**.
 They override the `onPaint` method to draw a Vertical/Horizontal Barrier.
 
 We have a `StatefulWidget` named **MarkerArea** to draw markers inside it.
 **MarkerArea** is a Layer with markers.
 For painting markers we have the **MarkerPainter** class extends from `CustomPainter`.
 
-***The data that are in Visible area between **rightBoundEpoch**, **leftBoundEpoch**, **topBoundEpoch**, **bottomBoundEpoch** will be painted by these methods.***
+***The data that are in Visible area between **rightBoundEpoch**, **leftBoundEpoch** and **topBoundEpoch**, **bottomBoundEpoch** will be painted based on these vis.***
 
 
 # Painting chart data
@@ -164,21 +164,21 @@ Chart has its own default dark and light themes that switch depending on Theme.o
 
 
 # BasicChart
-**BasicChart** is a StatefulWidget that other charts extend from.
+**BasicChart** is a simple chart widget that takes only one `Series` class to paint. It handles common functionalities of handling Y-axis range, scaling and its animation, top/bottom padding.
 
 # MainChart
-**MainChart** extends from **BasicChart** that is a main chart to display in the chart widget.
+**MainChart** is a subclass of **BasicChart** and a customized widget that can show multiple `ChartData` (like `overlaySeries and `markerSeries`) and adds crosshair feature and some other minor features.
 
 # BottomChart
 Sometimes we need to show two charts on the screen, for example for showing bottom indicators. In that case, we use **BottomChart** that extends from **BasicChart** to show the other chart widgets.
 ![plot](basic-chart.png)
 
 # Chart
-**Chart** is an interactive chart widget that contains **MainChart** and **BottomChart**.
-Both **MainChart** and **BottomChart** are using the same **XAxis** but they have different YAxis.
+**Chart** is a widget that manages showing  **MainChart** and multiple **BottomChart**s (to have `bottomSeries`, series that have different Y-scale than the MainChart) vertically.
+**MainChart** and **BottomChart**s use the same **XAxis** (and it's provided in the root of the `Chart` widget to be accessible on the widgets at the bottom) but they have different YAxis.
 
 # DerivChart
-**DerivChart** is a wrapper around the **Chart** which handles adding indicators to the chart.
+**DerivChart** A wrapper around the **chart** widget which provides the UI to add/remove indicators and to manage saving/restoring selected ones on storage.
 
 *if you want to have indicators in the chart, you should use ***DerivChart** instead of **Chart****
 
