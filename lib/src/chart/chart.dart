@@ -119,9 +119,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
   void _initChartTheme() {
     _chartTheme = widget.theme ??
-        (Theme
-            .of(context)
-            .brightness == Brightness.dark
+        (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
   }
@@ -169,16 +167,15 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairAppeared: widget.onCrosshairAppeared,
                     isLive: widget.isLive,
                     showLoadingAnimationForHistoricalData:
-                    !widget.dataFitEnabled,
+                        !widget.dataFitEnabled,
                     showDataFitButton: widget.dataFitEnabled,
                     opacity: widget.opacity,
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
                   ...widget.bottomSeries
-                      .map((BottomSeries series) =>
-                      Expanded(
-                          child: BottomChart(
+                      .map((BottomSeries series) => Expanded(
+                              child: BottomChart(
                             series: series.series,
                             pipSize: widget.pipSize,
                             hasZeroLine: series.hasZeroLine,
