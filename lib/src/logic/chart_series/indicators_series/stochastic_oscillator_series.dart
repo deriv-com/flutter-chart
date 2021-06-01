@@ -13,13 +13,14 @@ import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
 import '../series.dart';
-import '../series_painter.dart';;
+import '../series_painter.dart';
 
 /// A series which shows Stochastic Oscillator Series data calculated from 'entries'.
 class StochasticOscillatorSeries extends Series {
   /// Initializes a series which shows shows Stochastic Oscillator data calculated from [indicatorInput].
   StochasticOscillatorSeries(
     this.indicatorInput,
+    this.input,
     this.config, {
     String id,
     this.stochasticOscillatorOptions,
@@ -30,6 +31,7 @@ class StochasticOscillatorSeries extends Series {
 
   ///input data
   final Indicator<Tick> indicatorInput;
+  final IndicatorInput input;
 
   /// Configuration of StochasticOscillator.
   final StochasticOscillatorIndicatorConfig config;
@@ -40,20 +42,20 @@ class StochasticOscillatorSeries extends Series {
   @override
   SeriesPainter<Series> createPainter() {
     final FastStochasticIndicator<Tick> fastStochasticIndicator =
-        FastStochasticIndicator<Tick>.(indicatorInput,
+        FastStochasticIndicator<Tick>(input,indicator: indicatorInput,
             period: stochasticOscillatorOptions.period);
     _fastStochasticIndicatorSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () => fastStochasticIndicator,
-      inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
+      inputIndicator: indicatorInput,
       style: const LineStyle(color: Colors.white),
     );
 
     _slowStochasticIndicatorSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => SlowStochasticIndicator<Tick>(indicatorInput,
+      indicatorCreator: () => SlowStochasticIndicator<Tick>(input,
           stochasticIndicator: fastStochasticIndicator),
-      inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
+      inputIndicator: indicatorInput,
       style: const LineStyle(color: Colors.red),
     );
 

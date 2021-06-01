@@ -21,8 +21,8 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
     this.fieldType = 'close',
     this.overBoughtPrice = 80,
     this.overSoldPrice = 20,
-    this.showZones=true,
-    this.isSmooth=true,
+    this.showZones = true,
+    this.isSmooth = true,
     this.lineStyle = const LineStyle(color: Colors.white),
     this.mainHorizontalLinesStyle = const LineStyle(
       color: Colors.white,
@@ -30,15 +30,17 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
-  factory StochasticOscillatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>
+  factory StochasticOscillatorIndicatorConfig.fromJson(
+          Map<String, dynamic> json) =>
       _$StochasticOscillatorIndicatorConfigFromJson(json);
 
   /// Unique name for this indicator.
-  static const String name = 'RSI';
+  static const String name = 'StochasticOscillator';
 
   @override
-  Map<String, dynamic> toJson() => _$StochasticOscillatorIndicatorConfigToJson(this)
-    ..putIfAbsent(IndicatorConfig.nameKey, () => name);
+  Map<String, dynamic> toJson() =>
+      _$StochasticOscillatorIndicatorConfigToJson(this)
+        ..putIfAbsent(IndicatorConfig.nameKey, () => name);
 
   /// The period to calculate the average gain and loss.
   final int period;
@@ -68,16 +70,18 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => StochasticOscillatorSeries(
-    IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
-    this,
-    stochasticOscillatorOptions: StochasticOscillatorOptions(period: period,isSmooth: isSmooth,showZones: showZones),
-  );
+        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        indicatorInput,
+        this,
+        stochasticOscillatorOptions: StochasticOscillatorOptions(
+            period: period, isSmooth: isSmooth, showZones: showZones),
+      );
 
   @override
   IndicatorItem getItem(
-      UpdateIndicator updateIndicator,
-      VoidCallback deleteIndicator,
-      ) =>
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
+  ) =>
       StochasticOscillatorIndicatorItem(
         config: this,
         updateIndicator: updateIndicator,
