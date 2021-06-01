@@ -1,6 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
 
 import 'package:flutter/material.dart';
 
@@ -54,59 +53,33 @@ class WilliamsRIndicatorItemState
         ],
       );
 
-  Widget _buildPeriodField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelPeriod,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentPeriod().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _period = int.tryParse(text);
-                } else {
-                  _period = 14;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildPeriodField() => FieldWidget(
+        initialValue: '14',
+        label: ChartLocalization.of(context).labelPeriod,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _period = int.tryParse(text);
+          } else {
+            _period = 14;
+          }
+          updateIndicator();
+        },
       );
 
   int _getCurrentPeriod() =>
       _period ?? (widget.config as WilliamsRIndicatorConfig)?.period ?? 14;
 
-  Widget _buildOverBoughtPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverBoughtPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverBoughtPrice().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _overBoughtPrice = double.tryParse(text);
-                } else {
-                  _overBoughtPrice = -20;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverBoughtPriceField() => FieldWidget(
+        initialValue: _getCurrentOverBoughtPrice().toString(),
+        label: ChartLocalization.of(context).labelOverBoughtPrice,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overBoughtPrice = double.tryParse(text);
+          } else {
+            _overBoughtPrice = -20;
+          }
+          updateIndicator();
+        },
       );
 
   double _getCurrentOverBoughtPrice() =>
@@ -114,34 +87,58 @@ class WilliamsRIndicatorItemState
       (widget.config as WilliamsRIndicatorConfig)?.overBoughtPrice ??
       -20;
 
-  Widget _buildOverSoldPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverSoldPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverSoldPrice().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _overSoldPrice = double.tryParse(text);
-                } else {
-                  _overSoldPrice = -80;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverSoldPriceField() => FieldWidget(
+        initialValue: _getCurrentOverSoldPrice().toString(),
+        label: ChartLocalization.of(context).labelOverSoldPrice,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overSoldPrice = double.tryParse(text);
+          } else {
+            _overSoldPrice = -80;
+          }
+          updateIndicator();
+        },
       );
 
   double _getCurrentOverSoldPrice() =>
       _overSoldPrice ??
       (widget.config as WilliamsRIndicatorConfig)?.overSoldPrice ??
       -80;
+}
+
+/// Field widget
+class FieldWidget extends StatelessWidget {
+  /// Initializes
+  const FieldWidget({
+    @required this.initialValue,
+    this.onValueChanged,
+    this.label = '',
+    Key key,
+  }) : super(key: key);
+
+  /// Period's initial value
+  final String initialValue;
+
+  /// Will be called whenever the field's value has changed.
+  final Function(String) onValueChanged;
+
+  /// The label of the field.
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: <Widget>[
+          Text(label, style: const TextStyle(fontSize: 10)),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: initialValue,
+              keyboardType: TextInputType.number,
+              onChanged: onValueChanged,
+            ),
+          ),
+        ],
+      );
 }
