@@ -35,6 +35,7 @@ class StochasticOscillatorIndicatorItemState
   double _overBoughtPrice;
   double _overSoldPrice;
   String _field;
+  bool _isSmooth;
 
   @override
   StochasticOscillatorIndicatorConfig createIndicatorConfig() =>
@@ -43,6 +44,7 @@ class StochasticOscillatorIndicatorItemState
         overBoughtPrice: _getCurrentOverBoughtPrice(),
         overSoldPrice: _getCurrentOverSoldPrice(),
         fieldType: _getCurrentField(),
+        isSmooth: _getCurrentIsSmooth(),
       );
 
   @override
@@ -52,6 +54,7 @@ class StochasticOscillatorIndicatorItemState
           _buildFieldTypeMenu(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
+          buildIsSmoothField(),
         ],
       );
 
@@ -181,4 +184,32 @@ class StochasticOscillatorIndicatorItemState
       _overSoldPrice ??
       (widget.config as StochasticOscillatorIndicatorConfig)?.overSoldPrice ??
       20;
+
+  /// Builds show fractal indicator option
+  @protected
+  Widget buildIsSmoothField() => Row(
+    children: <Widget>[
+      Text(
+        ChartLocalization.of(context).labelShowFractals,
+        style: const TextStyle(fontSize: 10),
+      ),
+      const SizedBox(width: 4),
+      Switch(
+        value: _getCurrentIsSmooth(),
+        onChanged: (bool value) {
+          setState(() {
+            _isSmooth = value;
+          });
+          updateIndicator();
+        },
+        activeTrackColor: Colors.lightGreenAccent,
+        activeColor: Colors.green,
+      ),
+    ],
+  );
+
+  bool _getCurrentIsSmooth() =>
+      _isSmooth ??
+          (widget.config as StochasticOscillatorIndicatorConfig)?.isSmooth ??
+          true;
 }
