@@ -59,6 +59,8 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => WilliamsRSeries(
         indicatorInput,
         WilliamsROptions(period),
+        overboughtValue: overBoughtPrice,
+        oversoldValue: overSoldPrice,
       );
 
   @override
