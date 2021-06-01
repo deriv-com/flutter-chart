@@ -1,0 +1,79 @@
+import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/aroon/aroon_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
+
+import 'package:flutter/material.dart';
+
+import '../callbacks.dart';
+import '../indicator_config.dart';
+import '../indicator_item.dart';
+
+/// RSI indicator item in the list of indicator which provide this
+/// indicators options menu.
+class AroonIndicatorItem extends IndicatorItem {
+  /// Initializes
+  const AroonIndicatorItem({
+    Key key,
+    AroonIndicatorConfig config,
+    UpdateIndicator updateIndicator,
+    VoidCallback deleteIndicator,
+  }) : super(
+          key: key,
+          title: 'Aroon',
+          config: config,
+          updateIndicator: updateIndicator,
+          deleteIndicator: deleteIndicator,
+        );
+
+  @override
+  IndicatorItemState<IndicatorConfig> createIndicatorItemState() =>
+      AroonIndicatorItemState();
+}
+
+/// RSIItem State class
+class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
+  int _period;
+
+
+  @override
+  AroonIndicatorConfig createIndicatorConfig() => AroonIndicatorConfig(
+        period: _getCurrentPeriod(),
+      );
+
+  @override
+  Widget getIndicatorOptions() => Column(
+        children: <Widget>[
+          _buildPeriodField(),
+        ],
+      );
+
+  Widget _buildPeriodField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelPeriod,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: _getCurrentPeriod().toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (String text) {
+                if (text.isNotEmpty) {
+                  _period = int.tryParse(text);
+                } else {
+                  _period = 14;
+                }
+                updateIndicator();
+              },
+            ),
+          ),
+        ],
+      );
+
+  int _getCurrentPeriod() =>
+      _period ?? (widget.config as AroonIndicatorConfig)?.period ?? 14;
+}
