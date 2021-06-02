@@ -1,6 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_item.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/rsi_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/rsi_series.dart';
@@ -44,6 +45,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// The period to calculate the average gain and loss.
   final int period;
 
+  // TODO(NA): Use OscillatorLinesConfig instead.
   /// The price to show the over bought line.
   final double overBoughtPrice;
 

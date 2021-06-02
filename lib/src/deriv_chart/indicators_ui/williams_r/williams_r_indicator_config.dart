@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../callbacks.dart';
+import '../oscillator_lines/oscillator_lines_config.dart';
 import 'williams_r_indicator_item.dart';
 
 part 'williams_r_indicator_config.g.dart';
@@ -19,11 +20,13 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const WilliamsRIndicatorConfig({
     this.period = 14,
-    this.overBoughtPrice = -20,
-    this.overSoldPrice = -80,
     this.lineStyle = const LineStyle(color: Colors.white),
     this.zeroHorizontalLinesStyle = const LineStyle(color: Colors.red),
-    this.mainHorizontalLinesStyle = const LineStyle(color: Colors.white),
+    this.oscillatorLimits = const OscillatorLinesConfig(
+      overSoldPrice: -20,
+      overBoughtPrice: -80,
+      lineStyle: LineStyle(color: Colors.white),
+    ),
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -40,27 +43,21 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
   /// The period to calculate the average gain and loss.
   final int period;
 
-  /// The price to show the over bought line.
-  final double overBoughtPrice;
-
-  /// The price to show the over sold line.
-  final double overSoldPrice;
-
   /// The WilliamsR line style.
   final LineStyle lineStyle;
 
   /// The WilliamsR zero horizontal line style.
   final LineStyle zeroHorizontalLinesStyle;
 
-  /// The WilliamsR horizontal lines style(overBought and overSold).
-  final LineStyle mainHorizontalLinesStyle;
+  /// Oscillator limit lines
+  final OscillatorLinesConfig oscillatorLimits;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => WilliamsRSeries(
         indicatorInput,
         WilliamsROptions(period),
-        overboughtValue: overBoughtPrice,
-        oversoldValue: overSoldPrice,
+        overboughtValue: oscillatorLimits.overBoughtPrice,
+        oversoldValue: oscillatorLimits.overSoldPrice,
       );
 
   @override

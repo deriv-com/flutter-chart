@@ -7,6 +7,7 @@ import '../../widgets/field_widget.dart';
 import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
+import '../oscillator_lines/oscillator_lines_config.dart';
 import 'williams_r_indicator_config.dart';
 
 /// WilliamsR indicator item in the list of indicator which provide this
@@ -40,10 +41,11 @@ class WilliamsRIndicatorItemState
 
   @override
   WilliamsRIndicatorConfig createIndicatorConfig() => WilliamsRIndicatorConfig(
-        period: _getCurrentPeriod,
+      period: _getCurrentPeriod,
+      oscillatorLimits: OscillatorLinesConfig(
         overBoughtPrice: _getCurrentOverBoughtPrice,
         overSoldPrice: _getCurrentOverSoldPrice,
-      );
+      ));
 
   @override
   Widget getIndicatorOptions() => Column(
@@ -85,7 +87,9 @@ class WilliamsRIndicatorItemState
 
   double get _getCurrentOverBoughtPrice =>
       _overBoughtPrice ??
-      (widget.config as WilliamsRIndicatorConfig)?.overBoughtPrice ??
+      (widget.config as WilliamsRIndicatorConfig)
+          ?.oscillatorLimits
+          ?.overBoughtPrice ??
       -20;
 
   Widget _buildOverSoldPriceField() => FieldWidget(
@@ -103,6 +107,8 @@ class WilliamsRIndicatorItemState
 
   double get _getCurrentOverSoldPrice =>
       _overSoldPrice ??
-      (widget.config as WilliamsRIndicatorConfig)?.overSoldPrice ??
+      (widget.config as WilliamsRIndicatorConfig)
+          ?.oscillatorLimits
+          ?.overSoldPrice ??
       -80;
 }
