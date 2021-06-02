@@ -19,15 +19,12 @@ class OscillatorLinesConfig {
   /// The price to show the over sold line.
   final double overSoldPrice;
 
-  /// The WilliamsR horizontal lines style(overBought and overSold).
+  /// The horizontal lines style(overBought and overSold).
   final LineStyle lineStyle;
 
   /// Initializes from JSON.
   factory OscillatorLinesConfig.fromJson(Map<String, dynamic> json) =>
       _$OscillatorLinesConfigFromJson(json);
-
-  /// Unique name for this indicator.
-  static const String name = 'WilliamsR';
 
   @override
   Map<String, dynamic> toJson() => _$OscillatorLinesConfigToJson(this);
