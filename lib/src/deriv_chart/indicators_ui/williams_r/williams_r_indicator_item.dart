@@ -40,9 +40,9 @@ class WilliamsRIndicatorItemState
 
   @override
   WilliamsRIndicatorConfig createIndicatorConfig() => WilliamsRIndicatorConfig(
-        period: _getCurrentPeriod(),
-        overBoughtPrice: _getCurrentOverBoughtPrice(),
-        overSoldPrice: _getCurrentOverSoldPrice(),
+        period: _getCurrentPeriod,
+        overBoughtPrice: _getCurrentOverBoughtPrice,
+        overSoldPrice: _getCurrentOverSoldPrice,
       );
 
   @override
@@ -67,11 +67,11 @@ class WilliamsRIndicatorItemState
         },
       );
 
-  int _getCurrentPeriod() =>
+  int get _getCurrentPeriod =>
       _period ?? (widget.config as WilliamsRIndicatorConfig)?.period ?? 14;
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
-        initialValue: _getCurrentOverBoughtPrice().toString(),
+        initialValue: _getCurrentOverBoughtPrice.toString(),
         label: ChartLocalization.of(context).labelOverBoughtPrice,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -83,13 +83,13 @@ class WilliamsRIndicatorItemState
         },
       );
 
-  double _getCurrentOverBoughtPrice() =>
+  double get _getCurrentOverBoughtPrice =>
       _overBoughtPrice ??
       (widget.config as WilliamsRIndicatorConfig)?.overBoughtPrice ??
       -20;
 
   Widget _buildOverSoldPriceField() => FieldWidget(
-        initialValue: _getCurrentOverSoldPrice().toString(),
+        initialValue: _getCurrentOverSoldPrice.toString(),
         label: ChartLocalization.of(context).labelOverSoldPrice,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -101,7 +101,7 @@ class WilliamsRIndicatorItemState
         },
       );
 
-  double _getCurrentOverSoldPrice() =>
+  double get _getCurrentOverSoldPrice =>
       _overSoldPrice ??
       (widget.config as WilliamsRIndicatorConfig)?.overSoldPrice ??
       -80;
