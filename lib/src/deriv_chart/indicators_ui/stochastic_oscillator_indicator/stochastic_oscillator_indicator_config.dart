@@ -21,7 +21,7 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
     this.fieldType = 'close',
     this.overBoughtPrice = 80,
     this.overSoldPrice = 20,
-    this.showZones = true,
+    this.showZones = false,
     this.isSmooth = true,
     this.lineStyle = const LineStyle(color: Colors.white),
     this.mainHorizontalLinesStyle = const LineStyle(
@@ -71,7 +71,6 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => StochasticOscillatorSeries(
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
-        indicatorInput,
         this,
         stochasticOscillatorOptions: StochasticOscillatorOptions(
             period: period, isSmooth: isSmooth, showZones: showZones),

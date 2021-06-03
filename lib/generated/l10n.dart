@@ -345,6 +345,26 @@ class ChartLocalization {
     );
   }
 
+  /// `Is Smooth`
+  String get labelIsSmooth {
+    return Intl.message(
+      'Is Smooth',
+      name: 'labelIsSmooth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Zones`
+  String get labelShowZones {
+    return Intl.message(
+      'Show Zones',
+      name: 'labelShowZones',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Failed to load indicators.`
   String get warnFailedLoadingIndicators {
     return Intl.message(

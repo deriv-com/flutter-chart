@@ -11,6 +11,7 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/ma_indicator/ma_indica
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rainbow_indicator/rainbow_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/rsi/rsi_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 
 import 'package:deriv_chart/src/logic/chart_series/series.dart';
@@ -62,6 +63,8 @@ abstract class IndicatorConfig {
         return RSIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case StochasticOscillatorIndicatorConfig.name:
+        return StochasticOscillatorIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');

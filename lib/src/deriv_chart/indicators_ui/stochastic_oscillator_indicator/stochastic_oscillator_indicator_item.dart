@@ -36,6 +36,7 @@ class StochasticOscillatorIndicatorItemState
   double _overSoldPrice;
   String _field;
   bool _isSmooth;
+  bool _showZones;
 
   @override
   StochasticOscillatorIndicatorConfig createIndicatorConfig() =>
@@ -45,6 +46,7 @@ class StochasticOscillatorIndicatorItemState
         overSoldPrice: _getCurrentOverSoldPrice(),
         fieldType: _getCurrentField(),
         isSmooth: _getCurrentIsSmooth(),
+        showZones: _getCurrentShowZones(),
       );
 
   @override
@@ -55,6 +57,7 @@ class StochasticOscillatorIndicatorItemState
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
           buildIsSmoothField(),
+          buildShowZonesField(),
         ],
       );
 
@@ -185,31 +188,59 @@ class StochasticOscillatorIndicatorItemState
       (widget.config as StochasticOscillatorIndicatorConfig)?.overSoldPrice ??
       20;
 
-  /// Builds show fractal indicator option
+  /// Builds is Smooth option
   @protected
   Widget buildIsSmoothField() => Row(
-    children: <Widget>[
-      Text(
-        ChartLocalization.of(context).labelShowFractals,
-        style: const TextStyle(fontSize: 10),
-      ),
-      const SizedBox(width: 4),
-      Switch(
-        value: _getCurrentIsSmooth(),
-        onChanged: (bool value) {
-          setState(() {
-            _isSmooth = value;
-          });
-          updateIndicator();
-        },
-        activeTrackColor: Colors.lightGreenAccent,
-        activeColor: Colors.green,
-      ),
-    ],
-  );
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelIsSmooth,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: _getCurrentIsSmooth(),
+            onChanged: (bool value) {
+              setState(() {
+                _isSmooth = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          ),
+        ],
+      );
 
   bool _getCurrentIsSmooth() =>
       _isSmooth ??
-          (widget.config as StochasticOscillatorIndicatorConfig)?.isSmooth ??
-          true;
+      (widget.config as StochasticOscillatorIndicatorConfig)?.isSmooth ??
+      true;
+
+  /// Builds buildShowZones option
+  @protected
+  Widget buildShowZonesField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelShowZones,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: _getCurrentShowZones(),
+            onChanged: (bool value) {
+              setState(() {
+                _showZones = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          ),
+        ],
+      );
+
+  bool _getCurrentShowZones() =>
+      _showZones ??
+      (widget.config as StochasticOscillatorIndicatorConfig)?.showZones ??
+      false;
 }

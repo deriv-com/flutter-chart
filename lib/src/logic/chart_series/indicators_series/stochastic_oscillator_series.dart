@@ -2,9 +2,9 @@ import 'package:deriv_chart/src/deriv_chart/indicators_ui/stochastic_oscillator_
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/stochastic_oscillator_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/logic/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -17,22 +17,21 @@ import '../series_painter.dart';
 
 /// A series which shows Stochastic Oscillator Series data calculated from 'entries'.
 class StochasticOscillatorSeries extends Series {
-  /// Initializes a series which shows shows Stochastic Oscillator data calculated from [indicatorInput].
+  /// Initializes a series which shows shows Stochastic Oscillator data calculated from [inputIndicator].
   StochasticOscillatorSeries(
-    this.indicatorInput,
-    this.input,
+    this.inputIndicator,
     this.config, {
     String id,
     this.stochasticOscillatorOptions,
   }) : super(id);
 
-  SingleIndicatorSeries _fastPercentKStochasticIndicatorSeries;
-  SingleIndicatorSeries _fastPercentDStochasticIndicatorSeries;
+  SingleIndicatorSeries _smoothedFastPercentStochasticIndicatorSeries;
+  SingleIndicatorSeries _fastPercentStochasticIndicatorSeries;
   SingleIndicatorSeries _slowStochasticIndicatorSeries;
+  SingleIndicatorSeries _smoothedSlowStochasticIndicatorSeries;
 
   ///input data
-  final Indicator<Tick> indicatorInput;
-  final IndicatorInput input;
+  final Indicator<Tick> inputIndicator;
 
   /// Configuration of StochasticOscillator.
   final StochasticOscillatorIndicatorConfig config;
@@ -42,71 +41,133 @@ class StochasticOscillatorSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-
-    final FastPercentKStochasticIndicator<Tick> fastPercentKStochasticIndicator =
-    FastPercentKStochasticIndicator<Tick>(input, indicator: indicatorInput,
+    final FastStochasticIndicator<Tick> fastStochasticIndicator =
+        FastStochasticIndicator<Tick>.fromIndicator(inputIndicator,
             period: stochasticOscillatorOptions.period);
 
-    final FastPercentDStochasticIndicator<Tick> fastPercentDStochasticIndicator =
-    FastPercentDStochasticIndicator<Tick>(fastPercentKStochasticIndicator,
-        period: stochasticOscillatorOptions.period);
-
-    _fastPercentKStochasticIndicatorSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => fastPercentKStochasticIndicator,
-      inputIndicator: indicatorInput,
-      style: const LineStyle(color: Colors.white),
-    );
-
-    _fastPercentDStochasticIndicatorSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => fastPercentDStochasticIndicator,
-      inputIndicator: indicatorInput,
+    final SlowStochasticIndicator<Tick> slowStochasticIndicator =
+        SlowStochasticIndicator.fromIndicator(fastStochasticIndicator);
+    _fastPercentStochasticIndicatorSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => config.showZones
+          ? OscillatorLinePainter(
+              series,
+              bottomHorizontalLine: config.overSoldPrice,
+              topHorizontalLine: config.overBoughtPrice,
+              mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+            )
+          : LinePainter(series),
+      indicatorCreator: () => fastStochasticIndicator,
+      inputIndicator: inputIndicator,
       style: const LineStyle(color: Colors.white),
     );
 
     _slowStochasticIndicatorSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => SlowStochasticIndicator<Tick>(config.isSmooth? fastPercentDStochasticIndicator: fastPercentKStochasticIndicator),
-      inputIndicator: indicatorInput,
+      painterCreator: (Series series) => config.showZones
+          ? OscillatorLinePainter(
+              series,
+              bottomHorizontalLine: config.overSoldPrice,
+              topHorizontalLine: config.overBoughtPrice,
+              mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+            )
+          : LinePainter(series),
+      indicatorCreator: () => slowStochasticIndicator,
+      inputIndicator: inputIndicator,
       style: const LineStyle(color: Colors.red),
     );
 
+    if (config.isSmooth) {
+      final SmoothedFastStochasticIndicator<Tick>
+          smoothedFastStochasticIndicator =
+          SmoothedFastStochasticIndicator<Tick>(fastStochasticIndicator,
+              period: stochasticOscillatorOptions.period);
+
+      _smoothedFastPercentStochasticIndicatorSeries = SingleIndicatorSeries(
+        painterCreator: (Series series) => config.showZones
+            ? OscillatorLinePainter(
+                series,
+                bottomHorizontalLine: config.overSoldPrice,
+                topHorizontalLine: config.overBoughtPrice,
+                mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+              )
+            : LinePainter(series),
+        indicatorCreator: () => smoothedFastStochasticIndicator,
+        inputIndicator: inputIndicator,
+        style: const LineStyle(color: Colors.white),
+      );
+
+      _smoothedSlowStochasticIndicatorSeries = SingleIndicatorSeries(
+        painterCreator: (Series series) => config.showZones
+            ? OscillatorLinePainter(
+                series,
+                bottomHorizontalLine: config.overSoldPrice,
+                topHorizontalLine: config.overBoughtPrice,
+                mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+              )
+            : LinePainter(series),
+        indicatorCreator: () =>
+            SmoothedSlowStochasticIndicator<Tick>(slowStochasticIndicator),
+        inputIndicator: inputIndicator,
+        style: const LineStyle(color: Colors.red),
+      );
+    }
     return null;
   }
 
   @override
   bool didUpdate(ChartData oldData) {
     final StochasticOscillatorSeries series = oldData;
-    final bool _fcbHighUpdated = _fastPercentKStochasticIndicatorSeries
-        .didUpdate(series?._fastPercentKStochasticIndicatorSeries);
-    final bool _fast = _fastPercentDStochasticIndicatorSeries
-        .didUpdate(series?._fastPercentDStochasticIndicatorSeries);
-    final bool _fcbLowUpdated = _slowStochasticIndicatorSeries
+
+    final bool _fastUpdated = _fastPercentStochasticIndicatorSeries
+        .didUpdate(series?._fastPercentStochasticIndicatorSeries);
+    final bool _slowUpdated = _slowStochasticIndicatorSeries
         .didUpdate(series?._slowStochasticIndicatorSeries);
-    return _fcbHighUpdated || _fcbLowUpdated||_fast;
+
+    if (config.isSmooth) {
+      final bool _smoothedFastUpdated =
+          _smoothedFastPercentStochasticIndicatorSeries
+              .didUpdate(series?._smoothedFastPercentStochasticIndicatorSeries);
+      final bool _smoothedSlowUpdated = _smoothedSlowStochasticIndicatorSeries
+          .didUpdate(series?._smoothedSlowStochasticIndicatorSeries);
+
+      return _fastUpdated ||
+          _slowUpdated ||
+          _smoothedFastUpdated | _smoothedSlowUpdated;
+    }
+
+    return _fastUpdated || _slowUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _fastPercentKStochasticIndicatorSeries.update(leftEpoch, rightEpoch);
-    _fastPercentDStochasticIndicatorSeries.update(leftEpoch, rightEpoch);
+    _smoothedFastPercentStochasticIndicatorSeries?.update(
+        leftEpoch, rightEpoch);
+    _smoothedSlowStochasticIndicatorSeries?.update(leftEpoch, rightEpoch);
+    _fastPercentStochasticIndicatorSeries.update(leftEpoch, rightEpoch);
     _slowStochasticIndicatorSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
-  List<double> recalculateMinMax() => <double>[
-        <ChartData>[
-          _fastPercentKStochasticIndicatorSeries,
-          _fastPercentDStochasticIndicatorSeries,
-          _slowStochasticIndicatorSeries,
-        ].getMinValue(),
-        <ChartData>[
-          _fastPercentKStochasticIndicatorSeries,
-          _fastPercentDStochasticIndicatorSeries,
-          _slowStochasticIndicatorSeries,
-        ].getMaxValue()
-      ];
+  List<double> recalculateMinMax() => config.isSmooth
+      ? <double>[
+          <ChartData>[
+            _smoothedFastPercentStochasticIndicatorSeries,
+            _smoothedSlowStochasticIndicatorSeries,
+          ].getMinValue(),
+          <ChartData>[
+            _smoothedFastPercentStochasticIndicatorSeries,
+            _smoothedSlowStochasticIndicatorSeries,
+          ].getMaxValue()
+        ]
+      : <double>[
+          <ChartData>[
+            _fastPercentStochasticIndicatorSeries,
+            _slowStochasticIndicatorSeries,
+          ].getMinValue(),
+          <ChartData>[
+            _fastPercentStochasticIndicatorSeries,
+            _slowStochasticIndicatorSeries,
+          ].getMaxValue()
+        ];
 
   @override
   void paint(
@@ -118,41 +179,30 @@ class StochasticOscillatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    if(config.isSmooth) {
-      _fastPercentDStochasticIndicatorSeries.paint(
-          canvas,
-          size,
-          epochToX,
-          quoteToY,
-          animationInfo,
-          chartConfig,
-          theme);
+    if (!config.isSmooth) {
+      _fastPercentStochasticIndicatorSeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      _slowStochasticIndicatorSeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    } else {
+      _smoothedFastPercentStochasticIndicatorSeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      _smoothedSlowStochasticIndicatorSeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     }
-    else{
-      _fastPercentKStochasticIndicatorSeries.paint(
-          canvas,
-          size,
-          epochToX,
-          quoteToY,
-          animationInfo,
-          chartConfig,
-          theme);
-    }
-    _slowStochasticIndicatorSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
   int getMaxEpoch() => <ChartData>[
-        _fastPercentKStochasticIndicatorSeries,
-        _fastPercentDStochasticIndicatorSeries,
+        _smoothedFastPercentStochasticIndicatorSeries,
+        _fastPercentStochasticIndicatorSeries,
         _slowStochasticIndicatorSeries,
       ].getMaxEpoch();
 
   @override
   int getMinEpoch() => <ChartData>[
-        _fastPercentKStochasticIndicatorSeries,
-        _fastPercentDStochasticIndicatorSeries,
+        _smoothedFastPercentStochasticIndicatorSeries,
+        _fastPercentStochasticIndicatorSeries,
         _slowStochasticIndicatorSeries,
       ].getMinEpoch();
 }
