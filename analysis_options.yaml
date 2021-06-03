@@ -1,9 +1,9 @@
 analyzer:
   exclude:
     # Remove these later:
-#    - test/**
-#    - lib/**
-#    - example/**
+    - test/**
+    - lib/**
+    - example/**
 
     # Keep these:
     - example/lib/generated/**
