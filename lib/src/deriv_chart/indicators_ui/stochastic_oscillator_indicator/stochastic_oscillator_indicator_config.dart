@@ -12,7 +12,7 @@ import '../callbacks.dart';
 
 part 'stochastic_oscillator_indicator_config.g.dart';
 
-/// RSI Indicator configurations.
+/// Stochastic Oscillator Indicator configurations.
 @JsonSerializable()
 class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   /// Initializes
@@ -51,10 +51,10 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   /// The price to show the over sold line.
   final double overSoldPrice;
 
-  /// The RSI line style.
+  /// The line style.
   final LineStyle lineStyle;
 
-  /// The RSI horizontal lines style(overBought and overSold).
+  /// The horizontal lines style(overBought and overSold).
   final LineStyle mainHorizontalLinesStyle;
 
   /// Field type

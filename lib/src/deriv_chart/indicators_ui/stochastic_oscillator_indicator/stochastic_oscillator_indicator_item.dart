@@ -28,7 +28,7 @@ class StochasticOscillatorIndicatorItem extends IndicatorItem {
       StochasticOscillatorIndicatorItemState();
 }
 
-/// RSIItem State class
+/// StochasticOscillatorIndicatorItemState class
 class StochasticOscillatorIndicatorItemState
     extends IndicatorItemState<StochasticOscillatorIndicatorConfig> {
   int _period;
