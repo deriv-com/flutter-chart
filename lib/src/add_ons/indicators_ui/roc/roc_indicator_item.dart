@@ -3,7 +3,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/roc/roc_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 
 import 'package:flutter/material.dart';
 
