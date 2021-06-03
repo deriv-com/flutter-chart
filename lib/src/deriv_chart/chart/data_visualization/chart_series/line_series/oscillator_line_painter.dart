@@ -22,10 +22,12 @@ class OscillatorLinePainter extends LinePainter {
     LineStyle mainHorizontalLinesStyle,
     LineStyle secondaryHorizontalLinesStyle,
     List<double> secondaryHorizontalLines = const <double>[],
-  })  : _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
+  })  : _mainHorizontalLinesStyle =
+            mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
         _topHorizontalLine = topHorizontalLine,
         _secondaryHorizontalLines = secondaryHorizontalLines,
-        _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
+        _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle ??
+            const LineStyle(color: Colors.blueGrey),
         _bottomHorizontalLine = bottomHorizontalLine,
         super(
           series,
@@ -71,23 +73,27 @@ class OscillatorLinePainter extends LinePainter {
     _topHorizontalLinePath = Path();
     _bottomHorizontalLinePath = Path();
 
-    _topHorizontalLinePath.moveTo(0, quoteToY(_topHorizontalLine));
-    _bottomHorizontalLinePath.moveTo(0, quoteToY(_bottomHorizontalLine));
+    if (_topHorizontalLine != null) {
+      _topHorizontalLinePath
+        ..moveTo(0, quoteToY(_topHorizontalLine))
+        ..lineTo(
+            size.width -
+                _labelWidth(_bottomHorizontalLine, textStyle.textStyle,
+                    chartConfig.pipSize),
+            quoteToY(_topHorizontalLine));
+    }
 
-    _topHorizontalLinePath.lineTo(
-        size.width -
-            _labelWidth(_bottomHorizontalLine, textStyle.textStyle,
-                chartConfig.pipSize),
-        quoteToY(_topHorizontalLine));
-    _bottomHorizontalLinePath.lineTo(
-        size.width -
-            _labelWidth(
-                _topHorizontalLine, textStyle.textStyle, chartConfig.pipSize),
-        quoteToY(_bottomHorizontalLine));
+    if (_bottomHorizontalLine != null) {
+      _bottomHorizontalLinePath
+        ..moveTo(0, quoteToY(_bottomHorizontalLine))
+        ..lineTo(
+            size.width -
+                _labelWidth(_topHorizontalLine, textStyle.textStyle,
+                    chartConfig.pipSize),
+            quoteToY(_bottomHorizontalLine));
 
-    canvas
-      ..drawPath(_topHorizontalLinePath, paint)
-      ..drawPath(_bottomHorizontalLinePath, paint);
+      canvas.drawPath(_bottomHorizontalLinePath, paint);
+    }
 
     _paintLabels(size, quoteToY, canvas);
   }
@@ -112,42 +118,45 @@ class OscillatorLinePainter extends LinePainter {
       textStyle: TextStyle(fontSize: 10, color: theme.base01Color),
     );
 
-    final TextPainter topValuePainter = makeTextPainter(
-      _topHorizontalLine.toStringAsFixed(0),
-      style.textStyle,
-    );
+    if (_topHorizontalLine != null) {
+      final TextPainter topValuePainter = makeTextPainter(
+        _topHorizontalLine.toStringAsFixed(0),
+        style.textStyle,
+      );
+      final Rect topLabelArea = Rect.fromCenter(
+        center: Offset(
+            size.width - rightMargin - padding - topValuePainter.width / 2,
+            quoteToY(_topHorizontalLine)),
+        width: topValuePainter.width + padding * 2,
+        height: style.labelHeight,
+      );
+      paintWithTextPainter(
+        canvas,
+        painter: topValuePainter,
+        anchor: topLabelArea.center,
+      );
+    }
 
-    final TextPainter bottomValuePainter = makeTextPainter(
-      _bottomHorizontalLine.toStringAsFixed(0),
-      style.textStyle,
-    );
+    if (_bottomHorizontalLine != null) {
+      final TextPainter bottomValuePainter = makeTextPainter(
+        _bottomHorizontalLine.toStringAsFixed(0),
+        style.textStyle,
+      );
 
-    final Rect topLabelArea = Rect.fromCenter(
-      center: Offset(
-          size.width - rightMargin - padding - topValuePainter.width / 2,
-          quoteToY(_topHorizontalLine)),
-      width: topValuePainter.width + padding * 2,
-      height: style.labelHeight,
-    );
+      final Rect bottomLabelArea = Rect.fromCenter(
+        center: Offset(
+            size.width - rightMargin - padding - bottomValuePainter.width / 2,
+            quoteToY(_bottomHorizontalLine)),
+        width: bottomValuePainter.width + padding * 2,
+        height: style.labelHeight,
+      );
 
-    final Rect bottomLabelArea = Rect.fromCenter(
-      center: Offset(
-          size.width - rightMargin - padding - bottomValuePainter.width / 2,
-          quoteToY(_bottomHorizontalLine)),
-      width: bottomValuePainter.width + padding * 2,
-      height: style.labelHeight,
-    );
-
-    paintWithTextPainter(
-      canvas,
-      painter: topValuePainter,
-      anchor: topLabelArea.center,
-    );
-    paintWithTextPainter(
-      canvas,
-      painter: bottomValuePainter,
-      anchor: bottomLabelArea.center,
-    );
+      paintWithTextPainter(
+        canvas,
+        painter: bottomValuePainter,
+        anchor: bottomLabelArea.center,
+      );
+    }
   }
 
   // TODO(mohammadamir-fs): add channel fill.
