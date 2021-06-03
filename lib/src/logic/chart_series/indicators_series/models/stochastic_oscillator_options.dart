@@ -6,7 +6,7 @@ class StochasticOscillatorOptions extends IndicatorOptions {
   const StochasticOscillatorOptions(
       {this.period = 14, this.isSmooth = true, this.showZones = true});
 
-  /// The period to calculate rsi Indicator on.
+  /// The period to calculate Stochastic Oscillator Indicator on.
   final int period;
 
   /// if StochasticOscillator is smooth
@@ -14,7 +14,7 @@ class StochasticOscillatorOptions extends IndicatorOptions {
   final bool isSmooth;
 
   /// if show the overbought and oversold zones
-  /// default is true
+  /// default is false
   final bool showZones;
 
   @override
