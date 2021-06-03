@@ -7,7 +7,6 @@ import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart
 import 'package:deriv_chart/src/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/paint/paint_text.dart';
-import 'package:deriv_chart/src/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
@@ -58,24 +57,11 @@ class OscillatorLinePainter extends LinePainter {
     _paintHorizontalLines(canvas, quoteToY, size);
   }
 
-  void _paintLabelBackground(
-    Canvas canvas,
-    Rect rect,
-    LabelShape shape,
-  ) {
-    final Paint paint = Paint()
-      ..color = _mainHorizontalLinesStyle.color
-      ..style = PaintingStyle.fill
-      ..strokeWidth = _mainHorizontalLinesStyle.thickness;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(4)),
-      paint,
-    );
-  }
-
   void _paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
     _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
+    const HorizontalBarrierStyle textStyle =
+        HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
     final Paint paint = Paint()
       ..color = _mainHorizontalLinesStyle.color
       ..style = PaintingStyle.stroke
@@ -87,9 +73,16 @@ class OscillatorLinePainter extends LinePainter {
     _topHorizontalLinePath.moveTo(0, quoteToY(_topHorizontalLine));
     _bottomHorizontalLinePath.moveTo(0, quoteToY(_bottomHorizontalLine));
 
-    _topHorizontalLinePath.lineTo(size.width, quoteToY(_topHorizontalLine));
+    _topHorizontalLinePath.lineTo(
+        size.width -
+            _labelWidth(_bottomHorizontalLine, textStyle.textStyle,
+                chartConfig.pipSize),
+        quoteToY(_topHorizontalLine));
     _bottomHorizontalLinePath.lineTo(
-        size.width, quoteToY(_bottomHorizontalLine));
+        size.width -
+            _labelWidth(
+                _topHorizontalLine, textStyle.textStyle, chartConfig.pipSize),
+        quoteToY(_bottomHorizontalLine));
 
     canvas
       ..drawPath(_topHorizontalLinePath, paint)
@@ -115,10 +108,7 @@ class OscillatorLinePainter extends LinePainter {
 
   void _paintLabels(Size size, QuoteToY quoteToY, Canvas canvas) {
     final HorizontalBarrierStyle style = HorizontalBarrierStyle(
-      textStyle: TextStyle(
-        fontSize: 10,
-        color: calculateTextColor(_mainHorizontalLinesStyle.color),
-      ),
+      textStyle: TextStyle(fontSize: 10, color: theme.base01Color),
     );
 
     final TextPainter topValuePainter = makeTextPainter(
@@ -147,8 +137,6 @@ class OscillatorLinePainter extends LinePainter {
       height: style.labelHeight,
     );
 
-    _paintLabelBackground(canvas, bottomLabelArea, style.labelShape);
-    _paintLabelBackground(canvas, topLabelArea, style.labelShape);
     paintWithTextPainter(
       canvas,
       painter: topValuePainter,
@@ -163,3 +151,9 @@ class OscillatorLinePainter extends LinePainter {
 
   // TODO(mohammadamir-fs): add channel fill.
 }
+
+double _labelWidth(double text, TextStyle style, int pipSize) =>
+    makeTextPainter(
+      text.toStringAsFixed(pipSize),
+      style,
+    ).width;

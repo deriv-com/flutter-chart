@@ -51,6 +51,9 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   List<double> recalculateMinMax() {
     final List<double> rsiMinMax = super.recalculateMinMax();
 
+    if (!config.pinLabels) {
+      return rsiMinMax;
+    }
     return <double>[
       safeMin(
           safeMin(rsiMinMax[0], config.overSoldPrice), config.overBoughtPrice),
