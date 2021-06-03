@@ -4,6 +4,8 @@ import 'dart:developer' as dev;
 import 'dart:math' as math;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:example/settings_page.dart';
+import 'package:example/utils/endpoints_helper.dart';
 import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +18,11 @@ import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
+import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:example/generated/l10n.dart';
@@ -65,6 +69,9 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
+  static const String defaultAppID = '1089';
+  static const String defaultEndpoint = 'blue.binaryws.com';
+
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
@@ -115,11 +122,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = ConnectionBloc(ConnectionInformation(
-      appId: '1089',
-      brand: 'binary',
-      endpoint: 'blue.binaryws.com',
-    ))
+    _connectionBloc = ConnectionBloc(await _getConnectionInfoFromPrefs())
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
           // Calling this since we show some status labels when NOT connected.
@@ -128,10 +131,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
         }
 
         if (ticks.isEmpty) {
-          await _getActiveSymbols();
+          try {
+            await _getActiveSymbols();
 
-          _requestCompleter.complete();
-          _onIntervalSelected(0);
+            if (!_requestCompleter.isCompleted) {
+              _requestCompleter.complete();
+            }
+            _onIntervalSelected(0);
+          } on APIBaseException catch (e) {
+            await showDialog<void>(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text(
+                  e.message,
+                  style: const TextStyle(fontSize: 10),
+                ),
+              ),
+            );
+          }
         } else {
           _initTickStream(
             TicksHistoryRequest(
@@ -421,6 +438,32 @@ class _FullscreenChartState extends State<FullscreenChart> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: () async {
+                        final bool settingChanged =
+                            await Navigator.of(context).push(
+                          MaterialPageRoute<bool>(
+                              builder: (_) => SettingsPage(
+                                    defaultAppID: defaultAppID,
+                                    defaultEndpoint: defaultEndpoint,
+                                  )),
+                        );
+
+                        if (settingChanged) {
+                          _requestCompleter = Completer<dynamic>();
+                          _tickStreamSubscription?.cancel();
+                          ticks.clear();
+                          // reconnect to new config
+                          _connectionBloc.add(
+                              Reconfigure(await _getConnectionInfoFromPrefs()));
+
+                          WidgetsFlutterBinding.ensureInitialized()
+                              .addPostFrameCallback((_) {
+                            _connectionBloc.add(Connect());
+                          });
+                        }
+                      }),
                   RaisedButton(
                     color: Colors.green,
                     child: const Text('Up'),
@@ -750,6 +793,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
         isDashed: false,
       ),
       visibility: HorizontalBarrierVisibility.forceToStayOnRange,
+    );
+  }
+
+  Future<ConnectionInformation> _getConnectionInfoFromPrefs() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    return ConnectionInformation(
+      appId: preferences.getString('appID') ?? defaultAppID,
+      brand: 'deriv',
+      endpoint:
+          generateEndpointUrl(endpoint: preferences.getString('endpoint')) ??
+              defaultEndpoint,
     );
   }
 }
