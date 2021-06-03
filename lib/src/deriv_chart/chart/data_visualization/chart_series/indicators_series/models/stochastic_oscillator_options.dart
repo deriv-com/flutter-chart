@@ -1,4 +1,6 @@
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/indicator_options.dart';
+
+
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
 
 /// StochasticOscillator indicator options.
 class StochasticOscillatorOptions extends IndicatorOptions {
