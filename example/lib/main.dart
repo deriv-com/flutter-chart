@@ -76,6 +76,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
+  bool _showTimer = false;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier _slBarrier, _tpBarrier;
