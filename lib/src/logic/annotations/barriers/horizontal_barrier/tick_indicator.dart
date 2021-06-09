@@ -1,7 +1,7 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 
-import 'horizontal_barrier.dart';
 
 /// Tick indicator.
 class TickIndicator extends HorizontalBarrier {
