@@ -23,6 +23,7 @@ import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -76,7 +77,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
-  bool _showTimer = false;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier? _slBarrier, _tpBarrier;
@@ -107,11 +107,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartController _controller = ChartController();
   PersistentBottomSheetController? _bottomSheetController;
 
+  late PrefServiceCache _prefService;
+
   @override
   void initState() {
     super.initState();
     _requestCompleter = Completer<dynamic>();
     _connectToAPI();
+    _initPrefs();
+  }
+
+  Future<void> _initPrefs() async {
+    _prefService = PrefServiceCache();
+    await _prefService.setDefaultValues(<String, dynamic>{
+      'appID': defaultAppID,
+      'endpoint': defaultEndpoint,
+    });
   }
 
   @override
@@ -123,7 +134,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = ConnectionBloc(await _getConnectionInfoFromPrefs())
+    _connectionBloc = ConnectionBloc(ConnectionInformation(
+        endpoint: defaultEndpoint, appId: defaultAppID, brand: 'deriv'))
       ..stream.listen((connectionState) async {
         if (connectionState is! Connected) {
           // Calling this since we show some status labels when NOT connected.
@@ -445,18 +457,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   IconButton(
                       icon: Icon(Icons.settings),
                       onPressed: () async {
-                        final bool settingChanged =
+                        final bool? settingChanged =
                             await Navigator.of(context).push(
                           MaterialPageRoute<bool>(
-                              builder: (_) => SettingsPage(
-                                    defaultAppID: defaultAppID,
-                                    defaultEndpoint: defaultEndpoint,
+                              builder: (_) => PrefService(
+                                    child: SettingsPage(),
+                                    service: _prefService,
                                   )),
                         );
 
-                        if (settingChanged) {
+                        if (settingChanged ?? false) {
                           _requestCompleter = Completer<dynamic>();
-                          _tickStreamSubscription?.cancel();
+                          await _tickStreamSubscription?.cancel();
                           ticks.clear();
                           // reconnect to new config
                           _connectionBloc.add(
@@ -808,13 +820,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<ConnectionInformation> _getConnectionInfoFromPrefs() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final String? endpoint = preferences.getString('endpoint');
 
     return ConnectionInformation(
       appId: preferences.getString('appID') ?? defaultAppID,
       brand: 'deriv',
-      endpoint:
-          generateEndpointUrl(endpoint: preferences.getString('endpoint')) ??
-              defaultEndpoint,
+      endpoint: endpoint != null
+          ? generateEndpointUrl(endpoint: endpoint)
+          : defaultEndpoint,
     );
   }
 }
