@@ -18,9 +18,9 @@ dependencies:
   equatable: ^1.2.5
   deriv_technical_analysis:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: git@github.com:raminvakili-fs/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: dev
+      ref: ramin/add_dema_and_tema_indicators
 
   # Store state:
   shared_preferences: <1.0.0

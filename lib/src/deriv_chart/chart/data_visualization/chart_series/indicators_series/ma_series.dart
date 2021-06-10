@@ -64,6 +64,8 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return HMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.zeroLag:
         return ZLEMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.twoExponential:
+        return DEMAIndicator<Tick>(indicator, maOptions.period);
       default:
         return SMAIndicator<Tick>(indicator, maOptions.period);
     }
@@ -86,4 +88,7 @@ enum MovingAverageType {
 
   /// Zero-lag exponential
   zeroLag,
+
+  /// Double Exponential Moving Average
+  twoExponential,
 }
