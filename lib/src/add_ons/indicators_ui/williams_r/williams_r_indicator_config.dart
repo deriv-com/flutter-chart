@@ -23,8 +23,8 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
     this.lineStyle = const LineStyle(color: Colors.white),
     this.zeroHorizontalLinesStyle = const LineStyle(color: Colors.red),
     this.oscillatorLimits = const OscillatorLinesConfig(
-      overSoldPrice: -20,
-      overBoughtPrice: -80,
+      overSoldPrice: -80,
+      overBoughtPrice: -20,
       lineStyle: LineStyle(color: Colors.white),
     ),
   }) : super(isOverlay: false);
