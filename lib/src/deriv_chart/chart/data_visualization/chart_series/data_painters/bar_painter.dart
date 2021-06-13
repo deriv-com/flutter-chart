@@ -1,14 +1,16 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/logic/chart_data.dart';
-import 'package:deriv_chart/src/logic/chart_series/data_painter.dart';
-import 'package:deriv_chart/src/logic/chart_series/indexed_entry.dart';
-import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painting.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:flutter/material.dart';
 
+import '../../chart_data.dart';
+import '../data_painter.dart';
 import '../data_series.dart';
+import '../indexed_entry.dart';
 
 /// A [DataPainter] for painting Histogram Bar data.
 class BarPainter extends DataPainter<DataSeries<Tick>> {
@@ -45,16 +47,19 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
         i < series.visibleEntries.endIndex - 1;
         i++) {
       final Candle candle = series.entries[i];
+      final Candle lastCandle = series.entries[i - 1 >= 0 ? i - 1 : i];
 
-      _paintCandle(
+      _paintBar(
         canvas,
-        CandlePainting(
+        BarPainting(
           width: barWidth,
           xCenter: epochToX(getEpochOf(candle, i)),
-          yHigh: quoteToY(candle.high),
-          yLow: quoteToY(candle.low),
-          yOpen: quoteToY(candle.open),
-          yClose: quoteToY(candle.close),
+          yQuote: candle.quote,
+        ),
+        BarPainting(
+          width: barWidth,
+          xCenter: epochToX(getEpochOf(candle, i)),
+          yQuote: lastCandle.quote,
         ),
       );
     }
@@ -63,14 +68,14 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     final Candle lastCandle = series.entries.last;
     final Candle lastVisibleCandle = series.visibleEntries.last;
 
-    CandlePainting lastCandlePainting;
+    BarPainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
       final IndexedEntry<Candle> prevLastCandle = series.prevLastEntry;
 
-      final double animatedYClose = quoteToY(ui.lerpDouble(
-        prevLastCandle.entry.close,
-        lastCandle.close,
+      final double animatedYQuote = quoteToY(ui.lerpDouble(
+        prevLastCandle.entry.quote,
+        lastCandle.quote,
         animationInfo.currentTickPercent,
       ));
 
@@ -80,56 +85,48 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
         animationInfo.currentTickPercent,
       );
 
-      lastCandlePainting = CandlePainting(
+      lastCandlePainting = BarPainting(
         xCenter: xCenter,
-        yHigh: lastCandle.high > prevLastCandle.entry.high
-            // In this case we don't update high-low line to avoid instant change of its
-            // height (ahead of animation). Candle close value animation will cover the line.
-            ? quoteToY(prevLastCandle.entry.high)
-            : quoteToY(lastCandle.high),
-        yLow: lastCandle.low < prevLastCandle.entry.low
-            // Same as comment above.
-            ? quoteToY(prevLastCandle.entry.low)
-            : quoteToY(lastCandle.low),
-        yOpen: quoteToY(lastCandle.open),
-        yClose: animatedYClose,
+        yQuote: animatedYQuote,
         width: barWidth,
       );
     } else {
-      lastCandlePainting = CandlePainting(
+      lastCandlePainting = BarPainting(
         xCenter: epochToX(
             getEpochOf(lastVisibleCandle, series.visibleEntries.endIndex - 1)),
-        yHigh: quoteToY(lastVisibleCandle.high),
-        yLow: quoteToY(lastVisibleCandle.low),
-        yOpen: quoteToY(lastVisibleCandle.open),
-        yClose: quoteToY(lastVisibleCandle.close),
+        yQuote: quoteToY(lastVisibleCandle.quote),
         width: barWidth,
       );
     }
 
-    _paintCandle(canvas, lastCandlePainting);
+    _paintBar(canvas, lastCandlePainting, lastCandlePainting);
   }
 
-  void _paintCandle(Canvas canvas, CandlePainting cp) {
-    if (cp.yOpen > cp.yClose) {
+  void _paintBar(
+      Canvas canvas, BarPainting barPainting, BarPainting lastCandlePainting) {
+    if (barPainting.yQuote > 0) {
       canvas.drawRect(
         Rect.fromLTRB(
-          cp.xCenter - cp.width / 2,
-          cp.yClose,
-          cp.xCenter + cp.width / 2,
-          cp.yOpen,
+          barPainting.xCenter - barPainting.width / 2,
+          barPainting.yQuote,
+          barPainting.xCenter + barPainting.width / 2,
+          0,
         ),
-        _positiveHistogramPaint,
+        barPainting.yQuote >= lastCandlePainting.yQuote
+            ? _positiveHistogramPaint
+            : _negativeHistogramPaint,
       );
     } else {
       canvas.drawRect(
         Rect.fromLTRB(
-          cp.xCenter - cp.width / 2,
-          cp.yOpen,
-          cp.xCenter + cp.width / 2,
-          cp.yClose,
+          barPainting.xCenter - barPainting.width / 2,
+          0,
+          barPainting.xCenter + barPainting.width / 2,
+          barPainting.yQuote,
         ),
-        _negativeHistogramPaint,
+        barPainting.yQuote >= lastCandlePainting.yQuote
+            ? _positiveHistogramPaint
+            : _negativeHistogramPaint,
       );
     }
   }
