@@ -101,17 +101,18 @@ enum MovingAverageType {
 
 /// Moving Average types extension.
 extension MATypesExtension on MovingAverageType {
+  /// Exceptional titles.
+  static const Map<MovingAverageType, String> exceptionalTitles =
+      <MovingAverageType, String>{
+    MovingAverageType.doubleExponential: '2-Exponential',
+    MovingAverageType.tripleExponential: '3-Exponential',
+  };
+
   /// Gets the title of enum.
-  String get title {
+  String get title => exceptionalTitles[this] ?? _getCapitalizedTitle();
+
+  String _getCapitalizedTitle() {
     final String titleText = getEnumValue(this);
-    switch (titleText) {
-      case 'doubleExponential':
-        return '2-Exponential';
-      case 'tripleExponential':
-        return '3-Exponential';
-      default:
-        // First letter to uppercase.
-        return '${titleText[0].toUpperCase()}${titleText.substring(1)}';
-    }
+    return '${titleText[0].toUpperCase()}${titleText.substring(1)}';
   }
 }
