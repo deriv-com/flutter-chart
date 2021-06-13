@@ -65,9 +65,9 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return HMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.zeroLag:
         return ZLEMAIndicator<Tick>(indicator, maOptions.period);
-      case MovingAverageType.twoExponential:
+      case MovingAverageType.doubleExponential:
         return DEMAIndicator<Tick>(indicator, maOptions.period);
-      case MovingAverageType.threeExponential:
+      case MovingAverageType.tripleExponential:
         return TEMAIndicator<Tick>(indicator, maOptions.period);
       default:
         return SMAIndicator<Tick>(indicator, maOptions.period);
@@ -93,10 +93,10 @@ enum MovingAverageType {
   zeroLag,
 
   /// Double Exponential Moving Average
-  twoExponential,
+  doubleExponential,
 
   /// Triple Exponential Moving Average
-  threeExponential,
+  tripleExponential,
 }
 
 /// Moving Average types extension.
@@ -105,11 +105,12 @@ extension MATypesExtension on MovingAverageType {
   String get title {
     final String titleText = getEnumValue(this);
     switch (titleText) {
-      case 'twoExponential':
+      case 'doubleExponential':
         return '2-Exponential';
-      case 'threeExponential':
+      case 'tripleExponential':
         return '3-Exponential';
       default:
+        // First letter to uppercase.
         return '${titleText[0].toUpperCase()}${titleText.substring(1)}';
     }
   }
