@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -66,7 +67,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return ZLEMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.twoExponential:
         return DEMAIndicator<Tick>(indicator, maOptions.period);
-      case MovingAverageType.treeExponential:
+      case MovingAverageType.threeExponential:
         return TEMAIndicator<Tick>(indicator, maOptions.period);
       default:
         return SMAIndicator<Tick>(indicator, maOptions.period);
@@ -95,5 +96,21 @@ enum MovingAverageType {
   twoExponential,
 
   /// Triple Exponential Moving Average
-  treeExponential,
+  threeExponential,
+}
+
+/// Moving Average types extension.
+extension MATypesExtension on MovingAverageType {
+  /// Gets the title of enum.
+  String get title {
+    final String titleText = getEnumValue(this);
+    switch (titleText) {
+      case 'twoExponential':
+        return '2-Exponential';
+      case 'threeExponential':
+        return '3-Exponential';
+      default:
+        return '${titleText[0].toUpperCase()}${titleText.substring(1)}';
+    }
+  }
 }

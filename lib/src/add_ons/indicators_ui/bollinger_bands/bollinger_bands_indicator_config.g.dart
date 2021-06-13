@@ -66,5 +66,5 @@ const _$MovingAverageTypeEnumMap = {
   MovingAverageType.hull: 'hull',
   MovingAverageType.zeroLag: 'zeroLag',
   MovingAverageType.twoExponential: 'twoExponential',
-  MovingAverageType.treeExponential: 'treeExponential',
+  MovingAverageType.threeExponential: 'threeExponential',
 };
