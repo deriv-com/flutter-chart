@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -17,6 +18,7 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
     this._options, {
     this.overboughtValue = -20,
     this.oversoldValue = -80,
+    this.showZones = true,
     this.overboughtSoldLineStyles =
         const LineStyle(color: Colors.white, thickness: 0.5),
     String id,
@@ -39,15 +41,20 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
   /// The line style for overbought/sold horizontal lines.
   final LineStyle overboughtSoldLineStyles;
 
+  /// Whether to show overbought/sold lines and zones channel fill.
+  final bool showZones;
+
   @override
-  SeriesPainter<Series> createPainter() => OscillatorLinePainter(
-        this,
-        topHorizontalLine: overboughtValue,
-        bottomHorizontalLine: oversoldValue,
-        secondaryHorizontalLinesStyle: overboughtSoldLineStyles,
-        // TODO(NA): Zero line style will be removed from OscillatorLinePainter.
-        mainHorizontalLinesStyle: overboughtSoldLineStyles,
-      );
+  SeriesPainter<Series> createPainter() => showZones
+      ? OscillatorLinePainter(
+          this,
+          topHorizontalLine: overboughtValue,
+          bottomHorizontalLine: oversoldValue,
+          secondaryHorizontalLinesStyle: overboughtSoldLineStyles,
+          // TODO(NA): Zero line style will be removed from OscillatorLinePainter.
+          mainHorizontalLinesStyle: overboughtSoldLineStyles,
+        )
+      : LinePainter(this);
 
   @override
   CachedIndicator<Tick> initializeIndicator() => WilliamsRIndicator<Tick>(

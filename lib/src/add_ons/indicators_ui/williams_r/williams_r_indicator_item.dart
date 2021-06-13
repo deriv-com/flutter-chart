@@ -38,13 +38,15 @@ class WilliamsRIndicatorItemState
   int _period;
   double _overBoughtPrice;
   double _overSoldPrice;
+  bool _showZones;
 
   @override
   WilliamsRIndicatorConfig createIndicatorConfig() => WilliamsRIndicatorConfig(
-      period: _getCurrentPeriod,
+      period: _currentPeriod,
+      showZones: _currentShowZones,
       oscillatorLimits: OscillatorLinesConfig(
-        overBoughtPrice: _getCurrentOverBoughtPrice,
-        overSoldPrice: _getCurrentOverSoldPrice,
+        overBoughtPrice: _currentOverBoughtPrice,
+        overSoldPrice: _currentOverSoldPrice,
       ));
 
   @override
@@ -53,11 +55,34 @@ class WilliamsRIndicatorItemState
           _buildPeriodField(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
+          _buildShowZonesField(),
         ],
       );
 
+  
+  Widget _buildShowZonesField() => Row(
+    children: <Widget>[
+      Text(
+        ChartLocalization.of(context).labelShowZones,
+        style: const TextStyle(fontSize: 10),
+      ),
+      const SizedBox(width: 4),
+      Switch(
+        value: _currentShowZones,
+        onChanged: (bool value) {
+          setState(() {
+            _showZones = value;
+          });
+          updateIndicator();
+        },
+        activeTrackColor: Colors.lightGreenAccent,
+        activeColor: Colors.green,
+      ),
+    ],
+  );
+
   Widget _buildPeriodField() => FieldWidget(
-        initialValue: '14',
+        initialValue: _currentPeriod.toString(),
         label: ChartLocalization.of(context).labelPeriod,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -69,11 +94,11 @@ class WilliamsRIndicatorItemState
         },
       );
 
-  int get _getCurrentPeriod =>
+  int get _currentPeriod =>
       _period ?? (widget.config as WilliamsRIndicatorConfig)?.period ?? 14;
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
-        initialValue: _getCurrentOverBoughtPrice.toString(),
+        initialValue: _currentOverBoughtPrice.toString(),
         label: ChartLocalization.of(context).labelOverBoughtPrice,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -85,7 +110,7 @@ class WilliamsRIndicatorItemState
         },
       );
 
-  double get _getCurrentOverBoughtPrice =>
+  double get _currentOverBoughtPrice =>
       _overBoughtPrice ??
       (widget.config as WilliamsRIndicatorConfig)
           ?.oscillatorLimits
@@ -93,7 +118,7 @@ class WilliamsRIndicatorItemState
       -20;
 
   Widget _buildOverSoldPriceField() => FieldWidget(
-        initialValue: _getCurrentOverSoldPrice.toString(),
+        initialValue: _currentOverSoldPrice.toString(),
         label: ChartLocalization.of(context).labelOverSoldPrice,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -105,10 +130,16 @@ class WilliamsRIndicatorItemState
         },
       );
 
-  double get _getCurrentOverSoldPrice =>
+  double get _currentOverSoldPrice =>
       _overSoldPrice ??
       (widget.config as WilliamsRIndicatorConfig)
           ?.oscillatorLimits
           ?.overSoldPrice ??
       -80;
+
+  bool get _currentShowZones =>
+      _showZones ??
+          (widget.config as WilliamsRIndicatorConfig)
+              ?.showZones ??
+          true;
 }

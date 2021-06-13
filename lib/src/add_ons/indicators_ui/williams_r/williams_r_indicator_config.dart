@@ -22,6 +22,7 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
     this.period = 14,
     this.lineStyle = const LineStyle(color: Colors.white),
     this.zeroHorizontalLinesStyle = const LineStyle(color: Colors.red),
+    this.showZones = true,
     this.oscillatorLimits = const OscillatorLinesConfig(
       overSoldPrice: -80,
       overBoughtPrice: -20,
@@ -52,12 +53,16 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
   /// Oscillator limit lines
   final OscillatorLinesConfig oscillatorLimits;
 
+  /// To show overbought/sold lines and intersection zones with the indicator.
+  final bool showZones;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => WilliamsRSeries(
         indicatorInput,
         WilliamsROptions(period),
         overboughtValue: oscillatorLimits.overBoughtPrice,
         oversoldValue: oscillatorLimits.overSoldPrice,
+        showZones: showZones,
       );
 
   @override

@@ -17,6 +17,7 @@ WilliamsRIndicatorConfig _$WilliamsRIndicatorConfigFromJson(
         ? null
         : LineStyle.fromJson(
             json['zeroHorizontalLinesStyle'] as Map<String, dynamic>),
+    showZones: json['showZones'] as bool,
     oscillatorLimits: json['oscillatorLimits'] == null
         ? null
         : OscillatorLinesConfig.fromJson(
@@ -31,4 +32,5 @@ Map<String, dynamic> _$WilliamsRIndicatorConfigToJson(
       'lineStyle': instance.lineStyle,
       'zeroHorizontalLinesStyle': instance.zeroHorizontalLinesStyle,
       'oscillatorLimits': instance.oscillatorLimits,
+      'showZones': instance.showZones,
     };
