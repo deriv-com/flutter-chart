@@ -66,6 +66,8 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return ZLEMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.twoExponential:
         return DEMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.treeExponential:
+        return TEMAIndicator<Tick>(indicator, maOptions.period);
       default:
         return SMAIndicator<Tick>(indicator, maOptions.period);
     }
@@ -91,4 +93,7 @@ enum MovingAverageType {
 
   /// Double Exponential Moving Average
   twoExponential,
+
+  /// Triple Exponential Moving Average
+  treeExponential,
 }
