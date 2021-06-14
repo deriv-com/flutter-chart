@@ -2,12 +2,10 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';
-
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
 import 'package:flutter/material.dart';
 
-
-/// Rainbow indicator item in the list of indicator which provide this
+/// Stochastic Oscillator indicator item in the list of indicator which provide this
 /// indicators options menu.
 class StochasticOscillatorIndicatorItem extends IndicatorItem {
   /// Initializes
@@ -18,7 +16,7 @@ class StochasticOscillatorIndicatorItem extends IndicatorItem {
     VoidCallback deleteIndicator,
   }) : super(
           key: key,
-          title: 'Fractal Chaos Band Indicator',
+          title: 'Stochastic Oscillator',
           config: config,
           updateIndicator: updateIndicator,
           deleteIndicator: deleteIndicator,
@@ -42,12 +40,12 @@ class StochasticOscillatorIndicatorItemState
   @override
   StochasticOscillatorIndicatorConfig createIndicatorConfig() =>
       StochasticOscillatorIndicatorConfig(
-        period: _getCurrentPeriod(),
-        overBoughtPrice: _getCurrentOverBoughtPrice(),
-        overSoldPrice: _getCurrentOverSoldPrice(),
-        fieldType: _getCurrentField(),
-        isSmooth: _getCurrentIsSmooth(),
-        showZones: _getCurrentShowZones(),
+        period: _currentPeriod,
+        overBoughtPrice: _currentOverBoughtPrice,
+        overSoldPrice: _currentOverSoldPrice,
+        fieldType: _currentField,
+        isSmooth: _currentIsSmooth,
+        showZones: _currentShowZones,
       );
 
   @override
@@ -73,7 +71,7 @@ class StochasticOscillatorIndicatorItemState
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentPeriod().toString(),
+              initialValue: _currentPeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -88,7 +86,7 @@ class StochasticOscillatorIndicatorItemState
         ],
       );
 
-  int _getCurrentPeriod() =>
+  int get _currentPeriod =>
       _period ??
       (widget.config as StochasticOscillatorIndicatorConfig)?.period ??
       14;
@@ -101,7 +99,7 @@ class StochasticOscillatorIndicatorItemState
           ),
           const SizedBox(width: 4),
           DropdownButton<String>(
-            value: _getCurrentField(),
+            value: _currentField,
             items: IndicatorConfig.supportedFieldTypes.keys
                 .map<DropdownMenuItem<String>>(
                     (String fieldType) => DropdownMenuItem<String>(
@@ -122,7 +120,7 @@ class StochasticOscillatorIndicatorItemState
         ],
       );
 
-  String _getCurrentField() =>
+  String get _currentField =>
       _field ??
       (widget.config as StochasticOscillatorIndicatorConfig)?.fieldType ??
       'close';
@@ -138,7 +136,7 @@ class StochasticOscillatorIndicatorItemState
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverBoughtPrice().toString(),
+              initialValue: _currentOverBoughtPrice.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -153,7 +151,7 @@ class StochasticOscillatorIndicatorItemState
         ],
       );
 
-  double _getCurrentOverBoughtPrice() =>
+  double get _currentOverBoughtPrice =>
       _overBoughtPrice ??
       (widget.config as StochasticOscillatorIndicatorConfig)?.overBoughtPrice ??
       80;
@@ -169,7 +167,7 @@ class StochasticOscillatorIndicatorItemState
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverSoldPrice().toString(),
+              initialValue: _currentOverSoldPrice.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -184,7 +182,7 @@ class StochasticOscillatorIndicatorItemState
         ],
       );
 
-  double _getCurrentOverSoldPrice() =>
+  double get _currentOverSoldPrice =>
       _overSoldPrice ??
       (widget.config as StochasticOscillatorIndicatorConfig)?.overSoldPrice ??
       20;
@@ -199,7 +197,7 @@ class StochasticOscillatorIndicatorItemState
           ),
           const SizedBox(width: 4),
           Switch(
-            value: _getCurrentIsSmooth(),
+            value: _currentIsSmooth,
             onChanged: (bool value) {
               setState(() {
                 _isSmooth = value;
@@ -212,7 +210,7 @@ class StochasticOscillatorIndicatorItemState
         ],
       );
 
-  bool _getCurrentIsSmooth() =>
+  bool get _currentIsSmooth =>
       _isSmooth ??
       (widget.config as StochasticOscillatorIndicatorConfig)?.isSmooth ??
       true;
@@ -227,7 +225,7 @@ class StochasticOscillatorIndicatorItemState
           ),
           const SizedBox(width: 4),
           Switch(
-            value: _getCurrentShowZones(),
+            value: _currentShowZones,
             onChanged: (bool value) {
               setState(() {
                 _showZones = value;
@@ -240,7 +238,7 @@ class StochasticOscillatorIndicatorItemState
         ],
       );
 
-  bool _getCurrentShowZones() =>
+  bool get _currentShowZones =>
       _showZones ??
       (widget.config as StochasticOscillatorIndicatorConfig)?.showZones ??
       false;

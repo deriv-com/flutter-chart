@@ -2,15 +2,14 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/stochastic_oscillator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/stochastic_oscillator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/deriv_chart/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_item.dart';
 
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 
 part 'stochastic_oscillator_indicator_config.g.dart';
 
@@ -72,11 +71,11 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => StochasticOscillatorSeries(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
-        this,
-        stochasticOscillatorOptions: StochasticOscillatorOptions(
-            period: period, isSmooth: isSmooth, showZones: showZones),
-      );
+      IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput), this,
+      stochasticOscillatorOptions: StochasticOscillatorOptions(
+        period: period,
+        isSmooth: isSmooth,
+      ));
 
   @override
   IndicatorItem getItem(
