@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +23,10 @@ class OscillatorLinePainter extends LinePainter {
     LineStyle mainHorizontalLinesStyle,
     LineStyle secondaryHorizontalLinesStyle,
     List<double> secondaryHorizontalLines = const <double>[],
-  })  : _mainHorizontalLinesStyle =
-            mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
+  })  : _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
         _topHorizontalLine = topHorizontalLine,
         _secondaryHorizontalLines = secondaryHorizontalLines,
-        _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle ??
-            const LineStyle(color: Colors.blueGrey),
+        _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
         _bottomHorizontalLine = bottomHorizontalLine,
         super(
           series,
@@ -60,11 +59,24 @@ class OscillatorLinePainter extends LinePainter {
     _paintHorizontalLines(canvas, quoteToY, size);
   }
 
+  void _paintLabelBackground(
+    Canvas canvas,
+    Rect rect,
+    LabelShape shape,
+  ) {
+    final Paint paint = Paint()
+      ..color = _mainHorizontalLinesStyle.color
+      ..style = PaintingStyle.fill
+      ..strokeWidth = _mainHorizontalLinesStyle.thickness;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(4)),
+      paint,
+    );
+  }
+
   void _paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
     _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
-    const HorizontalBarrierStyle textStyle =
-        HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
     final Paint paint = Paint()
       ..color = _mainHorizontalLinesStyle.color
       ..style = PaintingStyle.stroke
@@ -73,29 +85,16 @@ class OscillatorLinePainter extends LinePainter {
     _topHorizontalLinePath = Path();
     _bottomHorizontalLinePath = Path();
 
-    if (_topHorizontalLine != null) {
-      _topHorizontalLinePath
-        ..moveTo(0, quoteToY(_topHorizontalLine))
-        ..lineTo(
-            size.width -
-                _labelWidth(_bottomHorizontalLine, textStyle.textStyle,
-                    chartConfig.pipSize),
-            quoteToY(_topHorizontalLine));
+    _topHorizontalLinePath.moveTo(0, quoteToY(_topHorizontalLine));
+    _bottomHorizontalLinePath.moveTo(0, quoteToY(_bottomHorizontalLine));
 
-      canvas.drawPath(_topHorizontalLinePath, paint);
-    }
+    _topHorizontalLinePath.lineTo(size.width, quoteToY(_topHorizontalLine));
+    _bottomHorizontalLinePath.lineTo(
+        size.width, quoteToY(_bottomHorizontalLine));
 
-    if (_bottomHorizontalLine != null) {
-      _bottomHorizontalLinePath
-        ..moveTo(0, quoteToY(_bottomHorizontalLine))
-        ..lineTo(
-            size.width -
-                _labelWidth(_topHorizontalLine, textStyle.textStyle,
-                    chartConfig.pipSize),
-            quoteToY(_bottomHorizontalLine));
-
-      canvas.drawPath(_bottomHorizontalLinePath, paint);
-    }
+    canvas
+      ..drawPath(_topHorizontalLinePath, paint)
+      ..drawPath(_bottomHorizontalLinePath, paint);
 
     _paintLabels(size, quoteToY, canvas);
   }
@@ -117,55 +116,51 @@ class OscillatorLinePainter extends LinePainter {
 
   void _paintLabels(Size size, QuoteToY quoteToY, Canvas canvas) {
     final HorizontalBarrierStyle style = HorizontalBarrierStyle(
-      textStyle: TextStyle(fontSize: 10, color: theme.base01Color),
+      textStyle: TextStyle(
+        fontSize: 10,
+        color: calculateTextColor(_mainHorizontalLinesStyle.color),
+      ),
     );
 
-    if (_topHorizontalLine != null) {
-      final TextPainter topValuePainter = makeTextPainter(
-        _topHorizontalLine.toStringAsFixed(0),
-        style.textStyle,
-      );
-      final Rect topLabelArea = Rect.fromCenter(
-        center: Offset(
-            size.width - rightMargin - padding - topValuePainter.width / 2,
-            quoteToY(_topHorizontalLine)),
-        width: topValuePainter.width + padding * 2,
-        height: style.labelHeight,
-      );
-      paintWithTextPainter(
-        canvas,
-        painter: topValuePainter,
-        anchor: topLabelArea.center,
-      );
-    }
+    final TextPainter topValuePainter = makeTextPainter(
+      _topHorizontalLine.toStringAsFixed(0),
+      style.textStyle,
+    );
 
-    if (_bottomHorizontalLine != null) {
-      final TextPainter bottomValuePainter = makeTextPainter(
-        _bottomHorizontalLine.toStringAsFixed(0),
-        style.textStyle,
-      );
+    final TextPainter bottomValuePainter = makeTextPainter(
+      _bottomHorizontalLine.toStringAsFixed(0),
+      style.textStyle,
+    );
 
-      final Rect bottomLabelArea = Rect.fromCenter(
-        center: Offset(
-            size.width - rightMargin - padding - bottomValuePainter.width / 2,
-            quoteToY(_bottomHorizontalLine)),
-        width: bottomValuePainter.width + padding * 2,
-        height: style.labelHeight,
-      );
+    final Rect topLabelArea = Rect.fromCenter(
+      center: Offset(
+          size.width - rightMargin - padding - topValuePainter.width / 2,
+          quoteToY(_topHorizontalLine)),
+      width: topValuePainter.width + padding * 2,
+      height: style.labelHeight,
+    );
 
-      paintWithTextPainter(
-        canvas,
-        painter: bottomValuePainter,
-        anchor: bottomLabelArea.center,
-      );
-    }
+    final Rect bottomLabelArea = Rect.fromCenter(
+      center: Offset(
+          size.width - rightMargin - padding - bottomValuePainter.width / 2,
+          quoteToY(_bottomHorizontalLine)),
+      width: bottomValuePainter.width + padding * 2,
+      height: style.labelHeight,
+    );
+
+    _paintLabelBackground(canvas, bottomLabelArea, style.labelShape);
+    _paintLabelBackground(canvas, topLabelArea, style.labelShape);
+    paintWithTextPainter(
+      canvas,
+      painter: topValuePainter,
+      anchor: topLabelArea.center,
+    );
+    paintWithTextPainter(
+      canvas,
+      painter: bottomValuePainter,
+      anchor: bottomLabelArea.center,
+    );
   }
 
-// TODO(mohammadamir-fs): add channel fill.
+  // TODO(mohammadamir-fs): add channel fill.
 }
-
-double _labelWidth(double text, TextStyle style, int pipSize) =>
-    makeTextPainter(
-      text.toStringAsFixed(pipSize),
-      style,
-    ).width;
