@@ -35,7 +35,6 @@ class AroonIndicatorItem extends IndicatorItem {
 class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
   int _period;
 
-
   @override
   AroonIndicatorConfig createIndicatorConfig() => AroonIndicatorConfig(
         period: _currentPeriod,
