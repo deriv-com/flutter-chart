@@ -15,14 +15,15 @@ import '../../chart_data.dart';
 import '../series.dart';
 import '../series_painter.dart';
 
-/// A series which shows Fractal Chaos Band Series data calculated from 'entries'.
+/// A series which shows Aroon Indicator Series data calculated from 'entries'.
 class AroonSeries extends Series {
   /// Initializes
-  AroonSeries(this.indicatorInput,
-      this.indicatorConfig, {
-        String id,
-        this.aroonOption,
-      }) : super(id);
+  AroonSeries(
+    this.indicatorInput,
+    this.indicatorConfig, {
+    String id,
+    this.aroonOption,
+  }) : super(id);
 
   ///input data
   final IndicatorInput indicatorInput;
@@ -38,8 +39,7 @@ class AroonSeries extends Series {
   SeriesPainter<Series> createPainter() {
     _aroonUpSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () =>
-      AroonUpIndicator<Tick>.fromIndicator(
+      indicatorCreator: () => AroonUpIndicator<Tick>.fromIndicator(
           HighValueIndicator<Tick>(indicatorInput),
           period: indicatorConfig.period),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
@@ -48,8 +48,7 @@ class AroonSeries extends Series {
     );
     _aroonDownSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () =>
-      AroonDownIndicator<Tick>.fromIndicator(
+      indicatorCreator: () => AroonDownIndicator<Tick>.fromIndicator(
           LowValueIndicator<Tick>(indicatorInput),
           period: indicatorConfig.period),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
@@ -64,9 +63,9 @@ class AroonSeries extends Series {
   bool didUpdate(ChartData oldData) {
     final AroonSeries series = oldData;
     final bool _aroonUpUpdated =
-    _aroonUpSeries.didUpdate(series?._aroonUpSeries);
+        _aroonUpSeries.didUpdate(series?._aroonUpSeries);
     final bool _aroonDownUpdated =
-    _aroonDownSeries.didUpdate(series?._aroonDownSeries);
+        _aroonDownSeries.didUpdate(series?._aroonDownSeries);
     return _aroonUpUpdated || _aroonDownUpdated;
   }
 
@@ -77,8 +76,7 @@ class AroonSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() =>
-      <double>[
+  List<double> recalculateMinMax() => <double>[
         <ChartData>[
           _aroonUpSeries,
           _aroonDownSeries,
@@ -90,41 +88,29 @@ class AroonSeries extends Series {
       ];
 
   @override
-  void paint(Canvas canvas,
-      Size size,
-      double Function(int) epochToX,
-      double Function(double) quoteToY,
-      AnimationInfo animationInfo,
-      ChartConfig chartConfig,
-      ChartTheme theme,) {
+  void paint(
+    Canvas canvas,
+    Size size,
+    double Function(int) epochToX,
+    double Function(double) quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme theme,
+  ) {
     _aroonDownSeries.paint(
-        canvas,
-        size,
-        epochToX,
-        quoteToY,
-        animationInfo,
-        chartConfig,
-        theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _aroonUpSeries.paint(
-        canvas,
-        size,
-        epochToX,
-        quoteToY,
-        animationInfo,
-        chartConfig,
-        theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
-  int getMaxEpoch() =>
-      <ChartData>[
+  int getMaxEpoch() => <ChartData>[
         _aroonDownSeries,
         _aroonUpSeries,
       ].getMaxEpoch();
 
   @override
-  int getMinEpoch() =>
-      <ChartData>[
+  int getMinEpoch() => <ChartData>[
         _aroonDownSeries,
         _aroonUpSeries,
       ].getMinEpoch();
