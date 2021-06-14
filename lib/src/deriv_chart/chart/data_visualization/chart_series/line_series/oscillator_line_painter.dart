@@ -162,5 +162,5 @@ class OscillatorLinePainter extends LinePainter {
     );
   }
 
-  // TODO(mohammadamir-fs): add channel fill.
+// TODO(mohammadamir-fs): add channel fill.
 }
