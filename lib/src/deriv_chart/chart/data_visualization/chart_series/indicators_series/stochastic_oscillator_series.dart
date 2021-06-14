@@ -62,6 +62,7 @@ class StochasticOscillatorSeries extends Series {
             : LinePainter(series),
         indicatorCreator: () => smoothedFastStochasticIndicator,
         inputIndicator: inputIndicator,
+        options: stochasticOscillatorOptions,
         style: const LineStyle(color: Colors.white),
       );
 
@@ -77,6 +78,7 @@ class StochasticOscillatorSeries extends Series {
         indicatorCreator: () =>
             SmoothedSlowStochasticIndicator<Tick>(slowStochasticIndicator),
         inputIndicator: inputIndicator,
+        options: stochasticOscillatorOptions,
         style: const LineStyle(color: Colors.red),
       );
     } else {
@@ -90,6 +92,7 @@ class StochasticOscillatorSeries extends Series {
               )
             : LinePainter(series),
         indicatorCreator: () => fastStochasticIndicator,
+        options: stochasticOscillatorOptions,
         inputIndicator: inputIndicator,
         style: const LineStyle(color: Colors.white),
       );
@@ -105,6 +108,7 @@ class StochasticOscillatorSeries extends Series {
             : LinePainter(series),
         indicatorCreator: () => slowStochasticIndicator,
         inputIndicator: inputIndicator,
+        options: stochasticOscillatorOptions,
         style: const LineStyle(color: Colors.red),
       );
     }
@@ -114,9 +118,6 @@ class StochasticOscillatorSeries extends Series {
   @override
   bool didUpdate(ChartData oldData) {
     final StochasticOscillatorSeries series = oldData;
-    if (config.isSmooth != series.config.isSmooth) {
-      return true;
-    }
     final bool _fastUpdated = _fastPercentStochasticIndicatorSeries
         .didUpdate(series?._fastPercentStochasticIndicatorSeries);
     final bool _slowUpdated = _slowStochasticIndicatorSeries
