@@ -4,6 +4,8 @@ import 'dart:developer' as dev;
 import 'dart:math' as math;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:example/settings_page.dart';
+import 'package:example/utils/endpoints_helper.dart';
 import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +18,11 @@ import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
 import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
+import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:example/generated/l10n.dart';
@@ -33,26 +37,24 @@ void main() {
 /// The start of the application.
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        ChartLocalization.delegate,
-        ExampleLocalization.delegate,
-      ],
-      supportedLocales: ExampleLocalization.delegate.supportedLocales,
-      theme: ThemeData.dark(),
-      debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          body: FullscreenChart(),
+  Widget build(BuildContext context) => MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          ChartLocalization.delegate,
+          ExampleLocalization.delegate,
+        ],
+        supportedLocales: ExampleLocalization.delegate.supportedLocales,
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+        home: const SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            body: FullscreenChart(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 /// Chart that sits in fullscreen.
@@ -67,9 +69,13 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
+  static const String defaultAppID = '1089';
+  static const String defaultEndpoint = 'blue.binaryws.com';
+
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
+  bool _showTimer = false;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier _slBarrier, _tpBarrier;
@@ -116,11 +122,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = ConnectionBloc(ConnectionInformation(
-      appId: '23789',
-      brand: 'deriv',
-      endpoint: 'blue.binaryws.com',
-    ))
+    _connectionBloc = ConnectionBloc(await _getConnectionInfoFromPrefs())
       ..listen((connectionState) async {
         if (connectionState is! Connected) {
           // Calling this since we show some status labels when NOT connected.
@@ -129,10 +131,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
         }
 
         if (ticks.isEmpty) {
-          await _getActiveSymbols();
+          try {
+            await _getActiveSymbols();
 
-          _requestCompleter.complete();
-          _onIntervalSelected(0);
+            if (!_requestCompleter.isCompleted) {
+              _requestCompleter.complete();
+            }
+            _onIntervalSelected(0);
+          } on APIBaseException catch (e) {
+            await showDialog<void>(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text(
+                  e.message,
+                  style: const TextStyle(fontSize: 10),
+                ),
+              ),
+            );
+          }
         } else {
           _initTickStream(
             TicksHistoryRequest(
@@ -314,6 +330,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         low: newTick.low,
         open: newTick.open,
         close: newTick.close,
+        currentEpoch: newTick.epoch.millisecondsSinceEpoch,
       ));
     }
   }
@@ -335,198 +352,223 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Color(0xFF0E0E0E),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(
-                  child: _markets == null
-                      ? SizedBox.shrink()
-                      : _buildMarketSelectorButton(),
-                ),
-                _buildChartTypeButton(),
-                _buildIntervalSelector(),
-              ],
+  Widget build(BuildContext context) => Material(
+        color: const Color(0xFF0E0E0E),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: _markets == null
+                        ? const SizedBox.shrink()
+                        : _buildMarketSelectorButton(),
+                  ),
+                  _buildChartTypeButton(),
+                  _buildIntervalSelector(),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Stack(
-              children: <Widget>[
-                ClipRect(
-                  child: DerivChart(
-                    mainSeries:
-                        style == ChartStyle.candles && ticks is List<Candle>
-                            ? CandleSeries(ticks)
-                            : LineSeries(
-                                ticks,
-                                style: const LineStyle(hasArea: true),
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  ClipRect(
+                    child: DerivChart(
+                      mainSeries:
+                          style == ChartStyle.candles && ticks is List<Candle>
+                              ? CandleSeries(ticks)
+                              : LineSeries(
+                                  ticks,
+                                  style: const LineStyle(hasArea: true),
+                                ),
+                      markerSeries: MarkerSeries(
+                        _markers,
+                        activeMarker: _activeMarker,
+                      ),
+                      annotations: ticks.length > 4
+                          ? <ChartAnnotation>[
+                              ..._sampleBarriers,
+                              if (_sl && _slBarrier != null) _slBarrier,
+                              if (_tp && _tpBarrier != null) _tpBarrier,
+                              TickIndicator(
+                                ticks.last,
+                                style: const HorizontalBarrierStyle(
+                                  color: Colors.redAccent,
+                                  labelShape: LabelShape.pentagon,
+                                  hasBlinkingDot: true,
+                                  hasArrow: false,
+                                ),
+                                visibility: HorizontalBarrierVisibility
+                                    .keepBarrierLabelVisible,
                               ),
-                    markerSeries: MarkerSeries(
-                      _markers,
-                      activeMarker: _activeMarker,
+                            ]
+                          : null,
+                      pipSize:
+                          _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
+                      granularity: granularity == 0
+                          ? 2000 // average ms difference between ticks
+                          : granularity * 1000,
+                      controller: _controller,
+                      isLive: (_symbol?.isOpen ?? false) &&
+                          (_connectionBloc?.state is Connected ?? false),
+                      opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
+                      onCrosshairAppeared: () =>
+                          Vibration.vibrate(duration: 50),
+                      onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                        if (!_waitingForHistory &&
+                            ticks.isNotEmpty &&
+                            leftEpoch < ticks.first.epoch) {
+                          _loadHistory(500);
+                        }
+                      },
                     ),
-                    annotations: ticks.length > 4
-                        ? <ChartAnnotation>[
-                            ..._sampleBarriers,
-                            if (_sl && _slBarrier != null) _slBarrier,
-                            if (_tp && _tpBarrier != null) _tpBarrier,
-                            TickIndicator(
-                              ticks.last,
-                              style: const HorizontalBarrierStyle(
-                                color: Colors.redAccent,
-                                labelShape: LabelShape.pentagon,
-                                hasBlinkingDot: true,
-                                hasArrow: false,
-                              ),
-                              visibility: HorizontalBarrierVisibility
-                                  .keepBarrierLabelVisible,
-                            ),
-                          ]
-                        : null,
-                    pipSize:
-                        _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
-                    granularity: granularity == 0
-                        ? 1500 // average ms difference between ticks
-                        : granularity * 1000,
-                    controller: _controller,
-                    isLive: (_symbol?.isOpen ?? false) &&
-                        (_connectionBloc?.state is Connected ?? false),
-                    opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
-                    onCrosshairAppeared: () => Vibration.vibrate(duration: 50),
-                    onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                      if (!_waitingForHistory &&
-                          ticks.isNotEmpty &&
-                          leftEpoch < ticks.first.epoch) {
-                        _loadHistory(500);
-                      }
-                    },
                   ),
-                ),
-                if (_connectionBloc != null &&
-                    _connectionBloc.state is! Connected)
-                  Align(
-                    alignment: Alignment.center,
-                    child: _buildConnectionStatus(),
+                  if (_connectionBloc != null &&
+                      _connectionBloc.state is! Connected)
+                    Align(
+                      alignment: Alignment.center,
+                      child: _buildConnectionStatus(),
+                    ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: () async {
+                        final bool settingChanged =
+                            await Navigator.of(context).push(
+                          MaterialPageRoute<bool>(
+                              builder: (_) => SettingsPage(
+                                    defaultAppID: defaultAppID,
+                                    defaultEndpoint: defaultEndpoint,
+                                  )),
+                        );
+
+                        if (settingChanged) {
+                          _requestCompleter = Completer<dynamic>();
+                          _tickStreamSubscription?.cancel();
+                          ticks.clear();
+                          // reconnect to new config
+                          _connectionBloc.add(
+                              Reconfigure(await _getConnectionInfoFromPrefs()));
+
+                          WidgetsFlutterBinding.ensureInitialized()
+                              .addPostFrameCallback((_) {
+                            _connectionBloc.add(Connect());
+                          });
+                        }
+                      }),
+                  RaisedButton(
+                    color: Colors.green,
+                    child: const Text('Up'),
+                    onPressed: () => _addMarker(MarkerDirection.up),
                   ),
-              ],
+                  RaisedButton(
+                    color: Colors.red,
+                    child: const Text('Down'),
+                    onPressed: () => _addMarker(MarkerDirection.down),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => setState(_clearMarkers),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RaisedButton(
-                  color: Colors.green,
-                  child: const Text('Up'),
-                  onPressed: () => _addMarker(MarkerDirection.up),
-                ),
-                RaisedButton(
-                  color: Colors.red,
-                  child: const Text('Down'),
-                  onPressed: () => _addMarker(MarkerDirection.down),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => setState(_clearMarkers),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FlatButton(
-                  child: Text('V barrier'),
-                  onPressed: () => setState(
-                    () => _sampleBarriers.add(
-                      VerticalBarrier.onTick(ticks.last,
-                          title: 'V Barrier',
-                          id: 'VBarrier${_sampleBarriers.length}',
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FlatButton(
+                    child: Text('V barrier'),
+                    onPressed: () => setState(
+                      () => _sampleBarriers.add(
+                        VerticalBarrier.onTick(ticks.last,
+                            title: 'V Barrier',
+                            id: 'VBarrier${_sampleBarriers.length}',
+                            longLine: math.Random().nextBool(),
+                            style: VerticalBarrierStyle(
+                              isDashed: math.Random().nextBool(),
+                            )),
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    child: Text('H barrier'),
+                    onPressed: () => setState(
+                      () => _sampleBarriers.add(
+                        HorizontalBarrier(
+                          ticks.last.quote,
+                          epoch: math.Random().nextBool()
+                              ? ticks.last.epoch
+                              : null,
+                          id: 'HBarrier${_sampleBarriers.length}',
                           longLine: math.Random().nextBool(),
-                          style: VerticalBarrierStyle(
+                          visibility: HorizontalBarrierVisibility.normal,
+                          style: HorizontalBarrierStyle(
+                            color: Colors.grey,
+                            labelShape: LabelShape.rectangle,
                             isDashed: math.Random().nextBool(),
-                          )),
-                    ),
-                  ),
-                ),
-                FlatButton(
-                  child: Text('H barrier'),
-                  onPressed: () => setState(
-                    () => _sampleBarriers.add(
-                      HorizontalBarrier(
-                        ticks.last.quote,
-                        epoch:
-                            math.Random().nextBool() ? ticks.last.epoch : null,
-                        id: 'HBarrier${_sampleBarriers.length}',
-                        longLine: math.Random().nextBool(),
-                        visibility: HorizontalBarrierVisibility.normal,
-                        style: HorizontalBarrierStyle(
-                          color: Colors.grey,
-                          labelShape: LabelShape.rectangle,
-                          isDashed: math.Random().nextBool(),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                FlatButton(
-                  child: Text('+ Both'),
-                  onPressed: () => setState(() => _sampleBarriers.add(
-                        CombinedBarrier(
-                          ticks.last,
-                          title: 'B Barrier',
-                          id: 'CBarrier${_sampleBarriers.length}',
-                          horizontalBarrierStyle: HorizontalBarrierStyle(
-                            color: Colors.grey,
-                            isDashed: true,
+                  FlatButton(
+                    child: Text('+ Both'),
+                    onPressed: () => setState(() => _sampleBarriers.add(
+                          CombinedBarrier(
+                            ticks.last,
+                            title: 'B Barrier',
+                            id: 'CBarrier${_sampleBarriers.length}',
+                            horizontalBarrierStyle: HorizontalBarrierStyle(
+                              color: Colors.grey,
+                              isDashed: true,
+                            ),
                           ),
-                        ),
-                      )),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => setState(() {
-                    _clearBarriers();
-                  }),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 64,
-            child: Row(
-              children: [
-                Expanded(
-                  child: CheckboxListTile(
-                    value: _sl,
-                    onChanged: (bool sl) => setState(() => _sl = sl),
-                    title: Text('Stop loss'),
+                        )),
                   ),
-                ),
-                Expanded(
-                  child: CheckboxListTile(
-                    value: _tp,
-                    onChanged: (bool tp) => setState(() => _tp = tp),
-                    title: Text('Take profit'),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => setState(() {
+                      _clearBarriers();
+                    }),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )
-        ],
-      ),
-    );
-  }
+            SizedBox(
+              height: 64,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: _sl,
+                      onChanged: (bool sl) => setState(() => _sl = sl),
+                      title: Text('Stop loss'),
+                    ),
+                  ),
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: _tp,
+                      onChanged: (bool tp) => setState(() => _tp = tp),
+                      title: Text('Take profit'),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
 
   void _addMarker(MarkerDirection direction) {
     final lastTick = ticks.last;
@@ -627,24 +669,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _waitingForHistory = false;
   }
 
-  IconButton _buildChartTypeButton() {
-    return IconButton(
-      icon: Icon(
-        style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
-        color: Colors.white,
-      ),
-      onPressed: () {
-        Vibration.vibrate(duration: 50);
-        setState(() {
-          if (style == ChartStyle.candles) {
-            style = ChartStyle.line;
-          } else {
-            style = ChartStyle.candles;
-          }
-        });
-      },
-    );
-  }
+  IconButton _buildChartTypeButton() => IconButton(
+        icon: Icon(
+          style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Vibration.vibrate(duration: 50);
+          setState(() {
+            if (style == ChartStyle.candles) {
+              style = ChartStyle.line;
+            } else {
+              style = ChartStyle.candles;
+            }
+          });
+        },
+      );
 
   Widget _buildIntervalSelector() {
     return Theme(
@@ -724,6 +764,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           low: ohlc.low,
           open: ohlc.open,
           close: ohlc.close,
+          currentEpoch: ohlc.epoch.millisecondsSinceEpoch,
         );
       }).toList();
     }
@@ -752,6 +793,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
         isDashed: false,
       ),
       visibility: HorizontalBarrierVisibility.forceToStayOnRange,
+    );
+  }
+
+  Future<ConnectionInformation> _getConnectionInfoFromPrefs() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    return ConnectionInformation(
+      appId: preferences.getString('appID') ?? defaultAppID,
+      brand: 'deriv',
+      endpoint:
+          generateEndpointUrl(endpoint: preferences.getString('endpoint')) ??
+              defaultEndpoint,
     );
   }
 }
