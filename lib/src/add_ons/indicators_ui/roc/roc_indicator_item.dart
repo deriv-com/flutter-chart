@@ -37,7 +37,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
   @override
   ROCIndicatorConfig createIndicatorConfig() => ROCIndicatorConfig(
         period: _currentPeriod,
-        fieldType: _getCurrentField(),
+        fieldType: _currentField,
       );
 
   @override
