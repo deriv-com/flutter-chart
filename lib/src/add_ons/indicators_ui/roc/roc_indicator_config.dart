@@ -11,7 +11,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'roc_indicator_config.g.dart';
 
-/// PRC Indicator configurations.
+/// ROC Indicator configurations.
 @JsonSerializable()
 class ROCIndicatorConfig extends IndicatorConfig {
   /// Initializes
@@ -25,7 +25,7 @@ class ROCIndicatorConfig extends IndicatorConfig {
       _$ROCIndicatorConfigFromJson(json);
 
   /// Unique name for this indicator.
-  static const String name = 'PRC';
+  static const String name = 'ROC';
 
   @override
   Map<String, dynamic> toJson() => _$ROCIndicatorConfigToJson(this)

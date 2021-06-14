@@ -36,7 +36,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
 
   @override
   ROCIndicatorConfig createIndicatorConfig() => ROCIndicatorConfig(
-        period: _getCurrentPeriod(),
+        period: _currentPeriod,
         fieldType: _getCurrentField(),
       );
 
@@ -59,7 +59,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentPeriod().toString(),
+              initialValue: _currentPeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -74,7 +74,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
         ],
       );
 
-  int _getCurrentPeriod() =>
+  int get _currentPeriod =>
       _period ?? (widget.config as ROCIndicatorConfig)?.period ?? 14;
 
   Widget _buildFieldTypeMenu() => Row(
@@ -85,7 +85,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
           ),
           const SizedBox(width: 4),
           DropdownButton<String>(
-            value: _getCurrentField(),
+            value: _currentField,
             items: IndicatorConfig.supportedFieldTypes.keys
                 .map<DropdownMenuItem<String>>(
                     (String fieldType) => DropdownMenuItem<String>(
@@ -106,6 +106,6 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
         ],
       );
 
-  String _getCurrentField() =>
+  String get _currentField =>
       _field ?? (widget.config as ROCIndicatorConfig)?.fieldType ?? 'close';
 }

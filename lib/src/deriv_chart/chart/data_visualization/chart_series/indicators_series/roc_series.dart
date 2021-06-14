@@ -15,8 +15,8 @@ class ROCSeries extends AbstractSingleIndicatorSeries {
   /// Initializes an ROC Indicator.
   ROCSeries(
     IndicatorInput indicatorInput, {
+    @required ROCOptions rocOptions,
     String id,
-    ROCOptions rocOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           const ROCIndicatorConfig(),
