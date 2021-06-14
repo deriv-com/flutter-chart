@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/fcb_indicator/fcb_indicator_config.dart';
@@ -62,6 +63,8 @@ abstract class IndicatorConfig {
         return RSIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case AroonIndicatorConfig.name:
+        return AroonIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');

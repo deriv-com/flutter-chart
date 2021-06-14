@@ -2,8 +2,8 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/aroon/aroon_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/indicator_item.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/rsi_options.dart';
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/rsi_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/aroon_series.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/aroon_options.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -31,15 +31,14 @@ class AroonIndicatorConfig extends IndicatorConfig {
   Map<String, dynamic> toJson() => _$AroonIndicatorConfigToJson(this)
     ..putIfAbsent(IndicatorConfig.nameKey, () => name);
 
-  /// The period to calculate the average gain and loss.
+  /// The period
   final int period;
 
-
   @override
-  Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+  Series getSeries(IndicatorInput indicatorInput) => AroonSeries(
+        indicatorInput,
         this,
-        rsiOptions: RSIOptions(period: period),
+        aroonOption: AroonOptions(period: period),
       );
 
   @override

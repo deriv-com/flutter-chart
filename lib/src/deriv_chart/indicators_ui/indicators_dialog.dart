@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/alligator/alligator_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/fcb_indicator/fcb_indicator_config.dart';
@@ -83,6 +84,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Aroon'),
+                    value: AroonIndicatorConfig(),
                   ),
                   // Add new indicators here.
                 ],

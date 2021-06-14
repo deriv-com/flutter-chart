@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/indicators_ui/aroon/aroon_indicator_config.dart';
+import 'package:deriv_chart/src/logic/chart_series/indicators_series/models/aroon_options.dart';
 import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/animation_info.dart';
@@ -17,12 +18,11 @@ import '../series_painter.dart';
 /// A series which shows Fractal Chaos Band Series data calculated from 'entries'.
 class AroonSeries extends Series {
   /// Initializes
-
-  AroonSeries(
-    this.indicatorInput, {
-    String id,
-   this.indicatorConfig,
-  }) : super(id);
+  AroonSeries(this.indicatorInput,
+      this.indicatorConfig, {
+        String id,
+        this.aroonOption,
+      }) : super(id);
 
   ///input data
   final IndicatorInput indicatorInput;
@@ -31,19 +31,30 @@ class AroonSeries extends Series {
   SingleIndicatorSeries _aroonUpSeries;
   SingleIndicatorSeries _aroonDownSeries;
 
+  /// options
+  AroonOptions aroonOption;
+
   @override
   SeriesPainter<Series> createPainter() {
     _aroonUpSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => AroonUpIndicator<Tick>(indicatorInput,),
+      indicatorCreator: () =>
+      AroonUpIndicator<Tick>.fromIndicator(
+          HighValueIndicator<Tick>(indicatorInput),
+          period: indicatorConfig.period),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.blue),
+      style: const LineStyle(color: Colors.green),
+      options: aroonOption,
     );
     _aroonDownSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => FCBLowIndicator<Tick>(indicatorInput),
+      indicatorCreator: () =>
+      AroonDownIndicator<Tick>.fromIndicator(
+          LowValueIndicator<Tick>(indicatorInput),
+          period: indicatorConfig.period),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.blue),
+      options: aroonOption,
+      style: const LineStyle(color: Colors.red),
     );
 
     return null;
@@ -51,11 +62,12 @@ class AroonSeries extends Series {
 
   @override
   bool didUpdate(ChartData oldData) {
-    final FractalChaosBandSeries series = oldData;
-    final bool _fcbHighUpdated =
-        _aroonUpSeries.didUpdate(series?._aroonUpSeries);
-    final bool _fcbLowUpdated = _aroonDownSeries.didUpdate(series?._aroonDownSeries);
-    return _fcbHighUpdated || _fcbLowUpdated;
+    final AroonSeries series = oldData;
+    final bool _aroonUpUpdated =
+    _aroonUpSeries.didUpdate(series?._aroonUpSeries);
+    final bool _aroonDownUpdated =
+    _aroonDownSeries.didUpdate(series?._aroonDownSeries);
+    return _aroonUpUpdated || _aroonDownUpdated;
   }
 
   @override
@@ -65,7 +77,8 @@ class AroonSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() => <double>[
+  List<double> recalculateMinMax() =>
+      <double>[
         <ChartData>[
           _aroonUpSeries,
           _aroonDownSeries,
@@ -77,29 +90,41 @@ class AroonSeries extends Series {
       ];
 
   @override
-  void paint(
-    Canvas canvas,
-    Size size,
-    double Function(int) epochToX,
-    double Function(double) quoteToY,
-    AnimationInfo animationInfo,
-    ChartConfig chartConfig,
-    ChartTheme theme,
-  ) {
+  void paint(Canvas canvas,
+      Size size,
+      double Function(int) epochToX,
+      double Function(double) quoteToY,
+      AnimationInfo animationInfo,
+      ChartConfig chartConfig,
+      ChartTheme theme,) {
     _aroonDownSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas,
+        size,
+        epochToX,
+        quoteToY,
+        animationInfo,
+        chartConfig,
+        theme);
     _aroonUpSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas,
+        size,
+        epochToX,
+        quoteToY,
+        animationInfo,
+        chartConfig,
+        theme);
   }
 
   @override
-  int getMaxEpoch() => <ChartData>[
+  int getMaxEpoch() =>
+      <ChartData>[
         _aroonDownSeries,
         _aroonUpSeries,
       ].getMaxEpoch();
 
   @override
-  int getMinEpoch() => <ChartData>[
+  int getMinEpoch() =>
+      <ChartData>[
         _aroonDownSeries,
         _aroonUpSeries,
       ].getMinEpoch();
