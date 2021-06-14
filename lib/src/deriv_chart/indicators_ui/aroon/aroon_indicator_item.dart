@@ -9,7 +9,7 @@ import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
 
-/// RSI indicator item in the list of indicator which provide this
+/// Aroon indicator item in the list of indicator which provide this
 /// indicators options menu.
 class AroonIndicatorItem extends IndicatorItem {
   /// Initializes
@@ -31,14 +31,14 @@ class AroonIndicatorItem extends IndicatorItem {
       AroonIndicatorItemState();
 }
 
-/// RSIItem State class
+/// Aroon Item State class
 class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
   int _period;
 
 
   @override
   AroonIndicatorConfig createIndicatorConfig() => AroonIndicatorConfig(
-        period: _getCurrentPeriod(),
+        period: _currentPeriod,
       );
 
   @override
@@ -59,7 +59,7 @@ class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentPeriod().toString(),
+              initialValue: _currentPeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -74,6 +74,6 @@ class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
         ],
       );
 
-  int _getCurrentPeriod() =>
+  int get _currentPeriod =>
       _period ?? (widget.config as AroonIndicatorConfig)?.period ?? 14;
 }
