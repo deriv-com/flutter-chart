@@ -81,6 +81,8 @@ class OscillatorLinePainter extends LinePainter {
                 _labelWidth(_bottomHorizontalLine, textStyle.textStyle,
                     chartConfig.pipSize),
             quoteToY(_topHorizontalLine));
+
+      canvas.drawPath(_topHorizontalLinePath, paint);
     }
 
     if (_bottomHorizontalLine != null) {
