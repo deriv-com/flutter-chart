@@ -28,6 +28,8 @@ class SMISeries extends Series {
   SingleIndicatorSeries _smi;
   SingleIndicatorSeries _smiSignal;
 
+  List<Series> _innerSeries;
+
   /// Indicator input.
   final IndicatorDataInput input;
 
@@ -56,6 +58,8 @@ class SMISeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(input),
     );
 
+    _innerSeries = <Series>[_smi, _smiSignal];
+
     return null;
   }
 
@@ -82,14 +86,10 @@ class SMISeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() {
-    final List<double> smiMinMax = _smi.recalculateMinMax();
-    final List<double> smiSignalMinMax = _smiSignal.recalculateMinMax();
-    return <double>[
-      min(smiMinMax[0], smiSignalMinMax[0]),
-      max(smiMinMax[1], smiSignalMinMax[1]),
-    ];
-  }
+  List<double> recalculateMinMax() => <double>[
+        _innerSeries.getMinValue(),
+        _innerSeries.getMaxValue(),
+      ];
 
   @override
   void paint(
