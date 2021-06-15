@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indica
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -59,7 +60,8 @@ class MACDSeries extends Series {
           ..calculateValues();
 
     _macdSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
+      painterCreator: (Series series) =>
+          OscillatorLinePainter(series, secondaryHorizontalLines: <double>[0]),
       indicatorCreator: () => macdIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.white),
@@ -73,7 +75,13 @@ class MACDSeries extends Series {
     );
 
     _macdHistogramSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => BarPainter(series),
+      painterCreator: (Series series) => BarPainter(
+        series,
+        checkColorCallback: (
+                {@required double previousQuote,
+                @required double currentQuote}) =>
+            currentQuote >= previousQuote,
+      ),
       indicatorCreator: () => macdHistogramIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const BarStyle(),

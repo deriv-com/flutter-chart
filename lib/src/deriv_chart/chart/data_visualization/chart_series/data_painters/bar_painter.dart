@@ -11,13 +11,25 @@ import '../data_painter.dart';
 import '../data_series.dart';
 import '../indexed_entry.dart';
 
+/// A callback function to say wether or not the color should be `Positive` or `Negative`.
+typedef CheckColorCallback = bool Function({
+  @required double previousQuote,
+  @required double currentQuote,
+});
+
 /// A [DataPainter] for painting Histogram Bar data.
 class BarPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
-  BarPainter(DataSeries<Tick> series) : super(series);
+  BarPainter(
+    DataSeries<Tick> series, {
+    @required this.checkColorCallback,
+  }) : super(series);
 
-  Paint _positiveHistogramPaint;
-  Paint _negativeHistogramPaint;
+  Paint _positiveBarPaint;
+  Paint _negativeBarPaint;
+
+  /// The callback function to say wether or not the color should be `Positive` or `Negative`.
+  CheckColorCallback checkColorCallback;
 
   @override
   void onPaintData(
@@ -30,11 +42,6 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     if (series.visibleEntries.length < 2) {
       return;
     }
-
-    final BarStyle style = series.style ?? theme.barStyle ?? const BarStyle();
-
-    _positiveHistogramPaint = Paint()..color = style.positiveColor;
-    _negativeHistogramPaint = Paint()..color = style.negativeColor;
 
     final double intervalWidth =
         epochToX(chartConfig.granularity) - epochToX(0);
@@ -56,11 +63,9 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
           width: barWidth,
           xCenter: epochToX(getEpochOf(tick, i)),
           yQuote: quoteToY(tick.quote),
-        ),
-        BarPainting(
-          width: barWidth,
-          xCenter: epochToX(getEpochOf(lastTick, i)),
-          yQuote: quoteToY(lastTick.quote),
+          painter: _painterColor(
+              isPositiveColor: checkColorCallback(
+                  previousQuote: lastTick.quote, currentQuote: tick.quote)),
         ),
         quoteToY,
       );
@@ -69,6 +74,7 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     // Painting last visible tick
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
+    final Tick preLastTick = series.entries[series.entries.length - 1];
 
     BarPainting lastTickPainting;
 
@@ -91,6 +97,10 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
         xCenter: xCenter,
         yQuote: animatedYQuote,
         width: barWidth,
+        painter: _painterColor(
+            isPositiveColor: checkColorCallback(
+                previousQuote: preLastTick.quote,
+                currentQuote: lastTick.quote)),
       );
     } else {
       lastTickPainting = BarPainting(
@@ -98,38 +108,43 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
             getEpochOf(lastVisibleTick, series.visibleEntries.endIndex - 1)),
         yQuote: quoteToY(lastVisibleTick.quote),
         width: barWidth,
+        painter: _painterColor(
+            isPositiveColor: checkColorCallback(
+                previousQuote: preLastTick.quote,
+                currentQuote: lastTick.quote)),
       );
     }
 
-    _paintBar(canvas, lastTickPainting, lastTickPainting, quoteToY);
+    _paintBar(canvas, lastTickPainting, quoteToY);
   }
 
-  void _paintBar(Canvas canvas, BarPainting barPainting,
-      BarPainting lastTickPainting, QuoteToY quoteToY) {
+  void _paintBar(Canvas canvas, BarPainting barPainting, QuoteToY quoteToY) {
     if (barPainting.yQuote > 0) {
       canvas.drawRect(
-        Rect.fromLTRB(
-          barPainting.xCenter - barPainting.width / 2,
-          barPainting.yQuote,
-          barPainting.xCenter + barPainting.width / 2,
-          quoteToY(0),
-        ),
-        barPainting.yQuote >= lastTickPainting.yQuote
-            ? _positiveHistogramPaint
-            : _negativeHistogramPaint,
-      );
+          Rect.fromLTRB(
+            barPainting.xCenter - barPainting.width / 2,
+            barPainting.yQuote,
+            barPainting.xCenter + barPainting.width / 2,
+            quoteToY(0),
+          ),
+          barPainting.painter);
     } else {
       canvas.drawRect(
-        Rect.fromLTRB(
-          barPainting.xCenter - barPainting.width / 2,
-          quoteToY(0),
-          barPainting.xCenter + barPainting.width / 2,
-          barPainting.yQuote,
-        ),
-        barPainting.yQuote >= lastTickPainting.yQuote
-            ? _positiveHistogramPaint
-            : _negativeHistogramPaint,
-      );
+          Rect.fromLTRB(
+            barPainting.xCenter - barPainting.width / 2,
+            quoteToY(0),
+            barPainting.xCenter + barPainting.width / 2,
+            barPainting.yQuote,
+          ),
+          barPainting.painter);
     }
+  }
+
+  Paint _painterColor({@required bool isPositiveColor}) {
+    final BarStyle style = series.style ?? theme.barStyle ?? const BarStyle();
+
+    _positiveBarPaint = Paint()..color = style.positiveColor;
+    _negativeBarPaint = Paint()..color = style.negativeColor;
+    return isPositiveColor ? _positiveBarPaint : _negativeBarPaint;
   }
 }
