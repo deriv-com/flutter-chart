@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/smi_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/smi_series.dart';
@@ -23,6 +24,8 @@ class SMIIndicatorConfig extends IndicatorConfig {
     this.doubleSmoothingPeriod = 3,
     this.overboughtValue = 40,
     this.oversoldValue = -40,
+    this.signalPeriod = 10,
+    this.maType = MovingAverageType.exponential,
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -42,8 +45,14 @@ class SMIIndicatorConfig extends IndicatorConfig {
   /// Smoothing period.
   final int smoothingPeriod;
 
-  /// Souble smoothing period.
+  /// double smoothing period.
   final int doubleSmoothingPeriod;
+
+  /// The period of SMI signal (D%).
+  final int signalPeriod;
+
+  /// /// The Moving Average type of SMI signal (D%).
+  final MovingAverageType maType;
 
   /// Overbought value.
   final double overboughtValue;
@@ -54,8 +63,12 @@ class SMIIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => SMISeries(
         indicatorInput,
-        const SMIOptions(),
-        const MAOptions(),
+        smiOptions: SMIOptions(
+          period: period,
+          smoothingPeriod: smoothingPeriod,
+          doubleSmoothingPeriod: doubleSmoothingPeriod,
+        ),
+        smiSignalOptions: MAOptions(period: signalPeriod, type: maType),
         overboughtValue: overboughtValue,
         oversoldValue: oversoldValue,
       );

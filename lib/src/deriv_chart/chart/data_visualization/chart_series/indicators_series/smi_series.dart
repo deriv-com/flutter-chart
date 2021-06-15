@@ -23,9 +23,9 @@ import 'models/smi_options.dart';
 class SMISeries extends Series {
   /// Initializes.
   SMISeries(
-    this.input,
-    this.smiOptions,
-    this.smiSignalOptions, {
+    this.input, {
+    @required this.smiOptions,
+    @required this.smiSignalOptions,
     this.overboughtValue = 40,
     this.oversoldValue = -40,
     String id,
