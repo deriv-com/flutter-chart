@@ -1,5 +1,8 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/dropdown_menu.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -35,6 +38,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   int _period;
   double _overboughtValue;
   double _oversoldValue;
+  MovingAverageType _maType;
 
   @override
   SMIIndicatorConfig createIndicatorConfig() => SMIIndicatorConfig(
@@ -47,6 +51,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
           _buildPeriodField(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
+          _buildMATypeField(),
         ],
       );
 
@@ -140,4 +145,22 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       _oversoldValue ??
       (widget.config as SMIIndicatorConfig)?.oversoldValue ??
       20;
+
+  MovingAverageType get _currentMAType =>
+      _maType ??
+      (widget.config as SMIIndicatorConfig)?.maType ??
+      MovingAverageType.exponential;
+
+  Widget _buildMATypeField() => DropdownMenu<MovingAverageType>(
+        initialValue: _currentMAType,
+        items: MovingAverageType.values,
+        label: ChartLocalization.of(context).labelType,
+        labelForItem: (MovingAverageType type) => getEnumValue(type),
+        onItemSelected: (MovingAverageType newType) => setState(
+          () {
+            _maType = newType;
+            updateIndicator();
+          },
+        ),
+      );
 }
