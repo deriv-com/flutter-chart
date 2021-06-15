@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
@@ -15,19 +17,22 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../series.dart';
+import 'models/smi_options.dart';
 
 /// Stochastic Momentum Index series class.
 class SMISeries extends Series {
   /// Initializes.
   SMISeries(
-    this.input, {
+    this.input,
+    this.smiOptions,
+    this.smiSignalOptions, {
     this.overboughtValue = 40,
     this.oversoldValue = -40,
     String id,
   }) : super(id);
 
   SingleIndicatorSeries _smi;
-  SingleIndicatorSeries _smiSignal;
+  MASeries _smiSignal;
 
   List<Series> _innerSeries;
 
@@ -40,9 +45,20 @@ class SMISeries extends Series {
   /// Oversold value.
   final double oversoldValue;
 
+  /// SMI Options
+  final SMIOptions smiOptions;
+
+  /// SMI Signal options, (D%)
+  final MAOptions smiSignalOptions;
+
   @override
   SeriesPainter<Series> createPainter() {
-    final SMIIndicator<Tick> smiIndicator = SMIIndicator<Tick>(input);
+    final SMIIndicator<Tick> smiIndicator = SMIIndicator<Tick>(
+      input,
+      period: smiOptions.period,
+      smoothingPeriod: smiOptions.smoothingPeriod,
+      doubleSmoothingPeriod: smiOptions.doubleSmoothingPeriod,
+    );
 
     _smi = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
@@ -53,15 +69,14 @@ class SMISeries extends Series {
         secondaryHorizontalLinesStyle: const LineStyle(),
       ),
       indicatorCreator: () => smiIndicator,
+      options: smiOptions,
       inputIndicator: CloseValueIndicator<Tick>(input),
     );
 
-    _smiSignal = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () =>
-          SMISignalIndicator<Tick>.fromIndicator(smiIndicator, period: 10),
-      inputIndicator: CloseValueIndicator<Tick>(input),
+    _smiSignal = MASeries.fromIndicator(
+      smiIndicator,
       style: const LineStyle(color: Colors.red),
+      options: smiSignalOptions,
     );
 
     _innerSeries = <Series>[_smi, _smiSignal];
