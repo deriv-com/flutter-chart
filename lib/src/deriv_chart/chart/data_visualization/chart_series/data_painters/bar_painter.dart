@@ -74,7 +74,7 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     // Painting last visible tick
     final Tick lastTick = series.entries.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
-    final Tick preLastTick = series.entries[series.entries.length - 1];
+    final Tick preLastTick = series.entries[series.entries.length - 2];
 
     BarPainting lastTickPainting;
 
