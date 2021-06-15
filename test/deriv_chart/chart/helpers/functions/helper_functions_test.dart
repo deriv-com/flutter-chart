@@ -25,12 +25,35 @@ void main() {
     });
   });
 
-  group('CalculateTextColor', () {
-    test(
-        'CalculateTextColor calculates the correct color for the given brightness',
+  group('duration to string', () {
+    test('durationToString returns the right H:MM:SS format when hour is not 0',
         () {
-      expect(calculateTextColor(Colors.black), Colors.white);
-      expect(calculateTextColor(Colors.white), Colors.black);
+      const Duration time = Duration(hours: 1, minutes: 20, seconds: 15);
+
+      expect(durationToString(time), '1:20:15');
+    });
+
+    test('durationToString returns the right MM:SS format when hour is 0', () {
+      const Duration time = Duration(minutes: 20, seconds: 15);
+
+      expect(durationToString(time), '20:15');
+    });
+
+    test(
+        'durationToString returns the right MM:SS format when hour is 0 and minute is not 2 digits',
+        () {
+      const Duration time = Duration(minutes: 4, seconds: 15);
+
+      expect(durationToString(time), '04:15');
+    });
+
+    group('CalculateTextColor', () {
+      test(
+          'CalculateTextColor calculates the correct color for the given brightness',
+          () {
+        expect(calculateTextColor(Colors.black), Colors.white);
+        expect(calculateTextColor(Colors.white), Colors.black);
+      });
     });
   });
 }
