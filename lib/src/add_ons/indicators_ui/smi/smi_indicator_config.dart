@@ -52,6 +52,8 @@ class SMIIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => SMISeries(
         indicatorInput,
+        overboughtValue: overboughtValue,
+        oversoldValue: oversoldValue,
       );
 
   @override

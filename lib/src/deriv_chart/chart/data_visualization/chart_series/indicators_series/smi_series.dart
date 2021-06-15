@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
@@ -46,6 +47,10 @@ class SMISeries extends Series {
     _smi = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
         series,
+        topHorizontalLine: overboughtValue,
+        bottomHorizontalLine: oversoldValue,
+        mainHorizontalLinesStyle: const LineStyle(),
+        secondaryHorizontalLinesStyle: const LineStyle(),
       ),
       indicatorCreator: () => smiIndicator,
       inputIndicator: CloseValueIndicator<Tick>(input),
@@ -54,8 +59,9 @@ class SMISeries extends Series {
     _smiSignal = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
       indicatorCreator: () =>
-          SMISignalIndicator<Tick>.fromIndicator(smiIndicator),
+          SMISignalIndicator<Tick>.fromIndicator(smiIndicator, period: 10),
       inputIndicator: CloseValueIndicator<Tick>(input),
+      style: const LineStyle(color: Colors.red),
     );
 
     _innerSeries = <Series>[_smi, _smiSignal];
@@ -81,8 +87,8 @@ class SMISeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _smi.onUpdate(leftEpoch, rightEpoch);
-    _smiSignal.onUpdate(leftEpoch, rightEpoch);
+    _smi.update(leftEpoch, rightEpoch);
+    _smiSignal.update(leftEpoch, rightEpoch);
   }
 
   @override
