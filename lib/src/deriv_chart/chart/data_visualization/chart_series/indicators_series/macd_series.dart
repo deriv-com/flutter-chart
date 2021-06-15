@@ -1,10 +1,13 @@
-import 'package:deriv_chart/src/logic/chart_series/indicators_series/single_indicator_series.dart';
-import 'package:deriv_chart/src/logic/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/models/animation_info.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
@@ -12,34 +15,68 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import '../series.dart';
 import '../series_painter.dart';
+import 'models/macd_options.dart';
 
+/// MACD series
 class MACDSeries extends Series {
   /// Initializes
 
   MACDSeries(
     this.indicatorInput, {
+    @required this.options,
+    @required this.config,
     String id,
   }) : super(id);
 
   ///input data
   final IndicatorInput indicatorInput;
 
-  SingleIndicatorSeries _fcbHighSeries;
-  SingleIndicatorSeries _fcbLowSeries;
+  SingleIndicatorSeries _macdSeries;
+  SingleIndicatorSeries _signalMACDSeries;
+  SingleIndicatorSeries _macdHistogramSeries;
+
+  /// MACD Configuration.
+  MACDIndicatorConfig config;
+
+  /// MACD Options.
+  MACDOptions options;
 
   @override
   SeriesPainter<Series> createPainter() {
-    _fcbHighSeries = SingleIndicatorSeries(
+    final MACDIndicator<Tick> macdIndicator = MACDIndicator<Tick>(
+      indicatorInput,
+      fastMAPeriod: config.fastMAPeriod,
+      slowMAPeriod: config.slowMAPeriod,
+    )..calculateValues();
+
+    final SignalMACDIndicator<Tick> signalMACDIndicator =
+        SignalMACDIndicator<Tick>.fromIndicator(macdIndicator)
+          ..calculateValues();
+
+    final MACDHistogramIndicator<Tick> macdHistogramIndicator =
+        MACDHistogramIndicator<Tick>.fromIndicator(
+            macdIndicator, signalMACDIndicator)
+          ..calculateValues();
+
+    _macdSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => FCBHighIndicator<Tick>(indicatorInput),
+      indicatorCreator: () => macdIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.blue),
+      style: const LineStyle(color: Colors.white),
     );
-    _fcbLowSeries = SingleIndicatorSeries(
+
+    _signalMACDSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => FCBLowIndicator<Tick>(indicatorInput),
+      indicatorCreator: () => signalMACDIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.blue),
+      style: const LineStyle(color: Colors.redAccent),
+    );
+
+    _macdHistogramSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => BarPainter(series),
+      indicatorCreator: () => macdHistogramIndicator,
+      inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
+      style: const BarStyle(),
     );
 
     return null;
@@ -48,28 +85,31 @@ class MACDSeries extends Series {
   @override
   bool didUpdate(ChartData oldData) {
     final MACDSeries series = oldData;
-    final bool _fcbHighUpdated =
-        _fcbHighSeries.didUpdate(series?._fcbHighSeries);
-    final bool _fcbLowUpdated = _fcbLowSeries.didUpdate(series?._fcbLowSeries);
-    return _fcbHighUpdated || _fcbLowUpdated;
+
+    final bool macdUpdated = _macdSeries.didUpdate(series?._macdSeries);
+
+    final bool signalMACDUpdated =
+        _signalMACDSeries.didUpdate(series?._signalMACDSeries);
+
+    final bool macdHistogramUpdated =
+        _macdHistogramSeries.didUpdate(series?._macdHistogramSeries);
+
+    return macdUpdated || signalMACDUpdated || macdHistogramUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _fcbHighSeries.update(leftEpoch, rightEpoch);
-    _fcbLowSeries.update(leftEpoch, rightEpoch);
+    _macdSeries.update(leftEpoch, rightEpoch);
+    _signalMACDSeries.update(leftEpoch, rightEpoch);
+    _macdHistogramSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
-        <ChartData>[
-          _fcbHighSeries,
-          _fcbLowSeries,
-        ].getMinValue(),
-        <ChartData>[
-          _fcbHighSeries,
-          _fcbLowSeries,
-        ].getMaxValue()
+        <ChartData>[_macdSeries, _signalMACDSeries, _macdHistogramSeries]
+            .getMinValue(),
+        <ChartData>[_macdSeries, _signalMACDSeries, _macdHistogramSeries]
+            .getMaxValue()
       ];
 
   @override
@@ -82,21 +122,25 @@ class MACDSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _fcbLowSeries.paint(
+    _macdHistogramSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _fcbHighSeries.paint(
+    _macdSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _signalMACDSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
   int getMaxEpoch() => <ChartData>[
-        _fcbLowSeries,
-        _fcbHighSeries,
+        _macdSeries,
+        _signalMACDSeries,
+        _macdHistogramSeries,
       ].getMaxEpoch();
 
   @override
   int getMinEpoch() => <ChartData>[
-        _fcbLowSeries,
-        _fcbHighSeries,
+        _macdSeries,
+        _signalMACDSeries,
+        _macdHistogramSeries,
       ].getMinEpoch();
 }

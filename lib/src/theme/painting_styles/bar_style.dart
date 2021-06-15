@@ -7,7 +7,7 @@ import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 class BarStyle extends DataSeriesStyle with EquatableMixin {
   /// Initializes a style that defines the style of painting histogram data.
   const BarStyle({
-    this.positiveColor = const Color(0xFF00A79E),
+    this.positiveColor = const Color(0xFF4CAF50),
     this.negativeColor = const Color(0xFFCC2E3D),
   });
 

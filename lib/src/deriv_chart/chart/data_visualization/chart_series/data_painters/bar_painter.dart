@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painting.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:flutter/material.dart';
@@ -46,73 +45,76 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {
-      final Candle candle = series.entries[i];
-      final Candle lastCandle = series.entries[i - 1 >= 0 ? i - 1 : i];
+      final Tick tick = series.entries[i];
+      final Tick lastTick = series.entries[i - 1 >= 0 ? i - 1 : i];
+
+      // canvas.drawCircle(epochToX(getEpochOf(tick, i)), 10, paint)
 
       _paintBar(
         canvas,
         BarPainting(
           width: barWidth,
-          xCenter: epochToX(getEpochOf(candle, i)),
-          yQuote: candle.quote,
+          xCenter: epochToX(getEpochOf(tick, i)),
+          yQuote: quoteToY(tick.quote),
         ),
         BarPainting(
           width: barWidth,
-          xCenter: epochToX(getEpochOf(candle, i)),
-          yQuote: lastCandle.quote,
+          xCenter: epochToX(getEpochOf(lastTick, i)),
+          yQuote: quoteToY(lastTick.quote),
         ),
+        quoteToY,
       );
     }
 
-    // Painting last visible candle
-    final Candle lastCandle = series.entries.last;
-    final Candle lastVisibleCandle = series.visibleEntries.last;
+    // Painting last visible tick
+    final Tick lastTick = series.entries.last;
+    final Tick lastVisibleTick = series.visibleEntries.last;
 
-    BarPainting lastCandlePainting;
+    BarPainting lastTickPainting;
 
-    if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
-      final IndexedEntry<Candle> prevLastCandle = series.prevLastEntry;
+    if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
+      final IndexedEntry<Tick> prevLastTick = series.prevLastEntry;
 
       final double animatedYQuote = quoteToY(ui.lerpDouble(
-        prevLastCandle.entry.quote,
-        lastCandle.quote,
+        prevLastTick.entry.quote,
+        lastTick.quote,
         animationInfo.currentTickPercent,
       ));
 
       final double xCenter = ui.lerpDouble(
-        epochToX(getEpochOf(prevLastCandle.entry, prevLastCandle.index)),
-        epochToX(getEpochOf(lastCandle, series.entries.length - 1)),
+        epochToX(getEpochOf(prevLastTick.entry, prevLastTick.index)),
+        epochToX(getEpochOf(lastTick, series.entries.length - 1)),
         animationInfo.currentTickPercent,
       );
 
-      lastCandlePainting = BarPainting(
+      lastTickPainting = BarPainting(
         xCenter: xCenter,
         yQuote: animatedYQuote,
         width: barWidth,
       );
     } else {
-      lastCandlePainting = BarPainting(
+      lastTickPainting = BarPainting(
         xCenter: epochToX(
-            getEpochOf(lastVisibleCandle, series.visibleEntries.endIndex - 1)),
-        yQuote: quoteToY(lastVisibleCandle.quote),
+            getEpochOf(lastVisibleTick, series.visibleEntries.endIndex - 1)),
+        yQuote: quoteToY(lastVisibleTick.quote),
         width: barWidth,
       );
     }
 
-    _paintBar(canvas, lastCandlePainting, lastCandlePainting);
+    _paintBar(canvas, lastTickPainting, lastTickPainting, quoteToY);
   }
 
-  void _paintBar(
-      Canvas canvas, BarPainting barPainting, BarPainting lastCandlePainting) {
+  void _paintBar(Canvas canvas, BarPainting barPainting,
+      BarPainting lastTickPainting, QuoteToY quoteToY) {
     if (barPainting.yQuote > 0) {
       canvas.drawRect(
         Rect.fromLTRB(
           barPainting.xCenter - barPainting.width / 2,
           barPainting.yQuote,
           barPainting.xCenter + barPainting.width / 2,
-          0,
+          quoteToY(0),
         ),
-        barPainting.yQuote >= lastCandlePainting.yQuote
+        barPainting.yQuote >= lastTickPainting.yQuote
             ? _positiveHistogramPaint
             : _negativeHistogramPaint,
       );
@@ -120,11 +122,11 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
       canvas.drawRect(
         Rect.fromLTRB(
           barPainting.xCenter - barPainting.width / 2,
-          0,
+          quoteToY(0),
           barPainting.xCenter + barPainting.width / 2,
           barPainting.yQuote,
         ),
-        barPainting.yQuote >= lastCandlePainting.yQuote
+        barPainting.yQuote >= lastTickPainting.yQuote
             ? _positiveHistogramPaint
             : _negativeHistogramPaint,
       );
