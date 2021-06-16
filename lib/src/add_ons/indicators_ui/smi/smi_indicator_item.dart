@@ -59,9 +59,12 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   Widget getIndicatorOptions() => Column(
         children: <Widget>[
           _buildPeriodField(),
+          _buildSmoothingPeriodField(),
+          _buildDoubleSmoothingPeriodField(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
           _buildMATypeField(),
+          _buildSignalPeriodField(),
         ],
       );
 
@@ -73,6 +76,45 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
             _period = int.tryParse(text);
           } else {
             _period = 14;
+          }
+          updateIndicator();
+        },
+      );
+
+  Widget _buildSmoothingPeriodField() => FieldWidget(
+        label: ChartLocalization.of(context).labelSmoothingPeriod,
+        initialValue: _currentSmoothingPeriod.toString(),
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _smoothingPeriod = int.tryParse(text);
+          } else {
+            _smoothingPeriod = 3;
+          }
+          updateIndicator();
+        },
+      );
+
+  Widget _buildDoubleSmoothingPeriodField() => FieldWidget(
+        label: ChartLocalization.of(context).labelDoubleSmoothingPeriod,
+        initialValue: _currentDoubleSmoothingPeriod.toString(),
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _doubleSmoothingPeriod = int.tryParse(text);
+          } else {
+            _doubleSmoothingPeriod = 3;
+          }
+          updateIndicator();
+        },
+      );
+
+  Widget _buildSignalPeriodField() => FieldWidget(
+        label: ChartLocalization.of(context).labelSignalPeriod,
+        initialValue: _currentSignalPeriod.toString(),
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _signalPeriod = int.tryParse(text);
+          } else {
+            _signalPeriod = 10;
           }
           updateIndicator();
         },
