@@ -47,12 +47,12 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   @override
   SMIIndicatorConfig createIndicatorConfig() => SMIIndicatorConfig(
         period: _currentPeriod,
-        smoothingPeriod: _smoothingPeriod,
-        doubleSmoothingPeriod: _doubleSmoothingPeriod,
-        overboughtValue: _overboughtValue,
-        oversoldValue: _oversoldValue,
-        maType: _maType,
-        signalPeriod: _signalPeriod,
+        smoothingPeriod: _currentSmoothingPeriod,
+        doubleSmoothingPeriod: _currentDoubleSmoothingPeriod,
+        overboughtValue: _currentOverboughtValue,
+        oversoldValue: _currentOversoldValue,
+        maType: _currentMAType,
+        signalPeriod: _currentSignalPeriod,
       );
 
   @override
@@ -105,13 +105,13 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       3;
 
   int get _currentSignalPeriod =>
-      _currentSignalPeriod ??
+      _signalPeriod ??
       (widget.config as SMIIndicatorConfig)?.signalPeriod ??
       10;
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
         label: ChartLocalization.of(context).labelOverBoughtPrice,
-        initialValue: _getCurrentOverBoughtPrice().toString(),
+        initialValue: _currentOverboughtValue.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _overboughtValue = double.tryParse(text);
@@ -122,8 +122,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
         },
       );
 
-
-  double _getCurrentOverBoughtPrice() =>
+  double get _currentOverboughtValue =>
       _overboughtValue ??
       (widget.config as SMIIndicatorConfig)?.overboughtValue ??
       80;
@@ -139,7 +138,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverSoldPrice().toString(),
+              initialValue: _currentOversoldValue.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
@@ -154,7 +153,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
         ],
       );
 
-  double _getCurrentOverSoldPrice() =>
+  double get _currentOversoldValue =>
       _oversoldValue ??
       (widget.config as SMIIndicatorConfig)?.oversoldValue ??
       20;
