@@ -1,6 +1,7 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/dropdown_menu.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 
@@ -36,13 +37,22 @@ class SMIIndicatorItem extends IndicatorItem {
 /// SMIItem State class
 class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   int _period;
+  int _smoothingPeriod;
+  int _doubleSmoothingPeriod;
   double _overboughtValue;
   double _oversoldValue;
   MovingAverageType _maType;
+  int _signalPeriod;
 
   @override
   SMIIndicatorConfig createIndicatorConfig() => SMIIndicatorConfig(
         period: _currentPeriod,
+        smoothingPeriod: _smoothingPeriod,
+        doubleSmoothingPeriod: _doubleSmoothingPeriod,
+        overboughtValue: _overboughtValue,
+        oversoldValue: _oversoldValue,
+        maType: _maType,
+        signalPeriod: _signalPeriod,
       );
 
   @override
@@ -84,31 +94,34 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   int get _currentPeriod =>
       _period ?? (widget.config as SMIIndicatorConfig)?.period ?? 14;
 
-  Widget _buildOverBoughtPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverBoughtPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverBoughtPrice().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _overboughtValue = double.tryParse(text);
-                } else {
-                  _overboughtValue = 80;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  int get _currentSmoothingPeriod =>
+      _smoothingPeriod ??
+      (widget.config as SMIIndicatorConfig)?.smoothingPeriod ??
+      3;
+
+  int get _currentDoubleSmoothingPeriod =>
+      _doubleSmoothingPeriod ??
+      (widget.config as SMIIndicatorConfig)?.doubleSmoothingPeriod ??
+      3;
+
+  int get _currentSignalPeriod =>
+      _currentSignalPeriod ??
+      (widget.config as SMIIndicatorConfig)?.signalPeriod ??
+      10;
+
+  Widget _buildOverBoughtPriceField() => FieldWidget(
+        label: ChartLocalization.of(context).labelOverBoughtPrice,
+        initialValue: _getCurrentOverBoughtPrice().toString(),
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overboughtValue = double.tryParse(text);
+          } else {
+            _overboughtValue = 80;
+          }
+          updateIndicator();
+        },
       );
+
 
   double _getCurrentOverBoughtPrice() =>
       _overboughtValue ??
