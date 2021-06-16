@@ -65,30 +65,17 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
         ],
       );
 
-  Widget _buildPeriodField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelPeriod,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentPeriod.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _period = int.tryParse(text);
-                } else {
-                  _period = 14;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildPeriodField() => FieldWidget(
+        label: ChartLocalization.of(context).labelPeriod,
+        initialValue: _currentPeriod.toString(),
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _period = int.tryParse(text);
+          } else {
+            _period = 14;
+          }
+          updateIndicator();
+        },
       );
 
   int get _currentPeriod =>
@@ -127,30 +114,17 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       (widget.config as SMIIndicatorConfig)?.overboughtValue ??
       80;
 
-  Widget _buildOverSoldPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverSoldPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentOversoldValue.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _oversoldValue = double.tryParse(text);
-                } else {
-                  _oversoldValue = 20;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverSoldPriceField() => FieldWidget(
+        label: ChartLocalization.of(context).labelOverSoldPrice,
+        initialValue: _currentOversoldValue.toString(),
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _oversoldValue = double.tryParse(text);
+          } else {
+            _oversoldValue = 20;
+          }
+          updateIndicator();
+        },
       );
 
   double get _currentOversoldValue =>
