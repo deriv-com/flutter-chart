@@ -75,7 +75,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
           if (text.isNotEmpty) {
             _period = int.tryParse(text);
           } else {
-            _period = 14;
+            _period = 10;
           }
           updateIndicator();
         },
@@ -121,7 +121,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   int get _currentPeriod =>
-      _period ?? (widget.config as SMIIndicatorConfig)?.period ?? 14;
+      _period ?? (widget.config as SMIIndicatorConfig)?.period ?? 10;
 
   int get _currentSmoothingPeriod =>
       _smoothingPeriod ??

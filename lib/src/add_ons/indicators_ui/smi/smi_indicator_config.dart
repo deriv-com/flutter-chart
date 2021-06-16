@@ -19,7 +19,7 @@ part 'smi_indicator_config.g.dart';
 class SMIIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const SMIIndicatorConfig({
-    this.period = 14,
+    this.period = 10,
     this.smoothingPeriod = 3,
     this.doubleSmoothingPeriod = 3,
     this.overboughtValue = 40,
