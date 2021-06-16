@@ -25,6 +25,7 @@ class NoResultPage extends StatelessWidget {
             Flexible(
               child: Text(
                 ChartLocalization.of(context).informNoResult(text),
+                textAlign: TextAlign.center,
                 style: theme.textStyle(
                   textStyle: theme.title,
                   color: theme.base03Color,
@@ -39,6 +40,7 @@ class NoResultPage extends StatelessWidget {
                 color: theme.base04Color,
               ),
             ),
+            SizedBox(height: theme.margin08Chart),
           ],
         ),
       ),
