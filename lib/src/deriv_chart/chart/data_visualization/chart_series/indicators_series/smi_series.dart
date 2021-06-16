@@ -25,14 +25,13 @@ class SMISeries extends Series {
   SMISeries(
     this.input, {
     @required this.smiOptions,
-    @required this.smiSignalOptions,
     this.overboughtValue = 40,
     this.oversoldValue = -40,
     String id,
   }) : super(id);
 
   SingleIndicatorSeries _smi;
-  MASeries _smiSignal;
+  SingleIndicatorSeries _smiSignal;
 
   List<Series> _innerSeries;
 
@@ -47,9 +46,6 @@ class SMISeries extends Series {
 
   /// SMI Options
   final SMIOptions smiOptions;
-
-  /// SMI Signal options, (D%)
-  final MAOptions smiSignalOptions;
 
   @override
   SeriesPainter<Series> createPainter() {
@@ -73,10 +69,13 @@ class SMISeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(input),
     );
 
-    _smiSignal = MASeries.fromIndicator(
-      smiIndicator,
+    _smiSignal = SingleIndicatorSeries(
+      painterCreator: (Series series) => LinePainter(series),
+      indicatorCreator: () =>
+          MASeries.getMAIndicator(smiIndicator, smiOptions.signalOptions),
+      inputIndicator: smiIndicator,
       style: const LineStyle(color: Colors.red),
-      options: smiSignalOptions,
+      options: smiOptions,
     );
 
     _innerSeries = <Series>[_smi, _smiSignal];

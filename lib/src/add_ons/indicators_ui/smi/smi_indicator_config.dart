@@ -67,8 +67,8 @@ class SMIIndicatorConfig extends IndicatorConfig {
           period: period,
           smoothingPeriod: smoothingPeriod,
           doubleSmoothingPeriod: doubleSmoothingPeriod,
+          signalOptions: MAOptions(period: signalPeriod, type: maType),
         ),
-        smiSignalOptions: MAOptions(period: signalPeriod, type: maType),
         overboughtValue: overboughtValue,
         oversoldValue: oversoldValue,
       );
