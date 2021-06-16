@@ -50,7 +50,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: const SafeArea(
           child: Scaffold(
-            resizeToAvoidBottomPadding: false,
             body: FullscreenChart(),
           ),
         ),
