@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
 
@@ -214,3 +213,9 @@ class OscillatorLinePainter extends LinePainter {
     }
   }
 }
+
+double _labelWidth(double text, TextStyle style, int pipSize) =>
+    makeTextPainter(
+      text.toStringAsFixed(pipSize),
+      style,
+    ).width;
