@@ -40,7 +40,6 @@ class ROCIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => ROCSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
-        this,
         rocOptions: ROCOptions(period: period),
       );
 
