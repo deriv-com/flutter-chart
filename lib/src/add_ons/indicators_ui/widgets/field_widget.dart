@@ -10,7 +10,7 @@ class FieldWidget extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  /// Period's initial value
+  /// Initial value
   final String initialValue;
 
   /// Will be called whenever the field's value has changed.
