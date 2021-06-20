@@ -21,8 +21,8 @@ class AroonSeries extends Series {
   AroonSeries(
     this.indicatorInput,
     this.indicatorConfig, {
+    @required this.aroonOption,
     String id,
-    this.aroonOption,
   }) : super(id);
 
   ///input data
