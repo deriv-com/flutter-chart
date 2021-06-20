@@ -67,14 +67,7 @@ class StochasticOscillatorSeries extends Series {
       );
 
       _slowStochasticIndicatorSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => config.showZones
-            ? OscillatorLinePainter(
-                series,
-                bottomHorizontalLine: config.overSoldPrice,
-                topHorizontalLine: config.overBoughtPrice,
-                mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
-              )
-            : LinePainter(series),
+        painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () =>
             SmoothedSlowStochasticIndicator<Tick>(slowStochasticIndicator),
         inputIndicator: inputIndicator,
@@ -98,14 +91,7 @@ class StochasticOscillatorSeries extends Series {
       );
 
       _slowStochasticIndicatorSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => config.showZones
-            ? OscillatorLinePainter(
-                series,
-                bottomHorizontalLine: config.overSoldPrice,
-                topHorizontalLine: config.overBoughtPrice,
-                mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
-              )
-            : LinePainter(series),
+        painterCreator: (Series series) => LinePainter(series),
         indicatorCreator: () => slowStochasticIndicator,
         inputIndicator: inputIndicator,
         options: stochasticOscillatorOptions,
