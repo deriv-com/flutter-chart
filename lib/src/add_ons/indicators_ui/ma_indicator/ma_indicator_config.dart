@@ -23,13 +23,14 @@ class MAIndicatorConfig extends IndicatorConfig {
     String fieldType,
     LineStyle lineStyle,
     int offset,
+    bool isOverlay = true,
   })  : period = period ?? 50,
         movingAverageType = movingAverageType ?? MovingAverageType.simple,
         fieldType = fieldType ?? 'close',
         offset = offset ?? 0,
         lineStyle =
             lineStyle ?? const LineStyle(color: Colors.yellow, thickness: 0.6),
-        super();
+        super(isOverlay: isOverlay);
 
   /// Initializes from JSON.
   factory MAIndicatorConfig.fromJson(Map<String, dynamic> json) =>

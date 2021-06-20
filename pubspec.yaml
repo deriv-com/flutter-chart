@@ -18,9 +18,9 @@ dependencies:
   equatable: ^1.2.5
   deriv_technical_analysis:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: git@github.com:mohammadamir-fs/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: dev
+      ref: Amir/fix_dpo_indicator_constructor
 
   # Store state:
   shared_preferences: <1.0.0
