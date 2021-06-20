@@ -26,8 +26,7 @@ class ROCSeries extends AbstractSingleIndicatorSeries {
 
   /// Initializes an ROC Indicator from the given [inputIndicator].
   ROCSeries.fromIndicator(
-    Indicator<Tick> inputIndicator,
-    this.config, {
+    Indicator<Tick> inputIndicator, {
     @required this.rocOptions,
     String id,
   })  : _inputIndicator = inputIndicator,
@@ -38,9 +37,6 @@ class ROCSeries extends AbstractSingleIndicatorSeries {
         );
 
   final Indicator<Tick> _inputIndicator;
-
-  /// Configuration of ROC.
-  final ROCIndicatorConfig config;
 
   /// Options for ROC Indicator.
   final ROCOptions rocOptions;
