@@ -1,6 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/rsi/rsi_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
@@ -48,13 +49,26 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   final RSIOptions rsiOptions;
 
   @override
+  List<double> recalculateMinMax() {
+    final List<double> rsiMinMax = super.recalculateMinMax();
+
+    if (!config.pinLabels) {
+      return rsiMinMax;
+    }
+    return <double>[
+      safeMin(
+          safeMin(rsiMinMax[0], config.overSoldPrice), config.overBoughtPrice),
+      safeMax(
+          safeMax(rsiMinMax[1], config.overSoldPrice), config.overBoughtPrice),
+    ];
+  }
+
+  @override
   SeriesPainter<Series> createPainter() => OscillatorLinePainter(
         this,
         bottomHorizontalLine: config.overSoldPrice,
         topHorizontalLine: config.overBoughtPrice,
-        topHorizontalLineStyle: config.topHorizontalLineStyle,
-        bottomHorizontalLineStyle: config.bottomHorizontalLinesStyle,
-        secondaryHorizontalLinesStyle: config.zeroHorizontalLineStyle,
+        mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
       );
 
   @override

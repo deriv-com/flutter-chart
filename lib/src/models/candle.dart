@@ -12,24 +12,45 @@ class Candle extends Tick with EquatableMixin {
     @required this.low,
     @required this.open,
     @required this.close,
-  }) : super(epoch: epoch, quote: close);
+    int currentEpoch,
+  })  : currentEpoch = currentEpoch ?? epoch,
+        super(epoch: epoch, quote: close);
 
   /// Initializes a candle class with only the given parameters or non given.
   const Candle.noParam(
-      int epoch, double open, double close, double high, double low)
-      : this(epoch: epoch, open: open, close: close, high: high, low: low);
+    int epoch,
+    double open,
+    double close,
+    double high,
+    double low, {
+    int currentEpoch,
+  }) : this(
+          epoch: epoch,
+          open: open,
+          close: close,
+          high: high,
+          low: low,
+          currentEpoch: currentEpoch,
+        );
 
   /// High value
+  @override
   final double high;
 
   /// Low value.
+  @override
   final double low;
 
   /// Open value.
+  @override
   final double open;
 
   /// Close value.
+  @override
   final double close;
+
+  /// The current time value of candle (it is the current time of the candle rather than start of it).
+  final int currentEpoch;
 
   /// Creates a copy of this object.
   Candle copyWith({
@@ -38,6 +59,7 @@ class Candle extends Tick with EquatableMixin {
     double low,
     double open,
     double close,
+    double currentEpoch,
   }) =>
       Candle(
         epoch: epoch ?? this.epoch,
@@ -45,11 +67,13 @@ class Candle extends Tick with EquatableMixin {
         low: low ?? this.low,
         open: open ?? this.open,
         close: close ?? this.close,
+        currentEpoch: currentEpoch ?? this.currentEpoch,
       );
 
   @override
   String toString() =>
-      'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close)';
+      'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close, currentEpoch: $currentEpoch)';
 
-  List<Object> get props => [epoch, open, close, high, low];
+  @override
+  List<Object> get props => <Object>[epoch, open, close, high, low];
 }

@@ -15,18 +15,11 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
     lineStyle: json['lineStyle'] == null
         ? null
         : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    zeroHorizontalLineStyle: json['zeroHorizontalLineStyle'] == null
+    mainHorizontalLinesStyle: json['mainHorizontalLinesStyle'] == null
         ? null
         : LineStyle.fromJson(
-            json['zeroHorizontalLineStyle'] as Map<String, dynamic>),
-    topHorizontalLineStyle: json['topHorizontalLineStyle'] == null
-        ? null
-        : LineStyle.fromJson(
-            json['topHorizontalLineStyle'] as Map<String, dynamic>),
-    bottomHorizontalLinesStyle: json['bottomHorizontalLinesStyle'] == null
-        ? null
-        : LineStyle.fromJson(
-            json['bottomHorizontalLinesStyle'] as Map<String, dynamic>),
+            json['mainHorizontalLinesStyle'] as Map<String, dynamic>),
+    pinLabels: json['pinLabels'] as bool,
   );
 }
 
@@ -36,8 +29,7 @@ Map<String, dynamic> _$RSIIndicatorConfigToJson(RSIIndicatorConfig instance) =>
       'overBoughtPrice': instance.overBoughtPrice,
       'overSoldPrice': instance.overSoldPrice,
       'lineStyle': instance.lineStyle,
-      'zeroHorizontalLineStyle': instance.zeroHorizontalLineStyle,
-      'topHorizontalLineStyle': instance.topHorizontalLineStyle,
-      'bottomHorizontalLinesStyle': instance.bottomHorizontalLinesStyle,
+      'mainHorizontalLinesStyle': instance.mainHorizontalLinesStyle,
       'fieldType': instance.fieldType,
+      'pinLabels': instance.pinLabels,
     };
