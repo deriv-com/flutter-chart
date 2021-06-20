@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class OscillatorLinePainter extends LinePainter {
         ..moveTo(0, quoteToY(_topHorizontalLine))
         ..lineTo(
             size.width -
-                _labelWidth(_bottomHorizontalLine, textStyle.textStyle,
+                labelWidth(_bottomHorizontalLine, textStyle.textStyle,
                     chartConfig.pipSize),
             quoteToY(_topHorizontalLine));
 
@@ -90,7 +91,7 @@ class OscillatorLinePainter extends LinePainter {
         ..moveTo(0, quoteToY(_bottomHorizontalLine))
         ..lineTo(
             size.width -
-                _labelWidth(_topHorizontalLine, textStyle.textStyle,
+                labelWidth(_topHorizontalLine, textStyle.textStyle,
                     chartConfig.pipSize),
             quoteToY(_bottomHorizontalLine));
 
@@ -163,9 +164,3 @@ class OscillatorLinePainter extends LinePainter {
 
   // TODO(mohammadamir-fs): add channel fill.
 }
-
-double _labelWidth(double text, TextStyle style, int pipSize) =>
-    makeTextPainter(
-      text.toStringAsFixed(pipSize),
-      style,
-    ).width;

@@ -25,11 +25,11 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     @required this.checkColorCallback,
   }) : super(series);
 
+  /// The callback function to say wether or not the color should be `Positive` or `Negative`.
+  final CheckColorCallback checkColorCallback;
+
   Paint _positiveBarPaint;
   Paint _negativeBarPaint;
-
-  /// The callback function to say wether or not the color should be `Positive` or `Negative`.
-  CheckColorCallback checkColorCallback;
 
   @override
   void onPaintData(
@@ -54,8 +54,6 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
         i++) {
       final Tick tick = series.entries[i];
       final Tick lastTick = series.entries[i - 1 >= 0 ? i - 1 : i];
-
-      // canvas.drawCircle(epochToX(getEpochOf(tick, i)), 10, paint)
 
       _paintBar(
         canvas,

@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'data_visualization/models/animation_info.dart';
 import 'helpers/functions/conversion.dart';
+import 'helpers/functions/helper_functions.dart';
 import 'helpers/paint_functions/paint_text.dart';
 import 'multiple_animated_builder.dart';
 import 'y_axis/quote_grid.dart';
@@ -248,12 +249,6 @@ class BasicChartState<T extends BasicChart> extends State<T>
         bottomPadding: _bottomPadding,
       );
 
-  // Calculate the width of Y label
-  double _labelWidth(double text, TextStyle style) => makeTextPainter(
-        text.toStringAsFixed(widget.pipSize),
-        style,
-      ).width;
-
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         key: _key,
@@ -290,8 +285,10 @@ class BasicChartState<T extends BasicChart> extends State<T>
             quoteToCanvasY: chartQuoteToCanvasY,
             style: context.watch<ChartTheme>().gridStyle,
             labelWidth: (gridLineQuotes?.isNotEmpty ?? false)
-                ? _labelWidth(gridLineQuotes.first,
-                    context.watch<ChartTheme>().gridStyle.yLabelStyle)
+                ? labelWidth(
+                    gridLineQuotes.first,
+                    context.watch<ChartTheme>().gridStyle.yLabelStyle,
+                    widget.pipSize)
                 : 0,
           ),
         ),

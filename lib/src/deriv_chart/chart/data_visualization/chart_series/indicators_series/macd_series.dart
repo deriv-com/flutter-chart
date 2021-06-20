@@ -21,7 +21,6 @@ import 'models/macd_options.dart';
 /// MACD series
 class MACDSeries extends Series {
   /// Initializes
-
   MACDSeries(
     this.indicatorInput, {
     @required this.options,
@@ -65,6 +64,7 @@ class MACDSeries extends Series {
       indicatorCreator: () => macdIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.white),
+      options: options,
     );
 
     _signalMACDSeries = SingleIndicatorSeries(
@@ -72,19 +72,22 @@ class MACDSeries extends Series {
       indicatorCreator: () => signalMACDIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.redAccent),
+      options: options,
     );
 
     _macdHistogramSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => BarPainter(
         series,
-        checkColorCallback: (
-                {@required double previousQuote,
-                @required double currentQuote}) =>
+        checkColorCallback: ({
+          @required double previousQuote,
+          @required double currentQuote,
+        }) =>
             currentQuote >= previousQuote,
       ),
       indicatorCreator: () => macdHistogramIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const BarStyle(),
+      options: options,
     );
 
     return null;

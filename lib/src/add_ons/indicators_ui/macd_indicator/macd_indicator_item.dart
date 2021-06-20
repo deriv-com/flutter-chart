@@ -6,7 +6,7 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'macd_indicator_config.dart';
 
-/// Ichimoku Cloud indicator item in the list of indicator which provide this
+/// MACD indicator item in the list of indicator which provide this
 /// indicators options menu.
 class MACDIndicatorItem extends IndicatorItem {
   /// Initializes
@@ -28,7 +28,7 @@ class MACDIndicatorItem extends IndicatorItem {
       MACDIndicatorItemState();
 }
 
-/// IchimokuCloudIndicatorItem State class
+/// MACD State class
 class MACDIndicatorItemState extends IndicatorItemState<MACDIndicatorConfig> {
   int _fastMAPeriod;
   int _slowMAPeriod;

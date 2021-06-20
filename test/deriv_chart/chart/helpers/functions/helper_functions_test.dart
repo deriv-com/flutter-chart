@@ -56,6 +56,14 @@ void main() {
       });
     });
   });
+  group('Label width test', () {
+    test(
+        'label width returns the correct width from the given text, style and pipSize',
+        () {
+      expect(labelWidth(10, const TextStyle(), 10), 182);
+      expect(labelWidth(100, const TextStyle(), 10), 196);
+    });
+  });
 }
 
 enum MockEnum {
