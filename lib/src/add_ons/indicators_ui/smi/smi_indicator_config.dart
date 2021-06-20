@@ -26,6 +26,7 @@ class SMIIndicatorConfig extends IndicatorConfig {
     this.oversoldValue = -40,
     this.signalPeriod = 10,
     this.maType = MovingAverageType.exponential,
+    this.showZones = true,
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -59,6 +60,9 @@ class SMIIndicatorConfig extends IndicatorConfig {
 
   /// Oversold value.
   final double oversoldValue;
+
+  /// Whether to show zones (intersection between indicator and overbought/sold).
+  final bool showZones;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => SMISeries(

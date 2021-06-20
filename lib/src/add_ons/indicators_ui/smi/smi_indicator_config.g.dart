@@ -15,6 +15,7 @@ SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) {
     oversoldValue: (json['oversoldValue'] as num)?.toDouble(),
     signalPeriod: json['signalPeriod'] as int,
     maType: _$enumDecodeNullable(_$MovingAverageTypeEnumMap, json['maType']),
+    showZones: json['showZones'] as bool,
   );
 }
 
@@ -27,6 +28,7 @@ Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
       'maType': _$MovingAverageTypeEnumMap[instance.maType],
       'overboughtValue': instance.overboughtValue,
       'oversoldValue': instance.oversoldValue,
+      'showZones': instance.showZones,
     };
 
 T _$enumDecode<T>(
