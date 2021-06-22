@@ -54,7 +54,7 @@ class DPOSeries extends Series {
           MASeries.getMAIndicator(indicator, dpoOptions),
       period: dpoOptions.period,
       isCentered: dpoOptions.isCentered,
-    )..calculateValues();
+    );
 
     _dpoSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
