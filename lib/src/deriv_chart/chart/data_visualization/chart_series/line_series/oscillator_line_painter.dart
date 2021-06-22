@@ -118,7 +118,7 @@ class OscillatorLinePainter extends LinePainter {
     _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
     const HorizontalBarrierStyle textStyle =
-        HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
+    HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
     final Paint paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = topHorizontalLinesStyle.thickness;
