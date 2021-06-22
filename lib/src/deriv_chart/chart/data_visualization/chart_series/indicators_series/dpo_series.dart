@@ -1,4 +1,6 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -46,17 +48,18 @@ class DPOSeries extends Series {
 
   @override
   SeriesPainter<Series> createPainter() {
-    final CachedIndicator<Tick> dpoMA =
-        MASeries.getMAIndicator(_fieldIndicator, dpoOptions)..calculateValues();
-
     final DPOIndicator<Tick> dpoIndicator = DPOIndicator<Tick>(
       _fieldIndicator,
-      dpoMA,
+      (Indicator<Tick> indicator) =>
+          MASeries.getMAIndicator(indicator, dpoOptions),
       period: dpoOptions.period,
     )..calculateValues();
 
     _dpoSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
+      painterCreator: (Series series) => OscillatorLinePainter(
+        series,
+        secondaryHorizontalLines: <double>[0],
+      ),
       indicatorCreator: () => dpoIndicator,
       inputIndicator: _fieldIndicator,
       options: dpoOptions,
