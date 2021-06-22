@@ -16,22 +16,22 @@ import 'line_painter.dart';
 class OscillatorLinePainter extends LinePainter {
   /// Initializes an Oscillator line painter.
   OscillatorLinePainter(
-    DataSeries<Tick> series, {
-    double topHorizontalLine,
-    double bottomHorizontalLine,
-    LineStyle mainHorizontalLinesStyle,
-    LineStyle secondaryHorizontalLinesStyle,
-    List<double> secondaryHorizontalLines = const <double>[],
-  })  : _mainHorizontalLinesStyle =
-            mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
+      DataSeries<Tick> series, {
+        double topHorizontalLine,
+        double bottomHorizontalLine,
+        LineStyle mainHorizontalLinesStyle,
+        LineStyle secondaryHorizontalLinesStyle,
+        List<double> secondaryHorizontalLines = const <double>[],
+      })  : _mainHorizontalLinesStyle =
+      mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
         _topHorizontalLine = topHorizontalLine,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle ??
             const LineStyle(color: Colors.blueGrey),
         _bottomHorizontalLine = bottomHorizontalLine,
         super(
-          series,
-        );
+        series,
+      );
 
   final double _topHorizontalLine;
   final double _bottomHorizontalLine;
@@ -49,12 +49,12 @@ class OscillatorLinePainter extends LinePainter {
 
   @override
   void onPaintData(
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
-  ) {
+      Canvas canvas,
+      Size size,
+      EpochToX epochToX,
+      QuoteToY quoteToY,
+      AnimationInfo animationInfo,
+      ) {
     super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
 
     _paintHorizontalLines(canvas, quoteToY, size);
@@ -64,7 +64,7 @@ class OscillatorLinePainter extends LinePainter {
     _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
     const HorizontalBarrierStyle textStyle =
-        HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
+    HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
     final Paint paint = Paint()
       ..color = _mainHorizontalLinesStyle.color
       ..style = PaintingStyle.stroke
@@ -161,7 +161,7 @@ class OscillatorLinePainter extends LinePainter {
     }
   }
 
-  // TODO(mohammadamir-fs): add channel fill.
+// TODO(mohammadamir-fs): add channel fill.
 }
 
 double _labelWidth(double text, TextStyle style, int pipSize) =>
