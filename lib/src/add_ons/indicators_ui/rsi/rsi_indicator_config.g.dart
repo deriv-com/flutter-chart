@@ -19,6 +19,7 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
         ? null
         : LineStyle.fromJson(
             json['mainHorizontalLinesStyle'] as Map<String, dynamic>),
+    pinLabels: json['pinLabels'] as bool,
   );
 }
 
@@ -30,4 +31,5 @@ Map<String, dynamic> _$RSIIndicatorConfigToJson(RSIIndicatorConfig instance) =>
       'lineStyle': instance.lineStyle,
       'mainHorizontalLinesStyle': instance.mainHorizontalLinesStyle,
       'fieldType': instance.fieldType,
+      'pinLabels': instance.pinLabels,
     };

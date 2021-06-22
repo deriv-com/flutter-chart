@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'alligator/alligator_indicator_config.dart';
 import 'bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'callbacks.dart';
+import 'commodity_channel_index/cci_indicator_config.dart';
 import 'donchian_channel/donchian_channel_indicator_config.dart';
 import 'fcb_indicator/fcb_indicator_config.dart';
 import 'ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
@@ -55,6 +56,8 @@ abstract class IndicatorConfig {
         return ParabolicSARConfig.fromJson(json);
       case RSIIndicatorConfig.name:
         return RSIIndicatorConfig.fromJson(json);
+      case CCIIndicatorConfig.name:
+        return CCIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
       case StochasticOscillatorIndicatorConfig.name:
