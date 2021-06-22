@@ -29,7 +29,7 @@ class DPOIndicatorItem extends IndicatorItem {
       DPOIndicatorItemState();
 }
 
-/// BollingerBandsIndicatorItem State class
+/// DpoIndicatorItem State class
 class DPOIndicatorItemState extends MAIndicatorItemState {
   @override
   DPOIndicatorConfig createIndicatorConfig() => DPOIndicatorConfig(
