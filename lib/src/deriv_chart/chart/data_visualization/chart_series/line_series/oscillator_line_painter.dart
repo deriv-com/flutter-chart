@@ -56,6 +56,8 @@ class OscillatorLinePainter extends LinePainter {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
+    super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
+
     _paintHorizontalLines(canvas, quoteToY, size);
 
     super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
@@ -162,5 +164,5 @@ class OscillatorLinePainter extends LinePainter {
     }
   }
 
-  // TODO(mohammadamir-fs): add channel fill.
+// TODO(mohammadamir-fs): add channel fill.
 }
