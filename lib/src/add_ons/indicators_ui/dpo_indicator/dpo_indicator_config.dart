@@ -22,6 +22,7 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
     int period = 14,
     MovingAverageType movingAverageType,
     String fieldType,
+    this.isCentered = true,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -36,6 +37,9 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
   /// Unique name for this indicator.
   static const String name = 'dpo';
 
+  /// Wether the indicator should be calculated `Centered` or not.
+  final bool isCentered;
+
   @override
   Map<String, dynamic> toJson() => _$DPOIndicatorConfigToJson(this)
     ..putIfAbsent(IndicatorConfig.nameKey, () => name);
@@ -46,6 +50,7 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
         dpoOptions: DPOOptions(
           period: period,
           movingAverageType: movingAverageType,
+          isCentered: isCentered,
         ),
       );
 

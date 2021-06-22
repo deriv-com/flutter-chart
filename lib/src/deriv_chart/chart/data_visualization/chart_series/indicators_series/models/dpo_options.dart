@@ -7,5 +7,9 @@ class DPOOptions extends MAOptions {
   const DPOOptions({
     int period = 14,
     MovingAverageType movingAverageType = MovingAverageType.simple,
+    this.isCentered = true,
   }) : super(period: period, type: movingAverageType);
+
+  /// Wether the indicator should be calculated `Centered` or not.
+  final bool isCentered;
 }
