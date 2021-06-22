@@ -14,9 +14,10 @@ import '../../../chart_data.dart';
 import 'horizontal_barrier.dart';
 
 /// A class for painting horizontal barriers.
-class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
+class HorizontalBarrierPainter<T extends HorizontalBarrier>
+    extends SeriesPainter<T> {
   /// Initializes [series].
-  HorizontalBarrierPainter(HorizontalBarrier series) : super(series);
+  HorizontalBarrierPainter(T series) : super(series);
 
   Paint _paint;
 
@@ -129,7 +130,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
         );
       }
 
-      if (lineStartX < lineEndX) {
+      if (lineStartX < lineEndX && style.hasLine) {
         _paintLine(canvas, lineStartX, lineEndX, y, style);
       }
     }
@@ -164,7 +165,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
 
     // Label.
-    _paintLabelBackground(canvas, labelArea, style.labelShape);
+    paintLabelBackground(canvas, labelArea, style.labelShape, _paint);
     paintWithTextPainter(
       canvas,
       painter: valuePainter,
@@ -191,15 +192,14 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
     }
   }
 
-  void _paintLabelBackground(
-    Canvas canvas,
-    Rect rect,
-    LabelShape shape,
-  ) {
+  /// Paints a background based on the given [LabelShape] for the label text.
+  void paintLabelBackground(
+      Canvas canvas, Rect rect, LabelShape shape, Paint paint,
+      {double radius = 4}) {
     if (shape == LabelShape.rectangle) {
       canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(4)),
-        _paint,
+        RRect.fromRectAndRadius(rect, Radius.elliptical(radius, 4)),
+        paint,
       );
     } else if (shape == LabelShape.pentagon) {
       canvas.drawPath(
@@ -209,7 +209,7 @@ class HorizontalBarrierPainter extends SeriesPainter<HorizontalBarrier> {
           right: rect.right,
           bottom: rect.bottom,
         ),
-        _paint,
+        paint,
       );
     }
   }
