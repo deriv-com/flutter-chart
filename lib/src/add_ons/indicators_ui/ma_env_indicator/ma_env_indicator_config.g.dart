@@ -66,6 +66,7 @@ const _$MovingAverageTypeEnumMap = {
   MovingAverageType.weighted: 'weighted',
   MovingAverageType.hull: 'hull',
   MovingAverageType.zeroLag: 'zeroLag',
+  MovingAverageType.triangular: 'triangular',
 };
 
 const _$ShiftTypeEnumMap = {
