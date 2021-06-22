@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import './ma_indicator/ma_indicator_config.dart';
 import 'alligator/alligator_indicator_config.dart';
 import 'bollinger_bands/bollinger_bands_indicator_config.dart';
+import 'commodity_channel_index/cci_indicator_config.dart';
 import 'donchian_channel/donchian_channel_indicator_config.dart';
 import 'fcb_indicator/fcb_indicator_config.dart';
 import 'ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
@@ -80,9 +81,13 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     value: RSIIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Commodity Channel Index'),
+                    value: CCIIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
-                  ),
+                  )
                   // Add new indicators here.
                 ],
                 onChanged: (IndicatorConfig config) {

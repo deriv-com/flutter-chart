@@ -9,24 +9,24 @@ import 'oscillator_line_painter.dart';
 class OscillatorLineSeries extends LineSeries {
   /// Initializes an Oscillator line series.
   OscillatorLineSeries(
-    List<Tick> entries, {
-    @required double topHorizontalLine,
-    @required double bottomHorizontalLine,
-    List<double> secondaryHorizontalLines = const <double>[],
-    LineStyle style,
-    String id,
-    LineStyle secondaryHorizontalLinesStyle,
-    LineStyle mainHorizontalLinesStyle,
-  })  : _topHorizontalLine = topHorizontalLine,
+      List<Tick> entries, {
+        @required double topHorizontalLine,
+        @required double bottomHorizontalLine,
+        List<double> secondaryHorizontalLines = const <double>[],
+        LineStyle style,
+        String id,
+        LineStyle secondaryHorizontalLinesStyle,
+        LineStyle mainHorizontalLinesStyle,
+      })  : _topHorizontalLine = topHorizontalLine,
         _bottomHorizontalLine = bottomHorizontalLine,
         _mainHorizontalLinesStyle = mainHorizontalLinesStyle,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         super(
-          entries,
-          id: id,
-          style: style,
-        );
+        entries,
+        id: id,
+        style: style,
+      );
 
   final List<double> _secondaryHorizontalLines;
   final double _topHorizontalLine;
@@ -36,11 +36,11 @@ class OscillatorLineSeries extends LineSeries {
 
   @override
   SeriesPainter<DataSeries<Tick>> createPainter() => OscillatorLinePainter(
-        this,
-        bottomHorizontalLine: _bottomHorizontalLine,
-        mainHorizontalLinesStyle: _mainHorizontalLinesStyle,
-        secondaryHorizontalLines: _secondaryHorizontalLines,
-        secondaryHorizontalLinesStyle: _secondaryHorizontalLinesStyle,
-        topHorizontalLine: _topHorizontalLine,
-      );
+    this,
+    bottomHorizontalLine: _bottomHorizontalLine,
+    mainHorizontalLinesStyle: _mainHorizontalLinesStyle,
+    secondaryHorizontalLines: _secondaryHorizontalLines,
+    secondaryHorizontalLinesStyle: _secondaryHorizontalLinesStyle,
+    topHorizontalLine: _topHorizontalLine,
+  );
 }
