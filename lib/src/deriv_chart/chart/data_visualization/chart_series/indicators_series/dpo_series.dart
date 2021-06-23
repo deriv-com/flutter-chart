@@ -62,7 +62,7 @@ class DPOSeries extends Series {
       indicatorCreator: () => dpoIndicator,
       inputIndicator: _fieldIndicator,
       options: dpoOptions,
-      offset: dpoOptions.isCentered ? -dpoOptions.timeShift : 0,
+      offset: dpoOptions.isCentered ? dpoIndicator.timeShift : 0,
     );
 
     return null;

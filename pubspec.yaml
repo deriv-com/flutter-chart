@@ -20,7 +20,7 @@ dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: 113eaae1cc9d758a5ce8311f6ee25c7c3cb0ae46
+      ref: ac8f8c759644e8271bd2f5c58a23b016b953a7f9
 
   # Store state:
   shared_preferences: <1.0.0
