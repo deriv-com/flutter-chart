@@ -52,7 +52,6 @@ class DPOSeries extends Series {
           MASeries.getMAIndicator(indicator, dpoOptions),
       period: dpoOptions.period,
       isCentered: dpoOptions.isCentered,
-      timeShift: dpoOptions.timeShift,
     );
 
     _dpoSeries = SingleIndicatorSeries(
