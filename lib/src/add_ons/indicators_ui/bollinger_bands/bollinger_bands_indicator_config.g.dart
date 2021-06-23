@@ -65,4 +65,5 @@ const _$MovingAverageTypeEnumMap = {
   MovingAverageType.weighted: 'weighted',
   MovingAverageType.hull: 'hull',
   MovingAverageType.zeroLag: 'zeroLag',
+  MovingAverageType.timeSeries: 'timeSeries',
 };
