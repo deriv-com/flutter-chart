@@ -8,8 +8,17 @@ class DPOOptions extends MAOptions {
     int period = 14,
     MovingAverageType movingAverageType = MovingAverageType.simple,
     this.isCentered = true,
-  }) : super(period: period, type: movingAverageType);
+  })  : timeShift = period ~/ 2 + 1,
+        super(period: period, type: movingAverageType);
 
   /// Wether the indicator should be calculated `Centered` or not.
   final bool isCentered;
+
+  /// The shift value for the `PreviousValueIndicator` to calculate the pervious value of.
+  ///
+  /// It will be calculated this way by using [period]:
+  /// ```dart
+  /// timeShift = period ~/ 2 + 1
+  /// ```
+  final int timeShift;
 }
