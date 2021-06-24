@@ -14,10 +14,10 @@ import 'rainbow_indicator_config.dart';
 class RainbowIndicatorItem extends IndicatorItem {
   /// Initializes
   const RainbowIndicatorItem({
-    Key key,
-    RainbowIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    required RainbowIndicatorConfig config,
+    Key? key,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Rainbow Indicator',
@@ -35,7 +35,7 @@ class RainbowIndicatorItem extends IndicatorItem {
 class RainbowIndicatorItemState extends MAIndicatorItemState {
   /// Rainbow MA bands count
   @protected
-  int bandsCount;
+  int? bandsCount;
 
   @override
   MAIndicatorConfig createIndicatorConfig() => RainbowIndicatorConfig(
@@ -90,11 +90,11 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   int getCurrentBandsCount() {
     final RainbowIndicatorConfig config =
         (widget.config as RainbowIndicatorConfig);
-    return bandsCount ?? config?.bandsCount ?? 10;
+    return bandsCount ?? config.bandsCount;
   }
 
   /// Gets Indicator current period.
   @override
   int getCurrentPeriod() =>
-      period ?? (widget.config as RainbowIndicatorConfig)?.period ?? 2;
+      period ?? (widget.config as RainbowIndicatorConfig).period;
 }

@@ -12,10 +12,10 @@ class VerticalBarrier extends Barrier {
   /// Initializes a vertical barrier class.
   VerticalBarrier(
     int epoch, {
-    double value,
-    String id,
-    String title,
-    BarrierStyle style,
+    double? value,
+    String? id,
+    String? title,
+    BarrierStyle? style,
     bool longLine = true,
   }) : super(
           id: id,
@@ -29,10 +29,10 @@ class VerticalBarrier extends Barrier {
   /// A vertical barrier on [Tick]'s epoch.
   factory VerticalBarrier.onTick(
     Tick tick, {
-    String id,
-    String title,
-    BarrierStyle style,
-    bool longLine,
+    String? id,
+    String? title,
+    BarrierStyle? style,
+    bool longLine = true,
   }) =>
       VerticalBarrier(
         tick.epoch,
@@ -40,14 +40,14 @@ class VerticalBarrier extends Barrier {
         id: id,
         title: title,
         style: style,
-        longLine: longLine ?? true,
+        longLine: longLine,
       );
 
   @override
   SeriesPainter<Series> createPainter() => VerticalBarrierPainter(this);
 
   @override
-  BarrierObject createObject() => VerticalBarrierObject(epoch, value);
+  BarrierObject createObject() => VerticalBarrierObject(epoch!, value: value);
 
   @override
   List<double> recalculateMinMax() =>

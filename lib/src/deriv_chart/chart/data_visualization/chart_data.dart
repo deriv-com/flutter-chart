@@ -20,15 +20,15 @@ abstract class ChartData {
   ///
   /// [id] is used to recognize an old [ChartData] with its new version after chart being updated.
   /// Doing so makes the chart able to perform live update animation.
-  String id;
+  late String id;
 
   /// Will be called by the chart when it was updated.
   ///
   /// Returns `true` if this chart data has changed with the chart widget update.
-  bool didUpdate(ChartData oldData);
+  bool didUpdate(ChartData? oldData);
 
   /// Checks if this ChartData needs to repaint with the chart widget's new frame.
-  bool shouldRepaint(ChartData oldData);
+  bool shouldRepaint(ChartData? oldData);
 
   /// Updates this [ChartData] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
@@ -47,12 +47,12 @@ abstract class ChartData {
   ///
   /// The chart calls this on any of its [ChartData]s and gets their minimum epoch
   /// then sets its X-Axis leftmost scroll limit based on them.
-  int getMinEpoch();
+  int? getMinEpoch();
 
   /// Maximum epoch of this [ChartData] on the chart's X-Axis.
   ///
   /// The chart uses it same as [getMinEpoch] to determine its rightmost scroll limit.
-  int getMaxEpoch();
+  int? getMaxEpoch();
 
   /// Paints this [ChartData] on the given [canvas].
   ///
@@ -80,49 +80,43 @@ abstract class ChartData {
 }
 
 /// An extension on Iterable with [ChartData] elements.
-extension ChartDataListExtension on Iterable<ChartData> {
+extension ChartDataListExtension on Iterable<ChartData?> {
   /// Gets the minimum of [ChartData.getMinEpoch]s.
-  int getMinEpoch() =>
-      _getEpochWithPredicate((ChartData c) => c?.getMinEpoch(), min);
+  int? getMinEpoch() => _getEpochWithPredicate(
+      (ChartData c) => c.getMinEpoch(), (int a, int b) => min<int>(a, b));
 
   /// Gets the maximum of [ChartData.getMaxEpoch]s.
-  int getMaxEpoch() =>
-      _getEpochWithPredicate((ChartData c) => c?.getMaxEpoch(), max);
+  int? getMaxEpoch() => _getEpochWithPredicate(
+      (ChartData c) => c.getMaxEpoch(), (int a, int b) => max<int>(a, b));
 
-  int _getEpochWithPredicate(
-    int Function(ChartData) getEpoch,
+  int? _getEpochWithPredicate(
+    int? Function(ChartData) getEpoch,
     int Function(int, int) epochComparator,
   ) {
-    final Iterable<int> maxEpochs =
-        map((ChartData c) => getEpoch(c)).where((int epoch) => epoch != null);
+    final Iterable<int?> maxEpochs = where((ChartData? c) => c != null)
+        .map((ChartData? c) => getEpoch(c!))
+        .where((int? epoch) => epoch != null);
 
     return maxEpochs.isNotEmpty
-        ? maxEpochs
-            .reduce((int current, int next) => epochComparator(current, next))
+        ? maxEpochs.reduce(
+            (int? current, int? next) => epochComparator(current!, next!),
+          )
         : null;
   }
 
   /// Gets the minimum of [ChartData.minValue]s.
   double getMinValue() {
-    final List<ChartData> chartData = this;
-    if (chartData != null) {
-      final Iterable<double> minValues = chartData
-          .where((ChartData c) => c != null && !c.minValue.isNaN)
-          .map((ChartData e) => e.minValue);
-      return minValues.isEmpty ? double.nan : minValues.reduce(min);
-    }
-    return double.nan;
+    final Iterable<double> minValues =
+        where((ChartData? c) => c != null && !c.minValue.isNaN)
+            .map((ChartData? c) => c!.minValue);
+    return minValues.isEmpty ? double.nan : minValues.reduce(min);
   }
 
   /// Gets the maximum of [ChartData.maxValue]s.
   double getMaxValue() {
-    final List<ChartData> chartData = this;
-    if (chartData != null) {
-      final Iterable<double> maxValues = chartData
-          .where((ChartData c) => c != null && !c.maxValue.isNaN)
-          .map((e) => e.maxValue);
-      return maxValues.isEmpty ? double.nan : maxValues.reduce(max);
-    }
-    return double.nan;
+    final Iterable<double> maxValues =
+        where((ChartData? c) => c != null && !c.maxValue.isNaN)
+            .map((ChartData? c) => c!.maxValue);
+    return maxValues.isEmpty ? double.nan : maxValues.reduce(max);
   }
 }

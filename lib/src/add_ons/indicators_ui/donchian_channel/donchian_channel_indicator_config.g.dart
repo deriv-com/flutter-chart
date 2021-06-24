@@ -12,15 +12,12 @@ DonchianChannelIndicatorConfig _$DonchianChannelIndicatorConfigFromJson(
     highPeriod: json['highPeriod'] as int,
     lowPeriod: json['lowPeriod'] as int,
     showChannelFill: json['showChannelFill'] as bool,
-    upperLineStyle: json['upperLineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['upperLineStyle'] as Map<String, dynamic>),
-    middleLineStyle: json['middleLineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['middleLineStyle'] as Map<String, dynamic>),
-    lowerLineStyle: json['lowerLineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['lowerLineStyle'] as Map<String, dynamic>),
+    upperLineStyle:
+        LineStyle.fromJson(json['upperLineStyle'] as Map<String, dynamic>),
+    middleLineStyle:
+        LineStyle.fromJson(json['middleLineStyle'] as Map<String, dynamic>),
+    lowerLineStyle:
+        LineStyle.fromJson(json['lowerLineStyle'] as Map<String, dynamic>),
     fillColor: const ColorConverter().fromJson(json['fillColor'] as int),
   );
 }

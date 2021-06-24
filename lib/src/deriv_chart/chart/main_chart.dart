@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
@@ -24,10 +25,10 @@ import 'multiple_animated_builder.dart';
 class MainChart extends BasicChart {
   /// Initializes the main chart to display in the chart widget.
   MainChart({
-    @required DataSeries<Tick> mainSeries,
-    @required int pipSize,
-    @required this.isLive,
-    Key key,
+    required DataSeries<Tick> mainSeries,
+    this.isLive = false,
+    int pipSize = 4,
+    Key? key,
     this.showLoadingAnimationForHistoricalData = true,
     this.showDataFitButton = false,
     this.markerSeries,
@@ -50,20 +51,20 @@ class MainChart extends BasicChart {
         );
 
   /// The indicator series that are displayed on the main chart.
-  final List<Series> overlaySeries;
+  final List<Series>? overlaySeries;
   final DataSeries<Tick> _mainSeries;
 
   /// List of chart annotations used in the chart.
-  final List<ChartAnnotation<ChartObject>> annotations;
+  final List<ChartAnnotation<ChartObject>>? annotations;
 
   /// The series that hold the list markers.
-  final MarkerSeries markerSeries;
+  final MarkerSeries? markerSeries;
 
   /// The function that gets called on crosshair appearance.
-  final VoidCallback onCrosshairAppeared;
+  final VoidCallback? onCrosshairAppeared;
 
   /// Chart's widget controller.
-  final ChartController controller;
+  final ChartController? controller;
 
   /// Whether the widget is live or not.
   final bool isLive;
@@ -84,33 +85,37 @@ class MainChart extends BasicChart {
 class _ChartImplementationState extends BasicChartState<MainChart> {
   /// Padding should be at least half of barrier label height.
 
-  AnimationController _currentTickBlinkingController;
+  late AnimationController _currentTickBlinkingController;
 
-  Animation<double> _currentTickBlinkAnimation;
+  late Animation<double> _currentTickBlinkAnimation;
 
   // TODO(Rustem): remove crosshair related state
   bool _isCrosshairMode = false;
 
   bool get _isScrollToLastTickAvailable =>
-      widget._mainSeries.entries.isNotEmpty &&
-      xAxis.rightBoundEpoch < widget._mainSeries.entries.last.epoch &&
+      (widget._mainSeries.entries?.isNotEmpty ?? false) &&
+      xAxis.rightBoundEpoch < widget._mainSeries.entries!.last.epoch &&
       !_isCrosshairMode;
 
   /// Crosshair related state.
-  AnimationController crosshairZoomOutAnimationController;
+  late AnimationController crosshairZoomOutAnimationController;
 
   /// The current animation value of crosshair zoom out.
-  Animation<double> crosshairZoomOutAnimation;
+  late Animation<double> crosshairZoomOutAnimation;
 
   @override
   double get verticalPadding {
-    final double padding = verticalPaddingFraction * canvasSize.height;
+    if (canvasSize == null) {
+      return 0;
+    }
+
+    final double padding = verticalPaddingFraction * canvasSize!.height;
     const double minCrosshairPadding = 80;
     final double paddingValue = padding +
         (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
             crosshairZoomOutAnimation.value;
     return paddingValue.clamp(
-        BasicChartState.minPadding, canvasSize.height / 2);
+        BasicChartState.minPadding, canvasSize!.height / 2);
   }
 
   @override
@@ -151,25 +156,22 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   @override
   void didUpdateChartData(covariant MainChart oldChart) {
     super.didUpdateChartData(oldChart);
-    if (widget.chartDataList != null) {
-      for (final ChartData data in widget.chartDataList.where(
-        // Exclude mainSeries, since its didUpdate is already called
-        (ChartData d) => d.id != widget.mainSeries.id,
-      )) {
-        final ChartData oldData = oldChart.chartDataList.firstWhere(
-          (ChartData d) => d.id == data.id,
-          orElse: () => null,
-        );
+    for (final ChartData data in widget.chartDataList.where(
+      // Exclude mainSeries, since its didUpdate is already called
+      (ChartData d) => d.id != widget.mainSeries.id,
+    )) {
+      final ChartData? oldData = oldChart.chartDataList.firstWhereOrNull(
+        (ChartData d) => d.id == data.id,
+      );
 
-        data.didUpdate(oldData);
-      }
+      data.didUpdate(oldData);
     }
   }
 
   @override
   void dispose() {
-    _currentTickBlinkingController?.dispose();
-    crosshairZoomOutAnimationController?.dispose();
+    _currentTickBlinkingController.dispose();
+    crosshairZoomOutAnimationController.dispose();
     super.dispose();
   }
 
@@ -230,7 +232,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           final XAxisModel xAxis = context.watch<XAxisModel>();
 
           canvasSize = Size(
-            xAxis.width,
+            xAxis.width!,
             constraints.maxHeight,
           );
 
@@ -243,7 +245,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 // _buildQuoteGridLine(gridLineQuotes),
 
                 if (widget.showLoadingAnimationForHistoricalData ||
-                    widget._mainSeries.entries.isEmpty)
+                    (widget._mainSeries.entries?.isEmpty ?? false))
                   _buildLoadingAnimation(),
                 // _buildQuoteGridLabel(gridLineQuotes),
                 super.build(context),
@@ -251,7 +253,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 _buildAnnotations(),
                 if (widget.markerSeries != null)
                   MarkerArea(
-                    markerSeries: widget.markerSeries,
+                    markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 _buildCrosshairArea(),
@@ -262,7 +264,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     child: _buildScrollToLastTickButton(),
                   ),
                 if (widget.showDataFitButton &&
-                    widget._mainSeries.entries.isNotEmpty)
+                    (widget._mainSeries.entries?.isNotEmpty ?? false))
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -276,7 +278,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
         loadingRightBoundX: widget._mainSeries.input.isEmpty
-            ? xAxis.width
+            ? xAxis.width!
             : xAxis.xFromEpoch(widget._mainSeries.input.first.epoch),
       );
 
@@ -285,10 +287,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           currentTickAnimation,
           _currentTickBlinkAnimation,
         ],
-        builder: (BuildContext context, Widget child) =>
+        builder: (BuildContext context, _) =>
             Stack(fit: StackFit.expand, children: <Widget>[
           if (widget.annotations != null)
-            ...widget.annotations
+            ...widget.annotations!
                 .map((ChartData annotation) => CustomPaint(
                       key: ValueKey<String>(annotation.id),
                       painter: ChartPainter(
@@ -309,8 +311,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   Widget _buildCrosshairArea() => AnimatedBuilder(
         animation: crosshairZoomOutAnimation,
-        builder: (BuildContext context, Widget child) => CrosshairArea(
-          mainSeries: widget.mainSeries,
+        builder: (BuildContext context, _) => CrosshairArea(
+          mainSeries: widget.mainSeries as DataSeries<Tick>,
           pipSize: widget.pipSize,
           quoteToCanvasY: chartQuoteToCanvasY,
           onCrosshairAppeared: () {
@@ -342,13 +344,13 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           bottomBoundQuoteAnimationController,
           crosshairZoomOutAnimation,
         ],
-        builder: (BuildContext context, Widget child) => RepaintBoundary(
+        builder: (BuildContext context, Widget? child) => RepaintBoundary(
           child: CustomPaint(
             painter: BaseChartDataPainter(
               animationInfo: AnimationInfo(
                 currentTickPercent: currentTickAnimation.value,
               ),
-              series: widget.overlaySeries,
+              series: widget.overlaySeries!,
               chartConfig: context.watch<ChartConfig>(),
               theme: context.watch<ChartTheme>(),
               epochToCanvasX: xAxis.xFromEpoch,
@@ -381,24 +383,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     double minQuote = minMaxValues[0];
     double maxQuote = minMaxValues[1];
 
-    if (widget.chartDataList != null) {
-      final Iterable<ChartData> dataInAction = widget.chartDataList.where(
-        (ChartData chartData) =>
-            !chartData.minValue.isNaN && !chartData.maxValue.isNaN,
-      );
-
-      if (dataInAction.isNotEmpty) {
-        final double chartDataMin = dataInAction
-            .map((ChartData chartData) => chartData.minValue)
-            .reduce(min);
-        final double chartDataMax = dataInAction
-            .map((ChartData chartData) => chartData.maxValue)
-            .reduce(max);
-
-        minQuote = safeMin(minQuote, chartDataMin);
-        maxQuote = safeMax(maxQuote, chartDataMax);
-      }
-    }
+    minQuote = safeMin(minQuote, widget.chartDataList.getMinValue());
+    maxQuote = safeMax(maxQuote, widget.chartDataList.getMaxValue());
     return <double>[minQuote, maxQuote];
   }
 }

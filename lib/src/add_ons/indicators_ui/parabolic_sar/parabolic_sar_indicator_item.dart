@@ -14,10 +14,10 @@ import 'parabolic_sar_indicator_config.dart';
 class ParabolicSARIndicatorItem extends IndicatorItem {
   /// Initializes
   const ParabolicSARIndicatorItem({
-    Key key,
-    ParabolicSARConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    ParabolicSARConfig config = const ParabolicSARConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'ParabolicSAR',
@@ -34,11 +34,11 @@ class ParabolicSARIndicatorItem extends IndicatorItem {
 /// ParabolicSARIndicatorItem State class
 class ParabolicSARIndicatorItemState
     extends IndicatorItemState<ParabolicSARConfig> {
-  double _minAccelerationFactor;
+  double? _minAccelerationFactor;
 
-  double _maxAccelerationFactor;
+  double? _maxAccelerationFactor;
 
-  ScatterStyle _scatterStyle;
+  ScatterStyle? _scatterStyle;
 
   @override
   ParabolicSARConfig createIndicatorConfig() => ParabolicSARConfig(
@@ -136,16 +136,12 @@ class ParabolicSARIndicatorItemState
   // TODO(Ramin): use generic type to avoid casting
   double get _currentMinAccelerationFactor =>
       _minAccelerationFactor ??
-      (widget.config as ParabolicSARConfig)?.minAccelerationFactor ??
-      0.02;
+      (widget.config as ParabolicSARConfig).minAccelerationFactor;
 
   double get _currentMaxAccelerationFactor =>
       _maxAccelerationFactor ??
-      (widget.config as ParabolicSARConfig)?.maxAccelerationFactor ??
-      0.2;
+      (widget.config as ParabolicSARConfig).maxAccelerationFactor;
 
   ScatterStyle get _currentScatterStyle =>
-      _scatterStyle ??
-      (widget.config as ParabolicSARConfig)?.scatterStyle ??
-      const ScatterStyle(color: Colors.yellowAccent);
+      _scatterStyle ?? (widget.config as ParabolicSARConfig).scatterStyle;
 }

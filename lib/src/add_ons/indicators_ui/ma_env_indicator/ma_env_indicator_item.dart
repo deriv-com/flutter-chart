@@ -15,10 +15,10 @@ import 'ma_env_indicator_config.dart';
 class MAEnvIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAEnvIndicatorItem({
-    Key key,
-    MAEnvIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    MAEnvIndicatorConfig config = const MAEnvIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'MA Envelope Indicator',
@@ -36,11 +36,11 @@ class MAEnvIndicatorItem extends IndicatorItem {
 class MAEnvIndicatorItemState extends MAIndicatorItemState {
   /// MA Env shift
   @protected
-  double shift;
+  double? shift;
 
   /// Field ShiftType
   @protected
-  ShiftType shiftType;
+  ShiftType? shiftType;
 
   @override
   MAEnvIndicatorConfig createIndicatorConfig() => MAEnvIndicatorConfig(
@@ -111,7 +111,7 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
                           ),
                         ))
                 .toList(),
-            onChanged: (ShiftType newType) => setState(
+            onChanged: (ShiftType? newType) => setState(
               () {
                 shiftType = newType;
                 updateIndicator();
@@ -125,18 +125,17 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
   @protected
   ShiftType getCurrentShiftType() {
     final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
-    return shiftType ?? config?.shiftType ?? ShiftType.percent;
+    return shiftType ?? config.shiftType;
   }
 
   /// Gets Indicator current period.
   @protected
   double getCurrentShift() {
     final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
-    return shift ?? config?.shift ?? 5;
+    return shift ?? config.shift;
   }
 
   @protected
   LineStyle getCurrentLineStyle() =>
-      (widget.config as MAEnvIndicatorConfig).lineStyle ??
-      const LineStyle(color: Colors.yellowAccent, thickness: 0.6);
+      (widget.config as MAEnvIndicatorConfig).lineStyle;
 }

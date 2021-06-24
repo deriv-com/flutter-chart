@@ -9,6 +9,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
+import '../data_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
 import 'ma_series.dart';
@@ -22,8 +23,8 @@ class BollingerBandSeries extends Series {
   /// Close values will be chosen by default.
   BollingerBandSeries(
     IndicatorInput indicatorInput, {
-    BollingerBandsOptions bbOptions,
-    String id,
+    required BollingerBandsOptions bbOptions,
+    String? id,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           bbOptions: bbOptions,
@@ -33,14 +34,14 @@ class BollingerBandSeries extends Series {
   /// Initializes
   BollingerBandSeries.fromIndicator(
     Indicator<Tick> indicator, {
-    this.bbOptions,
-    String id,
+    required this.bbOptions,
+    String? id,
   })  : _fieldIndicator = indicator,
-        super(id);
+        super(id ?? 'Bollinger$bbOptions');
 
-  SingleIndicatorSeries _lowerSeries;
-  SingleIndicatorSeries _middleSeries;
-  SingleIndicatorSeries _upperSeries;
+  late SingleIndicatorSeries _lowerSeries;
+  late SingleIndicatorSeries _middleSeries;
+  late SingleIndicatorSeries _upperSeries;
 
   /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
@@ -50,7 +51,7 @@ class BollingerBandSeries extends Series {
   final List<Series> _innerSeries = <Series>[];
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     final StandardDeviationIndicator<Tick> standardDeviation =
         StandardDeviationIndicator<Tick>(_fieldIndicator, bbOptions.period);
 
@@ -58,14 +59,16 @@ class BollingerBandSeries extends Series {
         MASeries.getMAIndicator(_fieldIndicator, bbOptions);
 
     _middleSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
       options: bbOptions,
     );
 
     _lowerSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => LinePainter(series),
+        painterCreator: (Series series) =>
+            LinePainter(series as DataSeries<Tick>),
         indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
               bbmSMA,
               standardDeviation,
@@ -75,7 +78,8 @@ class BollingerBandSeries extends Series {
         options: bbOptions);
 
     _upperSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) => LinePainter(series),
+        painterCreator: (Series series) =>
+            LinePainter(series as DataSeries<Tick>),
         indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
               bbmSMA,
               standardDeviation,
@@ -90,8 +94,8 @@ class BollingerBandSeries extends Series {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final BollingerBandSeries series = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final BollingerBandSeries? series = oldData as BollingerBandSeries?;
 
     final bool lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
     final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
@@ -141,8 +145,8 @@ class BollingerBandSeries extends Series {
   }
 
   @override
-  int getMinEpoch() => _innerSeries.getMinEpoch();
+  int? getMinEpoch() => _innerSeries.getMinEpoch();
 
   @override
-  int getMaxEpoch() => _innerSeries.getMaxEpoch();
+  int? getMaxEpoch() => _innerSeries.getMaxEpoch();
 }
