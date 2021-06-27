@@ -17,10 +17,10 @@ import 'ma_indicator_config.dart';
 class MAIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAIndicatorItem({
-    Key key,
-    MAIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    MAIndicatorConfig config = const MAIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Moving Average',
@@ -38,23 +38,23 @@ class MAIndicatorItem extends IndicatorItem {
 class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// MA type
   @protected
-  MovingAverageType type;
+  MovingAverageType? type;
 
   /// Field type
   @protected
-  String field;
+  String? field;
 
   /// MA period
   @protected
-  int period;
+  int? period;
 
   /// MA period
   @protected
-  int offset;
+  int? offset;
 
   /// MA line style
   @protected
-  LineStyle lineStyle;
+  LineStyle? lineStyle;
 
   @override
   MAIndicatorConfig createIndicatorConfig() => MAIndicatorConfig(
@@ -121,7 +121,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                           ),
                         ))
                 .toList(),
-            onChanged: (String newField) => setState(
+            onChanged: (String? newField) => setState(
               () {
                 field = newField;
                 updateIndicator();
@@ -207,7 +207,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                           ),
                         ))
                 .toList(),
-            onChanged: (MovingAverageType newType) => setState(
+            onChanged: (MovingAverageType? newType) => setState(
               () {
                 type = newType;
                 updateIndicator();
@@ -220,29 +220,25 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   /// Gets Indicator current type.
   @protected
   MovingAverageType getCurrentType() =>
-      type ??
-      (widget.config as MAIndicatorConfig)?.movingAverageType ??
-      MovingAverageType.simple;
+      type ?? (widget.config as MAIndicatorConfig).movingAverageType;
 
   /// Gets Indicator current filed type.
   @protected
   String getCurrentField() =>
-      field ?? (widget.config as MAIndicatorConfig)?.fieldType ?? 'close';
+      field ?? (widget.config as MAIndicatorConfig).fieldType;
 
   /// Gets Indicator current period.
   @protected
   int getCurrentPeriod() =>
-      period ?? (widget.config as MAIndicatorConfig)?.period ?? 50;
+      period ?? (widget.config as MAIndicatorConfig).period;
 
   /// Gets Indicator current period.
   @protected
   int get currentOffset =>
-      offset ?? (widget.config as MAIndicatorConfig)?.offset ?? 0;
+      offset ?? (widget.config as MAIndicatorConfig).offset;
 
   /// Gets Indicator current line style.
   @protected
   LineStyle getCurrentLineStyle() =>
-      lineStyle ??
-      (widget.config as MAIndicatorConfig)?.lineStyle ??
-      const LineStyle(color: Colors.yellow, thickness: 0.6);
+      lineStyle ?? (widget.config as MAIndicatorConfig).lineStyle;
 }

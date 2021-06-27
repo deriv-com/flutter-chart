@@ -18,30 +18,30 @@ class MASeries extends AbstractSingleIndicatorSeries {
   MASeries(
     IndicatorInput indicatorInput,
     MAOptions options, {
-    String id,
-    LineStyle style,
-    int offset,
+    String? id,
+    LineStyle? style,
+    int offset = 0,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
+          options,
           id: id,
-          options: options,
           style: style,
           offset: offset,
         );
 
   /// Initializes
   MASeries.fromIndicator(
-    Indicator<Tick> indicator, {
-    String id,
-    LineStyle style,
-    MAOptions options,
-    int offset,
+    Indicator<Tick> indicator,
+    MAOptions options, {
+    String? id,
+    LineStyle? style,
+    int offset = 0,
   }) : super(
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',
           options,
           style: style ?? const LineStyle(thickness: 0.5),
-          offset: offset ?? 0,
+          offset: offset,
         );
 
   @override
@@ -49,7 +49,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>
-      MASeries.getMAIndicator(inputIndicator, options);
+      MASeries.getMAIndicator(inputIndicator, options as MAOptions);
 
   /// Returns a moving average indicator based on [maOptions] values.
   static CachedIndicator<Tick> getMAIndicator(

@@ -19,10 +19,10 @@ import 'y_axis/quote_grid.dart';
 class BasicChart extends StatefulWidget {
   ///Initializes a basic chart.
   const BasicChart({
-    @required this.mainSeries,
-    @required this.pipSize,
+    required this.mainSeries,
+    this.pipSize = 4,
     this.opacity = 1,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// The main series to display on the chart.
@@ -47,15 +47,15 @@ class BasicChartState<T extends BasicChart> extends State<T>
   bool _panStartedOnQuoteLabelsArea = false;
 
   /// The canvas size to draw the chart series and other options inside.
-  Size canvasSize;
+  Size? canvasSize;
 
   /// Chart widget's position on the screen.
-  Offset chartPosition;
+  Offset? chartPosition;
 
   final GlobalKey _key = GlobalKey();
 
   /// The model to use to calculate grid line quotes
-  YAxisModel yAxisModel;
+  YAxisModel? yAxisModel;
 
   /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
@@ -75,18 +75,18 @@ class BasicChartState<T extends BasicChart> extends State<T>
   double bottomBoundQuoteTarget = 30;
 
   /// Calculated quotes for showing the the grid line.
-  List<double> gridLineQuotes;
+  List<double>? gridLineQuotes;
 
-  AnimationController _currentTickAnimationController;
+  late AnimationController _currentTickAnimationController;
 
   /// The animation controller for chart top quote bound.
-  AnimationController topBoundQuoteAnimationController;
+  late AnimationController topBoundQuoteAnimationController;
 
   /// The animation controller for chart bottom quote bound.
-  AnimationController bottomBoundQuoteAnimationController;
+  late AnimationController bottomBoundQuoteAnimationController;
 
   /// The animation of the current tick.
-  Animation<double> currentTickAnimation;
+  late Animation<double> currentTickAnimation;
 
   double get _topBoundQuote => topBoundQuoteAnimationController.value;
 
@@ -94,16 +94,20 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   /// Vertical padding in pixel.
   double get verticalPadding {
-    final double padding = verticalPaddingFraction * canvasSize.height;
+    if (canvasSize == null) {
+      return 0;
+    }
+
+    final double padding = verticalPaddingFraction * canvasSize!.height;
     final double paddingValue = padding;
-    return paddingValue.clamp(minPadding, canvasSize.height / 2);
+    return paddingValue.clamp(minPadding, canvasSize!.height / 2);
   }
 
   double get _topPadding => verticalPadding;
 
   double get _bottomPadding => verticalPadding;
 
-  GestureManagerState _gestureManager;
+  late GestureManagerState _gestureManager;
 
   /// The xAxis model of the chart.
   XAxisModel get xAxis => context.read<XAxisModel>();
@@ -124,7 +128,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   @override
   void didUpdateWidget(BasicChart oldWidget) {
-    super.didUpdateWidget(oldWidget);
+    super.didUpdateWidget(oldWidget as T);
 
     didUpdateChartData(oldWidget);
     _updateChartPosition();
@@ -140,16 +144,17 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   @override
   void dispose() {
-    _currentTickAnimationController?.dispose();
+    _currentTickAnimationController.dispose();
 
-    topBoundQuoteAnimationController?.dispose();
-    bottomBoundQuoteAnimationController?.dispose();
+    topBoundQuoteAnimationController.dispose();
+    bottomBoundQuoteAnimationController.dispose();
     _clearGestures();
     super.dispose();
   }
 
   /// Call function to calculate the grid line quotes and put them inside [yAxisModel].
-  void calculateGridLineQuotes() => gridLineQuotes = yAxisModel.gridQuotes();
+  List<double> calculateGridLineQuotes(YAxisModel yAxisModel) =>
+      gridLineQuotes = yAxisModel.gridQuotes();
 
   void _playNewTickAnimation() {
     _currentTickAnimationController
@@ -157,17 +162,15 @@ class BasicChartState<T extends BasicChart> extends State<T>
       ..forward();
   }
 
-  void _setupYAxisModel() {
-    yAxisModel = YAxisModel(
-      yTopBound: chartQuoteToCanvasY(_topBoundQuote),
-      yBottomBound: chartQuoteToCanvasY(_bottomBoundQuote),
-      topBoundQuote: _topBoundQuote,
-      bottomBoundQuote: _bottomBoundQuote,
-      canvasHeight: canvasSize.height,
-      topPadding: _topPadding,
-      bottomPadding: _bottomPadding,
-    );
-  }
+  YAxisModel _setupYAxisModel(Size canvasSize) => yAxisModel = YAxisModel(
+        yTopBound: chartQuoteToCanvasY(_topBoundQuote),
+        yBottomBound: chartQuoteToCanvasY(_bottomBoundQuote),
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize.height,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
 
   /// Called to setup the current tick bounds and crosshair zoom out animations.
   void setupAnimations() {
@@ -243,7 +246,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
         quote: quote,
         topBoundQuote: _topBoundQuote,
         bottomBoundQuote: _bottomBoundQuote,
-        canvasHeight: canvasSize.height,
+        canvasHeight: canvasSize?.height ?? 200,
         topPadding: _topPadding,
         bottomPadding: _bottomPadding,
       );
@@ -261,15 +264,16 @@ class BasicChartState<T extends BasicChart> extends State<T>
           final XAxisModel xAxis = context.watch<XAxisModel>();
 
           canvasSize = Size(
-            xAxis.width,
+            xAxis.width!,
             constraints.maxHeight,
           );
 
-          _setupYAxisModel();
+          final YAxisModel yAxisModel = _setupYAxisModel(canvasSize!);
 
           updateVisibleData();
           _updateQuoteBoundTargets();
-          calculateGridLineQuotes();
+          final List<double> gridLineQuotes =
+              calculateGridLineQuotes(yAxisModel);
           return Stack(
             fit: StackFit.expand,
             children: <Widget>[
@@ -284,12 +288,12 @@ class BasicChartState<T extends BasicChart> extends State<T>
   Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
         animations: getQuoteGridAnimations(),
-        builder: (BuildContext context, Widget child) => CustomPaint(
+        builder: (BuildContext context, _) => CustomPaint(
           painter: YGridLinePainter(
             gridLineQuotes: gridLineQuotes,
             quoteToCanvasY: chartQuoteToCanvasY,
             style: context.watch<ChartTheme>().gridStyle,
-            labelWidth: (gridLineQuotes?.isNotEmpty ?? false)
+            labelWidth: (gridLineQuotes.isNotEmpty)
                 ? _labelWidth(gridLineQuotes.first,
                     context.watch<ChartTheme>().gridStyle.yLabelStyle)
                 : 0,
@@ -319,8 +323,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
   Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
         animations: getQuoteLabelAnimations(),
-        builder: (BuildContext context, Widget child) => CustomPaint(
-          size: canvasSize,
+        builder: (BuildContext context, _) => CustomPaint(
+          size: canvasSize!,
           painter: YGridLabelPainter(
             gridLineQuotes: gridLineQuotes,
             pipSize: widget.pipSize,
@@ -333,7 +337,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   // Main series and indicators on top of main series.
   Widget _buildChartData() => MultipleAnimatedBuilder(
         animations: getChartDataAnimations(),
-        builder: (BuildContext context, Widget child) => RepaintBoundary(
+        builder: (BuildContext context, _) => RepaintBoundary(
           child: Opacity(
             opacity: widget.opacity,
             child: CustomPaint(
@@ -368,21 +372,23 @@ class BasicChartState<T extends BasicChart> extends State<T>
   }
 
   void _updateChartPosition() =>
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final RenderBox box = _key.currentContext.findRenderObject();
+      WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
+        final RenderBox box =
+            _key.currentContext!.findRenderObject() as RenderBox;
         final Offset position = box.localToGlobal(Offset.zero);
         chartPosition = Offset(position.dx, position.dy);
       });
 
   bool _onQuoteLabelsTouchArea(Offset position) =>
-      position.dx > (xAxis.width - quoteLabelsTouchAreaWidth) &&
-      position.dy > chartPosition.dy &&
-      position.dy < chartPosition.dy + canvasSize.height;
+      chartPosition != null &&
+      position.dx > (xAxis.width! - quoteLabelsTouchAreaWidth) &&
+      position.dy > chartPosition!.dy &&
+      position.dy < chartPosition!.dy + canvasSize!.height;
 
   void _scaleVertically(double dy) {
     setState(() {
       verticalPaddingFraction =
-          ((verticalPadding + dy) / canvasSize.height).clamp(0.05, 0.49);
+          ((verticalPadding + dy) / canvasSize!.height).clamp(0.05, 0.49);
     });
   }
 }

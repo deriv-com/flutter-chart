@@ -11,6 +11,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
+import '../data_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
 import 'ma_series.dart';
@@ -24,12 +25,12 @@ class RainbowSeries extends Series {
   /// [rainbowOptions] Rainbow indicator options.
   RainbowSeries(
     IndicatorInput indicatorInput, {
-    List<Color> rainbowColors,
-    String id,
-    RainbowOptions rainbowOptions,
+    List<Color>? rainbowColors,
+    String? id,
+    required RainbowOptions rainbowOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
-          rainbowColors: rainbowColors,
+          rainbowColors: rainbowColors ?? const <Color>[],
           id: id,
           rainbowOptions: rainbowOptions,
         );
@@ -37,11 +38,11 @@ class RainbowSeries extends Series {
   /// Initializes
   RainbowSeries.fromIndicator(
     Indicator<Tick> indicator, {
-    this.rainbowColors,
-    String id,
-    this.rainbowOptions,
+    required this.rainbowOptions,
+    this.rainbowColors = const <Color>[],
+    String? id,
   })  : _fieldIndicator = indicator,
-        super(id);
+        super(id ?? 'MARainbow$rainbowOptions');
 
   final Indicator<Tick> _fieldIndicator;
 
@@ -54,17 +55,18 @@ class RainbowSeries extends Series {
   final List<Color> rainbowColors;
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     /// check if we have color for every band
-    final bool useColors = rainbowColors?.length == rainbowOptions.bandsCount;
+    final bool useColors = rainbowColors.length == rainbowOptions.bandsCount;
     final List<Indicator<Tick>> indicators = <Indicator<Tick>>[];
     for (int i = 0; i < rainbowOptions.bandsCount; i++) {
       if (i == 0) {
         indicators
             .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions));
         _rainbowSeries.add(SingleIndicatorSeries(
-          painterCreator: (Series series) => LinePainter(series),
-          indicatorCreator: () => indicators[0],
+          painterCreator: (Series series) =>
+              LinePainter(series as DataSeries<Tick>),
+          indicatorCreator: () => indicators[0] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
           style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
@@ -73,11 +75,9 @@ class RainbowSeries extends Series {
         indicators
             .add(MASeries.getMAIndicator(indicators[i - 1], rainbowOptions));
         _rainbowSeries.add(SingleIndicatorSeries(
-          painterCreator: (
-            Series series,
-          ) =>
-              LinePainter(series),
-          indicatorCreator: () => indicators[i],
+          painterCreator: (Series series) =>
+              LinePainter(series as DataSeries<Tick>),
+          indicatorCreator: () => indicators[i] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
           style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
@@ -88,8 +88,8 @@ class RainbowSeries extends Series {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final RainbowSeries oldRainbowSeries = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final RainbowSeries? oldRainbowSeries = oldData as RainbowSeries?;
     if (oldRainbowSeries == null) {
       return false;
     } else if (oldRainbowSeries._rainbowSeries.length !=
@@ -163,10 +163,10 @@ class RainbowSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() =>
+  int? getMaxEpoch() =>
       _rainbowSeries.isNotEmpty ? _rainbowSeries[0].getMaxEpoch() : null;
 
   @override
-  int getMinEpoch() =>
+  int? getMinEpoch() =>
       _rainbowSeries.isNotEmpty ? _rainbowSeries[0].getMinEpoch() : null;
 }

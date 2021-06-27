@@ -18,13 +18,13 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
     this.inputIndicator,
     String id,
     this.options, {
-    DataSeriesStyle style,
+    DataSeriesStyle? style,
     this.offset = 0,
   })  : _inputFirstTick = inputIndicator.entries.isNotEmpty
-            ? inputIndicator.entries.first
+            ? inputIndicator.entries.first as Tick
             : null,
-        _inputIndicatorData = inputIndicator.input,
-        super(inputIndicator.entries, id, style: style);
+        _inputIndicatorData = inputIndicator.input as IndicatorInput,
+        super(inputIndicator.entries as List<Tick>, id: id, style: style);
 
   /// Input indicator to calculate this indicator value on.
   ///
@@ -53,16 +53,16 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   ///
   /// It's used for comparison purpose to check whether this indicator series options has changed and
   /// It needs to recalculate [_resultIndicator]'s values.
-  final IndicatorOptions options;
+  final IndicatorOptions? options;
 
   /// Result indicator
   ///
   /// Entries of [_resultIndicator] will be the data that will be painted for this series.
-  CachedIndicator<Tick> _resultIndicator;
+  late CachedIndicator<Tick> _resultIndicator;
 
   /// For comparison purposes.
   /// To check whether series input list has changed entirely or not.
-  final Tick _inputFirstTick;
+  final Tick? _inputFirstTick;
 
   final IndicatorInput _inputIndicatorData;
 
@@ -71,22 +71,22 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
     if (entries != null) {
       final int targetIndex = index + offset;
 
-      if (targetIndex >= 0 && targetIndex < entries.length) {
+      if (targetIndex >= 0 && targetIndex < entries!.length) {
         // Instead of doing `epoch + offset * granularity` for all indices, for
         // those that are in the range of `entries` we should use the epoch of `index + offset`.
         // Meaning that if the offset was `2`, for the tick in index `1`, we should
         // use the epoch of index 3. This is because of time gaps that some chart data might have,
-        return entries[targetIndex].epoch;
-      } else if (targetIndex >= entries.length) {
+        return entries![targetIndex].epoch;
+      } else if (targetIndex >= entries!.length) {
         // Sometimes there might be market gaps even between entry in this index
         // and first/last index. In these cases `epoch + offset * granularity`
         // will be still wrong. Instead we use the epoch of the last/first index +/-
         // the estimation of remaining offset in epoch, using `first/lastEpoch + remainingOffset * granularity`.
-        final int remainingOffset = targetIndex - entries.length + 1;
-        return entries.last.epoch +
+        final int remainingOffset = targetIndex - entries!.length + 1;
+        return entries!.last.epoch +
             remainingOffset * _inputIndicatorData.granularity;
       } else {
-        return entries.first.epoch +
+        return entries!.first.epoch +
             targetIndex * _inputIndicatorData.granularity;
       }
     }
@@ -112,18 +112,17 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   CachedIndicator<Tick> initializeIndicator();
 
   @override
-  bool isOldDataAvailable(AbstractSingleIndicatorSeries oldSeries) =>
+  bool isOldDataAvailable(covariant AbstractSingleIndicatorSeries? oldSeries) =>
       super.isOldDataAvailable(oldSeries) &&
-      (oldSeries?.inputIndicator?.runtimeType == inputIndicator.runtimeType ??
-          false) &&
-      (oldSeries?.input?.isNotEmpty ?? false) &&
+      (oldSeries != null) &&
+      (oldSeries.inputIndicator.runtimeType == inputIndicator.runtimeType) &&
+      (oldSeries.input.isNotEmpty) &&
       (_inputFirstTick != null &&
           oldSeries._inputFirstTick == _inputFirstTick) &&
-      (oldSeries?.options == options ??
-          false || oldSeries?.options == null && options == null);
+      oldSeries.options == options;
 
   @override
-  void fillEntriesFromInput(AbstractSingleIndicatorSeries oldSeries) {
+  void fillEntriesFromInput(covariant AbstractSingleIndicatorSeries oldSeries) {
     _resultIndicator = initializeIndicator()
       ..copyValuesFrom(oldSeries._resultIndicator);
 

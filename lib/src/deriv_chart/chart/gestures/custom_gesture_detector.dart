@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -34,8 +35,8 @@ const longPressHoldRadius = 5;
 class CustomGestureDetector extends StatefulWidget {
   /// Creates a widget to track pan and scale gestures on one area.
   const CustomGestureDetector({
-    Key key,
-    this.child,
+    required this.child,
+    Key? key,
     this.onScaleAndPanStart,
     this.onScaleUpdate,
     this.onPanUpdate,
@@ -50,33 +51,33 @@ class CustomGestureDetector extends StatefulWidget {
   final Widget child;
 
   /// The pointers in contact with the screen have established a focal point and initial scale of 1.0.
-  final GestureScaleStartCallback onScaleAndPanStart;
+  final GestureScaleStartCallback? onScaleAndPanStart;
 
   /// The pointers in contact with the screen have indicated a new focal point and/or scale.
-  final GestureScaleUpdateCallback onScaleUpdate;
+  final GestureScaleUpdateCallback? onScaleUpdate;
 
   /// Called when a pointer that triggered an `onPointerDown` is no longer in contact with the screen.
-  final GestureDragUpdateCallback onPanUpdate;
+  final GestureDragUpdateCallback? onPanUpdate;
 
   /// The pointers are no longer in contact with the screen.
-  final GestureScaleEndCallback onScaleAndPanEnd;
+  final GestureScaleEndCallback? onScaleAndPanEnd;
 
   /// Called when a long press gesture with a primary button has been recognized.
   ///
   /// Triggered when a pointer has remained in contact with the screen at the same location for a long period of time.
-  final GestureLongPressStartCallback onLongPressStart;
+  final GestureLongPressStartCallback? onLongPressStart;
 
   /// A pointer has been drag-moved after a long press with a primary button.
-  final GestureLongPressMoveUpdateCallback onLongPressMoveUpdate;
+  final GestureLongPressMoveUpdateCallback? onLongPressMoveUpdate;
 
   /// Called when a long press gesture with a primary button has been recognized.
   ///
   /// Triggered when a pointer has remained in contact with the screen at the same location for a long period of time.
-  final GestureLongPressEndCallback onLongPressEnd;
+  final GestureLongPressEndCallback? onLongPressEnd;
 
   /// A pointer that will trigger a tap with a primary button has stopped contacting the screen at a particular location
   /// This triggers immediately before `onTap` in the case of the tap gesture winning. If the tap gesture did not win, `onTapCancel` is called instead.
-  final GestureTapUpCallback onTapUp;
+  final GestureTapUpCallback? onTapUp;
 
   @override
   _CustomGestureDetectorState createState() => _CustomGestureDetectorState();
@@ -90,12 +91,12 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
     _pointersDown = value;
   }
 
-  Offset _localStartPoint;
-  Offset _localLastPoint;
+  Offset _localStartPoint = Offset.zero;
+  Offset _localLastPoint = Offset.zero;
 
   bool _tap = false;
   bool _longPressed = false;
-  Timer _longPressTimer;
+  Timer? _longPressTimer;
 
   @override
   Widget build(BuildContext context) => Listener(
@@ -138,6 +139,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
         widget.onTapUp?.call(TapUpDetails(
           globalPosition: _localStartPoint,
           localPosition: _localLastPoint,
+          kind: PointerDeviceKind.touch,
         ));
       }
     }
@@ -198,6 +200,6 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
 
   void _onLongPressEnd() {
     _longPressed = false;
-    widget.onLongPressEnd?.call(null);
+    widget.onLongPressEnd?.call(const LongPressEndDetails());
   }
 }

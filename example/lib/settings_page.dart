@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:preferences/preferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pref/pref.dart';
 
 /// Check if [str] input contains only a-z letters and 0-9 numbers
 bool hasOnlySmallLettersAndNumberInput(String str) =>
@@ -15,29 +14,15 @@ String getNumFromString(String str) {
       RegExp(r'-?(?:\d*\.)?\d+(.*?:[eE][+-]?\d+)?', multiLine: true);
 
   return doubleRegex
-          .allMatches(str)
-          .map<dynamic>((dynamic m) => m.group(0))
-          .toString() ??
-      '--';
+      .allMatches(str)
+      .map<dynamic>((dynamic m) => m.group(0))
+      .toString();
 }
 
 /// This page is used to apply necessary QA configurations for the WS connection.
 /// Two fields can be set in this page 'endpoint' and 'app_id'
 /// The applied values stored for future usage
 class SettingsPage extends StatefulWidget {
-  /// Login Setting Page Constructor
-  const SettingsPage({
-    @required this.defaultAppID,
-    @required this.defaultEndpoint,
-    Key key,
-  }) : super(key: key);
-
-  /// Default app ID.
-  final String defaultAppID;
-
-  /// Default endpoint.
-  final String defaultEndpoint;
-
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -53,29 +38,28 @@ class _SettingsPageState extends State<SettingsPage> {
       },
       child: Scaffold(
         appBar: AppBar(title: const Text('Setting')),
-        body: PreferencePage(
-          <Widget>[
-            PreferenceTitle('Endpoint'),
-            TextFieldPreference(
-              'Endpoint',
-              'endpoint',
-              defaultVal: widget.defaultEndpoint,
-              validator: (String value) {
+        body: PrefPage(
+          children: <Widget>[
+            const PrefTitle(title: Text('Endpoint')),
+            PrefText(
+              label: 'Endpoint',
+              pref: 'endpoint',
+              validator: (String? value) {
                 _hasChanged = true;
-                return hasOnlySmallLettersAndNumberInput(value)
+                return value != null && hasOnlySmallLettersAndNumberInput(value)
                     ? null
                     : 'Invalid endpoint';
               },
             ),
-            TextFieldPreference(
-              'AppID',
-              'appID',
-              defaultVal: widget.defaultAppID,
-              validator: (String value) {
-                _hasChanged = true;
-                return hasOnlyNumberInput(value) ? null : 'Invalid AppID';
-              }
-            ),
+            PrefText(
+                label: 'AppID',
+                pref: 'appID',
+                validator: (String? value) {
+                  _hasChanged = true;
+                  return value != null && hasOnlyNumberInput(value)
+                      ? null
+                      : 'Invalid AppID';
+                }),
           ],
         ),
       ));
