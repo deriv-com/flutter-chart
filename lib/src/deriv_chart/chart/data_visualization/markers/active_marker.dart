@@ -5,11 +5,11 @@ import 'marker.dart';
 class ActiveMarker extends Marker {
   /// Creates an active marker of given direction.
   ActiveMarker({
-    @required int epoch,
-    @required double quote,
-    @required MarkerDirection direction,
-    @required this.text,
-    VoidCallback onTap,
+    required int epoch,
+    required double quote,
+    required MarkerDirection direction,
+    required this.text,
+    VoidCallback? onTap,
     this.onTapOutside,
   }) : super(
           epoch: epoch,
@@ -22,5 +22,5 @@ class ActiveMarker extends Marker {
   final String text;
 
   /// Called when chart is tapped outside of active marker.
-  final VoidCallback onTapOutside;
+  final VoidCallback? onTapOutside;
 }

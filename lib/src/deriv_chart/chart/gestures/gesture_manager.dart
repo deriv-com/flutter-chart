@@ -10,7 +10,7 @@ import 'custom_gesture_detector.dart';
 /// separate modules.
 class GestureManager extends StatefulWidget {
   /// Initialises the top level gesture detector that allows all descendants to register/remove gesture callbacks.
-  GestureManager({Key key, @required this.child})
+  GestureManager({Key? key, required this.child})
       : assert(child != null),
         super(key: key);
 
@@ -36,7 +36,7 @@ class GestureManagerState extends State<GestureManager> {
   }
 
   void _callAll<T extends Function>(dynamic details) {
-    _callbackPool.whereType<T>().forEach((f) => f.call(details));
+    _callbackPool.whereType<T>().forEach((f) => f(details));
   }
 
   @override

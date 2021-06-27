@@ -9,6 +9,7 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
+import '../data_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
 import 'single_indicator_series.dart';
@@ -16,29 +17,34 @@ import 'single_indicator_series.dart';
 /// A series which shows Fractal Chaos Band Series data calculated from 'entries'.
 class FractalChaosBandSeries extends Series {
   /// Initializes
-
   FractalChaosBandSeries(
     this.indicatorInput, {
-    String id,
-  }) : super(id);
+    String? id,
+    bool channelFill = false,
+  }) : super(id ?? 'FCB');
 
   ///input data
   final IndicatorInput indicatorInput;
 
-  SingleIndicatorSeries _fcbHighSeries;
-  SingleIndicatorSeries _fcbLowSeries;
+  late SingleIndicatorSeries _fcbHighSeries;
+  late SingleIndicatorSeries _fcbLowSeries;
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     _fcbHighSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => FCBHighIndicator<Tick>(indicatorInput),
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      // Using SMA temporarily until TA's migration branch gets updated.
+      indicatorCreator: () =>
+          SMAIndicator<Tick>(CloseValueIndicator<Tick>(indicatorInput), 10),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
     _fcbLowSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
-      indicatorCreator: () => FCBLowIndicator<Tick>(indicatorInput),
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      indicatorCreator: () =>
+          SMAIndicator<Tick>(CloseValueIndicator<Tick>(indicatorInput), 10),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
@@ -47,8 +53,8 @@ class FractalChaosBandSeries extends Series {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final FractalChaosBandSeries series = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final FractalChaosBandSeries? series = oldData as FractalChaosBandSeries?;
     final bool _fcbHighUpdated =
         _fcbHighSeries.didUpdate(series?._fcbHighSeries);
     final bool _fcbLowUpdated = _fcbLowSeries.didUpdate(series?._fcbLowSeries);
@@ -90,13 +96,13 @@ class FractalChaosBandSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => <ChartData>[
+  int? getMaxEpoch() => <ChartData>[
         _fcbLowSeries,
         _fcbHighSeries,
       ].getMaxEpoch();
 
   @override
-  int getMinEpoch() => <ChartData>[
+  int? getMinEpoch() => <ChartData>[
         _fcbLowSeries,
         _fcbHighSeries,
       ].getMinEpoch();

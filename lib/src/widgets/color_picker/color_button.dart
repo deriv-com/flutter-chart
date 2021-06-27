@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 class ColorButton extends StatelessWidget {
   /// Creates a button of color.
   const ColorButton({
-    @required this.color,
-    this.onTap,
-    Key key,
+    required this.color,
+    required this.onTap,
+    Key? key,
   }) : super(key: key);
 
   /// Display color value.

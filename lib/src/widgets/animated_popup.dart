@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class AnimatedPopupDialog extends StatefulWidget {
   /// Initializes
   const AnimatedPopupDialog({
-    Key key,
+    Key? key,
     this.child,
     this.animationDuration = const Duration(milliseconds: 150),
   }) : super(key: key);
 
   /// content of this dialog
-  final Widget child;
+  final Widget? child;
 
   /// Animation duration
   final Duration animationDuration;
@@ -21,7 +21,7 @@ class AnimatedPopupDialog extends StatefulWidget {
 
 class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
+  late AnimationController controller;
   final Curve _curve = Curves.easeOut;
 
   @override
@@ -36,7 +36,7 @@ class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
         animation: controller,
-        builder: (BuildContext context, Widget child) => Transform.scale(
+        builder: (BuildContext context, Widget? child) => Transform.scale(
           scale: _curve.transform(controller.value),
           child: child,
         ),

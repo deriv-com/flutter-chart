@@ -20,7 +20,12 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final ScatterStyle style = series.style ?? const ScatterStyle();
+    if (series.entries == null) {
+      return;
+    }
+
+    final ScatterStyle style =
+        series.style as ScatterStyle? ?? const ScatterStyle();
 
     final Paint dotPaint = Paint()
       ..color = style.color
@@ -29,7 +34,7 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex;
         i++) {
-      final Tick tick = series.entries[i];
+      final Tick tick = series.entries![i];
 
       if (!tick.quote.isNaN) {
         final double x = epochToX(getEpochOf(tick, i));

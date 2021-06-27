@@ -14,9 +14,14 @@ import 'intl/messages_all.dart';
 
 class ChartLocalization {
   ChartLocalization();
-  
-  static ChartLocalization current;
-  
+
+  static ChartLocalization? _current;
+
+  static ChartLocalization get current {
+    assert(_current != null, 'No instance of ChartLocalization was loaded. Try to initialize the ChartLocalization delegate before accessing ChartLocalization.current.');
+    return _current!;
+  }
+
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
 
@@ -25,13 +30,20 @@ class ChartLocalization {
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      ChartLocalization.current = ChartLocalization();
-      
-      return ChartLocalization.current;
+      final instance = ChartLocalization();
+      ChartLocalization._current = instance;
+ 
+      return instance;
     });
   } 
 
   static ChartLocalization of(BuildContext context) {
+    final instance = ChartLocalization.maybeOf(context);
+    assert(instance != null, 'No instance of ChartLocalization present in the widget tree. Did you add ChartLocalization.delegate in localizationsDelegates?');
+    return instance!;
+  }
+
+  static ChartLocalization? maybeOf(BuildContext context) {
     return Localizations.of<ChartLocalization>(context, ChartLocalization);
   }
 
@@ -404,11 +416,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
   bool shouldReload(AppLocalizationDelegate old) => false;
 
   bool _isSupported(Locale locale) {
-    if (locale != null) {
-      for (var supportedLocale in supportedLocales) {
-        if (supportedLocale.languageCode == locale.languageCode) {
-          return true;
-        }
+    for (var supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode) {
+        return true;
       }
     }
     return false;

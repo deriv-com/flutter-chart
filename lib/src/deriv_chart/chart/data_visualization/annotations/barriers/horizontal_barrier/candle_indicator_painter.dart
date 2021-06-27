@@ -20,7 +20,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
     CandleIndicator series,
   ) : super(series);
 
-  Paint _paint;
+  late Paint _paint;
 
   /// Padding between lines.
   static const double padding = 4;
@@ -30,11 +30,11 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
 
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   }) {
     if (!series.isOnRange) {
       return;
@@ -64,29 +64,28 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final HorizontalBarrierStyle style = series.style ??
-        theme.horizontalBarrierStyle ??
-        const HorizontalBarrierStyle();
+    final HorizontalBarrierStyle style =
+        series.style as HorizontalBarrierStyle? ?? theme.horizontalBarrierStyle;
 
     _paint = Paint()
       ..strokeWidth = 1
       ..color = style.secondaryBackgroundColor;
 
-    double animatedValue;
+    late double animatedValue;
 
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
     if (series.previousObject == null) {
-      animatedValue = series.value;
+      animatedValue = series.value!;
     } else {
-      final BarrierObject previousBarrier = series.previousObject;
+      final BarrierObject previousBarrier = series.previousObject!;
       // Calculating animated values regarding `currentTickPercent` in transition animation
       // from previousObject to new object
       animatedValue = lerpDouble(
-        previousBarrier.value,
-        series.value,
+        previousBarrier.value!,
+        series.value!,
         animationInfo.currentTickPercent,
-      );
+      )!;
     }
 
     double y = quoteToY(animatedValue);
@@ -109,8 +108,8 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
 
     String timerString = '--:--';
 
-    if (series?.timerDuration != null) {
-      timerString = durationToString(series?.timerDuration ?? const Duration());
+    if (series.timerDuration != null) {
+      timerString = durationToString(series.timerDuration ?? const Duration());
     }
 
     final TextPainter timerPainter = makeTextPainter(

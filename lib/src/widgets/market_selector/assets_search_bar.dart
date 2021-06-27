@@ -8,10 +8,10 @@ class AssetsSearchBar extends StatefulWidget {
   /// Creates a search bar.
   ///
   /// [onSearchTextChanged] will get called when the search query changes.
-  const AssetsSearchBar({Key key, this.onSearchTextChanged}) : super(key: key);
+  const AssetsSearchBar({Key? key, this.onSearchTextChanged}) : super(key: key);
 
   /// Will be called whenever the text in search bar has changed.
-  final ValueChanged<String> onSearchTextChanged;
+  final ValueChanged<String>? onSearchTextChanged;
 
   @override
   _AssetsSearchBarState createState() => _AssetsSearchBarState();
@@ -19,17 +19,16 @@ class AssetsSearchBar extends StatefulWidget {
 
 class _AssetsSearchBarState extends State<AssetsSearchBar> {
   bool _isSearching = false;
-  FocusNode _searchFieldFocusNode;
+  final FocusNode _searchFieldFocusNode = FocusNode();
 
-  TextEditingController _textEditingController;
+  late TextEditingController _textEditingController;
 
-  ChartTheme _theme;
+  late ChartTheme _theme;
 
   @override
   void initState() {
     super.initState();
 
-    _searchFieldFocusNode = FocusNode();
     _textEditingController = TextEditingController();
   }
 
@@ -42,8 +41,8 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
 
   @override
   void dispose() {
-    _textEditingController?.dispose();
-    _searchFieldFocusNode?.dispose();
+    _textEditingController.dispose();
+    _searchFieldFocusNode.dispose();
     super.dispose();
   }
 

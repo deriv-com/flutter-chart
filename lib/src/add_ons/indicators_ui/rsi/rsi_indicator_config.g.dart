@@ -10,6 +10,7 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
   return RSIIndicatorConfig(
     period: json['period'] as int,
     fieldType: json['fieldType'] as String,
+<<<<<<< HEAD
     overBoughtPrice: (json['overBoughtPrice'] as num)?.toDouble(),
     overSoldPrice: (json['overSoldPrice'] as num)?.toDouble(),
     lineStyle: json['lineStyle'] == null
@@ -19,6 +20,13 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
         ? null
         : LineStyle.fromJson(
             json['mainHorizontalLinesStyle'] as Map<String, dynamic>),
+=======
+    overBoughtPrice: (json['overBoughtPrice'] as num).toDouble(),
+    overSoldPrice: (json['overSoldPrice'] as num).toDouble(),
+    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    mainHorizontalLinesStyle: LineStyle.fromJson(
+        json['mainHorizontalLinesStyle'] as Map<String, dynamic>),
+>>>>>>> upstream/flutter2
     pinLabels: json['pinLabels'] as bool,
   );
 }

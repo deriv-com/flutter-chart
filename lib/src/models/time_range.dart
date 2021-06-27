@@ -17,7 +17,7 @@ class TimeRange {
 
   /// Returns overlap between this and [other] time range.
   /// Returns `null` if there is no overlap.
-  TimeRange overlap(TimeRange other) {
+  TimeRange? overlap(TimeRange other) {
     final int left = max(other.leftEpoch, leftEpoch);
     final int right = min(other.rightEpoch, rightEpoch);
     return right <= left ? null : TimeRange(left, right);

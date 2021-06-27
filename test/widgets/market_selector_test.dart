@@ -8,10 +8,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() {
   group('Test different scenarios that might break the [MarketSelector] widget',
       () {
-    Asset r50;
-    Asset r25Favourite;
-    SubMarket r50SubMarket;
-    SubMarket r25SubMarket;
+    late Asset r50;
+    late Asset r25Favourite;
+    late SubMarket r50SubMarket;
+    late SubMarket r25SubMarket;
 
     setUp(() {
       r50 = Asset(
@@ -33,12 +33,12 @@ void main() {
       r50SubMarket = SubMarket(
         name: 'smart',
         displayName: 'Smart',
-        assets: <Asset>[r50],
+        assets: <Asset?>[r50],
       );
       r25SubMarket = SubMarket(
         name: 'smart2',
         displayName: 'Smart2',
-        assets: <Asset>[r25Favourite],
+        assets: <Asset?>[r25Favourite],
       );
     });
 
@@ -195,7 +195,7 @@ void main() {
           ChartLocalization.delegate,
         ],
         supportedLocales: ChartLocalization.delegate.supportedLocales,
-        home: MarketSelector(),
+        home: MarketSelector(markets: [],),
       ));
 
       await tester.pumpAndSettle();
