@@ -15,7 +15,7 @@ dependencies:
     git:
       url: git@github.com:raminvakili-fs/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: samin/migrate_to_null_safety_temp
+      ref: ramin/add_dema_and_tema_indicators
   equatable: ^2.0.0
   flutter:
     sdk: flutter
