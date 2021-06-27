@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 class DropdownMenu<T> extends StatelessWidget {
   /// Initializes
   const DropdownMenu({
-    @required this.initialValue,
-    @required this.items,
+    required this.initialValue,
+    required this.items,
     this.label = '',
     this.labelForItem,
     this.onItemSelected,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Menu label.
@@ -24,10 +24,10 @@ class DropdownMenu<T> extends StatelessWidget {
   /// Will be called get the appropriate title for the item [T].
   ///
   /// If null if will use the [T.toString()] as the title.
-  final String Function(T item) labelForItem;
+  final String Function(T item)? labelForItem;
 
   /// Will be called whenever a dropdown item is selected.
-  final ValueChanged<T> onItemSelected;
+  final ValueChanged<T?>? onItemSelected;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -45,7 +45,7 @@ class DropdownMenu<T> extends StatelessWidget {
                       child: Text(
                         labelForItem == null
                             ? type.toString()
-                            : labelForItem(type),
+                            : labelForItem!(type),
                         style: const TextStyle(fontSize: 10),
                       ),
                     ))

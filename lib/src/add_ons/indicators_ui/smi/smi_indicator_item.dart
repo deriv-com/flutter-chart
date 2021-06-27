@@ -17,10 +17,10 @@ import 'smi_indicator_config.dart';
 class SMIIndicatorItem extends IndicatorItem {
   /// Initializes
   const SMIIndicatorItem({
-    Key key,
-    SMIIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    SMIIndicatorConfig config = const SMIIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'SMI',
@@ -36,13 +36,13 @@ class SMIIndicatorItem extends IndicatorItem {
 
 /// SMIItem State class
 class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
-  int _period;
-  int _smoothingPeriod;
-  int _doubleSmoothingPeriod;
-  double _overboughtValue;
-  double _oversoldValue;
-  MovingAverageType _maType;
-  int _signalPeriod;
+  int? _period;
+  int? _smoothingPeriod;
+  int? _doubleSmoothingPeriod;
+  double? _overboughtValue;
+  double? _oversoldValue;
+  MovingAverageType? _maType;
+  int? _signalPeriod;
 
   @override
   SMIIndicatorConfig createIndicatorConfig() => SMIIndicatorConfig(
@@ -121,22 +121,17 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   int get _currentPeriod =>
-      _period ?? (widget.config as SMIIndicatorConfig)?.period ?? 10;
+      _period ?? (widget.config as SMIIndicatorConfig).period;
 
   int get _currentSmoothingPeriod =>
-      _smoothingPeriod ??
-      (widget.config as SMIIndicatorConfig)?.smoothingPeriod ??
-      3;
+      _smoothingPeriod ?? (widget.config as SMIIndicatorConfig).smoothingPeriod;
 
   int get _currentDoubleSmoothingPeriod =>
       _doubleSmoothingPeriod ??
-      (widget.config as SMIIndicatorConfig)?.doubleSmoothingPeriod ??
-      3;
+      (widget.config as SMIIndicatorConfig).doubleSmoothingPeriod;
 
   int get _currentSignalPeriod =>
-      _signalPeriod ??
-      (widget.config as SMIIndicatorConfig)?.signalPeriod ??
-      10;
+      _signalPeriod ?? (widget.config as SMIIndicatorConfig).signalPeriod;
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
         label: ChartLocalization.of(context).labelOverBoughtPrice,
@@ -152,9 +147,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   double get _currentOverboughtValue =>
-      _overboughtValue ??
-      (widget.config as SMIIndicatorConfig)?.overboughtValue ??
-      80;
+      _overboughtValue ?? (widget.config as SMIIndicatorConfig).overboughtValue;
 
   Widget _buildOverSoldPriceField() => FieldWidget(
         label: ChartLocalization.of(context).labelOverSoldPrice,
@@ -170,23 +163,19 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   double get _currentOversoldValue =>
-      _oversoldValue ??
-      (widget.config as SMIIndicatorConfig)?.oversoldValue ??
-      20;
+      _oversoldValue ?? (widget.config as SMIIndicatorConfig).oversoldValue;
 
   MovingAverageType get _currentMAType =>
-      _maType ??
-      (widget.config as SMIIndicatorConfig)?.maType ??
-      MovingAverageType.exponential;
+      _maType ?? (widget.config as SMIIndicatorConfig).maType;
 
   Widget _buildMATypeField() => DropdownMenu<MovingAverageType>(
         initialValue: _currentMAType,
         items: MovingAverageType.values,
         label: ChartLocalization.of(context).labelType,
         labelForItem: (MovingAverageType type) => getEnumValue(type),
-        onItemSelected: (MovingAverageType newType) => setState(
+        onItemSelected: (MovingAverageType? newType) => setState(
           () {
-            _maType = newType;
+            _maType = newType ?? MovingAverageType.simple;
             updateIndicator();
           },
         ),

@@ -24,11 +24,11 @@ class SMISeries extends Series {
   /// Initializes.
   SMISeries(
     this.input, {
-    @required this.smiOptions,
+    required this.smiOptions,
     this.overboughtValue = 40,
     this.oversoldValue = -40,
-    String id,
-  }) : super(id);
+    String? id,
+  }) : super(id ?? 'SMI');
 
   SingleIndicatorSeries _smiSeries;
   SingleIndicatorSeries _smiSignalSeries;
@@ -48,7 +48,7 @@ class SMISeries extends Series {
   final SMIOptions smiOptions;
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     final SMIIndicator<Tick> smiIndicator = SMIIndicator<Tick>(
       input,
       period: smiOptions.period,
@@ -58,7 +58,7 @@ class SMISeries extends Series {
 
     _smiSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
-        series,
+        series as DataSeries<Tick>,
         topHorizontalLine: overboughtValue,
         bottomHorizontalLine: oversoldValue,
         mainHorizontalLinesStyle: const LineStyle(),
@@ -70,7 +70,7 @@ class SMISeries extends Series {
     );
 
     _smiSignalSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
+      painterCreator: (Series series) => LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
           MASeries.getMAIndicator(smiIndicator, smiOptions.signalOptions),
       inputIndicator: smiIndicator,
@@ -85,19 +85,19 @@ class SMISeries extends Series {
 
   @override
   bool didUpdate(ChartData oldData) {
-    final SMISeries oldSeries = oldData;
+    final SMISeries? oldSeries = oldData as SMISeries?;
 
-    final bool smiUpdated = _smiSeries.didUpdate(oldSeries._smiSeries);
-    final bool smiSignalUpdated = _smiSignalSeries.didUpdate(oldSeries._smiSignalSeries);
+    final bool smiUpdated = _smiSeries.didUpdate(oldSeries?._smiSeries);
+    final bool smiSignalUpdated = _smiSignalSeries.didUpdate(oldSeries?._smiSignalSeries);
 
     return smiUpdated || smiSignalUpdated;
   }
 
   @override
-  int getMaxEpoch() => _smiSeries.getMaxEpoch();
+  int? getMaxEpoch() => _smiSeries.getMaxEpoch();
 
   @override
-  int getMinEpoch() => _smiSeries.getMinEpoch();
+  int? getMinEpoch() => _smiSeries.getMinEpoch();
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
