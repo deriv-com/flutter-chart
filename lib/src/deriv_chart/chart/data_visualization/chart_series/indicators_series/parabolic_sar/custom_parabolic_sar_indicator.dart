@@ -32,11 +32,11 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
         );
 
   // Backup for PSAR internal variables.
-  double _backupAccelerationFactor;
-  bool _backupIsUptrend;
-  int _backupStartTrendIndex;
-  double _backupCurrentExtremePoint;
-  double _backupMinMaxExtremePoint;
+  late double _backupAccelerationFactor;
+  late bool _backupIsUptrend;
+  late int _backupStartTrendIndex;
+  late double _backupCurrentExtremePoint;
+  late double _backupMinMaxExtremePoint;
 
   @override
   Tick calculate(int index) {

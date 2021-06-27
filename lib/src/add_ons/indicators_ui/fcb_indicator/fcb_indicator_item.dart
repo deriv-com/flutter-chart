@@ -11,10 +11,11 @@ import 'fcb_indicator_config.dart';
 class FractalChaosBandIndicatorItem extends IndicatorItem {
   /// Initializes
   const FractalChaosBandIndicatorItem({
-    Key key,
-    FractalChaosBandIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    FractalChaosBandIndicatorConfig config =
+        const FractalChaosBandIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Fractal Chaos Band Indicator',
@@ -33,7 +34,7 @@ class FractalChaosBandIndicatorItemState
     extends IndicatorItemState<FractalChaosBandIndicatorConfig> {
   /// Rainbow MA bands count
   @protected
-  bool _channelFill;
+  bool? _channelFill;
 
   @override
   FractalChaosBandIndicatorConfig createIndicatorConfig() =>
@@ -72,6 +73,5 @@ class FractalChaosBandIndicatorItemState
   @protected
   bool get currentChannelFill =>
       _channelFill ??
-      (widget.config as FractalChaosBandIndicatorConfig)?.channelFill ??
-      false;
+      (widget.config as FractalChaosBandIndicatorConfig).channelFill;
 }

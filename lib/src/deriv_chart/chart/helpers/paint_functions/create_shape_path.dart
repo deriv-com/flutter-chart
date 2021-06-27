@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 /// Returns the path of a pentagon shaped label.
 Path getCurrentTickLabelBackgroundPath({
-  @required double left,
-  @required double top,
-  @required double right,
-  @required double bottom,
+  required double left,
+  required double top,
+  required double right,
+  required double bottom,
   double arrowWidth = 10,
   double radius = 4,
 }) =>

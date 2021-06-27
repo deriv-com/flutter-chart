@@ -19,7 +19,7 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
   final bool isUpward;
 
   /// Paint the arrow on the canvas
-  Paint arrowPaint;
+  late Paint arrowPaint;
 
   @override
   void onPaintData(
@@ -29,8 +29,11 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final LineStyle style =
-        series.style ?? theme.lineStyle ?? const LineStyle();
+    if (series.entries == null) {
+      return;
+    }
+
+    final LineStyle style = (series.style as LineStyle?) ?? theme.lineStyle;
 
     arrowPaint = Paint()
       ..color = style.color
@@ -40,7 +43,7 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {
-      final Tick tick = series.entries[i];
+      final Tick tick = series.entries![i];
       if (tick.quote.isNaN) {
         continue;
       }
@@ -62,8 +65,8 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
 
   void _paintUpwardArrows(
     Canvas canvas, {
-    @required double x,
-    @required double y,
+    required double x,
+    required double y,
     double arrowSize = 10,
   }) {
     canvas.drawPath(
@@ -77,8 +80,8 @@ class ArrowPainter extends DataPainter<DataSeries<Tick>> {
 
   void _paintDownwardArrows(
     Canvas canvas, {
-    @required double x,
-    @required double y,
+    required double x,
+    required double y,
     double arrowSize = 10,
   }) {
     canvas.drawPath(

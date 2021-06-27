@@ -7,7 +7,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
-import 'package:flutter/foundation.dart';
 
 import 'candle_indicator_painter.dart';
 import 'horizontal_barrier.dart';
@@ -17,17 +16,15 @@ class TickIndicator extends HorizontalBarrier {
   /// Initializes a tick indicator.
   TickIndicator(
     Tick tick, {
-    String id,
-    HorizontalBarrierStyle style,
+    String? id,
+    HorizontalBarrierStyle? style,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
   }) : super(
           tick.quote,
           epoch: tick.epoch,
           id: id,
           style: style ??
-              const HorizontalBarrierStyle(
-                labelShape: LabelShape.pentagon,
-              ),
+              const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
           visibility: visibility,
           longLine: false,
         );
@@ -38,10 +35,10 @@ class CandleIndicator extends HorizontalBarrier {
   /// Initializes a candle indicator.
   CandleIndicator(
     this.candle, {
-    @required this.granularity,
-    @required this.serverTime,
+    required this.granularity,
+    required this.serverTime,
     this.showTimer = false,
-    String id,
+    String? id,
     HorizontalBarrierStyle style = const HorizontalBarrierStyle(),
     HorizontalBarrierVisibility visibility =
         HorizontalBarrierVisibility.keepBarrierLabelVisible,
@@ -66,16 +63,15 @@ class CandleIndicator extends HorizontalBarrier {
   final int granularity;
 
   /// The time duration left on the timer to show.
-  Duration timerDuration;
+  Duration? timerDuration;
 
   /// Wether to show the candle close time timer or not.
   final bool showTimer;
 
-  Timer _timer;
+  Timer? _timer;
 
   void _startTimer() {
-    if (serverTime == null ||
-        serverTime.millisecondsSinceEpoch - candle.epoch >= granularity) {
+    if (serverTime.millisecondsSinceEpoch - candle.epoch >= granularity) {
       timerDuration = null;
       return;
     }
@@ -85,14 +81,14 @@ class CandleIndicator extends HorizontalBarrier {
             granularity - (serverTime.millisecondsSinceEpoch - candle.epoch));
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (timerDuration.inSeconds > 0) {
-        timerDuration = Duration(seconds: timerDuration.inSeconds - 1);
+      if (timerDuration!.inSeconds > 0) {
+        timerDuration = Duration(seconds: timerDuration!.inSeconds - 1);
       }
     });
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData? oldData) {
     if (oldData is CandleIndicator) {
       oldData._timer?.cancel();
     }

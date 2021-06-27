@@ -10,6 +10,7 @@ import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
+import 'package:flutter_deriv_api/api/common/models/candle_model.dart';
 import 'package:flutter_deriv_api/api/common/server_time/server_time.dart';
 import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
 import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -60,7 +62,7 @@ class MyApp extends StatelessWidget {
 class FullscreenChart extends StatefulWidget {
   /// Initializes a chart that sits in fullscreen.
   const FullscreenChart({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -74,55 +76,66 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
-  bool _showTimer = false;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
-  HorizontalBarrier _slBarrier, _tpBarrier;
+  HorizontalBarrier? _slBarrier, _tpBarrier;
   bool _sl = false, _tp = false;
 
-  TickHistorySubscription _tickHistorySubscription;
+  TickHistorySubscription? _tickHistorySubscription;
 
-  StreamSubscription _tickStreamSubscription;
+  StreamSubscription? _tickStreamSubscription;
 
-  ConnectionBloc _connectionBloc;
+  late ConnectionBloc _connectionBloc;
 
   bool _waitingForHistory = false;
 
-  MarketChangeReminder _marketsChangeReminder;
+  MarketChangeReminder? _marketsChangeReminder;
 
   // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
-  Completer _requestCompleter;
+  late Completer _requestCompleter;
 
-  List<Market> _markets;
+  List<Market> _markets = <Market>[];
   SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
 
-  ActiveMarker _activeMarker;
+  ActiveMarker? _activeMarker;
 
-  List<ActiveSymbol> _activeSymbols;
+  late List<ActiveSymbol> _activeSymbols;
 
-  Asset _symbol;
+  Asset _symbol = Asset(name: 'R_50');
 
   ChartController _controller = ChartController();
-  PersistentBottomSheetController _bottomSheetController;
+  PersistentBottomSheetController? _bottomSheetController;
+
+  late PrefServiceCache _prefService;
 
   @override
   void initState() {
     super.initState();
     _requestCompleter = Completer<dynamic>();
     _connectToAPI();
+    _initPrefs();
+  }
+
+  Future<void> _initPrefs() async {
+    _prefService = PrefServiceCache();
+    await _prefService.setDefaultValues(<String, dynamic>{
+      'appID': defaultAppID,
+      'endpoint': defaultEndpoint,
+    });
   }
 
   @override
   void dispose() {
     _tickStreamSubscription?.cancel();
-    _connectionBloc?.close();
+    _connectionBloc.close();
     _bottomSheetController?.close();
     super.dispose();
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = ConnectionBloc(await _getConnectionInfoFromPrefs())
-      ..listen((connectionState) async {
+    _connectionBloc = ConnectionBloc(ConnectionInformation(
+        endpoint: defaultEndpoint, appId: defaultAppID, brand: 'deriv'))
+      ..stream.listen((connectionState) async {
         if (connectionState is! Connected) {
           // Calling this since we show some status labels when NOT connected.
           setState(() {});
@@ -142,7 +155,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               context: context,
               builder: (_) => AlertDialog(
                 title: Text(
-                  e.message,
+                  e.message!,
                   style: const TextStyle(fontSize: 10),
                 ),
               ),
@@ -174,13 +187,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
       ),
       onCurrentTime: () async {
         final ServerTime serverTime = await ServerTime.fetchTime();
-        return serverTime.time.toUtc();
+        return serverTime.time!.toUtc();
       },
-      onMarketsStatusChange: (Map<String, bool> statusChanges) {
+      onMarketsStatusChange: (Map<String?, bool>? statusChanges) {
+        if (statusChanges == null) {
+          return;
+        }
+
         for (int i = 0; i < _activeSymbols.length; i++) {
-          if (statusChanges[_activeSymbols[i].symbol] != null) {
+          if (statusChanges[_activeSymbols[i].symbol!] != null) {
             _activeSymbols[i] = _activeSymbols[i].copyWith(
-              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
+              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol!],
             );
           }
         }
@@ -191,7 +208,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
 
           // Request for tick stream if symbol is changing from closed to open.
-          if (statusChanges[_symbol.name]) {
+          if (statusChanges[_symbol.name]!) {
             _onIntervalSelected(granularity);
           }
         }
@@ -204,22 +221,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
       const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic'),
     );
 
-    final ActiveSymbol firstOpenSymbol = _activeSymbols
-        .firstWhere((ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen);
+    final ActiveSymbol firstOpenSymbol = _activeSymbols.firstWhere(
+        (ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen!);
 
     _symbol = Asset(
-      name: firstOpenSymbol.symbol,
+      name: firstOpenSymbol.symbol!,
       displayName: firstOpenSymbol.displayName,
-      market: firstOpenSymbol.market,
-      subMarket: firstOpenSymbol.submarket,
-      isOpen: firstOpenSymbol.exchangeIsOpen,
+      market: firstOpenSymbol.market!,
+      subMarket: firstOpenSymbol.submarket!,
+      isOpen: firstOpenSymbol.exchangeIsOpen!,
     );
 
     _fillMarketSelectorList();
   }
 
   void _fillMarketSelectorList() {
-    final marketTitles = <String>{};
+    final marketTitles = <String?>{};
 
     final markets = <Market>[];
 
@@ -228,18 +245,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
         marketTitles.add(symbol.market);
         markets.add(
           Market.fromAssets(
-            name: symbol.market,
-            displayName: symbol.marketDisplayName,
+            name: symbol.market!,
+            displayName: symbol.marketDisplayName!,
             assets: _activeSymbols
                 .where((activeSymbol) => activeSymbol.market == symbol.market)
                 .map<Asset>((activeSymbol) => Asset(
-                      market: activeSymbol.market,
+                      market: activeSymbol.market!,
                       marketDisplayName: activeSymbol.marketDisplayName,
-                      subMarket: activeSymbol.submarket,
-                      name: activeSymbol.symbol,
+                      subMarket: activeSymbol.submarket!,
+                      name: activeSymbol.symbol!,
                       displayName: activeSymbol.displayName,
                       subMarketDisplayName: activeSymbol.submarketDisplayName,
-                      isOpen: activeSymbol.exchangeIsOpen,
+                      isOpen: activeSymbol.exchangeIsOpen!,
                     ))
                 .toList(),
           ),
@@ -247,7 +264,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       }
     }
     setState(() => _markets = markets);
-    _bottomSheetController?.setState(() {});
+    _bottomSheetController?.setState?.call(() {});
   }
 
   void _initTickStream(
@@ -262,7 +279,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             await TickHistory.fetchTicksAndSubscribe(request);
 
         final fetchedTicks =
-            _getTicksFromResponse(_tickHistorySubscription.tickHistory);
+            _getTicksFromResponse(_tickHistorySubscription!.tickHistory!);
 
         if (resume) {
           // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping ticks
@@ -276,7 +293,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         }
 
         _tickStreamSubscription =
-            _tickHistorySubscription.tickStream.listen(_handleTickStream);
+            _tickHistorySubscription!.tickStream!.listen(_handleTickStream);
       } else {
         _tickHistorySubscription = null;
 
@@ -289,20 +306,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _updateSampleSLAndTP();
 
-      WidgetsBinding.instance.addPostFrameCallback(
+      WidgetsBinding.instance!.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
       );
     } on TickException catch (e) {
-      dev.log(e.message, error: e);
+      dev.log(e.message!, error: e);
     } finally {
       _completeRequest();
     }
   }
 
   void _resetCandlesTo(List<Tick> fetchedCandles) => setState(() {
-        ticks.clear();
-        _clearMarkers();
-        _clearBarriers();
         ticks = fetchedCandles;
       });
 
@@ -312,24 +326,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
   }
 
-  void _handleTickStream(TickBase newTick) {
+  void _handleTickStream(TickBase? newTick) {
     if (!_requestCompleter.isCompleted || newTick == null) {
       return;
     }
 
     if (newTick is api_tick.Tick) {
       _onNewTick(Tick(
-        epoch: newTick.epoch.millisecondsSinceEpoch,
-        quote: newTick.quote,
+        epoch: newTick.epoch!.millisecondsSinceEpoch,
+        quote: newTick.quote!,
       ));
     } else if (newTick is OHLC) {
       _onNewCandle(Candle(
-        epoch: newTick.openTime.millisecondsSinceEpoch,
-        high: newTick.high,
-        low: newTick.low,
-        open: newTick.open,
-        close: newTick.close,
-        currentEpoch: newTick.epoch.millisecondsSinceEpoch,
+        epoch: newTick.openTime!.millisecondsSinceEpoch,
+        high: newTick.high!,
+        low: newTick.low!,
+        open: newTick.open!,
+        close: newTick.close!,
+        currentEpoch: newTick.epoch!.millisecondsSinceEpoch,
       ));
     }
   }
@@ -341,8 +355,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _onNewCandle(Candle newCandle) {
     final List<Candle> previousCandles =
         ticks.isNotEmpty && ticks.last.epoch == newCandle.epoch
-            ? ticks.sublist(0, ticks.length - 1)
-            : ticks;
+            ? ticks.sublist(0, ticks.length - 1) as List<Candle>
+            : ticks as List<Candle>;
 
     setState(() {
       // Don't modify candles in place, otherwise Chart's didUpdateWidget won't see the difference.
@@ -376,11 +390,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     child: DerivChart(
                       mainSeries:
                           style == ChartStyle.candles && ticks is List<Candle>
-                              ? CandleSeries(ticks)
+                              ? CandleSeries(ticks as List<Candle>)
                               : LineSeries(
                                   ticks,
                                   style: const LineStyle(hasArea: true),
-                                ),
+                                ) as DataSeries<Tick>,
                       markerSeries: MarkerSeries(
                         _markers,
                         activeMarker: _activeMarker,
@@ -388,8 +402,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       annotations: ticks.length > 4
                           ? <ChartAnnotation>[
                               ..._sampleBarriers,
-                              if (_sl && _slBarrier != null) _slBarrier,
-                              if (_tp && _tpBarrier != null) _tpBarrier,
+                              if (_sl && _slBarrier != null)
+                                _slBarrier as ChartAnnotation,
+                              if (_tp && _tpBarrier != null)
+                                _tpBarrier as ChartAnnotation,
                               TickIndicator(
                                 ticks.last,
                                 style: const HorizontalBarrierStyle(
@@ -409,9 +425,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           ? 2000 // average ms difference between ticks
                           : granularity * 1000,
                       controller: _controller,
-                      isLive: (_symbol?.isOpen ?? false) &&
-                          (_connectionBloc?.state is Connected ?? false),
-                      opacity: _symbol?.isOpen ?? true ? 1.0 : 0.5,
+                      isLive: (_symbol.isOpen) &&
+                          (_connectionBloc.state is Connected),
+                      opacity: _symbol.isOpen ? 1.0 : 0.5,
                       onCrosshairAppeared: () =>
                           Vibration.vibrate(duration: 50),
                       onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
@@ -440,18 +456,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   IconButton(
                       icon: Icon(Icons.settings),
                       onPressed: () async {
-                        final bool settingChanged =
+                        final bool? settingChanged =
                             await Navigator.of(context).push(
                           MaterialPageRoute<bool>(
-                              builder: (_) => SettingsPage(
-                                    defaultAppID: defaultAppID,
-                                    defaultEndpoint: defaultEndpoint,
+                              builder: (_) => PrefService(
+                                    child: SettingsPage(),
+                                    service: _prefService,
                                   )),
                         );
 
-                        if (settingChanged) {
+                        if (settingChanged ?? false) {
                           _requestCompleter = Completer<dynamic>();
-                          _tickStreamSubscription?.cancel();
+                          await _tickStreamSubscription?.cancel();
                           ticks.clear();
                           // reconnect to new config
                           _connectionBloc.add(
@@ -551,14 +567,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   Expanded(
                     child: CheckboxListTile(
                       value: _sl,
-                      onChanged: (bool sl) => setState(() => _sl = sl),
+                      onChanged: (bool? sl) => setState(() => _sl = sl!),
                       title: Text('Stop loss'),
                     ),
                   ),
                   Expanded(
                     child: CheckboxListTile(
                       value: _tp,
-                      onChanged: (bool tp) => setState(() => _tp = tp),
+                      onChanged: (bool? tp) => setState(() => _tp = tp!),
                       title: Text('Take profit'),
                     ),
                   ),
@@ -715,14 +731,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
     );
   }
 
-  Future<void> _onIntervalSelected(int value) async {
+  Future<void> _onIntervalSelected(int? value) async {
     if (!_requestCompleter.isCompleted) {
       return;
     }
 
     _requestCompleter = Completer<dynamic>();
 
-    setState(() => ticks.clear());
+    setState(() {
+      ticks.clear();
+      _clearMarkers();
+      _clearBarriers();
+    });
 
     try {
       await _tickHistorySubscription?.unsubscribe();
@@ -730,7 +750,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _completeRequest();
       dev.log(e.toString(), error: e);
     } finally {
-      granularity = value;
+      granularity = value ?? 0;
 
       _initTickStream(TicksHistoryRequest(
         ticksHistory: _symbol.name,
@@ -746,24 +766,26 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> _getTicksFromResponse(TickHistory tickHistory) {
     List<Tick> candles = [];
     if (tickHistory.history != null) {
-      final count = tickHistory.history.prices.length;
+      final count = tickHistory.history!.prices!.length;
       for (var i = 0; i < count; i++) {
         candles.add(Tick(
-          epoch: tickHistory.history.times[i].millisecondsSinceEpoch,
-          quote: tickHistory.history.prices[i],
+          epoch: tickHistory.history!.times![i]!.millisecondsSinceEpoch,
+          quote: tickHistory.history!.prices![i]!,
         ));
       }
     }
 
     if (tickHistory.candles != null) {
-      candles = tickHistory.candles.map<Candle>((ohlc) {
+      candles = tickHistory.candles!
+          .where((CandleModel? ohlc) => ohlc != null)
+          .map<Candle>((CandleModel? ohlc) {
         return Candle(
-          epoch: ohlc.epoch.millisecondsSinceEpoch,
-          high: ohlc.high,
-          low: ohlc.low,
-          open: ohlc.open,
-          close: ohlc.close,
-          currentEpoch: ohlc.epoch.millisecondsSinceEpoch,
+          epoch: ohlc!.epoch!.millisecondsSinceEpoch,
+          high: ohlc.high!,
+          low: ohlc.low!,
+          open: ohlc.open!,
+          close: ohlc.close!,
+          currentEpoch: ohlc.epoch!.millisecondsSinceEpoch,
         );
       }).toList();
     }
@@ -797,13 +819,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<ConnectionInformation> _getConnectionInfoFromPrefs() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final String? endpoint = preferences.getString('endpoint');
 
     return ConnectionInformation(
       appId: preferences.getString('appID') ?? defaultAppID,
       brand: 'deriv',
-      endpoint:
-          generateEndpointUrl(endpoint: preferences.getString('endpoint')) ??
-              defaultEndpoint,
+      endpoint: endpoint != null
+          ? generateEndpointUrl(endpoint: endpoint)
+          : defaultEndpoint,
     );
   }
 }

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 void paintXGrid(
   Canvas canvas,
   Size size, {
-  @required List<String> timeLabels,
-  @required List<double> xCoords,
-  @required GridStyle style,
+  required List<String> timeLabels,
+  required List<double> xCoords,
+  required GridStyle style,
 }) {
   assert(timeLabels.length == xCoords.length);
 
@@ -43,9 +43,9 @@ void _paintTimeGridLines(
 void _paintTimeLabels(
   Canvas canvas,
   Size size, {
-  @required List<String> timeLabels,
-  @required List<double> xCoords,
-  @required GridStyle style,
+  required List<String> timeLabels,
+  required List<double> xCoords,
+  required GridStyle style,
 }) {
   timeLabels.asMap().forEach((int index, String timeLabel) {
     paintText(

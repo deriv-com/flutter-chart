@@ -23,10 +23,10 @@ import 'sample_multi_painter.dart';
 /// Or we can directly implement [ChartData] interface.
 class SampleMultiSeries extends Series {
   /// Initializes a sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
-  SampleMultiSeries(IndicatorInput indicatorInput, {String id})
+  SampleMultiSeries(IndicatorInput indicatorInput, {String? id})
       : series1 = MASeries(indicatorInput, const MAOptions(period: 10)),
         series2 = MASeries(indicatorInput, const MAOptions()),
-        super(id);
+        super(id ?? 'SampleMultiSeries');
 
   /// Series 1.
   final MASeries series1;
@@ -50,11 +50,11 @@ class SampleMultiSeries extends Series {
   SeriesPainter<SampleMultiSeries> createPainter() => SampleMultiPainter(this);
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final SampleMultiSeries old = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final SampleMultiSeries? old = oldData as SampleMultiSeries;
 
-    final bool series1Updated = series1.didUpdate(old.series1);
-    final bool series2Updated = series2.didUpdate(old.series2);
+    final bool series1Updated = series1.didUpdate(old?.series1);
+    final bool series2Updated = series2.didUpdate(old?.series2);
 
     return series1Updated || series2Updated;
   }
@@ -79,8 +79,8 @@ class SampleMultiSeries extends Series {
   }
 
   @override
-  int getMinEpoch() => min(series1.getMinEpoch(), series2.getMinEpoch());
+  int getMinEpoch() => min(series1.getMinEpoch()!, series2.getMinEpoch()!);
 
   @override
-  int getMaxEpoch() => max(series1.getMaxEpoch(), series2.getMaxEpoch());
+  int getMaxEpoch() => max(series1.getMaxEpoch()!, series2.getMaxEpoch()!);
 }

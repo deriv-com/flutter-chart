@@ -10,7 +10,7 @@ class SymbolIcon extends FadeInImage {
   /// Initializes a wrapper widget around [AssetImage] which provides image icon for the
   /// given [symbolCode].
   SymbolIcon({
-    @required String symbolCode,
+    required String symbolCode,
     double width = 32,
     double height = 32,
     Duration fadeDuration = const Duration(milliseconds: 50),

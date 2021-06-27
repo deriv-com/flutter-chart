@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class LoadingPainter extends CustomPainter {
   /// Initializes the painter that paints loading on the given area.
   LoadingPainter({
-    @required this.loadingAnimationProgress,
-    @required this.loadingRightBoundX,
+    required this.loadingAnimationProgress,
+    required this.loadingRightBoundX,
   });
 
   /// The progress shown in `double` for the loading.

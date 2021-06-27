@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 /// Paints loading animation from screen left edge to [loadingRightBoundX].
 void paintLoadingAnimation({
-  @required Canvas canvas,
-  @required Size size,
-  @required double loadingAnimationProgress,
-  @required double loadingRightBoundX,
+  required Canvas canvas,
+  required Size size,
+  required double loadingAnimationProgress,
+  required double loadingRightBoundX,
 }) {
   final Paint loadingPaint = Paint()
     ..color = Colors.white12
