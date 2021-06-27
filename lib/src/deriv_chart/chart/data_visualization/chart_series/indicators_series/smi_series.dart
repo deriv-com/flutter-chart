@@ -1,9 +1,7 @@
-import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
@@ -30,10 +28,10 @@ class SMISeries extends Series {
     String? id,
   }) : super(id ?? 'SMI');
 
-  SingleIndicatorSeries _smiSeries;
-  SingleIndicatorSeries _smiSignalSeries;
+  late SingleIndicatorSeries _smiSeries;
+  late SingleIndicatorSeries _smiSignalSeries;
 
-  List<Series> _innerSeries;
+  late List<Series> _innerSeries;
 
   /// Indicator input.
   final IndicatorDataInput input;
@@ -84,7 +82,7 @@ class SMISeries extends Series {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
+  bool didUpdate(ChartData? oldData) {
     final SMISeries? oldSeries = oldData as SMISeries?;
 
     final bool smiUpdated = _smiSeries.didUpdate(oldSeries?._smiSeries);
