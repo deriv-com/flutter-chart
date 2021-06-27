@@ -10,18 +10,12 @@ WilliamsRIndicatorConfig _$WilliamsRIndicatorConfigFromJson(
     Map<String, dynamic> json) {
   return WilliamsRIndicatorConfig(
     period: json['period'] as int,
-    lineStyle: json['lineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    zeroHorizontalLinesStyle: json['zeroHorizontalLinesStyle'] == null
-        ? null
-        : LineStyle.fromJson(
-            json['zeroHorizontalLinesStyle'] as Map<String, dynamic>),
+    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    zeroHorizontalLinesStyle: LineStyle.fromJson(
+        json['zeroHorizontalLinesStyle'] as Map<String, dynamic>),
     showZones: json['showZones'] as bool,
-    oscillatorLimits: json['oscillatorLimits'] == null
-        ? null
-        : OscillatorLinesConfig.fromJson(
-            json['oscillatorLimits'] as Map<String, dynamic>),
+    oscillatorLimits: OscillatorLinesConfig.fromJson(
+        json['oscillatorLimits'] as Map<String, dynamic>),
   );
 }
 

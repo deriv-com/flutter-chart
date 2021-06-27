@@ -9,11 +9,9 @@ part of 'oscillator_lines_config.dart';
 OscillatorLinesConfig _$OscillatorLinesConfigFromJson(
     Map<String, dynamic> json) {
   return OscillatorLinesConfig(
-    overBoughtPrice: (json['overBoughtPrice'] as num)?.toDouble(),
-    overSoldPrice: (json['overSoldPrice'] as num)?.toDouble(),
-    lineStyle: json['lineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    overBoughtPrice: (json['overBoughtPrice'] as num).toDouble(),
+    overSoldPrice: (json['overSoldPrice'] as num).toDouble(),
+    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
   );
 }
 

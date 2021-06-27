@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 class FieldWidget extends StatelessWidget {
   /// Initializes
   const FieldWidget({
-    @required this.initialValue,
+    required this.initialValue,
     this.onValueChanged,
     this.label = '',
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Initial value
   final String initialValue;
 
   /// Will be called whenever the field's value has changed.
-  final Function(String) onValueChanged;
+  final Function(String)? onValueChanged;
 
   /// The label of the field.
   final String label;

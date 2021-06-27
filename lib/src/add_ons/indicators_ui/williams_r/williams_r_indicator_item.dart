@@ -15,10 +15,10 @@ import 'williams_r_indicator_config.dart';
 class WilliamsRIndicatorItem extends IndicatorItem {
   /// Initializes
   const WilliamsRIndicatorItem({
-    Key key,
-    WilliamsRIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    WilliamsRIndicatorConfig config = const WilliamsRIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'WilliamsR',
@@ -35,10 +35,10 @@ class WilliamsRIndicatorItem extends IndicatorItem {
 /// WilliamsRItem State class
 class WilliamsRIndicatorItemState
     extends IndicatorItemState<WilliamsRIndicatorConfig> {
-  int _period;
-  double _overBoughtPrice;
-  double _overSoldPrice;
-  bool _showZones;
+  int? _period;
+  double? _overBoughtPrice;
+  double? _overSoldPrice;
+  bool? _showZones;
 
   @override
   WilliamsRIndicatorConfig createIndicatorConfig() => WilliamsRIndicatorConfig(
@@ -59,27 +59,26 @@ class WilliamsRIndicatorItemState
         ],
       );
 
-  
   Widget _buildShowZonesField() => Row(
-    children: <Widget>[
-      Text(
-        ChartLocalization.of(context).labelShowZones,
-        style: const TextStyle(fontSize: 10),
-      ),
-      const SizedBox(width: 4),
-      Switch(
-        value: _currentShowZones,
-        onChanged: (bool value) {
-          setState(() {
-            _showZones = value;
-          });
-          updateIndicator();
-        },
-        activeTrackColor: Colors.lightGreenAccent,
-        activeColor: Colors.green,
-      ),
-    ],
-  );
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelShowZones,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: _currentShowZones,
+            onChanged: (bool value) {
+              setState(() {
+                _showZones = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          ),
+        ],
+      );
 
   Widget _buildPeriodField() => FieldWidget(
         initialValue: _currentPeriod.toString(),
@@ -95,7 +94,7 @@ class WilliamsRIndicatorItemState
       );
 
   int get _currentPeriod =>
-      _period ?? (widget.config as WilliamsRIndicatorConfig)?.period ?? 14;
+      _period ?? (widget.config as WilliamsRIndicatorConfig).period;
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
         initialValue: _currentOverBoughtPrice.toString(),
@@ -113,9 +112,8 @@ class WilliamsRIndicatorItemState
   double get _currentOverBoughtPrice =>
       _overBoughtPrice ??
       (widget.config as WilliamsRIndicatorConfig)
-          ?.oscillatorLimits
-          ?.overBoughtPrice ??
-      -20;
+          .oscillatorLimits
+          .overBoughtPrice;
 
   Widget _buildOverSoldPriceField() => FieldWidget(
         initialValue: _currentOverSoldPrice.toString(),
@@ -133,13 +131,9 @@ class WilliamsRIndicatorItemState
   double get _currentOverSoldPrice =>
       _overSoldPrice ??
       (widget.config as WilliamsRIndicatorConfig)
-          ?.oscillatorLimits
-          ?.overSoldPrice ??
-      -80;
+          .oscillatorLimits
+          .overSoldPrice;
 
   bool get _currentShowZones =>
-      _showZones ??
-          (widget.config as WilliamsRIndicatorConfig)
-              ?.showZones ??
-          true;
+      _showZones ?? (widget.config as WilliamsRIndicatorConfig).showZones;
 }
