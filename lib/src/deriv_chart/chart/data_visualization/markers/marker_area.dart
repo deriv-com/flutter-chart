@@ -1,8 +1,11 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../chart_data.dart';
 import 'animated_active_marker.dart';
 import 'marker.dart';
 
@@ -10,11 +13,10 @@ import 'marker.dart';
 class MarkerArea extends StatefulWidget {
   /// Initializes marker area.
   const MarkerArea({
-    @required this.markerSeries,
-    @required this.quoteToCanvasY,
-    Key key,
-  })  : assert(markerSeries != null),
-        super(key: key);
+    required this.markerSeries,
+    required this.quoteToCanvasY,
+    Key? key,
+  }) : super(key: key);
 
   /// The Series that holds the list markers.
   final MarkerSeries markerSeries;
@@ -27,7 +29,7 @@ class MarkerArea extends StatefulWidget {
 }
 
 class _MarkerAreaState extends State<MarkerArea> {
-  GestureManagerState gestureManager;
+  late GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
 
@@ -48,10 +50,10 @@ class _MarkerAreaState extends State<MarkerArea> {
     final MarkerSeries series = widget.markerSeries;
 
     if (series.activeMarker != null) {
-      if (series.activeMarker.tapArea.contains(details.localPosition)) {
-        series.activeMarker.onTap?.call();
+      if (series.activeMarker!.tapArea.contains(details.localPosition)) {
+        series.activeMarker!.onTap?.call();
       } else {
-        series.activeMarker.onTapOutside?.call();
+        series.activeMarker!.onTapOutside?.call();
       }
       return;
     }
@@ -94,20 +96,28 @@ class _MarkerAreaState extends State<MarkerArea> {
 
 class _MarkerPainter extends CustomPainter {
   _MarkerPainter({
-    this.series,
-    this.epochToX,
-    this.quoteToY,
-    this.theme,
+    required this.series,
+    required this.epochToX,
+    required this.quoteToY,
+    required this.theme,
   });
 
   final MarkerSeries series;
-  final Function epochToX;
-  final Function quoteToY;
+  final EpochToX epochToX;
+  final QuoteToY quoteToY;
   final ChartTheme theme;
 
   @override
   void paint(Canvas canvas, Size size) {
-    series.paint(canvas, size, epochToX, quoteToY, null, null, theme);
+    series.paint(
+      canvas,
+      size,
+      epochToX,
+      quoteToY,
+      const AnimationInfo(),
+      const ChartConfig(granularity: 1000),
+      theme,
+    );
   }
 
   @override

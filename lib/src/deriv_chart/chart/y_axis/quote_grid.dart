@@ -1,17 +1,15 @@
-import 'package:meta/meta.dart';
-
 ///A Model for calculating the grid intervals and quotes.
 class YAxisModel {
   ///Initializes a Model for calculating the grid intervals and quotes.
   YAxisModel({
-    @required double topBoundQuote,
-    @required double bottomBoundQuote,
-    @required double yTopBound,
-    @required double yBottomBound,
-    @required double canvasHeight,
-    @required double topPadding,
-    @required double bottomPadding,
-  })  : _quoteGridInterval = quoteGridInterval(
+    required double topBoundQuote,
+    required double bottomBoundQuote,
+    required double yTopBound,
+    required double yBottomBound,
+    required double canvasHeight,
+    required double topPadding,
+    required double bottomPadding,
+  })   : _quoteGridInterval = quoteGridInterval(
           quotePerPx(
               yTopBound: yTopBound,
               yBottomBound: yBottomBound,
@@ -52,10 +50,10 @@ class YAxisModel {
 
 /// Calculates the quotes that can be placed per pixel.
 double quotePerPx({
-  @required double topBoundQuote,
-  @required double bottomBoundQuote,
-  @required double yTopBound,
-  @required double yBottomBound,
+  required double topBoundQuote,
+  required double bottomBoundQuote,
+  required double yTopBound,
+  required double yBottomBound,
 }) {
   final double quoteDiff = topBoundQuote - bottomBoundQuote;
   final double pxDiff = yBottomBound - yTopBound;
