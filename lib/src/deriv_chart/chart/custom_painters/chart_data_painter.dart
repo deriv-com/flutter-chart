@@ -11,17 +11,17 @@ import 'package:flutter/material.dart';
 class ChartDataPainter extends BaseChartDataPainter {
   /// Initializes a `CustomPainter` which paints the chart data inside the chart.
   ChartDataPainter({
-    ChartConfig chartConfig,
-    ChartTheme theme,
-    this.mainSeries,
+    required ChartConfig chartConfig,
+    required ChartTheme theme,
+    required this.mainSeries,
+    required EpochToX epochToCanvasX,
+    required QuoteToY quoteToCanvasY,
+    required int rightBoundEpoch,
+    required int leftBoundEpoch,
+    required double topY,
+    required double bottomY,
     List<Series> secondarySeries = const <Series>[],
-    AnimationInfo animationInfo,
-    EpochToX epochToCanvasX,
-    QuoteToY quoteToCanvasY,
-    int rightBoundEpoch,
-    int leftBoundEpoch,
-    double topY,
-    double bottomY,
+    AnimationInfo animationInfo = const AnimationInfo(),
   }) : super(
           chartConfig: chartConfig,
           theme: theme,
@@ -76,16 +76,16 @@ class ChartDataPainter extends BaseChartDataPainter {
 class BaseChartDataPainter extends CustomPainter {
   /// Initializes a `CustomPainter` which paints the chart data inside the chart.
   BaseChartDataPainter({
-    this.chartConfig,
-    this.theme,
+    required this.chartConfig,
+    required this.theme,
+    required this.epochToCanvasX,
+    required this.quoteToCanvasY,
+    required this.rightBoundEpoch,
+    required this.leftBoundEpoch,
+    required this.topY,
+    required this.bottomY,
     this.series = const <Series>[],
-    this.animationInfo,
-    this.epochToCanvasX,
-    this.quoteToCanvasY,
-    this.rightBoundEpoch,
-    this.leftBoundEpoch,
-    this.topY,
-    this.bottomY,
+    this.animationInfo = const AnimationInfo(),
   });
 
   /// Chart config.
@@ -120,10 +120,6 @@ class BaseChartDataPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (series == null) {
-      return;
-    }
-
     for (final Series series in series) {
       series.paint(
         canvas,
@@ -151,8 +147,8 @@ class BaseChartDataPainter extends CustomPainter {
         return true;
       }
 
-      final Map<String, ChartPaintingStyle> oldStyles =
-          Map<String, ChartPaintingStyle>.fromIterable(
+      final Map<String?, ChartPaintingStyle?> oldStyles =
+          Map<String?, ChartPaintingStyle?>.fromIterable(
         oldDelegate.series,
         key: (dynamic series) => series.id,
         value: (dynamic series) => series.style,

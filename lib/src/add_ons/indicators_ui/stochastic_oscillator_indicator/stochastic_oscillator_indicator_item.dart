@@ -10,10 +10,11 @@ import 'package:flutter/material.dart';
 class StochasticOscillatorIndicatorItem extends IndicatorItem {
   /// Initializes
   const StochasticOscillatorIndicatorItem({
-    Key key,
-    StochasticOscillatorIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
+    Key? key,
+    StochasticOscillatorIndicatorConfig config =
+        const StochasticOscillatorIndicatorConfig(),
   }) : super(
           key: key,
           title: 'Stochastic Oscillator',
@@ -30,12 +31,12 @@ class StochasticOscillatorIndicatorItem extends IndicatorItem {
 /// StochasticOscillatorIndicatorItemState class
 class StochasticOscillatorIndicatorItemState
     extends IndicatorItemState<StochasticOscillatorIndicatorConfig> {
-  int _period;
-  double _overBoughtPrice;
-  double _overSoldPrice;
-  String _field;
-  bool _isSmooth;
-  bool _showZones;
+  int? _period;
+  double? _overBoughtPrice;
+  double? _overSoldPrice;
+  String? _field;
+  bool? _isSmooth;
+  bool? _showZones;
 
   @override
   StochasticOscillatorIndicatorConfig createIndicatorConfig() =>
@@ -88,8 +89,7 @@ class StochasticOscillatorIndicatorItemState
 
   int get _currentPeriod =>
       _period ??
-      (widget.config as StochasticOscillatorIndicatorConfig)?.period ??
-      14;
+      (widget.config as StochasticOscillatorIndicatorConfig).period;
 
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[
@@ -110,7 +110,7 @@ class StochasticOscillatorIndicatorItemState
                           ),
                         ))
                 .toList(),
-            onChanged: (String newField) => setState(
+            onChanged: (String? newField) => setState(
               () {
                 _field = newField;
                 updateIndicator();
@@ -122,8 +122,7 @@ class StochasticOscillatorIndicatorItemState
 
   String get _currentField =>
       _field ??
-      (widget.config as StochasticOscillatorIndicatorConfig)?.fieldType ??
-      'close';
+      (widget.config as StochasticOscillatorIndicatorConfig).fieldType;
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
@@ -153,8 +152,7 @@ class StochasticOscillatorIndicatorItemState
 
   double get _currentOverBoughtPrice =>
       _overBoughtPrice ??
-      (widget.config as StochasticOscillatorIndicatorConfig)?.overBoughtPrice ??
-      80;
+      (widget.config as StochasticOscillatorIndicatorConfig).overBoughtPrice;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -184,8 +182,7 @@ class StochasticOscillatorIndicatorItemState
 
   double get _currentOverSoldPrice =>
       _overSoldPrice ??
-      (widget.config as StochasticOscillatorIndicatorConfig)?.overSoldPrice ??
-      20;
+      (widget.config as StochasticOscillatorIndicatorConfig).overSoldPrice;
 
   /// Builds is Smooth option
   @protected
@@ -212,8 +209,7 @@ class StochasticOscillatorIndicatorItemState
 
   bool get _currentIsSmooth =>
       _isSmooth ??
-      (widget.config as StochasticOscillatorIndicatorConfig)?.isSmooth ??
-      true;
+      (widget.config as StochasticOscillatorIndicatorConfig).isSmooth;
 
   /// Builds buildShowZones option
   @protected
@@ -240,6 +236,5 @@ class StochasticOscillatorIndicatorItemState
 
   bool get _currentShowZones =>
       _showZones ??
-      (widget.config as StochasticOscillatorIndicatorConfig)?.showZones ??
-      false;
+      (widget.config as StochasticOscillatorIndicatorConfig).showZones;
 }

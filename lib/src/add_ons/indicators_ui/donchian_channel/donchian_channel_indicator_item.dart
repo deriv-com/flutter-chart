@@ -13,10 +13,11 @@ import 'donchian_channel_indicator_config.dart';
 class DonchianChannelIndicatorItem extends IndicatorItem {
   /// Initializes
   const DonchianChannelIndicatorItem({
-    Key key,
-    DonchianChannelIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    DonchianChannelIndicatorConfig config =
+        const DonchianChannelIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Donchian Channel',
@@ -33,9 +34,9 @@ class DonchianChannelIndicatorItem extends IndicatorItem {
 /// DonchianChannelIndicatorItem State class
 class DonchianChannelIndicatorItemState
     extends IndicatorItemState<DonchianChannelIndicatorConfig> {
-  int _highPeriod;
-  int _lowPeriod;
-  bool _channelFill;
+  int? _highPeriod;
+  int? _lowPeriod;
+  bool? _channelFill;
 
   @override
   DonchianChannelIndicatorConfig createIndicatorConfig() =>
@@ -75,8 +76,7 @@ class DonchianChannelIndicatorItemState
 
   bool _getCurrentFill() =>
       _channelFill ??
-      (widget.config as DonchianChannelIndicatorConfig)?.showChannelFill ??
-      true;
+      (widget.config as DonchianChannelIndicatorConfig).showChannelFill;
 
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
@@ -106,8 +106,7 @@ class DonchianChannelIndicatorItemState
 
   int _getCurrentHighPeriod() =>
       _highPeriod ??
-      (widget.config as DonchianChannelIndicatorConfig)?.highPeriod ??
-      10;
+      (widget.config as DonchianChannelIndicatorConfig).highPeriod;
 
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[
@@ -136,7 +135,5 @@ class DonchianChannelIndicatorItemState
       );
 
   int _getCurrentLowPeriod() =>
-      _lowPeriod ??
-      (widget.config as DonchianChannelIndicatorConfig)?.lowPeriod ??
-      10;
+      _lowPeriod ?? (widget.config as DonchianChannelIndicatorConfig).lowPeriod;
 }

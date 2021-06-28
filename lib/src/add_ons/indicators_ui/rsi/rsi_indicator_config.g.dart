@@ -10,15 +10,11 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
   return RSIIndicatorConfig(
     period: json['period'] as int,
     fieldType: json['fieldType'] as String,
-    overBoughtPrice: (json['overBoughtPrice'] as num)?.toDouble(),
-    overSoldPrice: (json['overSoldPrice'] as num)?.toDouble(),
-    lineStyle: json['lineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    mainHorizontalLinesStyle: json['mainHorizontalLinesStyle'] == null
-        ? null
-        : LineStyle.fromJson(
-            json['mainHorizontalLinesStyle'] as Map<String, dynamic>),
+    overBoughtPrice: (json['overBoughtPrice'] as num).toDouble(),
+    overSoldPrice: (json['overSoldPrice'] as num).toDouble(),
+    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    mainHorizontalLinesStyle: LineStyle.fromJson(
+        json['mainHorizontalLinesStyle'] as Map<String, dynamic>),
     pinLabels: json['pinLabels'] as bool,
   );
 }

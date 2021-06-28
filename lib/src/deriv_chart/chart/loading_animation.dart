@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class LoadingAnimationArea extends StatefulWidget {
   /// Creates loading animation area.
   const LoadingAnimationArea({
-    Key key,
-    @required this.loadingRightBoundX,
+    required this.loadingRightBoundX,
+    Key? key,
   }) : super(key: key);
 
   ///  The right bound in the chart area when loading area is showing.
@@ -18,7 +18,7 @@ class LoadingAnimationArea extends StatefulWidget {
 
 class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
     with SingleTickerProviderStateMixin {
-  AnimationController _loadingAnimationController;
+  late AnimationController _loadingAnimationController;
 
   bool get _isVisible => widget.loadingRightBoundX > 0;
 
@@ -33,7 +33,7 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
 
   @override
   void dispose() {
-    _loadingAnimationController?.dispose();
+    _loadingAnimationController.dispose();
     super.dispose();
   }
 
@@ -46,7 +46,7 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
     return ClipRect(
       child: AnimatedBuilder(
         animation: _loadingAnimationController,
-        builder: (BuildContext context, Widget child) => CustomPaint(
+        builder: (BuildContext context, _) => CustomPaint(
           painter: LoadingPainter(
             loadingAnimationProgress: _loadingAnimationController.value,
             loadingRightBoundX: widget.loadingRightBoundX,

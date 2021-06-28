@@ -12,9 +12,9 @@ class LineSeries extends DataSeries<Tick> {
   /// Initializes a line series.
   LineSeries(
     List<Tick> entries, {
-    String id,
-    LineStyle style,
-  }) : super(entries, id, style: style);
+    String? id,
+    LineStyle? style,
+  }) : super(entries, id: id ?? 'LineSeries', style: style);
 
   @override
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(

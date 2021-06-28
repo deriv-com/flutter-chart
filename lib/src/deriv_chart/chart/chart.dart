@@ -25,9 +25,9 @@ import 'main_chart.dart';
 class Chart extends StatefulWidget {
   /// Creates chart that expands to available space.
   const Chart({
-    @required this.mainSeries,
-    @required this.pipSize,
-    @required this.granularity,
+    required this.mainSeries,
+    required this.granularity,
+    this.pipSize = 4,
     this.controller,
     this.overlaySeries,
     this.bottomSeries,
@@ -39,23 +39,23 @@ class Chart extends StatefulWidget {
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Chart's main data series.
   final DataSeries<Tick> mainSeries;
 
   /// List of overlay indicator series to add on chart beside the [mainSeries].
-  final List<Series> overlaySeries;
+  final List<Series>? overlaySeries;
 
   /// List of bottom indicator series to add on chart separate from the [mainSeries].
-  final List<Series> bottomSeries;
+  final List<Series>? bottomSeries;
 
   /// Open position marker series.
-  final MarkerSeries markerSeries;
+  final MarkerSeries? markerSeries;
 
   /// Chart's controller
-  final ChartController controller;
+  final ChartController? controller;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -65,16 +65,16 @@ class Chart extends StatefulWidget {
   final int granularity;
 
   /// Called when crosshair details appear after long press.
-  final VoidCallback onCrosshairAppeared;
+  final VoidCallback? onCrosshairAppeared;
 
   /// Called when chart is scrolled or zoomed.
-  final VisibleAreaChangedCallback onVisibleAreaChanged;
+  final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
   /// Chart's theme.
-  final ChartTheme theme;
+  final ChartTheme? theme;
 
   /// Chart's annotations
-  final List<ChartAnnotation<ChartObject>> annotations;
+  final List<ChartAnnotation<ChartObject>>? annotations;
 
   /// Whether the chart should be showing live data or not.
   ///
@@ -93,14 +93,14 @@ class Chart extends StatefulWidget {
 }
 
 class _ChartState extends State<Chart> with WidgetsBindingObserver {
-  bool _followCurrentTick;
-  ChartController _controller;
-  ChartTheme _chartTheme;
+  bool? _followCurrentTick;
+  late ChartController _controller;
+  late ChartTheme _chartTheme;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsFlutterBinding.ensureInitialized().addObserver(this);
     _initChartController();
   }
 
@@ -130,9 +130,9 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     final List<ChartData> chartDataList = <ChartData>[
       widget.mainSeries,
-      if (widget.overlaySeries != null) ...widget.overlaySeries,
-      if (widget.bottomSeries != null) ...widget.bottomSeries,
-      if (widget.annotations != null) ...widget.annotations,
+      if (widget.overlaySeries != null) ...widget.overlaySeries!,
+      if (widget.bottomSeries != null) ...widget.bottomSeries!,
+      if (widget.annotations != null) ...widget.annotations!,
     ];
 
     return MultiProvider(
@@ -170,7 +170,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
-                  ...widget.bottomSeries
+                  ...widget.bottomSeries!
                       .map((Series series) => Expanded(
                               child: BottomChart(
                             series: series,
@@ -190,8 +190,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     // detect what is current viewing mode before lock the screen
     if (widget.mainSeries.entries != null &&
-        widget.mainSeries.entries.isNotEmpty) {
-      if (rightBoundEpoch > widget.mainSeries.entries.last.epoch) {
+        widget.mainSeries.entries!.isNotEmpty) {
+      if (rightBoundEpoch > widget.mainSeries.entries!.last.epoch) {
         _followCurrentTick = true;
       } else {
         _followCurrentTick = false;
@@ -204,16 +204,18 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
 
     //scroll to last tick when screen is on
-    if (state == AppLifecycleState.resumed && _followCurrentTick) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _controller.onScrollToLastTick(false);
+    if (state == AppLifecycleState.resumed &&
+        _followCurrentTick != null &&
+        _followCurrentTick!) {
+      WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
+        _controller.onScrollToLastTick?.call(false);
       });
     }
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsFlutterBinding.ensureInitialized().removeObserver(this);
     super.dispose();
   }
 
@@ -228,13 +230,14 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     if (widget.theme != oldWidget.theme) {
       _initChartTheme();
     }
+
     //check if entire entries changes(market or granularity changes)
     // scroll to last tick
     if (widget.mainSeries.entries != null &&
-        widget.mainSeries.entries.isNotEmpty) {
-      if (widget.mainSeries.entries.first.epoch !=
-          oldWidget.mainSeries.entries.first.epoch) {
-        _controller.onScrollToLastTick(false);
+        widget.mainSeries.entries!.isNotEmpty) {
+      if (widget.mainSeries.entries!.first.epoch !=
+          oldWidget.mainSeries.entries!.first.epoch) {
+        _controller.onScrollToLastTick?.call(false);
       }
     }
   }

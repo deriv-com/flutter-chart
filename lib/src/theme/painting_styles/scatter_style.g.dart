@@ -9,7 +9,7 @@ part of 'scatter_style.dart';
 ScatterStyle _$ScatterStyleFromJson(Map<String, dynamic> json) {
   return ScatterStyle(
     color: const ColorConverter().fromJson(json['color'] as int),
-    radius: (json['radius'] as num)?.toDouble(),
+    radius: (json['radius'] as num).toDouble(),
   );
 }
 

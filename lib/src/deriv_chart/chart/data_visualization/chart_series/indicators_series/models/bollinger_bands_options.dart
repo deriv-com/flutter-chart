@@ -6,8 +6,8 @@ class BollingerBandsOptions extends MAOptions {
   /// Initializes
   const BollingerBandsOptions({
     this.standardDeviationFactor = 2,
-    int period,
-    MovingAverageType movingAverageType,
+    int period = 20,
+    MovingAverageType movingAverageType = MovingAverageType.simple,
   }) : super(period: period, type: movingAverageType);
 
   /// Standard Deviation value
