@@ -13,9 +13,9 @@ dependencies:
   collection: ^1.15.0-nullsafety.4
   deriv_technical_analysis:
     git:
-      url: git@github.com:raminvakili-fs/flutter-deriv-packages.git
+      url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: ramin/add_dema_and_tema_indicators
+      ref: 23f6badf5ef94a05b157cb14a1078e87569f8f7d
   equatable: ^2.0.0
   flutter:
     sdk: flutter
