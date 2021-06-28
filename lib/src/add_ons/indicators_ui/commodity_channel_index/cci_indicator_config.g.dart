@@ -9,11 +9,9 @@ part of 'cci_indicator_config.dart';
 CCIIndicatorConfig _$CCIIndicatorConfigFromJson(Map<String, dynamic> json) {
   return CCIIndicatorConfig(
     period: json['period'] as int,
-    overboughtValue: (json['overboughtValue'] as num)?.toDouble(),
-    oversoldValue: (json['oversoldValue'] as num)?.toDouble(),
-    lineStyle: json['lineStyle'] == null
-        ? null
-        : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    overboughtValue: (json['overboughtValue'] as num).toDouble(),
+    oversoldValue: (json['oversoldValue'] as num).toDouble(),
+    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
   );
 }
 

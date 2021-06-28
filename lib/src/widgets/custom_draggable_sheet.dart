@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 class CustomDraggableSheet extends StatefulWidget {
   /// Initializes a widget to manage the over-scroll to dismiss for a scrollable inside its [child].
   const CustomDraggableSheet({
-    Key key,
-    @required this.child,
+    required this.child,
+    Key? key,
     this.animationDuration = const Duration(milliseconds: 100),
     this.introAnimationDuration = const Duration(milliseconds: 300),
   }) : super(key: key);
@@ -30,11 +30,11 @@ class CustomDraggableSheet extends StatefulWidget {
 
 class _CustomDraggableSheetState extends State<CustomDraggableSheet>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   final _sheetKey = GlobalKey();
 
-  Size _sheetSize;
+  Size? _sheetSize;
 
   bool _overScrolled = false;
 
@@ -50,7 +50,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
         }
       });
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
       _sheetSize = _initSizes();
       _animationController.animateTo(
         0,
@@ -61,7 +61,8 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   Size _initSizes() {
-    final RenderBox chartBox = _sheetKey.currentContext.findRenderObject();
+    final RenderBox chartBox =
+        _sheetKey.currentContext!.findRenderObject() as RenderBox;
     return chartBox.size;
   }
 
@@ -81,7 +82,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
 
   @override
   void dispose() {
-    _animationController?.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -102,7 +103,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   void _panToTop(ScrollUpdateNotification notification) {
-    final deltaPercent = notification.scrollDelta / _sheetSize.height;
+    final deltaPercent = notification.scrollDelta! / _sheetSize!.height;
 
     if (deltaPercent > 0) {
       _updateSheetHeightBy(deltaPercent);
@@ -110,7 +111,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   void _panToBottom(OverscrollNotification notification) {
-    final deltaPercent = notification.overscroll / _sheetSize.height;
+    final deltaPercent = notification.overscroll / _sheetSize!.height;
 
     if (deltaPercent < 0) {
       _updateSheetHeightBy(deltaPercent);

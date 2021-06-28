@@ -12,10 +12,11 @@ import 'bollinger_bands_indicator_config.dart';
 class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
   const BollingerBandsIndicatorItem({
-    Key key,
-    BollingerBandsIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    BollingerBandsIndicatorConfig config =
+        const BollingerBandsIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Bollinger Bands',
@@ -31,7 +32,7 @@ class BollingerBandsIndicatorItem extends IndicatorItem {
 
 /// BollingerBandsIndicatorItem State class
 class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
-  double _standardDeviation;
+  double? _standardDeviation;
 
   @override
   BollingerBandsIndicatorConfig createIndicatorConfig() =>
@@ -86,6 +87,6 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   double _getCurrentStandardDeviation() {
     final BollingerBandsIndicatorConfig config =
         widget.config as BollingerBandsIndicatorConfig;
-    return _standardDeviation ?? config?.standardDeviation ?? 2;
+    return _standardDeviation ?? config.standardDeviation;
   }
 }

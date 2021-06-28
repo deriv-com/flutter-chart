@@ -11,8 +11,8 @@ abstract class OHLCTypeSeries extends DataSeries<Candle> {
   OHLCTypeSeries(
     List<Candle> entries,
     String id, {
-    CandleStyle style,
-  }) : super(entries, id, style: style);
+    CandleStyle? style,
+  }) : super(entries, id: id, style: style);
 
   @override
   Widget getCrossHairInfo(

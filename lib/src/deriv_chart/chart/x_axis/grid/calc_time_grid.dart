@@ -6,9 +6,9 @@ const _month = Duration(days: 30);
 
 /// Creates a list of [DateTime] with gaps of [timeGridInterval].
 List<DateTime> gridTimestamps({
-  @required Duration timeGridInterval,
-  @required int leftBoundEpoch,
-  @required int rightBoundEpoch,
+  required Duration timeGridInterval,
+  required int leftBoundEpoch,
+  required int rightBoundEpoch,
 }) {
   final timestamps = <DateTime>[];
   final rightBoundTime =

@@ -19,16 +19,15 @@ import 'x_axis_model.dart';
 class XAxis extends StatefulWidget {
   /// Creates x-axis the size of child.
   const XAxis({
-    @required this.entries,
-    @required this.child,
-    @required this.isLive,
-    @required this.startWithDataFitMode,
+    required this.entries,
+    required this.child,
+    required this.isLive,
+    required this.startWithDataFitMode,
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
-    Key key,
-  })  : assert(child != null),
-        super(key: key);
+    Key? key,
+  }) : super(key: key);
 
   /// The widget below this widget in the tree.
   final Widget child;
@@ -43,21 +42,21 @@ class XAxis extends StatefulWidget {
   final bool startWithDataFitMode;
 
   /// Callback provided by library user.
-  final VisibleAreaChangedCallback onVisibleAreaChanged;
+  final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
-  final int minEpoch;
-  final int maxEpoch;
+  final int? minEpoch;
+  final int? maxEpoch;
 
   @override
   _XAxisState createState() => _XAxisState();
 }
 
 class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
-  XAxisModel _model;
-  Ticker _ticker;
-  AnimationController _rightEpochAnimationController;
+  late XAxisModel _model;
+  late Ticker _ticker;
+  late AnimationController _rightEpochAnimationController;
 
-  GestureManagerState gestureManager;
+  late GestureManagerState gestureManager;
 
   @override
   void initState() {
@@ -105,8 +104,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _ticker?.dispose();
-    _rightEpochAnimationController?.dispose();
+    _ticker.dispose();
+    _rightEpochAnimationController.dispose();
 
     gestureManager
       ..removeCallback(_model.onScaleAndPanStart)

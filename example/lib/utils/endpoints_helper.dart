@@ -16,13 +16,9 @@ const String defaultAppId = '23789';
 /// [endpoint] argument is required.
 /// [isAuthUrl] is optional and has a default value of `false`.
 String generateEndpointUrl({
-  @required String endpoint,
+  required String endpoint,
   bool isAuthUrl = false,
 }) {
-  if (endpoint == null) {
-    return null;
-  }
-
   final RegExp qaRegExp = RegExp('^(qa[0-9]{2})\$', caseSensitive: false);
   final RegExp derivRegExp =
       RegExp('(binary|deriv)ws\.(com|app)\$', caseSensitive: false);

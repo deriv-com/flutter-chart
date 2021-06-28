@@ -9,11 +9,11 @@ import 'indicator_repository.dart';
 abstract class IndicatorItem extends StatefulWidget {
   /// Initializes
   const IndicatorItem({
-    Key key,
-    this.title,
-    this.config,
-    this.updateIndicator,
-    this.deleteIndicator,
+    Key? key,
+    required this.title,
+    required this.config,
+    required this.updateIndicator,
+    required this.deleteIndicator,
   }) : super(key: key);
 
   /// Title
@@ -42,7 +42,7 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
     extends State<IndicatorItem> {
   /// Indicators repository
   @protected
-  IndicatorsRepository indicatorsRepo;
+  late IndicatorsRepository indicatorsRepo;
 
   @override
   void didChangeDependencies() {
@@ -64,7 +64,7 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
 
   /// Updates indicator based on its current config values.
   void updateIndicator() =>
-      widget.updateIndicator?.call(createIndicatorConfig());
+      widget.updateIndicator.call(createIndicatorConfig());
 
   /// Removes this indicator.
   void removeIndicator() => widget.deleteIndicator.call();
