@@ -27,4 +27,5 @@ Map<String, dynamic> _$RSIIndicatorConfigToJson(RSIIndicatorConfig instance) =>
       'lineStyle': instance.lineStyle,
       'mainHorizontalLinesStyle': instance.mainHorizontalLinesStyle,
       'fieldType': instance.fieldType,
+      'pinLabels': instance.pinLabels,
     };
