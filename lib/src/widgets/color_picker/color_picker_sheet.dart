@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 class ColorPickerSheet extends StatefulWidget {
   /// Creates color picker sheet.
   const ColorPickerSheet({
-    @required this.selectedColor,
-    @required this.onChanged,
-    Key key,
+    required this.selectedColor,
+    required this.onChanged,
+    Key? key,
   }) : super(key: key);
 
   /// Selected color value.
@@ -22,27 +22,17 @@ class ColorPickerSheet extends StatefulWidget {
 }
 
 class _ColorPickerSheetState extends State<ColorPickerSheet> {
-  Color _selectedColor;
+  Color? _selectedColor;
 
   @override
   Widget build(BuildContext context) => ChartBottomSheet(
         child: MaterialColorGrid(
-          colorSwatches: const <MaterialColor>[
-            Colors.red,
-            Colors.pink,
-            Colors.purple,
-            Colors.lightBlue,
-            Colors.lightGreen,
-            Colors.yellow,
-            Colors.grey,
-          ],
-          colorShades: const <int>[100, 300, 500, 700],
           selectedColor: _selectedColor ?? widget.selectedColor,
           onChanged: (Color selectedColor) {
             setState(() {
               _selectedColor = selectedColor;
             });
-            widget.onChanged?.call(selectedColor);
+            widget.onChanged.call(selectedColor);
             Navigator.pop(context);
           },
         ),

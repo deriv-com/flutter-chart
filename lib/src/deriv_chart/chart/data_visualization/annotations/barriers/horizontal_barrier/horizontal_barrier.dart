@@ -10,11 +10,11 @@ class HorizontalBarrier extends Barrier {
   /// Initializes a horizontal barrier.
   HorizontalBarrier(
     double value, {
-    int epoch,
-    String id,
-    String title,
+    int? epoch,
+    String? id,
+    String? title,
     bool longLine = true,
-    HorizontalBarrierStyle style,
+    HorizontalBarrierStyle? style,
     this.visibility = HorizontalBarrierVisibility.keepBarrierLabelVisible,
   }) : super(
           id: id,
@@ -40,7 +40,7 @@ class HorizontalBarrier extends Barrier {
           : <double>[double.nan, double.nan];
 
   @override
-  BarrierObject createObject() => BarrierObject(epoch, null, value);
+  BarrierObject createObject() => BarrierObject(leftEpoch: epoch, value: value);
 }
 
 /// Horizontal barrier visibility behavior and whether it contributes in defining

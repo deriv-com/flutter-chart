@@ -16,15 +16,15 @@ import 'sample_multi_series.dart';
 /// In this example we only paint red lines between [SampleMultiSeries.series1] and [SampleMultiSeries.series2] entries.
 class SampleMultiPainter extends SeriesPainter<SampleMultiSeries> {
   /// Initializes a sample class just to represent how a custom indicator with multiple data-series can be implemented.
-  SampleMultiPainter(Series series) : super(series);
+  SampleMultiPainter(Series series) : super(series as SampleMultiSeries);
 
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   }) {
     // Painting red lines in-between two lines of series showing an area.
     for (int i = 0;

@@ -24,7 +24,7 @@ void main() {
           tradingTimesReminder.statusChangeTimes.firstKey();
 
       final firstMarkChangeSymbols =
-          tradingTimesReminder.statusChangeTimes[firstMarketChangeDate];
+          tradingTimesReminder.statusChangeTimes[firstMarketChangeDate!]!;
 
       // First date will be remove to set the first reminding timer
       expect(tradingTimesReminder.statusChangeTimes.length, 3);
@@ -36,7 +36,7 @@ void main() {
           tradingTimesReminder.statusChangeTimes.lastKey();
 
       final lastMarkChangeSymbols =
-          tradingTimesReminder.statusChangeTimes[lastMarketChangeDate];
+          tradingTimesReminder.statusChangeTimes[lastMarketChangeDate!]!;
 
       expect(lastMarketChangeDate, DateTime(2020, 10, 10, 22));
       expect(lastMarkChangeSymbols.keys.first, 'OTC_HSI');

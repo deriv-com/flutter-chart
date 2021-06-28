@@ -6,6 +6,8 @@ import '../ma_series.dart';
 ///
 /// Is used to detect changes in the options of an indicator to whether recalculate
 /// its values again or use it's old values.
+/// For an indicator any option which by changing it, the result of that indicator
+/// would need to be calculated again should be in its option class.
 abstract class IndicatorOptions extends Equatable {
   /// Initializes
   ///

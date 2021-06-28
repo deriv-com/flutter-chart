@@ -11,10 +11,10 @@ import 'zigzag_indicator_config.dart';
 class ZigZagIndicatorItem extends IndicatorItem {
   /// Initializes
   const ZigZagIndicatorItem({
-    Key key,
-    ZigZagIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    ZigZagIndicatorConfig config = const ZigZagIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'ZigZag',
@@ -33,7 +33,7 @@ class ZigZagIndicatorItemState
     extends IndicatorItemState<ZigZagIndicatorConfig> {
   /// distance
   @protected
-  double distance;
+  double? distance;
 
   @override
   ZigZagIndicatorConfig createIndicatorConfig() => ZigZagIndicatorConfig(
@@ -74,5 +74,5 @@ class ZigZagIndicatorItemState
   /// Gets Indicator current period.
   @protected
   double getCurrentDistance() =>
-      distance ?? (widget.config as ZigZagIndicatorConfig)?.distance ?? 10;
+      distance ?? (widget.config as ZigZagIndicatorConfig).distance;
 }

@@ -11,10 +11,10 @@ import 'ichimoku_cloud_indicator_config.dart';
 class IchimokuCloudIndicatorItem extends IndicatorItem {
   /// Initializes
   const IchimokuCloudIndicatorItem({
-    Key key,
-    IchimokuCloudIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    IchimokuCloudIndicatorConfig config = const IchimokuCloudIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Ichimoku',
@@ -31,10 +31,10 @@ class IchimokuCloudIndicatorItem extends IndicatorItem {
 /// IchimokuCloudIndicatorItem State class
 class IchimokuCloudIndicatorItemState
     extends IndicatorItemState<IchimokuCloudIndicatorConfig> {
-  int _baseLinePeriod;
-  int _conversionLinePeriod;
-  int _spanBPeriod;
-  int _laggingSpanOffset;
+  int? _baseLinePeriod;
+  int? _conversionLinePeriod;
+  int? _spanBPeriod;
+  int? _laggingSpanOffset;
 
   @override
   IchimokuCloudIndicatorConfig createIndicatorConfig() =>
@@ -166,21 +166,17 @@ class IchimokuCloudIndicatorItemState
   // TOdO(Ramin): Add generic type to avoid casting.
   int get _currentBaseLinePeriod =>
       _baseLinePeriod ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.baseLinePeriod ??
-      26;
+      (widget.config as IchimokuCloudIndicatorConfig).baseLinePeriod;
 
   int get _currentConversionLinePeriod =>
       _conversionLinePeriod ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.conversionLinePeriod ??
-      9;
+      (widget.config as IchimokuCloudIndicatorConfig).conversionLinePeriod;
 
   int get _currentSpanBPeriod =>
       _spanBPeriod ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.spanBPeriod ??
-      52;
+      (widget.config as IchimokuCloudIndicatorConfig).spanBPeriod;
 
   int get _currentLaggingSpanOffset =>
       _laggingSpanOffset ??
-      (widget.config as IchimokuCloudIndicatorConfig)?.laggingSpanOffset ??
-      -26;
+      (widget.config as IchimokuCloudIndicatorConfig).laggingSpanOffset;
 }

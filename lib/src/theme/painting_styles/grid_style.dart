@@ -20,11 +20,7 @@ class GridStyle with EquatableMixin {
       fontWeight: FontWeight.normal,
       color: Colors.white,
       shadows: <Shadow>[
-        Shadow(
-          offset: Offset.zero,
-          blurRadius: 4.0,
-          color: Colors.black,
-        ),
+        Shadow(blurRadius: 4),
       ],
       fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
