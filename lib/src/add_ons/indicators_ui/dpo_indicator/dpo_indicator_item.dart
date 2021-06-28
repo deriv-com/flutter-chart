@@ -12,10 +12,10 @@ import 'dpo_indicator_config.dart';
 class DPOIndicatorItem extends IndicatorItem {
   /// Initializes
   const DPOIndicatorItem({
-    Key key,
-    DPOIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
+    Key? key,
+    DPOIndicatorConfig config = const DPOIndicatorConfig(),
   }) : super(
           key: key,
           title: 'DPO',

@@ -18,11 +18,11 @@ part 'ma_indicator_config.g.dart';
 class MAIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const MAIndicatorConfig({
-    int period,
-    MovingAverageType movingAverageType,
-    String fieldType,
-    LineStyle lineStyle,
-    int offset,
+    int? period,
+    MovingAverageType? movingAverageType,
+    String? fieldType,
+    LineStyle? lineStyle,
+    int? offset,
     bool isOverlay = true,
   })  : period = period ?? 50,
         movingAverageType = movingAverageType ?? MovingAverageType.simple,
@@ -60,8 +60,8 @@ class MAIndicatorConfig extends IndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
-        options: MAOptions(period: period, type: movingAverageType),
+        IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
+        MAOptions(period: period, type: movingAverageType),
         offset: offset,
         style: lineStyle,
       );

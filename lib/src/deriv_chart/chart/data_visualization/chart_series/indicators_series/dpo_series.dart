@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -21,23 +22,23 @@ class DPOSeries extends Series {
   /// Close values will be chosen by default.
   DPOSeries(
     IndicatorInput indicatorInput, {
-    DPOOptions dpoOptions,
-    String id,
+    required DPOOptions dpoOptions,
+    String? id,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           dpoOptions: dpoOptions,
-          id: id,
+          id: id ?? 'Ichimoku$dpoOptions',
         );
 
   /// Initializes
   DPOSeries.fromIndicator(
     Indicator<Tick> indicator, {
-    this.dpoOptions,
-    String id,
+    required this.dpoOptions,
+    String? id,
   })  : _fieldIndicator = indicator,
-        super(id);
+        super(id ?? 'Ichimoku$dpoOptions');
 
-  SingleIndicatorSeries _dpoSeries;
+  late SingleIndicatorSeries _dpoSeries;
 
   /// Detrended Price Oscillator options
   final DPOOptions dpoOptions;
@@ -45,7 +46,7 @@ class DPOSeries extends Series {
   final Indicator<Tick> _fieldIndicator;
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     final DPOIndicator<Tick> dpoIndicator = DPOIndicator<Tick>(
       _fieldIndicator,
       (Indicator<Tick> indicator) =>
@@ -56,21 +57,21 @@ class DPOSeries extends Series {
 
     _dpoSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
-        series,
+        series as DataSeries<Tick>,
         secondaryHorizontalLines: <double>[0],
       ),
       indicatorCreator: () => dpoIndicator,
       inputIndicator: _fieldIndicator,
       options: dpoOptions,
-      offset: dpoOptions.isCentered ? dpoIndicator.timeShift : 0,
+      offset: dpoOptions.isCentered ? -dpoIndicator.timeShift : 0,
     );
 
     return null;
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final DPOSeries series = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final DPOSeries? series = oldData as DPOSeries;
 
     final bool dpoUpdated = _dpoSeries.didUpdate(series?._dpoSeries);
 
@@ -103,8 +104,8 @@ class DPOSeries extends Series {
   }
 
   @override
-  int getMinEpoch() => _dpoSeries.getMinEpoch();
+  int? getMinEpoch() => _dpoSeries.getMinEpoch();
 
   @override
-  int getMaxEpoch() => _dpoSeries.getMaxEpoch();
+  int? getMaxEpoch() => _dpoSeries.getMaxEpoch();
 }

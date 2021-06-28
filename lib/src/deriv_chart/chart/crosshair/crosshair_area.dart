@@ -15,10 +15,10 @@ import 'find.dart';
 class CrosshairArea extends StatefulWidget {
   /// Initializes a  widget to display candle/point details on longpress in a chart.
   const CrosshairArea({
-    @required this.mainSeries,
-    @required this.quoteToCanvasY,
-    @required this.pipSize,
-    Key key,
+    required this.mainSeries,
+    required this.quoteToCanvasY,
+    this.pipSize = 4,
+    Key? key,
     this.onCrosshairAppeared,
     this.onCrosshairDisappeared,
   }) : super(key: key);
@@ -33,30 +33,31 @@ class CrosshairArea extends StatefulWidget {
   final double Function(double) quoteToCanvasY;
 
   /// Called on longpress to show candle/point details.
-  final VoidCallback onCrosshairAppeared;
+  final VoidCallback? onCrosshairAppeared;
 
   /// Called when candle or point is dismissed.
-  final VoidCallback onCrosshairDisappeared;
+  final VoidCallback? onCrosshairDisappeared;
 
   @override
   _CrosshairAreaState createState() => _CrosshairAreaState();
 }
 
 class _CrosshairAreaState extends State<CrosshairArea> {
-  Tick crosshairTick;
+  Tick? crosshairTick;
 
-  double _lastLongPressPosition;
+  double? _lastLongPressPosition;
   int _lastLongPressPositionEpoch = -1;
 
   final double _panSpeed = 0.08;
   static const double _closeDistance = 60;
 
-  GestureManagerState gestureManager;
+  late GestureManagerState gestureManager;
 
   XAxisModel get xAxis => context.read<XAxisModel>();
-  DateTime _timer;
+  DateTime? _timer;
   final VelocityTracker _dragVelocityTracker =
       VelocityTracker.withKind(PointerDeviceKind.touch);
+
   VelocityEstimate _dragVelocity = const VelocityEstimate(
       confidence: 1,
       pixelsPerSecond: Offset.zero,
@@ -79,14 +80,12 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _updateCrosshairCandle() {
-    if (crosshairTick == null ||
-        widget.mainSeries.visibleEntries == null ||
-        widget.mainSeries.visibleEntries.isEmpty) {
+    if (crosshairTick == null || widget.mainSeries.visibleEntries.isEmpty) {
       return;
     }
 
     final Tick lastTick = widget.mainSeries.visibleEntries.last;
-    if (crosshairTick.epoch == lastTick.epoch) {
+    if (crosshairTick!.epoch == lastTick.epoch) {
       crosshairTick = lastTick;
     }
   }
@@ -111,14 +110,16 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
-    _lastLongPressPosition = details.localPosition.dx;
-    setState(() => _updatePanSpeed());
+    if (_timer != null) {
+      _lastLongPressPosition = details.localPosition.dx;
+      setState(() => _updatePanSpeed());
 
-    final DateTime now = DateTime.now();
-    final Duration passedTime = now.difference(_timer);
-    _timer = DateTime.now();
-    _dragVelocityTracker.addPosition(passedTime, details.localPosition);
-    _dragVelocity = _dragVelocityTracker.getVelocityEstimate();
+      final DateTime now = DateTime.now();
+      final Duration passedTime = now.difference(_timer!);
+      _timer = DateTime.now();
+      _dragVelocityTracker.addPosition(passedTime, details.localPosition);
+      _dragVelocity = _dragVelocityTracker.getVelocityEstimate()!;
+    }
   }
 
   void _updatePanSpeed() {
@@ -126,16 +127,16 @@ class _CrosshairAreaState extends State<CrosshairArea> {
       return;
     }
 
-    if (_lastLongPressPosition < _closeDistance) {
+    if (_lastLongPressPosition! < _closeDistance) {
       xAxis.pan(-_panSpeed);
-    } else if (xAxis.width - _lastLongPressPosition < _closeDistance) {
+    } else if (xAxis.width! - _lastLongPressPosition! < _closeDistance) {
       xAxis.pan(_panSpeed);
     } else {
       xAxis.pan(0);
     }
   }
 
-  Tick _getClosestTick() => findClosestToEpoch(
+  Tick? _getClosestTick() => findClosestToEpoch(
       _lastLongPressPositionEpoch, widget.mainSeries.visibleEntries.entries);
 
   Duration get animationDuration {
@@ -175,10 +176,10 @@ class _CrosshairAreaState extends State<CrosshairArea> {
   @override
   Widget build(BuildContext context) {
     if (_lastLongPressPosition != null) {
-      _lastLongPressPosition = _lastLongPressPosition.clamp(
-          _closeDistance, context.watch<XAxisModel>().width - _closeDistance);
+      _lastLongPressPosition = _lastLongPressPosition!.clamp(
+          _closeDistance, context.watch<XAxisModel>().width! - _closeDistance);
       final int newLongPressEpoch =
-          context.watch<XAxisModel>().epochFromX(_lastLongPressPosition);
+          context.watch<XAxisModel>().epochFromX(_lastLongPressPosition!);
       if (newLongPressEpoch != _lastLongPressPositionEpoch) {
         // Only update closest tick if position epoch has changed.
         _lastLongPressPositionEpoch = newLongPressEpoch;
@@ -192,15 +193,15 @@ class _CrosshairAreaState extends State<CrosshairArea> {
           children: <Widget>[
             AnimatedPositioned(
               duration: animationDuration,
-              left: xAxis.xFromEpoch(crosshairTick.epoch),
+              left: xAxis.xFromEpoch(crosshairTick!.epoch),
               child: CustomPaint(
                 size: Size(1, constraints.maxHeight),
                 painter: const CrosshairLinePainter(),
               ),
             ),
             AnimatedPositioned(
-              top: widget.quoteToCanvasY(crosshairTick.quote),
-              left: xAxis.xFromEpoch(crosshairTick.epoch),
+              top: widget.quoteToCanvasY(crosshairTick!.quote),
+              left: xAxis.xFromEpoch(crosshairTick!.epoch),
               duration: animationDuration,
               child: CustomPaint(
                 size: Size(1, constraints.maxHeight),
@@ -212,13 +213,13 @@ class _CrosshairAreaState extends State<CrosshairArea> {
               top: 8,
               bottom: 0,
               width: constraints.maxWidth,
-              left: xAxis.xFromEpoch(crosshairTick.epoch) -
+              left: xAxis.xFromEpoch(crosshairTick!.epoch) -
                   constraints.maxWidth / 2,
               child: Align(
                 alignment: Alignment.topCenter,
                 child: CrosshairDetails(
                   mainSeries: widget.mainSeries,
-                  crosshairTick: crosshairTick,
+                  crosshairTick: crosshairTick!,
                   pipSize: widget.pipSize,
                 ),
               ),

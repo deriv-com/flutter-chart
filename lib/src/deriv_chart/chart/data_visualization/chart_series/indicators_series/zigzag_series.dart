@@ -16,8 +16,8 @@ class ZigZagSeries extends LineSeries {
   /// [distance] The minimum distance in percent between two zigzag points.
   ZigZagSeries(
     IndicatorDataInput entries, {
-    String id,
-    LineStyle style,
+    String? id,
+    LineStyle? style,
     double distance = 10,
   }) : super(
           ZigZagIndicator<Tick>(entries, distance).calculateValues(),
@@ -32,27 +32,29 @@ class ZigZagSeries extends LineSeries {
   VisibleEntries<Tick> getVisibleEntries(int startIndex, int endIndex) {
     int firstIndex = startIndex;
     int lastIndex = endIndex;
-    if (startIndex == -1 || endIndex == -1) {
+    if (entries == null || startIndex < 0 || endIndex >= entries!.length) {
       return VisibleEntries<Tick>.empty();
     }
-    if (entries[startIndex].quote.isNaN) {
+    if (entries![startIndex].quote.isNaN) {
       for (int i = startIndex - 1; i >= 0; i--) {
-        if (!entries[i].quote.isNaN) {
+        final Tick entry = entries![i];
+        if (!entry.quote.isNaN) {
           firstIndex = i;
           break;
         }
       }
     }
-    if (entries[endIndex - 1].quote.isNaN) {
-      for (int i = endIndex + 1; i < entries.length; i++) {
-        if (!entries[i].quote.isNaN) {
+    if (entries![endIndex - 1].quote.isNaN) {
+      for (int i = endIndex + 1; i < entries!.length; i++) {
+        final Tick entry = entries![i];
+        if (!entry.quote.isNaN) {
           lastIndex = i + 1;
           break;
         }
       }
     }
     return VisibleEntries<Tick>(
-      entries.sublist(firstIndex, lastIndex),
+      entries!.sublist(firstIndex, lastIndex),
       firstIndex,
       lastIndex,
     );

@@ -12,10 +12,10 @@ import 'cci_indicator_config.dart';
 class CCIIndicatorItem extends IndicatorItem {
   /// Initializes
   const CCIIndicatorItem({
-    Key key,
-    CCIIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    CCIIndicatorConfig config = const CCIIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Commodity Channel Index',
@@ -31,9 +31,9 @@ class CCIIndicatorItem extends IndicatorItem {
 
 /// CCIItem State class
 class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
-  int _period;
-  double _overboughtValue;
-  double _oversoldValue;
+  int? _period;
+  double? _overboughtValue;
+  double? _oversoldValue;
 
   @override
   CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
@@ -79,7 +79,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
 
   // TODO(Ramin): use generic type in widget class as well for the config.
   int get _currentPeriod =>
-      _period ?? (widget.config as CCIIndicatorConfig)?.period ?? 20;
+      _period ?? (widget.config as CCIIndicatorConfig).period;
 
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
@@ -108,9 +108,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double get _currentOverBoughtPrice =>
-      _overboughtValue ??
-      (widget.config as CCIIndicatorConfig)?.overboughtValue ??
-      100;
+      _overboughtValue ?? (widget.config as CCIIndicatorConfig).overboughtValue;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -139,7 +137,5 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double get _currentOverSoldPrice =>
-      _oversoldValue ??
-      (widget.config as CCIIndicatorConfig)?.oversoldValue ??
-      -100;
+      _oversoldValue ?? (widget.config as CCIIndicatorConfig).oversoldValue;
 }

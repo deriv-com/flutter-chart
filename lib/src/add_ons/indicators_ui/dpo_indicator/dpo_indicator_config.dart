@@ -20,8 +20,8 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const DPOIndicatorConfig({
     int period = 14,
-    MovingAverageType movingAverageType,
-    String fieldType,
+    MovingAverageType movingAverageType = MovingAverageType.simple,
+    String fieldType = 'close',
     this.isCentered = true,
   }) : super(
           period: period,
@@ -46,7 +46,7 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => DPOSeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         dpoOptions: DPOOptions(
           period: period,
           movingAverageType: movingAverageType,
