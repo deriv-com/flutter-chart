@@ -20,7 +20,7 @@ class DonchianChannelsSeries extends Series {
   /// Initializes
   DonchianChannelsSeries(
     IndicatorInput indicatorInput, {
-    String id,
+    String? id,
   }) : this.fromIndicator(
           HighValueIndicator<Tick>(indicatorInput),
           LowValueIndicator<Tick>(indicatorInput),
@@ -33,14 +33,15 @@ class DonchianChannelsSeries extends Series {
     HighValueIndicator<Tick> highIndicator,
     LowValueIndicator<Tick> lowIndicator,
     this.config, {
-    String id,
+    String? id,
   })  : _highIndicator = highIndicator,
         _lowIndicator = lowIndicator,
-        super(id);
+        // TODO(Ramin): define DonchianChannelOptions class
+        super(id ?? 'Donchian$config');
 
-  LineSeries _upperChannelSeries;
-  LineSeries _middleChannelSeries;
-  LineSeries _lowerChannelSeries;
+  late LineSeries _upperChannelSeries;
+  late LineSeries _middleChannelSeries;
+  late LineSeries _lowerChannelSeries;
 
   final HighValueIndicator<Tick> _highIndicator;
   final LowValueIndicator<Tick> _lowIndicator;
@@ -49,7 +50,7 @@ class DonchianChannelsSeries extends Series {
   final DonchianChannelIndicatorConfig config;
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     final HighestValueIndicator<Tick> upperChannelIndicator =
         HighestValueIndicator<Tick>(
       _highIndicator,
@@ -87,8 +88,9 @@ class DonchianChannelsSeries extends Series {
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final DonchianChannelsSeries oldSeries = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final DonchianChannelsSeries? oldSeries =
+        oldData as DonchianChannelsSeries?;
 
     final bool upperUpdated =
         _upperChannelSeries.didUpdate(oldSeries?._upperChannelSeries);
@@ -117,8 +119,8 @@ class DonchianChannelsSeries extends Series {
   void paint(
     Canvas canvas,
     Size size,
-    double Function(int) epochToX,
-    double Function(double) quoteToY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
@@ -129,6 +131,11 @@ class DonchianChannelsSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _lowerChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+
+    if (_lowerChannelSeries.entries == null ||
+        _upperChannelSeries.entries == null) {
+      return;
+    }
 
     if (config.showChannelFill &&
         _upperChannelSeries.visibleEntries.isNotEmpty &&
@@ -142,15 +149,10 @@ class DonchianChannelsSeries extends Series {
           quoteToY(_upperChannelSeries.visibleEntries.first.quote),
         );
 
-      // Skip first (starting point) and last (can be animated).
-      for (final Tick tick in _upperChannelSeries.visibleEntries.entries
-          .skip(1)
-          .take(_upperChannelSeries.visibleEntries.length - 2)) {}
-
       for (int i = _upperChannelSeries.visibleEntries.startIndex + 1;
           i < _upperChannelSeries.visibleEntries.endIndex - 1;
           i++) {
-        final Tick tick = _upperChannelSeries.entries[i];
+        final Tick tick = _upperChannelSeries.entries![i];
         fillPath.lineTo(
           epochToX(_upperChannelSeries.getEpochOf(tick, i)),
           quoteToY(tick.quote),
@@ -158,55 +160,56 @@ class DonchianChannelsSeries extends Series {
       }
 
       // Check for animated upper tick.
-      final Tick lastUpperTick = _upperChannelSeries.entries.last;
+      final Tick lastUpperTick = _upperChannelSeries.entries!.last;
       final Tick lastUpperVisibleTick = _upperChannelSeries.visibleEntries.last;
-      double lastVisibleTickX;
+      double? lastVisibleTickX;
 
       if (lastUpperTick == lastUpperVisibleTick &&
           _upperChannelSeries.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
           epochToX(_upperChannelSeries.getEpochOf(
-            _upperChannelSeries.prevLastEntry.entry,
-            _upperChannelSeries.prevLastEntry.index,
+            _upperChannelSeries.prevLastEntry!.entry,
+            _upperChannelSeries.prevLastEntry!.index,
           )),
           epochToX(lastUpperTick.epoch),
           animationInfo.currentTickPercent,
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _upperChannelSeries.prevLastEntry.entry.quote,
+          _upperChannelSeries.prevLastEntry!.entry.quote,
           lastUpperTick.quote,
           animationInfo.currentTickPercent,
-        ));
+        )!);
 
-        fillPath.lineTo(lastVisibleTickX, tickY);
+        fillPath.lineTo(lastVisibleTickX!, tickY);
       } else {
         lastVisibleTickX = epochToX(lastUpperVisibleTick.epoch);
         fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
       }
 
       // Check for animated lower tick.
-      final Tick lastLowerTick = _lowerChannelSeries.entries.last;
-      final Tick lastLowerVisibleTick = _lowerChannelSeries.visibleEntries.last;
+      final Tick lastLowerTick = _lowerChannelSeries.entries!.last;
+      final Tick lastLowerVisibleTick =
+          _lowerChannelSeries.visibleEntries.last;
 
       if (lastLowerTick == lastLowerVisibleTick &&
           _lowerChannelSeries.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
           epochToX(_lowerChannelSeries.getEpochOf(
-            _lowerChannelSeries.prevLastEntry.entry,
-            _lowerChannelSeries.prevLastEntry.index,
+            _lowerChannelSeries.prevLastEntry!.entry,
+            _lowerChannelSeries.prevLastEntry!.index,
           )),
           epochToX(lastLowerTick.epoch),
           animationInfo.currentTickPercent,
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _lowerChannelSeries.prevLastEntry.entry.quote,
+          _lowerChannelSeries.prevLastEntry!.entry.quote,
           lastLowerTick.quote,
           animationInfo.currentTickPercent,
-        ));
+        )!);
 
-        fillPath.lineTo(lastVisibleTickX, tickY);
+        fillPath.lineTo(lastVisibleTickX!, tickY);
       } else {
         lastVisibleTickX = epochToX(lastLowerVisibleTick.epoch);
         fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
@@ -215,7 +218,7 @@ class DonchianChannelsSeries extends Series {
       for (int i = _lowerChannelSeries.visibleEntries.endIndex - 1;
           i >= _lowerChannelSeries.visibleEntries.startIndex;
           i--) {
-        final Tick tick = _lowerChannelSeries.entries[i];
+        final Tick tick = _lowerChannelSeries.entries![i];
         fillPath.lineTo(
           epochToX(_lowerChannelSeries.getEpochOf(tick, i)),
           quoteToY(tick.quote),
@@ -234,8 +237,8 @@ class DonchianChannelsSeries extends Series {
 
   // min/max epoch for all 3 channels are equal, using only `_loweChannelSeries` min/max.
   @override
-  int getMaxEpoch() => _lowerChannelSeries.getMaxEpoch();
+  int? getMaxEpoch() => _lowerChannelSeries.getMaxEpoch();
 
   @override
-  int getMinEpoch() => _lowerChannelSeries.getMinEpoch();
+  int? getMinEpoch() => _lowerChannelSeries.getMinEpoch();
 }

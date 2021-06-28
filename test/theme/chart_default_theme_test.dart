@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  ChartTheme chartTheme;
+  late ChartTheme chartTheme;
 
   setUp(() {
     chartTheme = ChartDefaultDarkTheme();

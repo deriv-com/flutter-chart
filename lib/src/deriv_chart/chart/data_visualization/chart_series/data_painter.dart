@@ -14,18 +14,18 @@ abstract class DataPainter<S extends DataSeries<Tick>>
   /// Initializes series for sub-class.
   DataPainter(DataSeries<Tick> series)
       : _dataSeries = series,
-        super(series);
+        super(series as S);
 
   final DataSeries<Tick> _dataSeries;
 
   /// Paints [DataSeries.visibleEntries] on the [canvas].
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   }) {
     final DataSeries<Tick> series = this.series;
 

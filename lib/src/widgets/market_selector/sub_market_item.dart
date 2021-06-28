@@ -11,11 +11,11 @@ import 'models.dart';
 class SubMarketItem extends StatelessWidget {
   /// Initializes a widget to show a sub-market item under a market.
   const SubMarketItem({
-    @required this.subMarket,
-    Key key,
+    required this.subMarket,
+    Key? key,
     this.filterText = '',
     this.selectedItemKey,
-    this.onAssetClicked,
+    required this.onAssetClicked,
     this.isCategorized = true,
   }) : super(key: key);
 
@@ -26,7 +26,7 @@ class SubMarketItem extends StatelessWidget {
   final String filterText;
 
   /// The key to be passed to the `AnimatedHighlight` widget to highlight the sub-maket item.
-  final GlobalObjectKey selectedItemKey;
+  final GlobalObjectKey? selectedItemKey;
 
   /// The action that appens on clicking the [AssetItem].
   final OnAssetClicked onAssetClicked;
@@ -38,10 +38,10 @@ class SubMarketItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChartTheme theme = Provider.of<ChartTheme>(context);
 
-    final List<Asset> assets = (filterText == null || filterText.isEmpty)
+    final List<Asset?> assets = filterText.isEmpty
         ? subMarket.assets
         : subMarket.assets
-            .where((Asset a) => a.containsText(filterText))
+            .where((Asset? a) => a != null && a.containsText(filterText))
             .toList();
     return assets.isEmpty
         ? const SizedBox.shrink()
@@ -70,10 +70,10 @@ class SubMarketItem extends StatelessWidget {
           );
   }
 
-  List<Widget> _buildAssetsList(List<Asset> assets) =>
-      assets.map((Asset asset) {
+  List<Widget> _buildAssetsList(List<Asset?> assets) =>
+      assets.where((Asset? asset) => asset != null).map((Asset? asset) {
         final AssetItem assetItem = AssetItem(
-          asset: asset,
+          asset: asset!,
           filterText: filterText,
           onAssetClicked: onAssetClicked,
         );

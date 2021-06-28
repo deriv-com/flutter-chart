@@ -14,8 +14,8 @@ import 'package:meta/meta.dart';
 class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   /// Initializes
   const Tick({
-    @required this.epoch,
-    @required this.quote,
+    required this.epoch,
+    required this.quote,
   });
 
   /// Epoch of the tick
@@ -37,5 +37,6 @@ class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   @override
   double get open => quote;
 
-  List<Object> get props => [epoch, quote];
+  @override
+  List<Object?> get props => <Object>[epoch, quote];
 }

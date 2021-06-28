@@ -6,14 +6,15 @@ import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'basic_chart.dart';
+import 'y_axis/quote_grid.dart';
 
 /// The chart to add the bottom indicators too.
 class BottomChart extends BasicChart {
   /// Initializes a bottom chart.
   const BottomChart({
-    @required Series series,
-    @required int pipSize,
-    Key key,
+    required Series series,
+    int pipSize = 4,
+    Key? key,
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
 
   @override
@@ -22,7 +23,8 @@ class BottomChart extends BasicChart {
 
 class _BottomChartState extends BasicChartState<BottomChart> {
   @override
-  void calculateGridLineQuotes() => gridLineQuotes = const <double>[];
+  List<double> calculateGridLineQuotes(YAxisModel yAxisModel) =>
+      gridLineQuotes = const <double>[];
 
   @override
   Widget build(BuildContext context) {
