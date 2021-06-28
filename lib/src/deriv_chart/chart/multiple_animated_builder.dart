@@ -21,13 +21,13 @@ import 'package:flutter/material.dart';
 class MultipleAnimatedBuilder extends StatelessWidget {
   /// Create multiple animated builder.
   const MultipleAnimatedBuilder({
-    Key key,
-    @required this.animations,
-    @required this.builder,
+    required this.animations,
+    required this.builder,
+    Key? key,
   }) : super(key: key);
 
   /// List of animations that build will listen to.
-  final List<Listenable> animations;
+  final List<Listenable?> animations;
 
   /// Called every time any of the animations changes value.
   final TransitionBuilder builder;

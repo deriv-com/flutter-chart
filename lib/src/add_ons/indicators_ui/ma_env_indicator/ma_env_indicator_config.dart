@@ -20,17 +20,16 @@ part 'ma_env_indicator_config.g.dart';
 class MAEnvIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const MAEnvIndicatorConfig({
-    int period,
-    MovingAverageType movingAverageType,
-    String fieldType,
-    double shift,
-    ShiftType shiftType,
-  })  : shift = shift ?? 5,
-        shiftType = shiftType ?? ShiftType.percent,
-        super(
-            period: period,
-            movingAverageType: movingAverageType,
-            fieldType: fieldType);
+    int period = 50,
+    MovingAverageType movingAverageType = MovingAverageType.simple,
+    String fieldType = 'close',
+    this.shift = 5,
+    this.shiftType = ShiftType.percent,
+  }) : super(
+          period: period,
+          movingAverageType: movingAverageType,
+          fieldType: fieldType,
+        );
 
   /// Initializes from JSON.
   factory MAEnvIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -51,7 +50,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => MAEnvSeries.fromIndicator(
-      IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+      IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
       maEnvOptions: MAEnvOptions(
         period: period,
         movingAverageType: movingAverageType,

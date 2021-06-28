@@ -4,10 +4,10 @@ import 'package:meta/meta.dart';
 
 /// Returns resulting epoch when given [epoch] is shifted by [pxShift] on x-axis, skipping time gaps.
 int shiftEpochByPx({
-  @required int epoch,
-  @required double pxShift,
-  @required double msPerPx,
-  @required List<TimeRange> gaps,
+  required int epoch,
+  required double pxShift,
+  required double msPerPx,
+  required List<TimeRange> gaps,
 }) {
   if (pxShift == 0) return epoch;
   if (gaps.isEmpty) return epoch + (pxShift * msPerPx).round();
@@ -68,12 +68,12 @@ int shiftEpochByPx({
 
 /// Returns canvas y-coordinate of the given quote/value.
 double quoteToCanvasY({
-  @required double quote,
-  @required double topBoundQuote,
-  @required double bottomBoundQuote,
-  @required double canvasHeight,
-  @required double topPadding,
-  @required double bottomPadding,
+  required double quote,
+  required double topBoundQuote,
+  required double bottomBoundQuote,
+  required double canvasHeight,
+  required double topPadding,
+  required double bottomPadding,
 }) {
   final drawingRange = canvasHeight - topPadding - bottomPadding;
   final quoteRange = topBoundQuote - bottomBoundQuote;

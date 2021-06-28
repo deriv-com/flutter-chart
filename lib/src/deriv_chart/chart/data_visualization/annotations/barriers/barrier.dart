@@ -9,14 +9,14 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   Barrier({
     this.epoch,
     this.value,
-    String id,
+    String? id,
     this.title,
-    this.longLine,
-    BarrierStyle style,
-  }) : super(id ?? title, style: style);
+    this.longLine = true,
+    BarrierStyle? style,
+  }) : super(id ?? '$title$style$longLine', style: style);
 
   /// Title of the barrier.
-  final String title;
+  final String? title;
 
   /// Barrier line start from screen edge or from the tick.
   ///
@@ -24,14 +24,14 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   final bool longLine;
 
   /// Epoch of the vertical barrier.
-  final int epoch;
+  final int? epoch;
 
   /// The value that this barrier points to.
-  final double value;
+  final double? value;
 
   @override
-  int getMaxEpoch() => epoch;
+  int? getMaxEpoch() => epoch;
 
   @override
-  int getMinEpoch() => epoch;
+  int? getMinEpoch() => epoch;
 }

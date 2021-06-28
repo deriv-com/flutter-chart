@@ -12,10 +12,10 @@ import 'package:flutter/material.dart';
 class ROCIndicatorItem extends IndicatorItem {
   /// Initializes
   const ROCIndicatorItem({
-    Key key,
-    ROCIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
+    Key? key,
+    ROCIndicatorConfig config=const ROCIndicatorConfig(),
   }) : super(
           key: key,
           title: 'ROC',
@@ -31,8 +31,8 @@ class ROCIndicatorItem extends IndicatorItem {
 
 /// ROCItem State class
 class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
-  int _period;
-  String _field;
+  int? _period;
+  String? _field;
 
   @override
   ROCIndicatorConfig createIndicatorConfig() => ROCIndicatorConfig(
@@ -96,7 +96,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
                           ),
                         ))
                 .toList(),
-            onChanged: (String newField) => setState(
+            onChanged: (String? newField) => setState(
               () {
                 _field = newField;
                 updateIndicator();

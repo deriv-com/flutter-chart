@@ -12,10 +12,10 @@ import 'symbol_icon.dart';
 class AssetItem extends StatelessWidget {
   /// Initializes a widget to show an asset (active symbol) item in the market selector.
   const AssetItem({
-    @required this.asset,
-    Key key,
+    required this.asset,
+    Key? key,
     this.filterText = '',
-    this.onAssetClicked,
+    required this.onAssetClicked,
     this.iconFadeInDuration = const Duration(milliseconds: 50),
   }) : super(key: key);
 
@@ -38,7 +38,7 @@ class AssetItem extends StatelessWidget {
       contentPadding: EdgeInsets.only(left: theme.margin12Chart),
       leading: _buildAssetIcon(),
       title: _buildAssetTitle(theme),
-      onTap: () => onAssetClicked?.call(asset, false),
+      onTap: () => onAssetClicked.call(asset, false),
       trailing: _buildFavouriteIcon(theme),
     );
   }
@@ -68,7 +68,7 @@ class AssetItem extends StatelessWidget {
               asset.isFavourite ? theme.accentYellowColor : theme.base04Color,
           size: 20,
         ),
-        onPressed: () => onAssetClicked?.call(asset, true),
+        onPressed: () => onAssetClicked.call(asset, true),
       );
 
   Widget _buildAssetIcon() => SymbolIcon(symbolCode: asset.name);
