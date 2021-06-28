@@ -23,12 +23,10 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.overBoughtPrice = 80,
     this.overSoldPrice = 20,
     this.lineStyle = const LineStyle(color: Colors.white),
-    this.zeroHorizontalLinesStyle = const LineStyle(
-      color: Colors.red,
-    ),
     this.mainHorizontalLinesStyle = const LineStyle(
-      color: Colors.white,
+      color: Colors.blueGrey,
     ),
+    this.pinLabels = false,
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -54,18 +52,19 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// The RSI line style.
   final LineStyle lineStyle;
 
-  /// The RSI zero horizontal line style.
-  final LineStyle zeroHorizontalLinesStyle;
-
   /// The RSI horizontal lines style(overBought and overSold).
   final LineStyle mainHorizontalLinesStyle;
 
   /// Field type
   final String fieldType;
 
+  /// Wether to always show labels or not.
+  /// Default is set to `false`.
+  final bool pinLabels;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
-        IndicatorConfig.supportedFieldTypes[fieldType](indicatorInput),
+        IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,
         rsiOptions: RSIOptions(period: period),
       );

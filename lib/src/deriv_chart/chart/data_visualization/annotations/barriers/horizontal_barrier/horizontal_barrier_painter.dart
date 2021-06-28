@@ -19,7 +19,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   /// Initializes [series].
   HorizontalBarrierPainter(T series) : super(series);
 
-  Paint _paint;
+  late Paint _paint;
 
   /// Padding between lines.
   static const double padding = 4;
@@ -35,19 +35,18 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
   @override
   void onPaint({
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
   }) {
     if (!series.isOnRange) {
       return;
     }
 
-    final HorizontalBarrierStyle style = series.style ??
-        theme.horizontalBarrierStyle ??
-        const HorizontalBarrierStyle();
+    final HorizontalBarrierStyle style =
+        series.style as HorizontalBarrierStyle? ?? theme.horizontalBarrierStyle;
 
     _paint = Paint()
       ..strokeWidth = 1
@@ -55,19 +54,19 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
     BarrierArrowType arrowType = BarrierArrowType.none;
 
-    double animatedValue;
+    double? animatedValue;
 
-    double dotX;
+    double? dotX;
 
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
     if (series.previousObject == null) {
       animatedValue = series.value;
       if (series.epoch != null) {
-        dotX = epochToX(series.epoch);
+        dotX = epochToX(series.epoch!);
       }
     } else {
-      final BarrierObject previousBarrier = series.previousObject;
+      final BarrierObject previousBarrier = series.previousObject!;
       // Calculating animated values regarding `currentTickPercent` in transition animation
       // from previousObject to new object
       animatedValue = lerpDouble(
@@ -76,16 +75,16 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
         animationInfo.currentTickPercent,
       );
 
-      if (series.epoch != null && series.previousObject.leftEpoch != null) {
+      if (series.epoch != null && series.previousObject!.leftEpoch != null) {
         dotX = lerpDouble(
-          epochToX(series.previousObject.leftEpoch),
-          epochToX(series.epoch),
+          epochToX(series.previousObject!.leftEpoch!),
+          epochToX(series.epoch!),
           animationInfo.currentTickPercent,
         );
       }
     }
 
-    double y = quoteToY(animatedValue);
+    double y = quoteToY(animatedValue!);
 
     if (series.visibility ==
         HorizontalBarrierVisibility.keepBarrierLabelVisible) {
@@ -102,8 +101,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
     // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
-      _paintBlinkingDot(canvas, dotX, y, animationInfo,
-          style.blinkingDotColor ?? style.color ?? Colors.redAccent);
+      _paintBlinkingDot(canvas, dotX, y, animationInfo, style.blinkingDotColor);
     }
 
     final TextPainter valuePainter = makeTextPainter(
@@ -138,7 +136,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     // Title.
     if (series.title != null) {
       final TextPainter titlePainter = makeTextPainter(
-        series.title,
+        series.title!,
         style.textStyle.copyWith(color: style.color),
       );
       final double titleEndX = labelArea.left - _distanceBetweenTitleAndLabel;
@@ -255,8 +253,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
   void _paintUpwardArrows(
     Canvas canvas, {
-    Offset center,
-    double arrowSize,
+    required Offset center,
+    required double arrowSize,
   }) {
     final Paint arrowPaint = Paint()
       ..color = _paint.color
@@ -290,8 +288,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
   void _paintDownwardArrows(
     Canvas canvas, {
-    Offset center,
-    double arrowSize,
+    required Offset center,
+    required double arrowSize,
   }) {
     final Paint arrowPaint = Paint()
       ..color = _paint.color

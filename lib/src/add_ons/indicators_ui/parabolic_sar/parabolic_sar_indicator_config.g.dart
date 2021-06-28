@@ -8,11 +8,10 @@ part of 'parabolic_sar_indicator_config.dart';
 
 ParabolicSARConfig _$ParabolicSARConfigFromJson(Map<String, dynamic> json) {
   return ParabolicSARConfig(
-    minAccelerationFactor: (json['minAccelerationFactor'] as num)?.toDouble(),
-    maxAccelerationFactor: (json['maxAccelerationFactor'] as num)?.toDouble(),
-    scatterStyle: json['scatterStyle'] == null
-        ? null
-        : ScatterStyle.fromJson(json['scatterStyle'] as Map<String, dynamic>),
+    minAccelerationFactor: (json['minAccelerationFactor'] as num).toDouble(),
+    maxAccelerationFactor: (json['maxAccelerationFactor'] as num).toDouble(),
+    scatterStyle:
+        ScatterStyle.fromJson(json['scatterStyle'] as Map<String, dynamic>),
   );
 }
 

@@ -1,7 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/abstract_single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/indicator_options.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -17,7 +16,7 @@ class MockOptions extends IndicatorOptions {
 class MockMASeries extends AbstractSingleIndicatorSeries {
   MockMASeries(
     IndicatorInput input, {
-    int offset,
+    int offset = 0,
   }) : super(
           CloseValueIndicator<Tick>(input),
           'MOCK_MA_SERIES',
@@ -26,7 +25,7 @@ class MockMASeries extends AbstractSingleIndicatorSeries {
         );
 
   @override
-  SeriesPainter<Series> createPainter() => LinePainter(this);
+  SeriesPainter<Series>? createPainter() => null;
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>
@@ -37,7 +36,7 @@ void main() {
   group('Abstract Single indicator series getEpochOf', () {
     group('''getEpochOf returns correct result 
         when there is offset and NO market gaps''', () {
-      IndicatorInput input;
+      late IndicatorInput input;
       setUp(() {
         input = IndicatorInput(
           const <Tick>[
@@ -110,7 +109,7 @@ void main() {
 
     group('''getEpochOf returns correct result 
         when there is offset and there is market gaps''', () {
-      IndicatorInput input;
+      late IndicatorInput input;
       setUp(() {
         input = IndicatorInput(
           const <Tick>[

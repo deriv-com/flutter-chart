@@ -12,7 +12,7 @@ class MinMaxCalculator {
   MinMaxCalculator(this.minValueOf, this.maxValueOf);
 
   /// List of current entries from which min/max is calculated.
-  List<Tick> _visibleEntries;
+  List<Tick>? _visibleEntries;
 
   /// Returns min of entry.
   final double Function(Tick) minValueOf;
@@ -25,18 +25,18 @@ class MinMaxCalculator {
       SplayTreeMap<double, int>();
 
   /// Minimum value of current visible entries.
-  double get min => _visibleEntriesCount?.firstKey() ?? double.nan;
+  double get min => _visibleEntriesCount.firstKey() ?? double.nan;
 
   /// Maximum value of current visible entries.
-  double get max => _visibleEntriesCount?.lastKey() ?? double.nan;
+  double get max => _visibleEntriesCount.lastKey() ?? double.nan;
 
   /// Efficiently calculates new min/max by comparing previous visible entries and [newVisibleEntries].
   void calculate(List<Tick> newVisibleEntries) {
-    if (newVisibleEntries == null || newVisibleEntries.isEmpty) {
+    if (/*newVisibleEntries == null || */ newVisibleEntries.isEmpty) {
       _visibleEntriesCount.clear();
     } else if (_visibleEntries == null ||
-        _visibleEntries.isEmpty ||
-        _noOverlap(_visibleEntries, newVisibleEntries)) {
+        _visibleEntries!.isEmpty ||
+        _noOverlap(_visibleEntries!, newVisibleEntries)) {
       _visibleEntriesCount.clear();
 
       for (final Tick entry in newVisibleEntries) {
@@ -48,27 +48,27 @@ class MinMaxCalculator {
       final List<Tick> removedEntries = <Tick>[];
 
       // Compare and find what entries got removed/added by checking epochs.
-      if (_visibleEntries.first.epoch < newVisibleEntries.first.epoch) {
+      if (_visibleEntries!.first.epoch < newVisibleEntries.first.epoch) {
         removedEntries.addAll(
-          _visibleEntries.takeWhile(
+          _visibleEntries!.takeWhile(
               (Tick entry) => entry.epoch < newVisibleEntries.first.epoch),
         );
       } else {
         addedEntries.addAll(
           newVisibleEntries.takeWhile(
-              (Tick entry) => entry.epoch < _visibleEntries.first.epoch),
+              (Tick entry) => entry.epoch < _visibleEntries!.first.epoch),
         );
       }
 
-      if (_visibleEntries.last.epoch > newVisibleEntries.last.epoch) {
+      if (_visibleEntries!.last.epoch > newVisibleEntries.last.epoch) {
         removedEntries.addAll(
-          _visibleEntries.reversed.takeWhile(
+          _visibleEntries!.reversed.takeWhile(
               (Tick entry) => entry.epoch > newVisibleEntries.last.epoch),
         );
       } else {
         addedEntries.addAll(
           newVisibleEntries.reversed.takeWhile(
-              (Tick entry) => entry.epoch > _visibleEntries.last.epoch),
+              (Tick entry) => entry.epoch > _visibleEntries!.last.epoch),
         );
       }
 
@@ -88,13 +88,15 @@ class MinMaxCalculator {
 
   void _incrementCount(double value) {
     _visibleEntriesCount.putIfAbsent(value, () => 0);
-    _visibleEntriesCount[value]++;
+    _visibleEntriesCount[value] = _visibleEntriesCount[value]! + 1;
   }
 
   void _decrementCount(double value) {
-    _visibleEntriesCount[value]--;
-    if (_visibleEntriesCount[value] == 0) {
-      _visibleEntriesCount.remove(value);
+    if (_visibleEntriesCount[value] != null) {
+      _visibleEntriesCount[value] = _visibleEntriesCount[value]! - 1;
+      if (_visibleEntriesCount[value] == 0) {
+        _visibleEntriesCount.remove(value);
+      }
     }
   }
 

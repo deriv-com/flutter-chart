@@ -2,9 +2,9 @@ version: 2.1
 executors:
   flutter_executor:
     docker:
-      - image: cirrusci/flutter:1.22.6
+      - image: cirrusci/flutter:stable
     environment:
-      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
 
 commands:
   prepare_enviroment:

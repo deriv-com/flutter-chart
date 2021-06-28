@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +23,7 @@ class IndicatorsDialog extends StatefulWidget {
 }
 
 class _IndicatorsDialogState extends State<IndicatorsDialog> {
-  IndicatorConfig _selectedIndicator;
+  IndicatorConfig? _selectedIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +80,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     value: RSIIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Commodity Channel Index'),
+                    value: CCIIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
                   ),
@@ -90,7 +93,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   ),
                   // Add new indicators here.
                 ],
-                onChanged: (IndicatorConfig config) {
+                onChanged: (IndicatorConfig? config) {
                   setState(() {
                     _selectedIndicator = config;
                   });
@@ -101,7 +104,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
                     ? () {
-                        repo.add(_selectedIndicator);
+                        repo.add(_selectedIndicator!);
                         setState(() {});
                       }
                     : null,
