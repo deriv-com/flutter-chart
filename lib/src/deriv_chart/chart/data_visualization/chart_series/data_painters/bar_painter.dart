@@ -13,8 +13,8 @@ import '../indexed_entry.dart';
 
 /// A callback function to say wether or not the color should be `Positive` or `Negative`.
 typedef CheckColorCallback = bool Function({
-  @required double previousQuote,
-  @required double currentQuote,
+  required double previousQuote,
+  required double currentQuote,
 });
 
 /// A [DataPainter] for painting Histogram Bar data.
@@ -22,14 +22,14 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   BarPainter(
     DataSeries<Tick> series, {
-    @required this.checkColorCallback,
+    required this.checkColorCallback,
   }) : super(series);
 
   /// The callback function to say wether or not the color should be `Positive` or `Negative`.
   final CheckColorCallback checkColorCallback;
 
-  Paint _positiveBarPaint;
-  Paint _negativeBarPaint;
+  late Paint _positiveBarPaint;
+  late Paint _negativeBarPaint;
 
   @override
   void onPaintData(
@@ -52,8 +52,8 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {
-      final Tick tick = series.entries[i];
-      final Tick lastTick = series.entries[i - 1 >= 0 ? i - 1 : i];
+      final Tick tick = series.entries![i];
+      final Tick lastTick = series.entries![i - 1 >= 0 ? i - 1 : i];
 
       _paintBar(
         canvas,
@@ -70,26 +70,26 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     }
 
     // Painting last visible tick
-    final Tick lastTick = series.entries.last;
+    final Tick lastTick = series.entries!.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
-    final Tick preLastTick = series.entries[series.entries.length - 2];
+    final Tick preLastTick = series.entries![series.entries!.length - 2];
 
     BarPainting lastTickPainting;
 
     if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
-      final IndexedEntry<Tick> prevLastTick = series.prevLastEntry;
+      final IndexedEntry<Tick> prevLastTick = series.prevLastEntry!;
 
       final double animatedYQuote = quoteToY(ui.lerpDouble(
         prevLastTick.entry.quote,
         lastTick.quote,
         animationInfo.currentTickPercent,
-      ));
+      )!);
 
       final double xCenter = ui.lerpDouble(
         epochToX(getEpochOf(prevLastTick.entry, prevLastTick.index)),
-        epochToX(getEpochOf(lastTick, series.entries.length - 1)),
+        epochToX(getEpochOf(lastTick, series.entries!.length - 1)),
         animationInfo.currentTickPercent,
-      );
+      )!;
 
       lastTickPainting = BarPainting(
         xCenter: xCenter,
@@ -138,8 +138,9 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     }
   }
 
-  Paint _painterColor({@required bool isPositiveColor}) {
-    final BarStyle style = series.style ?? theme.barStyle ?? const BarStyle();
+  Paint _painterColor({required bool isPositiveColor}) {
+    final BarStyle style =
+        series.style as BarStyle ?? theme.barStyle ?? const BarStyle();
 
     _positiveBarPaint = Paint()..color = style.positiveColor;
     _negativeBarPaint = Paint()..color = style.negativeColor;

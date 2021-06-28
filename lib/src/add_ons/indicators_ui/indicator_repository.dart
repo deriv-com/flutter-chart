@@ -14,7 +14,7 @@ class IndicatorsRepository extends ChangeNotifier {
   IndicatorsRepository() : _indicators = <IndicatorConfig>[];
 
   final List<IndicatorConfig> _indicators;
-  SharedPreferences _prefs;
+  SharedPreferences? _prefs;
 
   /// List of indicators.
   List<IndicatorConfig> get indicators => _indicators;
@@ -28,7 +28,7 @@ class IndicatorsRepository extends ChangeNotifier {
       return;
     }
 
-    final List<String> strings = prefs.getStringList(indicatorsKey);
+    final List<String> strings = prefs.getStringList(indicatorsKey)!;
     _indicators.clear();
 
     for (final String string in strings) {
@@ -68,7 +68,7 @@ class IndicatorsRepository extends ChangeNotifier {
 
   Future<void> _writeToPrefs() async {
     if (_prefs != null) {
-      await _prefs.setStringList(
+      await _prefs!.setStringList(
         indicatorsKey,
         _indicators
             .map((IndicatorConfig config) => jsonEncode(config))

@@ -31,11 +31,11 @@ class CCISeries extends AbstractSingleIndicatorSeries {
     this.zeroHorizontalLineStyle =
         const LineStyle(color: Colors.white, thickness: 0.5),
     LineStyle cciLineStyle = const LineStyle(),
-    String id,
+    String? id,
   })  : _options = options,
         super(
           CloseValueIndicator<Tick>(_indicatorInput),
-          id,
+          id ?? 'CCISeries',
           options,
           style: cciLineStyle,
         );

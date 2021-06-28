@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
@@ -23,17 +24,17 @@ class MACDSeries extends Series {
   /// Initializes
   MACDSeries(
     this.indicatorInput, {
-    @required this.options,
-    @required this.config,
-    String id,
+    required this.options,
+    required this.config,
+    String id = '',
   }) : super(id);
 
   ///input data
   final IndicatorInput indicatorInput;
 
-  SingleIndicatorSeries _macdSeries;
-  SingleIndicatorSeries _signalMACDSeries;
-  SingleIndicatorSeries _macdHistogramSeries;
+  late SingleIndicatorSeries _macdSeries;
+  late SingleIndicatorSeries _signalMACDSeries;
+  late SingleIndicatorSeries _macdHistogramSeries;
 
   /// MACD Configuration.
   MACDIndicatorConfig config;
@@ -42,7 +43,7 @@ class MACDSeries extends Series {
   MACDOptions options;
 
   @override
-  SeriesPainter<Series> createPainter() {
+  SeriesPainter<Series>? createPainter() {
     final MACDIndicator<Tick> macdIndicator = MACDIndicator<Tick>(
       indicatorInput,
       fastMAPeriod: config.fastMAPeriod,
@@ -59,8 +60,9 @@ class MACDSeries extends Series {
           ..calculateValues();
 
     _macdSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) =>
-          OscillatorLinePainter(series, secondaryHorizontalLines: <double>[0]),
+      painterCreator: (Series series) => OscillatorLinePainter(
+          series as DataSeries<Tick>,
+          secondaryHorizontalLines: <double>[0]),
       indicatorCreator: () => macdIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.white),
@@ -68,7 +70,8 @@ class MACDSeries extends Series {
     );
 
     _signalMACDSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series),
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => signalMACDIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.redAccent),
@@ -77,10 +80,10 @@ class MACDSeries extends Series {
 
     _macdHistogramSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => BarPainter(
-        series,
+        series as DataSeries<Tick>,
         checkColorCallback: ({
-          @required double previousQuote,
-          @required double currentQuote,
+          required double previousQuote,
+          required double currentQuote,
         }) =>
             currentQuote >= previousQuote,
       ),
@@ -89,13 +92,11 @@ class MACDSeries extends Series {
       style: const BarStyle(),
       options: options,
     );
-
-    return null;
   }
 
   @override
-  bool didUpdate(ChartData oldData) {
-    final MACDSeries series = oldData;
+  bool didUpdate(ChartData? oldData) {
+    final MACDSeries? series = oldData as MACDSeries;
 
     final bool macdUpdated = _macdSeries.didUpdate(series?._macdSeries);
 
@@ -142,14 +143,14 @@ class MACDSeries extends Series {
   }
 
   @override
-  int getMaxEpoch() => <ChartData>[
+  int? getMaxEpoch() => <ChartData>[
         _macdSeries,
         _signalMACDSeries,
         _macdHistogramSeries,
       ].getMaxEpoch();
 
   @override
-  int getMinEpoch() => <ChartData>[
+  int? getMinEpoch() => <ChartData>[
         _macdSeries,
         _signalMACDSeries,
         _macdHistogramSeries,

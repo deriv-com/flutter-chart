@@ -1,15 +1,13 @@
 import 'dart:ui';
 
-import 'package:meta/meta.dart';
-
 /// The required painting properties of a bar.
 class BarPainting {
   /// Initializes the required painting properties of a bar.
   BarPainting({
-    @required this.xCenter,
-    @required this.yQuote,
-    @required this.width,
-    @required this.painter,
+    required this.xCenter,
+    required this.yQuote,
+    required this.width,
+    required this.painter,
   });
 
   /// The center X position of the bar.

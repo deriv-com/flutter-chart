@@ -14,13 +14,13 @@ class MarkerSeries extends Series {
   /// Initializes
   MarkerSeries(
     SplayTreeSet<Marker> entries, {
-    String id,
-    MarkerStyle style,
+    String? id,
+    MarkerStyle? style,
     this.activeMarker,
     this.entryTick,
     this.exitTick,
   })  : _entries = entries.toList(),
-        super(id, style: style);
+        super(id ?? 'Markers', style: style);
 
   /// Marker entries.
   final List<Marker> _entries;
@@ -29,13 +29,13 @@ class MarkerSeries extends Series {
   List<Marker> visibleEntries = <Marker>[];
 
   /// Active/focused marker on the chart.
-  final ActiveMarker activeMarker;
+  final ActiveMarker? activeMarker;
 
   /// Entry tick marker.
-  final Tick entryTick;
+  final Tick? entryTick;
 
   /// Exit tick marker.
-  final Tick exitTick;
+  final Tick? exitTick;
 
   @override
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
@@ -44,7 +44,7 @@ class MarkerSeries extends Series {
   // TODO(Ramin): Return correct result,
   // We only use the result of didUpdate of the mainSeries for now to whether play the new tick animation or not,
   // No need to check if the marker series data has changed with chart update.
-  bool didUpdate(ChartData oldData) => false;
+  bool didUpdate(ChartData? oldData) => false;
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
@@ -63,8 +63,8 @@ class MarkerSeries extends Series {
   List<double> recalculateMinMax() => <double>[double.nan, double.nan];
 
   @override
-  int getMaxEpoch() => _entries.isNotEmpty ? _entries.last.epoch : null;
+  int? getMaxEpoch() => _entries.isNotEmpty ? _entries.last.epoch : null;
 
   @override
-  int getMinEpoch() => _entries.isNotEmpty ? _entries?.first?.epoch : null;
+  int? getMinEpoch() => _entries.isNotEmpty ? _entries.first.epoch : null;
 }

@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
 /// Chart's general configuration.
+@immutable
 class ChartConfig {
   /// Initializes chart's general configuration.
-  const ChartConfig({this.pipSize, this.granularity});
+  const ChartConfig({required this.granularity, this.pipSize = 4});
 
   /// PipSize, number of decimal digits when showing prices on the chart.
   final int pipSize;
@@ -14,5 +17,5 @@ class ChartConfig {
       pipSize == other.pipSize && granularity == other.granularity;
 
   @override
-  int get hashCode => super.hashCode;
+  int get hashCode => hashValues(pipSize, granularity);
 }

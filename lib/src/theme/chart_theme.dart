@@ -106,7 +106,7 @@ abstract class ChartTheme {
   /// The [color] may be null or un-passed, in that case, a default value will
   /// be assigned to it.
   TextStyle textStyle({
-    @required TextStyle textStyle,
-    Color color,
+    required TextStyle textStyle,
+    Color? color,
   });
 }

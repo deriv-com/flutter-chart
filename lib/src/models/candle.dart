@@ -7,12 +7,12 @@ import 'package:meta/meta.dart';
 class Candle extends Tick with EquatableMixin {
   /// Initializes a candle class.
   const Candle({
-    @required int epoch,
-    @required this.high,
-    @required this.low,
-    @required this.open,
-    @required this.close,
-    int currentEpoch,
+    required int epoch,
+    required this.high,
+    required this.low,
+    required this.open,
+    required this.close,
+    int? currentEpoch,
   })  : currentEpoch = currentEpoch ?? epoch,
         super(epoch: epoch, quote: close);
 
@@ -23,7 +23,7 @@ class Candle extends Tick with EquatableMixin {
     double close,
     double high,
     double low, {
-    int currentEpoch,
+    int? currentEpoch,
   }) : this(
           epoch: epoch,
           open: open,
@@ -54,12 +54,12 @@ class Candle extends Tick with EquatableMixin {
 
   /// Creates a copy of this object.
   Candle copyWith({
-    int epoch,
-    double high,
-    double low,
-    double open,
-    double close,
-    double currentEpoch,
+    int? epoch,
+    double? high,
+    double? low,
+    double? open,
+    double? close,
+    int? currentEpoch,
   }) =>
       Candle(
         epoch: epoch ?? this.epoch,

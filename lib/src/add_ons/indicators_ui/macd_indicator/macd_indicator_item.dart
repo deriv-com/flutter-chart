@@ -11,10 +11,10 @@ import 'macd_indicator_config.dart';
 class MACDIndicatorItem extends IndicatorItem {
   /// Initializes
   const MACDIndicatorItem({
-    Key key,
-    MACDIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
+    Key? key,
+    MACDIndicatorConfig config = const MACDIndicatorConfig(),
   }) : super(
           key: key,
           title: 'MACD',
@@ -30,9 +30,9 @@ class MACDIndicatorItem extends IndicatorItem {
 
 /// MACD State class
 class MACDIndicatorItemState extends IndicatorItemState<MACDIndicatorConfig> {
-  int _fastMAPeriod;
-  int _slowMAPeriod;
-  int _signalPeriod;
+  int? _fastMAPeriod;
+  int? _slowMAPeriod;
+  int? _signalPeriod;
 
   @override
   MACDIndicatorConfig createIndicatorConfig() => MACDIndicatorConfig(
