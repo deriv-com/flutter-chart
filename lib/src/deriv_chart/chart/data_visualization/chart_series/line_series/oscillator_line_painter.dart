@@ -68,56 +68,90 @@ class OscillatorLinePainter extends LinePainter {
     Size size,
   ) {
     final List<DataPathInfo> paths = <DataPathInfo>[];
+
+    if (series.visibleEntries.length < 2) {
+      return paths;
+    }
+
+    if (_topHorizontalLine == null || _bottomHorizontalLine == null) {
+      return super.createPath(epochToX, quoteToY, animationInfo, size);
+    }
+
     final Path dataLinePath = Path();
+    final Path topHorizontalLinePath = Path()
+      ..addRect(Rect.fromLTRB(0, 0, size.width, quoteToY(_topHorizontalLine!)));
 
     double lastVisibleTickX;
-    bool isStartPointSet = false;
+    lastVisibleTickX = epochToX(getEpochOf(
+        series.visibleEntries.first, series.visibleEntries.startIndex));
 
-    // Adding visible entries line to the path except the last which might be animated.
-    for (int i = series.visibleEntries.startIndex;
-    i < series.visibleEntries.endIndex - 1;
-    i++) {
+    // TODO(NA): Check Nan.
+    dataLinePath.moveTo(
+      lastVisibleTickX,
+      quoteToY(series.visibleEntries.first.quote),
+    );
+
+    int i = 1;
+
+    Path topAreaPath = Path.from(dataLinePath);
+
+    bool topAreaClosed =
+        series.visibleEntries.first.quote < _topHorizontalLine!;
+
+    while (series.visibleEntries.isNotEmpty &&
+        i < series.visibleEntries.endIndex - 1) {
       final Tick tick = series.entries![i];
 
-      if (!tick.quote.isNaN) {
-        lastVisibleTickX = epochToX(getEpochOf(tick, i));
+      topAreaPath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
 
-        if (!isStartPointSet) {
-          isStartPointSet = true;
-          dataLinePath.moveTo(
-            lastVisibleTickX,
-            quoteToY(tick.quote),
-          );
-          continue;
-        }
-
-        final double y = quoteToY(tick.quote);
-        dataLinePath.lineTo(lastVisibleTickX, y);
+      if (topAreaClosed && tick.quote > _topHorizontalLine!) {
+        topAreaClosed = false;
       }
+
+      if (!topAreaClosed && tick.quote < _topHorizontalLine!) {
+        topAreaClosed = true;
+
+        topAreaPath.close();
+
+        topAreaPath = Path.combine(
+            PathOperation.intersect, topHorizontalLinePath, topAreaPath);
+
+        paths.add(DataPathInfo(
+            topAreaPath,
+            Paint()
+              ..color = Colors.red
+              ..style = PaintingStyle.fill));
+
+        topAreaPath = Path()
+          ..moveTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      }
+
+      i++;
     }
 
-    _lastVisibleTickX = _calculateLastVisibleTick(
-        epochToX, animationInfo, quoteToY, dataLinePath);
-
-    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
-
-    final Paint linePaint = Paint()
-      ..color = style.color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = style.thickness;
-
-    paths.add(DataPathInfo(dataLinePath, linePaint));
-
-    if (style.hasArea) {
-      final DataPathInfo areaPath = _getArea(
-        size,
-        dataLinePath,
-        epochToX(series.visibleEntries.first.epoch),
-        _lastVisibleTickX!,
-        style,
-      );
-      paths.add(areaPath);
-    }
+    // // Adding visible entries line to the path except the last which might be animated.
+    // for (int i = series.visibleEntries.startIndex;
+    //     i < series.visibleEntries.endIndex - 1;
+    //     i++) {
+    //   final Tick tick = series.entries![i];
+    //
+    //   if (!tick.quote.isNaN) {
+    //     final double y = quoteToY(tick.quote);
+    //     dataLinePath.lineTo(lastVisibleTickX, y);
+    //   }
+    // }
+    //
+    // _lastVisibleTickX = _calculateLastVisibleTick(
+    //     epochToX, animationInfo, quoteToY, dataLinePath);
+    //
+    // final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
+    //
+    // final Paint linePaint = Paint()
+    //   ..color = style.color
+    //   ..style = PaintingStyle.stroke
+    //   ..strokeWidth = style.thickness;
+    //
+    // paths.add(DataPathInfo(dataLinePath, linePaint));
 
     return paths;
   }
