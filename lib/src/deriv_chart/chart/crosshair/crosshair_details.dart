@@ -11,10 +11,10 @@ import 'package:intl/intl.dart';
 class CrosshairDetails extends StatelessWidget {
   /// Initializes the details to show on a crosshair.
   const CrosshairDetails({
-    @required this.mainSeries,
-    @required this.crosshairTick,
-    @required this.pipSize,
-    Key key,
+    required this.mainSeries,
+    required this.crosshairTick,
+    this.pipSize = 4,
+    Key? key,
   }) : super(key: key);
 
   /// The chart's main data series.

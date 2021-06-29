@@ -24,7 +24,7 @@ class IndicatorsDialog extends StatefulWidget {
 }
 
 class _IndicatorsDialogState extends State<IndicatorsDialog> {
-  IndicatorConfig _selectedIndicator;
+  IndicatorConfig? _selectedIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +90,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   )
                   // Add new indicators here.
                 ],
-                onChanged: (IndicatorConfig config) {
+                onChanged: (IndicatorConfig? config) {
                   setState(() {
                     _selectedIndicator = config;
                   });
@@ -101,7 +101,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
                     ? () {
-                        repo.add(_selectedIndicator);
+                        repo.add(_selectedIndicator!);
                         setState(() {});
                       }
                     : null,

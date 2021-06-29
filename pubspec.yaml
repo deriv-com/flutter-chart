@@ -3,34 +3,37 @@ description: Chart for multiplier flutter app.
 version: 0.0.1
 author:
 homepage:
+publish_to: none
+
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
-  intl: ^0.16.1
-  flutter_localizations:
-    sdk: flutter
-  provider: ^4.3.1
-  flutter_svg: ^0.19.0
-  equatable: ^1.2.5
+  collection: ^1.15.0-nullsafety.4
   deriv_technical_analysis:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: fb14233dd44389e33dd0cc54c1b5949d13340466
+      ref: flutter2
+  equatable: ^2.0.0
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
+  json_annotation: ^4.0.1
+  provider: ^5.0.0
 
   # Store state:
-  shared_preferences: <1.0.0
-  json_annotation: ">=3.0.0 <4.0.0"
+  shared_preferences: ^2.0.5
 
 dev_dependencies:
+  build_runner: ^2.0.0
   flutter_test:
     sdk: flutter
-  build_runner:
-  json_serializable:
+  intl_utils: ^2.0.0
+  json_serializable: ^4.1.1
 
 flutter:
   assets:

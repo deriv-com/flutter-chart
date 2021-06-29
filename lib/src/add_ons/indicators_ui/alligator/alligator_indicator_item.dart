@@ -11,10 +11,10 @@ import 'alligator_indicator_config.dart';
 class AlligatorIndicatorItem extends IndicatorItem {
   /// Initializes
   const AlligatorIndicatorItem({
-    Key key,
-    AlligatorIndicatorConfig config,
-    UpdateIndicator updateIndicator,
-    VoidCallback deleteIndicator,
+    Key? key,
+    AlligatorIndicatorConfig config = const AlligatorIndicatorConfig(),
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Alligator',
@@ -31,14 +31,14 @@ class AlligatorIndicatorItem extends IndicatorItem {
 /// AlligatorIndicatorItem State class
 class AlligatorIndicatorItemState
     extends IndicatorItemState<AlligatorIndicatorConfig> {
-  int _jawOffset;
-  int _jawPeriod;
-  int _teethOffset;
-  int _teethPeriod;
-  int _lipsOffset;
-  int _lipsPeriod;
-  bool _showLines;
-  bool _showFractal;
+  int? _jawOffset;
+  int? _jawPeriod;
+  int? _teethOffset;
+  int? _teethPeriod;
+  int? _lipsOffset;
+  int? _lipsPeriod;
+  bool? _showLines;
+  bool? _showFractal;
 
   @override
   AlligatorIndicatorConfig createIndicatorConfig() => AlligatorIndicatorConfig(
@@ -271,54 +271,40 @@ class AlligatorIndicatorItemState
   /// Gets current jaw offset.
   @protected
   int get currentJawOffset =>
-      _jawOffset ?? (widget.config as AlligatorIndicatorConfig)?.jawOffset ?? 8;
+      _jawOffset ?? (widget.config as AlligatorIndicatorConfig).jawOffset;
 
   /// Gets current jaw period.
   @protected
   int get currentJawPeriod =>
-      _jawPeriod ??
-      (widget.config as AlligatorIndicatorConfig)?.jawPeriod ??
-      13;
+      _jawPeriod ?? (widget.config as AlligatorIndicatorConfig).jawPeriod;
 
   /// Gets current teeth offset.
   @protected
   int get currentTeethOffset =>
-      _teethOffset ??
-      (widget.config as AlligatorIndicatorConfig)?.teethOffset ??
-      5;
+      _teethOffset ?? (widget.config as AlligatorIndicatorConfig).teethOffset;
 
   /// Gets current teeth period.
   @protected
   int get currentTeethPeriod =>
-      _teethPeriod ??
-      (widget.config as AlligatorIndicatorConfig)?.teethPeriod ??
-      8;
+      _teethPeriod ?? (widget.config as AlligatorIndicatorConfig).teethPeriod;
 
   /// Gets current lips period.
   @protected
   int get currentLipsPeriod =>
-      _lipsPeriod ??
-      (widget.config as AlligatorIndicatorConfig)?.lipsPeriod ??
-      5;
+      _lipsPeriod ?? (widget.config as AlligatorIndicatorConfig).lipsPeriod;
 
   /// Gets current lips offset.
   @protected
   int get currentLipsOffset =>
-      _lipsOffset ??
-      (widget.config as AlligatorIndicatorConfig)?.lipsOffset ??
-      3;
+      _lipsOffset ?? (widget.config as AlligatorIndicatorConfig).lipsOffset;
 
   /// Gets current show lines.
   @protected
   bool get currentShowLines =>
-      _showLines ??
-      (widget.config as AlligatorIndicatorConfig)?.showLines ??
-      true;
+      _showLines ?? (widget.config as AlligatorIndicatorConfig).showLines;
 
   /// Gets current show Fractal indicator.
   @protected
   bool get currentShowFractals =>
-      _showFractal ??
-      (widget.config as AlligatorIndicatorConfig)?.showFractal ??
-      false;
+      _showFractal ?? (widget.config as AlligatorIndicatorConfig).showFractal;
 }

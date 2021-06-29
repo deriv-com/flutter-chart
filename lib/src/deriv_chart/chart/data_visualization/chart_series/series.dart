@@ -22,18 +22,18 @@ abstract class Series implements ChartData {
 
   /// Responsible for painting a frame of this series on the canvas.
   @protected
-  SeriesPainter<Series> seriesPainter;
+  SeriesPainter<Series>? seriesPainter;
 
   /// The painting style of this [Series].
-  final ChartPaintingStyle style;
+  final ChartPaintingStyle? style;
 
   /// Minimum value of this series in a visible range of the chart.
   @protected
-  double minValueInFrame;
+  double? minValueInFrame;
 
   /// Maximum value of this series in a visible range of the chart.
   @protected
-  double maxValueInFrame;
+  double? maxValueInFrame;
 
   /// Min quote in a frame.
   @override
@@ -55,7 +55,7 @@ abstract class Series implements ChartData {
   }
 
   @override
-  bool shouldRepaint(ChartData previous) => true;
+  bool shouldRepaint(ChartData? previous) => true;
 
   /// Calculate min/max values in updated data
   List<double> recalculateMinMax();
@@ -64,7 +64,7 @@ abstract class Series implements ChartData {
   void onUpdate(int leftEpoch, int rightEpoch);
 
   /// Is called whenever series is created to create its [seriesPainter] as well.
-  SeriesPainter<Series> createPainter();
+  SeriesPainter<Series>? createPainter();
 
   /// Paints [seriesPainter]'s data on the [canvas].
   @override

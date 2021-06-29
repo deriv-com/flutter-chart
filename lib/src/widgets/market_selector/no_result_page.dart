@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 /// Page to show when the api call couldn't get any result.
 class NoResultPage extends StatelessWidget {
   /// Creates a page to show when the api call couldn't get any result.
-  const NoResultPage({Key key, this.text = ''}) : super(key: key);
+  const NoResultPage({Key? key, this.text = ''}) : super(key: key);
 
   /// The text to show when the api call couldn't get any result.
   final String text;

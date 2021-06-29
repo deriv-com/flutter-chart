@@ -9,10 +9,10 @@ import 'sub_market_item.dart';
 class MarketItem extends StatelessWidget {
   /// Initializes a widget to show a market item in market selector.
   const MarketItem({
-    @required this.market,
-    Key key,
+    required this.market,
+    Key? key,
     this.filterText = '',
-    this.onAssetClicked,
+    required this.onAssetClicked,
     this.selectedItemKey,
     this.isSubMarketsCategorized = true,
   }) : super(key: key);
@@ -24,7 +24,7 @@ class MarketItem extends StatelessWidget {
   final String filterText;
 
   /// Is used to scroll to the selected Asset item.
-  final GlobalObjectKey selectedItemKey;
+  final GlobalObjectKey? selectedItemKey;
 
   /// The action that appens on clicking the `AssetItem` inside the submarket part.
   final OnAssetClicked onAssetClicked;
@@ -48,7 +48,7 @@ class MarketItem extends StatelessWidget {
               bottom: theme.margin08Chart,
             ),
             child: Text(
-              market.displayName ?? '',
+              market.displayName,
               style: theme.textStyle(
                 textStyle: theme.body2,
                 color: theme.base01Color,
@@ -56,10 +56,10 @@ class MarketItem extends StatelessWidget {
             ),
           ),
           ...market.subMarkets
-              .map((SubMarket subMarket) => SubMarketItem(
+              .map((SubMarket? subMarket) => SubMarketItem(
                     isCategorized: isSubMarketsCategorized,
                     selectedItemKey: selectedItemKey,
-                    subMarket: subMarket,
+                    subMarket: subMarket!,
                     filterText:
                         subMarket.containsText(filterText) ? '' : filterText,
                     onAssetClicked: onAssetClicked,
