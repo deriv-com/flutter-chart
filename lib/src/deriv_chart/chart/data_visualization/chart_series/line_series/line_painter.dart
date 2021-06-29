@@ -27,50 +27,29 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
+    final List<DataPathInfo> paths =
+        createPath(epochToX, quoteToY, animationInfo, size);
 
-    final Paint linePaint = Paint()
-      ..color = style.color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = style.thickness;
-
-    final Path path = createPath(epochToX, quoteToY, animationInfo);
-
-    paintLines(canvas, path, linePaint);
-
-    if (style.hasArea) {
-      _drawArea(
-        canvas,
-        size,
-        path,
-        epochToX(series.visibleEntries.first.epoch),
-        _lastVisibleTickX!,
-        style,
-      );
-    }
+    paintLines(canvas, paths);
   }
 
   /// Paints the line on the given canvas.
   /// We can add channel fill here in the subclasses.
-  void paintLines(
-    Canvas canvas,
-    Path path,
-    Paint linePaint,
-  ) {
-    canvas.drawPath(path, linePaint);
+  void paintLines(Canvas canvas, List<DataPathInfo> paths) {
+    for (final DataPathInfo pathInfo in paths) {
+      canvas.drawPath(pathInfo.path, pathInfo.paint);
+    }
   }
 
   /// Creates the path of the given [series] and returns it.
-  Path createPath(
+  List<DataPathInfo> createPath(
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    Size size,
   ) {
-    final Path path = Path();
-
-    if (series.entries == null) {
-      return path;
-    }
+    final List<DataPathInfo> paths = <DataPathInfo>[];
+    final Path dataLinePath = Path();
 
     double lastVisibleTickX;
     bool isStartPointSet = false;
@@ -86,7 +65,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
         if (!isStartPointSet) {
           isStartPointSet = true;
-          path.moveTo(
+          dataLinePath.moveTo(
             lastVisibleTickX,
             quoteToY(tick.quote),
           );
@@ -94,14 +73,34 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         }
 
         final double y = quoteToY(tick.quote);
-        path.lineTo(lastVisibleTickX, y);
+        dataLinePath.lineTo(lastVisibleTickX, y);
       }
     }
 
-    _lastVisibleTickX =
-        _calculateLastVisibleTick(epochToX, animationInfo, quoteToY, path);
+    _lastVisibleTickX = _calculateLastVisibleTick(
+        epochToX, animationInfo, quoteToY, dataLinePath);
 
-    return path;
+    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
+
+    final Paint linePaint = Paint()
+      ..color = style.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = style.thickness;
+
+    paths.add(DataPathInfo(dataLinePath, linePaint));
+
+    if (style.hasArea) {
+      final DataPathInfo areaPath = _getArea(
+        size,
+        dataLinePath,
+        epochToX(series.visibleEntries.first.epoch),
+        _lastVisibleTickX!,
+        style,
+      );
+      paths.add(areaPath);
+    }
+
+    return paths;
   }
 
   /// calculates the last visible tick's `dx`.
@@ -143,8 +142,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     return lastVisibleTickX;
   }
 
-  void _drawArea(
-    Canvas canvas,
+  DataPathInfo _getArea(
     Size size,
     Path linePath,
     double lineStartX,
@@ -162,13 +160,25 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         ],
       );
 
-    linePath
+    final Path areaPath = Path.from(linePath)
       ..lineTo(
         lineEndX,
         size.height,
       )
       ..lineTo(lineStartX, size.height);
 
-    canvas.drawPath(linePath, areaPaint);
+    return DataPathInfo(areaPath, areaPaint);
   }
+}
+
+///
+class DataPathInfo {
+  ///
+  DataPathInfo(this.path, this.paint);
+
+  ///
+  final Path path;
+
+  ///
+  final Paint paint;
 }
