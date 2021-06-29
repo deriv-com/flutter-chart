@@ -15,7 +15,7 @@ dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: 75cdf06f9e797840eeb17b510b7c342d90ba9485
+      ref: 470d94553e0f3fe143f6674708b3399d292b001a
   equatable: ^2.0.0
   flutter:
     sdk: flutter
