@@ -103,6 +103,7 @@ class OscillatorLinePainter extends LinePainter {
       final Tick tick = series.entries![i];
 
       topAreaPath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      dataLinePath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
 
       if (topAreaClosed && tick.quote > _topHorizontalLine!) {
         topAreaClosed = false;
@@ -119,7 +120,23 @@ class OscillatorLinePainter extends LinePainter {
         paths.add(DataPathInfo(
             topAreaPath,
             Paint()
-              ..color = Colors.red
+              ..color = Colors.white60
+              ..style = PaintingStyle.fill));
+
+        topAreaPath = Path()
+          ..moveTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      }
+
+      if (i == series.visibleEntries.endIndex - 2) {
+        topAreaPath.lineTo(size.width, quoteToY(_topHorizontalLine!));
+
+        topAreaPath = Path.combine(
+            PathOperation.intersect, topHorizontalLinePath, topAreaPath);
+
+        paths.add(DataPathInfo(
+            topAreaPath,
+            Paint()
+              ..color = Colors.white24
               ..style = PaintingStyle.fill));
 
         topAreaPath = Path()
@@ -128,6 +145,14 @@ class OscillatorLinePainter extends LinePainter {
 
       i++;
     }
+
+    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
+    paths.add(DataPathInfo(
+        dataLinePath,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = style.color
+          ..strokeWidth = style.thickness));
 
     // // Adding visible entries line to the path except the last which might be animated.
     // for (int i = series.visibleEntries.startIndex;
