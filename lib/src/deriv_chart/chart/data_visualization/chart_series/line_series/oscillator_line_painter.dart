@@ -16,22 +16,22 @@ import 'line_painter.dart';
 class OscillatorLinePainter extends LinePainter {
   /// Initializes an Oscillator line painter.
   OscillatorLinePainter(
-      DataSeries<Tick> series, {
-        double? topHorizontalLine,
-        double? bottomHorizontalLine,
-        LineStyle? mainHorizontalLinesStyle,
-        LineStyle? secondaryHorizontalLinesStyle,
-        List<double> secondaryHorizontalLines = const <double>[],
-      })  : _mainHorizontalLinesStyle =
-      mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
+    DataSeries<Tick> series, {
+    double? topHorizontalLine,
+    double? bottomHorizontalLine,
+    LineStyle? mainHorizontalLinesStyle,
+    LineStyle? secondaryHorizontalLinesStyle,
+    List<double> secondaryHorizontalLines = const <double>[],
+  })  : _mainHorizontalLinesStyle =
+            mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
         _topHorizontalLine = topHorizontalLine,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle ??
             const LineStyle(color: Colors.blueGrey),
         _bottomHorizontalLine = bottomHorizontalLine,
         super(
-        series,
-      );
+          series,
+        );
 
   final double? _topHorizontalLine;
   final double? _bottomHorizontalLine;
@@ -49,22 +49,84 @@ class OscillatorLinePainter extends LinePainter {
 
   @override
   void onPaintData(
-      Canvas canvas,
-      Size size,
-      EpochToX epochToX,
-      QuoteToY quoteToY,
-      AnimationInfo animationInfo,
-      ) {
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+  ) {
     super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
 
     _paintHorizontalLines(canvas, quoteToY, size);
+  }
+
+  @override
+  List<DataPathInfo> createPath(
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    Size size,
+  ) {
+    final List<DataPathInfo> paths = <DataPathInfo>[];
+    final Path dataLinePath = Path();
+
+    double lastVisibleTickX;
+    bool isStartPointSet = false;
+
+    // Adding visible entries line to the path except the last which might be animated.
+    for (int i = series.visibleEntries.startIndex;
+    i < series.visibleEntries.endIndex - 1;
+    i++) {
+      final Tick tick = series.entries![i];
+
+      if (!tick.quote.isNaN) {
+        lastVisibleTickX = epochToX(getEpochOf(tick, i));
+
+        if (!isStartPointSet) {
+          isStartPointSet = true;
+          dataLinePath.moveTo(
+            lastVisibleTickX,
+            quoteToY(tick.quote),
+          );
+          continue;
+        }
+
+        final double y = quoteToY(tick.quote);
+        dataLinePath.lineTo(lastVisibleTickX, y);
+      }
+    }
+
+    _lastVisibleTickX = _calculateLastVisibleTick(
+        epochToX, animationInfo, quoteToY, dataLinePath);
+
+    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
+
+    final Paint linePaint = Paint()
+      ..color = style.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = style.thickness;
+
+    paths.add(DataPathInfo(dataLinePath, linePaint));
+
+    if (style.hasArea) {
+      final DataPathInfo areaPath = _getArea(
+        size,
+        dataLinePath,
+        epochToX(series.visibleEntries.first.epoch),
+        _lastVisibleTickX!,
+        style,
+      );
+      paths.add(areaPath);
+    }
+
+    return paths;
   }
 
   void _paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
     _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
     const HorizontalBarrierStyle textStyle =
-    HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
+        HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
     final Paint paint = Paint()
       ..color = _mainHorizontalLinesStyle.color
       ..style = PaintingStyle.stroke
