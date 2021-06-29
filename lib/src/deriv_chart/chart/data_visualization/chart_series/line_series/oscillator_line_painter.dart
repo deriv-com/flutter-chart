@@ -91,9 +91,9 @@ class OscillatorLinePainter extends LinePainter {
       quoteToY(series.visibleEntries.first.quote),
     );
 
-    int i = 1;
+    int i = series.visibleEntries.startIndex;
 
-    Path topAreaPath = Path.from(dataLinePath);
+    Path topAreaPath = Path()..moveTo(0, quoteToY(_topHorizontalLine!));
 
     bool topAreaClosed =
         series.visibleEntries.first.quote < _topHorizontalLine!;
@@ -127,7 +127,7 @@ class OscillatorLinePainter extends LinePainter {
           ..moveTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
       }
 
-      if (i == series.visibleEntries.endIndex - 1 && !topAreaClosed) {
+      if (i == series.visibleEntries.endIndex - 2 && !topAreaClosed) {
         topAreaPath.lineTo(
             epochToX(getEpochOf(tick, i)), quoteToY(_topHorizontalLine!));
 
