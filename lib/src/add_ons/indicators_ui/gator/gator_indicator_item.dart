@@ -6,7 +6,7 @@ import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
 
-/// Alligator indicator item in the list of indicator which provide this
+/// Gator indicator item in the list of indicator which provide this
 /// indicators options menu.
 class GatorIndicatorItem extends IndicatorItem {
   /// Initializes
@@ -17,7 +17,7 @@ class GatorIndicatorItem extends IndicatorItem {
     GatorIndicatorConfig config = const GatorIndicatorConfig(),
   }) : super(
           key: key,
-          title: 'Alligator',
+          title: 'Gator',
           config: config,
           updateIndicator: updateIndicator,
           deleteIndicator: deleteIndicator,
@@ -37,8 +37,6 @@ class GatorIndicatorItemState
   int? _teethPeriod;
   int? _lipsOffset;
   int? _lipsPeriod;
-  bool? _showLines;
-  bool? _showFractal;
 
   @override
   GatorIndicatorConfig createIndicatorConfig() => GatorIndicatorConfig(

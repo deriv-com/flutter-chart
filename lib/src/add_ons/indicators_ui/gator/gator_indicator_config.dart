@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/gator_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/gator_options.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +60,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
         jawOffset: jawOffset,
         teethOffset: teethOffset,
         lipsOffset: lipsOffset,
-        gatorOptions: GatorOptions(
+        gatorOptions: AlligatorOptions(
           jawPeriod: jawPeriod,
           teethPeriod: teethPeriod,
           lipsPeriod: lipsPeriod,

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/gator_options.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -30,12 +30,12 @@ class GatorSeries extends Series {
     this.teethOffset = 5,
     this.lipsOffset = 3,
   })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
-        super(id ?? 'Gator$GatorOptions$jawOffset$teethOffset$lipsOffset');
+        super(id ?? 'Gator$AlligatorOptions$jawOffset$teethOffset$lipsOffset');
 
   final Indicator<Tick> _fieldIndicator;
 
   /// Gator options
-  GatorOptions gatorOptions;
+  AlligatorOptions gatorOptions;
 
   SingleIndicatorSeries? _gatorTopSeries;
   SingleIndicatorSeries? _gatorBottomSeries;
