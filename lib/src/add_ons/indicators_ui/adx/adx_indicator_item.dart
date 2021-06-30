@@ -32,31 +32,41 @@ class ADXIndicatorItem extends IndicatorItem {
 
 /// ADXIndicatorItem State class
 class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
-  int? _highPeriod;
-  int? _lowPeriod;
+  int? _period;
+  int? _smoothingPeriod;
   bool? _channelFill;
+  bool? _showHistogram;
+  bool? _showSeries;
 
   @override
   ADXIndicatorConfig createIndicatorConfig() => ADXIndicatorConfig(
-        period: _getCurrentHighPeriod(),
-        lowPeriod: _getCurrentLowPeriod(),
-        showChannelFill: _getCurrentFill(),
+        period: _currentPeriod,
+        smoothingPeriod: _currentSmoothingPeriod,
+        showChannelFill: _currentChannelFill,
+        showSeries: _currentShowSeries,
+        showHistogram: _currentShowHistogram,
       );
 
   @override
   Widget getIndicatorOptions() => Column(
-        children: <Widget>[],
+        children: <Widget>[
+          _buildPeriodField(),
+          _buildSmoothingPeriodField(),
+          _buildShowSeriesToggle(),
+          _buildChannelFillToggle(),
+          _buildShowHistogramToggle()
+        ],
       );
 
   Widget _buildChannelFillToggle() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelChannelFill,
+            ChartLocalization.of(context).labelShading,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
           Switch(
-            value: _getCurrentFill(),
+            value: _currentChannelFill,
             onChanged: (bool value) {
               setState(() {
                 _channelFill = value;
@@ -67,14 +77,48 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
         ],
       );
 
-  bool _getCurrentFill() =>
-      _channelFill ??
-      (widget.config as DonchianChannelIndicatorConfig).showChannelFill;
-
-  Widget _buildHighPeriodField() => Row(
+  Widget _buildShowSeriesToggle() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelHighPeriod,
+            ChartLocalization.of(context).labelSeries,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: _currentShowSeries,
+            onChanged: (bool value) {
+              setState(() {
+                _showSeries = value;
+              });
+              updateIndicator();
+            },
+          ),
+        ],
+      );
+
+  Widget _buildShowHistogramToggle() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelHistogram,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: _currentShowHistogram,
+            onChanged: (bool value) {
+              setState(() {
+                _showHistogram = value;
+              });
+              updateIndicator();
+            },
+          ),
+        ],
+      );
+
+  Widget _buildSmoothingPeriodField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelSmoothingPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -82,13 +126,13 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentHighPeriod().toString(),
+              initialValue: _currentSmoothingPeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  _highPeriod = int.tryParse(text);
+                  _smoothingPeriod = int.tryParse(text);
                 } else {
-                  _highPeriod = 10;
+                  _smoothingPeriod = 14;
                 }
                 updateIndicator();
               },
@@ -97,14 +141,10 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
         ],
       );
 
-  int _getCurrentHighPeriod() =>
-      _highPeriod ??
-      (widget.config as DonchianChannelIndicatorConfig).highPeriod;
-
-  Widget _buildLowPeriodField() => Row(
+  Widget _buildPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelLowPeriod,
+            ChartLocalization.of(context).labelPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -112,13 +152,13 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
             width: 20,
             child: TextFormField(
               style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentLowPeriod().toString(),
+              initialValue: _currentPeriod.toString(),
               keyboardType: TextInputType.number,
               onChanged: (String text) {
                 if (text.isNotEmpty) {
-                  _lowPeriod = int.tryParse(text);
+                  _period = int.tryParse(text);
                 } else {
-                  _lowPeriod = 10;
+                  _period = 14;
                 }
                 updateIndicator();
               },
@@ -127,6 +167,18 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
         ],
       );
 
-  int _getCurrentLowPeriod() =>
-      _lowPeriod ?? (widget.config as DonchianChannelIndicatorConfig).lowPeriod;
+  int get _currentPeriod =>
+      _period ?? (widget.config as ADXIndicatorConfig).period;
+
+  int get _currentSmoothingPeriod =>
+      _smoothingPeriod ?? (widget.config as ADXIndicatorConfig).period;
+
+  bool get _currentChannelFill =>
+      _channelFill ?? (widget.config as ADXIndicatorConfig).showChannelFill;
+
+  bool get _currentShowHistogram =>
+      _showHistogram ?? (widget.config as ADXIndicatorConfig).showHistogram;
+
+  bool get _currentShowSeries =>
+      _showSeries ?? (widget.config as ADXIndicatorConfig).showSeries;
 }

@@ -8,10 +8,10 @@ class ADXOptions extends IndicatorOptions {
     this.smoothingPeriod = 14,
   });
 
-  /// The `period` for the `ADXIndicator` and the `Positive/NegativeDIIndicator`s. Default is set to `14`.
+  /// The period value for the ADX series.
   final int period;
 
-  /// The `period` for the smoothing the `ADXIndicator` results. Default is set to `14`.
+  /// The period value for smoothing the ADX series.
   final int smoothingPeriod;
 
   @override

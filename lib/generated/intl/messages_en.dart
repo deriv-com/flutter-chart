@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelDistance": MessageLookupByLibrary.simpleMessage("Distance"),
         "labelField": MessageLookupByLibrary.simpleMessage("Field"),
         "labelHighPeriod": MessageLookupByLibrary.simpleMessage("High Period"),
+        "labelHistogram": MessageLookupByLibrary.simpleMessage("Histogram"),
         "labelJawOffset": MessageLookupByLibrary.simpleMessage("Jaw Offset"),
         "labelJawPeriod": MessageLookupByLibrary.simpleMessage("Jaw Period"),
         "labelLaggingSpanOffset":
@@ -51,11 +52,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelPeriod": MessageLookupByLibrary.simpleMessage("Period"),
         "labelSearchAssets":
             MessageLookupByLibrary.simpleMessage("Search assets"),
+        "labelSeries": MessageLookupByLibrary.simpleMessage("Series"),
+        "labelShading": MessageLookupByLibrary.simpleMessage("Shading"),
         "labelShift": MessageLookupByLibrary.simpleMessage("Shift"),
         "labelShiftType": MessageLookupByLibrary.simpleMessage("Shift Type"),
         "labelShowFractals":
             MessageLookupByLibrary.simpleMessage("Show Fractals"),
         "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
+        "labelSmoothingPeriod":
+            MessageLookupByLibrary.simpleMessage("Smoothing Period"),
         "labelSpanBPeriod":
             MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
         "labelStandardDeviation":

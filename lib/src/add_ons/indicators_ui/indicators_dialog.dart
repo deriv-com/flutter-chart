@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './ma_indicator/ma_indicator_config.dart';
+import 'adx/adx_indicator_config.dart';
 import 'alligator/alligator_indicator_config.dart';
 import 'bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'commodity_channel_index/cci_indicator_config.dart';
@@ -87,7 +88,11 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
-                  )
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('ADX'),
+                    value: ADXIndicatorConfig(),
+                  ),
                   // Add new indicators here.
                 ],
                 onChanged: (IndicatorConfig? config) {
@@ -97,7 +102,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 },
               ),
               const SizedBox(width: 16),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
                     ? () {

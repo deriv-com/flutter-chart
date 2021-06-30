@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/adx_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/adx_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
+import 'adx_indicator_item.dart';
 
 part 'adx_indicator_config.g.dart';
 
@@ -17,7 +19,10 @@ class ADXIndicatorConfig extends IndicatorConfig {
   const ADXIndicatorConfig({
     this.period = 14,
     this.smoothingPeriod = 14,
-  }) : super();
+    this.showSeries = true,
+    this.showChannelFill = false,
+    this.showHistogram = false,
+  }) : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory ADXIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -33,16 +38,25 @@ class ADXIndicatorConfig extends IndicatorConfig {
   /// The period value for the ADX series.
   final int period;
 
-  /// The period value for smoothing the ADX series;
+  /// The period value for smoothing the ADX series.
   final int smoothingPeriod;
+
+  /// Wether to add channel fill between the Positive and Negative DI Indicator.
+  final bool showChannelFill;
+
+  /// Wether to show the histogram Series or not.
+  final bool showHistogram;
+
+  /// Wether to show the Series or not.
+  final bool showSeries;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => ADXSeries(
         indicatorInput,
-        bbOptions: ADXOptions(
+        config: this,
+        adxOptions: ADXOptions(
+          smoothingPeriod: smoothingPeriod,
           period: period,
-          movingAverageType: movingAverageType,
-          standardDeviationFactor: standardDeviation,
         ),
       );
 

@@ -60,6 +60,36 @@ class ChartLocalization {
     );
   }
 
+  /// `Shading`
+  String get labelShading {
+    return Intl.message(
+      'Shading',
+      name: 'labelShading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Histogram`
+  String get labelHistogram {
+    return Intl.message(
+      'Histogram',
+      name: 'labelHistogram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Series`
+  String get labelSeries {
+    return Intl.message(
+      'Series',
+      name: 'labelSeries',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Field`
   String get labelField {
     return Intl.message(
@@ -75,6 +105,16 @@ class ChartLocalization {
     return Intl.message(
       'Period',
       name: 'labelPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Smoothing Period`
+  String get labelSmoothingPeriod {
+    return Intl.message(
+      'Smoothing Period',
+      name: 'labelSmoothingPeriod',
       desc: '',
       args: [],
     );

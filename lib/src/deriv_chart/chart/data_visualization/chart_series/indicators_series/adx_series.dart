@@ -11,6 +11,7 @@ import '../../chart_data.dart';
 import '../data_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
+import 'models/adx_options.dart';
 import 'single_indicator_series.dart';
 
 /// ADX series
@@ -23,8 +24,11 @@ class ADXSeries extends Series {
     String? id,
   }) : super(id ?? 'ADX$adxOptions');
 
-  late SingleIndicatorSeries _conversionLineSeries;
-  late SingleIndicatorSeries _baseLineSeries;
+  late SingleIndicatorSeries _adxSeries;
+  late SingleIndicatorSeries _positiveDISeries;
+  late SingleIndicatorSeries _negativeDISeries;
+
+  late List<SingleIndicatorSeries> _adxSeriesList;
 
   /// List of [Tick]s to calculate ADX on.
   final IndicatorDataInput ticks;
@@ -38,118 +42,80 @@ class ADXSeries extends Series {
   @override
   SeriesPainter<Series>? createPainter() {
     final NegativeDIIndicator<Tick> negativeDIIndicator =
-        NegativeDIIndicator<Tick>(ticks);
+        NegativeDIIndicator<Tick>(ticks, period: adxOptions.period);
 
+    final PositiveDIIndicator<Tick> positiveDIIndicator =
+        PositiveDIIndicator<Tick>(ticks, period: adxOptions.period);
 
-  final PositiveDIIndicator<Tick> positiveDIIndicator =
-        PositiveDIIndicator<Tick>(ticks);
-
-   final ADXIndicator<Tick> adxIndicator = ADXIndicator
-    _conversionLineSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick>),
-      indicatorCreator: () => conversionLineIndicator,
-      inputIndicator: closeValueIndicator,
-      options: ichimokuCloudOptions,
-      style: const LineStyle(
-        color: Colors.indigo,
-      ),
+    final ADXIndicator<Tick> adxIndicator = ADXIndicator<Tick>.fromIndicator(
+      positiveDIIndicator,
+      negativeDIIndicator,
+      adxPeriod: adxOptions.period,
     );
 
-    _baseLineSeries = SingleIndicatorSeries(
+    _positiveDISeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
-      indicatorCreator: () => baseLineIndicator,
-      inputIndicator: closeValueIndicator,
-      options: ichimokuCloudOptions,
-      style: const LineStyle(
-        color: Colors.redAccent,
-      ),
+      indicatorCreator: () => positiveDIIndicator,
+      inputIndicator: positiveDIIndicator,
+      options: adxOptions,
+      style: const LineStyle(color: Colors.green),
     );
 
-    // TODO(mohammadamir-fs): add offset to line painter
-    _laggingSpanSeries = SingleIndicatorSeries(
+    _negativeDISeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
-      indicatorCreator: () => laggingSpanIndicator,
-      inputIndicator: closeValueIndicator,
-      options: ichimokuCloudOptions,
-      offset: config.laggingSpanOffset,
-      style: const LineStyle(
-        color: Colors.lime,
-      ),
+      indicatorCreator: () => negativeDIIndicator,
+      inputIndicator: negativeDIIndicator,
+      options: adxOptions,
+      style: const LineStyle(color: Colors.red),
     );
 
-    _spanASeries = SingleIndicatorSeries(
+    _adxSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
-      indicatorCreator: () => spanAIndicator,
-      inputIndicator: closeValueIndicator,
-      options: ichimokuCloudOptions,
-      offset: ichimokuCloudOptions.baseLinePeriod,
-      style: const LineStyle(
-        color: Colors.green,
-      ),
+      indicatorCreator: () => adxIndicator,
+      inputIndicator: adxIndicator,
+      options: adxOptions,
+      style: const LineStyle(color: Colors.white),
     );
 
-    _spanBSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick>),
-      indicatorCreator: () => spanBIndicator,
-      inputIndicator: closeValueIndicator,
-      options: ichimokuCloudOptions,
-      offset: ichimokuCloudOptions.baseLinePeriod,
-      style: const LineStyle(
-        color: Colors.red,
-      ),
-    );
-
-    _ichimokuSeries
-      ..add(_conversionLineSeries)
-      ..add(_baseLineSeries)
-      ..add(_laggingSpanSeries)
-      ..add(_spanASeries)
-      ..add(_spanBSeries);
+    _adxSeriesList = <SingleIndicatorSeries>[
+      _adxSeries,
+      _positiveDISeries,
+      _negativeDISeries
+    ];
 
     return null;
   }
 
   @override
   bool didUpdate(ChartData? oldData) {
-    final IchimokuCloudSeries? series = oldData as IchimokuCloudSeries?;
+    final ADXSeries? series = oldData as ADXSeries?;
 
-    final bool conversionLineUpdated =
-        _conversionLineSeries.didUpdate(series?._conversionLineSeries);
-    final bool baseLineUpdated =
-        _baseLineSeries.didUpdate(series?._baseLineSeries);
-    final bool laggingSpanUpdated =
-        _laggingSpanSeries.didUpdate(series?._laggingSpanSeries);
-    final bool spanAUpdated = _spanASeries.didUpdate(series?._spanASeries);
-    final bool spanBUpdated = _spanBSeries.didUpdate(series?._spanBSeries);
+    final bool positiveDIUpdated =
+        _positiveDISeries.didUpdate(series?._positiveDISeries);
+    final bool negativeDIUpdated =
+        _negativeDISeries.didUpdate(series?._negativeDISeries);
+    final bool adxUpdated = _adxSeries.didUpdate(series?._adxSeries);
 
-    return conversionLineUpdated ||
-        baseLineUpdated ||
-        laggingSpanUpdated ||
-        spanAUpdated ||
-        spanBUpdated;
+    return positiveDIUpdated || negativeDIUpdated || adxUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _conversionLineSeries.update(leftEpoch, rightEpoch);
-    _baseLineSeries.update(leftEpoch, rightEpoch);
-    _laggingSpanSeries.update(leftEpoch, rightEpoch);
-    _spanASeries.update(leftEpoch, rightEpoch);
-    _spanBSeries.update(leftEpoch, rightEpoch);
+    _positiveDISeries.update(leftEpoch, rightEpoch);
+    _negativeDISeries.update(leftEpoch, rightEpoch);
+    _adxSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() {
-    final double minValue = _ichimokuSeries
+    final double minValue = _adxSeriesList
         .map((SingleIndicatorSeries series) => series.minValue)
         .reduce(safeMin);
 
-    final double maxValue = _ichimokuSeries
+    final double maxValue = _adxSeriesList
         .map((SingleIndicatorSeries series) => series.maxValue)
         .reduce(safeMax);
 
@@ -166,23 +132,15 @@ class ADXSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _conversionLineSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _baseLineSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _laggingSpanSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _spanASeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _spanBSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-
-    // TODO(ramin): call super.paint to paint the Channels fill.
+    for (final SingleIndicatorSeries series in _adxSeriesList) {
+      series.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
   }
 
   @override
-  int? getMaxEpoch() => _ichimokuSeries.getMaxEpoch();
+  int? getMaxEpoch() => _adxSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _ichimokuSeries.getMinEpoch();
+  int? getMinEpoch() => _adxSeries.getMinEpoch();
 }
