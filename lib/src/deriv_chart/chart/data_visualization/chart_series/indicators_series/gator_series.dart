@@ -1,11 +1,13 @@
+import 'dart:math';
+
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/gator_options.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
@@ -21,14 +23,14 @@ class GatorSeries extends Series {
   ///
   /// [gatorOptions] Gator indicator options.
   GatorSeries(
-  IndicatorInput indicatorInput, {
+    IndicatorInput indicatorInput, {
     required this.gatorOptions,
     String? id,
     this.jawOffset = 8,
     this.teethOffset = 5,
     this.lipsOffset = 3,
-  }) : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
-    super(id ?? 'Gator$GatorOptions$jawOffset$teethOffset$lipsOffset');
+  })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
+        super(id ?? 'Gator$GatorOptions$jawOffset$teethOffset$lipsOffset');
 
   final Indicator<Tick> _fieldIndicator;
 
@@ -50,8 +52,14 @@ class GatorSeries extends Series {
   @override
   SeriesPainter<Series>? createPainter() {
     _gatorTopSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick>),
+      painterCreator: (Series series) => BarPainter(
+        series as DataSeries<Tick>,
+        checkColorCallback: ({
+          required double previousQuote,
+          required double currentQuote,
+        }) =>
+            currentQuote >= previousQuote,
+      ),
       indicatorCreator: () => GatorOscillatorIndicatorTopBar<Tick>(
           _fieldIndicator,
           jawPeriod: gatorOptions.jawPeriod,
@@ -60,15 +68,22 @@ class GatorSeries extends Series {
           teethOffset: teethOffset),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
-      style: const LineStyle(color: Colors.blue),
-      offset: jawOffset,
+      style: const BarStyle(),
+      offset: min(jawOffset, teethOffset),
     );
 
     _gatorBottomSeries = SingleIndicatorSeries(
       painterCreator: (
         Series series,
       ) =>
-          LinePainter(series as DataSeries<Tick>),
+          BarPainter(
+        series as DataSeries<Tick>,
+        checkColorCallback: ({
+          required double previousQuote,
+          required double currentQuote,
+        }) =>
+            currentQuote.abs() >= previousQuote.abs(),
+      ),
       indicatorCreator: () => GatorOscillatorIndicatorBottomBar<Tick>(
         _fieldIndicator,
         teethPeriod: gatorOptions.teethPeriod,
@@ -78,8 +93,8 @@ class GatorSeries extends Series {
       ),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
-      style: const LineStyle(color: Colors.red),
-      offset: teethOffset,
+      style: const BarStyle(),
+      offset: min(teethOffset, lipsOffset),
     );
 
     return null;

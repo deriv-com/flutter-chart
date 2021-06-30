@@ -73,8 +73,6 @@ class _BottomChartState extends BasicChartState<BottomChart> {
   void didUpdateWidget(BottomChart oldChart) {
     super.didUpdateWidget(oldChart);
 
-    didUpdateChartData(oldChart);
-
     xAxis.update(
       minEpoch: widget.mainSeries.getMinEpoch(),
       maxEpoch: widget.mainSeries.getMaxEpoch(),
