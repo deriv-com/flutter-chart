@@ -81,6 +81,12 @@ class OscillatorLinePainter extends LinePainter {
     final Path topHorizontalLinePath = Path()
       ..addRect(Rect.fromLTRB(0, 0, size.width, quoteToY(_topHorizontalLine!)));
 
+    final Path bottomHorizontalLinePath = Path()
+      ..addRect(
+        Rect.fromLTRB(
+            0, quoteToY(_bottomHorizontalLine!), size.width, size.height),
+      );
+
     double lastVisibleTickX;
     lastVisibleTickX = epochToX(getEpochOf(
         series.visibleEntries.first, series.visibleEntries.startIndex));
@@ -101,10 +107,17 @@ class OscillatorLinePainter extends LinePainter {
     bool topAreaClosed =
         series.visibleEntries.first.quote < _topHorizontalLine!;
 
-    final UpZonePathCreator pathManager = UpZonePathCreator(
+    final UpZonePathCreator upZonePathCreator = UpZonePathCreator(
       series: series,
       lineValue: _topHorizontalLine!,
       linePath: topHorizontalLinePath,
+      zonePaint: zonePaint,
+    );
+
+    final DownZonePathCreator downZonePathCreator = DownZonePathCreator(
+      series: series,
+      lineValue: _bottomHorizontalLine!,
+      linePath: bottomHorizontalLinePath,
       zonePaint: zonePaint,
     );
 
@@ -112,7 +125,8 @@ class OscillatorLinePainter extends LinePainter {
         i < series.visibleEntries.endIndex - 1) {
       final Tick tick = series.entries![i];
 
-      pathManager.addTick(tick, i, epochToX, quoteToY);
+      upZonePathCreator.addTick(tick, i, epochToX, quoteToY);
+      downZonePathCreator.addTick(tick, i, epochToX, quoteToY);
 
       // topAreaPath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
       dataLinePath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
@@ -148,7 +162,7 @@ class OscillatorLinePainter extends LinePainter {
       i++;
     }
 
-    paths.addAll(pathManager._path);
+    paths..addAll(upZonePathCreator._path)..addAll(downZonePathCreator._path);
 
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
     paths.add(DataPathInfo(
