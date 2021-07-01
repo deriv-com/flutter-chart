@@ -1,9 +1,12 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/adx/adx_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +30,7 @@ class ADXSeries extends Series {
   late SingleIndicatorSeries _adxSeries;
   late SingleIndicatorSeries _positiveDISeries;
   late SingleIndicatorSeries _negativeDISeries;
+  late SingleIndicatorSeries _adxHistogramSeries;
 
   late List<SingleIndicatorSeries> _adxSeriesList;
 
@@ -46,6 +50,10 @@ class ADXSeries extends Series {
 
     final PositiveDIIndicator<Tick> positiveDIIndicator =
         PositiveDIIndicator<Tick>(ticks, period: adxOptions.period);
+
+    final ADXHistogramIndicator<Tick> adxHistogramIndicator =
+        ADXHistogramIndicator<Tick>.fromIndicator(
+            positiveDIIndicator, negativeDIIndicator);
 
     final ADXIndicator<Tick> adxIndicator = ADXIndicator<Tick>.fromIndicator(
       positiveDIIndicator,
@@ -71,9 +79,26 @@ class ADXSeries extends Series {
       style: const LineStyle(color: Colors.red),
     );
 
+    _adxHistogramSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) => BarPainter(
+        series as DataSeries<Tick>,
+        checkColorCallback: ({
+          required double currentQuote,
+          required double previousQuote,
+        }) =>
+            !currentQuote.isNegative,
+      ),
+      indicatorCreator: () => adxHistogramIndicator,
+      inputIndicator: adxHistogramIndicator,
+      options: adxOptions,
+      style: const BarStyle(),
+    );
+
     _adxSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick>),
+      painterCreator: (Series series) => OscillatorLinePainter(
+        series as DataSeries<Tick>,
+        secondaryHorizontalLines: <double>[0],
+      ),
       indicatorCreator: () => adxIndicator,
       inputIndicator: adxIndicator,
       options: adxOptions,
@@ -81,9 +106,10 @@ class ADXSeries extends Series {
     );
 
     _adxSeriesList = <SingleIndicatorSeries>[
+      _adxHistogramSeries,
       _adxSeries,
       _positiveDISeries,
-      _negativeDISeries
+      _negativeDISeries,
     ];
 
     return null;
@@ -98,8 +124,13 @@ class ADXSeries extends Series {
     final bool negativeDIUpdated =
         _negativeDISeries.didUpdate(series?._negativeDISeries);
     final bool adxUpdated = _adxSeries.didUpdate(series?._adxSeries);
+    final bool histogramUpdated =
+        _adxHistogramSeries.didUpdate(series?._adxHistogramSeries);
 
-    return positiveDIUpdated || negativeDIUpdated || adxUpdated;
+    return positiveDIUpdated ||
+        negativeDIUpdated ||
+        adxUpdated ||
+        histogramUpdated;
   }
 
   @override
@@ -107,6 +138,7 @@ class ADXSeries extends Series {
     _positiveDISeries.update(leftEpoch, rightEpoch);
     _negativeDISeries.update(leftEpoch, rightEpoch);
     _adxSeries.update(leftEpoch, rightEpoch);
+    _adxHistogramSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
