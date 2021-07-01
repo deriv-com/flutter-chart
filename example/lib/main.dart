@@ -52,7 +52,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: const SafeArea(
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
             body: FullscreenChart(),
           ),
         ),
@@ -423,7 +422,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       pipSize:
                           _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
                       granularity: granularity == 0
-                          ? 2000 // average ms difference between ticks
+                          ? 1000 // average ms difference between ticks
                           : granularity * 1000,
                       controller: _controller,
                       isLive: (_symbol.isOpen) &&

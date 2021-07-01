@@ -13,6 +13,7 @@ import 'ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'indicator_config.dart';
 import 'indicator_repository.dart';
 import 'ma_env_indicator/ma_env_indicator_config.dart';
+import 'macd_indicator/macd_indicator_config.dart';
 import 'parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'rainbow_indicator/rainbow_indicator_config.dart';
 import 'rsi/rsi_indicator_config.dart';
@@ -92,6 +93,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Stochastic Momentum Index'),
                     value: SMIIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('MACD'),
+                    value: MACDIndicatorConfig(),
                   ),
                   // Add new indicators here.
                 ],
