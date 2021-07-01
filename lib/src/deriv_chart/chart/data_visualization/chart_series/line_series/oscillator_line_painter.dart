@@ -38,8 +38,6 @@ class OscillatorLinePainter extends LinePainter {
   final LineStyle _mainHorizontalLinesStyle;
   final List<double> _secondaryHorizontalLines;
   final LineStyle _secondaryHorizontalLinesStyle;
-  late Path _topHorizontalLinePath;
-  late Path _bottomHorizontalLinePath;
 
   /// Padding between lines.
   static const double padding = 4;
@@ -170,31 +168,26 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = _mainHorizontalLinesStyle.thickness;
 
-    _topHorizontalLinePath = Path();
-    _bottomHorizontalLinePath = Path();
-
     if (_topHorizontalLine != null) {
-      _topHorizontalLinePath
-        ..moveTo(0, quoteToY(_topHorizontalLine!))
-        ..lineTo(
-            size.width -
-                _labelWidth(_topHorizontalLine!, textStyle.textStyle,
-                    chartConfig.pipSize),
-            quoteToY(_topHorizontalLine!));
-
-      canvas.drawPath(_topHorizontalLinePath, paint);
+      canvas.drawLine(
+          Offset(0, quoteToY(_topHorizontalLine!)),
+          Offset(
+              size.width -
+                  _labelWidth(_topHorizontalLine!, textStyle.textStyle,
+                      chartConfig.pipSize),
+              quoteToY(_topHorizontalLine!)),
+          paint);
     }
 
     if (_bottomHorizontalLine != null) {
-      _bottomHorizontalLinePath
-        ..moveTo(0, quoteToY(_bottomHorizontalLine!))
-        ..lineTo(
-            size.width -
-                _labelWidth(_topHorizontalLine!, textStyle.textStyle,
-                    chartConfig.pipSize),
-            quoteToY(_bottomHorizontalLine!));
-
-      canvas.drawPath(_bottomHorizontalLinePath, paint);
+      canvas.drawLine(
+          Offset(0, quoteToY(_bottomHorizontalLine!)),
+          Offset(
+              size.width -
+                  _labelWidth(_topHorizontalLine!, textStyle.textStyle,
+                      chartConfig.pipSize),
+              quoteToY(_bottomHorizontalLine!)),
+          paint);
     }
 
     _paintLabels(size, quoteToY, canvas);
@@ -259,8 +252,6 @@ class OscillatorLinePainter extends LinePainter {
       );
     }
   }
-
-// TODO(mohammadamir-fs): add channel fill.
 }
 
 double _labelWidth(double text, TextStyle style, int pipSize) =>
