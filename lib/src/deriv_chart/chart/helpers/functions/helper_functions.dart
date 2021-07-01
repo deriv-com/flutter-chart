@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
 
 /// Gets enum value as string from the given enum
@@ -62,3 +63,9 @@ String _twoDigitDuration(int duration) => duration.toString().padLeft(2, '0');
 /// If the [background] color is considered `bright` it will return [Colors.black], otherwise it will return [Colors.white].
 Color calculateTextColor(Color background) =>
     background.computeLuminance() >= 0.5 ? Colors.black : Colors.white;
+
+/// Returns the width of the label with the given text,
+double labelWidth(double text, TextStyle style, int pipSize) => makeTextPainter(
+      text.toStringAsFixed(pipSize),
+      style,
+    ).width;

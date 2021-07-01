@@ -13,17 +13,17 @@ import '../indexed_entry.dart';
 
 /// A callback function to say wether or not the color should be `Positive` or `Negative`.
 typedef CheckColorCallback = bool Function({
-required double previousQuote,
-required double currentQuote,
+  required double previousQuote,
+  required double currentQuote,
 });
 
 /// A [DataPainter] for painting Histogram Bar data.
 class BarPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   BarPainter(
-      DataSeries<Tick> series, {
-        required this.checkColorCallback,
-      }) : super(series);
+    DataSeries<Tick> series, {
+    required this.checkColorCallback,
+  }) : super(series);
 
   /// The callback function to say wether or not the color should be `Positive` or `Negative`.
   final CheckColorCallback checkColorCallback;
@@ -33,12 +33,12 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
 
   @override
   void onPaintData(
-      Canvas canvas,
-      Size size,
-      EpochToX epochToX,
-      QuoteToY quoteToY,
-      AnimationInfo animationInfo,
-      ) {
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+  ) {
     if (series.visibleEntries.length < 2) {
       return;
     }
@@ -50,8 +50,8 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
 
     // Painting visible bars except the last one that might be animated.
     for (int i = series.visibleEntries.startIndex;
-    i < series.visibleEntries.endIndex - 1;
-    i++) {
+        i < series.visibleEntries.endIndex - 1;
+        i++) {
       final Tick tick = series.entries![i];
       final Tick lastTick = series.entries![i - 1 >= 0 ? i - 1 : i];
 
@@ -140,7 +140,7 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
 
   Paint _painterColor({required bool isPositiveColor}) {
     final BarStyle style =
-        series.style as BarStyle;
+        series.style as BarStyle ?? theme.barStyle ?? const BarStyle();
 
     _positiveBarPaint = Paint()..color = style.positiveColor;
     _negativeBarPaint = Paint()..color = style.negativeColor;
