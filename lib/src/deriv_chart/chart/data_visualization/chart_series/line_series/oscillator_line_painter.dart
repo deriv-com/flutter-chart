@@ -78,14 +78,6 @@ class OscillatorLinePainter extends LinePainter {
     }
 
     final Path dataLinePath = Path();
-    final Path topHorizontalLinePath = Path()
-      ..addRect(Rect.fromLTRB(0, 0, size.width, quoteToY(_topHorizontalLine!)));
-
-    final Path bottomHorizontalLinePath = Path()
-      ..addRect(
-        Rect.fromLTRB(
-            0, quoteToY(_bottomHorizontalLine!), size.width, size.height),
-      );
 
     double lastVisibleTickX;
     lastVisibleTickX = epochToX(getEpochOf(
@@ -106,14 +98,14 @@ class OscillatorLinePainter extends LinePainter {
     final TopZonePathCreator topZonePathCreator = TopZonePathCreator(
       series: series,
       lineValue: _topHorizontalLine!,
-      linePath: topHorizontalLinePath,
+      canvasSize: size,
       zonePaint: zonePaint,
     );
 
     final BottomZonePathCreator bottomZonePathCreator = BottomZonePathCreator(
       series: series,
       lineValue: _bottomHorizontalLine!,
-      linePath: bottomHorizontalLinePath,
+      canvasSize: size,
       zonePaint: zonePaint,
     );
 
@@ -284,7 +276,7 @@ abstract class ZonesPathCreator {
     required bool isClosedInitially,
     required this.series,
     required this.lineValue,
-    required this.linePath,
+    required this.canvasSize,
     Paint? zonePaint,
   })  : _paint = zonePaint ?? Paint()
           ..style = PaintingStyle.fill
@@ -295,6 +287,7 @@ abstract class ZonesPathCreator {
   /// Considers adding a new tick to update the [_areaPath] in the process of
   /// creating current zone [DataPathInfo].
   void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
+    _linePath ??= getLineRect(canvasSize, quoteToY);
     _areaPath ??= Path()..moveTo(0, quoteToY(lineValue));
     _areaPath?.lineTo(
         epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
@@ -308,7 +301,7 @@ abstract class ZonesPathCreator {
 
       _areaPath?.close();
 
-      _areaPath = Path.combine(PathOperation.intersect, linePath, _areaPath!);
+      _areaPath = Path.combine(PathOperation.intersect, _linePath!, _areaPath!);
 
       _paths.add(DataPathInfo(_areaPath!, _paint));
 
@@ -321,7 +314,7 @@ abstract class ZonesPathCreator {
       _areaPath!.lineTo(
           epochToX(series.getEpochOf(tick, index)), quoteToY(lineValue));
 
-      _areaPath = Path.combine(PathOperation.intersect, linePath, _areaPath!);
+      _areaPath = Path.combine(PathOperation.intersect, _linePath!, _areaPath!);
 
       _paths.add(DataPathInfo(_areaPath!, _paint));
     }
@@ -331,6 +324,9 @@ abstract class ZonesPathCreator {
   /// in creating a zone.
   @protected
   bool isOnZoneArea(Tick tick);
+
+  /// Gets the path of th
+  Path getLineRect(Size canvasSize, QuoteToY quoteToY);
 
   final Paint _paint;
 
@@ -345,8 +341,11 @@ abstract class ZonesPathCreator {
   /// The value of the horizontal line.
   final double lineValue;
 
+  /// The size of the canvas.
+  final Size canvasSize;
+
   /// The path of the horizontal line.
-  final Path linePath;
+  Path? _linePath;
 
   Path? _areaPath;
   late bool _isClosed;
@@ -358,18 +357,22 @@ class TopZonePathCreator extends ZonesPathCreator {
   TopZonePathCreator({
     required DataSeries<Tick> series,
     required double lineValue,
-    required Path linePath,
+    required Size canvasSize,
     Paint? zonePaint,
   }) : super(
           isClosedInitially: series.visibleEntries.first.quote < lineValue,
           series: series,
+          canvasSize: canvasSize,
           lineValue: lineValue,
-          linePath: linePath,
           zonePaint: zonePaint,
         );
 
   @override
   bool isOnZoneArea(Tick tick) => tick.quote >= lineValue;
+
+  @override
+  Path getLineRect(Size canvasSize, QuoteToY quoteToY) => Path()
+    ..addRect(Rect.fromLTRB(0, 0, canvasSize.width, quoteToY(lineValue)));
 }
 
 /// A classes to create [DataPathInfo] for bottom zones.
@@ -378,16 +381,27 @@ class BottomZonePathCreator extends ZonesPathCreator {
   BottomZonePathCreator({
     required DataSeries<Tick> series,
     required double lineValue,
-    required Path linePath,
+    required Size canvasSize,
     Paint? zonePaint,
   }) : super(
           isClosedInitially: series.visibleEntries.first.quote > lineValue,
           series: series,
+          canvasSize: canvasSize,
           lineValue: lineValue,
-          linePath: linePath,
           zonePaint: zonePaint,
         );
 
   @override
   bool isOnZoneArea(Tick tick) => tick.quote <= lineValue;
+
+  @override
+  Path getLineRect(Size canvasSize, QuoteToY quoteToY) => Path()
+    ..addRect(
+      Rect.fromLTRB(
+        0,
+        quoteToY(lineValue),
+        canvasSize.width,
+        canvasSize.height,
+      ),
+    );
 }
