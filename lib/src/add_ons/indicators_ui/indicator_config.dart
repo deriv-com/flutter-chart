@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -62,6 +63,8 @@ abstract class IndicatorConfig {
         return FractalChaosBandIndicatorConfig.fromJson(json);
       case WilliamsRIndicatorConfig.name:
         return WilliamsRIndicatorConfig.fromJson(json);
+      case MACDIndicatorConfig.name:
+        return MACDIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
