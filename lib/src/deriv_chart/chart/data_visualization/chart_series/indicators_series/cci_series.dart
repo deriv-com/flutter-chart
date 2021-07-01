@@ -36,7 +36,7 @@ class CCISeries extends AbstractSingleIndicatorSeries {
         super(
           CloseValueIndicator<Tick>(_indicatorInput),
           id ?? 'CCISeries',
-          options,
+          options: options,
           style: cciLineStyle,
         );
 

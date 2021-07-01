@@ -37,7 +37,7 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
     String? id,
     DataSeriesStyle? style,
     int offset = 0,
-  }) : super(inputIndicator, id ?? '$options', options,
+  }) : super(inputIndicator, id ?? '$options', options: options,
             style: style, offset: offset);
 
   /// Function which will be called to get the painter object of this class.

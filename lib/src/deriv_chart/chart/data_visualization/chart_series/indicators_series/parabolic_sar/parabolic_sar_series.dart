@@ -1,5 +1,5 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/scatter_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/parabolic_sar_options.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/scatter/scatter_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
@@ -22,7 +22,7 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
         super(
           CloseValueIndicator<Tick>(_indicatorInput),
           id ?? 'ParabolicSAR',
-          options,
+          options: options,
           style: style,
         );
 

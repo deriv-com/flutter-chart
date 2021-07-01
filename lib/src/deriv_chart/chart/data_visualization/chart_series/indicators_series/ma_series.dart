@@ -38,7 +38,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
   }) : super(
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',
-          options,
+          options: options,
           style: style ?? const LineStyle(thickness: 0.5),
           offset: offset,
         );
