@@ -210,6 +210,36 @@ class ChartLocalization {
     );
   }
 
+  /// `Fast MA Period`
+  String get labelFastMAPeriod {
+    return Intl.message(
+      'Fast MA Period',
+      name: 'labelFastMAPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Slow MA Period`
+  String get labelSlowMAPeriod {
+    return Intl.message(
+      'Slow MA Period',
+      name: 'labelSlowMAPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signal Period`
+  String get labelSignalPeriod {
+    return Intl.message(
+      'Signal Period',
+      name: 'labelSignalPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Over Bought Price`
   String get labelOverBoughtPrice {
     return Intl.message(
