@@ -99,22 +99,18 @@ class OscillatorLinePainter extends LinePainter {
 
     int i = series.visibleEntries.startIndex;
 
-    Path topAreaPath = Path()..moveTo(0, quoteToY(_topHorizontalLine!));
     final Paint zonePaint = Paint()
       ..color = Colors.white24
       ..style = PaintingStyle.fill;
 
-    bool topAreaClosed =
-        series.visibleEntries.first.quote < _topHorizontalLine!;
-
-    final UpZonePathCreator upZonePathCreator = UpZonePathCreator(
+    final TopZonePathCreator topZonePathCreator = TopZonePathCreator(
       series: series,
       lineValue: _topHorizontalLine!,
       linePath: topHorizontalLinePath,
       zonePaint: zonePaint,
     );
 
-    final DownZonePathCreator downZonePathCreator = DownZonePathCreator(
+    final BottomZonePathCreator bottomZonePathCreator = BottomZonePathCreator(
       series: series,
       lineValue: _bottomHorizontalLine!,
       linePath: bottomHorizontalLinePath,
@@ -125,44 +121,17 @@ class OscillatorLinePainter extends LinePainter {
         i < series.visibleEntries.endIndex - 1) {
       final Tick tick = series.entries![i];
 
-      upZonePathCreator.addTick(tick, i, epochToX, quoteToY);
-      downZonePathCreator.addTick(tick, i, epochToX, quoteToY);
+      topZonePathCreator.addTick(tick, i, epochToX, quoteToY);
+      bottomZonePathCreator.addTick(tick, i, epochToX, quoteToY);
 
-      // topAreaPath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
       dataLinePath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
-
-      // if (topAreaClosed && tick.quote > _topHorizontalLine!) {
-      //   topAreaClosed = false;
-      // }
-
-      // if (!topAreaClosed && tick.quote < _topHorizontalLine!) {
-      //   topAreaClosed = true;
-      //
-      //   topAreaPath.close();
-      //
-      //   topAreaPath = Path.combine(
-      //       PathOperation.intersect, topHorizontalLinePath, topAreaPath);
-      //
-      //   paths.add(DataPathInfo(topAreaPath, zonePaint));
-      //
-      //   topAreaPath = Path()
-      //     ..moveTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
-      // }
-
-      // if (i == series.visibleEntries.endIndex - 2 && !topAreaClosed) {
-      //   topAreaPath.lineTo(
-      //       epochToX(getEpochOf(tick, i)), quoteToY(_topHorizontalLine!));
-      //
-      //   topAreaPath = Path.combine(
-      //       PathOperation.intersect, topHorizontalLinePath, topAreaPath);
-      //
-      //   paths.add(DataPathInfo(topAreaPath, zonePaint));
-      // }
 
       i++;
     }
 
-    paths..addAll(upZonePathCreator._path)..addAll(downZonePathCreator._path);
+    paths
+      ..addAll(topZonePathCreator.paths)
+      ..addAll(bottomZonePathCreator.paths);
 
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
     paths.add(DataPathInfo(
@@ -320,7 +289,7 @@ abstract class ZonesPathCreator {
   })  : _paint = zonePaint ?? Paint()
           ..style = PaintingStyle.fill
           ..color = Colors.white24,
-        _path = <DataPathInfo>[],
+        _paths = <DataPathInfo>[],
         _isClosed = isClosedInitially;
 
   /// Considers adding a new tick to update the [_areaPath] in the process of
@@ -330,18 +299,18 @@ abstract class ZonesPathCreator {
     _areaPath?.lineTo(
         epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
 
-    if (_isClosed && isOverZoneArea(tick)) {
+    if (_isClosed && isOnZoneArea(tick)) {
       _isClosed = false;
     }
 
-    if (!_isClosed && !isOverZoneArea(tick)) {
+    if (!_isClosed && !isOnZoneArea(tick)) {
       _isClosed = true;
 
       _areaPath?.close();
 
       _areaPath = Path.combine(PathOperation.intersect, linePath, _areaPath!);
 
-      _path.add(DataPathInfo(_areaPath!, _paint));
+      _paths.add(DataPathInfo(_areaPath!, _paint));
 
       _areaPath = Path()
         ..moveTo(
@@ -354,28 +323,39 @@ abstract class ZonesPathCreator {
 
       _areaPath = Path.combine(PathOperation.intersect, linePath, _areaPath!);
 
-      _path.add(DataPathInfo(_areaPath!, _paint));
+      _paths.add(DataPathInfo(_areaPath!, _paint));
     }
   }
 
   /// Indicators whether the [tick] is on zones area and should be involved
   /// in creating a zone.
   @protected
-  bool isOverZoneArea(Tick tick);
+  bool isOnZoneArea(Tick tick);
 
   final Paint _paint;
-  final List<DataPathInfo> _path;
+
+  final List<DataPathInfo> _paths;
+
+  /// The result paths to be painted as zones fill.
+  List<DataPathInfo> get paths => _paths;
+
+  /// The data series which has the entries
+  final DataSeries<Tick> series;
+
+  /// The value of the horizontal line.
+  final double lineValue;
+
+  /// The path of the horizontal line.
+  final Path linePath;
+
   Path? _areaPath;
   late bool _isClosed;
-  final DataSeries<Tick> series;
-  final double lineValue;
-  final Path linePath;
 }
 
-///
-class UpZonePathCreator extends ZonesPathCreator {
-  ///
-  UpZonePathCreator({
+/// A classes to create [DataPathInfo] for top zones.
+class TopZonePathCreator extends ZonesPathCreator {
+  /// Initializes.
+  TopZonePathCreator({
     required DataSeries<Tick> series,
     required double lineValue,
     required Path linePath,
@@ -389,13 +369,13 @@ class UpZonePathCreator extends ZonesPathCreator {
         );
 
   @override
-  bool isOverZoneArea(Tick tick) => tick.quote >= lineValue;
+  bool isOnZoneArea(Tick tick) => tick.quote >= lineValue;
 }
 
-///
-class DownZonePathCreator extends ZonesPathCreator {
-  ///
-  DownZonePathCreator({
+/// A classes to create [DataPathInfo] for bottom zones.
+class BottomZonePathCreator extends ZonesPathCreator {
+  /// Initializes.
+  BottomZonePathCreator({
     required DataSeries<Tick> series,
     required double lineValue,
     required Path linePath,
@@ -409,5 +389,5 @@ class DownZonePathCreator extends ZonesPathCreator {
         );
 
   @override
-  bool isOverZoneArea(Tick tick) => tick.quote <= lineValue;
+  bool isOnZoneArea(Tick tick) => tick.quote <= lineValue;
 }
