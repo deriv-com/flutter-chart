@@ -101,8 +101,7 @@ class OscillatorLinePainter extends LinePainter {
     bool topAreaClosed =
         series.visibleEntries.first.quote < _topHorizontalLine!;
 
-    final FillPathManager pathManager = FillPathManager(
-      series.visibleEntries.first.quote < _topHorizontalLine!,
+    final UpZonePathCreator pathManager = UpZonePathCreator(
       series: series,
       lineValue: _topHorizontalLine!,
       linePath: topHorizontalLinePath,
@@ -295,11 +294,11 @@ double _labelWidth(double text, TextStyle style, int pipSize) =>
       style,
     ).width;
 
-///
-class FillPathManager {
-  ///
-  FillPathManager(
-    bool isClosedInitially, {
+/// A class which is responsible to create [DataPathInfo] for oscillators `show zones` option.
+abstract class ZonesPathCreator {
+  /// Initializes
+  ZonesPathCreator({
+    required bool isClosedInitially,
     required this.series,
     required this.lineValue,
     required this.linePath,
@@ -310,16 +309,18 @@ class FillPathManager {
         _path = <DataPathInfo>[],
         _isClosed = isClosedInitially;
 
+  /// Considers adding a new tick to update the [_areaPath] in the process of
+  /// creating current zone [DataPathInfo].
   void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
     _areaPath ??= Path()..moveTo(0, quoteToY(lineValue));
     _areaPath?.lineTo(
         epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
 
-    if (_isClosed && tick.quote > lineValue) {
+    if (_isClosed && isOverZoneArea(tick)) {
       _isClosed = false;
     }
 
-    if (!_isClosed && tick.quote < lineValue) {
+    if (!_isClosed && !isOverZoneArea(tick)) {
       _isClosed = true;
 
       _areaPath?.close();
@@ -343,6 +344,11 @@ class FillPathManager {
     }
   }
 
+  /// Indicators whether the [tick] is on zones area and should be involved
+  /// in creating a zone.
+  @protected
+  bool isOverZoneArea(Tick tick);
+
   final Paint _paint;
   final List<DataPathInfo> _path;
   Path? _areaPath;
@@ -350,4 +356,44 @@ class FillPathManager {
   final DataSeries<Tick> series;
   final double lineValue;
   final Path linePath;
+}
+
+///
+class UpZonePathCreator extends ZonesPathCreator {
+  ///
+  UpZonePathCreator({
+    required DataSeries<Tick> series,
+    required double lineValue,
+    required Path linePath,
+    Paint? zonePaint,
+  }) : super(
+          isClosedInitially: series.visibleEntries.first.quote < lineValue,
+          series: series,
+          lineValue: lineValue,
+          linePath: linePath,
+          zonePaint: zonePaint,
+        );
+
+  @override
+  bool isOverZoneArea(Tick tick) => tick.quote >= lineValue;
+}
+
+///
+class DownZonePathCreator extends ZonesPathCreator {
+  ///
+  DownZonePathCreator({
+    required DataSeries<Tick> series,
+    required double lineValue,
+    required Path linePath,
+    Paint? zonePaint,
+  }) : super(
+          isClosedInitially: series.visibleEntries.first.quote > lineValue,
+          series: series,
+          lineValue: lineValue,
+          linePath: linePath,
+          zonePaint: zonePaint,
+        );
+
+  @override
+  bool isOverZoneArea(Tick tick) => tick.quote <= lineValue;
 }
