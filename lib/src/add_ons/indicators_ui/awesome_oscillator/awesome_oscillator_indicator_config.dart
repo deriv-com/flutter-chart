@@ -17,7 +17,7 @@ part 'awesome_oscillator_indicator_config.g.dart';
 class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const AwesomeOscillatorIndicatorConfig({this.barStyle = const BarStyle()})
-      : super();
+      : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory AwesomeOscillatorIndicatorConfig.fromJson(
