@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelConversionLinePeriod":
             MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
         "labelDistance": MessageLookupByLibrary.simpleMessage("Distance"),
+        "labelFastMAPeriod":
+            MessageLookupByLibrary.simpleMessage("Fast MA Period"),
         "labelField": MessageLookupByLibrary.simpleMessage("Field"),
         "labelHighPeriod": MessageLookupByLibrary.simpleMessage("High Period"),
         "labelIsSmooth": MessageLookupByLibrary.simpleMessage("Is Smooth"),
@@ -58,6 +60,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show Fractals"),
         "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
         "labelShowZones": MessageLookupByLibrary.simpleMessage("Show Zones"),
+        "labelSignalPeriod":
+            MessageLookupByLibrary.simpleMessage("Signal Period"),
+        "labelSlowMAPeriod":
+            MessageLookupByLibrary.simpleMessage("Slow MA Period"),
         "labelSpanBPeriod":
             MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
         "labelStandardDeviation":
