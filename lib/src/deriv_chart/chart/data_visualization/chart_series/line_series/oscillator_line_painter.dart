@@ -101,43 +101,55 @@ class OscillatorLinePainter extends LinePainter {
     bool topAreaClosed =
         series.visibleEntries.first.quote < _topHorizontalLine!;
 
+    final FillPathManager pathManager = FillPathManager(
+      series.visibleEntries.first.quote < _topHorizontalLine!,
+      series: series,
+      lineValue: _topHorizontalLine!,
+      linePath: topHorizontalLinePath,
+      zonePaint: zonePaint,
+    );
+
     while (series.visibleEntries.isNotEmpty &&
         i < series.visibleEntries.endIndex - 1) {
       final Tick tick = series.entries![i];
 
-      topAreaPath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      pathManager.addTick(tick, i, epochToX, quoteToY);
+
+      // topAreaPath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
       dataLinePath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
 
-      if (topAreaClosed && tick.quote > _topHorizontalLine!) {
-        topAreaClosed = false;
-      }
+      // if (topAreaClosed && tick.quote > _topHorizontalLine!) {
+      //   topAreaClosed = false;
+      // }
 
-      if (!topAreaClosed && tick.quote < _topHorizontalLine!) {
-        topAreaClosed = true;
+      // if (!topAreaClosed && tick.quote < _topHorizontalLine!) {
+      //   topAreaClosed = true;
+      //
+      //   topAreaPath.close();
+      //
+      //   topAreaPath = Path.combine(
+      //       PathOperation.intersect, topHorizontalLinePath, topAreaPath);
+      //
+      //   paths.add(DataPathInfo(topAreaPath, zonePaint));
+      //
+      //   topAreaPath = Path()
+      //     ..moveTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      // }
 
-        topAreaPath.close();
-
-        topAreaPath = Path.combine(
-            PathOperation.intersect, topHorizontalLinePath, topAreaPath);
-
-        paths.add(DataPathInfo(topAreaPath, zonePaint));
-
-        topAreaPath = Path()
-          ..moveTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
-      }
-
-      if (i == series.visibleEntries.endIndex - 2 && !topAreaClosed) {
-        topAreaPath.lineTo(
-            epochToX(getEpochOf(tick, i)), quoteToY(_topHorizontalLine!));
-
-        topAreaPath = Path.combine(
-            PathOperation.intersect, topHorizontalLinePath, topAreaPath);
-
-        paths.add(DataPathInfo(topAreaPath, zonePaint));
-      }
+      // if (i == series.visibleEntries.endIndex - 2 && !topAreaClosed) {
+      //   topAreaPath.lineTo(
+      //       epochToX(getEpochOf(tick, i)), quoteToY(_topHorizontalLine!));
+      //
+      //   topAreaPath = Path.combine(
+      //       PathOperation.intersect, topHorizontalLinePath, topAreaPath);
+      //
+      //   paths.add(DataPathInfo(topAreaPath, zonePaint));
+      // }
 
       i++;
     }
+
+    paths.addAll(pathManager._path);
 
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
     paths.add(DataPathInfo(
@@ -282,3 +294,60 @@ double _labelWidth(double text, TextStyle style, int pipSize) =>
       text.toStringAsFixed(pipSize),
       style,
     ).width;
+
+///
+class FillPathManager {
+  ///
+  FillPathManager(
+    bool isClosedInitially, {
+    required this.series,
+    required this.lineValue,
+    required this.linePath,
+    Paint? zonePaint,
+  })  : _paint = zonePaint ?? Paint()
+          ..style = PaintingStyle.fill
+          ..color = Colors.white24,
+        _path = <DataPathInfo>[],
+        _isClosed = isClosedInitially;
+
+  void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
+    _areaPath ??= Path()..moveTo(0, quoteToY(lineValue));
+    _areaPath?.lineTo(
+        epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
+
+    if (_isClosed && tick.quote > lineValue) {
+      _isClosed = false;
+    }
+
+    if (!_isClosed && tick.quote < lineValue) {
+      _isClosed = true;
+
+      _areaPath?.close();
+
+      _areaPath = Path.combine(PathOperation.intersect, linePath, _areaPath!);
+
+      _path.add(DataPathInfo(_areaPath!, _paint));
+
+      _areaPath = Path()
+        ..moveTo(
+            epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
+    }
+
+    if (index == series.visibleEntries.endIndex - 2 && !_isClosed) {
+      _areaPath!.lineTo(
+          epochToX(series.getEpochOf(tick, index)), quoteToY(lineValue));
+
+      _areaPath = Path.combine(PathOperation.intersect, linePath, _areaPath!);
+
+      _path.add(DataPathInfo(_areaPath!, _paint));
+    }
+  }
+
+  final Paint _paint;
+  final List<DataPathInfo> _path;
+  Path? _areaPath;
+  late bool _isClosed;
+  final DataSeries<Tick> series;
+  final double lineValue;
+  final Path linePath;
+}
