@@ -104,9 +104,9 @@ abstract class ChartDefaultTheme implements ChartTheme {
 
   @override
   BarStyle get barStyle => BarStyle(
-    positiveColor: accentGreenColor,
-    negativeColor: accentRedColor,
-  );
+        positiveColor: accentGreenColor,
+        negativeColor: accentRedColor,
+      );
 
   @override
   LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
