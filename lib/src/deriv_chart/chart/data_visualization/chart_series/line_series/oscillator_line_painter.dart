@@ -311,7 +311,7 @@ abstract class ZonesPathCreator {
     }
   }
 
-  /// Indicators whether the [tick] is on zones area and should be involved
+  /// Indicates whether the [tick] is on zones area and should be involved
   /// in creating a zone.
   @protected
   bool isOnZoneArea(Tick tick);
