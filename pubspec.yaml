@@ -13,9 +13,9 @@ dependencies:
   collection: ^1.15.0-nullsafety.4
   deriv_technical_analysis:
     git:
-      url: git@github.com:raminvakili-fs/flutter-deriv-packages.git
+      url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: samin/migrate_to_null_safety_temp
+      ref: flutter2
   equatable: ^2.0.0
   flutter:
     sdk: flutter
