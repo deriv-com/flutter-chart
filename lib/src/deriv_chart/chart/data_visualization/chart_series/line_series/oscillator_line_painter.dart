@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -17,22 +16,22 @@ import 'line_painter.dart';
 class OscillatorLinePainter extends LinePainter {
   /// Initializes an Oscillator line painter.
   OscillatorLinePainter(
-    DataSeries<Tick> series, {
-    double? topHorizontalLine,
-    double? bottomHorizontalLine,
-    LineStyle? mainHorizontalLinesStyle,
-    LineStyle? secondaryHorizontalLinesStyle,
-    List<double> secondaryHorizontalLines = const <double>[],
-  })  : _mainHorizontalLinesStyle =
-            mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
+      DataSeries<Tick> series, {
+        double? topHorizontalLine,
+        double? bottomHorizontalLine,
+        LineStyle? mainHorizontalLinesStyle,
+        LineStyle? secondaryHorizontalLinesStyle,
+        List<double> secondaryHorizontalLines = const <double>[],
+      })  : _mainHorizontalLinesStyle =
+      mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
         _topHorizontalLine = topHorizontalLine,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle ??
             const LineStyle(color: Colors.blueGrey),
         _bottomHorizontalLine = bottomHorizontalLine,
         super(
-          series,
-        );
+        series,
+      );
 
   final double? _topHorizontalLine;
   final double? _bottomHorizontalLine;
@@ -50,24 +49,22 @@ class OscillatorLinePainter extends LinePainter {
 
   @override
   void onPaintData(
-    Canvas canvas,
-    Size size,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
-  ) {
+      Canvas canvas,
+      Size size,
+      EpochToX epochToX,
+      QuoteToY quoteToY,
+      AnimationInfo animationInfo,
+      ) {
     super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
 
     _paintHorizontalLines(canvas, quoteToY, size);
-
-    super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
   }
 
   void _paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {
     _paintSecondaryHorizontalLines(canvas, quoteToY, size);
 
     const HorizontalBarrierStyle textStyle =
-        HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
+    HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
     final Paint paint = Paint()
       ..color = _mainHorizontalLinesStyle.color
       ..style = PaintingStyle.stroke
@@ -81,7 +78,7 @@ class OscillatorLinePainter extends LinePainter {
         ..moveTo(0, quoteToY(_topHorizontalLine!))
         ..lineTo(
             size.width -
-                labelWidth(_bottomHorizontalLine!, textStyle.textStyle,
+                _labelWidth(_topHorizontalLine!, textStyle.textStyle,
                     chartConfig.pipSize),
             quoteToY(_topHorizontalLine!));
 
@@ -93,7 +90,7 @@ class OscillatorLinePainter extends LinePainter {
         ..moveTo(0, quoteToY(_bottomHorizontalLine!))
         ..lineTo(
             size.width -
-                labelWidth(_topHorizontalLine!, textStyle.textStyle,
+                _labelWidth(_topHorizontalLine!, textStyle.textStyle,
                     chartConfig.pipSize),
             quoteToY(_bottomHorizontalLine!));
 
@@ -165,3 +162,9 @@ class OscillatorLinePainter extends LinePainter {
 
 // TODO(mohammadamir-fs): add channel fill.
 }
+
+double _labelWidth(double text, TextStyle style, int pipSize) =>
+    makeTextPainter(
+      text.toStringAsFixed(pipSize),
+      style,
+    ).width;

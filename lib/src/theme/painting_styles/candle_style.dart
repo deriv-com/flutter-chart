@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 /// Defines the style of painting candle data.
 class CandleStyle extends DataSeriesStyle with EquatableMixin {
