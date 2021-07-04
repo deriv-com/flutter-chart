@@ -61,6 +61,7 @@ const _$MovingAverageTypeEnumMap = {
   MovingAverageType.hull: 'hull',
   MovingAverageType.zeroLag: 'zeroLag',
   MovingAverageType.timeSeries: 'timeSeries',
+  MovingAverageType.wellesWilder: 'wellesWilder',
 };
 
 const _$ShiftTypeEnumMap = {
