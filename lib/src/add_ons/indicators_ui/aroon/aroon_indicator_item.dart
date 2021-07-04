@@ -14,7 +14,7 @@ class AroonIndicatorItem extends IndicatorItem {
   /// Initializes
   const AroonIndicatorItem({
     Key? key,
-    AroonIndicatorConfig config= const AroonIndicatorConfig(),
+    AroonIndicatorConfig config = const AroonIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
   }) : super(
@@ -32,7 +32,7 @@ class AroonIndicatorItem extends IndicatorItem {
 
 /// Aroon Item State class
 class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
-  int _period;
+  int? _period;
 
   @override
   AroonIndicatorConfig createIndicatorConfig() => AroonIndicatorConfig(
@@ -73,5 +73,5 @@ class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
       );
 
   int get _currentPeriod =>
-      _period ?? (widget.config as AroonIndicatorConfig)?.period ?? 14;
+      _period ?? (widget.config as AroonIndicatorConfig).period;
 }

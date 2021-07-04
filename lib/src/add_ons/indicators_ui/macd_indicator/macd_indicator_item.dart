@@ -136,17 +136,11 @@ class MACDIndicatorItemState extends IndicatorItemState<MACDIndicatorConfig> {
 
   // TOdO(Ramin): Add generic type to avoid casting.
   int get _currentSlowMAPeriod =>
-      _slowMAPeriod ??
-      (widget.config as MACDIndicatorConfig)?.slowMAPeriod ??
-      26;
+      _slowMAPeriod ?? (widget.config as MACDIndicatorConfig).slowMAPeriod;
 
   int get _currentFastMAPeriod =>
-      _fastMAPeriod ??
-      (widget.config as MACDIndicatorConfig)?.fastMAPeriod ??
-      12;
+      _fastMAPeriod ?? (widget.config as MACDIndicatorConfig).fastMAPeriod;
 
   int get _currentSignalPeriod =>
-      _signalPeriod ??
-      (widget.config as MACDIndicatorConfig)?.signalPeriod ??
-      9;
+      _signalPeriod ?? (widget.config as MACDIndicatorConfig).signalPeriod;
 }
