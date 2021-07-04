@@ -293,7 +293,7 @@ abstract class ZonesPathCreator {
             epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
     }
 
-    if (index == series.visibleEntries.endIndex - 2 && !_isClosed) {
+    if (index == series.visibleEntries.endIndex - 1 && !_isClosed) {
       _areaPath!.lineTo(
           epochToX(series.getEpochOf(tick, index)), quoteToY(lineValue));
 
