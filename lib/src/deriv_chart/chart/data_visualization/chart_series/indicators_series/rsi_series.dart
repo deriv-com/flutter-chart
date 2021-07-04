@@ -68,7 +68,7 @@ class RSISeries extends AbstractSingleIndicatorSeries {
         this,
         bottomHorizontalLine: config.overSoldPrice,
         topHorizontalLine: config.overBoughtPrice,
-        mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+        topHorizontalLinesStyle: config.mainHorizontalLinesStyle,
       );
 
   @override

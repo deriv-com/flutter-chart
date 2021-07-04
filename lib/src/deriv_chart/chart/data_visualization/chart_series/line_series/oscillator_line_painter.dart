@@ -19,12 +19,11 @@ class OscillatorLinePainter extends LinePainter {
     DataSeries<Tick> series, {
     double? topHorizontalLine,
     double? bottomHorizontalLine,
-    LineStyle? mainHorizontalLinesStyle,
+    this.topHorizontalLinesStyle = const LineStyle(color: Colors.blueGrey),
+    this.bottomHorizontalLinesStyle = const LineStyle(color: Colors.blueGrey),
     LineStyle? secondaryHorizontalLinesStyle,
     List<double> secondaryHorizontalLines = const <double>[],
-  })  : _mainHorizontalLinesStyle =
-            mainHorizontalLinesStyle ?? const LineStyle(color: Colors.blueGrey),
-        _topHorizontalLine = topHorizontalLine,
+  })  : _topHorizontalLine = topHorizontalLine,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle ??
             const LineStyle(color: Colors.blueGrey),
@@ -35,7 +34,13 @@ class OscillatorLinePainter extends LinePainter {
 
   final double? _topHorizontalLine;
   final double? _bottomHorizontalLine;
-  final LineStyle _mainHorizontalLinesStyle;
+
+  /// Line style of the top horizontal line
+  final LineStyle topHorizontalLinesStyle;
+
+  /// Line style of the bottom horizontal line
+  final LineStyle bottomHorizontalLinesStyle;
+
   final List<double> _secondaryHorizontalLines;
   final LineStyle _secondaryHorizontalLinesStyle;
 
@@ -81,22 +86,26 @@ class OscillatorLinePainter extends LinePainter {
 
     int i = series.visibleEntries.startIndex;
 
-    final Paint zonePaint = Paint()
-      ..color = Colors.white24
+    final Paint topZonesPaint = Paint()
+      ..color = topHorizontalLinesStyle.color.withOpacity(0.5)
+      ..style = PaintingStyle.fill;
+
+    final Paint bottomZonesPaint = Paint()
+      ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
       ..style = PaintingStyle.fill;
 
     final TopZonePathCreator topZonePathCreator = TopZonePathCreator(
       series: series,
       lineValue: _topHorizontalLine!,
       canvasSize: size,
-      zonePaint: zonePaint,
+      zonePaint: topZonesPaint,
     );
 
     final BottomZonePathCreator bottomZonePathCreator = BottomZonePathCreator(
       series: series,
       lineValue: _bottomHorizontalLine!,
       canvasSize: size,
-      zonePaint: zonePaint,
+      zonePaint: bottomZonesPaint,
     );
 
     while (series.visibleEntries.isNotEmpty &&
@@ -152,11 +161,11 @@ class OscillatorLinePainter extends LinePainter {
     const HorizontalBarrierStyle textStyle =
         HorizontalBarrierStyle(textStyle: TextStyle(fontSize: 10));
     final Paint paint = Paint()
-      ..color = _mainHorizontalLinesStyle.color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = _mainHorizontalLinesStyle.thickness;
+      ..strokeWidth = topHorizontalLinesStyle.thickness;
 
     if (_topHorizontalLine != null) {
+      paint.color = topHorizontalLinesStyle.color;
       canvas.drawLine(
           Offset(0, quoteToY(_topHorizontalLine!)),
           Offset(
@@ -168,6 +177,7 @@ class OscillatorLinePainter extends LinePainter {
     }
 
     if (_bottomHorizontalLine != null) {
+      paint.color = bottomHorizontalLinesStyle.color;
       canvas.drawLine(
           Offset(0, quoteToY(_bottomHorizontalLine!)),
           Offset(
@@ -257,9 +267,10 @@ abstract class ZonesPathCreator {
     required this.lineValue,
     required this.canvasSize,
     Paint? zonePaint,
-  })  : _paint = zonePaint ?? Paint()
-          ..style = PaintingStyle.fill
-          ..color = Colors.white24,
+  })  : _paint = zonePaint ??
+            (Paint()
+              ..style = PaintingStyle.fill
+              ..color = Colors.white24),
         _paths = <DataPathInfo>[],
         _isClosed = isClosedInitially;
 
