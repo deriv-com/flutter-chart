@@ -109,13 +109,25 @@ class OscillatorLinePainter extends LinePainter {
     );
 
     while (series.visibleEntries.isNotEmpty &&
-        i < series.visibleEntries.endIndex - 1) {
+        i < series.visibleEntries.endIndex) {
       final Tick tick = series.entries![i];
 
       topZonePathCreator.addTick(tick, i, epochToX, quoteToY);
       bottomZonePathCreator.addTick(tick, i, epochToX, quoteToY);
 
-      dataLinePath.lineTo(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      if (i == series.visibleEntries.endIndex - 1) {
+        final Offset? lastVisibleTickPosition =
+            calculateLastVisibleTickPosition(
+                epochToX, animationInfo, quoteToY, dataLinePath);
+
+        if (lastVisibleTickPosition != null) {
+          dataLinePath.lineTo(
+              lastVisibleTickPosition.dx, lastVisibleTickPosition.dy);
+        }
+      } else {
+        dataLinePath.lineTo(
+            epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      }
 
       i++;
     }
@@ -131,30 +143,6 @@ class OscillatorLinePainter extends LinePainter {
           ..style = PaintingStyle.stroke
           ..color = style.color
           ..strokeWidth = style.thickness));
-
-    // // Adding visible entries line to the path except the last which might be animated.
-    // for (int i = series.visibleEntries.startIndex;
-    //     i < series.visibleEntries.endIndex - 1;
-    //     i++) {
-    //   final Tick tick = series.entries![i];
-    //
-    //   if (!tick.quote.isNaN) {
-    //     final double y = quoteToY(tick.quote);
-    //     dataLinePath.lineTo(lastVisibleTickX, y);
-    //   }
-    // }
-    //
-    // _lastVisibleTickX = _calculateLastVisibleTick(
-    //     epochToX, animationInfo, quoteToY, dataLinePath);
-    //
-    // final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
-    //
-    // final Paint linePaint = Paint()
-    //   ..color = style.color
-    //   ..style = PaintingStyle.stroke
-    //   ..strokeWidth = style.thickness;
-    //
-    // paths.add(DataPathInfo(dataLinePath, linePaint));
 
     return paths;
   }

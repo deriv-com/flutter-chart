@@ -75,8 +75,15 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       }
     }
 
-    lastVisibleTickX = _calculateLastVisibleTick(
+    final Offset? lastVisibleTickPosition = calculateLastVisibleTickPosition(
         epochToX, animationInfo, quoteToY, dataLinePath);
+
+    if (lastVisibleTickPosition != null) {
+      dataLinePath.lineTo(
+          lastVisibleTickPosition.dx, lastVisibleTickPosition.dy);
+
+      lastVisibleTickX = lastVisibleTickPosition.dx;
+    }
 
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
 
@@ -101,8 +108,9 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     return paths;
   }
 
-  /// calculates the last visible tick's `dx`.
-  double _calculateLastVisibleTick(
+  /// calculates the last visible tick's position.
+  @protected
+  Offset? calculateLastVisibleTickPosition(
     EpochToX epochToX,
     AnimationInfo animationInfo,
     QuoteToY quoteToY,
@@ -129,15 +137,15 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
           animationInfo.currentTickPercent,
         )!);
 
-        path.lineTo(lastVisibleTickX, tickY);
+        return Offset(lastVisibleTickX, tickY);
       } else {
         lastVisibleTickX = epochToX(
             getEpochOf(lastVisibleTick, series.visibleEntries.endIndex - 1));
-        path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
+        return Offset(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
       }
     }
 
-    return lastVisibleTickX;
+    return null;
   }
 
   DataPathInfo _getArea(
