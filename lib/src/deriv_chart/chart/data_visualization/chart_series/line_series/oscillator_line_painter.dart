@@ -77,15 +77,7 @@ class OscillatorLinePainter extends LinePainter {
 
     final Path dataLinePath = Path();
 
-    double lastVisibleTickX;
-    lastVisibleTickX = epochToX(getEpochOf(
-        series.visibleEntries.first, series.visibleEntries.startIndex));
-
-    // TODO(NA): Check Nan.
-    dataLinePath.moveTo(
-      lastVisibleTickX,
-      quoteToY(series.visibleEntries.first.quote),
-    );
+    double? lastVisibleTickX;
 
     int i = series.visibleEntries.startIndex;
 
@@ -113,6 +105,10 @@ class OscillatorLinePainter extends LinePainter {
 
       if (tick.quote.isNaN) {
         continue;
+      } else if (lastVisibleTickX == null) {
+        lastVisibleTickX = epochToX(getEpochOf(tick, i));
+
+        dataLinePath.moveTo(lastVisibleTickX, quoteToY(tick.quote));
       }
 
       topZonePathCreator.addTick(tick, i, epochToX, quoteToY);
