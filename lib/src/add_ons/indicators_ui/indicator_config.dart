@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -60,6 +61,8 @@ abstract class IndicatorConfig {
         return CCIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case MACDIndicatorConfig.name:
+        return MACDIndicatorConfig.fromJson(json);
       case AroonIndicatorConfig.name:
         return AroonIndicatorConfig.fromJson(json);
       // Add new indicators here.
