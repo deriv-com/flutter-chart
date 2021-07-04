@@ -66,6 +66,8 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return ZLEMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.triangular:
         return TRIMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.wellesWilder:
+        return WWSMAIndicator<Tick>(indicator, maOptions.period);
       default:
         return SMAIndicator<Tick>(indicator, maOptions.period);
     }
@@ -88,6 +90,9 @@ enum MovingAverageType {
 
   /// Zero-lag exponential
   zeroLag,
+
+  /// Welles Wilder
+  wellesWilder,
 
   /// Triangular
   triangular,
