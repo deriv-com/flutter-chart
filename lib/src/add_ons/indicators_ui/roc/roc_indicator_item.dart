@@ -75,7 +75,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
       );
 
   int get _currentPeriod =>
-      _period ?? (widget.config as ROCIndicatorConfig)?.period ?? 14;
+      _period ?? (widget.config as ROCIndicatorConfig).period;
 
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[
@@ -107,5 +107,5 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
       );
 
   String get _currentField =>
-      _field ?? (widget.config as ROCIndicatorConfig)?.fieldType ?? 'close';
+      _field ?? (widget.config as ROCIndicatorConfig).fieldType;
 }

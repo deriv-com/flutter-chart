@@ -94,7 +94,6 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     child: Text('MACD'),
                     value: MACDIndicatorConfig(),
                   ),
-                  ),
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Price Rate Of Changes'),
                     value: ROCIndicatorConfig(),
