@@ -1,4 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 
 import 'package:flutter/material.dart';
 
@@ -38,8 +39,10 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   @override
   CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
         period: _currentPeriod,
-        overboughtValue: _currentOverBoughtPrice,
-        oversoldValue: _currentOverSoldPrice,
+        oscillatorLinesConfig: OscillatorLinesConfig(
+          overboughtValue: _currentOverBoughtPrice,
+          oversoldValue: _currentOverSoldPrice,
+        ),
       );
 
   @override
@@ -108,7 +111,10 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double get _currentOverBoughtPrice =>
-      _overboughtValue ?? (widget.config as CCIIndicatorConfig).overboughtValue;
+      _overboughtValue ??
+      (widget.config as CCIIndicatorConfig)
+          .oscillatorLinesConfig
+          .overboughtValue;
 
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
@@ -137,5 +143,6 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       );
 
   double get _currentOverSoldPrice =>
-      _oversoldValue ?? (widget.config as CCIIndicatorConfig).oversoldValue;
+      _oversoldValue ??
+      (widget.config as CCIIndicatorConfig).oscillatorLinesConfig.oversoldValue;
 }

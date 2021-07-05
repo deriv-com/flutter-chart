@@ -9,8 +9,8 @@ part of 'cci_indicator_config.dart';
 CCIIndicatorConfig _$CCIIndicatorConfigFromJson(Map<String, dynamic> json) {
   return CCIIndicatorConfig(
     period: json['period'] as int,
-    overboughtValue: (json['overboughtValue'] as num).toDouble(),
-    oversoldValue: (json['oversoldValue'] as num).toDouble(),
+    oscillatorLinesConfig: OscillatorLinesConfig.fromJson(
+        json['oscillatorLinesConfig'] as Map<String, dynamic>),
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
   );
 }
@@ -18,7 +18,6 @@ CCIIndicatorConfig _$CCIIndicatorConfigFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$CCIIndicatorConfigToJson(CCIIndicatorConfig instance) =>
     <String, dynamic>{
       'period': instance.period,
-      'overboughtValue': instance.overboughtValue,
-      'oversoldValue': instance.oversoldValue,
+      'oscillatorLinesConfig': instance.oscillatorLinesConfig,
       'lineStyle': instance.lineStyle,
     };

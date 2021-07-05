@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/cci_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/cci_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -19,8 +20,10 @@ class CCIIndicatorConfig extends IndicatorConfig {
   /// Initializes.
   const CCIIndicatorConfig({
     this.period = 20,
-    this.overboughtValue = 100,
-    this.oversoldValue = -100,
+    this.oscillatorLinesConfig = const OscillatorLinesConfig(
+      overboughtValue: 100,
+      oversoldValue: -100,
+    ),
     this.lineStyle = const LineStyle(color: Colors.white),
   }) : super(isOverlay: false);
 
@@ -38,11 +41,8 @@ class CCIIndicatorConfig extends IndicatorConfig {
   /// The period to calculate the average gain and loss.
   final int period;
 
-  /// Overbought value.
-  final double overboughtValue;
-
-  /// Oversold value.
-  final double oversoldValue;
+  /// The config of overbought/sold.
+  final OscillatorLinesConfig oscillatorLinesConfig;
 
   /// The CCI line style.
   final LineStyle lineStyle;
@@ -51,8 +51,8 @@ class CCIIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => CCISeries(
         indicatorInput,
         CCIOptions(period),
-        overboughtValue: overboughtValue,
-        oversoldValue: oversoldValue,
+        overboughtValue: oscillatorLinesConfig.overboughtValue,
+        oversoldValue: oscillatorLinesConfig.oversoldValue,
       );
 
   @override
