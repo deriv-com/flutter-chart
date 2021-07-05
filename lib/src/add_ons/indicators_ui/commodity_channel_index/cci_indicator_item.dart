@@ -3,6 +3,7 @@ import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
 
 import 'package:flutter/material.dart';
 
@@ -76,31 +77,25 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   int get _currentPeriod =>
       _period ?? (widget.config as CCIIndicatorConfig).period;
 
-  Widget _buildOverBoughtPriceField() => Row(
-        children: [
-          FieldWidget(
-            initialValue: _currentOverBoughtPrice.toString(),
-            label: ChartLocalization.of(context).labelOverbought,
-            onValueChanged: (String text) {
-              if (text.isNotEmpty) {
-                _overboughtValue = double.tryParse(text);
-              } else {
-                _overboughtValue = 100;
-              }
-              updateIndicator();
-            },
-          ),
-          ColorSelector(
-            currentColor: _currentOverboughtStyle.color,
-            onColorChanged: (Color selectedColor) {
-              setState(() {
-                _overboughtStyle =
-                    _currentOverboughtStyle.copyWith(color: selectedColor);
-              });
-              updateIndicator();
-            },
-          ),
-        ],
+  Widget _buildOverBoughtPriceField() => OscillatorLimit(
+        label: ChartLocalization.of(context).labelOverbought,
+        value: _currentOverBoughtPrice,
+        color: _currentOverboughtStyle.color,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overboughtValue = double.tryParse(text);
+          } else {
+            _overboughtValue = 100;
+          }
+          updateIndicator();
+        },
+        onColorChanged: (Color selectedColor) {
+          setState(() {
+            _overboughtStyle =
+                _currentOverboughtStyle.copyWith(color: selectedColor);
+          });
+          updateIndicator();
+        },
       );
 
   double get _currentOverBoughtPrice =>
