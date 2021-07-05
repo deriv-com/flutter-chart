@@ -4,7 +4,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
@@ -135,21 +134,16 @@ class ADXSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _positiveDISeries.update(leftEpoch, rightEpoch);
-    _negativeDISeries.update(leftEpoch, rightEpoch);
-    _adxSeries.update(leftEpoch, rightEpoch);
-    _adxHistogramSeries.update(leftEpoch, rightEpoch);
+    for (final SingleIndicatorSeries series in _adxSeriesList) {
+      series.update(leftEpoch, rightEpoch);
+    }
   }
 
   @override
   List<double> recalculateMinMax() {
-    final double minValue = _adxSeriesList
-        .map((SingleIndicatorSeries series) => series.minValue)
-        .reduce(safeMin);
+    final double minValue = _adxSeriesList.getMinValue();
 
-    final double maxValue = _adxSeriesList
-        .map((SingleIndicatorSeries series) => series.maxValue)
-        .reduce(safeMax);
+    final double maxValue = _adxSeriesList.getMaxValue();
 
     return <double>[minValue, maxValue];
   }
