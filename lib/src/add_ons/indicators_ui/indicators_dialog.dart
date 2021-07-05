@@ -17,6 +17,7 @@ import 'macd_indicator/macd_indicator_config.dart';
 import 'parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'rainbow_indicator/rainbow_indicator_config.dart';
 import 'rsi/rsi_indicator_config.dart';
+import 'williams_r/williams_r_indicator_config.dart';
 import 'zigzag_indicator/zigzag_indicator_config.dart';
 
 /// Indicators dialog with selected indicators.
@@ -93,6 +94,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('ADX'),
                     value: ADXIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Williams %R'),
+                    value: WilliamsRIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('MACD'),
