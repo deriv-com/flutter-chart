@@ -291,13 +291,10 @@ abstract class ZonesPathCreator {
 
     if (!_isClosed && !isOnZoneArea(tick)) {
       _isClosed = true;
-
       _areaPath?.close();
-
       _areaPath = Path.combine(PathOperation.intersect, _linePath!, _areaPath!);
 
       _paths.add(DataPathInfo(_areaPath!, _paint));
-
       _areaPath = Path()
         ..moveTo(
             epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));

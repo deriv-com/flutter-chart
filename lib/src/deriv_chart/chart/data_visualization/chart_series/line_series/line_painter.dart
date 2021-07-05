@@ -177,14 +177,16 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   }
 }
 
+/// A class for holding the information required to paint a path.
 ///
+/// this information can represent a line data or a fill area on an indicator.
 class DataPathInfo {
-  ///
+  /// Initializes
   DataPathInfo(this.path, this.paint);
 
-  ///
+  /// The Path
   final Path path;
 
-  ///
+  /// Paint object which describes how this [path] is going to be painted.
   final Paint paint;
 }
