@@ -118,7 +118,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       return paddingValue.clamp(
           BasicChartState.minPadding, canvasSize!.height / 2);
     } else {
-      return BasicChartState.minPadding;
+      return 0;
     }
   }
 
