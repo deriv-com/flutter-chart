@@ -24,7 +24,7 @@ class CCISeries extends AbstractSingleIndicatorSeries {
     CCIOptions options, {
     this.overboughtValue = 100,
     this.oversoldValue = -100,
-    this.overBoughtLineStyle =
+    this.overboughtLineStyle =
         const LineStyle(color: Colors.white, thickness: 0.5),
     this.oversoldLineStyle =
         const LineStyle(color: Colors.white, thickness: 0.5),
@@ -51,7 +51,7 @@ class CCISeries extends AbstractSingleIndicatorSeries {
   final double oversoldValue;
 
   /// LineStyle of overbought line
-  final LineStyle overBoughtLineStyle;
+  final LineStyle overboughtLineStyle;
 
   /// LineStyle of oversold line
   final LineStyle oversoldLineStyle;
@@ -64,6 +64,8 @@ class CCISeries extends AbstractSingleIndicatorSeries {
         this,
         topHorizontalLine: overboughtValue,
         bottomHorizontalLine: oversoldValue,
+        topHorizontalLinesStyle: overboughtLineStyle,
+        bottomHorizontalLinesStyle: oversoldLineStyle,
         secondaryHorizontalLinesStyle: zeroHorizontalLineStyle,
       );
 
