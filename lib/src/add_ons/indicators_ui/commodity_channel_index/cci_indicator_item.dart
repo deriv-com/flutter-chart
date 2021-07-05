@@ -1,5 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
 
 import 'package:flutter/material.dart';
 
@@ -54,60 +55,34 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         ],
       );
 
-  Widget _buildPeriodField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelPeriod,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentPeriod.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _period = int.tryParse(text);
-                } else {
-                  _period = 20;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildPeriodField() => FieldWidget(
+        initialValue: _currentPeriod.toString(),
+        label: ChartLocalization.of(context).labelPeriod,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _period = int.tryParse(text);
+          } else {
+            _period = 20;
+          }
+          updateIndicator();
+        },
       );
 
   // TODO(Ramin): use generic type in widget class as well for the config.
   int get _currentPeriod =>
       _period ?? (widget.config as CCIIndicatorConfig).period;
 
-  Widget _buildOverBoughtPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverBoughtPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentOverBoughtPrice.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _overboughtValue = double.tryParse(text);
-                } else {
-                  _overboughtValue = 100;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverBoughtPriceField() => FieldWidget(
+        initialValue: _currentOverBoughtPrice.toString(),
+        label: ChartLocalization.of(context).labelOverBoughtPrice,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overboughtValue = double.tryParse(text);
+          } else {
+            _overboughtValue = 100;
+          }
+          updateIndicator();
+        },
       );
 
   double get _currentOverBoughtPrice =>
@@ -116,30 +91,17 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           .oscillatorLinesConfig
           .overboughtValue;
 
-  Widget _buildOverSoldPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverSoldPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentOverSoldPrice.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _oversoldValue = double.tryParse(text);
-                } else {
-                  _oversoldValue = -100;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverSoldPriceField() => FieldWidget(
+        initialValue: _currentOverSoldPrice.toString(),
+        label: ChartLocalization.of(context).labelOverSoldPrice,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _oversoldValue = double.tryParse(text);
+          } else {
+            _oversoldValue = -100;
+          }
+          updateIndicator();
+        },
       );
 
   double get _currentOverSoldPrice =>
