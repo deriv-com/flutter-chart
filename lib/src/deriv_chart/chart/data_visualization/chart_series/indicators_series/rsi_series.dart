@@ -56,19 +56,20 @@ class RSISeries extends AbstractSingleIndicatorSeries {
       return rsiMinMax;
     }
     return <double>[
-      safeMin(
-          safeMin(rsiMinMax[0], config.overSoldPrice), config.overBoughtPrice),
-      safeMax(
-          safeMax(rsiMinMax[1], config.overSoldPrice), config.overBoughtPrice),
+      safeMin(safeMin(rsiMinMax[0], config.oscillatorLinesConfig.oversoldValue),
+          config.oscillatorLinesConfig.overboughtValue),
+      safeMax(safeMax(rsiMinMax[1], config.oscillatorLinesConfig.oversoldValue),
+          config.oscillatorLinesConfig.overboughtValue),
     ];
   }
 
   @override
   SeriesPainter<Series> createPainter() => OscillatorLinePainter(
         this,
-        bottomHorizontalLine: config.overSoldPrice,
-        topHorizontalLine: config.overBoughtPrice,
-        topHorizontalLinesStyle: config.mainHorizontalLinesStyle,
+        bottomHorizontalLine: config.oscillatorLinesConfig.oversoldValue,
+        topHorizontalLine: config.oscillatorLinesConfig.overboughtValue,
+        topHorizontalLinesStyle: config.oscillatorLinesConfig.overboughtStyle,
+        bottomHorizontalLinesStyle: config.oscillatorLinesConfig.oversoldStyle,
       );
 
   @override

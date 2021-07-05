@@ -1,5 +1,7 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
 
 import 'package:flutter/material.dart';
 
@@ -36,12 +38,18 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   double? _overBoughtPrice;
   double? _overSoldPrice;
   String? _field;
+  LineStyle? _overboughtStyle;
+  LineStyle? _oversoldStyle;
 
   @override
   RSIIndicatorConfig createIndicatorConfig() => RSIIndicatorConfig(
         period: _getCurrentPeriod(),
-        overBoughtPrice: _getCurrentOverBoughtPrice(),
-        overSoldPrice: _getCurrentOverSoldPrice(),
+        oscillatorLinesConfig: OscillatorLinesConfig(
+          overboughtValue: _getCurrentOverBoughtPrice(),
+          oversoldValue: _getCurrentOverSoldPrice(),
+          overboughtStyle: _currentOverboughtStyle,
+          oversoldStyle: _currentOversoldStyle,
+        ),
         fieldType: _getCurrentField(),
       );
 
@@ -116,61 +124,65 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   String _getCurrentField() =>
       _field ?? (widget.config as RSIIndicatorConfig).fieldType;
 
-  Widget _buildOverBoughtPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverbought,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverBoughtPrice().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _overBoughtPrice = double.tryParse(text);
-                } else {
-                  _overBoughtPrice = 80;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverBoughtPriceField() => OscillatorLimit(
+        label: ChartLocalization.of(context).labelOverbought,
+        value: _getCurrentOverBoughtPrice(),
+        color: _currentOverboughtStyle.color,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overBoughtPrice = double.tryParse(text);
+          } else {
+            _overBoughtPrice = 80;
+          }
+          updateIndicator();
+        },
+        onColorChanged: (Color selectedColor) {
+          setState(() {
+            _overboughtStyle =
+                _currentOverboughtStyle.copyWith(color: selectedColor);
+          });
+          updateIndicator();
+        },
       );
 
   double _getCurrentOverBoughtPrice() =>
-      _overBoughtPrice ?? (widget.config as RSIIndicatorConfig).overBoughtPrice;
+      _overBoughtPrice ??
+      (widget.config as RSIIndicatorConfig)
+          .oscillatorLinesConfig
+          .overboughtValue;
 
-  Widget _buildOverSoldPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOversold,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _getCurrentOverSoldPrice().toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _overSoldPrice = double.tryParse(text);
-                } else {
-                  _overSoldPrice = 20;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverSoldPriceField() => OscillatorLimit(
+        label: ChartLocalization.of(context).labelOversold,
+        value: _getCurrentOverSoldPrice(),
+        color: _currentOversoldStyle.color,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overSoldPrice = double.tryParse(text);
+          } else {
+            _overSoldPrice = 20;
+          }
+          updateIndicator();
+        },
+        onColorChanged: (Color selectedColor) {
+          setState(() {
+            _oversoldStyle =
+                _currentOversoldStyle.copyWith(color: selectedColor);
+          });
+          updateIndicator();
+        },
       );
 
   double _getCurrentOverSoldPrice() =>
-      _overSoldPrice ?? (widget.config as RSIIndicatorConfig).overSoldPrice;
+      _overSoldPrice ??
+      (widget.config as RSIIndicatorConfig).oscillatorLinesConfig.oversoldValue;
+
+  LineStyle get _currentOverboughtStyle =>
+      _overboughtStyle ??
+      (widget.config as RSIIndicatorConfig)
+          .oscillatorLinesConfig
+          .overboughtStyle;
+
+  LineStyle get _currentOversoldStyle =>
+      _oversoldStyle ??
+      (widget.config as RSIIndicatorConfig).oscillatorLinesConfig.oversoldStyle;
 }

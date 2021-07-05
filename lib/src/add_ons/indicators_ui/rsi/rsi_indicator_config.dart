@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/rsi_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/rsi_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -20,12 +21,11 @@ class RSIIndicatorConfig extends IndicatorConfig {
   const RSIIndicatorConfig({
     this.period = 14,
     this.fieldType = 'close',
-    this.overBoughtPrice = 80,
-    this.overSoldPrice = 20,
-    this.lineStyle = const LineStyle(color: Colors.white),
-    this.mainHorizontalLinesStyle = const LineStyle(
-      color: Colors.blueGrey,
+    this.oscillatorLinesConfig = const OscillatorLinesConfig(
+      overboughtValue: 80,
+      oversoldValue: 20,
     ),
+    this.lineStyle = const LineStyle(color: Colors.white),
     this.pinLabels = false,
   }) : super(isOverlay: false);
 
@@ -43,17 +43,8 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// The period to calculate the average gain and loss.
   final int period;
 
-  /// The price to show the over bought line.
-  final double overBoughtPrice;
-
-  /// The price to show the over sold line.
-  final double overSoldPrice;
-
   /// The RSI line style.
   final LineStyle lineStyle;
-
-  /// The RSI horizontal lines style(overBought and overSold).
-  final LineStyle mainHorizontalLinesStyle;
 
   /// Field type
   final String fieldType;
@@ -61,6 +52,9 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// Wether to always show labels or not.
   /// Default is set to `false`.
   final bool pinLabels;
+
+  /// Config of overbought and oversold.
+  final OscillatorLinesConfig oscillatorLinesConfig;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
