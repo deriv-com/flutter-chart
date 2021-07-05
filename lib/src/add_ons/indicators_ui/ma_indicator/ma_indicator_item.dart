@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -69,23 +70,14 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   Widget getIndicatorOptions() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          ColorButton(
-            color: getCurrentLineStyle().color,
-            onTap: () {
-              showModalBottomSheet<void>(
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: (BuildContext context) => ColorPickerSheet(
-                  selectedColor: getCurrentLineStyle().color,
-                  onChanged: (Color selectedColor) {
-                    setState(() {
-                      lineStyle =
-                          getCurrentLineStyle().copyWith(color: selectedColor);
-                    });
-                    updateIndicator();
-                  },
-                ),
-              );
+          ColorSelector(
+            currentColor: getCurrentLineStyle().color,
+            onColorChanged: (Color selectedColor) {
+              setState(() {
+                lineStyle =
+                    getCurrentLineStyle().copyWith(color: selectedColor);
+              });
+              updateIndicator();
             },
           ),
           buildMATypeMenu(),
