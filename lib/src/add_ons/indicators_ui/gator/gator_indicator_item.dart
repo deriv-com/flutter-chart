@@ -29,8 +29,7 @@ class GatorIndicatorItem extends IndicatorItem {
 }
 
 /// AlligatorIndicatorItem State class
-class GatorIndicatorItemState
-    extends IndicatorItemState<GatorIndicatorConfig> {
+class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   int? _jawOffset;
   int? _jawPeriod;
   int? _teethOffset;

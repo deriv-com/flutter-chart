@@ -20,6 +20,7 @@ import 'ma_indicator/ma_indicator_config.dart';
 import 'parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'rainbow_indicator/rainbow_indicator_config.dart';
 import 'rsi/rsi_indicator_config.dart';
+import 'williams_r/williams_r_indicator_config.dart';
 import 'zigzag_indicator/zigzag_indicator_config.dart';
 
 /// Indicator config
@@ -61,6 +62,8 @@ abstract class IndicatorConfig {
         return CCIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case WilliamsRIndicatorConfig.name:
+        return WilliamsRIndicatorConfig.fromJson(json);
       case MACDIndicatorConfig.name:
         return MACDIndicatorConfig.fromJson(json);
       case GatorIndicatorConfig.name:

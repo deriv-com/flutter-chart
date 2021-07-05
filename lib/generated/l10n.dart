@@ -287,6 +287,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Show Zones`
+  String get labelShowZones {
+    return Intl.message(
+      'Show Zones',
+      name: 'labelShowZones',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Bands Count`
   String get labelBandsCount {
     return Intl.message(
