@@ -24,6 +24,7 @@
   "labelMaxAF": "Max AF",
   "labelMinAF": "Min AF",
   "labelShift": "Shift",
+  "labelShowZones": "Show Zones",
   "labelBandsCount": "Bands Count",
   "labelSearchAssets": "Search assets",
   "labelStandardDeviation": "Standard Deviation",
