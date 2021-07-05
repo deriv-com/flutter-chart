@@ -10,7 +10,8 @@ class OscillatorLinesConfig {
   const OscillatorLinesConfig({
     required this.overBoughtPrice,
     required this.overSoldPrice,
-    this.lineStyle = const LineStyle(),
+    this.overboughtStyle = const LineStyle(),
+    this.oversoldStyle = const LineStyle(),
   });
 
   /// The price to show the over bought line.
@@ -19,8 +20,11 @@ class OscillatorLinesConfig {
   /// The price to show the over sold line.
   final double overSoldPrice;
 
-  /// The horizontal lines style(overBought and overSold).
-  final LineStyle lineStyle;
+  /// The overbought line style.
+  final LineStyle overboughtStyle;
+
+  /// The oversold line style.
+  final LineStyle oversoldStyle;
 
   /// Initializes from JSON.
   factory OscillatorLinesConfig.fromJson(Map<String, dynamic> json) =>
