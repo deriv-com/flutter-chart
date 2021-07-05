@@ -177,7 +177,10 @@ class OscillatorLinePainter extends LinePainter {
     }
 
     if (_bottomHorizontalLine != null) {
-      paint.color = bottomHorizontalLinesStyle.color;
+      paint
+        ..color = bottomHorizontalLinesStyle.color
+        ..strokeWidth = bottomHorizontalLinesStyle.thickness;
+
       canvas.drawLine(
           Offset(0, quoteToY(_bottomHorizontalLine!)),
           Offset(

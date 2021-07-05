@@ -10,8 +10,8 @@ class OscillatorLinesConfig {
   const OscillatorLinesConfig({
     required this.overboughtValue,
     required this.oversoldValue,
-    this.overboughtStyle = const LineStyle(),
-    this.oversoldStyle = const LineStyle(),
+    this.overboughtStyle = const LineStyle(thickness: 0.5),
+    this.oversoldStyle = const LineStyle(thickness: 0.5),
   });
 
   /// The price to show the over bought line.
