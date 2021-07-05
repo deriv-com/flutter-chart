@@ -240,21 +240,21 @@ class ChartLocalization {
     );
   }
 
-  /// `Over Bought Price`
-  String get labelOverBoughtPrice {
+  /// `Overbought`
+  String get labelOverbought {
     return Intl.message(
-      'Over Bought Price',
-      name: 'labelOverBoughtPrice',
+      'Overbought',
+      name: 'labelOverbought',
       desc: '',
       args: [],
     );
   }
 
-  /// `Over Sold Price`
-  String get labelOverSoldPrice {
+  /// `Oversold`
+  String get labelOversold {
     return Intl.message(
-      'Over Sold Price',
-      name: 'labelOverSoldPrice',
+      'Oversold',
+      name: 'labelOversold',
       desc: '',
       args: [],
     );

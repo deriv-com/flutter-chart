@@ -46,10 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelMaxAF": MessageLookupByLibrary.simpleMessage("Max AF"),
         "labelMinAF": MessageLookupByLibrary.simpleMessage("Min AF"),
         "labelOffset": MessageLookupByLibrary.simpleMessage("Offset"),
-        "labelOverBoughtPrice":
-            MessageLookupByLibrary.simpleMessage("Over Bought Price"),
-        "labelOverSoldPrice":
-            MessageLookupByLibrary.simpleMessage("Over Sold Price"),
+        "labelOverbought": MessageLookupByLibrary.simpleMessage("Overbought"),
+        "labelOversold": MessageLookupByLibrary.simpleMessage("Oversold"),
         "labelPeriod": MessageLookupByLibrary.simpleMessage("Period"),
         "labelSearchAssets":
             MessageLookupByLibrary.simpleMessage("Search assets"),

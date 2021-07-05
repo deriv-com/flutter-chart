@@ -119,7 +119,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelOverBoughtPrice,
+            ChartLocalization.of(context).labelOverbought,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -148,7 +148,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelOverSoldPrice,
+            ChartLocalization.of(context).labelOversold,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

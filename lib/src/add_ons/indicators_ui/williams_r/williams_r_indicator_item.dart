@@ -98,7 +98,7 @@ class WilliamsRIndicatorItemState
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
         initialValue: _currentOverBoughtPrice.toString(),
-        label: ChartLocalization.of(context).labelOverBoughtPrice,
+        label: ChartLocalization.of(context).labelOverbought,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _overBoughtPrice = double.tryParse(text);
@@ -117,7 +117,7 @@ class WilliamsRIndicatorItemState
 
   Widget _buildOverSoldPriceField() => FieldWidget(
         initialValue: _currentOverSoldPrice.toString(),
-        label: ChartLocalization.of(context).labelOverSoldPrice,
+        label: ChartLocalization.of(context).labelOversold,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _overSoldPrice = double.tryParse(text);

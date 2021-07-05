@@ -80,7 +80,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         children: [
           FieldWidget(
             initialValue: _currentOverBoughtPrice.toString(),
-            label: ChartLocalization.of(context).labelOverBoughtPrice,
+            label: ChartLocalization.of(context).labelOverbought,
             onValueChanged: (String text) {
               if (text.isNotEmpty) {
                 _overboughtValue = double.tryParse(text);
@@ -111,7 +111,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
 
   Widget _buildOverSoldPriceField() => FieldWidget(
         initialValue: _currentOverSoldPrice.toString(),
-        label: ChartLocalization.of(context).labelOverSoldPrice,
+        label: ChartLocalization.of(context).labelOversold,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _oversoldValue = double.tryParse(text);
