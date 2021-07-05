@@ -1,7 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
 
@@ -40,6 +39,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   double? _overboughtValue;
   double? _oversoldValue;
   LineStyle? _overboughtStyle;
+  LineStyle? _oversoldStyle;
 
   @override
   CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
@@ -48,6 +48,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           overboughtValue: _currentOverBoughtPrice,
           oversoldValue: _currentOverSoldPrice,
           overboughtStyle: _currentOverboughtStyle,
+          oversoldStyle: _currentOversoldStyle,
         ),
       );
 
@@ -104,15 +105,23 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           .oscillatorLinesConfig
           .overboughtValue;
 
-  Widget _buildOverSoldPriceField() => FieldWidget(
-        initialValue: _currentOverSoldPrice.toString(),
+  Widget _buildOverSoldPriceField() => OscillatorLimit(
         label: ChartLocalization.of(context).labelOversold,
+        value: _currentOverSoldPrice,
+        color: _currentOversoldStyle.color,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _oversoldValue = double.tryParse(text);
           } else {
             _oversoldValue = -100;
           }
+          updateIndicator();
+        },
+        onColorChanged: (Color selectedColor) {
+          setState(() {
+            _oversoldStyle =
+                _currentOversoldStyle.copyWith(color: selectedColor);
+          });
           updateIndicator();
         },
       );
@@ -126,4 +135,8 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       (widget.config as CCIIndicatorConfig)
           .oscillatorLinesConfig
           .overboughtStyle;
+
+  LineStyle get _currentOversoldStyle =>
+      _oversoldStyle ??
+      (widget.config as CCIIndicatorConfig).oscillatorLinesConfig.oversoldStyle;
 }
