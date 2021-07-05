@@ -53,6 +53,8 @@ class CCIIndicatorConfig extends IndicatorConfig {
         CCIOptions(period),
         overboughtValue: oscillatorLinesConfig.overboughtValue,
         oversoldValue: oscillatorLinesConfig.oversoldValue,
+        overBoughtLineStyle: oscillatorLinesConfig.overboughtStyle,
+        oversoldLineStyle: oscillatorLinesConfig.oversoldStyle,
       );
 
   @override

@@ -1,5 +1,7 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -36,6 +38,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   int? _period;
   double? _overboughtValue;
   double? _oversoldValue;
+  LineStyle? _overboughtStyle;
 
   @override
   CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
@@ -43,6 +46,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
         oscillatorLinesConfig: OscillatorLinesConfig(
           overboughtValue: _currentOverBoughtPrice,
           oversoldValue: _currentOverSoldPrice,
+          overboughtStyle: _currentOverboughtStyle,
         ),
       );
 
@@ -72,17 +76,31 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   int get _currentPeriod =>
       _period ?? (widget.config as CCIIndicatorConfig).period;
 
-  Widget _buildOverBoughtPriceField() => FieldWidget(
-        initialValue: _currentOverBoughtPrice.toString(),
-        label: ChartLocalization.of(context).labelOverBoughtPrice,
-        onValueChanged: (String text) {
-          if (text.isNotEmpty) {
-            _overboughtValue = double.tryParse(text);
-          } else {
-            _overboughtValue = 100;
-          }
-          updateIndicator();
-        },
+  Widget _buildOverBoughtPriceField() => Row(
+        children: [
+          FieldWidget(
+            initialValue: _currentOverBoughtPrice.toString(),
+            label: ChartLocalization.of(context).labelOverBoughtPrice,
+            onValueChanged: (String text) {
+              if (text.isNotEmpty) {
+                _overboughtValue = double.tryParse(text);
+              } else {
+                _overboughtValue = 100;
+              }
+              updateIndicator();
+            },
+          ),
+          ColorSelector(
+            currentColor: _currentOverboughtStyle.color,
+            onColorChanged: (Color selectedColor) {
+              setState(() {
+                _overboughtStyle =
+                    _currentOverboughtStyle.copyWith(color: selectedColor);
+              });
+              updateIndicator();
+            },
+          ),
+        ],
       );
 
   double get _currentOverBoughtPrice =>
@@ -107,4 +125,10 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   double get _currentOverSoldPrice =>
       _oversoldValue ??
       (widget.config as CCIIndicatorConfig).oscillatorLinesConfig.oversoldValue;
+
+  LineStyle get _currentOverboughtStyle =>
+      _overboughtStyle ??
+      (widget.config as CCIIndicatorConfig)
+          .oscillatorLinesConfig
+          .overboughtStyle;
 }
