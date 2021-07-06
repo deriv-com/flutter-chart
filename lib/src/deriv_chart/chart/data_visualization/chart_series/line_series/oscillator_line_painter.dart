@@ -280,7 +280,7 @@ abstract class ZonesPathCreator {
   /// Considers adding a new tick to update the [_areaPath] in the process of
   /// creating current zone [DataPathInfo].
   void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
-    _linePath ??= getLineRect(canvasSize, quoteToY);
+    _rectPath ??= getLineRect(canvasSize, quoteToY);
     _areaPath ??= Path()..moveTo(0, quoteToY(lineValue));
     _areaPath?.lineTo(
         epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
@@ -292,7 +292,7 @@ abstract class ZonesPathCreator {
     if (!_isClosed && !isOnZoneArea(tick)) {
       _isClosed = true;
       _areaPath?.close();
-      _areaPath = Path.combine(PathOperation.intersect, _linePath!, _areaPath!);
+      _areaPath = Path.combine(PathOperation.intersect, _rectPath!, _areaPath!);
 
       _paths.add(DataPathInfo(_areaPath!, _paint));
       _areaPath = Path()
@@ -304,7 +304,7 @@ abstract class ZonesPathCreator {
       _areaPath!.lineTo(
           epochToX(series.getEpochOf(tick, index)), quoteToY(lineValue));
 
-      _areaPath = Path.combine(PathOperation.intersect, _linePath!, _areaPath!);
+      _areaPath = Path.combine(PathOperation.intersect, _rectPath!, _areaPath!);
 
       _paths.add(DataPathInfo(_areaPath!, _paint));
     }
@@ -315,7 +315,23 @@ abstract class ZonesPathCreator {
   @protected
   bool isOnZoneArea(Tick tick);
 
-  /// Gets the path of th
+  /// Gets the path of the rectangle that will be intersected with the [_areaPath]
+  /// to create the actual fill area path.
+  ///
+  /// This rectangle somehow represents the horizontal line that we want to get the enclosed
+  /// area between this line and [series] data, since intersection with a line doesn't give
+  /// us the desired fill path, we have to intersect the line data path with a rectangle to
+  /// get the correct fill area path. The rect's boundaries will be different depending on
+  /// whether we're creating the top/bottom zones fill. E.g. for a top zones fill area:
+  ///
+  ///  _______________________________________
+  /// |                                       |
+  /// |         The Rectangle                 |
+  /// |          ____                         |
+  /// |         /####\ intersected fill area  |
+  /// ---------------------------------------- -> The horizontal line
+  ///    ____/        \___
+  ///   /                 \_______ -> The [Series] data line
   Path getLineRect(Size canvasSize, QuoteToY quoteToY);
 
   final Paint _paint;
@@ -335,7 +351,7 @@ abstract class ZonesPathCreator {
   final Size canvasSize;
 
   /// The path of the horizontal line.
-  Path? _linePath;
+  Path? _rectPath;
 
   Path? _areaPath;
   late bool _isClosed;
