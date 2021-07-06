@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
@@ -25,29 +26,21 @@ class GatorSeries extends Series {
   GatorSeries(
     IndicatorInput indicatorInput, {
     required this.gatorOptions,
+    required this.gatorConfig,
     String? id,
-    this.jawOffset = 8,
-    this.teethOffset = 5,
-    this.lipsOffset = 3,
   })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
-        super(id ?? 'Gator$AlligatorOptions$jawOffset$teethOffset$lipsOffset');
+        super(id ?? 'Gator$AlligatorOptions');
 
   final Indicator<Tick> _fieldIndicator;
 
   /// Gator options
   AlligatorOptions gatorOptions;
 
-  SingleIndicatorSeries? _gatorTopSeries;
-  SingleIndicatorSeries? _gatorBottomSeries;
+  late SingleIndicatorSeries _gatorTopSeries;
+  late SingleIndicatorSeries _gatorBottomSeries;
 
-  /// Shift to future in jaw series
-  final int jawOffset;
-
-  /// Shift to future in teeth series
-  final int teethOffset;
-
-  /// Shift to future in lips series
-  final int lipsOffset;
+  /// Gator config
+  final GatorIndicatorConfig gatorConfig;
 
   @override
   SeriesPainter<Series>? createPainter() {
@@ -63,13 +56,13 @@ class GatorSeries extends Series {
       indicatorCreator: () => GatorOscillatorIndicatorTopBar<Tick>(
           _fieldIndicator,
           jawPeriod: gatorOptions.jawPeriod,
-          jawOffset: jawOffset,
+          jawOffset: gatorConfig.jawOffset,
           teethPeriod: gatorOptions.teethPeriod,
-          teethOffset: teethOffset),
+          teethOffset: gatorConfig.teethOffset),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
       style: const BarStyle(),
-      offset: min(jawOffset, teethOffset),
+      offset: min(gatorConfig.jawOffset, gatorConfig.teethOffset),
     );
 
     _gatorBottomSeries = SingleIndicatorSeries(
@@ -87,14 +80,14 @@ class GatorSeries extends Series {
       indicatorCreator: () => GatorOscillatorIndicatorBottomBar<Tick>(
         _fieldIndicator,
         teethPeriod: gatorOptions.teethPeriod,
-        teethOffset: teethOffset,
-        lipsOffset: lipsOffset,
+        teethOffset: gatorConfig.teethOffset,
+        lipsOffset: gatorConfig.lipsOffset,
         lipsPeriod: gatorOptions.lipsPeriod,
       ),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
       style: const BarStyle(),
-      offset: min(teethOffset, lipsOffset),
+      offset: min(gatorConfig.teethOffset, gatorConfig.lipsOffset),
     );
 
     return null;
@@ -104,17 +97,17 @@ class GatorSeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final GatorSeries? series = oldData as GatorSeries?;
     final bool _gatorBottomUpdated =
-        _gatorBottomSeries?.didUpdate(series?._gatorBottomSeries) ?? false;
+        _gatorBottomSeries.didUpdate(series?._gatorBottomSeries);
     final bool _gatorTopUpdated =
-        _gatorTopSeries?.didUpdate(series?._gatorTopSeries) ?? false;
+        _gatorTopSeries.didUpdate(series?._gatorTopSeries);
 
     return _gatorTopUpdated || _gatorBottomUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _gatorTopSeries?.update(leftEpoch, rightEpoch);
-    _gatorBottomSeries?.update(leftEpoch, rightEpoch);
+    _gatorTopSeries.update(leftEpoch, rightEpoch);
+    _gatorBottomSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
@@ -133,9 +126,9 @@ class GatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _gatorBottomSeries?.paint(
+    _gatorBottomSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _gatorTopSeries?.paint(
+    _gatorTopSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 

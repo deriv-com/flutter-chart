@@ -57,9 +57,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => GatorSeries(
         indicatorInput,
-        jawOffset: jawOffset,
-        teethOffset: teethOffset,
-        lipsOffset: lipsOffset,
+        gatorConfig: this,
         gatorOptions: AlligatorOptions(
           jawPeriod: jawPeriod,
           teethPeriod: teethPeriod,
