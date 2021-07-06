@@ -91,7 +91,7 @@ abstract class ZonesPathCreator {
   /// |          ____                         |
   /// |         /####\ intersected fill area  |
   /// ---------/-----|------------------------ -> The horizontal line
-  ///    _____/      \___
+  ///    _____/       \___
   ///  _/                \_______ -> The [series] data line
   Path getLineRect(Size canvasSize, EpochToX epochToX, QuoteToY quoteToY);
 
@@ -140,7 +140,8 @@ class TopZonePathCreator extends ZonesPathCreator {
   @override
   Path getLineRect(Size canvasSize, EpochToX epochToX, QuoteToY quoteToY) =>
       Path()
-        ..addRect(Rect.fromLTRB(
+        ..addRect(
+          Rect.fromLTRB(
             _firstNonNanTick.entry.quote.isNaN
                 ? 0
                 : epochToX(series.getEpochOf(
@@ -149,7 +150,9 @@ class TopZonePathCreator extends ZonesPathCreator {
                   )),
             0,
             canvasSize.width,
-            quoteToY(lineValue)));
+            quoteToY(lineValue),
+          ),
+        );
 }
 
 /// A class to create [DataPathInfo] list for bottom zones.
