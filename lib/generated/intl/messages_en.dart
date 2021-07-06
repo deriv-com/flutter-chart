@@ -49,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelShiftType" : MessageLookupByLibrary.simpleMessage("Shift Type"),
     "labelShowFractals" : MessageLookupByLibrary.simpleMessage("Show Fractals"),
     "labelShowLines" : MessageLookupByLibrary.simpleMessage("Show Lines"),
+    "labelShowZones" : MessageLookupByLibrary.simpleMessage("Show Zones"),
     "labelSignalPeriod" : MessageLookupByLibrary.simpleMessage("Signal Period"),
     "labelSlowMAPeriod" : MessageLookupByLibrary.simpleMessage("Slow MA Period"),
     "labelSpanBPeriod" : MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
