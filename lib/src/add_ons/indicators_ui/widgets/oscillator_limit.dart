@@ -16,13 +16,13 @@ class OscillatorLimit extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  /// Value.
+  /// The value of the line.
   final double value;
 
-  /// Color
+  /// The color of the line and zones fill area.
   final Color color;
 
-  /// Filed label
+  /// Field label
   final String label;
 
   /// Will be called when the value has changed.

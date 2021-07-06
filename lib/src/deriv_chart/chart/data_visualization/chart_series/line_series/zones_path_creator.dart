@@ -92,7 +92,7 @@ abstract class ZonesPathCreator {
   /// |         /####\ intersected fill area  |
   /// ---------/-----|------------------------ -> The horizontal line
   ///    _____/       \___
-  ///  _/                \_______ -> The [series] data line
+  ///  _/                 \______ -> The [series] data line
   Path getLineRect(Size canvasSize, EpochToX epochToX, QuoteToY quoteToY);
 
   final Paint _paint;
