@@ -23,6 +23,9 @@ abstract class ZonesPathCreator {
 
   /// Considers adding a new tick to update the [_areaPath] in the process of
   /// creating current zone [DataPathInfo].
+  ///
+  /// Once a zone fill area is create, a [DataPathInfo] will be instantiated for it
+  /// and will be added to [paths] list.
   void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
     _rectPath ??= getLineRect(canvasSize, quoteToY);
     _areaPath ??= Path()..moveTo(0, quoteToY(lineValue));
@@ -101,7 +104,7 @@ abstract class ZonesPathCreator {
   late bool _isClosed;
 }
 
-/// A classes to create [DataPathInfo] for top zones.
+/// A class to create [DataPathInfo] list for top zones.
 class TopZonePathCreator extends ZonesPathCreator {
   /// Initializes.
   TopZonePathCreator({
@@ -125,7 +128,7 @@ class TopZonePathCreator extends ZonesPathCreator {
     ..addRect(Rect.fromLTRB(0, 0, canvasSize.width, quoteToY(lineValue)));
 }
 
-/// A classes to create [DataPathInfo] for bottom zones.
+/// A class to create [DataPathInfo] list for bottom zones.
 class BottomZonePathCreator extends ZonesPathCreator {
   /// Initializes.
   BottomZonePathCreator({
