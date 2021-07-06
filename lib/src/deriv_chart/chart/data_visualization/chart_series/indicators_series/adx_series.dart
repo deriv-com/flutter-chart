@@ -153,16 +153,16 @@ class ADXSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
+    if (config.showHistogram) {
+      _adxHistogramSeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
     if (config.showSeries) {
       _negativeDISeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
       _positiveDISeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
       _adxSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    }
-    if (config.showHistogram) {
-      _adxHistogramSeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     }
   }
