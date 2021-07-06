@@ -147,7 +147,7 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
       _period ?? (widget.config as ADXIndicatorConfig).period;
 
   int get _currentSmoothingPeriod =>
-      _smoothingPeriod ?? (widget.config as ADXIndicatorConfig).period;
+      _smoothingPeriod ?? (widget.config as ADXIndicatorConfig).smoothingPeriod;
 
   bool get _currentChannelFill =>
       _channelFill ?? (widget.config as ADXIndicatorConfig).showChannelFill;

@@ -57,7 +57,7 @@ class ADXSeries extends Series {
     final ADXIndicator<Tick> adxIndicator = ADXIndicator<Tick>.fromIndicator(
       positiveDIIndicator,
       negativeDIIndicator,
-      adxPeriod: adxOptions.period,
+      adxPeriod: adxOptions.smoothingPeriod,
     );
 
     _positiveDISeries = SingleIndicatorSeries(
@@ -140,13 +140,8 @@ class ADXSeries extends Series {
   }
 
   @override
-  List<double> recalculateMinMax() {
-    final double minValue = _adxSeriesList.getMinValue();
-
-    final double maxValue = _adxSeriesList.getMaxValue();
-
-    return <double>[minValue, maxValue];
-  }
+  List<double> recalculateMinMax() =>
+      <double>[_adxSeriesList.getMinValue(), _adxSeriesList.getMaxValue()];
 
   @override
   void paint(
@@ -158,8 +153,16 @@ class ADXSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    for (final SingleIndicatorSeries series in _adxSeriesList) {
-      series.paint(
+    if (config.showSeries) {
+      _negativeDISeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      _positiveDISeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      _adxSeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
+    if (config.showHistogram) {
+      _adxHistogramSeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     }
   }
