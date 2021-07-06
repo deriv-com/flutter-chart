@@ -1,5 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
 
 import 'package:flutter/material.dart';
 
@@ -53,29 +54,30 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
           _buildPeriodField(),
           _buildSmoothingPeriodField(),
           _buildShowSeriesToggle(),
-          _buildChannelFillToggle(),
+          // _buildChannelFillToggle(),
           _buildShowHistogramToggle()
         ],
       );
 
-  Widget _buildChannelFillToggle() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelShading,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          Switch(
-            value: _currentChannelFill,
-            onChanged: (bool value) {
-              setState(() {
-                _channelFill = value;
-              });
-              updateIndicator();
-            },
-          ),
-        ],
-      );
+  // TODO(mohammadamir): Add Shading after channel Fill is done
+  // Widget _buildChannelFillToggle() => Row(
+  //       children: <Widget>[
+  //         Text(
+  //           ChartLocalization.of(context).labelShading,
+  //           style: const TextStyle(fontSize: 10),
+  //         ),
+  //         const SizedBox(width: 4),
+  //         Switch(
+  //           value: _currentChannelFill,
+  //           onChanged: (bool value) {
+  //             setState(() {
+  //               _channelFill = value;
+  //             });
+  //             updateIndicator();
+  //           },
+  //         ),
+  //       ],
+  //     );
 
   Widget _buildShowSeriesToggle() => Row(
         children: <Widget>[
@@ -115,56 +117,30 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
         ],
       );
 
-  Widget _buildSmoothingPeriodField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelSmoothingPeriod,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentSmoothingPeriod.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _smoothingPeriod = int.tryParse(text);
-                } else {
-                  _smoothingPeriod = 14;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildSmoothingPeriodField() => FieldWidget(
+        initialValue: _currentSmoothingPeriod.toString(),
+        label: ChartLocalization.of(context).labelSmoothingPeriod,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _smoothingPeriod = int.tryParse(text);
+          } else {
+            _smoothingPeriod = 14;
+          }
+          updateIndicator();
+        },
       );
 
-  Widget _buildPeriodField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelPeriod,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentPeriod.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _period = int.tryParse(text);
-                } else {
-                  _period = 14;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildPeriodField() => FieldWidget(
+        initialValue: _currentPeriod.toString(),
+        label: ChartLocalization.of(context).labelPeriod,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _period = int.tryParse(text);
+          } else {
+            _period = 14;
+          }
+          updateIndicator();
+        },
       );
 
   int get _currentPeriod =>
