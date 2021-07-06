@@ -15,21 +15,21 @@ abstract class ZonesPathCreator {
     required this.canvasSize,
     Paint? zonePaint,
   })  : _paint = zonePaint ??
-      (Paint()
-        ..style = PaintingStyle.fill
-        ..color = Colors.white24),
+            (Paint()
+              ..style = PaintingStyle.fill
+              ..color = Colors.white24),
         _paths = <DataPathInfo>[],
         _isClosed = isClosedInitially;
 
-  /// Considers adding a new tick to update the [_areaPath] in the process of
+  /// Considers adding a new tick to update the [_currentFillPath] in the process of
   /// creating current zone [DataPathInfo].
   ///
   /// Once a zone fill area is create, a [DataPathInfo] will be instantiated for it
   /// and will be added to [paths] list.
   void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
     _rectPath ??= getLineRect(canvasSize, quoteToY);
-    _areaPath ??= Path()..moveTo(0, quoteToY(lineValue));
-    _areaPath?.lineTo(
+    _currentFillPath ??= Path()..moveTo(0, quoteToY(lineValue));
+    _currentFillPath?.lineTo(
         epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
 
     if (_isClosed && isOnZoneArea(tick)) {
@@ -38,22 +38,24 @@ abstract class ZonesPathCreator {
 
     if (!_isClosed && !isOnZoneArea(tick)) {
       _isClosed = true;
-      _areaPath?.close();
-      _areaPath = Path.combine(PathOperation.intersect, _rectPath!, _areaPath!);
+      _currentFillPath?.close();
+      final Path areaPath =
+          Path.combine(PathOperation.intersect, _rectPath!, _currentFillPath!);
 
-      _paths.add(DataPathInfo(_areaPath!, _paint));
-      _areaPath = Path()
+      _paths.add(DataPathInfo(areaPath, _paint));
+      _currentFillPath = Path()
         ..moveTo(
             epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
     }
 
     if (index == series.visibleEntries.endIndex - 1 && !_isClosed) {
-      _areaPath!.lineTo(
+      _currentFillPath!.lineTo(
           epochToX(series.getEpochOf(tick, index)), quoteToY(lineValue));
 
-      _areaPath = Path.combine(PathOperation.intersect, _rectPath!, _areaPath!);
+      final Path areaPath =
+          Path.combine(PathOperation.intersect, _rectPath!, _currentFillPath!);
 
-      _paths.add(DataPathInfo(_areaPath!, _paint));
+      _paths.add(DataPathInfo(areaPath, _paint));
     }
   }
 
@@ -62,7 +64,7 @@ abstract class ZonesPathCreator {
   @protected
   bool isOnZoneArea(Tick tick);
 
-  /// Gets the path of the rectangle that will be intersected with the [_areaPath]
+  /// Gets the path of the rectangle that will be intersected with the [_currentFillPath]
   /// to create the actual fill area path.
   ///
   /// This rectangle somehow represents the horizontal line that we want to get the enclosed
@@ -100,7 +102,7 @@ abstract class ZonesPathCreator {
   /// The path of the horizontal line.
   Path? _rectPath;
 
-  Path? _areaPath;
+  Path? _currentFillPath;
   late bool _isClosed;
 }
 
@@ -113,12 +115,12 @@ class TopZonePathCreator extends ZonesPathCreator {
     required Size canvasSize,
     Paint? zonePaint,
   }) : super(
-    isClosedInitially: series.visibleEntries.first.quote < lineValue,
-    series: series,
-    canvasSize: canvasSize,
-    lineValue: lineValue,
-    zonePaint: zonePaint,
-  );
+          isClosedInitially: series.visibleEntries.first.quote < lineValue,
+          series: series,
+          canvasSize: canvasSize,
+          lineValue: lineValue,
+          zonePaint: zonePaint,
+        );
 
   @override
   bool isOnZoneArea(Tick tick) => tick.quote >= lineValue;
@@ -137,12 +139,12 @@ class BottomZonePathCreator extends ZonesPathCreator {
     required Size canvasSize,
     Paint? zonePaint,
   }) : super(
-    isClosedInitially: series.visibleEntries.first.quote > lineValue,
-    series: series,
-    canvasSize: canvasSize,
-    lineValue: lineValue,
-    zonePaint: zonePaint,
-  );
+          isClosedInitially: series.visibleEntries.first.quote > lineValue,
+          series: series,
+          canvasSize: canvasSize,
+          lineValue: lineValue,
+          zonePaint: zonePaint,
+        );
 
   @override
   bool isOnZoneArea(Tick tick) => tick.quote <= lineValue;
