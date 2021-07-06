@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indexed_entry.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,18 @@ abstract class ZonesPathCreator {
               ..style = PaintingStyle.fill
               ..color = Colors.white24),
         _paths = <DataPathInfo>[],
-        _isClosed = isClosedInitially;
+        _isClosed = isClosedInitially {
+    int index = series.visibleEntries.startIndex;
+    _firstNonNanTick = IndexedEntry<Tick>(series.visibleEntries.first, index);
+    while (_firstNonNanTick.entry.quote.isNaN &&
+        index < series.visibleEntries.endIndex) {
+      index++;
+      _firstNonNanTick =
+          IndexedEntry<Tick>(series.visibleEntries.entries[index], index);
+    }
+  }
+
+  late IndexedEntry<Tick> _firstNonNanTick;
 
   /// Considers adding a new tick to update the [_currentFillPath] in the process of
   /// creating current zone [DataPathInfo].
@@ -27,7 +39,7 @@ abstract class ZonesPathCreator {
   /// Once a zone fill area is create, a [DataPathInfo] will be instantiated for it
   /// and will be added to [paths] list.
   void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
-    _rectPath ??= getLineRect(canvasSize, quoteToY);
+    _rectPath ??= getLineRect(canvasSize, epochToX, quoteToY);
     _currentFillPath ??= Path()..moveTo(0, quoteToY(lineValue));
     _currentFillPath?.lineTo(
         epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
@@ -75,13 +87,13 @@ abstract class ZonesPathCreator {
   ///
   ///  _______________________________________
   /// |                                       |
-  /// |         The Rectangle                 |
+  /// |             The Rectangle             |
   /// |          ____                         |
   /// |         /####\ intersected fill area  |
-  /// ---------------------------------------- -> The horizontal line
-  ///    ____/        \___
-  ///   /                 \_______ -> The [series] data line
-  Path getLineRect(Size canvasSize, QuoteToY quoteToY);
+  /// ---------/-----|------------------------ -> The horizontal line
+  ///    _____/      \___
+  ///  _/                \_______ -> The [series] data line
+  Path getLineRect(Size canvasSize, EpochToX epochToX, QuoteToY quoteToY);
 
   final Paint _paint;
 
@@ -126,8 +138,18 @@ class TopZonePathCreator extends ZonesPathCreator {
   bool isOnZoneArea(Tick tick) => tick.quote >= lineValue;
 
   @override
-  Path getLineRect(Size canvasSize, QuoteToY quoteToY) => Path()
-    ..addRect(Rect.fromLTRB(0, 0, canvasSize.width, quoteToY(lineValue)));
+  Path getLineRect(Size canvasSize, EpochToX epochToX, QuoteToY quoteToY) =>
+      Path()
+        ..addRect(Rect.fromLTRB(
+            _firstNonNanTick.entry.quote.isNaN
+                ? 0
+                : epochToX(series.getEpochOf(
+                    _firstNonNanTick.entry,
+                    _firstNonNanTick.index,
+                  )),
+            0,
+            canvasSize.width,
+            quoteToY(lineValue)));
 }
 
 /// A class to create [DataPathInfo] list for bottom zones.
@@ -150,13 +172,19 @@ class BottomZonePathCreator extends ZonesPathCreator {
   bool isOnZoneArea(Tick tick) => tick.quote <= lineValue;
 
   @override
-  Path getLineRect(Size canvasSize, QuoteToY quoteToY) => Path()
-    ..addRect(
-      Rect.fromLTRB(
-        0,
-        quoteToY(lineValue),
-        canvasSize.width,
-        canvasSize.height,
-      ),
-    );
+  Path getLineRect(Size canvasSize, EpochToX epochToX, QuoteToY quoteToY) =>
+      Path()
+        ..addRect(
+          Rect.fromLTRB(
+            _firstNonNanTick.entry.quote.isNaN
+                ? 0
+                : epochToX(series.getEpochOf(
+                    _firstNonNanTick.entry,
+                    _firstNonNanTick.index,
+                  )),
+            quoteToY(lineValue),
+            canvasSize.width,
+            canvasSize.height,
+          ),
+        );
 }
