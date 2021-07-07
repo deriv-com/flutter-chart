@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -31,6 +32,7 @@ class CCISeries extends AbstractSingleIndicatorSeries {
     this.zeroHorizontalLineStyle =
         const LineStyle(color: Colors.white, thickness: 0.5),
     LineStyle cciLineStyle = const LineStyle(),
+    this.showZones = true,
     String? id,
   })  : _options = options,
         super(
@@ -59,15 +61,20 @@ class CCISeries extends AbstractSingleIndicatorSeries {
   /// The RSI zero horizontal line style.
   final LineStyle zeroHorizontalLineStyle;
 
+  /// Whether to fill overbought/sold zones.
+  final bool showZones;
+
   @override
-  SeriesPainter<Series> createPainter() => OscillatorLinePainter(
-        this,
-        topHorizontalLine: overboughtValue,
-        bottomHorizontalLine: oversoldValue,
-        topHorizontalLinesStyle: overboughtLineStyle,
-        bottomHorizontalLinesStyle: oversoldLineStyle,
-        secondaryHorizontalLinesStyle: zeroHorizontalLineStyle,
-      );
+  SeriesPainter<Series> createPainter() => showZones
+      ? OscillatorLinePainter(
+          this,
+          topHorizontalLine: overboughtValue,
+          bottomHorizontalLine: oversoldValue,
+          topHorizontalLinesStyle: overboughtLineStyle,
+          bottomHorizontalLinesStyle: oversoldLineStyle,
+          secondaryHorizontalLinesStyle: zeroHorizontalLineStyle,
+        )
+      : LinePainter(this);
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>

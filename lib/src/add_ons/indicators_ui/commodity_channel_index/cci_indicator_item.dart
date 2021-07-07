@@ -40,6 +40,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   double? _oversoldValue;
   LineStyle? _overboughtStyle;
   LineStyle? _oversoldStyle;
+  bool? _showZones;
 
   @override
   CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
@@ -50,6 +51,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           overboughtStyle: _currentOverboughtStyle,
           oversoldStyle: _currentOversoldStyle,
         ),
+        showZones: _currentShowZones,
       );
 
   @override
@@ -58,6 +60,28 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           _buildPeriodField(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
+          _buildShowZonesField(),
+        ],
+      );
+
+  Widget _buildShowZonesField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelShowZones,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: _currentShowZones,
+            onChanged: (bool value) {
+              setState(() {
+                _showZones = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          ),
         ],
       );
 
@@ -139,4 +163,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   LineStyle get _currentOversoldStyle =>
       _oversoldStyle ??
       (widget.config as CCIIndicatorConfig).oscillatorLinesConfig.oversoldStyle;
+
+  bool get _currentShowZones =>
+      _showZones ?? (widget.config as CCIIndicatorConfig).showZones;
 }

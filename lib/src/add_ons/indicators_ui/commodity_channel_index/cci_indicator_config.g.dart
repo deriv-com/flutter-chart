@@ -11,6 +11,7 @@ CCIIndicatorConfig _$CCIIndicatorConfigFromJson(Map<String, dynamic> json) {
     period: json['period'] as int,
     oscillatorLinesConfig: OscillatorLinesConfig.fromJson(
         json['oscillatorLinesConfig'] as Map<String, dynamic>),
+    showZones: json['showZones'] as bool,
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
   );
 }
@@ -20,4 +21,5 @@ Map<String, dynamic> _$CCIIndicatorConfigToJson(CCIIndicatorConfig instance) =>
       'period': instance.period,
       'oscillatorLinesConfig': instance.oscillatorLinesConfig,
       'lineStyle': instance.lineStyle,
+      'showZones': instance.showZones,
     };

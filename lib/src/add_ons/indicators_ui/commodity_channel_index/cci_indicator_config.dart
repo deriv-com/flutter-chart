@@ -24,6 +24,7 @@ class CCIIndicatorConfig extends IndicatorConfig {
       overboughtValue: 100,
       oversoldValue: -100,
     ),
+    this.showZones = true,
     this.lineStyle = const LineStyle(color: Colors.white),
   }) : super(isOverlay: false);
 
@@ -47,6 +48,9 @@ class CCIIndicatorConfig extends IndicatorConfig {
   /// The CCI line style.
   final LineStyle lineStyle;
 
+  /// Whether to paint overbought/sold zones fill.
+  final bool showZones;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => CCISeries(
         indicatorInput,
@@ -55,6 +59,7 @@ class CCIIndicatorConfig extends IndicatorConfig {
         oversoldValue: oscillatorLinesConfig.oversoldValue,
         overboughtLineStyle: oscillatorLinesConfig.overboughtStyle,
         oversoldLineStyle: oscillatorLinesConfig.oversoldStyle,
+        showZones: showZones,
       );
 
   @override
