@@ -14,6 +14,7 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
         json['oscillatorLinesConfig'] as Map<String, dynamic>),
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
     pinLabels: json['pinLabels'] as bool,
+    showZones: json['showZones'] as bool,
   );
 }
 
@@ -24,4 +25,5 @@ Map<String, dynamic> _$RSIIndicatorConfigToJson(RSIIndicatorConfig instance) =>
       'fieldType': instance.fieldType,
       'pinLabels': instance.pinLabels,
       'oscillatorLinesConfig': instance.oscillatorLinesConfig,
+      'showZones': instance.showZones,
     };

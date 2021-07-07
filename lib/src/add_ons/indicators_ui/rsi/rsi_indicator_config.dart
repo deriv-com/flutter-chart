@@ -27,6 +27,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
     ),
     this.lineStyle = const LineStyle(color: Colors.white),
     this.pinLabels = false,
+    this.showZones = true,
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -56,11 +57,15 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// Config of overbought and oversold.
   final OscillatorLinesConfig oscillatorLinesConfig;
 
+  /// Whether to paint [oscillatorLinesConfig] zones fill.
+  final bool showZones;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,
         rsiOptions: RSIOptions(period: period),
+        showZones: showZones,
       );
 
   @override

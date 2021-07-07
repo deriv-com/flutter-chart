@@ -40,6 +40,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   String? _field;
   LineStyle? _overboughtStyle;
   LineStyle? _oversoldStyle;
+  bool? _showZones;
 
   @override
   RSIIndicatorConfig createIndicatorConfig() => RSIIndicatorConfig(
@@ -51,6 +52,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
           oversoldStyle: _currentOversoldStyle,
         ),
         fieldType: _getCurrentField(),
+        showZones: _currentShowZones,
       );
 
   @override
@@ -60,6 +62,28 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
           _buildFieldTypeMenu(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
+          _buildShowZonesField(),
+        ],
+      );
+
+  Widget _buildShowZonesField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelShowZones,
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 4),
+          Switch(
+            value: _currentShowZones,
+            onChanged: (bool value) {
+              setState(() {
+                _showZones = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
+          ),
         ],
       );
 
@@ -185,4 +209,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   LineStyle get _currentOversoldStyle =>
       _oversoldStyle ??
       (widget.config as RSIIndicatorConfig).oscillatorLinesConfig.oversoldStyle;
+
+  bool get _currentShowZones =>
+      _showZones ?? (widget.config as RSIIndicatorConfig).showZones;
 }
