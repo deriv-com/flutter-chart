@@ -121,21 +121,22 @@ class OscillatorLinePainter extends LinePainter {
         dataLinePath.moveTo(lastVisibleTickX, quoteToY(tick.quote));
       }
 
-      topZonePathCreator.addTick(tick, i, epochToX, quoteToY);
-      bottomZonePathCreator.addTick(tick, i, epochToX, quoteToY);
+      Offset? lastVisibleTickPos;
 
       if (i == series.visibleEntries.endIndex - 1) {
-        final Offset? lastVisibleTickPosition =
-            calculateLastVisibleTickPosition(
-                epochToX, animationInfo, quoteToY, dataLinePath);
-
-        if (lastVisibleTickPosition != null) {
-          dataLinePath.lineTo(
-              lastVisibleTickPosition.dx, lastVisibleTickPosition.dy);
-        }
+        lastVisibleTickPos = calculateLastVisibleTickPosition(
+            epochToX, animationInfo, quoteToY, dataLinePath);
       } else {
-        lastVisibleTickX = epochToX(getEpochOf(tick, i));
-        dataLinePath.lineTo(lastVisibleTickX, quoteToY(tick.quote));
+        lastVisibleTickPos =
+            Offset(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+      }
+
+      if (lastVisibleTickPos != null) {
+        dataLinePath.lineTo(lastVisibleTickPos.dx, lastVisibleTickPos.dy);
+        topZonePathCreator.addTick(
+            tick, i, lastVisibleTickPos, epochToX, quoteToY);
+        bottomZonePathCreator.addTick(
+            tick, i, lastVisibleTickPos, epochToX, quoteToY);
       }
 
       i++;

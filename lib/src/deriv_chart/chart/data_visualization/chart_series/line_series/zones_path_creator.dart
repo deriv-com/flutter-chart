@@ -38,11 +38,16 @@ abstract class ZonesPathCreator {
   ///
   /// Once a zone fill area is create, a [DataPathInfo] will be instantiated for it
   /// and will be added to [paths] list.
-  void addTick(Tick tick, int index, EpochToX epochToX, QuoteToY quoteToY) {
+  void addTick(
+    Tick tick,
+    int index,
+    Offset tickPosition,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {
     _rectPath ??= getLineRect(canvasSize, epochToX, quoteToY);
     _currentFillPath ??= Path()..moveTo(0, quoteToY(lineValue));
-    _currentFillPath?.lineTo(
-        epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
+    _currentFillPath?.lineTo(tickPosition.dx, tickPosition.dy);
 
     if (_isClosed && isOnZoneArea(tick)) {
       _isClosed = false;
@@ -50,25 +55,32 @@ abstract class ZonesPathCreator {
 
     if (!_isClosed && !isOnZoneArea(tick)) {
       _isClosed = true;
-      _currentFillPath?.close();
-      final Path areaPath =
-          Path.combine(PathOperation.intersect, _rectPath!, _currentFillPath!);
 
-      _paths.add(DataPathInfo(areaPath, _paint));
-      _currentFillPath = Path()
-        ..moveTo(
-            epochToX(series.getEpochOf(tick, index)), quoteToY(tick.quote));
+      if (index == series.visibleEntries.endIndex - 1) {
+        _completeLastTickArea(tickPosition, quoteToY);
+      }
+
+      _addIntersectionToPaths();
+      _currentFillPath = Path()..moveTo(tickPosition.dx, tickPosition.dy);
+      return;
     }
 
-    if (index == series.visibleEntries.endIndex - 1 && !_isClosed) {
-      _currentFillPath!.lineTo(
-          epochToX(series.getEpochOf(tick, index)), quoteToY(lineValue));
+    if (index == series.visibleEntries.endIndex - 1) {
+      _completeLastTickArea(tickPosition, quoteToY);
 
-      final Path areaPath =
-          Path.combine(PathOperation.intersect, _rectPath!, _currentFillPath!);
-
-      _paths.add(DataPathInfo(areaPath, _paint));
+      _addIntersectionToPaths();
     }
+  }
+
+  void _completeLastTickArea(Offset tickPosition, QuoteToY quoteToY) {
+    _currentFillPath!.lineTo(tickPosition.dx, quoteToY(lineValue));
+  }
+
+  void _addIntersectionToPaths() {
+    final Path areaPath =
+        Path.combine(PathOperation.intersect, _rectPath!, _currentFillPath!);
+
+    _paths.add(DataPathInfo(areaPath, _paint));
   }
 
   /// Indicates whether the [tick] is on zones area and should be involved
