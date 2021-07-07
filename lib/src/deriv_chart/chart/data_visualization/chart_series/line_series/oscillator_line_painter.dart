@@ -134,8 +134,8 @@ class OscillatorLinePainter extends LinePainter {
               lastVisibleTickPosition.dx, lastVisibleTickPosition.dy);
         }
       } else {
-        dataLinePath.lineTo(
-            epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
+        lastVisibleTickX = epochToX(getEpochOf(tick, i));
+        dataLinePath.lineTo(lastVisibleTickX, quoteToY(tick.quote));
       }
 
       i++;
