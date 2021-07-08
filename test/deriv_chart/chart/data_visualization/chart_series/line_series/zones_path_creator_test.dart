@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/zones_path_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -63,7 +63,7 @@ void main() {
           (Tick tick) => Offset(epochToX(tick.epoch), quoteToY(tick.quote));
     });
 
-    test('TopZonesCreator', () {
+    test('TopZonesCreator internal states are correct', () {
       final TopZonePathCreator pathCreator = TopZonePathCreator(
         series: series,
         lineValue: lineValue,
@@ -95,7 +95,7 @@ void main() {
       expect(pathCreator.paths.length, 2);
     });
 
-    test('BottomZonesCreator', () {
+    test('BottomZonesCreator internal states are correct', () {
       final BottomZonePathCreator pathCreator = BottomZonePathCreator(
         series: series,
         lineValue: lineValue,
