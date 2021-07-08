@@ -77,7 +77,6 @@ void main() {
         pathCreator.addTick(
             ticks[i], i, getTickPosition(ticks[i]), epochToX, quoteToY);
       }
-
       expect(pathCreator.isClosed, true);
       expect(pathCreator.paths.length, 1);
 
@@ -85,7 +84,6 @@ void main() {
         pathCreator.addTick(
             ticks[i], i, getTickPosition(ticks[i]), epochToX, quoteToY);
       }
-
       expect(pathCreator.isClosed, false);
       expect(pathCreator.paths.length, 1);
 
@@ -93,7 +91,6 @@ void main() {
         pathCreator.addTick(
             ticks[i], i, getTickPosition(ticks[i]), epochToX, quoteToY);
       }
-
       expect(pathCreator.isClosed, true);
       expect(pathCreator.paths.length, 2);
     });
@@ -112,7 +109,6 @@ void main() {
         pathCreator.addTick(
             ticks[i], i, getTickPosition(ticks[i]), epochToX, quoteToY);
       }
-
       expect(pathCreator.isClosed, false);
       expect(pathCreator.paths.length, 0);
 
@@ -120,7 +116,6 @@ void main() {
         pathCreator.addTick(
             ticks[i], i, getTickPosition(ticks[i]), epochToX, quoteToY);
       }
-
       expect(pathCreator.isClosed, true);
       expect(pathCreator.paths.length, 1);
 
@@ -128,7 +123,6 @@ void main() {
         pathCreator.addTick(
             ticks[i], i, getTickPosition(ticks[i]), epochToX, quoteToY);
       }
-
       expect(pathCreator.isClosed, false);
       expect(pathCreator.paths.length, 1);
 
@@ -136,7 +130,6 @@ void main() {
         pathCreator.addTick(
             ticks[i], i, getTickPosition(ticks[i]), epochToX, quoteToY);
       }
-
       expect(pathCreator.isClosed, true);
       expect(pathCreator.paths.length, 2);
     });
