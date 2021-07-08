@@ -63,7 +63,7 @@ void main() {
           (Tick tick) => Offset(epochToX(tick.epoch), quoteToY(tick.quote));
     });
 
-    test('TopZonesCreator internal states are correct', () {
+    test('TopZonesCreator creates paths list correctly', () {
       final TopZonePathCreator pathCreator = TopZonePathCreator(
         series: series,
         lineValue: lineValue,
@@ -95,7 +95,7 @@ void main() {
       expect(pathCreator.paths.length, 2);
     });
 
-    test('BottomZonesCreator internal states are correct', () {
+    test('BottomZonesCreator creates paths list correctly', () {
       final BottomZonePathCreator pathCreator = BottomZonePathCreator(
         series: series,
         lineValue: lineValue,
