@@ -71,7 +71,6 @@ void main() {
       );
 
       expect(series.visibleEntries.first, ticks[2]);
-
       expect(pathCreator.isClosedInitially, false);
 
       for (int i = 3; i <= 4; i++) {
@@ -107,7 +106,6 @@ void main() {
       );
 
       expect(series.visibleEntries.first, ticks[2]);
-
       expect(pathCreator.isClosedInitially, true);
 
       for (int i = 3; i <= 4; i++) {
