@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indexed_entry.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/painting.dart';
 
 import '../../chart_data.dart';
 import '../data_series.dart';
-import 'zones_path_creator.dart';
 import 'line_painter.dart';
 
 /// A [LinePainter] for painting line with two main top and bottom horizontal lines.
@@ -59,102 +59,79 @@ class OscillatorLinePainter extends LinePainter {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    super.onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
-
-    _paintHorizontalLines(canvas, quoteToY, size);
-  }
-
-  @override
-  List<DataPathInfo> createPath(
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    AnimationInfo animationInfo,
-    Size size,
-  ) {
-    final List<DataPathInfo> paths = <DataPathInfo>[];
-
-    if (series.visibleEntries.length < 2) {
-      return paths;
-    }
-
-    if (_topHorizontalLine == null || _bottomHorizontalLine == null) {
-      return super.createPath(epochToX, quoteToY, animationInfo, size);
-    }
-
-    final Path dataLinePath = Path();
-
-    double? lastVisibleTickX;
-
-    int i = series.visibleEntries.startIndex;
-
-    final Paint topZonesPaint = Paint()
-      ..color = topHorizontalLinesStyle.color.withOpacity(0.5)
-      ..style = PaintingStyle.fill;
-
-    final Paint bottomZonesPaint = Paint()
-      ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
-      ..style = PaintingStyle.fill;
-
-    final TopZonePathCreator topZonePathCreator = TopZonePathCreator(
-      series: series,
-      lineValue: _topHorizontalLine!,
-      canvasSize: size,
-      zonePaint: topZonesPaint,
-    );
-
-    final BottomZonePathCreator bottomZonePathCreator = BottomZonePathCreator(
-      series: series,
-      lineValue: _bottomHorizontalLine!,
-      canvasSize: size,
-      zonePaint: bottomZonesPaint,
-    );
-
-    while (series.visibleEntries.isNotEmpty &&
-        i < series.visibleEntries.endIndex) {
-      final Tick tick = series.entries![i];
-
-      if (tick.quote.isNaN) {
-        continue;
-      } else if (lastVisibleTickX == null) {
-        lastVisibleTickX = epochToX(getEpochOf(tick, i));
-
-        dataLinePath.moveTo(lastVisibleTickX, quoteToY(tick.quote));
-      }
-
-      Offset? lastVisibleTickPos;
-
-      if (i == series.visibleEntries.endIndex - 1) {
-        lastVisibleTickPos = calculateLastVisibleTickPosition(
-            epochToX, animationInfo, quoteToY, dataLinePath);
-      } else {
-        lastVisibleTickPos =
-            Offset(epochToX(getEpochOf(tick, i)), quoteToY(tick.quote));
-      }
-
-      if (lastVisibleTickPos != null) {
-        dataLinePath.lineTo(lastVisibleTickPos.dx, lastVisibleTickPos.dy);
-        topZonePathCreator.addTick(
-            tick, i, lastVisibleTickPos, epochToX, quoteToY);
-        bottomZonePathCreator.addTick(
-            tick, i, lastVisibleTickPos, epochToX, quoteToY);
-      }
-
-      i++;
-    }
-
-    paths
-      ..addAll(topZonePathCreator.paths)
-      ..addAll(bottomZonePathCreator.paths);
+    final Path linePath = createPath(epochToX, quoteToY, animationInfo);
 
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
-    paths.add(DataPathInfo(
-        dataLinePath,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..color = style.color
-          ..strokeWidth = style.thickness));
 
-    return paths;
+    final Paint linePaint = Paint()
+      ..color = style.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = style.thickness;
+
+    canvas.drawPath(linePath, linePaint);
+
+    final Path bottomAreaPath = Path.from(linePath);
+    final Path topAreaPath = Path.from(linePath);
+
+    final IndexedEntry<Tick> firstTick = IndexedEntry<Tick>(
+        series.visibleEntries.first, series.visibleEntries.startIndex);
+    final IndexedEntry<Tick> lastTick = IndexedEntry<Tick>(
+        series.visibleEntries.last, series.visibleEntries.endIndex - 1);
+
+    bottomAreaPath
+      ..lineTo(
+          epochToX(getEpochOf(lastTick.entry, lastTick.index)), size.height)
+      ..lineTo(
+        epochToX(getEpochOf(firstTick.entry, firstTick.index)),
+        size.height,
+      );
+
+    topAreaPath
+      ..lineTo(epochToX(getEpochOf(lastTick.entry, lastTick.index)), 0)
+      ..lineTo(epochToX(getEpochOf(firstTick.entry, firstTick.index)), 0);
+
+    final Path topRect = Path()
+      ..addRect(
+        Rect.fromLTRB(
+          epochToX(getEpochOf(firstTick.entry, firstTick.index)),
+          0,
+          epochToX(getEpochOf(lastTick.entry, lastTick.index)),
+          quoteToY(_topHorizontalLine!),
+        ),
+      );
+
+    final Path bottomRect = Path()
+      ..addRect(
+        Rect.fromLTRB(
+          epochToX(getEpochOf(firstTick.entry, firstTick.index)),
+          quoteToY(_bottomHorizontalLine!),
+          epochToX(getEpochOf(lastTick.entry, lastTick.index)),
+          size.height,
+        ),
+      );
+
+    final Path topIntersections =
+        Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
+
+    final Path bottomIntersection =
+        Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
+
+    canvas
+      ..drawPath(
+        topIntersections,
+        Paint()
+          ..color = topHorizontalLinesStyle.color.withOpacity(0.5)
+          ..style = PaintingStyle.fill,
+      )
+      ..drawPath(
+        bottomIntersection,
+        Paint()
+          ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
+          ..style = PaintingStyle.fill,
+      );
+
+
+    _paintHorizontalLines(canvas, quoteToY, size);
   }
 
   void _paintHorizontalLines(Canvas canvas, QuoteToY quoteToY, Size size) {

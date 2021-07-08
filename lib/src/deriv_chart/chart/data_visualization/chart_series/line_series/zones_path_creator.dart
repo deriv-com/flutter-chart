@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
 import '../data_series.dart';
-import 'line_painter.dart';
 
 /// A class which is responsible to create [DataPathInfo] for oscillators `show zones` option.
 abstract class ZonesPathCreator {
@@ -233,4 +232,10 @@ class BottomZonePathCreator extends ZonesPathCreator {
             canvasSize.height,
           ),
         );
+}
+
+class DataPathInfo {
+  DataPathInfo(this.path, this.paint);
+  final Path path;
+  final Paint paint;
 }

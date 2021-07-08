@@ -17,6 +17,8 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     DataSeries<Tick> series,
   ) : super(series);
 
+  double? _lastVisibleTickX;
+
   @override
   void onPaintData(
     Canvas canvas,
@@ -25,31 +27,52 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final List<DataPathInfo> paths =
-        createPath(epochToX, quoteToY, animationInfo, size);
+    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
 
-    paintLines(canvas, paths);
+    final Paint linePaint = Paint()
+      ..color = style.color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = style.thickness;
+
+    final Path path = createPath(epochToX, quoteToY, animationInfo);
+
+    paintLines(canvas, path, linePaint);
+
+    if (style.hasArea) {
+      _drawArea(
+        canvas,
+        size,
+        path,
+        epochToX(series.visibleEntries.first.epoch),
+        _lastVisibleTickX!,
+        style,
+      );
+    }
   }
 
   /// Paints the line on the given canvas.
   /// We can add channel fill here in the subclasses.
-  void paintLines(Canvas canvas, List<DataPathInfo> paths) {
-    for (final DataPathInfo pathInfo in paths) {
-      canvas.drawPath(pathInfo.path, pathInfo.paint);
-    }
+  void paintLines(
+    Canvas canvas,
+    Path path,
+    Paint linePaint,
+  ) {
+    canvas.drawPath(path, linePaint);
   }
 
   /// Creates the path of the given [series] and returns it.
-  List<DataPathInfo> createPath(
+  Path createPath(
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    Size size,
   ) {
-    final List<DataPathInfo> paths = <DataPathInfo>[];
-    final Path dataLinePath = Path();
+    final Path path = Path();
 
-    late double lastVisibleTickX;
+    if (series.entries == null) {
+      return path;
+    }
+
+    double lastVisibleTickX;
     bool isStartPointSet = false;
 
     // Adding visible entries line to the path except the last which might be animated.
@@ -63,7 +86,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
         if (!isStartPointSet) {
           isStartPointSet = true;
-          dataLinePath.moveTo(
+          path.moveTo(
             lastVisibleTickX,
             quoteToY(tick.quote),
           );
@@ -71,46 +94,18 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         }
 
         final double y = quoteToY(tick.quote);
-        dataLinePath.lineTo(lastVisibleTickX, y);
+        path.lineTo(lastVisibleTickX, y);
       }
     }
 
-    final Offset? lastVisibleTickPosition = calculateLastVisibleTickPosition(
-        epochToX, animationInfo, quoteToY, dataLinePath);
+    _lastVisibleTickX =
+        _calculateLastVisibleTick(epochToX, animationInfo, quoteToY, path);
 
-    if (lastVisibleTickPosition != null) {
-      dataLinePath.lineTo(
-          lastVisibleTickPosition.dx, lastVisibleTickPosition.dy);
-
-      lastVisibleTickX = lastVisibleTickPosition.dx;
-    }
-
-    final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
-
-    final Paint linePaint = Paint()
-      ..color = style.color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = style.thickness;
-
-    paths.add(DataPathInfo(dataLinePath, linePaint));
-
-    if (style.hasArea) {
-      final DataPathInfo areaPath = _getArea(
-        size,
-        dataLinePath,
-        epochToX(series.visibleEntries.first.epoch),
-        lastVisibleTickX,
-        style,
-      );
-      paths.add(areaPath);
-    }
-
-    return paths;
+    return path;
   }
 
-  /// calculates the last visible tick's position.
-  @protected
-  Offset? calculateLastVisibleTickPosition(
+  /// calculates the last visible tick's `dx`.
+  double? _calculateLastVisibleTick(
     EpochToX epochToX,
     AnimationInfo animationInfo,
     QuoteToY quoteToY,
@@ -118,7 +113,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   ) {
     final Tick lastTick = series.entries!.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
-    late double lastVisibleTickX;
+    double? lastVisibleTickX;
 
     if (!lastVisibleTick.quote.isNaN) {
       if (lastTick == lastVisibleTick && series.prevLastEntry != null) {
@@ -129,7 +124,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
           ),
           epochToX(getEpochOf(lastTick, series.entries!.length - 1)),
           animationInfo.currentTickPercent,
-        )!;
+        );
 
         final double tickY = quoteToY(ui.lerpDouble(
           series.prevLastEntry!.entry.quote,
@@ -137,18 +132,19 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
           animationInfo.currentTickPercent,
         )!);
 
-        return Offset(lastVisibleTickX, tickY);
+        path.lineTo(lastVisibleTickX!, tickY);
       } else {
         lastVisibleTickX = epochToX(
             getEpochOf(lastVisibleTick, series.visibleEntries.endIndex - 1));
-        return Offset(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
+        path.lineTo(lastVisibleTickX, quoteToY(lastVisibleTick.quote));
       }
     }
 
-    return null;
+    return lastVisibleTickX;
   }
 
-  DataPathInfo _getArea(
+  void _drawArea(
+    Canvas canvas,
     Size size,
     Path linePath,
     double lineStartX,
@@ -166,27 +162,13 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         ],
       );
 
-    final Path areaPath = Path.from(linePath)
+    linePath
       ..lineTo(
         lineEndX,
         size.height,
       )
       ..lineTo(lineStartX, size.height);
 
-    return DataPathInfo(areaPath, areaPaint);
+    canvas.drawPath(linePath, areaPaint);
   }
-}
-
-/// A class for holding the information required to paint a path.
-///
-/// this information can represent a line data or a fill area on an indicator.
-class DataPathInfo {
-  /// Initializes
-  DataPathInfo(this.path, this.paint);
-
-  /// The Path
-  final Path path;
-
-  /// Paint object which describes how this [path] is going to be painted.
-  final Paint paint;
 }
