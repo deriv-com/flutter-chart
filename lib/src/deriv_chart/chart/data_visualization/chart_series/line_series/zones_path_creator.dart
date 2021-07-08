@@ -19,16 +19,23 @@ abstract class ZonesPathCreator {
               ..style = PaintingStyle.fill
               ..color = Colors.white24),
         _paths = <DataPathInfo>[] {
+    _firstNonNanTick = _findFirstNonNanTick();
+
+    _isClosed = _isClosedInitially = !isOnZoneArea(_firstNonNanTick.entry);
+  }
+
+  IndexedEntry<Tick> _findFirstNonNanTick() {
     int index = series.visibleEntries.startIndex;
-    _firstNonNanTick = IndexedEntry<Tick>(series.visibleEntries.first, index);
-    while (_firstNonNanTick.entry.quote.isNaN &&
+    IndexedEntry<Tick> firstNonNanTick =
+        IndexedEntry<Tick>(series.visibleEntries.first, index);
+    while (firstNonNanTick.entry.quote.isNaN &&
         index < series.visibleEntries.endIndex) {
       index++;
-      _firstNonNanTick =
+      firstNonNanTick =
           IndexedEntry<Tick>(series.visibleEntries.entries[index], index);
     }
 
-    _isClosed = _isClosedInitially = !isOnZoneArea(_firstNonNanTick.entry);
+    return firstNonNanTick;
   }
 
   late IndexedEntry<Tick> _firstNonNanTick;
