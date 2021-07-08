@@ -10,7 +10,6 @@ import 'line_painter.dart';
 abstract class ZonesPathCreator {
   /// Initializes
   ZonesPathCreator({
-    required this.isClosedInitially,
     required this.series,
     required this.lineValue,
     required this.canvasSize,
@@ -19,8 +18,7 @@ abstract class ZonesPathCreator {
             (Paint()
               ..style = PaintingStyle.fill
               ..color = Colors.white24),
-        _paths = <DataPathInfo>[],
-        _isClosed = isClosedInitially {
+        _paths = <DataPathInfo>[] {
     int index = series.visibleEntries.startIndex;
     _firstNonNanTick = IndexedEntry<Tick>(series.visibleEntries.first, index);
     while (_firstNonNanTick.entry.quote.isNaN &&
@@ -29,6 +27,8 @@ abstract class ZonesPathCreator {
       _firstNonNanTick =
           IndexedEntry<Tick>(series.visibleEntries.entries[index], index);
     }
+
+    _isClosed = _isClosedInitially = !isOnZoneArea(_firstNonNanTick.entry);
   }
 
   late IndexedEntry<Tick> _firstNonNanTick;
@@ -45,7 +45,7 @@ abstract class ZonesPathCreator {
   ///     /###
   /// --/------- Is in the [_isClosed] = `false` state and we know after touching
   ///  *          the line we're gonna complete the current path and add it to the [paths].
-  final bool isClosedInitially;
+  late bool _isClosedInitially;
 
   /// Indicates that the [series] data line has ever touched the horizontal line.
   bool _touchedTheLine = false;
@@ -84,7 +84,7 @@ abstract class ZonesPathCreator {
     }
 
     if (index == series.visibleEntries.endIndex - 1 &&
-        (!isClosedInitially || _touchedTheLine)) {
+        (!_isClosedInitially || _touchedTheLine)) {
       _completeLastTickArea(tickPosition, quoteToY);
 
       _addIntersectionToPaths();
@@ -158,7 +158,6 @@ class TopZonePathCreator extends ZonesPathCreator {
     required Size canvasSize,
     Paint? zonePaint,
   }) : super(
-          isClosedInitially: series.visibleEntries.first.quote < lineValue,
           series: series,
           canvasSize: canvasSize,
           lineValue: lineValue,
@@ -195,7 +194,6 @@ class BottomZonePathCreator extends ZonesPathCreator {
     required Size canvasSize,
     Paint? zonePaint,
   }) : super(
-          isClosedInitially: series.visibleEntries.first.quote > lineValue,
           series: series,
           canvasSize: canvasSize,
           lineValue: lineValue,
