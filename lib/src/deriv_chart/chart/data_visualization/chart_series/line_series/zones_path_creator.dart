@@ -40,6 +40,8 @@ abstract class ZonesPathCreator {
 
   late IndexedEntry<Tick> _firstNonNanTick;
 
+  late bool _isClosedInitially;
+
   /// We consider closed state as when the tick in NOT in the zone area. We take this and
   /// [_isClosed] to know when to complete a zone fill path and add it to the [paths].
   ///
@@ -52,7 +54,34 @@ abstract class ZonesPathCreator {
   ///     /###
   /// --/------- Is in the [_isClosed] = `false` state and we know after touching
   ///  *          the line we're gonna complete the current path and add it to the [paths].
-  late bool _isClosedInitially;
+  bool get isClosedInitially => _isClosedInitially;
+
+  late bool _isClosed;
+
+  /// Current state of the fill path whether is closed or not.
+  /// Refer to [isClosedInitially].
+  bool get isClosed => _isClosed;
+
+  final Paint _paint;
+
+  final List<DataPathInfo> _paths;
+
+  /// The result paths to be painted as zones fill.
+  List<DataPathInfo> get paths => _paths;
+
+  /// The data series which has the entries
+  final DataSeries<Tick> series;
+
+  /// The value of the horizontal line.
+  final double lineValue;
+
+  /// The size of the canvas.
+  final Size canvasSize;
+
+  /// The path of the horizontal line.
+  Path? _rectPath;
+
+  Path? _currentFillPath;
 
   /// Indicates that the [series] data line has ever touched the horizontal line.
   bool _touchedTheLine = false;
@@ -132,28 +161,6 @@ abstract class ZonesPathCreator {
   ///    _____/       \___
   ///  _/                 \______ -> The [series] data line
   Path getLineRect(Size canvasSize, EpochToX epochToX, QuoteToY quoteToY);
-
-  final Paint _paint;
-
-  final List<DataPathInfo> _paths;
-
-  /// The result paths to be painted as zones fill.
-  List<DataPathInfo> get paths => _paths;
-
-  /// The data series which has the entries
-  final DataSeries<Tick> series;
-
-  /// The value of the horizontal line.
-  final double lineValue;
-
-  /// The size of the canvas.
-  final Size canvasSize;
-
-  /// The path of the horizontal line.
-  Path? _rectPath;
-
-  Path? _currentFillPath;
-  late bool _isClosed;
 }
 
 /// A class to create [DataPathInfo] list for top zones.
