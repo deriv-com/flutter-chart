@@ -10,7 +10,7 @@ import 'line_painter.dart';
 abstract class ZonesPathCreator {
   /// Initializes
   ZonesPathCreator({
-    required bool isClosedInitially,
+    required this.isClosedInitially,
     required this.series,
     required this.lineValue,
     required this.canvasSize,
@@ -33,6 +33,23 @@ abstract class ZonesPathCreator {
 
   late IndexedEntry<Tick> _firstNonNanTick;
 
+  /// We consider closed state as when the tick in NOT in the zone area. We take this and
+  /// [_isClosed] to know when to complete a zone fill path and add it to the [paths].
+  ///
+  /// E.g: If * be the tick and for top zones.
+  ///
+  /// ---------- Is in the [_isClosed] = `true` state and we know after touching
+  ///  *          the line we're gonna start creating the path.
+  ///
+  ///       *
+  ///     /###
+  /// --/------- Is in the [_isClosed] = `false` state and we know after touching
+  ///  *          the line we're gonna complete the current path and add it to the [paths].
+  final bool isClosedInitially;
+
+  /// Indicates that the [series] data line has ever touched the horizontal line.
+  bool _touchedTheLine = false;
+
   /// Considers adding a new tick to update the [_currentFillPath] in the process of
   /// creating current zone [DataPathInfo].
   ///
@@ -50,6 +67,7 @@ abstract class ZonesPathCreator {
     _currentFillPath?.lineTo(tickPosition.dx, tickPosition.dy);
 
     if (_isClosed && isOnZoneArea(tick)) {
+      _touchedTheLine = true;
       _isClosed = false;
     }
 
@@ -65,7 +83,8 @@ abstract class ZonesPathCreator {
       return;
     }
 
-    if (index == series.visibleEntries.endIndex - 1) {
+    if (index == series.visibleEntries.endIndex - 1 &&
+        (!isClosedInitially || _touchedTheLine)) {
       _completeLastTickArea(tickPosition, quoteToY);
 
       _addIntersectionToPaths();
