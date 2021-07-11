@@ -28,6 +28,12 @@ class OscillatorLinePainter extends LinePainter {
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle ??
             const LineStyle(color: Colors.blueGrey),
         _bottomHorizontalLine = bottomHorizontalLine,
+        _topZonesPaint = Paint()
+          ..color = topHorizontalLinesStyle.color.withOpacity(0.5)
+          ..style = PaintingStyle.fill,
+        _bottomZonesPaint = Paint()
+          ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
+          ..style = PaintingStyle.fill,
         super(
           series,
         );
@@ -50,6 +56,10 @@ class OscillatorLinePainter extends LinePainter {
   /// Right margin.
   static const double rightMargin = 4;
 
+  Paint? _linePaint;
+  final Paint _topZonesPaint;
+  final Paint _bottomZonesPaint;
+
   @override
   void onPaintData(
     Canvas canvas,
@@ -63,12 +73,12 @@ class OscillatorLinePainter extends LinePainter {
 
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
 
-    final Paint linePaint = Paint()
+    _linePaint ??= Paint()
       ..color = style.color
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    canvas.drawPath(linePath.path, linePaint);
+    canvas.drawPath(linePath.path, _linePaint!);
 
     final Path bottomAreaPath = Path.from(linePath.path);
     final Path topAreaPath = Path.from(linePath.path);
@@ -108,18 +118,8 @@ class OscillatorLinePainter extends LinePainter {
         Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
 
     canvas
-      ..drawPath(
-        topIntersections,
-        Paint()
-          ..color = topHorizontalLinesStyle.color.withOpacity(0.5)
-          ..style = PaintingStyle.fill,
-      )
-      ..drawPath(
-        bottomIntersection,
-        Paint()
-          ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
-          ..style = PaintingStyle.fill,
-      );
+      ..drawPath(topIntersections, _topZonesPaint)
+      ..drawPath(bottomIntersection, _bottomZonesPaint);
 
     _paintHorizontalLines(canvas, quoteToY, size);
   }
