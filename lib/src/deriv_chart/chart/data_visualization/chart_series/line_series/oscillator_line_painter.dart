@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indexed_entry.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -59,7 +58,8 @@ class OscillatorLinePainter extends LinePainter {
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
   ) {
-    final Path linePath = createPath(epochToX, quoteToY, animationInfo);
+    final DataLinePathInfo linePath =
+        createPath(epochToX, quoteToY, animationInfo);
 
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
 
@@ -68,34 +68,25 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    canvas.drawPath(linePath, linePaint);
+    canvas.drawPath(linePath.path, linePaint);
 
-    final Path bottomAreaPath = Path.from(linePath);
-    final Path topAreaPath = Path.from(linePath);
-
-    final IndexedEntry<Tick> firstTick = IndexedEntry<Tick>(
-        series.visibleEntries.first, series.visibleEntries.startIndex);
-    final IndexedEntry<Tick> lastTick = IndexedEntry<Tick>(
-        series.visibleEntries.last, series.visibleEntries.endIndex - 1);
+    final Path bottomAreaPath = Path.from(linePath.path);
+    final Path topAreaPath = Path.from(linePath.path);
 
     bottomAreaPath
-      ..lineTo(
-          epochToX(getEpochOf(lastTick.entry, lastTick.index)), size.height)
-      ..lineTo(
-        epochToX(getEpochOf(firstTick.entry, firstTick.index)),
-        size.height,
-      );
+      ..lineTo(linePath.endPosition.dx, size.height)
+      ..lineTo(linePath.startPosition.dx, size.height);
 
     topAreaPath
-      ..lineTo(epochToX(getEpochOf(lastTick.entry, lastTick.index)), 0)
-      ..lineTo(epochToX(getEpochOf(firstTick.entry, firstTick.index)), 0);
+      ..lineTo(linePath.endPosition.dx, 0)
+      ..lineTo(linePath.startPosition.dx, 0);
 
     final Path topRect = Path()
       ..addRect(
         Rect.fromLTRB(
-          epochToX(getEpochOf(firstTick.entry, firstTick.index)),
+          linePath.startPosition.dx,
           0,
-          epochToX(getEpochOf(lastTick.entry, lastTick.index)),
+          linePath.endPosition.dx,
           quoteToY(_topHorizontalLine!),
         ),
       );
@@ -103,9 +94,9 @@ class OscillatorLinePainter extends LinePainter {
     final Path bottomRect = Path()
       ..addRect(
         Rect.fromLTRB(
-          epochToX(getEpochOf(firstTick.entry, firstTick.index)),
+          linePath.startPosition.dx,
           quoteToY(_bottomHorizontalLine!),
-          epochToX(getEpochOf(lastTick.entry, lastTick.index)),
+          linePath.endPosition.dx,
           size.height,
         ),
       );
@@ -129,7 +120,6 @@ class OscillatorLinePainter extends LinePainter {
           ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
           ..style = PaintingStyle.fill,
       );
-
 
     _paintHorizontalLines(canvas, quoteToY, size);
   }
