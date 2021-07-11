@@ -60,13 +60,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelShowFractals":
             MessageLookupByLibrary.simpleMessage("Show Fractals"),
         "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
-<<<<<<< HEAD
-        "labelSignalPeriod": MessageLookupByLibrary.simpleMessage("D% Period"),
-=======
         "labelShowZones": MessageLookupByLibrary.simpleMessage("Show Zones"),
-        "labelSignalPeriod":
-            MessageLookupByLibrary.simpleMessage("Signal Period"),
->>>>>>> upstream/flutter2
+        "labelSignalPeriod": MessageLookupByLibrary.simpleMessage("D% Period"),
         "labelSlowMAPeriod":
             MessageLookupByLibrary.simpleMessage("Slow MA Period"),
         "labelSmoothingPeriod":
