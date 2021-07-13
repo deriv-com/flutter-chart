@@ -202,7 +202,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
                         DropdownMenuItem<MovingAverageType>(
                           value: type,
                           child: Text(
-                            '${getEnumValue(type)}',
+                            '${type.title}',
                             style: const TextStyle(fontSize: 10),
                           ),
                         ))

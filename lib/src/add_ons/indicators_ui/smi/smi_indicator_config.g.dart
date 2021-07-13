@@ -1,30 +1,34 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bollinger_bands_indicator_config.dart';
+part of 'smi_indicator_config.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BollingerBandsIndicatorConfig _$BollingerBandsIndicatorConfigFromJson(
-    Map<String, dynamic> json) {
-  return BollingerBandsIndicatorConfig(
+SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) {
+  return SMIIndicatorConfig(
     period: json['period'] as int,
-    movingAverageType:
-        _$enumDecode(_$MovingAverageTypeEnumMap, json['movingAverageType']),
-    fieldType: json['fieldType'] as String,
-    standardDeviation: (json['standardDeviation'] as num).toDouble(),
+    smoothingPeriod: json['smoothingPeriod'] as int,
+    doubleSmoothingPeriod: json['doubleSmoothingPeriod'] as int,
+    overboughtValue: (json['overboughtValue'] as num).toDouble(),
+    oversoldValue: (json['oversoldValue'] as num).toDouble(),
+    signalPeriod: json['signalPeriod'] as int,
+    maType: _$enumDecode(_$MovingAverageTypeEnumMap, json['maType']),
+    showZones: json['showZones'] as bool,
   );
 }
 
-Map<String, dynamic> _$BollingerBandsIndicatorConfigToJson(
-        BollingerBandsIndicatorConfig instance) =>
+Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
     <String, dynamic>{
       'period': instance.period,
-      'movingAverageType':
-          _$MovingAverageTypeEnumMap[instance.movingAverageType],
-      'fieldType': instance.fieldType,
-      'standardDeviation': instance.standardDeviation,
+      'smoothingPeriod': instance.smoothingPeriod,
+      'doubleSmoothingPeriod': instance.doubleSmoothingPeriod,
+      'signalPeriod': instance.signalPeriod,
+      'maType': _$MovingAverageTypeEnumMap[instance.maType],
+      'overboughtValue': instance.overboughtValue,
+      'oversoldValue': instance.oversoldValue,
+      'showZones': instance.showZones,
     };
 
 K _$enumDecode<K, V>(
@@ -59,8 +63,4 @@ const _$MovingAverageTypeEnumMap = {
   MovingAverageType.weighted: 'weighted',
   MovingAverageType.hull: 'hull',
   MovingAverageType.zeroLag: 'zeroLag',
-  MovingAverageType.timeSeries: 'timeSeries',
-  MovingAverageType.wellesWilder: 'wellesWilder',
-  MovingAverageType.doubleExponential: 'doubleExponential',
-  MovingAverageType.tripleExponential: 'tripleExponential',
 };
