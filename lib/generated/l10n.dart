@@ -100,6 +100,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Double Smoothing Period`
+  String get labelDoubleSmoothingPeriod {
+    return Intl.message(
+      'Double Smoothing Period',
+      name: 'labelDoubleSmoothingPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Leading Span B Period`
   String get labelSpanBPeriod {
     return Intl.message(
@@ -230,10 +240,10 @@ class ChartLocalization {
     );
   }
 
-  /// `Signal Period`
+  /// `D% Period`
   String get labelSignalPeriod {
     return Intl.message(
-      'Signal Period',
+      'D% Period',
       name: 'labelSignalPeriod',
       desc: '',
       args: [],
@@ -345,6 +355,16 @@ class ChartLocalization {
     return Intl.message(
       'Shift Type',
       name: 'labelShiftType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Smoothing Period`
+  String get labelSmoothingPeriod {
+    return Intl.message(
+      'Smoothing Period',
+      name: 'labelSmoothingPeriod',
       desc: '',
       args: [],
     );
