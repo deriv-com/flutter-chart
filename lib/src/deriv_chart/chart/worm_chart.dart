@@ -8,15 +8,11 @@ class WormChart extends StatelessWidget {
   const WormChart({
     required this.ticks,
     Key? key,
-    this.numberOfVisibleTicks = 10,
-    this.zoomFactor = 0.1,
+    this.zoomFactor = 0.02,
   }) : super(key: key);
 
   /// The ticks list to show.
   final List<Tick> ticks;
-
-  /// The number of ticks from the [mainSeries.entries] that is going to be shown.
-  final int numberOfVisibleTicks;
 
   /// Indicates the proportion of the horizontal space that each tick is going to take.
   ///
@@ -24,30 +20,19 @@ class WormChart extends StatelessWidget {
   /// and at most 10 ticks will be visible.
   final double zoomFactor;
 
-  // /// Indicates that the right side of the chart screen is pointing to what index.
-  // ///
-  // /// e.g. 10.2 is somewhere between index 10 and 11.
-  // final double rightBoundIndex;
-
   @override
   Widget build(BuildContext context) => CustomPaint(
-        painter: _WormChartPainter(
-          ticks,
-          numberOfVisibleTicks,
-          zoomFactor,
-        ),
+        painter: _WormChartPainter(ticks, zoomFactor),
       );
 }
 
 class _WormChartPainter extends CustomPainter {
-  _WormChartPainter(this.ticks, this.numberOfVisibleTicks, this.zoomFactor)
+  _WormChartPainter(this.ticks, this.zoomFactor)
       : _paint = Paint()
-          ..color = Colors.black
+          ..color = Colors.white
           ..style = PaintingStyle.fill;
 
   final List<Tick> ticks;
-
-  final int numberOfVisibleTicks;
 
   final double zoomFactor;
 
@@ -59,11 +44,13 @@ class _WormChartPainter extends CustomPainter {
       return;
     }
 
+    final double ticksDistanceInPx = zoomFactor * size.width;
+
+    final int numberOfVisibleTicks = (size.width / ticksDistanceInPx).floor();
+
     final int startIndex = numberOfVisibleTicks >= ticks.length
         ? 0
         : ticks.length - numberOfVisibleTicks;
-
-    final double ticksDistanceInPx = zoomFactor * size.width;
 
     final List<double> minMax = _getMinMax(ticks, startIndex);
 
@@ -131,6 +118,6 @@ double _quoteToY(double quote, double max, double min, double height) =>
       topBoundQuote: max,
       bottomBoundQuote: min,
       canvasHeight: height,
-      topPadding: 0,
-      bottomPadding: 0,
+      topPadding: 5,
+      bottomPadding: 5,
     );
