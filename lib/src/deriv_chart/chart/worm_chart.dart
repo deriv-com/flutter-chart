@@ -12,6 +12,7 @@ class WormChart extends StatefulWidget {
     Key? key,
     this.zoomFactor = 0.02,
     this.offsetAnimationDuration = Duration.zero,
+    this.lineStyle = const LineStyle(),
   }) : super(key: key);
 
   /// The ticks list to show.
@@ -27,6 +28,9 @@ class WormChart extends StatefulWidget {
   ///
   /// Default is zero meaning the animation is disabled.
   final Duration offsetAnimationDuration;
+
+  /// WormChart's line style.
+  final LineStyle lineStyle;
 
   @override
   _WormChartState createState() => _WormChartState();
@@ -71,6 +75,7 @@ class _WormChartState extends State<WormChart>
                 widget.ticks,
                 widget.zoomFactor,
                 offset: _animation.value,
+                lineStyle: widget.lineStyle,
               ),
             ),
           ),
@@ -79,18 +84,32 @@ class _WormChartState extends State<WormChart>
 }
 
 class _WormChartPainter extends CustomPainter {
-  _WormChartPainter(this.ticks, this.zoomFactor, {this.offset = 1})
-      : _paint = Paint()
+  _WormChartPainter(
+    this.ticks,
+    this.zoomFactor, {
+    required this.lineStyle,
+    this.offset = 1,
+  })  : _linePaint = Paint()
           ..color = Colors.white
-          ..style = PaintingStyle.stroke;
+          ..style = PaintingStyle.stroke,
+        highestCirclePaint = Paint()
+          ..color = Colors.green
+          ..style = PaintingStyle.fill,
+        lowestCirclePaint = Paint()
+          ..color = Colors.red
+          ..style = PaintingStyle.fill;
 
   final List<Tick> ticks;
 
   final double zoomFactor;
 
-  final Paint _paint;
+  final Paint _linePaint;
+  final Paint highestCirclePaint;
+  final Paint lowestCirclePaint;
 
   final double offset;
+
+  final LineStyle lineStyle;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -136,13 +155,13 @@ class _WormChartPainter extends CustomPainter {
       }
     }
 
-    canvas.drawPath(linePath!, _paint);
+    canvas.drawPath(linePath!, _linePaint);
 
     linePath
       ..lineTo(currentPosition.dx, size.height)
       ..lineTo(size.width, size.height);
 
-    _drawArea(canvas, size, linePath, const LineStyle());
+    _drawArea(canvas, size, linePath, lineStyle);
   }
 
   void _drawArea(
@@ -173,23 +192,11 @@ class _WormChartPainter extends CustomPainter {
     Canvas canvas,
   ) {
     if (tick.quote == max) {
-      canvas.drawCircle(
-        position,
-        2,
-        Paint()
-          ..color = Colors.green
-          ..style = PaintingStyle.fill,
-      );
+      canvas.drawCircle(position, 2, highestCirclePaint);
     }
 
     if (tick.quote == min) {
-      canvas.drawCircle(
-        position,
-        2,
-        Paint()
-          ..color = Colors.red
-          ..style = PaintingStyle.fill,
-      );
+      canvas.drawCircle(position, 2, lowestCirclePaint);
     }
   }
 
