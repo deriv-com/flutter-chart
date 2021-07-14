@@ -1,5 +1,7 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'dart:ui' as ui;
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 ///
@@ -108,6 +110,7 @@ class _WormChartPainter extends CustomPainter {
     final double max = minMax[1];
 
     Path? linePath;
+    late Offset currentPosition;
 
     for (int i = ticks.length - 1; i >= startIndex; i--) {
       final Tick tick = ticks[i];
@@ -117,20 +120,47 @@ class _WormChartPainter extends CustomPainter {
             (ticks.length - i) * ticksDistanceInPx +
             offset * ticksDistanceInPx;
 
-        final Offset position = Offset(x, y);
+        currentPosition = Offset(x, y);
 
         if (linePath == null) {
           linePath = Path()..moveTo(x, y);
-          _drawCircleIfMinMax(tick, position, min, max, canvas);
+          _drawCircleIfMinMax(tick, currentPosition, min, max, canvas);
           continue;
         }
 
         linePath.lineTo(x, y);
 
-        _drawCircleIfMinMax(tick, position, min, max, canvas);
+        _drawCircleIfMinMax(tick, currentPosition, min, max, canvas);
       }
     }
+
     canvas.drawPath(linePath!, _paint);
+
+    linePath
+      ..lineTo(currentPosition.dx, size.height)
+      ..lineTo(size.width, size.height);
+
+    _drawArea(canvas, size, linePath, const LineStyle());
+  }
+
+  void _drawArea(
+    Canvas canvas,
+    Size size,
+    Path linePath,
+    LineStyle style,
+  ) {
+    final Paint areaPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..shader = ui.Gradient.linear(
+        const Offset(0, 0),
+        Offset(0, size.height),
+        <Color>[
+          style.color.withOpacity(0.1),
+          style.color.withOpacity(0.0001),
+        ],
+      );
+
+    canvas.drawPath(linePath, areaPaint);
   }
 
   void _drawCircleIfMinMax(
