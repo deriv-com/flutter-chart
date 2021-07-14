@@ -21,8 +21,8 @@ class WormChart extends StatelessWidget {
   final double zoomFactor;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(10),
+  Widget build(BuildContext context) => Container(
+        constraints: const BoxConstraints.expand(),
         child: CustomPaint(
           painter: _WormChartPainter(ticks, zoomFactor),
         ),
@@ -142,6 +142,6 @@ double _quoteToY(double quote, double max, double min, double height) =>
       topBoundQuote: max,
       bottomBoundQuote: min,
       canvasHeight: height,
-      topPadding: 5,
-      bottomPadding: 5,
+      topPadding: 2,
+      bottomPadding: 2,
     );
