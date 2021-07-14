@@ -16,7 +16,7 @@ class WormChart extends StatelessWidget {
 
   /// Indicates the proportion of the horizontal space that each tick is going to take.
   ///
-  /// Default is 0.1 which means each tick occupies 10% of the horizontal space,
+  /// Default is 0.02 which means each tick occupies 2% of the horizontal space,
   /// and at most 10 ticks will be visible.
   final double zoomFactor;
 
