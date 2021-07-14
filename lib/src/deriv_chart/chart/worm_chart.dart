@@ -90,8 +90,9 @@ class _WormChartPainter extends CustomPainter {
     required this.lineStyle,
     this.offset = 1,
   })  : _linePaint = Paint()
-          ..color = Colors.white
-          ..style = PaintingStyle.stroke,
+          ..color = lineStyle.color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1,
         highestCirclePaint = Paint()
           ..color = Colors.green
           ..style = PaintingStyle.fill,
@@ -176,8 +177,8 @@ class _WormChartPainter extends CustomPainter {
         const Offset(0, 0),
         Offset(0, size.height),
         <Color>[
-          style.color.withOpacity(0.1),
-          style.color.withOpacity(0.0001),
+          style.color.withOpacity(0.2),
+          style.color.withOpacity(0.001),
         ],
       );
 
