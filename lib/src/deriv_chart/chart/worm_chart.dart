@@ -3,12 +3,13 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.d
 import 'package:flutter/material.dart';
 
 ///
-class WormChart extends StatelessWidget {
+class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
     required this.ticks,
     Key? key,
     this.zoomFactor = 0.02,
+    this.offsetAnimationDuration = Duration.zero,
   }) : super(key: key);
 
   /// The ticks list to show.
@@ -20,17 +21,61 @@ class WormChart extends StatelessWidget {
   /// and at most 10 ticks will be visible.
   final double zoomFactor;
 
+  ///
+  final Duration offsetAnimationDuration;
+
   @override
-  Widget build(BuildContext context) => Container(
-        constraints: const BoxConstraints.expand(),
-        child: CustomPaint(
-          painter: _WormChartPainter(ticks, zoomFactor),
+  _WormChartState createState() => _WormChartState();
+}
+
+class _WormChartState extends State<WormChart>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: widget.offsetAnimationDuration,
+    );
+
+    _animation = Tween<double>(begin: 1, end: 0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant WormChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _animationController
+      ..reset()
+      ..forward();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _animationController,
+        builder: (BuildContext context, Widget? child) => ClipRect(
+          child: Container(
+            constraints: const BoxConstraints.expand(),
+            child: CustomPaint(
+              painter: _WormChartPainter(
+                widget.ticks,
+                widget.zoomFactor,
+                offset: _animation.value,
+              ),
+            ),
+          ),
         ),
       );
 }
 
 class _WormChartPainter extends CustomPainter {
-  _WormChartPainter(this.ticks, this.zoomFactor)
+  _WormChartPainter(this.ticks, this.zoomFactor, {this.offset = 1})
       : _paint = Paint()
           ..color = Colors.white
           ..style = PaintingStyle.stroke;
@@ -40,6 +85,8 @@ class _WormChartPainter extends CustomPainter {
   final double zoomFactor;
 
   final Paint _paint;
+
+  final double offset;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -66,7 +113,9 @@ class _WormChartPainter extends CustomPainter {
       final Tick tick = ticks[i];
       if (!tick.quote.isNaN) {
         final double y = _quoteToY(tick.quote, max, min, size.height);
-        final double x = size.width - (ticks.length - i) * ticksDistanceInPx;
+        final double x = size.width -
+            (ticks.length - i) * ticksDistanceInPx +
+            offset * ticksDistanceInPx;
 
         final Offset position = Offset(x, y);
 
