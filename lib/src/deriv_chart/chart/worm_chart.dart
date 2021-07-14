@@ -22,11 +22,11 @@ class WormChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(10),
-    child: CustomPaint(
+        padding: const EdgeInsets.all(10),
+        child: CustomPaint(
           painter: _WormChartPainter(ticks, zoomFactor),
         ),
-  );
+      );
 }
 
 class _WormChartPainter extends CustomPainter {
@@ -68,37 +68,48 @@ class _WormChartPainter extends CustomPainter {
         final double y = _quoteToY(tick.quote, max, min, size.height);
         final double x = size.width - (ticks.length - i) * ticksDistanceInPx;
 
+        final Offset position = Offset(x, y);
+
         if (linePath == null) {
           linePath = Path()..moveTo(x, y);
+          _drawCircleIfMinMax(tick, position, min, max, canvas);
           continue;
         }
 
-        final Offset position = Offset(x, y);
-
         linePath.lineTo(x, y);
 
-        if (tick.quote == max) {
-          canvas.drawCircle(
-            position,
-            2,
-            Paint()
-              ..color = Colors.green
-              ..style = PaintingStyle.fill,
-          );
-        }
-
-        if (tick.quote == min) {
-          canvas.drawCircle(
-            position,
-            2,
-            Paint()
-              ..color = Colors.red
-              ..style = PaintingStyle.fill,
-          );
-        }
+        _drawCircleIfMinMax(tick, position, min, max, canvas);
       }
     }
     canvas.drawPath(linePath!, _paint);
+  }
+
+  void _drawCircleIfMinMax(
+    Tick tick,
+    Offset position,
+    double min,
+    double max,
+    Canvas canvas,
+  ) {
+    if (tick.quote == max) {
+      canvas.drawCircle(
+        position,
+        2,
+        Paint()
+          ..color = Colors.green
+          ..style = PaintingStyle.fill,
+      );
+    }
+
+    if (tick.quote == min) {
+      canvas.drawCircle(
+        position,
+        2,
+        Paint()
+          ..color = Colors.red
+          ..style = PaintingStyle.fill,
+      );
+    }
   }
 
   @override
