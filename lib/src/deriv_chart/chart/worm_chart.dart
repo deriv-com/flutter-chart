@@ -4,7 +4,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
-///
+/// A worm chart widget.
 class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
@@ -20,10 +20,12 @@ class WormChart extends StatefulWidget {
   /// Indicates the proportion of the horizontal space that each tick is going to take.
   ///
   /// Default is 0.02 which means each tick occupies 2% of the horizontal space,
-  /// and at most 10 ticks will be visible.
+  /// and at most 50 ticks will be visible.
   final double zoomFactor;
 
+  /// The duration of sliding animation as the chart gets updated.
   ///
+  /// Default is zero meaning the animation is disabled.
   final Duration offsetAnimationDuration;
 
   @override
@@ -61,7 +63,7 @@ class _WormChartState extends State<WormChart>
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
         animation: _animationController,
-        builder: (BuildContext context, Widget? child) => ClipRect(
+        builder: (_, __) => ClipRect(
           child: Container(
             constraints: const BoxConstraints.expand(),
             child: CustomPaint(
