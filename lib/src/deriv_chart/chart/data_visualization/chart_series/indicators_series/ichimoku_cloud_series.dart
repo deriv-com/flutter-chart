@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
@@ -95,7 +96,6 @@ class IchimokuCloudSeries extends Series {
       ),
     );
 
-    // TODO(mohammadamir-fs): add offset to line painter
     _laggingSpanSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
@@ -109,8 +109,7 @@ class IchimokuCloudSeries extends Series {
     );
 
     _spanASeries = SingleIndicatorSeries(
-      painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick>),
+      painterCreator: (Series series) => null,
       indicatorCreator: () => spanAIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
@@ -121,8 +120,7 @@ class IchimokuCloudSeries extends Series {
     );
 
     _spanBSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) =>
-          LinePainter(series as DataSeries<Tick>),
+      painterCreator: (Series series) => null,
       indicatorCreator: () => spanBIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
@@ -139,7 +137,7 @@ class IchimokuCloudSeries extends Series {
       ..add(_spanASeries)
       ..add(_spanBSeries);
 
-    return null;
+    return ChannelFillPainter(_spanASeries, _spanBSeries);
   }
 
   @override
@@ -200,12 +198,8 @@ class IchimokuCloudSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _laggingSpanSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _spanASeries.paint(
+    super.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _spanBSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-
-    // TODO(ramin): call super.paint to paint the Channels fill.
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
@@ -10,18 +12,23 @@ import '../data_painter.dart';
 import '../data_series.dart';
 
 /// A [DataPainter] for painting two line data and the channel fill inside of them.
-class ChannelFillPainter extends LinePainter {
+class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   ChannelFillPainter(
     this.firstSeries,
     this.secondSeries,
-  ) : super(firstSeries);
+  )   : _firstLinePainter = LinePainter(firstSeries),
+        _secondLinePainter = LinePainter(secondSeries),
+        super(firstSeries);
 
   /// The first line series to be painting.
   final DataSeries<Tick> firstSeries;
 
   /// The second line series to be painting.
   final DataSeries<Tick> secondSeries;
+
+  final LinePainter _firstLinePainter;
+  final LinePainter _secondLinePainter;
 
   @override
   void onPaintData(
@@ -34,7 +41,7 @@ class ChannelFillPainter extends LinePainter {
     final LineStyle firstLineStyle =
         firstSeries.style as LineStyle? ?? theme.lineStyle;
     final LineStyle secondLineStyle =
-        firstSeries.style as LineStyle? ?? theme.lineStyle;
+        secondSeries.style as LineStyle? ?? theme.lineStyle;
 
     final Paint firstLinePaint = Paint()
       ..color = firstLineStyle.color
@@ -42,40 +49,39 @@ class ChannelFillPainter extends LinePainter {
       ..strokeWidth = firstLineStyle.thickness;
 
     final Paint firstChannelFillPaint = Paint()
-      ..color = firstLineStyle.color
+      ..color = firstLineStyle.color.withOpacity(0.2)
       ..style = PaintingStyle.fill
       ..strokeWidth = 0;
 
     final Paint secondLinePaint = Paint()
       ..color = secondLineStyle.color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = firstLineStyle.thickness;
+      ..strokeWidth = secondLineStyle.thickness;
 
     final Paint secondChannelFillPaint = Paint()
-      ..color = secondLineStyle.color
+      ..color = secondLineStyle.color.withOpacity(0.2)
       ..style = PaintingStyle.fill
       ..strokeWidth = 0;
 
     final DataLinePathInfo firstDataPathInfo =
-        createPath(firstSeries, epochToX, quoteToY, animationInfo);
+        _firstLinePainter.createPath(epochToX, quoteToY, animationInfo);
     final DataLinePathInfo secondDataPathInfo =
-        createPath(secondSeries, epochToX, quoteToY, animationInfo);
+        _secondLinePainter.createPath(epochToX, quoteToY, animationInfo);
 
-    final Path channelFillPath = firstDataPathInfo.path
-      ..moveTo(
-          firstDataPathInfo.endPosition.dx, firstDataPathInfo.endPosition.dy)
+    final Path channelFillPath = Path.from(firstDataPathInfo.path)
       ..lineTo(
-          secondDataPathInfo.endPosition.dx, secondDataPathInfo.endPosition.dy)
-      ..moveTo(firstDataPathInfo.startPosition.dx,
-          firstDataPathInfo.startPosition.dy)
-      ..lineTo(secondDataPathInfo.startPosition.dx,
-          secondDataPathInfo.startPosition.dy)
-      ..addPath(secondDataPathInfo.path, Offset.zero);
+          secondDataPathInfo.endPosition.dx, secondDataPathInfo.endPosition.dy);
 
-    final Path firstLineAreaPath = areaPath(
+    _createPathReverse(
+        secondSeries, epochToX, quoteToY, animationInfo, channelFillPath);
+
+    channelFillPath.lineTo(
+        firstDataPathInfo.startPosition.dx, firstDataPathInfo.startPosition.dy);
+
+    final Path firstLineAreaPath = _firstLinePainter.areaPath(
         canvas,
         size,
-        firstDataPathInfo.path,
+        Path.from(firstDataPathInfo.path),
         firstDataPathInfo.startPosition.dx,
         firstDataPathInfo.endPosition.dx);
 
@@ -89,5 +95,52 @@ class ChannelFillPainter extends LinePainter {
       ..drawPath(secondDataPathInfo.path, secondLinePaint)
       ..drawPath(firstUpperChannelFill, firstChannelFillPaint)
       ..drawPath(secondUpperChannelFill, secondChannelFillPaint);
+  }
+
+  void _createPathReverse(
+    DataSeries<Tick> series,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    Path path,
+  ) {
+    double? lastVisibleTickX;
+    // Check for animated lower tick.
+    final Tick lastLowerTick = series.entries!.last;
+    final Tick lastLowerVisibleTick = series.visibleEntries.last;
+
+    if (lastLowerTick == lastLowerVisibleTick && series.prevLastEntry != null) {
+      lastVisibleTickX = ui.lerpDouble(
+        epochToX(series.getEpochOf(
+          series.prevLastEntry!.entry,
+          series.prevLastEntry!.index,
+        )),
+        epochToX(lastLowerTick.epoch),
+        animationInfo.currentTickPercent,
+      );
+
+      final double tickY = quoteToY(ui.lerpDouble(
+        series.prevLastEntry!.entry.quote,
+        lastLowerTick.quote,
+        animationInfo.currentTickPercent,
+      )!);
+
+      path.lineTo(lastVisibleTickX!, tickY);
+    } else {
+      lastVisibleTickX = epochToX(lastLowerVisibleTick.epoch);
+      path.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
+    }
+
+    for (int i = series.visibleEntries.endIndex - 1;
+        i >= series.visibleEntries.startIndex;
+        i--) {
+      final Tick tick = series.entries![i];
+      path.lineTo(
+        epochToX(series.getEpochOf(tick, i)),
+        quoteToY(tick.quote),
+      );
+    }
+
+    return;
   }
 }
