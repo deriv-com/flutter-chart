@@ -200,6 +200,11 @@ class IchimokuCloudSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     super.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+
+    if (animationInfo.currentTickPercent == 1) {
+      _spanASeries.resetLastEntryAnimation();
+      _spanBSeries.resetLastEntryAnimation();
+    }
   }
 
   @override
