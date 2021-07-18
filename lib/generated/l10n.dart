@@ -10,7 +10,7 @@ import 'intl/messages_all.dart';
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 // ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
 
 class ChartLocalization {
   ChartLocalization();
@@ -18,28 +18,31 @@ class ChartLocalization {
   static ChartLocalization? _current;
 
   static ChartLocalization get current {
-    assert(_current != null, 'No instance of ChartLocalization was loaded. Try to initialize the ChartLocalization delegate before accessing ChartLocalization.current.');
+    assert(_current != null,
+        'No instance of ChartLocalization was loaded. Try to initialize the ChartLocalization delegate before accessing ChartLocalization.current.');
     return _current!;
   }
 
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<ChartLocalization> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       final instance = ChartLocalization();
       ChartLocalization._current = instance;
- 
+
       return instance;
     });
-  } 
+  }
 
   static ChartLocalization of(BuildContext context) {
     final instance = ChartLocalization.maybeOf(context);
-    assert(instance != null, 'No instance of ChartLocalization present in the widget tree. Did you add ChartLocalization.delegate in localizationsDelegates?');
+    assert(instance != null,
+        'No instance of ChartLocalization present in the widget tree. Did you add ChartLocalization.delegate in localizationsDelegates?');
     return instance!;
   }
 
@@ -92,6 +95,16 @@ class ChartLocalization {
     return Intl.message(
       'Base Line Period',
       name: 'labelBaseLinePeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Double Smoothing Period`
+  String get labelDoubleSmoothingPeriod {
+    return Intl.message(
+      'Double Smoothing Period',
+      name: 'labelDoubleSmoothingPeriod',
       desc: '',
       args: [],
     );
@@ -207,6 +220,36 @@ class ChartLocalization {
     );
   }
 
+  /// `Fast MA Period`
+  String get labelFastMAPeriod {
+    return Intl.message(
+      'Fast MA Period',
+      name: 'labelFastMAPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Slow MA Period`
+  String get labelSlowMAPeriod {
+    return Intl.message(
+      'Slow MA Period',
+      name: 'labelSlowMAPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `D% Period`
+  String get labelSignalPeriod {
+    return Intl.message(
+      'D% Period',
+      name: 'labelSignalPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Over Bought Price`
   String get labelOverBoughtPrice {
     return Intl.message(
@@ -257,6 +300,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Show Zones`
+  String get labelShowZones {
+    return Intl.message(
+      'Show Zones',
+      name: 'labelShowZones',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Bands Count`
   String get labelBandsCount {
     return Intl.message(
@@ -302,6 +355,16 @@ class ChartLocalization {
     return Intl.message(
       'Shift Type',
       name: 'labelShiftType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Smoothing Period`
+  String get labelSmoothingPeriod {
+    return Intl.message(
+      'Smoothing Period',
+      name: 'labelSmoothingPeriod',
       desc: '',
       args: [],
     );
@@ -381,7 +444,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
   @override
-  Future<ChartLocalization> load(Locale locale) => ChartLocalization.load(locale);
+  Future<ChartLocalization> load(Locale locale) =>
+      ChartLocalization.load(locale);
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

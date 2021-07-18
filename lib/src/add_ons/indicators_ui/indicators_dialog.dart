@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +13,11 @@ import 'ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'indicator_config.dart';
 import 'indicator_repository.dart';
 import 'ma_env_indicator/ma_env_indicator_config.dart';
+import 'macd_indicator/macd_indicator_config.dart';
 import 'parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'rainbow_indicator/rainbow_indicator_config.dart';
 import 'rsi/rsi_indicator_config.dart';
+import 'williams_r/williams_r_indicator_config.dart';
 import 'zigzag_indicator/zigzag_indicator_config.dart';
 
 /// Indicators dialog with selected indicators.
@@ -87,7 +90,19 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
-                  )
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Stochastic Momentum Index'),
+                    value: SMIIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Williams %R'),
+                    value: WilliamsRIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('MACD'),
+                    value: MACDIndicatorConfig(),
+                  ),
                   // Add new indicators here.
                 ],
                 onChanged: (IndicatorConfig? config) {
