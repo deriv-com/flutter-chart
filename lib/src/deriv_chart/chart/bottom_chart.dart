@@ -42,10 +42,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
                 thickness: 1,
                 color: theme.brandGreenishColor,
               ),
-              // const SizedBox(height: 30),
-              Expanded(
-                child: super.build(context),
-              ),
+              Expanded(child: super.build(context)),
             ],
           ),
           Positioned(

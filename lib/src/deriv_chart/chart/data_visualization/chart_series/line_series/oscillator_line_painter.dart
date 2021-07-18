@@ -35,9 +35,7 @@ class OscillatorLinePainter extends LinePainter {
         _bottomZonesPaint = Paint()
           ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
           ..style = PaintingStyle.fill,
-        super(
-          series,
-        );
+        super(series);
 
   final double? _topHorizontalLine;
   final double? _bottomHorizontalLine;
@@ -81,46 +79,43 @@ class OscillatorLinePainter extends LinePainter {
 
     canvas.drawPath(linePath.path, _linePaint!);
 
-    final Path bottomAreaPath = Path.from(linePath.path);
-    final Path topAreaPath = Path.from(linePath.path);
+    if (_topHorizontalLine != null) {
+      final Path bottomAreaPath = Path.from(linePath.path)
+        ..lineTo(linePath.endPosition.dx, size.height)
+        ..lineTo(linePath.startPosition.dx, size.height);
+      final Path topRect = Path()
+        ..addRect(
+          Rect.fromLTRB(
+            linePath.startPosition.dx,
+            0,
+            linePath.endPosition.dx,
+            quoteToY(_topHorizontalLine!),
+          ),
+        );
 
-    bottomAreaPath
-      ..lineTo(linePath.endPosition.dx, size.height)
-      ..lineTo(linePath.startPosition.dx, size.height);
+      final Path topIntersections =
+          Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
+      canvas.drawPath(topIntersections, _topZonesPaint);
+    }
 
-    topAreaPath
-      ..lineTo(linePath.endPosition.dx, 0)
-      ..lineTo(linePath.startPosition.dx, 0);
+    if (_bottomHorizontalLine != null) {
+      final Path topAreaPath = Path.from(linePath.path)
+        ..lineTo(linePath.endPosition.dx, 0)
+        ..lineTo(linePath.startPosition.dx, 0);
+      final Path bottomRect = Path()
+        ..addRect(
+          Rect.fromLTRB(
+            linePath.startPosition.dx,
+            quoteToY(_bottomHorizontalLine!),
+            linePath.endPosition.dx,
+            size.height,
+          ),
+        );
 
-    final Path topRect = Path()
-      ..addRect(
-        Rect.fromLTRB(
-          linePath.startPosition.dx,
-          0,
-          linePath.endPosition.dx,
-          quoteToY(_topHorizontalLine!),
-        ),
-      );
-
-    final Path bottomRect = Path()
-      ..addRect(
-        Rect.fromLTRB(
-          linePath.startPosition.dx,
-          quoteToY(_bottomHorizontalLine!),
-          linePath.endPosition.dx,
-          size.height,
-        ),
-      );
-
-    final Path topIntersections =
-        Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
-
-    final Path bottomIntersection =
-        Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
-
-    canvas
-      ..drawPath(topIntersections, _topZonesPaint)
-      ..drawPath(bottomIntersection, _bottomZonesPaint);
+      final Path bottomIntersection =
+          Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
+      canvas.drawPath(bottomIntersection, _bottomZonesPaint);
+    }
 
     _paintHorizontalLines(canvas, quoteToY, size);
   }
