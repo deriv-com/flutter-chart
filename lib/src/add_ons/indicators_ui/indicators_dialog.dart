@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -89,6 +90,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Stochastic Momentum Index'),
+                    value: SMIIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Williams %R'),
