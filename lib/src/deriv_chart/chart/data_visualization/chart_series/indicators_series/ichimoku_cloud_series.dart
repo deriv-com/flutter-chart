@@ -137,7 +137,12 @@ class IchimokuCloudSeries extends Series {
       ..add(_spanASeries)
       ..add(_spanBSeries);
 
-    return ChannelFillPainter(_spanASeries, _spanBSeries);
+    return ChannelFillPainter(
+      _spanASeries,
+      _spanBSeries,
+      firstUpperChannelFillColor: Colors.green.withOpacity(0.2),
+      secondUpperChannelFillColor: Colors.red.withOpacity(0.2),
+    );
   }
 
   @override

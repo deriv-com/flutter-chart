@@ -17,8 +17,10 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   ChannelFillPainter(
     this.firstSeries,
-    this.secondSeries,
-  )   : _firstLinePainter = LinePainter(firstSeries),
+    this.secondSeries, {
+    this.firstUpperChannelFillColor,
+    this.secondUpperChannelFillColor,
+  })  : _firstLinePainter = LinePainter(firstSeries),
         _secondLinePainter = LinePainter(secondSeries),
         super(firstSeries);
 
@@ -27,6 +29,12 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
 
   /// The second line series to be painting.
   final DataSeries<Tick> secondSeries;
+
+  /// The color for channel fill when [firstSeries] is the upper series.
+  Color? firstUpperChannelFillColor;
+
+  /// The color for channel fill when [secondSeries] is the upper series.
+  Color? secondUpperChannelFillColor;
 
   final LinePainter _firstLinePainter;
   final LinePainter _secondLinePainter;
@@ -50,7 +58,8 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
       ..strokeWidth = firstLineStyle.thickness;
 
     final Paint firstChannelFillPaint = Paint()
-      ..color = firstLineStyle.color.withOpacity(0.2)
+      ..color =
+          firstUpperChannelFillColor ?? firstLineStyle.color.withOpacity(0.2)
       ..style = PaintingStyle.fill
       ..strokeWidth = 0;
 
@@ -60,7 +69,8 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
       ..strokeWidth = secondLineStyle.thickness;
 
     final Paint secondChannelFillPaint = Paint()
-      ..color = secondLineStyle.color.withOpacity(0.2)
+      ..color =
+          secondUpperChannelFillColor ?? secondLineStyle.color.withOpacity(0.2)
       ..style = PaintingStyle.fill
       ..strokeWidth = 0;
 
