@@ -1,6 +1,6 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
