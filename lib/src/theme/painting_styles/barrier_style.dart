@@ -13,6 +13,7 @@ abstract class BarrierStyle extends ChartPaintingStyle {
     this.textStyle,
   });
 
+
   /// Color of the barrier
   final Color color;
 
