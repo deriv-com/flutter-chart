@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../../chart_data.dart';
 import '../data_painter.dart';
 import '../data_series.dart';
+import 'line_painter.dart';
 
 /// A [DataPainter] for painting two line data and the channel fill inside of them.
 class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
@@ -78,12 +79,10 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
     channelFillPath.lineTo(
         firstDataPathInfo.startPosition.dx, firstDataPathInfo.startPosition.dy);
 
-    final Path firstLineAreaPath = _firstLinePainter.areaPath(
-        canvas,
-        size,
-        Path.from(firstDataPathInfo.path),
-        firstDataPathInfo.startPosition.dx,
-        firstDataPathInfo.endPosition.dx);
+    final Path firstLineAreaPath = Path.from(firstDataPathInfo.path);
+
+    addAreaPath(canvas, size, firstLineAreaPath,
+        firstDataPathInfo.startPosition.dx, firstDataPathInfo.endPosition.dx);
 
     final Path firstUpperChannelFill = Path.combine(
         PathOperation.intersect, channelFillPath, firstLineAreaPath);

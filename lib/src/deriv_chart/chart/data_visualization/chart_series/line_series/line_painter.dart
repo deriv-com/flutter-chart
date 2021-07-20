@@ -48,7 +48,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
           ],
         );
 
-      final Path seriesAreaPath = areaPath(
+      addAreaPath(
         canvas,
         size,
         path.path,
@@ -56,7 +56,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         path.endPosition.dx,
       );
 
-      canvas.drawPath(seriesAreaPath, areaPaint);
+      canvas.drawPath(path.path, areaPaint);
     }
   }
 
@@ -157,24 +157,23 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     return lastVisibleTickPosition;
   }
+}
 
-  /// Returns the area paint of the given [Path].
-  Path areaPath(
-    Canvas canvas,
-    Size size,
-    Path linePath,
-    double lineStartX,
-    double lineEndX,
-  ) {
-    linePath
-      ..lineTo(
-        lineEndX,
-        size.height,
-      )
-      ..lineTo(lineStartX, size.height);
-
-    return linePath;
-  }
+/// Returns the area paint of the given [Path].
+void addAreaPath(
+  Canvas canvas,
+  Size size,
+  Path linePath,
+  double lineStartX,
+  double lineEndX,
+) {
+  linePath
+    ..lineTo(
+      lineEndX,
+      size.height,
+    )
+    ..lineTo(lineStartX, size.height);
+  return;
 }
 
 /// A class for holding the information of a [DataSeries] line path.
