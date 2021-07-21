@@ -1,34 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'smi_indicator_config.dart';
+part of 'dpo_indicator_config.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) {
-  return SMIIndicatorConfig(
+DPOIndicatorConfig _$DPOIndicatorConfigFromJson(Map<String, dynamic> json) {
+  return DPOIndicatorConfig(
     period: json['period'] as int,
-    smoothingPeriod: json['smoothingPeriod'] as int,
-    doubleSmoothingPeriod: json['doubleSmoothingPeriod'] as int,
-    overboughtValue: (json['overboughtValue'] as num).toDouble(),
-    oversoldValue: (json['oversoldValue'] as num).toDouble(),
-    signalPeriod: json['signalPeriod'] as int,
-    maType: _$enumDecode(_$MovingAverageTypeEnumMap, json['maType']),
-    showZones: json['showZones'] as bool,
+    movingAverageType:
+        _$enumDecode(_$MovingAverageTypeEnumMap, json['movingAverageType']),
+    fieldType: json['fieldType'] as String,
+    isCentered: json['isCentered'] as bool,
   );
 }
 
-Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
+Map<String, dynamic> _$DPOIndicatorConfigToJson(DPOIndicatorConfig instance) =>
     <String, dynamic>{
       'period': instance.period,
-      'smoothingPeriod': instance.smoothingPeriod,
-      'doubleSmoothingPeriod': instance.doubleSmoothingPeriod,
-      'signalPeriod': instance.signalPeriod,
-      'maType': _$MovingAverageTypeEnumMap[instance.maType],
-      'overboughtValue': instance.overboughtValue,
-      'oversoldValue': instance.oversoldValue,
-      'showZones': instance.showZones,
+      'movingAverageType':
+          _$MovingAverageTypeEnumMap[instance.movingAverageType],
+      'fieldType': instance.fieldType,
+      'isCentered': instance.isCentered,
     };
 
 K _$enumDecode<K, V>(
