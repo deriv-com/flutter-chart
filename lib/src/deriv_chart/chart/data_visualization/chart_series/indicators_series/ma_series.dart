@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -38,7 +39,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
   }) : super(
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',
-          options,
+          options: options,
           style: style ?? const LineStyle(thickness: 0.5),
           offset: offset,
         );
@@ -64,6 +65,12 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return HMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.zeroLag:
         return ZLEMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.timeSeries:
+        return LSMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.doubleExponential:
+        return DEMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.tripleExponential:
+        return TEMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.wellesWilder:
         return WWSMAIndicator<Tick>(indicator, maOptions.period);
       default:
@@ -89,6 +96,33 @@ enum MovingAverageType {
   /// Zero-lag exponential
   zeroLag,
 
+  /// Time Series
+  timeSeries,
+
   /// Welles Wilder
   wellesWilder,
+
+  /// Double Exponential Moving Average
+  doubleExponential,
+
+  /// Triple Exponential Moving Average
+  tripleExponential,
+}
+
+/// Moving Average types extension.
+extension MATypesExtension on MovingAverageType {
+  /// Exceptional titles.
+  static const Map<MovingAverageType, String> exceptionalTitles =
+      <MovingAverageType, String>{
+    MovingAverageType.doubleExponential: '2-Exponential',
+    MovingAverageType.tripleExponential: '3-Exponential',
+  };
+
+  /// Gets the title of enum.
+  String get title => exceptionalTitles[this] ?? _getCapitalizedTitle();
+
+  String _getCapitalizedTitle() {
+    final String titleText = getEnumValue(this);
+    return '${titleText[0].toUpperCase()}${titleText.substring(1)}';
+  }
 }

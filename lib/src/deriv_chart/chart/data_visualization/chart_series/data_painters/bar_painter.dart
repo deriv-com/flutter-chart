@@ -139,8 +139,7 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
   }
 
   Paint _painterColor({required bool isPositiveColor}) {
-    final BarStyle style =
-        series.style as BarStyle;
+    final BarStyle style = series.style as BarStyle? ?? theme.barStyle;
 
     _positiveBarPaint = Paint()..color = style.positiveColor;
     _negativeBarPaint = Paint()..color = style.negativeColor;

@@ -22,7 +22,7 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
         super(
           CloseValueIndicator<Tick>(_indicatorInput),
           id ?? 'ParabolicSAR',
-          options,
+          options: options,
           style: style,
         );
 

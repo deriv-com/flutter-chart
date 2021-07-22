@@ -32,7 +32,7 @@ class ROCSeries extends AbstractSingleIndicatorSeries {
         super(
           inputIndicator,
           id ?? 'ROCIndicator',
-          rocOptions,
+          options: rocOptions,
         );
 
   final Indicator<Tick> _inputIndicator;
