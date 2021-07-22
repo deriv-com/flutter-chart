@@ -10,7 +10,7 @@ class WormChart extends StatefulWidget {
   const WormChart({
     required this.ticks,
     Key? key,
-    this.zoomFactor = 0.02,
+    this.zoomFactor = 0.05,
     this.offsetAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
   }) : super(key: key);
@@ -126,10 +126,12 @@ class _WormChartPainter extends CustomPainter {
         ? 0
         : ticks.length - numberOfVisibleTicks;
 
-    final List<double> minMax = _getMinMax(ticks, startIndex);
+    final List<int> minMax = _getMinMax(ticks, startIndex);
 
-    final double min = minMax[0];
-    final double max = minMax[1];
+    final int minIndex = minMax[0];
+    final int maxIndex = minMax[1];
+    final double min = ticks[minIndex].quote;
+    final double max = ticks[maxIndex].quote;
 
     Path? linePath;
     late Offset currentPosition;
@@ -146,13 +148,19 @@ class _WormChartPainter extends CustomPainter {
 
         if (linePath == null) {
           linePath = Path()..moveTo(x, y);
-          _drawCircleIfMinMax(tick, currentPosition, min, max, canvas);
+          _drawCircleIfMinMax(
+            currentPosition,
+            i,
+            minIndex,
+            maxIndex,
+            canvas,
+          );
           continue;
         }
 
         linePath.lineTo(x, y);
 
-        _drawCircleIfMinMax(tick, currentPosition, min, max, canvas);
+        _drawCircleIfMinMax(currentPosition, i, minIndex, maxIndex, canvas);
       }
     }
 
@@ -186,17 +194,17 @@ class _WormChartPainter extends CustomPainter {
   }
 
   void _drawCircleIfMinMax(
-    Tick tick,
     Offset position,
-    double min,
-    double max,
+    int index,
+    int minIndex,
+    int maxIndex,
     Canvas canvas,
   ) {
-    if (tick.quote == max) {
+    if (index == maxIndex) {
       canvas.drawCircle(position, 2, highestCirclePaint);
     }
 
-    if (tick.quote == min) {
+    if (index == minIndex) {
       canvas.drawCircle(position, 2, lowestCirclePaint);
     }
   }
@@ -206,23 +214,23 @@ class _WormChartPainter extends CustomPainter {
       true; // TODO(NA): Return the correct value depending on the series.
 }
 
-List<double> _getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
+List<int> _getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
   final int end = endIndex ?? ticks.length - 1;
-  double min = ticks.last.quote;
-  double max = ticks.last.quote;
+  int minIndex = end;
+  int maxIndex = end;
 
-  for (int i = startIndex; i < end; i++) {
+  for (int i = end - 1; i >= startIndex; i--) {
     final Tick tick = ticks[i];
 
-    if (tick.quote > max) {
-      max = tick.quote;
+    if (tick.quote >= ticks[maxIndex].quote) {
+      maxIndex = i;
     }
-    if (tick.quote < min) {
-      min = tick.quote;
+    if (tick.quote <= ticks[minIndex].quote) {
+      minIndex = i;
     }
   }
 
-  return <double>[min, max];
+  return <int>[minIndex, maxIndex];
 }
 
 double _quoteToY(double quote, double max, double min, double height) =>
