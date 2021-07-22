@@ -9,16 +9,20 @@ part of 'oscillator_lines_config.dart';
 OscillatorLinesConfig _$OscillatorLinesConfigFromJson(
     Map<String, dynamic> json) {
   return OscillatorLinesConfig(
-    overBoughtPrice: (json['overBoughtPrice'] as num).toDouble(),
-    overSoldPrice: (json['overSoldPrice'] as num).toDouble(),
-    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+    overboughtValue: (json['overboughtValue'] as num).toDouble(),
+    oversoldValue: (json['oversoldValue'] as num).toDouble(),
+    overboughtStyle:
+        LineStyle.fromJson(json['overboughtStyle'] as Map<String, dynamic>),
+    oversoldStyle:
+        LineStyle.fromJson(json['oversoldStyle'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$OscillatorLinesConfigToJson(
         OscillatorLinesConfig instance) =>
     <String, dynamic>{
-      'overBoughtPrice': instance.overBoughtPrice,
-      'overSoldPrice': instance.overSoldPrice,
-      'lineStyle': instance.lineStyle,
+      'overboughtValue': instance.overboughtValue,
+      'oversoldValue': instance.oversoldValue,
+      'overboughtStyle': instance.overboughtStyle,
+      'oversoldStyle': instance.oversoldStyle,
     };
