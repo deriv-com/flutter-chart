@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
@@ -80,6 +81,8 @@ abstract class IndicatorConfig {
         return MACDIndicatorConfig.fromJson(json);
       case GatorIndicatorConfig.name:
         return GatorIndicatorConfig.fromJson(json);
+      case ROCIndicatorConfig.name:
+        return ROCIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');

@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
@@ -118,6 +119,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('MACD'),
                     value: MACDIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Price Rate Of Changes'),
+                    value: ROCIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Gator Oscillator'),
