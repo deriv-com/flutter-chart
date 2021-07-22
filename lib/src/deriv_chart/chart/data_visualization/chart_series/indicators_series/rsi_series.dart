@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/rsi/rsi_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -19,10 +20,12 @@ class RSISeries extends AbstractSingleIndicatorSeries {
     IndicatorInput indicatorInput, {
     String? id,
     required RSIOptions rsiOptions,
+    bool showZones = true,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           const RSIIndicatorConfig(),
           rsiOptions: rsiOptions,
+          showZones: showZones,
           id: id,
         );
 
@@ -31,12 +34,13 @@ class RSISeries extends AbstractSingleIndicatorSeries {
     Indicator<Tick> inputIndicator,
     this.config, {
     required this.rsiOptions,
+    this.showZones = true,
     String? id,
   })  : _inputIndicator = inputIndicator,
         super(
           inputIndicator,
           id ?? 'RSIIndicator',
-          rsiOptions,
+          options: rsiOptions,
           style: config.lineStyle,
         );
 
@@ -48,6 +52,9 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   /// Options for RSI Indicator.
   final RSIOptions rsiOptions;
 
+  /// Whether to fill overbought/sold zones.
+  final bool showZones;
+
   @override
   List<double> recalculateMinMax() {
     final List<double> rsiMinMax = super.recalculateMinMax();
@@ -56,20 +63,24 @@ class RSISeries extends AbstractSingleIndicatorSeries {
       return rsiMinMax;
     }
     return <double>[
-      safeMin(
-          safeMin(rsiMinMax[0], config.overSoldPrice), config.overBoughtPrice),
-      safeMax(
-          safeMax(rsiMinMax[1], config.overSoldPrice), config.overBoughtPrice),
+      safeMin(safeMin(rsiMinMax[0], config.oscillatorLinesConfig.oversoldValue),
+          config.oscillatorLinesConfig.overboughtValue),
+      safeMax(safeMax(rsiMinMax[1], config.oscillatorLinesConfig.oversoldValue),
+          config.oscillatorLinesConfig.overboughtValue),
     ];
   }
 
   @override
-  SeriesPainter<Series> createPainter() => OscillatorLinePainter(
-        this,
-        bottomHorizontalLine: config.overSoldPrice,
-        topHorizontalLine: config.overBoughtPrice,
-        mainHorizontalLinesStyle: config.mainHorizontalLinesStyle,
-      );
+  SeriesPainter<Series> createPainter() => showZones
+      ? OscillatorLinePainter(
+          this,
+          bottomHorizontalLine: config.oscillatorLinesConfig.oversoldValue,
+          topHorizontalLine: config.oscillatorLinesConfig.overboughtValue,
+          topHorizontalLinesStyle: config.oscillatorLinesConfig.overboughtStyle,
+          bottomHorizontalLinesStyle:
+              config.oscillatorLinesConfig.oversoldStyle,
+        )
+      : LinePainter(this);
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>

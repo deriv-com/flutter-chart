@@ -2,6 +2,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/stochastic_oscillator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/stochastic_oscillator_series.dart';
@@ -25,8 +26,9 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
     this.showZones = false,
     this.isSmooth = true,
     this.lineStyle = const LineStyle(color: Colors.white),
-    this.mainHorizontalLinesStyle = const LineStyle(
-      color: Colors.white,
+    this.oscillatorLinesConfig = const OscillatorLinesConfig(
+      overboughtValue: 80,
+      oversoldValue: 20,
     ),
   }) : super(isOverlay: false);
 
@@ -55,8 +57,8 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   /// The line style.
   final LineStyle lineStyle;
 
-  /// The horizontal lines style(overBought and overSold).
-  final LineStyle mainHorizontalLinesStyle;
+  /// Config of overbought and oversold.
+  final OscillatorLinesConfig oscillatorLinesConfig;
 
   /// Field type
   final String fieldType;

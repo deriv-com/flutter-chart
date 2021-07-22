@@ -16,8 +16,8 @@ StochasticOscillatorIndicatorConfig
     showZones: json['showZones'] as bool,
     isSmooth: json['isSmooth'] as bool,
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    mainHorizontalLinesStyle: LineStyle.fromJson(
-        json['mainHorizontalLinesStyle'] as Map<String, dynamic>),
+    oscillatorLinesConfig: OscillatorLinesConfig.fromJson(
+        json['oscillatorLinesConfig'] as Map<String, dynamic>),
   );
 }
 
@@ -28,7 +28,7 @@ Map<String, dynamic> _$StochasticOscillatorIndicatorConfigToJson(
       'overBoughtPrice': instance.overBoughtPrice,
       'overSoldPrice': instance.overSoldPrice,
       'lineStyle': instance.lineStyle,
-      'mainHorizontalLinesStyle': instance.mainHorizontalLinesStyle,
+      'oscillatorLinesConfig': instance.oscillatorLinesConfig,
       'fieldType': instance.fieldType,
       'isSmooth': instance.isSmooth,
       'showZones': instance.showZones,

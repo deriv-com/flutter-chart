@@ -20,7 +20,7 @@ class MockMASeries extends AbstractSingleIndicatorSeries {
   }) : super(
           CloseValueIndicator<Tick>(input),
           'MOCK_MA_SERIES',
-          MockOptions(),
+          options: MockOptions(),
           offset: offset,
         );
 

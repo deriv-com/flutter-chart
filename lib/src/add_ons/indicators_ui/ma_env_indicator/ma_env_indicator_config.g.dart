@@ -60,7 +60,10 @@ const _$MovingAverageTypeEnumMap = {
   MovingAverageType.weighted: 'weighted',
   MovingAverageType.hull: 'hull',
   MovingAverageType.zeroLag: 'zeroLag',
+  MovingAverageType.timeSeries: 'timeSeries',
   MovingAverageType.wellesWilder: 'wellesWilder',
+  MovingAverageType.doubleExponential: 'doubleExponential',
+  MovingAverageType.tripleExponential: 'tripleExponential',
 };
 
 const _$ShiftTypeEnumMap = {

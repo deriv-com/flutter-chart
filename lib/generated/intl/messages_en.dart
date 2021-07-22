@@ -32,10 +32,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelConversionLinePeriod":
             MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
         "labelDistance": MessageLookupByLibrary.simpleMessage("Distance"),
+        "labelDoubleSmoothingPeriod":
+            MessageLookupByLibrary.simpleMessage("Double Smoothing Period"),
         "labelFastMAPeriod":
             MessageLookupByLibrary.simpleMessage("Fast MA Period"),
         "labelField": MessageLookupByLibrary.simpleMessage("Field"),
         "labelHighPeriod": MessageLookupByLibrary.simpleMessage("High Period"),
+        "labelHistogram": MessageLookupByLibrary.simpleMessage("Histogram"),
         "labelIsSmooth": MessageLookupByLibrary.simpleMessage("Is Smooth"),
         "labelJawOffset": MessageLookupByLibrary.simpleMessage("Jaw Offset"),
         "labelJawPeriod": MessageLookupByLibrary.simpleMessage("Jaw Period"),
@@ -54,16 +57,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelPeriod": MessageLookupByLibrary.simpleMessage("Period"),
         "labelSearchAssets":
             MessageLookupByLibrary.simpleMessage("Search assets"),
+        "labelSeries": MessageLookupByLibrary.simpleMessage("Series"),
+        "labelShading": MessageLookupByLibrary.simpleMessage("Shading"),
         "labelShift": MessageLookupByLibrary.simpleMessage("Shift"),
         "labelShiftType": MessageLookupByLibrary.simpleMessage("Shift Type"),
         "labelShowFractals":
             MessageLookupByLibrary.simpleMessage("Show Fractals"),
         "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
         "labelShowZones": MessageLookupByLibrary.simpleMessage("Show Zones"),
-        "labelSignalPeriod":
-            MessageLookupByLibrary.simpleMessage("Signal Period"),
+        "labelSignalPeriod": MessageLookupByLibrary.simpleMessage("D% Period"),
         "labelSlowMAPeriod":
             MessageLookupByLibrary.simpleMessage("Slow MA Period"),
+        "labelSmoothingPeriod":
+            MessageLookupByLibrary.simpleMessage("Smoothing Period"),
         "labelSpanBPeriod":
             MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
         "labelStandardDeviation":

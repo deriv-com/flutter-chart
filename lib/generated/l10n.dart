@@ -60,6 +60,36 @@ class ChartLocalization {
     );
   }
 
+  /// `Shading`
+  String get labelShading {
+    return Intl.message(
+      'Shading',
+      name: 'labelShading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Histogram`
+  String get labelHistogram {
+    return Intl.message(
+      'Histogram',
+      name: 'labelHistogram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Series`
+  String get labelSeries {
+    return Intl.message(
+      'Series',
+      name: 'labelSeries',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Field`
   String get labelField {
     return Intl.message(
@@ -80,6 +110,16 @@ class ChartLocalization {
     );
   }
 
+  /// `Smoothing Period`
+  String get labelSmoothingPeriod {
+    return Intl.message(
+      'Smoothing Period',
+      name: 'labelSmoothingPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Conversion Line Period`
   String get labelConversionLinePeriod {
     return Intl.message(
@@ -95,6 +135,16 @@ class ChartLocalization {
     return Intl.message(
       'Base Line Period',
       name: 'labelBaseLinePeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Double Smoothing Period`
+  String get labelDoubleSmoothingPeriod {
+    return Intl.message(
+      'Double Smoothing Period',
+      name: 'labelDoubleSmoothingPeriod',
       desc: '',
       args: [],
     );
@@ -230,10 +280,10 @@ class ChartLocalization {
     );
   }
 
-  /// `Signal Period`
+  /// `D% Period`
   String get labelSignalPeriod {
     return Intl.message(
-      'Signal Period',
+      'D% Period',
       name: 'labelSignalPeriod',
       desc: '',
       args: [],
@@ -285,6 +335,16 @@ class ChartLocalization {
     return Intl.message(
       'Shift',
       name: 'labelShift',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Zones`
+  String get labelShowZones {
+    return Intl.message(
+      'Show Zones',
+      name: 'labelShowZones',
       desc: '',
       args: [],
     );
@@ -395,16 +455,6 @@ class ChartLocalization {
     return Intl.message(
       'Is Smooth',
       name: 'labelIsSmooth',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Show Zones`
-  String get labelShowZones {
-    return Intl.message(
-      'Show Zones',
-      name: 'labelShowZones',
       desc: '',
       args: [],
     );
