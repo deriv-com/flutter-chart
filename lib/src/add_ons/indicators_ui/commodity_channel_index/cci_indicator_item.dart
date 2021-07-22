@@ -1,4 +1,8 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
 
 import 'package:flutter/material.dart';
 
@@ -34,12 +38,20 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   int? _period;
   double? _overboughtValue;
   double? _oversoldValue;
+  LineStyle? _overboughtStyle;
+  LineStyle? _oversoldStyle;
+  bool? _showZones;
 
   @override
   CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
         period: _currentPeriod,
-        overboughtValue: _currentOverBoughtPrice,
-        oversoldValue: _currentOverSoldPrice,
+        oscillatorLinesConfig: OscillatorLinesConfig(
+          overboughtValue: _currentOverBoughtPrice,
+          oversoldValue: _currentOverSoldPrice,
+          overboughtStyle: _currentOverboughtStyle,
+          oversoldStyle: _currentOversoldStyle,
+        ),
+        showZones: _currentShowZones,
       );
 
   @override
@@ -48,94 +60,110 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           _buildPeriodField(),
           _buildOverBoughtPriceField(),
           _buildOverSoldPriceField(),
+          _buildShowZonesField(),
         ],
       );
 
-  Widget _buildPeriodField() => Row(
+  Widget _buildShowZonesField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelPeriod,
+            ChartLocalization.of(context).labelShowZones,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentPeriod.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _period = int.tryParse(text);
-                } else {
-                  _period = 20;
-                }
-                updateIndicator();
-              },
-            ),
+          Switch(
+            value: _currentShowZones,
+            onChanged: (bool value) {
+              setState(() {
+                _showZones = value;
+              });
+              updateIndicator();
+            },
+            activeTrackColor: Colors.lightGreenAccent,
+            activeColor: Colors.green,
           ),
         ],
+      );
+
+  Widget _buildPeriodField() => FieldWidget(
+        initialValue: _currentPeriod.toString(),
+        label: ChartLocalization.of(context).labelPeriod,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _period = int.tryParse(text);
+          } else {
+            _period = 20;
+          }
+          updateIndicator();
+        },
       );
 
   // TODO(Ramin): use generic type in widget class as well for the config.
   int get _currentPeriod =>
       _period ?? (widget.config as CCIIndicatorConfig).period;
 
-  Widget _buildOverBoughtPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverBoughtPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentOverBoughtPrice.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _overboughtValue = double.tryParse(text);
-                } else {
-                  _overboughtValue = 100;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverBoughtPriceField() => OscillatorLimit(
+        label: ChartLocalization.of(context).labelOverbought,
+        value: _currentOverBoughtPrice,
+        color: _currentOverboughtStyle.color,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _overboughtValue = double.tryParse(text);
+          } else {
+            _overboughtValue = 100;
+          }
+          updateIndicator();
+        },
+        onColorChanged: (Color selectedColor) {
+          setState(() {
+            _overboughtStyle =
+                _currentOverboughtStyle.copyWith(color: selectedColor);
+          });
+          updateIndicator();
+        },
       );
 
   double get _currentOverBoughtPrice =>
-      _overboughtValue ?? (widget.config as CCIIndicatorConfig).overboughtValue;
+      _overboughtValue ??
+      (widget.config as CCIIndicatorConfig)
+          .oscillatorLinesConfig
+          .overboughtValue;
 
-  Widget _buildOverSoldPriceField() => Row(
-        children: <Widget>[
-          Text(
-            ChartLocalization.of(context).labelOverSoldPrice,
-            style: const TextStyle(fontSize: 10),
-          ),
-          const SizedBox(width: 4),
-          SizedBox(
-            width: 20,
-            child: TextFormField(
-              style: const TextStyle(fontSize: 10),
-              initialValue: _currentOverSoldPrice.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (String text) {
-                if (text.isNotEmpty) {
-                  _oversoldValue = double.tryParse(text);
-                } else {
-                  _oversoldValue = -100;
-                }
-                updateIndicator();
-              },
-            ),
-          ),
-        ],
+  Widget _buildOverSoldPriceField() => OscillatorLimit(
+        label: ChartLocalization.of(context).labelOversold,
+        value: _currentOverSoldPrice,
+        color: _currentOversoldStyle.color,
+        onValueChanged: (String text) {
+          if (text.isNotEmpty) {
+            _oversoldValue = double.tryParse(text);
+          } else {
+            _oversoldValue = -100;
+          }
+          updateIndicator();
+        },
+        onColorChanged: (Color selectedColor) {
+          setState(() {
+            _oversoldStyle =
+                _currentOversoldStyle.copyWith(color: selectedColor);
+          });
+          updateIndicator();
+        },
       );
 
   double get _currentOverSoldPrice =>
-      _oversoldValue ?? (widget.config as CCIIndicatorConfig).oversoldValue;
+      _oversoldValue ??
+      (widget.config as CCIIndicatorConfig).oscillatorLinesConfig.oversoldValue;
+
+  LineStyle get _currentOverboughtStyle =>
+      _overboughtStyle ??
+      (widget.config as CCIIndicatorConfig)
+          .oscillatorLinesConfig
+          .overboughtStyle;
+
+  LineStyle get _currentOversoldStyle =>
+      _oversoldStyle ??
+      (widget.config as CCIIndicatorConfig).oscillatorLinesConfig.oversoldStyle;
+
+  bool get _currentShowZones =>
+      _showZones ?? (widget.config as CCIIndicatorConfig).showZones;
 }

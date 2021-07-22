@@ -101,7 +101,12 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
     final double padding = verticalPaddingFraction * canvasSize!.height;
     final double paddingValue = padding;
-    return paddingValue.clamp(minPadding, canvasSize!.height / 2);
+    if (BasicChartState.minPadding < canvasSize!.height / 2) {
+      return paddingValue.clamp(
+          BasicChartState.minPadding, canvasSize!.height / 2);
+    } else {
+      return 0;
+    }
   }
 
   double get _topPadding => verticalPadding;

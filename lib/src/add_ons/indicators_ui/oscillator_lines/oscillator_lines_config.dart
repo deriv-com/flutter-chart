@@ -8,19 +8,23 @@ part 'oscillator_lines_config.g.dart';
 class OscillatorLinesConfig {
   /// Initializes
   const OscillatorLinesConfig({
-    required this.overBoughtPrice,
-    required this.overSoldPrice,
-    this.lineStyle = const LineStyle(),
+    required this.overboughtValue,
+    required this.oversoldValue,
+    this.overboughtStyle = const LineStyle(thickness: 0.5),
+    this.oversoldStyle = const LineStyle(thickness: 0.5),
   });
 
   /// The price to show the over bought line.
-  final double overBoughtPrice;
+  final double overboughtValue;
 
   /// The price to show the over sold line.
-  final double overSoldPrice;
+  final double oversoldValue;
 
-  /// The horizontal lines style(overBought and overSold).
-  final LineStyle lineStyle;
+  /// The overbought line style.
+  final LineStyle overboughtStyle;
+
+  /// The oversold line style.
+  final LineStyle oversoldStyle;
 
   /// Initializes from JSON.
   factory OscillatorLinesConfig.fromJson(Map<String, dynamic> json) =>
