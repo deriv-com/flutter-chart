@@ -134,7 +134,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       _signalPeriod ?? (widget.config as SMIIndicatorConfig).signalPeriod;
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
-        label: ChartLocalization.of(context).labelOverbought,
+        label: ChartLocalization.of(context).labelOverBoughtPrice,
         initialValue: _currentOverboughtValue.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -150,7 +150,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       _overboughtValue ?? (widget.config as SMIIndicatorConfig).overboughtValue;
 
   Widget _buildOverSoldPriceField() => FieldWidget(
-        label: ChartLocalization.of(context).labelOversold,
+        label: ChartLocalization.of(context).labelOverSoldPrice,
         initialValue: _currentOversoldValue.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
