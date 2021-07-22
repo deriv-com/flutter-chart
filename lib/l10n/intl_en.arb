@@ -1,8 +1,12 @@
 {
   "@@locale": "en",
   "labelChannelFill": "Channel Fill",
+  "labelShading": "Shading",
+  "labelHistogram": "Histogram",
+  "labelSeries": "Series",
   "labelField": "Field",
   "labelPeriod": "Period",
+  "labelSmoothingPeriod": "Smoothing Period",
   "labelConversionLinePeriod": "Conversion Line Period",
   "labelBaseLinePeriod": "Base Line Period",
   "labelDoubleSmoothingPeriod": "Double Smoothing Period",

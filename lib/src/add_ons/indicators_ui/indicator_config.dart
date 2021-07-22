@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
+import 'adx/adx_indicator_config.dart';
 import 'alligator/alligator_indicator_config.dart';
 import 'bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'callbacks.dart';
@@ -63,6 +64,8 @@ abstract class IndicatorConfig {
         return CCIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case ADXIndicatorConfig.name:
+        return ADXIndicatorConfig.fromJson(json);
       case DPOIndicatorConfig.name:
         return DPOIndicatorConfig.fromJson(json);
       case SMIIndicatorConfig.name:
