@@ -60,6 +60,36 @@ class ChartLocalization {
     );
   }
 
+  /// `Shading`
+  String get labelShading {
+    return Intl.message(
+      'Shading',
+      name: 'labelShading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Histogram`
+  String get labelHistogram {
+    return Intl.message(
+      'Histogram',
+      name: 'labelHistogram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Series`
+  String get labelSeries {
+    return Intl.message(
+      'Series',
+      name: 'labelSeries',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Field`
   String get labelField {
     return Intl.message(
@@ -75,6 +105,16 @@ class ChartLocalization {
     return Intl.message(
       'Period',
       name: 'labelPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Smoothing Period`
+  String get labelSmoothingPeriod {
+    return Intl.message(
+      'Smoothing Period',
+      name: 'labelSmoothingPeriod',
       desc: '',
       args: [],
     );
@@ -250,21 +290,21 @@ class ChartLocalization {
     );
   }
 
-  /// `Over Bought Price`
-  String get labelOverBoughtPrice {
+  /// `Overbought`
+  String get labelOverbought {
     return Intl.message(
-      'Over Bought Price',
-      name: 'labelOverBoughtPrice',
+      'Overbought',
+      name: 'labelOverbought',
       desc: '',
       args: [],
     );
   }
 
-  /// `Over Sold Price`
-  String get labelOverSoldPrice {
+  /// `Oversold`
+  String get labelOversold {
     return Intl.message(
-      'Over Sold Price',
-      name: 'labelOverSoldPrice',
+      'Oversold',
+      name: 'labelOversold',
       desc: '',
       args: [],
     );
@@ -355,16 +395,6 @@ class ChartLocalization {
     return Intl.message(
       'Shift Type',
       name: 'labelShiftType',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Smoothing Period`
-  String get labelSmoothingPeriod {
-    return Intl.message(
-      'Smoothing Period',
-      name: 'labelSmoothingPeriod',
       desc: '',
       args: [],
     );

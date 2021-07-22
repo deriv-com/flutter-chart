@@ -14,7 +14,7 @@ class FieldWidget extends StatelessWidget {
   final String initialValue;
 
   /// Will be called whenever the field's value has changed.
-  final Function(String)? onValueChanged;
+  final ValueChanged<String>? onValueChanged;
 
   /// The label of the field.
   final String label;

@@ -38,6 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Fast MA Period"),
         "labelField": MessageLookupByLibrary.simpleMessage("Field"),
         "labelHighPeriod": MessageLookupByLibrary.simpleMessage("High Period"),
+        "labelHistogram": MessageLookupByLibrary.simpleMessage("Histogram"),
         "labelJawOffset": MessageLookupByLibrary.simpleMessage("Jaw Offset"),
         "labelJawPeriod": MessageLookupByLibrary.simpleMessage("Jaw Period"),
         "labelLaggingSpanOffset":
@@ -48,13 +49,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelMaxAF": MessageLookupByLibrary.simpleMessage("Max AF"),
         "labelMinAF": MessageLookupByLibrary.simpleMessage("Min AF"),
         "labelOffset": MessageLookupByLibrary.simpleMessage("Offset"),
-        "labelOverBoughtPrice":
-            MessageLookupByLibrary.simpleMessage("Over Bought Price"),
-        "labelOverSoldPrice":
-            MessageLookupByLibrary.simpleMessage("Over Sold Price"),
+        "labelOverbought": MessageLookupByLibrary.simpleMessage("Overbought"),
+        "labelOversold": MessageLookupByLibrary.simpleMessage("Oversold"),
         "labelPeriod": MessageLookupByLibrary.simpleMessage("Period"),
         "labelSearchAssets":
             MessageLookupByLibrary.simpleMessage("Search assets"),
+        "labelSeries": MessageLookupByLibrary.simpleMessage("Series"),
+        "labelShading": MessageLookupByLibrary.simpleMessage("Shading"),
         "labelShift": MessageLookupByLibrary.simpleMessage("Shift"),
         "labelShiftType": MessageLookupByLibrary.simpleMessage("Shift Type"),
         "labelShowFractals":

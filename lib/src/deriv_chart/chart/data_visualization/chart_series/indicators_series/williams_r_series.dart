@@ -52,7 +52,7 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
           bottomHorizontalLine: oversoldValue,
           secondaryHorizontalLinesStyle: overboughtSoldLineStyles,
           // TODO(NA): Zero line style will be removed from OscillatorLinePainter.
-          mainHorizontalLinesStyle: overboughtSoldLineStyles,
+          topHorizontalLinesStyle: overboughtSoldLineStyles,
         )
       : LinePainter(this);
 
