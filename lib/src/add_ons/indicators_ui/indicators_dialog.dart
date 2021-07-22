@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
@@ -113,6 +114,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     child: Text('MACD'),
                     value: MACDIndicatorConfig(),
                   ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Gator Oscillator'),
+                    value: GatorIndicatorConfig(),
+                  )
                   // Add new indicators here.
                 ],
                 onChanged: (IndicatorConfig? config) {
