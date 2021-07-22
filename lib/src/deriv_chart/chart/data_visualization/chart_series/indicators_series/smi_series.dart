@@ -59,7 +59,6 @@ class SMISeries extends Series {
         series as DataSeries<Tick>,
         topHorizontalLine: overboughtValue,
         bottomHorizontalLine: oversoldValue,
-        mainHorizontalLinesStyle: const LineStyle(),
         secondaryHorizontalLinesStyle: const LineStyle(),
       ),
       indicatorCreator: () => smiIndicator,
