@@ -10,7 +10,7 @@ import 'abstract_single_indicator_series.dart';
 import 'models/indicator_options.dart';
 
 /// Function to get a [DataPainter] object to paint the data.
-typedef DataPainterCreator = DataPainter<DataSeries<Tick>> Function(
+typedef DataPainterCreator = DataPainter<DataSeries<Tick>>? Function(
   Series series,
 );
 
@@ -47,7 +47,7 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   final CachedIndicator<Tick> Function() indicatorCreator;
 
   @override
-  SeriesPainter<Series> createPainter() => painterCreator(this);
+  SeriesPainter<Series>? createPainter() => painterCreator(this);
 
   @override
   CachedIndicator<Tick> initializeIndicator() => indicatorCreator();
