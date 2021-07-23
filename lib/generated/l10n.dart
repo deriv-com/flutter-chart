@@ -290,21 +290,21 @@ class ChartLocalization {
     );
   }
 
-  /// `Overbought`
-  String get labelOverbought {
+  /// `Over Bought Price`
+  String get labelOverBoughtPrice {
     return Intl.message(
-      'Overbought',
-      name: 'labelOverbought',
+      'Over Bought Price',
+      name: 'labelOverBoughtPrice',
       desc: '',
       args: [],
     );
   }
 
-  /// `Oversold`
-  String get labelOversold {
+  /// `Over Sold Price`
+  String get labelOverSoldPrice {
     return Intl.message(
-      'Oversold',
-      name: 'labelOversold',
+      'Over Sold Price',
+      name: 'labelOverSoldPrice',
       desc: '',
       args: [],
     );
@@ -445,6 +445,16 @@ class ChartLocalization {
     return Intl.message(
       'Show Fractals',
       name: 'labelShowFractals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Is Smooth`
+  String get labelIsSmooth {
+    return Intl.message(
+      'Is Smooth',
+      name: 'labelIsSmooth',
       desc: '',
       args: [],
     );

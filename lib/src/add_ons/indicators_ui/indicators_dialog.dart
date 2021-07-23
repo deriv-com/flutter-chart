@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
@@ -95,6 +96,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('StochasticOscillator'),
+                    value: StochasticOscillatorIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('ADX'),

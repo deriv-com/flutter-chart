@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicato
 import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -67,6 +68,8 @@ abstract class IndicatorConfig {
         return CCIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case StochasticOscillatorIndicatorConfig.name:
+        return StochasticOscillatorIndicatorConfig.fromJson(json);
       case ADXIndicatorConfig.name:
         return ADXIndicatorConfig.fromJson(json);
       case DPOIndicatorConfig.name:

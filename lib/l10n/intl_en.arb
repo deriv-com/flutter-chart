@@ -24,8 +24,8 @@
   "labelFastMAPeriod": "Fast MA Period",
   "labelSlowMAPeriod": "Slow MA Period",
   "labelSignalPeriod": "Signal Period",
-  "labelOverbought": "Overbought",
-  "labelOversold": "Oversold",
+  "labelOverBoughtPrice": "Over Bought Price",
+  "labelOverSoldPrice": "Over Sold Price",
   "labelMaxAF": "Max AF",
   "labelMinAF": "Min AF",
   "labelShift": "Shift",
@@ -42,5 +42,7 @@
   "warnCheckAssetSearchingText": "Try checking your spelling or use a different term",
   "labelShowLines": "Show Lines",
   "labelShowFractals": "Show Fractals",
+  "labelIsSmooth": "Is Smooth",
+  "labelShowZones": "Show Zones",
   "warnFailedLoadingIndicators": "Failed to load indicators."
 }
