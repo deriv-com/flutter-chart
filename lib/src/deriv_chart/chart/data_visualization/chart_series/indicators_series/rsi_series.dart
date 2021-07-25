@@ -40,7 +40,7 @@ class RSISeries extends AbstractSingleIndicatorSeries {
         super(
           inputIndicator,
           id ?? 'RSIIndicator',
-          rsiOptions,
+          options: rsiOptions,
           style: config.lineStyle,
         );
 

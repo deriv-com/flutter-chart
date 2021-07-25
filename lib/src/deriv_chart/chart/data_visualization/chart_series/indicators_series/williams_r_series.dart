@@ -25,7 +25,7 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
   }) : super(
           CloseValueIndicator<Tick>(_indicatorDataInput),
           id ?? 'WilliamsR',
-          _options,
+          options: _options,
         );
 
   final IndicatorDataInput _indicatorDataInput;

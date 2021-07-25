@@ -17,8 +17,8 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Initializes
   AbstractSingleIndicatorSeries(
     this.inputIndicator,
-    String id,
-    this.options, {
+    String id, {
+    this.options,
     DataSeriesStyle? style,
     this.offset = 0,
     HorizontalBarrierStyle? lastTickIndicatorStyle,

@@ -54,5 +54,5 @@ class DPOIndicatorItemState extends MAIndicatorItemState {
 
   @override
   int getCurrentPeriod() =>
-      period ?? (widget.config as MAIndicatorConfig)?.period ?? 14;
+      period ?? (widget.config as MAIndicatorConfig).period;
 }

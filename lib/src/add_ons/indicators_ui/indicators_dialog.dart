@@ -1,10 +1,15 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './ma_indicator/ma_indicator_config.dart';
+import 'adx/adx_indicator_config.dart';
 import 'alligator/alligator_indicator_config.dart';
 import 'bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'commodity_channel_index/cci_indicator_config.dart';
@@ -93,6 +98,14 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     value: FractalChaosBandIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('StochasticOscillator'),
+                    value: StochasticOscillatorIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('ADX'),
+                    value: ADXIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
                     child: Text('DPO'),
                     value: DPOIndicatorConfig(),
                   ),
@@ -105,9 +118,21 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                     value: WilliamsRIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('AwesomeOscillator'),
+                    value: AwesomeOscillatorIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
                     child: Text('MACD'),
                     value: MACDIndicatorConfig(),
                   ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Price Rate Of Changes'),
+                    value: ROCIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Gator Oscillator'),
+                    value: GatorIndicatorConfig(),
+                  )
                   // Add new indicators here.
                 ],
                 onChanged: (IndicatorConfig? config) {
@@ -117,7 +142,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 },
               ),
               const SizedBox(width: 16),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
                     ? () {

@@ -37,14 +37,26 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     paintLines(canvas, path.path, linePaint);
 
     if (style.hasArea) {
-      _drawArea(
+      final Paint areaPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..shader = ui.Gradient.linear(
+          const Offset(0, 0),
+          Offset(0, size.height),
+          <Color>[
+            style.color.withOpacity(0.2),
+            style.color.withOpacity(0.01),
+          ],
+        );
+
+      addAreaPath(
         canvas,
         size,
         path.path,
         path.startPosition.dx,
         path.endPosition.dx,
-        style,
       );
+
+      canvas.drawPath(path.path, areaPaint);
     }
   }
 
@@ -92,8 +104,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
       }
     }
 
-    endPosition =
-        _addLastVisibleTick(epochToX, animationInfo, quoteToY, path);
+    endPosition = _addLastVisibleTick(epochToX, animationInfo, quoteToY, path);
 
     return startPosition != null && endPosition != null
         ? DataLinePathInfo(path, startPosition, endPosition)
@@ -146,35 +157,23 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     return lastVisibleTickPosition;
   }
+}
 
-  void _drawArea(
-    Canvas canvas,
-    Size size,
-    Path linePath,
-    double lineStartX,
-    double lineEndX,
-    LineStyle style,
-  ) {
-    final Paint areaPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..shader = ui.Gradient.linear(
-        const Offset(0, 0),
-        Offset(0, size.height),
-        <Color>[
-          style.color.withOpacity(0.2),
-          style.color.withOpacity(0.01),
-        ],
-      );
-
-    linePath
-      ..lineTo(
-        lineEndX,
-        size.height,
-      )
-      ..lineTo(lineStartX, size.height);
-
-    canvas.drawPath(linePath, areaPaint);
-  }
+/// Returns the area paint of the given [Path].
+void addAreaPath(
+  Canvas canvas,
+  Size size,
+  Path linePath,
+  double lineStartX,
+  double lineEndX,
+) {
+  linePath
+    ..lineTo(
+      lineEndX,
+      size.height,
+    )
+    ..lineTo(lineStartX, size.height);
+  return;
 }
 
 /// A class for holding the information of a [DataSeries] line path.

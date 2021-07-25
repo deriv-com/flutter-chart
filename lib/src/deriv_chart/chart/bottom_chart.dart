@@ -1,5 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:deriv_chart/src/theme/chart_default_theme.dart';
@@ -61,6 +63,16 @@ class _BottomChartState extends BasicChartState<BottomChart> {
           ),
         ],
       ),
+    );
+  }
+
+  @override
+  void didUpdateWidget(BottomChart oldChart) {
+    super.didUpdateWidget(oldChart);
+
+    xAxis.update(
+      minEpoch: widget.mainSeries.getMinEpoch(),
+      maxEpoch: widget.mainSeries.getMaxEpoch(),
     );
   }
 }
