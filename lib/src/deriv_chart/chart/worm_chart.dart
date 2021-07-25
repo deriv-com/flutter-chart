@@ -177,6 +177,15 @@ class _WormChartPainter extends CustomPainter {
 
         currentPosition = Offset(x, y);
 
+        if (i == ticks.length - 1 && lastTickStyle != null) {
+          canvas.drawCircle(
+              currentPosition,
+              lastTickStyle!.radius,
+              Paint()
+                ..color = lastTickStyle!.color
+                ..style = PaintingStyle.fill);
+        }
+
         if (linePath == null) {
           linePath = Path()..moveTo(x, y);
           _drawCircleIfMinMax(
@@ -241,8 +250,7 @@ class _WormChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) =>
-      true; // TODO(NA): Return the correct value depending on the series.
+  bool shouldRepaint(covariant _WormChartPainter oldDelegate) => true;
 }
 
 List<int> _getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
