@@ -309,9 +309,12 @@ abstract class DataSeries<T extends Tick> extends Series {
 
     // Prevent re-animating indicators that haven't changed.
     if (animationInfo.currentTickPercent == 1) {
-      prevLastEntry = null;
+      resetLastEntryAnimation();
     }
   }
+
+  /// Use this to reset last tick in [entries] animation by setting [prevLastEntry] to `null`.
+  void resetLastEntryAnimation() => prevLastEntry = null;
 
   /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements.
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);

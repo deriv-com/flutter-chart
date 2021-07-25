@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';

@@ -60,6 +60,36 @@ class ChartLocalization {
     );
   }
 
+  /// `Shading`
+  String get labelShading {
+    return Intl.message(
+      'Shading',
+      name: 'labelShading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Histogram`
+  String get labelHistogram {
+    return Intl.message(
+      'Histogram',
+      name: 'labelHistogram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Series`
+  String get labelSeries {
+    return Intl.message(
+      'Series',
+      name: 'labelSeries',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Field`
   String get labelField {
     return Intl.message(
@@ -75,6 +105,16 @@ class ChartLocalization {
     return Intl.message(
       'Period',
       name: 'labelPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Smoothing Period`
+  String get labelSmoothingPeriod {
+    return Intl.message(
+      'Smoothing Period',
+      name: 'labelSmoothingPeriod',
       desc: '',
       args: [],
     );
@@ -250,21 +290,21 @@ class ChartLocalization {
     );
   }
 
-  /// `Overbought`
-  String get labelOverbought {
+  /// `Over Bought Price`
+  String get labelOverBoughtPrice {
     return Intl.message(
-      'Overbought',
-      name: 'labelOverbought',
+      'Over Bought Price',
+      name: 'labelOverBoughtPrice',
       desc: '',
       args: [],
     );
   }
 
-  /// `Oversold`
-  String get labelOversold {
+  /// `Over Sold Price`
+  String get labelOverSoldPrice {
     return Intl.message(
-      'Oversold',
-      name: 'labelOversold',
+      'Over Sold Price',
+      name: 'labelOverSoldPrice',
       desc: '',
       args: [],
     );
@@ -360,16 +400,6 @@ class ChartLocalization {
     );
   }
 
-  /// `Smoothing Period`
-  String get labelSmoothingPeriod {
-    return Intl.message(
-      'Smoothing Period',
-      name: 'labelSmoothingPeriod',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Distance`
   String get labelDistance {
     return Intl.message(
@@ -415,6 +445,16 @@ class ChartLocalization {
     return Intl.message(
       'Show Fractals',
       name: 'labelShowFractals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Is Smooth`
+  String get labelIsSmooth {
+    return Intl.message(
+      'Is Smooth',
+      name: 'labelIsSmooth',
       desc: '',
       args: [],
     );

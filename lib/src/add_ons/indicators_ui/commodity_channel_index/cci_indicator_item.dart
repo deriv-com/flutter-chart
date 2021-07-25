@@ -103,7 +103,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       _period ?? (widget.config as CCIIndicatorConfig).period;
 
   Widget _buildOverBoughtPriceField() => OscillatorLimit(
-        label: ChartLocalization.of(context).labelOverbought,
+        label: ChartLocalization.of(context).labelOverBoughtPrice,
         value: _currentOverBoughtPrice,
         color: _currentOverboughtStyle.color,
         onValueChanged: (String text) {
@@ -130,7 +130,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           .overboughtValue;
 
   Widget _buildOverSoldPriceField() => OscillatorLimit(
-        label: ChartLocalization.of(context).labelOversold,
+        label: ChartLocalization.of(context).labelOverSoldPrice,
         value: _currentOverSoldPrice,
         color: _currentOversoldStyle.color,
         onValueChanged: (String text) {
