@@ -42,10 +42,10 @@ class WormChart extends StatefulWidget {
   /// WormChart's line style.
   final LineStyle lineStyle;
 
-  /// The style of the circle which is the tick with the highest [Tick.quote]
+  /// The style of the circle which is the tick with the highest [Tick.quote].
   final ScatterStyle highestTickStyle;
 
-  /// The style of the circle which is the tick with the lowest [Tick.quote]
+  /// The style of the circle which is the tick with the lowest [Tick.quote].
   final ScatterStyle lowestTickStyle;
 
   /// The style of the circle showing the last tick.
@@ -93,7 +93,7 @@ class _WormChartState extends State<WormChart>
               painter: _WormChartPainter(
                 widget.ticks,
                 widget.zoomFactor,
-                offset: _animation.value,
+                offsetAnimationValue: _animation.value,
                 lineStyle: widget.lineStyle,
                 highestTickStyle: widget.highestTickStyle,
                 lowestTickStyle: widget.lowestTickStyle,
@@ -113,7 +113,7 @@ class _WormChartPainter extends CustomPainter {
     required this.highestTickStyle,
     required this.lowestTickStyle,
     this.lastTickStyle,
-    this.offset = 1,
+    this.offsetAnimationValue = 1,
   })  : linePaint = Paint()
           ..color = lineStyle.color
           ..style = PaintingStyle.stroke
@@ -139,7 +139,10 @@ class _WormChartPainter extends CustomPainter {
 
   final ScatterStyle? lastTickStyle;
 
-  final double offset;
+  /// Chart will be shifted to the right by `offset * (distance between two consecutive ticks)`.
+  ///
+  /// A number between 0.0 to 1.0.
+  final double offsetAnimationValue;
 
   final LineStyle lineStyle;
 
@@ -173,7 +176,7 @@ class _WormChartPainter extends CustomPainter {
         final double y = _quoteToY(tick.quote, max, min, size.height);
         final double x = size.width -
             (ticks.length - i) * ticksDistanceInPx +
-            offset * ticksDistanceInPx;
+            offsetAnimationValue * ticksDistanceInPx;
 
         currentPosition = Offset(x, y);
 
