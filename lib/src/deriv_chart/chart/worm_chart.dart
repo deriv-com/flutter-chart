@@ -178,12 +178,7 @@ class _WormChartPainter extends CustomPainter {
         currentPosition = Offset(x, y);
 
         if (i == ticks.length - 1 && lastTickStyle != null) {
-          canvas.drawCircle(
-              currentPosition,
-              lastTickStyle!.radius,
-              Paint()
-                ..color = lastTickStyle!.color
-                ..style = PaintingStyle.fill);
+          _drawLastTickCircle(canvas, currentPosition);
         }
 
         if (linePath == null) {
@@ -210,8 +205,18 @@ class _WormChartPainter extends CustomPainter {
       ..lineTo(currentPosition.dx, size.height)
       ..lineTo(size.width, size.height);
 
-    _drawArea(canvas, size, linePath, lineStyle);
+    if (lineStyle.hasArea) {
+      _drawArea(canvas, size, linePath, lineStyle);
+    }
   }
+
+  void _drawLastTickCircle(ui.Canvas canvas, ui.Offset currentPosition) =>
+      canvas.drawCircle(
+          currentPosition,
+          lastTickStyle!.radius,
+          Paint()
+            ..color = lastTickStyle!.color
+            ..style = PaintingStyle.fill);
 
   void _drawArea(
     Canvas canvas,
