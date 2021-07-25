@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:flutter/material.dart';
 
 /// A worm chart widget.
@@ -13,6 +14,15 @@ class WormChart extends StatefulWidget {
     this.zoomFactor = 0.05,
     this.offsetAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
+    this.highestTickStyle = const ScatterStyle(
+      color: Color(0xFF00A79E),
+      radius: 2,
+    ),
+    this.lowestTickStyle = const ScatterStyle(
+      color: Color(0xFFCC2E3D),
+      radius: 2,
+    ),
+    this.lastTickStyle,
   }) : super(key: key);
 
   /// The ticks list to show.
@@ -31,6 +41,15 @@ class WormChart extends StatefulWidget {
 
   /// WormChart's line style.
   final LineStyle lineStyle;
+
+  /// The style of the circle which is the tick with the highest [Tick.quote]
+  final ScatterStyle highestTickStyle;
+
+  /// The style of the circle which is the tick with the lowest [Tick.quote]
+  final ScatterStyle lowestTickStyle;
+
+  /// The style of the circle showing the last tick.
+  final ScatterStyle? lastTickStyle;
 
   @override
   _WormChartState createState() => _WormChartState();
@@ -76,6 +95,9 @@ class _WormChartState extends State<WormChart>
                 widget.zoomFactor,
                 offset: _animation.value,
                 lineStyle: widget.lineStyle,
+                highestTickStyle: widget.highestTickStyle,
+                lowestTickStyle: widget.lowestTickStyle,
+                lastTickStyle: widget.lastTickStyle,
               ),
             ),
           ),
@@ -88,25 +110,34 @@ class _WormChartPainter extends CustomPainter {
     this.ticks,
     this.zoomFactor, {
     required this.lineStyle,
+    required this.highestTickStyle,
+    required this.lowestTickStyle,
+    this.lastTickStyle,
     this.offset = 1,
-  })  : _linePaint = Paint()
+  })  : linePaint = Paint()
           ..color = lineStyle.color
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1,
+          ..strokeWidth = lineStyle.thickness,
         highestCirclePaint = Paint()
-          ..color = Colors.green
+          ..color = highestTickStyle.color
           ..style = PaintingStyle.fill,
         lowestCirclePaint = Paint()
-          ..color = Colors.red
+          ..color = lowestTickStyle.color
           ..style = PaintingStyle.fill;
 
   final List<Tick> ticks;
 
   final double zoomFactor;
 
-  final Paint _linePaint;
+  final Paint linePaint;
   final Paint highestCirclePaint;
   final Paint lowestCirclePaint;
+
+  final ScatterStyle highestTickStyle;
+
+  final ScatterStyle lowestTickStyle;
+
+  final ScatterStyle? lastTickStyle;
 
   final double offset;
 
@@ -164,7 +195,7 @@ class _WormChartPainter extends CustomPainter {
       }
     }
 
-    canvas.drawPath(linePath!, _linePaint);
+    canvas.drawPath(linePath!, linePaint);
 
     linePath
       ..lineTo(currentPosition.dx, size.height)
@@ -201,11 +232,11 @@ class _WormChartPainter extends CustomPainter {
     Canvas canvas,
   ) {
     if (index == maxIndex) {
-      canvas.drawCircle(position, 2, highestCirclePaint);
+      canvas.drawCircle(position, highestTickStyle.radius, highestCirclePaint);
     }
 
     if (index == minIndex) {
-      canvas.drawCircle(position, 2, lowestCirclePaint);
+      canvas.drawCircle(position, lowestTickStyle.radius, lowestCirclePaint);
     }
   }
 
