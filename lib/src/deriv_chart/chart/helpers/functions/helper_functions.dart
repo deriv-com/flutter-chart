@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
 /// Gets enum value as string from the given enum
@@ -69,3 +70,26 @@ double labelWidth(double text, TextStyle style, int pipSize) => makeTextPainter(
       text.toStringAsFixed(pipSize),
       style,
     ).width;
+
+/// Gets the min and max index from a list of [Tick].
+List<int> getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
+  final int end = endIndex ?? ticks.length - 1;
+  int minIndex = end;
+  int maxIndex = end;
+
+  for (int i = end - 1; i >= startIndex; i--) {
+    final Tick tick = ticks[i];
+    if (tick.quote.isNaN) {
+      continue;
+    }
+
+    if (tick.quote >= ticks[maxIndex].quote || ticks[maxIndex].quote.isNaN) {
+      maxIndex = i;
+    }
+    if (tick.quote <= ticks[minIndex].quote || ticks[minIndex].quote.isNaN) {
+      minIndex = i;
+    }
+  }
+
+  return <int>[minIndex, maxIndex];
+}

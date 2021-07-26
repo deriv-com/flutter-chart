@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
@@ -179,7 +180,7 @@ class _WormChartPainter extends CustomPainter {
         ? 0
         : ticks.length - numberOfVisibleTicks;
 
-    final List<int> minMax = _getMinMax(ticks, startIndex);
+    final List<int> minMax = getMinMax(ticks, startIndex);
 
     final int minIndex = minMax[0];
     final int maxIndex = minMax[1];
@@ -279,28 +280,6 @@ class _WormChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _WormChartPainter oldDelegate) => true;
-}
-
-List<int> _getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
-  final int end = endIndex ?? ticks.length - 1;
-  int minIndex = end;
-  int maxIndex = end;
-
-  for (int i = end - 1; i >= startIndex; i--) {
-    final Tick tick = ticks[i];
-    if (tick.quote.isNaN) {
-      continue;
-    }
-
-    if (tick.quote >= ticks[maxIndex].quote || ticks[maxIndex].quote.isNaN) {
-      maxIndex = i;
-    }
-    if (tick.quote <= ticks[minIndex].quote || ticks[minIndex].quote.isNaN) {
-      minIndex = i;
-    }
-  }
-
-  return <int>[minIndex, maxIndex];
 }
 
 double _quoteToY(

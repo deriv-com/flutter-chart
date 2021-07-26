@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -62,6 +63,77 @@ void main() {
         () {
       expect(labelWidth(10, const TextStyle(), 10), 182);
       expect(labelWidth(100, const TextStyle(), 10), 196);
+    });
+  });
+
+  group('getMinMax index function', () {
+    test('Gets the min/max index of a list with no NaN value', () {
+      const List<Tick> ticks = <Tick>[
+        Tick(epoch: 0, quote: 12),
+        Tick(epoch: 1, quote: 13),
+        Tick(epoch: 2, quote: 10),
+        Tick(epoch: 3, quote: 5),
+        Tick(epoch: 4, quote: 2),
+        Tick(epoch: 5, quote: 20),
+        Tick(epoch: 6, quote: 4),
+      ];
+
+      final List<int> minMaxIndex = getMinMax(ticks, 3);
+
+      expect(minMaxIndex[0], 4);
+      expect(minMaxIndex[1], 5);
+    });
+
+    test('Gets the min/max index of a list with no NaN value at the end', () {
+      const List<Tick> ticks = <Tick>[
+        Tick(epoch: 0, quote: 12),
+        Tick(epoch: 1, quote: 13),
+        Tick(epoch: 2, quote: 10),
+        Tick(epoch: 3, quote: 5),
+        Tick(epoch: 4, quote: 2),
+        Tick(epoch: 5, quote: 20),
+        Tick(epoch: 6, quote: double.nan),
+      ];
+
+      final List<int> minMaxIndex = getMinMax(ticks, 3);
+
+      expect(minMaxIndex[0], 4);
+      expect(minMaxIndex[1], 5);
+    });
+
+    test('Gets the min/max index of a list with no NaN value in the middle',
+        () {
+      const List<Tick> ticks = <Tick>[
+        Tick(epoch: 0, quote: 12),
+        Tick(epoch: 1, quote: 13),
+        Tick(epoch: 2, quote: 10),
+        Tick(epoch: 3, quote: 5),
+        Tick(epoch: 4, quote: double.nan),
+        Tick(epoch: 5, quote: 20),
+        Tick(epoch: 6, quote: 4),
+      ];
+
+      final List<int> minMaxIndex = getMinMax(ticks, 3);
+
+      expect(minMaxIndex[0], 6);
+      expect(minMaxIndex[1], 5);
+    });
+
+    test('Gets the min/max index of a list with last two being NaN', () {
+      const List<Tick> ticks = <Tick>[
+        Tick(epoch: 0, quote: 12),
+        Tick(epoch: 1, quote: 13),
+        Tick(epoch: 2, quote: 10),
+        Tick(epoch: 3, quote: 5),
+        Tick(epoch: 4, quote: 2),
+        Tick(epoch: 5, quote: double.nan),
+        Tick(epoch: 6, quote: double.nan),
+      ];
+
+      final List<int> minMaxIndex = getMinMax(ticks, 3);
+
+      expect(minMaxIndex[0], 4);
+      expect(minMaxIndex[1], 3);
     });
   });
 }
