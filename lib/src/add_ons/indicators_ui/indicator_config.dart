@@ -1,5 +1,11 @@
 import 'dart:convert';
 
+import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -7,6 +13,7 @@ import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
+import 'adx/adx_indicator_config.dart';
 import 'alligator/alligator_indicator_config.dart';
 import 'bollinger_bands/bollinger_bands_indicator_config.dart';
 import 'callbacks.dart';
@@ -20,6 +27,7 @@ import 'ma_indicator/ma_indicator_config.dart';
 import 'parabolic_sar/parabolic_sar_indicator_config.dart';
 import 'rainbow_indicator/rainbow_indicator_config.dart';
 import 'rsi/rsi_indicator_config.dart';
+import 'williams_r/williams_r_indicator_config.dart';
 import 'zigzag_indicator/zigzag_indicator_config.dart';
 
 /// Indicator config
@@ -61,10 +69,26 @@ abstract class IndicatorConfig {
         return CCIIndicatorConfig.fromJson(json);
       case FractalChaosBandIndicatorConfig.name:
         return FractalChaosBandIndicatorConfig.fromJson(json);
+      case StochasticOscillatorIndicatorConfig.name:
+        return StochasticOscillatorIndicatorConfig.fromJson(json);
+      case ADXIndicatorConfig.name:
+        return ADXIndicatorConfig.fromJson(json);
+      case DPOIndicatorConfig.name:
+        return DPOIndicatorConfig.fromJson(json);
+      case AwesomeOscillatorIndicatorConfig.name:
+        return AwesomeOscillatorIndicatorConfig.fromJson(json);
+      case SMIIndicatorConfig.name:
+        return SMIIndicatorConfig.fromJson(json);
+      case WilliamsRIndicatorConfig.name:
+        return WilliamsRIndicatorConfig.fromJson(json);
       case MACDIndicatorConfig.name:
         return MACDIndicatorConfig.fromJson(json);
       case AroonIndicatorConfig.name:
         return AroonIndicatorConfig.fromJson(json);
+      case GatorIndicatorConfig.name:
+        return GatorIndicatorConfig.fromJson(json);
+      case ROCIndicatorConfig.name:
+        return ROCIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
