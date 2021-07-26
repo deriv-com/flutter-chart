@@ -5,12 +5,11 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:flutter/material.dart';
 
-/// A worm chart widget.
+/// A lightweight worm chart widget.
 class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
     required this.ticks,
-    Key? key,
     this.zoomFactor = 0.05,
     this.offsetAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
@@ -25,6 +24,7 @@ class WormChart extends StatefulWidget {
     this.lastTickStyle,
     this.topPadding = 2,
     this.bottomPadding = 2,
+    Key? key,
   }) : super(key: key);
 
   /// The ticks list to show.
@@ -86,9 +86,11 @@ class _WormChartState extends State<WormChart>
   void didUpdateWidget(covariant WormChart oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _animationController
-      ..reset()
-      ..forward();
+    if (widget.offsetAnimationDuration != Duration.zero) {
+      _animationController
+        ..reset()
+        ..forward();
+    }
   }
 
   @override
