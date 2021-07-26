@@ -33,7 +33,7 @@ class WormChart extends StatefulWidget {
   /// Indicates the proportion of the horizontal space that each tick is going to take.
   ///
   /// Default is 0.02 which means each tick occupies 2% of the horizontal space,
-  /// and at most 50 ticks will be visible.
+  /// and at most 50 of most recent ticks will be visible.
   final double zoomFactor;
 
   /// The duration of sliding animation as the chart gets updated.
@@ -223,11 +223,10 @@ class _WormChartPainter extends CustomPainter {
 
     canvas.drawPath(linePath!, linePaint);
 
-    linePath
-      ..lineTo(currentPosition.dx, size.height)
-      ..lineTo(size.width, size.height);
-
     if (lineStyle.hasArea) {
+      linePath
+        ..lineTo(currentPosition.dx, size.height)
+        ..lineTo(linePath.getBounds().right, size.height);
       _drawArea(canvas, size, linePath, lineStyle);
     }
   }
