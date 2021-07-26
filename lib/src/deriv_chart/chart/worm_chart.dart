@@ -288,11 +288,14 @@ List<int> _getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
 
   for (int i = end - 1; i >= startIndex; i--) {
     final Tick tick = ticks[i];
+    if (tick.quote.isNaN) {
+      continue;
+    }
 
-    if (tick.quote >= ticks[maxIndex].quote) {
+    if (tick.quote >= ticks[maxIndex].quote || ticks[maxIndex].quote.isNaN) {
       maxIndex = i;
     }
-    if (tick.quote <= ticks[minIndex].quote) {
+    if (tick.quote <= ticks[minIndex].quote || ticks[minIndex].quote.isNaN) {
       minIndex = i;
     }
   }
