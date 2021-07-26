@@ -23,6 +23,8 @@ class WormChart extends StatefulWidget {
       radius: 2,
     ),
     this.lastTickStyle,
+    this.topPadding = 2,
+    this.bottomPadding = 2,
   }) : super(key: key);
 
   /// The ticks list to show.
@@ -38,6 +40,12 @@ class WormChart extends StatefulWidget {
   ///
   /// Default is zero meaning the animation is disabled.
   final Duration offsetAnimationDuration;
+
+  /// Chart's top padding.
+  final double topPadding;
+
+  /// Chart's bottom padding.
+  final double bottomPadding;
 
   /// WormChart's line style.
   final LineStyle lineStyle;
@@ -98,6 +106,8 @@ class _WormChartState extends State<WormChart>
                 highestTickStyle: widget.highestTickStyle,
                 lowestTickStyle: widget.lowestTickStyle,
                 lastTickStyle: widget.lastTickStyle,
+                topPadding: widget.topPadding,
+                bottomPadding: widget.bottomPadding,
               ),
             ),
           ),
@@ -114,6 +124,8 @@ class _WormChartPainter extends CustomPainter {
     required this.lowestTickStyle,
     this.lastTickStyle,
     this.offsetAnimationValue = 1,
+    this.topPadding = 0,
+    this.bottomPadding = 0,
   })  : linePaint = Paint()
           ..color = lineStyle.color
           ..style = PaintingStyle.stroke
@@ -146,8 +158,13 @@ class _WormChartPainter extends CustomPainter {
 
   final LineStyle lineStyle;
 
+  final double topPadding;
+  final double bottomPadding;
+
   @override
   void paint(Canvas canvas, Size size) {
+    assert(topPadding + bottomPadding < 0.9 * size.height);
+
     if (ticks.length < 2) {
       return;
     }
@@ -173,7 +190,9 @@ class _WormChartPainter extends CustomPainter {
     for (int i = ticks.length - 1; i >= startIndex; i--) {
       final Tick tick = ticks[i];
       if (!tick.quote.isNaN) {
-        final double y = _quoteToY(tick.quote, max, min, size.height);
+        final double y = _quoteToY(tick.quote, max, min, size.height,
+            topPadding: topPadding, bottomPadding: bottomPadding);
+
         final double x = size.width -
             (ticks.length - i) * ticksDistanceInPx +
             offsetAnimationValue * ticksDistanceInPx;
@@ -280,12 +299,19 @@ List<int> _getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
   return <int>[minIndex, maxIndex];
 }
 
-double _quoteToY(double quote, double max, double min, double height) =>
+double _quoteToY(
+  double quote,
+  double max,
+  double min,
+  double height, {
+  double topPadding = 0,
+  double bottomPadding = 0,
+}) =>
     quoteToCanvasY(
       quote: quote,
       topBoundQuote: max,
       bottomBoundQuote: min,
       canvasHeight: height,
-      topPadding: 2,
-      bottomPadding: 2,
+      topPadding: topPadding,
+      bottomPadding: bottomPadding,
     );
