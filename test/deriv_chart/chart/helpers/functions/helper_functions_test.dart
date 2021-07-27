@@ -78,7 +78,7 @@ void main() {
         Tick(epoch: 6, quote: 4),
       ];
 
-      final List<int> minMaxIndex = getMinMax(ticks, 3);
+      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
 
       expect(minMaxIndex[0], 4);
       expect(minMaxIndex[1], 5);
@@ -95,7 +95,7 @@ void main() {
         Tick(epoch: 6, quote: double.nan),
       ];
 
-      final List<int> minMaxIndex = getMinMax(ticks, 3);
+      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
 
       expect(minMaxIndex[0], 4);
       expect(minMaxIndex[1], 5);
@@ -113,7 +113,7 @@ void main() {
         Tick(epoch: 6, quote: 4),
       ];
 
-      final List<int> minMaxIndex = getMinMax(ticks, 3);
+      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
 
       expect(minMaxIndex[0], 6);
       expect(minMaxIndex[1], 5);
@@ -130,7 +130,7 @@ void main() {
         Tick(epoch: 6, quote: double.nan),
       ];
 
-      final List<int> minMaxIndex = getMinMax(ticks, 3);
+      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
 
       expect(minMaxIndex[0], 4);
       expect(minMaxIndex[1], 3);

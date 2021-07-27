@@ -72,7 +72,7 @@ double labelWidth(double text, TextStyle style, int pipSize) => makeTextPainter(
     ).width;
 
 /// Gets the min and max index from a list of [Tick].
-List<int> getMinMax(List<Tick> ticks, int startIndex, [int? endIndex]) {
+List<int> getMinMaxIndex(List<Tick> ticks, int startIndex, [int? endIndex]) {
   final int end = endIndex ?? ticks.length - 1;
   int minIndex = end;
   int maxIndex = end;
