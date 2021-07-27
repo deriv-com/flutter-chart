@@ -38,7 +38,7 @@ class MASeries extends AbstractSingleIndicatorSeries {
   }) : super(
           indicator,
           id ?? 'SMASeries-period${options.period}-type${options.type}',
-          options,
+          options: options,
           style: style ?? const LineStyle(thickness: 0.5),
           offset: offset,
         );
@@ -64,6 +64,12 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return HMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.zeroLag:
         return ZLEMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.timeSeries:
+        return LSMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.doubleExponential:
+        return DEMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.tripleExponential:
+        return TEMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.triangular:
         return TRIMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.wellesWilder:
@@ -91,9 +97,36 @@ enum MovingAverageType {
   /// Zero-lag exponential
   zeroLag,
 
+  /// Time Series
+  timeSeries,
+
   /// Welles Wilder
   wellesWilder,
 
   /// Triangular
   triangular,
+
+  /// Double Exponential Moving Average
+  doubleExponential,
+
+  /// Triple Exponential Moving Average
+  tripleExponential,
+}
+
+/// Moving Average types extension.
+extension MATypesExtension on MovingAverageType {
+  /// Exceptional titles.
+  static const Map<MovingAverageType, String> exceptionalTitles =
+      <MovingAverageType, String>{
+    MovingAverageType.doubleExponential: '2-Exponential',
+    MovingAverageType.tripleExponential: '3-Exponential',
+  };
+
+  /// Gets the title of enum.
+  String get title => exceptionalTitles[this] ?? _getCapitalizedTitle();
+
+  String _getCapitalizedTitle() {
+    final String titleText = getEnumValue(this);
+    return '${titleText[0].toUpperCase()}${titleText.substring(1)}';
+  }
 }
