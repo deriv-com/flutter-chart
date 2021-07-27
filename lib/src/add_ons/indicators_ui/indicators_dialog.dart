@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/commodity_channel_index/cci_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
@@ -12,7 +14,6 @@ import './ma_indicator/ma_indicator_config.dart';
 import 'adx/adx_indicator_config.dart';
 import 'alligator/alligator_indicator_config.dart';
 import 'bollinger_bands/bollinger_bands_indicator_config.dart';
-import 'commodity_channel_index/cci_indicator_config.dart';
 import 'donchian_channel/donchian_channel_indicator_config.dart';
 import 'fcb_indicator/fcb_indicator_config.dart';
 import 'ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
@@ -124,6 +125,10 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('MACD'),
                     value: MACDIndicatorConfig(),
+                  ),
+                  const DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Aroon'),
+                    value: AroonIndicatorConfig(),
                   ),
                   const DropdownMenuItem<IndicatorConfig>(
                     child: Text('Price Rate Of Changes'),
