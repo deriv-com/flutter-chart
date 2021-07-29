@@ -71,6 +71,8 @@ class MASeries extends AbstractSingleIndicatorSeries {
         return DEMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.tripleExponential:
         return TEMAIndicator<Tick>(indicator, maOptions.period);
+      case MovingAverageType.triangular:
+        return TRIMAIndicator<Tick>(indicator, maOptions.period);
       case MovingAverageType.wellesWilder:
         return WWSMAIndicator<Tick>(indicator, maOptions.period);
       default:
@@ -101,6 +103,9 @@ enum MovingAverageType {
 
   /// Welles Wilder
   wellesWilder,
+
+  /// Triangular
+  triangular,
 
   /// Double Exponential Moving Average
   doubleExponential,
