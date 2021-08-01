@@ -72,7 +72,8 @@ double labelWidth(double text, TextStyle style, int pipSize) => makeTextPainter(
     ).width;
 
 /// Gets the min and max index from a list of [Tick].
-List<int> getMinMaxIndex(List<Tick> ticks, int startIndex, [int? endIndex]) {
+MinMaxIndices getMinMaxIndex(List<Tick> ticks, int startIndex,
+    [int? endIndex]) {
   final int end = endIndex ?? ticks.length - 1;
   int minIndex = end;
   int maxIndex = end;
@@ -91,5 +92,17 @@ List<int> getMinMaxIndex(List<Tick> ticks, int startIndex, [int? endIndex]) {
     }
   }
 
-  return <int>[minIndex, maxIndex];
+  return MinMaxIndices(minIndex, maxIndex);
+}
+
+/// A model class to hold min/max indices of a list
+class MinMaxIndices {
+  /// Initializes
+  const MinMaxIndices(this.minIndex, this.maxIndex);
+
+  /// Min index.
+  final int minIndex;
+
+  /// Max index.
+  final int maxIndex;
 }

@@ -78,10 +78,10 @@ void main() {
         Tick(epoch: 6, quote: 4),
       ];
 
-      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
+      final MinMaxIndices minMaxIndex = getMinMaxIndex(ticks, 3);
 
-      expect(minMaxIndex[0], 4);
-      expect(minMaxIndex[1], 5);
+      expect(minMaxIndex.minIndex, 4);
+      expect(minMaxIndex.maxIndex, 5);
     });
 
     test('Gets the min/max index of a list with no NaN value at the end', () {
@@ -95,10 +95,10 @@ void main() {
         Tick(epoch: 6, quote: double.nan),
       ];
 
-      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
+      final MinMaxIndices minMaxIndex = getMinMaxIndex(ticks, 3);
 
-      expect(minMaxIndex[0], 4);
-      expect(minMaxIndex[1], 5);
+      expect(minMaxIndex.minIndex, 4);
+      expect(minMaxIndex.maxIndex, 5);
     });
 
     test('Gets the min/max index of a list with no NaN value in the middle',
@@ -113,10 +113,10 @@ void main() {
         Tick(epoch: 6, quote: 4),
       ];
 
-      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
+      final MinMaxIndices minMaxIndex = getMinMaxIndex(ticks, 3);
 
-      expect(minMaxIndex[0], 6);
-      expect(minMaxIndex[1], 5);
+      expect(minMaxIndex.minIndex, 6);
+      expect(minMaxIndex.maxIndex, 5);
     });
 
     test('Gets the min/max index of a list with last two being NaN', () {
@@ -130,10 +130,10 @@ void main() {
         Tick(epoch: 6, quote: double.nan),
       ];
 
-      final List<int> minMaxIndex = getMinMaxIndex(ticks, 3);
+      final MinMaxIndices minMaxIndex = getMinMaxIndex(ticks, 3);
 
-      expect(minMaxIndex[0], 4);
-      expect(minMaxIndex[1], 3);
+      expect(minMaxIndex.minIndex, 4);
+      expect(minMaxIndex.maxIndex, 3);
     });
   });
 }

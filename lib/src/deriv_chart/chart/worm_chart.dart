@@ -180,10 +180,10 @@ class _WormChartPainter extends CustomPainter {
         ? 0
         : ticks.length - numberOfVisibleTicks;
 
-    final List<int> minMax = getMinMaxIndex(ticks, startIndex);
+    final MinMaxIndices minMax = getMinMaxIndex(ticks, startIndex);
 
-    final int minIndex = minMax[0];
-    final int maxIndex = minMax[1];
+    final int minIndex = minMax.minIndex;
+    final int maxIndex = minMax.maxIndex;
     final double min = ticks[minIndex].quote;
     final double max = ticks[maxIndex].quote;
 
