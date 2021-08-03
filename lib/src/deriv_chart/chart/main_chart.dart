@@ -114,8 +114,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     final double paddingValue = padding +
         (minCrosshairPadding - padding).clamp(0, minCrosshairPadding) *
             crosshairZoomOutAnimation.value;
-    return paddingValue.clamp(
-        BasicChartState.minPadding, canvasSize!.height / 2);
+    if (BasicChartState.minPadding < canvasSize!.height / 2) {
+      return paddingValue.clamp(
+          BasicChartState.minPadding, canvasSize!.height / 2);
+    } else {
+      return 0;
+    }
   }
 
   @override

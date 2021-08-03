@@ -25,7 +25,7 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
   }) : super(
           CloseValueIndicator<Tick>(_indicatorDataInput),
           id ?? 'WilliamsR',
-          _options,
+          options: _options,
         );
 
   final IndicatorDataInput _indicatorDataInput;
@@ -52,7 +52,7 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
           bottomHorizontalLine: oversoldValue,
           secondaryHorizontalLinesStyle: overboughtSoldLineStyles,
           // TODO(NA): Zero line style will be removed from OscillatorLinePainter.
-          mainHorizontalLinesStyle: overboughtSoldLineStyles,
+          topHorizontalLinesStyle: overboughtSoldLineStyles,
         )
       : LinePainter(this);
 
