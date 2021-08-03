@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 
 import '../../data_series.dart';
@@ -13,7 +14,13 @@ class CandleSeries extends OHLCTypeSeries {
     List<Candle> entries, {
     String? id,
     CandleStyle? style,
-  }) : super(entries, id ?? 'CandleSeries', style: style);
+    HorizontalBarrierStyle? lastTickIndicatorStyle,
+  }) : super(
+          entries,
+          id ?? 'CandleSeries',
+          style: style,
+          lastTickIndicatorStyle: lastTickIndicatorStyle,
+        );
 
   @override
   SeriesPainter<DataSeries<Candle>> createPainter() => CandlePainter(this);
