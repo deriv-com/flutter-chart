@@ -49,7 +49,7 @@ class MarketSelector extends StatefulWidget {
   final ChartTheme? theme;
 
   /// The theme of the chart which the market selector is being placed inside.
-  final ChartTheme theme;
+  final ChartTheme? theme;
 
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
@@ -103,7 +103,7 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   void _fillMarketsList() {
-    _marketsToDisplay = _filterText.isEmpty || widget.markets == null
+    _marketsToDisplay = _filterText.isEmpty
         ? widget.markets
         : widget.markets
             .where((Market market) =>

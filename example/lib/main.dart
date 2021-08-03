@@ -76,17 +76,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
-  bool _showTimer = false;
 
   List<Barrier> _sampleBarriers = <Barrier>[];
-  HorizontalBarrier _slBarrier, _tpBarrier;
+  HorizontalBarrier? _slBarrier, _tpBarrier;
   bool _sl = false, _tp = false;
 
-  TickHistorySubscription _tickHistorySubscription;
+  TickHistorySubscription? _tickHistorySubscription;
 
-  StreamSubscription _tickStreamSubscription;
+  StreamSubscription? _tickStreamSubscription;
 
-  ConnectionBloc _connectionBloc;
+  late ConnectionBloc _connectionBloc;
 
   bool _waitingForHistory = false;
 
@@ -123,7 +122,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
   late PrefServiceCache _prefService;
 
   ChartController _controller = ChartController();
-  PersistentBottomSheetController _bottomSheetController;
+  PersistentBottomSheetController? _bottomSheetController;
+
+  late PrefServiceCache _prefService;
 
   @override
   void initState() {
@@ -209,9 +210,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
         }
 
         for (int i = 0; i < _activeSymbols.length; i++) {
-          if (statusChanges[_activeSymbols[i].symbol] != null) {
+          if (statusChanges[_activeSymbols[i].symbol!] != null) {
             _activeSymbols[i] = _activeSymbols[i].copyWith(
-              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
+              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol!],
             );
           }
         }
@@ -240,11 +241,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
         (ActiveSymbolsItem activeSymbol) => activeSymbol.exchangeIsOpen);
 
     _symbol = Asset(
-      name: firstOpenSymbol.symbol,
+      name: firstOpenSymbol.symbol!,
       displayName: firstOpenSymbol.displayName,
-      market: firstOpenSymbol.market,
-      subMarket: firstOpenSymbol.submarket,
-      isOpen: firstOpenSymbol.exchangeIsOpen,
+      market: firstOpenSymbol.market!,
+      subMarket: firstOpenSymbol.submarket!,
+      isOpen: firstOpenSymbol.exchangeIsOpen!,
     );
 
     _fillMarketSelectorList();
@@ -260,19 +261,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
         marketTitles.add(symbol.market);
         markets.add(
           Market.fromAssets(
-            name: symbol.market,
-            displayName: symbol.marketDisplayName,
+            name: symbol.market!,
+            displayName: symbol.marketDisplayName!,
             assets: _activeSymbols
                 .where((dynamic activeSymbol) =>
                     activeSymbol.market == symbol.market)
                 .map<Asset>((dynamic activeSymbol) => Asset(
                       market: activeSymbol.market,
                       marketDisplayName: activeSymbol.marketDisplayName,
-                      subMarket: activeSymbol.submarket,
-                      name: activeSymbol.symbol,
+                      subMarket: activeSymbol.submarket!,
+                      name: activeSymbol.symbol!,
                       displayName: activeSymbol.displayName,
                       subMarketDisplayName: activeSymbol.submarketDisplayName,
-                      isOpen: activeSymbol.exchangeIsOpen,
+                      isOpen: activeSymbol.exchangeIsOpen!,
                     ))
                 .toList(),
           ),

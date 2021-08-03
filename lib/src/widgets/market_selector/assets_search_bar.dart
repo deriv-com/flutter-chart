@@ -25,7 +25,7 @@ class _AssetsSearchBarState extends State<AssetsSearchBar> {
 
   late ChartTheme _theme;
 
-  ChartTheme _theme;
+  late ChartTheme _theme;
 
   @override
   void initState() {
