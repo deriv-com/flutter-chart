@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -11,7 +12,7 @@ class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
     required this.ticks,
-    this.zoomFactor = 0.05,
+    this.zoomFactor = 0.02,
     this.offsetAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
     this.highestTickStyle = const ScatterStyle(
@@ -69,6 +70,11 @@ class _WormChartState extends State<WormChart>
   late AnimationController _animationController;
   late Animation<double> _animation;
 
+  late double _rightIndex;
+  late double _leftIndex;
+  final GlobalKey _chartKey = GlobalKey();
+  Size _chartSize = Size.zero;
+
   @override
   void initState() {
     super.initState();
@@ -81,6 +87,13 @@ class _WormChartState extends State<WormChart>
     _animation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
+
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
+      setState(() {
+        _chartSize =
+            (_chartKey.currentContext?.findRenderObject() as RenderBox).size;
+      });
+    });
   }
 
   @override
@@ -94,28 +107,51 @@ class _WormChartState extends State<WormChart>
     }
   }
 
+  /// Converts XFactor to x coordinate
+  double _indexToX(int xFactor) => lerpDouble(
+        0,
+        _chartSize.width,
+        (xFactor - _leftIndex) / (_rightIndex - _leftIndex),
+      )!;
+
+  // /// Converts x coordinate to XFactor value
+  // int _xToIndex(double x) =>
+  //     x * xFactorDifference ~/ canvasSize.width + leftXFactor;
+
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _animationController,
-        builder: (_, __) => ClipRect(
-          child: Container(
-            constraints: const BoxConstraints.expand(),
-            child: CustomPaint(
-              painter: _WormChartPainter(
-                widget.ticks,
-                widget.zoomFactor,
-                offsetAnimationValue: _animation.value,
-                lineStyle: widget.lineStyle,
-                highestTickStyle: widget.highestTickStyle,
-                lowestTickStyle: widget.lowestTickStyle,
-                lastTickStyle: widget.lastTickStyle,
-                topPadding: widget.topPadding,
-                bottomPadding: widget.bottomPadding,
-              ),
+  Widget build(BuildContext context) {
+    _rightIndex = widget.ticks.length.toDouble();
+    _leftIndex = _rightIndex - (widget.zoomFactor * _chartSize.width);
+    if (widget.ticks.isNotEmpty) {
+      print(
+        'Last:${_indexToX(widget.ticks.length - 1)}, 1st:${_indexToX(3)} LeftIndex: $_leftIndex',
+      );
+    }
+
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (_, __) => ClipRect(
+        child: Container(
+          key: _chartKey,
+          constraints: const BoxConstraints.expand(),
+          child: CustomPaint(
+            painter: _WormChartPainter(
+              widget.ticks,
+              widget.zoomFactor,
+              indexToX: _indexToX,
+              offsetAnimationValue: _animation.value,
+              lineStyle: widget.lineStyle,
+              highestTickStyle: widget.highestTickStyle,
+              lowestTickStyle: widget.lowestTickStyle,
+              lastTickStyle: widget.lastTickStyle,
+              topPadding: widget.topPadding,
+              bottomPadding: widget.bottomPadding,
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }
 
 class _WormChartPainter extends CustomPainter {
@@ -125,6 +161,7 @@ class _WormChartPainter extends CustomPainter {
     required this.lineStyle,
     required this.highestTickStyle,
     required this.lowestTickStyle,
+    required this.indexToX,
     this.lastTickStyle,
     this.offsetAnimationValue = 1,
     this.topPadding = 0,
@@ -163,6 +200,8 @@ class _WormChartPainter extends CustomPainter {
 
   final double topPadding;
   final double bottomPadding;
+
+  final double Function(int) indexToX;
 
   @override
   void paint(Canvas canvas, Size size) {
