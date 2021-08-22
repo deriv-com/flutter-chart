@@ -121,11 +121,10 @@ class _WormChartState extends State<WormChart>
 
   @override
   Widget build(BuildContext context) {
-    late List<Tick> visibleTicks;
+    int lowerIndex = 0;
+    int upperIndex = 0;
 
-    if (_chartSize == Size.zero) {
-      visibleTicks = <Tick>[];
-    } else {
+    if (_chartSize != Size.zero) {
       _rightIndex = widget.ticks.length.toDouble();
       _leftIndex = _rightIndex - (widget.zoomFactor * _chartSize.width);
       if (widget.ticks.isNotEmpty) {
@@ -134,9 +133,8 @@ class _WormChartState extends State<WormChart>
         );
       }
 
-      final int lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
-      final int upperIndex = _searchUpperIndex(widget.ticks, _rightIndex);
-      visibleTicks = widget.ticks.sublist(lowerIndex, upperIndex);
+      lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
+      upperIndex = _searchUpperIndex(widget.ticks, _rightIndex);
     }
 
     return AnimatedBuilder(
@@ -147,7 +145,7 @@ class _WormChartState extends State<WormChart>
           constraints: const BoxConstraints.expand(),
           child: CustomPaint(
             painter: _WormChartPainter(
-              visibleTicks,
+              widget.ticks,
               widget.zoomFactor,
               indexToX: _indexToX,
               offsetAnimationValue: _animation.value,
@@ -157,6 +155,8 @@ class _WormChartState extends State<WormChart>
               lastTickStyle: widget.lastTickStyle,
               topPadding: widget.topPadding,
               bottomPadding: widget.bottomPadding,
+              startIndex: lowerIndex,
+              endIndex: upperIndex,
             ),
           ),
         ),
@@ -173,6 +173,8 @@ class _WormChartPainter extends CustomPainter {
     required this.highestTickStyle,
     required this.lowestTickStyle,
     required this.indexToX,
+    required this.startIndex,
+    required this.endIndex,
     this.lastTickStyle,
     this.offsetAnimationValue = 1,
     this.topPadding = 0,
@@ -189,6 +191,9 @@ class _WormChartPainter extends CustomPainter {
           ..style = PaintingStyle.fill;
 
   final List<Tick> ticks;
+
+  final int startIndex;
+  final int endIndex;
 
   final double zoomFactor;
 
@@ -222,15 +227,7 @@ class _WormChartPainter extends CustomPainter {
       return;
     }
 
-    final double ticksDistanceInPx = zoomFactor * size.width;
-
-    final int numberOfVisibleTicks = (size.width / ticksDistanceInPx).floor();
-
-    final int startIndex = numberOfVisibleTicks >= ticks.length
-        ? 0
-        : ticks.length - numberOfVisibleTicks;
-
-    final MinMaxIndices minMax = getMinMaxIndex(ticks, startIndex);
+    final MinMaxIndices minMax = getMinMaxIndex(ticks, 0);
 
     final int minIndex = minMax.minIndex;
     final int maxIndex = minMax.maxIndex;
@@ -240,38 +237,23 @@ class _WormChartPainter extends CustomPainter {
     Path? linePath;
     late Offset currentPosition;
 
-    for (int i = ticks.length - 1; i >= startIndex; i--) {
+    for (int i = startIndex; i < endIndex; i++) {
       final Tick tick = ticks[i];
-      if (!tick.quote.isNaN) {
-        final double y = _quoteToY(tick.quote, max, min, size.height,
-            topPadding: topPadding, bottomPadding: bottomPadding);
 
-        final double x = size.width -
-            (ticks.length - i) * ticksDistanceInPx +
-            offsetAnimationValue * ticksDistanceInPx;
+      final double x = indexToX(i);
+      final double y = _quoteToY(tick.quote, max, min, size.height);
+      currentPosition = Offset(x, y);
 
-        currentPosition = Offset(x, y);
-
-        if (i == ticks.length - 1 && lastTickStyle != null) {
-          _drawLastTickCircle(canvas, currentPosition);
-        }
-
-        if (linePath == null) {
-          linePath = Path()..moveTo(x, y);
-          _drawCircleIfMinMax(
-            currentPosition,
-            i,
-            minIndex,
-            maxIndex,
-            canvas,
-          );
-          continue;
-        }
-
-        linePath.lineTo(x, y);
-
-        _drawCircleIfMinMax(currentPosition, i, minIndex, maxIndex, canvas);
+      if (i == ticks.length - 1 && lastTickStyle != null) {
+        _drawLastTickCircle(canvas, currentPosition);
       }
+
+      if (linePath == null) {
+        linePath = Path()..moveTo(x, y);
+        continue;
+      }
+
+      linePath.lineTo(x, y);
     }
 
     canvas.drawPath(linePath!, linePaint);
