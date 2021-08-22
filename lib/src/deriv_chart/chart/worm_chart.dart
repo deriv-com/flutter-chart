@@ -90,8 +90,9 @@ class _WormChartState extends State<WormChart>
 
     WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
       setState(() {
-        _chartSize =
-            (_chartKey.currentContext?.findRenderObject() as RenderBox).size;
+        final renderObject = _chartKey.currentContext?.findRenderObject();
+        print('');
+        _chartSize = (renderObject as RenderBox).size;
       });
     });
   }
@@ -120,12 +121,22 @@ class _WormChartState extends State<WormChart>
 
   @override
   Widget build(BuildContext context) {
-    _rightIndex = widget.ticks.length.toDouble();
-    _leftIndex = _rightIndex - (widget.zoomFactor * _chartSize.width);
-    if (widget.ticks.isNotEmpty) {
-      print(
-        'Last:${_indexToX(widget.ticks.length - 1)}, 1st:${_indexToX(3)} LeftIndex: $_leftIndex',
-      );
+    late List<Tick> visibleTicks;
+
+    if (_chartSize == Size.zero) {
+      visibleTicks = <Tick>[];
+    } else {
+      _rightIndex = widget.ticks.length.toDouble();
+      _leftIndex = _rightIndex - (widget.zoomFactor * _chartSize.width);
+      if (widget.ticks.isNotEmpty) {
+        print(
+          'Last:${_indexToX(widget.ticks.length - 1)}, 1st:${_indexToX(3)} LeftIndex: $_leftIndex $_rightIndex',
+        );
+      }
+
+      final int lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
+      final int upperIndex = _searchUpperIndex(widget.ticks, _rightIndex);
+      visibleTicks = widget.ticks.sublist(lowerIndex, upperIndex);
     }
 
     return AnimatedBuilder(
@@ -136,7 +147,7 @@ class _WormChartState extends State<WormChart>
           constraints: const BoxConstraints.expand(),
           child: CustomPaint(
             painter: _WormChartPainter(
-              widget.ticks,
+              visibleTicks,
               widget.zoomFactor,
               indexToX: _indexToX,
               offsetAnimationValue: _animation.value,
@@ -337,3 +348,68 @@ double _quoteToY(
       topPadding: topPadding,
       bottomPadding: bottomPadding,
     );
+
+int _searchLowerIndex(List<Tick> entries, double leftIndex) {
+  if (leftIndex < 0) {
+    return 0;
+  }
+  if (leftIndex > entries.length - 1) {
+    return -1;
+  }
+
+  int lo = 0;
+  int hi = entries.length - 1;
+
+  while (lo <= hi) {
+    final int mid = (hi + lo) ~/ 2;
+
+    if (leftIndex < mid) {
+      hi = mid - 1;
+    } else if (leftIndex > mid) {
+      lo = mid + 1;
+    } else {
+      return mid;
+    }
+  }
+
+  // lo == hi + 1
+  final int closest = (lo - leftIndex) < (leftIndex - hi) ? lo : hi;
+  final int index = closest <= leftIndex
+      ? closest
+      : closest - 1 < 0
+          ? closest
+          : closest - 1;
+  return index - 1 < 0 ? index : index - 1;
+}
+
+int _searchUpperIndex(List<Tick> entries, double rightIndex) {
+  if (rightIndex < 0) {
+    return -1;
+  }
+  if (rightIndex > entries.length - 1) {
+    return entries.length;
+  }
+
+  int lo = 0;
+  int hi = entries.length - 1;
+
+  while (lo <= hi) {
+    final int mid = (hi + lo) ~/ 2;
+
+    if (rightIndex < mid) {
+      hi = mid - 1;
+    } else if (rightIndex > mid) {
+      lo = mid + 1;
+    } else {
+      return mid;
+    }
+  }
+
+  // lo == hi + 1
+  final int closest = (lo - rightIndex) < (rightIndex - hi) ? lo : hi;
+
+  final int index = closest >= rightIndex
+      ? closest
+      : (closest + 1 > entries.length ? closest : closest + 1);
+  return index == entries.length ? index : index + 1;
+}

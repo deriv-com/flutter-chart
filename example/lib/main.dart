@@ -387,57 +387,63 @@ class _FullscreenChartState extends State<FullscreenChart> {
               child: Stack(
                 children: <Widget>[
                   ClipRect(
-                    child: DerivChart(
-                      mainSeries:
-                          style == ChartStyle.candles && ticks is List<Candle>
-                              ? CandleSeries(ticks as List<Candle>)
-                              : LineSeries(
-                                  ticks,
-                                  style: const LineStyle(hasArea: true),
-                                ) as DataSeries<Tick>,
-                      markerSeries: MarkerSeries(
-                        _markers,
-                        activeMarker: _activeMarker,
-                      ),
-                      annotations: ticks.length > 4
-                          ? <ChartAnnotation>[
-                              ..._sampleBarriers,
-                              if (_sl && _slBarrier != null)
-                                _slBarrier as ChartAnnotation,
-                              if (_tp && _tpBarrier != null)
-                                _tpBarrier as ChartAnnotation,
-                              TickIndicator(
-                                ticks.last,
-                                style: const HorizontalBarrierStyle(
-                                  color: Colors.redAccent,
-                                  labelShape: LabelShape.pentagon,
-                                  hasBlinkingDot: true,
-                                  hasArrow: false,
-                                ),
-                                visibility: HorizontalBarrierVisibility
-                                    .keepBarrierLabelVisible,
-                              ),
-                            ]
-                          : null,
-                      pipSize:
-                          _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
-                      granularity: granularity == 0
-                          ? 1000 // average ms difference between ticks
-                          : granularity * 1000,
-                      controller: _controller,
-                      isLive: (_symbol.isOpen) &&
-                          (_connectionBloc.state is Connected),
-                      opacity: _symbol.isOpen ? 1.0 : 0.5,
-                      onCrosshairAppeared: () =>
-                          Vibration.vibrate(duration: 50),
-                      onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                        if (!_waitingForHistory &&
-                            ticks.isNotEmpty &&
-                            leftEpoch < ticks.first.epoch) {
-                          _loadHistory(500);
-                        }
-                      },
-                    ),
+                    child: true
+                        ? WormChart(
+                            ticks: ticks,
+                          )
+                        : DerivChart(
+                            mainSeries: style == ChartStyle.candles &&
+                                    ticks is List<Candle>
+                                ? CandleSeries(ticks as List<Candle>)
+                                : LineSeries(
+                                    ticks,
+                                    style: const LineStyle(hasArea: true),
+                                  ) as DataSeries<Tick>,
+                            markerSeries: MarkerSeries(
+                              _markers,
+                              activeMarker: _activeMarker,
+                            ),
+                            annotations: ticks.length > 4
+                                ? <ChartAnnotation>[
+                                    ..._sampleBarriers,
+                                    if (_sl && _slBarrier != null)
+                                      _slBarrier as ChartAnnotation,
+                                    if (_tp && _tpBarrier != null)
+                                      _tpBarrier as ChartAnnotation,
+                                    TickIndicator(
+                                      ticks.last,
+                                      style: const HorizontalBarrierStyle(
+                                        color: Colors.redAccent,
+                                        labelShape: LabelShape.pentagon,
+                                        hasBlinkingDot: true,
+                                        hasArrow: false,
+                                      ),
+                                      visibility: HorizontalBarrierVisibility
+                                          .keepBarrierLabelVisible,
+                                    ),
+                                  ]
+                                : null,
+                            pipSize: _tickHistorySubscription
+                                    ?.tickHistory?.pipSize ??
+                                4,
+                            granularity: granularity == 0
+                                ? 1000 // average ms difference between ticks
+                                : granularity * 1000,
+                            controller: _controller,
+                            isLive: (_symbol.isOpen) &&
+                                (_connectionBloc.state is Connected),
+                            opacity: _symbol.isOpen ? 1.0 : 0.5,
+                            onCrosshairAppeared: () =>
+                                Vibration.vibrate(duration: 50),
+                            onVisibleAreaChanged:
+                                (int leftEpoch, int rightEpoch) {
+                              if (!_waitingForHistory &&
+                                  ticks.isNotEmpty &&
+                                  leftEpoch < ticks.first.epoch) {
+                                _loadHistory(500);
+                              }
+                            },
+                          ),
                   ),
                   if (_connectionBloc != null &&
                       _connectionBloc.state is! Connected)
