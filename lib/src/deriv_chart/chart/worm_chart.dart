@@ -12,7 +12,7 @@ class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
     required this.ticks,
-    this.zoomFactor = 0.02,
+    this.zoomFactor = 0.08,
     this.offsetAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
     this.highestTickStyle = const ScatterStyle(
@@ -227,7 +227,8 @@ class _WormChartPainter extends CustomPainter {
       return;
     }
 
-    final MinMaxIndices minMax = getMinMaxIndex(ticks, 0);
+    final MinMaxIndices minMax =
+        getMinMaxIndex(ticks, startIndex, endIndex - 1);
 
     final int minIndex = minMax.minIndex;
     final int maxIndex = minMax.maxIndex;
