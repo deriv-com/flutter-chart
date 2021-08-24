@@ -297,7 +297,7 @@ class _WormChartPainter extends CustomPainter {
     if (lineStyle.hasArea) {
       linePath
         ..lineTo(currentPosition.dx, size.height)
-        ..lineTo(linePath.getBounds().right, size.height);
+        ..lineTo(linePath.getBounds().left, size.height);
       _drawArea(canvas, size, linePath, lineStyle);
     }
   }
