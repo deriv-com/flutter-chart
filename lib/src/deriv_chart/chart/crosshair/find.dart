@@ -24,6 +24,28 @@ Tick? findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
   }
 }
 
+/// Returns a reference to candle with exact or closest epoch to [targetEpoch].
+///
+/// Returns [null] if list is empty.
+/// Expects a list of candles to be sorted.
+int findClosestToIndex(double index, List<Tick> ticks) {
+  if (ticks.isEmpty) {
+    return index.floor();
+  }
+
+  if (index < 0) {
+    return 0;
+  } else if (index > ticks.length - 1) {
+    return ticks.length - 1;
+  } else {
+    final int leftIndex = index.floor();
+    final int rightIndex = index.ceil();
+    final double distanceToLeft = index - leftIndex;
+    final double distanceToRight = rightIndex - index;
+    return distanceToLeft <= distanceToRight ? leftIndex : rightIndex;
+  }
+}
+
 /// Returns index of the [epoch] location in [ticks].
 ///
 /// E.g. `3` if [epoch] matches epoch of `ticks[3]`.

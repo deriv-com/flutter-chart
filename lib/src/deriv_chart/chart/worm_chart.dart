@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'dart:ui';
+import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -115,14 +116,15 @@ class _WormChartState extends State<WormChart>
         (xFactor - _leftIndex) / (_rightIndex - _leftIndex),
       )!;
 
-  // /// Converts x coordinate to XFactor value
-  // int _xToIndex(double x) =>
-  //     x * xFactorDifference ~/ canvasSize.width + leftXFactor;
+  /// Converts x coordinate to XFactor value
+  double _xToIndex(double x) =>
+      x * (_rightIndex - _leftIndex) ~/ _chartSize.width + _leftIndex;
 
   @override
   Widget build(BuildContext context) {
     int lowerIndex = 0;
     int upperIndex = 0;
+    int? crossHairIndex;
 
     if (_chartSize != Size.zero) {
       _rightIndex = widget.ticks.length.toDouble();
@@ -135,6 +137,7 @@ class _WormChartState extends State<WormChart>
 
       lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
       upperIndex = _searchUpperIndex(widget.ticks, _rightIndex);
+      crossHairIndex = findClosestToIndex(_xToIndex(179), widget.ticks);
     }
 
     return AnimatedBuilder(
@@ -144,20 +147,18 @@ class _WormChartState extends State<WormChart>
           key: _chartKey,
           constraints: const BoxConstraints.expand(),
           child: CustomPaint(
-            painter: _WormChartPainter(
-              widget.ticks,
-              widget.zoomFactor,
-              indexToX: _indexToX,
-              offsetAnimationValue: _animation.value,
-              lineStyle: widget.lineStyle,
-              highestTickStyle: widget.highestTickStyle,
-              lowestTickStyle: widget.lowestTickStyle,
-              lastTickStyle: widget.lastTickStyle,
-              topPadding: widget.topPadding,
-              bottomPadding: widget.bottomPadding,
-              startIndex: lowerIndex,
-              endIndex: upperIndex,
-            ),
+            painter: _WormChartPainter(widget.ticks, widget.zoomFactor,
+                indexToX: _indexToX,
+                offsetAnimationValue: _animation.value,
+                lineStyle: widget.lineStyle,
+                highestTickStyle: widget.highestTickStyle,
+                lowestTickStyle: widget.lowestTickStyle,
+                lastTickStyle: widget.lastTickStyle,
+                topPadding: widget.topPadding,
+                bottomPadding: widget.bottomPadding,
+                startIndex: lowerIndex,
+                endIndex: upperIndex,
+                crossHairIndex: crossHairIndex),
           ),
         ),
       ),
@@ -175,6 +176,7 @@ class _WormChartPainter extends CustomPainter {
     required this.indexToX,
     required this.startIndex,
     required this.endIndex,
+    this.crossHairIndex,
     this.lastTickStyle,
     this.offsetAnimationValue = 1,
     this.topPadding = 0,
@@ -206,6 +208,8 @@ class _WormChartPainter extends CustomPainter {
   final ScatterStyle lowestTickStyle;
 
   final ScatterStyle? lastTickStyle;
+
+  final int? crossHairIndex;
 
   /// Chart will be shifted to the right by `offset * (distance between two consecutive ticks)`.
   ///
@@ -255,6 +259,10 @@ class _WormChartPainter extends CustomPainter {
       }
 
       linePath.lineTo(x, y);
+
+      if (i == crossHairIndex) {
+        canvas.drawLine(Offset(x, 0), Offset(x, size.height), linePaint);
+      }
     }
 
     canvas.drawPath(linePath!, linePaint);
