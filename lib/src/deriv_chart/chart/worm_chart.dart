@@ -120,11 +120,12 @@ class _WormChartState extends State<WormChart>
   double _xToIndex(double x) =>
       x * (_rightIndex - _leftIndex) ~/ _chartSize.width + _leftIndex;
 
+  int? _crossHairIndex;
+
   @override
   Widget build(BuildContext context) {
     int lowerIndex = 0;
     int upperIndex = 0;
-    int? crossHairIndex;
 
     if (_chartSize != Size.zero) {
       _rightIndex = widget.ticks.length.toDouble();
@@ -137,17 +138,22 @@ class _WormChartState extends State<WormChart>
 
       lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
       upperIndex = _searchUpperIndex(widget.ticks, _rightIndex);
-      crossHairIndex = findClosestToIndex(_xToIndex(179), widget.ticks);
     }
 
     return AnimatedBuilder(
       animation: _animationController,
       builder: (_, __) => ClipRect(
-        child: Container(
-          key: _chartKey,
-          constraints: const BoxConstraints.expand(),
-          child: CustomPaint(
-            painter: _WormChartPainter(widget.ticks, widget.zoomFactor,
+        child: GestureDetector(
+          onLongPressStart: _onLongPressStart,
+          onLongPressMoveUpdate: _onLongPressUpdate,
+          onLongPressEnd: _onLongPressEnd,
+          child: Container(
+            key: _chartKey,
+            constraints: const BoxConstraints.expand(),
+            child: CustomPaint(
+              painter: _WormChartPainter(
+                widget.ticks,
+                widget.zoomFactor,
                 indexToX: _indexToX,
                 offsetAnimationValue: _animation.value,
                 lineStyle: widget.lineStyle,
@@ -158,12 +164,33 @@ class _WormChartState extends State<WormChart>
                 bottomPadding: widget.bottomPadding,
                 startIndex: lowerIndex,
                 endIndex: upperIndex,
-                crossHairIndex: crossHairIndex),
+                crossHairIndex: _crossHairIndex,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
+
+  void _onLongPressStart(LongPressStartDetails details) {
+    final Offset position = details.localPosition;
+    _updateCrossHairToPosition(position.dx);
+  }
+
+  void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
+    final Offset position = details.localPosition;
+    _updateCrossHairToPosition(position.dx);
+  }
+
+  void _updateCrossHairToPosition(double x) => setState(
+        () => _crossHairIndex = findClosestToIndex(
+          _xToIndex(x),
+          widget.ticks,
+        ),
+      );
+
+  void _onLongPressEnd(LongPressEndDetails details) => _crossHairIndex = null;
 }
 
 class _WormChartPainter extends CustomPainter {
