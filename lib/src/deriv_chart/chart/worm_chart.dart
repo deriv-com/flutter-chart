@@ -26,8 +26,8 @@ class WormChart extends StatefulWidget {
       radius: 2,
     ),
     this.lastTickStyle,
-    this.topPadding = 2,
-    this.bottomPadding = 2,
+    this.topPadding = 0,
+    this.bottomPadding = 20,
     Key? key,
   }) : super(key: key);
 
@@ -274,7 +274,14 @@ class _WormChartPainter extends CustomPainter {
       final Tick tick = ticks[i];
 
       final double x = indexToX(i);
-      final double y = _quoteToY(tick.quote, max, min, size.height);
+      final double y = _quoteToY(
+        tick.quote,
+        max,
+        min,
+        size.height,
+        topPadding: topPadding,
+        bottomPadding: bottomPadding,
+      );
       currentPosition = Offset(x, y);
 
       if (i == ticks.length - 1 && lastTickStyle != null) {
