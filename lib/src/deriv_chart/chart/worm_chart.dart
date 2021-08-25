@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
@@ -289,6 +290,12 @@ class _WormChartPainter extends CustomPainter {
 
       if (i == crossHairIndex) {
         canvas.drawLine(Offset(x, 0), Offset(x, size.height), linePaint);
+        paintText(
+          canvas,
+          text: tick.quote.toString(),
+          anchor: Offset(x, 10),
+          style: const TextStyle(),
+        );
       }
     }
 
