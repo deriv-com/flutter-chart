@@ -100,8 +100,7 @@ class _WormChartState extends State<WormChart>
 
     if (widget.ticks.isNotEmpty) {
       _rightIndexAnimationController
-        ..value += 2
-        ..animateTo(widget.ticks.length.toDouble() + 2);
+          .animateTo(widget.ticks.length.toDouble() + 2);
     }
   }
 
@@ -125,17 +124,18 @@ class _WormChartState extends State<WormChart>
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
         animation: _rightIndexAnimationController,
+        key: _chartKey,
         builder: (_, __) {
-          int lowerIndex = 0;
-          int upperIndex = 0;
-          if (_chartSize != Size.zero) {
-            _leftIndex = _rightIndexAnimationController.value -
-                (widget.zoomFactor * _chartSize.width);
-            lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex + 1);
-            upperIndex = _searchUpperIndex(
-                    widget.ticks, _rightIndexAnimationController.value) -
-                1;
+          if (_chartSize == Size.zero) {
+            return const SizedBox.shrink();
           }
+
+          _leftIndex = _rightIndexAnimationController.value -
+              (widget.zoomFactor * _chartSize.width);
+          final int lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
+          final int upperIndex = _searchUpperIndex(
+                  widget.ticks, _rightIndexAnimationController.value) -
+              1;
           return ClipRect(
             child: GestureDetector(
               onLongPressStart: _onLongPressStart,
@@ -143,7 +143,6 @@ class _WormChartState extends State<WormChart>
               onLongPressEnd: _onLongPressEnd,
               child: Container(
                 color: Colors.blueGrey,
-                key: _chartKey,
                 constraints: const BoxConstraints.expand(),
                 child: CustomPaint(
                   painter: _WormChartPainter(
