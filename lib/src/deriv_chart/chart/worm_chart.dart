@@ -69,10 +69,8 @@ class WormChart extends StatefulWidget {
 
 class _WormChartState extends State<WormChart>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+  late AnimationController _rightIndexAnimationController;
 
-  late double _rightIndex;
   late double _leftIndex;
   final GlobalKey _chartKey = GlobalKey();
   Size _chartSize = Size.zero;
@@ -81,19 +79,16 @@ class _WormChartState extends State<WormChart>
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(
+    _rightIndexAnimationController = AnimationController.unbounded(
       vsync: this,
       duration: widget.offsetAnimationDuration,
-    );
-
-    _animation = Tween<double>(begin: 1, end: 0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+      value: 1,
     );
 
     WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
       setState(() {
-        final renderObject = _chartKey.currentContext?.findRenderObject();
-        print('');
+        final RenderObject? renderObject =
+            _chartKey.currentContext?.findRenderObject();
         _chartSize = (renderObject as RenderBox).size;
       });
     });
@@ -103,10 +98,10 @@ class _WormChartState extends State<WormChart>
   void didUpdateWidget(covariant WormChart oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.offsetAnimationDuration != Duration.zero) {
-      _animationController
-        ..reset()
-        ..forward();
+    if (widget.ticks.isNotEmpty) {
+      _rightIndexAnimationController
+        ..value += 2
+        ..animateTo(widget.ticks.length.toDouble() + 2);
     }
   }
 
@@ -114,65 +109,63 @@ class _WormChartState extends State<WormChart>
   double _indexToX(int xFactor) => lerpDouble(
         0,
         _chartSize.width,
-        (xFactor - _leftIndex) / (_rightIndex - _leftIndex),
+        (xFactor - _leftIndex) /
+            (_rightIndexAnimationController.value - _leftIndex),
       )!;
 
   /// Converts x coordinate to XFactor value
   double _xToIndex(double x) =>
-      x * (_rightIndex - _leftIndex) ~/ _chartSize.width + _leftIndex;
+      x *
+          (_rightIndexAnimationController.value - _leftIndex) ~/
+          _chartSize.width +
+      _leftIndex;
 
   int? _crossHairIndex;
 
   @override
-  Widget build(BuildContext context) {
-    int lowerIndex = 0;
-    int upperIndex = 0;
-
-    if (_chartSize != Size.zero) {
-      _rightIndex = widget.ticks.length.toDouble();
-      _leftIndex = _rightIndex - (widget.zoomFactor * _chartSize.width);
-      if (widget.ticks.isNotEmpty) {
-        print(
-          'Last:${_indexToX(widget.ticks.length - 1)}, 1st:${_indexToX(3)} LeftIndex: $_leftIndex $_rightIndex',
-        );
-      }
-
-      lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
-      upperIndex = _searchUpperIndex(widget.ticks, _rightIndex);
-    }
-
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (_, __) => ClipRect(
-        child: GestureDetector(
-          onLongPressStart: _onLongPressStart,
-          onLongPressMoveUpdate: _onLongPressUpdate,
-          onLongPressEnd: _onLongPressEnd,
-          child: Container(
-            key: _chartKey,
-            constraints: const BoxConstraints.expand(),
-            child: CustomPaint(
-              painter: _WormChartPainter(
-                widget.ticks,
-                widget.zoomFactor,
-                indexToX: _indexToX,
-                offsetAnimationValue: _animation.value,
-                lineStyle: widget.lineStyle,
-                highestTickStyle: widget.highestTickStyle,
-                lowestTickStyle: widget.lowestTickStyle,
-                lastTickStyle: widget.lastTickStyle,
-                topPadding: widget.topPadding,
-                bottomPadding: widget.bottomPadding,
-                startIndex: lowerIndex,
-                endIndex: upperIndex,
-                crossHairIndex: _crossHairIndex,
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _rightIndexAnimationController,
+        builder: (_, __) {
+          int lowerIndex = 0;
+          int upperIndex = 0;
+          if (_chartSize != Size.zero) {
+            _leftIndex = _rightIndexAnimationController.value -
+                (widget.zoomFactor * _chartSize.width);
+            lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex + 1);
+            upperIndex = _searchUpperIndex(
+                    widget.ticks, _rightIndexAnimationController.value) -
+                1;
+          }
+          return ClipRect(
+            child: GestureDetector(
+              onLongPressStart: _onLongPressStart,
+              onLongPressMoveUpdate: _onLongPressUpdate,
+              onLongPressEnd: _onLongPressEnd,
+              child: Container(
+                color: Colors.blueGrey,
+                key: _chartKey,
+                constraints: const BoxConstraints.expand(),
+                child: CustomPaint(
+                  painter: _WormChartPainter(
+                    widget.ticks,
+                    widget.zoomFactor,
+                    indexToX: _indexToX,
+                    lineStyle: widget.lineStyle,
+                    highestTickStyle: widget.highestTickStyle,
+                    lowestTickStyle: widget.lowestTickStyle,
+                    lastTickStyle: widget.lastTickStyle,
+                    topPadding: widget.topPadding,
+                    bottomPadding: widget.bottomPadding,
+                    startIndex: lowerIndex,
+                    endIndex: upperIndex,
+                    crossHairIndex: _crossHairIndex,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
+          );
+        },
+      );
 
   void _onLongPressStart(LongPressStartDetails details) {
     final Offset position = details.localPosition;
@@ -206,7 +199,6 @@ class _WormChartPainter extends CustomPainter {
     required this.endIndex,
     this.crossHairIndex,
     this.lastTickStyle,
-    this.offsetAnimationValue = 1,
     this.topPadding = 0,
     this.bottomPadding = 0,
   })  : linePaint = Paint()
@@ -239,11 +231,6 @@ class _WormChartPainter extends CustomPainter {
 
   final int? crossHairIndex;
 
-  /// Chart will be shifted to the right by `offset * (distance between two consecutive ticks)`.
-  ///
-  /// A number between 0.0 to 1.0.
-  final double offsetAnimationValue;
-
   final LineStyle lineStyle;
 
   final double topPadding;
@@ -259,8 +246,7 @@ class _WormChartPainter extends CustomPainter {
       return;
     }
 
-    final MinMaxIndices minMax =
-        getMinMaxIndex(ticks, startIndex, endIndex - 1);
+    final MinMaxIndices minMax = getMinMaxIndex(ticks, startIndex, endIndex);
 
     final int minIndex = minMax.minIndex;
     final int maxIndex = minMax.maxIndex;
@@ -287,6 +273,8 @@ class _WormChartPainter extends CustomPainter {
       if (i == ticks.length - 1 && lastTickStyle != null) {
         _drawLastTickCircle(canvas, currentPosition);
       }
+
+      _drawCircleIfMinMax(currentPosition, i, minIndex, maxIndex, canvas);
 
       if (linePath == null) {
         linePath = Path()..moveTo(x, y);
