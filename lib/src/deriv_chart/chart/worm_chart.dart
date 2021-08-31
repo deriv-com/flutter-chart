@@ -26,8 +26,8 @@ class WormChart extends StatefulWidget {
       radius: 2,
     ),
     this.lastTickStyle,
-    this.topPadding = 0,
-    this.bottomPadding = 20,
+    this.topPadding = 10,
+    this.bottomPadding = 30,
     Key? key,
   }) : super(key: key);
 
@@ -99,8 +99,13 @@ class _WormChartState extends State<WormChart>
     super.didUpdateWidget(oldWidget);
 
     if (widget.ticks.isNotEmpty) {
-      _rightIndexAnimationController
-          .animateTo(widget.ticks.length.toDouble() + 2);
+      if (_rightIndexAnimationController.value == 1) {
+        _rightIndexAnimationController.value =
+            widget.ticks.length.toDouble() + 2;
+      } else {
+        _rightIndexAnimationController
+            .animateTo(widget.ticks.length.toDouble() + 2);
+      }
     }
   }
 
@@ -126,7 +131,7 @@ class _WormChartState extends State<WormChart>
         animation: _rightIndexAnimationController,
         key: _chartKey,
         builder: (_, __) {
-          if (_chartSize == Size.zero) {
+          if (_chartSize == Size.zero || widget.ticks.length < 2) {
             return const SizedBox.shrink();
           }
 
