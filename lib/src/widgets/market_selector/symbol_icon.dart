@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 String getSymbolAssetPath(String assetCode) =>
     'assets/icons/symbols/${assetCode.toLowerCase()}.png';
 
+const String _placeHolderPath = 'assets/icons/icon_placeholder.png';
+const String _packageName = 'deriv_chart';
+
 /// A wrapper widget around [AssetImage] which provides image icon for the
 /// given `symbolCode`.
 class SymbolIcon extends FadeInImage {
@@ -18,12 +21,23 @@ class SymbolIcon extends FadeInImage {
           width: width,
           height: height,
           placeholder: const AssetImage(
-            'assets/icons/icon_placeholder.png',
-            package: 'deriv_chart',
+            _placeHolderPath,
+            package: _packageName,
           ),
           image: AssetImage(
             getSymbolAssetPath(symbolCode),
-            package: 'deriv_chart',
+            package: _packageName,
+          ),
+          imageErrorBuilder: (
+            BuildContext context,
+            Object error,
+            StackTrace? stackTrace,
+          ) =>
+              Image.asset(
+            _placeHolderPath,
+            package: _packageName,
+            width: width,
+            height: height,
           ),
           fadeInDuration: fadeDuration,
           fadeOutDuration: fadeDuration,
