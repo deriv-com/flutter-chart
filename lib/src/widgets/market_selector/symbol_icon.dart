@@ -33,6 +33,7 @@ class SymbolIcon extends FadeInImage {
             Object error,
             StackTrace? stackTrace,
           ) =>
+              // TODO(NA): Replace with a placeholder which somehow indicates loading icon has failed
               Image.asset(
             _placeHolderPath,
             package: _packageName,
