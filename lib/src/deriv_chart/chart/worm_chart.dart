@@ -109,15 +109,15 @@ class _WormChartState extends State<WormChart>
     }
   }
 
-  /// Converts XFactor to x coordinate
-  double _indexToX(int xFactor) => lerpDouble(
+  /// Converts index to x coordinate.
+  double _indexToX(int index) => lerpDouble(
         0,
         _chartSize.width,
-        (xFactor - _leftIndex) /
+        (index - _leftIndex) /
             (_rightIndexAnimationController.value - _leftIndex),
       )!;
 
-  /// Converts x coordinate to XFactor value
+  /// Converts x coordinate to index value.
   double _xToIndex(double x) =>
       x *
           (_rightIndexAnimationController.value - _leftIndex) ~/
@@ -147,12 +147,10 @@ class _WormChartState extends State<WormChart>
               onLongPressMoveUpdate: _onLongPressUpdate,
               onLongPressEnd: _onLongPressEnd,
               child: Container(
-                color: Colors.blueGrey,
                 constraints: const BoxConstraints.expand(),
                 child: CustomPaint(
                   painter: _WormChartPainter(
                     widget.ticks,
-                    widget.zoomFactor,
                     indexToX: _indexToX,
                     lineStyle: widget.lineStyle,
                     highestTickStyle: widget.highestTickStyle,
@@ -193,8 +191,7 @@ class _WormChartState extends State<WormChart>
 
 class _WormChartPainter extends CustomPainter {
   _WormChartPainter(
-    this.ticks,
-    this.zoomFactor, {
+    this.ticks, {
     required this.lineStyle,
     required this.highestTickStyle,
     required this.lowestTickStyle,
@@ -220,8 +217,6 @@ class _WormChartPainter extends CustomPainter {
 
   final int startIndex;
   final int endIndex;
-
-  final double zoomFactor;
 
   final Paint linePaint;
   final Paint highestCirclePaint;
@@ -260,7 +255,7 @@ class _WormChartPainter extends CustomPainter {
     Path? linePath;
     late Offset currentPosition;
 
-    for (int i = startIndex; i < endIndex; i++) {
+    for (int i = startIndex; i <= endIndex; i++) {
       final Tick tick = ticks[i];
 
       final double x = indexToX(i);
