@@ -28,6 +28,7 @@ class WormChart extends StatefulWidget {
     this.lastTickStyle,
     this.topPadding = 0,
     this.bottomPadding = 20,
+    this.crossHairEnabled = false,
     Key? key,
   }) : super(key: key);
 
@@ -62,6 +63,9 @@ class WormChart extends StatefulWidget {
 
   /// The style of the circle showing the last tick.
   final ScatterStyle? lastTickStyle;
+
+  /// Whether the cross-hair feature is enabled or not.
+  final bool crossHairEnabled;
 
   @override
   _WormChartState createState() => _WormChartState();
@@ -142,25 +146,28 @@ class _WormChartState extends State<WormChart>
                   widget.ticks, _rightIndexAnimationController.value) -
               1;
           return ClipRect(
-            child: GestureDetector(
-              onLongPressStart: _onLongPressStart,
-              onLongPressMoveUpdate: _onLongPressUpdate,
-              onLongPressEnd: _onLongPressEnd,
-              child: Container(
-                constraints: const BoxConstraints.expand(),
-                child: CustomPaint(
-                  painter: _WormChartPainter(
-                    widget.ticks,
-                    indexToX: _indexToX,
-                    lineStyle: widget.lineStyle,
-                    highestTickStyle: widget.highestTickStyle,
-                    lowestTickStyle: widget.lowestTickStyle,
-                    lastTickStyle: widget.lastTickStyle,
-                    topPadding: widget.topPadding,
-                    bottomPadding: widget.bottomPadding,
-                    startIndex: lowerIndex,
-                    endIndex: upperIndex,
-                    crossHairIndex: _crossHairIndex,
+            child: IgnorePointer(
+              ignoring: !widget.crossHairEnabled,
+              child: GestureDetector(
+                onLongPressStart: _onLongPressStart,
+                onLongPressMoveUpdate: _onLongPressUpdate,
+                onLongPressEnd: _onLongPressEnd,
+                child: Container(
+                  constraints: const BoxConstraints.expand(),
+                  child: CustomPaint(
+                    painter: _WormChartPainter(
+                      widget.ticks,
+                      indexToX: _indexToX,
+                      lineStyle: widget.lineStyle,
+                      highestTickStyle: widget.highestTickStyle,
+                      lowestTickStyle: widget.lowestTickStyle,
+                      lastTickStyle: widget.lastTickStyle,
+                      topPadding: widget.topPadding,
+                      bottomPadding: widget.bottomPadding,
+                      startIndex: lowerIndex,
+                      endIndex: upperIndex,
+                      crossHairIndex: _crossHairIndex,
+                    ),
                   ),
                 ),
               ),
