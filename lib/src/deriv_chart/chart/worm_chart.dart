@@ -26,8 +26,8 @@ class WormChart extends StatefulWidget {
       radius: 2,
     ),
     this.lastTickStyle,
-    this.topPadding = 40,
-    this.bottomPadding = 60,
+    this.topPadding = 0,
+    this.bottomPadding = 20,
     Key? key,
   }) : super(key: key);
 
@@ -241,7 +241,7 @@ class _WormChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     assert(topPadding + bottomPadding < 0.9 * size.height);
 
-    if (ticks.length < 2) {
+    if (endIndex - startIndex <= 2) {
       return;
     }
 
