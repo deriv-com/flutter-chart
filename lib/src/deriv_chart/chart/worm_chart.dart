@@ -14,8 +14,8 @@ class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
     required this.ticks,
-    this.zoomFactor = 0.08,
-    this.offsetAnimationDuration = Duration.zero,
+    this.zoomFactor = 0.05,
+    this.updateAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
     this.highestTickStyle = const ScatterStyle(
       color: Color(0xFF00A79E),
@@ -37,14 +37,14 @@ class WormChart extends StatefulWidget {
 
   /// Indicates the proportion of the horizontal space that each tick is going to take.
   ///
-  /// Default is 0.02 which means each tick occupies 2% of the horizontal space,
-  /// and at most 50 of most recent ticks will be visible.
+  /// Default is 0.05 which means each tick occupies 5% of the horizontal space,
+  /// and at most 20 of most recent ticks will be visible.
   final double zoomFactor;
 
   /// The duration of sliding animation as the chart gets updated.
   ///
   /// Default is zero meaning the animation is disabled.
-  final Duration offsetAnimationDuration;
+  final Duration updateAnimationDuration;
 
   /// Chart's top padding.
   final double topPadding;
@@ -85,7 +85,7 @@ class _WormChartState extends State<WormChart>
 
     _rightIndexAnimationController = AnimationController.unbounded(
       vsync: this,
-      duration: widget.offsetAnimationDuration,
+      duration: widget.updateAnimationDuration,
       value: 1,
     );
 
@@ -193,7 +193,8 @@ class _WormChartState extends State<WormChart>
         ),
       );
 
-  void _onLongPressEnd(LongPressEndDetails details) => _crossHairIndex = null;
+  void _onLongPressEnd(LongPressEndDetails details) =>
+      setState(() => _crossHairIndex = null);
 }
 
 class _WormChartPainter extends CustomPainter {
@@ -248,7 +249,9 @@ class _WormChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     assert(topPadding + bottomPadding < 0.9 * size.height);
 
-    if (endIndex - startIndex <= 2) {
+    if (endIndex - startIndex <= 2 ||
+        startIndex < 0 ||
+        endIndex >= ticks.length) {
       return;
     }
 
