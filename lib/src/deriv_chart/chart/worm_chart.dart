@@ -191,7 +191,7 @@ class _WormChartState extends State<WormChart>
   }
 
   void _updateCrossHairToPosition(double x) => setState(
-        () => _crossHairIndex = findClosestTickToIndex(
+        () => _crossHairIndex = findClosestIndex(
           _xToIndex(x),
           widget.ticks,
         ),
@@ -365,7 +365,7 @@ class _WormChartPainter extends CustomPainter {
   bool shouldRepaint(covariant _WormChartPainter oldDelegate) => true;
 }
 
-// TODO(NA): Extract A-Axis conversions later to be able to support both epoch and index base XAxis
+// TODO(NA): Extract X-Axis conversions later to be able to support both epoch and index
 double _quoteToY(
   double quote,
   double max,
