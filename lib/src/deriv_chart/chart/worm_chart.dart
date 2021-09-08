@@ -19,13 +19,16 @@ class WormChart extends StatefulWidget {
     this.lineStyle = const LineStyle(),
     this.highestTickStyle = const ScatterStyle(
       color: Color(0xFF00A79E),
-      radius: 2,
+      radius: 3,
     ),
     this.lowestTickStyle = const ScatterStyle(
       color: Color(0xFFCC2E3D),
-      radius: 2,
+      radius: 3,
     ),
-    this.lastTickStyle,
+    this.lastTickStyle = const ScatterStyle(
+      color: Color(0xFF377CFC),
+      radius: 3,
+    ),
     this.topPadding = 0,
     this.bottomPadding = 20,
     this.crossHairEnabled = false,
@@ -104,10 +107,11 @@ class _WormChartState extends State<WormChart>
 
     if (widget.ticks.isNotEmpty) {
       if (_rightIndexAnimationController.value == 1) {
-        _rightIndexAnimationController.value = widget.ticks.length.toDouble();
+        _rightIndexAnimationController.value =
+            widget.ticks.length.toDouble() + 1;
       } else {
         _rightIndexAnimationController
-            .animateTo(widget.ticks.length.toDouble());
+            .animateTo(widget.ticks.length.toDouble() + 1);
       }
     }
   }
@@ -187,7 +191,7 @@ class _WormChartState extends State<WormChart>
   }
 
   void _updateCrossHairToPosition(double x) => setState(
-        () => _crossHairIndex = findClosestToIndex(
+        () => _crossHairIndex = findClosestTickToIndex(
           _xToIndex(x),
           widget.ticks,
         ),
@@ -361,6 +365,7 @@ class _WormChartPainter extends CustomPainter {
   bool shouldRepaint(covariant _WormChartPainter oldDelegate) => true;
 }
 
+// TODO(NA): Extract A-Axis conversions later to be able to support both epoch and index base XAxis
 double _quoteToY(
   double quote,
   double max,
@@ -386,29 +391,13 @@ int _searchLowerIndex(List<Tick> entries, double leftIndex) {
     return -1;
   }
 
-  int lo = 0;
-  int hi = entries.length - 1;
+  final int closest = findClosestIndex(leftIndex, entries);
 
-  while (lo <= hi) {
-    final int mid = (hi + lo) ~/ 2;
-
-    if (leftIndex < mid) {
-      hi = mid - 1;
-    } else if (leftIndex > mid) {
-      lo = mid + 1;
-    } else {
-      return mid;
-    }
-  }
-
-  // lo == hi + 1
-  final int closest = (lo - leftIndex) < (leftIndex - hi) ? lo : hi;
-  final int index = closest <= leftIndex
+  return closest <= leftIndex
       ? closest
       : closest - 1 < 0
           ? closest
           : closest - 1;
-  return index - 1 < 0 ? index : index - 1;
 }
 
 int _searchUpperIndex(List<Tick> entries, double rightIndex) {
@@ -419,26 +408,9 @@ int _searchUpperIndex(List<Tick> entries, double rightIndex) {
     return entries.length;
   }
 
-  int lo = 0;
-  int hi = entries.length - 1;
+  final int closest = findClosestIndex(rightIndex, entries);
 
-  while (lo <= hi) {
-    final int mid = (hi + lo) ~/ 2;
-
-    if (rightIndex < mid) {
-      hi = mid - 1;
-    } else if (rightIndex > mid) {
-      lo = mid + 1;
-    } else {
-      return mid;
-    }
-  }
-
-  // lo == hi + 1
-  final int closest = (lo - rightIndex) < (rightIndex - hi) ? lo : hi;
-
-  final int index = closest >= rightIndex
+  return closest >= rightIndex
       ? closest
       : (closest + 1 > entries.length ? closest : closest + 1);
-  return index == entries.length ? index : index + 1;
 }
