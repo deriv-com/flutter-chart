@@ -27,7 +27,7 @@ Tick? findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
 /// Finds closest index in the [ticks] to the [index].
 int findClosestIndex(double index, List<Tick> ticks) {
   if (ticks.isEmpty) {
-    return index.floor();
+    return index.round();
   }
 
   if (index < 0) {
@@ -35,11 +35,7 @@ int findClosestIndex(double index, List<Tick> ticks) {
   } else if (index > ticks.length - 1) {
     return ticks.length - 1;
   } else {
-    final int leftIndex = index.floor();
-    final int rightIndex = index.ceil();
-    final double distanceToLeft = index - leftIndex;
-    final double distanceToRight = rightIndex - index;
-    return distanceToLeft <= distanceToRight ? leftIndex : rightIndex;
+    return index.round();
   }
 }
 
