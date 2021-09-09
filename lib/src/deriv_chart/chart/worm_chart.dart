@@ -29,7 +29,7 @@ class WormChart extends StatefulWidget {
       color: Color(0xFF377CFC),
       radius: 3,
     ),
-    this.topPadding = 0,
+    this.topPadding = 5,
     this.bottomPadding = 20,
     this.crossHairEnabled = false,
     Key? key,
