@@ -126,54 +126,56 @@ class _WormChartState extends State<WormChart>
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        _chartSize = Size(constraints.maxWidth, constraints.maxHeight);
+        builder: (BuildContext context, BoxConstraints constraints) {
+          _chartSize = Size(constraints.maxWidth, constraints.maxHeight);
 
-        return AnimatedBuilder(
-          animation: _rightIndexAnimationController,
-          builder: (_, __) {
-            if (_chartSize == Size.zero || widget.ticks.length < 2) {
-              return const SizedBox.shrink();
-            }
+          return AnimatedBuilder(
+            animation: _rightIndexAnimationController,
+            builder: (_, __) {
+              if (_chartSize == Size.zero || widget.ticks.length < 2) {
+                return const SizedBox.shrink();
+              }
 
-            _leftIndex = _rightIndexAnimationController.value -
-                _chartSize.width / (widget.zoomFactor * _chartSize.width);
+              _leftIndex = _rightIndexAnimationController.value -
+                  _chartSize.width / (widget.zoomFactor * _chartSize.width);
 
-            final int lowerIndex = _searchLowerIndex(widget.ticks, _leftIndex);
-            final int upperIndex = _searchUpperIndex(
-                    widget.ticks, _rightIndexAnimationController.value) -
-                1;
-            return ClipRect(
-              child: IgnorePointer(
-                ignoring: !widget.crossHairEnabled,
-                child: GestureDetector(
-                  onLongPressStart: _onLongPressStart,
-                  onLongPressMoveUpdate: _onLongPressUpdate,
-                  onLongPressEnd: _onLongPressEnd,
-                  child: Container(
-                    constraints: const BoxConstraints.expand(),
-                    child: CustomPaint(
-                      painter: _WormChartPainter(
-                        widget.ticks,
-                        indexToX: _indexToX,
-                        lineStyle: widget.lineStyle,
-                        highestTickStyle: widget.highestTickStyle,
-                        lowestTickStyle: widget.lowestTickStyle,
-                        lastTickStyle: widget.lastTickStyle,
-                        topPadding: widget.topPadding,
-                        bottomPadding: widget.bottomPadding,
-                        startIndex: lowerIndex,
-                        endIndex: upperIndex,
-                        crossHairIndex: _crossHairIndex,
+              final int lowerIndex =
+                  _searchLowerIndex(widget.ticks, _leftIndex);
+              final int upperIndex = _searchUpperIndex(
+                      widget.ticks, _rightIndexAnimationController.value) -
+                  1;
+              return ClipRect(
+                child: IgnorePointer(
+                  ignoring: !widget.crossHairEnabled,
+                  child: GestureDetector(
+                    onLongPressStart: _onLongPressStart,
+                    onLongPressMoveUpdate: _onLongPressUpdate,
+                    onLongPressEnd: _onLongPressEnd,
+                    child: Container(
+                      constraints: const BoxConstraints.expand(),
+                      child: CustomPaint(
+                        painter: _WormChartPainter(
+                          widget.ticks,
+                          indexToX: _indexToX,
+                          lineStyle: widget.lineStyle,
+                          highestTickStyle: widget.highestTickStyle,
+                          lowestTickStyle: widget.lowestTickStyle,
+                          lastTickStyle: widget.lastTickStyle,
+                          topPadding: widget.topPadding,
+                          bottomPadding: widget.bottomPadding,
+                          startIndex: lowerIndex,
+                          endIndex: upperIndex,
+                          crossHairIndex: _crossHairIndex,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-        );
-      });
+              );
+            },
+          );
+        },
+      );
 
   void _onLongPressStart(LongPressStartDetails details) {
     final Offset position = details.localPosition;
