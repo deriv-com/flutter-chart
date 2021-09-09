@@ -395,9 +395,7 @@ int _searchLowerIndex(List<Tick> entries, double leftIndex) {
 
   return closest <= leftIndex
       ? closest
-      : closest - 1 < 0
-          ? closest
-          : closest - 1;
+      : (closest - 1 < 0 ? closest : closest - 1);
 }
 
 int _searchUpperIndex(List<Tick> entries, double rightIndex) {
