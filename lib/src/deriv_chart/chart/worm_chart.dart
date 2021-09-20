@@ -256,6 +256,8 @@ class _WormChartPainter extends CustomPainter {
       return;
     }
 
+    final List<TickIndicatorModel> tickIndicators = <TickIndicatorModel>[];
+
     final MinMaxIndices minMax = getMinMaxIndex(ticks, startIndex, endIndex);
 
     final int minIndex = minMax.minIndex;
@@ -281,10 +283,17 @@ class _WormChartPainter extends CustomPainter {
       currentPosition = Offset(x, y);
 
       if (i == ticks.length - 1 && lastTickStyle != null) {
-        _drawLastTickCircle(canvas, currentPosition);
+        _drawLastTickCircle(canvas, currentPosition, tickIndicators);
       }
 
-      _drawCircleIfMinMax(currentPosition, i, minIndex, maxIndex, canvas);
+      _drawCircleIfMinMax(
+        currentPosition,
+        i,
+        minIndex,
+        maxIndex,
+        canvas,
+        tickIndicators,
+      );
 
       if (linePath == null) {
         linePath = Path()..moveTo(x, y);
@@ -295,6 +304,7 @@ class _WormChartPainter extends CustomPainter {
 
       if (i == crossHairIndex) {
         canvas.drawLine(Offset(x, 0), Offset(x, size.height), linePaint);
+        // canvas.drawCircle(Offset(indexToX(i), dy), radius, paint)
         paintText(
           canvas,
           text: tick.quote.toString(),
@@ -304,7 +314,9 @@ class _WormChartPainter extends CustomPainter {
       }
     }
 
-    canvas.drawPath(linePath!, linePaint);
+    canvas
+      ..saveLayer(Rect.fromLTRB(0, 0, size.width, size.height), Paint())
+      ..drawPath(linePath!, linePaint);
 
     if (lineStyle.hasArea) {
       linePath
@@ -312,15 +324,44 @@ class _WormChartPainter extends CustomPainter {
         ..lineTo(linePath.getBounds().left, size.height);
       _drawArea(canvas, size, linePath, lineStyle);
     }
+
+    for (final TickIndicatorModel tickIndicator in tickIndicators) {
+      canvas
+        ..drawCircle(
+          tickIndicator.position,
+          tickIndicator.style.radius + 4,
+          Paint()..blendMode = BlendMode.clear,
+        )
+        ..drawCircle(
+          tickIndicator.position,
+          tickIndicator.style.radius,
+          tickIndicator.paint,
+        );
+    }
+
+    canvas.restore();
   }
 
-  void _drawLastTickCircle(ui.Canvas canvas, ui.Offset currentPosition) =>
-      canvas.drawCircle(
-          currentPosition,
-          lastTickStyle!.radius,
-          Paint()
-            ..color = lastTickStyle!.color
-            ..style = PaintingStyle.fill);
+  void _drawLastTickCircle(ui.Canvas canvas, ui.Offset currentPosition,
+      List<TickIndicatorModel> tickIndicators) {
+    // dotsPath.addOval(
+    //     Rect.fromCenter(center: currentPosition, width: 20, height: 20));
+    tickIndicators.add(
+      TickIndicatorModel(
+        currentPosition,
+        lastTickStyle!,
+        Paint()
+          ..color = lastTickStyle!.color
+          ..style = PaintingStyle.fill,
+      ),
+    );
+    canvas.drawCircle(
+        currentPosition,
+        lastTickStyle!.radius,
+        Paint()
+          ..color = lastTickStyle!.color
+          ..style = PaintingStyle.fill);
+  }
 
   void _drawArea(
     Canvas canvas,
@@ -348,13 +389,16 @@ class _WormChartPainter extends CustomPainter {
     int minIndex,
     int maxIndex,
     Canvas canvas,
+    List<TickIndicatorModel> tickIndicators,
   ) {
     if (index == maxIndex) {
-      canvas.drawCircle(position, highestTickStyle.radius, highestCirclePaint);
+      tickIndicators.add(
+          TickIndicatorModel(position, highestTickStyle, highestCirclePaint));
     }
 
     if (index == minIndex) {
-      canvas.drawCircle(position, lowestTickStyle.radius, lowestCirclePaint);
+      tickIndicators.add(
+          TickIndicatorModel(position, lowestTickStyle, lowestCirclePaint));
     }
   }
 
@@ -408,4 +452,20 @@ int _searchUpperIndex(List<Tick> entries, double rightIndex) {
   return closest >= rightIndex
       ? closest
       : (closest + 1 > entries.length ? closest : closest + 1);
+}
+
+/// A model class to hod the information needed to paint a [Tick] indicator on the
+/// chart's canvas.
+class TickIndicatorModel {
+  /// Initializes
+  const TickIndicatorModel(this.position, this.style, this.paint);
+
+  /// The position of this tick indicator.
+  final Offset position;
+
+  /// The style which has the information of how this tick indicator should look like.
+  final ScatterStyle style;
+
+  /// The paint object which is used for painting on the canvas.
+  final Paint paint;
 }
