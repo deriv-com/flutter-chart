@@ -2,7 +2,7 @@ library deriv_chart;
 
 export 'generated/l10n.dart';
 export 'src/deriv_chart/chart/chart.dart';
-export 'src/deriv_chart/chart/worm_chart.dart';
+export 'src/deriv_chart/chart/worm_chart/worm_chart.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
