@@ -67,13 +67,12 @@ class WormChartPainter extends CustomPainter {
   /// be chosen.
   final ScatterStyle lowestTickStyle;
 
-  /// The style of the tick indicator dot for the last tick.
-  /// inside the chart's visible area.
+  /// The style of the tick indicator dot for the last tick inside the chart's visible area.
   final ScatterStyle? lastTickStyle;
 
   /// The index the tick which the cross-hair is going to point at.
   ///
-  /// If `null` means that the cross-hair is disabled.
+  /// Being `null` means that the cross-hair is disabled.
   final int? crossHairIndex;
 
   /// The line style of the [WormChart].
@@ -98,7 +97,7 @@ class WormChartPainter extends CustomPainter {
       return;
     }
 
-    final List<TickIndicatorModel> tickIndicators = <TickIndicatorModel>[];
+    final List<_TickIndicatorModel> tickIndicators = <_TickIndicatorModel>[];
 
     final MinMaxIndices minMax = getMinMaxIndex(ticks, startIndex, endIndex);
 
@@ -167,7 +166,7 @@ class WormChartPainter extends CustomPainter {
       _drawArea(canvas, size, linePath, lineStyle);
     }
 
-    for (final TickIndicatorModel tickIndicator in tickIndicators) {
+    for (final _TickIndicatorModel tickIndicator in tickIndicators) {
       canvas
         ..drawCircle(
           tickIndicator.position,
@@ -185,11 +184,11 @@ class WormChartPainter extends CustomPainter {
   }
 
   void _drawLastTickCircle(ui.Canvas canvas, ui.Offset currentPosition,
-      List<TickIndicatorModel> tickIndicators) {
+      List<_TickIndicatorModel> tickIndicators) {
     // dotsPath.addOval(
     //     Rect.fromCenter(center: currentPosition, width: 20, height: 20));
     tickIndicators.add(
-      TickIndicatorModel(
+      _TickIndicatorModel(
         currentPosition,
         lastTickStyle!,
         Paint()
@@ -231,16 +230,16 @@ class WormChartPainter extends CustomPainter {
     int minIndex,
     int maxIndex,
     Canvas canvas,
-    List<TickIndicatorModel> tickIndicators,
+    List<_TickIndicatorModel> tickIndicators,
   ) {
     if (index == maxIndex) {
       tickIndicators.add(
-          TickIndicatorModel(position, highestTickStyle, _highestCirclePaint));
+          _TickIndicatorModel(position, highestTickStyle, _highestCirclePaint));
     }
 
     if (index == minIndex) {
       tickIndicators.add(
-          TickIndicatorModel(position, lowestTickStyle, _lowestCirclePaint));
+          _TickIndicatorModel(position, lowestTickStyle, _lowestCirclePaint));
     }
   }
 
@@ -265,3 +264,19 @@ double _quoteToY(
       topPadding: topPadding,
       bottomPadding: bottomPadding,
     );
+
+/// A model class to hod the information needed to paint a [Tick] indicator on the
+/// chart's canvas.
+class _TickIndicatorModel {
+  /// Initializes
+  const _TickIndicatorModel(this.position, this.style, this.paint);
+
+  /// The position of this tick indicator.
+  final Offset position;
+
+  /// The style which has the information of how this tick indicator should look like.
+  final ScatterStyle style;
+
+  /// The paint object which is used for painting on the canvas.
+  final Paint paint;
+}

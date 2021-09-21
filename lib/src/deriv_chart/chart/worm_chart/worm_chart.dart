@@ -225,19 +225,3 @@ int _searchUpperIndex(List<Tick> entries, double rightIndex) {
       ? closest
       : (closest + 1 > entries.length ? closest : closest + 1);
 }
-
-/// A model class to hod the information needed to paint a [Tick] indicator on the
-/// chart's canvas.
-class TickIndicatorModel {
-  /// Initializes
-  const TickIndicatorModel(this.position, this.style, this.paint);
-
-  /// The position of this tick indicator.
-  final Offset position;
-
-  /// The style which has the information of how this tick indicator should look like.
-  final ScatterStyle style;
-
-  /// The paint object which is used for painting on the canvas.
-  final Paint paint;
-}
