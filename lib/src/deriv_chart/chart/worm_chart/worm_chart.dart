@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
@@ -77,6 +79,9 @@ class _WormChartState extends State<WormChart>
   late AnimationController _rightIndexAnimationController;
 
   late double _leftIndex;
+  late double _minValue;
+  late double _maxValue;
+
   Size _chartSize = Size.zero;
 
   @override
@@ -120,6 +125,16 @@ class _WormChartState extends State<WormChart>
           _chartSize.width +
       _leftIndex;
 
+  /// Converts quote value to y position.
+  double _quoteToY(double quote) => quoteToCanvasY(
+        quote: quote,
+        topBoundQuote: _maxValue,
+        bottomBoundQuote: _minValue,
+        canvasHeight: _chartSize.height,
+        topPadding: widget.topPadding,
+        bottomPadding: widget.bottomPadding,
+      );
+
   int? _crossHairIndex;
 
   @override
@@ -142,6 +157,13 @@ class _WormChartState extends State<WormChart>
               final int upperIndex = _searchUpperIndex(
                       widget.ticks, _rightIndexAnimationController.value) -
                   1;
+
+              final MinMaxIndices minMax =
+                  getMinMaxIndex(widget.ticks, lowerIndex, upperIndex);
+
+              _minValue = widget.ticks[minMax.minIndex].quote;
+              _maxValue = widget.ticks[minMax.maxIndex].quote;
+
               return ClipRect(
                 child: IgnorePointer(
                   ignoring: !widget.crossHairEnabled,
@@ -155,12 +177,12 @@ class _WormChartState extends State<WormChart>
                         painter: WormChartPainter(
                           widget.ticks,
                           indexToX: _indexToX,
+                          quoteToY: _quoteToY,
+                          minMax: minMax,
                           lineStyle: widget.lineStyle,
                           highestTickStyle: widget.highestTickStyle,
                           lowestTickStyle: widget.lowestTickStyle,
                           lastTickStyle: widget.lastTickStyle,
-                          topPadding: widget.topPadding,
-                          bottomPadding: widget.bottomPadding,
                           startIndex: lowerIndex,
                           endIndex: upperIndex,
                           crossHairIndex: _crossHairIndex,

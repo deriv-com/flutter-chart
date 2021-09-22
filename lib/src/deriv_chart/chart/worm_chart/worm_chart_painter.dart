@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 import 'dart:ui';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -19,12 +19,12 @@ class WormChartPainter extends CustomPainter {
     required this.highestTickStyle,
     required this.lowestTickStyle,
     required this.indexToX,
+    required this.quoteToY,
     required this.startIndex,
     required this.endIndex,
+    required this.minMax,
     this.crossHairIndex,
     this.lastTickStyle,
-    this.topPadding = 0,
-    this.bottomPadding = 0,
   })  : _linePaint = Paint()
           ..color = lineStyle.color
           ..style = PaintingStyle.stroke
@@ -78,18 +78,18 @@ class WormChartPainter extends CustomPainter {
   /// The line style of the [WormChart].
   final LineStyle lineStyle;
 
-  /// The top padding which is considered in [Tick.quote] to Y position and vice versa.
-  final double topPadding;
-
-  /// The bottom padding which is considered in [Tick.quote] to Y position and vice versa.
-  final double bottomPadding;
-
   /// The conversion function to convert index to [Canvas]'s X position.
   final double Function(int) indexToX;
 
+  /// The conversion function to convert quote to [Canvas]'s Y position.
+  final QuoteToY quoteToY;
+
+  /// MinMax indices.
+  final MinMaxIndices minMax;
+
   @override
   void paint(Canvas canvas, Size size) {
-    assert(topPadding + bottomPadding < 0.9 * size.height);
+    // TODO(NA): assert(topPadding + bottomPadding < 0.9 * size.height);
 
     if (endIndex - startIndex <= 2 ||
         startIndex < 0 ||
@@ -99,12 +99,8 @@ class WormChartPainter extends CustomPainter {
 
     final List<_TickIndicatorModel> tickIndicators = <_TickIndicatorModel>[];
 
-    final MinMaxIndices minMax = getMinMaxIndex(ticks, startIndex, endIndex);
-
     final int minIndex = minMax.minIndex;
     final int maxIndex = minMax.maxIndex;
-    final double min = ticks[minIndex].quote;
-    final double max = ticks[maxIndex].quote;
 
     Path? linePath;
     late Offset currentPosition;
@@ -113,14 +109,7 @@ class WormChartPainter extends CustomPainter {
       final Tick tick = ticks[i];
 
       final double x = indexToX(i);
-      final double y = _quoteToY(
-        tick.quote,
-        max,
-        min,
-        size.height,
-        topPadding: topPadding,
-        bottomPadding: bottomPadding,
-      );
+      final double y = quoteToY(tick.quote);
       currentPosition = Offset(x, y);
 
       if (i == ticks.length - 1 && lastTickStyle != null) {
@@ -246,24 +235,6 @@ class WormChartPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant WormChartPainter oldDelegate) => true;
 }
-
-// TODO(NA): Extract X-Axis conversions later to be able to support both epoch and index
-double _quoteToY(
-  double quote,
-  double max,
-  double min,
-  double height, {
-  double topPadding = 0,
-  double bottomPadding = 0,
-}) =>
-    quoteToCanvasY(
-      quote: quote,
-      topBoundQuote: max,
-      bottomBoundQuote: min,
-      canvasHeight: height,
-      topPadding: topPadding,
-      bottomPadding: bottomPadding,
-    );
 
 /// A model class to hod the information needed to paint a [Tick] indicator on the
 /// chart's canvas.
