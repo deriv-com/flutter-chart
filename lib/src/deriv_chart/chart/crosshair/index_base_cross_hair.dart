@@ -42,6 +42,7 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
   late GestureManagerState gestureManager;
 
   late AnimationController _crossHairAnimationController;
+  late Animation<double> _crossHairFadeAnimation;
 
   @override
   void initState() {
@@ -50,6 +51,11 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     _crossHairAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
+    );
+
+    _crossHairFadeAnimation = CurvedAnimation(
+      parent: _crossHairAnimationController,
+      curve: Curves.easeInOut,
     );
 
     gestureManager = context.read<GestureManagerState>()
@@ -65,45 +71,41 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
         onLongPressEnd: _onLongPressEnd,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) =>
-              AnimatedBuilder(
-            animation: _crossHairAnimationController,
-            builder: (_, __) => Opacity(
-              opacity: _crossHairAnimationController.value,
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  if (_crossHairIndex != null)
-                    Positioned(
-                      left: widget.indexToX(_crossHairIndex!),
-                      child: CustomPaint(
-                        size: Size(1, constraints.maxHeight),
-                        painter: const CrosshairLinePainter(),
-                      ),
+              FadeTransition(
+            opacity: _crossHairFadeAnimation,
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                if (_crossHairIndex != null)
+                  Positioned(
+                    left: widget.indexToX(_crossHairIndex!),
+                    child: CustomPaint(
+                      size: Size(1, constraints.maxHeight),
+                      painter: const CrosshairLinePainter(),
                     ),
-                  if (_crossHairIndex != null)
-                    Positioned(
-                      top:
-                          widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
-                      left: widget.indexToX(_crossHairIndex!),
-                      child: CustomPaint(
-                        size: Size(1, constraints.maxHeight),
-                        painter: const CrosshairDotPainter(),
-                      ),
+                  ),
+                if (_crossHairIndex != null)
+                  Positioned(
+                    top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
+                    left: widget.indexToX(_crossHairIndex!),
+                    child: CustomPaint(
+                      size: Size(1, constraints.maxHeight),
+                      painter: const CrosshairDotPainter(),
                     ),
-                  if (_crossHairIndex != null)
-                    Positioned(
-                      top: 8,
-                      bottom: 0,
-                      width: constraints.maxWidth,
-                      left: widget.indexToX(_crossHairIndex!) -
-                          constraints.maxWidth / 2,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Text('${widget.ticks[_crossHairIndex!].quote}'),
-                      ),
+                  ),
+                if (_crossHairIndex != null)
+                  Positioned(
+                    top: 8,
+                    bottom: 0,
+                    width: constraints.maxWidth,
+                    left: widget.indexToX(_crossHairIndex!) -
+                        constraints.maxWidth / 2,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text('${widget.ticks[_crossHairIndex!].quote}'),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         ),
