@@ -251,3 +251,4 @@ class _TickIndicatorModel {
   /// The paint object which is used for painting on the canvas.
   final Paint paint;
 }
+

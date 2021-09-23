@@ -1,11 +1,14 @@
 import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'worm_chart_painter.dart';
 
@@ -135,8 +138,6 @@ class _WormChartState extends State<WormChart>
         bottomPadding: widget.bottomPadding,
       );
 
-  int? _crossHairIndex;
-
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -165,36 +166,105 @@ class _WormChartState extends State<WormChart>
               _maxValue = widget.ticks[minMax.maxIndex].quote;
 
               return ClipRect(
-                child: IgnorePointer(
-                  ignoring: !widget.crossHairEnabled,
-                  child: GestureDetector(
-                    onLongPressStart: _onLongPressStart,
-                    onLongPressMoveUpdate: _onLongPressUpdate,
-                    onLongPressEnd: _onLongPressEnd,
-                    child: Container(
-                      constraints: const BoxConstraints.expand(),
-                      child: CustomPaint(
-                        painter: WormChartPainter(
-                          widget.ticks,
-                          indexToX: _indexToX,
-                          quoteToY: _quoteToY,
-                          minMax: minMax,
-                          lineStyle: widget.lineStyle,
-                          highestTickStyle: widget.highestTickStyle,
-                          lowestTickStyle: widget.lowestTickStyle,
-                          lastTickStyle: widget.lastTickStyle,
-                          startIndex: lowerIndex,
-                          endIndex: upperIndex,
-                          crossHairIndex: _crossHairIndex,
+                child: GestureManager(
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        constraints: const BoxConstraints.expand(),
+                        child: CustomPaint(
+                          painter: WormChartPainter(
+                            widget.ticks,
+                            indexToX: _indexToX,
+                            quoteToY: _quoteToY,
+                            minMax: minMax,
+                            lineStyle: widget.lineStyle,
+                            highestTickStyle: widget.highestTickStyle,
+                            lowestTickStyle: widget.lowestTickStyle,
+                            lastTickStyle: widget.lastTickStyle,
+                            startIndex: lowerIndex,
+                            endIndex: upperIndex,
+                          ),
                         ),
                       ),
-                    ),
+                      IndexBasedCrossHair(
+                        indexToX: _indexToX,
+                        quoteToY: _quoteToY,
+                        xToIndex: _xToIndex,
+                        ticks: widget.ticks,
+                      ),
+                    ],
                   ),
                 ),
               );
             },
           );
         },
+      );
+}
+
+///
+class IndexBasedCrossHair extends StatefulWidget {
+  ///
+  const IndexBasedCrossHair({
+    required this.quoteToY,
+    required this.indexToX,
+    required this.xToIndex,
+    required this.ticks,
+    Key? key,
+  }) : super(key: key);
+
+  ///
+  final QuoteToY quoteToY;
+
+  ///
+  final double Function(int) indexToX;
+
+  ///
+  final double Function(double x) xToIndex;
+
+  ///
+  final List<Tick> ticks;
+
+  @override
+  _IndexBasedCrossHairState createState() => _IndexBasedCrossHairState();
+}
+
+class _IndexBasedCrossHairState extends State<IndexBasedCrossHair> {
+  int? _crossHairIndex;
+  late GestureManagerState gestureManager;
+
+  @override
+  void initState() {
+    super.initState();
+
+    gestureManager = context.read<GestureManagerState>()
+      ..registerCallback(_onLongPressStart)
+      ..registerCallback(_onLongPressUpdate)
+      ..registerCallback(_onLongPressEnd);
+  }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onLongPressStart: _onLongPressStart,
+        onLongPressMoveUpdate: _onLongPressUpdate,
+        onLongPressEnd: _onLongPressEnd,
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            if (_crossHairIndex != null)
+              Positioned(
+                left: widget.indexToX(_crossHairIndex!),
+                top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
+                width: 2,
+                height: 2,
+                child: Container(
+                  width: 2,
+                  height: 2,
+                  color: Colors.red,
+                ),
+              )
+          ],
+        ),
       );
 
   void _onLongPressStart(LongPressStartDetails details) {
@@ -209,7 +279,7 @@ class _WormChartState extends State<WormChart>
 
   void _updateCrossHairToPosition(double x) => setState(
         () => _crossHairIndex = findClosestIndex(
-          _xToIndex(x),
+          widget.xToIndex(x),
           widget.ticks,
         ),
       );
