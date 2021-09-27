@@ -14,15 +14,18 @@ import 'ma_series.dart';
 import 'models/indicator_options.dart';
 import 'sample_multi_painter.dart';
 
-/// A sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
+/// A sample class just to examine how a custom indicator with multiple
+/// data-series can be implemented in this structure.
 ///
-/// Can also extend from a concrete implementation of [Series] like `LineSeries` and instead of two only
-/// define one nested series. In that case, since we override [createPainter()]
-/// and set value for [seriesPainter] we should have another [SeriesPainter] inside this class.
+/// Can also extend from a concrete implementation of [Series] like `LineSeries`
+/// and instead of two only define one nested series. In that case, since we
+/// override [createPainter()] and set value for [seriesPainter] we should have
+/// another [SeriesPainter] inside this class.
 ///
 /// Or we can directly implement [ChartData] interface.
 class SampleMultiSeries extends Series {
-  /// Initializes a sample class just to examine how a custom indicator with multiple data-series can be implemented in this structure.
+  /// Initializes a sample class just to examine how a custom indicator with
+  /// multiple data-series can be implemented in this structure.
   SampleMultiSeries(IndicatorInput indicatorInput, {String? id})
       : series1 = MASeries(indicatorInput, const MAOptions(period: 10)),
         series2 = MASeries(indicatorInput, const MAOptions()),

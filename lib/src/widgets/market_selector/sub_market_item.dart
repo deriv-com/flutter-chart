@@ -25,7 +25,8 @@ class SubMarketItem extends StatelessWidget {
   /// the filter text to be passed to the asset of the sub-market.
   final String filterText;
 
-  /// The key to be passed to the `AnimatedHighlight` widget to highlight the sub-maket item.
+  /// The key to be passed to the `AnimatedHighlight` widget to highlight the
+  /// sub-maket item.
   final GlobalObjectKey? selectedItemKey;
 
   /// The action that appens on clicking the [AssetItem].

@@ -2,7 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/gaps/helpers.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:meta/meta.dart';
 
-/// Returns resulting epoch when given [epoch] is shifted by [pxShift] on x-axis, skipping time gaps.
+/// Returns resulting epoch when given [epoch] is shifted by [pxShift]
+/// on x-axis, skipping time gaps.
 int shiftEpochByPx({
   required int epoch,
   required double pxShift,

@@ -30,7 +30,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   /// Distance between title area and label area.
   static const double _distanceBetweenTitleAndLabel = 16;
 
-  /// Padding on both sides of the title (so that barrier line doesn't touch title text).
+  /// Padding on both sides of the title (so that barrier line doesn't touch
+  /// title text).
   static const double _titleHorizontalPadding = 2;
 
   @override
@@ -67,7 +68,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       }
     } else {
       final BarrierObject previousBarrier = series.previousObject!;
-      // Calculating animated values regarding `currentTickPercent` in transition animation
+      // Calculating animated values regarding `currentTickPercent` in
+      // transition animation
       // from previousObject to new object
       animatedValue = lerpDouble(
         previousBarrier.value,
@@ -180,7 +182,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
           arrowSize: style.arrowSize,
         );
       } else if (arrowType == BarrierArrowType.downward) {
-        // TODO(Anonymous): Rotate arrows like in `paintMarker` instead of defining two identical paths only different in rotation.
+        // TODO(Anonymous): Rotate arrows like in `paintMarker` instead of
+        // defining two identical paths only different in rotation.
         _paintDownwardArrows(
           canvas,
           center: Offset(arrowMidX, y),

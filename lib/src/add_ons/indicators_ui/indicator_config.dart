@@ -95,8 +95,8 @@ abstract class IndicatorConfig {
     }
   }
 
-  /// Whether the indicator is an overlay on the main chart or displays on a separate chart.
-  /// Default is set to `true`.
+  /// Whether the indicator is an overlay on the main chart or displays on a
+  /// separate chart. Default is set to `true`.
   final bool isOverlay;
 
   /// Key of indicator name property in JSON.

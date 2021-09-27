@@ -50,33 +50,41 @@ class CustomGestureDetector extends StatefulWidget {
   /// The widget below this widget in the tree.
   final Widget child;
 
-  /// The pointers in contact with the screen have established a focal point and initial scale of 1.0.
+  /// The pointers in contact with the screen have established a focal point and
+  /// initial scale of 1.0.
   final GestureScaleStartCallback? onScaleAndPanStart;
 
   /// The pointers in contact with the screen have indicated a new focal point and/or scale.
   final GestureScaleUpdateCallback? onScaleUpdate;
 
-  /// Called when a pointer that triggered an `onPointerDown` is no longer in contact with the screen.
+  /// Called when a pointer that triggered an `onPointerDown` is no longer in
+  /// contact with the screen.
   final GestureDragUpdateCallback? onPanUpdate;
 
   /// The pointers are no longer in contact with the screen.
   final GestureScaleEndCallback? onScaleAndPanEnd;
 
-  /// Called when a long press gesture with a primary button has been recognized.
+  /// Called when a long press gesture with a primary button has been
+  /// recognized.
   ///
-  /// Triggered when a pointer has remained in contact with the screen at the same location for a long period of time.
+  /// Triggered when a pointer has remained in contact with the screen at the
+  /// same location for a long period of time.
   final GestureLongPressStartCallback? onLongPressStart;
 
   /// A pointer has been drag-moved after a long press with a primary button.
   final GestureLongPressMoveUpdateCallback? onLongPressMoveUpdate;
 
-  /// Called when a long press gesture with a primary button has been recognized.
+  /// Called when a long press gesture with a primary button has been
+  /// recognized.
   ///
-  /// Triggered when a pointer has remained in contact with the screen at the same location for a long period of time.
+  /// Triggered when a pointer has remained in contact with the screen at the
+  /// same location for a long period of time.
   final GestureLongPressEndCallback? onLongPressEnd;
 
-  /// A pointer that will trigger a tap with a primary button has stopped contacting the screen at a particular location
-  /// This triggers immediately before `onTap` in the case of the tap gesture winning. If the tap gesture did not win, `onTapCancel` is called instead.
+  /// A pointer that will trigger a tap with a primary button has stopped
+  /// contacting the screen at a particular location.
+  /// This triggers immediately before `onTap` in the case of the tap gesture
+  /// winning. If the tap gesture did not win, `onTapCancel` is called instead.
   final GestureTapUpCallback? onTapUp;
 
   @override

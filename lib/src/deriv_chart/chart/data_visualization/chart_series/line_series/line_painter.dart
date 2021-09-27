@@ -84,7 +84,8 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     Offset? startPosition, endPosition;
 
-    // Adding visible entries line to the path except the last which might be animated.
+    // Adding visible entries line to the path except the last which might
+    //be animated.
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {

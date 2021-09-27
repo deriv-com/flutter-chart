@@ -10,8 +10,8 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_env_indicator_config.dart';
 
-/// Moving Average Envelope indicator item in the list of indicator which provide this
-/// indicators options menu.
+/// Moving Average Envelope indicator item in the list of indicator which
+/// provide this indicators options menu.
 class MAEnvIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAEnvIndicatorItem({

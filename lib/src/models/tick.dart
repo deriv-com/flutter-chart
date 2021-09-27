@@ -8,8 +8,9 @@ import 'package:meta/meta.dart';
 // to have to check if it is a <Tick>[] use something like QuoteIndicator(ticks)
 // as input for Indicators that do the calculation and if it's a <Candle>[] use
 // Close|High|Hl2|ValueIndicator(ticks).
-// To avoid doing this check, we made Tick class comply with OHLC interface. So we
-// can use either <Tick>[] or <Candle>[] as input for Close|High|Hl2|ValueIndicators.
+// To avoid doing this check, we made Tick class comply with OHLC interface. So
+// we can use either <Tick>[] or <Candle>[] as input for
+// Close|High|Hl2|ValueIndicators.
 @immutable
 class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   /// Initializes

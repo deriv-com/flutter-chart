@@ -6,9 +6,11 @@ import 'closed_tag.dart';
 import 'models.dart';
 import 'symbol_icon.dart';
 
-/// A Button to open the market selector. The selected [Asset] should be passed as [asset].
+/// A Button to open the market selector. The selected [Asset] should be passed
+/// as [asset].
 class MarketSelectorButton extends StatelessWidget {
-  /// Creates a Button to open the market selector. The selected [Asset] should be passed as [asset].
+  /// Creates a Button to open the market selector. The selected [Asset] should
+  /// be passed as [asset].
   const MarketSelectorButton({
     required this.asset,
     Key? key,

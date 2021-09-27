@@ -9,10 +9,12 @@ import 'no_result_page.dart';
 
 /// Handles the tap on [Asset] in market selector.
 ///
-/// [favouriteClicked] is true when the user has tapped on the favourite icon of the item.
+/// [favouriteClicked] is true when the user has tapped on the favourite icon of
+/// the item.
 typedef OnAssetClicked = Function(Asset asset, bool favouriteClicked);
 
-/// The duration of animating the scroll to the selected item in the [MarketSelector] widget.
+/// The duration of animating the scroll to the selected item in the
+/// [MarketSelector] widget.
 const Duration scrollToSelectedDuration = Duration.zero;
 
 /// A widget which is used to select the market of the chart.
@@ -36,7 +38,8 @@ class MarketSelector extends StatefulWidget {
   /// The selected asset item which contains the details of the selected market.
   final Asset? selectedItem;
 
-  /// `Optional` whenever it is null, it will be substituted with a list of assets that their [Asset.isFavourite] is true.
+  /// `Optional` whenever it is null, it will be substituted with a list of
+  /// assets that their [Asset.isFavourite] is true.
   final List<Asset?>? favouriteAssets;
 
   /// The theme of the chart which the market selector is being placed inside.

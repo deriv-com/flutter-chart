@@ -61,7 +61,8 @@ String durationToString(Duration duration) {
 String _twoDigitDuration(int duration) => duration.toString().padLeft(2, '0');
 
 /// A method used for getting color for the given [background] `brightness`.
-/// If the [background] color is considered `bright` it will return [Colors.black], otherwise it will return [Colors.white].
+/// If the [background] color is considered `bright` it will return
+/// [Colors.black], otherwise it will return [Colors.white].
 Color calculateTextColor(Color background) =>
     background.computeLuminance() >= 0.5 ? Colors.black : Colors.white;
 

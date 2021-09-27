@@ -11,7 +11,8 @@ import '../data_painter.dart';
 import '../data_series.dart';
 import '../indexed_entry.dart';
 
-/// A callback function to say wether or not the color should be `Positive` or `Negative`.
+/// A callback function to say wether or not the color should be `Positive`
+/// or `Negative`.
 typedef CheckColorCallback = bool Function({
   required double previousQuote,
   required double currentQuote,
@@ -25,7 +26,8 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     required this.checkColorCallback,
   }) : super(series);
 
-  /// The callback function to say wether or not the color should be `Positive` or `Negative`.
+  /// The callback function to say wether or not the color should be `Positive`
+  /// or `Negative`.
   final CheckColorCallback checkColorCallback;
 
   late Paint _positiveBarPaint;

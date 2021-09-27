@@ -11,7 +11,8 @@ import '../visible_entries.dart';
 
 /// A series which shows ZigZag data calculated from [entries].
 class ZigZagSeries extends LineSeries {
-  /// Initializes a series which shows shows ZigZag data calculated from [entries].
+  /// Initializes a series which shows shows ZigZag data calculated
+  /// from [entries].
   ///
   /// [distance] The minimum distance in percent between two zigzag points.
   ZigZagSeries(

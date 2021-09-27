@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 /// A widget to show a highlighted substring inside a text.
 ///
-/// This widget only highlights the first occurrence of the highlighted substring,
-/// Can be improved to show all the substring if there are more than one occurrence.
+/// This widget only highlights the first occurrence of the highlighted
+/// substring. Can be improved to show all the substring if there are more than
+/// one occurrence.
 class HighLightedText extends StatelessWidget {
   ///Initializes a widget to show a highlighted substring inside a text.
   const HighLightedText(

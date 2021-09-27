@@ -5,9 +5,8 @@ import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';
 
-
-/// Awesome Oscillator Indicator item in the list of indicator which provide this
-/// indicators options menu.
+/// Awesome Oscillator Indicator item in the list of indicator which provide
+/// this indicators options menu.
 class AwesomeOscillatorIndicatorItem extends IndicatorItem {
   /// Initializes
   const AwesomeOscillatorIndicatorItem({
@@ -15,7 +14,7 @@ class AwesomeOscillatorIndicatorItem extends IndicatorItem {
     required VoidCallback deleteIndicator,
     Key? key,
     AwesomeOscillatorIndicatorConfig config =
-         const AwesomeOscillatorIndicatorConfig(),
+        const AwesomeOscillatorIndicatorConfig(),
   }) : super(
           key: key,
           title: 'Awesome Oscillator Indicator',
@@ -32,12 +31,10 @@ class AwesomeOscillatorIndicatorItem extends IndicatorItem {
 /// Awesome Oscillator IndicatorItem State class
 class AwesomeOscillatorIndicatorItemState
     extends IndicatorItemState<AwesomeOscillatorIndicatorConfig> {
-
   @override
   AwesomeOscillatorIndicatorConfig createIndicatorConfig() =>
       const AwesomeOscillatorIndicatorConfig();
 
   @override
   Widget getIndicatorOptions() => Container();
-
 }

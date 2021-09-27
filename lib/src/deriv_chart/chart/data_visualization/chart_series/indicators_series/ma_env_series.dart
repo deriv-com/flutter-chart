@@ -18,7 +18,8 @@ import 'single_indicator_series.dart';
 
 /// A series which shows Moving Average Envelope data calculated from 'entries'.
 class MAEnvSeries extends Series {
-  /// Initializes a series which shows shows moving Average data calculated from [entries].
+  /// Initializes a series which shows shows moving Average data calculated
+  /// from [entries].
   ///
   /// [maEnvOptions] Moving Average Envelope indicator options.
   MAEnvSeries(
@@ -92,7 +93,10 @@ class MAEnvSeries extends Series {
       style: const LineStyle(color: Colors.green),
     );
 
-    _innerSeries..add(_lowerSeries)..add(_middleSeries)..add(_upperSeries);
+    _innerSeries
+      ..add(_lowerSeries)
+      ..add(_middleSeries)
+      ..add(_upperSeries);
 
     return null;
   }
@@ -117,8 +121,8 @@ class MAEnvSeries extends Series {
 
   @override
   List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
-      // But to be safe we calculate min and max. from all three series.
+      // Can just use _lowerSeries minValue for min and _upperSeries maxValue
+      // for max. But to be safe we calculate min and max. from all three series
       // TODO(Ramin): Maybe later we can have these code and getMin/MaxEpochs in a parent class for Indicators like MAEnv, Ichimoku, Bollinger, etc
       <double>[
         _innerSeries

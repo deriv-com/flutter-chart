@@ -69,7 +69,8 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
   /// Removes this indicator.
   void removeIndicator() => widget.deleteIndicator.call();
 
-  /// Returns the [IndicatorConfig] which can be used to create the Series for this indicator.
+  /// Returns the [IndicatorConfig] which can be used to create the Series for
+  /// this indicator.
   T createIndicatorConfig();
 
   /// Creates the menu options widget for this indicator.

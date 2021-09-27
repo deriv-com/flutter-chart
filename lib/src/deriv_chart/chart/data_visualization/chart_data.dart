@@ -13,59 +13,71 @@ typedef EpochToX = double Function(int);
 /// Conversion function to convert value(quote) value to canvas Y.
 typedef QuoteToY = double Function(double);
 
-/// Any data that the chart takes and makes it paint its self on the chart's canvas including
-/// Line, CandleStick data, Markers, barriers etc..
+/// Any data that the chart takes and makes it paint its self on the chart's
+/// canvas including Line, CandleStick data, Markers, barriers etc..
 abstract class ChartData {
   /// The ID of this [ChartData].
   ///
-  /// [id] is used to recognize an old [ChartData] with its new version after chart being updated.
-  /// Doing so makes the chart able to perform live update animation.
+  /// [id] is used to recognize an old [ChartData] with its new version after
+  /// chart being updated. Doing so makes the chart able to perform live update
+  /// animation.
   late String id;
 
   /// Will be called by the chart when it was updated.
   ///
-  /// Returns `true` if this chart data has changed with the chart widget update.
+  /// Returns `true` if this chart data has changed with the chart
+  /// widget update.
   bool didUpdate(ChartData? oldData);
 
-  /// Checks if this ChartData needs to repaint with the chart widget's new frame.
+  /// Checks if this ChartData needs to repaint with the chart widget's
+  ///  new frame.
   bool shouldRepaint(ChartData? oldData);
 
   /// Updates this [ChartData] after tye chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
 
-  /// The minimum value this [ChartData] has at the current X-Axis epoch range after [update] is called.
+  /// The minimum value this [ChartData] has at the current X-Axis epoch range
+  /// after [update] is called.
   ///
-  /// [double.nan] should be returned if this [ChartData] doesn't have any element to have a minimum value.
+  /// [double.nan] should be returned if this [ChartData] doesn't have any
+  /// element to have a minimum value.
   double get minValue;
 
-  /// The maximum value this [ChartData] has at the current X-Axis epoch range after [update] is called.
+  /// The maximum value this [ChartData] has at the current X-Axis epoch range
+  /// after [update] is called.
   ///
-  /// [double.nan] should be returned if this [ChartData] doesn't have any element to have a maximum value.
+  /// [double.nan] should be returned if this [ChartData] doesn't have any
+  /// element to have a maximum value.
   double get maxValue;
 
   /// Minimum epoch of this [ChartData] on the chart's X-Axis.
   ///
-  /// The chart calls this on any of its [ChartData]s and gets their minimum epoch
-  /// then sets its X-Axis leftmost scroll limit based on them.
+  /// The chart calls this on any of its [ChartData]s and gets their minimum
+  /// epoch then sets its X-Axis leftmost scroll limit based on them.
   int? getMinEpoch();
 
   /// Maximum epoch of this [ChartData] on the chart's X-Axis.
   ///
-  /// The chart uses it same as [getMinEpoch] to determine its rightmost scroll limit.
+  /// The chart uses it same as [getMinEpoch] to determine its rightmost scroll
+  /// limit.
   int? getMaxEpoch();
 
   /// Paints this [ChartData] on the given [canvas].
   ///
   /// [Size] is the size of the [canvas].
   ///
-  /// [epochToX] and [quoteToY] are conversion functions in the chart's coordinate system.
-  /// They respectively convert epoch to canvas X and quote to canvas Y.
+  /// [epochToX] and [quoteToY] are conversion functions in the chart's
+  /// coordinate system. They respectively convert epoch to canvas X and quote
+  /// to canvas Y.
   ///
-  /// [animationInfo] Contains animations progress values in this frame of painting.
+  /// [animationInfo] Contains animations progress values in this frame of
+  /// painting.
   ///
   /// [ChartConfig] is the chart's config which consist of
-  ///   - `pipSize` Number of decimal digits [ChartData] must use when showing their prices.
-  ///   - `granularity` Duration of 1 candle in ms (for ticks: average ms difference between ticks).
+  ///   - `pipSize` Number of decimal digits [ChartData] must use when showing
+  /// their prices.
+  ///   - `granularity` Duration of 1 candle in ms (for ticks: average ms
+  /// difference between ticks).
   ///
   /// [theme] Chart's theme
   void paint(

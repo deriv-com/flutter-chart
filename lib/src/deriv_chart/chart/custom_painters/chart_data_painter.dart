@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.
 class ChartDataPainter extends BaseChartDataPainter {
-  /// Initializes a `CustomPainter` which paints the chart data inside the chart.
+  /// Initializes a `CustomPainter` which paints the chart data inside
+  /// the chart.
   ChartDataPainter({
     required ChartConfig chartConfig,
     required ChartTheme theme,
@@ -74,7 +75,8 @@ class ChartDataPainter extends BaseChartDataPainter {
 
 /// A `CustomPainter` which paints the chart data inside the chart.
 class BaseChartDataPainter extends CustomPainter {
-  /// Initializes a `CustomPainter` which paints the chart data inside the chart.
+  /// Initializes a `CustomPainter` which paints the chart data inside
+  /// the chart.
   BaseChartDataPainter({
     required this.chartConfig,
     required this.theme,

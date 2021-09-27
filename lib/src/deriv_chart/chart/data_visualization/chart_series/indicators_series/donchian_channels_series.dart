@@ -83,8 +83,8 @@ class DonchianChannelsSeries extends Series {
       middleChannelIndicator.results,
       style: config.middleLineStyle,
     );
-
-    return null; // TODO(ramin): return the painter that paints Channel Fill between bands
+    // TODO(ramin): return the painter that paints Channel Fill between bands
+    return null;
   }
 
   @override
@@ -189,8 +189,7 @@ class DonchianChannelsSeries extends Series {
 
       // Check for animated lower tick.
       final Tick lastLowerTick = _lowerChannelSeries.entries!.last;
-      final Tick lastLowerVisibleTick =
-          _lowerChannelSeries.visibleEntries.last;
+      final Tick lastLowerVisibleTick = _lowerChannelSeries.visibleEntries.last;
 
       if (lastLowerTick == lastLowerVisibleTick &&
           _lowerChannelSeries.prevLastEntry != null) {

@@ -158,7 +158,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
     super.dispose();
   }
 
-  /// Call function to calculate the grid line quotes and put them inside [yAxisModel].
+  /// Call function to calculate the grid line quotes and put them inside
+  /// [yAxisModel].
   List<double> calculateGridLineQuotes(YAxisModel yAxisModel) =>
       gridLineQuotes = yAxisModel.gridQuotes();
 
@@ -209,10 +210,13 @@ class BasicChartState<T extends BasicChart> extends State<T>
   }
 
   void _clearGestures() {
-    _gestureManager..removeCallback(_onPanStart)..removeCallback(_onPanUpdate);
+    _gestureManager
+      ..removeCallback(_onPanStart)
+      ..removeCallback(_onPanUpdate);
   }
 
-  /// Updates the visible data to be shown inside the chart with updating the right bound and left bound epoch.
+  /// Updates the visible data to be shown inside the chart with updating the
+  /// right bound and left bound epoch.
   void updateVisibleData() =>
       widget.mainSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
 
@@ -225,7 +229,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
     double minQuote = minMaxValues[0];
     double maxQuote = minMaxValues[1];
 
-    // If the minQuote and maxQuote are the same there should be a default state to show chart quotes.
+    // If the minQuote and maxQuote are the same there should be a default state
+    // to show chart quotes.
     if (minQuote == maxQuote) {
       minQuote -= 2;
       maxQuote += 2;
@@ -316,7 +321,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
         bottomBoundQuoteAnimationController,
       ];
 
-  /// Returns a list of animation controllers to animate the chart data inside the chart.
+  /// Returns a list of animation controllers to animate the chart data inside
+  /// the chart.
   List<Listenable> getChartDataAnimations() => <Listenable>[
         topBoundQuoteAnimationController,
         bottomBoundQuoteAnimationController,

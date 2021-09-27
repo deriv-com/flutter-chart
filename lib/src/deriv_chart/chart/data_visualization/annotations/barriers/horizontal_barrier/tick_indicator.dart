@@ -30,7 +30,7 @@ class TickIndicator extends HorizontalBarrier {
         );
 }
 
-/// Indicator for showing the candle current value and remaining time (optional).
+/// Indicator for showing the candle current value and remaining time (optional)
 class CandleIndicator extends HorizontalBarrier {
   /// Initializes a candle indicator.
   CandleIndicator(

@@ -20,7 +20,8 @@ import 'single_indicator_series.dart';
 
 /// A series which shows Gator Series data calculated from 'entries'.
 class GatorSeries extends Series {
-  /// Initializes a series which shows shows Gator data calculated from [indicatorInput].
+  /// Initializes a series which shows shows Gator data calculated
+  /// from [indicatorInput].
   ///
   /// [gatorOptions] Gator indicator options.
   GatorSeries(

@@ -12,7 +12,8 @@ import '../data_painter.dart';
 import '../data_series.dart';
 import 'line_painter.dart';
 
-/// A [DataPainter] for painting two line data and the channel fill inside of them.
+/// A [DataPainter] for painting two line data and the channel fill inside
+/// of them.
 class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
   /// Initializes
   ChannelFillPainter(

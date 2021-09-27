@@ -79,8 +79,8 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
       animatedValue = series.value!;
     } else {
       final BarrierObject previousBarrier = series.previousObject!;
-      // Calculating animated values regarding `currentTickPercent` in transition animation
-      // from previousObject to new object
+      // Calculating animated values regarding `currentTickPercent` in
+      // transition animation from previousObject to new object
       animatedValue = lerpDouble(
         previousBarrier.value!,
         series.value!,

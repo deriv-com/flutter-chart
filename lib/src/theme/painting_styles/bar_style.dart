@@ -24,7 +24,8 @@ class BarStyle extends DataSeriesStyle with EquatableMixin {
   @override
   Map<String, dynamic> toJson() => _$BarStyleToJson(this);
 
-  /// Color of histogram bar in which the price moved HIGHER than the last epoch.
+  /// Color of histogram bar in which the price moved HIGHER than the
+  /// last epoch.
   final Color positiveColor;
 
   /// Color of histogram bar in which the price moved LOWER than the last epoch.
@@ -37,8 +38,7 @@ class BarStyle extends DataSeriesStyle with EquatableMixin {
   }) =>
       BarStyle(
         positiveColor: positiveColor ?? const Color(0xFF4CAF50),
-        negativeColor: negativeColor ??  const Color(0xFFCC2E3D),
-
+        negativeColor: negativeColor ?? const Color(0xFFCC2E3D),
       );
 
   @override

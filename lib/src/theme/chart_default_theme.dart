@@ -139,7 +139,8 @@ abstract class ChartDefaultTheme implements ChartTheme {
     _textStyle[textStyle]!
         .putIfAbsent(color, () => textStyle.copyWith(color: color));
 
-    // We already did put `_textStyle[textStyle][color]` if they were absent. So using `!` is safe.
+    // We already did put `_textStyle[textStyle][color]` if they were absent.
+    // So using `!` is safe.
     return _textStyle[textStyle]![color]!;
   }
 

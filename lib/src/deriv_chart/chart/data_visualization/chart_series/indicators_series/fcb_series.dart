@@ -14,7 +14,8 @@ import '../series.dart';
 import '../series_painter.dart';
 import 'single_indicator_series.dart';
 
-/// A series which shows Fractal Chaos Band Series data calculated from 'entries'.
+/// A series which shows Fractal Chaos Band Series data calculated
+/// from 'entries'.
 class FractalChaosBandSeries extends Series {
   /// Initializes
   FractalChaosBandSeries(

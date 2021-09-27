@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 
 /// An interface for the Chart's theme.
 ///
-/// Any app which wants to define the chart's theme should pass an implementation of this interface.
+/// Any app which wants to define the chart's theme should pass an
+/// implementation of this interface.
 abstract class ChartTheme {
   String get fontFamily;
 

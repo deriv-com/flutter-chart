@@ -10,18 +10,21 @@ import 'gaps/gap_manager.dart';
 import 'gaps/helpers.dart';
 import 'grid/calc_time_grid.dart';
 
-/// Will stop auto-panning when the last tick has reached to this offset from the [XAxisModel.leftBoundEpoch].
+/// Will stop auto-panning when the last tick has reached to this offset from
+/// the [XAxisModel.leftBoundEpoch].
 const double autoPanOffset = 30;
 
 /// Padding around data used in data-fit mode.
 const EdgeInsets dataFitPadding = EdgeInsets.only(left: 16, right: 120);
 
-/// Modes that control chart's zoom and scroll behaviour without user interaction.
+/// Modes that control chart's zoom and scroll behaviour without user
+/// interaction.
 enum ViewingMode {
   /// Keeps current tick visible.
   ///
   /// This mode is enabled when [isLive] is `true` and current tick is visible.
-  /// It works by keeping the x coordinate of `DateTime.now().millisecondsSinceEpoch` constant.
+  /// It works by keeping the x coordinate of
+  /// `DateTime.now().millisecondsSinceEpoch` constant.
   /// Meaning, if a line is drawn at `DateTime.now().millisecondsSinceEpoch`
   /// on each frame in this mode, it will appear stationary.
   followCurrentTick,
@@ -180,7 +183,8 @@ class XAxisModel extends ChangeNotifier {
   double get _defaultMsPerPx => _granularity / defaultIntervalWidth;
 
   /// Whether data fit mode is enabled.
-  /// Doesn't mean it is currently active viewing mode. Check [_currentViewingMode].
+  /// Doesn't mean it is currently active viewing mode.
+  /// Check [_currentViewingMode].
   bool get dataFitEnabled => _dataFitMode;
 
   /// Current mode that controls chart's zooming and scrolling behaviour.
@@ -206,7 +210,7 @@ class XAxisModel extends ChangeNotifier {
         ? _entries!.last.epoch
         : _nowEpoch + elapsedMs;
     _lastEpoch = newNowTime;
-    // TODO: Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
+    // TODO(NA): Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
         _scrollTo(_rightBoundEpoch + elapsedMs);
@@ -214,7 +218,8 @@ class XAxisModel extends ChangeNotifier {
       case ViewingMode.fitData:
         _fitData();
 
-        /// Switch to [ViewingMode.followCurrentTick] once reached zoom out limit.
+        /// Switch to [ViewingMode.followCurrentTick] once reached zoom out
+        /// limit.
         if (_msPerPx == _maxMsPerPx) {
           disableDataFit();
         }
@@ -271,13 +276,14 @@ class XAxisModel extends ChangeNotifier {
       _gapManager.insertInFront(findGaps(prefix, maxDiff));
     }
 
-    // Sublist, so that [_entries] references the old list when [entries] is modified in place.
+    // Sublist, so that [_entries] references the old list when [entries] is
+    // modified in place.
     _entries = entries.sublist(0);
 
-    // After switching between closed and open symbols, since their epoch range might
-    // be without any overlap, scroll position on the new symbol might be completely off
-    // where there is no data hence the chart will show just a loading animation.
-    // Here we make sure that it's on-range.
+    // After switching between closed and open symbols, since their epoch range
+    // might be without any overlap, scroll position on the new symbol might be
+    // completely off where there is no data hence the chart will show just a
+    // loading animation. Here we make sure that it's on-range.
     _clampRightBoundEpoch();
   }
 
@@ -301,7 +307,8 @@ class XAxisModel extends ChangeNotifier {
     if (width != null && (_entries?.isNotEmpty ?? false)) {
       final int lastEntryEpoch = _entries?.last.epoch ?? _nowEpoch;
 
-      // `entries.length * granularity` gives ms duration with market gaps excluded.
+      // `entries.length * granularity` gives ms duration with market gaps
+      // excluded.
       final int msDataDuration = _entries!.length * granularity;
       final double pxTargetDataWidth = width! - dataFitPadding.horizontal;
 
@@ -351,7 +358,8 @@ class XAxisModel extends ChangeNotifier {
   double pxBetween(int leftEpoch, int rightEpoch) =>
       _gapManager.removeGaps(TimeRange(leftEpoch, rightEpoch)) / _msPerPx;
 
-  /// Resulting epoch when given epoch value is shifted by given px amount on x-axis.
+  /// Resulting epoch when given epoch value is shifted by given px amount
+  /// on X-axis.
   ///
   /// Positive [pxShift] is shifting epoch into the future,
   /// and negative [pxShift] into the past.

@@ -1,4 +1,3 @@
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
@@ -67,7 +66,8 @@ class SMISeries extends Series {
     );
 
     _smiSignalSeries = SingleIndicatorSeries(
-      painterCreator: (Series series) => LinePainter(series as DataSeries<Tick>),
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
           MASeries.getMAIndicator(smiIndicator, smiOptions.signalOptions),
       inputIndicator: smiIndicator,
@@ -85,7 +85,8 @@ class SMISeries extends Series {
     final SMISeries? oldSeries = oldData as SMISeries?;
 
     final bool smiUpdated = _smiSeries.didUpdate(oldSeries?._smiSeries);
-    final bool smiSignalUpdated = _smiSignalSeries.didUpdate(oldSeries?._smiSignalSeries);
+    final bool smiSignalUpdated =
+        _smiSignalSeries.didUpdate(oldSeries?._smiSignalSeries);
 
     return smiUpdated || smiSignalUpdated;
   }

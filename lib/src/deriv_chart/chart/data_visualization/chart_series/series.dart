@@ -63,7 +63,8 @@ abstract class Series implements ChartData {
   /// Updates series visible data.
   void onUpdate(int leftEpoch, int rightEpoch);
 
-  /// Is called whenever series is created to create its [seriesPainter] as well.
+  /// Is called whenever series is created to create its [seriesPainter]
+  /// as well.
   SeriesPainter<Series>? createPainter();
 
   /// Paints [seriesPainter]'s data on the [canvas].

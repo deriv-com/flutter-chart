@@ -3,7 +3,8 @@ import 'package:deriv_chart/src/models/time_range.dart';
 
 /// Finds time gaps in a list of entries.
 ///
-/// [maxDiff] is the maximum distance between two consecutive entries in milliseconds.
+/// [maxDiff] is the maximum distance between two consecutive entries in
+/// milliseconds.
 List<TimeRange> findGaps(List<Tick> entries, int maxDiff) {
   final List<TimeRange> gaps = <TimeRange>[];
 

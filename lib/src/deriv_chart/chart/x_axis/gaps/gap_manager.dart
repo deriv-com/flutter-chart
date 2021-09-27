@@ -7,8 +7,8 @@ import 'helpers.dart';
 /// `GapManager` is responsible for keeping a sorted list of `gaps`
 /// and providing efficient utility functions `removeGaps` and `isInGap`.
 ///
-/// Time gaps are calculated outside and passed to `GapManager` with `insertInFront`
-/// or `replaceGaps` in case of reload (e.g. opening new market).
+/// Time gaps are calculated outside and passed to `GapManager` with
+/// `insertInFront` or `replaceGaps` in case of reload (e.g. opening new market)
 class GapManager {
   /// The list of times that the market is closed.
   List<TimeRange> gaps = [];
