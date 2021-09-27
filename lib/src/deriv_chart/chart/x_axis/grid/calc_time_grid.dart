@@ -51,9 +51,7 @@ DateTime _closestFutureMonthStart(int epoch) {
   return monthStart.isBefore(time) ? _addMonth(monthStart) : monthStart;
 }
 
-DateTime _addMonth(DateTime time) {
-  return DateTime.utc(time.year, time.month + 1);
-}
+DateTime _addMonth(DateTime time) => DateTime.utc(time.year, time.month + 1);
 
 /// Px width of duration in ms on time axis with current scale.
 /// Conversion callback dependency of [timeGridInterval].

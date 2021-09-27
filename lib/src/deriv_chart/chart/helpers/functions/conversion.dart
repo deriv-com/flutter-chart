@@ -9,8 +9,12 @@ int shiftEpochByPx({
   required double msPerPx,
   required List<TimeRange> gaps,
 }) {
-  if (pxShift == 0) return epoch;
-  if (gaps.isEmpty) return epoch + (pxShift * msPerPx).round();
+  if (pxShift == 0) {
+    return epoch;
+  }
+  if (gaps.isEmpty) {
+    return epoch + (pxShift * msPerPx).round();
+  }
 
   int shiftedEpoch = epoch;
   double remainingPxShift = pxShift;
@@ -78,7 +82,9 @@ double quoteToCanvasY({
   final drawingRange = canvasHeight - topPadding - bottomPadding;
   final quoteRange = topBoundQuote - bottomBoundQuote;
 
-  if (quoteRange == 0) return topPadding + drawingRange / 2;
+  if (quoteRange == 0) {
+    return topPadding + drawingRange / 2;
+  }
 
   final quoteToBottomBoundFraction = (quote - bottomBoundQuote) / quoteRange;
   final quoteToTopBoundFraction = 1 - quoteToBottomBoundFraction;

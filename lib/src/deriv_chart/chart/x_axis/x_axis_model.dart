@@ -293,7 +293,9 @@ class XAxisModel extends ChangeNotifier {
   ///
   /// Should be called before [_updateEntries] and after [_updateIsLive]
   void _updateGranularity(int? newGranularity) {
-    if (newGranularity == null || _granularity == newGranularity) return;
+    if (newGranularity == null || _granularity == newGranularity) {
+      return;
+    }
     _granularity = newGranularity;
     _msPerPx = _defaultMsPerPx;
     _scrollTo(_maxRightBoundEpoch);
@@ -375,9 +377,11 @@ class XAxisModel extends ChangeNotifier {
 
   /// Get x position of epoch.
   double xFromEpoch(int epoch) {
-    return epoch <= rightBoundEpoch
-        ? width! - pxBetween(epoch, rightBoundEpoch)
-        : width! + pxBetween(rightBoundEpoch, epoch);
+    if (epoch <= rightBoundEpoch) {
+      return width! - pxBetween(epoch, rightBoundEpoch);
+    } else {
+      return width! + pxBetween(rightBoundEpoch, epoch);
+    }
   }
 
   /// Get epoch of x position.
