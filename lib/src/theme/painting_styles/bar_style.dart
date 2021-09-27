@@ -21,7 +21,7 @@ class BarStyle extends DataSeriesStyle with EquatableMixin {
   factory BarStyle.fromJson(Map<String, dynamic> json) =>
       _$BarStyleFromJson(json);
 
-  @override
+  /// Parses this instance of [BarStyle] into a Map<String,dynamic>.
   Map<String, dynamic> toJson() => _$BarStyleToJson(this);
 
   /// Color of histogram bar in which the price moved HIGHER than the

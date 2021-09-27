@@ -20,7 +20,7 @@ class ScatterStyle extends DataSeriesStyle {
   factory ScatterStyle.fromJson(Map<String, dynamic> json) =>
       _$ScatterStyleFromJson(json);
 
-  @override
+  /// Parses this instance of [ScatterStyle] into a Map<String,dynamic>
   Map<String, dynamic> toJson() => _$ScatterStyleToJson(this);
 
   /// Dot color.

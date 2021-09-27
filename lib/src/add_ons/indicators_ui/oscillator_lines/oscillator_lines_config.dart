@@ -30,6 +30,6 @@ class OscillatorLinesConfig {
   factory OscillatorLinesConfig.fromJson(Map<String, dynamic> json) =>
       _$OscillatorLinesConfigFromJson(json);
 
-  @override
+  /// Parses this instance of [OscillatorLinesConfig] into a Map<String,dynamic>
   Map<String, dynamic> toJson() => _$OscillatorLinesConfigToJson(this);
 }

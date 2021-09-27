@@ -282,6 +282,7 @@ abstract class DataSeries<T extends Tick> extends Series {
       oldSeries?.entries?.isNotEmpty ?? false;
 
   @override
+  // ignore: avoid_renaming_method_parameters
   bool shouldRepaint(ChartData? oldDelegate) {
     final DataSeries<T> oldDataSeries = oldDelegate as DataSeries<T>;
     final VisibleEntries<Tick> current = visibleEntries;

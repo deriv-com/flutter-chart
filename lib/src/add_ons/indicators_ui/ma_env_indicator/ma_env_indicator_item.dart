@@ -135,6 +135,7 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
     return shift ?? config.shift;
   }
 
+  @override
   @protected
   LineStyle getCurrentLineStyle() =>
       (widget.config as MAEnvIndicatorConfig).lineStyle;
