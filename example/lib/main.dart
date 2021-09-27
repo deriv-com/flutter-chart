@@ -22,7 +22,8 @@ import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
-import 'package:flutter_deriv_api/state/connection/connection_bloc.dart';
+import 'package:flutter_deriv_api/state/connection/connection_bloc.dart'
+    as connection_bloc;
 import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -33,14 +34,16 @@ import 'utils/misc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 /// The start of the application.
 class MyApp extends StatelessWidget {
+  /// Intiialize
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) => MaterialApp(
-        localizationsDelegates: [
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -61,9 +64,7 @@ class MyApp extends StatelessWidget {
 /// Chart that sits in fullscreen.
 class FullscreenChart extends StatefulWidget {
   /// Initializes a chart that sits in fullscreen.
-  const FullscreenChart({
-    Key? key,
-  }) : super(key: key);
+  const FullscreenChart({Key? key}) : super(key: key);
 
   @override
   _FullscreenChartState createState() => _FullscreenChartState();
@@ -77,25 +78,26 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
-  List<Barrier> _sampleBarriers = <Barrier>[];
+  final List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier? _slBarrier, _tpBarrier;
   bool _sl = false, _tp = false;
 
   TickHistorySubscription? _tickHistorySubscription;
 
-  StreamSubscription? _tickStreamSubscription;
+  StreamSubscription<TickBase?>? _tickStreamSubscription;
 
-  late ConnectionBloc _connectionBloc;
+  late connection_bloc.ConnectionBloc _connectionBloc;
 
   bool _waitingForHistory = false;
 
   MarketChangeReminder? _marketsChangeReminder;
 
-  // Is used to make sure we make only one request to the API at a time. We will not make a new call until the prev call has completed.
-  late Completer _requestCompleter;
+  // Is used to make sure we make only one request to the API at a time.
+  // We will not make a new call until the prev call has completed.
+  late Completer<dynamic> _requestCompleter;
 
   List<Market> _markets = <Market>[];
-  SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
+  final SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
 
   ActiveMarker? _activeMarker;
 
@@ -103,8 +105,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Asset _symbol = Asset(name: 'R_50');
 
-  ChartController _controller = ChartController();
-  PersistentBottomSheetController? _bottomSheetController;
+  final ChartController _controller = ChartController();
+  PersistentBottomSheetController<dynamic>? _bottomSheetController;
 
   late PrefServiceCache _prefService;
 
@@ -133,10 +135,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = ConnectionBloc(ConnectionInformation(
+    _connectionBloc = connection_bloc.ConnectionBloc(ConnectionInformation(
         endpoint: defaultEndpoint, appId: defaultAppID, brand: 'deriv'))
-      ..stream.listen((connectionState) async {
-        if (connectionState is! Connected) {
+      ..stream.listen((connection_bloc.ConnectionState connectionState) async {
+        if (connectionState is! connection_bloc.Connected) {
           // Calling this since we show some status labels when NOT connected.
           setState(() {});
           return;
@@ -149,7 +151,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             if (!_requestCompleter.isCompleted) {
               _requestCompleter.complete();
             }
-            _onIntervalSelected(0);
+            await _onIntervalSelected(0);
           } on APIBaseException catch (e) {
             await showDialog<void>(
               context: context,
@@ -162,7 +164,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             );
           }
         } else {
-          _initTickStream(
+          await _initTickStream(
             TicksHistoryRequest(
               ticksHistory: _symbol.name,
               adjustStartTime: 1,
@@ -182,8 +184,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Future<void> _setupMarketChangeReminder() async {
     _marketsChangeReminder?.reset();
     _marketsChangeReminder = MarketChangeReminder(
-      () async => await TradingTimes.fetchTradingTimes(
-        TradingTimesRequest(tradingTimes: 'today'),
+      () async => TradingTimes.fetchTradingTimes(
+        const TradingTimesRequest(tradingTimes: 'today'),
       ),
       onCurrentTime: () async {
         final ServerTime serverTime = await ServerTime.fetchTime();
@@ -236,11 +238,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _fillMarketSelectorList() {
-    final marketTitles = <String?>{};
+    final Set<String?> marketTitles = <String?>{};
 
-    final markets = <Market>[];
+    final List<Market> markets = <Market>[];
 
-    for (final symbol in _activeSymbols) {
+    for (final ActiveSymbol symbol in _activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
         markets.add(
@@ -248,8 +250,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
             name: symbol.market!,
             displayName: symbol.marketDisplayName!,
             assets: _activeSymbols
-                .where((activeSymbol) => activeSymbol.market == symbol.market)
-                .map<Asset>((activeSymbol) => Asset(
+                .where((ActiveSymbol activeSymbol) =>
+                    activeSymbol.market == symbol.market)
+                .map<Asset>((ActiveSymbol activeSymbol) => Asset(
                       market: activeSymbol.market!,
                       marketDisplayName: activeSymbol.marketDisplayName,
                       subMarket: activeSymbol.submarket!,
@@ -267,7 +270,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _bottomSheetController?.setState?.call(() {});
   }
 
-  void _initTickStream(
+  Future<void> _initTickStream(
     TicksHistoryRequest request, {
     bool resume = false,
   }) async {
@@ -278,11 +281,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _tickHistorySubscription =
             await TickHistory.fetchTicksAndSubscribe(request);
 
-        final fetchedTicks =
+        final List<Tick> fetchedTicks =
             _getTicksFromResponse(_tickHistorySubscription!.tickHistory!);
 
         if (resume) {
-          // TODO(ramin): Consider changing TicksHistoryRequest params to avoid overlapping ticks
+          // TODO(ramin): Consider changing TicksHistoryRequest params to avoid
+          // overlapping ticks
           if (ticks.last.epoch == fetchedTicks.first.epoch) {
             ticks.removeLast();
           }
@@ -297,7 +301,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       } else {
         _tickHistorySubscription = null;
 
-        final historyCandles = _getTicksFromResponse(
+        final List<Tick> historyCandles = _getTicksFromResponse(
           await TickHistory.fetchTickHistory(request),
         );
 
@@ -307,7 +311,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       _updateSampleSLAndTP();
 
       WidgetsBinding.instance!.addPostFrameCallback(
-        (Duration timeStamp) => _controller.scrollToLastTick(animate: false),
+        (Duration timeStamp) => _controller.scrollToLastTick(),
       );
     } on TickException catch (e) {
       dev.log(e.message!, error: e);
@@ -349,7 +353,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _onNewTick(Tick newTick) {
-    setState(() => ticks = ticks + [newTick]);
+    setState(() => ticks = ticks + <Tick>[newTick]);
   }
 
   void _onNewCandle(Candle newCandle) {
@@ -359,7 +363,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
             : ticks as List<Candle>;
 
     setState(() {
-      // Don't modify candles in place, otherwise Chart's didUpdateWidget won't see the difference.
+      // Don't modify candles in place, otherwise Chart's didUpdateWidget won't
+      // see the difference.
       ticks = previousCandles + <Candle>[newCandle];
     });
   }
@@ -374,6 +379,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               child: Row(
                 children: <Widget>[
                   Expanded(
+                    // ignore: unnecessary_null_comparison
                     child: _markets == null
                         ? const SizedBox.shrink()
                         : _buildMarketSelectorButton(),
@@ -426,7 +432,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           : granularity * 1000,
                       controller: _controller,
                       isLive: (_symbol.isOpen) &&
-                          (_connectionBloc.state is Connected),
+                          (_connectionBloc.state is connection_bloc.Connected),
                       opacity: _symbol.isOpen ? 1.0 : 0.5,
                       onCrosshairAppeared: () =>
                           Vibration.vibrate(duration: 50),
@@ -439,10 +445,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       },
                     ),
                   ),
+                  // ignore: unnecessary_null_comparison
                   if (_connectionBloc != null &&
-                      _connectionBloc.state is! Connected)
+                      _connectionBloc.state is! connection_bloc.Connected)
                     Align(
-                      alignment: Alignment.center,
                       child: _buildConnectionStatus(),
                     ),
                 ],
@@ -452,9 +458,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
               height: 64,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                children: <Widget>[
                   IconButton(
-                      icon: Icon(Icons.settings),
+                      icon: const Icon(Icons.settings),
                       onPressed: () async {
                         final bool? settingChanged =
                             await Navigator.of(context).push(
@@ -471,26 +477,35 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           ticks.clear();
                           // reconnect to new config
                           _connectionBloc.add(
-                              Reconfigure(await _getConnectionInfoFromPrefs()));
+                            connection_bloc.Reconfigure(
+                              await _getConnectionInfoFromPrefs(),
+                            ),
+                          );
 
                           WidgetsFlutterBinding.ensureInitialized()
                               .addPostFrameCallback((_) {
-                            _connectionBloc.add(Connect());
+                            _connectionBloc.add(connection_bloc.Connect());
                           });
                         }
                       }),
-                  RaisedButton(
-                    color: Colors.green,
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) => Colors.green),
+                    ),
                     child: const Text('Up'),
                     onPressed: () => _addMarker(MarkerDirection.up),
                   ),
-                  RaisedButton(
-                    color: Colors.red,
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) => Colors.red),
+                    ),
                     child: const Text('Down'),
                     onPressed: () => _addMarker(MarkerDirection.down),
                   ),
                   IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () => setState(_clearMarkers),
                   ),
                 ],
@@ -500,10 +515,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
               height: 64,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  FlatButton(
-                    child: Text('V barrier'),
+                children: <Widget>[
+                  TextButton(
+                    child: const Text('V barrier'),
                     onPressed: () => setState(
                       () => _sampleBarriers.add(
                         VerticalBarrier.onTick(ticks.last,
@@ -516,8 +530,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       ),
                     ),
                   ),
-                  FlatButton(
-                    child: Text('H barrier'),
+                  TextButton(
+                    child: const Text('H barrier'),
                     onPressed: () => setState(
                       () => _sampleBarriers.add(
                         HorizontalBarrier(
@@ -530,29 +544,28 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           visibility: HorizontalBarrierVisibility.normal,
                           style: HorizontalBarrierStyle(
                             color: Colors.grey,
-                            labelShape: LabelShape.rectangle,
                             isDashed: math.Random().nextBool(),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  FlatButton(
-                    child: Text('+ Both'),
+                  TextButton(
+                    child: const Text('+ Both'),
                     onPressed: () => setState(() => _sampleBarriers.add(
                           CombinedBarrier(
                             ticks.last,
                             title: 'B Barrier',
                             id: 'CBarrier${_sampleBarriers.length}',
-                            horizontalBarrierStyle: HorizontalBarrierStyle(
+                            horizontalBarrierStyle:
+                                const HorizontalBarrierStyle(
                               color: Colors.grey,
-                              isDashed: true,
                             ),
                           ),
                         )),
                   ),
                   IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () => setState(() {
                       _clearBarriers();
                     }),
@@ -563,19 +576,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
             SizedBox(
               height: 64,
               child: Row(
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: CheckboxListTile(
                       value: _sl,
                       onChanged: (bool? sl) => setState(() => _sl = sl!),
-                      title: Text('Stop loss'),
+                      title: const Text('Stop loss'),
                     ),
                   ),
                   Expanded(
                     child: CheckboxListTile(
                       value: _tp,
                       onChanged: (bool? tp) => setState(() => _tp = tp!),
-                      title: Text('Take profit'),
+                      title: const Text('Take profit'),
                     ),
                   ),
                 ],
@@ -586,8 +599,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   void _addMarker(MarkerDirection direction) {
-    final lastTick = ticks.last;
-    final onTap = () {
+    final Tick lastTick = ticks.last;
+    void onTap() {
       setState(() {
         _activeMarker = ActiveMarker(
           direction: direction,
@@ -595,7 +608,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           quote: lastTick.quote,
           text: '0.00 USD',
           onTap: () {
-            print('>>> tapped active marker');
+            debugPrint('>>> tapped active marker');
           },
           onTapOutside: () {
             setState(() {
@@ -604,7 +617,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
           },
         );
       });
-    };
+    }
+
     setState(() {
       _markers.add(Marker(
         direction: direction,
@@ -627,15 +641,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Widget _buildConnectionStatus() => ConnectionStatusLabel(
-        text: _connectionBloc.state is ConnectionError
-            ? '${(_connectionBloc.state as ConnectionError).error}'
-            : _connectionBloc.state is Disconnected
+        text: _connectionBloc.state is connection_bloc.ConnectionError
+            // ignore: lines_longer_than_80_chars
+            ? '${(_connectionBloc.state as connection_bloc.ConnectionError).error}'
+            : _connectionBloc.state is connection_bloc.Disconnected
                 ? 'Connection lost, trying to reconnect...'
                 : 'Connecting...',
       );
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
-        backgroundColor: Color.fromRGBO(21, 23, 23, 1),
         asset: _symbol,
         onTap: () {
           _bottomSheetController = showBottomSheet<void>(
@@ -644,8 +658,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
             builder: (BuildContext context) => MarketSelector(
               selectedItem: _symbol,
               markets: _markets,
-              onAssetClicked: (asset, favoriteClicked) {
-                if (!favoriteClicked) {
+              onAssetClicked: (Asset asset, bool isFavoriteClicked) {
+                if (!isFavoriteClicked) {
                   Navigator.of(context).pop();
                   _symbol = asset;
                   _onIntervalSelected(granularity);
@@ -656,7 +670,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         },
       );
 
-  void _loadHistory(int count) async {
+  Future<void> _loadHistory(int count) async {
     _waitingForHistory = true;
 
     final TickHistory moreData = await TickHistory.fetchTickHistory(
@@ -701,35 +715,34 @@ class _FullscreenChartState extends State<FullscreenChart> {
         },
       );
 
-  Widget _buildIntervalSelector() {
-    return Theme(
-      data: ThemeData.dark(),
-      child: DropdownButton<int>(
-        value: granularity,
-        items: <int>[
-          0,
-          60,
-          120,
-          180,
-          300,
-          600,
-          900,
-          1800,
-          3600,
-          7200,
-          14400,
-          28800,
-          86400,
-        ]
-            .map<DropdownMenuItem<int>>((granularity) => DropdownMenuItem<int>(
-                  value: granularity,
-                  child: Text('${getGranularityLabel(granularity)}'),
-                ))
-            .toList(),
-        onChanged: _onIntervalSelected,
-      ),
-    );
-  }
+  Widget _buildIntervalSelector() => Theme(
+        data: ThemeData.dark(),
+        child: DropdownButton<int>(
+          value: granularity,
+          items: <int>[
+            0,
+            60,
+            120,
+            180,
+            300,
+            600,
+            900,
+            1800,
+            3600,
+            7200,
+            14400,
+            28800,
+            86400,
+          ]
+              .map<DropdownMenuItem<int>>(
+                  (int granularity) => DropdownMenuItem<int>(
+                        value: granularity,
+                        child: Text('${getGranularityLabel(granularity)}'),
+                      ))
+              .toList(),
+          onChanged: _onIntervalSelected,
+        ),
+      );
 
   Future<void> _onIntervalSelected(int? value) async {
     if (!_requestCompleter.isCompleted) {
@@ -752,7 +765,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     } finally {
       granularity = value ?? 0;
 
-      _initTickStream(TicksHistoryRequest(
+      await _initTickStream(TicksHistoryRequest(
         ticksHistory: _symbol.name,
         adjustStartTime: 1,
         end: 'latest',
@@ -764,10 +777,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   List<Tick> _getTicksFromResponse(TickHistory tickHistory) {
-    List<Tick> candles = [];
+    List<Tick> candles = <Tick>[];
     if (tickHistory.history != null) {
-      final count = tickHistory.history!.prices!.length;
-      for (var i = 0; i < count; i++) {
+      final int count = tickHistory.history!.prices!.length;
+      for (int i = 0; i < count; i++) {
         candles.add(Tick(
           epoch: tickHistory.history!.times![i]!.millisecondsSinceEpoch,
           quote: tickHistory.history!.prices![i]!,
@@ -778,16 +791,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
     if (tickHistory.candles != null) {
       candles = tickHistory.candles!
           .where((CandleModel? ohlc) => ohlc != null)
-          .map<Candle>((CandleModel? ohlc) {
-        return Candle(
-          epoch: ohlc!.epoch!.millisecondsSinceEpoch,
-          high: ohlc.high!,
-          low: ohlc.low!,
-          open: ohlc.open!,
-          close: ohlc.close!,
-          currentEpoch: ohlc.epoch!.millisecondsSinceEpoch,
-        );
-      }).toList();
+          .map<Candle>((CandleModel? ohlc) => Candle(
+                epoch: ohlc!.epoch!.millisecondsSinceEpoch,
+                high: ohlc.high!,
+                low: ohlc.low!,
+                open: ohlc.open!,
+                close: ohlc.close!,
+                currentEpoch: ohlc.epoch!.millisecondsSinceEpoch,
+              ))
+          .toList();
     }
     return candles;
   }
@@ -799,8 +811,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _slBarrier = HorizontalBarrier(
       ticksMin,
       title: 'Stop loss',
-      style: HorizontalBarrierStyle(
-        color: const Color(0xFFCC2E3D),
+      style: const HorizontalBarrierStyle(
+        color: Color(0xFFCC2E3D),
         isDashed: false,
       ),
       visibility: HorizontalBarrierVisibility.forceToStayOnRange,
@@ -809,8 +821,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _tpBarrier = HorizontalBarrier(
       ticksMax,
       title: 'Take profit',
-      style: HorizontalBarrierStyle(
-        color: const Color(0xFF00A79E),
+      style: const HorizontalBarrierStyle(
         isDashed: false,
       ),
       visibility: HorizontalBarrierVisibility.forceToStayOnRange,
