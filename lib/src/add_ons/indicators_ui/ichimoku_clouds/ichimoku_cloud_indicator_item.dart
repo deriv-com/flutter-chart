@@ -11,10 +11,10 @@ import 'ichimoku_cloud_indicator_config.dart';
 class IchimokuCloudIndicatorItem extends IndicatorItem {
   /// Initializes
   const IchimokuCloudIndicatorItem({
-    Key? key,
-    IchimokuCloudIndicatorConfig config = const IchimokuCloudIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    IchimokuCloudIndicatorConfig config = const IchimokuCloudIndicatorConfig(),
   }) : super(
           key: key,
           title: 'Ichimoku',

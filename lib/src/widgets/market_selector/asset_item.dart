@@ -14,9 +14,9 @@ class AssetItem extends StatelessWidget {
   /// selector.
   const AssetItem({
     required this.asset,
+    required this.onAssetClicked,
     Key? key,
     this.filterText = '',
-    required this.onAssetClicked,
     this.iconFadeInDuration = const Duration(milliseconds: 50),
   }) : super(key: key);
 

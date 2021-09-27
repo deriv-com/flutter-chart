@@ -15,10 +15,10 @@ import 'ma_env_indicator_config.dart';
 class MAEnvIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAEnvIndicatorItem({
-    Key? key,
-    MAEnvIndicatorConfig config = const MAEnvIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    MAEnvIndicatorConfig config = const MAEnvIndicatorConfig(),
   }) : super(
           key: key,
           title: 'MA Envelope Indicator',

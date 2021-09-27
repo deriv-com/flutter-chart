@@ -5,8 +5,8 @@ void paintText(
   Canvas canvas, {
   required String text,
   required Offset anchor,
-  Alignment anchorAlignment = Alignment.center,
   required TextStyle style,
+  Alignment anchorAlignment = Alignment.center,
 }) {
   final TextPainter painter = makeTextPainter(text, style);
   paintWithTextPainter(

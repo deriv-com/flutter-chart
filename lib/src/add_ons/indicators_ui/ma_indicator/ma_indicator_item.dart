@@ -18,10 +18,10 @@ import 'ma_indicator_config.dart';
 class MAIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAIndicatorItem({
-    Key? key,
-    MAIndicatorConfig config = const MAIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    MAIndicatorConfig config = const MAIndicatorConfig(),
   }) : super(
           key: key,
           title: 'Moving Average',

@@ -12,10 +12,10 @@ class SubMarketItem extends StatelessWidget {
   /// Initializes a widget to show a sub-market item under a market.
   const SubMarketItem({
     required this.subMarket,
+    required this.onAssetClicked,
     Key? key,
     this.filterText = '',
     this.selectedItemKey,
-    required this.onAssetClicked,
     this.isCategorized = true,
   }) : super(key: key);
 

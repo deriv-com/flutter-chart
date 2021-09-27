@@ -26,9 +26,9 @@ class RainbowSeries extends Series {
   /// [rainbowOptions] Rainbow indicator options.
   RainbowSeries(
     IndicatorInput indicatorInput, {
+    required RainbowOptions rainbowOptions,
     List<Color>? rainbowColors,
     String? id,
-    required RainbowOptions rainbowOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           rainbowColors: rainbowColors ?? const <Color>[],

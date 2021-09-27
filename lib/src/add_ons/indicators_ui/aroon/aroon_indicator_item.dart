@@ -13,10 +13,10 @@ import '../indicator_item.dart';
 class AroonIndicatorItem extends IndicatorItem {
   /// Initializes
   const AroonIndicatorItem({
-    Key? key,
-    AroonIndicatorConfig config = const AroonIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    AroonIndicatorConfig config = const AroonIndicatorConfig(),
   }) : super(
           key: key,
           title: 'Aroon',

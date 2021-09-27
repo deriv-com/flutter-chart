@@ -15,10 +15,10 @@ import 'williams_r_indicator_config.dart';
 class WilliamsRIndicatorItem extends IndicatorItem {
   /// Initializes
   const WilliamsRIndicatorItem({
-    Key? key,
-    WilliamsRIndicatorConfig config = const WilliamsRIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    WilliamsRIndicatorConfig config = const WilliamsRIndicatorConfig(),
   }) : super(
           key: key,
           title: 'WilliamsR',

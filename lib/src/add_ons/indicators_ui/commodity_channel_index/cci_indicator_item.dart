@@ -16,10 +16,10 @@ import 'cci_indicator_config.dart';
 class CCIIndicatorItem extends IndicatorItem {
   /// Initializes
   const CCIIndicatorItem({
-    Key? key,
-    CCIIndicatorConfig config = const CCIIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    CCIIndicatorConfig config = const CCIIndicatorConfig(),
   }) : super(
           key: key,
           title: 'Commodity Channel Index',

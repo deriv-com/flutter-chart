@@ -10,9 +10,9 @@ class MarketItem extends StatelessWidget {
   /// Initializes a widget to show a market item in market selector.
   const MarketItem({
     required this.market,
+    required this.onAssetClicked,
     Key? key,
     this.filterText = '',
-    required this.onAssetClicked,
     this.selectedItemKey,
     this.isSubMarketsCategorized = true,
   }) : super(key: key);

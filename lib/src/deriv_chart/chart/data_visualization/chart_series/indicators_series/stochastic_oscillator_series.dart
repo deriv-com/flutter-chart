@@ -23,8 +23,8 @@ class StochasticOscillatorSeries extends Series {
   StochasticOscillatorSeries(
     this.inputIndicator,
     this.config, {
-    String? id,
     required this.stochasticOscillatorOptions,
+    String? id,
   }) : super(id ?? 'StochasticOscillator');
 
   late SingleIndicatorSeries _fastPercentStochasticIndicatorSeries;

@@ -18,8 +18,8 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   /// Initializes an RSI Indicator.
   RSISeries(
     IndicatorInput indicatorInput, {
-    String? id,
     required RSIOptions rsiOptions,
+    String? id,
     bool showZones = true,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),

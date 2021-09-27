@@ -14,10 +14,10 @@ import 'parabolic_sar_indicator_config.dart';
 class ParabolicSARIndicatorItem extends IndicatorItem {
   /// Initializes
   const ParabolicSARIndicatorItem({
-    Key? key,
-    ParabolicSARConfig config = const ParabolicSARConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    ParabolicSARConfig config = const ParabolicSARConfig(),
   }) : super(
           key: key,
           title: 'ParabolicSAR',

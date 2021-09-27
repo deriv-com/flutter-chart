@@ -9,11 +9,11 @@ import 'indicator_repository.dart';
 abstract class IndicatorItem extends StatefulWidget {
   /// Initializes
   const IndicatorItem({
-    Key? key,
     required this.title,
     required this.config,
     required this.updateIndicator,
     required this.deleteIndicator,
+    Key? key,
   }) : super(key: key);
 
   /// Title

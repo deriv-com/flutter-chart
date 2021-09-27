@@ -12,11 +12,11 @@ import 'bollinger_bands_indicator_config.dart';
 class BollingerBandsIndicatorItem extends IndicatorItem {
   /// Initializes
   const BollingerBandsIndicatorItem({
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
     Key? key,
     BollingerBandsIndicatorConfig config =
         const BollingerBandsIndicatorConfig(),
-    required UpdateIndicator updateIndicator,
-    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Bollinger Bands',

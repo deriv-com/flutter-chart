@@ -11,10 +11,10 @@ import 'alligator_indicator_config.dart';
 class AlligatorIndicatorItem extends IndicatorItem {
   /// Initializes
   const AlligatorIndicatorItem({
-    Key? key,
-    AlligatorIndicatorConfig config = const AlligatorIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    AlligatorIndicatorConfig config = const AlligatorIndicatorConfig(),
   }) : super(
           key: key,
           title: 'Alligator',

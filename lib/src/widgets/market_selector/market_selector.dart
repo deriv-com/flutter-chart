@@ -21,8 +21,8 @@ const Duration scrollToSelectedDuration = Duration.zero;
 class MarketSelector extends StatefulWidget {
   /// Initializes a widget which is used to select the market of the chart.
   const MarketSelector({
-    Key? key,
     required this.markets,
+    Key? key,
     this.onAssetClicked,
     this.selectedItem,
     this.favouriteAssets,
