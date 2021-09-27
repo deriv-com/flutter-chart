@@ -2,7 +2,7 @@ import 'package:deriv_chart/src/models/tick.dart';
 
 /// Returns a reference to candle with exact or closest epoch to [targetEpoch].
 ///
-/// Returns [null] if list is empty.
+/// Returns `null` if list is empty.
 /// Expects a list of candles to be sorted.
 Tick? findClosestToEpoch(int targetEpoch, List<Tick> ticks) {
   if (ticks.isEmpty) {

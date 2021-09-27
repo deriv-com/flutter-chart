@@ -22,7 +22,7 @@ const EdgeInsets dataFitPadding = EdgeInsets.only(left: 16, right: 120);
 enum ViewingMode {
   /// Keeps current tick visible.
   ///
-  /// This mode is enabled when [isLive] is `true` and current tick is visible.
+  /// This mode is enabled when `isLive` is `true` and current tick is visible.
   /// It works by keeping the x coordinate of
   /// `DateTime.now().millisecondsSinceEpoch` constant.
   /// Meaning, if a line is drawn at `DateTime.now().millisecondsSinceEpoch`

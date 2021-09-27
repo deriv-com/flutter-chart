@@ -3,9 +3,9 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
 /// A version of Parabolic SAR indicator specifically to be suitable for
-/// [AbstractSingleIndicatorSeries].
+/// `AbstractSingleIndicatorSeries`.
 ///
-/// In [AbstractSingleIndicatorSeries] for better performance, when a new tick
+/// In `AbstractSingleIndicatorSeries` for better performance, when a new tick
 /// is added or the last tick gets updated, we don't recalculate indicator's
 /// result for all indices and just for the last tick.
 /// If we were in granularities other than `1 tick` mode, calculating the result

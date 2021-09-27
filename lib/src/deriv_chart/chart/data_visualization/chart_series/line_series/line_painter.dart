@@ -113,7 +113,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   }
 
   /// Adds the line to the last visible tick's position regarding the
-  /// [animationInfo.currentTickPercent] animation.
+  /// `animationInfo.currentTickPercent` animation.
   ///
   /// Returns the position of the last visible tick.
   Offset? _addLastVisibleTick(

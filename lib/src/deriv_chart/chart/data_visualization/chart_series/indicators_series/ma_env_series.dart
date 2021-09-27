@@ -19,7 +19,7 @@ import 'single_indicator_series.dart';
 /// A series which shows Moving Average Envelope data calculated from 'entries'.
 class MAEnvSeries extends Series {
   /// Initializes a series which shows shows moving Average data calculated
-  /// from [entries].
+  /// from `entries`.
   ///
   /// [maEnvOptions] Moving Average Envelope indicator options.
   MAEnvSeries(

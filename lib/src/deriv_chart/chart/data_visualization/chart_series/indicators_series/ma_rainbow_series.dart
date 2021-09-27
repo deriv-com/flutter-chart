@@ -21,7 +21,7 @@ import 'single_indicator_series.dart';
 /// Rainbow series
 class RainbowSeries extends Series {
   /// Initializes a series which shows shows Rainbow Series data calculated
-  /// from [entries].
+  /// from `entries`.
   ///
   /// [rainbowOptions] Rainbow indicator options.
   RainbowSeries(
