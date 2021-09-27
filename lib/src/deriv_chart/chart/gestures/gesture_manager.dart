@@ -23,7 +23,7 @@ class GestureManager extends StatefulWidget {
 
 /// The state of the top level gesture detector that allows all descendants to register/remove gesture callbacks.
 class GestureManagerState extends State<GestureManager> {
-  final _callbackPool = <Function>{};
+  final Set<Function> _callbackPool = <Function>{};
 
   /// Registers a callback funtion to the pool of functions in GestureManager.
   void registerCallback(Function callback) {
@@ -36,7 +36,7 @@ class GestureManagerState extends State<GestureManager> {
   }
 
   void _callAll<T extends Function>(dynamic details) {
-    _callbackPool.whereType<T>().forEach((f) => f(details));
+    _callbackPool.whereType<T>().forEach((T f) => f(details));
   }
 
   @override
@@ -56,7 +56,7 @@ class GestureManagerState extends State<GestureManager> {
         onLongPressEnd: (LongPressEndDetails d) =>
             _callAll<GestureLongPressEndCallback>(d),
         onTapUp: (TapUpDetails d) => _callAll<GestureTapUpCallback>(d),
-        child: Provider.value(
+        child: Provider<GestureManagerState>.value(
           value: this,
           child: widget.child,
         ),

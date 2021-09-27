@@ -29,7 +29,8 @@ class HorizontalBarrier extends Barrier {
   final HorizontalBarrierVisibility visibility;
 
   @override
-  SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
+  SeriesPainter<Series> createPainter() =>
+      HorizontalBarrierPainter<HorizontalBarrier>(this);
 
   @override
   List<double> recalculateMinMax() =>

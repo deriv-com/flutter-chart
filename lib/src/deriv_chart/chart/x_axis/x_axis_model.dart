@@ -416,14 +416,14 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
-    final nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
+    final double nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
     _scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
-    final focalToRightBound = width! - details.focalPoint.dx;
-    final focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
+    final double focalToRightBound = width! - details.focalPoint.dx;
+    final int focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
     _scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
   }

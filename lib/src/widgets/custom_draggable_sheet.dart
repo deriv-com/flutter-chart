@@ -35,7 +35,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
-  final _sheetKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _sheetKey = GlobalKey();
 
   Size? _sheetSize;
 
@@ -73,11 +73,11 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   Widget build(BuildContext context) => AnimatedBuilder(
         key: _sheetKey,
         animation: _animationController,
-        builder: (context, child) => FractionalTranslation(
+        builder: (BuildContext context, Widget? child) => FractionalTranslation(
           translation: Offset(0, _animationController.value),
           child: child,
         ),
-        child: NotificationListener(
+        child: NotificationListener<Notification>(
           onNotification: _handleScrollNotification,
           child: widget.child,
         ),
@@ -106,7 +106,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   void _panToTop(ScrollUpdateNotification notification) {
-    final deltaPercent = notification.scrollDelta! / _sheetSize!.height;
+    final double deltaPercent = notification.scrollDelta! / _sheetSize!.height;
 
     if (deltaPercent > 0) {
       _updateSheetHeightBy(deltaPercent);
@@ -114,7 +114,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
   }
 
   void _panToBottom(OverscrollNotification notification) {
-    final deltaPercent = notification.overscroll / _sheetSize!.height;
+    final double deltaPercent = notification.overscroll / _sheetSize!.height;
 
     if (deltaPercent < 0) {
       _updateSheetHeightBy(deltaPercent);

@@ -53,7 +53,7 @@ class GridStyle with EquatableMixin {
       '${yLabelStyle.toStringShort()}, $lineThickness';
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
         gridLineColor,
         xLabelStyle,
         yLabelStyle,

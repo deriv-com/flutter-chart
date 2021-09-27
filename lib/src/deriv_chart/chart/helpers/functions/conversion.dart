@@ -79,17 +79,18 @@ double quoteToCanvasY({
   required double topPadding,
   required double bottomPadding,
 }) {
-  final drawingRange = canvasHeight - topPadding - bottomPadding;
-  final quoteRange = topBoundQuote - bottomBoundQuote;
+  final double drawingRange = canvasHeight - topPadding - bottomPadding;
+  final double quoteRange = topBoundQuote - bottomBoundQuote;
 
   if (quoteRange == 0) {
     return topPadding + drawingRange / 2;
   }
 
-  final quoteToBottomBoundFraction = (quote - bottomBoundQuote) / quoteRange;
-  final quoteToTopBoundFraction = 1 - quoteToBottomBoundFraction;
+  final double quoteToBottomBoundFraction =
+      (quote - bottomBoundQuote) / quoteRange;
+  final double quoteToTopBoundFraction = 1 - quoteToBottomBoundFraction;
 
-  final pxFromTopBound = quoteToTopBoundFraction * drawingRange;
+  final double pxFromTopBound = quoteToTopBoundFraction * drawingRange;
 
   return topPadding + pxFromTopBound;
 }

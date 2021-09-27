@@ -71,7 +71,8 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
       );
 
   @override
-  IndicatorItem getItem(updateIndicator, deleteIndicator) =>
+  IndicatorItem getItem(dynamic Function(IndicatorConfig) updateIndicator,
+          VoidCallback deleteIndicator) =>
       DonchianChannelIndicatorItem(
         config: this,
         updateIndicator: updateIndicator,

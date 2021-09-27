@@ -46,7 +46,7 @@ class StochasticOscillatorSeries extends Series {
             period: stochasticOscillatorOptions.period);
 
     final SlowStochasticIndicator<Tick> slowStochasticIndicator =
-        SlowStochasticIndicator.fromIndicator(fastStochasticIndicator);
+        SlowStochasticIndicator<Tick>.fromIndicator(fastStochasticIndicator);
 
     if (config.isSmooth) {
       final SmoothedFastStochasticIndicator<Tick>
