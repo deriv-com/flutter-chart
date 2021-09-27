@@ -88,20 +88,20 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
-  // TODO: Allow customization of this setting.
+  // TODO(NA): Allow customization of this setting.
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
   static const double maxCurrentTickOffset = 150;
 
-  // TODO: Allow customization of this setting.
+  // TODO(NA): Allow customization of this setting.
   /// Scaling will not resize intervals to be smaller than this.
   static const int minIntervalWidth = 1;
 
-  // TODO: Allow customization of this setting.
+  // TODO(NA): Allow customization of this setting.
   /// Scaling will not resize intervals to be bigger than this.
   static const int maxIntervalWidth = 80;
 
-  // TODO: Allow customization of this setting.
+  // TODO(NA): Allow customization of this setting.
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
 

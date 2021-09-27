@@ -45,7 +45,7 @@ class FractalChaosBandIndicatorItemState
   @override
   Widget getIndicatorOptions() => Container();
 
-  // TODO: will add this option after apply the channel fill
+  // TODO(samin): will add this option after apply the channel fill
   /// Builds show lines option
   @protected
   Widget buildShowChannelFillField() => Row(
