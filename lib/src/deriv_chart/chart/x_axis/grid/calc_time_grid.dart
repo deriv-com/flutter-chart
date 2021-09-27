@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 const _day = Duration(days: 1);
 const _week = Duration(days: DateTime.daysPerWeek);
 const _month = Duration(days: 30);

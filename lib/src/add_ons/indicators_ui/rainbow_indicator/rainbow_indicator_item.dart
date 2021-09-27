@@ -89,7 +89,7 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   @protected
   int getCurrentBandsCount() {
     final RainbowIndicatorConfig config =
-        (widget.config as RainbowIndicatorConfig);
+        widget.config as RainbowIndicatorConfig;
     return bandsCount ?? config.bandsCount;
   }
 
