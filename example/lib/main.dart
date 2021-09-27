@@ -406,12 +406,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         activeMarker: _activeMarker,
                       ),
                       annotations: ticks.length > 4
-                          ? <ChartAnnotation>[
+                          ? <ChartAnnotation<ChartObject>>[
                               ..._sampleBarriers,
                               if (_sl && _slBarrier != null)
-                                _slBarrier as ChartAnnotation,
+                                _slBarrier as ChartAnnotation<ChartObject>,
                               if (_tp && _tpBarrier != null)
-                                _tpBarrier as ChartAnnotation,
+                                _tpBarrier as ChartAnnotation<ChartObject>,
                               TickIndicator(
                                 ticks.last,
                                 style: const HorizontalBarrierStyle(
