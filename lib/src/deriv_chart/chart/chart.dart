@@ -93,6 +93,7 @@ class Chart extends StatefulWidget {
   State<StatefulWidget> createState() => _ChartState();
 }
 
+// ignore: prefer_mixin
 class _ChartState extends State<Chart> with WidgetsBindingObserver {
   bool? _followCurrentTick;
   late ChartController _controller;

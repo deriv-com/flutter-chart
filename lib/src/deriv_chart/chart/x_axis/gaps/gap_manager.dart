@@ -43,7 +43,7 @@ class GapManager {
   }
 
   List<int> _calcCumulativeSums(List<TimeRange> gaps, {int startSum = 0}) {
-    List<int> sums = [];
+    final List<int> sums = <int>[];
     int sum = startSum;
 
     for (final TimeRange gap in gaps.reversed) {

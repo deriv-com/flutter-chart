@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
@@ -147,7 +149,7 @@ class XAxisModel extends ChangeNotifier {
   /// Epoch value of the rightmost chart's edge. Including quote labels area.
   int get rightBoundEpoch => _rightBoundEpoch;
 
-  void set rightBoundEpoch(int value) => _rightBoundEpoch = value;
+  set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
   int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, maxCurrentTickOffset);
@@ -331,6 +333,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Sets [panSpeed] if input not null, otherwise sets to `0`.
+  // ignore: use_setters_to_change_properties
   void pan(double panSpeed) => _panSpeed = panSpeed;
 
   /// Enables autopanning when current tick is visible.
