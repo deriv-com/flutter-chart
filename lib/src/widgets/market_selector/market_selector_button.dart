@@ -51,11 +51,19 @@ class MarketSelectorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Provider<ChartTheme>.value(
         value: theme ?? ChartDefaultDarkTheme(),
-        child: FlatButton(
-          padding: const EdgeInsets.all(8),
-          color: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: borderRadius,
+        child: TextButton(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
+              (Set<MaterialState> states) => const EdgeInsets.all(8),
+            ),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) => backgroundColor,
+            ),
+            shape: MaterialStateProperty.resolveWith<RoundedRectangleBorder>(
+              (Set<MaterialState> states) => RoundedRectangleBorder(
+                borderRadius: borderRadius,
+              ),
+            ),
           ),
           child: Row(
             children: <Widget>[
