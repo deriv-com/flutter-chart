@@ -124,14 +124,14 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
   /// Gets Indicator current type.
   @protected
   ShiftType getCurrentShiftType() {
-    final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
+    final MAEnvIndicatorConfig config = widget.config as MAEnvIndicatorConfig;
     return shiftType ?? config.shiftType;
   }
 
   /// Gets Indicator current period.
   @protected
   double getCurrentShift() {
-    final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
+    final MAEnvIndicatorConfig config = widget.config as MAEnvIndicatorConfig;
     return shift ?? config.shift;
   }
 
