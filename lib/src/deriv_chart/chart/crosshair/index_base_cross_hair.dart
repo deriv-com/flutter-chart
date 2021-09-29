@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -70,21 +71,16 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
         onLongPressMoveUpdate: _onLongPressUpdate,
         onLongPressEnd: _onLongPressEnd,
         child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) =>
-              FadeTransition(
-            opacity: _crossHairFadeAnimation,
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                if (_crossHairIndex != null)
-                  Positioned(
-                    left: widget.indexToX(_crossHairIndex!),
-                    child: CustomPaint(
-                      size: Size(1, constraints.maxHeight),
-                      painter: const CrosshairLinePainter(),
-                    ),
-                  ),
-                if (_crossHairIndex != null)
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (_crossHairIndex == null) {
+              return const SizedBox.shrink();
+            }
+
+            return FadeTransition(
+              opacity: _crossHairFadeAnimation,
+              child: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
                   Positioned(
                     top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
                     left: widget.indexToX(_crossHairIndex!),
@@ -93,21 +89,36 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                       painter: const CrosshairDotPainter(),
                     ),
                   ),
-                if (_crossHairIndex != null)
                   Positioned(
-                    top: 8,
-                    bottom: 0,
                     width: constraints.maxWidth,
                     left: widget.indexToX(_crossHairIndex!) -
                         constraints.maxWidth / 2,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text('${widget.ticks[_crossHairIndex!].quote}'),
+                    child: Column(
+                      children: <Widget>[
+                        _buildCrossHairDetail(),
+                        CustomPaint(
+                          size: Size(1, constraints.maxHeight),
+                          painter: const CrosshairLinePainter(),
+                        ),
+                      ],
                     ),
                   ),
-              ],
-            ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+  Align _buildCrossHairDetail() => Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            color: Color(0xFF323738),
           ),
+          child: Text('${widget.ticks[_crossHairIndex!].quote}'),
         ),
       );
 
