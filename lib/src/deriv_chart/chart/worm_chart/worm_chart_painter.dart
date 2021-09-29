@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
@@ -23,7 +22,6 @@ class WormChartPainter extends CustomPainter {
     required this.startIndex,
     required this.endIndex,
     required this.minMax,
-    this.crossHairIndex,
     this.lastTickStyle,
   })  : _linePaint = Paint()
           ..color = lineStyle.color
@@ -69,11 +67,6 @@ class WormChartPainter extends CustomPainter {
 
   /// The style of the tick indicator dot for the last tick inside the chart's visible area.
   final ScatterStyle? lastTickStyle;
-
-  /// The index the tick which the cross-hair is going to point at.
-  ///
-  /// Being `null` means that the cross-hair is disabled.
-  final int? crossHairIndex;
 
   /// The line style of the [WormChart].
   final LineStyle lineStyle;
@@ -129,17 +122,6 @@ class WormChartPainter extends CustomPainter {
       }
 
       linePath.lineTo(x, y);
-
-      if (i == crossHairIndex) {
-        canvas.drawLine(Offset(x, 0), Offset(x, size.height), _linePaint);
-        // canvas.drawCircle(Offset(indexToX(i), dy), radius, paint)
-        paintText(
-          canvas,
-          text: tick.quote.toString(),
-          anchor: Offset(x, 10),
-          style: const TextStyle(),
-        );
-      }
     }
 
     canvas
@@ -157,7 +139,7 @@ class WormChartPainter extends CustomPainter {
       canvas
         ..drawCircle(
           tickIndicator.position,
-          tickIndicator.style.radius + 4,
+          tickIndicator.style.radius + 2,
           Paint()..blendMode = BlendMode.clear,
         )
         ..drawCircle(
@@ -172,8 +154,6 @@ class WormChartPainter extends CustomPainter {
 
   void _drawLastTickCircle(ui.Canvas canvas, ui.Offset currentPosition,
       List<_TickIndicatorModel> tickIndicators) {
-    // dotsPath.addOval(
-    //     Rect.fromCenter(center: currentPosition, width: 20, height: 20));
     tickIndicators.add(
       _TickIndicatorModel(
         currentPosition,
@@ -249,4 +229,3 @@ class _TickIndicatorModel {
   /// The paint object which is used for painting on the canvas.
   final Paint paint;
 }
-
