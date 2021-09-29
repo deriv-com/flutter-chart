@@ -22,6 +22,7 @@ class WormChartPainter extends CustomPainter {
     required this.startIndex,
     required this.endIndex,
     required this.minMax,
+    this.applyTickIndicatorsPadding = false,
     this.lastTickStyle,
   })  : _linePaint = Paint()
           ..color = lineStyle.color
@@ -80,6 +81,9 @@ class WormChartPainter extends CustomPainter {
   /// MinMax indices.
   final MinMaxIndices minMax;
 
+  /// Whether to apply padding around tick indicator dots (highest, lowest, last tick).
+  final bool applyTickIndicatorsPadding;
+
   @override
   void paint(Canvas canvas, Size size) {
     if (endIndex - startIndex <= 2 ||
@@ -124,9 +128,10 @@ class WormChartPainter extends CustomPainter {
       linePath.lineTo(x, y);
     }
 
-    canvas
-      ..saveLayer(Rect.fromLTRB(0, 0, size.width, size.height), Paint())
-      ..drawPath(linePath!, _linePaint);
+    if (applyTickIndicatorsPadding) {
+      canvas.saveLayer(Rect.fromLTRB(0, 0, size.width, size.height), Paint());
+    }
+    canvas.drawPath(linePath!, _linePaint);
 
     if (lineStyle.hasArea) {
       linePath
@@ -136,20 +141,23 @@ class WormChartPainter extends CustomPainter {
     }
 
     for (final _TickIndicatorModel tickIndicator in tickIndicators) {
-      canvas
-        ..drawCircle(
+      if (applyTickIndicatorsPadding) {
+        canvas.drawCircle(
           tickIndicator.position,
           tickIndicator.style.radius + 2,
           Paint()..blendMode = BlendMode.clear,
-        )
-        ..drawCircle(
-          tickIndicator.position,
-          tickIndicator.style.radius,
-          tickIndicator.paint,
         );
+      }
+      canvas.drawCircle(
+        tickIndicator.position,
+        tickIndicator.style.radius,
+        tickIndicator.paint,
+      );
     }
 
-    canvas.restore();
+    if (applyTickIndicatorsPadding) {
+      canvas.restore();
+    }
   }
 
   void _drawLastTickCircle(ui.Canvas canvas, ui.Offset currentPosition,

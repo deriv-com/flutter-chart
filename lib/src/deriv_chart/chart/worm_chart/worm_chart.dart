@@ -20,6 +20,7 @@ class WormChart extends StatefulWidget {
     this.zoomFactor = 0.05,
     this.updateAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
+    this.applyTickIndicatorsPadding = false,
     this.highestTickStyle = const ScatterStyle(
       color: Color(0xFF00A79E),
       radius: 3,
@@ -75,6 +76,12 @@ class WormChart extends StatefulWidget {
 
   /// Number of decimals when showing the price of a tick on cross-hair.
   final int pipSize;
+
+  /// Whether to apply padding around tick indicator dots (highest, lowest, last tick).
+  ///
+  /// Since for applying padding we have used [Canvas.saveLayer] for now and in case
+  /// of performance it's relatively expensive, it can be disabled.
+  final bool applyTickIndicatorsPadding;
 
   @override
   _WormChartState createState() => _WormChartState();
@@ -189,6 +196,8 @@ class _WormChartState extends State<WormChart>
                             lastTickStyle: widget.lastTickStyle,
                             startIndex: lowerIndex,
                             endIndex: upperIndex,
+                            applyTickIndicatorsPadding:
+                                widget.applyTickIndicatorsPadding,
                           ),
                         ),
                       ),
