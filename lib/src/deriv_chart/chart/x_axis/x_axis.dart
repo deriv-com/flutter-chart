@@ -44,7 +44,10 @@ class XAxis extends StatefulWidget {
   /// Callback provided by library user.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
+  /// Minimum epoch for this [XAxis].
   final int? minEpoch;
+
+  /// Maximum epoch for this [XAxis].
   final int? maxEpoch;
 
   @override
