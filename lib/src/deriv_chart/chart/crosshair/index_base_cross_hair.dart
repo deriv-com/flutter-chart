@@ -18,6 +18,7 @@ class IndexBaseCrossHair extends StatefulWidget {
     required this.indexToX,
     required this.xToIndex,
     required this.ticks,
+    this.pipSize = 4,
     Key? key,
   }) : super(key: key);
 
@@ -32,6 +33,9 @@ class IndexBaseCrossHair extends StatefulWidget {
 
   /// The list of ticks to show it's ticks info on cross-hair.
   final List<Tick> ticks;
+
+  /// Number of decimal points when showing price of a tick.
+  final int pipSize;
 
   @override
   _IndexBaseCrossHairState createState() => _IndexBaseCrossHairState();
@@ -118,7 +122,9 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
             borderRadius: BorderRadius.all(Radius.circular(4)),
             color: Color(0xFF323738),
           ),
-          child: Text('${widget.ticks[_crossHairIndex!].quote}'),
+          child: Text(
+            '${widget.ticks[_crossHairIndex!].quote.toStringAsFixed(widget.pipSize)}',
+          ),
         ),
       );
 

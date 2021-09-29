@@ -16,6 +16,7 @@ class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
     required this.ticks,
+    this.pipSize = 4,
     this.zoomFactor = 0.05,
     this.updateAnimationDuration = Duration.zero,
     this.lineStyle = const LineStyle(),
@@ -71,6 +72,9 @@ class WormChart extends StatefulWidget {
 
   /// Whether the cross-hair feature is enabled or not.
   final bool crossHairEnabled;
+
+  /// Number of decimals when showing the price of a tick on cross-hair.
+  final int pipSize;
 
   @override
   _WormChartState createState() => _WormChartState();
