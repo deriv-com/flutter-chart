@@ -145,7 +145,10 @@ class _WormChartState extends State<WormChart>
           return AnimatedBuilder(
             animation: _rightIndexAnimationController,
             builder: (_, __) {
-              if (_chartSize == Size.zero || widget.ticks.length < 2) {
+              if (_chartSize == Size.zero ||
+                  widget.ticks.length < 2 ||
+                  widget.topPadding + widget.bottomPadding >=
+                      0.9 * _chartSize.height) {
                 return const SizedBox.shrink();
               }
 

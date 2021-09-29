@@ -89,8 +89,6 @@ class WormChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // TODO(NA): assert(topPadding + bottomPadding < 0.9 * size.height);
-
     if (endIndex - startIndex <= 2 ||
         startIndex < 0 ||
         endIndex >= ticks.length) {

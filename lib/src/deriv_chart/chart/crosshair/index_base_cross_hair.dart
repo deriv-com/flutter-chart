@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 import 'crosshair_dot_painter.dart';
 import 'crosshair_line_painter.dart';
 
-///
+/// A Cross-hair widget to work with index of data rather than epoch.
 class IndexBaseCrossHair extends StatefulWidget {
-  ///
+  /// initializes [IndexBaseCrossHair].
   const IndexBaseCrossHair({
     required this.quoteToY,
     required this.indexToX,
@@ -21,16 +21,16 @@ class IndexBaseCrossHair extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  ///
+  /// Conversion function to convert quote to canvas Y.
   final QuoteToY quoteToY;
 
-  ///
+  /// Conversion function to convert index to canvas X.
   final double Function(int) indexToX;
 
-  ///
+  /// Conversion function to convert canvas X to index.
   final double Function(double x) xToIndex;
 
-  ///
+  /// The list of ticks to show it's ticks info on cross-hair.
   final List<Tick> ticks;
 
   @override
