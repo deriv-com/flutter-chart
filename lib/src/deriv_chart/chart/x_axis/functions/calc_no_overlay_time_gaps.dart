@@ -11,7 +11,7 @@ List<DateTime> calculateNoOverlapGridTimestamps(
   bool Function(int) isInGap,
 ) {
   final List<DateTime> _noOverlapGridTimestamps = <DateTime>[];
-  if (gridTimestamps == null || gridTimestamps.isEmpty) {
+  if (gridTimestamps.isEmpty) {
     return _noOverlapGridTimestamps;
   }
   // check if timestamp is not have overlap with Previous timestamp
