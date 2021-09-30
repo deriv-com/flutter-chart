@@ -21,6 +21,7 @@ class FractalChaosBandSeries extends Series {
   FractalChaosBandSeries(
     this.indicatorInput, {
     String? id,
+    // ignore: avoid_unused_constructor_parameters
     bool channelFill = false,
   }) : super(id ?? 'FCB');
 

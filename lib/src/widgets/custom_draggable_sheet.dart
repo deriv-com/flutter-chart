@@ -123,7 +123,8 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet>
 
   void _updateSheetHeightBy(double deltaPercent) {
     _animationController.value -= deltaPercent;
-    _animationController.value = _animationController.value.clamp(0.0, 1.0);
+    final double value = _animationController.value.clamp(0.0, 1.0);
+    _animationController.value = value;
   }
 
   void _flingToTopOrBottom() {

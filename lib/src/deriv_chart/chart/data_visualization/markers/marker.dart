@@ -11,6 +11,7 @@ enum MarkerDirection {
 }
 
 /// Chart open position marker.
+// ignore: must_be_immutable
 class Marker extends Tick implements Comparable<Marker> {
   /// Creates a marker of given direction.
   Marker({

@@ -60,6 +60,7 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
         ],
       );
 
+  /// Renders Indicator's bands
   @protected
   Widget buildBandsCountField() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,

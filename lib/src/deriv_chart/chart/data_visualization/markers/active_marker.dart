@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'marker.dart';
 
 /// Focused marker on the chart.
+// ignore: must_be_immutable
 class ActiveMarker extends Marker {
   /// Creates an active marker of given direction.
   ActiveMarker({
