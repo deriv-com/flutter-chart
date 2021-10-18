@@ -12,7 +12,8 @@ class IchimokuCloudOptions extends IndicatorOptions {
   /// The `period` for the `IchimokuConversionLine`. Default is set to `9`.
   final int conversionLinePeriod;
 
-  /// The `period` for the `IchimokuBaseLine` and the `offset` of `leadingSpanA` and `leadingSpanB`. Default is set to `26`.
+  /// The `period` for the `IchimokuBaseLine` and the `offset` of `leadingSpanA`
+  /// and `leadingSpanB`. Default is set to `26`.
   final int baseLinePeriod;
 
   /// The `period` for the `IchimokuSpanB`. Default is set to `52`.

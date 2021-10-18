@@ -17,10 +17,10 @@ import 'smi_indicator_config.dart';
 class SMIIndicatorItem extends IndicatorItem {
   /// Initializes
   const SMIIndicatorItem({
-    Key? key,
-    SMIIndicatorConfig config = const SMIIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    SMIIndicatorConfig config = const SMIIndicatorConfig(),
   }) : super(
           key: key,
           title: 'SMI',

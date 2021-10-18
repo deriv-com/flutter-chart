@@ -19,7 +19,7 @@ String getNumFromString(String str) {
       .toString();
 }
 
-/// This page is used to apply necessary QA configurations for the WS connection.
+/// This page is used to apply necessary QA configurations for the WS connection
 /// Two fields can be set in this page 'endpoint' and 'app_id'
 /// The applied values stored for future usage
 class SettingsPage extends StatefulWidget {

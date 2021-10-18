@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 /// The required painting properties of a candle.
 class CandlePainting {
   /// Initialzes the required painting properties of a candle.

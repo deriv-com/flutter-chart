@@ -11,11 +11,11 @@ import 'fcb_indicator_config.dart';
 class FractalChaosBandIndicatorItem extends IndicatorItem {
   /// Initializes
   const FractalChaosBandIndicatorItem({
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
     Key? key,
     FractalChaosBandIndicatorConfig config =
         const FractalChaosBandIndicatorConfig(),
-    required UpdateIndicator updateIndicator,
-    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Fractal Chaos Band Indicator',
@@ -45,7 +45,7 @@ class FractalChaosBandIndicatorItemState
   @override
   Widget getIndicatorOptions() => Container();
 
-  // TODO: will add this option after apply the channel fill
+  // TODO(samin): will add this option after apply the channel fill
   /// Builds show lines option
   @protected
   Widget buildShowChannelFillField() => Row(

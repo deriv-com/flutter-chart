@@ -33,7 +33,8 @@ abstract class BarrierStyle extends ChartPaintingStyle {
 
   @override
   String toString() =>
-      '${super.toString()}$color, ${textStyle.toStringShort()}, $isDashed, $titleBackgroundColor';
+      '${super.toString()}$color, ${textStyle.toStringShort()}, $isDashed, '
+      '$titleBackgroundColor';
 }
 
 /// Horizontal barrier style.
@@ -72,7 +73,8 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Height of label background.
   final double labelHeight;
 
-  /// Whether to have a blinking dot animation where barrier and chart data are intersected.
+  /// Whether to have a blinking dot animation where barrier and chart data
+  /// are intersected.
   final bool hasBlinkingDot;
 
   /// The color of blinking dot.
@@ -80,18 +82,22 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// The size of the arrow.
   ///
-  /// The arrow when barrier is out of Y-Axis range and its [HorizontalBarrier.visibility]
-  /// is [HorizontalBarrierVisibility.keepBarrierLabelVisible].
+  /// The arrow when barrier is out of Y-Axis range and its
+  /// `HorizontalBarrier.visibility`
+  /// is HorizontalBarrierVisibility.keepBarrierLabelVisible`.
   final double arrowSize;
 
   /// Whether to show an arrow pointing in the direction of the barrier,
-  /// when the barrier is outside the y-axis range and visibility is set to `HorizontalBarrierVisibility.keepBarrierLabelVisible`.
+  /// when the barrier is outside the y-axis range and visibility is set to
+  /// `HorizontalBarrierVisibility.keepBarrierLabelVisible`.
   final bool hasArrow;
 
-  /// Whether to draw a horizontal line to the current tick from the y-axis grid to the
+  /// Whether to draw a horizontal line to the current tick from the y-axis
+  /// grid to the
   final bool hasLine;
 
-  /// Color used to paint a second background of label if needed under the initial color.
+  /// Color used to paint a second background of label if needed under the
+  /// initial color.
   final Color secondaryBackgroundColor;
 
   @override

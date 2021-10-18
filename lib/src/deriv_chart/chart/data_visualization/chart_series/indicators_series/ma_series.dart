@@ -12,7 +12,8 @@ import 'models/indicator_options.dart';
 
 /// A series which shows Moving Average data calculated from [entries].
 class MASeries extends AbstractSingleIndicatorSeries {
-  /// Initializes a series which shows shows moving Average data calculated from [entries].
+  /// Initializes a series which shows shows moving Average data calculated
+  /// from [entries].
   ///
   /// [options]   Options of this [MASeries].
   MASeries(

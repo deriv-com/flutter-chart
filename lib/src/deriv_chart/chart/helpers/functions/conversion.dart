@@ -1,16 +1,20 @@
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/gaps/helpers.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
-import 'package:meta/meta.dart';
 
-/// Returns resulting epoch when given [epoch] is shifted by [pxShift] on x-axis, skipping time gaps.
+/// Returns resulting epoch when given [epoch] is shifted by [pxShift]
+/// on x-axis, skipping time gaps.
 int shiftEpochByPx({
   required int epoch,
   required double pxShift,
   required double msPerPx,
   required List<TimeRange> gaps,
 }) {
-  if (pxShift == 0) return epoch;
-  if (gaps.isEmpty) return epoch + (pxShift * msPerPx).round();
+  if (pxShift == 0) {
+    return epoch;
+  }
+  if (gaps.isEmpty) {
+    return epoch + (pxShift * msPerPx).round();
+  }
 
   int shiftedEpoch = epoch;
   double remainingPxShift = pxShift;
@@ -75,15 +79,18 @@ double quoteToCanvasY({
   required double topPadding,
   required double bottomPadding,
 }) {
-  final drawingRange = canvasHeight - topPadding - bottomPadding;
-  final quoteRange = topBoundQuote - bottomBoundQuote;
+  final double drawingRange = canvasHeight - topPadding - bottomPadding;
+  final double quoteRange = topBoundQuote - bottomBoundQuote;
 
-  if (quoteRange == 0) return topPadding + drawingRange / 2;
+  if (quoteRange == 0) {
+    return topPadding + drawingRange / 2;
+  }
 
-  final quoteToBottomBoundFraction = (quote - bottomBoundQuote) / quoteRange;
-  final quoteToTopBoundFraction = 1 - quoteToBottomBoundFraction;
+  final double quoteToBottomBoundFraction =
+      (quote - bottomBoundQuote) / quoteRange;
+  final double quoteToTopBoundFraction = 1 - quoteToBottomBoundFraction;
 
-  final pxFromTopBound = quoteToTopBoundFraction * drawingRange;
+  final double pxFromTopBound = quoteToTopBoundFraction * drawingRange;
 
   return topPadding + pxFromTopBound;
 }

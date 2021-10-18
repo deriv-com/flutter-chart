@@ -13,11 +13,11 @@ import 'donchian_channel_indicator_config.dart';
 class DonchianChannelIndicatorItem extends IndicatorItem {
   /// Initializes
   const DonchianChannelIndicatorItem({
+    required UpdateIndicator updateIndicator,
+    required VoidCallback deleteIndicator,
     Key? key,
     DonchianChannelIndicatorConfig config =
         const DonchianChannelIndicatorConfig(),
-    required UpdateIndicator updateIndicator,
-    required VoidCallback deleteIndicator,
   }) : super(
           key: key,
           title: 'Donchian Channel',

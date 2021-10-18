@@ -10,9 +10,7 @@ import 'custom_gesture_detector.dart';
 /// separate modules.
 class GestureManager extends StatefulWidget {
   /// Initialises the top level gesture detector that allows all descendants to register/remove gesture callbacks.
-  GestureManager({Key? key, required this.child})
-      : assert(child != null),
-        super(key: key);
+  const GestureManager({required this.child, Key? key}) : super(key: key);
 
   /// The widget below this widget in the tree.
   final Widget child;
@@ -23,7 +21,7 @@ class GestureManager extends StatefulWidget {
 
 /// The state of the top level gesture detector that allows all descendants to register/remove gesture callbacks.
 class GestureManagerState extends State<GestureManager> {
-  final _callbackPool = <Function>{};
+  final Set<Function> _callbackPool = <Function>{};
 
   /// Registers a callback funtion to the pool of functions in GestureManager.
   void registerCallback(Function callback) {
@@ -36,25 +34,29 @@ class GestureManagerState extends State<GestureManager> {
   }
 
   void _callAll<T extends Function>(dynamic details) {
-    _callbackPool.whereType<T>().forEach((f) => f(details));
+    _callbackPool.whereType<T>().forEach((T f) => f(details));
   }
 
   @override
-  Widget build(BuildContext context) {
-    return CustomGestureDetector(
-      onScaleAndPanStart: (d) => _callAll<GestureScaleStartCallback>(d),
-      onPanUpdate: (d) => _callAll<GestureDragUpdateCallback>(d),
-      onScaleUpdate: (d) => _callAll<GestureScaleUpdateCallback>(d),
-      onScaleAndPanEnd: (d) => _callAll<GestureScaleEndCallback>(d),
-      onLongPressStart: (d) => _callAll<GestureLongPressStartCallback>(d),
-      onLongPressMoveUpdate: (d) =>
-          _callAll<GestureLongPressMoveUpdateCallback>(d),
-      onLongPressEnd: (d) => _callAll<GestureLongPressEndCallback>(d),
-      onTapUp: (d) => _callAll<GestureTapUpCallback>(d),
-      child: Provider.value(
-        value: this,
-        child: widget.child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => CustomGestureDetector(
+        onScaleAndPanStart: (ScaleStartDetails d) =>
+            _callAll<GestureScaleStartCallback>(d),
+        onPanUpdate: (DragUpdateDetails d) =>
+            _callAll<GestureDragUpdateCallback>(d),
+        onScaleUpdate: (ScaleUpdateDetails d) =>
+            _callAll<GestureScaleUpdateCallback>(d),
+        onScaleAndPanEnd: (ScaleEndDetails d) =>
+            _callAll<GestureScaleEndCallback>(d),
+        onLongPressStart: (LongPressStartDetails d) =>
+            _callAll<GestureLongPressStartCallback>(d),
+        onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) =>
+            _callAll<GestureLongPressMoveUpdateCallback>(d),
+        onLongPressEnd: (LongPressEndDetails d) =>
+            _callAll<GestureLongPressEndCallback>(d),
+        onTapUp: (TapUpDetails d) => _callAll<GestureTapUpCallback>(d),
+        child: Provider<GestureManagerState>.value(
+          value: this,
+          child: widget.child,
+        ),
+      );
 }

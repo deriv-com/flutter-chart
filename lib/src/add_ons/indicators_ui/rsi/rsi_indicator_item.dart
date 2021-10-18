@@ -15,10 +15,10 @@ import 'rsi_indicator_config.dart';
 class RSIIndicatorItem extends IndicatorItem {
   /// Initializes
   const RSIIndicatorItem({
-    Key? key,
-    RSIIndicatorConfig config = const RSIIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    RSIIndicatorConfig config = const RSIIndicatorConfig(),
   }) : super(
           key: key,
           title: 'RSI',

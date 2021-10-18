@@ -49,7 +49,8 @@ class Candle extends Tick with EquatableMixin {
   @override
   final double close;
 
-  /// The current time value of candle (it is the current time of the candle rather than start of it).
+  /// The current time value of candle (it is the current time of the candle
+  /// rather than start of it).
   final int currentEpoch;
 
   /// Creates a copy of this object.
@@ -72,7 +73,8 @@ class Candle extends Tick with EquatableMixin {
 
   @override
   String toString() =>
-      'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: $close, currentEpoch: $currentEpoch)';
+      'Candle(epoch: $epoch, high: $high, low: $low, open: $open, close: '
+      '$close, currentEpoch: $currentEpoch)';
 
   @override
   List<Object> get props => <Object>[epoch, open, close, high, low];

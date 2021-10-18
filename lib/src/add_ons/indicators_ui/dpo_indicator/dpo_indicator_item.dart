@@ -7,8 +7,8 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'dpo_indicator_config.dart';
 
-/// Detrended Price Oscillator indicator item in the list of indicator which provide this
-/// indicators options menu.
+/// Detrended Price Oscillator indicator item in the list of indicator which
+/// provide this indicators options menu.
 class DPOIndicatorItem extends IndicatorItem {
   /// Initializes
   const DPOIndicatorItem({

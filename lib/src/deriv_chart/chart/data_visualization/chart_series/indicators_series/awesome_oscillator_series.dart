@@ -7,7 +7,8 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
-/// A series which shows Awesome Oscillator Series data calculated from 'entries'.
+/// A series which shows Awesome Oscillator Series data calculated
+/// from `entries`.
 class AwesomeOscillatorSeries extends AbstractSingleIndicatorSeries {
   /// Initializes
   AwesomeOscillatorSeries(

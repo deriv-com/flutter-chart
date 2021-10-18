@@ -12,8 +12,8 @@ import '../../chart_data.dart';
 import '../data_series.dart';
 import 'line_painter.dart';
 
-/// A [LinePainter] for painting line with two main top and bottom horizontal lines.
-/// They can have more than 2 lines.
+/// A [LinePainter] for painting line with two main top and bottom
+/// horizontal lines. They can have more than 2 lines.
 class OscillatorLinePainter extends LinePainter {
   /// Initializes an Oscillator line painter.
   OscillatorLinePainter(

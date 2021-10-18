@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// Default auth endpoint.
 const String defaultAuthEndpoint = 'oauth.deriv.com';
 
@@ -24,7 +22,8 @@ String generateEndpointUrl({
       RegExp('(binary|deriv)ws\.(com|app)\$', caseSensitive: false);
 
   if (isAuthUrl && derivRegExp.hasMatch(endpoint)) {
-    // Since Deriv app is under Deriv.app, the oauth url should be always `oauth.deriv.com`.
+    // Since Deriv app is under Deriv.app, the oauth url should
+    // be always `oauth.deriv.com`.
     return defaultAuthEndpoint;
   } else if (qaRegExp.hasMatch(endpoint)) {
     return '$endpoint.deriv.dev';

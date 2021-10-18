@@ -31,8 +31,9 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Series input list.
   ///
-  /// This is not the list that eventually will be painted. Sub-classes have the option
-  /// to prepare their [entries] list which is the one that is painted from the [input].
+  /// This is not the list that eventually will be painted. Sub-classes have
+  /// the option to prepare their [entries] list which is the one that is
+  /// painted from the [input].
   final List<T> input;
 
   /// The list of this class that will be painted on the canvas.
@@ -40,22 +41,26 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// List of visible entries at a specific epoch range of the chart X-Axis.
   ///
-  /// Will be updated when the epoch boundaries of the chart changes and [onUpdate] gets called.
+  /// Will be updated when the epoch boundaries of the chart changes and
+  /// [onUpdate] gets called.
   VisibleEntries<T> _visibleEntries = VisibleEntries<T>.empty();
 
   /// Series visible entries
   VisibleEntries<T> get visibleEntries => _visibleEntries;
 
-  /// A reference to the last element of the previous version of this [DataSeries].
+  /// A reference to the last element of the previous version of this
+  /// [DataSeries].
   ///
-  /// Most of the times updating a [DataSeries] class is when the last tick is changed.
-  /// It can be just updating the last tick of the old [DataSeries] object, or adding a new tick
-  /// to the end of the list. In these cases we can do an animation from [prevLastEntry] to the
-  /// last tick of the new [DataSeries]. like a transition animation from the old tick to the
-  /// new tick in a line chart or updating the height of the candle in a candlestick chart.
+  /// Most of the times updating a [DataSeries] class is when the last tick is
+  /// changed. It can be just updating the last tick of the old [DataSeries]
+  /// object, or adding a new tick to the end of the list. In these cases we can
+  /// do an animation from [prevLastEntry] to the last tick of the new
+  /// [DataSeries]. like a transition animation from the old tick to the new
+  /// tick in a line chart or updating the height of the candle in a candlestick
+  /// chart.
   ///
-  /// In other cases like in the first run or when the [input] list changes entirely,
-  /// [prevLastEntry] will be `null` and there will be no animations.
+  /// In other cases like in the first run or when the [input] list changes
+  /// entirely, [prevLastEntry] will be `null` and there will be no animations.
   IndexedEntry<T>? prevLastEntry;
 
   /// Style of a last tick indicator.
@@ -130,9 +135,10 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Minimum value in [t].
   ///
-  /// sub-classes can decide what will be the min/max value of a [T], this way a candlestick series
-  /// can use (high, low) values as max and min and a line chart just use the close value and then a line
-  /// chart can expand as much as it can in the vertical space since it just shows close values.
+  /// sub-classes can decide what will be the min/max value of a [T], this way a
+  /// candlestick series can use (high, low) values as max and min and a line
+  /// chart just use the close value and then a line chart can expand as much as
+  /// it can in the vertical space since it just shows close values.
   double minValueOf(T t);
 
   /// Maximum value in [t].
@@ -149,9 +155,11 @@ abstract class DataSeries<T extends Tick> extends Series {
     }
   }
 
-  /// Gets min and max quotes after updating [visibleEntries] as an array with two elements [min, max].
+  /// Gets min and max quotes after updating [visibleEntries] as an array with
+  /// two elements [min, max].
   ///
-  /// Sub-classes can override this method if they calculate [minValue] & [maxValue] differently.
+  /// Sub-classes can override this method if they calculate [minValue] &
+  /// [maxValue] differently.
   @override
   List<double> recalculateMinMax() {
     if (!_needsMinMaxUpdate) {
@@ -229,7 +237,8 @@ abstract class DataSeries<T extends Tick> extends Series {
         isOldDataAvailable(oldSeries)) {
       fillEntriesFromInput(oldSeries);
 
-      // Preserve old computed values in case recomputation is deemed unnecessary.
+      // Preserve old computed values in case recomputation is
+      // deemed unnecessary.
       _visibleEntries = oldSeries.visibleEntries as VisibleEntries<T>;
       minValueInFrame = oldSeries.minValue;
       maxValueInFrame = oldSeries.maxValue;
@@ -256,9 +265,11 @@ abstract class DataSeries<T extends Tick> extends Series {
     return updated;
   }
 
-  /// Fills the entries that are about to be painted based on [input] and [oldSeries]
+  /// Fills the entries that are about to be painted based on [input] and
+  /// [oldSeries]
   ///
-  /// [oldSeries] is provided so this [DataSeries] class get the option to reuse it's previous data.
+  /// [oldSeries] is provided so this [DataSeries] class get the option to reuse
+  /// it's previous data.
   ///
   /// Here we just assign [input] to [entries] as a normal [DataSeries] class.
   @protected
@@ -271,6 +282,7 @@ abstract class DataSeries<T extends Tick> extends Series {
       oldSeries?.entries?.isNotEmpty ?? false;
 
   @override
+  // ignore: avoid_renaming_method_parameters
   bool shouldRepaint(ChartData? oldDelegate) {
     final DataSeries<T> oldDataSeries = oldDelegate as DataSeries<T>;
     final VisibleEntries<Tick> current = visibleEntries;
@@ -313,9 +325,11 @@ abstract class DataSeries<T extends Tick> extends Series {
     }
   }
 
-  /// Use this to reset last tick in [entries] animation by setting [prevLastEntry] to `null`.
+  /// Use this to reset last tick in [entries] animation by setting
+  /// [prevLastEntry] to `null`.
   void resetLastEntryAnimation() => prevLastEntry = null;
 
-  /// Each sub-class should implement and return appropriate cross-hair text based on its own requirements.
+  /// Each sub-class should implement and return appropriate cross-hair text
+  /// based on its own requirements.
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
 }

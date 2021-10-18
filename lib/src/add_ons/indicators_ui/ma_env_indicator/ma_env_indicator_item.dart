@@ -10,15 +10,15 @@ import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_env_indicator_config.dart';
 
-/// Moving Average Envelope indicator item in the list of indicator which provide this
-/// indicators options menu.
+/// Moving Average Envelope indicator item in the list of indicator which
+/// provide this indicators options menu.
 class MAEnvIndicatorItem extends IndicatorItem {
   /// Initializes
   const MAEnvIndicatorItem({
-    Key? key,
-    MAEnvIndicatorConfig config = const MAEnvIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    MAEnvIndicatorConfig config = const MAEnvIndicatorConfig(),
   }) : super(
           key: key,
           title: 'MA Envelope Indicator',
@@ -124,17 +124,18 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
   /// Gets Indicator current type.
   @protected
   ShiftType getCurrentShiftType() {
-    final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
+    final MAEnvIndicatorConfig config = widget.config as MAEnvIndicatorConfig;
     return shiftType ?? config.shiftType;
   }
 
   /// Gets Indicator current period.
   @protected
   double getCurrentShift() {
-    final MAEnvIndicatorConfig config = (widget.config as MAEnvIndicatorConfig);
+    final MAEnvIndicatorConfig config = widget.config as MAEnvIndicatorConfig;
     return shift ?? config.shift;
   }
 
+  @override
   @protected
   LineStyle getCurrentLineStyle() =>
       (widget.config as MAEnvIndicatorConfig).lineStyle;

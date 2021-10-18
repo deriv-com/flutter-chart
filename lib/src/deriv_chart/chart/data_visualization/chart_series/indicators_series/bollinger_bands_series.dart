@@ -88,9 +88,13 @@ class BollingerBandSeries extends Series {
         inputIndicator: _fieldIndicator,
         options: bbOptions);
 
-    _innerSeries..add(_lowerSeries)..add(_middleSeries)..add(_upperSeries);
+    _innerSeries
+      ..add(_lowerSeries)
+      ..add(_middleSeries)
+      ..add(_upperSeries);
 
-    return null; // TODO(ramin): return the painter that paints Channel Fill between bands
+    // TODO(ramin): return the painter that paints Channel Fill between bands
+    return null;
   }
 
   @override
@@ -113,8 +117,8 @@ class BollingerBandSeries extends Series {
 
   @override
   List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue for max.
-      // But to be safe we calculate min and max. from all three series.
+      // Can just use _lowerSeries minValue for min and _upperSeries maxValue
+      // for max. But to be safe we calculate min and max. from all three series
       <double>[
         _innerSeries
             .map((Series series) => series.minValue)

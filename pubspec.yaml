@@ -4,9 +4,8 @@ version: 0.0.1
 homepage: ''
 publish_to: none
 
-
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   collection: ^1.15.0-nullsafety.4
@@ -33,6 +32,11 @@ dev_dependencies:
     sdk: flutter
   intl_utils: ^2.0.0
   json_serializable: ^4.1.1
+  deriv_lint:
+    git:
+      url: git@github.com:boris-deriv/flutter-deriv-packages.git
+      path: packages/deriv_lint
+      ref: deriv_lint
 
 flutter:
   assets:

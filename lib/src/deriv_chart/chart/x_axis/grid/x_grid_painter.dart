@@ -23,7 +23,7 @@ class XGridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (timeLabels == null || xCoords == null) {
+    if (timeLabels.isEmpty || xCoords.isEmpty) {
       return;
     }
 

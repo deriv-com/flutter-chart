@@ -21,7 +21,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   factory LineStyle.fromJson(Map<String, dynamic> json) =>
       _$LineStyleFromJson(json);
 
-  @override
+  /// Parses this instance of [LineStyle] into a Map<String, dynamic>.
   Map<String, dynamic> toJson() => _$LineStyleToJson(this);
 
   /// Line color.
@@ -49,5 +49,5 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   String toString() => '${super.toString()}$color, $thickness, $hasArea';
 
   @override
-  List<Object> get props => [color, thickness, hasArea];
+  List<Object> get props => <Object>[color, thickness, hasArea];
 }

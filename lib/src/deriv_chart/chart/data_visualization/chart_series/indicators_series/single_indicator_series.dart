@@ -17,21 +17,24 @@ typedef DataPainterCreator = DataPainter<DataSeries<Tick>>? Function(
 
 /// Single indicator series.
 ///
-/// Can be used to make indicators series with a single [Indicator] by providing two functions,
-/// [painterCreator]    for making the [SeriesPainter] of this series and
-/// [indicatorCreator]  the indicator that will calculate the result from [inputIndicator]
+/// Can be used to make indicators series with a single [Indicator] by providing
+/// two functions, [painterCreator] for making the [SeriesPainter] of this
+/// series and [indicatorCreator]  the indicator that will calculate the result
+/// from [inputIndicator]
 ///
-/// Another approach for making single series indicators would be extending [AbstractSingleIndicatorSeries].
-/// And implementing `createPainter` and `initializeIndicator` methods.
+/// Another approach for making single series indicators would be extending
+/// [AbstractSingleIndicatorSeries]. And implementing `createPainter` and
+/// `initializeIndicator` methods.
 class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   /// Initializes
   ///
-  /// [inputIndicator]  The indicator that returned indicator from [indicatorCreator]
+  /// [inputIndicator]  The indicator that returned indicator from
+  /// [indicatorCreator]
   ///                   will calculate the its results on.
   /// [options]         The options of indicator.
-  /// [offset]          The offset of this indicator. Shift indicator's data by this number forward/backward.
-  /// [lastTickIndicatorStyle] The style of the last tick indicator. If not set there will be no
-  ///                   last tick indicator.
+  /// [offset]          The offset of this indicator. Shift indicator's data by
+  /// this number forward/backward. [lastTickIndicatorStyle] The style of the
+  /// last tick indicator. If not set there will be no last tick indicator.
   SingleIndicatorSeries({
     required this.painterCreator,
     required this.indicatorCreator,
@@ -53,7 +56,8 @@ class SingleIndicatorSeries extends AbstractSingleIndicatorSeries {
   /// Function which will be called to get the painter object of this class.
   final DataPainterCreator painterCreator;
 
-  /// Function which will be called to get the indicator that will eventually calculate the result.
+  /// Function which will be called to get the indicator that will eventually
+  /// calculate the result.
   final CachedIndicator<Tick> Function() indicatorCreator;
 
   @override

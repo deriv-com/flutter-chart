@@ -20,7 +20,8 @@ import 'single_indicator_series.dart';
 
 /// A series which shows Alligator Series data calculated from 'entries'.
 class AlligatorSeries extends Series {
-  /// Initializes a series which shows shows Alligator data calculated from [indicatorInput].
+  /// Initializes a series which shows shows Alligator data calculated from
+  /// [indicatorInput].
   ///
   /// [alligatorOptions] Alligator indicator options.
   AlligatorSeries(

@@ -28,6 +28,8 @@ class AroonSeries extends Series {
 
   ///input data
   final IndicatorInput indicatorInput;
+
+  /// Configs for `ArronIndicator`
   final AroonIndicatorConfig indicatorConfig;
 
   late SingleIndicatorSeries _aroonUpSeries;

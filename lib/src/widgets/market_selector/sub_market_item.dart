@@ -12,10 +12,10 @@ class SubMarketItem extends StatelessWidget {
   /// Initializes a widget to show a sub-market item under a market.
   const SubMarketItem({
     required this.subMarket,
+    required this.onAssetClicked,
     Key? key,
     this.filterText = '',
     this.selectedItemKey,
-    required this.onAssetClicked,
     this.isCategorized = true,
   }) : super(key: key);
 
@@ -25,7 +25,8 @@ class SubMarketItem extends StatelessWidget {
   /// the filter text to be passed to the asset of the sub-market.
   final String filterText;
 
-  /// The key to be passed to the `AnimatedHighlight` widget to highlight the sub-maket item.
+  /// The key to be passed to the `AnimatedHighlight` widget to highlight the
+  /// sub-maket item.
   final GlobalObjectKey? selectedItemKey;
 
   /// The action that appens on clicking the [AssetItem].

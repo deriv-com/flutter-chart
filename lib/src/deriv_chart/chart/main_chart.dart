@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';

@@ -42,7 +42,8 @@ class WormChart extends StatefulWidget {
   /// The ticks list to show.
   final List<Tick> ticks;
 
-  /// Indicates the proportion of the horizontal space that each tick is going to take.
+  /// Indicates the proportion of the horizontal space that each tick is going
+  /// to take.
   ///
   /// Default is 0.05 which means each tick occupies 5% of the horizontal space,
   /// and at most 20 of most recent ticks will be visible.
@@ -77,10 +78,11 @@ class WormChart extends StatefulWidget {
   /// Number of decimals when showing the price of a tick on cross-hair.
   final int pipSize;
 
-  /// Whether to apply padding around tick indicator dots (highest, lowest, last tick).
+  /// Whether to apply padding around tick indicator dots (highest, lowest,
+  /// last tick).
   ///
-  /// Since for applying padding we have used [Canvas.saveLayer] for now and in case
-  /// of performance it's relatively expensive, it can be disabled.
+  /// Since for applying padding we have used [Canvas.saveLayer] for now and
+  /// in case of performance it's relatively expensive, it can be disabled.
   final bool applyTickIndicatorsPadding;
 
   @override

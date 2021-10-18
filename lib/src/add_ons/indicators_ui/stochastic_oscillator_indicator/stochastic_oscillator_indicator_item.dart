@@ -5,8 +5,8 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
 import 'package:flutter/material.dart';
 
-/// Stochastic Oscillator indicator item in the list of indicator which provide this
-/// indicators options menu.
+/// Stochastic Oscillator indicator item in the list of indicator which provide
+/// this indicators options menu.
 class StochasticOscillatorIndicatorItem extends IndicatorItem {
   /// Initializes
   const StochasticOscillatorIndicatorItem({
@@ -88,8 +88,7 @@ class StochasticOscillatorIndicatorItemState
       );
 
   int get _currentPeriod =>
-      _period ??
-      (widget.config as StochasticOscillatorIndicatorConfig).period;
+      _period ?? (widget.config as StochasticOscillatorIndicatorConfig).period;
 
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[

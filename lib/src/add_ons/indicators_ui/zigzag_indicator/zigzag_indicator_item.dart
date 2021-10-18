@@ -11,10 +11,10 @@ import 'zigzag_indicator_config.dart';
 class ZigZagIndicatorItem extends IndicatorItem {
   /// Initializes
   const ZigZagIndicatorItem({
-    Key? key,
-    ZigZagIndicatorConfig config = const ZigZagIndicatorConfig(),
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
+    Key? key,
+    ZigZagIndicatorConfig config = const ZigZagIndicatorConfig(),
   }) : super(
           key: key,
           title: 'ZigZag',

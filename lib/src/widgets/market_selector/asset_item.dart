@@ -10,12 +10,13 @@ import 'symbol_icon.dart';
 
 /// A widget to show an asset (active symbol) item in the market selector.
 class AssetItem extends StatelessWidget {
-  /// Initializes a widget to show an asset (active symbol) item in the market selector.
+  /// Initializes a widget to show an asset (active symbol) item in the market
+  /// selector.
   const AssetItem({
     required this.asset,
+    required this.onAssetClicked,
     Key? key,
     this.filterText = '',
-    required this.onAssetClicked,
     this.iconFadeInDuration = const Duration(milliseconds: 50),
   }) : super(key: key);
 

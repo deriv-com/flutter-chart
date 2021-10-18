@@ -5,7 +5,8 @@ import 'package:deriv_chart/src/models/tick.dart';
 /// Accepts a list of entries sorted by time and calculates min/max values for that list.
 /// Reuses previous work done when visible entries are updated.
 ///
-/// Keep one instance for each unique `Series` or list of entries where visible entries change over time.
+/// Keep one instance for each unique `Series` or list of entries where visible
+/// entries change over time.
 class MinMaxCalculator {
   /// Instantiate min/max calculator with [minValueOf] and [maxValueOf] functions
   /// that return min/max respectively of the given entry.
@@ -20,7 +21,8 @@ class MinMaxCalculator {
   /// Returns max of entry.
   final double Function(Tick) maxValueOf;
 
-  /// A map sorted by key that keeps track of number of occurences of `min` and `max` values for all `_visibleEntries`.
+  /// A map sorted by key that keeps track of number of occurences of `min` and
+  /// `max` values for all `_visibleEntries`.
   final SplayTreeMap<double, int> _visibleEntriesCount =
       SplayTreeMap<double, int>();
 

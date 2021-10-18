@@ -10,9 +10,9 @@ class MarketItem extends StatelessWidget {
   /// Initializes a widget to show a market item in market selector.
   const MarketItem({
     required this.market,
+    required this.onAssetClicked,
     Key? key,
     this.filterText = '',
-    required this.onAssetClicked,
     this.selectedItemKey,
     this.isSubMarketsCategorized = true,
   }) : super(key: key);
@@ -26,11 +26,13 @@ class MarketItem extends StatelessWidget {
   /// Is used to scroll to the selected Asset item.
   final GlobalObjectKey? selectedItemKey;
 
-  /// The action that appens on clicking the `AssetItem` inside the submarket part.
+  /// The action that appens on clicking the `AssetItem` inside the
+  /// submarket part.
   final OnAssetClicked onAssetClicked;
 
   /// If true sub-markets will be shown with title on top of them,
-  /// Otherwise under [market], will be only the list of its assets. (Suitable for favourites list).
+  /// Otherwise under [market], will be only the list of its assets. (Suitable
+  /// for favourites list).
   final bool isSubMarketsCategorized;
 
   @override

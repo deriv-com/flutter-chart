@@ -71,8 +71,8 @@ class DerivChart extends StatefulWidget {
 
   /// Whether the chart should be showing live data or not.
   ///
-  /// In case of being true the chart will keep auto-scrolling when its visible area
-  /// is on the newest ticks/candles.
+  /// In case of being true the chart will keep auto-scrolling when its visible
+  /// area is on the newest ticks/candles.
   final bool isLive;
 
   /// Starts in data fit mode and adds a data-fit button.

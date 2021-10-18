@@ -26,5 +26,5 @@ class CandleStyle extends DataSeriesStyle with EquatableMixin {
       '${super.toString()}$positiveColor, $negativeColor, $lineColor';
 
   @override
-  List<Object> get props => [positiveColor, negativeColor, lineColor];
+  List<Object> get props => <Object>[positiveColor, negativeColor, lineColor];
 }

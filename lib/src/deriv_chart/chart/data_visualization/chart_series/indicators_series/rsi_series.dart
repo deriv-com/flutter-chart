@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_funct
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
-import 'package:flutter/material.dart';
 
 import '../series.dart';
 import '../series_painter.dart';
@@ -18,8 +17,8 @@ class RSISeries extends AbstractSingleIndicatorSeries {
   /// Initializes an RSI Indicator.
   RSISeries(
     IndicatorInput indicatorInput, {
-    String? id,
     required RSIOptions rsiOptions,
+    String? id,
     bool showZones = true,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),

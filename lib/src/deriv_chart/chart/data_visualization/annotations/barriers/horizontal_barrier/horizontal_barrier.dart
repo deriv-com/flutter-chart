@@ -29,12 +29,14 @@ class HorizontalBarrier extends Barrier {
   final HorizontalBarrierVisibility visibility;
 
   @override
-  SeriesPainter<Series> createPainter() => HorizontalBarrierPainter(this);
+  SeriesPainter<Series> createPainter() =>
+      HorizontalBarrierPainter<HorizontalBarrier>(this);
 
   @override
   List<double> recalculateMinMax() =>
       // When its visibility is NOT forceToStayOnRange, we return [NaN, NaN],
-      // so the chart will ignore this barrier when it wants to define its Y-Axis range.
+      // so the chart will ignore this barrier when it wants to define
+      // its Y-Axis range.
       visibility == HorizontalBarrierVisibility.forceToStayOnRange
           ? super.recalculateMinMax()
           : <double>[double.nan, double.nan];
@@ -43,8 +45,8 @@ class HorizontalBarrier extends Barrier {
   BarrierObject createObject() => BarrierObject(leftEpoch: epoch, value: value);
 }
 
-/// Horizontal barrier visibility behavior and whether it contributes in defining
-/// the overall Y-Axis range of the chart.
+/// Horizontal barrier visibility behavior and whether it contributes in
+/// defining the overall Y-Axis range of the chart.
 enum HorizontalBarrierVisibility {
   /// Won't force the chart to keep the barrier in its Y-Axis range, if it was
   /// out of range it will go off the screen.

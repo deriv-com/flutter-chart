@@ -87,5 +87,5 @@ class TextStyles {
       fontSize: 10,
       height: 1.4,
       fontWeight: FontWeight.w400,
-      fontFeatures: [FontFeature.tabularFigures()]);
+      fontFeatures: <FontFeature>[FontFeature.tabularFigures()]);
 }

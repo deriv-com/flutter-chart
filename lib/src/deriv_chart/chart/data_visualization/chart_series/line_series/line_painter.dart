@@ -84,7 +84,8 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     Offset? startPosition, endPosition;
 
-    // Adding visible entries line to the path except the last which might be animated.
+    // Adding visible entries line to the path except the last which might
+    //be animated.
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;
         i++) {
@@ -112,7 +113,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   }
 
   /// Adds the line to the last visible tick's position regarding the
-  /// [animationInfo.currentTickPercent] animation.
+  /// `animationInfo.currentTickPercent` animation.
   ///
   /// Returns the position of the last visible tick.
   Offset? _addLastVisibleTick(

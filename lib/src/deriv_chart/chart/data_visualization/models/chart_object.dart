@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Any component other than chart data (line or candle) which can take a rectangle on the chart's canvas.
+/// Any component other than chart data (line or candle) which can take a
+/// rectangle on the chart's canvas.
 @immutable
 abstract class ChartObject {
   /// Initializes

@@ -11,8 +11,9 @@ import 'models/indicator_options.dart';
 
 /// Base class of indicator series with a single indicator.
 ///
-/// Handles reusing result of previous indicator of the series. The decision to whether it can
-/// use the result of the old series calculated values is made inside [didUpdate] method.
+/// Handles reusing result of previous indicator of the series. The decision to
+/// whether it can use the result of the old series calculated values is made
+/// inside [didUpdate] method.
 abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   /// Initializes
   AbstractSingleIndicatorSeries(
@@ -35,13 +36,15 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
 
   /// Input indicator to calculate this indicator value on.
   ///
-  /// Input data might be a result of another [Indicator]. For example [CloseValueIndicator] or [HL2Indicator].
+  /// Input data might be a result of another [Indicator]. For example
+  /// [CloseValueIndicator] or [HL2Indicator].
   final Indicator<Tick> inputIndicator;
 
   /// The offset of this indicator.
   ///
-  /// Indicator's data will be shifted by this number of tick while they are being painted.
-  /// For example if we consider `*`s as indicator data on the chart below with default [offset] = 0:
+  /// Indicator's data will be shifted by this number of tick while they are
+  /// being painted. For example if we consider `*`s as indicator data on the
+  /// chart below with default [offset] = 0:
   /// |                                 (Tick5)
   /// |    *            (Tick3) (Tick4)    *
   /// | (Tick1)    *             *
@@ -58,13 +61,15 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
 
   /// Indicator options
   ///
-  /// It's used for comparison purpose to check whether this indicator series options has changed and
-  /// It needs to recalculate [_resultIndicator]'s values.
+  /// It's used for comparison purpose to check whether this indicator series
+  /// options has changed and it needs to recalculate [_resultIndicator]'s
+  /// values.
   final IndicatorOptions? options;
 
   /// Result indicator
   ///
-  /// Entries of [_resultIndicator] will be the data that will be painted for this series.
+  /// Entries of [_resultIndicator] will be the data that will be painted for
+  /// this series.
   late CachedIndicator<Tick> _resultIndicator;
 
   /// For comparison purposes.
@@ -80,9 +85,10 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
 
       if (targetIndex >= 0 && targetIndex < entries!.length) {
         // Instead of doing `epoch + offset * granularity` for all indices, for
-        // those that are in the range of `entries` we should use the epoch of `index + offset`.
-        // Meaning that if the offset was `2`, for the tick in index `1`, we should
-        // use the epoch of index 3. This is because of time gaps that some chart data might have,
+        // those that are in the range of `entries` we should use the epoch of
+        // `index + offset`. Meaning that if the offset was `2`, for the tick in
+        // index `1`, we should use the epoch of index 3. This is because of
+        // time gaps that some chart data might have,
         return entries![targetIndex].epoch;
       } else if (targetIndex >= entries!.length) {
         // Sometimes there might be market gaps even between entry in this index
@@ -113,8 +119,9 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
 
   /// Initializes the [_resultIndicator].
   ///
-  /// Will be called whenever [_resultIndicator]'s previous values are not available
-  /// or its results can't be used (Like when the [input] list changes entirely).
+  /// Will be called whenever [_resultIndicator]'s previous values are not
+  /// available or its results can't be used (Like when the [input] list changes
+  /// entirely).
   @protected
   CachedIndicator<Tick> initializeIndicator();
 
@@ -135,17 +142,21 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
 
     if (oldSeries.input.length == input.length) {
       if (oldSeries.input.last != input.last) {
-        // We're on granularity > 1 tick. Last tick of the input has been updated. Recalculating its indicator value.
+        // We're on granularity > 1 tick. Last tick of the input has been
+        // updated. Recalculating its indicator value.
         _resultIndicator.refreshValueFor(input.length - 1);
       } else {
-        // To cover the cases when chart's ticks list has changed but both old ticks and new ticks are to the same reference.
-        // And we can't detect if new ticks was added or not. But we calculate indicator's values for those indices that are null.
+        // To cover the cases when chart's ticks list has changed but both old
+        // ticks and new ticks are to the same reference.
+        // And we can't detect if new ticks was added or not. But we calculate
+        // indicator's values for those indices that are null.
         for (int i = _resultIndicator.lastResultIndex; i < input.length; i++) {
           _resultIndicator.refreshValueFor(i);
         }
       }
     } else if (input.length > oldSeries.input.length) {
-      // Some new ticks has been added. Calculating indicator's value for new ticks.
+      // Some new ticks has been added. Calculating indicator's value for new
+      // ticks.
       for (int i = oldSeries.input.length; i < input.length; i++) {
         _resultIndicator.refreshValueFor(i);
       }

@@ -42,8 +42,9 @@ class MarkerSeries extends Series {
 
   @override
   // TODO(Ramin): Return correct result,
-  // We only use the result of didUpdate of the mainSeries for now to whether play the new tick animation or not,
-  // No need to check if the marker series data has changed with chart update.
+  // We only use the result of didUpdate of the mainSeries for now to whether
+  // play the new tick animation or not, No need to check if the marker series
+  // data has changed with chart update.
   bool didUpdate(ChartData? oldData) => false;
 
   @override

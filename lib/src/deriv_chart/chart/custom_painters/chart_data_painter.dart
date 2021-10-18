@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -9,7 +11,8 @@ import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.
 class ChartDataPainter extends BaseChartDataPainter {
-  /// Initializes a `CustomPainter` which paints the chart data inside the chart.
+  /// Initializes a `CustomPainter` which paints the chart data inside
+  /// the chart.
   ChartDataPainter({
     required ChartConfig chartConfig,
     required ChartTheme theme,
@@ -74,7 +77,8 @@ class ChartDataPainter extends BaseChartDataPainter {
 
 /// A `CustomPainter` which paints the chart data inside the chart.
 class BaseChartDataPainter extends CustomPainter {
-  /// Initializes a `CustomPainter` which paints the chart data inside the chart.
+  /// Initializes a `CustomPainter` which paints the chart data inside
+  /// the chart.
   BaseChartDataPainter({
     required this.chartConfig,
     required this.theme,

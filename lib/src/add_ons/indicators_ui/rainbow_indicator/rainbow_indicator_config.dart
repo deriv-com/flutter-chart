@@ -59,6 +59,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
   /// Rainbow Moving Averages bands count
   final int bandsCount;
 
+  /// List of colors for the different bands in the [RainbowSeries].
   final List<Color> rainbowColors;
 
   @override

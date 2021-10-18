@@ -9,7 +9,7 @@ class YAxisModel {
     required double canvasHeight,
     required double topPadding,
     required double bottomPadding,
-  })   : _quoteGridInterval = quoteGridInterval(
+  })  : _quoteGridInterval = quoteGridInterval(
           quotePerPx(
               yTopBound: yTopBound,
               yBottomBound: yBottomBound,
@@ -65,7 +65,8 @@ double quotePerPx({
 double quoteGridInterval(
   double quotePerPx, {
   double minDistanceBetweenLines = 60,
-  // Options for quote labels value distance in Y-Axis. One of these intervals will be selected to be the distance between Y-Axis labels
+  // Options for quote labels value distance in Y-Axis. One of these intervals
+  // will be selected to be the distance between Y-Axis labels
   List<double> intervals = const <double>[
     0.0000000025,
     0.000000001,

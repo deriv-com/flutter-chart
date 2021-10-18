@@ -20,14 +20,15 @@ import 'single_indicator_series.dart';
 
 /// Rainbow series
 class RainbowSeries extends Series {
-  /// Initializes a series which shows shows Rainbow Series data calculated from [entries].
+  /// Initializes a series which shows shows Rainbow Series data calculated
+  /// from `entries`.
   ///
   /// [rainbowOptions] Rainbow indicator options.
   RainbowSeries(
     IndicatorInput indicatorInput, {
+    required RainbowOptions rainbowOptions,
     List<Color>? rainbowColors,
     String? id,
-    required RainbowOptions rainbowOptions,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
           rainbowColors: rainbowColors ?? const <Color>[],

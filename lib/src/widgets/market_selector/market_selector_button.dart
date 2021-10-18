@@ -6,9 +6,11 @@ import 'closed_tag.dart';
 import 'models.dart';
 import 'symbol_icon.dart';
 
-/// A Button to open the market selector. The selected [Asset] should be passed as [asset].
+/// A Button to open the market selector. The selected [Asset] should be passed
+/// as [asset].
 class MarketSelectorButton extends StatelessWidget {
-  /// Creates a Button to open the market selector. The selected [Asset] should be passed as [asset].
+  /// Creates a Button to open the market selector. The selected [Asset] should
+  /// be passed as [asset].
   const MarketSelectorButton({
     required this.asset,
     Key? key,
@@ -49,11 +51,19 @@ class MarketSelectorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Provider<ChartTheme>.value(
         value: theme ?? ChartDefaultDarkTheme(),
-        child: FlatButton(
-          padding: const EdgeInsets.all(8),
-          color: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: borderRadius,
+        child: TextButton(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
+              (Set<MaterialState> states) => const EdgeInsets.all(8),
+            ),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) => backgroundColor,
+            ),
+            shape: MaterialStateProperty.resolveWith<RoundedRectangleBorder>(
+              (Set<MaterialState> states) => RoundedRectangleBorder(
+                borderRadius: borderRadius,
+              ),
+            ),
           ),
           child: Row(
             children: <Widget>[
