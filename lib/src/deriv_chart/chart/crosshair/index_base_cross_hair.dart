@@ -158,4 +158,13 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     await _crossHairAnimationController.reverse(from: 1);
     setState(() => _crossHairIndex = null);
   }
+
+  @override
+  void dispose() {
+    gestureManager
+      ..removeCallback(_onLongPressStart)
+      ..removeCallback(_onLongPressUpdate)
+      ..removeCallback(_onLongPressEnd);
+    super.dispose();
+  }
 }
