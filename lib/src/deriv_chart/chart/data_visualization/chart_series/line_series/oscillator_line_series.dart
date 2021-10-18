@@ -21,10 +21,10 @@ class OscillatorLineSeries extends LineSeries {
         _secondaryHorizontalLinesStyle = secondaryHorizontalLinesStyle,
         _secondaryHorizontalLines = secondaryHorizontalLines,
         super(
-        entries,
-        id: id,
-        style: style,
-      );
+          entries,
+          id: id,
+          style: style,
+        );
 
   final List<double> _secondaryHorizontalLines;
   final double _topHorizontalLine;

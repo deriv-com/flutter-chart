@@ -38,7 +38,8 @@ class WormChart extends StatefulWidget {
   /// The ticks list to show.
   final List<Tick> ticks;
 
-  /// Indicates the proportion of the horizontal space that each tick is going to take.
+  /// Indicates the proportion of the horizontal space that each tick is going
+  /// to take.
   ///
   /// Default is 0.05 which means each tick occupies 5% of the horizontal space,
   /// and at most 20 of most recent ticks will be visible.
@@ -362,7 +363,8 @@ class _WormChartPainter extends CustomPainter {
   bool shouldRepaint(covariant _WormChartPainter oldDelegate) => true;
 }
 
-// TODO(NA): Extract X-Axis conversions later to be able to support both epoch and index
+// TODO(NA): Extract X-Axis conversions later to be able to support both epoch
+// and index
 double _quoteToY(
   double quote,
   double max,

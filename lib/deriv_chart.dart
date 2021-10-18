@@ -35,6 +35,7 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/active_marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
+export 'src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 export 'src/misc/chart_controller.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_axis_config.dart';

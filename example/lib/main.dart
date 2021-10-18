@@ -77,15 +77,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
-  List<Barrier> _sampleBarriers = <Barrier>[];
+  final List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier? _slBarrier, _tpBarrier;
   bool _sl = false, _tp = false;
 
   TickHistorySubscription? _tickHistorySubscription;
 
-  StreamSubscription? _tickStreamSubscription;
+  StreamSubscription<TickBase?>? _tickStreamSubscription;
 
-  late ConnectionBloc _connectionBloc;
+  late connection_bloc.ConnectionBloc _connectionBloc;
 
   bool _waitingForHistory = false;
 
@@ -662,7 +662,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           quote: lastTick.quote,
           text: '0.00 USD',
           onTap: () {
-            print('>>> tapped active marker');
+            debugPrint('>>> tapped active marker');
           },
           onTapOutside: () {
             setState(() {
@@ -671,7 +671,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
           },
         );
       });
-    };
+    }
+
     setState(() {
       _markers.add(Marker(
         direction: direction,
@@ -704,7 +705,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
       );
 
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
-        backgroundColor: Color.fromRGBO(21, 23, 23, 1),
         asset: _symbol,
         onTap: () {
           _bottomSheetController = showBottomSheet<void>(

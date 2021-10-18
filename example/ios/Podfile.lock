@@ -26,7 +26,6 @@ DEPENDENCIES:
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
-  - vibration_web (from `.symlinks/plugins/vibration_web/ios`)
 
 SPEC REPOS:
   trunk:
@@ -47,8 +46,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/ios"
   vibration:
     :path: ".symlinks/plugins/vibration/ios"
-  vibration_web:
-    :path: ".symlinks/plugins/vibration_web/ios"
 
 SPEC CHECKSUMS:
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
