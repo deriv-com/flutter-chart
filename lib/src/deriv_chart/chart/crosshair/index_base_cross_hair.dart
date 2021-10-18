@@ -18,6 +18,7 @@ class IndexBaseCrossHair extends StatefulWidget {
     required this.indexToX,
     required this.xToIndex,
     required this.ticks,
+    this.enabled = false,
     this.pipSize = 4,
     Key? key,
   }) : super(key: key);
@@ -36,6 +37,9 @@ class IndexBaseCrossHair extends StatefulWidget {
 
   /// Number of decimal points when showing price of a tick.
   final int pipSize;
+
+  /// Whether cross-hair is enabled or not.
+  final bool enabled;
 
   @override
   _IndexBaseCrossHairState createState() => _IndexBaseCrossHairState();
@@ -70,48 +74,43 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onLongPressStart: _onLongPressStart,
-        onLongPressMoveUpdate: _onLongPressUpdate,
-        onLongPressEnd: _onLongPressEnd,
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if (_crossHairIndex == null) {
-              return const SizedBox.shrink();
-            }
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (_crossHairIndex == null) {
+            return const SizedBox.shrink();
+          }
 
-            return FadeTransition(
-              opacity: _crossHairFadeAnimation,
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  Positioned(
-                    top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
-                    left: widget.indexToX(_crossHairIndex!),
-                    child: CustomPaint(
-                      size: Size(1, constraints.maxHeight),
-                      painter: const CrosshairDotPainter(),
-                    ),
+          return FadeTransition(
+            opacity: _crossHairFadeAnimation,
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                Positioned(
+                  top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
+                  left: widget.indexToX(_crossHairIndex!),
+                  child: CustomPaint(
+                    size: Size(1, constraints.maxHeight),
+                    painter: const CrosshairDotPainter(),
                   ),
-                  Positioned(
-                    width: constraints.maxWidth,
-                    left: widget.indexToX(_crossHairIndex!) -
-                        constraints.maxWidth / 2,
-                    child: Column(
-                      children: <Widget>[
-                        _buildCrossHairDetail(),
-                        CustomPaint(
-                          size: Size(1, constraints.maxHeight),
-                          painter: const CrosshairLinePainter(),
-                        ),
-                      ],
-                    ),
+                ),
+                Positioned(
+                  width: constraints.maxWidth,
+                  left: widget.indexToX(_crossHairIndex!) -
+                      constraints.maxWidth / 2,
+                  child: Column(
+                    children: <Widget>[
+                      _buildCrossHairDetail(),
+                      CustomPaint(
+                        size: Size(1, constraints.maxHeight),
+                        painter: const CrosshairLinePainter(),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+              ],
+            ),
+          );
+        },
       );
 
   Align _buildCrossHairDetail() => Align(
@@ -129,12 +128,18 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
       );
 
   void _onLongPressStart(LongPressStartDetails details) {
+    if (!widget.enabled) {
+      return;
+    }
     final Offset position = details.localPosition;
     _updateCrossHairToPosition(position.dx);
     _crossHairAnimationController.forward();
   }
 
   void _onLongPressUpdate(LongPressMoveUpdateDetails details) {
+    if (!widget.enabled) {
+      return;
+    }
     final Offset position = details.localPosition;
     _updateCrossHairToPosition(position.dx);
   }
@@ -147,6 +152,9 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
       );
 
   Future<void> _onLongPressEnd(LongPressEndDetails details) async {
+    if (!widget.enabled) {
+      return;
+    }
     await _crossHairAnimationController.reverse(from: 1);
     setState(() => _crossHairIndex = null);
   }
