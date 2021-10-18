@@ -37,8 +37,9 @@ class WormChartPainter extends CustomPainter {
 
   /// Input ticks.
   ///
-  /// This should be the whole list of [Tick]. since [WormChart] works with indices
-  /// visible ticks of the chart is defined with [startIndex] and [endIndex].
+  /// This should be the whole list of [Tick].
+  /// since [WormChart] works with indices visible ticks of the chart is
+  /// defined with [startIndex] and [endIndex].
   final List<Tick> ticks;
 
   /// first visible tick in the chart's visible area.
@@ -55,18 +56,19 @@ class WormChartPainter extends CustomPainter {
   /// The style of the tick indicator dot for the tick with highest [Tick.quote]
   /// inside the chart's visible area.
   ///
-  /// If there were two or more ticks with highest quote, the one in the left will
-  /// be chosen.
+  /// If there were two or more ticks with highest quote, the one in the left
+  /// will be chosen.
   final ScatterStyle highestTickStyle;
 
   /// The style of the tick indicator dot for the tick with lowest [Tick.quote]
   /// inside the chart's visible area.
   ///
-  /// If there were two or more ticks with highest quote, the one in the left will
-  /// be chosen.
+  /// If there were two or more ticks with highest quote, the one in the left
+  /// will be chosen.
   final ScatterStyle lowestTickStyle;
 
-  /// The style of the tick indicator dot for the last tick inside the chart's visible area.
+  /// The style of the tick indicator dot for the last tick inside the chart's
+  /// visible area.
   final ScatterStyle? lastTickStyle;
 
   /// The line style of the [WormChart].
@@ -81,7 +83,8 @@ class WormChartPainter extends CustomPainter {
   /// MinMax indices.
   final MinMaxIndices minMax;
 
-  /// Whether to apply padding around tick indicator dots (highest, lowest, last tick).
+  /// Whether to apply padding around tick indicator dots (highest, lowest,
+  /// last tick).
   final bool applyTickIndicatorsPadding;
 
   @override
@@ -222,8 +225,8 @@ class WormChartPainter extends CustomPainter {
   bool shouldRepaint(covariant WormChartPainter oldDelegate) => true;
 }
 
-/// A model class to hod the information needed to paint a [Tick] indicator on the
-/// chart's canvas.
+/// A model class to hod the information needed to paint a [Tick] indicator on
+/// the chart's canvas.
 class _TickIndicatorModel {
   /// Initializes
   const _TickIndicatorModel(this.position, this.style, this.paint);
@@ -231,7 +234,8 @@ class _TickIndicatorModel {
   /// The position of this tick indicator.
   final Offset position;
 
-  /// The style which has the information of how this tick indicator should look like.
+  /// The style which has the information of how this tick indicator should
+  /// look like.
   final ScatterStyle style;
 
   /// The paint object which is used for painting on the canvas.

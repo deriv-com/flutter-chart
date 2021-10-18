@@ -123,7 +123,7 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
             color: Color(0xFF323738),
           ),
           child: Text(
-            '${widget.ticks[_crossHairIndex!].quote.toStringAsFixed(widget.pipSize)}',
+            '''${widget.ticks[_crossHairIndex!].quote.toStringAsFixed(widget.pipSize)}''',
           ),
         ),
       );
