@@ -158,6 +158,7 @@ class _MarketSelectorState extends State<MarketSelector>
   }
 
   Widget _buildFavouriteSection(List<Asset?> favouritesList) => AnimatedSize(
+        vsync: this,
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 300),
         child: favouritesList.isEmpty
