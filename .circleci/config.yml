@@ -2,7 +2,7 @@ version: 2.1
 executors:
   flutter_executor:
     docker:
-      - image: cirrusci/flutter:2.2.3
+      - image: cirrusci/flutter:stable
     environment:
       _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
 
@@ -12,17 +12,17 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-          - 26:72:b1:08:0f:c1:3b:2b:2d:ea:61:7d:d6:11:63:fb
+            - 26:72:b1:08:0f:c1:3b:2b:2d:ea:61:7d:d6:11:63:fb
       - checkout
       - run:
           name: Run Flutter doctor
           command: flutter doctor
       - restore_cache:
           keys:
-              - android-sdk-licenses
-              - gradle
-              - pub-cache
-              - bin
+            - android-sdk-licenses
+            - gradle
+            - pub-cache
+            - bin
       - run:
           name: pub get
           command: flutter pub get
@@ -43,8 +43,8 @@ commands:
       - run:
           name: Upload coverage
           command: |
-                sudo gem install coveralls-lcov
-                coveralls-lcov -t $COVERALLS_REPO_TOKEN coverage/lcov.info
+            sudo gem install coveralls-lcov
+            coveralls-lcov -t $COVERALLS_REPO_TOKEN coverage/lcov.info
 
   build_app:
     description: Build the app
@@ -68,31 +68,31 @@ commands:
       - run:
           name: Check that we can build for all Android platforms
           command: |
-              flutter build -v << parameters.file_type >>  << parameters.buildNumber >> --<< parameters.mode >> << parameters.target >>
+            flutter build -v << parameters.file_type >>  << parameters.buildNumber >> --<< parameters.mode >> << parameters.target >>
           working_directory: <<parameters.working_directory>>
 
   save_env_cache:
-    description: Save the caches 
+    description: Save the caches
     steps:
       - save_cache:
           key: android-sdk-licenses
           paths:
-              - /opt/android-sdk-linux/licenses
+            - /opt/android-sdk-linux/licenses
 
       - save_cache:
           key: pub-cache
           paths:
-              - /home/cirrus/.pub-cache
+            - /home/cirrus/.pub-cache
 
       - save_cache:
           key: gradle
           paths:
-              - ~/.gradle
+            - ~/.gradle
 
       - save_cache:
           key: bin
           paths:
-              - /usr/local/bin
+            - /usr/local/bin
 
 jobs:
   build_pr:
@@ -108,7 +108,7 @@ jobs:
       - run:
           name: Copy APK
           command: |
-              sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/flutter-apk/app-debug.apk /artifacts/deriv-chart.apk
+            sudo mkdir -p /artifacts && sudo chown "$(whoami)" /artifacts && cp build/app/outputs/flutter-apk/app-debug.apk /artifacts/deriv-chart.apk
           working_directory: ~/project/example
 
       - store_artifacts:
