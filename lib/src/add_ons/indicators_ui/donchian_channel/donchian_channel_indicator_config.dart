@@ -1,7 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/donchian_channels_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/color_converter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';

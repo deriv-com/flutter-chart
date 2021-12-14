@@ -4,10 +4,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
-import '../series.dart';
 import '../series_painter.dart';
 import 'abstract_single_indicator_series.dart';
 import 'models/rsi_options.dart';

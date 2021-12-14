@@ -1,24 +1,14 @@
-import 'dart:ui';
-
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
-import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
-import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'bottom_chart.dart';
 import 'data_visualization/chart_data.dart';
-import 'data_visualization/models/chart_object.dart';
 import 'main_chart.dart';
 
 /// Interactive chart widget.

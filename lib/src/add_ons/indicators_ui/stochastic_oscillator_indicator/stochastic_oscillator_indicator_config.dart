@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillato
 import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_item.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/stochastic_oscillator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/stochastic_oscillator_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';

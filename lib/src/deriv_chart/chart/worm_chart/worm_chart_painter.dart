@@ -1,5 +1,4 @@
 import 'dart:ui' as ui;
-import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/tick.dart';

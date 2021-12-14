@@ -9,8 +9,6 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
-import '../data_series.dart';
-import '../series.dart';
 import '../series_painter.dart';
 import 'models/ichimoku_clouds_options.dart';
 import 'single_indicator_series.dart';

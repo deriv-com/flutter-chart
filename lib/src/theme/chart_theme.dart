@@ -1,12 +1,7 @@
 // ignore_for_file: public_member_api_docs
-import 'dart:ui';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
 /// An interface for the Chart's theme.

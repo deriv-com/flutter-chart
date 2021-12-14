@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'closed_tag.dart';
-import 'models.dart';
-import 'symbol_icon.dart';
 
 /// A Button to open the market selector. The selected [Asset] should be passed
 /// as [asset].

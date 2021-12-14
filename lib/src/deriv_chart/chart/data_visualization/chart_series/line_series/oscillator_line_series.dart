@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 
-import '../data_series.dart';
 import '../series_painter.dart';
 import 'oscillator_line_painter.dart';
 

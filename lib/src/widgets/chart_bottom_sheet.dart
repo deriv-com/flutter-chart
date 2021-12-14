@@ -1,6 +1,4 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
-import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:deriv_chart/src/widgets/custom_draggable_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

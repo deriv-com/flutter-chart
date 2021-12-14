@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../chart_data.dart';
 import 'animated_active_marker.dart';
-import 'marker.dart';
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {

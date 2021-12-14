@@ -3,8 +3,6 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
@@ -15,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'basic_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/models/animation_info.dart';
-import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';
 
