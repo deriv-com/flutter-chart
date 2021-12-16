@@ -4,12 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('getEnumValue function', () {
-    test('Gets enum value as string without enum prefix', () {
-      expect(getEnumValue(MockEnum.type1), 'type1');
-    });
-  });
-
   group('safe min/max', () {
     test('safeMin Calculates the correct result from giving 2 inputs', () {
       expect(safeMin(double.nan, double.nan).isNaN, true);
@@ -41,8 +35,8 @@ void main() {
     });
 
     test(
-        'durationToString returns the right MM:SS format when hour is 0 and minute is not 2 digits',
-        () {
+        'durationToString returns the right MM:SS format when hour is 0 and '
+        'minute is not 2 digits', () {
       const Duration time = Duration(minutes: 4, seconds: 15);
 
       expect(durationToString(time), '04:15');
@@ -50,8 +44,8 @@ void main() {
 
     group('CalculateTextColor', () {
       test(
-          'CalculateTextColor calculates the correct color for the given brightness',
-          () {
+          'CalculateTextColor calculates the correct color for the given '
+          'brightness', () {
         expect(calculateTextColor(Colors.black), Colors.white);
         expect(calculateTextColor(Colors.white), Colors.black);
       });
@@ -59,8 +53,8 @@ void main() {
   });
   group('Label width test', () {
     test(
-        'label width returns the correct width from the given text, style and pipSize',
-        () {
+        'label width returns the correct width from the given text, style and '
+        'pipSize', () {
       expect(labelWidth(10, const TextStyle(), 10), 182);
       expect(labelWidth(100, const TextStyle(), 10), 196);
     });
