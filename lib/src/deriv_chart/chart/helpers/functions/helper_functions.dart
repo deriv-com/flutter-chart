@@ -4,11 +4,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
-/// Gets enum value as string from the given enum
-/// E.g. MovingAverage.simple -> simple
-String getEnumValue<T>(T t) =>
-    t.toString().substring(t.toString().indexOf('.') + 1);
-
 /// Returns a safe minimum with considering each value other than `double.nan`.
 double safeMin(double a, double b) {
   final List<double> compareValues = _checkNan(a, b);

@@ -106,7 +106,7 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
                     (ShiftType type) => DropdownMenuItem<ShiftType>(
                           value: type,
                           child: Text(
-                            '${getEnumValue(type)}',
+                            '${type.name}',
                             style: const TextStyle(fontSize: 10),
                           ),
                         ))

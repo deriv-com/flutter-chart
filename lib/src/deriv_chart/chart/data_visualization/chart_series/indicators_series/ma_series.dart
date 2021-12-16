@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -132,8 +131,6 @@ extension MATypesExtension on MovingAverageType {
   /// Gets the title of enum.
   String get title => exceptionalTitles[this] ?? _getCapitalizedTitle();
 
-  String _getCapitalizedTitle() {
-    final String titleText = getEnumValue(this);
-    return '${titleText[0].toUpperCase()}${titleText.substring(1)}';
-  }
+  String _getCapitalizedTitle() =>
+      '${name[0].toUpperCase()}${name.substring(1)}';
 }

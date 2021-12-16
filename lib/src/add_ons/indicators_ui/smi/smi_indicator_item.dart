@@ -170,7 +170,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
         initialValue: _currentMAType,
         items: MovingAverageType.values,
         label: ChartLocalization.of(context).labelType,
-        labelForItem: (MovingAverageType type) => getEnumValue(type),
+        labelForItem: (MovingAverageType type) => type.name,
         onItemSelected: (MovingAverageType? newType) => setState(
           () {
             _maType = newType ?? MovingAverageType.simple;
