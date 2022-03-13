@@ -88,6 +88,8 @@ class MACDSeries extends Series {
       style: const BarStyle(),
       options: options,
     );
+
+    return null;
   }
 
   @override
