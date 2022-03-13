@@ -18,15 +18,15 @@ dependencies:
   pref: ^2.2.0
   flutter_deriv_api:
     git:
-      url: git@github.com:mohammadt-fs/flutter-deriv-api.git
-      ref: mohammad-t/migrate_flutter_version_2
+      url: git@github.com:regentmarkets/flutter-deriv-api.git
+      ref: dev
 
 dev_dependencies:
   deriv_lint:
     git:
-      url: git@github.com:boris-deriv/flutter-deriv-packages.git
+      url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: deriv_lint
+      ref: dev
   flutter_test:
     sdk: flutter
   intl_utils: ^2.0.0

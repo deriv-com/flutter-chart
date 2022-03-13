@@ -22,7 +22,7 @@ import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
 import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
-import 'package:flutter_deriv_api/state/connection/connection_bloc.dart'
+import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
     as connection_bloc;
 import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,7 +86,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   StreamSubscription<TickBase?>? _tickStreamSubscription;
 
-  late connection_bloc.ConnectionBloc _connectionBloc;
+  late connection_bloc.ConnectionCubit _connectionBloc;
 
   bool _waitingForHistory = false;
 
@@ -135,10 +135,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = connection_bloc.ConnectionBloc(ConnectionInformation(
+    _connectionBloc = connection_bloc.ConnectionCubit(ConnectionInformation(
         endpoint: defaultEndpoint, appId: defaultAppID, brand: 'deriv'))
       ..stream.listen((connection_bloc.ConnectionState connectionState) async {
-        if (connectionState is! connection_bloc.Connected) {
+        if (connectionState is! connection_bloc.ConnectionConnectedState) {
           // Calling this since we show some status labels when NOT connected.
           setState(() {});
           return;
@@ -432,7 +432,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           : granularity * 1000,
                       controller: _controller,
                       isLive: (_symbol.isOpen) &&
-                          (_connectionBloc.state is connection_bloc.Connected),
+                          (_connectionBloc.state
+                              is connection_bloc.ConnectionConnectedState),
                       opacity: _symbol.isOpen ? 1.0 : 0.5,
                       onCrosshairAppeared: () =>
                           Vibration.vibrate(duration: 50),
@@ -447,7 +448,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   ),
                   // ignore: unnecessary_null_comparison
                   if (_connectionBloc != null &&
-                      _connectionBloc.state is! connection_bloc.Connected)
+                      _connectionBloc.state
+                          is! connection_bloc.ConnectionConnectedState)
                     Align(
                       child: _buildConnectionStatus(),
                     ),
@@ -476,16 +478,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           await _tickStreamSubscription?.cancel();
                           ticks.clear();
                           // reconnect to new config
-                          _connectionBloc.add(
-                            connection_bloc.Reconfigure(
-                              await _getConnectionInfoFromPrefs(),
-                            ),
+                          await _connectionBloc.connect(
+                            connectionInformation:
+                                await _getConnectionInfoFromPrefs(),
                           );
-
-                          WidgetsFlutterBinding.ensureInitialized()
-                              .addPostFrameCallback((_) {
-                            _connectionBloc.add(connection_bloc.Connect());
-                          });
                         }
                       }),
                   ElevatedButton(
@@ -641,10 +637,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Widget _buildConnectionStatus() => ConnectionStatusLabel(
-        text: _connectionBloc.state is connection_bloc.ConnectionError
+        text: _connectionBloc.state is connection_bloc.ConnectionErrorState
             // ignore: lines_longer_than_80_chars
-            ? '${(_connectionBloc.state as connection_bloc.ConnectionError).error}'
-            : _connectionBloc.state is connection_bloc.Disconnected
+            ? '${(_connectionBloc.state as connection_bloc.ConnectionErrorState).error}'
+            : _connectionBloc.state
+                    is connection_bloc.ConnectionDisconnectedState
                 ? 'Connection lost, trying to reconnect...'
                 : 'Connecting...',
       );
