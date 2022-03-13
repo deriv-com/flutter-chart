@@ -85,7 +85,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   StreamSubscription<TickBase?>? _tickStreamSubscription;
 
-  late connection_bloc.ConnectionBloc _connectionBloc;
+  late connection_bloc.ConnectionCubit _connectionBloc;
 
   bool _waitingForHistory = false;
 
