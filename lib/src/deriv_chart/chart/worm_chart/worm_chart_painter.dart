@@ -12,21 +12,21 @@ import 'worm_chart.dart';
 class WormChartPainter extends CustomPainter {
   /// Initializes.
   WormChartPainter(
-    this.ticks, {
-    required this.lineStyle,
-    required this.highestTickStyle,
-    required this.lowestTickStyle,
-    required this.indexToX,
-    required this.quoteToY,
-    required this.startIndex,
-    required this.endIndex,
-    required this.minMax,
-    this.applyTickIndicatorsPadding = false,
-    this.lastTickStyle,
-  })  : _linePaint = Paint()
-          ..color = lineStyle.color
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = lineStyle.thickness,
+      this.ticks, {
+        required this.lineStyle,
+        required this.highestTickStyle,
+        required this.lowestTickStyle,
+        required this.indexToX,
+        required this.quoteToY,
+        required this.startIndex,
+        required this.endIndex,
+        required this.minMax,
+        this.applyTickIndicatorsPadding = false,
+        this.lastTickStyle,
+      })  : _linePaint = Paint()
+    ..color = lineStyle.color
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = lineStyle.thickness,
         _highestCirclePaint = Paint()
           ..color = highestTickStyle.color
           ..style = PaintingStyle.fill,
@@ -102,7 +102,7 @@ class WormChartPainter extends CustomPainter {
     Path? linePath;
     late Offset currentPosition;
 
-    for (int i = startIndex; i <= endIndex; i++) {
+    for (int i = endIndex; i >= startIndex; i--) {
       final Tick tick = ticks[i];
 
       final double x = indexToX(i);
@@ -182,11 +182,11 @@ class WormChartPainter extends CustomPainter {
   }
 
   void _drawArea(
-    Canvas canvas,
-    Size size,
-    Path linePath,
-    LineStyle style,
-  ) {
+      Canvas canvas,
+      Size size,
+      Path linePath,
+      LineStyle style,
+      ) {
     final Paint areaPaint = Paint()
       ..style = PaintingStyle.fill
       ..shader = ui.Gradient.linear(
@@ -202,13 +202,13 @@ class WormChartPainter extends CustomPainter {
   }
 
   void _drawCircleIfMinMax(
-    Offset position,
-    int index,
-    int minIndex,
-    int maxIndex,
-    Canvas canvas,
-    List<_TickIndicatorModel> tickIndicators,
-  ) {
+      Offset position,
+      int index,
+      int minIndex,
+      int maxIndex,
+      Canvas canvas,
+      List<_TickIndicatorModel> tickIndicators,
+      ) {
     if (index == maxIndex) {
       tickIndicators.add(
           _TickIndicatorModel(position, highestTickStyle, _highestCirclePaint));
