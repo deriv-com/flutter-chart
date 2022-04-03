@@ -1,9 +1,9 @@
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +23,7 @@ class XAxis extends StatefulWidget {
     required this.child,
     required this.isLive,
     required this.startWithDataFitMode,
+    required this.pipSize,
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
@@ -50,6 +51,9 @@ class XAxis extends StatefulWidget {
   /// Maximum epoch for this [XAxis].
   final int? maxEpoch;
 
+  /// Number of digits after decimal point in price
+  final int pipSize;
+
   @override
   _XAxisState createState() => _XAxisState();
 }
@@ -66,7 +70,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.initState();
 
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
-
     _model = XAxisModel(
       entries: widget.entries,
       granularity: context.read<ChartConfig>().granularity,
@@ -98,6 +101,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(XAxis oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     _model.update(
       isLive: widget.isLive,
       granularity: context.read<ChartConfig>().granularity,
@@ -130,8 +134,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
             final List<DateTime> _noOverlapGridTimestamps =
                 _model.getNoOverlapGridTimestamps();
-
-            final GridStyle gridStyle = context.watch<ChartTheme>().gridStyle;
+            final ChartTheme _chartTheme = context.watch<ChartTheme>();
 
             return Stack(
               fit: StackFit.expand,
@@ -146,14 +149,30 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
                           .map<double>((DateTime time) =>
                               _model.xFromEpoch(time.millisecondsSinceEpoch))
                           .toList(),
-                      style: gridStyle,
+                      style: _chartTheme.gridStyle,
                     ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: gridStyle.xLabelsAreaHeight),
+                  padding: EdgeInsets.only(
+                    bottom: _chartTheme.gridStyle.xLabelsAreaHeight,
+                  ),
                   child: widget.child,
                 ),
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      width: widget.entries.isNotEmpty
+                          ? labelWidth(
+                                widget.entries.first.quote,
+                                _chartTheme.gridStyle.yLabelStyle,
+                                widget.pipSize,
+                              ) +
+                              _chartTheme.gridStyle.labelHorizontalPadding
+                          : 100,
+                      height: _chartTheme.gridStyle.xLabelsAreaHeight,
+                      color: context.watch<ChartTheme>().base08Color,
+                    ))
               ],
             );
           },
