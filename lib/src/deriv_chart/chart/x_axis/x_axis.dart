@@ -171,7 +171,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
                               _chartTheme.gridStyle.labelHorizontalPadding
                           : 100,
                       height: _chartTheme.gridStyle.xLabelsAreaHeight,
-                      color: context.watch<ChartTheme>().base08Color,
+                      color: _chartTheme.base08Color,
                     ))
               ],
             );
