@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs
-
 import 'dart:async';
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -99,7 +97,10 @@ class CandleIndicator extends HorizontalBarrier {
   SeriesPainter<Series> createPainter() => CandleIndicatorPainter(this);
 }
 
+/// A tick indicator which also paints an icon on top of the barrier's tick.
 class IconTickIndicator extends TickIndicator {
+  /// Initializes
+  /// Paints the [icon] on top of the [tick].
   IconTickIndicator(
     Tick tick,
     this.icon, {
@@ -112,6 +113,7 @@ class IconTickIndicator extends TickIndicator {
         ),
         super(tick, id: id, style: style, visibility: visibility);
 
+  /// The icon to be painted on top of the barrier's tick.
   final Icon icon;
 
   @override

@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs
-
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -334,7 +332,10 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   }
 }
 
+/// The painter for the [IconTickIndicator] which paints the icon on the
+/// barrier's tick position.
 class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
+  /// Initializes [IconBarrierPainter].
   IconBarrierPainter(IconTickIndicator series) : super(series);
 
   @override
@@ -354,36 +355,40 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
     );
 
     if (_barrierPosition != null) {
-      final Icon icon = series.icon;
-
-      final double iconSize = icon.size!;
-      final double innerIconSize = iconSize * 0.6;
-
-      canvas
-        ..drawCircle(
-          _barrierPosition!,
-          iconSize / 2,
-          _paint,
-        )
-        ..drawCircle(
-          _barrierPosition!,
-          (iconSize / 2) - 2,
-          Paint()..color = Colors.black.withOpacity(0.32),
-        );
-
-      TextPainter(textDirection: TextDirection.ltr)
-        ..text = TextSpan(
-          text: String.fromCharCode(icon.icon!.codePoint),
-          style: TextStyle(
-            fontSize: innerIconSize,
-            fontFamily: icon.icon!.fontFamily,
-          ),
-        )
-        ..layout()
-        ..paint(
-          canvas,
-          _barrierPosition! - Offset(innerIconSize / 2, innerIconSize / 2),
-        );
+      _paintIcon(canvas);
     }
+  }
+
+  void _paintIcon(ui.Canvas canvas) {
+    final Icon icon = series.icon;
+
+    final double iconSize = icon.size!;
+    final double innerIconSize = iconSize * 0.6;
+
+    canvas
+      ..drawCircle(
+        _barrierPosition!,
+        iconSize / 2,
+        _paint,
+      )
+      ..drawCircle(
+        _barrierPosition!,
+        (iconSize / 2) - 2,
+        Paint()..color = Colors.black.withOpacity(0.32),
+      );
+
+    TextPainter(textDirection: TextDirection.ltr)
+      ..text = TextSpan(
+        text: String.fromCharCode(icon.icon!.codePoint),
+        style: TextStyle(
+          fontSize: innerIconSize,
+          fontFamily: icon.icon!.fontFamily,
+        ),
+      )
+      ..layout()
+      ..paint(
+        canvas,
+        _barrierPosition! - Offset(innerIconSize / 2, innerIconSize / 2),
+      );
   }
 }
