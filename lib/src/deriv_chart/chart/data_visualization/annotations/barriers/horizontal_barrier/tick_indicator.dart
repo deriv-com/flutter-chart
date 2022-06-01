@@ -1,10 +1,14 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
+import 'package:flutter/material.dart';
 
 import 'candle_indicator_painter.dart';
+import 'horizontal_barrier_painter.dart';
 
 /// Tick indicator.
 class TickIndicator extends HorizontalBarrier {
@@ -93,4 +97,19 @@ class CandleIndicator extends HorizontalBarrier {
 
   @override
   SeriesPainter<Series> createPainter() => CandleIndicatorPainter(this);
+}
+
+class IconTickIndicator extends TickIndicator {
+  IconTickIndicator(
+    Tick tick,
+    this.icon, {
+    String? id,
+    HorizontalBarrierStyle? style,
+    HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
+  }) : super(tick, id: id, style: style, visibility: visibility);
+
+  final Icon icon;
+
+  @override
+  SeriesPainter<Series> createPainter() => IconBarrierPainter(this);
 }

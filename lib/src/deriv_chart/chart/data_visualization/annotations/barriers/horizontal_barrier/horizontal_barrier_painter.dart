@@ -1,5 +1,8 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:ui';
 
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
@@ -33,6 +36,13 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   /// Padding on both sides of the title (so that barrier line doesn't touch
   /// title text).
   static const double _titleHorizontalPadding = 2;
+
+  /// Barrier position which is calculated which painting the barrier.
+  // TODO(Ramin): Breakdown painting functions into smaller classes and find
+  // a way to make them reusable.
+  // Proposal: Return useful PaintInfo in the [paint] method to be used by other
+  // painters
+  Offset? _barrierPosition;
 
   @override
   void onPaint({
@@ -191,6 +201,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
         );
       }
     }
+
+    _barrierPosition = Offset(dotX!, y);
   }
 
   /// Paints a background based on the given [LabelShape] for the label text.
@@ -322,5 +334,30 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
             size: arrowSize,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
+  }
+}
+
+class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
+  IconBarrierPainter(IconTickIndicator series) : super(series);
+
+  @override
+  void onPaint({
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
+  }) {
+    super.onPaint(
+      canvas: canvas,
+      size: size,
+      epochToX: epochToX,
+      quoteToY: quoteToY,
+      animationInfo: animationInfo,
+    );
+
+    if (_barrierPosition != null) {
+      canvas.drawCircle(_barrierPosition!, 10, Paint()..color = _paint.color);
+    }
   }
 }
