@@ -32,9 +32,9 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   /// title text).
   static const double _titleHorizontalPadding = 2;
 
-  /// Barrier position which is calculated which painting the barrier.
-  // TODO(Ramin): Breakdown painting functions into smaller classes and find
-  // a way to make them reusable.
+  /// Barrier position which is calculated on painting the barrier.
+  // TODO(Ramin): Breakdown paintings into smaller classes and find a way to
+  //  make them reusable.
   // Proposal: Return useful PaintInfo in the [paint] method to be used by other
   // painters
   Offset? _barrierPosition;
