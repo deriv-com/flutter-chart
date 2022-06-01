@@ -106,7 +106,11 @@ class IconTickIndicator extends TickIndicator {
     String? id,
     HorizontalBarrierStyle? style,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
-  }) : super(tick, id: id, style: style, visibility: visibility);
+  })  : assert(
+          icon.size != null,
+          'Icon size must be specified for icon tick indicator',
+        ),
+        super(tick, id: id, style: style, visibility: visibility);
 
   final Icon icon;
 

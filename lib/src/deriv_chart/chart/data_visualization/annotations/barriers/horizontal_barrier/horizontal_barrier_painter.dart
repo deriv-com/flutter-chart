@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
@@ -10,11 +11,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
-import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
-
-import '../../../chart_data.dart';
-import 'horizontal_barrier.dart';
 
 /// A class for painting horizontal barriers.
 class HorizontalBarrierPainter<T extends HorizontalBarrier>
@@ -81,14 +78,14 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       // Calculating animated values regarding `currentTickPercent` in
       // transition animation
       // from previousObject to new object
-      animatedValue = lerpDouble(
+      animatedValue = ui.lerpDouble(
         previousBarrier.value,
         series.value,
         animationInfo.currentTickPercent,
       );
 
       if (series.epoch != null && series.previousObject!.leftEpoch != null) {
-        dotX = lerpDouble(
+        dotX = ui.lerpDouble(
           epochToX(series.previousObject!.leftEpoch!),
           epochToX(series.epoch!),
           animationInfo.currentTickPercent,
@@ -357,7 +354,36 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
     );
 
     if (_barrierPosition != null) {
-      canvas.drawCircle(_barrierPosition!, 10, Paint()..color = _paint.color);
+      final Icon icon = series.icon;
+
+      final double iconSize = icon.size!;
+      final double innerIconSize = iconSize * 0.6;
+
+      canvas
+        ..drawCircle(
+          _barrierPosition!,
+          iconSize / 2,
+          _paint,
+        )
+        ..drawCircle(
+          _barrierPosition!,
+          (iconSize / 2) - 2,
+          Paint()..color = Colors.black.withOpacity(0.32),
+        );
+
+      TextPainter(textDirection: TextDirection.ltr)
+        ..text = TextSpan(
+          text: String.fromCharCode(icon.icon!.codePoint),
+          style: TextStyle(
+            fontSize: innerIconSize,
+            fontFamily: icon.icon!.fontFamily,
+          ),
+        )
+        ..layout()
+        ..paint(
+          canvas,
+          _barrierPosition! - Offset(innerIconSize / 2, innerIconSize / 2),
+        );
     }
   }
 }
