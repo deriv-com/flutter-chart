@@ -197,7 +197,9 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       }
     }
 
-    _barrierPosition = Offset(dotX!, y);
+    if (dotX != null) {
+      _barrierPosition = Offset(dotX, y);
+    }
   }
 
   /// Paints a background based on the given [LabelShape] for the label text.
