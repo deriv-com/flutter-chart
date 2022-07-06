@@ -180,11 +180,12 @@ class _WormChartState extends State<WormChart>
               _minValue = widget.ticks[minMax.minIndex].quote;
               _maxValue = widget.ticks[minMax.maxIndex].quote;
 
-              return ClipRect(
-                child: GestureManager(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
+              return GestureManager(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: <Widget>[
+                    ClipRect(
+                      child: Container(
                         constraints: const BoxConstraints.expand(),
                         child: CustomPaint(
                           painter: WormChartPainter(
@@ -203,15 +204,15 @@ class _WormChartState extends State<WormChart>
                           ),
                         ),
                       ),
-                      IndexBaseCrossHair(
-                        indexToX: _indexToX,
-                        quoteToY: _quoteToY,
-                        xToIndex: _xToIndex,
-                        ticks: widget.ticks,
-                        enabled: widget.crossHairEnabled,
-                      ),
-                    ],
-                  ),
+                    ),
+                    IndexBaseCrossHair(
+                      indexToX: _indexToX,
+                      quoteToY: _quoteToY,
+                      xToIndex: _xToIndex,
+                      ticks: widget.ticks,
+                      enabled: widget.crossHairEnabled,
+                    ),
+                  ],
                 ),
               );
             },

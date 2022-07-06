@@ -82,6 +82,7 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
           return FadeTransition(
             opacity: _crossHairFadeAnimation,
             child: Stack(
+              clipBehavior: Clip.none,
               fit: StackFit.expand,
               children: <Widget>[
                 Positioned(
