@@ -116,11 +116,16 @@ class _WormChartState extends State<WormChart>
 
     if (widget.ticks.isNotEmpty) {
       if (_rightIndexAnimationController.value == 1) {
-        _rightIndexAnimationController.value =
-            widget.ticks.length.toDouble() + 1;
+        _rightIndexAnimationController.value = widget.ticks.length.toDouble();
       } else {
-        _rightIndexAnimationController
-            .animateTo(widget.ticks.length.toDouble() + 1);
+        if (widget.updateAnimationDuration == Duration.zero) {
+          _rightIndexAnimationController
+              .animateTo(widget.ticks.length.toDouble());
+        }else{
+          _rightIndexAnimationController
+              .animateTo(widget.ticks.length.toDouble() + 1);
+        }
+
       }
     }
   }
@@ -129,7 +134,10 @@ class _WormChartState extends State<WormChart>
   double _indexToX(int index) => lerpDouble(
         0,
         _chartSize.width,
-        (index - _leftIndex) /
+        (index -
+                _leftIndex +
+                1 +
+                (widget.updateAnimationDuration == Duration.zero ? 0.2 : 0)) /
             (_rightIndexAnimationController.value - _leftIndex),
       )!;
 
@@ -153,7 +161,9 @@ class _WormChartState extends State<WormChart>
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          _chartSize = Size(constraints.maxWidth, constraints.maxHeight);
+          _chartSize = Size(
+              constraints.maxWidth - (widget.lastTickStyle?.radius ?? 0) * 2,
+              constraints.maxHeight);
 
           return AnimatedBuilder(
             animation: _rightIndexAnimationController,
@@ -168,18 +178,18 @@ class _WormChartState extends State<WormChart>
               _leftIndex = _rightIndexAnimationController.value -
                   _chartSize.width / (widget.zoomFactor * _chartSize.width);
 
-              final int lowerIndex =
-                  _searchLowerIndex(widget.ticks, _leftIndex);
+              final int lowerIndex = _searchLowerIndex(
+                      widget.ticks, _leftIndex) -
+                  (widget.updateAnimationDuration == Duration.zero ? 1 : 0);
               final int upperIndex = _searchUpperIndex(
                       widget.ticks, _rightIndexAnimationController.value) -
                   1;
 
-              final MinMaxIndices minMax =
-                  getMinMaxIndex(widget.ticks, lowerIndex, upperIndex);
+              final MinMaxIndices minMax = getMinMaxIndex(
+                  widget.ticks, lowerIndex, _leftIndex, upperIndex);
 
               _minValue = widget.ticks[minMax.minIndex].quote;
               _maxValue = widget.ticks[minMax.maxIndex].quote;
-
               return ClipRect(
                 child: GestureManager(
                   child: Stack(
