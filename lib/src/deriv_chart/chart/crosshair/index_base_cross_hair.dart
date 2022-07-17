@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
@@ -82,21 +84,23 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
           return FadeTransition(
             opacity: _crossHairFadeAnimation,
             child: Stack(
-              clipBehavior: Clip.none,
               fit: StackFit.expand,
               children: <Widget>[
-                Positioned(
-                  top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 100),
+                  top:
+                  widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
                   left: widget.indexToX(_crossHairIndex!),
                   child: CustomPaint(
                     size: Size(1, constraints.maxHeight),
                     painter: const CrosshairDotPainter(),
                   ),
                 ),
-                Positioned(
+                AnimatedPositioned(
                   width: constraints.maxWidth,
                   left: widget.indexToX(_crossHairIndex!) -
                       constraints.maxWidth / 2,
+                  duration: const Duration(milliseconds: 100),
                   child: Column(
                     children: <Widget>[
                       _buildCrossHairDetail(),
