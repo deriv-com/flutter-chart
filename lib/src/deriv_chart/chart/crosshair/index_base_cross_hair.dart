@@ -123,7 +123,7 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                     painter: const CrosshairDotPainter(),
                   ),
                 ),
-                if (_crossHairDetailSize != null)
+                if (_crossHairDetailSize != null) ...<Widget>[
                   AnimatedPositioned(
                     left: _getCrossHairDetailCardLeftPosition(
                       _crossHairDetailSize!.width,
@@ -131,16 +131,21 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                       constraints.maxWidth,
                     ),
                     duration: const Duration(milliseconds: 100),
-                    child: Column(
-                      children: <Widget>[
-                        _buildCrossHairDetail(),
-                        CustomPaint(
-                          size: Size(1, constraints.maxHeight),
-                          painter: const CrosshairLinePainter(),
-                        ),
-                      ],
-                    ),
+                    child: _buildCrossHairDetail(),
                   ),
+                  AnimatedPositioned(
+                    left: widget.indexToX(_crossHairIndex!),
+                    top: _crossHairDetailSize!.height,
+                    duration: const Duration(milliseconds: 100),
+                    child: CustomPaint(
+                      size: Size(
+                        1,
+                        constraints.maxHeight - _crossHairDetailSize!.height,
+                      ),
+                      painter: const CrosshairLinePainter(),
+                    ),
+                  )
+                ]
               ],
             ),
           );
