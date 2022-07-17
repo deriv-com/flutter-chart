@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
@@ -127,10 +125,10 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                 ),
                 if (_crossHairDetailSize != null)
                   AnimatedPositioned(
-                    left: max(
-                      0,
-                      widget.indexToX(_crossHairIndex!) -
-                          _crossHairDetailSize!.width / 2,
+                    left: _getCrossHairDetailCardLeftPosition(
+                      _crossHairDetailSize!.width,
+                      _crossHairIndex!,
+                      constraints.maxWidth,
                     ),
                     duration: const Duration(milliseconds: 100),
                     child: Column(
@@ -148,6 +146,25 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
           );
         },
       );
+
+  /// Calculates a left position for cross hair details card to keep it inside
+  /// Chart's area.
+  double _getCrossHairDetailCardLeftPosition(
+    double crossHairDetailWidth,
+    int crossHairIndex,
+    double chartWidth,
+  ) {
+    final double leftPosition =
+        widget.indexToX(crossHairIndex) - crossHairDetailWidth / 2;
+
+    if (leftPosition < 0) {
+      return 0;
+    } else if (leftPosition + crossHairDetailWidth > chartWidth) {
+      return chartWidth - crossHairDetailWidth;
+    }
+
+    return leftPosition;
+  }
 
   Size _calculateTextSize(String text, TextStyle style) {
     final TextPainter textPainter = TextPainter(
