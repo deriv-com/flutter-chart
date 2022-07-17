@@ -4,7 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +21,8 @@ class IndexBaseCrossHair extends StatefulWidget {
     required this.ticks,
     this.enabled = false,
     this.pipSize = 4,
+    this.crossHairContentPadding = 4,
+    this.crossHairTextStyle = TextStyles.overLine,
     Key? key,
   }) : super(key: key);
 
@@ -42,6 +44,12 @@ class IndexBaseCrossHair extends StatefulWidget {
   /// Whether cross-hair is enabled or not.
   final bool enabled;
 
+  /// Inner padding for cross hair details card.
+  final double crossHairContentPadding;
+
+  /// Text style for cross hair detail text.
+  final TextStyle crossHairTextStyle;
+
   @override
   _IndexBaseCrossHairState createState() => _IndexBaseCrossHairState();
 }
@@ -49,6 +57,7 @@ class IndexBaseCrossHair extends StatefulWidget {
 class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     with SingleTickerProviderStateMixin {
   int? _crossHairIndex;
+  Size? _crossHairDetailSize;
   late GestureManagerState gestureManager;
 
   late AnimationController _crossHairAnimationController;
@@ -72,6 +81,27 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
       ..registerCallback(_onLongPressStart)
       ..registerCallback(_onLongPressUpdate)
       ..registerCallback(_onLongPressEnd);
+
+    _updateCrossHairDetailSize();
+  }
+
+  @override
+  void didUpdateWidget(covariant IndexBaseCrossHair oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateCrossHairDetailSize();
+  }
+
+  void _updateCrossHairDetailSize() {
+    if (widget.ticks.isNotEmpty) {
+      _crossHairDetailSize = _calculateTextSize(
+            widget.ticks.first.quote.toStringAsFixed(widget.pipSize),
+            widget.crossHairTextStyle,
+          ) +
+          Offset(
+            widget.crossHairContentPadding,
+            widget.crossHairContentPadding,
+          );
+    }
   }
 
   @override
@@ -88,48 +118,62 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
               children: <Widget>[
                 AnimatedPositioned(
                   duration: const Duration(milliseconds: 100),
-                  top:
-                  widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
+                  top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
                   left: widget.indexToX(_crossHairIndex!),
                   child: CustomPaint(
                     size: Size(1, constraints.maxHeight),
                     painter: const CrosshairDotPainter(),
                   ),
                 ),
-                AnimatedPositioned(
-                  width: constraints.maxWidth,
-                  left: widget.indexToX(_crossHairIndex!) -
-                      constraints.maxWidth / 2,
-                  duration: const Duration(milliseconds: 100),
-                  child: Column(
-                    children: <Widget>[
-                      _buildCrossHairDetail(),
-                      CustomPaint(
-                        size: Size(1, constraints.maxHeight),
-                        painter: const CrosshairLinePainter(),
-                      ),
-                    ],
+                if (_crossHairDetailSize != null)
+                  AnimatedPositioned(
+                    left: max(
+                      0,
+                      widget.indexToX(_crossHairIndex!) -
+                          _crossHairDetailSize!.width / 2,
+                    ),
+                    duration: const Duration(milliseconds: 100),
+                    child: Column(
+                      children: <Widget>[
+                        _buildCrossHairDetail(),
+                        CustomPaint(
+                          size: Size(1, constraints.maxHeight),
+                          painter: const CrosshairLinePainter(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           );
         },
       );
 
-  Align _buildCrossHairDetail() => Align(
-        alignment: Alignment.topCenter,
-        child: Container(
-          padding: const EdgeInsets.all(4),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            color: Color(0xFF323738),
+  Size _calculateTextSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout();
+    return textPainter.size;
+  }
+
+  Widget _buildCrossHairDetail() => _crossHairDetailSize != null
+      ? Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            padding: EdgeInsets.all(widget.crossHairContentPadding),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              color: Color(0xFF323738),
+            ),
+            child: Text(
+              '''${widget.ticks[_crossHairIndex!].quote.toStringAsFixed(widget.pipSize)}''',
+              style: widget.crossHairTextStyle,
+            ),
           ),
-          child: Text(
-            '''${widget.ticks[_crossHairIndex!].quote.toStringAsFixed(widget.pipSize)}''',
-          ),
-        ),
-      );
+        )
+      : const SizedBox.shrink();
 
   void _onLongPressStart(LongPressStartDetails details) {
     if (!widget.enabled) {
