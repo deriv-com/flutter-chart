@@ -120,7 +120,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
       );
 
   @override
-  VerticalBarrierStyle get verticalBarrierStyle => VerticalBarrierStyle(
+  VerticalBarrierStyle get verticalBarrierStyle => const VerticalBarrierStyle(
         textStyle: TextStyles.overLine,
       );
 
