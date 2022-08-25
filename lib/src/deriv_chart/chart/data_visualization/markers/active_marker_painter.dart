@@ -15,6 +15,7 @@ class ActiveMarkerPainter extends CustomPainter {
     required this.quoteToY,
     this.style = const MarkerStyle(),
     this.animationProgress = 1,
+    this.productType,
   });
 
   /// The given active marker to paint.
@@ -31,6 +32,9 @@ class ActiveMarkerPainter extends CustomPainter {
 
   /// The progress value of the animation of active marker painter.
   final double animationProgress;
+
+  /// productType
+  final String? productType;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -80,6 +84,7 @@ class ActiveMarkerPainter extends CustomPainter {
       anchor + iconShift,
       activeMarker.direction,
       style,
+      productType!,
     );
 
     // Update tap area.

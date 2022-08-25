@@ -17,6 +17,7 @@ class MarkerSeries extends Series {
     this.activeMarker,
     this.entryTick,
     this.exitTick,
+    this.productType,
   })  : _entries = entries.toList(),
         super(id ?? 'Markers', style: style);
 
@@ -34,6 +35,9 @@ class MarkerSeries extends Series {
 
   /// Exit tick marker.
   final Tick? exitTick;
+
+  /// Product(trade) type defines marker icon
+  final String? productType;
 
   @override
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);

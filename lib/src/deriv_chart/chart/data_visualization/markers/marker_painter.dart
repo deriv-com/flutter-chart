@@ -25,6 +25,8 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
   }) {
     final MarkerStyle style = series.style as MarkerStyle? ?? theme.markerStyle;
 
+    final String productType = series.productType as String? ?? 'options';
+
     if (series.entryTick != null) {
       final Offset center = Offset(
         epochToX(series.entryTick!.epoch),
@@ -59,6 +61,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         anchor,
         marker.direction,
         style,
+        productType,
       );
 
       // Update marker tap area.

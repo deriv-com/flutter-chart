@@ -89,6 +89,7 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
           epochToX: xAxis.xFromEpoch,
           quoteToY: widget.quoteToCanvasY,
           animationProgress: _activeMarkerAnimation.value,
+          productType: widget.markerSeries.productType ?? 'options',
         ),
       ),
     );
