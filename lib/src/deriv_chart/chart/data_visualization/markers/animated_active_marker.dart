@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_multipliers/core/enums.dart';
 import 'active_marker.dart';
 import 'active_marker_painter.dart';
 import 'marker_series.dart';
@@ -89,7 +90,8 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
           epochToX: xAxis.xFromEpoch,
           quoteToY: widget.quoteToCanvasY,
           animationProgress: _activeMarkerAnimation.value,
-          productType: widget.markerSeries.productType ?? 'options',
+          productType:
+              widget.markerSeries.productType ?? ProductType.options.name,
         ),
       ),
     );

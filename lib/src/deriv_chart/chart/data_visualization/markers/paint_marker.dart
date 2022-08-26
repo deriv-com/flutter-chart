@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
+import 'package:flutter_multipliers/core/enums.dart';
 import 'marker.dart';
 
 /// Paints marker on the canvas.
@@ -50,10 +51,10 @@ void paintMarker(
   ///Divider for width an height
   int divider;
 
-  if (productType == 'multipliers') {
+  if (productType == ProductType.multipliers.name) {
     size = Size(10, 10);
     divider = 2;
-  } else if (productType == 'options') {
+  } else if (productType == ProductType.options.name) {
     size = Size(20, 20);
     divider = 4;
   } else {
@@ -68,7 +69,7 @@ void _drawArrow(Canvas canvas, Offset center, Size size, double dir,
     int divider, String productType) {
   final Path path = Path();
 
-  if (productType == 'multipliers') {
+  if (productType == ProductType.multipliers.name) {
     canvas
       ..save()
       ..translate(
@@ -110,7 +111,7 @@ void _drawArrow(Canvas canvas, Offset center, Size size, double dir,
       ..lineTo(5.5, 7)
       ..lineTo(7, 5.5)
       ..close();
-  } else if (productType == 'options') {
+  } else if (productType == ProductType.options.name) {
     canvas
       ..save()
       ..translate(

@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/anim
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_entry_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_exit_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
+import 'package:flutter_multipliers/core/enums.dart';
 import 'package:flutter/material.dart';
 
 import '../chart_data.dart';
@@ -25,7 +26,8 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
   }) {
     final MarkerStyle style = series.style as MarkerStyle? ?? theme.markerStyle;
 
-    final String productType = series.productType as String? ?? 'options';
+    final String productType =
+        series.productType as String? ?? ProductType.options.name;
 
     if (series.entryTick != null) {
       final Offset center = Offset(
