@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 
 import '../chart_data.dart';
+import 'marker_icon_painters/marker_icon_painter.dart';
 import 'marker_painter.dart';
 
 /// Marker series
@@ -17,7 +18,7 @@ class MarkerSeries extends Series {
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-    this.productType,
+    required this.markerIconPainter,
   })  : _entries = entries.toList(),
         super(id ?? 'Markers', style: style);
 
@@ -36,11 +37,14 @@ class MarkerSeries extends Series {
   /// Exit tick marker.
   final Tick? exitTick;
 
-  /// Product(trade) type defines marker icon
-  final String? productType;
+  ///Painter that draw corresponding marker icon
+  final MarkerIconPainter markerIconPainter;
 
   @override
-  SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
+  SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(
+        this,
+        markerIconPainter,
+      );
 
   @override
   // TODO(Ramin): Return correct result,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
 import 'active_marker.dart';
-import 'paint_marker.dart';
+import 'marker_icon_painters/marker_icon_painter.dart';
 
 /// Painter that paints a marker which is active.
 class ActiveMarkerPainter extends CustomPainter {
@@ -15,7 +15,7 @@ class ActiveMarkerPainter extends CustomPainter {
     required this.quoteToY,
     this.style = const MarkerStyle(),
     this.animationProgress = 1,
-    this.productType,
+    required this.markerIconPainter,
   });
 
   /// The given active marker to paint.
@@ -33,8 +33,8 @@ class ActiveMarkerPainter extends CustomPainter {
   /// The progress value of the animation of active marker painter.
   final double animationProgress;
 
-  /// productType
-  final String? productType;
+  ///Painter which draws corresponding marker icon
+  final MarkerIconPainter markerIconPainter;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -78,13 +78,12 @@ class ActiveMarkerPainter extends CustomPainter {
     }
 
     // Circle with icon.
-    paintMarker(
+    markerIconPainter.paintMarker(
       canvas,
       center + iconShift,
       anchor + iconShift,
       activeMarker.direction,
       style,
-      productType!,
     );
 
     // Update tap area.
