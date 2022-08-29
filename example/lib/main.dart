@@ -404,6 +404,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       markerSeries: MarkerSeries(
                         _markers,
                         activeMarker: _activeMarker,
+                        markerIconPainter: MultipliersMarkerIconPainter(),
                       ),
                       annotations: ticks.length > 4
                           ? <ChartAnnotation<ChartObject>>[
