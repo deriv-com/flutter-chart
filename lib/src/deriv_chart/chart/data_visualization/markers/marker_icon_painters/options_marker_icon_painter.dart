@@ -1,11 +1,10 @@
-import 'dart:ui';
-
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
 import 'marker_icon_painter.dart';
 
+///Icon painter for Options trade type
 class OptionsMarkerIconPainter extends MarkerIconPainter {
   @override
   void paintMarker(

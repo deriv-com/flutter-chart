@@ -13,9 +13,9 @@ class ActiveMarkerPainter extends CustomPainter {
     required this.activeMarker,
     required this.epochToX,
     required this.quoteToY,
+    required this.markerIconPainter,
     this.style = const MarkerStyle(),
     this.animationProgress = 1,
-    required this.markerIconPainter,
   });
 
   /// The given active marker to paint.

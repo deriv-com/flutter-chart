@@ -1,8 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
+///Foundation class for painting markers on canvas
 abstract class MarkerIconPainter {
   ///Paint circle
   void paintCircle(

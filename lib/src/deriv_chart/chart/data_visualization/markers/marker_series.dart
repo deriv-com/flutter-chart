@@ -13,12 +13,12 @@ class MarkerSeries extends Series {
   /// Initializes
   MarkerSeries(
     SplayTreeSet<Marker> entries, {
+    required this.markerIconPainter,
     String? id,
     MarkerStyle? style,
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-    required this.markerIconPainter,
   })  : _entries = entries.toList(),
         super(id ?? 'Markers', style: style);
 

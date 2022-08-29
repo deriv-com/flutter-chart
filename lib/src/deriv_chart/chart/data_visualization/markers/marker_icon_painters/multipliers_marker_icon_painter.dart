@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'marker_icon_painter.dart';
 
+///Icon painter for Multipliers trade type
 class MultipliersMarkerIconPainter extends MarkerIconPainter {
   @override
   void paintMarker(
