@@ -11,15 +11,15 @@ import 'marker_painter.dart';
 /// Marker series
 class MarkerSeries extends Series {
   /// Initializes
-  MarkerSeries(
-    SplayTreeSet<Marker> entries, {
+  MarkerSeries(SplayTreeSet<Marker> entries, {
     required this.markerIconPainter,
     String? id,
     MarkerStyle? style,
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-  })  : _entries = entries.toList(),
+  })
+      : _entries = entries.toList(),
         super(id ?? 'Markers', style: style);
 
   /// Marker entries.
@@ -41,7 +41,8 @@ class MarkerSeries extends Series {
   final MarkerIconPainter markerIconPainter;
 
   @override
-  SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(
+  SeriesPainter<MarkerSeries> createPainter() =>
+      MarkerPainter(
         this,
         markerIconPainter,
       );
