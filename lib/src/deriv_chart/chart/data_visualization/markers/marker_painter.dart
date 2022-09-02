@@ -15,7 +15,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
   /// Initializes
   MarkerPainter(MarkerSeries series, this.markerIconPainter) : super(series);
 
-  ///Marker painter which is based on trade type
+  /// Marker painter which is based on trade type
   final MarkerIconPainter markerIconPainter;
 
   @override

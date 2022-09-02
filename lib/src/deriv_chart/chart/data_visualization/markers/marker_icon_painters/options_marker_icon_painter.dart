@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'marker_icon_painter.dart';
 
-///Icon painter for Options trade type
+/// Icon painter for Options trade type
 class OptionsMarkerIconPainter extends MarkerIconPainter {
   @override
   void paintMarker(
@@ -26,12 +26,14 @@ class OptionsMarkerIconPainter extends MarkerIconPainter {
         center.dx - const Size(20, 20).width / 4,
         center.dy - (const Size(20, 20).height / 4) * dir,
       )
+
       // 16x16 is the original svg size.
       ..scale(
         const Size(20, 20).width / 16,
         const Size(20, 20).height / 16 * dir,
       );
-    //This path was generated with http://demo.qunee.com/svg2canvas/.
+
+    // This path was generated with http://demo.qunee.com/svg2canvas/.
     path
       ..moveTo(7, 0)
       ..lineTo(4.5, 0)
@@ -55,7 +57,7 @@ class OptionsMarkerIconPainter extends MarkerIconPainter {
       ..lineTo(1, 7.707)
       ..lineTo(0.707, 8)
       ..close();
-    //}
+
     canvas
       ..drawPath(path, Paint()..color = Colors.white)
       ..restore();

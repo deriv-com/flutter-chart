@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'marker_icon_painter.dart';
 
-///Icon painter for Multipliers trade type
+/// Icon painter for Multipliers trade type
 class MultipliersMarkerIconPainter extends MarkerIconPainter {
   @override
   void paintMarker(
@@ -24,13 +24,14 @@ class MultipliersMarkerIconPainter extends MarkerIconPainter {
         center.dx - const Size(10, 10).width / 2,
         center.dy - (const Size(10, 10).height / 2) * dir,
       )
+
       // 16x16 is the original svg size.
       ..scale(
         const Size(10, 10).width / 16,
         const Size(10, 10).height / 16 * dir,
       );
 
-    //This path was generated with http://demo.qunee.com/svg2canvas/.
+    // This path was generated with http://demo.qunee.com/svg2canvas/.
     path
       ..moveTo(9, 0)
       ..lineTo(14, 0)

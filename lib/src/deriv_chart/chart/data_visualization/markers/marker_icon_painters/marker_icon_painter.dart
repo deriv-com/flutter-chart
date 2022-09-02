@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
-///Foundation class for painting markers on canvas
+/// Foundation class for painting markers on canvas
 abstract class MarkerIconPainter {
-  ///Paint circle
+  /// Paint circle
   void paintCircle(
     Canvas canvas,
     Offset center,
@@ -45,7 +45,7 @@ abstract class MarkerIconPainter {
       );
   }
 
-  ///Paint marker
+  /// Paint marker
   void paintMarker(
     Canvas canvas,
     Offset center,

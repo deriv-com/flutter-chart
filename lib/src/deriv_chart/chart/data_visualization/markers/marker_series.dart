@@ -37,7 +37,7 @@ class MarkerSeries extends Series {
   /// Exit tick marker.
   final Tick? exitTick;
 
-  ///Painter that draw corresponding marker icon
+  /// Painter that draw corresponding marker icon
   final MarkerIconPainter markerIconPainter;
 
   @override
