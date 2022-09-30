@@ -10,7 +10,7 @@ import 'marker_painter.dart';
 
 /// Marker series
 class MarkerSeries extends Series {
-  /// Initializes
+  /// Initializes.
   MarkerSeries(
     SplayTreeSet<Marker> entries, {
     required this.markerIconPainter,
