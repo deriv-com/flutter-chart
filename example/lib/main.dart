@@ -26,8 +26,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:example/generated/l10n.dart';
 
 import 'utils/misc.dart';
 
