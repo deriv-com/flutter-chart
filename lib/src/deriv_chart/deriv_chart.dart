@@ -1,4 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
@@ -84,6 +86,7 @@ class DerivChart extends StatefulWidget {
 
 class _DerivChartState extends State<DerivChart> {
   final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
+  final DrawingToolsRepository _drawingToolsRepo = DrawingToolsRepository();
 
   @override
   void initState() {
@@ -95,6 +98,7 @@ class _DerivChartState extends State<DerivChart> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       _indicatorsRepo.loadFromPrefs(prefs);
+      _drawingToolsRepo.loadFromPrefs(prefs);
     } on Exception {
       // ignore: unawaited_futures
       showDialog<void>(
@@ -174,7 +178,30 @@ class _DerivChartState extends State<DerivChart> {
                   );
                 },
               ),
-            )
+            ),
+            Align(
+              alignment: const FractionalOffset(0.1, 0),
+              child: IconButton(
+                icon: Image.asset(
+                  'assets/icons/ic-drawing-tool.png',
+                  package: 'deriv_chart',
+                  width: 20,
+                  height: 20,
+                ),
+                onPressed: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (
+                        BuildContext context,
+                        ) =>
+                    ChangeNotifierProvider<DrawingToolsRepository>.value(
+                      value: _drawingToolsRepo,
+                      child: DrawingToolsDialog(),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       );

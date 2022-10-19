@@ -34,9 +34,9 @@ dev_dependencies:
   json_serializable: ^4.1.1
   deriv_lint:
     git:
-      url: git@github.com:boris-deriv/flutter-deriv-packages.git
+      url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: deriv_lint
+      ref: dev
 
 flutter:
   assets:
