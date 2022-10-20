@@ -469,6 +469,16 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Failed to load drawing tools.`
+  String get warnFailedLoadingDrawingTools {
+    return Intl.message(
+      'Failed to load drawing tools.',
+      name: 'warnFailedLoadingDrawingTools',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
@@ -483,9 +493,11 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
 
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
+
   @override
   Future<ChartLocalization> load(Locale locale) =>
       ChartLocalization.load(locale);
+
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

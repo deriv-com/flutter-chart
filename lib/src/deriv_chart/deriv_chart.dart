@@ -91,26 +91,33 @@ class _DerivChartState extends State<DerivChart> {
   @override
   void initState() {
     super.initState();
-    loadSavedIndicators();
+    loadSavedIndicatorsAndDrawingTools();
   }
 
-  Future<void> loadSavedIndicators() async {
+  Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      _indicatorsRepo.loadFromPrefs(prefs);
-      _drawingToolsRepo.loadFromPrefs(prefs);
-    } on Exception {
-      // ignore: unawaited_futures
-      showDialog<void>(
-          context: context,
-          builder: (BuildContext context) => AnimatedPopupDialog(
-                child: Center(
-                  child: Text(
-                    ChartLocalization.of(context).warnFailedLoadingIndicators,
+    final List<dynamic> _stateRepos = <dynamic>[
+      _indicatorsRepo,
+      _drawingToolsRepo
+    ];
+    _stateRepos.asMap().forEach((int index, dynamic element) {
+      try {
+        element.loadFromPrefs(prefs);
+      } on Exception {
+        // ignore: unawaited_futures
+        showDialog<void>(
+            context: context,
+            builder: (BuildContext context) => AnimatedPopupDialog(
+                  child: Center(
+                    child: element is IndicatorsRepository
+                        ? Text(ChartLocalization.of(context)
+                            .warnFailedLoadingIndicators)
+                        : Text(ChartLocalization.of(context)
+                            .warnFailedLoadingDrawingTools),
                   ),
-                ),
-              ));
-    }
+                ));
+      }
+    });
   }
 
   @override
@@ -192,9 +199,9 @@ class _DerivChartState extends State<DerivChart> {
                   showDialog<void>(
                     context: context,
                     builder: (
-                        BuildContext context,
-                        ) =>
-                    ChangeNotifierProvider<DrawingToolsRepository>.value(
+                      BuildContext context,
+                    ) =>
+                        ChangeNotifierProvider<DrawingToolsRepository>.value(
                       value: _drawingToolsRepo,
                       child: DrawingToolsDialog(),
                     ),

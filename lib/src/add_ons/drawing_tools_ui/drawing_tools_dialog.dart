@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 // import 'ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'drawing_tools_config.dart';
 import 'drawing_tools_repository.dart';
+
 // import 'ma_env_indicator/ma_env_indicator_config.dart';
 // import 'macd_indicator/macd_indicator_config.dart';
 // import 'parabolic_sar/parabolic_sar_indicator_config.dart';
@@ -34,7 +35,7 @@ class DrawingToolsDialog extends StatefulWidget {
 }
 
 class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
-  DrawingToolsConfig? _selectedDrawingTool;
+  String? _selectedDrawingTool;
 
   @override
   Widget build(BuildContext context) {
@@ -46,49 +47,49 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              DropdownButton<DrawingToolsConfig>(
+              DropdownButton<String>(
                 value: _selectedDrawingTool,
                 hint: const Text('Select drawing tool'),
-                items: const <DropdownMenuItem<DrawingToolsConfig>>[
-                  DropdownMenuItem<DrawingToolsConfig>(
+                items: const <DropdownMenuItem<String>>[
+                  DropdownMenuItem<String>(
                     child: Text('Channel'),
-                    // value: MAIndicatorConfig(),
+                    value: 'Channel',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Continuous'),
-                    // value: MAEnvIndicatorConfig(),
+                    value: 'Continuous',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Fib Fan'),
-                    // value: BollingerBandsIndicatorConfig(),
+                    value: 'Fib Fan',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Horizontal'),
-                    // value: DonchianChannelIndicatorConfig(),
+                    value: 'Horizontal',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Line'),
-                    // value: AlligatorIndicatorConfig(),
+                    value: 'Line',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Ray'),
-                    // value: RainbowIndicatorConfig(),
+                    value: 'Ray',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Rectangle'),
-                    // value: ZigZagIndicatorConfig(),
+                    value: 'Rectangle',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Trend'),
-                    // value: IchimokuCloudIndicatorConfig(),
+                    value: 'Trend',
                   ),
-                  DropdownMenuItem<DrawingToolsConfig>(
+                  DropdownMenuItem<String>(
                     child: Text('Vertical'),
-                    // value: ParabolicSARConfig(),
+                    value: 'Vertical',
                   ),
                   // Add new drawing tools here.
                 ],
-                onChanged: (DrawingToolsConfig? config) {
+                onChanged: (String? config) {
                   setState(() {
                     _selectedDrawingTool = config;
                   });
@@ -99,7 +100,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 child: const Text('Add'),
                 onPressed: _selectedDrawingTool != null
                     ? () {
-                        repo.add(_selectedDrawingTool!);
+                        repo.add(_selectedDrawingTool! as DrawingToolsConfig);
                         setState(() {});
                       }
                     : null,
