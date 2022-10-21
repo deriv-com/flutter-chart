@@ -9,9 +9,9 @@ const String addOnsKey = 'addOns';
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
 class AddOnsRepository<T> extends ChangeNotifier {
   /// Initializes
-  AddOnsRepository(this._addOnsConfig) : _addOns = <T>[];
+  AddOnsRepository(this._addOnConfig) : _addOns = <T>[];
 
-  final dynamic _addOnsConfig;
+  final dynamic _addOnConfig;
 
   final List<T> _addOns;
   SharedPreferences? _prefs;
@@ -32,25 +32,25 @@ class AddOnsRepository<T> extends ChangeNotifier {
     _addOns.clear();
 
     for (final String string in strings) {
-      final T addOnsConfig = _addOnsConfig.fromJson(jsonDecode(string));
-      _addOns.add(addOnsConfig);
+      final T addOnConfig = _addOnConfig.fromJson(jsonDecode(string));
+      _addOns.add(addOnConfig);
     }
     notifyListeners();
   }
 
   /// Adds a new indicator or drawing tool and updates storage.
-  void add(T addOnsConfig) {
-    _addOns.add(addOnsConfig);
+  void add(T addOnConfig) {
+    _addOns.add(addOnConfig);
     _writeToPrefs();
     notifyListeners();
   }
 
   /// Updates indicator or drawing tool at [index] and updates storage.
-  void updateAt(int index, T addOnsConfig) {
+  void updateAt(int index, T addOnConfig) {
     if (index < 0 || index >= _addOns.length) {
       return;
     }
-    _addOns[index] = addOnsConfig;
+    _addOns[index] = addOnConfig;
     _writeToPrefs();
     notifyListeners();
   }

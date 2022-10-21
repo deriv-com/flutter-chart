@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-/// Add-ons config
+/// Config for add-ons such as indicators and drawing tools
 @immutable
-abstract class AddOnsConfig {
+abstract class AddOnConfig {
   /// Initializes
-  const AddOnsConfig({
+  const AddOnConfig({
     this.isOverlay = true,
   });
 
@@ -20,7 +20,7 @@ abstract class AddOnsConfig {
 
   @override
   bool operator ==(dynamic other) =>
-      other is AddOnsConfig &&
+      other is AddOnConfig &&
       jsonEncode(other.toJson()) == jsonEncode(toJson());
 
   @override

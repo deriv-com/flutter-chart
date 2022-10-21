@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/add_ons/add_ons_config.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
@@ -31,7 +31,7 @@ import 'zigzag_indicator/zigzag_indicator_config.dart';
 
 /// Indicator config
 @immutable
-abstract class IndicatorConfig extends AddOnsConfig {
+abstract class IndicatorConfig extends AddOnConfig {
   /// Initializes
   const IndicatorConfig({bool isOverlay = true}) : super(isOverlay: isOverlay);
 

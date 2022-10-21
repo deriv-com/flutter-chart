@@ -493,11 +493,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
 
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
-
   @override
   Future<ChartLocalization> load(Locale locale) =>
       ChartLocalization.load(locale);
-
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

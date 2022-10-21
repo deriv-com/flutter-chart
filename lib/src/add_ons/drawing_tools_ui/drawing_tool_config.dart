@@ -1,11 +1,11 @@
-import 'package:deriv_chart/src/add_ons/add_ons_config.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:flutter/material.dart';
 import 'drawing_tool_item.dart';
 import 'callbacks.dart';
 
 /// Drawing tools config
 @immutable
-abstract class DrawingToolConfig extends AddOnsConfig {
+abstract class DrawingToolConfig extends AddOnConfig {
   /// Initializes
   const DrawingToolConfig({bool isOverlay = true})
       : super(isOverlay: isOverlay);
