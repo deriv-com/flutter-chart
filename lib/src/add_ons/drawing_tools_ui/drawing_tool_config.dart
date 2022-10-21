@@ -24,7 +24,7 @@ abstract class DrawingToolConfig extends AddOnsConfig {
     }
   }
 
-  /// Key of add-on name property in JSON.
+  /// Key of drawing tool name property in JSON.
   static const String nameKey = 'name';
 
   /// Creates drawing tool UI.

@@ -1,8 +1,8 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_repository.dart';
+import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
@@ -85,8 +85,10 @@ class DerivChart extends StatefulWidget {
 }
 
 class _DerivChartState extends State<DerivChart> {
-  final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
-  final DrawingToolsRepository _drawingToolsRepo = DrawingToolsRepository();
+  final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
+      AddOnsRepository<IndicatorConfig>(IndicatorConfig);
+  final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
+      AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
   @override
   void initState() {
@@ -109,7 +111,7 @@ class _DerivChartState extends State<DerivChart> {
             context: context,
             builder: (BuildContext context) => AnimatedPopupDialog(
                   child: Center(
-                    child: element is IndicatorsRepository
+                    child: element is AddOnsRepository<IndicatorConfig>
                         ? Text(ChartLocalization.of(context)
                             .warnFailedLoadingIndicators)
                         : Text(ChartLocalization.of(context)
@@ -122,7 +124,7 @@ class _DerivChartState extends State<DerivChart> {
 
   @override
   Widget build(BuildContext context) =>
-      ChangeNotifierProvider<IndicatorsRepository>.value(
+      ChangeNotifierProvider<AddOnsRepository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
         builder: (BuildContext context, _) => Stack(
           children: <Widget>[
@@ -133,8 +135,8 @@ class _DerivChartState extends State<DerivChart> {
               controller: widget.controller,
               overlaySeries: <Series>[
                 ...context
-                    .watch<IndicatorsRepository>()
-                    .indicators
+                    .watch<AddOnsRepository<IndicatorConfig>>()
+                    .addOns
                     .where((IndicatorConfig indicatorConfig) =>
                         indicatorConfig.isOverlay)
                     .map((IndicatorConfig indicatorConfig) =>
@@ -147,8 +149,8 @@ class _DerivChartState extends State<DerivChart> {
               ],
               bottomSeries: <Series>[
                 ...context
-                    .watch<IndicatorsRepository>()
-                    .indicators
+                    .watch<AddOnsRepository<IndicatorConfig>>()
+                    .addOns
                     .where((IndicatorConfig indicatorConfig) =>
                         !indicatorConfig.isOverlay)
                     .map((IndicatorConfig indicatorConfig) =>
@@ -178,7 +180,8 @@ class _DerivChartState extends State<DerivChart> {
                     builder: (
                       BuildContext context,
                     ) =>
-                        ChangeNotifierProvider<IndicatorsRepository>.value(
+                        ChangeNotifierProvider<
+                            AddOnsRepository<IndicatorConfig>>.value(
                       value: _indicatorsRepo,
                       child: IndicatorsDialog(),
                     ),
@@ -201,7 +204,8 @@ class _DerivChartState extends State<DerivChart> {
                     builder: (
                       BuildContext context,
                     ) =>
-                        ChangeNotifierProvider<DrawingToolsRepository>.value(
+                        ChangeNotifierProvider<
+                            AddOnsRepository<DrawingToolConfig>>.value(
                       value: _drawingToolsRepo,
                       child: DrawingToolsDialog(),
                     ),

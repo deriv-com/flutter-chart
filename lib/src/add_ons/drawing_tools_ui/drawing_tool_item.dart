@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'callbacks.dart';
-import 'drawing_tools_config.dart';
-import 'drawing_tools_repository.dart';
+import 'drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 
 /// Representing and drawing tool item in drawing tools list dialog.
-abstract class DrawingToolsItem extends StatefulWidget {
+abstract class DrawingToolItem extends StatefulWidget {
   /// Initializes
-  const DrawingToolsItem({
+  const DrawingToolItem({
     required this.title,
     required this.config,
     required this.updateDrawingTool,
@@ -19,36 +19,37 @@ abstract class DrawingToolsItem extends StatefulWidget {
   /// Title
   final String title;
 
-  /// Contains indicator configuration.
-  final DrawingToolsConfig config;
+  /// Contains drawing tool configuration.
+  final DrawingToolConfig config;
 
   /// Called when config values were updated.
   final UpdateDrawingTool updateDrawingTool;
 
-  /// Called when user removed indicator.
+  /// Called when user removed drawing tool.
   final VoidCallback deleteDrawingTool;
 
   @override
-  DrawingToolsItemState<DrawingToolsConfig> createState() =>
-      createDrawingToolsItemState();
+  DrawingToolItemState<DrawingToolConfig> createState() =>
+      createDrawingToolItemState();
 
   /// Create state object for this widget
   @protected
-  DrawingToolsItemState<DrawingToolsConfig> createDrawingToolsItemState();
+  DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState();
 }
 
-/// State class of [IndicatorItem]
-abstract class DrawingToolsItemState<T extends DrawingToolsConfig>
-    extends State<DrawingToolsItem> {
-  /// Indicators repository
+/// State class of [DrawingToolItem]
+abstract class DrawingToolItemState<T extends DrawingToolConfig>
+    extends State<DrawingToolItem> {
+  /// Drawing tools repository
   @protected
-  late DrawingToolsRepository drawingToolsRepo;
+  late AddOnsRepository<DrawingToolConfig> drawingToolsRepo;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    drawingToolsRepo = Provider.of<DrawingToolsRepository>(context);
+    drawingToolsRepo =
+        Provider.of<AddOnsRepository<DrawingToolConfig>>(context);
   }
 
   @override
@@ -62,17 +63,17 @@ abstract class DrawingToolsItemState<T extends DrawingToolsConfig>
         ),
       );
 
-  /// Updates indicator based on its current config values.
+  /// Updates drawing tool based on its current config values.
   void updateDrawingTool() =>
       widget.updateDrawingTool.call(createDrawingToolConfig());
 
-  /// Removes this indicator.
+  /// Removes this drawing tool.
   void removeDrawingTool() => widget.deleteDrawingTool.call();
 
-  /// Returns the [IndicatorConfig] which can be used to create the Series for
-  /// this indicator.
+  /// Returns the [DrawingToolConfig] which can be used to create the Series for
+  /// this drawing tool.
   T createDrawingToolConfig();
 
-  /// Creates the menu options widget for this indicator.
+  /// Creates the menu options widget for this drawing tool.
   Widget getDrawingToolOptions();
 }

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'callbacks.dart';
 import 'indicator_config.dart';
-import 'indicator_repository.dart';
+import '../add_ons_repository.dart';
 
 /// Representing and indicator item in indicators list dialog.
 abstract class IndicatorItem extends StatefulWidget {
@@ -42,13 +42,13 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
     extends State<IndicatorItem> {
   /// Indicators repository
   @protected
-  late IndicatorsRepository indicatorsRepo;
+  late AddOnsRepository<IndicatorConfig> indicatorsRepo;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    indicatorsRepo = Provider.of<IndicatorsRepository>(context);
+    indicatorsRepo = Provider.of<AddOnsRepository<IndicatorConfig>>(context);
   }
 
   @override
