@@ -64,7 +64,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     child: Text('Vertical'),
                     value: 'Vertical',
                   ),
-                  // TODO(Maryia): replace string values with real drawing tools
+                  // TODO(maryia-binary): replace string values with real drawing tools
                 ],
                 onChanged: (String? config) {
                   setState(() {
@@ -74,15 +74,9 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               ),
               const SizedBox(width: 16),
               ElevatedButton(
-                child: const Text('Add'),
-                onPressed: _selectedDrawingTool != null &&
-                        _selectedDrawingTool is DrawingToolConfig
-                    ? () {
-                        repo.add(_selectedDrawingTool! as DrawingToolConfig);
-                        setState(() {});
-                      }
-                    : null, // Temporary type check to disable Add button
-              ),
+                  child: const Text('Add'),
+                  onPressed:
+                      _selectedDrawingTool is DrawingToolConfig ? () {} : null),
             ],
           ),
           Expanded(
