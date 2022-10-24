@@ -192,12 +192,7 @@ class _DerivChartState extends State<DerivChart> {
             Align(
               alignment: const FractionalOffset(0.1, 0),
               child: IconButton(
-                icon: Image.asset(
-                  'assets/icons/ic-drawing-tool.png',
-                  package: 'deriv_chart',
-                  width: 20,
-                  height: 20,
-                ),
+                icon: const Icon(Icons.drive_file_rename_outline_outlined),
                 onPressed: () {
                   showDialog<void>(
                     context: context,
