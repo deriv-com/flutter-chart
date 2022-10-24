@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 
 import 'callbacks.dart';
 import 'indicator_config.dart';
-import '../add_ons_repository.dart';
 
 /// Representing and indicator item in indicators list dialog.
 abstract class IndicatorItem extends StatefulWidget {

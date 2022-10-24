@@ -44,5 +44,6 @@
   "labelShowFractals": "Show Fractals",
   "labelIsSmooth": "Is Smooth",
   "labelShowZones": "Show Zones",
-  "warnFailedLoadingIndicators": "Failed to load indicators."
+  "warnFailedLoadingIndicators": "Failed to load indicators.",
+  "warnFailedLoadingDrawingTools": "Failed to load drawing tools."
 }
