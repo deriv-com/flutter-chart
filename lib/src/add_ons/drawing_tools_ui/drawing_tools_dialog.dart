@@ -64,7 +64,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     child: Text('Vertical'),
                     value: 'Vertical',
                   ),
-                  // TODO(maryia-binary): replace string values with real drawing tools
+                  // TODO(maryia-binary): add real drawing tools above
                 ],
                 onChanged: (String? config) {
                   setState(() {
