@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
 
 /// Config for add-ons such as indicators and drawing tools
-@immutable
-abstract class AddOnConfig {
+abstract class AddOnConfig with EquatableMixin {
   /// Initializes [AddOnConfig].
   const AddOnConfig({
     this.isOverlay = true,
@@ -19,10 +17,5 @@ abstract class AddOnConfig {
   Map<String, dynamic> toJson();
 
   @override
-  bool operator ==(dynamic other) =>
-      other is AddOnConfig &&
-      jsonEncode(other.toJson()) == jsonEncode(toJson());
-
-  @override
-  int get hashCode => jsonEncode(toJson()).hashCode;
+  List<Object> get props => <Object>[toJson()];
 }

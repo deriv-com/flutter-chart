@@ -28,11 +28,11 @@ class AddOnsRepository<T> extends ChangeNotifier {
       return;
     }
 
-    final List<String> strings = prefs.getStringList(addOnsKey)!;
+    final List<String> encodedAddOns = prefs.getStringList(addOnsKey)!;
     _addOns.clear();
 
-    for (final String string in strings) {
-      final T addOnConfig = _addOnConfig.fromJson(jsonDecode(string));
+    for (final String encodedAddOn in encodedAddOns) {
+      final T addOnConfig = _addOnConfig.fromJson(jsonDecode(encodedAddOn));
       _addOns.add(addOnConfig);
     }
     notifyListeners();
