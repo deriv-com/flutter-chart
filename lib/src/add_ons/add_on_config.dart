@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// Config for add-ons such as indicators and drawing tools
 @immutable
 abstract class AddOnConfig {
-  /// Initializes
+  /// Initializes [AddOnConfig].
   const AddOnConfig({
     this.isOverlay = true,
   });
