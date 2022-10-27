@@ -81,9 +81,10 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
           ),
           Expanded(
             child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: repo.addOns.length,
-                itemBuilder: (BuildContext context, int index) => Container()),
+              shrinkWrap: true,
+              itemCount: repo.addOns.length,
+              itemBuilder: (BuildContext context, int index) => Container(),
+            ),
           ),
         ],
       ),

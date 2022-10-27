@@ -8,5 +8,5 @@ abstract class DrawingToolConfig extends AddOnConfig {
   const DrawingToolConfig({bool isOverlay = true})
       : super(isOverlay: isOverlay);
 
-  // TODO(maryia-binary): Add logics for drawing tools UI
+// TODO(maryia-binary): Add config for drawing tools UI
 }
