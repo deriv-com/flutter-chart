@@ -5,7 +5,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 
 import '../chart_data.dart';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 901a55f4 (Maryia/78669/add drawing tools list (#195))
 import 'marker_painter.dart';
 
 /// Marker series

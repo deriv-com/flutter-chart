@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
@@ -32,11 +31,9 @@ import 'zigzag_indicator/zigzag_indicator_config.dart';
 
 /// Indicator config
 @immutable
-abstract class IndicatorConfig {
+abstract class IndicatorConfig extends AddOnConfig {
   /// Initializes
-  const IndicatorConfig({
-    this.isOverlay = true,
-  });
+  const IndicatorConfig({bool isOverlay = true}) : super(isOverlay: isOverlay);
 
   /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
@@ -95,25 +92,8 @@ abstract class IndicatorConfig {
     }
   }
 
-  /// Whether the indicator is an overlay on the main chart or displays on a
-  /// separate chart. Default is set to `true`.
-  final bool isOverlay;
-
   /// Key of indicator name property in JSON.
   static const String nameKey = 'name';
-
-  /// Serialization to JSON. Serves as value in key-value storage.
-  ///
-  /// Must specify indicator `name` with `nameKey`.
-  Map<String, dynamic> toJson();
-
-  @override
-  bool operator ==(dynamic other) =>
-      other is IndicatorConfig &&
-      jsonEncode(other.toJson()) == jsonEncode(toJson());
-
-  @override
-  int get hashCode => jsonEncode(toJson()).hashCode;
 
   /// Indicators supported field types
   static final Map<String, FieldIndicatorBuilder> supportedFieldTypes =

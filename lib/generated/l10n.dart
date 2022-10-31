@@ -280,10 +280,10 @@ class ChartLocalization {
     );
   }
 
-  /// `D% Period`
+  /// `Signal Period`
   String get labelSignalPeriod {
     return Intl.message(
-      'D% Period',
+      'Signal Period',
       name: 'labelSignalPeriod',
       desc: '',
       args: [],
@@ -469,6 +469,16 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Failed to load drawing tools.`
+  String get warnFailedLoadingDrawingTools {
+    return Intl.message(
+      'Failed to load drawing tools.',
+      name: 'warnFailedLoadingDrawingTools',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
@@ -476,28 +486,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
-      Locale.fromSubtags(languageCode: 'ar'),
-      Locale.fromSubtags(languageCode: 'bn'),
-      Locale.fromSubtags(languageCode: 'de'),
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'es'),
-      Locale.fromSubtags(languageCode: 'es', countryCode: 'ES'),
-      Locale.fromSubtags(languageCode: 'fr'),
-      Locale.fromSubtags(languageCode: 'id'),
-      Locale.fromSubtags(languageCode: 'it'),
-      Locale.fromSubtags(languageCode: 'ko'),
-      Locale.fromSubtags(languageCode: 'pl'),
-      Locale.fromSubtags(languageCode: 'pt'),
-      Locale.fromSubtags(languageCode: 'pt', countryCode: 'PT'),
-      Locale.fromSubtags(languageCode: 'ru'),
-      Locale.fromSubtags(languageCode: 'si'),
-      Locale.fromSubtags(languageCode: 'si', countryCode: 'LK'),
-      Locale.fromSubtags(languageCode: 'th'),
-      Locale.fromSubtags(languageCode: 'tr'),
-      Locale.fromSubtags(languageCode: 'vi'),
-      Locale.fromSubtags(languageCode: 'zh'),
-      Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
     ];
   }
 

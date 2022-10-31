@@ -66,7 +66,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show Fractals"),
         "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
         "labelShowZones": MessageLookupByLibrary.simpleMessage("Show Zones"),
-        "labelSignalPeriod": MessageLookupByLibrary.simpleMessage("D% Period"),
+        "labelSignalPeriod":
+            MessageLookupByLibrary.simpleMessage("Signal Period"),
         "labelSlowMAPeriod":
             MessageLookupByLibrary.simpleMessage("Slow MA Period"),
         "labelSmoothingPeriod":
@@ -82,6 +83,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelType": MessageLookupByLibrary.simpleMessage("Type"),
         "warnCheckAssetSearchingText": MessageLookupByLibrary.simpleMessage(
             "Try checking your spelling or use a different term"),
+        "warnFailedLoadingDrawingTools": MessageLookupByLibrary.simpleMessage(
+            "Failed to load drawing tools."),
         "warnFailedLoadingIndicators":
             MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
       };
