@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicato
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ import 'donchian_channel/donchian_channel_indicator_config.dart';
 import 'fcb_indicator/fcb_indicator_config.dart';
 import 'ichimoku_clouds/ichimoku_cloud_indicator_config.dart';
 import 'indicator_config.dart';
-import 'indicator_repository.dart';
 import 'ma_env_indicator/ma_env_indicator_config.dart';
 import 'macd_indicator/macd_indicator_config.dart';
 import 'parabolic_sar/parabolic_sar_indicator_config.dart';
@@ -38,7 +38,8 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final IndicatorsRepository repo = context.watch<IndicatorsRepository>();
+    final AddOnsRepository<IndicatorConfig> repo =
+        context.watch<AddOnsRepository<IndicatorConfig>>();
 
     return AnimatedPopupDialog(
       child: Column(
@@ -161,9 +162,9 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: repo.indicators.length,
+              itemCount: repo.addOns.length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.indicators[index].getItem(
+                  repo.addOns[index].getItem(
                 (IndicatorConfig updatedConfig) =>
                     repo.updateAt(index, updatedConfig),
                 () {

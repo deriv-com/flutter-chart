@@ -1,6 +1,8 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_repository.dart';
+import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
@@ -88,100 +90,136 @@ class DerivChart extends StatefulWidget {
 }
 
 class _DerivChartState extends State<DerivChart> {
-  final IndicatorsRepository _indicatorsRepo = IndicatorsRepository();
+  final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
+      AddOnsRepository<IndicatorConfig>(IndicatorConfig);
+  final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
+      AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
   @override
   void initState() {
     super.initState();
-    loadSavedIndicators();
+    loadSavedIndicatorsAndDrawingTools();
   }
 
-  Future<void> loadSavedIndicators() async {
+  Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      _indicatorsRepo.loadFromPrefs(prefs);
-    } on Exception {
-      // ignore: unawaited_futures
-      showDialog<void>(
-          context: context,
-          builder: (BuildContext context) => AnimatedPopupDialog(
-                child: Center(
-                  child: Text(
-                    ChartLocalization.of(context).warnFailedLoadingIndicators,
+    final List<dynamic> _stateRepos = <dynamic>[
+      _indicatorsRepo,
+      _drawingToolsRepo
+    ];
+    _stateRepos.asMap().forEach((int index, dynamic element) {
+      try {
+        element.loadFromPrefs(prefs);
+      } on Exception {
+        // ignore: unawaited_futures
+        showDialog<void>(
+            context: context,
+            builder: (BuildContext context) => AnimatedPopupDialog(
+                  child: Center(
+                    child: element is AddOnsRepository<IndicatorConfig>
+                        ? Text(ChartLocalization.of(context)
+                            .warnFailedLoadingIndicators)
+                        : Text(ChartLocalization.of(context)
+                            .warnFailedLoadingDrawingTools),
                   ),
-                ),
-              ));
-    }
+                ));
+      }
+    });
   }
 
   @override
-  Widget build(BuildContext context) =>
-      ChangeNotifierProvider<IndicatorsRepository>.value(
-        value: _indicatorsRepo,
-        builder: (BuildContext context, _) => Stack(
-          children: <Widget>[
-            Chart(
-              mainSeries: widget.mainSeries,
-              pipSize: widget.pipSize,
-              granularity: widget.granularity,
-              controller: widget.controller,
-              overlaySeries: <Series>[
-                ...context
-                    .watch<IndicatorsRepository>()
-                    .indicators
-                    .where((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig.isOverlay)
-                    .map((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig.getSeries(
-                          IndicatorInput(
-                            widget.mainSeries.input,
-                            widget.granularity,
-                          ),
-                        ))
-              ],
-              bottomSeries: <Series>[
-                ...context
-                    .watch<IndicatorsRepository>()
-                    .indicators
-                    .where((IndicatorConfig indicatorConfig) =>
-                        !indicatorConfig.isOverlay)
-                    .map((IndicatorConfig indicatorConfig) =>
-                        indicatorConfig.getSeries(
-                          IndicatorInput(
-                            widget.mainSeries.input,
-                            widget.granularity,
-                          ),
-                        ))
-              ],
-              markerSeries: widget.markerSeries,
-              theme: widget.theme,
-              onCrosshairAppeared: widget.onCrosshairAppeared,
-              onVisibleAreaChanged: widget.onVisibleAreaChanged,
-              isLive: widget.isLive,
-              dataFitEnabled: widget.dataFitEnabled,
-              opacity: widget.opacity,
-              annotations: widget.annotations,
-              chartAxisConfig: widget.chartAxisConfig,
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                icon: const Icon(Icons.architecture),
-                onPressed: () {
-                  showDialog<void>(
-                    context: context,
-                    builder: (
-                      BuildContext context,
-                    ) =>
-                        ChangeNotifierProvider<IndicatorsRepository>.value(
-                      value: _indicatorsRepo,
-                      child: IndicatorsDialog(),
-                    ),
-                  );
-                },
+  Widget build(BuildContext context) => MultiProvider(
+        providers: <ChangeNotifierProvider<dynamic>>[
+          ChangeNotifierProvider<AddOnsRepository<IndicatorConfig>>.value(
+              value: _indicatorsRepo),
+          ChangeNotifierProvider<AddOnsRepository<DrawingToolConfig>>.value(
+              value: _drawingToolsRepo),
+        ],
+        child: Builder(
+          builder: (BuildContext context) => Stack(
+            children: <Widget>[
+              Chart(
+                mainSeries: widget.mainSeries,
+                pipSize: widget.pipSize,
+                granularity: widget.granularity,
+                controller: widget.controller,
+                overlaySeries: <Series>[
+                  ...context
+                      .watch<AddOnsRepository<IndicatorConfig>>()
+                      .addOns
+                      .where((IndicatorConfig indicatorConfig) =>
+                          indicatorConfig.isOverlay)
+                      .map((IndicatorConfig indicatorConfig) =>
+                          indicatorConfig.getSeries(
+                            IndicatorInput(
+                              widget.mainSeries.input,
+                              widget.granularity,
+                            ),
+                          ))
+                ],
+                bottomSeries: <Series>[
+                  ...context
+                      .watch<AddOnsRepository<IndicatorConfig>>()
+                      .addOns
+                      .where((IndicatorConfig indicatorConfig) =>
+                          !indicatorConfig.isOverlay)
+                      .map((IndicatorConfig indicatorConfig) =>
+                          indicatorConfig.getSeries(
+                            IndicatorInput(
+                              widget.mainSeries.input,
+                              widget.granularity,
+                            ),
+                          ))
+                ],
+                markerSeries: widget.markerSeries,
+                theme: widget.theme,
+                onCrosshairAppeared: widget.onCrosshairAppeared,
+                onVisibleAreaChanged: widget.onVisibleAreaChanged,
+                isLive: widget.isLive,
+                dataFitEnabled: widget.dataFitEnabled,
+                opacity: widget.opacity,
+                annotations: widget.annotations,
               ),
-            )
-          ],
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.architecture),
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      builder: (
+                        BuildContext context,
+                      ) =>
+                          ChangeNotifierProvider<
+                              AddOnsRepository<IndicatorConfig>>.value(
+                        value: _indicatorsRepo,
+                        child: IndicatorsDialog(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Align(
+                alignment: const FractionalOffset(0.1, 0),
+                child: IconButton(
+                  icon: const Icon(Icons.drive_file_rename_outline_outlined),
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      builder: (
+                        BuildContext context,
+                      ) =>
+                          ChangeNotifierProvider<
+                              AddOnsRepository<DrawingToolConfig>>.value(
+                        value: _drawingToolsRepo,
+                        child: DrawingToolsDialog(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       );
 }

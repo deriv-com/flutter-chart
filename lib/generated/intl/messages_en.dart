@@ -83,6 +83,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelType": MessageLookupByLibrary.simpleMessage("Type"),
         "warnCheckAssetSearchingText": MessageLookupByLibrary.simpleMessage(
             "Try checking your spelling or use a different term"),
+        "warnFailedLoadingDrawingTools": MessageLookupByLibrary.simpleMessage(
+            "Failed to load drawing tools."),
         "warnFailedLoadingIndicators":
             MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
       };
