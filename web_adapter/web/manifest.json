@@ -1,0 +1,12 @@
+{
+  "name": "web_adapter",
+  "short_name": "web_adapter",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0175C2",
+  "theme_color": "#0175C2",
+  "description": "Web adapter",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": []
+}
