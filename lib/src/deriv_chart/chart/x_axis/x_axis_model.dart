@@ -415,23 +415,26 @@ class XAxisModel extends ChangeNotifier {
     _triggerScrollMomentum(details.velocity);
   }
 
+  /// Called to scale the chart
+  void scale(double scale) {
+    _prevMsPerPx = _msPerPx;
+
+    _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
+    onScale?.call();
+    notifyListeners();
+  }
+
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final double nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
-    _scale(details.scale);
+    scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final double focalToRightBound = width! - details.focalPoint.dx;
     final int focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
-    _scale(details.scale);
+    scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
-  }
-
-  void _scale(double scale) {
-    _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
-    onScale?.call();
-    notifyListeners();
   }
 
   void _scrollTo(int rightBoundEpoch) {

@@ -124,6 +124,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     widget.controller?.onScrollToLastTick = (bool animate) {
       xAxis.scrollToLastTick(animate: animate);
     };
+
+    widget.controller?.onScale = (double scale) {
+      xAxis.scale(scale);
+    };
   }
 
   @override
