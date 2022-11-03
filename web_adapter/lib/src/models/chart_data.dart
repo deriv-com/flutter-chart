@@ -6,24 +6,29 @@ import 'dart:html' as html;
 
 import 'message.dart';
 
+/// State and methods of chart web adapter data.
 class ChartDataModel extends ChangeNotifier {
+  /// Tick data.
   List<Tick> ticks = <Tick>[];
+
+  /// Flag to indicate the status of ticks network request.
   bool waitingForHistory = false;
 
-  void listen(Message message) {
-    switch (message.type) {
+  /// Updates the ChartConfigModel state
+  void update(String messageType, dynamic payload) {
+    switch (messageType) {
       case 'TICKS_HISTORY':
-        _onTickHistory(message, false);
+        _onTickHistory(payload, false);
         break;
       case 'PREPEND_TICKS_HISTORY':
-        _onTickHistory(message, true);
+        _onTickHistory(payload, true);
         break;
       case 'TICK':
-        Tick tick = _parseTick(message.payload);
+        final Tick tick = _parseTick(payload);
         _onNewTick(tick);
         break;
       case 'CANDLE':
-        Candle candle = _parseCandle(message.payload);
+        final Candle candle = _parseCandle(payload);
         _onNewCandle(candle);
         break;
       case 'CLEAR_TICKS':
@@ -32,21 +37,17 @@ class ChartDataModel extends ChangeNotifier {
     }
   }
 
-  Tick _parseTick(dynamic item) {
-    return Tick(
-      epoch: DateTime.parse('${item['Date']}Z').millisecondsSinceEpoch,
-      quote: item['Close'],
-    );
-  }
-
-  Candle _parseCandle(dynamic item) {
-    return Candle(
+  Tick _parseTick(dynamic item) => Tick(
         epoch: DateTime.parse('${item['Date']}Z').millisecondsSinceEpoch,
-        high: item['High'],
-        low: item['Low'],
-        open: item['Open'],
-        close: item['Close']);
-  }
+        quote: item['Close'],
+      );
+
+  Candle _parseCandle(dynamic item) => Candle(
+      epoch: DateTime.parse('${item['Date']}Z').millisecondsSinceEpoch,
+      high: item['High'],
+      low: item['Low'],
+      open: item['Open'],
+      close: item['Close']);
 
   void _onNewTick(Tick tick) {
     ticks = ticks + <Tick>[tick];
@@ -65,21 +66,16 @@ class ChartDataModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _onTickHistory(Message message, bool append) {
-    var payload = message.payload as List;
-
-    var newTicks = payload.map((item) {
-      return item['Open'] != null ? _parseCandle(item) : _parseTick(item);
-    }).toList();
+  void _onTickHistory(List<dynamic> payload, bool append) {
+    List<Tick> newTicks = payload
+        .map((dynamic item) =>
+            item['Open'] != null ? _parseCandle(item) : _parseTick(item))
+        .toList();
 
     if (payload.first['Open'] != null) {
-      newTicks = payload.map((item) {
-        return _parseCandle(item);
-      }).toList();
+      newTicks = payload.map((dynamic item) => _parseCandle(item)).toList();
     } else {
-      newTicks = payload.map((item) {
-        return _parseTick(item);
-      }).toList();
+      newTicks = payload.map((dynamic item) => _parseTick(item)).toList();
     }
 
     if (append) {
@@ -100,16 +96,20 @@ class ChartDataModel extends ChangeNotifier {
   }
 
   void _onClearTicks() {
-    ticks = [];
+    ticks = <Tick>[];
     notifyListeners();
   }
 
-  void loadHistory(int count) async {
+  /// Loads old chart history
+  void loadHistory(int count) {
     waitingForHistory = true;
 
-    Map loadHistoryRequest = {"count": count, "end": ticks.first.epoch ~/ 1000};
+    final Map<String, int> loadHistoryRequest = <String, int>{
+      'count': count,
+      'end': ticks.first.epoch ~/ 1000
+    };
 
-    var loadHistoryMessage =
+    final Message loadHistoryMessage =
         Message('LOAD_HISTORY', jsonEncode(loadHistoryRequest));
 
     html.window.parent!.postMessage(loadHistoryMessage.toJson(), '*');

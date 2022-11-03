@@ -1,17 +1,16 @@
-import 'dart:collection';
-
+/// Message class
 class Message {
-  late String type;
-  dynamic payload;
-
+  /// Initializes a Message class.
   Message(this.type, this.payload);
 
-  Message.fromMap(LinkedHashMap<dynamic, dynamic> map) {
-    type = map["type"];
-    payload = map["payload"];
-  }
+  /// Type of the message
+  late String type;
 
-  Map<String, dynamic> toJson() => {
+  /// Payload Information
+  late dynamic payload;
+
+  /// Serialization to JSON.
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'type': type,
         'payload': payload,
       };
