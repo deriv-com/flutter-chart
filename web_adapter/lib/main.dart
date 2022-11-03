@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +49,8 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   }
 
   void listen(html.Event event) {
-    final Map<String, dynamic> data = (event as html.MessageEvent).data;
+    final LinkedHashMap<dynamic, dynamic> data =
+        (event as html.MessageEvent).data;
     final String messageType = data['type'];
     final dynamic payload = data['payload'];
 
