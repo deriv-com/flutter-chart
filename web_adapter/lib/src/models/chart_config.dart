@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +49,7 @@ class ChartConfigModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _onNewChart(Map<String, dynamic> payload) {
+  void _onNewChart(LinkedHashMap<dynamic, dynamic> payload) {
     if (payload['granularity'] != null) {
       final int _granularity = payload['granularity'];
       granularity = _granularity == 0 ? 1 * 1000 : _granularity * 1000;
