@@ -469,6 +469,16 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Failed to load drawing tools.`
+  String get warnFailedLoadingDrawingTools {
+    return Intl.message(
+      'Failed to load drawing tools.',
+      name: 'warnFailedLoadingDrawingTools',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
