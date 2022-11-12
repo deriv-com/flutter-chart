@@ -54,8 +54,11 @@ abstract class DrawingToolItemState<T extends DrawingToolConfig>
 
   @override
   Widget build(BuildContext context) => ListTile(
-        contentPadding: const EdgeInsets.all(0),
-        title: Text(widget.title, style: const TextStyle(fontSize: 14)),
+        contentPadding: const EdgeInsets.only(left: 62),
+        title: Text(
+          widget.title,
+          style: const TextStyle(fontSize: 16),
+        ),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
           onPressed: removeDrawingTool,

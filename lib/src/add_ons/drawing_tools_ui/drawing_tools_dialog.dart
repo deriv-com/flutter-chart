@@ -80,6 +80,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                         _selectedDrawingTool is DrawingToolConfig
                     ? () {
                         repo.add(_selectedDrawingTool! as DrawingToolConfig);
+                        Navigator.of(context).pop();
                         setState(() {});
                       }
                     : null,
