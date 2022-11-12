@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,8 +34,17 @@ class AddOnsRepository<T> extends ChangeNotifier {
     _addOns.clear();
 
     for (final String encodedAddOn in encodedAddOns) {
-      final T addOnConfig = _addOnConfig.fromJson(jsonDecode(encodedAddOn));
-      _addOns.add(addOnConfig);
+      dynamic addOnConfig;
+      if (_addOnConfig is IndicatorConfig) {
+        addOnConfig = IndicatorConfig.fromJson(jsonDecode(encodedAddOn)) as T;
+      } else if (_addOnConfig is DrawingToolConfig) {
+        addOnConfig = DrawingToolConfig.fromJson(jsonDecode(encodedAddOn)) as T;
+      }
+      if (addOnConfig == null) {
+        continue;
+      } else {
+        _addOns.add(addOnConfig);
+      }
     }
     notifyListeners();
   }
