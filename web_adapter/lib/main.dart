@@ -87,13 +87,20 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                                     ) as DataSeries<Tick>,
                               annotations: chartDataModel.ticks.length > 4
                                   ? <ChartAnnotation<ChartObject>>[
+                                      if (chartConfigModel.slBarrier != null)
+                                        chartConfigModel.slBarrier
+                                            as ChartAnnotation<ChartObject>,
+                                      if (chartConfigModel.tpBarrier != null)
+                                        chartConfigModel.tpBarrier
+                                            as ChartAnnotation<ChartObject>,
                                       TickIndicator(
                                         chartDataModel.ticks.last,
-                                        style: const HorizontalBarrierStyle(
+                                        style: HorizontalBarrierStyle(
                                           color: Colors.redAccent,
                                           labelShape: LabelShape.pentagon,
                                           hasBlinkingDot: true,
                                           hasArrow: false,
+                                          shadeType: chartConfigModel.shadeType,
                                         ),
                                         visibility: HorizontalBarrierVisibility
                                             .keepBarrierLabelVisible,

@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barr
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_shade.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
 
@@ -197,6 +198,11 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       }
     }
 
+    if (style.shadeType != ShadeType.none) {
+      final double right = labelArea.left - style.arrowSize - 6;
+      _paintShade(canvas, 0, right, y, style.shadeType, style.shadeColor);
+    }
+
     if (dotX != null) {
       _barrierPosition = Offset(dotX, y);
     }
@@ -331,6 +337,18 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
             size: arrowSize,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
+  }
+
+  void _paintShade(
+    Canvas canvas,
+    double mainLineStartX,
+    double mainLineEndX,
+    double y,
+    ShadeType shadeType,
+    Color shadeColor,
+  ) {
+    paintHorizontalShade(
+        canvas, mainLineEndX, mainLineStartX, y, shadeType, shadeColor);
   }
 }
 
