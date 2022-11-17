@@ -29,6 +29,7 @@ class Chart extends StatefulWidget {
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
+    this.barriers,
     Key? key,
   }) : super(key: key);
 
@@ -44,6 +45,9 @@ class Chart extends StatefulWidget {
 
   /// Open position marker series.
   final MarkerSeries? markerSeries;
+
+  /// The list that holds the stateful barriers.
+  final List<Barrier>? barriers;
 
   /// Chart's controller
   final ChartController? controller;
@@ -152,6 +156,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     mainSeries: widget.mainSeries,
                     overlaySeries: widget.overlaySeries,
                     annotations: widget.annotations,
+                    barriers: widget.barriers,
                     markerSeries: widget.markerSeries,
                     pipSize: widget.pipSize,
                     onCrosshairAppeared: widget.onCrosshairAppeared,

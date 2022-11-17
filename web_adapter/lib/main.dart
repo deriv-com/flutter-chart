@@ -34,7 +34,7 @@ class _DerivChartWebAdapter extends StatefulWidget {
 
 class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   _DerivChartWebAdapterState() {
-    chartConfigModel = ChartConfigModel(_controller);
+    chartConfigModel = ChartConfigModel(_controller, chartDataModel);
   }
 
   final ChartController _controller = ChartController();
@@ -76,49 +76,49 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                               ChartDataModel chartDataModel,
                               Widget? child) =>
                           DerivChart(
-                              mainSeries: chartConfigModel.style ==
-                                          ChartStyle.candles &&
-                                      chartDataModel.ticks is List<Candle>
-                                  ? CandleSeries(
-                                      chartDataModel.ticks as List<Candle>)
-                                  : LineSeries(
-                                      chartDataModel.ticks,
-                                      style: const LineStyle(hasArea: true),
-                                    ) as DataSeries<Tick>,
-                              annotations: chartDataModel.ticks.length > 4
-                                  ? <ChartAnnotation<ChartObject>>[
-                                      if (chartConfigModel.slBarrier != null)
-                                        chartConfigModel.slBarrier
-                                            as ChartAnnotation<ChartObject>,
-                                      if (chartConfigModel.tpBarrier != null)
-                                        chartConfigModel.tpBarrier
-                                            as ChartAnnotation<ChartObject>,
-                                      TickIndicator(
-                                        chartDataModel.ticks.last,
-                                        style: HorizontalBarrierStyle(
-                                          color: Colors.redAccent,
-                                          labelShape: LabelShape.pentagon,
-                                          hasBlinkingDot: true,
-                                          hasArrow: false,
-                                          shadeType: chartConfigModel.shadeType,
-                                        ),
-                                        visibility: HorizontalBarrierVisibility
-                                            .keepBarrierLabelVisible,
-                                      ),
-                                    ]
-                                  : null,
-                              granularity: chartConfigModel.granularity ?? 1000,
-                              controller: _controller,
-                              theme: chartConfigModel.theme,
-                              onVisibleAreaChanged:
-                                  (int leftEpoch, int rightEpoch) {
-                                if (!chartDataModel.waitingForHistory &&
-                                    chartDataModel.ticks.isNotEmpty &&
-                                    leftEpoch <
-                                        chartDataModel.ticks.first.epoch) {
-                                  chartDataModel.loadHistory(2500);
-                                }
-                              }),
+                        mainSeries: chartConfigModel.style ==
+                                    ChartStyle.candles &&
+                                chartDataModel.ticks is List<Candle>
+                            ? CandleSeries(chartDataModel.ticks as List<Candle>)
+                            : LineSeries(
+                                chartDataModel.ticks,
+                                style: const LineStyle(hasArea: true),
+                              ) as DataSeries<Tick>,
+                        annotations: chartDataModel.ticks.length > 4
+                            ? <Barrier>[
+                                if (chartConfigModel.slBarrier != null)
+                                  chartConfigModel.slBarrier as Barrier,
+                                if (chartConfigModel.tpBarrier != null)
+                                  chartConfigModel.tpBarrier as Barrier,
+                                TickIndicator(
+                                  chartDataModel.ticks.last,
+                                  style: HorizontalBarrierStyle(
+                                    color: Colors.redAccent,
+                                    labelShape: LabelShape.pentagon,
+                                    hasBlinkingDot: true,
+                                    hasArrow: false,
+                                    shadeType: chartConfigModel.shadeType,
+                                  ),
+                                  visibility: HorizontalBarrierVisibility
+                                      .keepBarrierLabelVisible,
+                                ),
+                              ]
+                            : null,
+                        granularity: chartConfigModel.granularity ?? 1000,
+                        controller: _controller,
+                        theme: chartConfigModel.theme,
+                        onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                          if (!chartDataModel.waitingForHistory &&
+                              chartDataModel.ticks.isNotEmpty &&
+                              leftEpoch < chartDataModel.ticks.first.epoch) {
+                            chartDataModel.loadHistory(2500);
+                          }
+                        },
+                        barriers: <Barrier>[
+                          if (chartConfigModel.draggableBarrier != null)
+                            chartConfigModel.draggableBarrier as Barrier
+                        ],
+                      ),
                     ),
                   ),
                 ],

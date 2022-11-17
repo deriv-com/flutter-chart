@@ -107,6 +107,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
     }
   }
 
+  bool _canScaleVertically = true;
+
   double get _topPadding => verticalPadding;
 
   double get _bottomPadding => verticalPadding;
@@ -260,6 +262,26 @@ class BasicChartState<T extends BasicChart> extends State<T>
         bottomPadding: _bottomPadding,
       );
 
+  /// Converts the chart quote to y axis value inside the canvas.
+  double chartQuoteFromCanvasY(double y) => quoteFromCanvasY(
+        y: y,
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize?.height ?? 200,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
+
+  /// Enables vertical scroll.
+  void enableVerticalScale() {
+    _canScaleVertically = true;
+  }
+
+  /// Disables vertical scroll.
+  void disableVerticalScale() {
+    _canScaleVertically = false;
+  }
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         key: _key,
@@ -373,7 +395,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   void _onPanUpdate(DragUpdateDetails details) {
     if (_panStartedOnQuoteLabelsArea &&
-        _onQuoteLabelsTouchArea(details.globalPosition)) {
+        _onQuoteLabelsTouchArea(details.globalPosition) &&
+        _canScaleVertically) {
       _scaleVertically(details.delta.dy);
     }
   }

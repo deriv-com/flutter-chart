@@ -112,19 +112,34 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       _paintBlinkingDot(canvas, dotX, y, animationInfo, style.blinkingDotColor);
     }
 
+    final String label =
+        series.label ?? animatedValue.toStringAsFixed(chartConfig.pipSize);
+
     final TextPainter valuePainter = makeTextPainter(
-      animatedValue.toStringAsFixed(chartConfig.pipSize),
+      label,
       style.textStyle,
     );
+
+    final TextPainter? iconPainter = style.isDraggable
+        ? makeTextPainter(
+            String.fromCharCode(Icons.drag_handle.codePoint),
+            TextStyle(
+                fontSize: 15,
+                fontFamily: Icons.drag_handle.fontFamily,
+                color: Colors.white),
+          )
+        : null;
+
     final Rect labelArea = Rect.fromCenter(
       center: Offset(
           size.width - rightMargin - padding - valuePainter.width / 2, y),
-      width: valuePainter.width + padding * 2,
+      width: (iconPainter?.width ?? 0) + valuePainter.width + padding * 2,
       height: style.labelHeight,
     );
+    series.labelTapArea = labelArea;
 
     // Line.
-    if (arrowType == BarrierArrowType.none) {
+    if (arrowType == BarrierArrowType.none || style.hasArrow == false) {
       final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double lineEndX = labelArea.left;
 
@@ -177,6 +192,14 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       painter: valuePainter,
       anchor: labelArea.center,
     );
+
+    if (iconPainter != null) {
+      paintWithTextPainter(
+        canvas,
+        painter: iconPainter,
+        anchor: labelArea.centerLeft + const Offset(6, 0),
+      );
+    }
 
     // Arrows.
     if (style.hasArrow) {
