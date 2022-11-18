@@ -90,6 +90,12 @@ class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
+  /// if drawing is allowed;
+  bool _isDrawingAllowed = false;
+
+  /// if drawing has been finished;
+  bool _isDrawingFinished = false;
+
   @override
   void initState() {
     super.initState();
@@ -167,6 +173,7 @@ class _DerivChartState extends State<DerivChart> {
                           ))
                 ],
                 markerSeries: widget.markerSeries,
+                isDrawingAllowed: _isDrawingAllowed,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
                 onVisibleAreaChanged: widget.onVisibleAreaChanged,
@@ -207,7 +214,10 @@ class _DerivChartState extends State<DerivChart> {
                           ChangeNotifierProvider<
                               AddOnsRepository<DrawingToolConfig>>.value(
                         value: _drawingToolsRepo,
-                        child: DrawingToolsDialog(),
+                        child: DrawingToolsDialog(
+                            onDrawingToolSelection: onDrawingToolSelection,
+                            onDrawingToolRemoval: onDrawingToolRemoval,
+                            isDrawingToolDrawn: _isDrawingFinished),
                       ),
                     );
                   },
@@ -217,4 +227,26 @@ class _DerivChartState extends State<DerivChart> {
           ),
         ),
       );
+
+  void onDrawingToolSelection(DrawingToolConfig selectedDrawingTool) {
+    setState(() {
+      if (!_isDrawingAllowed) {
+        _isDrawingAllowed = true;
+      }
+      // if (!_isDrawingFinished) {
+      //   _isDrawingFinished = true;
+      // }
+    });
+  }
+
+  void onDrawingToolRemoval(DrawingToolConfig selectedDrawingTool) {
+    setState(() {
+      if (_isDrawingAllowed) {
+        _isDrawingAllowed = false;
+      }
+      if (_isDrawingFinished) {
+        _isDrawingFinished = false;
+      }
+    });
+  }
 }

@@ -3,6 +3,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_drawing_tool_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
@@ -31,6 +32,7 @@ class MainChart extends BasicChart {
     this.onCrosshairAppeared,
     this.overlaySeries,
     this.annotations,
+    this.isDrawingAllowed = false,
     double opacity = 1,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
@@ -54,6 +56,9 @@ class MainChart extends BasicChart {
 
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
+
+  /// if drawing is allowed.
+  final bool isDrawingAllowed;
 
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
@@ -255,6 +260,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
+                if (widget.isDrawingAllowed) const LineDrawingToolArea(),
                 _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(

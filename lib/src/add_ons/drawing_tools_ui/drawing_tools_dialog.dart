@@ -7,6 +7,23 @@ import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 
 /// Drawing tools dialog with available drawing tools.
 class DrawingToolsDialog extends StatefulWidget {
+  /// Creates drawing tools dialog.
+  const DrawingToolsDialog({
+    required this.onDrawingToolSelection(DrawingToolConfig selectedDrawingTool),
+    required this.onDrawingToolRemoval(DrawingToolConfig selectedDrawingTool),
+    this.isDrawingToolDrawn = false,
+    Key? key,
+  }) : super(key: key);
+
+  /// callback to inform parent about drawing tool selection;
+  final dynamic Function(DrawingToolConfig) onDrawingToolSelection;
+
+  /// callback to inform parent about drawing tool removal;
+  final dynamic Function(DrawingToolConfig) onDrawingToolRemoval;
+
+  /// if a drawing tool has been drawn, defaults to false;
+  final bool isDrawingToolDrawn;
+
   @override
   _DrawingToolsDialogState createState() => _DrawingToolsDialogState();
 }
@@ -79,9 +96,9 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 onPressed: _selectedDrawingTool != null &&
                         _selectedDrawingTool is DrawingToolConfig
                     ? () {
+                        widget.onDrawingToolSelection(_selectedDrawingTool);
                         repo.add(_selectedDrawingTool! as DrawingToolConfig);
                         Navigator.of(context).pop();
-                        setState(() {});
                       }
                     : null,
               ),
@@ -92,14 +109,17 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               shrinkWrap: true,
               itemCount: repo.addOns.length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.addOns[index].getItem(
-                (DrawingToolConfig updatedConfig) =>
-                    repo.updateAt(index, updatedConfig),
-                () {
-                  repo.removeAt(index);
-                  setState(() {});
-                },
-              ),
+                  widget.isDrawingToolDrawn
+                      ? repo.addOns[index].getItem(
+                          (DrawingToolConfig updatedConfig) =>
+                              repo.updateAt(index, updatedConfig),
+                          () {
+                            widget.onDrawingToolRemoval(repo.addOns[index]);
+                            repo.removeAt(index);
+                            setState(() {});
+                          },
+                        )
+                      : Container(),
             ),
           ),
         ],

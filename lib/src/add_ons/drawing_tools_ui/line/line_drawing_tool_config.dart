@@ -30,14 +30,6 @@ class LineDrawingToolConfig extends DrawingToolConfig {
   /// Drawing tool line style
   final LineStyle lineStyle;
 
-  // add to chart:
-  // @override
-  // Series getSeries(IndicatorInput indicatorInput) => ZigZagSeries(
-  //   indicatorInput,
-  //   distance: distance,
-  //   style: lineStyle,
-  // );
-
   @override
   DrawingToolItem getItem(
     UpdateDrawingTool updateDrawingTool,

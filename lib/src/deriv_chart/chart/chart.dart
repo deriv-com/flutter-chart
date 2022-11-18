@@ -29,6 +29,7 @@ class Chart extends StatefulWidget {
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
+    this.isDrawingAllowed = false,
     Key? key,
   }) : super(key: key);
 
@@ -44,6 +45,9 @@ class Chart extends StatefulWidget {
 
   /// Open position marker series.
   final MarkerSeries? markerSeries;
+
+  /// if drawing is allowed.
+  final bool isDrawingAllowed;
 
   /// Chart's controller
   final ChartController? controller;
@@ -148,6 +152,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 Expanded(
                   flex: 3,
                   child: MainChart(
+                    isDrawingAllowed: widget.isDrawingAllowed,
                     controller: _controller,
                     mainSeries: widget.mainSeries,
                     overlaySeries: widget.overlaySeries,
