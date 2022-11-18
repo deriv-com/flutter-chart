@@ -40,22 +40,26 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
   }
 
   void _onTap(TapUpDetails details) {
-    position = details.localPosition;
-    if (!_isPenDown) {
-      _isPenDown = true;
-    } else {
-      _isPenDown = false;
-    }
+    setState(() {
+      position = details.localPosition;
+      if (!_isPenDown) {
+        _isPenDown = true;
+      } else {
+        _isPenDown = false;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) => Stack(children: <Widget>[
-        CustomPaint(
-            painter: _LineDrawingToolPainter(
-          x: position?.dx,
-          y: position?.dy,
-          theme: context.watch<ChartTheme>(),
-        )),
+        position?.dx != null && position?.dy != null
+            ? CustomPaint(
+                painter: _LineDrawingToolPainter(
+                x: position?.dx,
+                y: position?.dy,
+                theme: context.watch<ChartTheme>(),
+              ))
+            : Container()
       ]);
 }
 
@@ -77,7 +81,11 @@ class _LineDrawingToolPainter extends CustomPainter {
     canvas.drawCircle(
       center,
       4,
-      Paint()..color = Colors.white,
+      Paint()
+        ..color = Colors.white
+        ..strokeWidth = 1
+        ..style = PaintingStyle.stroke
+        ..strokeJoin = StrokeJoin.round,
     );
   }
 
