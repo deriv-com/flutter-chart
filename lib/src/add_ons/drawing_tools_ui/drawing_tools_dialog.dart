@@ -16,10 +16,10 @@ class DrawingToolsDialog extends StatefulWidget {
   }) : super(key: key);
 
   /// callback to inform parent about drawing tool selection;
-  final dynamic Function(DrawingToolConfig) onDrawingToolSelection;
+  final void Function(DrawingToolConfig) onDrawingToolSelection;
 
   /// callback to inform parent about drawing tool removal;
-  final dynamic Function(DrawingToolConfig) onDrawingToolRemoval;
+  final void Function(DrawingToolConfig) onDrawingToolRemoval;
 
   /// if a drawing tool has been drawn, defaults to false;
   final bool isDrawingToolDrawn;
@@ -96,8 +96,8 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 onPressed: _selectedDrawingTool != null &&
                         _selectedDrawingTool is DrawingToolConfig
                     ? () {
-                        widget.onDrawingToolSelection(_selectedDrawingTool);
                         repo.add(_selectedDrawingTool! as DrawingToolConfig);
+                        widget.onDrawingToolSelection(_selectedDrawingTool);
                         Navigator.of(context).pop();
                       }
                     : null,

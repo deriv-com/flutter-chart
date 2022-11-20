@@ -233,9 +233,9 @@ class _DerivChartState extends State<DerivChart> {
       if (!_isDrawingAllowed) {
         _isDrawingAllowed = true;
       }
-      // if (!_isDrawingFinished) {
-      //   _isDrawingFinished = true;
-      // }
+      if (!_isDrawingFinished) {
+        _isDrawingFinished = true;
+      }
     });
   }
 
