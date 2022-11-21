@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +34,8 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
   /// if drawing has been finished;
   bool _isDrawingFinished = false;
 
-  XAxisModel get xAxis => context.read<XAxisModel>();
+  /// canvas size;
+  Size? _canvasSize;
 
   @override
   void initState() {
@@ -66,13 +66,34 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
         _isPenDown = false;
         _isDrawingFinished = true;
         final Offset center = Offset(position!.dx, position!.dy);
+
+        /// calculations for drawing a line across 2 markers;
+        double startX = 0, startY = 0, endX = 0, endY = 0;
+        final double xDiff = (center.dx - _startingPoint!.dx).abs();
+        final double yDiff = (center.dy - _startingPoint!.dy).abs();
+        final double diagonal =
+            sqrt(pow(_canvasSize!.height, 2) + pow(_canvasSize!.width, 2));
+        final double count = xDiff == 0 || yDiff == 0
+            ? diagonal / max(xDiff, yDiff)
+            : diagonal / min(xDiff, yDiff);
+        for (int i = 1; i < count; i++) {
+          final double xIncrement =
+              _startingPoint!.dx > center.dx ? xDiff * i : -(xDiff * i);
+          final double yIncrement =
+              _startingPoint!.dy > center.dy ? yDiff * i : -(yDiff * i);
+          startX = _startingPoint!.dx + xIncrement;
+          startY = _startingPoint!.dy + yIncrement;
+          endX = center.dx + -xIncrement;
+          endY = center.dy + -yIncrement;
+        }
+
         _lineDrawings.addAll(<LineDrawingTool>[
           ..._lineDrawings,
           LineDrawingTool(drawingType: 'marker', start: center),
           LineDrawingTool(
             drawingType: 'line',
-            start: _startingPoint!,
-            end: center,
+            start: Offset(startX, startY),
+            end: Offset(endX, endY),
           )
         ]);
       }
@@ -87,9 +108,11 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
                   padding: const EdgeInsets.only(right: 60),
                 ),
                 painter: _LineDrawingToolPainter(
-                  lineDrawings: _lineDrawings,
-                  theme: context.watch<ChartTheme>(),
-                ))
+                    lineDrawings: _lineDrawings,
+                    theme: context.watch<ChartTheme>(),
+                    onPaint: (Size size) {
+                      _canvasSize = size;
+                    }))
             : Container()
       ]);
 }
@@ -98,15 +121,18 @@ class _LineDrawingToolPainter extends CustomPainter {
   _LineDrawingToolPainter({
     required this.lineDrawings,
     required this.theme,
+    required this.onPaint,
   });
 
   final List<LineDrawingTool> lineDrawings;
   final ChartTheme theme;
+  void Function(Size size) onPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
     lineDrawings.asMap().forEach((int index, LineDrawingTool element) {
       element.onPaint(canvas, size, theme);
+      onPaint(size);
     });
   }
 
@@ -144,25 +170,9 @@ class LineDrawingTool {
       canvas.drawCircle(
           start, markerRadius, Paint()..color = theme.base02Color);
     } else if (drawingType == 'line') {
-      double startX = 0, startY = 0, endX = 0, endY = 0;
-      final double xDiff = (end.dx - start.dx).abs();
-      final double yDiff = (end.dy - start.dy).abs();
-      final double diagonal = sqrt(pow(size.height, 2) + pow(size.width, 2));
-      final double count = xDiff == 0 || yDiff == 0
-          ? diagonal / max(xDiff, yDiff)
-          : diagonal / min(xDiff, yDiff);
-      for (int i = 1; i < count; i++) {
-        final double xIncrement = start.dx > end.dx ? xDiff * i : -(xDiff * i);
-        final double yIncrement = start.dy > end.dy ? yDiff * i : -(yDiff * i);
-        startX = start.dx + xIncrement;
-        startY = start.dy + yIncrement;
-        endX = end.dx + -xIncrement;
-        endY = end.dy + -yIncrement;
-      }
-
       canvas.drawLine(
-          Offset(startX, startY),
-          Offset(endX, endY),
+          start,
+          end,
           Paint()
             ..color = theme.base02Color
             ..strokeWidth = 1);
