@@ -59,6 +59,9 @@ class HorizontalBarrierStyle extends BarrierStyle {
       color: Colors.white,
       fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
+    this.shadeType = ShadeType.none,
+    this.shadeColor = const Color(0xFF607D8B),
+    this.isDraggable = false,
   })  : blinkingDotColor = blinkingDotColor ?? color,
         super(
           color: color,
@@ -99,6 +102,16 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Color used to paint a second background of label if needed under the
   /// initial color.
   final Color secondaryBackgroundColor;
+
+  /// Whether to draw a shade on top or below the horizontal line to the current
+  /// tick.
+  final ShadeType shadeType;
+
+  /// Color used to paint the shade
+  final Color shadeColor;
+
+  /// Whether to make the barrier draggable and show drag pointer on hover
+  final bool isDraggable;
 
   @override
   String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';
@@ -145,4 +158,16 @@ enum LabelShape {
 
   /// Pentagon.
   pentagon,
+}
+
+/// The type of arrow on top/bottom of barrier label (Horizontal barrier).
+enum ShadeType {
+  /// No arrows.
+  none,
+
+  /// Draws shade above the barrier.
+  above,
+
+  /// Draws shade below the barrier.
+  below,
 }

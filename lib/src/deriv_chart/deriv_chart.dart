@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.da
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -35,6 +36,7 @@ class DerivChart extends StatefulWidget {
     this.isLive = false,
     this.dataFitEnabled = false,
     this.annotations,
+    this.barriers,
     this.opacity = 1.0,
     this.pipSize = 4,
     Key? key,
@@ -67,6 +69,9 @@ class DerivChart extends StatefulWidget {
 
   /// Chart's annotations
   final List<ChartAnnotation<ChartObject>>? annotations;
+
+  /// The list that holds the stateful barriers.
+  final List<Barrier>? barriers;
 
   /// Whether the chart should be showing live data or not.
   ///
@@ -166,6 +171,7 @@ class _DerivChartState extends State<DerivChart> {
                             ),
                           ))
                 ],
+                barriers: widget.barriers,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,

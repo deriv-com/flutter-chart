@@ -231,4 +231,68 @@ void main() {
       );
     });
   });
+
+  group('quoteFromCanvasY should return', () {
+    test('[topBoundQuote] when [y == topPadding]', () {
+      expect(
+        quoteFromCanvasY(
+          y: 0,
+          topBoundQuote: 1234.2345,
+          bottomBoundQuote: 123.439,
+          canvasHeight: 10033,
+          topPadding: 0,
+          bottomPadding: 133,
+        ),
+        equals(1234.2345),
+      );
+      expect(
+        quoteFromCanvasY(
+          y: 1234.34,
+          topBoundQuote: 1234.2345,
+          bottomBoundQuote: 123.439,
+          canvasHeight: 10033,
+          topPadding: 1234.34,
+          bottomPadding: 133,
+        ),
+        equals(1234.2345),
+      );
+    });
+    test('[bottomBoundQuote] when [y == canvasHeight]', () {
+      expect(
+        quoteFromCanvasY(
+          y: 1024,
+          topBoundQuote: 102.2385,
+          bottomBoundQuote: 89.2345,
+          canvasHeight: 1024,
+          topPadding: 123,
+          bottomPadding: 0,
+        ),
+        equals(89.2345),
+      );
+      expect(
+        quoteFromCanvasY(
+          y: 1024,
+          topBoundQuote: 102.2385,
+          bottomBoundQuote: 89.2345,
+          canvasHeight: 1024,
+          topPadding: 123,
+          bottomPadding: 24,
+        ),
+        equals(89.2345),
+      );
+    });
+    test('middle of drawing range', () {
+      expect(
+        quoteFromCanvasY(
+          y: 512,
+          topBoundQuote: 100,
+          bottomBoundQuote: 200,
+          canvasHeight: 1024,
+          topPadding: 12,
+          bottomPadding: 12,
+        ),
+        equals(150),
+      );
+    });
+  });
 }

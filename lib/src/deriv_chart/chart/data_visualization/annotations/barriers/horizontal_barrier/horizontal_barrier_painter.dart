@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barr
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_shade.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
 
@@ -111,19 +112,34 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       _paintBlinkingDot(canvas, dotX, y, animationInfo, style.blinkingDotColor);
     }
 
+    final String label =
+        series.label ?? animatedValue.toStringAsFixed(chartConfig.pipSize);
+
     final TextPainter valuePainter = makeTextPainter(
-      animatedValue.toStringAsFixed(chartConfig.pipSize),
+      label,
       style.textStyle,
     );
+
+    final TextPainter? iconPainter = style.isDraggable
+        ? makeTextPainter(
+            String.fromCharCode(Icons.drag_handle.codePoint),
+            TextStyle(
+                fontSize: 15,
+                fontFamily: Icons.drag_handle.fontFamily,
+                color: Colors.white),
+          )
+        : null;
+
     final Rect labelArea = Rect.fromCenter(
       center: Offset(
           size.width - rightMargin - padding - valuePainter.width / 2, y),
-      width: valuePainter.width + padding * 2,
+      width: (iconPainter?.width ?? 0) + valuePainter.width + padding * 2,
       height: style.labelHeight,
     );
+    series.labelTapArea = labelArea;
 
     // Line.
-    if (arrowType == BarrierArrowType.none) {
+    if (arrowType == BarrierArrowType.none || style.hasArrow == false) {
       final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
       final double lineEndX = labelArea.left;
 
@@ -177,6 +193,14 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       anchor: labelArea.center,
     );
 
+    if (iconPainter != null) {
+      paintWithTextPainter(
+        canvas,
+        painter: iconPainter,
+        anchor: labelArea.centerLeft + const Offset(6, 0),
+      );
+    }
+
     // Arrows.
     if (style.hasArrow) {
       final double arrowMidX = labelArea.left - style.arrowSize - 6;
@@ -195,6 +219,11 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
           arrowSize: style.arrowSize,
         );
       }
+    }
+
+    if (style.shadeType != ShadeType.none) {
+      final double right = labelArea.left - style.arrowSize - 6;
+      _paintShade(canvas, 0, right, y, style.shadeType, style.shadeColor);
     }
 
     if (dotX != null) {
@@ -331,6 +360,18 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
             size: arrowSize,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
+  }
+
+  void _paintShade(
+    Canvas canvas,
+    double mainLineStartX,
+    double mainLineEndX,
+    double y,
+    ShadeType shadeType,
+    Color shadeColor,
+  ) {
+    paintHorizontalShade(
+        canvas, mainLineEndX, mainLineStartX, y, shadeType, shadeColor);
   }
 }
 
