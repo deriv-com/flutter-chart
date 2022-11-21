@@ -1,5 +1,3 @@
-// ignore_for_file: cascade_invocations
-// canvas.drawLine() returns void, cascade cannot be applied.
 import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -85,7 +83,9 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
   Widget build(BuildContext context) => Stack(children: <Widget>[
         _startingPoint != null
             ? CustomPaint(
-                child: Container(),
+                child: Container(
+                  padding: const EdgeInsets.only(right: 60),
+                ),
                 painter: _LineDrawingToolPainter(
                   lineDrawings: _lineDrawings,
                   theme: context.watch<ChartTheme>(),
@@ -142,68 +142,27 @@ class LineDrawingTool {
   void onPaint(Canvas canvas, Size size, ChartTheme theme) {
     if (drawingType == 'marker') {
       canvas.drawCircle(
-        start,
-        markerRadius,
-        Paint()
-          ..color = theme.base02Color
-          ..strokeWidth = 1
-          ..style = PaintingStyle.stroke
-          ..strokeJoin = StrokeJoin.round,
-      );
+          start, markerRadius, Paint()..color = theme.base02Color);
     } else if (drawingType == 'line') {
+      double startX = 0, startY = 0, endX = 0, endY = 0;
       final double xDiff = (end.dx - start.dx).abs();
       final double yDiff = (end.dy - start.dy).abs();
+      final double diagonal = sqrt(pow(size.height, 2) + pow(size.width, 2));
       final double count = xDiff == 0 || yDiff == 0
-          ? size.height / max(xDiff, yDiff)
-          : size.height / min(xDiff, yDiff);
-      double startX = 0;
-      double startY = 0;
-      double endX = 0;
-      double endY = 0;
-      final double xStart = start.dx > end.dx ? size.width : 0;
-      final double yStart = start.dy > end.dy ? size.height : 0;
-      final double xEnd = start.dx < end.dx ? size.width : 0;
-      final double yEnd = start.dy < end.dy ? size.height : 0;
-
+          ? diagonal / max(xDiff, yDiff)
+          : diagonal / min(xDiff, yDiff);
       for (int i = 1; i < count; i++) {
         final double xIncrement = start.dx > end.dx ? xDiff * i : -(xDiff * i);
         final double yIncrement = start.dy > end.dy ? yDiff * i : -(yDiff * i);
-        startX = start.dy == end.dy ? xStart : start.dx + xIncrement;
-        startY = start.dx == end.dx ? yStart : start.dy + yIncrement;
-        endX = start.dy == end.dy ? xEnd : end.dx + -xIncrement;
-        endY = start.dx == end.dx ? yEnd : end.dy + -yIncrement;
+        startX = start.dx + xIncrement;
+        startY = start.dy + yIncrement;
+        endX = end.dx + -xIncrement;
+        endY = end.dy + -yIncrement;
       }
-      final Offset _start = Offset(startX, startY);
-      final Offset _end = Offset(endX, endY);
-      final double yProportionalShift =
-          markerRadius * (start.dy - end.dy).abs() / (start.dx - end.dx).abs();
-      final double xShift = start.dx == end.dx
-          ? 0
-          : start.dx > end.dx
-              ? -markerRadius
-              : markerRadius;
-      final double yShift = start.dy == end.dy
-          ? 0
-          : start.dy > end.dy
-              ? -yProportionalShift
-              : yProportionalShift;
-      canvas.drawLine(
-          _start,
-          Offset(start.dx - xShift, start.dy - yShift),
-          Paint()
-            ..color = theme.base02Color
-            ..strokeWidth = 1);
 
       canvas.drawLine(
-          Offset(start.dx + xShift, start.dy + yShift),
-          Offset(end.dx - xShift, end.dy - yShift),
-          Paint()
-            ..color = theme.base02Color
-            ..strokeWidth = 1);
-
-      canvas.drawLine(
-          Offset(end.dx + xShift, end.dy + yShift),
-          _end,
+          Offset(startX, startY),
+          Offset(endX, endY),
           Paint()
             ..color = theme.base02Color
             ..strokeWidth = 1);
