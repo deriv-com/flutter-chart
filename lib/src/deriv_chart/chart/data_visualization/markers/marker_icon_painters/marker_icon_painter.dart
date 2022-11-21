@@ -1,4 +1,6 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -53,4 +55,12 @@ abstract class MarkerIconPainter {
     MarkerDirection direction,
     MarkerStyle style,
   );
+
+  /// Paint marker group
+  void paintMarkerGroup(
+    Canvas canvas,
+    MarkerGroup markerGroup,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {}
 }

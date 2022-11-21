@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_adapter/src/models/message.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -46,6 +47,12 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   void initState() {
     super.initState();
     html.window.addEventListener('message', listen, false);
+    onLoad();
+  }
+
+  void onLoad() {
+    final Message loadHistoryMessage = Message('ON_LOAD', '');
+    html.window.parent!.postMessage(loadHistoryMessage.toJson(), '*');
   }
 
   void listen(html.Event event) {
@@ -56,6 +63,8 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
 
     chartConfigModel.update(messageType, payload);
     chartDataModel.update(messageType, payload);
+
+    // print(chartDataModel.ticks);
   }
 
   @override
@@ -90,18 +99,19 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                                   chartConfigModel.slBarrier as Barrier,
                                 if (chartConfigModel.tpBarrier != null)
                                   chartConfigModel.tpBarrier as Barrier,
-                                TickIndicator(
-                                  chartDataModel.ticks.last,
-                                  style: HorizontalBarrierStyle(
-                                    color: Colors.redAccent,
-                                    labelShape: LabelShape.pentagon,
-                                    hasBlinkingDot: true,
-                                    hasArrow: false,
-                                    shadeType: chartConfigModel.shadeType,
+                                if (chartConfigModel.isLive)
+                                  TickIndicator(
+                                    chartDataModel.ticks.last,
+                                    style: HorizontalBarrierStyle(
+                                      color: Colors.redAccent,
+                                      labelShape: LabelShape.pentagon,
+                                      hasBlinkingDot: true,
+                                      hasArrow: false,
+                                      shadeType: chartConfigModel.shadeType,
+                                    ),
+                                    visibility: HorizontalBarrierVisibility
+                                        .keepBarrierLabelVisible,
                                   ),
-                                  visibility: HorizontalBarrierVisibility
-                                      .keepBarrierLabelVisible,
-                                ),
                               ]
                             : null,
                         granularity: chartConfigModel.granularity ?? 1000,
@@ -118,6 +128,14 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                           if (chartConfigModel.draggableBarrier != null)
                             chartConfigModel.draggableBarrier as Barrier
                         ],
+                        markerSeries: MarkerSeries(
+                          SplayTreeSet<Marker>(),
+                          markerGroupList: chartConfigModel.markerGroupList,
+                          markerIconPainter: TickMarkerIconPainter(),
+                          activeMarker: chartConfigModel.activeMarker,
+                        ),
+                        dataFitEnabled: true,
+                        isLive: chartConfigModel.isLive,
                       ),
                     ),
                   ),

@@ -31,11 +31,20 @@ class ChartConfigModel extends ChangeNotifier {
   /// Shade Type
   ShadeType shadeType = ShadeType.none;
 
+  /// Markers
+  List<MarkerGroup> markerGroupList = <MarkerGroup>[];
+
+  /// Active marker
+  ActiveMarker? activeMarker;
+
   bool _isDragging = false;
 
   late final ChartController _controller;
 
   late final ChartDataModel _chartDataModel;
+
+  /// Whether the chart should be showing live data or not.
+  bool isLive = false;
 
   /// Updates the ChartConfigModel state
   void update(String messageType, dynamic payload) {
@@ -55,7 +64,17 @@ class ChartConfigModel extends ChangeNotifier {
       case 'UPDATE_BARRIERS':
         _updateBarriers(payload);
         break;
+      case 'UPDATE_MARKERS':
+        _updateMarkers(payload);
+        break;
+      case 'UPDATE_LIVE_STATUS':
+        _updateLiveStatus(payload);
     }
+  }
+
+  void _updateLiveStatus(bool payload) {
+    isLive = payload;
+    notifyListeners();
   }
 
   void _updateChartStyle(String payload) {
@@ -238,6 +257,55 @@ class ChartConfigModel extends ChangeNotifier {
     }
   }
 
+  Color _colorFromHex(String hexColor) =>
+      Color(int.parse(hexColor.replaceAll('#', '0xff')));
+
+  MarkerType _getMarkerType(String? _markerType) {
+    switch (_markerType) {
+      case 'START':
+        return MarkerType.start;
+      case 'ENTRY':
+        return MarkerType.entry;
+      case 'CURRENT':
+        return MarkerType.current;
+      case 'EXIT':
+        return MarkerType.exit;
+      case 'END':
+        return MarkerType.end;
+    }
+    return MarkerType.start;
+  }
+
+  void _updateMarkers(List<dynamic> _markerGroupList) {
+    markerGroupList = <MarkerGroup>[];
+
+    for (final dynamic _markerGroup in _markerGroupList) {
+      final List<Marker> markers = <Marker>[];
+
+      for (final dynamic _marker in _markerGroup['markers']) {
+        markers.add(Marker(
+          quote: _marker['quote'] ??
+              _chartDataModel.getQuoteForEpoch(_marker['epoch']),
+          epoch: _marker['epoch'],
+          text: _marker['text'],
+          markerType: _getMarkerType(_marker['type']),
+          direction: MarkerDirection.up,
+        ));
+      }
+
+      final Color _color = _colorFromHex(_markerGroup['color']);
+
+      markerGroupList.add(
+        MarkerGroup(
+          markers,
+          style: MarkerStyle(
+            backgroundColor: _color,
+          ),
+        ),
+      );
+    }
+  }
+
   void _updateTheme(String payload) {
     theme =
         payload == 'dark' ? ChartDefaultDarkTheme() : ChartDefaultLightTheme();
@@ -248,8 +316,12 @@ class ChartConfigModel extends ChangeNotifier {
     if (payload['granularity'] != null) {
       final int _granularity = payload['granularity'];
       granularity = _granularity == 0 ? 1 * 1000 : _granularity * 1000;
-      notifyListeners();
     }
+
+    if (payload['isLive'] != null) {
+      isLive = payload['isLive'];
+    }
+    notifyListeners();
   }
 
   void _onScale(double payload) {

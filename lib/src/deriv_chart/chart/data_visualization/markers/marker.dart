@@ -10,6 +10,24 @@ enum MarkerDirection {
   down,
 }
 
+/// Type of marker.
+enum MarkerType {
+  /// Start marker.
+  start,
+
+  /// Entry marker.
+  entry,
+
+  /// Current marker.
+  current,
+
+  /// End marker.
+  end,
+
+  /// Exit marker.
+  exit,
+}
+
 /// Chart open position marker.
 // ignore: must_be_immutable
 class Marker extends Tick implements Comparable<Marker> {
@@ -19,6 +37,8 @@ class Marker extends Tick implements Comparable<Marker> {
     required double quote,
     required this.direction,
     this.onTap,
+    this.markerType,
+    this.text,
   }) : super(epoch: epoch, quote: quote);
 
   /// Creates an up marker.
@@ -26,6 +46,8 @@ class Marker extends Tick implements Comparable<Marker> {
     required int epoch,
     required double quote,
     this.onTap,
+    this.markerType,
+    this.text,
   })  : direction = MarkerDirection.up,
         super(epoch: epoch, quote: quote);
 
@@ -34,6 +56,8 @@ class Marker extends Tick implements Comparable<Marker> {
     required int epoch,
     required double quote,
     this.onTap,
+    this.markerType,
+    this.text,
   })  : direction = MarkerDirection.down,
         super(epoch: epoch, quote: quote);
 
@@ -45,6 +69,12 @@ class Marker extends Tick implements Comparable<Marker> {
 
   /// Used to store marker tap area on the chart.
   late Rect tapArea;
+
+  /// Type of marker.
+  final MarkerType? markerType;
+
+  /// Text displayed on the marker.
+  final String? text;
 
   @override
   String toString() => 'Marker(epoch: $epoch, quote: $quote)';
