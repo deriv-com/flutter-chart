@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_pai
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/barrier_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -133,6 +134,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     widget.controller?.onScale = (double scale) {
       xAxis.scale(scale);
     };
+
+    widget.controller?.getXFromEpoch = (int epoch) => xAxis.xFromEpoch(epoch);
+    widget.controller?.getYFromQuote =
+        (double quote) => chartQuoteToCanvasY(quote);
   }
 
   @override
@@ -259,11 +264,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 super.build(context),
                 _buildSeries(),
                 _buildAnnotations(),
-                if (widget.markerSeries != null)
-                  MarkerArea(
-                    markerSeries: widget.markerSeries!,
-                    quoteToCanvasY: chartQuoteToCanvasY,
-                  ),
                 if (widget.barriers != null)
                   BarrierArea(
                     barriers: widget.barriers!,
@@ -272,6 +272,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     enableVerticalScale: enableVerticalScale,
                     disableVerticalScale: disableVerticalScale,
                   ),
+                if (widget.markerSeries != null)
+                  MarkerArea(
+                    markerSeries: widget.markerSeries!,
+                    quoteToCanvasY: chartQuoteToCanvasY,
+                  ),
+
                 _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(

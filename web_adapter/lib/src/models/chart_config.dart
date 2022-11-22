@@ -28,6 +28,9 @@ class ChartConfigModel extends ChangeNotifier {
   /// Draggable barrier
   HorizontalBarrier? draggableBarrier;
 
+  /// Purchase barrier
+  HorizontalBarrier? purchaseBarrier;
+
   /// Shade Type
   ShadeType shadeType = ShadeType.none;
 
@@ -69,6 +72,7 @@ class ChartConfigModel extends ChangeNotifier {
         break;
       case 'UPDATE_LIVE_STATUS':
         _updateLiveStatus(payload);
+        break;
     }
   }
 
@@ -211,6 +215,19 @@ class ChartConfigModel extends ChangeNotifier {
     );
   }
 
+  void _updatePurchaseBarrier(dynamic barrier) {
+    purchaseBarrier = HorizontalBarrier(
+      barrier['high'],
+      style: HorizontalBarrierStyle(
+        isDashed: false,
+        hasArrow: false,
+        isDraggable: true,
+        color: const Color(0xFF999999),
+        shadeType: _getShadeType(barrier['shade']),
+      ),
+    );
+  }
+
   void _updateBarriers(List<dynamic> barriers) {
     _clearBarriers();
 
@@ -241,6 +258,9 @@ class ChartConfigModel extends ChangeNotifier {
           if (!_isDragging) {
             _updateDraggableBarrier(barrier);
           }
+          break;
+        default:
+          _updatePurchaseBarrier(barrier);
           break;
       }
     }
@@ -293,13 +313,17 @@ class ChartConfigModel extends ChangeNotifier {
         ));
       }
 
-      final Color _color = _colorFromHex(_markerGroup['color']);
+      Color _bgColor = Colors.white;
+
+      if (_markerGroup['color'] != null) {
+        _bgColor = _colorFromHex(_markerGroup['color']);
+      }
 
       markerGroupList.add(
         MarkerGroup(
           markers,
           style: MarkerStyle(
-            backgroundColor: _color,
+            backgroundColor: _bgColor,
           ),
         ),
       );

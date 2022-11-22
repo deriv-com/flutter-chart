@@ -126,12 +126,14 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                         },
                         barriers: <Barrier>[
                           if (chartConfigModel.draggableBarrier != null)
-                            chartConfigModel.draggableBarrier as Barrier
+                            chartConfigModel.draggableBarrier as Barrier,
+                          if (chartConfigModel.purchaseBarrier != null)
+                            chartConfigModel.purchaseBarrier as Barrier
                         ],
                         markerSeries: MarkerSeries(
                           SplayTreeSet<Marker>(),
                           markerGroupList: chartConfigModel.markerGroupList,
-                          markerIconPainter: TickMarkerIconPainter(),
+                          markerIconPainter: ContractReplayIconPainter(),
                           activeMarker: chartConfigModel.activeMarker,
                         ),
                         dataFitEnabled: true,

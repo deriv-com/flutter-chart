@@ -22,6 +22,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
   @override
   void paintMarkerGroup(
     Canvas canvas,
+    Size size,
     MarkerGroup markerGroup,
     EpochToX epochToX,
     QuoteToY quoteToY,

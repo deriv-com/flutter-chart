@@ -25,6 +25,7 @@ export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/mu
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/options_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/tick_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/digit_marker_icon_painter.dart';
+export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/contract_replay_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/chart/data_visualization/models/chart_object.dart';

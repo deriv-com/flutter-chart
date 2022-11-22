@@ -59,6 +59,7 @@ abstract class MarkerIconPainter {
   /// Paint marker group
   void paintMarkerGroup(
     Canvas canvas,
+    Size size,
     MarkerGroup markerGroup,
     EpochToX epochToX,
     QuoteToY quoteToY,
