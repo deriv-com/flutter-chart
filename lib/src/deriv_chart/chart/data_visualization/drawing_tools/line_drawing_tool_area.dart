@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,8 +24,11 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
   /// tapped position
   Offset? position;
 
-  /// saved starting point coordinates;
-  Offset? _startingPoint;
+  /// saved starting epoch;
+  int? _startingEpoch;
+
+  /// saved starting Y coordinates;
+  double? _startingYPoint;
 
   /// if drawing has been started;
   bool _isPenDown = false;
@@ -34,8 +36,8 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
   /// if drawing has been finished;
   bool _isDrawingFinished = false;
 
-  /// canvas size;
-  Size? _canvasSize;
+  /// get epoch from x
+  int Function(double x)? epochFromX;
 
   @override
   void initState() {
@@ -58,42 +60,31 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
         return;
       }
       if (!_isPenDown) {
-        _startingPoint = Offset(position!.dx, position!.dy);
+        _startingEpoch = epochFromX!(position!.dx);
+        _startingYPoint = position!.dy;
         _isPenDown = true;
-        _lineDrawings.add(
-            LineDrawingTool(drawingType: 'marker', start: _startingPoint!));
+        _lineDrawings.add(LineDrawingTool(
+            drawingType: 'marker',
+            startEpoch: _startingEpoch!,
+            startYCoord: _startingYPoint!));
       } else if (!_isDrawingFinished) {
         _isPenDown = false;
         _isDrawingFinished = true;
-        final Offset center = Offset(position!.dx, position!.dy);
-
-        /// calculations for drawing a line across 2 markers;
-        double startX = 0, startY = 0, endX = 0, endY = 0;
-        final double xDiff = (center.dx - _startingPoint!.dx).abs();
-        final double yDiff = (center.dy - _startingPoint!.dy).abs();
-        final double diagonal =
-            sqrt(pow(_canvasSize!.height, 2) + pow(_canvasSize!.width, 2));
-        final double count = xDiff == 0 || yDiff == 0
-            ? diagonal / max(xDiff, yDiff)
-            : diagonal / min(xDiff, yDiff);
-        for (int i = 1; i < count; i++) {
-          final double xIncrement =
-              _startingPoint!.dx > center.dx ? xDiff * i : -(xDiff * i);
-          final double yIncrement =
-              _startingPoint!.dy > center.dy ? yDiff * i : -(yDiff * i);
-          startX = _startingPoint!.dx + xIncrement;
-          startY = _startingPoint!.dy + yIncrement;
-          endX = center.dx + -xIncrement;
-          endY = center.dy + -yIncrement;
-        }
+        final int endEpoch = epochFromX!(position!.dx);
+        final double endYPoint = position!.dy;
 
         _lineDrawings.addAll(<LineDrawingTool>[
           ..._lineDrawings,
-          LineDrawingTool(drawingType: 'marker', start: center),
+          LineDrawingTool(
+              drawingType: 'marker',
+              startEpoch: endEpoch,
+              startYCoord: endYPoint),
           LineDrawingTool(
             drawingType: 'line',
-            start: Offset(startX, startY),
-            end: Offset(endX, endY),
+            startEpoch: _startingEpoch!,
+            startYCoord: _startingYPoint!,
+            endEpoch: endEpoch,
+            endYCoord: endYPoint,
           )
         ]);
       }
@@ -101,38 +92,41 @@ class _LineDrawingToolAreaState extends State<LineDrawingToolArea> {
   }
 
   @override
-  Widget build(BuildContext context) => Stack(children: <Widget>[
-        _startingPoint != null
-            ? CustomPaint(
-                child: Container(
-                  padding: const EdgeInsets.only(right: 60),
-                ),
-                painter: _LineDrawingToolPainter(
-                    lineDrawings: _lineDrawings,
-                    theme: context.watch<ChartTheme>(),
-                    onPaint: (Size size) {
-                      _canvasSize = size;
-                    }))
-            : Container()
-      ]);
+  Widget build(BuildContext context) {
+    final XAxisModel xAxis = context.watch<XAxisModel>();
+    epochFromX = xAxis.epochFromX;
+
+    return Stack(children: <Widget>[
+      _startingEpoch != null && _startingYPoint != null
+          ? CustomPaint(
+              child: Container(
+                padding: const EdgeInsets.only(right: 60),
+              ),
+              painter: _LineDrawingToolPainter(
+                lineDrawings: _lineDrawings,
+                theme: context.watch<ChartTheme>(),
+                epochToX: xAxis.xFromEpoch,
+              ))
+          : Container()
+    ]);
+  }
 }
 
 class _LineDrawingToolPainter extends CustomPainter {
   _LineDrawingToolPainter({
     required this.lineDrawings,
     required this.theme,
-    required this.onPaint,
+    required this.epochToX,
   });
 
   final List<LineDrawingTool> lineDrawings;
   final ChartTheme theme;
-  void Function(Size size) onPaint;
+  double Function(int x) epochToX;
 
   @override
   void paint(Canvas canvas, Size size) {
     lineDrawings.asMap().forEach((int index, LineDrawingTool element) {
-      element.onPaint(canvas, size, theme);
-      onPaint(size);
+      element.onPaint(canvas, size, theme, epochToX);
     });
   }
 
@@ -148,34 +142,96 @@ class LineDrawingTool {
   /// initializes
   LineDrawingTool({
     required this.drawingType,
-    this.start = const Offset(0, 0),
-    this.end = const Offset(0, 0),
+    this.startEpoch = 0,
+    this.startYCoord = 0,
+    this.endEpoch = 0,
+    this.endYCoord = 0,
   });
 
   /// if second tap has been made
   final String drawingType;
 
-  /// starting coordinates
-  final Offset start;
+  /// starting epoch
+  final int? startEpoch;
 
-  /// ending coordinates
-  final Offset end;
+  /// starting Y coordinates
+  final double? startYCoord;
+
+  /// ending epoch
+  final int? endEpoch;
+
+  /// ending Y coordinates
+  final double? endYCoord;
 
   /// marker radius
   final double markerRadius = 4;
 
+  /// calculate y intersection
+  double? yIntersection(Map<String, double?> vector, double x) {
+    final double x1 = vector['x0']!, x2 = vector['x1']!, x3 = x, x4 = x;
+    final double y1 = vector['y0']!, y2 = vector['y1']!, y3 = 0, y4 = 10000;
+    final double denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+    final double numera = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
+
+    double mua = numera / denom;
+    if (denom == 0) {
+      if (numera == 0) {
+        mua = 1;
+      } else {
+        return null;
+      }
+    }
+
+    final double y = y1 + mua * (y2 - y1);
+    return y;
+  }
+
   /// paint
-  void onPaint(Canvas canvas, Size size, ChartTheme theme) {
+  void onPaint(Canvas canvas, Size size, ChartTheme theme,
+      double Function(int x) epochToX) {
     if (drawingType == 'marker') {
-      canvas.drawCircle(
-          start, markerRadius, Paint()..color = theme.base02Color);
+      if (startEpoch != null && startYCoord != null) {
+        final double startXCoord = epochToX(startEpoch!);
+        canvas.drawCircle(Offset(startXCoord, startYCoord!), markerRadius,
+            Paint()..color = theme.base02Color);
+      }
     } else if (drawingType == 'line') {
-      canvas.drawLine(
-          start,
-          end,
-          Paint()
-            ..color = theme.base02Color
-            ..strokeWidth = 1);
+      if (startEpoch != null &&
+          endEpoch != null &&
+          startYCoord != null &&
+          endYCoord != null) {
+        final double startXCoord = epochToX(startEpoch!);
+        final double endXCoord = epochToX(endEpoch!);
+
+        Map<String, double?> vector = <String, double?>{
+          'x0': startXCoord,
+          'y0': startYCoord,
+          'x1': endXCoord,
+          'y1': endYCoord
+        };
+        if (vector['x0']! > vector['x1']!) {
+          vector = <String, double?>{
+            'x0': endXCoord,
+            'y0': endYCoord!,
+            'x1': startXCoord,
+            'y1': startYCoord!
+          };
+        }
+        final double earlier = vector['x0']! - 1000;
+        final double later = vector['x1']! + 1000;
+
+        final double startY = yIntersection(vector, earlier) ?? 0,
+            endingY = yIntersection(vector, later) ?? 0,
+            startX = earlier,
+            endingX = later;
+
+        canvas.drawLine(
+            Offset(startX, startY),
+            Offset(endingX, endingY),
+            Paint()
+              ..color = theme.base02Color
+              ..strokeWidth = 1);
+      }
     }
   }
 }
