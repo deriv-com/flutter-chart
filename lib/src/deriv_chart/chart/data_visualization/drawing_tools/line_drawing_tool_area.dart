@@ -168,14 +168,15 @@ class LineDrawingTool {
 
   /// calculate y intersection
   double? yIntersection(Map<String, double?> vector, double x) {
+    /// based on CIQ.yIntersection()
     final double x1 = vector['x0']!, x2 = vector['x1']!, x3 = x, x4 = x;
     final double y1 = vector['y0']!, y2 = vector['y1']!, y3 = 0, y4 = 10000;
-    final double denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-    final double numera = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
+    final double denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+    final double numerator = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
 
-    double mua = numera / denom;
-    if (denom == 0) {
-      if (numera == 0) {
+    double mua = numerator / denominator;
+    if (denominator == 0) {
+      if (numerator == 0) {
         mua = 1;
       } else {
         return null;
