@@ -5,6 +5,7 @@ import 'dart:html' as html;
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:web_adapter/src/interop/js_interop.dart';
 import 'package:web_adapter/src/models/chart_data.dart';
 import 'package:web_adapter/src/models/message.dart';
 
@@ -53,7 +54,7 @@ class ChartConfigModel extends ChangeNotifier {
   void update(String messageType, dynamic payload) {
     switch (messageType) {
       case 'UPDATE_THEME':
-        _updateTheme(payload);
+        updateTheme(payload);
         break;
       case 'NEW_CHART':
         _onNewChart(payload);
@@ -164,7 +165,7 @@ class ChartConfigModel extends ChangeNotifier {
       final Message loadHistoryMessage =
           Message('BARRIER_DRAG', jsonEncode(barrierDragEvent));
 
-      html.window.parent!.postMessage(loadHistoryMessage.toJson(), '*');
+      JsInterop.postMessage(loadHistoryMessage.toJson());
     } else {
       final double label;
       _isDragging = true;
@@ -260,7 +261,7 @@ class ChartConfigModel extends ChangeNotifier {
           }
           break;
         default:
-          _updatePurchaseBarrier(barrier);
+          // _updatePurchaseBarrier(barrier);
           break;
       }
     }
@@ -330,9 +331,10 @@ class ChartConfigModel extends ChangeNotifier {
     }
   }
 
-  void _updateTheme(String payload) {
+  /// To update the theme of the chart
+  void updateTheme(String _theme) {
     theme =
-        payload == 'dark' ? ChartDefaultDarkTheme() : ChartDefaultLightTheme();
+        _theme == 'dark' ? ChartDefaultDarkTheme() : ChartDefaultLightTheme();
     notifyListeners();
   }
 
@@ -351,5 +353,21 @@ class ChartConfigModel extends ChangeNotifier {
   void _onScale(double payload) {
     final double scale = payload;
     _controller.scale(scale);
+  }
+
+  /// Gets X position from epoch
+  double? getXFromEpoch(int epoch) {
+    if (_controller.getXFromEpoch != null) {
+      return _controller.getXFromEpoch!(epoch);
+    }
+    return null;
+  }
+
+  /// Gets Y position from quote
+  double? getYFromQuote(double quote) {
+    if (_controller.getYFromQuote != null) {
+      return _controller.getYFromQuote!(quote);
+    }
+    return null;
   }
 }

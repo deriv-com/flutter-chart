@@ -32,6 +32,7 @@ class DerivChart extends StatefulWidget {
     this.controller,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
+    this.onQuoteAreaChanged,
     this.theme,
     this.isLive = false,
     this.dataFitEnabled = false,
@@ -63,6 +64,9 @@ class DerivChart extends StatefulWidget {
 
   /// Called when chart is scrolled or zoomed.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
+
+  /// Callback provided by library user.
+  final VisibleQuoteAreaChangedCallback? onQuoteAreaChanged;
 
   /// Chart's theme.
   final ChartTheme? theme;
@@ -176,6 +180,7 @@ class _DerivChartState extends State<DerivChart> {
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
                 onVisibleAreaChanged: widget.onVisibleAreaChanged,
+                onQuoteAreaChanged: widget.onQuoteAreaChanged,
                 isLive: widget.isLive,
                 dataFitEnabled: widget.dataFitEnabled,
                 opacity: widget.opacity,

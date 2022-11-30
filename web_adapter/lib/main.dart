@@ -1,8 +1,10 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_adapter/src/interop/js_interop.dart';
 import 'package:web_adapter/src/models/message.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
@@ -36,6 +38,7 @@ class _DerivChartWebAdapter extends StatefulWidget {
 class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   _DerivChartWebAdapterState() {
     chartConfigModel = ChartConfigModel(_controller, chartDataModel);
+    initInterOp(listen, chartConfigModel);
   }
 
   final ChartController _controller = ChartController();
@@ -46,25 +49,21 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   @override
   void initState() {
     super.initState();
-    html.window.addEventListener('message', listen, false);
-    onLoad();
+    WidgetsBinding.instance?.addPostFrameCallback((_) => onLoad());
   }
 
   void onLoad() {
     final Message loadHistoryMessage = Message('ON_LOAD', '');
-    html.window.parent!.postMessage(loadHistoryMessage.toJson(), '*');
+    JsInterop.postMessage(loadHistoryMessage.toJson());
   }
 
-  void listen(html.Event event) {
-    final LinkedHashMap<dynamic, dynamic> data =
-        (event as html.MessageEvent).data;
+  void listen(String dataString) {
+    final dynamic data = json.decode(dataString);
     final String messageType = data['type'];
     final dynamic payload = data['payload'];
 
     chartConfigModel.update(messageType, payload);
     chartDataModel.update(messageType, payload);
-
-    // print(chartDataModel.ticks);
   }
 
   @override
@@ -123,6 +122,11 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                               leftEpoch < chartDataModel.ticks.first.epoch) {
                             chartDataModel.loadHistory(2500);
                           }
+                          JsInterop.onVisibleAreaChanged(leftEpoch, rightEpoch);
+                        },
+                        onQuoteAreaChanged:
+                            (double topQuote, double bottomQuote) {
+                          JsInterop.onQuoteAreaChanged(topQuote, bottomQuote);
                         },
                         barriers: <Barrier>[
                           if (chartConfigModel.draggableBarrier != null)
@@ -133,11 +137,11 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                         markerSeries: MarkerSeries(
                           SplayTreeSet<Marker>(),
                           markerGroupList: chartConfigModel.markerGroupList,
-                          markerIconPainter: ContractReplayIconPainter(),
+                          markerIconPainter: TickMarkerIconPainter(),
                           activeMarker: chartConfigModel.activeMarker,
                         ),
                         dataFitEnabled: true,
-                        isLive: chartConfigModel.isLive,
+                        //  isLive: false,
                       ),
                     ),
                   ),

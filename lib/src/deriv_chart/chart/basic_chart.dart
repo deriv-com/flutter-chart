@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.da
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class BasicChart extends StatefulWidget {
     this.pipSize = 4,
     this.opacity = 1,
     Key? key,
+    this.onQuoteAreaChanged,
   }) : super(key: key);
 
   /// The main series to display on the chart.
@@ -32,6 +34,9 @@ class BasicChart extends StatefulWidget {
 
   /// The opacity of the chart's data.
   final double opacity;
+
+  /// Callback provided by library user.
+  final VisibleQuoteAreaChangedCallback? onQuoteAreaChanged;
 
   @override
   BasicChartState<BasicChart> createState() => BasicChartState<BasicChart>();
@@ -160,8 +165,23 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   /// Call function to calculate the grid line quotes and put them inside
   /// [yAxisModel].
-  List<double> calculateGridLineQuotes(YAxisModel yAxisModel) =>
-      gridLineQuotes = yAxisModel.gridQuotes();
+  List<double> calculateGridLineQuotes(YAxisModel yAxisModel) {
+    final List<double> newGridLineQuotes = yAxisModel.gridQuotes();
+
+    if (newGridLineQuotes.isNotEmpty) {
+      if (gridLineQuotes == null ||
+          gridLineQuotes!.isEmpty ||
+          newGridLineQuotes.first != gridLineQuotes!.first ||
+          newGridLineQuotes.last != gridLineQuotes!.last) {
+        widget.onQuoteAreaChanged
+            ?.call(newGridLineQuotes.first, newGridLineQuotes.last);
+      }
+    }
+
+    gridLineQuotes = newGridLineQuotes;
+
+    return gridLineQuotes!;
+  }
 
   void _playNewTickAnimation() {
     _currentTickAnimationController
@@ -420,5 +440,15 @@ class BasicChartState<T extends BasicChart> extends State<T>
       verticalPaddingFraction =
           ((verticalPadding + dy) / canvasSize!.height).clamp(0.05, 0.49);
     });
+    _onScaleYAxis();
+  }
+
+  void _onScaleYAxis() {
+    if (gridLineQuotes != null && gridLineQuotes!.isNotEmpty) {
+      widget.onQuoteAreaChanged?.call(
+        gridLineQuotes!.first,
+        gridLineQuotes!.last,
+      );
+    }
   }
 }

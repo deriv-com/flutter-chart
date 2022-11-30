@@ -25,6 +25,7 @@ class Chart extends StatefulWidget {
     this.theme,
     this.onCrosshairAppeared,
     this.onVisibleAreaChanged,
+    this.onQuoteAreaChanged,
     this.isLive = false,
     this.dataFitEnabled = false,
     this.opacity = 1.0,
@@ -64,6 +65,9 @@ class Chart extends StatefulWidget {
 
   /// Called when chart is scrolled or zoomed.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
+
+  /// Callback provided by library user.
+  final VisibleQuoteAreaChangedCallback? onQuoteAreaChanged;
 
   /// Chart's theme.
   final ChartTheme? theme;
@@ -160,6 +164,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     markerSeries: widget.markerSeries,
                     pipSize: widget.pipSize,
                     onCrosshairAppeared: widget.onCrosshairAppeared,
+                    onQuoteAreaChanged: widget.onQuoteAreaChanged,
                     isLive: widget.isLive,
                     showLoadingAnimationForHistoricalData:
                         !widget.dataFitEnabled,

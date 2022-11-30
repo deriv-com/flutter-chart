@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Message class
 class Message {
   /// Initializes a Message class.
@@ -10,8 +12,10 @@ class Message {
   late dynamic payload;
 
   /// Serialization to JSON.
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'type': type,
-        'payload': payload,
-      };
+  String toJson() => json.encode(
+        <String, dynamic>{
+          'type': type,
+          'payload': payload,
+        },
+      );
 }

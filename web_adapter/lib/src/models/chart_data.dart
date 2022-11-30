@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:web_adapter/src/interop/js_interop.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -125,7 +126,7 @@ class ChartDataModel extends ChangeNotifier {
     final Message loadHistoryMessage =
         Message('LOAD_HISTORY', jsonEncode(loadHistoryRequest));
 
-    html.window.parent!.postMessage(loadHistoryMessage.toJson(), '*');
+    JsInterop.postMessage(loadHistoryMessage.toJson());
     notifyListeners();
   }
 }
