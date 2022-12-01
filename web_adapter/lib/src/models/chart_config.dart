@@ -370,4 +370,20 @@ class ChartConfigModel extends ChangeNotifier {
     }
     return null;
   }
+
+  /// Gets epoch from x position
+  int? getEpochFromX(double x) {
+    if (_controller.getEpochFromX != null) {
+      return _controller.getEpochFromX!(x);
+    }
+    return null;
+  }
+
+  /// Gets quote from y position
+  double? getQuoteFromY(double y) {
+    if (_controller.getQuoteFromY != null) {
+      return _controller.getQuoteFromY!(y);
+    }
+    return null;
+  }
 }

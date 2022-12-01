@@ -30,6 +30,8 @@ JsObject _initChartConfig(ChartConfigModel model) {
   final JsObject chartConfig = JsObject(context['Object']);
   setProperty(chartConfig, 'getXFromEpoch', allowInterop(model.getXFromEpoch));
   setProperty(chartConfig, 'getYFromQuote', allowInterop(model.getYFromQuote));
+  setProperty(chartConfig, 'getEpochFromX', allowInterop(model.getEpochFromX));
+  setProperty(chartConfig, 'getQuoteFromY', allowInterop(model.getQuoteFromY));
   setProperty(chartConfig, 'updateTheme', allowInterop(model.updateTheme));
 
   return chartConfig;

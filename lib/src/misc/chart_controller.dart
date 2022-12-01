@@ -10,6 +10,12 @@ typedef GetXFromEpoch = double? Function(int);
 /// Get Y position callback
 typedef GetYFromQuote = double? Function(double);
 
+/// Get epoch callback
+typedef GetEpochFromX = int? Function(double);
+
+/// Get quote callback
+typedef GetQuoteFromY = double Function(double);
+
 /// Chart widget's controller.
 class ChartController {
   /// Called to scroll the current display chart to last tick.
@@ -23,6 +29,12 @@ class ChartController {
 
   /// Called to get Y position from quote
   GetYFromQuote? getYFromQuote;
+
+  /// Called to get epoch from x position
+  GetEpochFromX? getEpochFromX;
+
+  /// Called to get quote from y position
+  GetQuoteFromY? getQuoteFromY;
 
   /// Scroll chart visible area to the newest data.
   void scrollToLastTick({bool animate = false}) =>

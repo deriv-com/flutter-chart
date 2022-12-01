@@ -140,6 +140,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     widget.controller?.getXFromEpoch = (int epoch) => xAxis.xFromEpoch(epoch);
     widget.controller?.getYFromQuote =
         (double quote) => chartQuoteToCanvasY(quote);
+
+    widget.controller?.getEpochFromX = (double x) => xAxis.epochFromX(x);
+    widget.controller?.getQuoteFromY = (double y) => chartQuoteFromCanvasY(y);
   }
 
   @override
