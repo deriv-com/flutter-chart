@@ -141,6 +141,7 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                           activeMarker: chartConfigModel.activeMarker,
                         ),
                         dataFitEnabled: true,
+                        hideCrosshair: true,
                         //  isLive: false,
                       ),
                     ),

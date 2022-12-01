@@ -36,6 +36,7 @@ class MainChart extends BasicChart {
     this.barriers,
     double opacity = 1,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
+    this.hideCrosshair = false,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
           mainSeries,
@@ -80,6 +81,9 @@ class MainChart extends BasicChart {
 
   /// Convenience list to access all chart data.
   final List<ChartData> chartDataList;
+
+  /// Whether the crosshair should be shown or not.
+  final bool hideCrosshair;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -282,8 +286,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
-
-                _buildCrosshairArea(),
+                if (widget.hideCrosshair == false) _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(
                     bottom: 0,

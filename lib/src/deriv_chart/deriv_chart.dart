@@ -36,6 +36,7 @@ class DerivChart extends StatefulWidget {
     this.theme,
     this.isLive = false,
     this.dataFitEnabled = false,
+    this.hideCrosshair = false,
     this.annotations,
     this.barriers,
     this.opacity = 1.0,
@@ -88,6 +89,9 @@ class DerivChart extends StatefulWidget {
 
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
+
+  /// Whether the crosshair should be shown or not.
+  final bool hideCrosshair;
 
   @override
   _DerivChartState createState() => _DerivChartState();
@@ -185,6 +189,7 @@ class _DerivChartState extends State<DerivChart> {
                 dataFitEnabled: widget.dataFitEnabled,
                 opacity: widget.opacity,
                 annotations: widget.annotations,
+                hideCrosshair: widget.hideCrosshair,
               ),
               Align(
                 alignment: Alignment.topLeft,

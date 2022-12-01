@@ -31,6 +31,7 @@ class Chart extends StatefulWidget {
     this.opacity = 1.0,
     this.annotations,
     this.barriers,
+    this.hideCrosshair = false,
     Key? key,
   }) : super(key: key);
 
@@ -86,6 +87,9 @@ class Chart extends StatefulWidget {
 
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
+
+  /// Whether the crosshair should be shown or not.
+  final bool hideCrosshair;
 
   @override
   State<StatefulWidget> createState() => _ChartState();
@@ -170,6 +174,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         !widget.dataFitEnabled,
                     showDataFitButton: widget.dataFitEnabled,
                     opacity: widget.opacity,
+                    hideCrosshair: widget.hideCrosshair,
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
