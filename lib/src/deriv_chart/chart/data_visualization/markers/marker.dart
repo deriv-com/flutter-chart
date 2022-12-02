@@ -12,6 +12,9 @@ enum MarkerDirection {
 
 /// Type of marker.
 enum MarkerType {
+  /// Active start marker.
+  activeStart,
+
   /// Start marker.
   start,
 

@@ -304,12 +304,17 @@ class ChartConfigModel extends ChangeNotifier {
       final List<Marker> markers = <Marker>[];
 
       for (final dynamic _marker in _markerGroup['markers']) {
+        final bool isActiveMarker = _markerGroup == _markerGroupList.last &&
+            _getMarkerType(_marker['type']) == MarkerType.start;
+
         markers.add(Marker(
           quote: _marker['quote'] ??
               _chartDataModel.getQuoteForEpoch(_marker['epoch']),
           epoch: _marker['epoch'],
           text: _marker['text'],
-          markerType: _getMarkerType(_marker['type']),
+          markerType: isActiveMarker
+              ? MarkerType.activeStart
+              : _getMarkerType(_marker['type']),
           direction: MarkerDirection.up,
         ));
       }
