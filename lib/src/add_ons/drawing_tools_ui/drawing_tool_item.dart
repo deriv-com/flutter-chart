@@ -54,11 +54,9 @@ abstract class DrawingToolItemState<T extends DrawingToolConfig>
 
   @override
   Widget build(BuildContext context) => ListTile(
-        contentPadding: const EdgeInsets.only(left: 62),
-        title: Text(
-          widget.title,
-          style: const TextStyle(fontSize: 16),
-        ),
+        contentPadding: const EdgeInsets.all(0),
+        leading: Text(widget.title, style: const TextStyle(fontSize: 16)),
+        title: getDrawingToolOptions(),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
           onPressed: removeDrawingTool,
@@ -75,4 +73,7 @@ abstract class DrawingToolItemState<T extends DrawingToolConfig>
   /// Returns the [DrawingToolConfig] which can be used to create the Series for
   /// this drawing tool.
   T createDrawingToolConfig();
+
+  /// Creates the menu options widget for this indicator.
+  Widget getDrawingToolOptions();
 }

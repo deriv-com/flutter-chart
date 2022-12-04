@@ -1,153 +1,92 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/segment.dart';
-// import 'package:flutter/cupertino.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../../deriv_chart.dart';
+import 'drawing.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
-/// It inherits its properties from {@link CIQ.Drawing.segment}.
 
-class LineDrawing extends Segment {
-  /// initialize
-  LineDrawing() : super(name: 'line', dragToDraw: false);
+class LineDrawing extends Drawing {
+  /// initializes
+  LineDrawing({
+    required this.drawingPart,
+    this.startEpoch = 0,
+    this.startYCoord = 0,
+    this.endEpoch = 0,
+    this.endYCoord = 0,
+  });
 
-  /// calculate line vector
-  // void calculateOuterSet(dynamic panel) {
-  //   if (this.p0[0] == this.p1[0] ||
-  //       this.p0[1] == this.p1[1] ||
-  //       CIQ.ChartEngine.isDailyInterval(this.stx.layout.interval)) {
-  //     return;
-  //   }
-  //
-  //   var vector = {
-  //     x0: this.p0[0],
-  //     y0: this.p0[1],
-  //     x1: this.p1[0],
-  //     y1: this.p1[1]
-  //   };
-  //   if (vector.x0 > vector.x1) {
-  //     vector = {
-//          x0: this.p1[0],
-//          y0: this.p1[1],
-//          x1: this.p0[0],
-//          y1: this.p0[1],
-//       };
-  //   }
-  //
-  //   var earlier = vector.x0 - 1000;
-  //   var later = vector.x1 + 1000;
-  //
-  //   this.v0B = CIQ.yIntersection(vector, earlier);
-  //   this.v1B = CIQ.yIntersection(vector, later);
-  //   this.d0B = this.stx.dateFromTick(earlier, panel.chart);
-  //   this.d1B = this.stx.dateFromTick(later, panel.chart);
-  // }
-  //
-  // /// draw on tap
-  // @override
-  // bool click(Canvas? context, num? tick, num? value) {
-  //   var panel = this.stx.panels[this.panelName];
-  //   if (!panel) return;
-  //   this.copyConfig();
-  //   if (!this.penDown) {
-  //     this.setPoint(0, tick, value, panel.chart);
-  //     this.penDown = true;
-  //     return false;
-  //   }
-  //
-  //   /// if the user accidentally double clicks in rapid fashion
-  //   if (accidentalClick(tick, value)) {
-  //     return dragToDraw;
-  //   }
-  //   setPoint(1, tick, value, panel.chart);
-  //   calculateOuterSet(panel);
-  //   penDown = false;
-  //   return true; // kernel will call render after this
-  // }
+  /// 'marker' or 'line'
+  final String drawingPart;
 
-  /// Reconstruct a line
-  /// @param  {CIQ.ChartEngine} stx The chart object
-  /// @param  {object} [obj] A drawing descriptor
-  /// @param {string} [obj.col] The line color
-  /// @param {string} [obj.pnl] The panel name
-  /// @param {string} [obj.ptrn] Optional pattern for line "solid","dotted",
-  /// "dashed". Defaults to solid.
-  /// @param {number} [obj.lw] Optional line width. Defaults to 1.
-  /// @param {number} [obj.v0] Value (price) for the first point
-  /// @param {number} [obj.v1] Value (price) for the second point
-  /// @param {number} [obj.d0] Date (string form) for the first point
-  /// @param {number} [obj.d1] Date (string form) for the second point
-  /// @param {number} [obj.v0B] Computed outer Value (price) for the first
-  /// point if original drawing was on intraday but now displaying on daily
-  /// @param {number} [obj.v1B] Computed outer Value (price) for the second
-  /// point if original drawing was on intraday but now displaying on daily
-  /// @param {number} [obj.d0B] Computed outer Date (string form) for the
-  /// first point if original drawing was on intraday but now displaying
-  /// on daily
-  /// @param {number} [obj.d1B] Computed outer Date (string form) for the
-  /// second point if original drawing was on intraday but now displaying
-  /// on daily
-  /// @param {number} [obj.tzo0] Offset of UTC from d0 in minutes
-  /// @param {number} [obj.tzo1] Offset of UTC from d1 in minutes
-  /// @memberOf CIQ.Drawing.line
-  // @override
-  // void reconstruct(dynamic stx, dynamic obj) {
-  //   this.stx = stx;
-  //   this.color = obj.col;
-  //   this.panelName = obj.pnl;
-  //   this.pattern = obj.ptrn;
-  //   this.lineWidth = obj.lw;
-  //   this.v0 = obj.v0;
-  //   this.v1 = obj.v1;
-  //   this.d0 = obj.d0;
-  //   this.d1 = obj.d1;
-  //   this.tzo0 = obj.tzo0;
-  //   this.tzo1 = obj.tzo1;
-  //   if (obj.d0B) {
-  //     this.d0B = obj.d0B;
-  //     this.d1B = obj.d1B;
-  //     this.v0B = obj.v0B;
-  //     this.v1B = obj.v1B;
-  //   }
-  //   this.adjust();
-  // }
-  //
-  // @override
-  // dynamic serialize() {
-  //   var obj = {
-  //     name: this.name,
-  //     pnl: this.panelName,
-  //     col: this.color,
-  //     ptrn: this.pattern,
-  //     lw: this.lineWidth,
-  //     d0: this.d0,
-  //     d1: this.d1,
-  //     tzo0: this.tzo0,
-  //     tzo1: this.tzo1,
-  //     v0: this.v0,
-  //     v1: this.v1
-  //   };
-  //   if (this.d0B) {
-  //     obj.d0B = this.d0B;
-  //     obj.d1B = this.d1B;
-  //     obj.v0B = this.v0B;
-  //     obj.v1B = this.v1B;
-  //   }
-  //   return obj;
-  // }
-  //
-  // /// adjust drawing
-  // @override
-  // void adjust() {
-  //   var panel = this.stx.panels[this.panelName];
-  //   if (!panel) return;
-  //   setPoint(0, this.d0, this.v0, panel.chart);
-  //   setPoint(1, this.d1, this.v1, panel.chart);
-  //
-  //   /// Use outer set if original drawing was on intraday but now displaying
-  //   /// on daily
-  //   if (CIQ.ChartEngine.isDailyInterval(this.stx.layout.interval)
-//         && this.d0B) {
-  //     setPoint(0, this.d0B, this.v0B, panel.chart);
-  //     setPoint(1, this.d1B, this.v1B, panel.chart);
-  //   }
-  // }
+  /// starting epoch
+  final int? startEpoch;
+
+  /// starting Y coordinates
+  final double? startYCoord;
+
+  /// ending epoch
+  final int? endEpoch;
+
+  /// ending Y coordinates
+  final double? endYCoord;
+
+  /// marker radius
+  final double markerRadius = 4;
+
+  /// paint
+  @override
+  void onPaint(Canvas canvas, Size size, ChartTheme theme,
+      double Function(int x) epochToX, DrawingToolConfig config) {
+    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    final String pattern = config.toJson()['pattern'];
+    if (drawingPart == 'marker') {
+      if (startEpoch != null && startYCoord != null) {
+        final double startXCoord = epochToX(startEpoch!);
+        canvas.drawCircle(Offset(startXCoord, startYCoord!), markerRadius,
+            Paint()..color = lineStyle.color);
+      }
+    } else if (drawingPart == 'line') {
+      if (startEpoch != null &&
+          endEpoch != null &&
+          startYCoord != null &&
+          endYCoord != null) {
+        final double startXCoord = epochToX(startEpoch!);
+        final double endXCoord = epochToX(endEpoch!);
+
+        /// based on calculateOuterSet() from SmartCharts
+        Map<String, double?> vector = <String, double?>{
+          'x0': startXCoord,
+          'y0': startYCoord,
+          'x1': endXCoord,
+          'y1': endYCoord
+        };
+        if (vector['x0']! > vector['x1']!) {
+          vector = <String, double?>{
+            'x0': endXCoord,
+            'y0': endYCoord!,
+            'x1': startXCoord,
+            'y1': startYCoord!
+          };
+        }
+        final double earlier = vector['x0']! - 1000;
+        final double later = vector['x1']! + 1000;
+
+        final double startY = getYIntersection(vector, earlier) ?? 0,
+            endingY = getYIntersection(vector, later) ?? 0,
+            startX = earlier,
+            endingX = later;
+
+        if (pattern == 'solid') {
+          canvas.drawLine(
+              Offset(startX, startY),
+              Offset(endingX, endingY),
+              Paint()
+                ..color = lineStyle.color
+                ..strokeWidth = lineStyle.thickness);
+        }
+      }
+    }
+  }
 }

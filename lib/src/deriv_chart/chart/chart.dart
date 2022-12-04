@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'bottom_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'main_chart.dart';
@@ -17,6 +19,10 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
+    required this.currentSymbolName,
+    required this.onAddDrawing,
+    this.drawings = const <String, List<Map<String, dynamic>>>{},
+    this.selectedDrawingTool,
     this.pipSize = 4,
     this.controller,
     this.overlaySeries,
@@ -29,7 +35,6 @@ class Chart extends StatefulWidget {
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
-    this.isDrawingAllowed = false,
     Key? key,
   }) : super(key: key);
 
@@ -46,8 +51,18 @@ class Chart extends StatefulWidget {
   /// Open position marker series.
   final MarkerSeries? markerSeries;
 
-  /// if drawing is allowed.
-  final bool isDrawingAllowed;
+  /// current symbol name
+  final String currentSymbolName;
+
+  /// existing drawings
+  final Map<String, List<Map<String, dynamic>>> drawings;
+
+  /// callback to pass new drawing to the parent;
+  final void Function(Map<String, List<Drawing>> addedDrawing,
+      {bool isDrawingFinished}) onAddDrawing;
+
+  /// selected drawing tool;
+  final DrawingToolConfig? selectedDrawingTool;
 
   /// Chart's controller
   final ChartController? controller;
@@ -152,7 +167,10 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 Expanded(
                   flex: 3,
                   child: MainChart(
-                    isDrawingAllowed: widget.isDrawingAllowed,
+                    currentSymbolName: widget.currentSymbolName,
+                    drawings: widget.drawings,
+                    onAddDrawing: widget.onAddDrawing,
+                    selectedDrawingTool: widget.selectedDrawingTool,
                     controller: _controller,
                     mainSeries: widget.mainSeries,
                     overlaySeries: widget.overlaySeries,

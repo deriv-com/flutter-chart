@@ -1,6 +1,8 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../deriv_chart.dart';
 import '../callbacks.dart';
 import '../drawing_tool_config.dart';
 import '../drawing_tool_item.dart';
@@ -30,7 +32,44 @@ class LineDrawingToolItem extends DrawingToolItem {
 /// LineDrawingToolItem State class
 class LineDrawingToolItemState
     extends DrawingToolItemState<LineDrawingToolConfig> {
+  LineStyle? _lineStyle;
+  String? _pattern;
+
   @override
-  LineDrawingToolConfig createDrawingToolConfig() =>
-      const LineDrawingToolConfig();
+  LineDrawingToolConfig createDrawingToolConfig() => LineDrawingToolConfig(
+        lineStyle: _currentLineStyle,
+        pattern: _currentPattern,
+      );
+
+  @override
+  Widget getDrawingToolOptions() => Column(
+        children: <Widget>[
+          _buildColorField(),
+          // TODO(maryia-binary): implement _buildPatternField() to set pattern
+        ],
+      );
+
+  Widget _buildColorField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelColor,
+            style: const TextStyle(fontSize: 16),
+          ),
+          ColorSelector(
+            currentColor: _currentLineStyle.color,
+            onColorChanged: (Color selectedColor) {
+              setState(() {
+                _lineStyle = _currentLineStyle.copyWith(color: selectedColor);
+              });
+              updateDrawingTool();
+            },
+          )
+        ],
+      );
+
+  LineStyle get _currentLineStyle =>
+      _lineStyle ?? (widget.config as LineDrawingToolConfig).lineStyle;
+
+  String get _currentPattern =>
+      _pattern ?? (widget.config as LineDrawingToolConfig).pattern;
 }

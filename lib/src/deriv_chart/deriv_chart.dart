@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
@@ -27,6 +28,7 @@ class DerivChart extends StatefulWidget {
   const DerivChart({
     required this.mainSeries,
     required this.granularity,
+    required this.currentSymbolName,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -51,6 +53,9 @@ class DerivChart extends StatefulWidget {
 
   /// Number of digits after decimal point in price.
   final int pipSize;
+
+  /// current symbol name
+  final String currentSymbolName;
 
   /// For candles: Duration of one candle in ms.
   /// For ticks: Average ms difference between two consecutive ticks.
@@ -87,14 +92,16 @@ class DerivChart extends StatefulWidget {
 class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
       AddOnsRepository<IndicatorConfig>(IndicatorConfig);
-  final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
-      AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
+  late final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
+      AddOnsRepository<DrawingToolConfig>(DrawingToolConfig,
+          currentSymbolName: widget.currentSymbolName);
 
-  /// if drawing is allowed;
-  bool _isDrawingAllowed = false;
+  /// selected drawing tool;
+  DrawingToolConfig? _selectedDrawingTool;
 
-  /// if drawing has been finished;
-  bool _isDrawingFinished = false;
+  /// existing drawings
+  final Map<String, List<Map<String, dynamic>>> _drawings =
+      <String, List<Map<String, dynamic>>>{};
 
   @override
   void initState() {
@@ -110,7 +117,11 @@ class _DerivChartState extends State<DerivChart> {
     ];
     _stateRepos.asMap().forEach((int index, dynamic element) {
       try {
-        element.loadFromPrefs(prefs);
+        element.loadFromPrefs(
+            prefs,
+            element is AddOnsRepository<DrawingToolConfig>
+                ? widget.currentSymbolName
+                : null);
       } on Exception {
         // ignore: unawaited_futures
         showDialog<void>(
@@ -172,8 +183,11 @@ class _DerivChartState extends State<DerivChart> {
                             ),
                           ))
                 ],
+                currentSymbolName: widget.currentSymbolName,
+                drawings: _drawings,
+                onAddDrawing: _onAddDrawing,
+                selectedDrawingTool: _selectedDrawingTool,
                 markerSeries: widget.markerSeries,
-                isDrawingAllowed: _isDrawingAllowed,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
                 onVisibleAreaChanged: widget.onVisibleAreaChanged,
@@ -207,19 +221,42 @@ class _DerivChartState extends State<DerivChart> {
                   icon: const Icon(Icons.drive_file_rename_outline_outlined),
                   onPressed: () {
                     showDialog<void>(
-                      context: context,
-                      builder: (
-                        BuildContext context,
-                      ) =>
-                          ChangeNotifierProvider<
-                              AddOnsRepository<DrawingToolConfig>>.value(
-                        value: _drawingToolsRepo,
-                        child: DrawingToolsDialog(
-                            onDrawingToolSelection: onDrawingToolSelection,
-                            onDrawingToolRemoval: onDrawingToolRemoval,
-                            isDrawingToolDrawn: _isDrawingFinished),
-                      ),
-                    );
+                        context: context,
+                        builder: (
+                          BuildContext context,
+                        ) =>
+                            ChangeNotifierProvider<
+                                AddOnsRepository<DrawingToolConfig>>.value(
+                              value: _drawingToolsRepo,
+                              child: DrawingToolsDialog(
+                                currentSymbolName: widget.currentSymbolName,
+                                onDrawingToolRemoval: (int index) {
+                                  setState(() {
+                                    if (_drawings[widget.currentSymbolName] !=
+                                        null) {
+                                      _drawings[widget.currentSymbolName]!
+                                          .removeAt(index);
+                                    }
+                                  });
+                                },
+                                onDrawingToolSelection:
+                                    (DrawingToolConfig selectedDrawingTool) {
+                                  setState(() {
+                                    _selectedDrawingTool = selectedDrawingTool;
+                                  });
+                                },
+                                onDrawingToolUpdate: (int index,
+                                    DrawingToolConfig updatedConfig) {
+                                  setState(() {
+                                    if (_drawings[widget.currentSymbolName] !=
+                                        null) {
+                                      _drawings[widget.currentSymbolName]![
+                                          index]['config'] = updatedConfig;
+                                    }
+                                  });
+                                },
+                              ),
+                            ));
                   },
                 ),
               ),
@@ -228,24 +265,33 @@ class _DerivChartState extends State<DerivChart> {
         ),
       );
 
-  void onDrawingToolSelection(DrawingToolConfig selectedDrawingTool) {
+  void _onAddDrawing(Map<String, List<Drawing>> addedDrawing,
+      {bool isDrawingFinished = false}) {
     setState(() {
-      if (!_isDrawingAllowed) {
-        _isDrawingAllowed = true;
-      }
-      if (!_isDrawingFinished) {
-        _isDrawingFinished = true;
-      }
-    });
-  }
+      final dynamic _currentSymbolDrawings =
+          _drawings[widget.currentSymbolName] ?? <Map<String, dynamic>>[];
+      final String drawingId = addedDrawing.keys.first;
 
-  void onDrawingToolRemoval(DrawingToolConfig selectedDrawingTool) {
-    setState(() {
-      if (_isDrawingAllowed) {
-        _isDrawingAllowed = false;
+      final Map<String, dynamic> existingDrawing =
+          _currentSymbolDrawings.firstWhere(
+              (Map<String, dynamic> drawing) =>
+                  drawing.isNotEmpty && drawing['id'] == drawingId,
+              orElse: () => <String, dynamic>{});
+
+      if (existingDrawing.isEmpty) {
+        _currentSymbolDrawings.add(<String, dynamic>{
+          'id': drawingId,
+          'config': _selectedDrawingTool,
+          'drawing': addedDrawing.values.first,
+        });
+      } else {
+        existingDrawing['drawing'] = addedDrawing.values.first;
       }
-      if (_isDrawingFinished) {
-        _isDrawingFinished = false;
+      _drawings[widget.currentSymbolName] = _currentSymbolDrawings;
+
+      if (isDrawingFinished) {
+        _drawingToolsRepo.add(_selectedDrawingTool!, widget.currentSymbolName);
+        _selectedDrawingTool = null;
       }
     });
   }
