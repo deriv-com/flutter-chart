@@ -4,10 +4,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart'
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
-import '../../../../add_ons/drawing_tools_ui/drawing_tool_config.dart';
-
-/// used to create a drawing piece by piece collected on every gesture
+/// Creates a drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a selectedDrawingTool and
 /// until drawing is finished
 class DrawingCreator extends StatefulWidget {
@@ -18,10 +17,10 @@ class DrawingCreator extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  /// selected drawing tool;
+  /// Selected drawing tool.
   final DrawingToolConfig selectedDrawingTool;
 
-  /// callback to pass a newly created drawing to the parent;
+  /// Callback to pass a newly created drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
 
@@ -32,28 +31,28 @@ class DrawingCreator extends StatefulWidget {
 class _DrawingCreatorState extends State<DrawingCreator> {
   late GestureManagerState gestureManager;
 
-  /// parts of a particular drawing, e.g. marker, line
+  /// Parts of a particular drawing, e.g. marker, line
   final List<Drawing> _drawingParts = <Drawing>[];
 
-  /// tapped position
+  /// Tapped position.
   Offset? position;
 
-  /// saved starting epoch;
+  /// Saved starting epoch.
   int? _startingEpoch;
 
-  /// saved starting Y coordinates;
+  /// Saved starting Y coordinates.
   double? _startingYPoint;
 
-  /// if drawing has been started;
+  /// If drawing has been started.
   bool _isPenDown = false;
 
-  /// unique drawing id;
+  /// Unique drawing id.
   String _drawingId = '';
 
-  /// if drawing has been finished;
+  /// If drawing has been finished.
   bool _isDrawingFinished = false;
 
-  /// get epoch from x
+  /// Get epoch from x.
   int Function(double x)? epochFromX;
 
   @override

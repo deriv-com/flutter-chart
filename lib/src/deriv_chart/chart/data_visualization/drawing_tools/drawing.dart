@@ -1,20 +1,15 @@
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../add_ons/drawing_tools_ui/drawing_tool_config.dart';
-
-/// Model class to hold visible entries of `DataSeries` and keep track of their
-/// [startIndex] and [endIndex] indices.
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
 /// Base class to draw a particular drawing
-
 class Drawing {
-  /// paint
+  /// Paint
   void onPaint(Canvas canvas, Size size, ChartTheme theme,
       double Function(int x) epochToX, DrawingToolConfig config) {}
 
-  /// calculate y intersection based on vector points
-  /// based on yIntersection() from SmartCharts
+  /// Calculates y intersection based on vector points.
+  /// Based on yIntersection() from SmartCharts
   double? getYIntersection(Map<String, double?> vector, double x) {
     final double x1 = vector['x0']!, x2 = vector['x1']!, x3 = x, x4 = x;
     final double y1 = vector['y0']!, y2 = vector['y1']!, y3 = 0, y4 = 10000;

@@ -24,7 +24,7 @@ class AddOnsRepository<T> extends ChangeNotifier {
   /// List of indicators.
   List<T> get addOns => getAddOns();
 
-  /// getter for list of addOns.
+  /// Getter for the list of addOns.
   /// If [currentSymbol] is passed, returns the list of drawing tools,
   /// If not, returns the list of indicators.
   List<T> getAddOns([String? currentSymbol]) =>

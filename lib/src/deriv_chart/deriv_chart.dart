@@ -54,7 +54,7 @@ class DerivChart extends StatefulWidget {
   /// Number of digits after decimal point in price.
   final int pipSize;
 
-  /// current symbol name
+  /// Current symbol name.
   final String currentSymbolName;
 
   /// For candles: Duration of one candle in ms.
@@ -96,10 +96,10 @@ class _DerivChartState extends State<DerivChart> {
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig,
           currentSymbolName: widget.currentSymbolName);
 
-  /// selected drawing tool;
+  /// Selected drawing tool.
   DrawingToolConfig? _selectedDrawingTool;
 
-  /// existing drawings
+  /// Existing drawings.
   final Map<String, List<Map<String, dynamic>>> _drawings =
       <String, List<Map<String, dynamic>>>{};
 

@@ -3,19 +3,18 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 
-import '../../../../../deriv_chart.dart';
-
-/// paints every existing drawing
+/// Paints every existing drawing.
 class DrawingPainter extends StatefulWidget {
-  /// initializes
+  /// Initializes
   const DrawingPainter({
     required this.drawingData,
     Key? key,
   }) : super(key: key);
 
-  /// drawing data is Map of type: { 'id': String, 'config': DrawingToolConfig,
-  /// 'drawing': Drawing }
+  /// Drawing data is a Map of type:
+  /// { 'id': String, 'config': DrawingToolConfig, 'drawing': Drawing }
   final Map<String, dynamic> drawingData;
 
   @override

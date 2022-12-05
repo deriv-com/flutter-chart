@@ -18,16 +18,16 @@ class DrawingToolsDialog extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  /// current symbol name for which a drawing is drawn
+  /// Current symbol name for which a drawing is drawn.
   final String currentSymbolName;
 
-  /// callback to inform parent about drawing tool selection;
-  final void Function(DrawingToolConfig) onDrawingToolSelection;
-
-  /// callback to inform parent about drawing tool removal;
+  /// Callback to inform parent about drawing tool removal.
   final void Function(int) onDrawingToolRemoval;
 
-  /// callback to inform parent about drawing tool update;
+  /// Callback to inform parent about drawing tool selection.
+  final void Function(DrawingToolConfig) onDrawingToolSelection;
+
+  /// Callback to inform parent about drawing tool update.
   final void Function(int, DrawingToolConfig) onDrawingToolUpdate;
 
   @override

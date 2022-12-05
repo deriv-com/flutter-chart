@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
-
 import 'callbacks.dart';
 import 'drawing_tool_config.dart';
 
-/// Representing a drawing tool item in drawing tools list dialog.
+/// Represents a drawing tool item on the list of drawing tools in dialog.
 abstract class DrawingToolItem extends StatefulWidget {
   /// Initializes
   const DrawingToolItem({
@@ -40,7 +39,7 @@ abstract class DrawingToolItem extends StatefulWidget {
 /// State class of [DrawingToolItem]
 abstract class DrawingToolItemState<T extends DrawingToolConfig>
     extends State<DrawingToolItem> {
-  /// Indicators repository
+  /// Drawing tools repository
   @protected
   late AddOnsRepository<DrawingToolConfig> drawingToolsRepo;
 
@@ -74,6 +73,6 @@ abstract class DrawingToolItemState<T extends DrawingToolConfig>
   /// this drawing tool.
   T createDrawingToolConfig();
 
-  /// Creates the menu options widget for this indicator.
+  /// Creates the menu options widget for this drawing tool.
   Widget getDrawingToolOptions();
 }

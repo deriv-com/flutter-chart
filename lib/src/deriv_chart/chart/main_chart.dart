@@ -12,8 +12,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'basic_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/models/animation_info.dart';
@@ -63,17 +62,17 @@ class MainChart extends BasicChart {
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
 
-  /// current symbol name
+  /// Current symbol name.
   final String currentSymbolName;
 
-  /// existing drawings
+  /// Existing drawings.
   final Map<String, List<Map<String, dynamic>>> drawings;
 
-  /// callback to pass new drawing to the parent;
+  /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
 
-  /// selected drawing tool;
+  /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
 
   /// The function that gets called on crosshair appearance.

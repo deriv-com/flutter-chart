@@ -1,14 +1,12 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../deriv_chart.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'drawing.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
-
 class LineDrawing extends Drawing {
-  /// initializes
+  /// Initializes
   LineDrawing({
     required this.drawingPart,
     this.startEpoch = 0,
@@ -17,25 +15,25 @@ class LineDrawing extends Drawing {
     this.endYCoord = 0,
   });
 
-  /// 'marker' or 'line'
+  /// Part of a drawing: 'marker' or 'line'
   final String drawingPart;
 
-  /// starting epoch
+  /// Starting epoch.
   final int? startEpoch;
 
-  /// starting Y coordinates
+  /// Starting Y coordinates.
   final double? startYCoord;
 
-  /// ending epoch
+  /// Ending epoch.
   final int? endEpoch;
 
-  /// ending Y coordinates
+  /// Ending Y coordinates.
   final double? endYCoord;
 
-  /// marker radius
+  /// Marker radius.
   final double markerRadius = 4;
 
-  /// paint
+  /// Paint
   @override
   void onPaint(Canvas canvas, Size size, ChartTheme theme,
       double Function(int x) epochToX, DrawingToolConfig config) {
@@ -55,7 +53,7 @@ class LineDrawing extends Drawing {
         final double startXCoord = epochToX(startEpoch!);
         final double endXCoord = epochToX(endEpoch!);
 
-        /// based on calculateOuterSet() from SmartCharts
+        /// Based on calculateOuterSet() from SmartCharts
         Map<String, double?> vector = <String, double?>{
           'x0': startXCoord,
           'y0': startYCoord,
