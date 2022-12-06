@@ -37,7 +37,7 @@ class _DerivChartWebAdapter extends StatefulWidget {
 
 class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   _DerivChartWebAdapterState() {
-    chartConfigModel = ChartConfigModel(_controller);
+    chartConfigModel = ChartConfigModel(_controller, chartDataModel);
     initInterOp(listen, chartConfigModel);
   }
 

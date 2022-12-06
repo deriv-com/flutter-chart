@@ -7,7 +7,7 @@ import 'package:web_adapter/src/models/chart_data.dart';
 /// State and methods of chart web adapter config.
 class ChartConfigModel extends ChangeNotifier {
   /// Initialize
-  ChartConfigModel(this._controller);
+  ChartConfigModel(this._controller, this._chartDataModel);
 
   /// Style of the chart
   ChartStyle style = ChartStyle.line;
