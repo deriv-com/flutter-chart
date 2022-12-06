@@ -15,8 +15,6 @@ class HorizontalBarrier extends Barrier {
     bool longLine = true,
     HorizontalBarrierStyle? style,
     this.visibility = HorizontalBarrierVisibility.keepBarrierLabelVisible,
-    OnDragCallback? onDrag,
-    String? label,
   }) : super(
           id: id,
           title: title,
@@ -24,8 +22,6 @@ class HorizontalBarrier extends Barrier {
           value: value,
           style: style,
           longLine: longLine,
-          label: label,
-          onDrag: onDrag,
         );
 
   /// Barrier visibility behavior.

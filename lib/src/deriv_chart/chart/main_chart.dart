@@ -3,7 +3,6 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/barrier_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
@@ -33,7 +32,6 @@ class MainChart extends BasicChart {
     this.onCrosshairAppeared,
     this.overlaySeries,
     this.annotations,
-    this.barriers,
     double opacity = 1,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
     this.hideCrosshair = false,
@@ -60,9 +58,6 @@ class MainChart extends BasicChart {
 
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
-
-  /// The list that holds the stateful barriers.
-  final List<Barrier>? barriers;
 
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
@@ -273,14 +268,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 super.build(context),
                 _buildSeries(),
                 _buildAnnotations(),
-                if (widget.barriers != null)
-                  BarrierArea(
-                    barriers: widget.barriers!,
-                    quoteToCanvasY: chartQuoteToCanvasY,
-                    quoteFromCanvasY: chartQuoteFromCanvasY,
-                    enableVerticalScale: enableVerticalScale,
-                    disableVerticalScale: disableVerticalScale,
-                  ),
                 if (widget.markerSeries != null)
                   MarkerArea(
                     markerSeries: widget.markerSeries!,

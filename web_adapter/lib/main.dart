@@ -37,7 +37,7 @@ class _DerivChartWebAdapter extends StatefulWidget {
 
 class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   _DerivChartWebAdapterState() {
-    chartConfigModel = ChartConfigModel(_controller, chartDataModel);
+    chartConfigModel = ChartConfigModel(_controller);
     initInterOp(listen, chartConfigModel);
   }
 
@@ -94,19 +94,14 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                               ) as DataSeries<Tick>,
                         annotations: chartDataModel.ticks.length > 4
                             ? <Barrier>[
-                                if (chartConfigModel.slBarrier != null)
-                                  chartConfigModel.slBarrier as Barrier,
-                                if (chartConfigModel.tpBarrier != null)
-                                  chartConfigModel.tpBarrier as Barrier,
                                 if (chartConfigModel.isLive)
                                   TickIndicator(
                                     chartDataModel.ticks.last,
-                                    style: HorizontalBarrierStyle(
+                                    style: const HorizontalBarrierStyle(
                                       color: Colors.redAccent,
                                       labelShape: LabelShape.pentagon,
                                       hasBlinkingDot: true,
                                       hasArrow: false,
-                                      shadeType: chartConfigModel.shadeType,
                                     ),
                                     visibility: HorizontalBarrierVisibility
                                         .keepBarrierLabelVisible,
@@ -128,12 +123,6 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                             (double topQuote, double bottomQuote) {
                           JsInterop.onQuoteAreaChanged(topQuote, bottomQuote);
                         },
-                        barriers: <Barrier>[
-                          if (chartConfigModel.draggableBarrier != null)
-                            chartConfigModel.draggableBarrier as Barrier,
-                          if (chartConfigModel.purchaseBarrier != null)
-                            chartConfigModel.purchaseBarrier as Barrier
-                        ],
                         markerSeries: MarkerSeries(
                           SplayTreeSet<Marker>(),
                           markerGroupList: chartConfigModel.markerGroupList,

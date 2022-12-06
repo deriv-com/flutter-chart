@@ -61,7 +61,6 @@ class HorizontalBarrierStyle extends BarrierStyle {
     ),
     this.shadeType = ShadeType.none,
     this.shadeColor = const Color(0xFF607D8B),
-    this.isDraggable = false,
   })  : blinkingDotColor = blinkingDotColor ?? color,
         super(
           color: color,
@@ -109,9 +108,6 @@ class HorizontalBarrierStyle extends BarrierStyle {
 
   /// Color used to paint the shade
   final Color shadeColor;
-
-  /// Whether to make the barrier draggable and show drag pointer on hover
-  final bool isDraggable;
 
   @override
   String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';
