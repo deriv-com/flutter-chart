@@ -38,15 +38,6 @@ class ChartDataModel extends ChangeNotifier {
     }
   }
 
-  /// To get quote for corresponding epoch
-  double getQuoteForEpoch(int epoch) {
-    final Tick tick = ticks.lastWhere(
-      (Tick tick) => tick.epoch == epoch,
-      orElse: () => Tick(epoch: epoch, quote: 0),
-    );
-    return tick.quote;
-  }
-
   Tick _parseTick(dynamic item) => Tick(
         epoch: DateTime.parse('${item['Date']}Z').millisecondsSinceEpoch,
         quote: item['Close'],

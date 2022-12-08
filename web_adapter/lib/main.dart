@@ -49,7 +49,7 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) => onLoad());
+    WidgetsBinding.instance.addPostFrameCallback((_) => onLoad());
   }
 
   void onLoad() {
@@ -126,7 +126,7 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                         markerSeries: MarkerSeries(
                           SplayTreeSet<Marker>(),
                           markerGroupList: chartConfigModel.markerGroupList,
-                          markerIconPainter: TickMarkerIconPainter(),
+                          markerIconPainter: DigitMarkerIconPainter(),
                           activeMarker: chartConfigModel.activeMarker,
                         ),
                         dataFitEnabled: true,

@@ -72,6 +72,8 @@ class ChartConfigModel extends ChangeNotifier {
 
   MarkerType _getMarkerType(String? _markerType) {
     switch (_markerType) {
+      case 'ACTIVE_START':
+        return MarkerType.activeStart;
       case 'START':
         return MarkerType.start;
       case 'ENTRY':
@@ -93,17 +95,11 @@ class ChartConfigModel extends ChangeNotifier {
       final List<Marker> markers = <Marker>[];
 
       for (final dynamic _marker in _markerGroup['markers']) {
-        final bool isActiveMarker = _markerGroup == _markerGroupList.last &&
-            _getMarkerType(_marker['type']) == MarkerType.start;
-
         markers.add(Marker(
-          quote: _marker['quote'] ??
-              _chartDataModel.getQuoteForEpoch(_marker['epoch']),
+          quote: _marker['quote'],
           epoch: _marker['epoch'],
           text: _marker['text'],
-          markerType: isActiveMarker
-              ? MarkerType.activeStart
-              : _getMarkerType(_marker['type']),
+          markerType: _getMarkerType(_marker['type']),
           direction: MarkerDirection.up,
         ));
       }

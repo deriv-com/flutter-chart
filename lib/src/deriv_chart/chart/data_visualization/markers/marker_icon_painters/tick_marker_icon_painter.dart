@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
   void paintMarkerGroup(
     Canvas canvas,
     Size size,
+    ChartTheme theme,
     MarkerGroup markerGroup,
     EpochToX epochToX,
     QuoteToY quoteToY,
@@ -41,7 +43,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
         points[marker.markerType!] = center;
       }
 
-      _drawMarker(canvas, size, marker, center, markerGroup.style);
+      _drawMarker(canvas, size, theme, marker, center, markerGroup.style);
     }
 
     _drawBarriers(canvas, points, markerGroup.style);
@@ -53,8 +55,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
       Canvas canvas, Map<MarkerType, Offset> points, MarkerStyle style) {
     final Paint paint = Paint()..color = style.backgroundColor;
     final Offset? _entryTickOffset = points[MarkerType.entry];
-    final Offset? _startTickOffset =
-        points[MarkerType.start] ?? points[MarkerType.activeStart];
+    final Offset? _startTickOffset = points[MarkerType.start];
     final Offset? _currentTickOffset = points[MarkerType.current];
     final Offset? _endTickOffset = points[MarkerType.end];
     final Offset? _exitTickOffset = points[MarkerType.exit];
@@ -75,7 +76,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
     if (_entryTickOffset != null &&
         (_currentTickOffset != null || _endTickOffset != null)) {
       canvas.drawLine(
-          _entryTickOffset!, _currentTickOffset ?? _endTickOffset!, paint);
+          _entryTickOffset, _currentTickOffset ?? _endTickOffset!, paint);
     }
 
     if (_exitTickOffset != null) {
@@ -99,13 +100,15 @@ class TickMarkerIconPainter extends MarkerIconPainter {
     }
   }
 
-  void _drawMarker(Canvas canvas, Size size, Marker marker, Offset anchor,
-      MarkerStyle style) {
+  void _drawMarker(Canvas canvas, Size size, ChartTheme theme, Marker marker,
+      Offset anchor, MarkerStyle style) {
     final Paint paint = Paint()..color = style.backgroundColor;
     switch (marker.markerType) {
       case MarkerType.activeStart:
+        _drawActiveStartPoint(canvas, size, marker, anchor, style);
+        break;
       case MarkerType.start:
-        _drawStartPoint(canvas, size, marker, anchor, style);
+        _drawStartPoint(canvas, size, theme, marker, anchor, style);
         break;
       case MarkerType.entry:
         canvas.drawCircle(
@@ -115,7 +118,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
         );
         break;
       case MarkerType.end:
-        _paintEndIcon(canvas, anchor - const Offset(1, 20), style);
+        _paintEndIcon(canvas, theme, anchor - const Offset(1, 20), style);
         break;
       case MarkerType.exit:
         canvas.drawCircle(
@@ -136,41 +139,65 @@ class TickMarkerIconPainter extends MarkerIconPainter {
     }
   }
 
-  void _drawStartPoint(Canvas canvas, Size size, Marker marker, Offset anchor,
-      MarkerStyle style) {
-    _paintIcon(canvas, Icons.location_on, anchor - const Offset(10, 20), style);
+  void _drawActiveStartPoint(Canvas canvas, Size size, Marker marker,
+      Offset anchor, MarkerStyle style) {
+    paintVerticalDashedLine(
+      canvas,
+      anchor.dx,
+      10,
+      size.height - 10,
+      style.backgroundColor,
+      1,
+      dashWidth: 6,
+    );
 
-    if (marker.markerType == MarkerType.activeStart) {
-      paintVerticalDashedLine(
-        canvas,
-        anchor.dx,
-        10,
-        size.height - 10,
-        style.backgroundColor,
-        1,
-        dashWidth: 6,
+    if (marker.text != null) {
+      final TextStyle textStyle = TextStyle(
+        color: style.backgroundColor,
+        fontSize: style.activeMarkerText.fontSize,
+        fontWeight: FontWeight.normal,
       );
 
-      if (marker.text != null) {
-        final TextStyle textStyle = TextStyle(
-          color: style.backgroundColor,
-          fontSize: style.activeMarkerText.fontSize,
-          fontWeight: FontWeight.bold,
-        );
+      final TextPainter textPainter = makeTextPainter(marker.text!, textStyle);
 
-        final TextPainter textPainter =
-            makeTextPainter(marker.text!, textStyle);
+      final Offset iconShift =
+          Offset(anchor.dx - textPainter.width - 5, size.height - 20);
 
-        final Offset iconShift =
-            Offset(textPainter.width / 2, 20 + textPainter.height);
+      paintWithTextPainter(
+        canvas,
+        painter: textPainter,
+        anchor: iconShift,
+        anchorAlignment: Alignment.centerLeft,
+      );
+    }
+  }
 
-        paintWithTextPainter(
-          canvas,
-          painter: textPainter,
-          anchor: anchor - iconShift,
-          anchorAlignment: Alignment.centerLeft,
-        );
-      }
+  void _drawStartPoint(Canvas canvas, Size size, ChartTheme theme,
+      Marker marker, Offset anchor, MarkerStyle style) {
+    if (marker.quote != 0) {
+      _paintIcon(
+          canvas, Icons.location_on, anchor - const Offset(10, 20), style);
+    }
+
+    if (marker.text != null) {
+      final TextStyle textStyle = TextStyle(
+        color: style.backgroundColor,
+        fontSize: style.activeMarkerText.fontSize,
+        fontWeight: FontWeight.bold,
+        backgroundColor: theme.base08Color,
+      );
+
+      final TextPainter textPainter = makeTextPainter(marker.text!, textStyle);
+
+      final Offset iconShift =
+          Offset(textPainter.width / 2, 20 + textPainter.height);
+
+      paintWithTextPainter(
+        canvas,
+        painter: textPainter,
+        anchor: anchor - iconShift,
+        anchorAlignment: Alignment.centerLeft,
+      );
     }
   }
 
@@ -195,7 +222,8 @@ class TickMarkerIconPainter extends MarkerIconPainter {
       );
   }
 
-  void _paintEndIcon(Canvas canvas, Offset center, MarkerStyle style) {
+  void _paintEndIcon(
+      Canvas canvas, ChartTheme theme, Offset center, MarkerStyle style) {
     canvas
       ..save()
       ..translate(
@@ -206,7 +234,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
 
     final Paint paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = Colors.white.withOpacity(1);
+      ..color = theme.base08Color.withOpacity(1);
 
     // This path was generated with http://demo.qunee.com/svg2canvas/.
     final Path path = Path()

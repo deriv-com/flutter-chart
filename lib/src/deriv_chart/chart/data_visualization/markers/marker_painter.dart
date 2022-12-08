@@ -77,6 +77,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
       markerIconPainter.paintMarkerGroup(
         canvas,
         size,
+        theme,
         markerGroup,
         epochToX,
         quoteToY,
