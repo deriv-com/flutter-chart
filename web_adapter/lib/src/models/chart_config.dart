@@ -2,12 +2,11 @@ import 'dart:collection';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:web_adapter/src/models/chart_data.dart';
 
 /// State and methods of chart web adapter config.
 class ChartConfigModel extends ChangeNotifier {
   /// Initialize
-  ChartConfigModel(this._controller, this._chartDataModel);
+  ChartConfigModel(this._controller);
 
   /// Style of the chart
   ChartStyle style = ChartStyle.line;
@@ -27,9 +26,10 @@ class ChartConfigModel extends ChangeNotifier {
   /// Whether the chart should be showing live data or not.
   bool isLive = false;
 
-  late final ChartController _controller;
+  /// Whether to use digit contract painter or non-digit contract painter
+  bool isDigitContract = false;
 
-  late final ChartDataModel _chartDataModel;
+  late final ChartController _controller;
 
   /// Updates the ChartConfigModel state
   void update(String messageType, dynamic payload) {
@@ -93,6 +93,8 @@ class ChartConfigModel extends ChangeNotifier {
 
     for (final dynamic _markerGroup in _markerGroupList) {
       final List<Marker> markers = <Marker>[];
+
+      isDigitContract = _markerGroup['type'] == 'DigitContract';
 
       for (final dynamic _marker in _markerGroup['markers']) {
         markers.add(Marker(

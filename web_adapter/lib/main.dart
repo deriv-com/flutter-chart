@@ -37,7 +37,7 @@ class _DerivChartWebAdapter extends StatefulWidget {
 
 class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   _DerivChartWebAdapterState() {
-    chartConfigModel = ChartConfigModel(_controller, chartDataModel);
+    chartConfigModel = ChartConfigModel(_controller);
     initInterOp(listen, chartConfigModel);
   }
 
@@ -126,7 +126,9 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
                         markerSeries: MarkerSeries(
                           SplayTreeSet<Marker>(),
                           markerGroupList: chartConfigModel.markerGroupList,
-                          markerIconPainter: DigitMarkerIconPainter(),
+                          markerIconPainter: chartConfigModel.isDigitContract
+                              ? DigitMarkerIconPainter()
+                              : TickMarkerIconPainter(),
                           activeMarker: chartConfigModel.activeMarker,
                         ),
                         dataFitEnabled: true,
