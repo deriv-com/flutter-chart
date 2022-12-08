@@ -1,7 +1,10 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
@@ -105,7 +108,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
     final Paint paint = Paint()..color = style.backgroundColor;
     switch (marker.markerType) {
       case MarkerType.activeStart:
-        _drawActiveStartPoint(canvas, size, marker, anchor, style);
+        paintStartLine(canvas, size, marker, anchor, style);
         break;
       case MarkerType.start:
         _drawStartPoint(canvas, size, theme, marker, anchor, style);
@@ -118,7 +121,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
         );
         break;
       case MarkerType.end:
-        _paintEndIcon(canvas, theme, anchor - const Offset(1, 20), style);
+        paintEndMarker(canvas, theme, anchor - const Offset(1, 20), style);
         break;
       case MarkerType.exit:
         canvas.drawCircle(
@@ -139,44 +142,10 @@ class TickMarkerIconPainter extends MarkerIconPainter {
     }
   }
 
-  void _drawActiveStartPoint(Canvas canvas, Size size, Marker marker,
-      Offset anchor, MarkerStyle style) {
-    paintVerticalDashedLine(
-      canvas,
-      anchor.dx,
-      10,
-      size.height - 10,
-      style.backgroundColor,
-      1,
-      dashWidth: 6,
-    );
-
-    if (marker.text != null) {
-      final TextStyle textStyle = TextStyle(
-        color: style.backgroundColor,
-        fontSize: style.activeMarkerText.fontSize,
-        fontWeight: FontWeight.normal,
-      );
-
-      final TextPainter textPainter = makeTextPainter(marker.text!, textStyle);
-
-      final Offset iconShift =
-          Offset(anchor.dx - textPainter.width - 5, size.height - 20);
-
-      paintWithTextPainter(
-        canvas,
-        painter: textPainter,
-        anchor: iconShift,
-        anchorAlignment: Alignment.centerLeft,
-      );
-    }
-  }
-
   void _drawStartPoint(Canvas canvas, Size size, ChartTheme theme,
       Marker marker, Offset anchor, MarkerStyle style) {
     if (marker.quote != 0) {
-      _paintIcon(
-          canvas, Icons.location_on, anchor - const Offset(10, 20), style);
+      paintStartMarker(canvas, anchor - const Offset(10, 20), style, 20);
     }
 
     if (marker.text != null) {
@@ -199,119 +168,5 @@ class TickMarkerIconPainter extends MarkerIconPainter {
         anchorAlignment: Alignment.centerLeft,
       );
     }
-  }
-
-  void _paintIcon(
-      Canvas canvas, IconData icon, Offset offset, MarkerStyle style) {
-    const double iconSize = 20;
-    const double innerIconSize = iconSize;
-
-    TextPainter(textDirection: TextDirection.ltr)
-      ..text = TextSpan(
-        text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(
-          fontSize: innerIconSize,
-          fontFamily: icon.fontFamily,
-          color: style.backgroundColor,
-        ),
-      )
-      ..layout()
-      ..paint(
-        canvas,
-        offset,
-      );
-  }
-
-  void _paintEndIcon(
-      Canvas canvas, ChartTheme theme, Offset center, MarkerStyle style) {
-    canvas
-      ..save()
-      ..translate(
-        center.dx,
-        center.dy,
-      )
-      ..scale(1);
-
-    final Paint paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = theme.base08Color.withOpacity(1);
-
-    // This path was generated with http://demo.qunee.com/svg2canvas/.
-    final Path path = Path()
-      ..moveTo(2, 2)
-      ..lineTo(18, 2)
-      ..lineTo(18, 12)
-      ..lineTo(2, 12)
-      ..close();
-
-    final Path flagPath = Path()
-      ..moveTo(2, 0)
-      ..lineTo(2, 1)
-      ..lineTo(19, 1)
-      ..lineTo(19, 12)
-      ..lineTo(2, 12)
-      ..lineTo(2, 20)
-      ..lineTo(1, 20)
-      ..lineTo(1, 0)
-      ..lineTo(2, 0)
-      ..close()
-      ..moveTo(18, 8)
-      ..lineTo(15, 8)
-      ..lineTo(15, 11)
-      ..lineTo(18, 11)
-      ..lineTo(18, 8)
-      ..close()
-      ..moveTo(12, 8)
-      ..lineTo(9, 8)
-      ..lineTo(9, 11)
-      ..lineTo(12, 11)
-      ..lineTo(12, 8)
-      ..close()
-      ..moveTo(6, 8)
-      ..lineTo(3, 8)
-      ..lineTo(3, 11)
-      ..lineTo(6, 11)
-      ..lineTo(6, 8)
-      ..close()
-      ..moveTo(15, 5)
-      ..lineTo(12, 5)
-      ..lineTo(12, 8)
-      ..lineTo(15, 8)
-      ..lineTo(15, 5)
-      ..close()
-      ..moveTo(9, 5)
-      ..lineTo(6, 5)
-      ..lineTo(6, 8)
-      ..lineTo(9, 8)
-      ..lineTo(9, 5)
-      ..close()
-      ..moveTo(6, 2)
-      ..lineTo(3, 2)
-      ..lineTo(3, 5)
-      ..lineTo(6, 5)
-      ..lineTo(6, 2)
-      ..close()
-      ..moveTo(18, 2)
-      ..lineTo(15, 2)
-      ..lineTo(15, 5)
-      ..lineTo(18, 5)
-      ..lineTo(18, 2)
-      ..close()
-      ..moveTo(12, 2)
-      ..lineTo(9, 2)
-      ..lineTo(9, 5)
-      ..lineTo(12, 5)
-      ..lineTo(12, 2)
-      ..close()
-      ..fillType = PathFillType.evenOdd;
-
-    final Paint flagPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = style.backgroundColor.withOpacity(1);
-
-    canvas
-      ..drawPath(path, paint)
-      ..drawPath(flagPath, flagPaint)
-      ..restore();
   }
 }
