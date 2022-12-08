@@ -9,7 +9,7 @@ import '../../../chart_data.dart';
 import '../../data_painter.dart';
 import '../../data_series.dart';
 import '../../indexed_entry.dart';
-import 'candle_painting.dart';
+import '../ohlc_painting.dart';
 
 /// A [DataPainter] for painting CandleStick data.
 class CandlePainter extends DataPainter<DataSeries<Candle>> {
@@ -54,7 +54,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
 
       _paintCandle(
         canvas,
-        CandlePainting(
+        OhlcPainting(
           width: candleWidth,
           xCenter: epochToX(getEpochOf(candle, i)),
           yHigh: quoteToY(candle.high),
@@ -69,7 +69,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     final Candle lastCandle = series.entries!.last;
     final Candle lastVisibleCandle = series.visibleEntries.last;
 
-    CandlePainting lastCandlePainting;
+    OhlcPainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
       final IndexedEntry<Candle> prevLastCandle = series.prevLastEntry!;
@@ -86,7 +86,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
         animationInfo.currentTickPercent,
       )!;
 
-      lastCandlePainting = CandlePainting(
+      lastCandlePainting = OhlcPainting(
         xCenter: xCenter,
         yHigh: lastCandle.high > prevLastCandle.entry.high
             // In this case we don't update high-low line to avoid instant
@@ -103,7 +103,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
         width: candleWidth,
       );
     } else {
-      lastCandlePainting = CandlePainting(
+      lastCandlePainting = OhlcPainting(
         xCenter: epochToX(
             getEpochOf(lastVisibleCandle, series.visibleEntries.endIndex - 1)),
         yHigh: quoteToY(lastVisibleCandle.high),
@@ -117,7 +117,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     _paintCandle(canvas, lastCandlePainting);
   }
 
-  void _paintCandle(Canvas canvas, CandlePainting cp) {
+  void _paintCandle(Canvas canvas, OhlcPainting cp) {
     canvas.drawLine(
       Offset(cp.xCenter, cp.yHigh),
       Offset(cp.xCenter, cp.yLow),
