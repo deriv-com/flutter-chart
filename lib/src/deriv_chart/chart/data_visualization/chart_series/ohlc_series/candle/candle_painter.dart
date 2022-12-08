@@ -35,7 +35,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
     _linePaint = Paint()
-      ..color = style.lineColor
+      ..color = style.neutralColor
       ..strokeWidth = 1.2;
 
     _positiveCandlePaint = Paint()..color = style.positiveColor;

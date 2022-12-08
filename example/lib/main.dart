@@ -704,7 +704,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               ? Icons.show_chart
               : style == ChartStyle.candles
                   ? Icons.insert_chart
-                  : Icons.candlestick_chart_outlined,
+                  : Icons.insert_chart_outlined_outlined,
           color: Colors.white,
         ),
         onPressed: () {
