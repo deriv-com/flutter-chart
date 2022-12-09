@@ -135,43 +135,45 @@ class HollowCandlePainter extends DataPainter<DataSeries<Candle>> {
     _paintCandle(canvas, lastCandlePainting, prevLastCandlePainting);
   }
 
-  void _drawWick(Canvas canvas, Color color, OhlcPainting cp) {
+  void _drawWick(Canvas canvas, Color color, OhlcPainting currentPainting) {
     canvas
       ..drawLine(
-        Offset(cp.xCenter, cp.yHigh),
-        Offset(cp.xCenter, cp.yClose),
+        Offset(currentPainting.xCenter, currentPainting.yHigh),
+        Offset(currentPainting.xCenter, currentPainting.yClose),
         Paint()
           ..color = color
           ..strokeWidth = 1.2,
       )
       ..drawLine(
-        Offset(cp.xCenter, cp.yLow),
-        Offset(cp.xCenter, cp.yOpen),
+        Offset(currentPainting.xCenter, currentPainting.yLow),
+        Offset(currentPainting.xCenter, currentPainting.yOpen),
         Paint()
           ..color = color
           ..strokeWidth = 1.2,
       );
   }
 
-  void _drawFilledRect(Canvas canvas, Color color, OhlcPainting cp) {
+  void _drawFilledRect(
+      Canvas canvas, Color color, OhlcPainting currentPainting) {
     canvas.drawRect(
       Rect.fromLTRB(
-        cp.xCenter - cp.width / 2,
-        cp.yClose,
-        cp.xCenter + cp.width / 2,
-        cp.yOpen,
+        currentPainting.xCenter - currentPainting.width / 2,
+        currentPainting.yClose,
+        currentPainting.xCenter + currentPainting.width / 2,
+        currentPainting.yOpen,
       ),
       Paint()..color = color,
     );
   }
 
-  void _drawHollowRect(Canvas canvas, Color color, OhlcPainting cp) {
+  void _drawHollowRect(
+      Canvas canvas, Color color, OhlcPainting currentPainting) {
     canvas.drawRect(
       Rect.fromLTRB(
-        cp.xCenter - cp.width / 2,
-        cp.yOpen,
-        cp.xCenter + cp.width / 2,
-        cp.yClose,
+        currentPainting.xCenter - currentPainting.width / 2,
+        currentPainting.yOpen,
+        currentPainting.xCenter + currentPainting.width / 2,
+        currentPainting.yClose,
       ),
       Paint()
         ..color = color
@@ -180,31 +182,34 @@ class HollowCandlePainter extends DataPainter<DataSeries<Candle>> {
     );
   }
 
-  void _drawLine(Canvas canvas, Color color, OhlcPainting cp) {
+  void _drawLine(Canvas canvas, Color color, OhlcPainting currentPainting) {
     canvas.drawLine(
-      Offset(cp.xCenter - cp.width / 2, cp.yOpen),
-      Offset(cp.xCenter + cp.width / 2, cp.yOpen),
+      Offset(currentPainting.xCenter - currentPainting.width / 2,
+          currentPainting.yOpen),
+      Offset(currentPainting.xCenter + currentPainting.width / 2,
+          currentPainting.yOpen),
       Paint()
         ..color = color
         ..strokeWidth = 1.2,
     );
   }
 
-  void _paintCandle(Canvas canvas, OhlcPainting cp, OhlcPainting pcp) {
-    final Color _candleColor = cp.yClose > pcp.yClose
+  void _paintCandle(
+      Canvas canvas, OhlcPainting currentPainting, OhlcPainting prevPainting) {
+    final Color _candleColor = currentPainting.yClose > prevPainting.yClose
         ? _negativeColor
-        : cp.yClose < pcp.yClose
+        : currentPainting.yClose < prevPainting.yClose
             ? _positiveColor
             : _neutralColor;
 
-    _drawWick(canvas, _candleColor, cp);
+    _drawWick(canvas, _candleColor, currentPainting);
 
-    if (cp.yOpen == cp.yClose) {
-      _drawLine(canvas, _candleColor, cp);
-    } else if (cp.yOpen < cp.yClose) {
-      _drawFilledRect(canvas, _candleColor, cp);
+    if (currentPainting.yOpen == currentPainting.yClose) {
+      _drawLine(canvas, _candleColor, currentPainting);
+    } else if (currentPainting.yOpen < currentPainting.yClose) {
+      _drawFilledRect(canvas, _candleColor, currentPainting);
     } else {
-      _drawHollowRect(canvas, _candleColor, cp);
+      _drawHollowRect(canvas, _candleColor, currentPainting);
     }
   }
 }

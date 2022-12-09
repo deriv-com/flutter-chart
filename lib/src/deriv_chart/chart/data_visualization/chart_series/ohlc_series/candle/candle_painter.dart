@@ -117,36 +117,36 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     _paintCandle(canvas, lastCandlePainting);
   }
 
-  void _paintCandle(Canvas canvas, OhlcPainting cp) {
+  void _paintCandle(Canvas canvas, OhlcPainting op) {
     canvas.drawLine(
-      Offset(cp.xCenter, cp.yHigh),
-      Offset(cp.xCenter, cp.yLow),
+      Offset(op.xCenter, op.yHigh),
+      Offset(op.xCenter, op.yLow),
       _linePaint,
     );
 
-    if (cp.yOpen == cp.yClose) {
+    if (op.yOpen == op.yClose) {
       canvas.drawLine(
-        Offset(cp.xCenter - cp.width / 2, cp.yOpen),
-        Offset(cp.xCenter + cp.width / 2, cp.yOpen),
+        Offset(op.xCenter - op.width / 2, op.yOpen),
+        Offset(op.xCenter + op.width / 2, op.yOpen),
         _linePaint,
       );
-    } else if (cp.yOpen > cp.yClose) {
+    } else if (op.yOpen > op.yClose) {
       canvas.drawRect(
         Rect.fromLTRB(
-          cp.xCenter - cp.width / 2,
-          cp.yClose,
-          cp.xCenter + cp.width / 2,
-          cp.yOpen,
+          op.xCenter - op.width / 2,
+          op.yClose,
+          op.xCenter + op.width / 2,
+          op.yOpen,
         ),
         _positiveCandlePaint,
       );
     } else {
       canvas.drawRect(
         Rect.fromLTRB(
-          cp.xCenter - cp.width / 2,
-          cp.yOpen,
-          cp.xCenter + cp.width / 2,
-          cp.yClose,
+          op.xCenter - op.width / 2,
+          op.yOpen,
+          op.xCenter + op.width / 2,
+          op.yClose,
         ),
         _negativeCandlePaint,
       );
