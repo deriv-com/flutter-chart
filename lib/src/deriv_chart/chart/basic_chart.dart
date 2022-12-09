@@ -92,9 +92,9 @@ class BasicChartState<T extends BasicChart> extends State<T>
   /// The animation of the current tick.
   late Animation<double> currentTickAnimation;
 
-  double get _topBoundQuote => topBoundQuoteAnimationController.value;
+  double get _topBoundQuote => topBoundQuoteTarget;
 
-  double get _bottomBoundQuote => bottomBoundQuoteAnimationController.value;
+  double get _bottomBoundQuote => bottomBoundQuoteTarget;
 
   /// Vertical padding in pixel.
   double get verticalPadding {
@@ -313,10 +313,11 @@ class BasicChartState<T extends BasicChart> extends State<T>
             constraints.maxHeight,
           );
 
-          final YAxisModel yAxisModel = _setupYAxisModel(canvasSize!);
-
           updateVisibleData();
           _updateQuoteBoundTargets();
+
+          final YAxisModel yAxisModel = _setupYAxisModel(canvasSize!);
+
           final List<double> gridLineQuotes =
               calculateGridLineQuotes(yAxisModel);
           return Stack(
