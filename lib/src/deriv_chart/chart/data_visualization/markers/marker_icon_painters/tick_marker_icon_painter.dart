@@ -59,7 +59,7 @@ class TickMarkerIconPainter extends MarkerIconPainter {
     final Paint paint = Paint()..color = style.backgroundColor;
     final Offset? _entryTickOffset = points[MarkerType.entry];
     final Offset? _startTickOffset = points[MarkerType.start];
-    final Offset? _currentTickOffset = points[MarkerType.current];
+    final Offset? _latestTickOffset = points[MarkerType.latestTick];
     final Offset? _endTickOffset = points[MarkerType.end];
     final Offset? _exitTickOffset = points[MarkerType.exit];
 
@@ -77,9 +77,9 @@ class TickMarkerIconPainter extends MarkerIconPainter {
     }
 
     if (_entryTickOffset != null &&
-        (_currentTickOffset != null || _endTickOffset != null)) {
+        (_latestTickOffset != null || _endTickOffset != null)) {
       canvas.drawLine(
-          _entryTickOffset, _currentTickOffset ?? _endTickOffset!, paint);
+          _entryTickOffset, _latestTickOffset ?? _endTickOffset!, paint);
     }
 
     if (_exitTickOffset != null) {
@@ -130,16 +130,20 @@ class TickMarkerIconPainter extends MarkerIconPainter {
           paint,
         );
         break;
-      case MarkerType.current:
-        canvas.drawCircle(
-          anchor,
-          2,
-          paint,
-        );
+      case MarkerType.tick:
+        _drawTickPoint(canvas, anchor, paint);
         break;
       default:
         break;
     }
+  }
+
+  void _drawTickPoint(Canvas canvas, Offset anchor, Paint paint) {
+    canvas.drawCircle(
+      anchor,
+      2,
+      paint,
+    );
   }
 
   void _drawStartPoint(Canvas canvas, Size size, ChartTheme theme,

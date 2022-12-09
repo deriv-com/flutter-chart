@@ -78,8 +78,10 @@ class ChartConfigModel extends ChangeNotifier {
         return MarkerType.start;
       case 'ENTRY':
         return MarkerType.entry;
-      case 'CURRENT':
-        return MarkerType.current;
+      case 'LATEST_TICK':
+        return MarkerType.latestTick;
+      case 'TICK':
+        return MarkerType.tick;
       case 'EXIT':
         return MarkerType.exit;
       case 'END':

@@ -69,7 +69,7 @@ class DigitMarkerIconPainter extends MarkerIconPainter {
         const Color fontColor = Colors.white;
         _drawTick(canvas, marker, anchor, style, paint, fontColor);
         break;
-      case MarkerType.current:
+      case MarkerType.tick:
         final Paint paint = Paint()
           ..color = style.backgroundColor
           ..style = PaintingStyle.stroke

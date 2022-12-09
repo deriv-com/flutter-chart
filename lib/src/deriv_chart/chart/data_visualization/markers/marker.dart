@@ -21,8 +21,11 @@ enum MarkerType {
   /// Entry marker.
   entry,
 
-  /// Current marker.
-  current,
+  /// Latest tick marker.
+  latestTick,
+
+  /// Tick marker.
+  tick,
 
   /// End marker.
   end,
