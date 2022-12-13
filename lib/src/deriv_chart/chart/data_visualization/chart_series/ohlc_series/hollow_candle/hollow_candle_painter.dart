@@ -11,6 +11,8 @@ import '../../data_series.dart';
 import '../../indexed_entry.dart';
 import '../ohlc_painting.dart';
 
+// TODO(Bahar): Remove the shared code with candle_painter and move them to 
+//separate file. 
 /// A [DataPainter] for painting Hollow CandleStick data.
 class HollowCandlePainter extends DataPainter<DataSeries<Candle>> {
   /// Initializes
