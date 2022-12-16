@@ -26,6 +26,9 @@ class ChartConfigModel extends ChangeNotifier {
   /// Whether the chart should be showing live data or not.
   bool isLive = false;
 
+  /// Starts in data fit mode and adds a data-fit button.
+  bool dataFitEnabled = false;
+
   /// Whether to use digit contract painter or non-digit contract painter
   bool isDigitContract = false;
 
@@ -134,12 +137,14 @@ class ChartConfigModel extends ChangeNotifier {
 
   void _onNewChart(LinkedHashMap<dynamic, dynamic> payload) {
     if (payload['granularity'] != null) {
-      final int _granularity = payload['granularity'];
-      granularity = _granularity == 0 ? 1 * 1000 : _granularity * 1000;
+      granularity = payload['granularity'];
     }
 
     if (payload['isLive'] != null) {
       isLive = payload['isLive'];
+    }
+    if (payload['dataFitEnabled'] != null) {
+      dataFitEnabled = payload['dataFitEnabled'];
     }
     notifyListeners();
   }
