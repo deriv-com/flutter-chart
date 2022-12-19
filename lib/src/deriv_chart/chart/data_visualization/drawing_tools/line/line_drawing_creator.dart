@@ -1,8 +1,8 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import './line_drawing.dart';
 
 /// Creates a line drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a selectedDrawingTool and

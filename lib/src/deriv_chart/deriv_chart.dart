@@ -183,8 +183,10 @@ class _DerivChartState extends State<DerivChart> {
                             ),
                           ))
                 ],
-                currentSymbolName: widget.currentSymbolName,
-                drawings: _drawings,
+                drawings: _drawings[widget.currentSymbolName] != null &&
+                        _drawings[widget.currentSymbolName]!.isNotEmpty
+                    ? _drawings[widget.currentSymbolName]
+                    : null,
                 onAddDrawing: _onAddDrawing,
                 selectedDrawingTool: _selectedDrawingTool,
                 markerSeries: widget.markerSeries,

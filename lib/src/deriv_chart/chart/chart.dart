@@ -18,9 +18,8 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
-    required this.currentSymbolName,
     required this.onAddDrawing,
-    this.drawings = const <String, List<Map<String, dynamic>>>{},
+    this.drawings,
     this.selectedDrawingTool,
     this.pipSize = 4,
     this.controller,
@@ -50,11 +49,8 @@ class Chart extends StatefulWidget {
   /// Open position marker series.
   final MarkerSeries? markerSeries;
 
-  /// Current symbol name.
-  final String currentSymbolName;
-
   /// Existing drawings.
-  final Map<String, List<Map<String, dynamic>>> drawings;
+  final List<Map<String, dynamic>>? drawings;
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
@@ -166,7 +162,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 Expanded(
                   flex: 3,
                   child: MainChart(
-                    currentSymbolName: widget.currentSymbolName,
                     drawings: widget.drawings,
                     onAddDrawing: widget.onAddDrawing,
                     selectedDrawingTool: widget.selectedDrawingTool,

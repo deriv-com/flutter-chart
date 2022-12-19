@@ -24,9 +24,8 @@ class MainChart extends BasicChart {
   /// Initializes the main chart to display in the chart widget.
   MainChart({
     required DataSeries<Tick> mainSeries,
-    required this.currentSymbolName,
     required this.onAddDrawing,
-    this.drawings = const <String, List<Map<String, dynamic>>>{},
+    this.drawings,
     this.selectedDrawingTool,
     this.isLive = false,
     int pipSize = 4,
@@ -62,11 +61,8 @@ class MainChart extends BasicChart {
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
 
-  /// Current symbol name.
-  final String currentSymbolName;
-
   /// Existing drawings.
-  final Map<String, List<Map<String, dynamic>>> drawings;
+  final List<Map<String, dynamic>>? drawings;
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
@@ -275,11 +271,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
-                if (widget.drawings[widget.currentSymbolName] != null &&
-                    widget.drawings[widget.currentSymbolName]!.isNotEmpty)
-                  ...widget.drawings[widget.currentSymbolName]!.map(
-                      (Map<String, dynamic> drawingData) =>
-                          DrawingPainter(drawingData: drawingData)),
+                if (widget.drawings != null)
+                  ...widget.drawings!.map((Map<String, dynamic> drawingData) =>
+                      DrawingPainter(drawingData: drawingData)),
                 if (widget.selectedDrawingTool != null)
                   DrawingCreator(
                       onAddDrawing: widget.onAddDrawing,
