@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './line_drawing.dart';
 
-/// Creates a line drawing piece by piece collected on every gesture
-/// exists in a widget tree starting from selecting a selectedDrawingTool and
+/// Creates a Line drawing piece by piece collected on every gesture
+/// exists in a widget tree starting from selecting a line drawing tool and
 /// until drawing is finished
 class LineDrawingCreator extends StatefulWidget {
-  /// Initializes drawing creator area.
+  /// Initializes the line drawing creator.
   const LineDrawingCreator({
     required this.onAddDrawing,
     Key? key,
   }) : super(key: key);
 
-  /// Callback to pass a newly created drawing to the parent.
+  /// Callback to pass a newly created line drawing to the parent.
   final void Function(Map<String, List<LineDrawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
 
@@ -25,7 +25,7 @@ class LineDrawingCreator extends StatefulWidget {
 class _LineDrawingCreatorState extends State<LineDrawingCreator> {
   late GestureManagerState gestureManager;
 
-  /// Parts of a particular drawing, e.g. marker, line
+  /// Parts of a particular line drawing, e.g. marker, line
   final List<LineDrawing> _drawingParts = <LineDrawing>[];
 
   /// Tapped position.
