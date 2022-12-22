@@ -2,6 +2,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
+import 'package:deriv_chart/src/misc/extensions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -66,7 +67,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   Widget _buildShowZonesField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelShowZones,
+            context.localization.labelShowZones,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -86,7 +87,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
 
   Widget _buildPeriodField() => FieldWidget(
         initialValue: _currentPeriod.toString(),
-        label: ChartLocalization.of(context).labelPeriod,
+        label: context.localization.labelPeriod,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _period = int.tryParse(text);
@@ -102,7 +103,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
       _period ?? (widget.config as CCIIndicatorConfig).period;
 
   Widget _buildOverBoughtPriceField() => OscillatorLimit(
-        label: ChartLocalization.of(context).labelOverBoughtPrice,
+        label: context.localization.labelOverBoughtPrice,
         value: _currentOverBoughtPrice,
         color: _currentOverboughtStyle.color,
         onValueChanged: (String text) {
@@ -129,7 +130,7 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
           .overboughtValue;
 
   Widget _buildOverSoldPriceField() => OscillatorLimit(
-        label: ChartLocalization.of(context).labelOverSoldPrice,
+        label: context.localization.labelOverSoldPrice,
         value: _currentOverSoldPrice,
         color: _currentOversoldStyle.color,
         onValueChanged: (String text) {

@@ -1,9 +1,8 @@
-import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
+import 'package:deriv_chart/src/misc/extensions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,7 @@ class ROCIndicatorItem extends IndicatorItem {
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
     Key? key,
-    ROCIndicatorConfig config=const ROCIndicatorConfig(),
+    ROCIndicatorConfig config = const ROCIndicatorConfig(),
   }) : super(
           key: key,
           title: 'ROC',
@@ -51,7 +50,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
   Widget _buildPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelPeriod,
+            context.localization.labelPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -80,7 +79,7 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelField,
+            context.localization.labelField,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

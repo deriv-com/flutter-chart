@@ -1,8 +1,8 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
+import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 
 /// Stochastic Oscillator indicator item in the list of indicator which provide
@@ -64,7 +64,7 @@ class StochasticOscillatorIndicatorItemState
   Widget _buildPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelPeriod,
+            context.localization.labelPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -93,7 +93,7 @@ class StochasticOscillatorIndicatorItemState
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelField,
+            context.localization.labelField,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -126,7 +126,7 @@ class StochasticOscillatorIndicatorItemState
   Widget _buildOverBoughtPriceField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelOverBoughtPrice,
+            context.localization.labelOverBoughtPrice,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -156,7 +156,7 @@ class StochasticOscillatorIndicatorItemState
   Widget _buildOverSoldPriceField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelOverSoldPrice,
+            context.localization.labelOverSoldPrice,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -188,7 +188,7 @@ class StochasticOscillatorIndicatorItemState
   Widget buildIsSmoothField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelIsSmooth,
+            context.localization.labelIsSmooth,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -215,7 +215,7 @@ class StochasticOscillatorIndicatorItemState
   Widget buildShowZonesField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelShowZones,
+            context.localization.labelShowZones,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
