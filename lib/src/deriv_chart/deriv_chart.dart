@@ -1,4 +1,3 @@
-import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
@@ -103,14 +102,13 @@ class _DerivChartState extends State<DerivChart> {
     } on Exception {
       // ignore: unawaited_futures
       showDialog<void>(
-          context: context,
-          builder: (BuildContext context) => AnimatedPopupDialog(
-                child: Center(
-                  child: Text(
-                    ChartLocalization.of(context).warnFailedLoadingIndicators,
-                  ),
-                ),
-              ));
+        context: context,
+        builder: (BuildContext context) => AnimatedPopupDialog(
+          child: Center(
+            child: Text(context.localization.warnFailedLoadingIndicators),
+          ),
+        ),
+      );
     }
   }
 

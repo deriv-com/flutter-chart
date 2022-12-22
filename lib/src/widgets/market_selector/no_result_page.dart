@@ -1,5 +1,5 @@
+import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class NoResultPage extends StatelessWidget {
             SizedBox(height: theme.margin16Chart),
             Flexible(
               child: Text(
-                ChartLocalization.of(context).informNoResult(text),
+                context.localization.informNoResult(text),
                 textAlign: TextAlign.center,
                 style: theme.textStyle(
                   textStyle: theme.title,
@@ -34,7 +34,7 @@ class NoResultPage extends StatelessWidget {
             ),
             SizedBox(height: theme.margin08Chart),
             Text(
-              ChartLocalization.of(context).warnCheckAssetSearchingText,
+              context.localization.warnCheckAssetSearchingText,
               style: theme.textStyle(
                 textStyle: theme.body1,
                 color: theme.base04Color,
