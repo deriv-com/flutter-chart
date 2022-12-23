@@ -1,9 +1,7 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -39,6 +37,7 @@ class DerivChart extends StatefulWidget {
     this.annotations,
     this.opacity = 1.0,
     this.pipSize = 4,
+    this.indicatorsRepo,
     Key? key,
   }) : super(key: key);
 
@@ -88,6 +87,9 @@ class DerivChart extends StatefulWidget {
   /// Whether the crosshair should be shown or not.
   final bool hideCrosshair;
 
+  /// Chart's indicators
+  final AddOnsRepository<IndicatorConfig>? indicatorsRepo;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -95,6 +97,7 @@ class DerivChart extends StatefulWidget {
 class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
       AddOnsRepository<IndicatorConfig>(IndicatorConfig);
+
   final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
@@ -134,7 +137,7 @@ class _DerivChartState extends State<DerivChart> {
   Widget build(BuildContext context) => MultiProvider(
         providers: <ChangeNotifierProvider<dynamic>>[
           ChangeNotifierProvider<AddOnsRepository<IndicatorConfig>>.value(
-              value: _indicatorsRepo),
+              value: widget.indicatorsRepo ?? _indicatorsRepo),
           ChangeNotifierProvider<AddOnsRepository<DrawingToolConfig>>.value(
               value: _drawingToolsRepo),
         ],
@@ -184,44 +187,6 @@ class _DerivChartState extends State<DerivChart> {
                 opacity: widget.opacity,
                 annotations: widget.annotations,
                 hideCrosshair: widget.hideCrosshair,
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: const Icon(Icons.architecture),
-                  onPressed: () {
-                    showDialog<void>(
-                      context: context,
-                      builder: (
-                        BuildContext context,
-                      ) =>
-                          ChangeNotifierProvider<
-                              AddOnsRepository<IndicatorConfig>>.value(
-                        value: _indicatorsRepo,
-                        child: IndicatorsDialog(),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Align(
-                alignment: const FractionalOffset(0.1, 0),
-                child: IconButton(
-                  icon: const Icon(Icons.drive_file_rename_outline_outlined),
-                  onPressed: () {
-                    showDialog<void>(
-                      context: context,
-                      builder: (
-                        BuildContext context,
-                      ) =>
-                          ChangeNotifierProvider<
-                              AddOnsRepository<DrawingToolConfig>>.value(
-                        value: _drawingToolsRepo,
-                        child: DrawingToolsDialog(),
-                      ),
-                    );
-                  },
-                ),
               ),
             ],
           ),

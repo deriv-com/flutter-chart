@@ -1,12 +1,16 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:web_adapter/src/helper.dart';
+import 'package:web_adapter/src/interop/indicators_ui/js_indicator_config.dart';
+import 'package:web_adapter/src/models/chart_data.dart';
 
 /// State and methods of chart web adapter config.
 class ChartConfigModel extends ChangeNotifier {
   /// Initialize
-  ChartConfigModel(this._controller);
+  ChartConfigModel(this._controller, this._chartDataModel);
 
   /// Style of the chart
   ChartStyle style = ChartStyle.line;
@@ -15,7 +19,7 @@ class ChartConfigModel extends ChangeNotifier {
   int? granularity;
 
   /// Theme of the chart
-  ChartTheme? theme;
+  ChartTheme theme = ChartDefaultLightTheme();
 
   /// Markers
   List<MarkerGroup> markerGroupList = <MarkerGroup>[];
@@ -33,6 +37,12 @@ class ChartConfigModel extends ChangeNotifier {
   bool isDigitContract = false;
 
   late final ChartController _controller;
+
+  late final ChartDataModel _chartDataModel;
+
+  /// Indicators repo
+  final AddOnsRepository<IndicatorConfig> indicatorsRepo =
+      AddOnsRepository<IndicatorConfig>(IndicatorConfig);
 
   /// Updates the ChartConfigModel state
   void update(String messageType, dynamic payload) {
@@ -69,9 +79,6 @@ class ChartConfigModel extends ChangeNotifier {
         : ChartStyle.line;
     notifyListeners();
   }
-
-  Color _colorFromHex(String hexColor) =>
-      Color(int.parse(hexColor.replaceAll('#', '0xff')));
 
   MarkerType _getMarkerType(String? _markerType) {
     switch (_markerType) {
@@ -114,7 +121,7 @@ class ChartConfigModel extends ChangeNotifier {
       Color _bgColor = Colors.white;
 
       if (_markerGroup['color'] != null) {
-        _bgColor = _colorFromHex(_markerGroup['color']);
+        _bgColor = getColorFromHex(_markerGroup['color']);
       }
 
       markerGroupList.add(
@@ -152,6 +159,49 @@ class ChartConfigModel extends ChangeNotifier {
   void _onScale(double payload) {
     final double scale = payload;
     _controller.scale(scale);
+  }
+
+  /// Gets the tooltip content for indicator series
+  String getIndicatorTootipContent(int epoch) {
+    // final IndicatorConfig config = indicatorsRepo.addOns.elementAt(0);
+    // final AbstractSingleIndicatorSeries series = config
+    //         .getSeries(IndicatorInput(_chartDataModel.ticks, granularity ?? 1))
+    //     as AbstractSingleIndicatorSeries;
+
+    // series.initialize();
+
+    // print(series.entries?.last.epoch);
+
+    // final Tick? item = series.entries?.firstWhere((Tick t) => t.epoch == epoch);
+
+    // if (item != null) {
+    //   print(item.close);
+    // }
+
+    return '';
+  }
+
+  /// To add or update an indicator
+  void addOrUpdateIndicator(String dataString) {
+    final Map<String, dynamic> config = json.decode(dataString);
+
+    final int index = indicatorsRepo.addOns
+        .indexWhere((IndicatorConfig addOn) => addOn.id == config['id']);
+
+    final IndicatorConfig? indicatorConfig = getIndicatorConfig(config);
+
+    if (indicatorConfig != null) {
+      index > -1
+          ? indicatorsRepo.updateAt(index, indicatorConfig)
+          : indicatorsRepo.add(indicatorConfig);
+    }
+  }
+
+  /// To remove an existing indicator
+  void removeIndicator(String id) {
+    final int index = indicatorsRepo.addOns
+        .indexWhere((IndicatorConfig addOn) => addOn.id == id);
+    indicatorsRepo.removeAt(index);
   }
 
   /// Gets X position from epoch
