@@ -5,4 +5,7 @@ enum ChartStyle {
 
   /// Used to show the chart with candles.
   candles,
+
+  /// Used to show the hollow candle chart.
+  hollow,
 }

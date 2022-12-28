@@ -14,6 +14,7 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/line_series/line_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/candle/candle_series.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/hollow_candle/hollow_candle_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/active_marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker.dart';

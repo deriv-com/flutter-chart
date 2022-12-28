@@ -9,7 +9,7 @@ class CandleStyle extends DataSeriesStyle with EquatableMixin {
   const CandleStyle({
     this.positiveColor = const Color(0xFF00A79E),
     this.negativeColor = const Color(0xFFCC2E3D),
-    this.lineColor = const Color(0xFF6E6E6E),
+    this.neutralColor = const Color(0xFF6E6E6E),
   });
 
   /// Color of candles in which the price moved HIGHER during their period.
@@ -18,13 +18,15 @@ class CandleStyle extends DataSeriesStyle with EquatableMixin {
   /// Color of candles in which the price moved LOWER during their period.
   final Color negativeColor;
 
-  /// The vertical line inside candle which represents high/low.
-  final Color lineColor;
+  /// Neutral color for candles in which the price remains same
+  /// or The vertical line inside candle which represents high/low.
+  final Color neutralColor;
 
   @override
   String toString() =>
-      '${super.toString()}$positiveColor, $negativeColor, $lineColor';
+      '${super.toString()}$positiveColor, $negativeColor, $neutralColor';
 
   @override
-  List<Object> get props => <Object>[positiveColor, negativeColor, lineColor];
+  List<Object> get props =>
+      <Object>[positiveColor, negativeColor, neutralColor];
 }
