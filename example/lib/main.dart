@@ -394,9 +394,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 children: <Widget>[
                   ClipRect(
                     child: DerivChart(
-                      mainSeries:
-                          style == ChartStyle.candles && ticks is List<Candle>
-                              ? CandleSeries(ticks as List<Candle>)
+                      mainSeries: style == ChartStyle.candles &&
+                              ticks is List<Candle>
+                          ? CandleSeries(ticks as List<Candle>)
+                          : style == ChartStyle.hollow && ticks is List<Candle>
+                              ? HollowCandleSeries(ticks as List<Candle>)
                               : LineSeries(
                                   ticks,
                                   style: const LineStyle(hasArea: true),
@@ -701,16 +703,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   IconButton _buildChartTypeButton() => IconButton(
         icon: Icon(
-          style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
+          style == ChartStyle.line
+              ? Icons.show_chart
+              : style == ChartStyle.candles
+                  ? Icons.insert_chart
+                  : Icons.insert_chart_outlined_outlined,
           color: Colors.white,
         ),
         onPressed: () {
           Vibration.vibrate(duration: 50);
           setState(() {
-            if (style == ChartStyle.candles) {
+            if (style == ChartStyle.hollow) {
               style = ChartStyle.line;
-            } else {
+            } else if (style == ChartStyle.line) {
               style = ChartStyle.candles;
+            } else {
+              style = ChartStyle.hollow;
             }
           });
         },

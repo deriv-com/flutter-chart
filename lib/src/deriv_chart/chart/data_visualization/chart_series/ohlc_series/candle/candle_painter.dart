@@ -9,7 +9,7 @@ import '../../../chart_data.dart';
 import '../../data_painter.dart';
 import '../../data_series.dart';
 import '../../indexed_entry.dart';
-import 'candle_painting.dart';
+import '../ohlc_painting.dart';
 
 /// A [DataPainter] for painting CandleStick data.
 class CandlePainter extends DataPainter<DataSeries<Candle>> {
@@ -35,7 +35,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
     _linePaint = Paint()
-      ..color = style.lineColor
+      ..color = style.neutralColor
       ..strokeWidth = 1.2;
 
     _positiveCandlePaint = Paint()..color = style.positiveColor;
@@ -54,7 +54,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
 
       _paintCandle(
         canvas,
-        CandlePainting(
+        OhlcPainting(
           width: candleWidth,
           xCenter: epochToX(getEpochOf(candle, i)),
           yHigh: quoteToY(candle.high),
@@ -69,7 +69,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     final Candle lastCandle = series.entries!.last;
     final Candle lastVisibleCandle = series.visibleEntries.last;
 
-    CandlePainting lastCandlePainting;
+    OhlcPainting lastCandlePainting;
 
     if (lastCandle == lastVisibleCandle && series.prevLastEntry != null) {
       final IndexedEntry<Candle> prevLastCandle = series.prevLastEntry!;
@@ -86,7 +86,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
         animationInfo.currentTickPercent,
       )!;
 
-      lastCandlePainting = CandlePainting(
+      lastCandlePainting = OhlcPainting(
         xCenter: xCenter,
         yHigh: lastCandle.high > prevLastCandle.entry.high
             // In this case we don't update high-low line to avoid instant
@@ -103,7 +103,7 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
         width: candleWidth,
       );
     } else {
-      lastCandlePainting = CandlePainting(
+      lastCandlePainting = OhlcPainting(
         xCenter: epochToX(
             getEpochOf(lastVisibleCandle, series.visibleEntries.endIndex - 1)),
         yHigh: quoteToY(lastVisibleCandle.high),
@@ -117,36 +117,36 @@ class CandlePainter extends DataPainter<DataSeries<Candle>> {
     _paintCandle(canvas, lastCandlePainting);
   }
 
-  void _paintCandle(Canvas canvas, CandlePainting cp) {
+  void _paintCandle(Canvas canvas, OhlcPainting op) {
     canvas.drawLine(
-      Offset(cp.xCenter, cp.yHigh),
-      Offset(cp.xCenter, cp.yLow),
+      Offset(op.xCenter, op.yHigh),
+      Offset(op.xCenter, op.yLow),
       _linePaint,
     );
 
-    if (cp.yOpen == cp.yClose) {
+    if (op.yOpen == op.yClose) {
       canvas.drawLine(
-        Offset(cp.xCenter - cp.width / 2, cp.yOpen),
-        Offset(cp.xCenter + cp.width / 2, cp.yOpen),
+        Offset(op.xCenter - op.width / 2, op.yOpen),
+        Offset(op.xCenter + op.width / 2, op.yOpen),
         _linePaint,
       );
-    } else if (cp.yOpen > cp.yClose) {
+    } else if (op.yOpen > op.yClose) {
       canvas.drawRect(
         Rect.fromLTRB(
-          cp.xCenter - cp.width / 2,
-          cp.yClose,
-          cp.xCenter + cp.width / 2,
-          cp.yOpen,
+          op.xCenter - op.width / 2,
+          op.yClose,
+          op.xCenter + op.width / 2,
+          op.yOpen,
         ),
         _positiveCandlePaint,
       );
     } else {
       canvas.drawRect(
         Rect.fromLTRB(
-          cp.xCenter - cp.width / 2,
-          cp.yOpen,
-          cp.xCenter + cp.width / 2,
-          cp.yClose,
+          op.xCenter - op.width / 2,
+          op.yOpen,
+          op.xCenter + op.width / 2,
+          op.yClose,
         ),
         _negativeCandlePaint,
       );
