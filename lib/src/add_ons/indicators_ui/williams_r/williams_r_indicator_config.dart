@@ -19,6 +19,7 @@ part 'williams_r_indicator_config.g.dart';
 class WilliamsRIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const WilliamsRIndicatorConfig({
+    String? id,
     this.period = 14,
     this.lineStyle = const LineStyle(color: Colors.white),
     this.zeroHorizontalLinesStyle = const LineStyle(color: Colors.red),
@@ -27,7 +28,7 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
       oversoldValue: -80,
       overboughtValue: -20,
     ),
-  }) : super(isOverlay: false);
+  }) : super(id: id, isOverlay: false);
 
   /// Initializes from JSON.
   factory WilliamsRIndicatorConfig.fromJson(Map<String, dynamic> json) =>

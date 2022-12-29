@@ -20,12 +20,14 @@ part 'ma_env_indicator_config.g.dart';
 class MAEnvIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const MAEnvIndicatorConfig({
+    String? id,
     int period = 50,
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.shift = 5,
     this.shiftType = ShiftType.percent,
   }) : super(
+          id: id,
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,

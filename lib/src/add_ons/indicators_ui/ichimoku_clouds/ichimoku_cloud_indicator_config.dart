@@ -17,11 +17,12 @@ part 'ichimoku_cloud_indicator_config.g.dart';
 class IchimokuCloudIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const IchimokuCloudIndicatorConfig({
+    String? id,
     this.baseLinePeriod = 26,
     this.conversionLinePeriod = 9,
     this.laggingSpanOffset = -26,
     this.spanBPeriod = 52,
-  }) : super();
+  }) : super(id: id);
 
   /// Initializes from JSON.
   factory IchimokuCloudIndicatorConfig.fromJson(Map<String, dynamic> json) =>

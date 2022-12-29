@@ -8,6 +8,7 @@ part of 'ma_env_indicator_config.dart';
 
 MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(Map<String, dynamic> json) {
   return MAEnvIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     movingAverageType:
         _$enumDecode(_$MovingAverageTypeEnumMap, json['movingAverageType']),
@@ -20,6 +21,7 @@ MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
         MAEnvIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType],

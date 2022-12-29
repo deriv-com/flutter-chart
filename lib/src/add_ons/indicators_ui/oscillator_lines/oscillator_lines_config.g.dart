@@ -15,12 +15,14 @@ OscillatorLinesConfig _$OscillatorLinesConfigFromJson(
         LineStyle.fromJson(json['overboughtStyle'] as Map<String, dynamic>),
     oversoldStyle:
         LineStyle.fromJson(json['oversoldStyle'] as Map<String, dynamic>),
+    id: json['id'] as String?,
   );
 }
 
 Map<String, dynamic> _$OscillatorLinesConfigToJson(
         OscillatorLinesConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'overboughtValue': instance.overboughtValue,
       'oversoldValue': instance.oversoldValue,
       'overboughtStyle': instance.overboughtStyle,

@@ -19,6 +19,7 @@ part 'donchian_channel_indicator_config.g.dart';
 class DonchianChannelIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const DonchianChannelIndicatorConfig({
+    String? id,
     this.highPeriod = 10,
     this.lowPeriod = 10,
     this.showChannelFill = true,
@@ -26,7 +27,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     this.middleLineStyle = const LineStyle(color: Colors.white),
     this.lowerLineStyle = const LineStyle(color: Colors.green),
     this.fillColor = Colors.white12,
-  }) : super();
+  }) : super(id: id);
 
   /// Initializes from JSON.
   factory DonchianChannelIndicatorConfig.fromJson(Map<String, dynamic> json) =>

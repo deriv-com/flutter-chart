@@ -9,6 +9,7 @@ part of 'williams_r_indicator_config.dart';
 WilliamsRIndicatorConfig _$WilliamsRIndicatorConfigFromJson(
     Map<String, dynamic> json) {
   return WilliamsRIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
     zeroHorizontalLinesStyle: LineStyle.fromJson(
@@ -22,6 +23,7 @@ WilliamsRIndicatorConfig _$WilliamsRIndicatorConfigFromJson(
 Map<String, dynamic> _$WilliamsRIndicatorConfigToJson(
         WilliamsRIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'lineStyle': instance.lineStyle,
       'zeroHorizontalLinesStyle': instance.zeroHorizontalLinesStyle,

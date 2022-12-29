@@ -8,6 +8,7 @@ part of 'adx_indicator_config.dart';
 
 ADXIndicatorConfig _$ADXIndicatorConfigFromJson(Map<String, dynamic> json) {
   return ADXIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     smoothingPeriod: json['smoothingPeriod'] as int,
     showSeries: json['showSeries'] as bool,
@@ -18,6 +19,7 @@ ADXIndicatorConfig _$ADXIndicatorConfigFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ADXIndicatorConfigToJson(ADXIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'smoothingPeriod': instance.smoothingPeriod,
       'showChannelFill': instance.showChannelFill,

@@ -9,6 +9,7 @@ part of 'zigzag_indicator_config.dart';
 ZigZagIndicatorConfig _$ZigZagIndicatorConfigFromJson(
     Map<String, dynamic> json) {
   return ZigZagIndicatorConfig(
+    id: json['id'] as String?,
     distance: (json['distance'] as num).toDouble(),
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
   );
@@ -17,6 +18,7 @@ ZigZagIndicatorConfig _$ZigZagIndicatorConfigFromJson(
 Map<String, dynamic> _$ZigZagIndicatorConfigToJson(
         ZigZagIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'distance': instance.distance,
       'lineStyle': instance.lineStyle,
     };

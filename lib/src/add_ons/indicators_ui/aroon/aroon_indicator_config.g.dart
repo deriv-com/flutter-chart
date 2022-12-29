@@ -8,6 +8,7 @@ part of 'aroon_indicator_config.dart';
 
 AroonIndicatorConfig _$AroonIndicatorConfigFromJson(Map<String, dynamic> json) {
   return AroonIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
   );
 }
@@ -15,5 +16,6 @@ AroonIndicatorConfig _$AroonIndicatorConfigFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$AroonIndicatorConfigToJson(
         AroonIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
     };

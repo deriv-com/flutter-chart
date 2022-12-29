@@ -9,6 +9,7 @@ part of 'stochastic_oscillator_indicator_config.dart';
 StochasticOscillatorIndicatorConfig
     _$StochasticOscillatorIndicatorConfigFromJson(Map<String, dynamic> json) {
   return StochasticOscillatorIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     fieldType: json['fieldType'] as String,
     overBoughtPrice: (json['overBoughtPrice'] as num).toDouble(),
@@ -24,6 +25,7 @@ StochasticOscillatorIndicatorConfig
 Map<String, dynamic> _$StochasticOscillatorIndicatorConfigToJson(
         StochasticOscillatorIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'overBoughtPrice': instance.overBoughtPrice,
       'overSoldPrice': instance.overSoldPrice,

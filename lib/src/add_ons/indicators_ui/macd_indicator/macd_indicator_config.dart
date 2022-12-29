@@ -17,10 +17,11 @@ part 'macd_indicator_config.g.dart';
 class MACDIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const MACDIndicatorConfig({
+    String? id,
     this.fastMAPeriod = 12,
     this.slowMAPeriod = 26,
     this.signalPeriod = 9,
-  }) : super(isOverlay: false);
+  }) : super(id: id, isOverlay: false);
 
   /// Initializes from JSON.
   factory MACDIndicatorConfig.fromJson(Map<String, dynamic> json) =>

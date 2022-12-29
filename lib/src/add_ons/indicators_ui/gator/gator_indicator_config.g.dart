@@ -8,6 +8,7 @@ part of 'gator_indicator_config.dart';
 
 GatorIndicatorConfig _$GatorIndicatorConfigFromJson(Map<String, dynamic> json) {
   return GatorIndicatorConfig(
+    id: json['id'] as String?,
     jawPeriod: json['jawPeriod'] as int,
     teethPeriod: json['teethPeriod'] as int,
     lipsPeriod: json['lipsPeriod'] as int,
@@ -20,6 +21,7 @@ GatorIndicatorConfig _$GatorIndicatorConfigFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$GatorIndicatorConfigToJson(
         GatorIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'jawOffset': instance.jawOffset,
       'jawPeriod': instance.jawPeriod,
       'teethOffset': instance.teethOffset,

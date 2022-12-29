@@ -8,6 +8,7 @@ part of 'cci_indicator_config.dart';
 
 CCIIndicatorConfig _$CCIIndicatorConfigFromJson(Map<String, dynamic> json) {
   return CCIIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     oscillatorLinesConfig: OscillatorLinesConfig.fromJson(
         json['oscillatorLinesConfig'] as Map<String, dynamic>),
@@ -18,6 +19,7 @@ CCIIndicatorConfig _$CCIIndicatorConfigFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$CCIIndicatorConfigToJson(CCIIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'oscillatorLinesConfig': instance.oscillatorLinesConfig,
       'lineStyle': instance.lineStyle,

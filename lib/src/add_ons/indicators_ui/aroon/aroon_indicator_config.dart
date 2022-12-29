@@ -17,8 +17,9 @@ part 'aroon_indicator_config.g.dart';
 class AroonIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const AroonIndicatorConfig({
+    String? id,
     this.period = 14,
-  }) : super(isOverlay: false);
+  }) : super(id: id, isOverlay: false);
 
   /// Initializes from JSON.
   factory AroonIndicatorConfig.fromJson(Map<String, dynamic> json) =>

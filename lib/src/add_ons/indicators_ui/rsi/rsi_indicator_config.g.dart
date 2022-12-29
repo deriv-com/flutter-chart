@@ -8,6 +8,7 @@ part of 'rsi_indicator_config.dart';
 
 RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
   return RSIIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     fieldType: json['fieldType'] as String,
     oscillatorLinesConfig: OscillatorLinesConfig.fromJson(
@@ -20,6 +21,7 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$RSIIndicatorConfigToJson(RSIIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'lineStyle': instance.lineStyle,
       'fieldType': instance.fieldType,

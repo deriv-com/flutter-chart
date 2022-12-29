@@ -8,6 +8,7 @@ part of 'dpo_indicator_config.dart';
 
 DPOIndicatorConfig _$DPOIndicatorConfigFromJson(Map<String, dynamic> json) {
   return DPOIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     movingAverageType:
         _$enumDecode(_$MovingAverageTypeEnumMap, json['movingAverageType']),
@@ -18,6 +19,7 @@ DPOIndicatorConfig _$DPOIndicatorConfigFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$DPOIndicatorConfigToJson(DPOIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType],

@@ -16,9 +16,10 @@ part 'roc_indicator_config.g.dart';
 class ROCIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const ROCIndicatorConfig({
+    String? id,
     this.period = 14,
     this.fieldType = 'close',
-  }) : super(isOverlay: false);
+  }) : super(id: id, isOverlay: false);
 
   /// Initializes from JSON.
   factory ROCIndicatorConfig.fromJson(Map<String, dynamic> json) =>

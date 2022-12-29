@@ -9,6 +9,7 @@ part of 'donchian_channel_indicator_config.dart';
 DonchianChannelIndicatorConfig _$DonchianChannelIndicatorConfigFromJson(
     Map<String, dynamic> json) {
   return DonchianChannelIndicatorConfig(
+    id: json['id'] as String?,
     highPeriod: json['highPeriod'] as int,
     lowPeriod: json['lowPeriod'] as int,
     showChannelFill: json['showChannelFill'] as bool,
@@ -25,6 +26,7 @@ DonchianChannelIndicatorConfig _$DonchianChannelIndicatorConfigFromJson(
 Map<String, dynamic> _$DonchianChannelIndicatorConfigToJson(
         DonchianChannelIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'highPeriod': instance.highPeriod,
       'lowPeriod': instance.lowPeriod,
       'showChannelFill': instance.showChannelFill,

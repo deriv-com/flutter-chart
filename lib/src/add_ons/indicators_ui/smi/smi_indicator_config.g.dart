@@ -8,6 +8,7 @@ part of 'smi_indicator_config.dart';
 
 SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) {
   return SMIIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     smoothingPeriod: json['smoothingPeriod'] as int,
     doubleSmoothingPeriod: json['doubleSmoothingPeriod'] as int,
@@ -21,6 +22,7 @@ SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'smoothingPeriod': instance.smoothingPeriod,
       'doubleSmoothingPeriod': instance.doubleSmoothingPeriod,

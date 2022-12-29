@@ -8,6 +8,7 @@ part of 'parabolic_sar_indicator_config.dart';
 
 ParabolicSARConfig _$ParabolicSARConfigFromJson(Map<String, dynamic> json) {
   return ParabolicSARConfig(
+    id: json['id'] as String?,
     minAccelerationFactor: (json['minAccelerationFactor'] as num).toDouble(),
     maxAccelerationFactor: (json['maxAccelerationFactor'] as num).toDouble(),
     scatterStyle:
@@ -17,6 +18,7 @@ ParabolicSARConfig _$ParabolicSARConfigFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ParabolicSARConfigToJson(ParabolicSARConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'minAccelerationFactor': instance.minAccelerationFactor,
       'maxAccelerationFactor': instance.maxAccelerationFactor,
       'scatterStyle': instance.scatterStyle,

@@ -9,6 +9,7 @@ part of 'bollinger_bands_indicator_config.dart';
 BollingerBandsIndicatorConfig _$BollingerBandsIndicatorConfigFromJson(
     Map<String, dynamic> json) {
   return BollingerBandsIndicatorConfig(
+    id: json['id'] as String?,
     period: json['period'] as int,
     movingAverageType:
         _$enumDecode(_$MovingAverageTypeEnumMap, json['movingAverageType']),
@@ -20,6 +21,7 @@ BollingerBandsIndicatorConfig _$BollingerBandsIndicatorConfigFromJson(
 Map<String, dynamic> _$BollingerBandsIndicatorConfigToJson(
         BollingerBandsIndicatorConfig instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'period': instance.period,
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType],

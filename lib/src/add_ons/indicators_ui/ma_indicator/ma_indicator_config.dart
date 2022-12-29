@@ -18,6 +18,7 @@ part 'ma_indicator_config.g.dart';
 class MAIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const MAIndicatorConfig({
+    String? id,
     int? period,
     MovingAverageType? movingAverageType,
     String? fieldType,
@@ -30,7 +31,7 @@ class MAIndicatorConfig extends IndicatorConfig {
         offset = offset ?? 0,
         lineStyle =
             lineStyle ?? const LineStyle(color: Colors.yellow, thickness: 0.6),
-        super(isOverlay: isOverlay);
+        super(id: id, isOverlay: isOverlay);
 
   /// Initializes from JSON.
   factory MAIndicatorConfig.fromJson(Map<String, dynamic> json) =>

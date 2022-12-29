@@ -33,15 +33,19 @@ import 'zigzag_indicator/zigzag_indicator_config.dart';
 @immutable
 abstract class IndicatorConfig extends AddOnConfig {
   /// Initializes
-  const IndicatorConfig({bool isOverlay = true}) : super(isOverlay: isOverlay);
+  const IndicatorConfig({bool isOverlay = true, this.id})
+      : super(isOverlay: isOverlay);
 
   /// Creates a concrete indicator config from JSON.
-  factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
-    if (!json.containsKey(nameKey)) {
+  factory IndicatorConfig.fromJson(
+      Map<String, dynamic> json, String? _nameKey) {
+    final String key = _nameKey ?? nameKey;
+
+    if (!json.containsKey(key)) {
       throw ArgumentError.value(json, 'json', 'Missing indicator name.');
     }
 
-    switch (json[nameKey]) {
+    switch (json[key]) {
       case MAIndicatorConfig.name:
         return MAIndicatorConfig.fromJson(json);
       case MAEnvIndicatorConfig.name:
@@ -91,6 +95,9 @@ abstract class IndicatorConfig extends AddOnConfig {
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');
     }
   }
+
+  /// The ID of this [IndicatorConfig].
+  final String? id;
 
   /// Key of indicator name property in JSON.
   static const String nameKey = 'name';

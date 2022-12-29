@@ -16,9 +16,10 @@ part 'zigzag_indicator_config.g.dart';
 class ZigZagIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const ZigZagIndicatorConfig({
+    String? id,
     this.distance = 10,
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
-  }) : super();
+  }) : super(id: id);
 
   /// Initializes from JSON.
   factory ZigZagIndicatorConfig.fromJson(Map<String, dynamic> json) =>

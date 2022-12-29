@@ -19,11 +19,13 @@ part 'dpo_indicator_config.g.dart';
 class DPOIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const DPOIndicatorConfig({
+    String? id,
     int period = 14,
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.isCentered = true,
   }) : super(
+          id: id,
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,
