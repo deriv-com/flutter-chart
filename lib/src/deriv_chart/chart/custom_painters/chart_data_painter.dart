@@ -68,8 +68,8 @@ class ChartDataPainter extends BaseChartDataPainter {
         mainSeries.shouldRepaint(oldDelegate.mainSeries);
 
     return super.shouldRepaint(oldDelegate) ||
-        visibleAnimationChanged() ||
-        styleChanged();
+        styleChanged() ||
+        visibleAnimationChanged();
   }
 }
 
