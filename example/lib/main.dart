@@ -399,10 +399,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           ? CandleSeries(ticks as List<Candle>)
                           : style == ChartStyle.hollow && ticks is List<Candle>
                               ? HollowCandleSeries(ticks as List<Candle>)
-                              : LineSeries(
-                                  ticks,
-                                  style: const LineStyle(hasArea: true),
-                                ) as DataSeries<Tick>,
+                              : style == ChartStyle.ohlc &&
+                                      ticks is List<Candle>
+                                  ? OhlcCandleSeries(ticks as List<Candle>)
+                                  : LineSeries(
+                                      ticks,
+                                      style: const LineStyle(hasArea: true),
+                                    ) as DataSeries<Tick>,
                       markerSeries: MarkerSeries(
                         _markers,
                         activeMarker: _activeMarker,
@@ -704,18 +707,27 @@ class _FullscreenChartState extends State<FullscreenChart> {
               ? Icons.show_chart
               : style == ChartStyle.candles
                   ? Icons.insert_chart
-                  : Icons.insert_chart_outlined_outlined,
+                  : style == ChartStyle.hollow
+                      ? Icons.insert_chart_outlined_outlined
+                      : Icons.important_devices,
           color: Colors.white,
         ),
         onPressed: () {
           Vibration.vibrate(duration: 50);
           setState(() {
-            if (style == ChartStyle.hollow) {
-              style = ChartStyle.line;
-            } else if (style == ChartStyle.line) {
-              style = ChartStyle.candles;
-            } else {
-              style = ChartStyle.hollow;
+            switch (style) {
+              case ChartStyle.ohlc:
+                style = ChartStyle.line;
+                return;
+              case ChartStyle.line:
+                style = ChartStyle.candles;
+                return;
+              case ChartStyle.candles:
+                style = ChartStyle.hollow;
+                return;
+              default:
+                style = ChartStyle.ohlc;
+                return;
             }
           });
         },
