@@ -709,7 +709,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   ? Icons.insert_chart
                   : style == ChartStyle.hollow
                       ? Icons.insert_chart_outlined_outlined
-                      : Icons.important_devices,
+                      : Icons.add_chart,
           color: Colors.white,
         ),
         onPressed: () {

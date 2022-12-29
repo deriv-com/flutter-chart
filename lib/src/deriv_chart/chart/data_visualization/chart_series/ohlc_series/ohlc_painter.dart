@@ -2,25 +2,18 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
-import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
-import '../../../chart_data.dart';
-import '../../data_painter.dart';
-import '../../data_series.dart';
-import '../../indexed_entry.dart';
-import '../ohlc_painting.dart';
+import '../../chart_data.dart';
+import '../data_painter.dart';
+import '../data_series.dart';
+import '../indexed_entry.dart';
+import './ohlc_painting.dart';
 
-// TODO(Bahar): Remove the shared code with candle_painter and move them to
-//separate file.
-/// A [DataPainter] for painting Ohlc CandleStick data.
-class OhlcCandlePainter extends DataPainter<DataSeries<Candle>> {
+/// A [DataPainter] for painting CandleStick data.
+abstract class OhlcPainter extends DataPainter<DataSeries<Candle>> {
   /// Initializes
-  OhlcCandlePainter(DataSeries<Candle> series) : super(series);
-
-  late Color _positiveColor;
-  late Color _negativeColor;
-  late Color _neutralColor;
+  OhlcPainter(DataSeries<Candle> series) : super(series);
 
   @override
   void onPaintData(
@@ -33,12 +26,6 @@ class OhlcCandlePainter extends DataPainter<DataSeries<Candle>> {
     if (series.entries == null || series.visibleEntries.length < 2) {
       return;
     }
-
-    final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
-
-    _positiveColor = style.positiveColor;
-    _negativeColor = style.negativeColor;
-    _neutralColor = style.neutralColor;
 
     final double intervalWidth =
         epochToX(chartConfig.granularity) - epochToX(0);
@@ -53,7 +40,7 @@ class OhlcCandlePainter extends DataPainter<DataSeries<Candle>> {
       final Candle prevCandle =
           i != 0 ? series.entries![i - 1] : series.entries![0];
 
-      _paintCandle(
+      onPaintCandle(
           canvas,
           OhlcPainting(
             width: candleWidth,
@@ -134,51 +121,10 @@ class OhlcCandlePainter extends DataPainter<DataSeries<Candle>> {
       width: candleWidth,
     );
 
-    _paintCandle(canvas, lastCandlePainting, prevLastCandlePainting);
+    onPaintCandle(canvas, lastCandlePainting, prevLastCandlePainting);
   }
 
-  void _drawWick(Canvas canvas, Color color, OhlcPainting currentPainting) {
-    canvas.drawLine(
-      Offset(currentPainting.xCenter, currentPainting.yHigh),
-      Offset(currentPainting.xCenter, currentPainting.yLow),
-      Paint()
-        ..color = color
-        ..strokeWidth = 1.2,
-    );
-  }
-
-  void _drawOcLines(Canvas canvas, Color color, OhlcPainting currentPainting) {
-    // Paint openning border
-    canvas
-      ..drawLine(
-        Offset(currentPainting.xCenter - currentPainting.width / 2,
-            currentPainting.yOpen),
-        Offset(currentPainting.xCenter, currentPainting.yOpen),
-        Paint()
-          ..color = color
-          ..strokeWidth = 1.2,
-      )
-
-      // Paint closing border
-      ..drawLine(
-        Offset(currentPainting.xCenter + currentPainting.width / 2,
-            currentPainting.yClose),
-        Offset(currentPainting.xCenter, currentPainting.yClose),
-        Paint()
-          ..color = color
-          ..strokeWidth = 1.2,
-      );
-  }
-
-  void _paintCandle(
-      Canvas canvas, OhlcPainting currentPainting, OhlcPainting prevPainting) {
-    final Color _candleColor = currentPainting.yClose > prevPainting.yClose
-        ? _negativeColor
-        : currentPainting.yClose < prevPainting.yClose
-            ? _positiveColor
-            : _neutralColor;
-
-    _drawWick(canvas, _candleColor, currentPainting);
-    _drawOcLines(canvas, _candleColor, currentPainting);
-  }
+  /// Paints [DataSeries.visibleEntries].
+  void onPaintCandle(
+      Canvas canvas, OhlcPainting currentPainting, OhlcPainting prevPainting);
 }
