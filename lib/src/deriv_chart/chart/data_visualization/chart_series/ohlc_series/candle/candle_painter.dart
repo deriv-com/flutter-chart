@@ -18,7 +18,10 @@ class CandlePainter extends OhlcPainter {
 
   @override
   void onPaintCandle(
-      Canvas canvas, OhlcPainting currentPainting, OhlcPainting prevPainting) {
+    Canvas canvas,
+    OhlcPainting currentPainting,
+    OhlcPainting prevPainting,
+  ) {
     final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
     _linePaint = Paint()

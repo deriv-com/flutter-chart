@@ -10,7 +10,8 @@ import '../data_series.dart';
 import '../indexed_entry.dart';
 import './ohlc_painting.dart';
 
-/// A [DataPainter] for painting CandleStick data.
+/// A [DataPainter] for painting CandleStick data which handles the logic for
+/// calculation of candle elements for all OHLC type charts
 abstract class OhlcPainter extends DataPainter<DataSeries<Candle>> {
   /// Initializes
   OhlcPainter(DataSeries<Candle> series) : super(series);
@@ -125,6 +126,11 @@ abstract class OhlcPainter extends DataPainter<DataSeries<Candle>> {
   }
 
   /// Paints [DataSeries.visibleEntries].
+  /// This method is for handling diffrent ways of painting candles for each
+  /// chart type
   void onPaintCandle(
-      Canvas canvas, OhlcPainting currentPainting, OhlcPainting prevPainting);
+    Canvas canvas,
+    OhlcPainting currentPainting,
+    OhlcPainting prevPainting,
+  );
 }
