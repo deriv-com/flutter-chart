@@ -370,16 +370,17 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   DataSeries<Tick> _getDataSeries(ChartStyle style) {
-      switch (style) {
-        case ChartStyle.candles:
-          return CandleSeries(ticks as List<Candle>);
-        case ChartStyle.hollow:
-          return HollowCandleSeries(ticks as List<Candle>);
-        case ChartStyle.ohlc:
-          return OhlcCandleSeries(ticks as List<Candle>);
-        default:
-          return LineSeries(ticks, style: const LineStyle(hasArea: true)) as DataSeries<Tick>;
-      }
+    switch (style) {
+      case ChartStyle.candles:
+        return CandleSeries(ticks as List<Candle>);
+      case ChartStyle.hollow:
+        return HollowCandleSeries(ticks as List<Candle>);
+      case ChartStyle.ohlc:
+        return OhlcCandleSeries(ticks as List<Candle>);
+      default:
+        return LineSeries(ticks, style: const LineStyle(hasArea: true))
+            as DataSeries<Tick>;
+    }
   }
 
   @override
@@ -407,7 +408,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 children: <Widget>[
                   ClipRect(
                     child: DerivChart(
-                      mainSeries: _getDataSeries(style),
+                      mainSeries: ticks is List<Candle>
+                          ? _getDataSeries(style)
+                          : LineSeries(ticks,
+                                  style: const LineStyle(hasArea: true))
+                              as DataSeries<Tick>,
                       markerSeries: MarkerSeries(
                         _markers,
                         activeMarker: _activeMarker,
