@@ -370,17 +370,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   DataSeries<Tick> _getDataSeries(ChartStyle style) {
-    switch (style) {
-      case ChartStyle.candles:
-        return CandleSeries(ticks as List<Candle>);
-      case ChartStyle.hollow:
-        return HollowCandleSeries(ticks as List<Candle>);
-      case ChartStyle.ohlc:
-        return OhlcCandleSeries(ticks as List<Candle>);
-      default:
-        return LineSeries(ticks, style: const LineStyle(hasArea: true))
-            as DataSeries<Tick>;
+    if (ticks is List<Candle>) {
+      switch (style) {
+        case ChartStyle.candles:
+          return CandleSeries(ticks as List<Candle>);
+        case ChartStyle.hollow:
+          return HollowCandleSeries(ticks as List<Candle>);
+        case ChartStyle.ohlc:
+          return OhlcCandleSeries(ticks as List<Candle>);
+      }
     }
+    return LineSeries(ticks, style: const LineStyle(hasArea: true))
+        as DataSeries<Tick>;
   }
 
   @override
@@ -393,7 +394,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    // ignore: unnecessary_null_comparison
                     child: _markets == null
                         ? const SizedBox.shrink()
                         : _buildMarketSelectorButton(),
@@ -408,11 +408,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 children: <Widget>[
                   ClipRect(
                     child: DerivChart(
-                      mainSeries: ticks is List<Candle>
-                          ? _getDataSeries(style)
-                          : LineSeries(ticks,
-                                  style: const LineStyle(hasArea: true))
-                              as DataSeries<Tick>,
+                      mainSeries: _getDataSeries(style),
                       markerSeries: MarkerSeries(
                         _markers,
                         activeMarker: _activeMarker,
