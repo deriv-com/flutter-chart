@@ -8,4 +8,7 @@ enum ChartStyle {
 
   /// Used to show the hollow candle chart.
   hollow,
+
+  /// Used to show the ohlc chart.
+  ohlc,
 }
