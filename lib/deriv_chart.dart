@@ -11,6 +11,7 @@ export 'src/deriv_chart/chart/data_visualization/annotations/chart_annotation.da
 export 'src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/bollinger_bands_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/abstract_single_indicator_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/line_series/line_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/line_series/line_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/candle/candle_series.dart';
@@ -35,6 +36,9 @@ export 'src/misc/chart_controller.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_style.dart';
 export 'src/models/tick.dart';
+export 'src/models/indicator_input.dart';
+export 'src/add_ons/add_ons_repository.dart';
+export 'src/add_ons/indicators_ui/indicator_config.dart';
 export 'src/theme/chart_default_dark_theme.dart';
 export 'src/theme/chart_default_light_theme.dart';
 export 'src/theme/chart_theme.dart';

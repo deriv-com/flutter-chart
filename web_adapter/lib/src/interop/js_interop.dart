@@ -33,6 +33,10 @@ JsObject _initChartConfig(ChartConfigModel model) {
   setProperty(chartConfig, 'getEpochFromX', allowInterop(model.getEpochFromX));
   setProperty(chartConfig, 'getQuoteFromY', allowInterop(model.getQuoteFromY));
   setProperty(chartConfig, 'updateTheme', allowInterop(model.updateTheme));
+  setProperty(chartConfig, 'addOrUpdateIndicator',
+      allowInterop(model.addOrUpdateIndicator));
+  setProperty(
+      chartConfig, 'removeIndicator', allowInterop(model.removeIndicator));
 
   return chartConfig;
 }

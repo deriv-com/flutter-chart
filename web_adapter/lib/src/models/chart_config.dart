@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:web_adapter/src/helper.dart';
-import 'package:web_adapter/src/interop/indicators_ui/js_indicator_config.dart';
 import 'package:web_adapter/src/models/chart_data.dart';
 
 /// State and methods of chart web adapter config.
@@ -161,26 +160,6 @@ class ChartConfigModel extends ChangeNotifier {
     _controller.scale(scale);
   }
 
-  /// Gets the tooltip content for indicator series
-  String getIndicatorTootipContent(int epoch) {
-    // final IndicatorConfig config = indicatorsRepo.addOns.elementAt(0);
-    // final AbstractSingleIndicatorSeries series = config
-    //         .getSeries(IndicatorInput(_chartDataModel.ticks, granularity ?? 1))
-    //     as AbstractSingleIndicatorSeries;
-
-    // series.initialize();
-
-    // print(series.entries?.last.epoch);
-
-    // final Tick? item = series.entries?.firstWhere((Tick t) => t.epoch == epoch);
-
-    // if (item != null) {
-    //   print(item.close);
-    // }
-
-    return '';
-  }
-
   /// To add or update an indicator
   void addOrUpdateIndicator(String dataString) {
     final Map<String, dynamic> config = json.decode(dataString);
@@ -188,7 +167,8 @@ class ChartConfigModel extends ChangeNotifier {
     final int index = indicatorsRepo.addOns
         .indexWhere((IndicatorConfig addOn) => addOn.id == config['id']);
 
-    final IndicatorConfig? indicatorConfig = getIndicatorConfig(config);
+    final IndicatorConfig? indicatorConfig =
+        IndicatorConfig.fromJson(config, 'name');
 
     if (indicatorConfig != null) {
       index > -1
