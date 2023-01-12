@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,7 @@ class DrawingToolsDialog extends StatefulWidget {
 }
 
 class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
-  String? _selectedDrawingTool;
+  DrawingToolConfig? _selectedDrawingTool;
 
   @override
   Widget build(BuildContext context) {
@@ -24,49 +25,48 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              DropdownButton<String>(
+              DropdownButton<DrawingToolConfig>(
                 value: _selectedDrawingTool,
                 hint: const Text('Select drawing tool'),
-                items: const <DropdownMenuItem<String>>[
-                  DropdownMenuItem<String>(
-                    child: Text('Channel'),
-                    value: 'Channel',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Continuous'),
-                    value: 'Continuous',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Fib Fan'),
-                    value: 'Fib Fan',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Horizontal'),
-                    value: 'Horizontal',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Line'),
-                    value: 'Line',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Ray'),
-                    value: 'Ray',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Rectangle'),
-                    value: 'Rectangle',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Trend'),
-                    value: 'Trend',
-                  ),
-                  DropdownMenuItem<String>(
+                items: const <DropdownMenuItem<DrawingToolConfig>>[
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Channel'),
+                  //   value: 'Channel',
+                  // ),
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Continuous'),
+                  //   value: 'Continuous',
+                  // ),
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Fib Fan'),
+                  //   value: 'Fib Fan',
+                  // ),
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Horizontal'),
+                  //   value: 'Horizontal',
+                  // ),
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Line'),
+                  //   value: 'Line',
+                  // ),
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Ray'),
+                  //   value: 'Ray',
+                  // ),
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Rectangle'),
+                  //   value: 'Rectangle',
+                  // ),
+                  // DropdownMenuItem<String>(
+                  //   child: Text('Trend'),
+                  //   value: 'Trend',
+                  // ),
+                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Vertical'),
-                    value: 'Vertical',
+                    value: VerticalDrawingToolConfig(),
                   ),
-                  // TODO(maryia-binary): add real drawing tools above
                 ],
-                onChanged: (String? config) {
+                onChanged: (DrawingToolConfig? config) {
                   setState(() {
                     _selectedDrawingTool = config;
                   });
@@ -75,8 +75,12 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               const SizedBox(width: 16),
               ElevatedButton(
                   child: const Text('Add'),
-                  onPressed:
-                      _selectedDrawingTool is DrawingToolConfig ? () {} : null),
+                  onPressed: _selectedDrawingTool is DrawingToolConfig
+                      ? () {
+                          repo.add(_selectedDrawingTool!);
+                          setState(() {});
+                        }
+                      : null),
             ],
           ),
           Expanded(
