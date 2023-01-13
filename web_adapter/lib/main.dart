@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_adapter/src/interop/dart_interop.dart';
 import 'package:web_adapter/src/interop/js_interop.dart';
-import 'package:web_adapter/src/models/message.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -37,8 +37,9 @@ class _DerivChartWebAdapter extends StatefulWidget {
 
 class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   _DerivChartWebAdapterState() {
-    chartConfigModel = ChartConfigModel(_controller, chartDataModel);
-    initInterOp(listen, chartConfigModel);
+    chartConfigModel = ChartConfigModel(_controller);
+    initDartInterop(chartConfigModel, _controller, listen);
+    JsInterop.onChartLoad();
   }
 
   final ChartController _controller = ChartController();
@@ -49,12 +50,6 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => onLoad());
-  }
-
-  void onLoad() {
-    final Message loadHistoryMessage = Message('ON_LOAD', '');
-    JsInterop.postMessage(loadHistoryMessage.toJson());
   }
 
   void listen(String dataString) {

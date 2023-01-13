@@ -4,12 +4,11 @@ import 'dart:convert';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:web_adapter/src/helper.dart';
-import 'package:web_adapter/src/models/chart_data.dart';
 
 /// State and methods of chart web adapter config.
 class ChartConfigModel extends ChangeNotifier {
   /// Initialize
-  ChartConfigModel(this._controller, this._chartDataModel);
+  ChartConfigModel(this._controller);
 
   /// Style of the chart
   ChartStyle style = ChartStyle.line;
@@ -37,8 +36,6 @@ class ChartConfigModel extends ChangeNotifier {
 
   late final ChartController _controller;
 
-  late final ChartDataModel _chartDataModel;
-
   /// Indicators repo
   final AddOnsRepository<IndicatorConfig> indicatorsRepo =
       AddOnsRepository<IndicatorConfig>(IndicatorConfig);
@@ -46,9 +43,6 @@ class ChartConfigModel extends ChangeNotifier {
   /// Updates the ChartConfigModel state
   void update(String messageType, dynamic payload) {
     switch (messageType) {
-      case 'UPDATE_THEME':
-        updateTheme(payload);
-        break;
       case 'NEW_CHART':
         _onNewChart(payload);
         break;
@@ -182,37 +176,5 @@ class ChartConfigModel extends ChangeNotifier {
     final int index = indicatorsRepo.addOns
         .indexWhere((IndicatorConfig addOn) => addOn.id == id);
     indicatorsRepo.removeAt(index);
-  }
-
-  /// Gets X position from epoch
-  double? getXFromEpoch(int epoch) {
-    if (_controller.getXFromEpoch != null) {
-      return _controller.getXFromEpoch!(epoch);
-    }
-    return null;
-  }
-
-  /// Gets Y position from quote
-  double? getYFromQuote(double quote) {
-    if (_controller.getYFromQuote != null) {
-      return _controller.getYFromQuote!(quote);
-    }
-    return null;
-  }
-
-  /// Gets epoch from x position
-  int? getEpochFromX(double x) {
-    if (_controller.getEpochFromX != null) {
-      return _controller.getEpochFromX!(x);
-    }
-    return null;
-  }
-
-  /// Gets quote from y position
-  double? getQuoteFromY(double y) {
-    if (_controller.getQuoteFromY != null) {
-      return _controller.getQuoteFromY!(y);
-    }
-    return null;
   }
 }
