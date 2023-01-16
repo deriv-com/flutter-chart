@@ -3,13 +3,16 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'basic_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/models/animation_info.dart';
@@ -21,6 +24,9 @@ class MainChart extends BasicChart {
   /// Initializes the main chart to display in the chart widget.
   MainChart({
     required DataSeries<Tick> mainSeries,
+    required this.onAddDrawing,
+    this.drawings,
+    this.selectedDrawingTool,
     this.isLive = false,
     int pipSize = 4,
     Key? key,
@@ -54,6 +60,16 @@ class MainChart extends BasicChart {
 
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
+
+  /// Existing drawings.
+  final List<Map<String, dynamic>>? drawings;
+
+  /// Callback to pass new drawing to the parent.
+  final void Function(Map<String, List<Drawing>> addedDrawing,
+      {bool isDrawingFinished}) onAddDrawing;
+
+  /// Selected drawing tool.
+  final DrawingToolConfig? selectedDrawingTool;
 
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
@@ -255,6 +271,13 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
+                if (widget.drawings != null)
+                  ...widget.drawings!.map((Map<String, dynamic> drawingData) =>
+                      DrawingPainter(drawingData: drawingData)),
+                if (widget.selectedDrawingTool != null)
+                  DrawingCreator(
+                      onAddDrawing: widget.onAddDrawing,
+                      selectedDrawingTool: widget.selectedDrawingTool!),
                 _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(

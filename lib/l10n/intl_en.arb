@@ -45,5 +45,7 @@
   "labelIsSmooth": "Is Smooth",
   "labelShowZones": "Show Zones",
   "warnFailedLoadingIndicators": "Failed to load indicators.",
-  "warnFailedLoadingDrawingTools": "Failed to load drawing tools."
+  "warnFailedLoadingDrawingTools": "Failed to load drawing tools.",
+  "selectDrawingTool": "Select drawing tool",
+  "labelColor": "Color"
 }

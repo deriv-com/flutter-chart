@@ -1,3 +1,5 @@
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,12 +8,34 @@ import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 
 /// Drawing tools dialog with available drawing tools.
 class DrawingToolsDialog extends StatefulWidget {
+  /// Creates drawing tools dialog.
+  const DrawingToolsDialog({
+    required this.onDrawingToolSelection(DrawingToolConfig selectedDrawingTool),
+    required this.onDrawingToolRemoval(int index),
+    required this.onDrawingToolUpdate(
+        int index, DrawingToolConfig updatedConfig),
+    required this.currentSymbolName,
+    Key? key,
+  }) : super(key: key);
+
+  /// Current symbol name for which a drawing is drawn.
+  final String currentSymbolName;
+
+  /// Callback to inform parent about drawing tool removal.
+  final void Function(int) onDrawingToolRemoval;
+
+  /// Callback to inform parent about drawing tool selection.
+  final void Function(DrawingToolConfig) onDrawingToolSelection;
+
+  /// Callback to inform parent about drawing tool update.
+  final void Function(int, DrawingToolConfig) onDrawingToolUpdate;
+
   @override
   _DrawingToolsDialogState createState() => _DrawingToolsDialogState();
 }
 
 class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
-  String? _selectedDrawingTool;
+  dynamic _selectedDrawingTool;
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +48,10 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              DropdownButton<String>(
+              DropdownButton<dynamic>(
                 value: _selectedDrawingTool,
-                hint: const Text('Select drawing tool'),
-                items: const <DropdownMenuItem<String>>[
+                hint: Text('select'),
+                items: const <DropdownMenuItem<dynamic>>[
                   DropdownMenuItem<String>(
                     child: Text('Channel'),
                     value: 'Channel',
@@ -44,9 +68,9 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     child: Text('Horizontal'),
                     value: 'Horizontal',
                   ),
-                  DropdownMenuItem<String>(
+                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Line'),
-                    value: 'Line',
+                    value: LineDrawingToolConfig(),
                   ),
                   DropdownMenuItem<String>(
                     child: Text('Ray'),
@@ -66,7 +90,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                   ),
                   // TODO(maryia-binary): add real drawing tools above
                 ],
-                onChanged: (String? config) {
+                onChanged: (dynamic config) {
                   setState(() {
                     _selectedDrawingTool = config;
                   });
@@ -74,16 +98,32 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               ),
               const SizedBox(width: 16),
               ElevatedButton(
-                  child: const Text('Add'),
-                  onPressed:
-                      _selectedDrawingTool is DrawingToolConfig ? () {} : null),
+                child: const Text('Add'),
+                onPressed: _selectedDrawingTool != null &&
+                        _selectedDrawingTool is DrawingToolConfig
+                    ? () {
+                        widget.onDrawingToolSelection(_selectedDrawingTool);
+                        Navigator.of(context).pop();
+                      }
+                    : null,
+              ),
             ],
           ),
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: repo.addOns.length,
-              itemBuilder: (BuildContext context, int index) => Container(),
+              itemCount: repo.getAddOns(widget.currentSymbolName).length,
+              itemBuilder: (BuildContext context, int index) =>
+                  repo.getAddOns(widget.currentSymbolName)[index].getItem(
+                (DrawingToolConfig updatedConfig) {
+                  widget.onDrawingToolUpdate(index, updatedConfig);
+                  repo.updateAt(index, updatedConfig, widget.currentSymbolName);
+                },
+                () {
+                  widget.onDrawingToolRemoval(index);
+                  repo.removeAt(index, widget.currentSymbolName);
+                },
+              ),
             ),
           ),
         ],
