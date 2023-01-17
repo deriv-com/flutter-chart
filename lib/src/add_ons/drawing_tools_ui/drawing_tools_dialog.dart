@@ -1,5 +1,6 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class DrawingToolsDialog extends StatefulWidget {
 }
 
 class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
-  dynamic _selectedDrawingTool;
+  DrawingToolConfig? _selectedDrawingTool;
 
   @override
   Widget build(BuildContext context) {
@@ -48,47 +49,19 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              DropdownButton<dynamic>(
+              DropdownButton<DrawingToolConfig>(
                 value: _selectedDrawingTool,
-                hint: Text('select'),
-                items: const <DropdownMenuItem<dynamic>>[
-                  DropdownMenuItem<String>(
-                    child: Text('Channel'),
-                    value: 'Channel',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Continuous'),
-                    value: 'Continuous',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Fib Fan'),
-                    value: 'Fib Fan',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Horizontal'),
-                    value: 'Horizontal',
-                  ),
+                hint: Text(ChartLocalization.of(context).selectDrawingTool),
+                items: const <DropdownMenuItem<DrawingToolConfig>>[
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Line'),
                     value: LineDrawingToolConfig(),
                   ),
-                  DropdownMenuItem<String>(
-                    child: Text('Ray'),
-                    value: 'Ray',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Rectangle'),
-                    value: 'Rectangle',
-                  ),
-                  DropdownMenuItem<String>(
-                    child: Text('Trend'),
-                    value: 'Trend',
-                  ),
-                  DropdownMenuItem<String>(
+                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Vertical'),
-                    value: 'Vertical',
+                    value: VerticalDrawingToolConfig(),
                   ),
-                  // TODO(maryia-binary): add real drawing tools above
+                  // TODO(maryia-binary): add other drawing tools above
                 ],
                 onChanged: (dynamic config) {
                   setState(() {
@@ -102,7 +75,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 onPressed: _selectedDrawingTool != null &&
                         _selectedDrawingTool is DrawingToolConfig
                     ? () {
-                        widget.onDrawingToolSelection(_selectedDrawingTool);
+                        widget.onDrawingToolSelection(_selectedDrawingTool!);
                         Navigator.of(context).pop();
                       }
                     : null,

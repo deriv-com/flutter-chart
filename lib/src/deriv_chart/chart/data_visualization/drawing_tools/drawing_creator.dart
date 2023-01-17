@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
@@ -27,6 +28,8 @@ class DrawingCreator extends StatelessWidget {
     switch (drawingToolType) {
       case 'line':
         return LineDrawingCreator(onAddDrawing: onAddDrawing);
+      case 'vertical':
+        return VerticalDrawingCreator(onAddDrawing: onAddDrawing);
       // TODO(maryia-binary): add the rest of drawing tools here
       default:
         return Container();
