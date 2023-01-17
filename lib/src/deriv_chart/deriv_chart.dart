@@ -1,15 +1,16 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -26,10 +27,10 @@ class DerivChart extends StatefulWidget {
   const DerivChart({
     required this.mainSeries,
     required this.granularity,
+    required this.currentSymbolName,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
-    required this.currentSymbolName,
     this.onVisibleAreaChanged,
     this.theme,
     this.isLive = false,
@@ -127,9 +128,9 @@ class _DerivChartState extends State<DerivChart> {
             builder: (BuildContext context) => AnimatedPopupDialog(
                   child: Center(
                     child: element is AddOnsRepository<IndicatorConfig>
-                        ? Text(ChartLocalization.of(context)!
+                        ? Text(ChartLocalization.of(context)
                             .warnFailedLoadingIndicators)
-                        : Text(ChartLocalization.of(context)!
+                        : Text(ChartLocalization.of(context)
                             .warnFailedLoadingDrawingTools),
                   ),
                 ));
