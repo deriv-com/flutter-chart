@@ -61,7 +61,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     child: Text('Vertical'),
                     value: VerticalDrawingToolConfig(),
                   ),
-                  // TODO(maryia-binary): add other drawing tools above
+                  // TODO(maryia-binary): add the rest of drawing tools above
                 ],
                 onChanged: (dynamic config) {
                   setState(() {
