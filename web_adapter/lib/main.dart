@@ -38,7 +38,7 @@ class _DerivChartWebAdapter extends StatefulWidget {
 class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   _DerivChartWebAdapterState() {
     chartConfigModel = ChartConfigModel(_controller);
-    initDartInterop(chartConfigModel, _controller, listen);
+    initDartInterop(chartConfigModel, chartDataModel, _controller);
     JsInterop.onChartLoad();
   }
 
@@ -50,15 +50,6 @@ class _DerivChartWebAdapterState extends State<_DerivChartWebAdapter> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void listen(String dataString) {
-    final dynamic data = json.decode(dataString);
-    final String messageType = data['type'];
-    final dynamic payload = data['payload'];
-
-    chartConfigModel.update(messageType, payload);
-    chartDataModel.update(messageType, payload);
   }
 
   @override

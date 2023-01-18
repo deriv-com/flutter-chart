@@ -5,16 +5,17 @@ import 'dart:js_util';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:web_adapter/src/models/chart_config.dart';
+import 'package:web_adapter/src/models/chart_data.dart';
 
 /// Refactor the code later with JSExport once the below issue is resolved.
 /// https://github.com/dart-lang/sdk/issues/50721
 
 /// Initialize
-void initDartInterop(
-    ChartConfigModel model, ChartController controller, Function listen) {
+void initDartInterop(ChartConfigModel configModel, ChartDataModel dataModel,
+    ChartController controller) {
   final JsObject dartInterop = JsObject(context['Object']);
-  setProperty(dartInterop, 'postMessage', allowInterop(listen));
-  setProperty(dartInterop, 'config', _exposeConfig(model));
+  setProperty(dartInterop, 'config', _exposeConfigModel(configModel));
+  setProperty(dartInterop, 'dataModel', _exposeDataModel(dataModel));
   setProperty(dartInterop, 'controller', _exposeController(controller));
   setProperty(html.window, 'flutterChart', dartInterop);
 }
@@ -37,13 +38,67 @@ JsObject _exposeController(ChartController controller) {
   return jsObject;
 }
 
-JsObject _exposeConfig(ChartConfigModel model) {
+JsObject _exposeDataModel(ChartDataModel model) {
+  final JsObject dataModel = JsObject(context['Object']);
+
+  setProperty(
+    dataModel,
+    'onTickHistory',
+    allowInterop(model.onTickHistory),
+  );
+
+  setProperty(
+    dataModel,
+    'onNewTick',
+    allowInterop(model.onNewTick),
+  );
+
+  setProperty(
+    dataModel,
+    'onNewCandle',
+    allowInterop(model.onNewCandle),
+  );
+
+  return dataModel;
+}
+
+JsObject _exposeConfigModel(ChartConfigModel model) {
   final JsObject chartConfig = JsObject(context['Object']);
 
   setProperty(
     chartConfig,
     'updateTheme',
     allowInterop(model.updateTheme),
+  );
+
+  setProperty(
+    chartConfig,
+    'newChart',
+    allowInterop(model.newChart),
+  );
+
+  setProperty(
+    chartConfig,
+    'scale',
+    allowInterop(model.scale),
+  );
+
+  setProperty(
+    chartConfig,
+    'updateChartStyle',
+    allowInterop(model.updateChartStyle),
+  );
+
+  setProperty(
+    chartConfig,
+    'updateMarkers',
+    allowInterop(model.updateMarkers),
+  );
+
+  setProperty(
+    chartConfig,
+    'updateLiveStatus',
+    allowInterop(model.updateLiveStatus),
   );
 
   setProperty(

@@ -5,8 +5,6 @@ import 'package:web_adapter/src/interop/js_interop.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
-import 'message.dart';
-
 /// State and methods of chart web adapter data.
 class ChartDataModel extends ChangeNotifier {
   /// Tick data.
@@ -15,47 +13,29 @@ class ChartDataModel extends ChangeNotifier {
   /// Flag to indicate the status of ticks network request.
   bool waitingForHistory = false;
 
-  /// Updates the ChartConfigModel state
-  void update(String messageType, dynamic payload) {
-    switch (messageType) {
-      case 'TICKS_HISTORY':
-        _onTickHistory(payload, false);
-        break;
-      case 'PREPEND_TICKS_HISTORY':
-        _onTickHistory(payload, true);
-        break;
-      case 'TICK':
-        final Tick tick = _parseTick(payload);
-        _onNewTick(tick);
-        break;
-      case 'CANDLE':
-        final Candle candle = _parseCandle(payload);
-        _onNewCandle(candle);
-        break;
-      case 'CLEAR_TICKS':
-        _onClearTicks();
-        break;
-    }
-  }
-
-  Tick _parseTick(dynamic item) => Tick(
-        epoch: DateTime.parse('${item['Date']}Z').millisecondsSinceEpoch,
-        quote: item['Close'],
+  Tick _parseTick(JsQuote item) => Tick(
+        epoch: DateTime.parse('${item.Date}Z').millisecondsSinceEpoch,
+        quote: item.Close,
       );
 
-  Candle _parseCandle(dynamic item) => Candle(
-      epoch: DateTime.parse('${item['Date']}Z').millisecondsSinceEpoch,
-      high: item['High'],
-      low: item['Low'],
-      open: item['Open'],
-      close: item['Close']);
+  Candle _parseCandle(JsQuote item) => Candle(
+        epoch: DateTime.parse('${item.Date}Z').millisecondsSinceEpoch,
+        high: item.High!,
+        low: item.Low!,
+        open: item.Open!,
+        close: item.Close,
+      );
 
-  void _onNewTick(Tick tick) {
+  /// Updates the chart with new tick
+  void onNewTick(JsQuote quote) {
+    final Tick tick = _parseTick(quote);
     ticks = ticks + <Tick>[tick];
     notifyListeners();
   }
 
-  void _onNewCandle(Candle newCandle) {
+  /// Updates the chart with new candle
+  void onNewCandle(JsQuote quote) {
+    final Candle newCandle = _parseCandle(quote);
     final List<Tick> previousCandles =
         ticks.isNotEmpty && ticks.last.epoch == newCandle.epoch
             ? ticks.sublist(0, ticks.length - 1)
@@ -67,20 +47,22 @@ class ChartDataModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _onTickHistory(List<dynamic> payload, bool append) {
-    if (payload.isEmpty) {
+  /// To update the tick history
+  // ignore: avoid_positional_boolean_parameters
+  void onTickHistory(List<JsQuote> quotes, bool append) {
+    if (quotes.isEmpty) {
       return;
     }
 
-    List<Tick> newTicks = payload
-        .map((dynamic item) =>
-            item['Open'] != null ? _parseCandle(item) : _parseTick(item))
+    List<Tick> newTicks = quotes
+        .map((JsQuote item) =>
+            item.Open != null ? _parseCandle(item) : _parseTick(item))
         .toList();
 
-    if (payload.first['Open'] != null) {
-      newTicks = payload.map((dynamic item) => _parseCandle(item)).toList();
+    if (quotes.first.Open != null) {
+      newTicks = quotes.map((JsQuote item) => _parseCandle(item)).toList();
     } else {
-      newTicks = payload.map((dynamic item) => _parseTick(item)).toList();
+      newTicks = quotes.map((JsQuote item) => _parseTick(item)).toList();
     }
 
     if (append) {
@@ -109,15 +91,11 @@ class ChartDataModel extends ChangeNotifier {
   void loadHistory(int count) {
     waitingForHistory = true;
 
-    final Map<String, int> loadHistoryRequest = <String, int>{
-      'count': count,
-      'end': ticks.first.epoch ~/ 1000
-    };
+    JsInterop.loadHistory(JsLoadHistoryReq(
+      count: count,
+      end: ticks.first.epoch ~/ 1000,
+    ));
 
-    final Message loadHistoryMessage =
-        Message('LOAD_HISTORY', jsonEncode(loadHistoryRequest));
-
-    JsInterop.postMessage(loadHistoryMessage.toJson());
     notifyListeners();
   }
 }
