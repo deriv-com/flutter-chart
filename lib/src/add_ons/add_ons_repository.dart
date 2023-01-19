@@ -8,23 +8,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 const String addOnsKey = 'addOns';
 
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
-class AddOnsRepository<T> extends ChangeNotifier {
+class AddOnsRepository<AddOnConfig> extends ChangeNotifier {
   /// Initializes
-  AddOnsRepository(this._addOnConfig) : _addOns = <T>[];
+  AddOnsRepository(this._addOnConfig) : _addOns = <AddOnConfig>[];
 
   final dynamic _addOnConfig;
 
   /// List containing indicators, or Map containing drawing tools
-  final dynamic _addOns;
+  final List<AddOnConfig> _addOns;
   SharedPreferences? _prefs;
 
   /// List of indicators.
-  List<T> get addOns => getAddOns();
+  List<AddOnConfig> get addOns => getAddOns();
 
   /// Getter for the list of addOns.
   /// If [currentSymbol] is passed, returns the list of drawing tools,
   /// If not, returns the list of indicators.
-  List<T> getAddOns() => _addOns;
+  List<AddOnConfig> getAddOns() => _addOns;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs, [String? currentSymbol]) {
@@ -41,9 +41,11 @@ class AddOnsRepository<T> extends ChangeNotifier {
     for (final String encodedAddOn in encodedAddOns) {
       dynamic addOnConfig;
       if (_addOnConfig is IndicatorConfig) {
-        addOnConfig = IndicatorConfig.fromJson(jsonDecode(encodedAddOn)) as T;
+        addOnConfig =
+            IndicatorConfig.fromJson(jsonDecode(encodedAddOn)) as AddOnConfig;
       } else if (_addOnConfig is DrawingToolConfig) {
-        addOnConfig = DrawingToolConfig.fromJson(jsonDecode(encodedAddOn)) as T;
+        addOnConfig =
+            DrawingToolConfig.fromJson(jsonDecode(encodedAddOn)) as AddOnConfig;
       }
       if (addOnConfig == null) {
         continue;
@@ -55,14 +57,14 @@ class AddOnsRepository<T> extends ChangeNotifier {
   }
 
   /// Adds a new indicator or drawing tool and updates storage.
-  void add(T addOnConfig, [String? currentSymbol]) {
+  void add(AddOnConfig addOnConfig, [String? currentSymbol]) {
     getAddOns().add(addOnConfig);
     _writeToPrefs();
     notifyListeners();
   }
 
   /// Updates indicator or drawing tool at [index] and updates storage.
-  void updateAt(int index, T addOnConfig) {
+  void updateAt(int index, AddOnConfig addOnConfig) {
     if (index < 0 || index >= getAddOns().length) {
       return;
     }
@@ -85,7 +87,7 @@ class AddOnsRepository<T> extends ChangeNotifier {
     if (_prefs != null) {
       await _prefs!.setStringList(
         addOnsKey,
-        getAddOns().map((T config) => jsonEncode(config)).toList(),
+        getAddOns().map((AddOnConfig config) => jsonEncode(config)).toList(),
       );
     }
   }
