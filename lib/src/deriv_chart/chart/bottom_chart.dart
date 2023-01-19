@@ -20,10 +20,6 @@ class BottomChart extends BasicChart {
 
 class _BottomChartState extends BasicChartState<BottomChart> {
   @override
-  List<double> calculateGridLineQuotes(YAxisModel yAxisModel) =>
-      gridLineQuotes = const <double>[];
-
-  @override
   Widget build(BuildContext context) {
     final ChartDefaultTheme theme =
         Theme.of(context).brightness == Brightness.dark

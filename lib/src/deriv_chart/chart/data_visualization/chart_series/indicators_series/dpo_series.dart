@@ -85,8 +85,8 @@ class DPOSeries extends Series {
 
   @override
   List<double> recalculateMinMax() => <double>[
-        _dpoSeries.maxValue,
         _dpoSeries.minValue,
+        _dpoSeries.maxValue,
       ];
 
   @override
