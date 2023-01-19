@@ -40,13 +40,7 @@ class VerticalDrawing extends Drawing {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
-    if (drawingPart == 'marker') {
-      if (startEpoch != null && startYCoord != null) {
-        final double startXCoord = epochToX(startEpoch!);
-        canvas.drawCircle(Offset(startXCoord, startYCoord!), markerRadius,
-            Paint()..color = lineStyle.color);
-      }
-    } else if (drawingPart == 'vertical') {
+    if (drawingPart == 'vertical') {
       if (startEpoch != null &&
           endEpoch != null &&
           startYCoord != null &&

@@ -70,11 +70,6 @@ class _VerticalDrawingCreatorState extends State<VerticalDrawingCreator> {
 
       _drawingParts.addAll(<VerticalDrawing>[
         VerticalDrawing(
-          drawingPart: 'marker',
-          startEpoch: _startingEpoch!,
-          startYCoord: _startingYPoint!,
-        ),
-        VerticalDrawing(
           drawingPart: 'vertical',
           startEpoch: _startingEpoch!,
           startYCoord: _startingYPoint!,
