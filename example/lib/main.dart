@@ -453,7 +453,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           _loadHistory(500);
                         }
                       },
-                      currentSymbolName: _symbol.name,
                     ),
                   ),
                   // ignore: unnecessary_null_comparison

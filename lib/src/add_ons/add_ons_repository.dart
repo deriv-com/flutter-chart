@@ -10,10 +10,7 @@ const String addOnsKey = 'addOns';
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
 class AddOnsRepository<T> extends ChangeNotifier {
   /// Initializes
-  AddOnsRepository(this._addOnConfig, {String? currentSymbolName})
-      : _addOns = currentSymbolName != null
-            ? <String, List<T>>{currentSymbolName: <T>[]}
-            : <T>[];
+  AddOnsRepository(this._addOnConfig) : _addOns = <T>[];
 
   final dynamic _addOnConfig;
 
@@ -27,8 +24,7 @@ class AddOnsRepository<T> extends ChangeNotifier {
   /// Getter for the list of addOns.
   /// If [currentSymbol] is passed, returns the list of drawing tools,
   /// If not, returns the list of indicators.
-  List<T> getAddOns([String? currentSymbol]) =>
-      currentSymbol != null ? (_addOns[currentSymbol] ??= <T>[]) : _addOns;
+  List<T> getAddOns() => _addOns;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs, [String? currentSymbol]) {
@@ -40,7 +36,7 @@ class AddOnsRepository<T> extends ChangeNotifier {
     }
 
     final List<String> encodedAddOns = prefs.getStringList(addOnsKey)!;
-    getAddOns(currentSymbol).clear();
+    getAddOns().clear();
 
     for (final String encodedAddOn in encodedAddOns) {
       dynamic addOnConfig;
@@ -52,7 +48,7 @@ class AddOnsRepository<T> extends ChangeNotifier {
       if (addOnConfig == null) {
         continue;
       } else {
-        getAddOns(currentSymbol).add(addOnConfig);
+        getAddOns().add(addOnConfig);
       }
     }
     notifyListeners();
@@ -60,37 +56,36 @@ class AddOnsRepository<T> extends ChangeNotifier {
 
   /// Adds a new indicator or drawing tool and updates storage.
   void add(T addOnConfig, [String? currentSymbol]) {
-    getAddOns(currentSymbol).add(addOnConfig);
-    _writeToPrefs(currentSymbol);
+    getAddOns().add(addOnConfig);
+    _writeToPrefs();
     notifyListeners();
   }
 
   /// Updates indicator or drawing tool at [index] and updates storage.
-  void updateAt(int index, T addOnConfig, [String? currentSymbol]) {
-    if (index < 0 || index >= getAddOns(currentSymbol).length) {
+  void updateAt(int index, T addOnConfig) {
+    if (index < 0 || index >= getAddOns().length) {
       return;
     }
-    getAddOns(currentSymbol)[index] = addOnConfig;
-    _writeToPrefs(currentSymbol);
+    getAddOns()[index] = addOnConfig;
+    _writeToPrefs();
     notifyListeners();
   }
 
   /// Removes indicator/drawing tool at [index] from repository and
   /// updates storage.
-  void removeAt(int index, [String? currentSymbol]) {
-    if (index < 0 || index >= getAddOns(currentSymbol).length) {
+  void removeAt(int index) {
+    if (index < 0 || index >= getAddOns().length) {
       return;
     }
-    getAddOns(currentSymbol).removeAt(index);
-    _writeToPrefs(currentSymbol);
+    getAddOns().removeAt(index);
     notifyListeners();
   }
 
-  Future<void> _writeToPrefs([String? currentSymbol]) async {
+  Future<void> _writeToPrefs() async {
     if (_prefs != null) {
       await _prefs!.setStringList(
         addOnsKey,
-        getAddOns(currentSymbol).map((T config) => jsonEncode(config)).toList(),
+        getAddOns().map((T config) => jsonEncode(config)).toList(),
       );
     }
   }

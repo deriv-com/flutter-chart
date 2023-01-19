@@ -15,12 +15,8 @@ class DrawingToolsDialog extends StatefulWidget {
     required this.onDrawingToolRemoval(int index),
     required this.onDrawingToolUpdate(
         int index, DrawingToolConfig updatedConfig),
-    required this.currentSymbolName,
     Key? key,
   }) : super(key: key);
-
-  /// Current symbol name for which a drawing is drawn.
-  final String currentSymbolName;
 
   /// Callback to inform parent about drawing tool removal.
   final void Function(int) onDrawingToolRemoval;
@@ -85,16 +81,16 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: repo.getAddOns(widget.currentSymbolName).length,
+              itemCount: repo.getAddOns().length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.getAddOns(widget.currentSymbolName)[index].getItem(
+                  repo.getAddOns()[index].getItem(
                 (DrawingToolConfig updatedConfig) {
                   widget.onDrawingToolUpdate(index, updatedConfig);
-                  repo.updateAt(index, updatedConfig, widget.currentSymbolName);
+                  repo.updateAt(index, updatedConfig);
                 },
                 () {
                   widget.onDrawingToolRemoval(index);
-                  repo.removeAt(index, widget.currentSymbolName);
+                  repo.removeAt(index);
                 },
               ),
             ),

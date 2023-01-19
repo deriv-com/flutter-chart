@@ -27,7 +27,6 @@ class DerivChart extends StatefulWidget {
   const DerivChart({
     required this.mainSeries,
     required this.granularity,
-    required this.currentSymbolName,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -56,9 +55,6 @@ class DerivChart extends StatefulWidget {
   /// For candles: Duration of one candle in ms.
   /// For ticks: Average ms difference between two consecutive ticks.
   final int granularity;
-
-  /// Current symbol name.
-  final String currentSymbolName;
 
   /// Called when crosshair details appear after long press.
   final VoidCallback? onCrosshairAppeared;
@@ -92,15 +88,13 @@ class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
       AddOnsRepository<IndicatorConfig>(IndicatorConfig);
   late final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
-      AddOnsRepository<DrawingToolConfig>(DrawingToolConfig,
-          currentSymbolName: widget.currentSymbolName);
+      AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
   /// Selected drawing tool.
   DrawingToolConfig? _selectedDrawingTool;
 
   /// Existing drawings.
-  final Map<String, List<Map<String, dynamic>>> _drawings =
-      <String, List<Map<String, dynamic>>>{};
+  final List<Map<String, dynamic>> _drawings = [];
 
   @override
   void initState() {
@@ -116,11 +110,7 @@ class _DerivChartState extends State<DerivChart> {
     ];
     _stateRepos.asMap().forEach((int index, dynamic element) {
       try {
-        element.loadFromPrefs(
-            prefs,
-            element is AddOnsRepository<DrawingToolConfig>
-                ? widget.currentSymbolName
-                : null);
+        element.loadFromPrefs(prefs);
       } on Exception {
         // ignore: unawaited_futures
         showDialog<void>(
@@ -182,10 +172,7 @@ class _DerivChartState extends State<DerivChart> {
                             ),
                           ))
                 ],
-                drawings: _drawings[widget.currentSymbolName] != null &&
-                        _drawings[widget.currentSymbolName]!.isNotEmpty
-                    ? _drawings[widget.currentSymbolName]
-                    : null,
+                drawings: _drawings,
                 onAddDrawing: _onAddDrawing,
                 selectedDrawingTool: _selectedDrawingTool,
                 markerSeries: widget.markerSeries,
@@ -230,13 +217,10 @@ class _DerivChartState extends State<DerivChart> {
                                 AddOnsRepository<DrawingToolConfig>>.value(
                               value: _drawingToolsRepo,
                               child: DrawingToolsDialog(
-                                currentSymbolName: widget.currentSymbolName,
                                 onDrawingToolRemoval: (int index) {
                                   setState(() {
-                                    if (_drawings[widget.currentSymbolName] !=
-                                        null) {
-                                      _drawings[widget.currentSymbolName]!
-                                          .removeAt(index);
+                                    if (_drawings != null) {
+                                      _drawings.removeAt(index);
                                     }
                                   });
                                 },
@@ -249,10 +233,9 @@ class _DerivChartState extends State<DerivChart> {
                                 onDrawingToolUpdate: (int index,
                                     DrawingToolConfig updatedConfig) {
                                   setState(() {
-                                    if (_drawings[widget.currentSymbolName] !=
-                                        null) {
-                                      _drawings[widget.currentSymbolName]![
-                                          index]['config'] = updatedConfig;
+                                    if (_drawings != null) {
+                                      _drawings![index]['config'] =
+                                          updatedConfig;
                                     }
                                   });
                                 },
@@ -268,18 +251,15 @@ class _DerivChartState extends State<DerivChart> {
   void _onAddDrawing(Map<String, List<Drawing>> addedDrawing,
       {bool isDrawingFinished = false}) {
     setState(() {
-      final dynamic _currentSymbolDrawings =
-          _drawings[widget.currentSymbolName] ?? <Map<String, dynamic>>[];
       final String drawingId = addedDrawing.keys.first;
 
-      final Map<String, dynamic> existingDrawing =
-          _currentSymbolDrawings.firstWhere(
-              (Map<String, dynamic> drawing) =>
-                  drawing.isNotEmpty && drawing['id'] == drawingId,
-              orElse: () => <String, dynamic>{});
+      final Map<String, dynamic> existingDrawing = _drawings.firstWhere(
+          (Map<String, dynamic> drawing) =>
+              drawing.isNotEmpty && drawing['id'] == drawingId,
+          orElse: () => <String, dynamic>{});
 
       if (existingDrawing.isEmpty) {
-        _currentSymbolDrawings.add(<String, dynamic>{
+        _drawings.add(<String, dynamic>{
           'id': drawingId,
           'config': _selectedDrawingTool,
           'drawing': addedDrawing.values.first,
@@ -287,10 +267,9 @@ class _DerivChartState extends State<DerivChart> {
       } else {
         existingDrawing['drawing'] = addedDrawing.values.first;
       }
-      _drawings[widget.currentSymbolName] = _currentSymbolDrawings;
 
       if (isDrawingFinished) {
-        _drawingToolsRepo.add(_selectedDrawingTool!, widget.currentSymbolName);
+        _drawingToolsRepo.add(_selectedDrawingTool!);
         _selectedDrawingTool = null;
       }
     });
