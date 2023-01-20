@@ -219,9 +219,7 @@ class _DerivChartState extends State<DerivChart> {
                               child: DrawingToolsDialog(
                                 onDrawingToolRemoval: (int index) {
                                   setState(() {
-                                    if (_drawings != null) {
-                                      _drawings.removeAt(index);
-                                    }
+                                    _drawings.removeAt(index);
                                   });
                                 },
                                 onDrawingToolSelection:
@@ -233,10 +231,7 @@ class _DerivChartState extends State<DerivChart> {
                                 onDrawingToolUpdate: (int index,
                                     DrawingToolConfig updatedConfig) {
                                   setState(() {
-                                    if (_drawings != null) {
-                                      _drawings![index]['config'] =
-                                          updatedConfig;
-                                    }
+                                    _drawings[index]['config'] = updatedConfig;
                                   });
                                 },
                               ),

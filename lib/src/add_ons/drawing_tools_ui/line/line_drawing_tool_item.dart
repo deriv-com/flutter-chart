@@ -5,7 +5,6 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'line_drawing_tool_config.dart';
 import '../callbacks.dart';
 import '../drawing_tool_config.dart';
-import '../drawing_tool_item.dart';
 
 /// Line drawing tool item in the list of drawing tools
 class LineDrawingToolItem extends DrawingToolItem {
