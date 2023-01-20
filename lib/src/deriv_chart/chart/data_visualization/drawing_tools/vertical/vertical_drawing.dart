@@ -30,9 +30,6 @@ class VerticalDrawing extends Drawing {
   /// Ending Y coordinates.
   final double? endYCoord;
 
-  /// Marker radius.
-  final double markerRadius = 4;
-
   /// Paint
   @override
   void onPaint(Canvas canvas, Size size, ChartTheme theme,

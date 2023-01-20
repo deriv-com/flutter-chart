@@ -87,7 +87,7 @@ class DerivChart extends StatefulWidget {
 class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
       AddOnsRepository<IndicatorConfig>(IndicatorConfig);
-  late final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
+  final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
   /// Selected drawing tool.

@@ -14,20 +14,18 @@ class AddOnsRepository<AddOnConfig> extends ChangeNotifier {
 
   final dynamic _addOnConfig;
 
-  /// List containing indicators, or Map containing drawing tools
+  /// List containing addOns
   final List<AddOnConfig> _addOns;
   SharedPreferences? _prefs;
 
   /// List of indicators.
   List<AddOnConfig> get addOns => getAddOns();
 
-  /// Getter for the list of addOns.
-  /// If [currentSymbol] is passed, returns the list of drawing tools,
-  /// If not, returns the list of indicators.
+  /// Getter for the list of addOns indicators or drawing tools.
   List<AddOnConfig> getAddOns() => _addOns;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
-  void loadFromPrefs(SharedPreferences prefs, [String? currentSymbol]) {
+  void loadFromPrefs(SharedPreferences prefs) {
     _prefs = prefs;
 
     if (!prefs.containsKey(addOnsKey)) {
@@ -57,7 +55,7 @@ class AddOnsRepository<AddOnConfig> extends ChangeNotifier {
   }
 
   /// Adds a new indicator or drawing tool and updates storage.
-  void add(AddOnConfig addOnConfig, [String? currentSymbol]) {
+  void add(AddOnConfig addOnConfig) {
     getAddOns().add(addOnConfig);
     _writeToPrefs();
     notifyListeners();

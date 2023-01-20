@@ -68,16 +68,14 @@ class _VerticalDrawingCreatorState extends State<VerticalDrawingCreator> {
       _drawingId = 'vertical_$_startingEpoch';
       _isDrawingFinished = true;
 
-      _drawingParts.addAll(<VerticalDrawing>[
-        VerticalDrawing(
-          drawingPart: 'vertical',
-          startEpoch: _startingEpoch!,
-          startYCoord: _startingYPoint!,
-          endEpoch: _startingEpoch!,
-          endYCoord: _startingYPoint!,
-        )
-      ]);
-      // }
+      _drawingParts.add(VerticalDrawing(
+        drawingPart: 'vertical',
+        startEpoch: _startingEpoch!,
+        startYCoord: _startingYPoint!,
+        endEpoch: _startingEpoch!,
+        endYCoord: _startingYPoint!,
+      ));
+
       widget.onAddDrawing(
           <String, List<VerticalDrawing>>{_drawingId: _drawingParts},
           isDrawingFinished: _isDrawingFinished);
