@@ -3,7 +3,6 @@ import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'basic_chart.dart';
-import 'y_axis/quote_grid.dart';
 
 /// The chart to add the bottom indicators too.
 class BottomChart extends BasicChart {
