@@ -68,6 +68,7 @@ class SMIIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => SMISeries(
         indicatorInput,
+        id: indicatorInput.id,
         smiOptions: SMIOptions(
           period: period,
           smoothingPeriod: smoothingPeriod,

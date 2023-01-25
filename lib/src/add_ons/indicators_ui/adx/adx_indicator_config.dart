@@ -54,6 +54,7 @@ class ADXIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => ADXSeries(
         indicatorInput,
+        id: indicatorInput.id,
         config: this,
         adxOptions: ADXOptions(
           smoothingPeriod: smoothingPeriod,

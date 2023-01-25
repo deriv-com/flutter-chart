@@ -29,8 +29,11 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
   final BarStyle barStyle;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) =>
-      AwesomeOscillatorSeries(indicatorInput, barStyle: barStyle);
+  Series getSeries(IndicatorInput indicatorInput) => AwesomeOscillatorSeries(
+        indicatorInput,
+        id: indicatorInput.id,
+        barStyle: barStyle,
+      );
 
   /// Unique name for this indicator.
   static const String name = 'AwesomeOscillator';

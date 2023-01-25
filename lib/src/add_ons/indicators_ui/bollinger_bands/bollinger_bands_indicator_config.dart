@@ -49,6 +49,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) =>
       BollingerBandSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
+        id: indicatorInput.id,
         bbOptions: BollingerBandsOptions(
           period: period,
           movingAverageType: movingAverageType,

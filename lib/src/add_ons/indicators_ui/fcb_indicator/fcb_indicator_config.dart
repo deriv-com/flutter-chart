@@ -26,8 +26,10 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
   final bool channelFill;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) =>
-      FractalChaosBandSeries(indicatorInput);
+  Series getSeries(IndicatorInput indicatorInput) => FractalChaosBandSeries(
+        indicatorInput,
+        id: indicatorInput.id,
+      );
 
   /// Unique name for this indicator.
   static const String name = 'fcb';

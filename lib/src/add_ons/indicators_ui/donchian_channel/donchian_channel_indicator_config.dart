@@ -69,6 +69,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
         IndicatorConfig.supportedFieldTypes['low']!(indicatorInput)
             as LowValueIndicator<Tick>,
         this,
+        id: indicatorInput.id,
       );
 
   @override

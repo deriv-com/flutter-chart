@@ -64,6 +64,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,
+        id: indicatorInput.id,
         rsiOptions: RSIOptions(period: period),
         showZones: showZones,
       );

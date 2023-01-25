@@ -28,13 +28,16 @@ class MACDIndicatorConfig extends IndicatorConfig {
       _$MACDIndicatorConfigFromJson(json);
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) => MACDSeries(indicatorInput,
-      config: this,
-      options: MACDOptions(
-        fastMAPeriod: fastMAPeriod,
-        slowMAPeriod: slowMAPeriod,
-        signalPeriod: signalPeriod,
-      ));
+  Series getSeries(IndicatorInput indicatorInput) => MACDSeries(
+        indicatorInput,
+        config: this,
+        options: MACDOptions(
+          fastMAPeriod: fastMAPeriod,
+          slowMAPeriod: slowMAPeriod,
+          signalPeriod: signalPeriod,
+        ),
+        id: indicatorInput.id,
+      );
 
   /// Unique name for this indicator.
   static const String name = 'macd';

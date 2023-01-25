@@ -60,6 +60,7 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => WilliamsRSeries(
         indicatorInput,
         WilliamsROptions(period),
+        id: indicatorInput.id,
         overboughtValue: oscillatorLimits.overboughtValue,
         oversoldValue: oscillatorLimits.oversoldValue,
         showZones: showZones,

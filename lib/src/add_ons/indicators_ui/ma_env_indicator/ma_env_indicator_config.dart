@@ -53,6 +53,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => MAEnvSeries.fromIndicator(
       IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
+      id: indicatorInput.id,
       maEnvOptions: MAEnvOptions(
         period: period,
         movingAverageType: movingAverageType,
