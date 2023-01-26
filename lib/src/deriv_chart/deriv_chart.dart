@@ -160,6 +160,7 @@ class _DerivChartState extends State<DerivChart> {
                             IndicatorInput(
                               widget.mainSeries.input,
                               widget.granularity,
+                              id: indicatorConfig.id,
                             ),
                           ))
                 ],
@@ -174,6 +175,7 @@ class _DerivChartState extends State<DerivChart> {
                             IndicatorInput(
                               widget.mainSeries.input,
                               widget.granularity,
+                              id: indicatorConfig.id,
                             ),
                           ))
                 ],
@@ -187,6 +189,7 @@ class _DerivChartState extends State<DerivChart> {
                 opacity: widget.opacity,
                 annotations: widget.annotations,
                 hideCrosshair: widget.hideCrosshair,
+                indicatorsRepo: widget.indicatorsRepo,
               ),
             ],
           ),

@@ -6,10 +6,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Storage key of saved indicators.
 const String addOnsKey = 'addOns';
 
+/// Called when an addOn is to be removed
+///
+/// [id] is the id of the addOn to be removed
+typedef OnRemoveCallback = void Function(String id);
+
+/// Called when an addOn is to be edited
+///
+/// [id] is the id of the addOn to be edited
+typedef OnEditCallback = void Function(String id);
+
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
 class AddOnsRepository<T> extends ChangeNotifier {
   /// Initializes
-  AddOnsRepository(this._addOnConfig) : _addOns = <T>[];
+  AddOnsRepository(
+    this._addOnConfig, {
+    this.onRemoveAddOn,
+    this.onEditAddOn,
+  }) : _addOns = <T>[];
 
   final dynamic _addOnConfig;
 
@@ -18,6 +32,12 @@ class AddOnsRepository<T> extends ChangeNotifier {
 
   /// List of indicators or drawing tools.
   List<T> get addOns => _addOns;
+
+  /// Called when an addOn is to be removed.
+  OnRemoveCallback? onRemoveAddOn;
+
+  /// Called when an addOn is to be edited.
+  OnEditCallback? onEditAddOn;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs) {

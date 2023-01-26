@@ -31,6 +31,7 @@ class Chart extends StatefulWidget {
     this.opacity = 1.0,
     this.annotations,
     this.hideCrosshair = false,
+    this.indicatorsRepo,
     Key? key,
   }) : super(key: key);
 
@@ -86,6 +87,9 @@ class Chart extends StatefulWidget {
 
   /// Whether the crosshair should be shown or not.
   final bool hideCrosshair;
+
+  /// Chart's indicators
+  final AddOnsRepository<IndicatorConfig>? indicatorsRepo;
 
   @override
   State<StatefulWidget> createState() => _ChartState();
@@ -175,10 +179,13 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 if (widget.bottomSeries?.isNotEmpty ?? false)
                   ...widget.bottomSeries!
                       .map((Series series) => Expanded(
-                              child: BottomChart(
-                            series: series,
-                            pipSize: widget.pipSize,
-                          )))
+                            child: BottomChart(
+                              series: series,
+                              pipSize: widget.pipSize,
+                              onRemove: widget.indicatorsRepo?.onRemoveAddOn,
+                              onEdit: widget.indicatorsRepo?.onEditAddOn,
+                            ),
+                          ))
                       .toList()
               ],
             ),

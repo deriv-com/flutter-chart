@@ -22,8 +22,8 @@ class MACDSeries extends Series {
     this.indicatorInput, {
     required this.options,
     required this.config,
-    String id = '',
-  }) : super(id);
+    String? id = '',
+  }) : super(id ?? 'MACD$options');
 
   ///input data
   final IndicatorInput indicatorInput;

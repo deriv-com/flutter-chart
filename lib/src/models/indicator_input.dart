@@ -4,13 +4,16 @@ import 'package:deriv_chart/src/models/tick.dart';
 /// Indicator's input
 class IndicatorInput implements IndicatorDataInput {
   /// Initializes
-  IndicatorInput(this.entries, this.granularity);
+  IndicatorInput(this.entries, this.granularity, {this.id});
 
   @override
   final List<Tick> entries;
 
   /// The granularity of this [entries] data.
   final int granularity;
+
+  /// The id passed to Indicator series.
+  final String? id;
 
   @override
   IndicatorResult createResult(int index, double value) =>
