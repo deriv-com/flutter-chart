@@ -28,12 +28,14 @@ class DerivChart extends StatefulWidget {
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
+    this.onCrosshairDisappeared,
+    this.onCrosshairHover,
     this.onVisibleAreaChanged,
     this.onQuoteAreaChanged,
     this.theme,
     this.isLive = false,
     this.dataFitEnabled = false,
-    this.hideCrosshair = false,
+    this.showCrosshair = true,
     this.annotations,
     this.opacity = 1.0,
     this.pipSize = 4,
@@ -60,6 +62,12 @@ class DerivChart extends StatefulWidget {
   /// Called when crosshair details appear after long press.
   final VoidCallback? onCrosshairAppeared;
 
+  /// Called when candle or point is dismissed.
+  final VoidCallback? onCrosshairDisappeared;
+
+  /// Called when the crosshair cursor is hovered/moved.
+  final OnCrosshairHoverCallback? onCrosshairHover;
+
   /// Called when chart is scrolled or zoomed.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
@@ -85,7 +93,7 @@ class DerivChart extends StatefulWidget {
   final double opacity;
 
   /// Whether the crosshair should be shown or not.
-  final bool hideCrosshair;
+  final bool showCrosshair;
 
   /// Chart's indicators
   final AddOnsRepository<IndicatorConfig>? indicatorsRepo;
@@ -182,13 +190,15 @@ class _DerivChartState extends State<DerivChart> {
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
+                onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                onCrosshairHover: widget.onCrosshairHover,
                 onVisibleAreaChanged: widget.onVisibleAreaChanged,
                 onQuoteAreaChanged: widget.onQuoteAreaChanged,
                 isLive: widget.isLive,
                 dataFitEnabled: widget.dataFitEnabled,
                 opacity: widget.opacity,
                 annotations: widget.annotations,
-                hideCrosshair: widget.hideCrosshair,
+                showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo,
               ),
             ],

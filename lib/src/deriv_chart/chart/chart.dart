@@ -24,13 +24,15 @@ class Chart extends StatefulWidget {
     this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
+    this.onCrosshairDisappeared,
+    this.onCrosshairHover,
     this.onVisibleAreaChanged,
     this.onQuoteAreaChanged,
     this.isLive = false,
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
-    this.hideCrosshair = false,
+    this.showCrosshair = false,
     this.indicatorsRepo,
     Key? key,
   }) : super(key: key);
@@ -61,6 +63,12 @@ class Chart extends StatefulWidget {
   /// Called when crosshair details appear after long press.
   final VoidCallback? onCrosshairAppeared;
 
+  /// Called when candle or point is dismissed.
+  final VoidCallback? onCrosshairDisappeared;
+
+  /// Called when the crosshair cursor is hovered/moved.
+  final OnCrosshairHoverCallback? onCrosshairHover;
+
   /// Called when chart is scrolled or zoomed.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
@@ -86,7 +94,7 @@ class Chart extends StatefulWidget {
   final double opacity;
 
   /// Whether the crosshair should be shown or not.
-  final bool hideCrosshair;
+  final bool showCrosshair;
 
   /// Chart's indicators
   final AddOnsRepository<IndicatorConfig>? indicatorsRepo;
@@ -173,7 +181,9 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         !widget.dataFitEnabled,
                     showDataFitButton: widget.dataFitEnabled,
                     opacity: widget.opacity,
-                    hideCrosshair: widget.hideCrosshair,
+                    showCrosshair: widget.showCrosshair,
+                    onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                    onCrosshairHover: widget.onCrosshairHover,
                   ),
                 ),
                 if (widget.bottomSeries?.isNotEmpty ?? false)
@@ -184,6 +194,10 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                               pipSize: widget.pipSize,
                               onRemove: widget.indicatorsRepo?.onRemoveAddOn,
                               onEdit: widget.indicatorsRepo?.onEditAddOn,
+                              showCrosshair: widget.showCrosshair,
+                              onCrosshairDisappeared:
+                                  widget.onCrosshairDisappeared,
+                              onCrosshairHover: widget.onCrosshairHover,
                             ),
                           ))
                       .toList()

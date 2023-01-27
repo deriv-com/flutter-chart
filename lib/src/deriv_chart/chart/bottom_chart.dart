@@ -1,6 +1,8 @@
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
+import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 
 import 'basic_chart.dart';
 
@@ -13,6 +15,9 @@ class BottomChart extends BasicChart {
     Key? key,
     this.onRemove,
     this.onEdit,
+    this.onCrosshairDisappeared,
+    this.onCrosshairHover,
+    this.showCrosshair = true,
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
 
   /// Called when an indicator is to be removed.
@@ -20,6 +25,15 @@ class BottomChart extends BasicChart {
 
   /// Called when an indicator is to be edited.
   final OnEditCallback? onEdit;
+
+  /// Called when candle or point is dismissed.
+  final VoidCallback? onCrosshairDisappeared;
+
+  /// Called when the crosshair cursor is hovered/moved.
+  final OnCrosshairHoverCallback? onCrosshairHover;
+
+  /// Whether the crosshair should be shown or not.
+  final bool showCrosshair;
 
   @override
   _BottomChartState createState() => _BottomChartState();
@@ -80,6 +94,16 @@ class _BottomChartState extends BasicChartState<BottomChart> {
     );
   }
 
+  Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
+        mainSeries: widget.mainSeries,
+        epochFromCanvasX: xAxis.epochFromX,
+        quoteFromCanvasY: chartQuoteFromCanvasY,
+        quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
+        showCrosshairCursor: widget.showCrosshair,
+        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+        onCrosshairHover: widget.onCrosshairHover,
+      );
+
   @override
   Widget build(BuildContext context) => ClipRect(
         child: Stack(
@@ -94,6 +118,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
                 Expanded(child: super.build(context)),
               ],
             ),
+            if (kIsWeb == true) _buildCrosshairAreaWeb(),
             _buildBottomChartOptions(context)
           ],
         ),

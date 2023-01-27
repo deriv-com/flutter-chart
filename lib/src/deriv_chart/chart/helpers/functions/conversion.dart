@@ -115,7 +115,7 @@ double quoteFromCanvasY({
 
   final double yToTopBoundFraction = (y - yTopBound) / drawingRange;
 
-  final double quoteFromTopBound = yToTopBoundFraction * quoteRange;
+  final double quoteDiffFromTopBound = yToTopBoundFraction * quoteRange;
 
-  return topBoundQuote - quoteFromTopBound;
+  return topBoundQuote - quoteDiffFromTopBound;
 }

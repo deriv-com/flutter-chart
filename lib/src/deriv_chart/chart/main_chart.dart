@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
@@ -30,11 +32,13 @@ class MainChart extends BasicChart {
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
+    this.onCrosshairDisappeared,
+    this.onCrosshairHover,
     this.overlaySeries,
     this.annotations,
     double opacity = 1,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
-    this.hideCrosshair = false,
+    this.showCrosshair = false,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
           mainSeries,
@@ -62,6 +66,12 @@ class MainChart extends BasicChart {
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
 
+  /// Called when candle or point is dismissed.
+  final VoidCallback? onCrosshairDisappeared;
+
+  /// Called when the crosshair cursor is hovered/moved.
+  final OnCrosshairHoverCallback? onCrosshairHover;
+
   /// Chart's widget controller.
   final ChartController? controller;
 
@@ -78,7 +88,7 @@ class MainChart extends BasicChart {
   final List<ChartData> chartDataList;
 
   /// Whether the crosshair should be shown or not.
-  final bool hideCrosshair;
+  final bool showCrosshair;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -273,7 +283,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
-                if (widget.hideCrosshair == false) _buildCrosshairArea(),
+                kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(
                     bottom: 0,
@@ -342,6 +352,16 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
             crosshairZoomOutAnimationController.reverse();
           },
         ),
+      );
+
+  Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
+        mainSeries: widget.mainSeries as DataSeries<Tick>,
+        epochFromCanvasX: xAxis.epochFromX,
+        quoteFromCanvasY: chartQuoteFromCanvasY,
+        quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
+        showCrosshairCursor: widget.showCrosshair,
+        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+        onCrosshairHover: widget.onCrosshairHover,
       );
 
   Widget _buildScrollToLastTickButton() => Material(
