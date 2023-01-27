@@ -9,26 +9,18 @@ class VerticalDrawing extends Drawing {
   /// Initializes
   VerticalDrawing({
     required this.drawingPart,
-    this.startEpoch = 0,
-    this.startYCoord = 0,
-    this.endEpoch = 0,
-    this.endYCoord = 0,
+    this.epoch = 0,
+    this.yCoord = 0,
   });
 
-  /// Part of a drawing: 'marker' or 'line'
+  /// Part of a drawing: 'vertical'
   final String drawingPart;
 
   /// Starting epoch.
-  final int? startEpoch;
+  final int epoch;
 
   /// Starting Y coordinates.
-  final double? startYCoord;
-
-  /// Ending epoch.
-  final int? endEpoch;
-
-  /// Ending Y coordinates.
-  final double? endYCoord;
+  final double yCoord;
 
   /// Paint
   @override
@@ -38,24 +30,17 @@ class VerticalDrawing extends Drawing {
     final String pattern = config.toJson()['pattern'];
 
     if (drawingPart == 'vertical') {
-      if (startEpoch != null &&
-          endEpoch != null &&
-          startYCoord != null &&
-          endYCoord != null) {
-        final double startXCoord = epochToX(startEpoch!);
+      final double xCoord = epochToX(epoch);
 
-        final double startY = startYCoord! - 1000,
-            endingY = startYCoord! + 1000,
-            startX = startXCoord;
+      final double startY = yCoord - 1000, endingY = yCoord + 1000;
 
-        if (pattern == 'solid') {
-          canvas.drawLine(
-              Offset(startX, startY),
-              Offset(startX, endingY),
-              Paint()
-                ..color = lineStyle.color
-                ..strokeWidth = lineStyle.thickness);
-        }
+      if (pattern == 'solid') {
+        canvas.drawLine(
+            Offset(xCoord, startY),
+            Offset(xCoord, endingY),
+            Paint()
+              ..color = lineStyle.color
+              ..strokeWidth = lineStyle.thickness);
       }
     }
   }

@@ -19,16 +19,16 @@ class LineDrawing extends Drawing {
   final String drawingPart;
 
   /// Starting epoch.
-  final int? startEpoch;
+  final int startEpoch;
 
   /// Starting Y coordinates.
-  final double? startYCoord;
+  final double startYCoord;
 
   /// Ending epoch.
-  final int? endEpoch;
+  final int endEpoch;
 
   /// Ending Y coordinates.
-  final double? endYCoord;
+  final double endYCoord;
 
   /// Marker radius.
   final double markerRadius = 4;
@@ -40,50 +40,43 @@ class LineDrawing extends Drawing {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
     if (drawingPart == 'marker') {
-      if (startEpoch != null && startYCoord != null) {
-        final double startXCoord = epochToX(startEpoch!);
-        canvas.drawCircle(Offset(startXCoord, startYCoord!), markerRadius,
-            Paint()..color = lineStyle.color);
-      }
+      final double startXCoord = epochToX(startEpoch);
+      canvas.drawCircle(Offset(startXCoord, startYCoord), markerRadius,
+          Paint()..color = lineStyle.color);
     } else if (drawingPart == 'line') {
-      if (startEpoch != null &&
-          endEpoch != null &&
-          startYCoord != null &&
-          endYCoord != null) {
-        final double startXCoord = epochToX(startEpoch!);
-        final double endXCoord = epochToX(endEpoch!);
+      final double startXCoord = epochToX(startEpoch);
+      final double endXCoord = epochToX(endEpoch);
 
-        /// Based on calculateOuterSet() from SmartCharts
-        Map<String, double?> vector = <String, double?>{
-          'x0': startXCoord,
-          'y0': startYCoord,
-          'x1': endXCoord,
-          'y1': endYCoord
+      /// Based on calculateOuterSet() from SmartCharts
+      Map<String, double?> vector = <String, double?>{
+        'x0': startXCoord,
+        'y0': startYCoord,
+        'x1': endXCoord,
+        'y1': endYCoord
+      };
+      if (vector['x0']! > vector['x1']!) {
+        vector = <String, double?>{
+          'x0': endXCoord,
+          'y0': endYCoord,
+          'x1': startXCoord,
+          'y1': startYCoord
         };
-        if (vector['x0']! > vector['x1']!) {
-          vector = <String, double?>{
-            'x0': endXCoord,
-            'y0': endYCoord!,
-            'x1': startXCoord,
-            'y1': startYCoord!
-          };
-        }
-        final double earlier = vector['x0']! - 1000;
-        final double later = vector['x1']! + 1000;
+      }
+      final double earlier = vector['x0']! - 1000;
+      final double later = vector['x1']! + 1000;
 
-        final double startY = getYIntersection(vector, earlier) ?? 0,
-            endingY = getYIntersection(vector, later) ?? 0,
-            startX = earlier,
-            endingX = later;
+      final double startY = getYIntersection(vector, earlier) ?? 0,
+          endingY = getYIntersection(vector, later) ?? 0,
+          startX = earlier,
+          endingX = later;
 
-        if (pattern == 'solid') {
-          canvas.drawLine(
-              Offset(startX, startY),
-              Offset(endingX, endingY),
-              Paint()
-                ..color = lineStyle.color
-                ..strokeWidth = lineStyle.thickness);
-        }
+      if (pattern == 'solid') {
+        canvas.drawLine(
+            Offset(startX, startY),
+            Offset(endingX, endingY),
+            Paint()
+              ..color = lineStyle.color
+              ..strokeWidth = lineStyle.thickness);
       }
     }
   }

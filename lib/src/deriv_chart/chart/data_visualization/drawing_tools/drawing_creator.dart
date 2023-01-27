@@ -26,9 +26,9 @@ class DrawingCreator extends StatelessWidget {
   Widget build(BuildContext context) {
     final String drawingToolType = selectedDrawingTool.toJson()['name'];
     switch (drawingToolType) {
-      case 'line':
+      case 'dt_line':
         return LineDrawingCreator(onAddDrawing: onAddDrawing);
-      case 'vertical':
+      case 'dt_vertical':
         return VerticalDrawingCreator(onAddDrawing: onAddDrawing);
       // TODO(maryia-binary): add the rest of drawing tools here
       default:

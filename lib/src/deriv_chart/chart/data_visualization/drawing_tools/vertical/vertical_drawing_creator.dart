@@ -70,10 +70,8 @@ class _VerticalDrawingCreatorState extends State<VerticalDrawingCreator> {
 
       _drawingParts.add(VerticalDrawing(
         drawingPart: 'vertical',
-        startEpoch: _startingEpoch!,
-        startYCoord: _startingYPoint!,
-        endEpoch: _startingEpoch!,
-        endYCoord: _startingYPoint!,
+        epoch: _startingEpoch!,
+        yCoord: _startingYPoint!,
       ));
 
       widget.onAddDrawing(

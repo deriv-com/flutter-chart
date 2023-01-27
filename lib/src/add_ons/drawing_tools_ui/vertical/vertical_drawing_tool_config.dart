@@ -23,7 +23,7 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
       _$VerticalDrawingToolConfigFromJson(json);
 
   /// Unique name for this drawing tool.
-  static const String name = 'vertical';
+  static const String name = 'dt_vertical';
 
   @override
   Map<String, dynamic> toJson() => _$VerticalDrawingToolConfigToJson(this)

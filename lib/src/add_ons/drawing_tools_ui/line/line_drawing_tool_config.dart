@@ -22,7 +22,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
       _$LineDrawingToolConfigFromJson(json);
 
   /// Drawing tool name
-  static const String name = 'line';
+  static const String name = 'dt_line';
 
   @override
   Map<String, dynamic> toJson() => _$LineDrawingToolConfigToJson(this)
