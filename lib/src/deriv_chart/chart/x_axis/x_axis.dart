@@ -22,7 +22,7 @@ class XAxis extends StatefulWidget {
     required this.entries,
     required this.child,
     required this.isLive,
-    required this.startWithDataFitMode,
+    required this.dataFitMode,
     required this.pipSize,
     this.onVisibleAreaChanged,
     this.minEpoch,
@@ -39,8 +39,8 @@ class XAxis extends StatefulWidget {
   /// Whether the chart is showing live data.
   final bool isLive;
 
-  /// Starts in data fit mode.
-  final bool startWithDataFitMode;
+  /// Whether the chart is in data fit mode.
+  final bool dataFitMode;
 
   /// Callback provided by library user.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
@@ -75,7 +75,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       granularity: context.read<ChartConfig>().granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
-      startWithDataFitMode: widget.startWithDataFitMode,
+      dataFitMode: widget.dataFitMode,
       onScale: _onVisibleAreaChanged,
       onScroll: _onVisibleAreaChanged,
       minEpoch: widget.minEpoch,
@@ -103,6 +103,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
 
     _model.update(
+      isDataFitMode: widget.dataFitMode,
       isLive: widget.isLive,
       granularity: context.read<ChartConfig>().granularity,
       entries: widget.entries,

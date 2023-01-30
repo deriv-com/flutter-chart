@@ -53,7 +53,7 @@ class XAxisModel extends ChangeNotifier {
     required int granularity,
     required AnimationController animationController,
     required bool isLive,
-    bool startWithDataFitMode = false,
+    bool dataFitMode = false,
     int? minEpoch,
     int? maxEpoch,
     this.onScale,
@@ -73,7 +73,7 @@ class XAxisModel extends ChangeNotifier {
     _msPerPx = _defaultMsPerPx;
     _isLive = isLive;
     _rightBoundEpoch = _maxRightBoundEpoch;
-    _dataFitMode = startWithDataFitMode;
+    _dataFitMode = dataFitMode;
 
     _updateEntries(entries);
 
@@ -306,6 +306,12 @@ class XAxisModel extends ChangeNotifier {
   /// Should be called before [_updateGranularity] and [_updateEntries]
   void _updateIsLive(bool? isLive) => _isLive = isLive ?? true;
 
+  /// Updates chart's dataFitMode property.
+  void _updateDataFitMode(bool? dataFitMode) {
+    _dataFitMode = dataFitMode ?? _dataFitMode;
+    notifyListeners();
+  }
+
   /// Fits available data to screen.
   void _fitData() {
     if (width != null && (_entries?.isNotEmpty ?? false)) {
@@ -438,7 +444,7 @@ class XAxisModel extends ChangeNotifier {
   }
 
   void _scrollTo(int rightBoundEpoch) {
-    if (_rightBoundEpoch != rightBoundEpoch) {
+    if (width != null && _rightBoundEpoch != rightBoundEpoch) {
       _rightBoundEpoch = rightBoundEpoch;
       _clampRightBoundEpoch();
       onScroll?.call();
@@ -501,10 +507,12 @@ class XAxisModel extends ChangeNotifier {
     List<Tick>? entries,
     int? minEpoch,
     int? maxEpoch,
+    bool? isDataFitMode,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
+    _updateDataFitMode(isDataFitMode);
 
     _minEpoch = minEpoch ?? _minEpoch;
     _maxEpoch = maxEpoch ?? _maxEpoch;
