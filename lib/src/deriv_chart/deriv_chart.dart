@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
@@ -9,6 +10,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
@@ -94,7 +96,7 @@ class _DerivChartState extends State<DerivChart> {
   DrawingToolConfig? _selectedDrawingTool;
 
   /// Existing drawings.
-  final List<Map<String, dynamic>> _drawings = [];
+  final List<DrawingData> _drawings = <DrawingData>[];
 
   @override
   void initState() {
@@ -209,33 +211,35 @@ class _DerivChartState extends State<DerivChart> {
                   icon: const Icon(Icons.drive_file_rename_outline_outlined),
                   onPressed: () {
                     showDialog<void>(
-                        context: context,
-                        builder: (
-                          BuildContext context,
-                        ) =>
-                            ChangeNotifierProvider<
-                                AddOnsRepository<DrawingToolConfig>>.value(
-                              value: _drawingToolsRepo,
-                              child: DrawingToolsDialog(
-                                onDrawingToolRemoval: (int index) {
-                                  setState(() {
-                                    _drawings.removeAt(index);
-                                  });
-                                },
-                                onDrawingToolSelection:
-                                    (DrawingToolConfig selectedDrawingTool) {
-                                  setState(() {
-                                    _selectedDrawingTool = selectedDrawingTool;
-                                  });
-                                },
-                                onDrawingToolUpdate: (int index,
-                                    DrawingToolConfig updatedConfig) {
-                                  setState(() {
-                                    _drawings[index]['config'] = updatedConfig;
-                                  });
-                                },
-                              ),
-                            ));
+                      context: context,
+                      builder: (
+                        BuildContext context,
+                      ) =>
+                          ChangeNotifierProvider<
+                              AddOnsRepository<DrawingToolConfig>>.value(
+                        value: _drawingToolsRepo,
+                        child: DrawingToolsDialog(
+                          onDrawingToolRemoval: (int index) {
+                            setState(() {
+                              _drawings.removeAt(index);
+                            });
+                          },
+                          onDrawingToolSelection:
+                              (DrawingToolConfig selectedDrawingTool) {
+                            setState(() {
+                              _selectedDrawingTool = selectedDrawingTool;
+                            });
+                          },
+                          onDrawingToolUpdate:
+                              (int index, DrawingToolConfig updatedConfig) {
+                            setState(() {
+                              _drawings[index] =
+                                  _drawings[index].updateConfig(updatedConfig);
+                            });
+                          },
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -244,24 +248,25 @@ class _DerivChartState extends State<DerivChart> {
         ),
       );
 
-  void _onAddDrawing(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished = false}) {
+  void _onAddDrawing(
+    Map<String, List<Drawing>> addedDrawing, {
+    bool isDrawingFinished = false,
+  }) {
     setState(() {
       final String drawingId = addedDrawing.keys.first;
 
-      final Map<String, dynamic> existingDrawing = _drawings.firstWhere(
-          (Map<String, dynamic> drawing) =>
-              drawing.isNotEmpty && drawing['id'] == drawingId,
-          orElse: () => <String, dynamic>{});
+      final DrawingData? existingDrawing = _drawings.firstWhereOrNull(
+        (DrawingData drawing) => drawing.id == drawingId,
+      );
 
-      if (existingDrawing.isEmpty) {
-        _drawings.add(<String, dynamic>{
-          'id': drawingId,
-          'config': _selectedDrawingTool,
-          'drawing': addedDrawing.values.first,
-        });
+      if (existingDrawing == null) {
+        _drawings.add(DrawingData(
+          id: drawingId,
+          config: _selectedDrawingTool!,
+          drawings: addedDrawing.values.first,
+        ));
       } else {
-        existingDrawing['drawing'] = addedDrawing.values.first;
+        existingDrawing.updateDrawingList(addedDrawing.values.first);
       }
 
       if (isDrawingFinished) {

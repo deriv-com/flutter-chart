@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart'
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
@@ -62,7 +63,7 @@ class MainChart extends BasicChart {
   final MarkerSeries? markerSeries;
 
   /// Existing drawings.
-  final List<Map<String, dynamic>>? drawings;
+  final List<DrawingData>? drawings;
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
@@ -272,7 +273,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 if (widget.drawings != null)
-                  ...widget.drawings!.map((Map<String, dynamic> drawingData) =>
+                  ...widget.drawings!.map((DrawingData drawingData) =>
                       DrawingPainter(drawingData: drawingData)),
                 if (widget.selectedDrawingTool != null)
                   DrawingCreator(
