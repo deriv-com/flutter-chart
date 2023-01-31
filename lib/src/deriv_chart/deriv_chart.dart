@@ -1,7 +1,9 @@
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -40,6 +42,7 @@ class DerivChart extends StatefulWidget {
     this.opacity = 1.0,
     this.pipSize = 4,
     this.indicatorsRepo,
+    this.drawingToolsRepo,
     Key? key,
   }) : super(key: key);
 
@@ -98,6 +101,9 @@ class DerivChart extends StatefulWidget {
   /// Chart's indicators
   final AddOnsRepository<IndicatorConfig>? indicatorsRepo;
 
+  /// Chart's drawings
+  final AddOnsRepository<DrawingToolConfig>? drawingToolsRepo;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -147,7 +153,7 @@ class _DerivChartState extends State<DerivChart> {
           ChangeNotifierProvider<AddOnsRepository<IndicatorConfig>>.value(
               value: widget.indicatorsRepo ?? _indicatorsRepo),
           ChangeNotifierProvider<AddOnsRepository<DrawingToolConfig>>.value(
-              value: _drawingToolsRepo),
+              value: widget.drawingToolsRepo ?? _drawingToolsRepo),
         ],
         child: Builder(
           builder: (BuildContext context) => Stack(
@@ -201,6 +207,46 @@ class _DerivChartState extends State<DerivChart> {
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo,
               ),
+              if (widget.indicatorsRepo == null)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.architecture),
+                    onPressed: () {
+                      showDialog<void>(
+                        context: context,
+                        builder: (
+                          BuildContext context,
+                        ) =>
+                            ChangeNotifierProvider<
+                                AddOnsRepository<IndicatorConfig>>.value(
+                          value: _indicatorsRepo,
+                          child: IndicatorsDialog(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              if (widget.drawingToolsRepo == null)
+                Align(
+                  alignment: const FractionalOffset(0.1, 0),
+                  child: IconButton(
+                    icon: const Icon(Icons.drive_file_rename_outline_outlined),
+                    onPressed: () {
+                      showDialog<void>(
+                        context: context,
+                        builder: (
+                          BuildContext context,
+                        ) =>
+                            ChangeNotifierProvider<
+                                AddOnsRepository<DrawingToolConfig>>.value(
+                          value: _drawingToolsRepo,
+                          child: DrawingToolsDialog(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
             ],
           ),
         ),
