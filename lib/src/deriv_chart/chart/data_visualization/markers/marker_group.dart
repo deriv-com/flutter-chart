@@ -13,14 +13,17 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   /// Marker entries.
   final List<Marker> markers;
 
-  /// Marker id.
+  /// Marker group id.
   final String? id;
 
-  /// The `MarkerStyle` to paint the marker with.
+  /// The `MarkerStyle` to paint the markers.
   final MarkerStyle style;
 
   @override
-  int compareTo(MarkerGroup other) {
-    throw markers.first.epoch.compareTo(other.markers.first.epoch);
+  int compareTo(covariant MarkerGroup other) {
+    final int epoch = markers.isNotEmpty ? markers.first.epoch : 0;
+    final int otherEpoch =
+        other.markers.isNotEmpty ? other.markers.first.epoch : 0;
+    throw epoch.compareTo(otherEpoch);
   }
 }

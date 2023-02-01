@@ -67,9 +67,13 @@ class _CrosshairAreaWebState extends State<CrosshairAreaWeb> {
           onExit: (PointerExitEvent ev) =>
               widget.onCrosshairDisappeared?.call(),
           onHover: (PointerHoverEvent ev) {
+            if (widget.onCrosshairHover == null) {
+              return;
+            }
+
             final double quote = widget.quoteFromCanvasY(ev.localPosition.dy);
             final int epoch = widget.epochFromCanvasX(ev.localPosition.dx);
-            return widget.onCrosshairHover
+            widget.onCrosshairHover
                 ?.call(ev, epoch, quote.toStringAsFixed(widget.pipSize));
           },
         ),

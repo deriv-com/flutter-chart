@@ -48,4 +48,10 @@ class ChartController {
 
   /// Gets Y position from quote
   double? yFromQuote(double quote) => getYFromQuote?.call(quote);
+
+  /// Gets epoch from X position
+  int? epochFromX(double x) => getEpochFromX?.call(x);
+
+  /// Gets quote from Y position
+  double? quoteFromY(double y) => getQuoteFromY?.call(y);
 }

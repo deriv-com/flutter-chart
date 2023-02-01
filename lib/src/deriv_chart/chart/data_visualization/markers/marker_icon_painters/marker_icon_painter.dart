@@ -65,5 +65,20 @@ abstract class MarkerIconPainter {
     MarkerGroup markerGroup,
     EpochToX epochToX,
     QuoteToY quoteToY,
-  ) {}
+  ) {
+    final Paint paint = Paint()..color = markerGroup.style.backgroundColor;
+
+    for (final Marker marker in markerGroup.markers) {
+      final Offset anchor = Offset(
+        epochToX(marker.epoch),
+        quoteToY(marker.quote),
+      );
+
+      canvas.drawCircle(
+        anchor,
+        2,
+        paint,
+      );
+    }
+  }
 }
