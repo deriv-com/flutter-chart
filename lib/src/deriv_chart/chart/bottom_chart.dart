@@ -60,34 +60,36 @@ class _BottomChartState extends BasicChartState<BottomChart> {
             Text(
               widget.mainSeries.runtimeType.toString(),
             ),
-            Material(
-              type: MaterialType.circle,
-              color: Colors.transparent,
-              clipBehavior: Clip.antiAlias,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.settings,
-                  size: 16,
+            if (widget.onEdit != null)
+              Material(
+                type: MaterialType.circle,
+                color: Colors.transparent,
+                clipBehavior: Clip.antiAlias,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.settings,
+                    size: 16,
+                  ),
+                  onPressed: () => widget.onEdit?.call(widget.mainSeries.id),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
-                onPressed: () => widget.onEdit?.call(widget.mainSeries.id),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
               ),
-            ),
-            Material(
-              type: MaterialType.circle,
-              color: Colors.transparent,
-              clipBehavior: Clip.antiAlias,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.delete,
-                  size: 16,
+            if (widget.onRemove != null)
+              Material(
+                type: MaterialType.circle,
+                color: Colors.transparent,
+                clipBehavior: Clip.antiAlias,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 16,
+                  ),
+                  onPressed: () => widget.onRemove?.call(widget.mainSeries.id),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
-                onPressed: () => widget.onRemove?.call(widget.mainSeries.id),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
               ),
-            ),
           ],
         ),
       ),

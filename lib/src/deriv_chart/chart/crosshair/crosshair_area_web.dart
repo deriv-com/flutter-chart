@@ -54,8 +54,6 @@ class CrosshairAreaWeb extends StatefulWidget {
 }
 
 class _CrosshairAreaWebState extends State<CrosshairAreaWeb> {
-  late GestureManagerState gestureManager;
-
   XAxisModel get xAxis => context.read<XAxisModel>();
 
   @override
