@@ -57,8 +57,7 @@ class ChartDataPainter extends BaseChartDataPainter {
   @override
   bool shouldRepaint(covariant ChartDataPainter oldDelegate) {
     bool styleChanged() =>
-        (mainSeries is LineSeries && oldDelegate.mainSeries is CandleSeries) ||
-        (mainSeries is CandleSeries && oldDelegate.mainSeries is LineSeries) ||
+        (mainSeries.runtimeType != oldDelegate.mainSeries.runtimeType) ||
         (mainSeries is LineSeries &&
             theme.lineStyle != oldDelegate.theme.lineStyle) ||
         (mainSeries is CandleSeries &&
