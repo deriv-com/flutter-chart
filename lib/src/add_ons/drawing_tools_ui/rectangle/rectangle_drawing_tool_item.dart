@@ -2,21 +2,21 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart'
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'line_drawing_tool_config.dart';
+import 'rectangle_drawing_tool_config.dart';
 import '../callbacks.dart';
 import '../drawing_tool_config.dart';
 
-/// Line drawing tool item in the list of drawing tools
-class LineDrawingToolItem extends DrawingToolItem {
+/// Rectangle drawing tool item in the list of drawing tools
+class RectangleDrawingToolItem extends DrawingToolItem {
   /// Initializes
-  const LineDrawingToolItem({
+  const RectangleDrawingToolItem({
     required UpdateDrawingTool updateDrawingTool,
     required VoidCallback deleteDrawingTool,
     Key? key,
-    LineDrawingToolConfig config = const LineDrawingToolConfig(),
+    RectangleDrawingToolConfig config = const RectangleDrawingToolConfig(),
   }) : super(
           key: key,
-          title: 'Line',
+          title: 'Rectangle',
           config: config,
           updateDrawingTool: updateDrawingTool,
           deleteDrawingTool: deleteDrawingTool,
@@ -24,17 +24,18 @@ class LineDrawingToolItem extends DrawingToolItem {
 
   @override
   DrawingToolItemState<DrawingToolConfig> createIndicatorItemState() =>
-      LineDrawingToolItemState();
+      RectangleDrawingToolItemState();
 }
 
-/// LineDrawingToolItem State class
-class LineDrawingToolItemState
-    extends DrawingToolItemState<LineDrawingToolConfig> {
+/// RectangleDrawingToolItem State class
+class RectangleDrawingToolItemState
+    extends DrawingToolItemState<RectangleDrawingToolConfig> {
   LineStyle? _lineStyle;
   String? _pattern;
 
   @override
-  LineDrawingToolConfig createDrawingToolConfig() => LineDrawingToolConfig(
+  RectangleDrawingToolConfig createDrawingToolConfig() =>
+      RectangleDrawingToolConfig(
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
       );
@@ -43,7 +44,7 @@ class LineDrawingToolItemState
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
           _buildColorField(),
-          // TODO(maryia-binary): implement _buildPatternField() to set pattern
+          // TODO(maryia-deriv): implement _buildPatternField() to set pattern
         ],
       );
 
@@ -66,8 +67,8 @@ class LineDrawingToolItemState
       );
 
   LineStyle get _currentLineStyle =>
-      _lineStyle ?? (widget.config as LineDrawingToolConfig).lineStyle;
+      _lineStyle ?? (widget.config as RectangleDrawingToolConfig).lineStyle;
 
   String get _currentPattern =>
-      _pattern ?? (widget.config as LineDrawingToolConfig).pattern;
+      _pattern ?? (widget.config as RectangleDrawingToolConfig).pattern;
 }
