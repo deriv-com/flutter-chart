@@ -13,6 +13,7 @@ part 'rectangle_drawing_tool_config.g.dart';
 class RectangleDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const RectangleDrawingToolConfig({
+    this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.transparent),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = 'solid',
   }) : super();
@@ -27,6 +28,9 @@ class RectangleDrawingToolConfig extends DrawingToolConfig {
   @override
   Map<String, dynamic> toJson() => _$RectangleDrawingToolConfigToJson(this)
     ..putIfAbsent(DrawingToolConfig.nameKey, () => name);
+
+  /// Drawing tool fill style
+  final LineStyle fillStyle;
 
   /// Drawing tool line style
   final LineStyle lineStyle;

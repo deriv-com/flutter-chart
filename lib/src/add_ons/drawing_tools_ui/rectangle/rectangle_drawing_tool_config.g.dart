@@ -9,6 +9,7 @@ part of 'rectangle_drawing_tool_config.dart';
 RectangleDrawingToolConfig _$RectangleDrawingToolConfigFromJson(
     Map<String, dynamic> json) {
   return RectangleDrawingToolConfig(
+    fillStyle: LineStyle.fromJson(json['fillStyle'] as Map<String, dynamic>),
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
     pattern: json['pattern'] as String,
   );
@@ -17,6 +18,7 @@ RectangleDrawingToolConfig _$RectangleDrawingToolConfigFromJson(
 Map<String, dynamic> _$RectangleDrawingToolConfigToJson(
         RectangleDrawingToolConfig instance) =>
     <String, dynamic>{
+      'fillStyle': instance.fillStyle,
       'lineStyle': instance.lineStyle,
       'pattern': instance.pattern,
     };

@@ -30,12 +30,14 @@ class RectangleDrawingToolItem extends DrawingToolItem {
 /// RectangleDrawingToolItem State class
 class RectangleDrawingToolItemState
     extends DrawingToolItemState<RectangleDrawingToolConfig> {
+  LineStyle? _fillStyle;
   LineStyle? _lineStyle;
   String? _pattern;
 
   @override
   RectangleDrawingToolConfig createDrawingToolConfig() =>
       RectangleDrawingToolConfig(
+        fillStyle: _currentFillStyle,
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
       );
@@ -43,28 +45,39 @@ class RectangleDrawingToolItemState
   @override
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
-          _buildColorField(),
+          _buildColorField(
+              ChartLocalization.of(context).labelColor, _currentLineStyle),
+          _buildColorField(
+              ChartLocalization.of(context).labelFillColor, _currentFillStyle),
           // TODO(maryia-deriv): implement _buildPatternField() to set pattern
         ],
       );
 
-  Widget _buildColorField() => Row(
+  Widget _buildColorField(String label, LineStyle style) => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelColor,
+            label,
             style: const TextStyle(fontSize: 16),
           ),
           ColorSelector(
-            currentColor: _currentLineStyle.color,
+            currentColor: style.color,
             onColorChanged: (Color selectedColor) {
               setState(() {
-                _lineStyle = _currentLineStyle.copyWith(color: selectedColor);
+                if (label == ChartLocalization.of(context).labelColor) {
+                  _lineStyle = style.copyWith(color: selectedColor);
+                } else {
+                  _fillStyle =
+                      style.copyWith(color: selectedColor.withOpacity(0.3));
+                }
               });
               updateDrawingTool();
             },
           )
         ],
       );
+
+  LineStyle get _currentFillStyle =>
+      _fillStyle ?? (widget.config as RectangleDrawingToolConfig).fillStyle;
 
   LineStyle get _currentLineStyle =>
       _lineStyle ?? (widget.config as RectangleDrawingToolConfig).lineStyle;

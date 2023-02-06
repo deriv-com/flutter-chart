@@ -38,6 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelFastMAPeriod":
             MessageLookupByLibrary.simpleMessage("Fast MA Period"),
         "labelField": MessageLookupByLibrary.simpleMessage("Field"),
+        "labelFillColor": MessageLookupByLibrary.simpleMessage("Fill Color"),
         "labelHighPeriod": MessageLookupByLibrary.simpleMessage("High Period"),
         "labelHistogram": MessageLookupByLibrary.simpleMessage("Histogram"),
         "labelIsSmooth": MessageLookupByLibrary.simpleMessage("Is Smooth"),

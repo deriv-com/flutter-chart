@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
@@ -20,13 +22,13 @@ class RectangleDrawing extends Drawing {
   /// Starting epoch.
   final int startEpoch;
 
-  /// Starting Y coordinates.
+  /// Starting Y coordinates. y0 in SmartCharts
   final double startYCoord;
 
   /// Ending epoch.
   final int endEpoch;
 
-  /// Ending Y coordinates.
+  /// Ending Y coordinates. y1 in SmartCharts
   final double endYCoord;
 
   /// Marker radius.
@@ -36,6 +38,7 @@ class RectangleDrawing extends Drawing {
   @override
   void onPaint(Canvas canvas, Size size, ChartTheme theme,
       double Function(int x) epochToX, DrawingToolConfig config) {
+    final LineStyle fillStyle = config.toJson()['fillStyle'];
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
     if (drawingPart == 'marker') {
@@ -43,39 +46,31 @@ class RectangleDrawing extends Drawing {
       canvas.drawCircle(Offset(startXCoord, startYCoord), markerRadius,
           Paint()..color = lineStyle.color);
     } else if (drawingPart == 'line') {
-      final double startXCoord = epochToX(startEpoch);
-      final double endXCoord = epochToX(endEpoch);
-
-      /// Based on calculateOuterSet() from SmartCharts
-      Map<String, double?> vector = <String, double?>{
-        'x0': startXCoord,
-        'y0': startYCoord,
-        'x1': endXCoord,
-        'y1': endYCoord
-      };
-      if (vector['x0']! > vector['x1']!) {
-        vector = <String, double?>{
-          'x0': endXCoord,
-          'y0': endYCoord,
-          'x1': startXCoord,
-          'y1': startYCoord
-        };
-      }
-      final double earlier = vector['x0']! - 1000;
-      final double later = vector['x1']! + 1000;
-
-      final double startY = getYIntersection(vector, earlier) ?? 0,
-          endingY = getYIntersection(vector, later) ?? 0,
-          startX = earlier,
-          endingX = later;
+      final double startXCoord = epochToX(startEpoch); // x0 in SmartCharts
+      final double endXCoord = epochToX(endEpoch); // x1 in SmartCharts
+      final double x = (min(startXCoord, endXCoord)).round() + 0.5;
+      final double y = min(startYCoord, endYCoord);
+      double width = max(startXCoord, endXCoord) - x;
+      double height = max(startYCoord, endYCoord) - y;
+      width = width == 0 ? 1 : width;
+      height = height == 0 ? 1 : height;
 
       if (pattern == 'solid') {
-        canvas.drawLine(
-            Offset(startX, startY),
-            Offset(endingX, endingY),
+        canvas.drawRect(
+            Offset(x, y) & Size(width, height),
             Paint()
               ..color = lineStyle.color
+              ..style = PaintingStyle.stroke
               ..strokeWidth = lineStyle.thickness);
+        if (fillStyle.color != Colors.transparent) {
+          // fill the rectangle:
+          canvas.drawRect(
+              Offset(x, y) & Size(width, height),
+              Paint()
+                ..color = fillStyle.color
+                ..style = PaintingStyle.fill
+                ..strokeWidth = lineStyle.thickness);
+        }
       }
     }
   }
