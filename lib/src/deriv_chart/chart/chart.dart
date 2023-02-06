@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-
 import 'bottom_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'main_chart.dart';
@@ -17,6 +16,7 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
+    required this.drawingCreatorAndPainter,
     this.pipSize = 4,
     this.controller,
     this.overlaySeries,
@@ -44,6 +44,9 @@ class Chart extends StatefulWidget {
 
   /// Open position marker series.
   final MarkerSeries? markerSeries;
+
+  /// Callback to pass new drawings
+  final List<Widget> drawingCreatorAndPainter;
 
   /// Chart's controller
   final ChartController? controller;
@@ -148,6 +151,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 Expanded(
                   flex: 3,
                   child: MainChart(
+                    drawingCreatorAndPainter: widget.drawingCreatorAndPainter,
                     controller: _controller,
                     mainSeries: widget.mainSeries,
                     overlaySeries: widget.overlaySeries,

@@ -9,7 +9,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'basic_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/models/animation_info.dart';
@@ -21,6 +20,7 @@ class MainChart extends BasicChart {
   /// Initializes the main chart to display in the chart widget.
   MainChart({
     required DataSeries<Tick> mainSeries,
+    required this.drawingCreatorAndPainter,
     this.isLive = false,
     int pipSize = 4,
     Key? key,
@@ -47,6 +47,7 @@ class MainChart extends BasicChart {
 
   /// The indicator series that are displayed on the main chart.
   final List<Series>? overlaySeries;
+
   final DataSeries<Tick> _mainSeries;
 
   /// List of chart annotations used in the chart.
@@ -54,6 +55,9 @@ class MainChart extends BasicChart {
 
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
+
+  /// Callback to pass new drawings.
+  final List<Widget> drawingCreatorAndPainter;
 
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
@@ -255,6 +259,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
+                ...widget.drawingCreatorAndPainter,
                 _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(
@@ -286,26 +291,28 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           currentTickAnimation,
           _currentTickBlinkAnimation,
         ],
-        builder: (BuildContext context, _) =>
-            Stack(fit: StackFit.expand, children: <Widget>[
-          if (widget.annotations != null)
-            ...widget.annotations!
-                .map((ChartData annotation) => CustomPaint(
-                      key: ValueKey<String>(annotation.id),
-                      painter: ChartPainter(
-                        animationInfo: AnimationInfo(
-                          currentTickPercent: currentTickAnimation.value,
-                          blinkingPercent: _currentTickBlinkAnimation.value,
+        builder: (BuildContext context, _) => Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            if (widget.annotations != null)
+              ...widget.annotations!
+                  .map((ChartData annotation) => CustomPaint(
+                        key: ValueKey<String>(annotation.id),
+                        painter: ChartPainter(
+                          animationInfo: AnimationInfo(
+                            currentTickPercent: currentTickAnimation.value,
+                            blinkingPercent: _currentTickBlinkAnimation.value,
+                          ),
+                          chartData: annotation,
+                          chartConfig: context.watch<ChartConfig>(),
+                          theme: context.watch<ChartTheme>(),
+                          epochToCanvasX: xAxis.xFromEpoch,
+                          quoteToCanvasY: chartQuoteToCanvasY,
                         ),
-                        chartData: annotation,
-                        chartConfig: context.watch<ChartConfig>(),
-                        theme: context.watch<ChartTheme>(),
-                        epochToCanvasX: xAxis.xFromEpoch,
-                        quoteToCanvasY: chartQuoteToCanvasY,
-                      ),
-                    ))
-                .toList()
-        ]),
+                      ))
+                  .toList()
+          ],
+        ),
       );
 
   Widget _buildCrosshairArea() => AnimatedBuilder(
