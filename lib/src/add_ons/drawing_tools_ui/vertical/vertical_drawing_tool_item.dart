@@ -52,9 +52,9 @@ class VerticalDrawingToolItemState
 
   Widget _buildColorField() => Row(
         children: <Widget>[
-          const Text(
-            'Color',
-            style: TextStyle(fontSize: 16),
+          Text(
+            ChartLocalization.of(context).labelColor,
+            style: const TextStyle(fontSize: 16),
           ),
           ColorSelector(
             currentColor: _currentLineStyle.color,

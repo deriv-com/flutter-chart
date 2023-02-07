@@ -49,9 +49,9 @@ class LineDrawingToolItemState
 
   Widget _buildColorField() => Row(
         children: <Widget>[
-          const Text(
-            'line',
-            style: TextStyle(fontSize: 16),
+          Text(
+            ChartLocalization.of(context).labelColor,
+            style: const TextStyle(fontSize: 16),
           ),
           ColorSelector(
             currentColor: _currentLineStyle.color,
