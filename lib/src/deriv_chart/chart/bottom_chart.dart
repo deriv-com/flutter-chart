@@ -121,7 +121,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
                 Expanded(child: super.build(context)),
               ],
             ),
-            if (kIsWeb == true) _buildCrosshairAreaWeb(),
+            if (kIsWeb) _buildCrosshairAreaWeb(),
             _buildBottomChartOptions(context)
           ],
         ),
