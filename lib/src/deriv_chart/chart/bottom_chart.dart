@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/widgets/bottom_indicator_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/deriv_chart.dart';
@@ -46,6 +47,36 @@ class _BottomChartState extends BasicChartState<BottomChart> {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
 
+    Widget _buildEditIcon() => Material(
+          type: MaterialType.circle,
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
+          child: IconButton(
+            icon: const Icon(
+              Icons.settings,
+              size: 16,
+            ),
+            onPressed: () => widget.onEdit?.call(widget.mainSeries.id),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        );
+
+    Widget _buildRemoveIcon() => Material(
+          type: MaterialType.circle,
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
+          child: IconButton(
+            icon: const Icon(
+              Icons.delete,
+              size: 16,
+            ),
+            onPressed: () => widget.onRemove?.call(widget.mainSeries.id),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        );
+
     return Positioned(
       top: 15,
       left: 10,
@@ -57,39 +88,9 @@ class _BottomChartState extends BasicChartState<BottomChart> {
         ),
         child: Row(
           children: <Widget>[
-            Text(
-              widget.mainSeries.runtimeType.toString(),
-            ),
-            if (widget.onEdit != null)
-              Material(
-                type: MaterialType.circle,
-                color: Colors.transparent,
-                clipBehavior: Clip.antiAlias,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.settings,
-                    size: 16,
-                  ),
-                  onPressed: () => widget.onEdit?.call(widget.mainSeries.id),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
-            if (widget.onRemove != null)
-              Material(
-                type: MaterialType.circle,
-                color: Colors.transparent,
-                clipBehavior: Clip.antiAlias,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.delete,
-                    size: 16,
-                  ),
-                  onPressed: () => widget.onRemove?.call(widget.mainSeries.id),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
+            BottomIndicatorTitle(widget.mainSeries.runtimeType.toString()),
+            _buildEditIcon(),
+            _buildRemoveIcon()
           ],
         ),
       ),

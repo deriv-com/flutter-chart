@@ -71,8 +71,7 @@ class _MarkerAreaState extends State<MarkerArea> {
 
     widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
 
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
+    return LayoutBuilder(builder: (_, BoxConstraints constraints) {
       final Size canvasSize = Size(
         xAxis.width!,
         constraints.maxHeight,
