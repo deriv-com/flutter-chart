@@ -19,15 +19,16 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/candle
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/hollow_candle/hollow_candle_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_candle/ohlc_candle_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/active_marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/active_marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker.dart';
-export 'src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/multipliers_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/options_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
+export 'src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 export 'src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';

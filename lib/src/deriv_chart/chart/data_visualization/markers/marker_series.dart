@@ -18,7 +18,6 @@ class MarkerSeries extends Series {
     this.activeMarker,
     this.entryTick,
     this.exitTick,
-    this.markerGroupList,
   })  : _entries = entries.toList(),
         super(id ?? 'Markers', style: style);
 
@@ -40,12 +39,6 @@ class MarkerSeries extends Series {
   /// Painter that draw corresponding marker icon.
   final MarkerIconPainter markerIconPainter;
 
-  /// List of related grouped markers.
-  final List<MarkerGroup>? markerGroupList;
-
-  /// Visible marker entries.
-  List<MarkerGroup> visibleMarkerGroupList = <MarkerGroup>[];
-
   @override
   SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(
         this,
@@ -63,24 +56,13 @@ class MarkerSeries extends Series {
   void onUpdate(int leftEpoch, int rightEpoch) {
     if (_entries.isEmpty) {
       visibleEntries = <Marker>[];
-    } else {
-      final int left = findEpochIndex(leftEpoch, _entries).ceil();
-      final int right = findEpochIndex(rightEpoch, _entries).floor();
-
-      visibleEntries = _entries.sublist(left, right + 1);
+      return;
     }
 
-    if (markerGroupList != null) {
-      visibleMarkerGroupList = markerGroupList!
-          .where(
-            (MarkerGroup group) =>
-                group.markers.isNotEmpty &&
-                group.markers.last.epoch >= leftEpoch,
-          )
-          .toList();
-    } else {
-      visibleMarkerGroupList = <MarkerGroup>[];
-    }
+    final int left = findEpochIndex(leftEpoch, _entries).ceil();
+    final int right = findEpochIndex(rightEpoch, _entries).floor();
+
+    visibleEntries = _entries.sublist(left, right + 1);
   }
 
   @override
