@@ -2,28 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 
 /// Storage key of saved indicators.
 const String addOnsKey = 'addOns';
 
-/// Called when an addOn is to be removed
-///
-/// [id] is the id of the addOn to be removed
-typedef OnRemoveCallback = void Function(String id);
-
-/// Called when an addOn is to be edited
-///
-/// [id] is the id of the addOn to be edited
-typedef OnEditCallback = void Function(String id);
-
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
-class AddOnsRepository<T> extends ChangeNotifier {
+class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
+    implements Repository<T> {
   /// Initializes
-  AddOnsRepository(
-    this._addOnConfig, {
-    this.onRemoveAddOn,
-    this.onEditAddOn,
-  }) : _addOns = <T>[];
+  AddOnsRepository(this._addOnConfig, {this.onEditCallback}) : _addOns = <T>[];
 
   final dynamic _addOnConfig;
 
@@ -31,13 +20,11 @@ class AddOnsRepository<T> extends ChangeNotifier {
   SharedPreferences? _prefs;
 
   /// List of indicators or drawing tools.
-  List<T> get addOns => _addOns;
+  @override
+  List<T> get items => _addOns;
 
-  /// Called when an addOn is to be removed.
-  OnRemoveCallback? onRemoveAddOn;
-
-  /// Called when an addOn is to be edited.
-  OnEditCallback? onEditAddOn;
+  /// Called when the edit icon is clicked.
+  VoidCallback? onEditCallback;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs) {
@@ -55,17 +42,26 @@ class AddOnsRepository<T> extends ChangeNotifier {
       final T addOnConfig = _addOnConfig.fromJson(jsonDecode(encodedAddOn));
       _addOns.add(addOnConfig);
     }
-    notifyListeners();
   }
 
   /// Adds a new indicator or drawing tool and updates storage.
+  @override
   void add(T addOnConfig) {
     _addOns.add(addOnConfig);
     _writeToPrefs();
     notifyListeners();
   }
 
+  /// Called when the edit icon is clicked.
+  @override
+  void editAt(
+    int index,
+  ) {
+    onEditCallback?.call();
+  }
+
   /// Updates indicator or drawing tool at [index] and updates storage.
+  @override
   void updateAt(int index, T addOnConfig) {
     if (index < 0 || index >= _addOns.length) {
       return;
@@ -76,6 +72,7 @@ class AddOnsRepository<T> extends ChangeNotifier {
   }
 
   /// Removes indicator/drawing tool at [index] from repository and updates storage.
+  @override
   void removeAt(int index) {
     if (index < 0 || index >= _addOns.length) {
       return;

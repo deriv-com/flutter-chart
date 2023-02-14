@@ -6,7 +6,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicato
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
-import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +38,8 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final AddOnsRepository<IndicatorConfig> repo =
-        context.watch<AddOnsRepository<IndicatorConfig>>();
+    final Repository<IndicatorConfig> repo =
+        context.watch<Repository<IndicatorConfig>>();
 
     return AnimatedPopupDialog(
       child: Column(
@@ -162,9 +162,9 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: repo.addOns.length,
+              itemCount: repo.items.length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.addOns[index].getItem(
+                  repo.items[index].getItem(
                 (IndicatorConfig updatedConfig) =>
                     repo.updateAt(index, updatedConfig),
                 () {

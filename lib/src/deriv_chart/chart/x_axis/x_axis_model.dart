@@ -309,7 +309,6 @@ class XAxisModel extends ChangeNotifier {
   /// Updates chart's dataFitMode property.
   void _updateDataFitMode(bool? dataFitMode) {
     _dataFitMode = dataFitMode ?? _dataFitMode;
-    notifyListeners();
   }
 
   /// Fits available data to screen.

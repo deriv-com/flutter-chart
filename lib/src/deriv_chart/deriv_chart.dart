@@ -1,9 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
@@ -99,21 +101,31 @@ class DerivChart extends StatefulWidget {
   final bool showCrosshair;
 
   /// Chart's indicators
-  final AddOnsRepository<IndicatorConfig>? indicatorsRepo;
+  final Repository<IndicatorConfig>? indicatorsRepo;
 
   /// Chart's drawings
-  final AddOnsRepository<DrawingToolConfig>? drawingToolsRepo;
+  final Repository<DrawingToolConfig>? drawingToolsRepo;
 
   @override
   _DerivChartState createState() => _DerivChartState();
 }
 
 class _DerivChartState extends State<DerivChart> {
-  final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
-      AddOnsRepository<IndicatorConfig>(IndicatorConfig);
+  _DerivChartState() {
+    _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
+      IndicatorConfig,
+      onEditCallback: showIndicatorsDialog,
+    );
 
-  final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
-      AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
+    _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
+      DrawingToolConfig,
+      onEditCallback: showDrawingToolsDialog,
+    );
+  }
+
+  late AddOnsRepository<IndicatorConfig> _indicatorsRepo;
+
+  late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
 
   @override
   void initState() {
@@ -136,7 +148,7 @@ class _DerivChartState extends State<DerivChart> {
             context: context,
             builder: (BuildContext context) => AnimatedPopupDialog(
                   child: Center(
-                    child: element is AddOnsRepository<IndicatorConfig>
+                    child: element is Repository<IndicatorConfig>
                         ? Text(ChartLocalization.of(context)
                             .warnFailedLoadingIndicators)
                         : Text(ChartLocalization.of(context)
@@ -147,12 +159,54 @@ class _DerivChartState extends State<DerivChart> {
     });
   }
 
+  void showIndicatorsDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) =>
+          ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
+        value: _indicatorsRepo,
+        child: IndicatorsDialog(),
+      ),
+    );
+  }
+
+  void showDrawingToolsDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) =>
+          ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
+        value: _drawingToolsRepo,
+        child: DrawingToolsDialog(),
+      ),
+    );
+  }
+
+  Widget _buildIndicatorsIcon() => Align(
+        alignment: Alignment.topLeft,
+        child: IconButton(
+          icon: const Icon(Icons.architecture),
+          onPressed: showIndicatorsDialog,
+        ),
+      );
+
+  Widget _buildDrawingToolsIcon() => Align(
+        alignment: const FractionalOffset(0.1, 0),
+        child: IconButton(
+          icon: const Icon(Icons.drive_file_rename_outline_outlined),
+          onPressed: showDrawingToolsDialog,
+        ),
+      );
+
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: <ChangeNotifierProvider<dynamic>>[
-          ChangeNotifierProvider<AddOnsRepository<IndicatorConfig>>.value(
+          ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
               value: widget.indicatorsRepo ?? _indicatorsRepo),
-          ChangeNotifierProvider<AddOnsRepository<DrawingToolConfig>>.value(
+          ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
               value: widget.drawingToolsRepo ?? _drawingToolsRepo),
         ],
         child: Builder(
@@ -165,33 +219,41 @@ class _DerivChartState extends State<DerivChart> {
                 controller: widget.controller,
                 overlaySeries: <Series>[
                   ...context
-                      .watch<AddOnsRepository<IndicatorConfig>>()
-                      .addOns
-                      .where((IndicatorConfig indicatorConfig) =>
-                          indicatorConfig.isOverlay)
-                      .map((IndicatorConfig indicatorConfig) =>
-                          indicatorConfig.getSeries(
-                            IndicatorInput(
-                              widget.mainSeries.input,
-                              widget.granularity,
-                              id: indicatorConfig.id,
-                            ),
-                          ))
+                      .watch<Repository<IndicatorConfig>>()
+                      .items
+                      .mapIndexed((int index, IndicatorConfig indicatorConfig) {
+                        if (!indicatorConfig.isOverlay) {
+                          return null;
+                        }
+                        return indicatorConfig.getSeries(
+                          IndicatorInput(
+                            widget.mainSeries.input,
+                            widget.granularity,
+                            id: indicatorConfig.id ?? index.toString(),
+                          ),
+                        );
+                      })
+                      .where((Series? series) => series != null)
+                      .whereType<Series>()
                 ],
                 bottomSeries: <Series>[
                   ...context
-                      .watch<AddOnsRepository<IndicatorConfig>>()
-                      .addOns
-                      .where((IndicatorConfig indicatorConfig) =>
-                          !indicatorConfig.isOverlay)
-                      .map((IndicatorConfig indicatorConfig) =>
-                          indicatorConfig.getSeries(
-                            IndicatorInput(
-                              widget.mainSeries.input,
-                              widget.granularity,
-                              id: indicatorConfig.id,
-                            ),
-                          ))
+                      .watch<Repository<IndicatorConfig>>()
+                      .items
+                      .mapIndexed((int index, IndicatorConfig indicatorConfig) {
+                        if (indicatorConfig.isOverlay) {
+                          return null;
+                        }
+                        return indicatorConfig.getSeries(
+                          IndicatorInput(
+                            widget.mainSeries.input,
+                            widget.granularity,
+                            id: indicatorConfig.id ?? index.toString(),
+                          ),
+                        );
+                      })
+                      .where((Series? series) => series != null)
+                      .whereType<Series>()
                 ],
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
@@ -205,48 +267,10 @@ class _DerivChartState extends State<DerivChart> {
                 opacity: widget.opacity,
                 annotations: widget.annotations,
                 showCrosshair: widget.showCrosshair,
-                indicatorsRepo: widget.indicatorsRepo,
+                indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
               ),
-              if (widget.indicatorsRepo == null)
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    icon: const Icon(Icons.architecture),
-                    onPressed: () {
-                      showDialog<void>(
-                        context: context,
-                        builder: (
-                          BuildContext context,
-                        ) =>
-                            ChangeNotifierProvider<
-                                AddOnsRepository<IndicatorConfig>>.value(
-                          value: _indicatorsRepo,
-                          child: IndicatorsDialog(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              if (widget.drawingToolsRepo == null)
-                Align(
-                  alignment: const FractionalOffset(0.1, 0),
-                  child: IconButton(
-                    icon: const Icon(Icons.drive_file_rename_outline_outlined),
-                    onPressed: () {
-                      showDialog<void>(
-                        context: context,
-                        builder: (
-                          BuildContext context,
-                        ) =>
-                            ChangeNotifierProvider<
-                                AddOnsRepository<DrawingToolConfig>>.value(
-                          value: _drawingToolsRepo,
-                          child: DrawingToolsDialog(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+              if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
+              if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),
             ],
           ),
         ),

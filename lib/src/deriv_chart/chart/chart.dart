@@ -97,7 +97,7 @@ class Chart extends StatefulWidget {
   final bool showCrosshair;
 
   /// Chart's indicators
-  final AddOnsRepository<IndicatorConfig>? indicatorsRepo;
+  final Repository<IndicatorConfig>? indicatorsRepo;
 
   @override
   State<StatefulWidget> createState() => _ChartState();
@@ -192,8 +192,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                             child: BottomChart(
                               series: series,
                               pipSize: widget.pipSize,
-                              onRemove: widget.indicatorsRepo?.onRemoveAddOn,
-                              onEdit: widget.indicatorsRepo?.onEditAddOn,
+                              onRemove: () {
+                                widget.indicatorsRepo?.removeAt(
+                                  int.parse(series.id.characters.last),
+                                );
+                              },
+                              onEdit: () {
+                                widget.indicatorsRepo?.editAt(
+                                  int.parse(series.id.characters.last),
+                                );
+                              },
                               showCrosshair: widget.showCrosshair,
                               onCrosshairDisappeared:
                                   widget.onCrosshairDisappeared,

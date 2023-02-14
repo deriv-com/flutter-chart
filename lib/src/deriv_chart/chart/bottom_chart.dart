@@ -22,10 +22,10 @@ class BottomChart extends BasicChart {
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
 
   /// Called when an indicator is to be removed.
-  final OnRemoveCallback? onRemove;
+  final VoidCallback? onRemove;
 
   /// Called when an indicator is to be edited.
-  final OnEditCallback? onEdit;
+  final VoidCallback? onEdit;
 
   /// Called when candle or point is dismissed.
   final VoidCallback? onCrosshairDisappeared;
@@ -56,7 +56,9 @@ class _BottomChartState extends BasicChartState<BottomChart> {
               Icons.settings,
               size: 16,
             ),
-            onPressed: () => widget.onEdit?.call(widget.mainSeries.id),
+            onPressed: () {
+              widget.onEdit?.call();
+            },
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
@@ -71,7 +73,9 @@ class _BottomChartState extends BasicChartState<BottomChart> {
               Icons.delete,
               size: 16,
             ),
-            onPressed: () => widget.onRemove?.call(widget.mainSeries.id),
+            onPressed: () {
+              widget.onRemove?.call();
+            },
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
