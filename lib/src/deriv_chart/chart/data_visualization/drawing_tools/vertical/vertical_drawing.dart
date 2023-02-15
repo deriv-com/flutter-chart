@@ -24,15 +24,22 @@ class VerticalDrawing extends Drawing {
 
   /// Paint
   @override
-  void onPaint(Canvas canvas, Size size, ChartTheme theme,
-      double Function(int x) epochToX, DrawingToolConfig config) {
+  void onPaint(
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
+    final double startQuoteToY = quoteToY(yCoord);
 
     if (drawingPart == 'vertical') {
       final double xCoord = epochToX(epoch);
 
-      final double startY = yCoord - 1000, endingY = yCoord + 1000;
+      final double startY = startQuoteToY - 1000,
+          endingY = startQuoteToY + 1000;
 
       if (pattern == 'solid') {
         canvas.drawLine(

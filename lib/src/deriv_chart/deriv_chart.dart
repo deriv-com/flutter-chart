@@ -10,9 +10,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
@@ -177,11 +175,9 @@ class _DerivChartState extends State<DerivChart> {
                             ),
                           ))
                 ],
-                drawingCreatorAndPainter: _drawingCreatorAndPainter(
-                  drawingData: _drawings,
-                  drawingToolConfig: _selectedDrawingTool,
-                  onAddDrawing: _onAddDrawing,
-                ),
+                drawings: _drawings,
+                onAddDrawing: _onAddDrawing,
+                selectedDrawingTool: _selectedDrawingTool,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
@@ -198,8 +194,11 @@ class _DerivChartState extends State<DerivChart> {
                   onPressed: () {
                     showDialog<void>(
                       context: context,
-                      builder: (BuildContext context) => ChangeNotifierProvider<
-                          AddOnsRepository<IndicatorConfig>>.value(
+                      builder: (
+                        BuildContext context,
+                      ) =>
+                          ChangeNotifierProvider<
+                              AddOnsRepository<IndicatorConfig>>.value(
                         value: _indicatorsRepo,
                         child: IndicatorsDialog(),
                       ),
@@ -277,28 +276,4 @@ class _DerivChartState extends State<DerivChart> {
       }
     });
   }
-
-  List<Widget> _drawingCreatorAndPainter({
-    required List<DrawingData> drawingData,
-    required DrawingToolConfig? drawingToolConfig,
-    required void Function(
-      Map<String, List<Drawing>> addedDrawing, {
-      bool isDrawingFinished,
-    })
-        onAddDrawing,
-  }) =>
-      <Widget>[
-        if (drawingData.isNotEmpty)
-          ..._drawings
-              .map(
-                (DrawingData drawingData) =>
-                    DrawingPainter(drawingData: drawingData),
-              )
-              .toList(),
-        if (_selectedDrawingTool != null)
-          DrawingCreator(
-            onAddDrawing: onAddDrawing,
-            selectedDrawingTool: drawingToolConfig!,
-          ),
-      ];
 }

@@ -12,6 +12,7 @@ class DrawingCreator extends StatelessWidget {
   const DrawingCreator({
     required this.onAddDrawing,
     required this.selectedDrawingTool,
+    required this.quoteFromCanvasY,
     Key? key,
   }) : super(key: key);
 
@@ -22,14 +23,23 @@ class DrawingCreator extends StatelessWidget {
   final void Function(Map<String, List<Drawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
 
+  /// Conversion function for converting quote to chart's canvas' Y position.
+  final double Function(double) quoteFromCanvasY;
+
   @override
   Widget build(BuildContext context) {
     final String drawingToolType = selectedDrawingTool.toJson()['name'];
     switch (drawingToolType) {
       case 'dt_line':
-        return LineDrawingCreator(onAddDrawing: onAddDrawing);
+        return LineDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+        );
       case 'dt_vertical':
-        return VerticalDrawingCreator(onAddDrawing: onAddDrawing);
+        return VerticalDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+        );
       // TODO(maryia-binary): add the rest of drawing tools here
       default:
         return Container();

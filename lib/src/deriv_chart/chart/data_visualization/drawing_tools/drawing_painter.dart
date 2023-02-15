@@ -11,12 +11,15 @@ class DrawingPainter extends StatefulWidget {
   /// Initializes
   const DrawingPainter({
     required this.drawingData,
+    required this.quoteToCanvasY,
     Key? key,
   }) : super(key: key);
 
-  /// Drawing data is a Map of type:
-  /// { 'id': String, 'config': DrawingToolConfig, 'drawing': Drawing }
+  /// Contains each drawing data
   final DrawingData? drawingData;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
+  final double Function(double) quoteToCanvasY;
 
   @override
   _DrawingPainterState createState() => _DrawingPainterState();
@@ -35,6 +38,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 drawingData: widget.drawingData!,
                 theme: context.watch<ChartTheme>(),
                 epochToX: xAxis.xFromEpoch,
+                quoteToY: widget.quoteToCanvasY,
               ),
             )
           : Container()
@@ -47,16 +51,19 @@ class _DrawingPainter extends CustomPainter {
     required this.drawingData,
     required this.theme,
     required this.epochToX,
+    required this.quoteToY,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
   double Function(int x) epochToX;
+  double Function(double y) quoteToY;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final Drawing drawing in drawingData.drawings) {
-      drawing.onPaint(canvas, size, theme, epochToX, drawingData.config!);
+      drawing.onPaint(
+          canvas, size, theme, epochToX, quoteToY, drawingData.config!);
     }
   }
 

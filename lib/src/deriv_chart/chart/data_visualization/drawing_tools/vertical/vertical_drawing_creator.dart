@@ -9,12 +9,16 @@ class VerticalDrawingCreator extends StatefulWidget {
   /// Initializes the vertical drawing creator.
   const VerticalDrawingCreator({
     required this.onAddDrawing,
+    required this.quoteFromCanvasY,
     Key? key,
   }) : super(key: key);
 
   /// Callback to pass a newly created vertical drawing to the parent.
   final void Function(Map<String, List<VerticalDrawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
+
+  /// Conversion function for converting quote from chart's canvas' Y position.
+  final double Function(double) quoteFromCanvasY;
 
   @override
   _VerticalDrawingCreatorState createState() => _VerticalDrawingCreatorState();
@@ -64,7 +68,7 @@ class _VerticalDrawingCreatorState extends State<VerticalDrawingCreator> {
     setState(() {
       position = details.localPosition;
       _startingEpoch = epochFromX!(position!.dx);
-      _startingYPoint = position!.dy;
+      _startingYPoint = widget.quoteFromCanvasY(position!.dy);
       _drawingId = 'vertical_$_startingEpoch';
       _isDrawingFinished = true;
 
