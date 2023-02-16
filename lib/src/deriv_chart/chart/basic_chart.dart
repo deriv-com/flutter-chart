@@ -260,6 +260,16 @@ class BasicChartState<T extends BasicChart> extends State<T>
         bottomPadding: _bottomPadding,
       );
 
+  /// Returns quote based on the y-coordinate.
+  double chartQuoteFromCanvasY(double quote) => quoteFromCanvasY(
+        y: quote,
+        topBoundQuote: _topBoundQuote,
+        bottomBoundQuote: _bottomBoundQuote,
+        canvasHeight: canvasSize?.height ?? 200,
+        topPadding: _topPadding,
+        bottomPadding: _bottomPadding,
+      );
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         key: _key,

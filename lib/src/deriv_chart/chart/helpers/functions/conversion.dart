@@ -94,3 +94,28 @@ double quoteToCanvasY({
 
   return topPadding + pxFromTopBound;
 }
+
+/// Returns quote based on the y-coordinate.
+double quoteFromCanvasY({
+  required double y,
+  required double topBoundQuote,
+  required double bottomBoundQuote,
+  required double canvasHeight,
+  required double topPadding,
+  required double bottomPadding,
+}) {
+  final double drawingRange = canvasHeight - topPadding - bottomPadding;
+  final double quoteRange = topBoundQuote - bottomBoundQuote;
+
+  final double yTopBound = topPadding;
+
+  if (quoteRange == 0) {
+    return topBoundQuote;
+  }
+
+  final double yToTopBoundFraction = (y - yTopBound) / drawingRange;
+
+  final double quoteDiffFromTopBound = yToTopBoundFraction * quoteRange;
+
+  return topBoundQuote - quoteDiffFromTopBound;
+}

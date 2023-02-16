@@ -10,6 +10,7 @@ class Drawing {
     Size size,
     ChartTheme theme,
     double Function(int x) epochToX,
+    double Function(double y) quoteToY,
     DrawingToolConfig config,
   ) {}
 

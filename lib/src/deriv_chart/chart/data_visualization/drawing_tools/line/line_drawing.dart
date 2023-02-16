@@ -35,13 +35,22 @@ class LineDrawing extends Drawing {
 
   /// Paint
   @override
-  void onPaint(Canvas canvas, Size size, ChartTheme theme,
-      double Function(int x) epochToX, DrawingToolConfig config) {
+  void onPaint(
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
+    final double startQuoteToY = quoteToY(startYCoord);
+    final double endQuoteToY = quoteToY(endYCoord);
+
     if (drawingPart == 'marker') {
       final double startXCoord = epochToX(startEpoch);
-      canvas.drawCircle(Offset(startXCoord, startYCoord), markerRadius,
+
+      canvas.drawCircle(Offset(startXCoord, startQuoteToY), markerRadius,
           Paint()..color = lineStyle.color);
     } else if (drawingPart == 'line') {
       final double startXCoord = epochToX(startEpoch);
@@ -50,16 +59,16 @@ class LineDrawing extends Drawing {
       /// Based on calculateOuterSet() from SmartCharts
       Map<String, double?> vector = <String, double?>{
         'x0': startXCoord,
-        'y0': startYCoord,
+        'y0': startQuoteToY,
         'x1': endXCoord,
-        'y1': endYCoord
+        'y1': endQuoteToY
       };
       if (vector['x0']! > vector['x1']!) {
         vector = <String, double?>{
           'x0': endXCoord,
-          'y0': endYCoord,
+          'y0': endQuoteToY,
           'x1': startXCoord,
-          'y1': startYCoord
+          'y1': startQuoteToY
         };
       }
       final double earlier = vector['x0']! - 1000;

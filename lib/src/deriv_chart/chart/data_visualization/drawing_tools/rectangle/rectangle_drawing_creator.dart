@@ -11,12 +11,16 @@ class RectangleDrawingCreator extends StatefulWidget {
   /// Initializes the Rectangle drawing creator.
   const RectangleDrawingCreator({
     required this.onAddDrawing,
+    required this.quoteFromCanvasY,
     Key? key,
   }) : super(key: key);
 
   /// Callback to pass a newly created Rectangle drawing to the parent.
   final void Function(Map<String, List<RectangleDrawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
+
+  /// Conversion function for converting quote from chart's canvas' Y position.
+  final double Function(double) quoteFromCanvasY;
 
   @override
   _RectangleDrawingCreatorState createState() =>
@@ -71,7 +75,7 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
       position = details.localPosition;
       if (!_isPenDown) {
         _startingEpoch = epochFromX!(position!.dx);
-        _startingYPoint = position!.dy;
+        _startingYPoint = widget.quoteFromCanvasY(position!.dy);
         _isPenDown = true;
         _drawingId = 'rectangle_$_startingEpoch';
 
@@ -84,7 +88,7 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
         _isPenDown = false;
         _isDrawingFinished = true;
         final int endEpoch = epochFromX!(position!.dx);
-        final double endYPoint = position!.dy;
+        final double endYPoint = widget.quoteFromCanvasY(position!.dy);
 
         _drawingParts.addAll(<RectangleDrawing>[
           RectangleDrawing(

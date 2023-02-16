@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
@@ -36,22 +35,30 @@ class RectangleDrawing extends Drawing {
 
   /// Paint
   @override
-  void onPaint(Canvas canvas, Size size, ChartTheme theme,
-      double Function(int x) epochToX, DrawingToolConfig config) {
+  void onPaint(
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config) {
     final LineStyle fillStyle = config.toJson()['fillStyle'];
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
+    final double startQuoteToY = quoteToY(startYCoord);
+    final double endQuoteToY = quoteToY(endYCoord);
+
     if (drawingPart == 'marker') {
       final double startXCoord = epochToX(startEpoch);
-      canvas.drawCircle(Offset(startXCoord, startYCoord), markerRadius,
+      canvas.drawCircle(Offset(startXCoord, startQuoteToY), markerRadius,
           Paint()..color = lineStyle.color);
     } else if (drawingPart == 'line') {
       final double startXCoord = epochToX(startEpoch); // x0 in SmartCharts
       final double endXCoord = epochToX(endEpoch); // x1 in SmartCharts
       final double x = (min(startXCoord, endXCoord)).round() + 0.5;
-      final double y = min(startYCoord, endYCoord);
+      final double y = min(startQuoteToY, endQuoteToY);
       double width = max(startXCoord, endXCoord) - x;
-      double height = max(startYCoord, endYCoord) - y;
+      double height = max(startQuoteToY, endQuoteToY) - y;
       width = width == 0 ? 1 : width;
       height = height == 0 ? 1 : height;
 
@@ -67,7 +74,7 @@ class RectangleDrawing extends Drawing {
           canvas.drawRect(
               Offset(x, y) & Size(width, height),
               Paint()
-                ..color = fillStyle.color
+                ..color = fillStyle.color.withOpacity(0.3)
                 ..style = PaintingStyle.fill
                 ..strokeWidth = lineStyle.thickness);
         }

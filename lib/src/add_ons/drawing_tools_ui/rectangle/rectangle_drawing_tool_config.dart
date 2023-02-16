@@ -13,7 +13,7 @@ part 'rectangle_drawing_tool_config.g.dart';
 class RectangleDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const RectangleDrawingToolConfig({
-    this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.transparent),
+    this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = 'solid',
   }) : super();

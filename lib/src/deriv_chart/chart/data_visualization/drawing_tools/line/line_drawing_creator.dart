@@ -11,12 +11,16 @@ class LineDrawingCreator extends StatefulWidget {
   /// Initializes the line drawing creator.
   const LineDrawingCreator({
     required this.onAddDrawing,
+    required this.quoteFromCanvasY,
     Key? key,
   }) : super(key: key);
 
   /// Callback to pass a newly created line drawing to the parent.
   final void Function(Map<String, List<LineDrawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
+
+  /// Conversion function for converting quote from chart's canvas' Y position.
+  final double Function(double) quoteFromCanvasY;
 
   @override
   _LineDrawingCreatorState createState() => _LineDrawingCreatorState();
@@ -70,7 +74,7 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
       position = details.localPosition;
       if (!_isPenDown) {
         _startingEpoch = epochFromX!(position!.dx);
-        _startingYPoint = position!.dy;
+        _startingYPoint = widget.quoteFromCanvasY(position!.dy);
         _isPenDown = true;
         _drawingId = 'line_$_startingEpoch';
 
@@ -83,7 +87,7 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
         _isPenDown = false;
         _isDrawingFinished = true;
         final int endEpoch = epochFromX!(position!.dx);
-        final double endYPoint = position!.dy;
+        final double endYPoint = widget.quoteFromCanvasY(position!.dy);
 
         _drawingParts.addAll(<LineDrawing>[
           LineDrawing(
