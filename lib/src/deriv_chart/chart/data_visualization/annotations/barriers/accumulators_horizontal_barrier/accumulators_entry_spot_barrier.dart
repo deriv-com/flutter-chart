@@ -2,11 +2,12 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
 
-import '../accumulators_horizontal_barrier/accumulators_entry_spot_barrier_painter.dart';
+import 'accumulators_entry_spot_barrier_painter.dart';
 
-/// Horizontal barrier class.
+
+/// Horizontal barrier with entry spot class.
 class AccumulatorsEntrySpotBarrier extends Barrier {
-  /// Initializes a horizontal barrier.
+  /// Initializes barrier.
   AccumulatorsEntrySpotBarrier(
     double value, {
     this.previousEpoch,

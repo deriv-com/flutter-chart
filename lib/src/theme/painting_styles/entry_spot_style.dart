@@ -2,9 +2,9 @@ import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart'
 import 'package:flutter/material.dart';
 
 
-/// Defines the style of an entry marker.
+/// Defines the style of an accumulators entry spot.
 class EntrySpotStyle extends ChartPaintingStyle {
-  /// Creates an entry marker style.
+  /// Creates an entry spot style.
   const EntrySpotStyle({
     this.mainColor = const Color(0xFF0E0E0E),
     this.borderColor = const Color(0xFFFF444F),
@@ -21,6 +21,6 @@ class EntrySpotStyle extends ChartPaintingStyle {
   /// Width of the inner border.
   final double strokeWidth;
 
-  /// Radius of a single marker.
+  /// Radius of a single spot.
   final double radius;
 }
