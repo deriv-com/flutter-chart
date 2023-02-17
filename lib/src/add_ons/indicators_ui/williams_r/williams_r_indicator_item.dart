@@ -1,5 +1,4 @@
-import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/misc/extensions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -62,7 +61,7 @@ class WilliamsRIndicatorItemState
   Widget _buildShowZonesField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelShowZones,
+            context.localization.labelShowZones,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -82,7 +81,7 @@ class WilliamsRIndicatorItemState
 
   Widget _buildPeriodField() => FieldWidget(
         initialValue: _currentPeriod.toString(),
-        label: ChartLocalization.of(context).labelPeriod,
+        label: context.localization.labelPeriod,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _period = int.tryParse(text);
@@ -98,7 +97,7 @@ class WilliamsRIndicatorItemState
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
         initialValue: _currentOverBoughtPrice.toString(),
-        label: ChartLocalization.of(context).labelOverBoughtPrice,
+        label: context.localization.labelOverBoughtPrice,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _overBoughtPrice = double.tryParse(text);
@@ -117,7 +116,7 @@ class WilliamsRIndicatorItemState
 
   Widget _buildOverSoldPriceField() => FieldWidget(
         initialValue: _currentOverSoldPrice.toString(),
-        label: ChartLocalization.of(context).labelOverSoldPrice,
+        label: context.localization.labelOverSoldPrice,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _overSoldPrice = double.tryParse(text);

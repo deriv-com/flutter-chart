@@ -50,7 +50,7 @@ class LineDrawingToolItemState
   Widget _buildColorField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelColor,
+            ChartLocalization.of(context)!.labelColor,
             style: const TextStyle(fontSize: 16),
           ),
           ColorSelector(
