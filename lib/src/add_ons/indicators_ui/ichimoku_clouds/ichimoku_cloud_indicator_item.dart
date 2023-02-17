@@ -1,4 +1,4 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -58,7 +58,7 @@ class IchimokuCloudIndicatorItemState
   Widget _buildConversionLinePeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelConversionLinePeriod,
+            context.localization.labelConversionLinePeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -86,7 +86,7 @@ class IchimokuCloudIndicatorItemState
   Widget _buildBaseLinePeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelBaseLinePeriod,
+            context.localization.labelBaseLinePeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -114,7 +114,7 @@ class IchimokuCloudIndicatorItemState
   Widget _buildSpanBPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelSpanBPeriod,
+            context.localization.labelSpanBPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -142,7 +142,7 @@ class IchimokuCloudIndicatorItemState
   Widget _buildOffsetField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelLaggingSpanOffset,
+            context.localization.labelLaggingSpanOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
