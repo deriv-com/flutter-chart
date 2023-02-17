@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../drawing.dart';
@@ -57,25 +58,26 @@ class LineDrawing extends Drawing {
       final double endXCoord = epochToX(endEpoch);
 
       /// Based on calculateOuterSet() from SmartCharts
-      Map<String, double?> vector = <String, double?>{
-        'x0': startXCoord,
-        'y0': startQuoteToY,
-        'x1': endXCoord,
-        'y1': endQuoteToY
-      };
-      if (vector['x0']! > vector['x1']!) {
-        vector = <String, double?>{
-          'x0': endXCoord,
-          'y0': endQuoteToY,
-          'x1': startXCoord,
-          'y1': startQuoteToY
-        };
+      Vector vec = Vector(
+        x0: startXCoord,
+        y0: startQuoteToY,
+        x1: endXCoord,
+        y1: endQuoteToY,
+      );
+      if (vec.x0! > vec.x1!) {
+        vec = Vector(
+          x0: endXCoord,
+          y0: endQuoteToY,
+          x1: startXCoord,
+          y1: startQuoteToY,
+        );
       }
-      final double earlier = vector['x0']! - 1000;
-      final double later = vector['x1']! + 1000;
 
-      final double startY = getYIntersection(vector, earlier) ?? 0,
-          endingY = getYIntersection(vector, later) ?? 0,
+      final double earlier = vec.x0! - 1000;
+      final double later = vec.x1! + 1000;
+
+      final double startY = getYIntersection(vec, earlier) ?? 0,
+          endingY = getYIntersection(vec, later) ?? 0,
           startX = earlier,
           endingX = later;
 

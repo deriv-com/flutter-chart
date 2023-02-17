@@ -273,10 +273,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 if (widget.drawings != null)
-                  ...widget.drawings!.map((DrawingData drawingData) =>
-                      DrawingPainter(
-                          drawingData: drawingData,
-                          quoteToCanvasY: chartQuoteToCanvasY)),
+                  ...widget.drawings!
+                      .map((DrawingData drawingData) => DrawingPainter(
+                            drawingData: drawingData,
+                            quoteToCanvasY: chartQuoteToCanvasY,
+                          )),
                 if (widget.selectedDrawingTool != null)
                   DrawingCreator(
                     onAddDrawing: widget.onAddDrawing,
