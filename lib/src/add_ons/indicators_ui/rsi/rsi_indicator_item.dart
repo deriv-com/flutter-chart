@@ -1,6 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
+import 'package:deriv_chart/src/misc/extensions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -68,7 +69,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   Widget _buildShowZonesField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelShowZones,
+            context.localization.labelShowZones,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -89,7 +90,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   Widget _buildPeriodField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelPeriod,
+            context.localization.labelPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -118,7 +119,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   Widget _buildFieldTypeMenu() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context).labelField,
+            context.localization.labelField,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -148,7 +149,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
       _field ?? (widget.config as RSIIndicatorConfig).fieldType;
 
   Widget _buildOverBoughtPriceField() => OscillatorLimit(
-        label: ChartLocalization.of(context).labelOverBoughtPrice,
+        label: context.localization.labelOverBoughtPrice,
         value: _getCurrentOverBoughtPrice(),
         color: _currentOverboughtStyle.color,
         onValueChanged: (String text) {
@@ -175,7 +176,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
           .overboughtValue;
 
   Widget _buildOverSoldPriceField() => OscillatorLimit(
-        label: ChartLocalization.of(context).labelOverSoldPrice,
+        label: context.localization.labelOverSoldPrice,
         value: _getCurrentOverSoldPrice(),
         color: _currentOversoldStyle.color,
         onValueChanged: (String text) {

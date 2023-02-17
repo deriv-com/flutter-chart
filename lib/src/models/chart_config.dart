@@ -17,5 +17,5 @@ class ChartConfig {
       pipSize == other.pipSize && granularity == other.granularity;
 
   @override
-  int get hashCode => hashValues(pipSize, granularity);
+  int get hashCode => Object.hash(pipSize, granularity);
 }
