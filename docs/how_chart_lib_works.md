@@ -178,9 +178,9 @@ Sometimes we need to show two charts on the screen, for example for showing bott
 **MainChart** and **BottomChart**s use the same **XAxis** (and it's provided in the root of the `Chart` widget to be accessible on the widgets at the bottom) but they have different YAxis.
 
 # DerivChart
-**DerivChart** A wrapper around the **chart** widget which provides the UI to add/remove indicators and to manage saving/restoring selected ones on storage.
+**DerivChart** A wrapper around the **chart** widget which provides the UI to add/remove addons (indicators and drawing tools) and to manage saving/restoring selected ones on storage.
 
-*if you want to have indicators in the chart, you should use ***DerivChart** instead of **Chart****
+*if you want to have indicators and drawing tools in the chart, you should use ***DerivChart** instead of **Chart****
 
 ![plot](deriv-chart.png)
 

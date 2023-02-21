@@ -1,13 +1,19 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:collection/collection.dart';
+import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
@@ -18,9 +24,6 @@ import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'chart/chart.dart';
-import 'chart/data_visualization/models/chart_object.dart';
 
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
 class DerivChart extends StatefulWidget {
@@ -95,9 +98,16 @@ class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
+  /// Selected drawing tool.
+  DrawingToolConfig? _selectedDrawingTool;
+
+  /// Existing drawings.
+  final List<DrawingData> _drawings = <DrawingData>[];
+
   @override
   void initState() {
     super.initState();
+
     loadSavedIndicatorsAndDrawingTools();
   }
 
@@ -171,6 +181,9 @@ class _DerivChartState extends State<DerivChart> {
                             ),
                           ))
                 ],
+                drawings: _drawings,
+                onAddDrawing: _onAddDrawing,
+                selectedDrawingTool: _selectedDrawingTool,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
@@ -212,7 +225,26 @@ class _DerivChartState extends State<DerivChart> {
                           ChangeNotifierProvider<
                               AddOnsRepository<DrawingToolConfig>>.value(
                         value: _drawingToolsRepo,
-                        child: DrawingToolsDialog(),
+                        child: DrawingToolsDialog(
+                          onDrawingToolRemoval: (int index) {
+                            setState(() {
+                              _drawings.removeAt(index);
+                            });
+                          },
+                          onDrawingToolSelection:
+                              (DrawingToolConfig selectedDrawingTool) {
+                            setState(() {
+                              _selectedDrawingTool = selectedDrawingTool;
+                            });
+                          },
+                          onDrawingToolUpdate:
+                              (int index, DrawingToolConfig updatedConfig) {
+                            setState(() {
+                              _drawings[index] =
+                                  _drawings[index].updateConfig(updatedConfig);
+                            });
+                          },
+                        ),
                       ),
                     );
                   },
@@ -222,4 +254,32 @@ class _DerivChartState extends State<DerivChart> {
           ),
         ),
       );
+
+  void _onAddDrawing(
+    Map<String, List<Drawing>> addedDrawing, {
+    bool isDrawingFinished = false,
+  }) {
+    setState(() {
+      final String drawingId = addedDrawing.keys.first;
+
+      final DrawingData? existingDrawing = _drawings.firstWhereOrNull(
+        (DrawingData drawing) => drawing.id == drawingId,
+      );
+
+      if (existingDrawing == null) {
+        _drawings.add(DrawingData(
+          id: drawingId,
+          config: _selectedDrawingTool!,
+          drawings: addedDrawing.values.first,
+        ));
+      } else {
+        existingDrawing.updateDrawingList(addedDrawing.values.first);
+      }
+
+      if (isDrawingFinished) {
+        _drawingToolsRepo.add(_selectedDrawingTool!);
+        _selectedDrawingTool = null;
+      }
+    });
+  }
 }
