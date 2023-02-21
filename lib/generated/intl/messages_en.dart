@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Base Line Period"),
         "labelChannelFill":
             MessageLookupByLibrary.simpleMessage("Channel Fill"),
+        "labelColor": MessageLookupByLibrary.simpleMessage("Color"),
         "labelConversionLinePeriod":
             MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
         "labelDistance": MessageLookupByLibrary.simpleMessage("Distance"),
@@ -81,6 +82,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelTeethPeriod":
             MessageLookupByLibrary.simpleMessage("Teeth Period"),
         "labelType": MessageLookupByLibrary.simpleMessage("Type"),
+        "selectDrawingTool":
+            MessageLookupByLibrary.simpleMessage("Select drawing tool"),
         "warnCheckAssetSearchingText": MessageLookupByLibrary.simpleMessage(
             "Try checking your spelling or use a different term"),
         "warnFailedLoadingDrawingTools": MessageLookupByLibrary.simpleMessage(
