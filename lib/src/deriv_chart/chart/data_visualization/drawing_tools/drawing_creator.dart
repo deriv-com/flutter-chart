@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -20,7 +21,7 @@ class DrawingCreator extends StatelessWidget {
   final DrawingToolConfig selectedDrawingTool;
 
   /// Callback to pass a newly created drawing to the parent.
-  final void Function(Map<String, List<Drawing>> addedDrawing,
+  final void Function(Map<String, List<Drawing<dynamic>>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
@@ -32,6 +33,11 @@ class DrawingCreator extends StatelessWidget {
     switch (drawingToolType) {
       case 'dt_line':
         return LineDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+        );
+      case 'dt_rectangle':
+        return RectangleDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
         );

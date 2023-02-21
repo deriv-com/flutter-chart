@@ -66,7 +66,7 @@ class MainChart extends BasicChart {
   final List<DrawingData>? drawings;
 
   /// Callback to pass new drawing to the parent.
-  final void Function(Map<String, List<Drawing>> addedDrawing,
+  final void Function(Map<String, List<Drawing<dynamic>>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
 
   /// Selected drawing tool.

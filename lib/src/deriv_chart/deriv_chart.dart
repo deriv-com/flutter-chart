@@ -249,7 +249,7 @@ class _DerivChartState extends State<DerivChart> {
       );
 
   void _onAddDrawing(
-    Map<String, List<Drawing>> addedDrawing, {
+    Map<String, List<Drawing<dynamic>>> addedDrawing, {
     bool isDrawingFinished = false,
   }) {
     setState(() {

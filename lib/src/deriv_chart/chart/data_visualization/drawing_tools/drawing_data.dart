@@ -17,13 +17,13 @@ class DrawingData {
   final DrawingToolConfig? config;
 
   ///Drawing list.
-  final List<Drawing> drawings;
+  final List<Drawing<dynamic>> drawings;
 
   /// Updates configuration.
   DrawingData updateConfig(DrawingToolConfig config) =>
       DrawingData(id: id, config: config, drawings: drawings);
 
   /// Updates drawing list.
-  DrawingData updateDrawingList(List<Drawing> drawings) =>
+  DrawingData updateDrawingList(List<Drawing<dynamic>> drawings) =>
       DrawingData(id: id, config: config, drawings: drawings);
 }

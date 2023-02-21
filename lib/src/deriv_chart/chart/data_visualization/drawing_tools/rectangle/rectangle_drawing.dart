@@ -1,14 +1,13 @@
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
+import 'dart:math';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../drawing.dart';
 
-/// Line drawing tool. A line is a vector defined by two points that is
-/// infinite in both directions.
-class LineDrawing extends Drawing<LineDrawingToolConfig> {
+/// Rectangle drawing tool.
+class RectangleDrawing extends Drawing<RectangleDrawingToolConfig> {
   /// Initializes
-  LineDrawing({
+  RectangleDrawing({
     required this.drawingPart,
     this.startEpoch = 0,
     this.startYCoord = 0,
@@ -28,7 +27,7 @@ class LineDrawing extends Drawing<LineDrawingToolConfig> {
   /// Ending epoch.
   final int endEpoch;
 
-  /// Ending Y coordinates.
+  /// Ending Y coordinates. y1 in SmartCharts
   final double endYCoord;
 
   /// Marker radius.
@@ -42,7 +41,8 @@ class LineDrawing extends Drawing<LineDrawingToolConfig> {
       ChartTheme theme,
       double Function(int x) epochToX,
       double Function(double y) quoteToY,
-      LineDrawingToolConfig config) {
+      RectangleDrawingToolConfig config) {
+    final LineStyle fillStyle = config.fillStyle;
     final LineStyle lineStyle = config.lineStyle;
     final String pattern = config.pattern;
     final double startQuoteToY = quoteToY(startYCoord);
@@ -50,44 +50,34 @@ class LineDrawing extends Drawing<LineDrawingToolConfig> {
 
     if (drawingPart == 'marker') {
       final double startXCoord = epochToX(startEpoch);
-
       canvas.drawCircle(Offset(startXCoord, startQuoteToY), markerRadius,
           Paint()..color = lineStyle.color);
     } else if (drawingPart == 'line') {
-      final double startXCoord = epochToX(startEpoch);
-      final double endXCoord = epochToX(endEpoch);
-
-      /// Based on calculateOuterSet() from SmartCharts
-      Vector vec = Vector(
-        x0: startXCoord,
-        y0: startQuoteToY,
-        x1: endXCoord,
-        y1: endQuoteToY,
-      );
-      if (vec.x0! > vec.x1!) {
-        vec = Vector(
-          x0: endXCoord,
-          y0: endQuoteToY,
-          x1: startXCoord,
-          y1: startQuoteToY,
-        );
-      }
-
-      final double earlier = vec.x0! - 1000;
-      final double later = vec.x1! + 1000;
-
-      final double startY = getYIntersection(vec, earlier) ?? 0,
-          endingY = getYIntersection(vec, later) ?? 0,
-          startX = earlier,
-          endingX = later;
+      final double startXCoord = epochToX(startEpoch); // x0 in SmartCharts
+      final double endXCoord = epochToX(endEpoch); // x1 in SmartCharts
+      final double x = (min(startXCoord, endXCoord)).round() + 0.5;
+      final double y = min(startQuoteToY, endQuoteToY);
+      double width = max(startXCoord, endXCoord) - x;
+      double height = max(startQuoteToY, endQuoteToY) - y;
+      width = width == 0 ? 1 : width;
+      height = height == 0 ? 1 : height;
 
       if (pattern == 'solid') {
-        canvas.drawLine(
-            Offset(startX, startY),
-            Offset(endingX, endingY),
+        canvas.drawRect(
+            Offset(x, y) & Size(width, height),
             Paint()
               ..color = lineStyle.color
+              ..style = PaintingStyle.stroke
               ..strokeWidth = lineStyle.thickness);
+        if (fillStyle.color != Colors.transparent) {
+          // fill the rectangle:
+          canvas.drawRect(
+              Offset(x, y) & Size(width, height),
+              Paint()
+                ..color = fillStyle.color.withOpacity(0.3)
+                ..style = PaintingStyle.fill
+                ..strokeWidth = lineStyle.thickness);
+        }
       }
     }
   }
