@@ -37,15 +37,12 @@ abstract class IndicatorConfig extends AddOnConfig {
       : super(isOverlay: isOverlay);
 
   /// Creates a concrete indicator config from JSON.
-  factory IndicatorConfig.fromJson(
-      Map<String, dynamic> json, String? _nameKey) {
-    final String key = _nameKey ?? nameKey;
-
-    if (!json.containsKey(key)) {
+  factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
+    if (!json.containsKey(nameKey)) {
       throw ArgumentError.value(json, 'json', 'Missing indicator name.');
     }
 
-    switch (json[key]) {
+    switch (json[nameKey]) {
       case MAIndicatorConfig.name:
         return MAIndicatorConfig.fromJson(json);
       case MAEnvIndicatorConfig.name:

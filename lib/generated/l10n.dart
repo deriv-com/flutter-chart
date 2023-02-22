@@ -464,6 +464,26 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Select drawing tool`
+  String get selectDrawingTool {
+    return Intl.message(
+      'Select drawing tool',
+      name: 'selectDrawingTool',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color`
+  String get labelColor {
+    return Intl.message(
+      'Color',
+      name: 'labelColor',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {

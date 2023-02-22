@@ -163,7 +163,7 @@ class IchimokuCloudIndicatorItemState
         ],
       );
 
-  // TOdO(Ramin): Add generic type to avoid casting.
+  // TODO(Ramin): Add generic type to avoid casting.
   int get _currentBaseLinePeriod =>
       _baseLinePeriod ??
       (widget.config as IchimokuCloudIndicatorConfig).baseLinePeriod;

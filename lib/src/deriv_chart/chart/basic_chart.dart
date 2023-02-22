@@ -4,7 +4,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.da
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -280,7 +279,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
         bottomPadding: _bottomPadding,
       );
 
-  /// Converts the chart quote to y axis value inside the canvas.
+  /// Returns quote based on the y-coordinate.
   double chartQuoteFromCanvasY(double y) => quoteFromCanvasY(
         y: y,
         topBoundQuote: _topBoundQuote,
