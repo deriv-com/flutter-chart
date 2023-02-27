@@ -6,6 +6,7 @@ export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulato
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
+export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_horizontal_barrier/accumulators_entry_spot_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/tick_indicator.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
@@ -35,13 +36,10 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/candle
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/candle/candle_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/active_marker.dart';
-export 'src/deriv_chart/chart/data_visualization/markers/active_marker.dart';
-export 'src/deriv_chart/chart/data_visualization/markers/marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/multipliers_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/options_marker_icon_painter.dart';
-export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 export 'src/deriv_chart/chart/worm_chart/worm_chart.dart';
@@ -65,3 +63,4 @@ export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
+export 'src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
