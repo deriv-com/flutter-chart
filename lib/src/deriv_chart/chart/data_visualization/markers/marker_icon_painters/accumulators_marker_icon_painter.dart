@@ -6,6 +6,7 @@ import 'marker_icon_painter.dart';
 
 /// Icon painter for Accumulators trade type
 class AccumulatorsMarkerIconPainter extends MarkerIconPainter {
+  // TODO(Ilya): refactor and move common parts to MarkerIconPainter.
   @override
   void paintMarker(
     Canvas canvas,
