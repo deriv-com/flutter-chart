@@ -4,35 +4,35 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barr
 
 import 'accumulators_entry_spot_barrier_painter.dart';
 
-
 /// Horizontal barrier with entry spot class.
 class AccumulatorsEntrySpotBarrier extends Barrier {
   /// Initializes barrier.
   AccumulatorsEntrySpotBarrier(
     double value, {
-    this.previousEpoch,
-      int? epoch,
+    this.startingEpoch,
+    int? endingEpoch,
     String? id,
     String? title,
     bool longLine = true,
     HorizontalBarrierStyle? style,
-    this.visibility =
-        AccumulatorsEntrySpotBarrierVisibility.keepBarrierLabelVisible,
-
+    this.visibility = HorizontalBarrierVisibility.keepBarrierLabelVisible,
   }) : super(
           id: id,
           title: title,
-          epoch: epoch,
+          epoch: endingEpoch,
           value: value,
           style: style,
           longLine: longLine,
         );
 
   /// Barrier visibility behavior.
-  final AccumulatorsEntrySpotBarrierVisibility visibility;
+  final HorizontalBarrierVisibility visibility;
 
-  /// Barrier visibility behavior.
-  final int? previousEpoch;
+  /// Epoch which is similar to one with marker.
+  /// Barrier will be painter from the next epoch to this one.
+  /// [endingEpoch] is used for painting EntrySpot dot.
+  /// Barrier goes left from [endingEpoch].
+  final int? startingEpoch;
 
   @override
   SeriesPainter<Series> createPainter() =>
@@ -43,26 +43,11 @@ class AccumulatorsEntrySpotBarrier extends Barrier {
       // When its visibility is NOT forceToStayOnRange, we return [NaN, NaN],
       // so the chart will ignore this barrier when it wants to define
       // its Y-Axis range.
-      visibility == AccumulatorsEntrySpotBarrierVisibility.forceToStayOnRange
+      visibility == HorizontalBarrierVisibility.forceToStayOnRange
           ? super.recalculateMinMax()
           : <double>[double.nan, double.nan];
 
   @override
-  BarrierObject createObject() => BarrierObject(leftEpoch: epoch, value: value);
-}
-
-/// Horizontal barrier visibility behavior and whether it contributes in
-/// defining the overall Y-Axis range of the chart.
-enum AccumulatorsEntrySpotBarrierVisibility {
-  /// Won't force the chart to keep the barrier in its Y-Axis range, if it was
-  /// out of range it will go off the screen.
-  normal,
-
-  /// Won't force the chart to keep the barrier in its Y-Axis range, if it was
-  /// out of range, will show it on top/bottom edge with an arrow which indicates
-  /// its value is beyond Y-Axis range.
-  keepBarrierLabelVisible,
-
-  /// Will forces the chart to keep this barrier in its Y-Axis range.
-  forceToStayOnRange,
+  BarrierObject createObject() =>
+      BarrierObject(leftEpoch: startingEpoch, rightEpoch: epoch, value: value);
 }

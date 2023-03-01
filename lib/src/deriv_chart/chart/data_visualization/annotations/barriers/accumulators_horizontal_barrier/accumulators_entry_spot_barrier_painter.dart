@@ -67,9 +67,8 @@ class AccumulatorsEntrySpotBarrierPainter<
     final double y = quoteToY(animatedValue!);
 
     final double lineStartX = dotX ?? 0;
-    final double lineEndX = series.epoch != null
-        ? epochToX(series.previousEpoch!)
-        : 0;
+    final double lineEndX =
+        series.epoch != null ? epochToX(series.startingEpoch!) : 0;
 
     if (lineStartX > lineEndX && style.hasLine) {
       _paintLine(canvas, lineStartX, lineEndX, y, DarkThemeColors.base04);

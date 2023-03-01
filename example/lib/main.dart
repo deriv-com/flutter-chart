@@ -41,6 +41,7 @@ void main() {
 class MyApp extends StatelessWidget {
   /// Intiialize
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
@@ -109,6 +110,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   PersistentBottomSheetController<dynamic>? _bottomSheetController;
 
   late PrefServiceCache _prefService;
+
+  bool shouldPaintAccBarrier = false;
 
   @override
   void initState() {
@@ -340,6 +343,28 @@ class _FullscreenChartState extends State<FullscreenChart> {
         epoch: newTick.epoch!.millisecondsSinceEpoch,
         quote: newTick.quote!,
       ));
+      if (_markers.isNotEmpty &&
+          _markers.last.epoch == ticks[ticks.length - 2].epoch &&
+          shouldPaintAccBarrier) {
+        WidgetsBinding.instance!.addPostFrameCallback(
+          (_) {
+            _sampleBarriers.add(
+              AccumulatorsEntrySpotBarrier(
+                ticks.last.quote,
+                startingEpoch: ticks[ticks.length - 2].epoch,
+                endingEpoch: ticks.last.epoch,
+                id: 'AccBarrier ${_sampleBarriers.length}',
+                longLine: true,
+                visibility: HorizontalBarrierVisibility.normal,
+                style: HorizontalBarrierStyle(
+                  color: Colors.grey,
+                  isDashed: true,
+                ),
+              ),
+            );
+          },
+        );
+      }
     } else if (newTick is OHLC) {
       _onNewCandle(Candle(
         epoch: newTick.openTime!.millisecondsSinceEpoch,
@@ -486,20 +511,41 @@ class _FullscreenChartState extends State<FullscreenChart> {
                         }
                       }),
                   ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => Colors.green),
-                    ),
-                    child: const Text('Up'),
-                    onPressed: () => _addMarker(MarkerDirection.up),
-                  ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) => Colors.green),
+                      ),
+                      child: const Text('Up'),
+                      onPressed: () {
+                        shouldPaintAccBarrier = false;
+                        _addMarker(MarkerDirection.up);
+                      }),
                   ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => Colors.red),
-                    ),
-                    child: const Text('Down'),
-                    onPressed: () => _addMarker(MarkerDirection.down),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) => Colors.red),
+                      ),
+                      child: const Text('Down'),
+                      onPressed: () {
+                        shouldPaintAccBarrier = false;
+                        _addMarker(MarkerDirection.down);
+                      }),
+                  IconButton(
+                    icon: const Icon(Icons.battery_charging_full),
+                    onPressed: () {
+                      _addMarker(MarkerDirection.up);
+                      _sampleBarriers.add(
+                        VerticalBarrier.onTick(ticks.last,
+                            id: 'VBarrier${_sampleBarriers.length}',
+                            longLine: true,
+                            style: VerticalBarrierStyle(
+                              isDashed: math.Random().nextBool(),
+                            )),
+                      );
+                      shouldPaintAccBarrier = true;
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete),
