@@ -1,7 +1,6 @@
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
-
 /// Defines the style of an accumulators entry spot.
 class EntrySpotStyle extends ChartPaintingStyle {
   /// Creates an entry spot style.

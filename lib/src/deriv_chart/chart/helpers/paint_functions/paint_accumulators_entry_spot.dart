@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 
 /// Paints an entry spot point for accumulators.
 void paintAccumulatorsEntrySpot(
-    Canvas canvas,
-    Offset center,
-    EntrySpotStyle style,
-    ) {
-  canvas..drawCircle(
-    center,
-    style.radius,
-    Paint()
-      ..color = style.mainColor
-      ..style = PaintingStyle.fill
-  )
+  Canvas canvas,
+  Offset center,
+  EntrySpotStyle style,
+) {
+  canvas
+    ..drawCircle(
+        center,
+        style.radius,
+        Paint()
+          ..color = style.mainColor
+          ..style = PaintingStyle.fill)
     ..drawCircle(
       center,
       style.radius,
