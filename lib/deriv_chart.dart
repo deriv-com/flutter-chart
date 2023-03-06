@@ -20,6 +20,7 @@ export 'src/deriv_chart/chart/data_visualization/markers/marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/multipliers_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/options_marker_icon_painter.dart';
+export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/accumulators_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 export 'src/deriv_chart/chart/worm_chart/worm_chart.dart';
