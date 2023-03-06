@@ -41,7 +41,6 @@ void main() {
 class MyApp extends StatelessWidget {
   /// Intiialize
   const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) => MaterialApp(
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
@@ -110,8 +109,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   PersistentBottomSheetController<dynamic>? _bottomSheetController;
 
   late PrefServiceCache _prefService;
-
-  bool shouldPaintAccBarrier = false;
 
   @override
   void initState() {
