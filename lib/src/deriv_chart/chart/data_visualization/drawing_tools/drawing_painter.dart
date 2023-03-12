@@ -61,7 +61,7 @@ class _DrawingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (final Drawing drawing in drawingData.drawings) {
+    for (final Drawing<dynamic> drawing in drawingData.drawings) {
       drawing.onPaint(
           canvas, size, theme, epochToX, quoteToY, drawingData.config!);
     }

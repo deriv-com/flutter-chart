@@ -10,12 +10,18 @@ import 'intl/messages_all.dart';
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 // ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
 
 class ChartLocalization {
   ChartLocalization();
 
-  static ChartLocalization? current;
+  static ChartLocalization? _current;
+
+  static ChartLocalization get current {
+    assert(_current != null,
+        'No instance of ChartLocalization was loaded. Try to initialize the ChartLocalization delegate before accessing ChartLocalization.current.');
+    return _current!;
+  }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
@@ -26,13 +32,21 @@ class ChartLocalization {
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      ChartLocalization.current = ChartLocalization();
+      final instance = ChartLocalization();
+      ChartLocalization._current = instance;
 
-      return ChartLocalization.current!;
+      return instance;
     });
   }
 
-  static ChartLocalization? of(BuildContext context) {
+  static ChartLocalization of(BuildContext context) {
+    final instance = ChartLocalization.maybeOf(context);
+    assert(instance != null,
+        'No instance of ChartLocalization present in the widget tree. Did you add ChartLocalization.delegate in localizationsDelegates?');
+    return instance!;
+  }
+
+  static ChartLocalization? maybeOf(BuildContext context) {
     return Localizations.of<ChartLocalization>(context, ChartLocalization);
   }
 

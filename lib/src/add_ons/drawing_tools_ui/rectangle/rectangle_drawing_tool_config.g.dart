@@ -7,13 +7,16 @@ part of 'rectangle_drawing_tool_config.dart';
 // **************************************************************************
 
 RectangleDrawingToolConfig _$RectangleDrawingToolConfigFromJson(
-    Map<String, dynamic> json) {
-  return RectangleDrawingToolConfig(
-    fillStyle: LineStyle.fromJson(json['fillStyle'] as Map<String, dynamic>),
-    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    pattern: json['pattern'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    RectangleDrawingToolConfig(
+      fillStyle: json['fillStyle'] == null
+          ? const LineStyle(thickness: 0.9, color: Colors.blue)
+          : LineStyle.fromJson(json['fillStyle'] as Map<String, dynamic>),
+      lineStyle: json['lineStyle'] == null
+          ? const LineStyle(thickness: 0.9, color: Colors.white)
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      pattern: json['pattern'] as String? ?? 'solid',
+    );
 
 Map<String, dynamic> _$RectangleDrawingToolConfigToJson(
         RectangleDrawingToolConfig instance) =>

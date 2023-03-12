@@ -7,12 +7,13 @@ part of 'line_drawing_tool_config.dart';
 // **************************************************************************
 
 LineDrawingToolConfig _$LineDrawingToolConfigFromJson(
-    Map<String, dynamic> json) {
-  return LineDrawingToolConfig(
-    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    pattern: json['pattern'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    LineDrawingToolConfig(
+      lineStyle: json['lineStyle'] == null
+          ? const LineStyle(thickness: 0.9, color: Colors.white)
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      pattern: json['pattern'] as String? ?? 'solid',
+    );
 
 Map<String, dynamic> _$LineDrawingToolConfigToJson(
         LineDrawingToolConfig instance) =>

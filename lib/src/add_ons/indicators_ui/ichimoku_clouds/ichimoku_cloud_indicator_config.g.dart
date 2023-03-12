@@ -7,14 +7,13 @@ part of 'ichimoku_cloud_indicator_config.dart';
 // **************************************************************************
 
 IchimokuCloudIndicatorConfig _$IchimokuCloudIndicatorConfigFromJson(
-    Map<String, dynamic> json) {
-  return IchimokuCloudIndicatorConfig(
-    baseLinePeriod: json['baseLinePeriod'] as int,
-    conversionLinePeriod: json['conversionLinePeriod'] as int,
-    laggingSpanOffset: json['laggingSpanOffset'] as int,
-    spanBPeriod: json['spanBPeriod'] as int,
-  );
-}
+        Map<String, dynamic> json) =>
+    IchimokuCloudIndicatorConfig(
+      baseLinePeriod: json['baseLinePeriod'] as int? ?? 26,
+      conversionLinePeriod: json['conversionLinePeriod'] as int? ?? 9,
+      laggingSpanOffset: json['laggingSpanOffset'] as int? ?? -26,
+      spanBPeriod: json['spanBPeriod'] as int? ?? 52,
+    );
 
 Map<String, dynamic> _$IchimokuCloudIndicatorConfigToJson(
         IchimokuCloudIndicatorConfig instance) =>

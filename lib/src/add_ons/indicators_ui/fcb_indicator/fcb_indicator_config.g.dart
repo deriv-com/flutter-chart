@@ -7,11 +7,10 @@ part of 'fcb_indicator_config.dart';
 // **************************************************************************
 
 FractalChaosBandIndicatorConfig _$FractalChaosBandIndicatorConfigFromJson(
-    Map<String, dynamic> json) {
-  return FractalChaosBandIndicatorConfig(
-    channelFill: json['channelFill'] as bool,
-  );
-}
+        Map<String, dynamic> json) =>
+    FractalChaosBandIndicatorConfig(
+      channelFill: json['channelFill'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$FractalChaosBandIndicatorConfigToJson(
         FractalChaosBandIndicatorConfig instance) =>
