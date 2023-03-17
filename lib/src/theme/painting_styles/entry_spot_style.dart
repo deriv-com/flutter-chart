@@ -7,8 +7,8 @@ class EntrySpotStyle extends ChartPaintingStyle {
   const EntrySpotStyle({
     this.mainColor = const Color(0xFF0E0E0E),
     this.borderColor = const Color(0xFFFF444F),
-    this.strokeWidth = 1.5,
-    this.radius = 3.5,
+    this.strokeWidth = 1.0,
+    this.radius = 2.5,
   });
 
   /// Main color of accumulators entry spot.
