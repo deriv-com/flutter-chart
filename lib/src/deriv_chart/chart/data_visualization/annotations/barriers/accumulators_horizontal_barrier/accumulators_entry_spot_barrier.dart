@@ -13,17 +13,15 @@ import 'accumulators_entry_spot_barrier_painter.dart';
 
 /// Below example can be used in multipliers project -> deriv_go_chart.dart
 ///
+/// In order to show accumulators specific entry spot barrier
+/// pass [AccumulatorsEntrySpotBarrier] to [annotations]
+///
 /// annotations: <Barrier>[
 ///           if (purchaseTime != null &&
 ///               entrySpot != null &&
-///               ticks.isNotEmpty &&
-///               isLive &&
 ///               isAccumulatorsContract(activeContract))
 ///             AccumulatorsEntrySpotBarrier(
-///               ticks[ticks.indexOf(
-///                   ticks.lastWhere((Tick tick) => tick.quote == entrySpot)) +
-///                   1]
-///                   .quote,
+///               nextTickAfterEntrySpot.quote,
 ///               startingEpoch: purchaseTime,
 ///               endingEpoch: purchaseTime + 1000,
 ///               style: HorizontalBarrierStyle(
@@ -31,7 +29,19 @@ import 'accumulators_entry_spot_barrier_painter.dart';
 ///                 isDashed: false,
 ///               ),
 ///             ),
-
+///
+/// in that case [nextTickAfterEntrySpot] can be defined as following:
+///
+/// final double nextTickAfterEntrySpot = ticks.asMap().containsKey(
+///            ticks.indexOf(
+///                    ticks.lastWhere((Tick tick) => tick.quote == entrySpot)) +
+///                1) && entrySpot != null
+///        ? ticks[ticks.indexOf(
+///                    ticks.lastWhere((Tick tick) => tick.quote == entrySpot)) +
+///                1]
+///            .quote
+///        : ticks.last.quote;
+///
 /// Horizontal barrier with entry spot class.
 class AccumulatorsEntrySpotBarrier extends Barrier {
   /// Initializes barrier.
