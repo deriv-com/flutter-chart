@@ -4,16 +4,14 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barr
 
 import 'accumulators_entry_spot_barrier_painter.dart';
 
-// [AccumulatorsEntrySpotBarrier] creates a dot and a dashed horizontal barrier
-// to the previous x epoch where accumulators marker was painted.
-// Example is below.
-// By checking that list of accumulator markers is not empty and when the
-// current tick is the next after painted marker, barrier will be automatically
-// added to a chart.
+/// [AccumulatorsEntrySpotBarrier] creates a dot and a dashed horizontal barrier
+/// to the previous x epoch where accumulators marker was painted.
+/// Example is below.
+/// By checking that list of accumulator markers is not empty and when the
+/// current tick is the next after painted marker, barrier will be automatically
+/// added to a chart.
 
-/// Below example can be used in multipliers project -> deriv_go_chart.dart
-///
-/// In order to show accumulators specific entry spot barrier
+/// In order to add accumulators entry spot barrier
 /// pass [AccumulatorsEntrySpotBarrier] to [annotations]
 ///
 /// annotations: <Barrier>[
@@ -30,18 +28,19 @@ import 'accumulators_entry_spot_barrier_painter.dart';
 ///               ),
 ///             ),
 ///
-/// in that case [nextTickAfterEntrySpot] can be defined as following:
+/// For [flutter-multipliers] project case specific [nextTickAfterEntrySpot] can
+/// be defined in [DerivGoChart] as following:
 ///
-/// final double nextTickAfterEntrySpot = ticks.asMap().containsKey(
-///            ticks.indexOf(
-///                    ticks.lastWhere((Tick tick) => tick.quote == entrySpot)) +
-///                1) && entrySpot != null
-///        ? ticks[ticks.indexOf(
-///                    ticks.lastWhere((Tick tick) => tick.quote == entrySpot)) +
-///                1]
-///            .quote
-///        : ticks.last.quote;
-///
+/// final double? nextTickAfterEntrySpot = ticks.asMap().containsKey(ticks.indexOf(
+///             ticks.lastWhere((Tick tick) =>
+///                 tick.quote == entrySpot && purchaseTime == tick.epoch)) +
+///         1)
+///     ? ticks[ticks.indexOf(ticks.lastWhere((Tick tick) =>
+///                 tick.quote == entrySpot && purchaseTime == tick.epoch)) +
+///             1]
+///         .quote
+///     : ticks.last.quote;
+
 /// Horizontal barrier with entry spot class.
 class AccumulatorsEntrySpotBarrier extends Barrier {
   /// Initializes barrier.
