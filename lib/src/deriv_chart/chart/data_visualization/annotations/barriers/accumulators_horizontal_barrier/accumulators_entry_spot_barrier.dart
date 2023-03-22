@@ -69,7 +69,7 @@ class AccumulatorsEntrySpotBarrier extends Barrier {
   /// Barrier will be painter from the next epoch to this one.
   /// [endingEpoch] is used for painting EntrySpot dot.
   /// Barrier goes left from [endingEpoch].
-  final int? startingEpoch;
+  final int startingEpoch;
 
   @override
   SeriesPainter<Series> createPainter() =>
