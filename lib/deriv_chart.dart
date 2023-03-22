@@ -6,6 +6,7 @@ export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulato
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
+export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_horizontal_barrier/accumulators_entry_spot_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/tick_indicator.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
@@ -63,3 +64,4 @@ export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
+export 'src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
