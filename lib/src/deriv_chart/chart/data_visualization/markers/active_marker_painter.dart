@@ -1,10 +1,6 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
-
-import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
-
-import 'active_marker.dart';
-import 'marker_icon_painters/marker_icon_painter.dart';
 
 /// Painter that paints a marker which is active.
 class ActiveMarkerPainter extends CustomPainter {
@@ -58,7 +54,6 @@ class ActiveMarkerPainter extends CustomPainter {
           (style.textLeftPadding + textPainter.width + style.textRightPadding) *
               animationProgress,
     );
-    final Offset iconShift = Offset(-markerArea.width / 2 + style.radius, 0);
 
     // Marker body.
     canvas.drawRRect(
@@ -70,9 +65,7 @@ class ActiveMarkerPainter extends CustomPainter {
       paintWithTextPainter(
         canvas,
         painter: textPainter,
-        anchor: center +
-            iconShift +
-            Offset(style.radius + style.textLeftPadding, 0),
+        anchor: _buildAnchor(markerArea, center),
         anchorAlignment: Alignment.centerLeft,
       );
     }
@@ -80,8 +73,8 @@ class ActiveMarkerPainter extends CustomPainter {
     // Circle with icon.
     markerIconPainter.paintMarker(
       canvas,
-      center + iconShift,
-      anchor + iconShift,
+      center + _getIconShift(markerArea),
+      anchor + _getIconShift(markerArea),
       activeMarker.direction,
       style,
     );
@@ -95,4 +88,22 @@ class ActiveMarkerPainter extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(ActiveMarkerPainter oldDelegate) => false;
+
+  Offset _getIconShift(Rect markerArea) {
+    if (activeMarker.isRightLabeled) {
+      return Offset(-markerArea.width / 2 + style.radius, 0);
+    } else {
+      return Offset(markerArea.width / 2 - style.radius, 0);
+    }
+  }
+
+  Offset _buildAnchor(
+          Rect markerArea, Offset center) =>
+      activeMarker.isRightLabeled
+          ? center +
+              _getIconShift(markerArea) +
+              Offset(style.radius + style.textLeftPadding, 0)
+          : center -
+              _getIconShift(markerArea) -
+              Offset(style.radius - style.textLeftPadding, 0);
 }
