@@ -24,7 +24,7 @@ dependencies:
   collection: ^1.15.0-nullsafety.4
   equatable: ^2.0.5
   intl: ^0.17.0
-  json_annotation: ^4.7.0
+  json_annotation: ^4.0.1
   provider: ^6.0.5
   shared_preferences: ^2.0.15
 
