@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/misc/extensions.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -51,7 +51,7 @@ class FractalChaosBandIndicatorItemState
   Widget buildShowChannelFillField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelLipsPeriod,
+            ChartLocalization.of(context).labelLipsPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

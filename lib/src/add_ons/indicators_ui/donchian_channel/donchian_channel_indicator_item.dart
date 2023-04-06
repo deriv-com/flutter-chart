@@ -1,4 +1,5 @@
-import 'package:deriv_chart/src/misc/extensions.dart';
+import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 
 import 'package:flutter/material.dart';
 
@@ -57,7 +58,7 @@ class DonchianChannelIndicatorItemState
   Widget _buildChannelFillToggle() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelChannelFill,
+            ChartLocalization.of(context).labelChannelFill,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -80,7 +81,7 @@ class DonchianChannelIndicatorItemState
   Widget _buildHighPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelHighPeriod,
+            ChartLocalization.of(context).labelHighPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -110,7 +111,7 @@ class DonchianChannelIndicatorItemState
   Widget _buildLowPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelLowPeriod,
+            ChartLocalization.of(context).labelLowPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

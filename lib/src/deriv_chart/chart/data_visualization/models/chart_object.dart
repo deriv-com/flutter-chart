@@ -32,7 +32,7 @@ abstract class ChartObject {
       bottomValue == other.bottomValue;
 
   @override
-  int get hashCode => Object.hash(leftEpoch, rightEpoch, topValue, bottomValue);
+  int get hashCode => hashValues(leftEpoch, rightEpoch, topValue, bottomValue);
 
   /// Whether this chart object is in chart horizontal visible area.
   bool isOnEpochRange(int leftBoundEpoch, int rightBoundEpoch) =>
