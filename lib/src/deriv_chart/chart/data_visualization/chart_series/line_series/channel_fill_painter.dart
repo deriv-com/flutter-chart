@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
 import '../data_painter.dart';
+import 'line_painter.dart';
 
 /// A [DataPainter] for painting two line data and the channel fill inside
 /// of them.

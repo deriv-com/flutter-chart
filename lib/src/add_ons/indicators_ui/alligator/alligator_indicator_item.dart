@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/misc/extensions.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -71,7 +71,7 @@ class AlligatorIndicatorItemState
   Widget buildShowLinesField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelShowLines,
+            ChartLocalization.of(context).labelShowLines,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -94,7 +94,7 @@ class AlligatorIndicatorItemState
   Widget buildShowFractalField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelShowFractals,
+            ChartLocalization.of(context).labelShowFractals,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -117,7 +117,7 @@ class AlligatorIndicatorItemState
   Widget buildJawOffsetField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelJawOffset,
+            ChartLocalization.of(context).labelJawOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -143,7 +143,7 @@ class AlligatorIndicatorItemState
   Widget buildJawPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelJawPeriod,
+            ChartLocalization.of(context).labelJawPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -169,7 +169,7 @@ class AlligatorIndicatorItemState
   Widget buildTeethOffsetField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelTeethOffset,
+            ChartLocalization.of(context).labelTeethOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -195,7 +195,7 @@ class AlligatorIndicatorItemState
   Widget buildTeethPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelTeethPeriod,
+            ChartLocalization.of(context).labelTeethPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -221,7 +221,7 @@ class AlligatorIndicatorItemState
   Widget buildLipsOffsetField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelLipsOffset,
+            ChartLocalization.of(context).labelLipsOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -247,7 +247,7 @@ class AlligatorIndicatorItemState
   Widget buildLipsPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelLipsPeriod,
+            ChartLocalization.of(context).labelLipsPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

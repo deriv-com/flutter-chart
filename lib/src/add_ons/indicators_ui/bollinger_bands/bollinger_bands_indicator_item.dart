@@ -1,5 +1,5 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/ma_indicator/ma_indicator_item.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -61,7 +61,7 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   Widget _buildSDMenu() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelStandardDeviation,
+            ChartLocalization.of(context).labelStandardDeviation,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
