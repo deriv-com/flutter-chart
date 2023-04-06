@@ -8,7 +8,7 @@ class EntryMarkerStyle extends ChartPaintingStyle {
   const EntryMarkerStyle({
     this.radius = 2.5,
     this.borderWidth = 1.0,
-    this.borderColor = BrandColors.coral,
+    this.borderColor = const Color(0xFFC2C2C2),
   });
 
   /// Radius of the marker.
