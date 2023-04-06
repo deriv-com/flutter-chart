@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -92,7 +91,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   Widget buildFieldTypeMenu() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelField,
+            ChartLocalization.of(context).labelField,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -123,7 +122,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   Widget buildPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelPeriod,
+            ChartLocalization.of(context).labelPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -151,7 +150,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   Widget buildOffsetField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelOffset,
+            ChartLocalization.of(context).labelOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -177,7 +176,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   Widget buildMATypeMenu() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelType,
+            ChartLocalization.of(context).labelType,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

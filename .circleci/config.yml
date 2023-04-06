@@ -2,7 +2,7 @@ version: 2.1
 executors:
   flutter_executor:
     docker:
-      - image: cirrusci/flutter:3.3.10
+      - image: cirrusci/flutter:2.8.1
     environment:
       _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
 

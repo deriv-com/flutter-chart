@@ -102,5 +102,3 @@ lint/tmp/
 # lint/reports/
 coverage
 .fvm/
-.vscode
-.vscode/settings.json

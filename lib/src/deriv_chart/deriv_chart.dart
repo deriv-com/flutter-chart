@@ -1,3 +1,4 @@
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
@@ -7,7 +8,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -98,13 +98,14 @@ class _DerivChartState extends State<DerivChart> {
     } on Exception {
       // ignore: unawaited_futures
       showDialog<void>(
-        context: context,
-        builder: (BuildContext context) => AnimatedPopupDialog(
-          child: Center(
-            child: Text(context.localization.warnFailedLoadingIndicators),
-          ),
-        ),
-      );
+          context: context,
+          builder: (BuildContext context) => AnimatedPopupDialog(
+                child: Center(
+                  child: Text(
+                    ChartLocalization.of(context).warnFailedLoadingIndicators,
+                  ),
+                ),
+              ));
     }
   }
 

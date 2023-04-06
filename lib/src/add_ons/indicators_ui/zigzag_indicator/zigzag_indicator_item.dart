@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/misc/extensions.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -48,7 +48,7 @@ class ZigZagIndicatorItemState
   Widget buildDistanceField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelDistance,
+            ChartLocalization.of(context).labelDistance,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

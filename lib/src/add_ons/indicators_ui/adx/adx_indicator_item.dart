@@ -1,5 +1,6 @@
+import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -81,7 +82,7 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
   Widget _buildShowSeriesToggle() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelSeries,
+            ChartLocalization.of(context).labelSeries,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -100,7 +101,7 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
   Widget _buildShowHistogramToggle() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelHistogram,
+            ChartLocalization.of(context).labelHistogram,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -118,7 +119,7 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
 
   Widget _buildSmoothingPeriodField() => FieldWidget(
         initialValue: _currentSmoothingPeriod.toString(),
-        label: context.localization.labelSmoothingPeriod,
+        label: ChartLocalization.of(context).labelSmoothingPeriod,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _smoothingPeriod = int.tryParse(text);
@@ -131,7 +132,7 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
 
   Widget _buildPeriodField() => FieldWidget(
         initialValue: _currentPeriod.toString(),
-        label: context.localization.labelPeriod,
+        label: ChartLocalization.of(context).labelPeriod,
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
             _period = int.tryParse(text);

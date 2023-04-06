@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/misc/extensions.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_button.dart';
 import 'package:deriv_chart/src/widgets/color_picker/color_picker_sheet.dart';
@@ -84,7 +84,7 @@ class ParabolicSARIndicatorItemState
   Widget _buildMaxAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelMaxAF,
+            ChartLocalization.of(context).labelMaxAF,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -110,7 +110,7 @@ class ParabolicSARIndicatorItemState
   Widget _buildMinAccelerationFactorField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelMinAF,
+            ChartLocalization.of(context).labelMinAF,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
