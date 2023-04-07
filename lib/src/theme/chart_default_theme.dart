@@ -107,6 +107,8 @@ abstract class ChartDefaultTheme implements ChartTheme {
   @override
   LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
 
+  // TODO(Ramin): Use the values from the chart itself. so if later theme
+  // the theme changes the default styles also get updated accordingly.
   @override
   MarkerStyle get markerStyle => MarkerStyle(
         upColor: accentGreenColor,
