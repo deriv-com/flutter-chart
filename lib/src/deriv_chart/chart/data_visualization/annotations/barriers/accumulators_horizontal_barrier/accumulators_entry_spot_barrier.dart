@@ -31,10 +31,11 @@ import 'accumulators_entry_spot_barrier_painter.dart';
 /// For [flutter-multipliers] project case specific [nextTickAfterEntrySpot] can
 /// be defined in [DerivGoChart] as following:
 ///
-/// final double? nextTickAfterEntrySpot = ticks.asMap().containsKey(ticks.indexOf(
+/// final double? nextTickAfterEntrySpot = ticks.asMap()
+///       .containsKey(ticks.indexOf(
 ///             ticks.lastWhere((Tick tick) =>
-///                 tick.quote == entrySpot && purchaseTime == tick.epoch)) +
-///         1)
+///                 tick.quote == entrySpot && purchaseTime == tick.epoch)) + 1
+///         )
 ///     ? ticks[ticks.indexOf(ticks.lastWhere((Tick tick) =>
 ///                 tick.quote == entrySpot && purchaseTime == tick.epoch)) +
 ///             1]
