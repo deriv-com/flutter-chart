@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class EntryMarkerStyle extends ChartPaintingStyle {
   /// Creates an entry marker style.
   const EntryMarkerStyle({
-    this.radius = 2.5,
+    this.radius = 4,
     this.borderWidth = 1.0,
     this.borderColor = const Color(0xFFC2C2C2),
   });
