@@ -1,18 +1,17 @@
 import 'package:deriv_chart/src/theme/painting_styles/entry_marker_style.dart';
 import 'package:flutter/material.dart';
 
-/// Paints an entry tick marker.
-void paintEntryMarker(
+/// Paints the entry/exit markers based on the [style] passed.
+void paintEntryExitMarker(
   Canvas canvas,
   Offset center,
-  EntryMarkerStyle style,
-  Color backgroundColor,
+  EntryExitMarkerStyle style,
 ) {
   canvas
     ..drawCircle(
       center,
       style.radius,
-      Paint()..color = backgroundColor,
+      Paint()..color = style.color,
     )
     ..drawCircle(
       center,
