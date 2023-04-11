@@ -1,7 +1,7 @@
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
-/// Defines the style of an entry marker.
+/// Defines the style of an entry or exit marker.
 class EntryExitMarkerStyle extends ChartPaintingStyle {
   /// Creates an entry marker style.
   const EntryExitMarkerStyle({

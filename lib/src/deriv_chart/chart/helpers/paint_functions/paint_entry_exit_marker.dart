@@ -1,7 +1,7 @@
-import 'package:deriv_chart/src/theme/painting_styles/entry_marker_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/entry_exit_marker_style.dart';
 import 'package:flutter/material.dart';
 
-/// Paints the entry/exit markers based on the [style] passed.
+/// Paints the entry or exit markers based on the [style] passed.
 void paintEntryExitMarker(
   Canvas canvas,
   Offset center,
