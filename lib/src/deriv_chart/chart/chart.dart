@@ -39,6 +39,7 @@ class Chart extends StatefulWidget {
     this.annotations,
     this.showCrosshair = false,
     this.indicatorsRepo,
+    this.maxCurrentTickOffset,
     Key? key,
   }) : super(key: key);
 
@@ -111,6 +112,9 @@ class Chart extends StatefulWidget {
   /// Whether the crosshair should be shown or not.
   final bool showCrosshair;
 
+  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
+  final double? maxCurrentTickOffset;
+
   /// Chart's indicators
   final Repository<IndicatorConfig>? indicatorsRepo;
 
@@ -178,6 +182,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             onVisibleAreaChanged: _onVisibleAreaChanged,
             isLive: widget.isLive,
             dataFitMode: widget.dataFitEnabled,
+            maxCurrentTickOffset: widget.maxCurrentTickOffset,
             child: Column(
               children: <Widget>[
                 Expanded(

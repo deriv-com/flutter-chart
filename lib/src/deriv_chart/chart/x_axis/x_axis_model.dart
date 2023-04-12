@@ -53,9 +53,10 @@ class XAxisModel extends ChangeNotifier {
     required int granularity,
     required AnimationController animationController,
     required bool isLive,
-    bool dataFitMode = false,
+    required bool dataFitMode,
     int? minEpoch,
     int? maxEpoch,
+    double? maxCurrentTickOffset,
     this.onScale,
     this.onScroll,
   }) {
@@ -72,6 +73,7 @@ class XAxisModel extends ChangeNotifier {
     _granularity = granularity;
     _msPerPx = _defaultMsPerPx;
     _isLive = isLive;
+    _maxCurrentTickOffset = maxCurrentTickOffset ?? 150;
     _rightBoundEpoch = _maxRightBoundEpoch;
     _dataFitMode = dataFitMode;
 
@@ -91,11 +93,6 @@ class XAxisModel extends ChangeNotifier {
   }
 
   // TODO(NA): Allow customization of this setting.
-  /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
-  /// Limits panning to the right.
-  static const double maxCurrentTickOffset = 150;
-
-  // TODO(NA): Allow customization of this setting.
   /// Scaling will not resize intervals to be smaller than this.
   static const int minIntervalWidth = 1;
 
@@ -106,6 +103,10 @@ class XAxisModel extends ChangeNotifier {
   // TODO(NA): Allow customization of this setting.
   /// Default to this interval width on granularity change.
   static const int defaultIntervalWidth = 20;
+
+  /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
+  /// Limits panning to the right.
+  late double _maxCurrentTickOffset;
 
   late bool _isLive;
 
@@ -152,10 +153,10 @@ class XAxisModel extends ChangeNotifier {
   set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
-  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, maxCurrentTickOffset);
+  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, _maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, _maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -465,7 +466,7 @@ class XAxisModel extends ChangeNotifier {
     final int target = _shiftEpoch(
             // _lastEntryEpoch will be removed later.
             (_entries?.isNotEmpty ?? false) ? _entries!.last.epoch : _nowEpoch,
-            maxCurrentTickOffset) +
+            _maxCurrentTickOffset) +
         duration.inMilliseconds;
 
     final double distance = target > _rightBoundEpoch

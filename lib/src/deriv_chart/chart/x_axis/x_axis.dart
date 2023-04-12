@@ -22,11 +22,12 @@ class XAxis extends StatefulWidget {
     required this.entries,
     required this.child,
     required this.isLive,
-    required this.dataFitMode,
     required this.pipSize,
+    required this.dataFitMode,
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
+    this.maxCurrentTickOffset,
     Key? key,
   }) : super(key: key);
 
@@ -39,9 +40,6 @@ class XAxis extends StatefulWidget {
   /// Whether the chart is showing live data.
   final bool isLive;
 
-  /// Whether the chart is in data fit mode.
-  final bool dataFitMode;
-
   /// Callback provided by library user.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
 
@@ -53,6 +51,12 @@ class XAxis extends StatefulWidget {
 
   /// Number of digits after decimal point in price
   final int pipSize;
+
+  /// Whether the chart is in data fit mode.
+  final bool dataFitMode;
+
+  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
+  final double? maxCurrentTickOffset;
 
   @override
   _XAxisState createState() => _XAxisState();
@@ -75,11 +79,12 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       granularity: context.read<ChartConfig>().granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
-      dataFitMode: widget.dataFitMode,
       onScale: _onVisibleAreaChanged,
       onScroll: _onVisibleAreaChanged,
       minEpoch: widget.minEpoch,
       maxEpoch: widget.maxEpoch,
+      dataFitMode: widget.dataFitMode,
+      maxCurrentTickOffset: widget.maxCurrentTickOffset,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
