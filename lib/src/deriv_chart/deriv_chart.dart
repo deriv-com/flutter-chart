@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
@@ -116,18 +117,6 @@ class DerivChart extends StatefulWidget {
 }
 
 class _DerivChartState extends State<DerivChart> {
-  _DerivChartState() {
-    _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
-      IndicatorConfig,
-      onEditCallback: showIndicatorsDialog,
-    );
-
-    _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
-      DrawingToolConfig,
-      onEditCallback: showDrawingToolsDialog,
-    );
-  }
-
   late AddOnsRepository<IndicatorConfig> _indicatorsRepo;
 
   late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
@@ -143,6 +132,17 @@ class _DerivChartState extends State<DerivChart> {
     super.initState();
 
     loadSavedIndicatorsAndDrawingTools();
+    _initRepos();
+  }
+
+  void _initRepos() {
+    _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
+      onEditCallback: showIndicatorsDialog,
+    );
+
+    _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
+      onEditCallback: showDrawingToolsDialog,
+    );
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
@@ -230,7 +230,7 @@ class _DerivChartState extends State<DerivChart> {
 
   @override
   Widget build(BuildContext context) => MultiProvider(
-        providers: <ChangeNotifierProvider<dynamic>>[
+        providers: <ChangeNotifierProvider<Repository<AddOnConfig>>>[
           ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
               value: widget.indicatorsRepo ?? _indicatorsRepo),
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
@@ -244,43 +244,17 @@ class _DerivChartState extends State<DerivChart> {
                 pipSize: widget.pipSize,
                 granularity: widget.granularity,
                 controller: widget.controller,
-                overlaySeries: <Series>[
+                overlayConfigs: <IndicatorConfig>[
                   ...context
                       .watch<Repository<IndicatorConfig>>()
                       .items
-                      .mapIndexed((int index, IndicatorConfig indicatorConfig) {
-                        if (!indicatorConfig.isOverlay) {
-                          return null;
-                        }
-                        return indicatorConfig.getSeries(
-                          IndicatorInput(
-                            widget.mainSeries.input,
-                            widget.granularity,
-                            id: indicatorConfig.id ?? index.toString(),
-                          ),
-                        );
-                      })
-                      .where((Series? series) => series != null)
-                      .whereType<Series>()
+                      .where((IndicatorConfig config) => config.isOverlay)
                 ],
-                bottomSeries: <Series>[
+                bottomConfigs: <IndicatorConfig>[
                   ...context
                       .watch<Repository<IndicatorConfig>>()
                       .items
-                      .mapIndexed((int index, IndicatorConfig indicatorConfig) {
-                        if (indicatorConfig.isOverlay) {
-                          return null;
-                        }
-                        return indicatorConfig.getSeries(
-                          IndicatorInput(
-                            widget.mainSeries.input,
-                            widget.granularity,
-                            id: indicatorConfig.id ?? index.toString(),
-                          ),
-                        );
-                      })
-                      .where((Series? series) => series != null)
-                      .whereType<Series>()
+                      .where((IndicatorConfig config) => !config.isOverlay)
                 ],
                 drawings: _drawings,
                 onAddDrawing: _onAddDrawing,

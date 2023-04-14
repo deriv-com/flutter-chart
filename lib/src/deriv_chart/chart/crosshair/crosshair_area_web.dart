@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:flutter/material.dart';

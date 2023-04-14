@@ -1,32 +1,27 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
-
-/// Storage key of saved indicators/drawing tools.
-const String addOnsKey = 'addOns';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
-class AddOnsRepository<AddOnConfig> extends ChangeNotifier
-    implements Repository<AddOnConfig> {
+class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
+    implements Repository<T> {
   /// Initializes
-  AddOnsRepository(this._addOnConfig, {this.onEditCallback})
-      : _addOns = <AddOnConfig>[];
-
-  final dynamic _addOnConfig;
+  AddOnsRepository({this.onEditCallback}) : _addOns = <T>[];
 
   /// List containing addOns
-  final List<AddOnConfig> _addOns;
+  final List<T> _addOns;
   SharedPreferences? _prefs;
 
   /// List of indicators.
   @override
-  List<AddOnConfig> get items => getAddOns();
+  List<T> get items => _addOns;
 
-  /// Getter for the list of addOns indicators or drawing tools.
-  List<AddOnConfig> getAddOns() => _addOns;
+  /// Storage key of saved indicators/drawing tools.
+  String get addOnsKey => 'addOns_${T.toString()}';
 
   /// Called when the edit icon is clicked.
   VoidCallback? onEditCallback;
@@ -41,48 +36,46 @@ class AddOnsRepository<AddOnConfig> extends ChangeNotifier
     }
 
     final List<String> encodedAddOns = prefs.getStringList(addOnsKey)!;
-    getAddOns().clear();
+    items.clear();
 
     for (final String encodedAddOn in encodedAddOns) {
-      dynamic addOnConfig;
-      if (_addOnConfig is IndicatorConfig) {
-        addOnConfig =
-            IndicatorConfig.fromJson(jsonDecode(encodedAddOn)) as AddOnConfig;
-      } else if (_addOnConfig is DrawingToolConfig) {
-        addOnConfig =
-            DrawingToolConfig.fromJson(jsonDecode(encodedAddOn)) as AddOnConfig;
+      T? addOnConfig;
+      if (T == IndicatorConfig) {
+        addOnConfig = IndicatorConfig.fromJson(jsonDecode(encodedAddOn)) as T;
+      } else if (T == DrawingToolConfig) {
+        addOnConfig = DrawingToolConfig.fromJson(jsonDecode(encodedAddOn)) as T;
       }
       if (addOnConfig == null) {
         continue;
       } else {
-        getAddOns().add(addOnConfig);
+        items.add(addOnConfig);
       }
     }
   }
 
   /// Adds a new indicator or drawing tool and updates storage.
   @override
-  void add(AddOnConfig addOnConfig) {
-    getAddOns().add(addOnConfig);
+  void add(T addOnConfig) {
+    items.add(addOnConfig);
     _writeToPrefs();
     notifyListeners();
   }
 
   /// Called when the edit icon is clicked.
   @override
-  void editAt(
-    int index,
+  void edit(
+    T config,
   ) {
     onEditCallback?.call();
   }
 
   /// Updates indicator or drawing tool at [index] and updates storage.
   @override
-  void updateAt(int index, AddOnConfig addOnConfig) {
-    if (index < 0 || index >= getAddOns().length) {
+  void updateAt(int index, T addOnConfig) {
+    if (index < 0 || index >= items.length) {
       return;
     }
-    getAddOns()[index] = addOnConfig;
+    items[index] = addOnConfig;
     _writeToPrefs();
     notifyListeners();
   }
@@ -90,11 +83,11 @@ class AddOnsRepository<AddOnConfig> extends ChangeNotifier
   /// Removes indicator/drawing tool at [index] from repository and
   /// updates storage.
   @override
-  void removeAt(int index) {
-    if (index < 0 || index >= getAddOns().length) {
+  void remove(T config) {
+    if (!items.contains(config)) {
       return;
     }
-    getAddOns().removeAt(index);
+    items.remove(config);
     notifyListeners();
   }
 
@@ -102,7 +95,7 @@ class AddOnsRepository<AddOnConfig> extends ChangeNotifier
     if (_prefs != null) {
       await _prefs!.setStringList(
         addOnsKey,
-        getAddOns().map((AddOnConfig config) => jsonEncode(config)).toList(),
+        items.map((AddOnConfig config) => jsonEncode(config)).toList(),
       );
     }
   }

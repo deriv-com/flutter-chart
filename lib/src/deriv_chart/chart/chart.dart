@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -5,6 +6,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart'
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -24,8 +26,8 @@ class Chart extends StatefulWidget {
     this.selectedDrawingTool,
     this.pipSize = 4,
     this.controller,
-    this.overlaySeries,
-    this.bottomSeries,
+    this.overlayConfigs,
+    this.bottomConfigs,
     this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
@@ -47,11 +49,11 @@ class Chart extends StatefulWidget {
   final DataSeries<Tick> mainSeries;
 
   /// List of overlay indicator series to add on chart beside the [mainSeries].
-  final List<Series>? overlaySeries;
+  final List<IndicatorConfig>? overlayConfigs;
 
   /// List of bottom indicator series to add on chart separate from the
   /// [mainSeries].
-  final List<Series>? bottomSeries;
+  final List<IndicatorConfig>? bottomConfigs;
 
   /// Open position marker series.
   final MarkerSeries? markerSeries;
@@ -127,12 +129,15 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
   bool? _followCurrentTick;
   late ChartController _controller;
   late ChartTheme _chartTheme;
+  late List<Series>? bottomSeries;
+  late List<Series>? overlaySeries;
 
   @override
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized().addObserver(this);
     _initChartController();
+    _initSeries();
   }
 
   @override
@@ -143,6 +148,26 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
   void _initChartController() {
     _controller = widget.controller ?? ChartController();
+  }
+
+  void _initSeries() {
+    overlaySeries = _getIndicatorConfigs(widget.overlayConfigs);
+    bottomSeries = _getIndicatorConfigs(widget.bottomConfigs);
+  }
+
+  List<Series>? _getIndicatorConfigs(List<IndicatorConfig>? configs) {
+    if (configs == null) {
+      return null;
+    }
+
+    return configs
+        .map((IndicatorConfig indicatorConfig) => indicatorConfig.getSeries(
+              IndicatorInput(
+                widget.mainSeries.input,
+                widget.granularity,
+              ),
+            ))
+        .toList();
   }
 
   void _initChartTheme() {
@@ -161,8 +186,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     final List<ChartData> chartDataList = <ChartData>[
       widget.mainSeries,
-      if (widget.overlaySeries != null) ...widget.overlaySeries!,
-      if (widget.bottomSeries != null) ...widget.bottomSeries!,
+      if (overlaySeries != null) ...overlaySeries!,
+      if (bottomSeries != null) ...bottomSeries!,
       if (widget.annotations != null) ...widget.annotations!,
     ];
 
@@ -193,7 +218,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     selectedDrawingTool: widget.selectedDrawingTool,
                     controller: _controller,
                     mainSeries: widget.mainSeries,
-                    overlaySeries: widget.overlaySeries,
+                    overlaySeries: overlaySeries,
                     annotations: widget.annotations,
                     markerSeries: widget.markerSeries,
                     pipSize: widget.pipSize,
@@ -209,20 +234,19 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairHover: widget.onCrosshairHover,
                   ),
                 ),
-                if (widget.bottomSeries?.isNotEmpty ?? false)
-                  ...widget.bottomSeries!
-                      .map((Series series) => Expanded(
+                if (bottomSeries?.isNotEmpty ?? false)
+                  ...bottomSeries!
+                      .mapIndexed((int index, Series series) => Expanded(
                             child: BottomChart(
                               series: series,
                               pipSize: widget.pipSize,
                               onRemove: () {
-                                widget.indicatorsRepo?.removeAt(
-                                  int.parse(series.id.characters.last),
-                                );
+                                widget.indicatorsRepo
+                                    ?.remove(widget.bottomConfigs![index]);
                               },
                               onEdit: () {
-                                widget.indicatorsRepo?.editAt(
-                                  int.parse(series.id.characters.last),
+                                widget.indicatorsRepo?.edit(
+                                  widget.bottomConfigs![index],
                                 );
                               },
                               showCrosshair: widget.showCrosshair,
@@ -294,6 +318,13 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
           oldWidget.mainSeries.entries!.first.epoch) {
         _controller.onScrollToLastTick?.call(false);
       }
+    }
+
+    if (oldWidget.overlayConfigs != widget.overlayConfigs) {
+      overlaySeries = _getIndicatorConfigs(oldWidget.overlayConfigs);
+    }
+    if (oldWidget.bottomConfigs != widget.bottomConfigs) {
+      bottomSeries = _getIndicatorConfigs(oldWidget.bottomConfigs);
     }
   }
 }
