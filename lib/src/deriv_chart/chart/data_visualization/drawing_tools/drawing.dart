@@ -13,6 +13,7 @@ class Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
+    Offset draggedPosition,
   ) {}
 
   /// Calculates y intersection based on vector points.
@@ -35,4 +36,14 @@ class Drawing {
     final double y = y1 + mua * (y2 - y1);
     return y;
   }
+
+  /// Calculation for detemining whether a user's touch or click intersects
+  /// with any of the painted areas on the screen
+  bool hitTest(
+    Offset position,
+    double Function(int x) epochToX,
+    Offset draggedPosition,
+    DrawingToolConfig config,
+  ) =>
+      true;
 }

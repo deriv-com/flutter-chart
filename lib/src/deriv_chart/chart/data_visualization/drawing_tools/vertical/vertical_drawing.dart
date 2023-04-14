@@ -25,18 +25,25 @@ class VerticalDrawing extends Drawing {
   /// Paint
   @override
   void onPaint(
-      Canvas canvas,
-      Size size,
-      ChartTheme theme,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config) {
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    Offset draggedPosition,
+  ) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
-    final double startQuoteToY = quoteToY(yCoord);
+
+    final double startQuoteToY = draggedPosition == Offset.zero
+        ? quoteToY(yCoord)
+        : quoteToY(draggedPosition.dy);
 
     if (drawingPart == 'vertical') {
-      final double xCoord = epochToX(epoch);
+      final double xCoord = draggedPosition == Offset.zero
+          ? epochToX(epoch)
+          : epochToX(draggedPosition.dx.toInt());
 
       final double startY = startQuoteToY - 1000,
           endingY = startQuoteToY + 1000;
@@ -50,5 +57,27 @@ class VerticalDrawing extends Drawing {
               ..strokeWidth = lineStyle.thickness);
       }
     }
+  }
+
+  /// Calculation for detemining whether a user's touch or click intersects
+  /// with any of the painted areas on the screen
+  @override
+  bool hitTest(
+    Offset position,
+    double Function(int x) epochToX,
+    Offset draggedPosition,
+    DrawingToolConfig config,
+  ) {
+    final LineStyle lineStyle = config.toJson()['lineStyle'];
+
+    return draggedPosition == Offset.zero
+        ? position.dx > epochToX(epoch) - lineStyle.thickness - 3 &&
+            position.dx < epochToX(epoch) + lineStyle.thickness + 3
+        : position.dx >
+                epochToX(draggedPosition.dx.toInt()) -
+                    lineStyle.thickness -
+                    3 &&
+            position.dx <
+                epochToX(draggedPosition.dx.toInt()) + lineStyle.thickness + 3;
   }
 }

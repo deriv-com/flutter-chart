@@ -12,6 +12,7 @@ class DrawingPainter extends StatefulWidget {
   const DrawingPainter({
     required this.drawingData,
     required this.quoteToCanvasY,
+    required this.quoteFromCanvasY,
     Key? key,
   }) : super(key: key);
 
@@ -23,26 +24,39 @@ class DrawingPainter extends StatefulWidget {
 
   @override
   _DrawingPainterState createState() => _DrawingPainterState();
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
+  final double Function(double) quoteFromCanvasY;
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
+  Offset _draggedPosition = Offset.zero;
+
   @override
   Widget build(BuildContext context) {
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
-    return Stack(children: <Widget>[
-      widget.drawingData != null
-          ? CustomPaint(
-              child: Container(),
-              painter: _DrawingPainter(
+    return widget.drawingData != null
+        ? GestureDetector(
+            onPanUpdate: (DragUpdateDetails details) {
+              setState(() {
+                _draggedPosition = Offset(
+                    xAxis.epochFromX(details.localPosition.dx).toDouble(),
+                    widget.quoteFromCanvasY(details.localPosition.dy));
+              });
+            },
+            child: CustomPaint(
+              foregroundPainter: _DrawingPainter(
                 drawingData: widget.drawingData!,
                 theme: context.watch<ChartTheme>(),
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
+                draggedPosition: _draggedPosition,
               ),
-            )
-          : Container()
-    ]);
+              size: const Size(double.infinity, double.infinity),
+            ),
+          )
+        : const SizedBox();
   }
 }
 
@@ -52,18 +66,27 @@ class _DrawingPainter extends CustomPainter {
     required this.theme,
     required this.epochToX,
     required this.quoteToY,
+    required this.draggedPosition,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
+  Offset draggedPosition;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final Drawing drawing in drawingData.drawings) {
       drawing.onPaint(
-          canvas, size, theme, epochToX, quoteToY, drawingData.config!);
+        canvas,
+        size,
+        theme,
+        epochToX,
+        quoteToY,
+        drawingData.config!,
+        draggedPosition,
+      );
     }
   }
 
@@ -72,4 +95,17 @@ class _DrawingPainter extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(_DrawingPainter oldDelegate) => false;
+
+  @override
+  bool hitTest(Offset position) {
+    for (final Drawing drawing in drawingData.drawings) {
+      return drawing.hitTest(
+        position,
+        epochToX,
+        draggedPosition,
+        drawingData.config!,
+      );
+    }
+    return true;
+  }
 }
