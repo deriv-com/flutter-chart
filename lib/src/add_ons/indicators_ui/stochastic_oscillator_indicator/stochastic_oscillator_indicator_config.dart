@@ -74,7 +74,6 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => StochasticOscillatorSeries(
       IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput), this,
-      id: indicatorInput.id,
       stochasticOscillatorOptions: StochasticOscillatorOptions(
         period: period,
         isSmooth: isSmooth,

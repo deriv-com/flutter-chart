@@ -59,7 +59,6 @@ class GatorIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => GatorSeries(
         indicatorInput,
         gatorConfig: this,
-        id: indicatorInput.id,
         gatorOptions: AlligatorOptions(
           jawPeriod: jawPeriod,
           teethPeriod: teethPeriod,

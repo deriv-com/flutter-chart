@@ -48,7 +48,6 @@ class ParabolicSARConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => ParabolicSARSeries(
         indicatorInput,
         ParabolicSAROptions(minAccelerationFactor, maxAccelerationFactor),
-        id: indicatorInput.id,
         style: scatterStyle,
       );
 

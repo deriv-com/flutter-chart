@@ -67,7 +67,6 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
       RainbowSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         rainbowColors: rainbowColors,
-        id: indicatorInput.id,
         rainbowOptions: RainbowOptions(
           period: period,
           movingAverageType: movingAverageType,

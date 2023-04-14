@@ -49,7 +49,6 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => DPOSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
-        id: indicatorInput.id,
         dpoOptions: DPOOptions(
           period: period,
           movingAverageType: movingAverageType,

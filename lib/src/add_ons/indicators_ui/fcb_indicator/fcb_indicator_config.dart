@@ -28,7 +28,6 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => FractalChaosBandSeries(
         indicatorInput,
-        id: indicatorInput.id,
       );
 
   /// Unique name for this indicator.

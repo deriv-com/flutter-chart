@@ -56,7 +56,6 @@ class CCIIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => CCISeries(
         indicatorInput,
         CCIOptions(period),
-        id: indicatorInput.id,
         overboughtValue: oscillatorLinesConfig.overboughtValue,
         oversoldValue: oscillatorLinesConfig.oversoldValue,
         overboughtLineStyle: oscillatorLinesConfig.overboughtStyle,

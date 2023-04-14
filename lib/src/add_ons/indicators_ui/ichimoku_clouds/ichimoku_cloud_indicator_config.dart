@@ -51,7 +51,6 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) =>
       IchimokuCloudSeries(indicatorInput,
           config: this,
-          id: indicatorInput.id,
           ichimokuCloudOptions: IchimokuCloudOptions(
             baseLinePeriod: baseLinePeriod,
             conversionLinePeriod: conversionLinePeriod,

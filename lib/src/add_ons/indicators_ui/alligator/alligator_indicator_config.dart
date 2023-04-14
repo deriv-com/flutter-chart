@@ -69,7 +69,6 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
         jawOffset: jawOffset,
         teethOffset: teethOffset,
         lipsOffset: lipsOffset,
-        id: indicatorInput.id,
         alligatorOptions: AlligatorOptions(
           jawPeriod: jawPeriod,
           teethPeriod: teethPeriod,

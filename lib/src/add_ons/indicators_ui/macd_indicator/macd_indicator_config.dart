@@ -36,7 +36,6 @@ class MACDIndicatorConfig extends IndicatorConfig {
           slowMAPeriod: slowMAPeriod,
           signalPeriod: signalPeriod,
         ),
-        id: indicatorInput.id,
       );
 
   /// Unique name for this indicator.

@@ -41,7 +41,6 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => ZigZagSeries(
         indicatorInput,
-        id: indicatorInput.id,
         distance: distance,
         style: lineStyle,
       );

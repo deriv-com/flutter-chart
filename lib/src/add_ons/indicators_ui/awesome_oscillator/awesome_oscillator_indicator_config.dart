@@ -31,7 +31,6 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => AwesomeOscillatorSeries(
         indicatorInput,
-        id: indicatorInput.id,
         barStyle: barStyle,
       );
 
