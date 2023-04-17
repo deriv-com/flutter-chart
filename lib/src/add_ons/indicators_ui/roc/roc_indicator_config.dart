@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/roc_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,6 +19,7 @@ class ROCIndicatorConfig extends IndicatorConfig {
   const ROCIndicatorConfig({
     this.period = 14,
     this.fieldType = 'close',
+    this.lineStyle,
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -37,10 +39,14 @@ class ROCIndicatorConfig extends IndicatorConfig {
   /// Field type
   final String fieldType;
 
+  /// Line style.
+  final LineStyle? lineStyle;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => ROCSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         rocOptions: ROCOptions(period: period),
+        lineStyle: lineStyle,
       );
 
   @override
