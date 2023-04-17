@@ -8,7 +8,6 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +46,7 @@ class AroonSeries extends Series {
           HighValueIndicator<Tick>(indicatorInput),
           period: indicatorConfig.period),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.green),
+      style: indicatorConfig.upLineStyle,
       options: aroonOption,
     );
     _aroonDownSeries = SingleIndicatorSeries(
@@ -58,7 +57,7 @@ class AroonSeries extends Series {
           period: indicatorConfig.period),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       options: aroonOption,
-      style: const LineStyle(color: Colors.red),
+      style: indicatorConfig.downLineStyle,
     );
 
     return null;
