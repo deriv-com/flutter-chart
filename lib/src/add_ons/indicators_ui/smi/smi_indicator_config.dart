@@ -19,7 +19,6 @@ part 'smi_indicator_config.g.dart';
 class SMIIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const SMIIndicatorConfig({
-    String? id,
     this.period = 10,
     this.smoothingPeriod = 3,
     this.doubleSmoothingPeriod = 3,
@@ -28,7 +27,7 @@ class SMIIndicatorConfig extends IndicatorConfig {
     this.signalPeriod = 10,
     this.maType = MovingAverageType.exponential,
     this.showZones = true,
-  }) : super(id: id, isOverlay: false);
+  }) : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory SMIIndicatorConfig.fromJson(Map<String, dynamic> json) =>

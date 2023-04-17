@@ -18,7 +18,6 @@ part 'stochastic_oscillator_indicator_config.g.dart';
 class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const StochasticOscillatorIndicatorConfig({
-    String? id,
     this.period = 14,
     this.fieldType = 'close',
     this.overBoughtPrice = 80,
@@ -30,7 +29,7 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
       overboughtValue: 80,
       oversoldValue: 20,
     ),
-  }) : super(id: id, isOverlay: false);
+  }) : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory StochasticOscillatorIndicatorConfig.fromJson(

@@ -18,7 +18,6 @@ part 'rsi_indicator_config.g.dart';
 class RSIIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const RSIIndicatorConfig({
-    String? id,
     this.period = 14,
     this.fieldType = 'close',
     this.oscillatorLinesConfig = const OscillatorLinesConfig(
@@ -28,7 +27,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.lineStyle = const LineStyle(color: Colors.white),
     this.pinLabels = false,
     this.showZones = true,
-  }) : super(id: id, isOverlay: false);
+  }) : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory RSIIndicatorConfig.fromJson(Map<String, dynamic> json) =>

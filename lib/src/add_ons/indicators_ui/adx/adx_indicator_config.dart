@@ -17,13 +17,12 @@ part 'adx_indicator_config.g.dart';
 class ADXIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const ADXIndicatorConfig({
-    String? id,
     this.period = 14,
     this.smoothingPeriod = 14,
     this.showSeries = true,
     this.showChannelFill = false,
     this.showHistogram = false,
-  }) : super(id: id, isOverlay: false);
+  }) : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory ADXIndicatorConfig.fromJson(Map<String, dynamic> json) =>

@@ -19,14 +19,12 @@ part 'rainbow_indicator_config.g.dart';
 class RainbowIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   RainbowIndicatorConfig({
-    String? id,
     int period = 50,
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.bandsCount = 10,
   })  : rainbowColors = _getRainbowColors(bandsCount),
         super(
-          id: id,
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,

@@ -17,7 +17,6 @@ part 'alligator_indicator_config.g.dart';
 class AlligatorIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const AlligatorIndicatorConfig({
-    String? id,
     this.jawPeriod = 13,
     this.teethPeriod = 8,
     this.lipsPeriod = 5,
@@ -26,7 +25,7 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.lipsOffset = 3,
     this.showLines = true,
     this.showFractal = false,
-  }) : super(id: id);
+  }) : super();
 
   /// Initializes from JSON.
   factory AlligatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>

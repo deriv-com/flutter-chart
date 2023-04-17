@@ -18,7 +18,6 @@ part 'gator_indicator_config.g.dart';
 class GatorIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const GatorIndicatorConfig({
-    String? id,
     this.jawPeriod = 13,
     this.teethPeriod = 8,
     this.lipsPeriod = 5,
@@ -26,7 +25,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
     this.teethOffset = 5,
     this.lipsOffset = 3,
     this.barStyle = const BarStyle(),
-  }) : super(id: id, isOverlay: false);
+  }) : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory GatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>

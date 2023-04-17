@@ -33,8 +33,7 @@ import 'zigzag_indicator/zigzag_indicator_config.dart';
 @immutable
 abstract class IndicatorConfig extends AddOnConfig {
   /// Initializes
-  const IndicatorConfig({bool isOverlay = true, String? id})
-      : super(isOverlay: isOverlay, id: id);
+  const IndicatorConfig({bool isOverlay = true}) : super(isOverlay: isOverlay);
 
   /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {

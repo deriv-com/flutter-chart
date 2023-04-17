@@ -19,7 +19,6 @@ part 'cci_indicator_config.g.dart';
 class CCIIndicatorConfig extends IndicatorConfig {
   /// Initializes.
   const CCIIndicatorConfig({
-    String? id,
     this.period = 20,
     this.oscillatorLinesConfig = const OscillatorLinesConfig(
       overboughtValue: 100,
@@ -27,7 +26,7 @@ class CCIIndicatorConfig extends IndicatorConfig {
     ),
     this.showZones = true,
     this.lineStyle = const LineStyle(color: Colors.white),
-  }) : super(id: id, isOverlay: false);
+  }) : super(isOverlay: false);
 
   /// Initializes from JSON.
   factory CCIIndicatorConfig.fromJson(Map<String, dynamic> json) =>
