@@ -69,7 +69,7 @@ class StochasticOscillatorSeries extends Series {
         indicatorCreator: () => smoothedFastStochasticIndicator,
         inputIndicator: inputIndicator,
         options: stochasticOscillatorOptions,
-        style: const LineStyle(color: Colors.white),
+        style: config.fastLineStyle,
       );
 
       _slowStochasticIndicatorSeries = SingleIndicatorSeries(
@@ -79,7 +79,7 @@ class StochasticOscillatorSeries extends Series {
             SmoothedSlowStochasticIndicator<Tick>(slowStochasticIndicator),
         inputIndicator: inputIndicator,
         options: stochasticOscillatorOptions,
-        style: const LineStyle(color: Colors.red),
+        style: config.slowLineStyle,
       );
     } else {
       _fastPercentStochasticIndicatorSeries = SingleIndicatorSeries(
@@ -97,7 +97,7 @@ class StochasticOscillatorSeries extends Series {
         indicatorCreator: () => fastStochasticIndicator,
         options: stochasticOscillatorOptions,
         inputIndicator: inputIndicator,
-        style: const LineStyle(color: Colors.white),
+        style: config.fastLineStyle,
       );
 
       _slowStochasticIndicatorSeries = SingleIndicatorSeries(
@@ -106,7 +106,7 @@ class StochasticOscillatorSeries extends Series {
         indicatorCreator: () => slowStochasticIndicator,
         inputIndicator: inputIndicator,
         options: stochasticOscillatorOptions,
-        style: const LineStyle(color: Colors.red),
+        style: config.slowLineStyle,
       );
     }
     return null;

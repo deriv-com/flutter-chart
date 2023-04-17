@@ -23,6 +23,14 @@ StochasticOscillatorIndicatorConfig
                   overboughtValue: 80, oversoldValue: 20)
               : OscillatorLinesConfig.fromJson(
                   json['oscillatorLinesConfig'] as Map<String, dynamic>),
+          fastLineStyle: json['fastLineStyle'] == null
+              ? const LineStyle(color: Colors.white)
+              : LineStyle.fromJson(
+                  json['fastLineStyle'] as Map<String, dynamic>),
+          slowLineStyle: json['slowLineStyle'] == null
+              ? const LineStyle(color: Colors.red)
+              : LineStyle.fromJson(
+                  json['slowLineStyle'] as Map<String, dynamic>),
         );
 
 Map<String, dynamic> _$StochasticOscillatorIndicatorConfigToJson(
@@ -36,4 +44,6 @@ Map<String, dynamic> _$StochasticOscillatorIndicatorConfigToJson(
       'fieldType': instance.fieldType,
       'isSmooth': instance.isSmooth,
       'showZones': instance.showZones,
+      'fastLineStyle': instance.fastLineStyle,
+      'slowLineStyle': instance.slowLineStyle,
     };
