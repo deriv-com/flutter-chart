@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/macd_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -20,6 +22,9 @@ class MACDIndicatorConfig extends IndicatorConfig {
     this.fastMAPeriod = 12,
     this.slowMAPeriod = 26,
     this.signalPeriod = 9,
+    this.barStyle = const BarStyle(),
+    this.lineStyle = const LineStyle(color: Colors.white),
+    this.signalLineStyle = const LineStyle(color: Colors.redAccent),
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -34,6 +39,9 @@ class MACDIndicatorConfig extends IndicatorConfig {
           fastMAPeriod: fastMAPeriod,
           slowMAPeriod: slowMAPeriod,
           signalPeriod: signalPeriod,
+          barStyle: barStyle,
+          lineStyle: lineStyle,
+          signalLineStyle: signalLineStyle,
         ),
       );
 
@@ -52,6 +60,15 @@ class MACDIndicatorConfig extends IndicatorConfig {
 
   /// The period to calculate the Signal value.
   final int signalPeriod;
+
+  /// Histogram bar style
+  final BarStyle barStyle;
+
+  /// Line style.
+  final LineStyle lineStyle;
+
+  /// Signal line style.
+  final LineStyle signalLineStyle;
 
   @override
   IndicatorItem getItem(

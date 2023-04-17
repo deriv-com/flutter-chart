@@ -1,3 +1,7 @@
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:flutter/material.dart';
+
 import 'indicator_options.dart';
 
 /// MACD Options.
@@ -7,6 +11,9 @@ class MACDOptions extends IndicatorOptions {
     this.fastMAPeriod = 12,
     this.slowMAPeriod = 26,
     this.signalPeriod = 9,
+    this.barStyle = const BarStyle(),
+    this.lineStyle = const LineStyle(color: Colors.white),
+    this.signalLineStyle = const LineStyle(color: Colors.redAccent),
   });
 
   /// The `period` for the `MACDFastMA`. Default is set to `12`.
@@ -17,6 +24,15 @@ class MACDOptions extends IndicatorOptions {
 
   /// The `period` for the `MACDSignal`. Default is set to `9`.
   final int signalPeriod;
+
+  /// Histogram bar style
+  final BarStyle barStyle;
+
+  /// Line style.
+  final LineStyle lineStyle;
+
+  /// Signal line style.
+  final LineStyle signalLineStyle;
 
   @override
   List<int> get props => <int>[fastMAPeriod, slowMAPeriod, signalPeriod];

@@ -44,7 +44,7 @@ class GatorSeries extends Series {
   /// Gator config
   final GatorIndicatorConfig gatorConfig;
 
-  /// Bar Style
+  /// Histogram bar style
   final BarStyle barStyle;
 
   @override

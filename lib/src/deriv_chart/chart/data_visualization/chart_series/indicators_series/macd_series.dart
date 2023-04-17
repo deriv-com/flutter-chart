@@ -61,7 +61,7 @@ class MACDSeries extends Series {
           secondaryHorizontalLines: <double>[0]),
       indicatorCreator: () => macdIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.white),
+      style: options.lineStyle,
       options: options,
     );
 
@@ -70,7 +70,7 @@ class MACDSeries extends Series {
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => signalMACDIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.redAccent),
+      style: options.signalLineStyle,
       options: options,
     );
 
@@ -85,7 +85,7 @@ class MACDSeries extends Series {
       ),
       indicatorCreator: () => macdHistogramIndicator,
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const BarStyle(),
+      style: options.barStyle,
       options: options,
     );
 

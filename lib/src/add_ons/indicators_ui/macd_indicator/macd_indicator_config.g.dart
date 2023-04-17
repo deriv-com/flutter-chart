@@ -11,6 +11,15 @@ MACDIndicatorConfig _$MACDIndicatorConfigFromJson(Map<String, dynamic> json) =>
       fastMAPeriod: json['fastMAPeriod'] as int? ?? 12,
       slowMAPeriod: json['slowMAPeriod'] as int? ?? 26,
       signalPeriod: json['signalPeriod'] as int? ?? 9,
+      barStyle: json['barStyle'] == null
+          ? const BarStyle()
+          : BarStyle.fromJson(json['barStyle'] as Map<String, dynamic>),
+      lineStyle: json['lineStyle'] == null
+          ? const LineStyle(color: Colors.white)
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      signalLineStyle: json['signalLineStyle'] == null
+          ? const LineStyle(color: Colors.redAccent)
+          : LineStyle.fromJson(json['signalLineStyle'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MACDIndicatorConfigToJson(
@@ -19,4 +28,7 @@ Map<String, dynamic> _$MACDIndicatorConfigToJson(
       'fastMAPeriod': instance.fastMAPeriod,
       'slowMAPeriod': instance.slowMAPeriod,
       'signalPeriod': instance.signalPeriod,
+      'barStyle': instance.barStyle,
+      'lineStyle': instance.lineStyle,
+      'signalLineStyle': instance.signalLineStyle,
     };
