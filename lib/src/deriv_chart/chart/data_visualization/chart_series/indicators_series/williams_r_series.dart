@@ -21,11 +21,13 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
     this.showZones = true,
     this.overboughtSoldLineStyles =
         const LineStyle(color: Colors.white, thickness: 0.5),
+    LineStyle? lineStyle,
     String? id,
   }) : super(
           CloseValueIndicator<Tick>(_indicatorDataInput),
           id ?? 'WilliamsR',
           options: _options,
+          style: lineStyle,
         );
 
   final IndicatorDataInput _indicatorDataInput;

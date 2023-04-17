@@ -62,6 +62,7 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
         overboughtValue: oscillatorLimits.overboughtValue,
         oversoldValue: oscillatorLimits.oversoldValue,
         showZones: showZones,
+        lineStyle: lineStyle,
       );
 
   @override
