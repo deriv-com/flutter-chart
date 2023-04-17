@@ -6,17 +6,14 @@ part of 'roc_indicator_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ROCIndicatorConfig _$ROCIndicatorConfigFromJson(Map<String, dynamic> json) {
-  return ROCIndicatorConfig(
-    id: json['id'] as String?,
-    period: json['period'] as int,
-    fieldType: json['fieldType'] as String,
-  );
-}
+ROCIndicatorConfig _$ROCIndicatorConfigFromJson(Map<String, dynamic> json) =>
+    ROCIndicatorConfig(
+      period: json['period'] as int? ?? 14,
+      fieldType: json['fieldType'] as String? ?? 'close',
+    );
 
 Map<String, dynamic> _$ROCIndicatorConfigToJson(ROCIndicatorConfig instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'period': instance.period,
       'fieldType': instance.fieldType,
     };

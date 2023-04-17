@@ -7,23 +7,27 @@ part of 'williams_r_indicator_config.dart';
 // **************************************************************************
 
 WilliamsRIndicatorConfig _$WilliamsRIndicatorConfigFromJson(
-    Map<String, dynamic> json) {
-  return WilliamsRIndicatorConfig(
-    id: json['id'] as String?,
-    period: json['period'] as int,
-    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    zeroHorizontalLinesStyle: LineStyle.fromJson(
-        json['zeroHorizontalLinesStyle'] as Map<String, dynamic>),
-    showZones: json['showZones'] as bool,
-    oscillatorLimits: OscillatorLinesConfig.fromJson(
-        json['oscillatorLimits'] as Map<String, dynamic>),
-  );
-}
+        Map<String, dynamic> json) =>
+    WilliamsRIndicatorConfig(
+      period: json['period'] as int? ?? 14,
+      lineStyle: json['lineStyle'] == null
+          ? const LineStyle(color: Colors.white)
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      zeroHorizontalLinesStyle: json['zeroHorizontalLinesStyle'] == null
+          ? const LineStyle(color: Colors.red)
+          : LineStyle.fromJson(
+              json['zeroHorizontalLinesStyle'] as Map<String, dynamic>),
+      showZones: json['showZones'] as bool? ?? true,
+      oscillatorLimits: json['oscillatorLimits'] == null
+          ? const OscillatorLinesConfig(
+              oversoldValue: -80, overboughtValue: -20)
+          : OscillatorLinesConfig.fromJson(
+              json['oscillatorLimits'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$WilliamsRIndicatorConfigToJson(
         WilliamsRIndicatorConfig instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'period': instance.period,
       'lineStyle': instance.lineStyle,
       'zeroHorizontalLinesStyle': instance.zeroHorizontalLinesStyle,

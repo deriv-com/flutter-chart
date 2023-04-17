@@ -6,20 +6,17 @@ part of 'adx_indicator_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ADXIndicatorConfig _$ADXIndicatorConfigFromJson(Map<String, dynamic> json) {
-  return ADXIndicatorConfig(
-    id: json['id'] as String?,
-    period: json['period'] as int,
-    smoothingPeriod: json['smoothingPeriod'] as int,
-    showSeries: json['showSeries'] as bool,
-    showChannelFill: json['showChannelFill'] as bool,
-    showHistogram: json['showHistogram'] as bool,
-  );
-}
+ADXIndicatorConfig _$ADXIndicatorConfigFromJson(Map<String, dynamic> json) =>
+    ADXIndicatorConfig(
+      period: json['period'] as int? ?? 14,
+      smoothingPeriod: json['smoothingPeriod'] as int? ?? 14,
+      showSeries: json['showSeries'] as bool? ?? true,
+      showChannelFill: json['showChannelFill'] as bool? ?? false,
+      showHistogram: json['showHistogram'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$ADXIndicatorConfigToJson(ADXIndicatorConfig instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'period': instance.period,
       'smoothingPeriod': instance.smoothingPeriod,
       'showChannelFill': instance.showChannelFill,

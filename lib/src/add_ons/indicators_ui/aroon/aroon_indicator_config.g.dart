@@ -6,16 +6,14 @@ part of 'aroon_indicator_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AroonIndicatorConfig _$AroonIndicatorConfigFromJson(Map<String, dynamic> json) {
-  return AroonIndicatorConfig(
-    id: json['id'] as String?,
-    period: json['period'] as int,
-  );
-}
+AroonIndicatorConfig _$AroonIndicatorConfigFromJson(
+        Map<String, dynamic> json) =>
+    AroonIndicatorConfig(
+      period: json['period'] as int? ?? 14,
+    );
 
 Map<String, dynamic> _$AroonIndicatorConfigToJson(
         AroonIndicatorConfig instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'period': instance.period,
     };

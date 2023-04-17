@@ -6,22 +6,23 @@ part of 'rsi_indicator_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) {
-  return RSIIndicatorConfig(
-    id: json['id'] as String?,
-    period: json['period'] as int,
-    fieldType: json['fieldType'] as String,
-    oscillatorLinesConfig: OscillatorLinesConfig.fromJson(
-        json['oscillatorLinesConfig'] as Map<String, dynamic>),
-    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    pinLabels: json['pinLabels'] as bool,
-    showZones: json['showZones'] as bool,
-  );
-}
+RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) =>
+    RSIIndicatorConfig(
+      period: json['period'] as int? ?? 14,
+      fieldType: json['fieldType'] as String? ?? 'close',
+      oscillatorLinesConfig: json['oscillatorLinesConfig'] == null
+          ? const OscillatorLinesConfig(overboughtValue: 80, oversoldValue: 20)
+          : OscillatorLinesConfig.fromJson(
+              json['oscillatorLinesConfig'] as Map<String, dynamic>),
+      lineStyle: json['lineStyle'] == null
+          ? const LineStyle(color: Colors.white)
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      pinLabels: json['pinLabels'] as bool? ?? false,
+      showZones: json['showZones'] as bool? ?? true,
+    );
 
 Map<String, dynamic> _$RSIIndicatorConfigToJson(RSIIndicatorConfig instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'period': instance.period,
       'lineStyle': instance.lineStyle,
       'fieldType': instance.fieldType,
