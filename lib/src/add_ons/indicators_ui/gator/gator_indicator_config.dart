@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -24,6 +25,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
     this.jawOffset = 8,
     this.teethOffset = 5,
     this.lipsOffset = 3,
+    this.barStyle = const BarStyle(),
   }) : super(id: id, isOverlay: false);
 
   /// Initializes from JSON.
@@ -55,6 +57,9 @@ class GatorIndicatorConfig extends IndicatorConfig {
   /// Smoothing period for lips series
   final int lipsPeriod;
 
+  /// Histogram bar style
+  final BarStyle barStyle;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => GatorSeries(
         indicatorInput,
@@ -64,6 +69,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
           teethPeriod: teethPeriod,
           lipsPeriod: lipsPeriod,
         ),
+        barStyle: barStyle,
       );
 
   @override

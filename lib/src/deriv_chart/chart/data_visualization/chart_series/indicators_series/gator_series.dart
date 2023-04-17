@@ -28,6 +28,7 @@ class GatorSeries extends Series {
     IndicatorInput indicatorInput, {
     required this.gatorOptions,
     required this.gatorConfig,
+    this.barStyle = const BarStyle(),
     String? id,
   })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
         super(id ?? 'Gator$AlligatorOptions');
@@ -42,6 +43,9 @@ class GatorSeries extends Series {
 
   /// Gator config
   final GatorIndicatorConfig gatorConfig;
+
+  /// Bar Style
+  final BarStyle barStyle;
 
   @override
   SeriesPainter<Series>? createPainter() {
@@ -62,7 +66,7 @@ class GatorSeries extends Series {
           teethOffset: gatorConfig.teethOffset),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
-      style: const BarStyle(),
+      style: barStyle,
       offset: min(gatorConfig.jawOffset, gatorConfig.teethOffset),
     );
 
@@ -87,7 +91,7 @@ class GatorSeries extends Series {
       ),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
-      style: const BarStyle(),
+      style: barStyle,
       offset: min(gatorConfig.teethOffset, gatorConfig.lipsOffset),
     );
 
