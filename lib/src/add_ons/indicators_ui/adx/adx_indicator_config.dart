@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/adx_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -22,6 +24,10 @@ class ADXIndicatorConfig extends IndicatorConfig {
     this.showSeries = true,
     this.showChannelFill = false,
     this.showHistogram = false,
+    this.lineStyle = const LineStyle(color: Colors.white),
+    this.positiveLineStyle = const LineStyle(color: Colors.green),
+    this.negativeLineStyle = const LineStyle(color: Colors.red),
+    this.barStyle = const BarStyle(),
   }) : super(isOverlay: false);
 
   /// Initializes from JSON.
@@ -30,6 +36,18 @@ class ADXIndicatorConfig extends IndicatorConfig {
 
   /// Unique name for this indicator.
   static const String name = 'adx';
+
+  /// Line style.
+  final LineStyle lineStyle;
+
+  /// Positive Line style.
+  final LineStyle positiveLineStyle;
+
+  /// Negative Line style.
+  final LineStyle negativeLineStyle;
+
+  /// Histogram bar style
+  final BarStyle barStyle;
 
   @override
   Map<String, dynamic> toJson() => _$ADXIndicatorConfigToJson(this)

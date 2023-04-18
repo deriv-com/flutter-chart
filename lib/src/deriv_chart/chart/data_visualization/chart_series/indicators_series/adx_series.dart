@@ -64,7 +64,7 @@ class ADXSeries extends Series {
       indicatorCreator: () => positiveDIIndicator,
       inputIndicator: positiveDIIndicator,
       options: adxOptions,
-      style: const LineStyle(color: Colors.green),
+      style: config.positiveLineStyle,
     );
 
     _negativeDISeries = SingleIndicatorSeries(
@@ -73,7 +73,7 @@ class ADXSeries extends Series {
       indicatorCreator: () => negativeDIIndicator,
       inputIndicator: negativeDIIndicator,
       options: adxOptions,
-      style: const LineStyle(color: Colors.red),
+      style: config.negativeLineStyle,
     );
 
     _adxHistogramSeries = SingleIndicatorSeries(
@@ -88,7 +88,7 @@ class ADXSeries extends Series {
       indicatorCreator: () => adxHistogramIndicator,
       inputIndicator: adxHistogramIndicator,
       options: adxOptions,
-      style: const BarStyle(),
+      style: config.barStyle,
     );
 
     _adxSeries = SingleIndicatorSeries(
@@ -99,7 +99,7 @@ class ADXSeries extends Series {
       indicatorCreator: () => adxIndicator,
       inputIndicator: adxIndicator,
       options: adxOptions,
-      style: const LineStyle(color: Colors.white),
+      style: config.lineStyle,
     );
 
     _adxSeriesList = <SingleIndicatorSeries>[
