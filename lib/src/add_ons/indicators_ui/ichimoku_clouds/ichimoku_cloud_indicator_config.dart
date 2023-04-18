@@ -2,7 +2,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/ichimoku_clouds_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../callbacks.dart';
@@ -21,6 +23,11 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
     this.conversionLinePeriod = 9,
     this.laggingSpanOffset = -26,
     this.spanBPeriod = 52,
+    this.conversionLineStyle = const LineStyle(color: Colors.indigo),
+    this.baseLineStyle = const LineStyle(color: Colors.redAccent),
+    this.spanALineStyle = const LineStyle(color: Colors.green),
+    this.spanBLineStyle = const LineStyle(color: Colors.red),
+    this.laggingLineStyle = const LineStyle(color: Colors.lime),
   }) : super();
 
   /// Initializes from JSON.
@@ -45,6 +52,21 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
 
   /// The period to calculate the Base Line value.
   final int laggingSpanOffset;
+
+  /// Conversion line style.
+  final LineStyle conversionLineStyle;
+
+  /// Base line style.
+  final LineStyle baseLineStyle;
+
+  /// Span A style.
+  final LineStyle spanALineStyle;
+
+  /// Span B style.
+  final LineStyle spanBLineStyle;
+
+  /// Lagging line style.
+  final LineStyle laggingLineStyle;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) =>

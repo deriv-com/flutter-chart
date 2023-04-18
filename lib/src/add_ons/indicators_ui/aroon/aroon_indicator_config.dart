@@ -37,10 +37,10 @@ class AroonIndicatorConfig extends IndicatorConfig {
   /// The period
   final int period;
 
-  /// Up Line style.
+  /// Up line style.
   final LineStyle upLineStyle;
 
-  /// Down Line style.
+  /// Down line style.
   final LineStyle downLineStyle;
 
   @override

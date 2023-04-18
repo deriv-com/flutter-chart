@@ -31,13 +31,13 @@ ADXIndicatorConfig _$ADXIndicatorConfigFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ADXIndicatorConfigToJson(ADXIndicatorConfig instance) =>
     <String, dynamic>{
-      'lineStyle': instance.lineStyle,
-      'positiveLineStyle': instance.positiveLineStyle,
-      'negativeLineStyle': instance.negativeLineStyle,
-      'barStyle': instance.barStyle,
       'period': instance.period,
       'smoothingPeriod': instance.smoothingPeriod,
       'showChannelFill': instance.showChannelFill,
       'showHistogram': instance.showHistogram,
       'showSeries': instance.showSeries,
+      'lineStyle': instance.lineStyle,
+      'positiveLineStyle': instance.positiveLineStyle,
+      'negativeLineStyle': instance.negativeLineStyle,
+      'barStyle': instance.barStyle,
     };

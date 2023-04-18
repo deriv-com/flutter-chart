@@ -78,9 +78,7 @@ class IchimokuCloudSeries extends Series {
       indicatorCreator: () => conversionLineIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
-      style: const LineStyle(
-        color: Colors.indigo,
-      ),
+      style: config.conversionLineStyle,
     );
 
     _baseLineSeries = SingleIndicatorSeries(
@@ -89,9 +87,7 @@ class IchimokuCloudSeries extends Series {
       indicatorCreator: () => baseLineIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
-      style: const LineStyle(
-        color: Colors.redAccent,
-      ),
+      style: config.baseLineStyle,
     );
 
     _laggingSpanSeries = SingleIndicatorSeries(
@@ -101,9 +97,7 @@ class IchimokuCloudSeries extends Series {
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: config.laggingSpanOffset,
-      style: const LineStyle(
-        color: Colors.lime,
-      ),
+      style: config.laggingLineStyle,
     );
 
     _spanASeries = SingleIndicatorSeries(
@@ -112,9 +106,7 @@ class IchimokuCloudSeries extends Series {
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
-      style: const LineStyle(
-        color: Colors.green,
-      ),
+      style: config.spanALineStyle,
     );
 
     _spanBSeries = SingleIndicatorSeries(
@@ -123,9 +115,7 @@ class IchimokuCloudSeries extends Series {
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
-      style: const LineStyle(
-        color: Colors.red,
-      ),
+      style: config.spanBLineStyle,
     );
 
     _ichimokuSeries
@@ -138,8 +128,8 @@ class IchimokuCloudSeries extends Series {
     return ChannelFillPainter(
       _spanASeries,
       _spanBSeries,
-      firstUpperChannelFillColor: Colors.green.withOpacity(0.2),
-      secondUpperChannelFillColor: Colors.red.withOpacity(0.2),
+      firstUpperChannelFillColor: config.spanALineStyle.color.withOpacity(0.2),
+      secondUpperChannelFillColor: config.spanBLineStyle.color.withOpacity(0.2),
     );
   }
 

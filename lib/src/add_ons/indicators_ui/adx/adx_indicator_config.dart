@@ -37,18 +37,6 @@ class ADXIndicatorConfig extends IndicatorConfig {
   /// Unique name for this indicator.
   static const String name = 'adx';
 
-  /// Line style.
-  final LineStyle lineStyle;
-
-  /// Positive Line style.
-  final LineStyle positiveLineStyle;
-
-  /// Negative Line style.
-  final LineStyle negativeLineStyle;
-
-  /// Histogram bar style
-  final BarStyle barStyle;
-
   @override
   Map<String, dynamic> toJson() => _$ADXIndicatorConfigToJson(this)
     ..putIfAbsent(IndicatorConfig.nameKey, () => name);
@@ -67,6 +55,18 @@ class ADXIndicatorConfig extends IndicatorConfig {
 
   /// Wether to show the Series or not.
   final bool showSeries;
+
+  /// Line style.
+  final LineStyle lineStyle;
+
+  /// Positive line style.
+  final LineStyle positiveLineStyle;
+
+  /// Negative line style.
+  final LineStyle negativeLineStyle;
+
+  /// Histogram bar style
+  final BarStyle barStyle;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => ADXSeries(
