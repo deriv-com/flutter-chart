@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/bollinger_bands_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -23,6 +24,9 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.standardDeviation = 2,
+    this.upperLineStyle = const LineStyle(color: Colors.black),
+    this.middleLineStyle = const LineStyle(color: Colors.black),
+    this.lowerLineStyle = const LineStyle(color: Colors.black),
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -43,6 +47,15 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   /// Standard Deviation value
   final double standardDeviation;
 
+  /// Upper line style.
+  final LineStyle upperLineStyle;
+
+  /// Middle line style.
+  final LineStyle middleLineStyle;
+
+  /// Lower line style.
+  final LineStyle lowerLineStyle;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       BollingerBandSeries.fromIndicator(
@@ -51,6 +64,9 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
           period: period,
           movingAverageType: movingAverageType,
           standardDeviationFactor: standardDeviation,
+          upperLineStyle: upperLineStyle,
+          middleLineStyle: middleLineStyle,
+          lowerLineStyle: lowerLineStyle,
         ),
       );
 

@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
@@ -64,29 +65,34 @@ class BollingerBandSeries extends Series {
       indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
       options: bbOptions,
+      style: bbOptions.middleLineStyle,
     );
 
     _lowerSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) =>
-            LinePainter(series as DataSeries<Tick>),
-        indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
-              bbmSMA,
-              standardDeviation,
-              k: bbOptions.standardDeviationFactor,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: bbOptions);
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
+        bbmSMA,
+        standardDeviation,
+        k: bbOptions.standardDeviationFactor,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: bbOptions,
+      style: bbOptions.lowerLineStyle,
+    );
 
     _upperSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) =>
-            LinePainter(series as DataSeries<Tick>),
-        indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
-              bbmSMA,
-              standardDeviation,
-              k: bbOptions.standardDeviationFactor,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: bbOptions);
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
+        bbmSMA,
+        standardDeviation,
+        k: bbOptions.standardDeviationFactor,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: bbOptions,
+      style: bbOptions.upperLineStyle,
+    );
 
     _innerSeries
       ..add(_lowerSeries)

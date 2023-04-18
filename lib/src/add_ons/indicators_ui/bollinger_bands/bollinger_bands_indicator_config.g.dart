@@ -15,6 +15,15 @@ BollingerBandsIndicatorConfig _$BollingerBandsIndicatorConfigFromJson(
           MovingAverageType.simple,
       fieldType: json['fieldType'] as String? ?? 'close',
       standardDeviation: (json['standardDeviation'] as num?)?.toDouble() ?? 2,
+      upperLineStyle: json['upperLineStyle'] == null
+          ? const LineStyle(color: Colors.black)
+          : LineStyle.fromJson(json['upperLineStyle'] as Map<String, dynamic>),
+      middleLineStyle: json['middleLineStyle'] == null
+          ? const LineStyle(color: Colors.black)
+          : LineStyle.fromJson(json['middleLineStyle'] as Map<String, dynamic>),
+      lowerLineStyle: json['lowerLineStyle'] == null
+          ? const LineStyle(color: Colors.black)
+          : LineStyle.fromJson(json['lowerLineStyle'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BollingerBandsIndicatorConfigToJson(
@@ -25,6 +34,9 @@ Map<String, dynamic> _$BollingerBandsIndicatorConfigToJson(
           _$MovingAverageTypeEnumMap[instance.movingAverageType]!,
       'fieldType': instance.fieldType,
       'standardDeviation': instance.standardDeviation,
+      'upperLineStyle': instance.upperLineStyle,
+      'middleLineStyle': instance.middleLineStyle,
+      'lowerLineStyle': instance.lowerLineStyle,
     };
 
 const _$MovingAverageTypeEnumMap = {
