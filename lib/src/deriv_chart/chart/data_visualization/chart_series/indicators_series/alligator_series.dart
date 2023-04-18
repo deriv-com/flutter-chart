@@ -31,6 +31,9 @@ class AlligatorSeries extends Series {
     this.jawOffset = 8,
     this.teethOffset = 5,
     this.lipsOffset = 3,
+    this.jawLineStyle = const LineStyle(color: Colors.blue),
+    this.teethLineStyle = const LineStyle(color: Colors.red),
+    this.lipsLineStyle = const LineStyle(color: Colors.green),
   })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
         _indicatorInput = indicatorInput,
         super(id ??
@@ -58,6 +61,15 @@ class AlligatorSeries extends Series {
   /// Shift to future in lips series
   final int lipsOffset;
 
+  /// Jaw line style.
+  final LineStyle jawLineStyle;
+
+  /// Teeth line style.
+  final LineStyle teethLineStyle;
+
+  /// Lips line style.
+  final LineStyle lipsLineStyle;
+
   @override
   SeriesPainter<Series>? createPainter() {
     if (alligatorOptions.showLines) {
@@ -68,7 +80,7 @@ class AlligatorSeries extends Series {
             MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.jawPeriod),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
-        style: const LineStyle(color: Colors.blue),
+        style: jawLineStyle,
         offset: jawOffset,
       );
 
@@ -83,7 +95,7 @@ class AlligatorSeries extends Series {
         ),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
-        style: const LineStyle(color: Colors.red),
+        style: teethLineStyle,
         offset: teethOffset,
       );
 
@@ -96,7 +108,7 @@ class AlligatorSeries extends Series {
             MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.lipsPeriod),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
-        style: const LineStyle(color: Colors.green),
+        style: lipsLineStyle,
         offset: lipsOffset,
       );
     }

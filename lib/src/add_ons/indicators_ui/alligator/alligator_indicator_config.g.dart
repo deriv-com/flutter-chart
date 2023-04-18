@@ -17,6 +17,15 @@ AlligatorIndicatorConfig _$AlligatorIndicatorConfigFromJson(
       lipsOffset: json['lipsOffset'] as int? ?? 3,
       showLines: json['showLines'] as bool? ?? true,
       showFractal: json['showFractal'] as bool? ?? false,
+      jawLineStyle: json['jawLineStyle'] == null
+          ? const LineStyle(color: Colors.blue)
+          : LineStyle.fromJson(json['jawLineStyle'] as Map<String, dynamic>),
+      teethLineStyle: json['teethLineStyle'] == null
+          ? const LineStyle(color: Colors.red)
+          : LineStyle.fromJson(json['teethLineStyle'] as Map<String, dynamic>),
+      lipsLineStyle: json['lipsLineStyle'] == null
+          ? const LineStyle(color: Colors.green)
+          : LineStyle.fromJson(json['lipsLineStyle'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AlligatorIndicatorConfigToJson(
@@ -30,4 +39,7 @@ Map<String, dynamic> _$AlligatorIndicatorConfigToJson(
       'lipsPeriod': instance.lipsPeriod,
       'showLines': instance.showLines,
       'showFractal': instance.showFractal,
+      'jawLineStyle': instance.jawLineStyle,
+      'teethLineStyle': instance.teethLineStyle,
+      'lipsLineStyle': instance.lipsLineStyle,
     };
