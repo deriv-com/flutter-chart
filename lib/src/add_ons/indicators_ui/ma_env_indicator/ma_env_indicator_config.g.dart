@@ -17,6 +17,15 @@ MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(
       shift: (json['shift'] as num?)?.toDouble() ?? 5,
       shiftType: $enumDecodeNullable(_$ShiftTypeEnumMap, json['shiftType']) ??
           ShiftType.percent,
+      upperLineStyle: json['upperLineStyle'] == null
+          ? const LineStyle(color: Colors.green)
+          : LineStyle.fromJson(json['upperLineStyle'] as Map<String, dynamic>),
+      middleLineStyle: json['middleLineStyle'] == null
+          ? const LineStyle(color: Colors.blue)
+          : LineStyle.fromJson(json['middleLineStyle'] as Map<String, dynamic>),
+      lowerLineStyle: json['lowerLineStyle'] == null
+          ? const LineStyle(color: Colors.red)
+          : LineStyle.fromJson(json['lowerLineStyle'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
@@ -28,6 +37,9 @@ Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
       'fieldType': instance.fieldType,
       'shiftType': _$ShiftTypeEnumMap[instance.shiftType]!,
       'shift': instance.shift,
+      'upperLineStyle': instance.upperLineStyle,
+      'middleLineStyle': instance.middleLineStyle,
+      'lowerLineStyle': instance.lowerLineStyle,
     };
 
 const _$MovingAverageTypeEnumMap = {

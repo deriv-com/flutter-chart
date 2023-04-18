@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/ma_env_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -25,6 +26,9 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
     String fieldType = 'close',
     this.shift = 5,
     this.shiftType = ShiftType.percent,
+    this.upperLineStyle = const LineStyle(color: Colors.green),
+    this.middleLineStyle = const LineStyle(color: Colors.blue),
+    this.lowerLineStyle = const LineStyle(color: Colors.red),
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -48,6 +52,15 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
   /// Moving Average Envelope shift
   final double shift;
 
+  /// Upper line style.
+  final LineStyle upperLineStyle;
+
+  /// Middle line style.
+  final LineStyle middleLineStyle;
+
+  /// Lower line style.
+  final LineStyle lowerLineStyle;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => MAEnvSeries.fromIndicator(
       IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
@@ -56,6 +69,9 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
         movingAverageType: movingAverageType,
         shift: shift,
         shiftType: shiftType,
+        upperLineStyle: upperLineStyle,
+        middleLineStyle: middleLineStyle,
+        lowerLineStyle: lowerLineStyle,
       ));
 
   @override
