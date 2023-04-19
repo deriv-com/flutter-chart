@@ -24,9 +24,9 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.standardDeviation = 2,
-    this.upperLineStyle = const LineStyle(color: Colors.black),
-    this.middleLineStyle = const LineStyle(color: Colors.black),
-    this.lowerLineStyle = const LineStyle(color: Colors.black),
+    this.upperLineStyle = const LineStyle(color: Colors.white),
+    this.middleLineStyle = const LineStyle(color: Colors.white),
+    this.lowerLineStyle = const LineStyle(color: Colors.white),
   }) : super(
           period: period,
           movingAverageType: movingAverageType,

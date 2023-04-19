@@ -11,9 +11,9 @@ class BollingerBandsOptions extends MAOptions {
     this.standardDeviationFactor = 2,
     int period = 20,
     MovingAverageType movingAverageType = MovingAverageType.simple,
-    this.upperLineStyle = const LineStyle(color: Colors.black),
-    this.middleLineStyle = const LineStyle(color: Colors.black),
-    this.lowerLineStyle = const LineStyle(color: Colors.black),
+    this.upperLineStyle = const LineStyle(color: Colors.white),
+    this.middleLineStyle = const LineStyle(color: Colors.white),
+    this.lowerLineStyle = const LineStyle(color: Colors.white),
   }) : super(period: period, type: movingAverageType);
 
   /// Standard Deviation value

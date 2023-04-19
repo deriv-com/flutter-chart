@@ -16,13 +16,13 @@ BollingerBandsIndicatorConfig _$BollingerBandsIndicatorConfigFromJson(
       fieldType: json['fieldType'] as String? ?? 'close',
       standardDeviation: (json['standardDeviation'] as num?)?.toDouble() ?? 2,
       upperLineStyle: json['upperLineStyle'] == null
-          ? const LineStyle(color: Colors.black)
+          ? const LineStyle(color: Colors.white)
           : LineStyle.fromJson(json['upperLineStyle'] as Map<String, dynamic>),
       middleLineStyle: json['middleLineStyle'] == null
-          ? const LineStyle(color: Colors.black)
+          ? const LineStyle(color: Colors.white)
           : LineStyle.fromJson(json['middleLineStyle'] as Map<String, dynamic>),
       lowerLineStyle: json['lowerLineStyle'] == null
-          ? const LineStyle(color: Colors.black)
+          ? const LineStyle(color: Colors.white)
           : LineStyle.fromJson(json['lowerLineStyle'] as Map<String, dynamic>),
     );
 
