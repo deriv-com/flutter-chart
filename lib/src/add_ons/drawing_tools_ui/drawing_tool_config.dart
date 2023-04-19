@@ -9,8 +9,8 @@ import 'vertical/vertical_drawing_tool_config.dart';
 @immutable
 abstract class DrawingToolConfig extends AddOnConfig {
   /// Initializes
-  const DrawingToolConfig({bool isOverlay = true, String? id})
-      : super(isOverlay: isOverlay, id: id);
+  const DrawingToolConfig({bool isOverlay = true})
+      : super(isOverlay: isOverlay);
 
   /// Creates a concrete drawing tool config from JSON.
   factory DrawingToolConfig.fromJson(Map<String, dynamic> json) {
