@@ -71,34 +71,25 @@ class _MarkerAreaState extends State<MarkerArea> {
 
     widget.markerSeries.update(xAxis.leftBoundEpoch, xAxis.rightBoundEpoch);
 
-    return LayoutBuilder(builder: (_, BoxConstraints constraints) {
-      final Size canvasSize = Size(
-        xAxis.width!,
-        constraints.maxHeight,
-      );
-
-      return Stack(
-        children: <Widget>[
-          AnimatedOpacity(
-            duration: animationDuration,
-            opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
-            child: CustomPaint(
-              size: canvasSize,
-              painter: _MarkerPainter(
+    return Stack(
+      children: <Widget>[
+        AnimatedOpacity(
+          duration: animationDuration,
+          opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
+          child: CustomPaint(
+            painter: _MarkerPainter(
                 series: widget.markerSeries,
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
-                theme: context.watch<ChartTheme>(),
-              ),
-            ),
+                theme: context.watch<ChartTheme>()),
           ),
-          AnimatedActiveMarker(
-            markerSeries: widget.markerSeries,
-            quoteToCanvasY: widget.quoteToCanvasY,
-          ),
-        ],
-      );
-    });
+        ),
+        AnimatedActiveMarker(
+          markerSeries: widget.markerSeries,
+          quoteToCanvasY: widget.quoteToCanvasY,
+        ),
+      ],
+    );
   }
 }
 
