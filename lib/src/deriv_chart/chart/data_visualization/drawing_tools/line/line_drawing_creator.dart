@@ -41,6 +41,12 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
   /// Saved starting Y coordinates.
   double? _startingYPoint;
 
+  /// Saved ending epoch.
+  int? _endingEpoch;
+
+  /// Saved ending Y coordinates.
+  double? _endingYPoint;
+
   /// If drawing has been started.
   bool _isPenDown = false;
 
@@ -86,27 +92,28 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
       } else if (!_isDrawingFinished) {
         _isPenDown = false;
         _isDrawingFinished = true;
-        final int endEpoch = epochFromX!(position!.dx);
-        final double endYPoint = widget.quoteFromCanvasY(position!.dy);
+        _endingEpoch = epochFromX!(position!.dx);
+        _endingYPoint = widget.quoteFromCanvasY(position!.dy);
 
         _drawingParts.addAll(<LineDrawing>[
           LineDrawing(
             drawingPart: 'marker',
-            startEpoch: endEpoch,
-            startYCoord: endYPoint,
+            endEpoch: _endingEpoch!,
+            endYCoord: _endingYPoint!,
           ),
           LineDrawing(
             drawingPart: 'line',
             startEpoch: _startingEpoch!,
             startYCoord: _startingYPoint!,
-            endEpoch: endEpoch,
-            endYCoord: endYPoint,
+            endEpoch: _endingEpoch!,
+            endYCoord: _endingYPoint!,
           )
         ]);
       }
       widget.onAddDrawing(
-          <String, List<LineDrawing>>{_drawingId: _drawingParts},
-          isDrawingFinished: _isDrawingFinished);
+        <String, List<LineDrawing>>{_drawingId: _drawingParts},
+        isDrawingFinished: _isDrawingFinished,
+      );
     });
   }
 

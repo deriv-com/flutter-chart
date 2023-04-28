@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../drawing.dart';
@@ -25,25 +26,30 @@ class VerticalDrawing extends Drawing {
   /// Paint
   @override
   void onPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingToolConfig config,
-    Offset draggedPosition,
-  ) {
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config,
+      bool isDrawingDragged,
+      DraggableEdgePoint draggableInitialPoint,
+      {DraggableEdgePoint? draggableFinalPoint}) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
-    final double startQuoteToY = draggedPosition == Offset.zero
-        ? quoteToY(yCoord)
-        : quoteToY(draggedPosition.dy);
+    draggableInitialPoint.draggedPosition = isDrawingDragged
+        ? draggableInitialPoint.draggedPosition
+        : Offset(epoch.toDouble(), yCoord);
+
+    final double startQuoteToY = isDrawingDragged
+        ? quoteToY(draggableInitialPoint.draggedPosition.dy)
+        : quoteToY(yCoord);
 
     if (drawingPart == 'vertical') {
-      final double xCoord = draggedPosition == Offset.zero
-          ? epochToX(epoch)
-          : epochToX(draggedPosition.dx.toInt());
+      final double xCoord = isDrawingDragged
+          ? epochToX(draggableInitialPoint.draggedPosition.dx.toInt())
+          : epochToX(epoch);
 
       final double startY = startQuoteToY - 1000,
           endingY = startQuoteToY + 1000;
@@ -63,21 +69,29 @@ class VerticalDrawing extends Drawing {
   /// with any of the painted areas on the screen
   @override
   bool hitTest(
-    Offset position,
-    double Function(int x) epochToX,
-    Offset draggedPosition,
-    DrawingToolConfig config,
-  ) {
+      Offset position,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config,
+      bool isDrawingDragged,
+      DraggableEdgePoint draggableInitialPoint,
+      {DraggableEdgePoint? draggableFinalPoint}) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
-    return draggedPosition == Offset.zero
-        ? position.dx > epochToX(epoch) - lineStyle.thickness - 3 &&
-            position.dx < epochToX(epoch) + lineStyle.thickness + 3
-        : position.dx >
-                epochToX(draggedPosition.dx.toInt()) -
+    draggableInitialPoint.draggedPosition = isDrawingDragged
+        ? draggableInitialPoint.draggedPosition
+        : Offset(epoch.toDouble(), yCoord);
+
+    return isDrawingDragged
+        ? position.dx >
+                epochToX(draggableInitialPoint.draggedPosition.dx.toInt()) -
                     lineStyle.thickness -
                     3 &&
             position.dx <
-                epochToX(draggedPosition.dx.toInt()) + lineStyle.thickness + 3;
+                epochToX(draggableInitialPoint.draggedPosition.dx.toInt()) +
+                    lineStyle.thickness +
+                    3
+        : position.dx > epochToX(epoch) - lineStyle.thickness - 3 &&
+            position.dx < epochToX(epoch) + lineStyle.thickness + 3;
   }
 }

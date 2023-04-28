@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
@@ -30,7 +31,9 @@ class DrawingPainter extends StatefulWidget {
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
-  Offset _draggedPosition = Offset.zero;
+  bool _isDrawingDragged = false;
+  final DraggableEdgePoint _draggableInitialPoint = DraggableEdgePoint();
+  final DraggableEdgePoint _draggableFinalPoint = DraggableEdgePoint();
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +42,36 @@ class _DrawingPainterState extends State<DrawingPainter> {
     return widget.drawingData != null
         ? GestureDetector(
             onPanUpdate: (DragUpdateDetails details) {
+              Offset getFixedPosition(Offset position,
+                      {required bool isTouched}) =>
+                  Offset(xAxis.xFromEpoch(position.dx.toInt()),
+                      widget.quoteToCanvasY(position.dy)) +
+                  (isTouched ? Offset.zero : details.delta);
+
+              final Offset startFixedPosition = getFixedPosition(
+                  _draggableInitialPoint.draggedPosition,
+                  isTouched: _draggableFinalPoint.isDragged);
+
+              final Offset endFixedPosition = getFixedPosition(
+                  _draggableFinalPoint.draggedPosition,
+                  isTouched: _draggableInitialPoint.isDragged);
+
               setState(() {
-                _draggedPosition = Offset(
-                    xAxis.epochFromX(details.localPosition.dx).toDouble(),
-                    widget.quoteFromCanvasY(details.localPosition.dy));
+                _isDrawingDragged = details.delta != Offset.zero;
+
+                _draggableInitialPoint.draggedPosition = Offset(
+                    xAxis.epochFromX(startFixedPosition.dx).toDouble(),
+                    widget.quoteFromCanvasY(startFixedPosition.dy));
+
+                _draggableFinalPoint.draggedPosition = Offset(
+                    xAxis.epochFromX(endFixedPosition.dx).toDouble(),
+                    widget.quoteFromCanvasY(endFixedPosition.dy));
+              });
+            },
+            onPanEnd: (DragEndDetails details) {
+              setState(() {
+                _draggableInitialPoint.isDragged = false;
+                _draggableFinalPoint.isDragged = false;
               });
             },
             child: CustomPaint(
@@ -51,7 +80,9 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 theme: context.watch<ChartTheme>(),
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
-                draggedPosition: _draggedPosition,
+                isDrawingDragged: _isDrawingDragged,
+                draggableInitialPoint: _draggableInitialPoint,
+                draggableFinalPoint: _draggableFinalPoint,
               ),
               size: const Size(double.infinity, double.infinity),
             ),
@@ -66,14 +97,18 @@ class _DrawingPainter extends CustomPainter {
     required this.theme,
     required this.epochToX,
     required this.quoteToY,
-    required this.draggedPosition,
+    required this.isDrawingDragged,
+    required this.draggableInitialPoint,
+    this.draggableFinalPoint,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
-  Offset draggedPosition;
+  bool isDrawingDragged;
+  DraggableEdgePoint draggableInitialPoint;
+  DraggableEdgePoint? draggableFinalPoint;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -85,7 +120,9 @@ class _DrawingPainter extends CustomPainter {
         epochToX,
         quoteToY,
         drawingData.config!,
-        draggedPosition,
+        isDrawingDragged,
+        draggableInitialPoint,
+        draggableFinalPoint: draggableFinalPoint,
       );
     }
   }
@@ -99,13 +136,18 @@ class _DrawingPainter extends CustomPainter {
   @override
   bool hitTest(Offset position) {
     for (final Drawing drawing in drawingData.drawings) {
-      return drawing.hitTest(
+      if (drawing.hitTest(
         position,
         epochToX,
-        draggedPosition,
+        quoteToY,
         drawingData.config!,
-      );
+        isDrawingDragged,
+        draggableInitialPoint,
+        draggableFinalPoint: draggableFinalPoint,
+      )) {
+        return true;
+      }
     }
-    return true;
+    return false;
   }
 }
