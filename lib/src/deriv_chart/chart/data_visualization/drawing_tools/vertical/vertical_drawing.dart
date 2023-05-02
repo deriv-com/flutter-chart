@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../drawing.dart';
@@ -33,24 +34,22 @@ class VerticalDrawing extends Drawing {
       double Function(double y) quoteToY,
       DrawingToolConfig config,
       bool isDrawingDragged,
-      DraggableEdgePoint draggableInitialPoint,
-      {DraggableEdgePoint? draggableFinalPoint}) {
+      DraggableEdgePoint draggableStartPoint,
+      {DraggableEdgePoint? draggableEndPoint}) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
-    draggableInitialPoint.draggedPosition = isDrawingDragged
-        ? draggableInitialPoint.draggedPosition
-        : Offset(epoch.toDouble(), yCoord);
+    final Point startPoint = draggableStartPoint.updatePosition(
+      epoch,
+      yCoord,
+      epochToX,
+      quoteToY,
+    );
 
-    final double startQuoteToY = isDrawingDragged
-        ? quoteToY(draggableInitialPoint.draggedPosition.dy)
-        : quoteToY(yCoord);
+    final double xCoord = startPoint.x;
+    final double startQuoteToY = startPoint.y;
 
     if (drawingPart == 'vertical') {
-      final double xCoord = isDrawingDragged
-          ? epochToX(draggableInitialPoint.draggedPosition.dx.toInt())
-          : epochToX(epoch);
-
       final double startY = startQuoteToY - 1000,
           endingY = startQuoteToY + 1000;
 
@@ -74,24 +73,18 @@ class VerticalDrawing extends Drawing {
       double Function(double y) quoteToY,
       DrawingToolConfig config,
       bool isDrawingDragged,
-      DraggableEdgePoint draggableInitialPoint,
-      {DraggableEdgePoint? draggableFinalPoint}) {
+      DraggableEdgePoint draggableStartPoint,
+      {DraggableEdgePoint? draggableEndPoint}) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
-    draggableInitialPoint.draggedPosition = isDrawingDragged
-        ? draggableInitialPoint.draggedPosition
-        : Offset(epoch.toDouble(), yCoord);
+    final Point startPoint = draggableStartPoint.updatePosition(
+      epoch,
+      yCoord,
+      epochToX,
+      quoteToY,
+    );
 
-    return isDrawingDragged
-        ? position.dx >
-                epochToX(draggableInitialPoint.draggedPosition.dx.toInt()) -
-                    lineStyle.thickness -
-                    3 &&
-            position.dx <
-                epochToX(draggableInitialPoint.draggedPosition.dx.toInt()) +
-                    lineStyle.thickness +
-                    3
-        : position.dx > epochToX(epoch) - lineStyle.thickness - 3 &&
-            position.dx < epochToX(epoch) + lineStyle.thickness + 3;
+    return position.dx > startPoint.x - lineStyle.thickness - 3 &&
+        position.dx < startPoint.x + lineStyle.thickness + 3;
   }
 }

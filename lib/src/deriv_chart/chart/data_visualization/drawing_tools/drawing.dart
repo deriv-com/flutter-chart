@@ -15,11 +15,10 @@ class Drawing {
       double Function(double y) quoteToY,
       DrawingToolConfig config,
       bool isDrawingDragged,
-      DraggableEdgePoint draggableInitialPoint,
-      {DraggableEdgePoint? draggableFinalPoint}) {}
+      DraggableEdgePoint draggableStartPoint,
+      {DraggableEdgePoint? draggableEndPoint}) {}
 
   /// Calculates y intersection based on vector points.
-  /// Based on yIntersection() from SmartCharts
   double? getYIntersection(Vector vector, double x) {
     final double x1 = vector.x0, x2 = vector.x1, x3 = x, x4 = x;
     final double y1 = vector.y0, y2 = vector.y1, y3 = 0, y4 = 10000;
@@ -47,7 +46,7 @@ class Drawing {
           double Function(double y) quoteToY,
           DrawingToolConfig config,
           bool isDrawingDragged,
-          DraggableEdgePoint draggableInitialPoint,
-          {DraggableEdgePoint? draggableFinalPoint}) =>
+          DraggableEdgePoint draggableStartPoint,
+          {DraggableEdgePoint? draggableEndPoint}) =>
       true;
 }

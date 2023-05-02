@@ -32,8 +32,8 @@ class DrawingPainter extends StatefulWidget {
 
 class _DrawingPainterState extends State<DrawingPainter> {
   bool _isDrawingDragged = false;
-  final DraggableEdgePoint _draggableInitialPoint = DraggableEdgePoint();
-  final DraggableEdgePoint _draggableFinalPoint = DraggableEdgePoint();
+  final DraggableEdgePoint _draggableStartPoint = DraggableEdgePoint();
+  final DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
 
   @override
   Widget build(BuildContext context) {
@@ -42,36 +42,32 @@ class _DrawingPainterState extends State<DrawingPainter> {
     return widget.drawingData != null
         ? GestureDetector(
             onPanUpdate: (DragUpdateDetails details) {
-              Offset getFixedPosition(Offset position,
-                      {required bool isTouched}) =>
-                  Offset(xAxis.xFromEpoch(position.dx.toInt()),
-                      widget.quoteToCanvasY(position.dy)) +
-                  (isTouched ? Offset.zero : details.delta);
-
-              final Offset startFixedPosition = getFixedPosition(
-                  _draggableInitialPoint.draggedPosition,
-                  isTouched: _draggableFinalPoint.isDragged);
-
-              final Offset endFixedPosition = getFixedPosition(
-                  _draggableFinalPoint.draggedPosition,
-                  isTouched: _draggableInitialPoint.isDragged);
-
               setState(() {
                 _isDrawingDragged = details.delta != Offset.zero;
-
-                _draggableInitialPoint.draggedPosition = Offset(
-                    xAxis.epochFromX(startFixedPosition.dx).toDouble(),
-                    widget.quoteFromCanvasY(startFixedPosition.dy));
-
-                _draggableFinalPoint.draggedPosition = Offset(
-                    xAxis.epochFromX(endFixedPosition.dx).toDouble(),
-                    widget.quoteFromCanvasY(endFixedPosition.dy));
+                _draggableStartPoint
+                  ..isDrawingDragged = _isDrawingDragged
+                  ..updatePositionWithLocalPositions(
+                    details.delta,
+                    xAxis,
+                    widget.quoteFromCanvasY,
+                    widget.quoteToCanvasY,
+                    isOtherEndDragged: _draggableEndPoint.isDragged,
+                  );
+                _draggableEndPoint
+                  ..isDrawingDragged = _isDrawingDragged
+                  ..updatePositionWithLocalPositions(
+                    details.delta,
+                    xAxis,
+                    widget.quoteFromCanvasY,
+                    widget.quoteToCanvasY,
+                    isOtherEndDragged: _draggableStartPoint.isDragged,
+                  );
               });
             },
             onPanEnd: (DragEndDetails details) {
               setState(() {
-                _draggableInitialPoint.isDragged = false;
-                _draggableFinalPoint.isDragged = false;
+                _draggableStartPoint.isDragged = false;
+                _draggableEndPoint.isDragged = false;
               });
             },
             child: CustomPaint(
@@ -81,8 +77,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
                 isDrawingDragged: _isDrawingDragged,
-                draggableInitialPoint: _draggableInitialPoint,
-                draggableFinalPoint: _draggableFinalPoint,
+                draggableStartPoint: _draggableStartPoint,
+                draggableEndPoint: _draggableEndPoint,
               ),
               size: const Size(double.infinity, double.infinity),
             ),
@@ -98,8 +94,8 @@ class _DrawingPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.isDrawingDragged,
-    required this.draggableInitialPoint,
-    this.draggableFinalPoint,
+    required this.draggableStartPoint,
+    this.draggableEndPoint,
   });
 
   final DrawingData drawingData;
@@ -107,8 +103,8 @@ class _DrawingPainter extends CustomPainter {
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   bool isDrawingDragged;
-  DraggableEdgePoint draggableInitialPoint;
-  DraggableEdgePoint? draggableFinalPoint;
+  DraggableEdgePoint draggableStartPoint;
+  DraggableEdgePoint? draggableEndPoint;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -121,8 +117,8 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData.config!,
         isDrawingDragged,
-        draggableInitialPoint,
-        draggableFinalPoint: draggableFinalPoint,
+        draggableStartPoint,
+        draggableEndPoint: draggableEndPoint,
       );
     }
   }
@@ -142,8 +138,8 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData.config!,
         isDrawingDragged,
-        draggableInitialPoint,
-        draggableFinalPoint: draggableFinalPoint,
+        draggableStartPoint,
+        draggableEndPoint: draggableEndPoint,
       )) {
         return true;
       }

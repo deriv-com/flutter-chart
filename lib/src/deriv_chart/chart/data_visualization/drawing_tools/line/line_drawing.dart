@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../drawing.dart';
@@ -83,42 +84,37 @@ class LineDrawing extends Drawing {
       double Function(double y) quoteToY,
       DrawingToolConfig config,
       bool isDrawingDragged,
-      DraggableEdgePoint draggableInitialPoint,
-      {DraggableEdgePoint? draggableFinalPoint}) {
+      DraggableEdgePoint draggableStartPoint,
+      {DraggableEdgePoint? draggableEndPoint}) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
-    draggableInitialPoint.updatePosition(
-      isDrawingDragged
-          ? draggableInitialPoint.draggedPosition
-          : Offset(startEpoch.toDouble(), startYCoord),
+    final Point startPoint = draggableStartPoint.updatePosition(
+      startEpoch,
+      startYCoord,
+      epochToX,
+      quoteToY,
+    );
+    final Point endPoint = draggableEndPoint!.updatePosition(
+      endEpoch,
+      endYCoord,
+      epochToX,
+      quoteToY,
     );
 
-    draggableFinalPoint!.updatePosition(
-      isDrawingDragged
-          ? draggableFinalPoint.draggedPosition
-          : Offset(endEpoch.toDouble(), endYCoord),
-    );
+    final double startXCoord = startPoint.x;
+    final double startQuoteToY = startPoint.y;
 
-    final double startQuoteToY = isDrawingDragged
-        ? quoteToY(draggableInitialPoint.draggedPosition.dy)
-        : quoteToY(startYCoord);
-    final double startXCoord = isDrawingDragged
-        ? epochToX(draggableInitialPoint.draggedPosition.dx.toInt())
-        : epochToX(startEpoch);
-
-    final double endQuoteToY = isDrawingDragged
-        ? quoteToY(draggableFinalPoint.draggedPosition.dy)
-        : quoteToY(endYCoord);
-    final double endXCoord = isDrawingDragged
-        ? epochToX(draggableFinalPoint.draggedPosition.dx.toInt())
-        : epochToX(endEpoch);
+    final double endXCoord = endPoint.x;
+    final double endQuoteToY = endPoint.y;
 
     if (drawingPart == 'marker') {
       if (endEpoch != 0 && endQuoteToY != 0) {
+        /// Draw first point
         canvas.drawCircle(Offset(endXCoord, endQuoteToY), markerRadius,
             Paint()..color = lineStyle.color);
       } else if (startEpoch != 0 && startQuoteToY != 0) {
+        /// Draw second point
         canvas.drawCircle(Offset(startXCoord, startQuoteToY), markerRadius,
             Paint()..color = lineStyle.color);
       }
@@ -146,44 +142,41 @@ class LineDrawing extends Drawing {
       double Function(double y) quoteToY,
       DrawingToolConfig config,
       bool isDrawingDragged,
-      DraggableEdgePoint draggableInitialPoint,
-      {DraggableEdgePoint? draggableFinalPoint}) {
-    draggableInitialPoint.updatePosition(
-      isDrawingDragged
-          ? draggableInitialPoint.draggedPosition
-          : Offset(startEpoch.toDouble(), startYCoord),
+      DraggableEdgePoint draggableStartPoint,
+      {DraggableEdgePoint? draggableEndPoint}) {
+    final LineStyle lineStyle = config.toJson()['lineStyle'];
+
+    final Point startPoint = draggableStartPoint.updatePosition(
+      startEpoch,
+      startYCoord,
+      epochToX,
+      quoteToY,
+    );
+    final Point endPoint = draggableEndPoint!.updatePosition(
+      endEpoch,
+      endYCoord,
+      epochToX,
+      quoteToY,
     );
 
-    draggableFinalPoint!.updatePosition(
-      isDrawingDragged
-          ? draggableFinalPoint.draggedPosition
-          : Offset(endEpoch.toDouble(), endYCoord),
-    );
+    final double startXCoord = startPoint.x;
+    final double startQuoteToY = startPoint.y;
 
-    final double startQuoteToY = isDrawingDragged
-        ? quoteToY(draggableInitialPoint.draggedPosition.dy)
-        : quoteToY(startYCoord);
-    final double endQuoteToY = isDrawingDragged
-        ? quoteToY(draggableFinalPoint.draggedPosition.dy)
-        : quoteToY(endYCoord);
-    final double startXCoord = isDrawingDragged
-        ? epochToX(draggableInitialPoint.draggedPosition.dx.toInt())
-        : epochToX(startEpoch);
-    final double endXCoord = isDrawingDragged
-        ? epochToX(draggableFinalPoint.draggedPosition.dx.toInt())
-        : epochToX(endEpoch);
+    final double endXCoord = endPoint.x;
+    final double endQuoteToY = endPoint.y;
 
-    if (pow(startXCoord - position.dx, 2) +
-            pow(startQuoteToY - position.dy, 2) <
-        pow(markerRadius, 2)) {
-      draggableInitialPoint.setIsEdgeDragged(isEdgeDragged: true);
+    /// Check if start point clicked
+    if (startPoint.isClicked(position, markerRadius)) {
+      draggableStartPoint.setIsEdgeDragged(isEdgeDragged: true);
     }
 
-    if (pow(endXCoord - position.dx, 2) + pow(endQuoteToY - position.dy, 2) <
-        pow(markerRadius, 2)) {
-      draggableFinalPoint.setIsEdgeDragged(isEdgeDragged: true);
+    /// Check if end point clicked
+    if (endPoint.isClicked(position, markerRadius)) {
+      draggableEndPoint.setIsEdgeDragged(isEdgeDragged: true);
     }
 
+    /// Computes the distance between a point and a line which should be less
+    /// than the line thickness + 6 to make sure the user can easily click on
     final double distance = ((endQuoteToY - startQuoteToY) * position.dx -
             (endXCoord - startXCoord) * position.dy +
             endXCoord * startQuoteToY -
@@ -191,6 +184,6 @@ class LineDrawing extends Drawing {
         sqrt(pow(endQuoteToY - startQuoteToY, 2) +
             pow(endXCoord - startXCoord, 2));
 
-    return distance.abs() <= 10;
+    return distance.abs() <= lineStyle.thickness + 6;
   }
 }
