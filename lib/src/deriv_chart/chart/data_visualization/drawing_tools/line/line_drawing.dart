@@ -77,15 +77,16 @@ class LineDrawing extends Drawing {
   /// Paint the line
   @override
   void onPaint(
-      Canvas canvas,
-      Size size,
-      ChartTheme theme,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      bool isDrawingDragged,
-      DraggableEdgePoint draggableStartPoint,
-      {DraggableEdgePoint? draggableEndPoint}) {
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DraggableEdgePoint draggableStartPoint, {
+    required bool isDrawingDragged,
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
@@ -137,13 +138,14 @@ class LineDrawing extends Drawing {
   /// with any of the painted areas on the screen
   @override
   bool hitTest(
-      Offset position,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      bool isDrawingDragged,
-      DraggableEdgePoint draggableStartPoint,
-      {DraggableEdgePoint? draggableEndPoint}) {
+    Offset position,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DraggableEdgePoint draggableStartPoint, {
+    required bool isDrawingDragged,
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
     final Point startPoint = draggableStartPoint.updatePosition(

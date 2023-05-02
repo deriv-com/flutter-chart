@@ -15,8 +15,8 @@ class Point {
   ///Related y for the point
   double y;
 
-  /// Checks whether the point has been "clicked" by a user at a certain position
-  /// on the screen, within a given "affected area" radius.
+  /// Checks whether the point has been "clicked" by a user at a certain
+  /// position on the screen, within a given "affected area" radius.
   ///
   /// The [position] parameter is the location on the screen where the user
   /// clicked, specified as an [Offset] object.

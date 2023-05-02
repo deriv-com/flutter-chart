@@ -116,8 +116,8 @@ class _DrawingPainter extends CustomPainter {
         epochToX,
         quoteToY,
         drawingData.config!,
-        isDrawingDragged,
         draggableStartPoint,
+        isDrawingDragged: isDrawingDragged,
         draggableEndPoint: draggableEndPoint,
       );
     }
@@ -137,8 +137,8 @@ class _DrawingPainter extends CustomPainter {
         epochToX,
         quoteToY,
         drawingData.config!,
-        isDrawingDragged,
         draggableStartPoint,
+        isDrawingDragged: isDrawingDragged,
         draggableEndPoint: draggableEndPoint,
       )) {
         return true;

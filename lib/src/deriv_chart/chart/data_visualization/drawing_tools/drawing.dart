@@ -8,15 +8,16 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 class Drawing {
   /// Paint
   void onPaint(
-      Canvas canvas,
-      Size size,
-      ChartTheme theme,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      bool isDrawingDragged,
-      DraggableEdgePoint draggableStartPoint,
-      {DraggableEdgePoint? draggableEndPoint}) {}
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DraggableEdgePoint draggableStartPoint, {
+    required bool isDrawingDragged,
+    DraggableEdgePoint? draggableEndPoint,
+  }) {}
 
   /// Calculates y intersection based on vector points.
   double? getYIntersection(Vector vector, double x) {
@@ -41,12 +42,13 @@ class Drawing {
   /// Calculation for detemining whether a user's touch or click intersects
   /// with any of the painted areas on the screen
   bool hitTest(
-          Offset position,
-          double Function(int x) epochToX,
-          double Function(double y) quoteToY,
-          DrawingToolConfig config,
-          bool isDrawingDragged,
-          DraggableEdgePoint draggableStartPoint,
-          {DraggableEdgePoint? draggableEndPoint}) =>
+    Offset position,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DraggableEdgePoint draggableStartPoint, {
+    required bool isDrawingDragged,
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
       true;
 }
