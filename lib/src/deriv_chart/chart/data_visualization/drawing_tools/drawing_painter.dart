@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:deriv_chart/deriv_chart.dart';
@@ -14,6 +15,7 @@ class DrawingPainter extends StatefulWidget {
     required this.drawingData,
     required this.quoteToCanvasY,
     required this.quoteFromCanvasY,
+    required this.onMoveDrawing,
     Key? key,
   }) : super(key: key);
 
@@ -28,6 +30,9 @@ class DrawingPainter extends StatefulWidget {
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
+
+  /// Callback for when drawing is moved.
+  final void Function({bool isDrawingMoved}) onMoveDrawing;
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
@@ -39,36 +44,50 @@ class _DrawingPainterState extends State<DrawingPainter> {
   Widget build(BuildContext context) {
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
+    void _onPanUpdate(DragUpdateDetails details) {
+      setState(() {
+        _isDrawingDragged = details.delta != Offset.zero;
+        _draggableStartPoint
+          ..isDrawingDragged = _isDrawingDragged
+          ..updatePositionWithLocalPositions(
+            details.delta,
+            xAxis,
+            widget.quoteFromCanvasY,
+            widget.quoteToCanvasY,
+            isOtherEndDragged: _draggableEndPoint.isDragged,
+          );
+        _draggableEndPoint
+          ..isDrawingDragged = _isDrawingDragged
+          ..updatePositionWithLocalPositions(
+            details.delta,
+            xAxis,
+            widget.quoteFromCanvasY,
+            widget.quoteToCanvasY,
+            isOtherEndDragged: _draggableStartPoint.isDragged,
+          );
+      });
+    }
+
     return widget.drawingData != null
         ? GestureDetector(
+            onLongPressDown: (LongPressDownDetails details) {
+              widget.onMoveDrawing(isDrawingMoved: true);
+            },
+            onLongPressUp: () {
+              widget.onMoveDrawing(isDrawingMoved: false);
+            },
+            onPanStart: (DragStartDetails details) {
+              widget.onMoveDrawing(isDrawingMoved: true);
+            },
             onPanUpdate: (DragUpdateDetails details) {
-              setState(() {
-                _isDrawingDragged = details.delta != Offset.zero;
-                _draggableStartPoint
-                  ..isDrawingDragged = _isDrawingDragged
-                  ..updatePositionWithLocalPositions(
-                    details.delta,
-                    xAxis,
-                    widget.quoteFromCanvasY,
-                    widget.quoteToCanvasY,
-                    isOtherEndDragged: _draggableEndPoint.isDragged,
-                  );
-                _draggableEndPoint
-                  ..isDrawingDragged = _isDrawingDragged
-                  ..updatePositionWithLocalPositions(
-                    details.delta,
-                    xAxis,
-                    widget.quoteFromCanvasY,
-                    widget.quoteToCanvasY,
-                    isOtherEndDragged: _draggableStartPoint.isDragged,
-                  );
-              });
+              _onPanUpdate(details);
             },
             onPanEnd: (DragEndDetails details) {
               setState(() {
                 _draggableStartPoint.isDragged = false;
                 _draggableEndPoint.isDragged = false;
               });
+              widget.onMoveDrawing(isDrawingMoved: false);
             },
             child: CustomPaint(
               foregroundPainter: _DrawingPainter(

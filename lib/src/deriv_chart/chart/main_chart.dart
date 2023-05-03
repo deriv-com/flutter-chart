@@ -114,6 +114,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   /// The current animation value of crosshair zoom out.
   late Animation<double> crosshairZoomOutAnimation;
 
+  bool _isDrawingMoving = false;
+
   @override
   double get verticalPadding {
     if (canvasSize == null) {
@@ -274,11 +276,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 DrawingToolChart(
                   drawings: widget.drawings,
                   onAddDrawing: widget.onAddDrawing,
+                  onMoveDrawing: _onMoveDrawing,
                   selectedDrawingTool: widget.selectedDrawingTool,
                   chartQuoteToCanvasY: chartQuoteToCanvasY,
                   chartQuoteFromCanvasY: chartQuoteFromCanvasY,
                 ),
-                _buildCrosshairArea(),
+                if (!_isDrawingMoving) _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(
                     bottom: 0,
@@ -408,5 +411,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     minQuote = safeMin(minQuote, widget.chartDataList.getMinValue());
     maxQuote = safeMax(maxQuote, widget.chartDataList.getMaxValue());
     return <double>[minQuote, maxQuote];
+  }
+
+  void _onMoveDrawing({bool isDrawingMoved = false}) {
+    setState(() {
+      _isDrawingMoving = isDrawingMoved;
+    });
   }
 }

@@ -12,6 +12,7 @@ class DrawingToolChart extends StatelessWidget {
     required this.onAddDrawing,
     required this.chartQuoteFromCanvasY,
     required this.chartQuoteToCanvasY,
+    required this.onMoveDrawing,
     this.drawings,
     this.selectedDrawingTool,
     Key? key,
@@ -23,6 +24,9 @@ class DrawingToolChart extends StatelessWidget {
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
+
+  /// Callback to pass new drawing to the parent.
+  final void Function({bool isDrawingMoved}) onMoveDrawing;
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
@@ -43,6 +47,7 @@ class DrawingToolChart extends StatelessWidget {
                     drawingData: drawingData,
                     quoteToCanvasY: chartQuoteToCanvasY,
                     quoteFromCanvasY: chartQuoteFromCanvasY,
+                    onMoveDrawing: onMoveDrawing,
                   )),
             if (selectedDrawingTool != null)
               DrawingCreator(
