@@ -12,15 +12,11 @@ class OscillatorLinesConfig {
     required this.oversoldValue,
     this.overboughtStyle = const LineStyle(thickness: 0.5),
     this.oversoldStyle = const LineStyle(thickness: 0.5),
-    this.id,
   });
 
   /// Initializes from JSON.
   factory OscillatorLinesConfig.fromJson(Map<String, dynamic> json) =>
       _$OscillatorLinesConfigFromJson(json);
-
-  /// The ID of this [OscillatorLinesConfig].
-  final String? id;
 
   /// The price to show the over bought line.
   final double overboughtValue;

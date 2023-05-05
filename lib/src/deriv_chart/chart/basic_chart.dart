@@ -165,14 +165,13 @@ class BasicChartState<T extends BasicChart> extends State<T>
   List<double> calculateGridLineQuotes(YAxisModel yAxisModel) {
     final List<double> newGridLineQuotes = yAxisModel.gridQuotes();
 
-    if (newGridLineQuotes.isNotEmpty) {
-      if (gridLineQuotes == null ||
-          gridLineQuotes!.isEmpty ||
-          newGridLineQuotes.first != gridLineQuotes!.first ||
-          newGridLineQuotes.last != gridLineQuotes!.last) {
-        widget.onQuoteAreaChanged
-            ?.call(newGridLineQuotes.first, newGridLineQuotes.last);
-      }
+    if (newGridLineQuotes.isNotEmpty &&
+        (gridLineQuotes == null ||
+            gridLineQuotes!.isEmpty ||
+            newGridLineQuotes.first != gridLineQuotes!.first ||
+            newGridLineQuotes.last != gridLineQuotes!.last)) {
+      widget.onQuoteAreaChanged
+          ?.call(newGridLineQuotes.first, newGridLineQuotes.last);
     }
 
     gridLineQuotes = newGridLineQuotes;

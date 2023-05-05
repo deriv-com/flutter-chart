@@ -48,9 +48,7 @@ class AroonIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => AroonSeries(
         indicatorInput,
         this,
-        aroonOption: AroonOptions(
-          period: period,
-        ),
+        aroonOption: AroonOptions(period: period),
       );
 
   @override
