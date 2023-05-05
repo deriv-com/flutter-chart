@@ -151,11 +151,11 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
   }
 
   void _initSeries() {
-    overlaySeries = _getIndicatorConfigs(widget.overlayConfigs);
-    bottomSeries = _getIndicatorConfigs(widget.bottomConfigs);
+    overlaySeries = _getIndicatorSeries(widget.overlayConfigs);
+    bottomSeries = _getIndicatorSeries(widget.bottomConfigs);
   }
 
-  List<Series>? _getIndicatorConfigs(List<IndicatorConfig>? configs) {
+  List<Series>? _getIndicatorSeries(List<IndicatorConfig>? configs) {
     if (configs == null) {
       return null;
     }
@@ -321,10 +321,10 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     }
 
     if (oldWidget.overlayConfigs != widget.overlayConfigs) {
-      overlaySeries = _getIndicatorConfigs(oldWidget.overlayConfigs);
+      overlaySeries = _getIndicatorSeries(oldWidget.overlayConfigs);
     }
     if (oldWidget.bottomConfigs != widget.bottomConfigs) {
-      bottomSeries = _getIndicatorConfigs(oldWidget.bottomConfigs);
+      bottomSeries = _getIndicatorSeries(oldWidget.bottomConfigs);
     }
   }
 }
