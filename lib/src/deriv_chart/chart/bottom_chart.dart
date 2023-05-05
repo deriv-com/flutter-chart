@@ -7,6 +7,11 @@ import 'package:deriv_chart/src/theme/chart_default_theme.dart';
 
 import 'basic_chart.dart';
 
+/// Called when the indicator is moved up/down
+///
+/// [offset] is the displacement between the swap positions.
+typedef SwapCallback = Function(int offset);
+
 /// The chart to add the bottom indicators too.
 class BottomChart extends BasicChart {
   /// Initializes a bottom chart.
@@ -17,9 +22,15 @@ class BottomChart extends BasicChart {
     Key? key,
     this.onRemove,
     this.onEdit,
+    this.onExpandToggle,
     this.onCrosshairDisappeared,
     this.onCrosshairHover,
+    this.onSwap,
+    this.isExpanded = false,
     this.showCrosshair = true,
+    this.showExpandedIcon = false,
+    this.showMoveUpIcon = false,
+    this.showMoveDownIcon = false,
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
 
   /// Called when an indicator is to be removed.
@@ -28,17 +39,35 @@ class BottomChart extends BasicChart {
   /// Called when an indicator is to be edited.
   final VoidCallback? onEdit;
 
+  /// Called when an indicator is to be expanded.
+  final VoidCallback? onExpandToggle;
+
+  /// Called when an indicator is to moved up/down.
+  final SwapCallback? onSwap;
+
   /// Called when candle or point is dismissed.
   final VoidCallback? onCrosshairDisappeared;
 
   /// Called when the crosshair cursor is hovered/moved.
   final OnCrosshairHoverCallback? onCrosshairHover;
 
+  /// Whether the indicator is expanded or not.
+  final bool isExpanded;
+
   /// Whether the crosshair should be shown or not.
   final bool showCrosshair;
 
   /// The title of the bottom chart.
   final String title;
+
+  /// Whether the expanded icon should be shown or not.
+  final bool showExpandedIcon;
+
+  /// Whether the move up icon should be shown or not.
+  final bool showMoveUpIcon;
+
+  /// Whether the move down icon should be shown or not.
+  final bool showMoveDownIcon;
 
   @override
   _BottomChartState createState() => _BottomChartState();
@@ -51,38 +80,63 @@ class _BottomChartState extends BasicChartState<BottomChart> {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme();
 
-    Widget _buildEditIcon() => Material(
+    Widget _buildIcon({
+      required IconData iconData,
+      void Function()? onPressed,
+    }) =>
+        Material(
           type: MaterialType.circle,
           color: Colors.transparent,
           clipBehavior: Clip.antiAlias,
           child: IconButton(
-            icon: const Icon(
-              Icons.settings,
+            icon: Icon(
+              iconData,
               size: 16,
             ),
-            onPressed: () {
-              widget.onEdit?.call();
-            },
+            onPressed: onPressed,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
         );
 
-    Widget _buildRemoveIcon() => Material(
-          type: MaterialType.circle,
-          color: Colors.transparent,
-          clipBehavior: Clip.antiAlias,
-          child: IconButton(
-            icon: const Icon(
-              Icons.delete,
-              size: 16,
+    Widget _buildIcons() => Row(
+          children: <Widget>[
+            if (widget.showMoveUpIcon)
+              _buildIcon(
+                iconData: Icons.arrow_upward,
+                onPressed: () {
+                  widget.onSwap?.call(-1);
+                },
+              ),
+            if (widget.showMoveDownIcon)
+              _buildIcon(
+                iconData: Icons.arrow_downward,
+                onPressed: () {
+                  widget.onSwap?.call(1);
+                },
+              ),
+            if (widget.showExpandedIcon)
+              _buildIcon(
+                iconData: widget.isExpanded
+                    ? Icons.fullscreen_exit
+                    : Icons.fullscreen,
+                onPressed: () {
+                  widget.onExpandToggle?.call();
+                },
+              ),
+            _buildIcon(
+              iconData: Icons.settings,
+              onPressed: () {
+                widget.onEdit?.call();
+              },
             ),
-            onPressed: () {
-              widget.onRemove?.call();
-            },
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
+            _buildIcon(
+              iconData: Icons.delete,
+              onPressed: () {
+                widget.onRemove?.call();
+              },
+            ),
+          ],
         );
 
     return Positioned(
@@ -97,8 +151,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
         child: Row(
           children: <Widget>[
             BottomIndicatorTitle(widget.title),
-            _buildEditIcon(),
-            _buildRemoveIcon()
+            _buildIcons(),
           ],
         ),
       ),

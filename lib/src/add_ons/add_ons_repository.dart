@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
@@ -83,6 +84,15 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       return;
     }
     items.remove(config);
+    _writeToPrefs();
+    notifyListeners();
+  }
+
+  /// Swaps two elements of a list.
+  @override
+  void swap(int index1, int index2) {
+    items.swap(index1, index2);
+    _writeToPrefs();
     notifyListeners();
   }
 

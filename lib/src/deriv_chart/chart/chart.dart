@@ -131,6 +131,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
   late ChartTheme _chartTheme;
   late List<Series>? bottomSeries;
   late List<Series>? overlaySeries;
+  int? expandedIndex;
 
   @override
   void initState() {
@@ -235,28 +236,44 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                   ),
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)
-                  ...bottomSeries!
-                      .mapIndexed((int index, Series series) => Expanded(
-                            child: BottomChart(
-                              series: series,
-                              pipSize: widget.pipSize,
-                              title: widget.bottomConfigs![index].title,
-                              onRemove: () {
-                                widget.indicatorsRepo
-                                    ?.remove(widget.bottomConfigs![index]);
-                              },
-                              onEdit: () {
-                                widget.indicatorsRepo?.edit(
-                                  widget.bottomConfigs![index],
-                                );
-                              },
-                              showCrosshair: widget.showCrosshair,
-                              onCrosshairDisappeared:
-                                  widget.onCrosshairDisappeared,
-                              onCrosshairHover: widget.onCrosshairHover,
-                            ),
-                          ))
-                      .toList()
+                  ...bottomSeries!.mapIndexed((int index, Series series) {
+                    if (expandedIndex != null && expandedIndex != index) {
+                      return Container();
+                    }
+
+                    return Expanded(
+                      flex: expandedIndex != null ? bottomSeries!.length : 1,
+                      child: BottomChart(
+                        series: series,
+                        pipSize: widget.pipSize,
+                        title: widget.bottomConfigs![index].title,
+                        onRemove: () {
+                          expandedIndex = null;
+                          widget.indicatorsRepo
+                              ?.remove(widget.bottomConfigs![index]);
+                        },
+                        onEdit: () {
+                          widget.indicatorsRepo?.edit(
+                            widget.bottomConfigs![index],
+                          );
+                        },
+                        onExpandToggle: () {
+                          expandedIndex = expandedIndex != index ? index : null;
+                        },
+                        onSwap: (int offset) {
+                          widget.indicatorsRepo?.swap(index, index + offset);
+                        },
+                        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                        onCrosshairHover: widget.onCrosshairHover,
+                        isExpanded: expandedIndex != null,
+                        showCrosshair: widget.showCrosshair,
+                        showExpandedIcon: bottomSeries!.length > 1,
+                        showMoveUpIcon: bottomSeries!.length > 1 && index != 0,
+                        showMoveDownIcon: bottomSeries!.length > 1 &&
+                            index != bottomSeries!.length - 1,
+                      ),
+                    );
+                  }).toList()
               ],
             ),
           ),
