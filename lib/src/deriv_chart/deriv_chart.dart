@@ -137,20 +137,22 @@ class _DerivChartState extends State<DerivChart> {
 
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
+      createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       onEditCallback: showIndicatorsDialog,
     );
 
     _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
+      createAddOn: (Map<String, dynamic> map) =>
+          DrawingToolConfig.fromJson(map),
       onEditCallback: showDrawingToolsDialog,
     );
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<dynamic> _stateRepos = <dynamic>[
-      _indicatorsRepo,
-      _drawingToolsRepo
-    ];
+    final List<AddOnsRepository<AddOnConfig>> _stateRepos =
+        <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
+
     _stateRepos.asMap().forEach((int index, dynamic element) {
       try {
         element.loadFromPrefs(prefs);
