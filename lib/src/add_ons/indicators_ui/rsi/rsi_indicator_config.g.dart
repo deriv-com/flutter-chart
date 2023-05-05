@@ -19,10 +19,12 @@ RSIIndicatorConfig _$RSIIndicatorConfigFromJson(Map<String, dynamic> json) =>
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
       pinLabels: json['pinLabels'] as bool? ?? false,
       showZones: json['showZones'] as bool? ?? true,
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$RSIIndicatorConfigToJson(RSIIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'lineStyle': instance.lineStyle,
       'fieldType': instance.fieldType,

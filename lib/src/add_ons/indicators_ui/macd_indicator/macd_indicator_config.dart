@@ -25,7 +25,8 @@ class MACDIndicatorConfig extends IndicatorConfig {
     this.barStyle = const BarStyle(),
     this.lineStyle = const LineStyle(color: Colors.white),
     this.signalLineStyle = const LineStyle(color: Colors.redAccent),
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? MACDIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory MACDIndicatorConfig.fromJson(Map<String, dynamic> json) =>

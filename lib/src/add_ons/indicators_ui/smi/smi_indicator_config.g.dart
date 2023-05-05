@@ -17,10 +17,12 @@ SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) =>
       maType: $enumDecodeNullable(_$MovingAverageTypeEnumMap, json['maType']) ??
           MovingAverageType.exponential,
       showZones: json['showZones'] as bool? ?? true,
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'smoothingPeriod': instance.smoothingPeriod,
       'doubleSmoothingPeriod': instance.doubleSmoothingPeriod,

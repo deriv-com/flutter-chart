@@ -240,6 +240,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                             child: BottomChart(
                               series: series,
                               pipSize: widget.pipSize,
+                              title: widget.bottomConfigs![index].title,
                               onRemove: () {
                                 widget.indicatorsRepo
                                     ?.remove(widget.bottomConfigs![index]);

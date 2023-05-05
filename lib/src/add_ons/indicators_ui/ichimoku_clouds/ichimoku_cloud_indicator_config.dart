@@ -28,7 +28,8 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
     this.spanALineStyle = const LineStyle(color: Colors.green),
     this.spanBLineStyle = const LineStyle(color: Colors.red),
     this.laggingLineStyle = const LineStyle(color: Colors.lime),
-  }) : super();
+    String? title,
+  }) : super(title: title ?? IchimokuCloudIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory IchimokuCloudIndicatorConfig.fromJson(Map<String, dynamic> json) =>

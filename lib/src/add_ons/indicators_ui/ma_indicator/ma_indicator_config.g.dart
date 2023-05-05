@@ -17,11 +17,13 @@ MAIndicatorConfig _$MAIndicatorConfigFromJson(Map<String, dynamic> json) =>
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
       offset: json['offset'] as int?,
       isOverlay: json['isOverlay'] as bool? ?? true,
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$MAIndicatorConfigToJson(MAIndicatorConfig instance) =>
     <String, dynamic>{
       'isOverlay': instance.isOverlay,
+      'title': instance.title,
       'period': instance.period,
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType]!,

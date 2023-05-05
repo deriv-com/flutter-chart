@@ -27,7 +27,8 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.lineStyle = const LineStyle(color: Colors.white),
     this.pinLabels = false,
     this.showZones = true,
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? RSIIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory RSIIndicatorConfig.fromJson(Map<String, dynamic> json) =>

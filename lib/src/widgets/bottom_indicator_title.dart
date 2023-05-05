@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:deriv_chart/src/theme/text_styles.dart';
 
 /// Widget that shows the bottom indicator title.
 class BottomIndicatorTitle extends StatelessWidget {
@@ -9,5 +10,6 @@ class BottomIndicatorTitle extends StatelessWidget {
   final String title;
 
   @override
-  Widget build(BuildContext context) => Text(title);
+  Widget build(BuildContext context) =>
+      Text(title, style: TextStyles.body1Bold);
 }

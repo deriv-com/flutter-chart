@@ -18,11 +18,13 @@ GatorIndicatorConfig _$GatorIndicatorConfigFromJson(
       barStyle: json['barStyle'] == null
           ? const BarStyle()
           : BarStyle.fromJson(json['barStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$GatorIndicatorConfigToJson(
         GatorIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'jawOffset': instance.jawOffset,
       'jawPeriod': instance.jawPeriod,
       'teethOffset': instance.teethOffset,

@@ -18,10 +18,12 @@ CCIIndicatorConfig _$CCIIndicatorConfigFromJson(Map<String, dynamic> json) =>
       lineStyle: json['lineStyle'] == null
           ? const LineStyle(color: Colors.white)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$CCIIndicatorConfigToJson(CCIIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'oscillatorLinesConfig': instance.oscillatorLinesConfig,
       'lineStyle': instance.lineStyle,

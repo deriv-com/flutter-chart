@@ -20,7 +20,8 @@ class ROCIndicatorConfig extends IndicatorConfig {
     this.period = 14,
     this.fieldType = 'close',
     this.lineStyle,
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? ROCIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory ROCIndicatorConfig.fromJson(Map<String, dynamic> json) =>

@@ -26,7 +26,8 @@ class CCIIndicatorConfig extends IndicatorConfig {
     ),
     this.showZones = true,
     this.lineStyle = const LineStyle(color: Colors.white),
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? CCIIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory CCIIndicatorConfig.fromJson(Map<String, dynamic> json) =>

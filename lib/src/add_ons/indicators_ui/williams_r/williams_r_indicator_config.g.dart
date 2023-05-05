@@ -23,11 +23,13 @@ WilliamsRIndicatorConfig _$WilliamsRIndicatorConfigFromJson(
               oversoldValue: -80, overboughtValue: -20)
           : OscillatorLinesConfig.fromJson(
               json['oscillatorLimits'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$WilliamsRIndicatorConfigToJson(
         WilliamsRIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'lineStyle': instance.lineStyle,
       'zeroHorizontalLinesStyle': instance.zeroHorizontalLinesStyle,

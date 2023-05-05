@@ -13,11 +13,13 @@ ZigZagIndicatorConfig _$ZigZagIndicatorConfigFromJson(
       lineStyle: json['lineStyle'] == null
           ? const LineStyle(thickness: 0.9, color: Colors.blue)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$ZigZagIndicatorConfigToJson(
         ZigZagIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'distance': instance.distance,
       'lineStyle': instance.lineStyle,
     };

@@ -25,7 +25,8 @@ class GatorIndicatorConfig extends IndicatorConfig {
     this.teethOffset = 5,
     this.lipsOffset = 3,
     this.barStyle = const BarStyle(),
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? GatorIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory GatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>

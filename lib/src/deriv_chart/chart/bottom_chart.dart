@@ -12,6 +12,7 @@ class BottomChart extends BasicChart {
   /// Initializes a bottom chart.
   const BottomChart({
     required Series series,
+    required this.title,
     int pipSize = 4,
     Key? key,
     this.onRemove,
@@ -35,6 +36,9 @@ class BottomChart extends BasicChart {
 
   /// Whether the crosshair should be shown or not.
   final bool showCrosshair;
+
+  /// The title of the bottom chart.
+  final String title;
 
   @override
   _BottomChartState createState() => _BottomChartState();
@@ -92,7 +96,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
         ),
         child: Row(
           children: <Widget>[
-            BottomIndicatorTitle(widget.mainSeries.runtimeType.toString()),
+            BottomIndicatorTitle(widget.title),
             _buildEditIcon(),
             _buildRemoveIcon()
           ],

@@ -31,7 +31,11 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
     ),
     this.fastLineStyle = const LineStyle(color: Colors.white),
     this.slowLineStyle = const LineStyle(color: Colors.red),
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(
+          isOverlay: false,
+          title: title ?? StochasticOscillatorIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory StochasticOscillatorIndicatorConfig.fromJson(

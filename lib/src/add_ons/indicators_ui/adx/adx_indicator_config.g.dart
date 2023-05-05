@@ -27,10 +27,12 @@ ADXIndicatorConfig _$ADXIndicatorConfigFromJson(Map<String, dynamic> json) =>
       barStyle: json['barStyle'] == null
           ? const BarStyle()
           : BarStyle.fromJson(json['barStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$ADXIndicatorConfigToJson(ADXIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'smoothingPeriod': instance.smoothingPeriod,
       'showChannelFill': instance.showChannelFill,

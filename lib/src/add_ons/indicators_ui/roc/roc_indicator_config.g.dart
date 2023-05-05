@@ -13,10 +13,12 @@ ROCIndicatorConfig _$ROCIndicatorConfigFromJson(Map<String, dynamic> json) =>
       lineStyle: json['lineStyle'] == null
           ? null
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$ROCIndicatorConfigToJson(ROCIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'fieldType': instance.fieldType,
       'lineStyle': instance.lineStyle,

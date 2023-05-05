@@ -24,11 +24,13 @@ DonchianChannelIndicatorConfig _$DonchianChannelIndicatorConfigFromJson(
       fillColor: json['fillColor'] == null
           ? Colors.white12
           : const ColorConverter().fromJson(json['fillColor'] as int),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$DonchianChannelIndicatorConfigToJson(
         DonchianChannelIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'highPeriod': instance.highPeriod,
       'lowPeriod': instance.lowPeriod,
       'showChannelFill': instance.showChannelFill,

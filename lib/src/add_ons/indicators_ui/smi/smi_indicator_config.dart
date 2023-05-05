@@ -27,7 +27,8 @@ class SMIIndicatorConfig extends IndicatorConfig {
     this.signalPeriod = 10,
     this.maType = MovingAverageType.exponential,
     this.showZones = true,
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? SMIIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory SMIIndicatorConfig.fromJson(Map<String, dynamic> json) =>

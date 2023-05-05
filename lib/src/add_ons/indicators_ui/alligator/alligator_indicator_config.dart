@@ -29,7 +29,8 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.jawLineStyle = const LineStyle(color: Colors.blue),
     this.teethLineStyle = const LineStyle(color: Colors.red),
     this.lipsLineStyle = const LineStyle(color: Colors.green),
-  }) : super();
+    String? title,
+  }) : super(title: title ?? AlligatorIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory AlligatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>

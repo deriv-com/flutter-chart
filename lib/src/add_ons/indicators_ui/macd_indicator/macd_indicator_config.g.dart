@@ -20,11 +20,13 @@ MACDIndicatorConfig _$MACDIndicatorConfigFromJson(Map<String, dynamic> json) =>
       signalLineStyle: json['signalLineStyle'] == null
           ? const LineStyle(color: Colors.redAccent)
           : LineStyle.fromJson(json['signalLineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$MACDIndicatorConfigToJson(
         MACDIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'fastMAPeriod': instance.fastMAPeriod,
       'slowMAPeriod': instance.slowMAPeriod,
       'signalPeriod': instance.signalPeriod,

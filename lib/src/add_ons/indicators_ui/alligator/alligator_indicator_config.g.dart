@@ -26,11 +26,13 @@ AlligatorIndicatorConfig _$AlligatorIndicatorConfigFromJson(
       lipsLineStyle: json['lipsLineStyle'] == null
           ? const LineStyle(color: Colors.green)
           : LineStyle.fromJson(json['lipsLineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$AlligatorIndicatorConfigToJson(
         AlligatorIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'jawOffset': instance.jawOffset,
       'jawPeriod': instance.jawPeriod,
       'teethOffset': instance.teethOffset,

@@ -27,7 +27,8 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
       oversoldValue: -80,
       overboughtValue: -20,
     ),
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? WilliamsRIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory WilliamsRIndicatorConfig.fromJson(Map<String, dynamic> json) =>

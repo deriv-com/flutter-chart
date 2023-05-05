@@ -28,7 +28,8 @@ class ADXIndicatorConfig extends IndicatorConfig {
     this.positiveLineStyle = const LineStyle(color: Colors.green),
     this.negativeLineStyle = const LineStyle(color: Colors.red),
     this.barStyle = const BarStyle(),
-  }) : super(isOverlay: false);
+    String? title,
+  }) : super(isOverlay: false, title: title ?? ADXIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory ADXIndicatorConfig.fromJson(Map<String, dynamic> json) =>

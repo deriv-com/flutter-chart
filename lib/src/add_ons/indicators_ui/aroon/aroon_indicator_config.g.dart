@@ -16,11 +16,13 @@ AroonIndicatorConfig _$AroonIndicatorConfigFromJson(
       downLineStyle: json['downLineStyle'] == null
           ? const LineStyle(color: Colors.red)
           : LineStyle.fromJson(json['downLineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$AroonIndicatorConfigToJson(
         AroonIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'upLineStyle': instance.upLineStyle,
       'downLineStyle': instance.downLineStyle,

@@ -30,11 +30,13 @@ IchimokuCloudIndicatorConfig _$IchimokuCloudIndicatorConfigFromJson(
           ? const LineStyle(color: Colors.lime)
           : LineStyle.fromJson(
               json['laggingLineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$IchimokuCloudIndicatorConfigToJson(
         IchimokuCloudIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'conversionLinePeriod': instance.conversionLinePeriod,
       'baseLinePeriod': instance.baseLinePeriod,
       'spanBPeriod': instance.spanBPeriod,

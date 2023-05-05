@@ -15,7 +15,12 @@ part 'fcb_indicator_config.g.dart';
 @JsonSerializable()
 class FractalChaosBandIndicatorConfig extends IndicatorConfig {
   /// Initializes
-  const FractalChaosBandIndicatorConfig({this.channelFill = false}) : super();
+  const FractalChaosBandIndicatorConfig({
+    this.channelFill = false,
+    String? title,
+  }) : super(
+          title: title ?? FractalChaosBandIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory FractalChaosBandIndicatorConfig.fromJson(Map<String, dynamic> json) =>

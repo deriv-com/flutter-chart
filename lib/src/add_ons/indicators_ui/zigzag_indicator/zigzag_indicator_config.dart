@@ -18,7 +18,8 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
   const ZigZagIndicatorConfig({
     this.distance = 10,
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
-  }) : super();
+    String? title,
+  }) : super(title: title ?? ZigZagIndicatorConfig.name);
 
   /// Initializes from JSON.
   factory ZigZagIndicatorConfig.fromJson(Map<String, dynamic> json) =>
