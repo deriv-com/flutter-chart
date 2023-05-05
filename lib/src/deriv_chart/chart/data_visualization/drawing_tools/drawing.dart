@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
 /// Base class to draw a particular drawing
-class Drawing {
+abstract class Drawing {
   /// Paint
   void onPaint(
     Canvas canvas,
@@ -17,7 +17,7 @@ class Drawing {
     DraggableEdgePoint draggableStartPoint, {
     required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
-  }) {}
+  });
 
   /// Calculates y intersection based on vector points.
   double? getYIntersection(Vector vector, double x) {
@@ -49,6 +49,5 @@ class Drawing {
     DraggableEdgePoint draggableStartPoint, {
     required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
-  }) =>
-      true;
+  });
 }
