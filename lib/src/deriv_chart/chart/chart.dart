@@ -242,7 +242,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     }
 
                     return Expanded(
-                      flex: expandedIndex != null ? bottomSeries!.length : 1,
+                      flex: expandedIndex != null ? bottomSeries.length : 1,
                       child: BottomChart(
                         series: series,
                         pipSize: widget.pipSize,
