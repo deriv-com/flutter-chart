@@ -39,7 +39,7 @@ abstract class Drawing {
     return y;
   }
 
-  /// Calculation for detemining whether a user's touch or click intersects
+  /// Calculates whether a user's touch or click intersects
   /// with any of the painted areas on the screen
   bool hitTest(
     Offset position,

@@ -5,7 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
-/// Interactive chart widget.
+/// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatelessWidget {
   /// Creates chart that expands to available space.
   const DrawingToolChart({

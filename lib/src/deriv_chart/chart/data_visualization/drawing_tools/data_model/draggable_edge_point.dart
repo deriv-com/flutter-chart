@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 
-///A class that holds draggable edge point data
+/// A class that holds draggable edge point data.
 class DraggableEdgePoint {
   /// Represents whether the whole drawing is currently being dragged or not
   bool isDrawingDragged = false;

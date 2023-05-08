@@ -38,7 +38,7 @@ class LineDrawing extends Drawing {
   /// Marker radius.
   final double markerRadius = 4;
 
-  Vector _vector = Vector(x0: 0, y0: 0, x1: 0, y1: 0);
+  Vector _vector = const Vector(x0: 0, y0: 0, x1: 0, y1: 0);
 
   ///Vector of the line
   Vector getLineVector(double startXCoord, double startQuoteToY,

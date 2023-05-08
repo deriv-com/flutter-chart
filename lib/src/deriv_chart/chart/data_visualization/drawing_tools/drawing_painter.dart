@@ -39,7 +39,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
   bool _isDrawingDragged = false;
   final DraggableEdgePoint _draggableStartPoint = DraggableEdgePoint();
   final DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
-  Offset _previousPosition = Offset.zero;
+  Offset? _previousPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +70,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
     }
 
     DragUpdateDetails convertLongPressToDrag(
-        LongPressMoveUpdateDetails longPressDetails, Offset previousPosition) {
-      final Offset delta = longPressDetails.localPosition - previousPosition;
+        LongPressMoveUpdateDetails longPressDetails, Offset? previousPosition) {
+      final Offset delta = longPressDetails.localPosition - previousPosition!;
       return DragUpdateDetails(
         delta: delta,
         globalPosition: longPressDetails.globalPosition,
