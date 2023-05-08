@@ -138,7 +138,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized().addObserver(this);
     _initChartController();
-    _initSeries();
   }
 
   @override
@@ -149,11 +148,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
   void _initChartController() {
     _controller = widget.controller ?? ChartController();
-  }
-
-  void _initSeries() {
-    overlaySeries = _getIndicatorSeries(widget.overlayConfigs);
-    bottomSeries = _getIndicatorSeries(widget.bottomConfigs);
   }
 
   List<Series>? _getIndicatorSeries(List<IndicatorConfig>? configs) {
@@ -185,10 +179,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
       granularity: widget.granularity,
     );
 
+    final List<Series>? overlaySeries =
+        _getIndicatorSeries(widget.overlayConfigs);
+
+    final List<Series>? bottomSeries =
+        _getIndicatorSeries(widget.bottomConfigs);
+
     final List<ChartData> chartDataList = <ChartData>[
       widget.mainSeries,
-      if (overlaySeries != null) ...overlaySeries!,
-      if (bottomSeries != null) ...bottomSeries!,
+      if (overlaySeries != null) ...overlaySeries,
+      if (bottomSeries != null) ...bottomSeries,
       if (widget.annotations != null) ...widget.annotations!,
     ];
 
@@ -267,10 +267,10 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         onCrosshairHover: widget.onCrosshairHover,
                         isExpanded: expandedIndex != null,
                         showCrosshair: widget.showCrosshair,
-                        showExpandedIcon: bottomSeries!.length > 1,
-                        showMoveUpIcon: bottomSeries!.length > 1 && index != 0,
-                        showMoveDownIcon: bottomSeries!.length > 1 &&
-                            index != bottomSeries!.length - 1,
+                        showExpandedIcon: bottomSeries.length > 1,
+                        showMoveUpIcon: bottomSeries.length > 1 && index != 0,
+                        showMoveDownIcon: bottomSeries.length > 1 &&
+                            index != bottomSeries.length - 1,
                       ),
                     );
                   }).toList()
@@ -336,13 +336,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
           oldWidget.mainSeries.entries!.first.epoch) {
         _controller.onScrollToLastTick?.call(false);
       }
-    }
-
-    if (oldWidget.overlayConfigs != widget.overlayConfigs) {
-      overlaySeries = _getIndicatorSeries(oldWidget.overlayConfigs);
-    }
-    if (oldWidget.bottomConfigs != widget.bottomConfigs) {
-      bottomSeries = _getIndicatorSeries(oldWidget.bottomConfigs);
     }
   }
 }
