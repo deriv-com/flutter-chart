@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart'
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../data_model/drawing_parts.dart';
 import './line_drawing.dart';
 
 /// Creates a Line drawing piece by piece collected on every gesture
@@ -85,7 +86,7 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
         _drawingId = 'line_$_startingEpoch';
 
         _drawingParts.add(LineDrawing(
-          drawingPart: 'marker',
+          drawingPart: DrawingParts.marker,
           startEpoch: _startingEpoch!,
           startYCoord: _startingYPoint!,
         ));
@@ -97,12 +98,12 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
 
         _drawingParts.addAll(<LineDrawing>[
           LineDrawing(
-            drawingPart: 'marker',
+            drawingPart: DrawingParts.marker,
             endEpoch: _endingEpoch!,
             endYCoord: _endingYPoint!,
           ),
           LineDrawing(
-            drawingPart: 'line',
+            drawingPart: DrawingParts.line,
             startEpoch: _startingEpoch!,
             startYCoord: _startingYPoint!,
             endEpoch: _endingEpoch!,

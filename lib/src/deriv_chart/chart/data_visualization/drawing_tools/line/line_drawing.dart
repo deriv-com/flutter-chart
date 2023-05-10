@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import '../data_model/drawing_parts.dart';
 import '../drawing.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
@@ -21,7 +22,7 @@ class LineDrawing extends Drawing {
   });
 
   /// Part of a drawing: 'marker' or 'line'
-  final String drawingPart;
+  final DrawingParts drawingPart;
 
   /// Starting epoch.
   final int startEpoch;
@@ -109,7 +110,7 @@ class LineDrawing extends Drawing {
     final double endXCoord = endPoint.x;
     final double endQuoteToY = endPoint.y;
 
-    if (drawingPart == 'marker') {
+    if (drawingPart == DrawingParts.marker) {
       if (endEpoch != 0 && endQuoteToY != 0) {
         /// Draw first point
         canvas.drawCircle(Offset(endXCoord, endQuoteToY), markerRadius,
@@ -119,7 +120,7 @@ class LineDrawing extends Drawing {
         canvas.drawCircle(Offset(startXCoord, startQuoteToY), markerRadius,
             Paint()..color = lineStyle.color);
       }
-    } else if (drawingPart == 'line') {
+    } else if (drawingPart == DrawingParts.line) {
       _vector =
           getLineVector(startXCoord, startQuoteToY, endXCoord, endQuoteToY);
 
