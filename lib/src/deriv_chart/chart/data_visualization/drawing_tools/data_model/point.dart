@@ -4,16 +4,16 @@ import 'dart:ui';
 ///A class that holds point data
 class Point {
   /// Initializes
-  Point({
+  const Point({
     required this.x,
     required this.y,
   });
 
   ///Related x for the point
-  double x;
+  final double x;
 
   ///Related y for the point
-  double y;
+  final double y;
 
   /// Checks whether the point has been "clicked" by a user at a certain
   /// position on the screen, within a given "affected area" radius.

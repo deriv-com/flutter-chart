@@ -12,7 +12,7 @@ class DraggableEdgePoint {
   bool isDragged = false;
 
   /// Holds the current position of the edge point when it is being dragged.
-  Offset draggedPosition = Offset.zero;
+  late Offset draggedPosition;
 
   /// A callback method that takes the relative x and y positions as parameter,
   /// sets the draggedPosition field to its value and return epoch and quote
