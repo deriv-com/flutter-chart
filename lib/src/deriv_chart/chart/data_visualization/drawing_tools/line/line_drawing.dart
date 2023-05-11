@@ -41,6 +41,9 @@ class LineDrawing extends Drawing {
 
   Vector _vector = const Vector(x0: 0, y0: 0, x1: 0, y1: 0);
 
+  /// Keeps the latest position of the start and end point of drawing
+  Point? startPoint, endPoint;
+
   ///Vector of the line
   Vector getLineVector(double startXCoord, double startQuoteToY,
       double endXCoord, double endQuoteToY) {
@@ -91,24 +94,24 @@ class LineDrawing extends Drawing {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
-    final Point startPoint = draggableStartPoint.updatePosition(
+    startPoint = draggableStartPoint.updatePosition(
       startEpoch,
       startYCoord,
       epochToX,
       quoteToY,
     );
-    final Point endPoint = draggableEndPoint!.updatePosition(
+    endPoint = draggableEndPoint!.updatePosition(
       endEpoch,
       endYCoord,
       epochToX,
       quoteToY,
     );
 
-    final double startXCoord = startPoint.x;
-    final double startQuoteToY = startPoint.y;
+    final double startXCoord = startPoint!.x;
+    final double startQuoteToY = startPoint!.y;
 
-    final double endXCoord = endPoint.x;
-    final double endQuoteToY = endPoint.y;
+    final double endXCoord = endPoint!.x;
+    final double endQuoteToY = endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
       if (endEpoch != 0 && endQuoteToY != 0) {
@@ -149,33 +152,20 @@ class LineDrawing extends Drawing {
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
-    final Point startPoint = draggableStartPoint.updatePosition(
-      startEpoch,
-      startYCoord,
-      epochToX,
-      quoteToY,
-    );
-    final Point endPoint = draggableEndPoint!.updatePosition(
-      endEpoch,
-      endYCoord,
-      epochToX,
-      quoteToY,
-    );
+    final double startXCoord = startPoint!.x;
+    final double startQuoteToY = startPoint!.y;
 
-    final double startXCoord = startPoint.x;
-    final double startQuoteToY = startPoint.y;
-
-    final double endXCoord = endPoint.x;
-    final double endQuoteToY = endPoint.y;
+    final double endXCoord = endPoint!.x;
+    final double endQuoteToY = endPoint!.y;
 
     /// Check if start point clicked
-    if (startPoint.isClicked(position, markerRadius)) {
+    if (startPoint!.isClicked(position, markerRadius)) {
       draggableStartPoint.setIsEdgeDragged(isEdgeDragged: true);
     }
 
     /// Check if end point clicked
-    if (endPoint.isClicked(position, markerRadius)) {
-      draggableEndPoint.setIsEdgeDragged(isEdgeDragged: true);
+    if (endPoint!.isClicked(position, markerRadius)) {
+      draggableEndPoint!.setIsEdgeDragged(isEdgeDragged: true);
     }
 
     /// Computes the distance between a point and a line which should be less

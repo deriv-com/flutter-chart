@@ -12,7 +12,7 @@ class DraggableEdgePoint {
   bool isDragged = false;
 
   /// Holds the current position of the edge point when it is being dragged.
-  late Offset draggedPosition;
+  Offset? draggedPosition;
 
   /// A callback method that takes the relative x and y positions as parameter,
   /// sets the draggedPosition field to its value and return epoch and quote
@@ -22,8 +22,8 @@ class DraggableEdgePoint {
     final Offset oldPosition = Offset(epoch.toDouble(), yCoord);
     draggedPosition = isDrawingDragged ? draggedPosition : oldPosition;
 
-    final double xCoord = epochToX(draggedPosition.dx.toInt());
-    final double quoteY = quoteToY(draggedPosition.dy);
+    final double xCoord = epochToX(draggedPosition!.dx.toInt());
+    final double quoteY = quoteToY(draggedPosition!.dy);
 
     return Point(x: xCoord, y: quoteY);
   }
@@ -37,8 +37,8 @@ class DraggableEdgePoint {
       double Function(double y) quoteToY,
       {required bool isOtherEndDragged}) {
     final Offset localPosition = Offset(
-            xAxis.xFromEpoch(draggedPosition.dx.toInt()),
-            quoteToY(draggedPosition.dy)) +
+            xAxis.xFromEpoch(draggedPosition!.dx.toInt()),
+            quoteToY(draggedPosition!.dy)) +
         (isOtherEndDragged ? Offset.zero : delta);
 
     draggedPosition = Offset(xAxis.epochFromX(localPosition.dx).toDouble(),

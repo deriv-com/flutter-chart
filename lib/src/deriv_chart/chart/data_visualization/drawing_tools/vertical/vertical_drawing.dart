@@ -24,6 +24,9 @@ class VerticalDrawing extends Drawing {
   /// Starting Y coordinates.
   final double yCoord;
 
+  /// Keeps the latest position of the start of drawing
+  Point? startPoint;
+
   /// Paint
   @override
   void onPaint(
@@ -40,15 +43,15 @@ class VerticalDrawing extends Drawing {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
-    final Point startPoint = draggableStartPoint.updatePosition(
+    startPoint = draggableStartPoint.updatePosition(
       epoch,
       yCoord,
       epochToX,
       quoteToY,
     );
 
-    final double xCoord = startPoint.x;
-    final double startQuoteToY = startPoint.y;
+    final double xCoord = startPoint!.x;
+    final double startQuoteToY = startPoint!.y;
 
     if (drawingPart == 'vertical') {
       final double startY = startQuoteToY - 1000,
@@ -79,14 +82,7 @@ class VerticalDrawing extends Drawing {
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
-    final Point startPoint = draggableStartPoint.updatePosition(
-      epoch,
-      yCoord,
-      epochToX,
-      quoteToY,
-    );
-
-    return position.dx > startPoint.x - lineStyle.thickness - 3 &&
-        position.dx < startPoint.x + lineStyle.thickness + 3;
+    return position.dx > startPoint!.x - lineStyle.thickness - 3 &&
+        position.dx < startPoint!.x + lineStyle.thickness + 3;
   }
 }

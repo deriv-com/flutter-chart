@@ -31,7 +31,8 @@ class DrawingPainter extends StatefulWidget {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
 
-  /// Callback for when drawing is moved.
+  /// Callback to check if any single part of a single drawing is moved
+  /// regardless of knowing type of the drawing.
   final void Function({bool isDrawingMoved}) onMoveDrawing;
 }
 
