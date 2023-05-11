@@ -1,4 +1,4 @@
-///A class that holds vector data
+/// A class that holds vector data
 class Vector {
   /// Initializes
   const Vector({
@@ -8,15 +8,15 @@ class Vector {
     required this.y1,
   });
 
-  ///Related x for starting point of the vector
+  /// Related x for starting point of the vector
   final double x0;
 
-  ///Related y for starting point of the vector
+  /// Related y for starting point of the vector
   final double y0;
 
-  ///Related x for ending point of the vector
+  /// Related x for ending point of the vector
   final double x1;
 
-  ///Related y for ending point of the vector
+  /// Related y for ending point of the vector
   final double y1;
 }

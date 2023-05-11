@@ -4,6 +4,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 
 /// A class that holds draggable edge point data.
+/// Draggable edge points are part of the drawings which added by user clicks
+/// For example with dots are draggable edge points for the line
+/// ⎯⎯⚪️⎯⎯⎯⚪️⎯⎯
 class DraggableEdgePoint {
   /// Represents whether the whole drawing is currently being dragged or not
   bool isDrawingDragged = false;
@@ -45,8 +48,8 @@ class DraggableEdgePoint {
         quoteFromCanvasY(localPosition.dy));
   }
 
-  ///A callback method that takes a boolean value as a parameter
-  ///and sets the isDragged field to its value.
+  /// A callback method that takes a boolean value as a parameter
+  /// and sets the isDragged field to its value.
   void setIsEdgeDragged({required bool isEdgeDragged}) {
     isDragged = isEdgeDragged;
   }

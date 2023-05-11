@@ -44,9 +44,13 @@ class LineDrawing extends Drawing {
   /// Keeps the latest position of the start and end point of drawing
   Point? startPoint, endPoint;
 
-  ///Vector of the line
-  Vector getLineVector(double startXCoord, double startQuoteToY,
-      double endXCoord, double endQuoteToY) {
+  /// Vector of the line
+  Vector getLineVector(
+    double startXCoord,
+    double startQuoteToY,
+    double endXCoord,
+    double endQuoteToY,
+  ) {
     Vector vec = Vector(
       x0: startXCoord,
       y0: startQuoteToY,
@@ -124,8 +128,12 @@ class LineDrawing extends Drawing {
             Paint()..color = lineStyle.color);
       }
     } else if (drawingPart == DrawingParts.line) {
-      _vector =
-          getLineVector(startXCoord, startQuoteToY, endXCoord, endQuoteToY);
+      _vector = getLineVector(
+        startXCoord,
+        startQuoteToY,
+        endXCoord,
+        endQuoteToY,
+      );
 
       if (pattern == 'solid') {
         canvas.drawLine(
