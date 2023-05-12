@@ -91,9 +91,9 @@ class BasicChartState<T extends BasicChart> extends State<T>
   /// The animation of the current tick.
   late Animation<double> currentTickAnimation;
 
-  double get _topBoundQuote => topBoundQuoteTarget;
+  double get _topBoundQuote => topBoundQuoteAnimationController.value;
 
-  double get _bottomBoundQuote => bottomBoundQuoteTarget;
+  double get _bottomBoundQuote => bottomBoundQuoteAnimationController.value;
 
   /// Vertical padding in pixel.
   double get verticalPadding {
