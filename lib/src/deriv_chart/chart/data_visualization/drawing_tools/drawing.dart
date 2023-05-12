@@ -15,7 +15,6 @@ abstract class Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint, {
-    required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
   });
 
@@ -47,7 +46,6 @@ abstract class Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint, {
-    required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
   });
 }

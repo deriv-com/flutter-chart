@@ -117,7 +117,6 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 theme: context.watch<ChartTheme>(),
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
-                isDrawingDragged: _isDrawingDragged,
                 draggableStartPoint: _draggableStartPoint,
                 draggableEndPoint: _draggableEndPoint,
               ),
@@ -134,7 +133,6 @@ class _DrawingPainter extends CustomPainter {
     required this.theme,
     required this.epochToX,
     required this.quoteToY,
-    required this.isDrawingDragged,
     required this.draggableStartPoint,
     this.draggableEndPoint,
   });
@@ -143,7 +141,6 @@ class _DrawingPainter extends CustomPainter {
   final ChartTheme theme;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
-  bool isDrawingDragged;
   DraggableEdgePoint draggableStartPoint;
   DraggableEdgePoint? draggableEndPoint;
 
@@ -158,7 +155,6 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData.config!,
         draggableStartPoint,
-        isDrawingDragged: isDrawingDragged,
         draggableEndPoint: draggableEndPoint,
       );
     }
@@ -179,7 +175,6 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData.config!,
         draggableStartPoint,
-        isDrawingDragged: isDrawingDragged,
         draggableEndPoint: draggableEndPoint,
       )) {
         return true;

@@ -92,7 +92,6 @@ class LineDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint, {
-    required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
@@ -147,7 +146,9 @@ class LineDrawing extends Drawing {
   }
 
   /// Calculation for detemining whether a user's touch or click intersects
-  /// with any of the painted areas on the screen
+  /// with any of the painted areas on the screen, for any of the edge points
+  /// it will call "setIsEdgeDragged" callback function to determine which
+  /// point is clicked
   @override
   bool hitTest(
     Offset position,
@@ -155,7 +156,6 @@ class LineDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint, {
-    required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];

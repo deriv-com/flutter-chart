@@ -37,7 +37,6 @@ class VerticalDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint, {
-    required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
@@ -77,7 +76,6 @@ class VerticalDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint, {
-    required bool isDrawingDragged,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
