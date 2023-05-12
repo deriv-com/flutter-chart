@@ -23,11 +23,13 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.isCentered = true,
+    String? title,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,
           isOverlay: false,
+          title: title ?? DPOIndicatorConfig.name,
         );
 
   /// Initializes from JSON.

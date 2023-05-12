@@ -14,10 +14,12 @@ DPOIndicatorConfig _$DPOIndicatorConfigFromJson(Map<String, dynamic> json) =>
           MovingAverageType.simple,
       fieldType: json['fieldType'] as String? ?? 'close',
       isCentered: json['isCentered'] as bool? ?? true,
+      title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$DPOIndicatorConfigToJson(DPOIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'period': instance.period,
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType]!,
