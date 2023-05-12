@@ -223,6 +223,14 @@ class BasicChartState<T extends BasicChart> extends State<T>
       vsync: this,
       duration: quoteBoundsAnimationDuration,
     );
+
+    /// Builds the widget once the animation is finished
+    /// so that the y-axis is correctly filled.
+    topBoundQuoteAnimationController.addListener(() {
+      if (topBoundQuoteAnimationController.isCompleted) {
+        setState(() {});
+      }
+    });
   }
 
   void _clearGestures() {
