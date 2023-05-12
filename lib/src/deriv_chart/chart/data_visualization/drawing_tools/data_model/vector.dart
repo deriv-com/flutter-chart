@@ -8,6 +8,9 @@ class Vector {
     required this.y1,
   });
 
+  /// Vector with zero coordinate.
+  const Vector.zero() : this(x0: 0, y0: 0, x1: 0, y1: 0);
+
   /// Related x for starting point of the vector
   final double x0;
 

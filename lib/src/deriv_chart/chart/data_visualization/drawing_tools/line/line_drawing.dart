@@ -39,7 +39,7 @@ class LineDrawing extends Drawing {
   /// Marker radius.
   final double markerRadius = 4;
 
-  Vector _vector = const Vector(x0: 0, y0: 0, x1: 0, y1: 0);
+  Vector _vector = const Vector.zero();
 
   /// Keeps the latest position of the start and end point of drawing
   Point? startPoint, endPoint;
