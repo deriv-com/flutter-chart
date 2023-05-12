@@ -192,6 +192,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
       if (widget.annotations != null) ...widget.annotations!,
     ];
 
+    final bool isExpanded = expandedIndex != null;
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
@@ -237,12 +239,12 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)
                   ...bottomSeries!.mapIndexed((int index, Series series) {
-                    if (expandedIndex != null && expandedIndex != index) {
+                    if (isExpanded && expandedIndex != index) {
                       return Container();
                     }
 
                     return Expanded(
-                      flex: expandedIndex != null ? bottomSeries.length : 1,
+                      flex: isExpanded ? bottomSeries.length : 1,
                       child: BottomChart(
                         series: series,
                         pipSize: widget.pipSize,
@@ -261,15 +263,19 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                           expandedIndex = expandedIndex != index ? index : null;
                         },
                         onSwap: (int offset) {
-                          widget.indicatorsRepo?.swap(index, index + offset);
+                          _onSwap(widget.bottomConfigs![index],
+                              widget.bottomConfigs![index + offset]);
                         },
                         onCrosshairDisappeared: widget.onCrosshairDisappeared,
                         onCrosshairHover: widget.onCrosshairHover,
-                        isExpanded: expandedIndex != null,
+                        isExpanded: isExpanded,
                         showCrosshair: widget.showCrosshair,
                         showExpandedIcon: bottomSeries.length > 1,
-                        showMoveUpIcon: bottomSeries.length > 1 && index != 0,
-                        showMoveDownIcon: bottomSeries.length > 1 &&
+                        showMoveUpIcon: !isExpanded &&
+                            bottomSeries.length > 1 &&
+                            index != 0,
+                        showMoveDownIcon: !isExpanded &&
+                            bottomSeries.length > 1 &&
                             index != bottomSeries.length - 1,
                       ),
                     );
@@ -280,6 +286,14 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
+    if (widget.indicatorsRepo != null) {
+      final int index1 = widget.indicatorsRepo!.items.indexOf(config1);
+      final int index2 = widget.indicatorsRepo!.items.indexOf(config2);
+      widget.indicatorsRepo!.swap(index1, index2);
+    }
   }
 
   void _onVisibleAreaChanged(int leftBoundEpoch, int rightBoundEpoch) {
