@@ -160,7 +160,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     };
 
     widget.controller?.onScale = (double scale) {
-      xAxis.scale(scale);
+      xAxis
+        ..onScaleAndPanStart(ScaleStartDetails())
+        ..scale(scale);
     };
 
     widget.controller?.getXFromEpoch = (int epoch) => xAxis.xFromEpoch(epoch);

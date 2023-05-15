@@ -423,8 +423,6 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called to scale the chart
   void scale(double scale) {
-    _prevMsPerPx = _msPerPx;
-
     _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
     onScale?.call();
     notifyListeners();
