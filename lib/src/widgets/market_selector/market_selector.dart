@@ -11,7 +11,10 @@ import 'no_result_page.dart';
 ///
 /// [favouriteClicked] is true when the user has tapped on the favourite icon of
 /// the item.
-typedef OnAssetClicked = Function(Asset asset, bool favouriteClicked);
+typedef OnAssetClicked = void Function({
+  required Asset asset,
+  required bool favouriteClicked,
+});
 
 /// The duration of animating the scroll to the selected item in the
 /// [MarketSelector] widget.
@@ -179,10 +182,12 @@ class _MarketSelectorState extends State<MarketSelector>
         filterText:
             market.containsText(lowerCaseFilterText) ? '' : lowerCaseFilterText,
         market: market,
-        onAssetClicked: (Asset asset, bool isFavouriteClicked) {
-          widget.onAssetClicked?.call(asset, isFavouriteClicked);
+        onAssetClicked: (
+            {required Asset asset, required bool favouriteClicked}) {
+          widget.onAssetClicked
+              ?.call(asset: asset, favouriteClicked: favouriteClicked);
 
-          if (isFavouriteClicked) {
+          if (favouriteClicked) {
             setState(() {
               asset.toggleFavourite();
             });
