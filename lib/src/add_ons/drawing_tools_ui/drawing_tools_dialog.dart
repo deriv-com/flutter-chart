@@ -90,7 +90,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 },
                 () {
                   widget.onDrawingToolRemoval(index);
-                  repo.remove(repo.items[index]);
+                  repo.removeAt(index);
                 },
               ),
             ),

@@ -61,7 +61,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// Called when the edit icon is clicked.
   @override
-  void edit(T config) {
+  void editAt(int index) {
     onEditCallback?.call();
   }
 
@@ -79,16 +79,16 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   /// Removes indicator/drawing tool at [index] from repository and
   /// updates storage.
   @override
-  void remove(T config) {
-    if (!items.contains(config)) {
+  void removeAt(int index) {
+    if (index < 0 || index >= items.length) {
       return;
     }
-    items.remove(config);
+    items.removeAt(index);
     _writeToPrefs();
     notifyListeners();
   }
 
-  /// Swaps two elements of a list.
+  /// Swaps two elements of a list and updates storage.
   @override
   void swap(int index1, int index2) {
     items.swap(index1, index2);

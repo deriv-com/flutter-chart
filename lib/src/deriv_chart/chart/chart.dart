@@ -249,23 +249,14 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         series: series,
                         pipSize: widget.pipSize,
                         title: widget.bottomConfigs![index].title,
-                        onRemove: () {
-                          expandedIndex = null;
-                          widget.indicatorsRepo
-                              ?.remove(widget.bottomConfigs![index]);
-                        },
-                        onEdit: () {
-                          widget.indicatorsRepo?.edit(
-                            widget.bottomConfigs![index],
-                          );
-                        },
+                        onRemove: () => _onRemove(widget.bottomConfigs![index]),
+                        onEdit: () => _onEdit(widget.bottomConfigs![index]),
                         onExpandToggle: () {
                           expandedIndex = expandedIndex != index ? index : null;
                         },
-                        onSwap: (int offset) {
-                          _onSwap(widget.bottomConfigs![index],
-                              widget.bottomConfigs![index + offset]);
-                        },
+                        onSwap: (int offset) => _onSwap(
+                            widget.bottomConfigs![index],
+                            widget.bottomConfigs![index + offset]),
                         onCrosshairDisappeared: widget.onCrosshairDisappeared,
                         onCrosshairHover: widget.onCrosshairHover,
                         isExpanded: isExpanded,
@@ -286,6 +277,22 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  void _onEdit(IndicatorConfig config) {
+    if (widget.indicatorsRepo != null) {
+      final int index = widget.indicatorsRepo!.items.indexOf(config);
+      widget.indicatorsRepo!.editAt(index);
+    }
+  }
+
+  void _onRemove(IndicatorConfig config) {
+    expandedIndex = null;
+
+    if (widget.indicatorsRepo != null) {
+      final int index = widget.indicatorsRepo!.items.indexOf(config);
+      widget.indicatorsRepo!.removeAt(index);
+    }
   }
 
   void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
