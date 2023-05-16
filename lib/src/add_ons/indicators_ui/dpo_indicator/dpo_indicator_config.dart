@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/dpo_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -23,12 +24,14 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.isCentered = true,
+    LineStyle? lineStyle,
     String? title,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,
           isOverlay: false,
+          lineStyle: lineStyle,
           title: title ?? DPOIndicatorConfig.name,
         );
 
@@ -53,6 +56,7 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
           period: period,
           movingAverageType: movingAverageType,
           isCentered: isCentered,
+          lineStyle: lineStyle,
         ),
       );
 

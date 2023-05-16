@@ -14,6 +14,9 @@ DPOIndicatorConfig _$DPOIndicatorConfigFromJson(Map<String, dynamic> json) =>
           MovingAverageType.simple,
       fieldType: json['fieldType'] as String? ?? 'close',
       isCentered: json['isCentered'] as bool? ?? true,
+      lineStyle: json['lineStyle'] == null
+          ? null
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
       title: json['title'] as String?,
     );
 
@@ -24,6 +27,7 @@ Map<String, dynamic> _$DPOIndicatorConfigToJson(DPOIndicatorConfig instance) =>
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType]!,
       'fieldType': instance.fieldType,
+      'lineStyle': instance.lineStyle,
       'isCentered': instance.isCentered,
     };
 
