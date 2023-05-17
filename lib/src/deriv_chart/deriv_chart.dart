@@ -70,7 +70,7 @@ class DerivChart extends StatefulWidget {
   /// Called when crosshair details appear after long press.
   final VoidCallback? onCrosshairAppeared;
 
-  /// Called when candle or point is dismissed.
+  /// Called when the crosshair is dismissed.
   final VoidCallback? onCrosshairDisappeared;
 
   /// Called when the crosshair cursor is hovered/moved.

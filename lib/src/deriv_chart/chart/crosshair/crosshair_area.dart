@@ -35,7 +35,7 @@ class CrosshairArea extends StatefulWidget {
   /// Called on longpress to show candle/point details.
   final VoidCallback? onCrosshairAppeared;
 
-  /// Called when candle or point is dismissed.
+  /// Called when the crosshair is dismissed.
   final VoidCallback? onCrosshairDisappeared;
 
   @override

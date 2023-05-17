@@ -45,7 +45,7 @@ class BottomChart extends BasicChart {
   /// Called when an indicator is to moved up/down.
   final SwapCallback? onSwap;
 
-  /// Called when candle or point is dismissed.
+  /// Called when the crosshair is dismissed.
   final VoidCallback? onCrosshairDisappeared;
 
   /// Called when the crosshair cursor is hovered/moved.
