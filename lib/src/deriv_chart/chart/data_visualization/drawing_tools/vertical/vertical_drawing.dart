@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../drawing.dart';
@@ -35,10 +36,11 @@ class VerticalDrawing extends Drawing {
     ChartTheme theme,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
-    DrawingToolConfig config,
+    DrawingData drawingData,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    final DrawingToolConfig config = drawingData.config!;
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
@@ -53,16 +55,25 @@ class VerticalDrawing extends Drawing {
     final double startQuoteToY = startPoint!.y;
 
     if (drawingPart == 'vertical') {
-      final double startY = startQuoteToY - 1000,
-          endingY = startQuoteToY + 1000;
+      final double startY = startQuoteToY - 10000,
+          endingY = startQuoteToY + 10000;
+
+      final Paint shadowPaint = Paint()
+        ..color = lineStyle.color
+        ..strokeWidth = lineStyle.thickness + 3
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 10);
+
+      final Paint simplePaint = Paint()
+        ..color = lineStyle.color
+        ..strokeWidth = lineStyle.thickness;
 
       if (pattern == 'solid') {
         canvas.drawLine(
-            Offset(xCoord, startY),
-            Offset(xCoord, endingY),
-            Paint()
-              ..color = lineStyle.color
-              ..strokeWidth = lineStyle.thickness);
+          Offset(xCoord, startY),
+          Offset(xCoord, endingY),
+          drawingData.isSelected ? shadowPaint : simplePaint,
+        );
       }
     }
   }
@@ -80,7 +91,7 @@ class VerticalDrawing extends Drawing {
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
-    return position.dx > startPoint!.x - lineStyle.thickness - 3 &&
-        position.dx < startPoint!.x + lineStyle.thickness + 3;
+    return position.dx > startPoint!.x - lineStyle.thickness - 5 &&
+        position.dx < startPoint!.x + lineStyle.thickness + 5;
   }
 }

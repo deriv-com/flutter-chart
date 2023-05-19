@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../data_model/drawing_parts.dart';
@@ -37,7 +39,7 @@ class LineDrawing extends Drawing {
   final double endYCoord;
 
   /// Marker radius.
-  final double markerRadius = 4;
+  final double markerRadius = 10;
 
   Vector _vector = const Vector.zero();
 
@@ -90,10 +92,12 @@ class LineDrawing extends Drawing {
     ChartTheme theme,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
-    DrawingToolConfig config,
+    DrawingData drawingData,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    final DrawingPaintStyle paint = DrawingPaintStyle();
+    final DrawingToolConfig config = drawingData.config!;
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
@@ -119,12 +123,20 @@ class LineDrawing extends Drawing {
     if (drawingPart == DrawingParts.marker) {
       if (endEpoch != 0 && endQuoteToY != 0) {
         /// Draw first point
-        canvas.drawCircle(Offset(endXCoord, endQuoteToY), markerRadius,
-            Paint()..color = lineStyle.color);
+        canvas.drawCircle(
+            Offset(endXCoord, endQuoteToY),
+            markerRadius,
+            drawingData.isSelected
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle());
       } else if (startEpoch != 0 && startQuoteToY != 0) {
         /// Draw second point
-        canvas.drawCircle(Offset(startXCoord, startQuoteToY), markerRadius,
-            Paint()..color = lineStyle.color);
+        canvas.drawCircle(
+            Offset(startXCoord, startQuoteToY),
+            markerRadius,
+            drawingData.isSelected
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle());
       }
     } else if (drawingPart == DrawingParts.line) {
       _vector = getLineVector(
@@ -136,11 +148,12 @@ class LineDrawing extends Drawing {
 
       if (pattern == 'solid') {
         canvas.drawLine(
-            Offset(_vector.x0, _vector.y0),
-            Offset(_vector.x1, _vector.y1),
-            Paint()
-              ..color = lineStyle.color
-              ..strokeWidth = lineStyle.thickness);
+          Offset(_vector.x0, _vector.y0),
+          Offset(_vector.x1, _vector.y1),
+          drawingData.isSelected
+              ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
+              : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
+        );
       }
     }
   }
@@ -168,12 +181,12 @@ class LineDrawing extends Drawing {
 
     /// Check if start point clicked
     if (startPoint!.isClicked(position, markerRadius)) {
-      draggableStartPoint.setIsEdgeDragged(isEdgeDragged: true);
+      draggableStartPoint.isDragged = true;
     }
 
     /// Check if end point clicked
     if (endPoint!.isClicked(position, markerRadius)) {
-      draggableEndPoint!.setIsEdgeDragged(isEdgeDragged: true);
+      draggableEndPoint!.isDragged = true;
     }
 
     /// Computes the distance between a point and a line which should be less
@@ -185,6 +198,6 @@ class LineDrawing extends Drawing {
         sqrt(pow(endQuoteToY - startQuoteToY, 2) +
             pow(endXCoord - startXCoord, 2));
 
-    return distance.abs() <= lineStyle.thickness + 6;
+    return distance.abs() <= lineStyle.thickness + 10;
   }
 }

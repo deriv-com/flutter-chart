@@ -37,6 +37,16 @@ class DrawingToolChart extends StatelessWidget {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) chartQuoteToCanvasY;
 
+  void _setIsDrawingSelected(DrawingData drawing) {
+    drawing.isSelected = !drawing.isSelected;
+
+    for (final DrawingData d in drawings!) {
+      if (d.id != drawing.id) {
+        d.isSelected = false;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) => ClipRect(
         child: Stack(
@@ -48,6 +58,7 @@ class DrawingToolChart extends StatelessWidget {
                     quoteToCanvasY: chartQuoteToCanvasY,
                     quoteFromCanvasY: chartQuoteFromCanvasY,
                     onMoveDrawing: onMoveDrawing,
+                    setIsDrawingSelected: _setIsDrawingSelected,
                   )),
             if (selectedDrawingTool != null)
               DrawingCreator(

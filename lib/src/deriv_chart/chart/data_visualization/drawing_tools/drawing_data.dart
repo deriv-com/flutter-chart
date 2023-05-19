@@ -4,10 +4,11 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 /// A class that hold drawing data.
 class DrawingData {
   /// Initializes
-  const DrawingData({
+  DrawingData({
     required this.id,
     required this.config,
-    required this.drawings,
+    required this.drawingParts,
+    this.isSelected = true,
   });
 
   /// Unique id of the current drawing.
@@ -16,14 +17,17 @@ class DrawingData {
   /// Configuration of the current drawing.
   final DrawingToolConfig? config;
 
-  ///Drawing list.
-  final List<Drawing> drawings;
+  /// Drawing list.
+  final List<Drawing> drawingParts;
+
+  /// If the drawing is selected by the user.
+  bool isSelected;
 
   /// Updates configuration.
   DrawingData updateConfig(DrawingToolConfig config) =>
-      DrawingData(id: id, config: config, drawings: drawings);
+      DrawingData(id: id, config: config, drawingParts: drawingParts);
 
   /// Updates drawing list.
-  DrawingData updateDrawingList(List<Drawing> drawings) =>
-      DrawingData(id: id, config: config, drawings: drawings);
+  DrawingData updateDrawingList(List<Drawing> drawingParts) =>
+      DrawingData(id: id, config: config, drawingParts: drawingParts);
 }

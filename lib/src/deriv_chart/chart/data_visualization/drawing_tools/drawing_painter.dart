@@ -16,6 +16,7 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteToCanvasY,
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
+    required this.setIsDrawingSelected,
     Key? key,
   }) : super(key: key);
 
@@ -34,6 +35,9 @@ class DrawingPainter extends StatefulWidget {
   /// Callback to check if any single part of a single drawing is moved
   /// regardless of knowing type of the drawing.
   final void Function({bool isDrawingMoved}) onMoveDrawing;
+
+  /// Callback to set if drawing is selected (tapped).
+  final void Function(DrawingData drawing) setIsDrawingSelected;
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
@@ -47,27 +51,29 @@ class _DrawingPainterState extends State<DrawingPainter> {
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
     void _onPanUpdate(DragUpdateDetails details) {
-      setState(() {
-        _isDrawingDragged = details.delta != Offset.zero;
-        _draggableStartPoint
-          ..isDrawingDragged = _isDrawingDragged
-          ..updatePositionWithLocalPositions(
-            details.delta,
-            xAxis,
-            widget.quoteFromCanvasY,
-            widget.quoteToCanvasY,
-            isOtherEndDragged: _draggableEndPoint.isDragged,
-          );
-        _draggableEndPoint
-          ..isDrawingDragged = _isDrawingDragged
-          ..updatePositionWithLocalPositions(
-            details.delta,
-            xAxis,
-            widget.quoteFromCanvasY,
-            widget.quoteToCanvasY,
-            isOtherEndDragged: _draggableStartPoint.isDragged,
-          );
-      });
+      if (widget.drawingData!.isSelected) {
+        setState(() {
+          _isDrawingDragged = details.delta != Offset.zero;
+          _draggableStartPoint
+            ..isDrawingDragged = _isDrawingDragged
+            ..updatePositionWithLocalPositions(
+              details.delta,
+              xAxis,
+              widget.quoteFromCanvasY,
+              widget.quoteToCanvasY,
+              isOtherEndDragged: _draggableEndPoint.isDragged,
+            );
+          _draggableEndPoint
+            ..isDrawingDragged = _isDrawingDragged
+            ..updatePositionWithLocalPositions(
+              details.delta,
+              xAxis,
+              widget.quoteFromCanvasY,
+              widget.quoteToCanvasY,
+              isOtherEndDragged: _draggableStartPoint.isDragged,
+            );
+        });
+      }
     }
 
     DragUpdateDetails convertLongPressToDrag(
@@ -82,6 +88,9 @@ class _DrawingPainterState extends State<DrawingPainter> {
 
     return widget.drawingData != null
         ? GestureDetector(
+            onTapUp: (TapUpDetails details) {
+              widget.setIsDrawingSelected(widget.drawingData!);
+            },
             onLongPressDown: (LongPressDownDetails details) {
               widget.onMoveDrawing(isDrawingMoved: true);
               _previousPosition = details.localPosition;
@@ -146,14 +155,14 @@ class _DrawingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (final Drawing drawing in drawingData.drawings) {
-      drawing.onPaint(
+    for (final Drawing drawingPart in drawingData.drawingParts) {
+      drawingPart.onPaint(
         canvas,
         size,
         theme,
         epochToX,
         quoteToY,
-        drawingData.config!,
+        drawingData,
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
       );
@@ -168,8 +177,8 @@ class _DrawingPainter extends CustomPainter {
 
   @override
   bool hitTest(Offset position) {
-    for (final Drawing drawing in drawingData.drawings) {
-      if (drawing.hitTest(
+    for (final Drawing drawingPart in drawingData.drawingParts) {
+      if (drawingPart.hitTest(
         position,
         epochToX,
         quoteToY,
@@ -180,6 +189,8 @@ class _DrawingPainter extends CustomPainter {
         return true;
       }
     }
+
+    drawingData.isSelected = false;
     return false;
   }
 }

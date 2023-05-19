@@ -47,10 +47,4 @@ class DraggableEdgePoint {
     draggedPosition = Offset(xAxis.epochFromX(localPosition.dx).toDouble(),
         quoteFromCanvasY(localPosition.dy));
   }
-
-  /// A callback method that takes a boolean value as a parameter
-  /// and sets the isDragged field to its value.
-  void setIsEdgeDragged({required bool isEdgeDragged}) {
-    isDragged = isEdgeDragged;
-  }
 }

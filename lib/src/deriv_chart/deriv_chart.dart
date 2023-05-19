@@ -263,10 +263,12 @@ class _DerivChartState extends State<DerivChart> {
         _drawings.add(DrawingData(
           id: drawingId,
           config: _selectedDrawingTool!,
-          drawings: addedDrawing.values.first,
+          drawingParts: addedDrawing.values.first,
         ));
       } else {
-        existingDrawing.updateDrawingList(addedDrawing.values.first);
+        existingDrawing
+          ..updateDrawingList(addedDrawing.values.first)
+          ..isSelected = true;
       }
 
       if (isDrawingFinished) {
