@@ -264,16 +264,23 @@ class _DerivChartState extends State<DerivChart> {
           id: drawingId,
           config: _selectedDrawingTool!,
           drawingParts: addedDrawing.values.first,
+          isDrawingFinished: isDrawingFinished,
         ));
       } else {
         existingDrawing
-          ..updateDrawingList(addedDrawing.values.first)
-          ..isSelected = true;
+          ..updateDrawingPartList(addedDrawing.values.first)
+          ..isSelected = true
+          ..isDrawingFinished = isDrawingFinished;
       }
 
       if (isDrawingFinished) {
         _drawingToolsRepo.add(_selectedDrawingTool!);
         _selectedDrawingTool = null;
+      }
+
+      if (_drawings.length > 1) {
+        _drawings.removeWhere((DrawingData data) =>
+            data.id != drawingId && !data.isDrawingFinished);
       }
     });
   }

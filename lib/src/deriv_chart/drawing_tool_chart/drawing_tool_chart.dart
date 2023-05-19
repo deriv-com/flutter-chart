@@ -40,9 +40,9 @@ class DrawingToolChart extends StatelessWidget {
   void _setIsDrawingSelected(DrawingData drawing) {
     drawing.isSelected = !drawing.isSelected;
 
-    for (final DrawingData d in drawings!) {
-      if (d.id != drawing.id) {
-        d.isSelected = false;
+    for (final DrawingData data in drawings!) {
+      if (data.id != drawing.id) {
+        data.isSelected = false;
       }
     }
   }

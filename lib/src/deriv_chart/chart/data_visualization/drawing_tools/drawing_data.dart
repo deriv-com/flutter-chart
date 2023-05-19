@@ -8,6 +8,7 @@ class DrawingData {
     required this.id,
     required this.config,
     required this.drawingParts,
+    this.isDrawingFinished = false,
     this.isSelected = true,
   });
 
@@ -15,10 +16,13 @@ class DrawingData {
   final String id;
 
   /// Configuration of the current drawing.
-  final DrawingToolConfig? config;
+  final DrawingToolConfig config;
 
   /// Drawing list.
   final List<Drawing> drawingParts;
+
+  /// If drawing is finished.
+  bool isDrawingFinished;
 
   /// If the drawing is selected by the user.
   bool isSelected;
@@ -28,6 +32,6 @@ class DrawingData {
       DrawingData(id: id, config: config, drawingParts: drawingParts);
 
   /// Updates drawing list.
-  DrawingData updateDrawingList(List<Drawing> drawingParts) =>
+  DrawingData updateDrawingPartList(List<Drawing> drawingParts) =>
       DrawingData(id: id, config: config, drawingParts: drawingParts);
 }

@@ -182,7 +182,7 @@ class _DrawingPainter extends CustomPainter {
         position,
         epochToX,
         quoteToY,
-        drawingData.config!,
+        drawingData.config,
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
       )) {

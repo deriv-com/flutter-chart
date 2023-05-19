@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _VerticalDrawingCreatorState extends State<VerticalDrawingCreator> {
       _isDrawingFinished = true;
 
       _drawingParts.add(VerticalDrawing(
-        drawingPart: 'vertical',
+        drawingPart: DrawingParts.line,
         epoch: _startingEpoch!,
         yCoord: _startingYPoint!,
       ));

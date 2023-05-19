@@ -1,10 +1,13 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import '../drawing.dart';
 
 /// Vertical drawing tool. A vertical is a vertical line defined by one point
 /// that is infinite in both directions.
@@ -17,7 +20,7 @@ class VerticalDrawing extends Drawing {
   });
 
   /// Part of a drawing: 'vertical'
-  final String drawingPart;
+  final DrawingParts drawingPart;
 
   /// Starting epoch.
   final int epoch;
@@ -40,9 +43,12 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    final DrawingToolConfig config = drawingData.config!;
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
-    final String pattern = config.toJson()['pattern'];
+    final DrawingPaintStyle paint = DrawingPaintStyle();
+    final VerticalDrawingToolConfig config =
+        drawingData.config as VerticalDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
+    final String pattern = config.pattern;
 
     startPoint = draggableStartPoint.updatePosition(
       epoch,
@@ -54,25 +60,17 @@ class VerticalDrawing extends Drawing {
     final double xCoord = startPoint!.x;
     final double startQuoteToY = startPoint!.y;
 
-    if (drawingPart == 'vertical') {
+    if (drawingPart == DrawingParts.line) {
       final double startY = startQuoteToY - 10000,
           endingY = startQuoteToY + 10000;
-
-      final Paint shadowPaint = Paint()
-        ..color = lineStyle.color
-        ..strokeWidth = lineStyle.thickness + 3
-        ..strokeCap = StrokeCap.round
-        ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 10);
-
-      final Paint simplePaint = Paint()
-        ..color = lineStyle.color
-        ..strokeWidth = lineStyle.thickness;
 
       if (pattern == 'solid') {
         canvas.drawLine(
           Offset(xCoord, startY),
           Offset(xCoord, endingY),
-          drawingData.isSelected ? shadowPaint : simplePaint,
+          drawingData.isSelected
+              ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
+              : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
       }
     }
