@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:flutter_deriv_api/api/common/models/market_model.dart';
-import 'package:flutter_deriv_api/api/common/models/submarket_model.dart';
-import 'package:flutter_deriv_api/api/common/models/symbol_model.dart';
-import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
+import 'package:flutter_deriv_api/api/response/trading_times_response_result.dart';
 import 'package:intl/intl.dart';
 
 /// Markets status change callback. (List of symbols that have been changed.)
@@ -72,11 +69,11 @@ class MarketChangeReminder {
 
     final TradingTimes todayTradingTimes = await onTradingTimes();
 
-    for (final MarketModel? market in todayTradingTimes.markets!) {
-      for (final SubmarketModel? subMarket in market!.submarkets!) {
-        for (final SymbolModel? symbol in subMarket!.symbols!) {
-          final List<dynamic> openTimes = symbol!.times!.open!;
-          final List<dynamic>? closeTimes = symbol.times!.close;
+    for (final MarketsItem? market in todayTradingTimes.markets) {
+      for (final SubmarketsItem? subMarket in market!.submarkets!) {
+        for (final SymbolsItem? symbol in subMarket!.symbols!) {
+          final List<dynamic> openTimes = symbol!.times!['open'];
+          final List<dynamic>? closeTimes = symbol.times!['close'];
 
           final bool isOpenAllDay = openTimes.length == 1 &&
               openTimes[0] == '00:00:00' &&
@@ -89,11 +86,11 @@ class MarketChangeReminder {
             continue;
           }
 
-          for (final String? time in openTimes as Iterable<String?>) {
+          for (final String? time in openTimes) {
             _addEntryToStatusChanges(time!, symbol.symbol, true, now);
           }
 
-          for (final String? time in closeTimes as Iterable<String?>) {
+          for (final String? time in closeTimes as List<dynamic>) {
             _addEntryToStatusChanges(time!, symbol.symbol, false, now);
           }
         }
