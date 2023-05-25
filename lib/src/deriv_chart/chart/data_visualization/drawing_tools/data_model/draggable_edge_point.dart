@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 
 /// A class that holds draggable edge point data.
 /// Draggable edge points are part of the drawings which added by user clicks
+/// And we want to hanle difftent type of drag events on them.
 /// For example with dots are draggable edge points for the line
 /// ⎯⎯⚪️⎯⎯⎯⚪️⎯⎯
 class DraggableEdgePoint {

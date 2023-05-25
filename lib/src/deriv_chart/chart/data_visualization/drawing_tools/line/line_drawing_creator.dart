@@ -13,6 +13,8 @@ class LineDrawingCreator extends StatefulWidget {
   const LineDrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
+    required this.cleanDrawingToolSelection,
+    required this.removeDrawing,
     Key? key,
   }) : super(key: key);
 
@@ -22,6 +24,12 @@ class LineDrawingCreator extends StatefulWidget {
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
+
+  /// Callback to clean drawing tool selection.
+  final VoidCallback cleanDrawingToolSelection;
+
+  /// Callback to remove specific drawing from the list of drawings.
+  final void Function(String drawingId) removeDrawing;
 
   @override
   _LineDrawingCreatorState createState() => _LineDrawingCreatorState();
@@ -80,6 +88,7 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
     setState(() {
       position = details.localPosition;
       if (!_isPenDown) {
+        /// Draw the initial point of the line.
         _startingEpoch = epochFromX!(position!.dx);
         _startingYPoint = widget.quoteFromCanvasY(position!.dy);
         _isPenDown = true;
@@ -91,25 +100,38 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
           startYCoord: _startingYPoint!,
         ));
       } else if (!_isDrawingFinished) {
+        /// Draw final point and the whole line.
         _isPenDown = false;
         _isDrawingFinished = true;
         _endingEpoch = epochFromX!(position!.dx);
         _endingYPoint = widget.quoteFromCanvasY(position!.dy);
 
-        _drawingParts.addAll(<LineDrawing>[
-          LineDrawing(
-            drawingPart: DrawingParts.marker,
-            endEpoch: _endingEpoch!,
-            endYCoord: _endingYPoint!,
-          ),
-          LineDrawing(
-            drawingPart: DrawingParts.line,
-            startEpoch: _startingEpoch!,
-            startYCoord: _startingYPoint!,
-            endEpoch: _endingEpoch!,
-            endYCoord: _endingYPoint!,
-          )
-        ]);
+        /// Checks if the initial point and the final point are the same.
+        if (Offset(_startingEpoch!.toDouble(), _startingYPoint!.toDouble()) ==
+            Offset(_endingEpoch!.toDouble(), _endingYPoint!.toDouble())) {
+          /// If the initial point and the final point are the same,
+          /// remove the drawing and cleazn the drawing tool selection.
+          widget.removeDrawing(_drawingId);
+          widget.cleanDrawingToolSelection();
+          return;
+        } else {
+          /// If the initial point and the final point are not the same,
+          /// draw the final point and the whole line.
+          _drawingParts.addAll(<LineDrawing>[
+            LineDrawing(
+              drawingPart: DrawingParts.marker,
+              endEpoch: _endingEpoch!,
+              endYCoord: _endingYPoint!,
+            ),
+            LineDrawing(
+              drawingPart: DrawingParts.line,
+              startEpoch: _startingEpoch!,
+              startYCoord: _startingYPoint!,
+              endEpoch: _endingEpoch!,
+              endYCoord: _endingYPoint!,
+            )
+          ]);
+        }
       }
       widget.onAddDrawing(
         <String, List<LineDrawing>>{_drawingId: _drawingParts},

@@ -25,6 +25,7 @@ class MainChart extends BasicChart {
   MainChart({
     required DataSeries<Tick> mainSeries,
     required this.onAddDrawing,
+    required this.cleanDrawingToolSelection,
     this.drawings,
     this.selectedDrawingTool,
     this.isLive = false,
@@ -70,6 +71,9 @@ class MainChart extends BasicChart {
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
+
+  /// Callback to clean drawing tool selection.
+  final VoidCallback cleanDrawingToolSelection;
 
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
@@ -278,6 +282,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   onAddDrawing: widget.onAddDrawing,
                   onMoveDrawing: _onMoveDrawing,
                   selectedDrawingTool: widget.selectedDrawingTool,
+                  cleanDrawingToolSelection: widget.cleanDrawingToolSelection,
                   chartQuoteToCanvasY: chartQuoteToCanvasY,
                   chartQuoteFromCanvasY: chartQuoteFromCanvasY,
                 ),

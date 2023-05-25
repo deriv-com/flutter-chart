@@ -28,8 +28,12 @@ class DrawingData {
   bool isSelected;
 
   /// Updates configuration.
-  DrawingData updateConfig(DrawingToolConfig config) =>
-      DrawingData(id: id, config: config, drawingParts: drawingParts);
+  DrawingData updateConfig(DrawingToolConfig config) => DrawingData(
+        id: id,
+        config: config,
+        drawingParts: drawingParts,
+        isDrawingFinished: isDrawingFinished,
+      );
 
   /// Updates drawing list.
   DrawingData updateDrawingPartList(List<Drawing> drawingParts) =>

@@ -201,6 +201,6 @@ class LineDrawing extends Drawing {
         sqrt(pow(endQuoteToY - startQuoteToY, 2) +
             pow(endXCoord - startXCoord, 2));
 
-    return distance.abs() <= lineStyle.thickness + 10;
+    return distance.abs() <= lineStyle.thickness + 6;
   }
 }

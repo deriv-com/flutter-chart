@@ -177,6 +177,7 @@ class _DerivChartState extends State<DerivChart> {
                 drawings: _drawings,
                 onAddDrawing: _onAddDrawing,
                 selectedDrawingTool: _selectedDrawingTool,
+                cleanDrawingToolSelection: _cleanDrawingToolSelection,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
@@ -210,6 +211,15 @@ class _DerivChartState extends State<DerivChart> {
                 child: IconButton(
                   icon: const Icon(Icons.drive_file_rename_outline_outlined),
                   onPressed: () {
+                    /// Remove unfinished drawings before openning the dialog.
+                    /// For the scenario where the user adds part of a drawing
+                    /// and then opens the dialog.
+                    setState(() {
+                      _drawings.removeWhere(
+                          (DrawingData data) => !data.isDrawingFinished);
+                      _selectedDrawingTool = null;
+                    });
+
                     showDialog<void>(
                       context: context,
                       builder: (
@@ -282,6 +292,13 @@ class _DerivChartState extends State<DerivChart> {
         _drawings.removeWhere((DrawingData data) =>
             data.id != drawingId && !data.isDrawingFinished);
       }
+    });
+  }
+
+  /// Clean the drawing tool selection.
+  void _cleanDrawingToolSelection() {
+    setState(() {
+      _selectedDrawingTool = null;
     });
   }
 }

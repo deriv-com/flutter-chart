@@ -13,6 +13,7 @@ class DrawingToolChart extends StatelessWidget {
     required this.chartQuoteFromCanvasY,
     required this.chartQuoteToCanvasY,
     required this.onMoveDrawing,
+    required this.cleanDrawingToolSelection,
     this.drawings,
     this.selectedDrawingTool,
     Key? key,
@@ -28,6 +29,9 @@ class DrawingToolChart extends StatelessWidget {
   /// Callback to pass new drawing to the parent.
   final void Function({bool isDrawingMoved}) onMoveDrawing;
 
+  /// Callback to clean drawing tool selection.
+  final VoidCallback cleanDrawingToolSelection;
+
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
 
@@ -37,6 +41,7 @@ class DrawingToolChart extends StatelessWidget {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) chartQuoteToCanvasY;
 
+  /// Sets drawing as selected and unselects the rest of drawings
   void _setIsDrawingSelected(DrawingData drawing) {
     drawing.isSelected = !drawing.isSelected;
 
@@ -45,6 +50,11 @@ class DrawingToolChart extends StatelessWidget {
         data.isSelected = false;
       }
     }
+  }
+
+  /// Removes specific drawing from the list of drawings
+  void removeDrawing(String drawingId) {
+    drawings!.removeWhere((DrawingData data) => data.id == drawingId);
   }
 
   @override
@@ -65,6 +75,8 @@ class DrawingToolChart extends StatelessWidget {
                 onAddDrawing: onAddDrawing,
                 selectedDrawingTool: selectedDrawingTool!,
                 quoteFromCanvasY: chartQuoteFromCanvasY,
+                cleanDrawingToolSelection: cleanDrawingToolSelection,
+                removeDrawing: removeDrawing,
               ),
           ],
         ),

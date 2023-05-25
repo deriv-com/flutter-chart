@@ -51,7 +51,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
     void _onPanUpdate(DragUpdateDetails details) {
-      if (widget.drawingData!.isSelected) {
+      if (widget.drawingData!.isSelected &&
+          widget.drawingData!.isDrawingFinished) {
         setState(() {
           _isDrawingDragged = details.delta != Offset.zero;
           _draggableStartPoint
@@ -190,6 +191,7 @@ class _DrawingPainter extends CustomPainter {
       }
     }
 
+    /// For deselecting the drawing when tapping outside of the drawing.
     drawingData.isSelected = false;
     return false;
   }
