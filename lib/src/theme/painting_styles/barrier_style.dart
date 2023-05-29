@@ -111,6 +111,7 @@ class VerticalBarrierStyle extends BarrierStyle {
     Color color = Colors.grey,
     Color titleBackgroundColor = Colors.transparent,
     bool isDashed = true,
+    this.labelPosition = VerticalBarrierLabelPosition.auto,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -124,6 +125,9 @@ class VerticalBarrierStyle extends BarrierStyle {
           isDashed: isDashed,
           textStyle: textStyle,
         );
+
+  /// label position
+  final VerticalBarrierLabelPosition labelPosition;
 }
 
 /// The type of arrow on top/bottom of barrier label (Horizontal barrier).
@@ -145,4 +149,16 @@ enum LabelShape {
 
   /// Pentagon.
   pentagon,
+}
+
+/// Vertical barrier label position
+enum VerticalBarrierLabelPosition {
+  /// right if there is no space on left, otherwise left
+  auto,
+
+  /// always right
+  right,
+
+  /// always left
+  left,
 }

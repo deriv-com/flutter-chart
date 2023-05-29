@@ -24,8 +24,8 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     required AnimationInfo animationInfo,
   }) {
     if (series.isOnRange) {
-      final BarrierStyle style =
-          series.style as BarrierStyle? ?? theme.verticalBarrierStyle;
+      final VerticalBarrierStyle style =
+          series.style as VerticalBarrierStyle? ?? theme.verticalBarrierStyle;
 
       final Paint paint = Paint()
         ..color = style.color
@@ -79,7 +79,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     Canvas canvas,
     double lineX,
     double lineEndY,
-    BarrierStyle style,
+    VerticalBarrierStyle style,
   ) {
     final TextPainter titlePainter = TextPainter(
       text: TextSpan(
@@ -90,10 +90,20 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
       textDirection: TextDirection.ltr,
     )..layout();
 
-    double titleStartX = lineX - titlePainter.width - 5;
-
-    if (titleStartX < 0) {
-      titleStartX = lineX + 5;
+    late double titleStartX;
+    switch (style.labelPosition) {
+      case VerticalBarrierLabelPosition.auto:
+        titleStartX = lineX - titlePainter.width - 5;
+        if (titleStartX < 0) {
+          titleStartX = lineX + 5;
+        }
+        break;
+      case VerticalBarrierLabelPosition.right:
+        titleStartX = lineX + 5;
+        break;
+      case VerticalBarrierLabelPosition.left:
+        titleStartX = lineX - titlePainter.width - 5;
+        break;
     }
 
     titlePainter.paint(
