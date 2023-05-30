@@ -10,7 +10,8 @@ LineDrawingToolConfig _$LineDrawingToolConfigFromJson(
     Map<String, dynamic> json) {
   return LineDrawingToolConfig(
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    pattern: json['pattern'] as String,
+    pattern: DrawingPattern.enumDecode(
+        DrawingPattern.patternEnumMap, json['pattern']),
   );
 }
 
@@ -18,5 +19,5 @@ Map<String, dynamic> _$LineDrawingToolConfigToJson(
         LineDrawingToolConfig instance) =>
     <String, dynamic>{
       'lineStyle': instance.lineStyle,
-      'pattern': instance.pattern,
+      'pattern': DrawingPattern.patternEnumMap[instance.pattern],
     };

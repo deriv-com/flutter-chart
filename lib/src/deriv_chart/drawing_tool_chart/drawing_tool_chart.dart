@@ -13,7 +13,7 @@ class DrawingToolChart extends StatelessWidget {
     required this.chartQuoteFromCanvasY,
     required this.chartQuoteToCanvasY,
     required this.onMoveDrawing,
-    required this.cleanDrawingToolSelection,
+    required this.clearDrawingToolSelection,
     this.drawings,
     this.selectedDrawingTool,
     Key? key,
@@ -30,7 +30,7 @@ class DrawingToolChart extends StatelessWidget {
   final void Function({bool isDrawingMoved}) onMoveDrawing;
 
   /// Callback to clean drawing tool selection.
-  final VoidCallback cleanDrawingToolSelection;
+  final VoidCallback clearDrawingToolSelection;
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
@@ -75,7 +75,7 @@ class DrawingToolChart extends StatelessWidget {
                 onAddDrawing: onAddDrawing,
                 selectedDrawingTool: selectedDrawingTool!,
                 quoteFromCanvasY: chartQuoteFromCanvasY,
-                cleanDrawingToolSelection: cleanDrawingToolSelection,
+                clearDrawingToolSelection: clearDrawingToolSelection,
                 removeDrawing: removeDrawing,
               ),
           ],

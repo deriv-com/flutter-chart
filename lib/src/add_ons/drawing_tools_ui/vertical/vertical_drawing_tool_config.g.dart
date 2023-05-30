@@ -10,7 +10,8 @@ VerticalDrawingToolConfig _$VerticalDrawingToolConfigFromJson(
     Map<String, dynamic> json) {
   return VerticalDrawingToolConfig(
     lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-    pattern: json['pattern'] as String,
+    pattern: DrawingPattern.enumDecode(
+        DrawingPattern.patternEnumMap, json['pattern']),
   );
 }
 
@@ -18,5 +19,5 @@ Map<String, dynamic> _$VerticalDrawingToolConfigToJson(
         VerticalDrawingToolConfig instance) =>
     <String, dynamic>{
       'lineStyle': instance.lineStyle,
-      'pattern': instance.pattern,
+      'pattern': DrawingPattern.patternEnumMap[instance.pattern],
     };

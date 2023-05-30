@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
@@ -102,7 +103,7 @@ class LineDrawing extends Drawing {
         drawingData.config as LineDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
-    final String pattern = config.pattern;
+    final DrawingPatterns pattern = config.pattern;
 
     _startPoint = draggableStartPoint.updatePosition(
       startEpoch,
@@ -149,7 +150,7 @@ class LineDrawing extends Drawing {
         endQuoteToY,
       );
 
-      if (pattern == 'solid') {
+      if (pattern == DrawingPatterns.solid) {
         canvas.drawLine(
           Offset(_vector.x0, _vector.y0),
           Offset(_vector.x1, _vector.y1),

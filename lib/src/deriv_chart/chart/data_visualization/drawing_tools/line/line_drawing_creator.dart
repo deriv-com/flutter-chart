@@ -13,7 +13,7 @@ class LineDrawingCreator extends StatefulWidget {
   const LineDrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
-    required this.cleanDrawingToolSelection,
+    required this.clearDrawingToolSelection,
     required this.removeDrawing,
     Key? key,
   }) : super(key: key);
@@ -26,7 +26,7 @@ class LineDrawingCreator extends StatefulWidget {
   final double Function(double) quoteFromCanvasY;
 
   /// Callback to clean drawing tool selection.
-  final VoidCallback cleanDrawingToolSelection;
+  final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
   final void Function(String drawingId) removeDrawing;
@@ -112,7 +112,7 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
           /// If the initial point and the final point are the same,
           /// remove the drawing and cleazn the drawing tool selection.
           widget.removeDrawing(_drawingId);
-          widget.cleanDrawingToolSelection();
+          widget.clearDrawingToolSelection();
           return;
         } else {
           /// If the initial point and the final point are not the same,

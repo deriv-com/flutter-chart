@@ -177,7 +177,7 @@ class _DerivChartState extends State<DerivChart> {
                 drawings: _drawings,
                 onAddDrawing: _onAddDrawing,
                 selectedDrawingTool: _selectedDrawingTool,
-                cleanDrawingToolSelection: _cleanDrawingToolSelection,
+                clearDrawingToolSelection: _clearDrawingToolSelection,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
@@ -296,7 +296,7 @@ class _DerivChartState extends State<DerivChart> {
   }
 
   /// Clean the drawing tool selection.
-  void _cleanDrawingToolSelection() {
+  void _clearDrawingToolSelection() {
     setState(() {
       _selectedDrawingTool = null;
     });
