@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -16,18 +16,17 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   pref: ^2.7.1
-  # TODO: Change the ref once we have merge
   flutter_deriv_api:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-api.git
-      ref: a08850b260c380bf61a9f0ccd3ea7fac5cecf2df
+      ref: flutter-version-3
 
 dev_dependencies:
   deriv_lint:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: dev
+      ref: flutter-version-3
   flutter_test:
     sdk: flutter
   intl_utils: ^2.8.2
