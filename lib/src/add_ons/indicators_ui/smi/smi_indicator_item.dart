@@ -1,6 +1,10 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/dropdown_menu.dart'
+<<<<<<< HEAD
     as chart_dropdown;
+=======
+    as deriv_dropdown;
+>>>>>>> 87b82f3e (sahani/migrate_flutter_to_version_3_10 (#225))
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -166,7 +170,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   MovingAverageType get _currentMAType =>
       _maType ?? (widget.config as SMIIndicatorConfig).maType;
 
-  Widget _buildMATypeField() => chart_dropdown.DropdownMenu<MovingAverageType>(
+  Widget _buildMATypeField() => deriv_dropdown.DropdownMenu<MovingAverageType>(
         initialValue: _currentMAType,
         items: MovingAverageType.values,
         label: ChartLocalization.of(context).labelType,
