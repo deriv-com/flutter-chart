@@ -126,7 +126,7 @@ class VerticalBarrierStyle extends BarrierStyle {
           textStyle: textStyle,
         );
 
-  /// label position
+  /// Label position.
   final VerticalBarrierLabelPosition labelPosition;
 }
 
@@ -151,14 +151,14 @@ enum LabelShape {
   pentagon,
 }
 
-/// Vertical barrier label position
+/// Vertical barrier label position.
 enum VerticalBarrierLabelPosition {
-  /// right if there is no space on left, otherwise left
+  /// Right if there is no space on left, otherwise left.
   auto,
 
-  /// always right
+  /// Always right.
   right,
 
-  /// always left
+  /// Always left.
   left,
 }
