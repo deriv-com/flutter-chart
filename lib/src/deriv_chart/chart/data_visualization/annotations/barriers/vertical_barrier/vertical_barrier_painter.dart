@@ -91,6 +91,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     )..layout();
 
     late double titleStartX;
+
     switch (style.labelPosition) {
       case VerticalBarrierLabelPosition.auto:
         titleStartX = lineX - titlePainter.width - 5;
