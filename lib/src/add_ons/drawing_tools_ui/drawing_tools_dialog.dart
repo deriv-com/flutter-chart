@@ -1,4 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -56,6 +57,10 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Vertical'),
                     value: VerticalDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Horizontal'),
+                    value: HorizontalDrawingToolConfig(),
                   ),
                   // TODO(maryia-binary): add the rest of drawing tools above
                 ],
