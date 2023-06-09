@@ -20,12 +20,12 @@ abstract class DrawingToolConfig extends AddOnConfig {
     }
 
     switch (json[nameKey]) {
+      case HorizontalDrawingToolConfig.name:
+        return HorizontalDrawingToolConfig.fromJson(json);
       case LineDrawingToolConfig.name:
         return LineDrawingToolConfig.fromJson(json);
       case VerticalDrawingToolConfig.name:
         return VerticalDrawingToolConfig.fromJson(json);
-      case HorizontalDrawingToolConfig.name:
-        return HorizontalDrawingToolConfig.fromJson(json);
 
       // Add new drawing tools here.
       default:

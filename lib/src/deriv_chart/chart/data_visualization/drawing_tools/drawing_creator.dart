@@ -42,6 +42,11 @@ class DrawingCreator extends StatelessWidget {
     final String drawingToolType = selectedDrawingTool.toJson()['name'];
 
     switch (drawingToolType) {
+      case 'dt_horizontal':
+        return HorizontalDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+        );
       case 'dt_line':
         return LineDrawingCreator(
           onAddDrawing: onAddDrawing,
@@ -51,11 +56,6 @@ class DrawingCreator extends StatelessWidget {
         );
       case 'dt_vertical':
         return VerticalDrawingCreator(
-          onAddDrawing: onAddDrawing,
-          quoteFromCanvasY: quoteFromCanvasY,
-        );
-      case 'dt_horizontal':
-        return HorizontalDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
         );
