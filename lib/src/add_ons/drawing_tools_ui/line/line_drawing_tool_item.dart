@@ -24,7 +24,7 @@ class LineDrawingToolItem extends DrawingToolItem {
         );
 
   @override
-  DrawingToolItemState<DrawingToolConfig> createIndicatorItemState() =>
+  DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState() =>
       LineDrawingToolItemState();
 }
 

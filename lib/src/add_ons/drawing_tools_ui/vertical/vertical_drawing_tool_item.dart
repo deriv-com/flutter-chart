@@ -27,7 +27,7 @@ class VerticalDrawingToolItem extends DrawingToolItem {
         );
 
   @override
-  DrawingToolItemState<DrawingToolConfig> createIndicatorItemState() =>
+  DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState() =>
       VerticalDrawingToolItemState();
 }
 
