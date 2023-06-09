@@ -2,6 +2,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -15,7 +16,7 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const VerticalDrawingToolConfig({
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
-    this.pattern = 'solid',
+    this.pattern = DrawingPatterns.solid,
   }) : super();
 
   /// Initializes from JSON.
@@ -33,7 +34,7 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
   final LineStyle lineStyle;
 
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
-  final String pattern;
+  final DrawingPatterns pattern;
 
   @override
   DrawingToolItem getItem(
