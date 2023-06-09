@@ -20,6 +20,7 @@ class Chart extends StatefulWidget {
     required this.mainSeries,
     required this.granularity,
     required this.onAddDrawing,
+    required this.shouldStopDrawing,
     required this.clearDrawingToolSelection,
     this.drawings,
     this.selectedDrawingTool,
@@ -57,6 +58,10 @@ class Chart extends StatefulWidget {
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
+
+  /// A flag to show when to stop drawing only for drawings which don't have
+  /// fixed number of points like continuous drawing
+  final bool shouldStopDrawing;
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
@@ -169,6 +174,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                   child: MainChart(
                     drawings: widget.drawings,
                     onAddDrawing: widget.onAddDrawing,
+                    shouldStopDrawing: widget.shouldStopDrawing,
                     selectedDrawingTool: widget.selectedDrawingTool,
                     clearDrawingToolSelection: widget.clearDrawingToolSelection,
                     controller: _controller,

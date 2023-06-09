@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/continuous/continuous_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
@@ -15,6 +16,7 @@ class DrawingCreator extends StatelessWidget {
     required this.quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
+    this.shouldStopDrawing,
     Key? key,
   }) : super(key: key);
 
@@ -34,6 +36,10 @@ class DrawingCreator extends StatelessWidget {
   /// Callback to remove specific drawing from the list of drawings.
   final void Function(String drawingId) removeDrawing;
 
+  /// A flag to show when to stop drawing only for drawings which don't have
+  /// fixed number of points like continuous drawing
+  final bool? shouldStopDrawing;
+
   @override
   Widget build(BuildContext context) {
     // TODO(bahar-deriv): Deligate the creation of drawing to the specific
@@ -41,6 +47,14 @@ class DrawingCreator extends StatelessWidget {
     final String drawingToolType = selectedDrawingTool.toJson()['name'];
 
     switch (drawingToolType) {
+      case 'dt_continuous':
+        return ContinuousDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+          clearDrawingToolSelection: clearDrawingToolSelection,
+          removeDrawing: removeDrawing,
+          shouldStopDrawing: shouldStopDrawing!,
+        );
       case 'dt_line':
         return LineDrawingCreator(
           onAddDrawing: onAddDrawing,

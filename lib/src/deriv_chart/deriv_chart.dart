@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
@@ -98,6 +99,10 @@ class _DerivChartState extends State<DerivChart> {
   /// Existing drawings.
   final List<DrawingData> _drawings = <DrawingData>[];
 
+  /// A flag to show when to stop drawing only for drawings which don't have
+  /// fixed number of points like continuous drawing
+  bool _shouldStopDrawing = false;
+
   @override
   void initState() {
     super.initState();
@@ -176,6 +181,7 @@ class _DerivChartState extends State<DerivChart> {
                 ],
                 drawings: _drawings,
                 onAddDrawing: _onAddDrawing,
+                shouldStopDrawing: _shouldStopDrawing,
                 selectedDrawingTool: _selectedDrawingTool,
                 clearDrawingToolSelection: _clearDrawingToolSelection,
                 markerSeries: widget.markerSeries,
@@ -215,8 +221,13 @@ class _DerivChartState extends State<DerivChart> {
                     /// For the scenario where the user adds part of a drawing
                     /// and then opens the dialog.
                     setState(() {
-                      _drawings.removeWhere(
-                          (DrawingData data) => !data.isDrawingFinished);
+                      if (_selectedDrawingTool != null) {
+                        _shouldStopDrawing = true;
+                      }
+                      _drawings.removeWhere((DrawingData data) =>
+                          !data.isDrawingFinished &&
+                          data.config.runtimeType !=
+                              ContinuousDrawingToolConfig);
                       _selectedDrawingTool = null;
                     });
 
@@ -236,6 +247,7 @@ class _DerivChartState extends State<DerivChart> {
                           },
                           onDrawingToolSelection:
                               (DrawingToolConfig selectedDrawingTool) {
+                            _shouldStopDrawing = false;
                             setState(() {
                               _selectedDrawingTool = selectedDrawingTool;
                             });
@@ -285,12 +297,21 @@ class _DerivChartState extends State<DerivChart> {
 
       if (isDrawingFinished) {
         _drawingToolsRepo.add(_selectedDrawingTool!);
-        _selectedDrawingTool = null;
+
+        if (_selectedDrawingTool.runtimeType == ContinuousDrawingToolConfig &&
+            _shouldStopDrawing) {
+          _selectedDrawingTool = null;
+        }
+        if (_selectedDrawingTool.runtimeType != ContinuousDrawingToolConfig) {
+          _selectedDrawingTool = null;
+        }
       }
 
       if (_drawings.length > 1) {
         _drawings.removeWhere((DrawingData data) =>
-            data.id != drawingId && !data.isDrawingFinished);
+            data.id != drawingId &&
+            !data.isDrawingFinished &&
+            data.config.runtimeType != ContinuousDrawingToolConfig);
       }
     });
   }

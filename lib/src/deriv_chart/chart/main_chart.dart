@@ -26,6 +26,7 @@ class MainChart extends BasicChart {
     required DataSeries<Tick> mainSeries,
     required this.onAddDrawing,
     required this.clearDrawingToolSelection,
+    required this.shouldStopDrawing,
     this.drawings,
     this.selectedDrawingTool,
     this.isLive = false,
@@ -68,6 +69,10 @@ class MainChart extends BasicChart {
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
+
+  /// A flag to show when to stop drawing only for drawings which don't have
+  /// fixed number of points like continuous drawing
+  final bool shouldStopDrawing;
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
@@ -285,6 +290,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   clearDrawingToolSelection: widget.clearDrawingToolSelection,
                   chartQuoteToCanvasY: chartQuoteToCanvasY,
                   chartQuoteFromCanvasY: chartQuoteFromCanvasY,
+                  shouldStopDrawing: widget.shouldStopDrawing,
                 ),
                 if (!_isDrawingMoving) _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)

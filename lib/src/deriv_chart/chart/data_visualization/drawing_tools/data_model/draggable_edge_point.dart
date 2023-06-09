@@ -9,6 +9,18 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 /// For example with dots are draggable edge points for the line
 /// ⎯⎯⚪️⎯⎯⎯⚪️⎯⎯
 class DraggableEdgePoint {
+  /// Initializes
+  DraggableEdgePoint({
+    this.epoch = 0,
+    this.yCoord = 0,
+  });
+
+  /// Epoch.
+  int? epoch;
+
+  /// Y coordinates.
+  double? yCoord;
+
   /// Represents whether the whole drawing is currently being dragged or not
   bool isDrawingDragged = false;
 

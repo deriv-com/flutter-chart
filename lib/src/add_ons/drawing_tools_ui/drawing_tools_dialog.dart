@@ -1,4 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -49,6 +50,10 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 value: _selectedDrawingTool,
                 hint: Text(ChartLocalization.of(context)!.selectDrawingTool),
                 items: const <DropdownMenuItem<DrawingToolConfig>>[
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Continuous'),
+                    value: ContinuousDrawingToolConfig(),
+                  ),
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Line'),
                     value: LineDrawingToolConfig(),

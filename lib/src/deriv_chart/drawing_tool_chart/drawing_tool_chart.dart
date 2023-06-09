@@ -14,6 +14,7 @@ class DrawingToolChart extends StatelessWidget {
     required this.chartQuoteToCanvasY,
     required this.onMoveDrawing,
     required this.clearDrawingToolSelection,
+    required this.shouldStopDrawing,
     this.drawings,
     this.selectedDrawingTool,
     Key? key,
@@ -40,6 +41,10 @@ class DrawingToolChart extends StatelessWidget {
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) chartQuoteToCanvasY;
+
+  /// A flag to show when to stop drawing only for drawings which don't have
+  /// fixed number of points like continuous drawing
+  final bool shouldStopDrawing;
 
   /// Sets drawing as selected and unselects the rest of drawings
   void _setIsDrawingSelected(DrawingData drawing) {
@@ -77,6 +82,7 @@ class DrawingToolChart extends StatelessWidget {
                 quoteFromCanvasY: chartQuoteFromCanvasY,
                 clearDrawingToolSelection: clearDrawingToolSelection,
                 removeDrawing: removeDrawing,
+                shouldStopDrawing: shouldStopDrawing,
               ),
           ],
         ),

@@ -1,20 +1,22 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data_model/drawing_parts.dart';
-import './line_drawing.dart';
 
 /// Creates a Line drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a line drawing tool and
 /// until drawing is finished
-class LineDrawingCreator extends StatefulWidget {
-  /// Initializes the line drawing creator.
-  const LineDrawingCreator({
+class ContinuousDrawingCreator extends StatefulWidget {
+  /// Initializes the continuous drawing creator.
+  const ContinuousDrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
+    required this.shouldStopDrawing,
     Key? key,
   }) : super(key: key);
 
@@ -31,33 +33,27 @@ class LineDrawingCreator extends StatefulWidget {
   /// Callback to remove specific drawing from the list of drawings.
   final void Function(String drawingId) removeDrawing;
 
+  /// A flag to show when to stop drawing only for drawings which don't have
+  /// fixed number of points like continuous drawing
+  final bool shouldStopDrawing;
+
   @override
-  _LineDrawingCreatorState createState() => _LineDrawingCreatorState();
+  _ContinuousDrawingCreatorState createState() =>
+      _ContinuousDrawingCreatorState();
 }
 
-class _LineDrawingCreatorState extends State<LineDrawingCreator> {
+class _ContinuousDrawingCreatorState extends State<ContinuousDrawingCreator> {
   late GestureManagerState gestureManager;
 
   /// Parts of a particular line drawing, e.g. marker, line
-  final List<LineDrawing> _drawingParts = <LineDrawing>[];
+  List<LineDrawing> _drawingParts = <LineDrawing>[];
 
   /// Tapped position.
   Offset? position;
 
-  /// Saved starting epoch.
-  int? _startingEpoch;
+  int tapCount = 0;
 
-  /// Saved starting Y coordinates.
-  double? _startingYPoint;
-
-  /// Saved ending epoch.
-  int? _endingEpoch;
-
-  /// Saved ending Y coordinates.
-  double? _endingYPoint;
-
-  /// If drawing has been started.
-  bool _isPenDown = false;
+  final List<DraggableEdgePoint> _edgePoints = <DraggableEdgePoint>[];
 
   /// Unique drawing id.
   String _drawingId = '';
@@ -82,59 +78,77 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
   }
 
   void _onTap(TapUpDetails details) {
-    if (_isDrawingFinished) {
+    if (widget.shouldStopDrawing) {
       return;
+    } else {
+      _isDrawingFinished = false;
     }
     setState(() {
       position = details.localPosition;
-      if (!_isPenDown) {
-        /// Draw the initial point of the line.
-        _startingEpoch = epochFromX!(position!.dx);
-        _startingYPoint = widget.quoteFromCanvasY(position!.dy);
-        _isPenDown = true;
-        _drawingId = 'line_$_startingEpoch';
+      tapCount++;
+
+      if (_edgePoints.isEmpty) {
+        /// Draw the initial point of the continuous.
+        _edgePoints.add(DraggableEdgePoint(
+          epoch: epochFromX!(position!.dx),
+          yCoord: widget.quoteFromCanvasY(position!.dy),
+        ));
+        _drawingId = 'continuous_${_edgePoints.first.epoch}';
 
         _drawingParts.add(LineDrawing(
           drawingPart: DrawingParts.marker,
-          startEpoch: _startingEpoch!,
-          startYCoord: _startingYPoint!,
+          startEpoch: _edgePoints.first.epoch!,
+          startYCoord: _edgePoints.first.yCoord!,
         ));
       } else if (!_isDrawingFinished) {
-        /// Draw final point and the whole line.
-        _isPenDown = false;
+        /// Draw other points and the whole continuous drawing.
         _isDrawingFinished = true;
-        _endingEpoch = epochFromX!(position!.dx);
-        _endingYPoint = widget.quoteFromCanvasY(position!.dy);
+        _edgePoints.add(DraggableEdgePoint(
+          epoch: epochFromX!(position!.dx),
+          yCoord: widget.quoteFromCanvasY(position!.dy),
+        ));
 
         /// Checks if the initial point and the final point are the same.
-        if (Offset(_startingEpoch!.toDouble(), _startingYPoint!.toDouble()) ==
-            Offset(_endingEpoch!.toDouble(), _endingYPoint!.toDouble())) {
+        if (Offset(_edgePoints[tapCount - 2].epoch!.toDouble(),
+                _edgePoints[tapCount - 2].yCoord!.toDouble()) ==
+            Offset(_edgePoints[tapCount - 1].epoch!.toDouble(),
+                _edgePoints[tapCount - 1].yCoord!.toDouble())) {
           /// If the initial point and the final point are the same,
-          /// remove the drawing and cleazn the drawing tool selection.
+          /// remove the drawing and clean the drawing tool selection.
           widget.removeDrawing(_drawingId);
           widget.clearDrawingToolSelection();
           return;
         } else {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole line.
+
+          if (tapCount > 2) {
+            _drawingId = 'continuous_${_edgePoints[tapCount - 1].epoch}';
+            _drawingParts = <LineDrawing>[];
+
+            _drawingParts.add(LineDrawing(
+              drawingPart: DrawingParts.marker,
+              startEpoch: _edgePoints[tapCount - 2].epoch!,
+              startYCoord: _edgePoints[tapCount - 2].yCoord!,
+            ));
+          }
           _drawingParts.addAll(<LineDrawing>[
             LineDrawing(
               drawingPart: DrawingParts.marker,
-              endEpoch: _endingEpoch!,
-              endYCoord: _endingYPoint!,
+              endEpoch: _edgePoints[tapCount - 1].epoch!,
+              endYCoord: _edgePoints[tapCount - 1].yCoord!,
             ),
             LineDrawing(
               drawingPart: DrawingParts.line,
-              startEpoch: _startingEpoch!,
-              startYCoord: _startingYPoint!,
-              endEpoch: _endingEpoch!,
-              endYCoord: _endingYPoint!,
-              exceedStart: true,
-              exceedEnd: true,
+              startEpoch: _edgePoints[tapCount - 2].epoch!,
+              startYCoord: _edgePoints[tapCount - 2].yCoord!,
+              endEpoch: _edgePoints[tapCount - 1].epoch!,
+              endYCoord: _edgePoints[tapCount - 1].yCoord!,
             )
           ]);
         }
       }
+
       widget.onAddDrawing(
         <String, List<LineDrawing>>{_drawingId: _drawingParts},
         isDrawingFinished: _isDrawingFinished,
