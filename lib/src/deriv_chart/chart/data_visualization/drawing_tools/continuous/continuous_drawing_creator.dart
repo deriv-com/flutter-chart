@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data_model/drawing_parts.dart';
 
-/// Creates a Line drawing piece by piece collected on every gesture
-/// exists in a widget tree starting from selecting a line drawing tool and
-/// until drawing is finished
+/// Creates a Continuous drawing piece by piece collected on every gesture
+/// exists in a widget tree starting from selecting a continuous drawing tool
+/// and until drawing should be finished.
 class ContinuousDrawingCreator extends StatefulWidget {
   /// Initializes the continuous drawing creator.
   const ContinuousDrawingCreator({
@@ -49,9 +49,10 @@ class _ContinuousDrawingCreatorState extends State<ContinuousDrawingCreator> {
   List<LineDrawing> _drawingParts = <LineDrawing>[];
 
   /// Tapped position.
-  Offset? position;
+  Offset? _position;
 
-  int tapCount = 0;
+  /// Keeps track of how many times user tapped on the chart.
+  int _tapCount = 0;
 
   final List<DraggableEdgePoint> _edgePoints = <DraggableEdgePoint>[];
 
@@ -84,14 +85,14 @@ class _ContinuousDrawingCreatorState extends State<ContinuousDrawingCreator> {
       _isDrawingFinished = false;
     }
     setState(() {
-      position = details.localPosition;
-      tapCount++;
+      _position = details.localPosition;
+      _tapCount++;
 
       if (_edgePoints.isEmpty) {
         /// Draw the initial point of the continuous.
         _edgePoints.add(DraggableEdgePoint(
-          epoch: epochFromX!(position!.dx),
-          yCoord: widget.quoteFromCanvasY(position!.dy),
+          epoch: epochFromX!(_position!.dx),
+          yCoord: widget.quoteFromCanvasY(_position!.dy),
         ));
         _drawingId = 'continuous_${_edgePoints.first.epoch}';
 
@@ -104,46 +105,45 @@ class _ContinuousDrawingCreatorState extends State<ContinuousDrawingCreator> {
         /// Draw other points and the whole continuous drawing.
         _isDrawingFinished = true;
         _edgePoints.add(DraggableEdgePoint(
-          epoch: epochFromX!(position!.dx),
-          yCoord: widget.quoteFromCanvasY(position!.dy),
+          epoch: epochFromX!(_position!.dx),
+          yCoord: widget.quoteFromCanvasY(_position!.dy),
         ));
 
-        /// Checks if the initial point and the final point are the same.
-        if (Offset(_edgePoints[tapCount - 2].epoch!.toDouble(),
-                _edgePoints[tapCount - 2].yCoord!.toDouble()) ==
-            Offset(_edgePoints[tapCount - 1].epoch!.toDouble(),
-                _edgePoints[tapCount - 1].yCoord!.toDouble())) {
-          /// If the initial point and the final point are the same,
+        /// Checks if the initial point and the 2nd points are the same.
+        if (Offset(_edgePoints[1].epoch!.toDouble(),
+                _edgePoints[1].yCoord!.toDouble()) ==
+            Offset(_edgePoints.first.epoch!.toDouble(),
+                _edgePoints.first.yCoord!.toDouble())) {
+          /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
           widget.removeDrawing(_drawingId);
           widget.clearDrawingToolSelection();
           return;
         } else {
           /// If the initial point and the final point are not the same,
-          /// draw the final point and the whole line.
-
-          if (tapCount > 2) {
-            _drawingId = 'continuous_${_edgePoints[tapCount - 1].epoch}';
+          /// draw the final point and the whole drawing.
+          if (_tapCount > 2) {
+            _drawingId = 'continuous_${_edgePoints[_tapCount - 1].epoch}';
             _drawingParts = <LineDrawing>[];
 
             _drawingParts.add(LineDrawing(
               drawingPart: DrawingParts.marker,
-              startEpoch: _edgePoints[tapCount - 2].epoch!,
-              startYCoord: _edgePoints[tapCount - 2].yCoord!,
+              startEpoch: _edgePoints[_tapCount - 2].epoch!,
+              startYCoord: _edgePoints[_tapCount - 2].yCoord!,
             ));
           }
           _drawingParts.addAll(<LineDrawing>[
             LineDrawing(
               drawingPart: DrawingParts.marker,
-              endEpoch: _edgePoints[tapCount - 1].epoch!,
-              endYCoord: _edgePoints[tapCount - 1].yCoord!,
+              endEpoch: _edgePoints[_tapCount - 1].epoch!,
+              endYCoord: _edgePoints[_tapCount - 1].yCoord!,
             ),
             LineDrawing(
               drawingPart: DrawingParts.line,
-              startEpoch: _edgePoints[tapCount - 2].epoch!,
-              startYCoord: _edgePoints[tapCount - 2].yCoord!,
-              endEpoch: _edgePoints[tapCount - 1].epoch!,
-              endYCoord: _edgePoints[tapCount - 1].yCoord!,
+              startEpoch: _edgePoints[_tapCount - 2].epoch!,
+              startYCoord: _edgePoints[_tapCount - 2].yCoord!,
+              endEpoch: _edgePoints[_tapCount - 1].epoch!,
+              endYCoord: _edgePoints[_tapCount - 1].yCoord!,
             )
           ]);
         }

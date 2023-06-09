@@ -100,7 +100,7 @@ class _DerivChartState extends State<DerivChart> {
   final List<DrawingData> _drawings = <DrawingData>[];
 
   /// A flag to show when to stop drawing only for drawings which don't have
-  /// fixed number of points like continuous drawing
+  /// fixed number of points eg. continuous drawing
   bool _shouldStopDrawing = false;
 
   @override
