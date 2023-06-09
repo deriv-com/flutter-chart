@@ -68,7 +68,7 @@ class MainChart extends BasicChart {
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
+      {bool isDrawingFinished, bool isInfinitDrawing}) onAddDrawing;
 
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing

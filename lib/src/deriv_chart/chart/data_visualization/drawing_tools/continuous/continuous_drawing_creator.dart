@@ -22,7 +22,7 @@ class ContinuousDrawingCreator extends StatefulWidget {
 
   /// Callback to pass a newly created line drawing to the parent.
   final void Function(Map<String, List<LineDrawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
+      {bool isDrawingFinished, bool isInfinitDrawing}) onAddDrawing;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
@@ -103,7 +103,11 @@ class _ContinuousDrawingCreatorState extends State<ContinuousDrawingCreator> {
         ));
       } else if (!_isDrawingFinished) {
         /// Draw other points and the whole continuous drawing.
+
         _isDrawingFinished = true;
+        final int _currentTap = _tapCount - 1;
+        final int _previousTap = _tapCount - 2;
+
         _edgePoints.add(DraggableEdgePoint(
           epoch: epochFromX!(_position!.dx),
           yCoord: widget.quoteFromCanvasY(_position!.dy),
@@ -123,27 +127,27 @@ class _ContinuousDrawingCreatorState extends State<ContinuousDrawingCreator> {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole drawing.
           if (_tapCount > 2) {
-            _drawingId = 'continuous_${_edgePoints[_tapCount - 1].epoch}';
+            _drawingId = 'continuous_${_edgePoints[_currentTap].epoch}';
             _drawingParts = <LineDrawing>[];
 
             _drawingParts.add(LineDrawing(
               drawingPart: DrawingParts.marker,
-              startEpoch: _edgePoints[_tapCount - 2].epoch!,
-              startYCoord: _edgePoints[_tapCount - 2].yCoord!,
+              startEpoch: _edgePoints[_previousTap].epoch!,
+              startYCoord: _edgePoints[_previousTap].yCoord!,
             ));
           }
           _drawingParts.addAll(<LineDrawing>[
             LineDrawing(
               drawingPart: DrawingParts.marker,
-              endEpoch: _edgePoints[_tapCount - 1].epoch!,
-              endYCoord: _edgePoints[_tapCount - 1].yCoord!,
+              endEpoch: _edgePoints[_currentTap].epoch!,
+              endYCoord: _edgePoints[_currentTap].yCoord!,
             ),
             LineDrawing(
               drawingPart: DrawingParts.line,
-              startEpoch: _edgePoints[_tapCount - 2].epoch!,
-              startYCoord: _edgePoints[_tapCount - 2].yCoord!,
-              endEpoch: _edgePoints[_tapCount - 1].epoch!,
-              endYCoord: _edgePoints[_tapCount - 1].yCoord!,
+              startEpoch: _edgePoints[_previousTap].epoch!,
+              startYCoord: _edgePoints[_previousTap].yCoord!,
+              endEpoch: _edgePoints[_currentTap].epoch!,
+              endYCoord: _edgePoints[_currentTap].yCoord!,
             )
           ]);
         }
@@ -152,6 +156,7 @@ class _ContinuousDrawingCreatorState extends State<ContinuousDrawingCreator> {
       widget.onAddDrawing(
         <String, List<LineDrawing>>{_drawingId: _drawingParts},
         isDrawingFinished: _isDrawingFinished,
+        isInfinitDrawing: true,
       );
     });
   }

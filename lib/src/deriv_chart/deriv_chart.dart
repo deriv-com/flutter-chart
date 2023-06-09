@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
@@ -224,10 +223,8 @@ class _DerivChartState extends State<DerivChart> {
                       if (_selectedDrawingTool != null) {
                         _shouldStopDrawing = true;
                       }
-                      _drawings.removeWhere((DrawingData data) =>
-                          !data.isDrawingFinished &&
-                          data.config.runtimeType !=
-                              ContinuousDrawingToolConfig);
+                      _drawings.removeWhere(
+                          (DrawingData data) => !data.isDrawingFinished);
                       _selectedDrawingTool = null;
                     });
 
@@ -270,9 +267,12 @@ class _DerivChartState extends State<DerivChart> {
         ),
       );
 
+  /// Adds the new drawing to the list of drawings
+  /// isInfinitDrawing used for drawings which don't have fixed number of points
   void _onAddDrawing(
     Map<String, List<Drawing>> addedDrawing, {
     bool isDrawingFinished = false,
+    bool isInfinitDrawing = false,
   }) {
     setState(() {
       final String drawingId = addedDrawing.keys.first;
@@ -298,20 +298,17 @@ class _DerivChartState extends State<DerivChart> {
       if (isDrawingFinished) {
         _drawingToolsRepo.add(_selectedDrawingTool!);
 
-        if (_selectedDrawingTool.runtimeType == ContinuousDrawingToolConfig &&
-            _shouldStopDrawing) {
+        if (isInfinitDrawing && _shouldStopDrawing) {
           _selectedDrawingTool = null;
         }
-        if (_selectedDrawingTool.runtimeType != ContinuousDrawingToolConfig) {
+        if (!isInfinitDrawing) {
           _selectedDrawingTool = null;
         }
       }
 
       if (_drawings.length > 1) {
         _drawings.removeWhere((DrawingData data) =>
-            data.id != drawingId &&
-            !data.isDrawingFinished &&
-            data.config.runtimeType != ContinuousDrawingToolConfig);
+            data.id != drawingId && !data.isDrawingFinished);
       }
     });
   }
