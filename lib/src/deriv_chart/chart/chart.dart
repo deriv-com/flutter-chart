@@ -21,6 +21,7 @@ class Chart extends StatefulWidget {
     required this.granularity,
     required this.onAddDrawing,
     required this.clearDrawingToolSelection,
+    this.isFirstDrawingPoint = false,
     this.drawings,
     this.selectedDrawingTool,
     this.pipSize = 4,
@@ -98,6 +99,8 @@ class Chart extends StatefulWidget {
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
 
+  final bool isFirstDrawingPoint;
+
   @override
   State<StatefulWidget> createState() => _ChartState();
 }
@@ -168,6 +171,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                   flex: 3,
                   child: MainChart(
                     drawings: widget.drawings,
+                    isFirstDrawingPoint: widget.isFirstDrawingPoint,
                     onAddDrawing: widget.onAddDrawing,
                     selectedDrawingTool: widget.selectedDrawingTool,
                     clearDrawingToolSelection: widget.clearDrawingToolSelection,

@@ -27,6 +27,7 @@ class MainChart extends BasicChart {
     required this.onAddDrawing,
     required this.clearDrawingToolSelection,
     this.drawings,
+    this.isFirstDrawingPoint = false,
     this.selectedDrawingTool,
     this.isLive = false,
     int pipSize = 4,
@@ -55,6 +56,8 @@ class MainChart extends BasicChart {
   /// The indicator series that are displayed on the main chart.
   final List<Series>? overlaySeries;
   final DataSeries<Tick> _mainSeries;
+
+  final bool isFirstDrawingPoint;
 
   /// List of chart annotations used in the chart.
   final List<ChartAnnotation<ChartObject>>? annotations;
@@ -278,6 +281,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 DrawingToolChart(
+                  isFirstDrawingPoint: widget.isFirstDrawingPoint,
                   drawings: widget.drawings,
                   onAddDrawing: widget.onAddDrawing,
                   onMoveDrawing: _onMoveDrawing,

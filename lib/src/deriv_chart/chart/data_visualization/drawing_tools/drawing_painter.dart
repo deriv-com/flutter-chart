@@ -17,11 +17,14 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
+    this.isFirstDrawingPoint = false,
     Key? key,
   }) : super(key: key);
 
   /// Contains each drawing data
   final DrawingData? drawingData;
+
+  final bool isFirstDrawingPoint;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
@@ -123,13 +126,13 @@ class _DrawingPainterState extends State<DrawingPainter> {
             },
             child: CustomPaint(
               foregroundPainter: _DrawingPainter(
-                drawingData: widget.drawingData!,
-                theme: context.watch<ChartTheme>(),
-                epochToX: xAxis.xFromEpoch,
-                quoteToY: widget.quoteToCanvasY,
-                draggableStartPoint: _draggableStartPoint,
-                draggableEndPoint: _draggableEndPoint,
-              ),
+                  drawingData: widget.drawingData!,
+                  theme: context.watch<ChartTheme>(),
+                  epochToX: xAxis.xFromEpoch,
+                  quoteToY: widget.quoteToCanvasY,
+                  draggableStartPoint: _draggableStartPoint,
+                  draggableEndPoint: _draggableEndPoint,
+                  isFirstDrawingPoint: widget.isFirstDrawingPoint),
               size: const Size(double.infinity, double.infinity),
             ),
           )
@@ -144,11 +147,13 @@ class _DrawingPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.draggableStartPoint,
+    this.isFirstDrawingPoint = false,
     this.draggableEndPoint,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
+  final bool isFirstDrawingPoint;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
@@ -187,6 +192,9 @@ class _DrawingPainter extends CustomPainter {
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
       )) {
+        if (isFirstDrawingPoint) {
+          return false;
+        }
         return true;
       }
     }

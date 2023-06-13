@@ -14,10 +14,13 @@ class DrawingToolChart extends StatelessWidget {
     required this.chartQuoteToCanvasY,
     required this.onMoveDrawing,
     required this.clearDrawingToolSelection,
+    this.isFirstDrawingPoint = false,
     this.drawings,
     this.selectedDrawingTool,
     Key? key,
   }) : super(key: key);
+
+  final bool isFirstDrawingPoint;
 
   /// Existing drawings.
   final List<DrawingData>? drawings;
@@ -42,12 +45,28 @@ class DrawingToolChart extends StatelessWidget {
   final double Function(double) chartQuoteToCanvasY;
 
   /// Sets drawing as selected and unselects the rest of drawings
-  void _setIsDrawingSelected(DrawingData drawing) {
-    drawing.isSelected = !drawing.isSelected;
+  // void _setIsDrawingSelected(DrawingData drawing) {
+  //   drawing.isSelected = !drawing.isSelected;
 
+  //   for (final DrawingData data in drawings!) {
+  //     if (data.id != drawing.id) {
+  //       data.isSelected = false;
+  //     }
+  //   }
+  // }
+  void _setIsDrawingSelected(DrawingData drawing) {
+    final bool isNotFinished = drawings!
+        .any((DrawingData element) => element.isDrawingFinished == false);
+    if (isNotFinished == false) {
+      drawing.isSelected = !drawing.isSelected;
+    }
     for (final DrawingData data in drawings!) {
-      if (data.id != drawing.id) {
+      if (data.id != drawing.id || isNotFinished) {
         data.isSelected = false;
+      }
+
+      if (data.isDrawingFinished == false) {
+        data.isSelected = true;
       }
     }
   }
@@ -62,14 +81,6 @@ class DrawingToolChart extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            if (drawings != null)
-              ...drawings!.map((DrawingData drawingData) => DrawingPainter(
-                    drawingData: drawingData,
-                    quoteToCanvasY: chartQuoteToCanvasY,
-                    quoteFromCanvasY: chartQuoteFromCanvasY,
-                    onMoveDrawing: onMoveDrawing,
-                    setIsDrawingSelected: _setIsDrawingSelected,
-                  )),
             if (selectedDrawingTool != null)
               DrawingCreator(
                 onAddDrawing: onAddDrawing,
@@ -78,6 +89,14 @@ class DrawingToolChart extends StatelessWidget {
                 clearDrawingToolSelection: clearDrawingToolSelection,
                 removeDrawing: removeDrawing,
               ),
+            if (drawings!.isNotEmpty)
+              ...drawings!.map((DrawingData drawingData) => DrawingPainter(
+                  drawingData: drawingData,
+                  quoteToCanvasY: chartQuoteToCanvasY,
+                  quoteFromCanvasY: chartQuoteFromCanvasY,
+                  onMoveDrawing: onMoveDrawing,
+                  setIsDrawingSelected: _setIsDrawingSelected,
+                  isFirstDrawingPoint: isFirstDrawingPoint)),
           ],
         ),
       );

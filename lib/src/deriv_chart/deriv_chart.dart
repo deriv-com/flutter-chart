@@ -92,6 +92,8 @@ class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
+  bool isFirstDrawingPoint = false;
+
   /// Selected drawing tool.
   DrawingToolConfig? _selectedDrawingTool;
 
@@ -145,6 +147,7 @@ class _DerivChartState extends State<DerivChart> {
                 mainSeries: widget.mainSeries,
                 pipSize: widget.pipSize,
                 granularity: widget.granularity,
+                isFirstDrawingPoint: isFirstDrawingPoint,
                 controller: widget.controller,
                 overlaySeries: <Series>[
                   ...context
@@ -230,6 +233,7 @@ class _DerivChartState extends State<DerivChart> {
                         value: _drawingToolsRepo,
                         child: DrawingToolsDialog(
                           onDrawingToolRemoval: (int index) {
+                            isFirstDrawingPoint = false;
                             setState(() {
                               _drawings.removeAt(index);
                             });
@@ -237,6 +241,7 @@ class _DerivChartState extends State<DerivChart> {
                           onDrawingToolSelection:
                               (DrawingToolConfig selectedDrawingTool) {
                             setState(() {
+                              isFirstDrawingPoint = true;
                               _selectedDrawingTool = selectedDrawingTool;
                             });
                           },
@@ -277,12 +282,15 @@ class _DerivChartState extends State<DerivChart> {
           isDrawingFinished: isDrawingFinished,
         ));
       } else {
+        isFirstDrawingPoint = false;
         existingDrawing
           ..updateDrawingPartList(addedDrawing.values.first)
           ..isSelected = true
           ..isDrawingFinished = isDrawingFinished;
       }
-
+      if (drawingId.contains('vertical') || drawingId.contains('horizontal')) {
+        isFirstDrawingPoint = false;
+      }
       if (isDrawingFinished) {
         _drawingToolsRepo.add(_selectedDrawingTool!);
         _selectedDrawingTool = null;

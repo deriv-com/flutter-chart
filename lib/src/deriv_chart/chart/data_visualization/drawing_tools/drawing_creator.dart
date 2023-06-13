@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/horizontal/horizontal_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -54,11 +55,19 @@ class DrawingCreator extends StatelessWidget {
           clearDrawingToolSelection: clearDrawingToolSelection,
           removeDrawing: removeDrawing,
         );
+      case 'dt_rectangle':
+        return RectangleDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+          cleanDrawingToolSelection: clearDrawingToolSelection,
+          removeDrawing: removeDrawing,
+        );
       case 'dt_vertical':
         return VerticalDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
         );
+
       // TODO(maryia-binary): add the rest of drawing tools here
       default:
         return Container();

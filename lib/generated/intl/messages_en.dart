@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelChannelFill":
             MessageLookupByLibrary.simpleMessage("Channel Fill"),
         "labelColor": MessageLookupByLibrary.simpleMessage("Color"),
+        "labelFillColor": MessageLookupByLibrary.simpleMessage("Fill Color"),
         "labelConversionLinePeriod":
             MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
         "labelDistance": MessageLookupByLibrary.simpleMessage("Distance"),
