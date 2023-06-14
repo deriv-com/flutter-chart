@@ -24,6 +24,7 @@ class DrawingPainter extends StatefulWidget {
   /// Contains each drawing data
   final DrawingData? drawingData;
 
+  /// check if the first point is already clicked
   final bool isFirstDrawingPoint;
 
   /// Conversion function for converting quote to chart's canvas' Y position.

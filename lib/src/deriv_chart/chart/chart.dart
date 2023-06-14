@@ -99,6 +99,7 @@ class Chart extends StatefulWidget {
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
 
+  /// check if first point of any drawing is clicked
   final bool isFirstDrawingPoint;
 
   @override

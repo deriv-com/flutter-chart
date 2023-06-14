@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data_model/drawing_parts.dart';
 
-/// Creates a Line drawing piece by piece collected on every gesture
-/// exists in a widget tree starting from selectisg a line drawing tool and
+/// Creates a Rectangle drawing piece by piece collected on every gesture
+/// exists in a widget tree starting from selecting a rectangle drawing tool and
 /// until drawing is finished
+///
 class RectangleDrawingCreator extends StatefulWidget {
-  /// Initializes the line drawing creator.
+  /// Initializes the rectangle drawing creator.
   const RectangleDrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
@@ -18,7 +19,7 @@ class RectangleDrawingCreator extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  /// Callback to pass a newly created line drawing to the parent.
+  /// Callback to pass a newly created rectangle drawing to the parent.
   final void Function(Map<String, List<RectangleDrawing>> addedDrawing,
       {bool isDrawingFinished}) onAddDrawing;
 
@@ -39,7 +40,7 @@ class RectangleDrawingCreator extends StatefulWidget {
 class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
   late GestureManagerState gestureManager;
 
-  /// Parts of a particular line drawing, e.g. marker, line
+  /// Parts of a particular rectangle drawing, e.g. marker, line , rectangle
   final List<RectangleDrawing> _drawingParts = <RectangleDrawing>[];
 
   /// Tapped position.
@@ -89,7 +90,7 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
     setState(() {
       position = details.localPosition;
       if (!_isPenDown) {
-        /// Draw the initial point of the line.
+        /// Draw the initial point.
         _startingEpoch = epochFromX!(position!.dx);
         _startingYPoint = widget.quoteFromCanvasY(position!.dy);
         _isPenDown = true;
@@ -98,10 +99,9 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
         _drawingParts.add(RectangleDrawing(
             drawingPart: DrawingParts.marker,
             startEpoch: _startingEpoch!,
-            startYCoord: _startingYPoint!,
-            id: _drawingId));
+            startYCoord: _startingYPoint!));
       } else if (!_isDrawingFinished) {
-        /// Draw final point and the whole line.
+        /// Draw second point and the rectangle.
         _isPenDown = false;
         _isDrawingFinished = true;
         _endingEpoch = epochFromX!(position!.dx);
@@ -123,7 +123,7 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
           )
         ]);
       }
-      // }
+
       widget.onAddDrawing(
         <String, List<RectangleDrawing>>{_drawingId: _drawingParts},
         isDrawingFinished: _isDrawingFinished,

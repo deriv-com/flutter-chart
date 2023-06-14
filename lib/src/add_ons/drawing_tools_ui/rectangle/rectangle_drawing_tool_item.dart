@@ -30,7 +30,7 @@ class RectangleDrawingToolItem extends DrawingToolItem {
       RectangleDrawingToolItemState();
 }
 
-/// Vertival drawing tool Item State class
+/// Rectangle drawing tool Item State class
 class RectangleDrawingToolItemState
     extends DrawingToolItemState<RectangleDrawingToolConfig> {
   LineStyle? _fillStyle;
@@ -52,7 +52,6 @@ class RectangleDrawingToolItemState
               ChartLocalization.of(context)!.labelColor, _currentLineStyle),
           _buildColorField(
               ChartLocalization.of(context)!.labelFillColor, _currentFillStyle),
-          // TODO(maryia-deriv): implement _buildPatternField() to set pattern
         ],
       );
   Widget _buildColorField(String label, LineStyle style) => Row(

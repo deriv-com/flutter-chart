@@ -92,6 +92,7 @@ class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
+  // check if first point of any drawing is clicked
   bool isFirstDrawingPoint = false;
 
   /// Selected drawing tool.
@@ -233,10 +234,12 @@ class _DerivChartState extends State<DerivChart> {
                         value: _drawingToolsRepo,
                         child: DrawingToolsDialog(
                           onDrawingToolRemoval: (int index) {
-                            isFirstDrawingPoint = false;
-                            setState(() {
-                              _drawings.removeAt(index);
-                            });
+                            if (_drawings.isNotEmpty) {
+                              setState(() {
+                                isFirstDrawingPoint = false;
+                                _drawings.removeAt(index);
+                              });
+                            }
                           },
                           onDrawingToolSelection:
                               (DrawingToolConfig selectedDrawingTool) {
@@ -281,6 +284,10 @@ class _DerivChartState extends State<DerivChart> {
           drawingParts: addedDrawing.values.first,
           isDrawingFinished: isDrawingFinished,
         ));
+        if (drawingId.contains('horizontal') ||
+            drawingId.contains('vertical')) {
+          isFirstDrawingPoint = false;
+        }
       } else {
         isFirstDrawingPoint = false;
         existingDrawing
@@ -288,10 +295,9 @@ class _DerivChartState extends State<DerivChart> {
           ..isSelected = true
           ..isDrawingFinished = isDrawingFinished;
       }
-      if (drawingId.contains('vertical') || drawingId.contains('horizontal')) {
-        isFirstDrawingPoint = false;
-      }
+
       if (isDrawingFinished) {
+        isFirstDrawingPoint = false;
         _drawingToolsRepo.add(_selectedDrawingTool!);
         _selectedDrawingTool = null;
       }

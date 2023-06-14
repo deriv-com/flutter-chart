@@ -57,6 +57,7 @@ class MainChart extends BasicChart {
   final List<Series>? overlaySeries;
   final DataSeries<Tick> _mainSeries;
 
+  /// check if a point is clicked for a drawing tool
   final bool isFirstDrawingPoint;
 
   /// List of chart annotations used in the chart.

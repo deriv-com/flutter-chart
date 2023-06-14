@@ -20,6 +20,7 @@ class DrawingToolChart extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  /// check if the first point is already clicked for the drawing
   final bool isFirstDrawingPoint;
 
   /// Existing drawings.
@@ -45,27 +46,22 @@ class DrawingToolChart extends StatelessWidget {
   final double Function(double) chartQuoteToCanvasY;
 
   /// Sets drawing as selected and unselects the rest of drawings
-  // void _setIsDrawingSelected(DrawingData drawing) {
-  //   drawing.isSelected = !drawing.isSelected;
-
-  //   for (final DrawingData data in drawings!) {
-  //     if (data.id != drawing.id) {
-  //       data.isSelected = false;
-  //     }
-  //   }
-  // }
+  /// if any of the drawing is not finished , it selects the unfinished drawing
   void _setIsDrawingSelected(DrawingData drawing) {
+    // check if any of the drawings are not completed
     final bool isNotFinished = drawings!
         .any((DrawingData element) => element.isDrawingFinished == false);
-    if (isNotFinished == false) {
+
+    if (!isNotFinished) {
       drawing.isSelected = !drawing.isSelected;
     }
+
     for (final DrawingData data in drawings!) {
       if (data.id != drawing.id || isNotFinished) {
         data.isSelected = false;
       }
 
-      if (data.isDrawingFinished == false) {
+      if (!data.isDrawingFinished) {
         data.isSelected = true;
       }
     }

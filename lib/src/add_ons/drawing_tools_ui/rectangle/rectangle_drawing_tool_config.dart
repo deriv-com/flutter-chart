@@ -9,7 +9,7 @@ import '../callbacks.dart';
 
 part 'rectangle_drawing_tool_config.g.dart';
 
-/// Trend drawing tool configurations.
+/// Rectangle drawing tool configurations.
 @JsonSerializable()
 class RectangleDrawingToolConfig extends DrawingToolConfig {
   /// Initializes

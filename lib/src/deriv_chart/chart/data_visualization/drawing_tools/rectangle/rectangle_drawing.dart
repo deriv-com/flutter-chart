@@ -14,25 +14,19 @@ import 'package:deriv_chart/deriv_chart.dart';
 /// Rectangle drawing tool.
 class RectangleDrawing extends Drawing {
   /// Initializes
-  RectangleDrawing(
-      {required this.drawingPart,
-      this.startEpoch = 0,
-      this.startYCoord = 0,
-      this.endEpoch = 0,
-      this.endYCoord = 0,
-      this.isFirstPoint = false,
-      this.id = 'rectangle_0'});
+  RectangleDrawing({
+    required this.drawingPart,
+    this.startEpoch = 0,
+    this.startYCoord = 0,
+    this.endEpoch = 0,
+    this.endYCoord = 0,
+  });
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
 
-  final String id;
-
   /// Starting epoch.
   final int startEpoch;
-
-  ///
-  final bool isFirstPoint;
 
   /// Starting Y coordinates.
   final double startYCoord;
@@ -49,6 +43,8 @@ class RectangleDrawing extends Drawing {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
+  /// Store the created rectangle in this variable
+  ///  (so it can be used for hitTest as well).
   Rect rect = Rect.zero;
 
   /// Paint the line
@@ -103,8 +99,6 @@ class RectangleDrawing extends Drawing {
                 : paint.transparentCirclePaintStyle());
       } else if (startEpoch != 0 && startQuoteToY != 0) {
         /// Draw second point
-        ///
-
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
@@ -114,19 +108,16 @@ class RectangleDrawing extends Drawing {
       }
     } else if (drawingPart == DrawingParts.rectangle) {
       if (pattern == 'solid') {
-        // rect = Offset(x, y) & Size(width, height);
         rect = Rect.fromPoints(
             Offset(startXCoord, startQuoteToY), Offset(endXCoord, endQuoteToY));
-        // startXCoord, startQuoteToY, endXCoord, endQuoteToY
+
         canvas.drawRect(
             rect,
             drawingData.isSelected
                 ? paint.glowyLinePaintStyle(
-                    lineStyle.color, lineStyle.thickness)
-                : Paint()
-              ..color = fillStyle.color.withOpacity(0.3)
-              ..style = PaintingStyle.fill
-              ..strokeWidth = lineStyle.thickness);
+                    fillStyle.color.withOpacity(0.3), lineStyle.thickness)
+                : paint.fillPaintStyle(
+                    fillStyle.color.withOpacity(0.3), lineStyle.thickness));
       }
     }
   }
@@ -145,10 +136,6 @@ class RectangleDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
-    // if (drawingPart == DrawingParts.marker) {
-    //   print('here');
-    //   return false;
-    // }
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
 
@@ -176,9 +163,11 @@ class RectangleDrawing extends Drawing {
         sqrt(pow(endQuoteToY - startQuoteToY, 2) +
             pow(endXCoord - startXCoord, 2));
 
+    // check if the clicked position is inside the rectangle
     if (rect.contains(position) && endEpoch != 0) {
       return true;
     }
+
     if (distance.abs() <= lineStyle.thickness + 6) {
       return true;
     }
