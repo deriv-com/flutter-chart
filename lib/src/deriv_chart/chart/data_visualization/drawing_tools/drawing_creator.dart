@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/horizontal/horizontal_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
@@ -43,11 +42,6 @@ class DrawingCreator extends StatelessWidget {
     final String drawingToolType = selectedDrawingTool.toJson()['name'];
 
     switch (drawingToolType) {
-      case 'dt_horizontal':
-        return HorizontalDrawingCreator(
-          onAddDrawing: onAddDrawing,
-          quoteFromCanvasY: quoteFromCanvasY,
-        );
       case 'dt_line':
         return LineDrawingCreator(
           onAddDrawing: onAddDrawing,
