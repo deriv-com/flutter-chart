@@ -1,7 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
-///A class that holds point data
+/// A class that holds point data
+/// This class is equivalent to Offest but with customized methods
 class Point {
   /// Initializes
   const Point({

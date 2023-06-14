@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -16,18 +17,14 @@ class VerticalDrawing extends Drawing {
   /// Initializes
   VerticalDrawing({
     required this.drawingPart,
-    this.epoch = 0,
-    this.yCoord = 0,
+    required this.edgePoint,
   });
 
   /// Part of a drawing: 'vertical'
   final DrawingParts drawingPart;
 
-  /// Starting epoch.
-  final int epoch;
-
-  /// Starting Y coordinates.
-  final double yCoord;
+  /// Starting point of drawing
+  final EdgePoint edgePoint;
 
   /// Keeps the latest position of the start of drawing
   Point? startPoint;
@@ -52,8 +49,8 @@ class VerticalDrawing extends Drawing {
     final DrawingPatterns pattern = config.pattern;
 
     startPoint = draggableStartPoint.updatePosition(
-      epoch,
-      yCoord,
+      edgePoint.epoch,
+      edgePoint.yCoord,
       epochToX,
       quoteToY,
     );

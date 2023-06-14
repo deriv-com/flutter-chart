@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 
@@ -8,18 +9,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 /// And we want to hanle difftent types of drag events on them.
 /// For example with dots are draggable edge points for the line
 /// ⎯⎯⚪️⎯⎯⎯⚪️⎯⎯
-class DraggableEdgePoint {
+class DraggableEdgePoint extends EdgePoint {
   /// Initializes
   DraggableEdgePoint({
-    this.epoch = 0,
-    this.yCoord = 0,
-  });
-
-  /// Epoch.
-  int? epoch;
-
-  /// Y coordinates.
-  double? yCoord;
+    int epoch = 0,
+    double yCoord = 0,
+  }) : super(epoch: epoch, yCoord: yCoord);
 
   /// Represents whether the whole drawing is currently being dragged or not
   bool isDrawingDragged = false;
@@ -33,15 +28,19 @@ class DraggableEdgePoint {
   /// A callback method that takes the relative x and y positions as parameter,
   /// sets the draggedPosition field to its value and return epoch and quote
   /// values.
-  Point updatePosition(int epoch, double yCoord,
-      double Function(int x) epochToX, double Function(double y) quoteToY) {
+  Point updatePosition(
+    int epoch,
+    double yCoord,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+  ) {
     final Offset oldPosition = Offset(epoch.toDouble(), yCoord);
     draggedPosition = isDrawingDragged ? draggedPosition : oldPosition;
 
-    final double xCoord = epochToX(draggedPosition.dx.toInt());
-    final double quoteY = quoteToY(draggedPosition.dy);
+    final double x = epochToX(draggedPosition.dx.toInt());
+    final double y = quoteToY(draggedPosition.dy);
 
-    return Point(x: xCoord, y: quoteY);
+    return Point(x: x, y: y);
   }
 
   /// A method that takes the gesture delta Offset object as parameter

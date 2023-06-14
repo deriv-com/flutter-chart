@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
@@ -17,10 +18,8 @@ class LineDrawing extends Drawing {
   /// Initializes
   LineDrawing({
     required this.drawingPart,
-    this.startEpoch = 0,
-    this.startYCoord = 0,
-    this.endEpoch = 0,
-    this.endYCoord = 0,
+    this.startEdgePoint = const EdgePoint(),
+    this.endEdgePoint = const EdgePoint(),
     this.exceedStart = false,
     this.exceedEnd = false,
   });
@@ -28,17 +27,11 @@ class LineDrawing extends Drawing {
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
 
-  /// Starting epoch.
-  final int startEpoch;
+  /// Starting point of drawing
+  final EdgePoint startEdgePoint;
 
-  /// Starting Y coordinates.
-  final double startYCoord;
-
-  /// Ending epoch.
-  final int endEpoch;
-
-  /// Ending Y coordinates.
-  final double endYCoord;
+  /// Ending point of drawing
+  final EdgePoint endEdgePoint;
 
   /// If the line pass the start point.
   final bool exceedStart;
@@ -146,14 +139,14 @@ class LineDrawing extends Drawing {
     final String pattern = config.toJson()['pattern'];
 
     _startPoint = draggableStartPoint.updatePosition(
-      startEpoch,
-      startYCoord,
+      startEdgePoint.epoch,
+      startEdgePoint.yCoord,
       epochToX,
       quoteToY,
     );
     _endPoint = draggableEndPoint!.updatePosition(
-      endEpoch,
-      endYCoord,
+      endEdgePoint.epoch,
+      endEdgePoint.yCoord,
       epochToX,
       quoteToY,
     );
@@ -165,7 +158,7 @@ class LineDrawing extends Drawing {
     final double endQuoteToY = _endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
-      if (endEpoch != 0 && endQuoteToY != 0) {
+      if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw first point
         canvas.drawCircle(
             Offset(endXCoord, endQuoteToY),
@@ -173,7 +166,7 @@ class LineDrawing extends Drawing {
             drawingData.isSelected
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
-      } else if (startEpoch != 0 && startQuoteToY != 0) {
+      } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
         /// Draw second point
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),

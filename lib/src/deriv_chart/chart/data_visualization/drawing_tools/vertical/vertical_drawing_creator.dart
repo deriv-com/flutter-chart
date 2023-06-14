@@ -1,96 +1,57 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import './vertical_drawing.dart';
 
 /// Creates a Vertical line drawing
-class VerticalDrawingCreator extends StatefulWidget {
+class VerticalDrawingCreator extends Creator<VerticalDrawing> {
   /// Initializes the vertical drawing creator.
   const VerticalDrawingCreator({
-    required this.onAddDrawing,
-    required this.quoteFromCanvasY,
+    required void Function(
+      Map<String, List<VerticalDrawing>>, {
+      bool isDrawingFinished,
+      bool isInfinitDrawing,
+    })
+        onAddDrawing,
+    required double Function(double) quoteFromCanvasY,
     Key? key,
-  }) : super(key: key);
-
-  /// Callback to pass a newly created vertical drawing to the parent.
-  final void Function(Map<String, List<VerticalDrawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
-
-  /// Conversion function for converting quote from chart's canvas' Y position.
-  final double Function(double) quoteFromCanvasY;
+  }) : super(
+          key: key,
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+        );
 
   @override
-  _VerticalDrawingCreatorState createState() => _VerticalDrawingCreatorState();
+  CreatorState<VerticalDrawing> createState() => _VerticalDrawingCreatorState();
 }
 
-class _VerticalDrawingCreatorState extends State<VerticalDrawingCreator> {
-  late GestureManagerState gestureManager;
-
-  /// Parts of a particular vertical drawing, e.g. marker, line
-  final List<VerticalDrawing> _drawingParts = <VerticalDrawing>[];
-
-  /// Tapped position.
-  Offset? position;
-
-  /// Saved starting epoch.
-  int? _startingEpoch;
-
-  /// Saved starting Y coordinates.
-  double? _startingYPoint;
-
-  /// Unique drawing id.
-  String _drawingId = '';
-
-  /// If drawing has been finished.
-  bool _isDrawingFinished = false;
-
-  /// Get epoch from x.
-  int Function(double x)? epochFromX;
-
+class _VerticalDrawingCreatorState extends CreatorState<VerticalDrawing> {
   @override
-  void initState() {
-    super.initState();
-    gestureManager = context.read<GestureManagerState>()
-      ..registerCallback(_onTap);
-  }
-
-  @override
-  void dispose() {
-    gestureManager.removeCallback(_onTap);
-    super.dispose();
-  }
-
-  void _onTap(TapUpDetails details) {
-    if (_isDrawingFinished) {
+  void onTap(TapUpDetails details) {
+    if (isDrawingFinished) {
       return;
     }
     setState(() {
       position = details.localPosition;
-      _startingEpoch = epochFromX!(position!.dx);
-      _startingYPoint = widget.quoteFromCanvasY(position!.dy);
-      _drawingId = 'vertical_$_startingEpoch';
-      _isDrawingFinished = true;
 
-      _drawingParts.add(VerticalDrawing(
+      edgePoints.add(EdgePoint(
+        epoch: epochFromX!(position!.dx),
+        yCoord: widget.quoteFromCanvasY(position!.dy),
+      ));
+
+      drawingId = 'vertical_${edgePoints.first.epoch}';
+      isDrawingFinished = true;
+
+      drawingParts.add(VerticalDrawing(
         drawingPart: DrawingParts.line,
-        epoch: _startingEpoch!,
-        yCoord: _startingYPoint!,
+        edgePoint: edgePoints.first,
       ));
 
       widget.onAddDrawing(
-        <String, List<VerticalDrawing>>{_drawingId: _drawingParts},
-        isDrawingFinished: _isDrawingFinished,
+        <String, List<VerticalDrawing>>{drawingId: drawingParts},
+        isDrawingFinished: isDrawingFinished,
       );
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final XAxisModel xAxis = context.watch<XAxisModel>();
-    epochFromX = xAxis.epochFromX;
-
-    return Container();
   }
 }
