@@ -133,8 +133,9 @@ class LineDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final DrawingToolConfig config = drawingData.config;
 
+    /// Get the latest config of any drawing tool which is used to draw the line
+    final DrawingToolConfig config = drawingData.config;
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
