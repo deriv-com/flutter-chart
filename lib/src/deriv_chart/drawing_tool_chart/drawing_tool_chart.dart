@@ -77,6 +77,14 @@ class DrawingToolChart extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
+            if (drawings != null)
+              ...drawings!.map((DrawingData drawingData) => DrawingPainter(
+                  drawingData: drawingData,
+                  quoteToCanvasY: chartQuoteToCanvasY,
+                  quoteFromCanvasY: chartQuoteFromCanvasY,
+                  onMoveDrawing: onMoveDrawing,
+                  setIsDrawingSelected: _setIsDrawingSelected,
+                  isFirstDrawingPoint: isFirstDrawingPoint)),
             if (selectedDrawingTool != null)
               DrawingCreator(
                 onAddDrawing: onAddDrawing,
@@ -85,14 +93,6 @@ class DrawingToolChart extends StatelessWidget {
                 clearDrawingToolSelection: clearDrawingToolSelection,
                 removeDrawing: removeDrawing,
               ),
-            if (drawings!.isNotEmpty)
-              ...drawings!.map((DrawingData drawingData) => DrawingPainter(
-                  drawingData: drawingData,
-                  quoteToCanvasY: chartQuoteToCanvasY,
-                  quoteFromCanvasY: chartQuoteFromCanvasY,
-                  onMoveDrawing: onMoveDrawing,
-                  setIsDrawingSelected: _setIsDrawingSelected,
-                  isFirstDrawingPoint: isFirstDrawingPoint)),
           ],
         ),
       );
