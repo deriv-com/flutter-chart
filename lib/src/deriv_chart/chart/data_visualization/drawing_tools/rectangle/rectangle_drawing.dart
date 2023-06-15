@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_dra
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -64,10 +65,9 @@ class RectangleDrawing extends Drawing {
         drawingData.config as RectangleDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
-
     final LineStyle fillStyle = config.fillStyle;
 
-    final String pattern = config.pattern;
+    final DrawingPatterns pattern = config.pattern;
 
     _startPoint = draggableStartPoint.updatePosition(
       startEpoch,
@@ -107,17 +107,20 @@ class RectangleDrawing extends Drawing {
                 : paint.transparentCirclePaintStyle());
       }
     } else if (drawingPart == DrawingParts.rectangle) {
-      if (pattern == 'solid') {
+      if (pattern == DrawingPatterns.solid) {
         rect = Rect.fromPoints(
             Offset(startXCoord, startQuoteToY), Offset(endXCoord, endQuoteToY));
 
-        canvas.drawRect(
-            rect,
-            drawingData.isSelected
-                ? paint.glowyLinePaintStyle(
-                    fillStyle.color.withOpacity(0.3), lineStyle.thickness)
-                : paint.fillPaintStyle(
-                    fillStyle.color.withOpacity(0.3), lineStyle.thickness));
+        canvas
+          ..drawRect(
+              rect,
+              drawingData.isSelected
+                  ? paint.glowyLinePaintStyle(
+                      fillStyle.color.withOpacity(0.3), lineStyle.thickness)
+                  : paint.fillPaintStyle(
+                      fillStyle.color.withOpacity(0.3), lineStyle.thickness))
+          ..drawRect(
+              rect, paint.strokeStyle(lineStyle.color, lineStyle.thickness));
       }
     }
   }

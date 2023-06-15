@@ -21,6 +21,12 @@ class DrawingPaintStyle {
     ..style = PaintingStyle.fill
     ..strokeWidth = thickness;
 
+  ///
+  Paint strokeStyle(Color color, double thickness) => Paint()
+    ..color = color
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = thickness;
+
   /// Returns the paint style of the circle marker
   Paint glowyCirclePaintStyle(Color color) => Paint()
     ..color = color
