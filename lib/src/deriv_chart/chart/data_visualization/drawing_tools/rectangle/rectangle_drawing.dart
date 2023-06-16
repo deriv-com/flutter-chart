@@ -140,8 +140,6 @@ class RectangleDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
-
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
 
@@ -150,7 +148,7 @@ class RectangleDrawing extends Drawing {
 
     /// inflate the rect to 2px so that the stroke is inclusive and
     /// can be detected
-    final Rect _inflatedRect = _rect.inflate(lineStyle.thickness);
+    final Rect _inflatedRect = _rect.inflate(2);
 
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
