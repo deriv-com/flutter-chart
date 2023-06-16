@@ -39,7 +39,8 @@ class RectangleDrawingCreator extends StatefulWidget {
 class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
   late GestureManagerState gestureManager;
 
-  /// Parts of a particular rectangle drawing, e.g. marker, line , rectangle
+  /// List to maintain instance of Rectangle drawing with
+  /// multiple input to be passed to onAddDrawing Callback
   final List<RectangleDrawing> _drawingParts = <RectangleDrawing>[];
 
   /// Tapped position.

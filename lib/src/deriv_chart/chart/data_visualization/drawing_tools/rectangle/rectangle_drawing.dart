@@ -23,7 +23,7 @@ class RectangleDrawing extends Drawing {
     this.endYCoord = 0,
   });
 
-  /// enum including all possible drawing parts (marker,rectangle and drawing)
+  /// instance of enum including all possible drawing parts(marker,rectangle)
   final DrawingParts drawingPart;
 
   /// Starting epoch.
