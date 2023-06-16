@@ -127,8 +127,8 @@ class RectangleDrawing extends Drawing {
 
   /// Calculation for detemining whether a user's touch or click intersects
   /// with any of the painted areas on the screen,
-  /// For any of the marker's clicked , the "isDragged" callback
-  ///  function is called and allow the dragging of the points and changing the
+  /// For any of the marker's clicked , the "isDragged" flag is activated
+  /// that allow the dragging of the points and changing the
   /// width/height of the drawing .If click is anywhere on rectangle, it allows the draging of
   /// the whole drawing
   ///
@@ -142,6 +142,7 @@ class RectangleDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
+
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
 
@@ -150,7 +151,7 @@ class RectangleDrawing extends Drawing {
 
     /// inflate the rect to 2px so that the stroke is inclusive and
     /// can be detected
-    final Rect _inflatedRect = _rect.inflate(2);
+    final Rect _inflatedRect = _rect.inflate(lineStyle.thickness);
 
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
