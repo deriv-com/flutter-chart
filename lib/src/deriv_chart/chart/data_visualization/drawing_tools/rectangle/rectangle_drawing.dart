@@ -131,7 +131,6 @@ class RectangleDrawing extends Drawing {
   /// that allow the dragging of the points and changing the
   /// width/height of the drawing .If click is anywhere on rectangle, it allows the draging of
   /// the whole drawing
-  ///
   @override
   bool hitTest(
     Offset position,
