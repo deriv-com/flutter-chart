@@ -15,13 +15,12 @@ class DrawingPaintStyle {
     ..strokeWidth = thickness;
 
   /// Returns the paint style of the inner filling of container
-  ///
   Paint fillPaintStyle(Color color, double thickness) => Paint()
     ..color = color
     ..style = PaintingStyle.fill
     ..strokeWidth = thickness;
 
-  ///
+  /// Returns the paint style of the outer stroke of the container
   Paint strokeStyle(Color color, double thickness) => Paint()
     ..color = color
     ..style = PaintingStyle.stroke

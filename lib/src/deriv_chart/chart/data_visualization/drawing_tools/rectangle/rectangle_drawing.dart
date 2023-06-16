@@ -23,7 +23,7 @@ class RectangleDrawing extends Drawing {
     this.endYCoord = 0,
   });
 
-  /// Part of a drawing: 'marker' or 'line'
+  /// enum including all possible drawing parts (marker,rectangle and drawing)
   final DrawingParts drawingPart;
 
   /// Starting epoch.
@@ -39,16 +39,16 @@ class RectangleDrawing extends Drawing {
   final double endYCoord;
 
   /// Marker radius.
-  final double markerRadius = 10;
+  final double _markerRadius = 10;
 
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
   /// Store the created rectangle in this variable
   ///  (so it can be used for hitTest as well).
-  Rect rect = Rect.zero;
+  Rect _rect = Rect.zero;
 
-  /// Paint the line
+  /// Paint the rectangle
   @override
   void onPaint(
     Canvas canvas,
@@ -93,7 +93,7 @@ class RectangleDrawing extends Drawing {
         /// Draw first point
         canvas.drawCircle(
             Offset(endXCoord, endQuoteToY),
-            markerRadius,
+            _markerRadius,
             drawingData.isSelected
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
@@ -101,34 +101,37 @@ class RectangleDrawing extends Drawing {
         /// Draw second point
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
-            markerRadius,
+            _markerRadius,
             drawingData.isSelected
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       }
     } else if (drawingPart == DrawingParts.rectangle) {
       if (pattern == DrawingPatterns.solid) {
-        rect = Rect.fromPoints(
+        _rect = Rect.fromPoints(
             Offset(startXCoord, startQuoteToY), Offset(endXCoord, endQuoteToY));
 
         canvas
           ..drawRect(
-              rect,
+              _rect,
               drawingData.isSelected
                   ? paint.glowyLinePaintStyle(
                       fillStyle.color.withOpacity(0.3), lineStyle.thickness)
                   : paint.fillPaintStyle(
                       fillStyle.color.withOpacity(0.3), lineStyle.thickness))
           ..drawRect(
-              rect, paint.strokeStyle(lineStyle.color, lineStyle.thickness));
+              _rect, paint.strokeStyle(lineStyle.color, lineStyle.thickness));
       }
     }
   }
 
   /// Calculation for detemining whether a user's touch or click intersects
-  /// with any of the painted areas on the screen, for any of the edge points
-  /// it will call "setIsEdgeDragged" callback function to determine which
-  /// point clicked
+  /// with any of the painted areas on the screen,
+  /// For any of the marker's clicked , the "isDragged" callback
+  ///  function is called and allow the dragging of the points and changing the
+  /// width/height of the drawing .If click is anywhere on rectangle, it allows the draging of
+  /// the whole drawing
+  ///
   @override
   bool hitTest(
     Offset position,
@@ -145,35 +148,47 @@ class RectangleDrawing extends Drawing {
     final double endXCoord = _endPoint!.x;
     final double endQuoteToY = _endPoint!.y;
 
-    /// Check if start point clicked
-    if (_startPoint!.isClicked(position, markerRadius)) {
-      draggableStartPoint.isDragged = true;
-    }
+    /// inflate the rect to 2px so that the stroke is inclusive and
+    /// can be detected
+    final Rect _inflatedRect = _rect.inflate(2);
+
+    // Calculate the difference between the start Point and the tap point.
+    final double startDx = position.dx - startXCoord;
+    final double startDy = position.dy - startQuoteToY;
+
+    // Calculate the difference between the end Point and the tap point.
+    final double endDx = position.dx - endXCoord;
+    final double endDy = position.dy - endQuoteToY;
+
+    // getting the distance of end point
+    final double endPointDistance = sqrt(endDx * endDx + endDy * endDy);
+
+    // getting the distance of start point
+    final double startPointDistance =
+        sqrt(startDx * startDx + startDy * startDy);
 
     /// Check if end point clicked
-    if (_endPoint!.isClicked(position, markerRadius)) {
+    if (_endPoint!.isClicked(position, _markerRadius)) {
       draggableEndPoint!.isDragged = true;
     }
 
-    if (endEpoch == 0) {
-      return false;
+    /// Check if start point clicked
+    if (_startPoint!.isClicked(position, _markerRadius)) {
+      draggableStartPoint.isDragged = true;
     }
 
-    final double distance = ((endQuoteToY - startQuoteToY) * position.dx -
-            (endXCoord - startXCoord) * position.dy +
-            endXCoord * startQuoteToY -
-            endQuoteToY * startXCoord) /
-        sqrt(pow(endQuoteToY - startQuoteToY, 2) +
-            pow(endXCoord - startXCoord, 2));
+    // If the distance (endpoint and startpoint) is less or equal to the
+    //marker radius, it means the tap was inside the circle
+    if (endPointDistance <= _markerRadius ||
+        startPointDistance <= _markerRadius) {
+      return true;
+    }
 
     // check if the clicked position is inside the rectangle
-    if (rect.contains(position) && endEpoch != 0) {
+    if (_inflatedRect.contains(position) && endEpoch != 0) {
       return true;
     }
 
-    if (distance.abs() <= lineStyle.thickness + 6) {
-      return true;
-    }
     return false;
   }
 }

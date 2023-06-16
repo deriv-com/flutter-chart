@@ -8,7 +8,6 @@ import '../data_model/drawing_parts.dart';
 /// Creates a Rectangle drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a rectangle drawing tool and
 /// until drawing is finished
-///
 class RectangleDrawingCreator extends StatefulWidget {
   /// Initializes the rectangle drawing creator.
   const RectangleDrawingCreator({
@@ -108,20 +107,27 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
 
         _endingYPoint = widget.quoteFromCanvasY(position!.dy);
 
-        _drawingParts.addAll(<RectangleDrawing>[
-          RectangleDrawing(
-            drawingPart: DrawingParts.marker,
-            endEpoch: _endingEpoch!,
-            endYCoord: _endingYPoint!,
-          ),
-          RectangleDrawing(
-            drawingPart: DrawingParts.rectangle,
-            startEpoch: _startingEpoch!,
-            startYCoord: _startingYPoint!,
-            endEpoch: _endingEpoch!,
-            endYCoord: _endingYPoint!,
-          )
-        ]);
+        if (Offset(_startingEpoch!.toDouble(), _startingYPoint!.toDouble()) ==
+            Offset(_endingEpoch!.toDouble(), _endingYPoint!.toDouble())) {
+          widget.removeDrawing(_drawingId);
+          widget.cleanDrawingToolSelection();
+          return;
+        } else {
+          _drawingParts.addAll(<RectangleDrawing>[
+            RectangleDrawing(
+              drawingPart: DrawingParts.marker,
+              endEpoch: _endingEpoch!,
+              endYCoord: _endingYPoint!,
+            ),
+            RectangleDrawing(
+              drawingPart: DrawingParts.rectangle,
+              startEpoch: _startingEpoch!,
+              startYCoord: _startingYPoint!,
+              endEpoch: _endingEpoch!,
+              endYCoord: _endingYPoint!,
+            )
+          ]);
+        }
       }
 
       widget.onAddDrawing(

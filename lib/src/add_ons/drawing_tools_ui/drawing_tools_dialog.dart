@@ -55,13 +55,14 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     value: LineDrawingToolConfig(),
                   ),
                   DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Vertical'),
-                    value: VerticalDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Rectangle'),
                     value: RectangleDrawingToolConfig(),
                   ),
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Vertical'),
+                    value: VerticalDrawingToolConfig(),
+                  ),
+
                   // TODO(maryia-binary): add the rest of drawing tools above
                 ],
                 onChanged: (dynamic config) {
