@@ -17,7 +17,7 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
-    this.isFirstDrawingPoint = false,
+    this.isFirstPointOfNewDrawing = false,
     Key? key,
   }) : super(key: key);
 
@@ -25,7 +25,7 @@ class DrawingPainter extends StatefulWidget {
   final DrawingData? drawingData;
 
   /// check if the first point is already clicked
-  final bool isFirstDrawingPoint;
+  final bool isFirstPointOfNewDrawing;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
@@ -133,7 +133,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   quoteToY: widget.quoteToCanvasY,
                   draggableStartPoint: _draggableStartPoint,
                   draggableEndPoint: _draggableEndPoint,
-                  isFirstDrawingPoint: widget.isFirstDrawingPoint),
+                  isFirstPointOfNewDrawing: widget.isFirstPointOfNewDrawing),
               size: const Size(double.infinity, double.infinity),
             ),
           )
@@ -148,13 +148,13 @@ class _DrawingPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.draggableStartPoint,
-    this.isFirstDrawingPoint = false,
+    this.isFirstPointOfNewDrawing = false,
     this.draggableEndPoint,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
-  final bool isFirstDrawingPoint;
+  final bool isFirstPointOfNewDrawing;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
@@ -193,7 +193,7 @@ class _DrawingPainter extends CustomPainter {
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
       )) {
-        if (isFirstDrawingPoint) {
+        if (isFirstPointOfNewDrawing) {
           return false;
         }
         return true;

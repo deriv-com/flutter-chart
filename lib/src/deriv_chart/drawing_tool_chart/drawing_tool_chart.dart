@@ -14,14 +14,14 @@ class DrawingToolChart extends StatelessWidget {
     required this.chartQuoteToCanvasY,
     required this.onMoveDrawing,
     required this.clearDrawingToolSelection,
-    this.isFirstDrawingPoint = false,
+    this.isFirstPointOfNewDrawing = false,
     this.drawings,
     this.selectedDrawingTool,
     Key? key,
   }) : super(key: key);
 
   /// check if the first point is already clicked for the drawing
-  final bool isFirstDrawingPoint;
+  final bool isFirstPointOfNewDrawing;
 
   /// Existing drawings.
   final List<DrawingData>? drawings;
@@ -84,7 +84,7 @@ class DrawingToolChart extends StatelessWidget {
                   quoteFromCanvasY: chartQuoteFromCanvasY,
                   onMoveDrawing: onMoveDrawing,
                   setIsDrawingSelected: _setIsDrawingSelected,
-                  isFirstDrawingPoint: isFirstDrawingPoint)),
+                  isFirstPointOfNewDrawing: isFirstPointOfNewDrawing)),
             if (selectedDrawingTool != null)
               DrawingCreator(
                 onAddDrawing: onAddDrawing,

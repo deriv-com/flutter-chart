@@ -21,7 +21,7 @@ class Chart extends StatefulWidget {
     required this.granularity,
     required this.onAddDrawing,
     required this.clearDrawingToolSelection,
-    this.isFirstDrawingPoint = false,
+    this.isFirstPointOfNewDrawing = false,
     this.drawings,
     this.selectedDrawingTool,
     this.pipSize = 4,
@@ -100,7 +100,7 @@ class Chart extends StatefulWidget {
   final double opacity;
 
   /// check if first point of any drawing is clicked
-  final bool isFirstDrawingPoint;
+  final bool isFirstPointOfNewDrawing;
 
   @override
   State<StatefulWidget> createState() => _ChartState();
@@ -172,7 +172,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                   flex: 3,
                   child: MainChart(
                     drawings: widget.drawings,
-                    isFirstDrawingPoint: widget.isFirstDrawingPoint,
+                    isFirstPointOfNewDrawing: widget.isFirstPointOfNewDrawing,
                     onAddDrawing: widget.onAddDrawing,
                     selectedDrawingTool: widget.selectedDrawingTool,
                     clearDrawingToolSelection: widget.clearDrawingToolSelection,
