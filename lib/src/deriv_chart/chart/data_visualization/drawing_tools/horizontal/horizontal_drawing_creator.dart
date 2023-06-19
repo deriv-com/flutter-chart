@@ -38,8 +38,8 @@ class _HorizontalDrawingCreatorState extends State<HorizontalDrawingCreator> {
   /// Saved starting epoch.
   int? _startingEpoch;
 
-  /// Saved starting Y coordinates.
-  double? _startingYPoint;
+  /// Saved starting quote.
+  double? _startingQuote;
 
   /// Unique drawing id.
   String _drawingId = '';
@@ -70,14 +70,14 @@ class _HorizontalDrawingCreatorState extends State<HorizontalDrawingCreator> {
     setState(() {
       position = details.localPosition;
       _startingEpoch = epochFromX!(position!.dx);
-      _startingYPoint = widget.quoteFromCanvasY(position!.dy);
+      _startingQuote = widget.quoteFromCanvasY(position!.dy);
       _drawingId = 'horizontal_$_startingEpoch';
       _isDrawingFinished = true;
 
       _drawingParts.add(HorizontalDrawing(
         drawingPart: DrawingParts.line,
         epoch: _startingEpoch!,
-        yCoord: _startingYPoint!,
+        quote: _startingQuote!,
       ));
 
       widget.onAddDrawing(

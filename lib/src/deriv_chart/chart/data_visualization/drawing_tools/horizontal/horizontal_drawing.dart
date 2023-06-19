@@ -18,7 +18,7 @@ class HorizontalDrawing extends Drawing {
   HorizontalDrawing({
     required this.drawingPart,
     this.epoch = 0,
-    this.yCoord = 0,
+    this.quote = 0,
   });
 
   /// Part of a drawing: 'horizontal'
@@ -27,8 +27,8 @@ class HorizontalDrawing extends Drawing {
   /// Starting epoch.
   final int epoch;
 
-  /// Starting Y coordinates.s
-  final double yCoord;
+  /// Starting quote
+  final double quote;
 
   /// Keeps the latest position of the horizontal line
   Point? point;
@@ -54,7 +54,7 @@ class HorizontalDrawing extends Drawing {
 
     point = draggableStartPoint.updatePosition(
       epoch,
-      yCoord,
+      quote,
       epochToX,
       quoteToY,
     );
