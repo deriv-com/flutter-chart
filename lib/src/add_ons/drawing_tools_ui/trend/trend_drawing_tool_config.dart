@@ -1,8 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_item.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -15,8 +14,9 @@ part 'trend_drawing_tool_config.g.dart';
 class TrendDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const TrendDrawingToolConfig({
+    this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
-    this.pattern = DrawingPatterns.solid,
+    this.pattern = 'solid',
   }) : super();
 
   /// Initializes from JSON.
@@ -33,8 +33,11 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
   /// Drawing tool line style
   final LineStyle lineStyle;
 
+  /// Drawing tool fill style
+  final LineStyle fillStyle;
+
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
-  final DrawingPatterns pattern;
+  final String pattern;
 
   @override
   DrawingToolItem getItem(

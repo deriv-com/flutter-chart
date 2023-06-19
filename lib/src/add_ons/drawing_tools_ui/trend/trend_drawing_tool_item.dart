@@ -1,7 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 
 import 'package:flutter/material.dart';
 
@@ -34,11 +33,13 @@ class TrendDrawingToolItem extends DrawingToolItem {
 /// Vertival drawing tool Item State class
 class TrendDrawingToolItemState
     extends DrawingToolItemState<TrendDrawingToolConfig> {
+  LineStyle? _fillStyle;
   LineStyle? _lineStyle;
-  DrawingPatterns? _pattern;
+  String? _pattern;
 
   @override
   TrendDrawingToolConfig createDrawingToolConfig() => TrendDrawingToolConfig(
+        fillStyle: _currentFillStyle,
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
       );
@@ -46,21 +47,29 @@ class TrendDrawingToolItemState
   @override
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
-          _buildColorField(),
+          _buildColorField(
+              ChartLocalization.of(context)!.labelColor, _currentLineStyle),
+          _buildColorField(
+              ChartLocalization.of(context)!.labelFillColor, _currentFillStyle),
+          // TODO(maryia-deriv): implement _buildPatternField() to set pattern
         ],
       );
-
-  Widget _buildColorField() => Row(
+  Widget _buildColorField(String label, LineStyle style) => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context)!.labelColor,
+            label,
             style: const TextStyle(fontSize: 16),
           ),
           ColorSelector(
-            currentColor: _currentLineStyle.color,
+            currentColor: style.color,
             onColorChanged: (Color selectedColor) {
               setState(() {
-                _lineStyle = _currentLineStyle.copyWith(color: selectedColor);
+                final LineStyle newColor = style.copyWith(color: selectedColor);
+                if (label == ChartLocalization.of(context)!.labelColor) {
+                  _lineStyle = newColor;
+                } else {
+                  _fillStyle = newColor;
+                }
               });
               updateDrawingTool();
             },
@@ -68,9 +77,12 @@ class TrendDrawingToolItemState
         ],
       );
 
+  LineStyle get _currentFillStyle =>
+      _fillStyle ?? (widget.config as TrendDrawingToolConfig).fillStyle;
+
   LineStyle get _currentLineStyle =>
       _lineStyle ?? (widget.config as TrendDrawingToolConfig).lineStyle;
 
-  DrawingPatterns get _currentPattern =>
+  String get _currentPattern =>
       _pattern ?? (widget.config as TrendDrawingToolConfig).pattern;
 }

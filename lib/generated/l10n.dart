@@ -14,22 +14,23 @@ import 'intl/messages_all.dart';
 
 class ChartLocalization {
   ChartLocalization();
-  
+
   static ChartLocalization? current;
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<ChartLocalization> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       ChartLocalization.current = ChartLocalization();
-      
+
       return ChartLocalization.current!;
     });
-  } 
+  }
 
   static ChartLocalization? of(BuildContext context) {
     return Localizations.of<ChartLocalization>(context, ChartLocalization);
@@ -484,6 +485,15 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  String get labelFillColor {
+    return Intl.message(
+      'Color',
+      name: 'labelFillColor',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
@@ -499,7 +509,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
   @override
-  Future<ChartLocalization> load(Locale locale) => ChartLocalization.load(locale);
+  Future<ChartLocalization> load(Locale locale) =>
+      ChartLocalization.load(locale);
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

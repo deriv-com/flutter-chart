@@ -1,7 +1,9 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
@@ -16,8 +18,11 @@ class DrawingCreator extends StatelessWidget {
     required this.quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
+    required this.series,
     Key? key,
   }) : super(key: key);
+
+  final DataSeries<Tick> series;
 
   /// Selected drawing tool.
   final DrawingToolConfig selectedDrawingTool;
@@ -51,8 +56,11 @@ class DrawingCreator extends StatelessWidget {
         );
       case 'dt_trend':
         return TrendDrawingCreator(
+          series: series,
           onAddDrawing: onAddDrawing,
+          cleanDrawingToolSelection: clearDrawingToolSelection,
           quoteFromCanvasY: quoteFromCanvasY,
+          removeDrawing: removeDrawing,
         );
       case 'dt_vertical':
         return VerticalDrawingCreator(
