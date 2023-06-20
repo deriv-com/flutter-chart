@@ -175,18 +175,8 @@ class RectangleDrawing extends Drawing {
       draggableStartPoint.isDragged = true;
     }
 
-    // If the distance (endpoint and startpoint) is less or equal to the
-    //marker radius, it means the tap was inside the circle
-    if (endPointDistance <= _markerRadius ||
-        startPointDistance <= _markerRadius) {
-      return true;
-    }
-
-    // check if the clicked position is inside the rectangle
-    if (_inflatedRect.contains(position) && endEpoch != 0) {
-      return true;
-    }
-
-    return false;
+    return endPointDistance <= _markerRadius ||
+        startPointDistance <= _markerRadius ||
+        (_inflatedRect.contains(position) && endEpoch != 0);
   }
 }
