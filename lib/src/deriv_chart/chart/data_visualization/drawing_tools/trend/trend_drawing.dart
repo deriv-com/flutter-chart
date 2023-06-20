@@ -16,16 +16,17 @@ import 'package:deriv_chart/deriv_chart.dart';
 /// infinite in both directions.
 class TrendDrawing extends Drawing {
   /// Initializes
-  TrendDrawing(
-      {required this.drawingPart,
-      required this.series,
-      required this.epochFromX,
-      this.startEpoch = 0,
-      this.startYCoord = 0,
-      this.endEpoch = 0,
-      this.endYCoord = 0,
-      this.maxValList});
+  TrendDrawing({
+    required this.drawingPart,
+    required this.series,
+    required this.epochFromX,
+    this.startEpoch = 0,
+    this.startYCoord = 0,
+    this.endEpoch = 0,
+    this.endYCoord = 0,
+  });
 
+  /// The series of ticks including epoch and quote
   final DataSeries<Tick> series;
 
   /// Get epoch from x.
@@ -33,9 +34,6 @@ class TrendDrawing extends Drawing {
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
-
-  ///
-  final List<Tick>? maxValList;
 
   /// Starting epoch.
   final int startEpoch;
@@ -55,8 +53,12 @@ class TrendDrawing extends Drawing {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
-  MinMaxCalculator? calculator;
+  /// instance of MinMaxCalculator class for getting the minimum and maximum
+  ///  quote w.r.t epoch
+  MinMaxCalculator? _calculator;
 
+  /// store the distance between minimum and maximum quote so that 3 rectangles
+  ///  of trend can be made.
   double distance = 0;
 
   double startXCoord = 0;
@@ -65,8 +67,14 @@ class TrendDrawing extends Drawing {
   double endXCoord = 0;
   double endQuoteToY = 0;
 
+  /// store the complete Rectangular area between start,end epoch and
+  /// minimum,maximum quote.
+  /// primarily used for hitTest to see if click is inside the area
   Rect wholeRect = Rect.zero;
 
+  int _isSwappedCounter = 0;
+
+  /// stores the center of the area for the markers
   double yAxis = 0;
 
   /// Paint the line
@@ -124,19 +132,24 @@ class TrendDrawing extends Drawing {
           ?.where((Tick i) => i.epoch >= minVal && i.epoch <= maxsVal)
           .toList();
 
-      calculator = MinMaxCalculator(minValueOf, maxValueOf)..calculate(maxVal!);
+      _calculator = MinMaxCalculator(minValueOf, maxValueOf)
+        ..calculate(maxVal!);
 
-      distance = (quoteToY(calculator!.min) - quoteToY(calculator!.max)).abs();
+      distance =
+          (quoteToY(_calculator!.min) - quoteToY(_calculator!.max)).abs();
+
+      yAxis = quoteToY(_calculator!.min) +
+          ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
 
       _startPoint = draggableStartPoint.updatePosition(
           startEpoch,
-          calculator!.min + (calculator!.max - calculator!.min) / 2,
+          _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
           epochToX,
           quoteToY);
 
       _endPoint = draggableEndPoint!.updatePosition(
           endEpoch,
-          calculator!.min + (calculator!.max - calculator!.min) / 2,
+          _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
           epochToX,
           quoteToY);
 
@@ -145,36 +158,37 @@ class TrendDrawing extends Drawing {
 
       endXCoord = _endPoint!.x;
       endQuoteToY = _endPoint!.y;
+
       if (endXCoord < startXCoord) {
         final double temp = endXCoord;
         endXCoord = startXCoord;
         startXCoord = temp;
+        _isSwappedCounter++;
       }
-
+      if (quoteToY(_calculator!.max).isNaN) {
+        return;
+      }
       if (pattern == 'solid') {
         final Rect topRect = Rect.fromLTRB(
             startXCoord,
-            quoteToY(calculator!.max),
+            quoteToY(_calculator!.max),
             endXCoord,
-            quoteToY(calculator!.max) + distance / 3);
+            quoteToY(_calculator!.max) + distance / 3);
 
         final Rect centerRect = Rect.fromLTRB(
             startXCoord,
-            quoteToY(calculator!.max) + distance / 3 + 2,
+            quoteToY(_calculator!.max) + distance / 3,
             endXCoord,
-            quoteToY(calculator!.max) + (distance - distance / 3));
+            quoteToY(_calculator!.max) + (distance - distance / 3));
 
         final Rect bottomRect = Rect.fromLTRB(
             startXCoord,
-            quoteToY(calculator!.max) + (distance - distance / 3) + 2,
+            quoteToY(_calculator!.max) + (distance - distance / 3),
             endXCoord,
-            quoteToY(calculator!.min));
+            quoteToY(_calculator!.min));
 
-        yAxis = quoteToY(calculator!.min) +
-            ((quoteToY(calculator!.max) - quoteToY(calculator!.min)) / 2);
-
-        wholeRect = Rect.fromLTRB(startXCoord, quoteToY(calculator!.max),
-            endXCoord, quoteToY(calculator!.min));
+        wholeRect = Rect.fromLTRB(startXCoord, quoteToY(_calculator!.max),
+            endXCoord, quoteToY(_calculator!.min));
 
         canvas
           ..drawRect(
@@ -187,6 +201,8 @@ class TrendDrawing extends Drawing {
                 ..style = PaintingStyle.fill
                 ..strokeWidth = lineStyle.thickness)
           ..drawRect(
+              topRect, paint.strokeStyle(lineStyle.color, lineStyle.thickness))
+          ..drawRect(
               centerRect,
               drawingData.isSelected
                   ? paint.glowyLinePaintStyle(
@@ -195,6 +211,8 @@ class TrendDrawing extends Drawing {
                 ..color = fillStyle.color.withOpacity(0.3)
                 ..style = PaintingStyle.fill
                 ..strokeWidth = lineStyle.thickness)
+          ..drawRect(centerRect,
+              paint.strokeStyle(lineStyle.color, lineStyle.thickness))
           ..drawRect(
               bottomRect,
               drawingData.isSelected
@@ -204,6 +222,14 @@ class TrendDrawing extends Drawing {
                 ..color = fillStyle.color.withOpacity(0.3)
                 ..style = PaintingStyle.fill
                 ..strokeWidth = lineStyle.thickness)
+          ..drawRect(bottomRect,
+              paint.strokeStyle(lineStyle.color, lineStyle.thickness))
+          ..drawLine(
+              Offset(endXCoord, yAxis),
+              Offset(startXCoord, yAxis),
+              drawingData.isSelected
+                  ? paint.glowyCirclePaintStyle(lineStyle.color)
+                  : paint.transparentCirclePaintStyle())
           ..drawCircle(
               Offset(endXCoord, yAxis),
               _markerRadius,
@@ -229,8 +255,6 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    // yAxis;
-
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - yAxis;
@@ -246,28 +270,22 @@ class TrendDrawing extends Drawing {
     final double startPointDistance =
         sqrt(startDx * startDx + startDy * startDy);
 
-    /// Check if start point clicked
-    if (_startPoint!.isClicked(position, _markerRadius)) {
+    if (startPointDistance <= _markerRadius) {
       draggableStartPoint.isDragged = true;
     }
 
-    /// Check if end point clicked
-    if (_endPoint!.isClicked(position, _markerRadius)) {
+    if (endPointDistance <= _markerRadius) {
       draggableEndPoint!.isDragged = true;
     }
-    // If the distance (endpoint and startpoint) is less or equal to the
-    //marker radius, it means the tap was inside the circle
 
-    if (endPointDistance <= _markerRadius ||
-        startPointDistance <= _markerRadius) {
-      print('inside circle clicked !!1');
+    if (startPointDistance <= _markerRadius ||
+        endPointDistance <= _markerRadius) {
       return true;
     }
 
-    if (wholeRect.contains(position) && endEpoch != 0) {
+    if (wholeRect.inflate(2).contains(position) && endEpoch != 0) {
       return true;
     }
-
     return false;
   }
 }

@@ -21,4 +21,10 @@ class DrawingPaintStyle {
 
   /// Returns the paint style of the circle marker
   Paint transparentCirclePaintStyle() => Paint()..color = Colors.transparent;
+
+  /// Returns the paint style of the outer stroke of the container
+  Paint strokeStyle(Color color, double thickness) => Paint()
+    ..color = color
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = thickness;
 }

@@ -113,28 +113,18 @@ class _TrendDrawingCreatorState extends State<TrendDrawingCreator> {
         _endingEpoch = epochFromX!(position!.dx);
         _endingYPoint = widget.quoteFromCanvasY(position!.dy);
 
-        final List<Tick>? maxValList = widget.series.entries
-            ?.where((Tick i) =>
-                i.epoch > _startingEpoch! && i.epoch > _endingEpoch!)
-            .toList();
-
-        // double minValueOf(Tick t) => t.quote;
-        // double maxValueOf(Tick t) => t.quote;
-
-        // print(maxValList);
-
         _drawingParts
           ..removeAt(0)
           ..addAll(<TrendDrawing>[
             TrendDrawing(
-                epochFromX: epochFromX,
-                series: widget.series,
-                drawingPart: DrawingParts.rectangle,
-                startEpoch: _startingEpoch!,
-                startYCoord: _startingYPoint!,
-                endEpoch: _endingEpoch!,
-                endYCoord: _endingYPoint!,
-                maxValList: maxValList)
+              epochFromX: epochFromX,
+              series: widget.series,
+              drawingPart: DrawingParts.rectangle,
+              startEpoch: _startingEpoch!,
+              startYCoord: _startingYPoint!,
+              endEpoch: _endingEpoch!,
+              endYCoord: _endingYPoint!,
+            )
           ]);
       }
       // }
