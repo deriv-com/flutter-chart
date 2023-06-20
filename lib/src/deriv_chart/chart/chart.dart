@@ -1,14 +1,12 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'bottom_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'main_chart.dart';
@@ -19,11 +17,7 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
-    required this.onAddDrawing,
-    required this.shouldStopDrawing,
-    required this.clearDrawingToolSelection,
-    this.drawings,
-    this.selectedDrawingTool,
+    required this.drawingTools,
     this.pipSize = 4,
     this.controller,
     this.overlaySeries,
@@ -52,22 +46,8 @@ class Chart extends StatefulWidget {
   /// Open position marker series.
   final MarkerSeries? markerSeries;
 
-  /// Existing drawings.
-  final List<DrawingData>? drawings;
-
-  /// Callback to pass new drawing to the parent.
-  final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished, bool isInfiniteDrawing}) onAddDrawing;
-
-  /// A flag to show when to stop drawing only for drawings which don't have
-  /// fixed number of points like continuous drawing
-  final bool shouldStopDrawing;
-
-  /// Selected drawing tool.
-  final DrawingToolConfig? selectedDrawingTool;
-
-  /// Callback to clean drawing tool selection.
-  final VoidCallback clearDrawingToolSelection;
+  /// Keep the reference to the drawing tools class
+  final DrawingTools drawingTools;
 
   /// Chart's controller
   final ChartController? controller;
@@ -172,11 +152,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                 Expanded(
                   flex: 3,
                   child: MainChart(
-                    drawings: widget.drawings,
-                    onAddDrawing: widget.onAddDrawing,
-                    shouldStopDrawing: widget.shouldStopDrawing,
-                    selectedDrawingTool: widget.selectedDrawingTool,
-                    clearDrawingToolSelection: widget.clearDrawingToolSelection,
+                    drawingTools: widget.drawingTools,
                     controller: _controller,
                     mainSeries: widget.mainSeries,
                     overlaySeries: widget.overlaySeries,

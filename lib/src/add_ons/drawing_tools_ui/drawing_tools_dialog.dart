@@ -2,6 +2,7 @@ import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,21 +13,12 @@ import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 class DrawingToolsDialog extends StatefulWidget {
   /// Creates drawing tools dialog.
   const DrawingToolsDialog({
-    required this.onDrawingToolSelection(DrawingToolConfig selectedDrawingTool),
-    required this.onDrawingToolRemoval(int index),
-    required this.onDrawingToolUpdate(
-        int index, DrawingToolConfig updatedConfig),
+    required this.drawingTools,
     Key? key,
   }) : super(key: key);
 
-  /// Callback to inform parent about drawing tool removal.
-  final void Function(int) onDrawingToolRemoval;
-
-  /// Callback to inform parent about drawing tool selection.
-  final void Function(DrawingToolConfig) onDrawingToolSelection;
-
-  /// Callback to inform parent about drawing tool update.
-  final void Function(int, DrawingToolConfig) onDrawingToolUpdate;
+  ///
+  final DrawingTools drawingTools;
 
   @override
   _DrawingToolsDialogState createState() => _DrawingToolsDialogState();
@@ -76,7 +68,8 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 onPressed: _selectedDrawingTool != null &&
                         _selectedDrawingTool is DrawingToolConfig
                     ? () {
-                        widget.onDrawingToolSelection(_selectedDrawingTool!);
+                        widget.drawingTools
+                            .onDrawingToolSelection(_selectedDrawingTool!);
                         Navigator.of(context).pop();
                       }
                     : null,
@@ -90,11 +83,11 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               itemBuilder: (BuildContext context, int index) =>
                   repo.getAddOns()[index].getItem(
                 (DrawingToolConfig updatedConfig) {
-                  widget.onDrawingToolUpdate(index, updatedConfig);
+                  widget.drawingTools.onDrawingToolUpdate(index, updatedConfig);
                   repo.updateAt(index, updatedConfig);
                 },
                 () {
-                  widget.onDrawingToolRemoval(index);
+                  widget.drawingTools.onDrawingToolRemoval(index);
                   repo.removeAt(index);
                 },
               ),
