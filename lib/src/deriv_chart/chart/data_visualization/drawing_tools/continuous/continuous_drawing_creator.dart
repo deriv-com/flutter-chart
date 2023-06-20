@@ -13,7 +13,7 @@ class ContinuousDrawingCreator extends Creator<LineDrawing> {
     required void Function(
       Map<String, List<LineDrawing>>, {
       bool isDrawingFinished,
-      bool isInfinitDrawing,
+      bool isInfiniteDrawing,
     })
         onAddDrawing,
     required double Function(double) quoteFromCanvasY,
@@ -59,7 +59,7 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
         /// Draw the initial point of the continuous.
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
-          yCoord: widget.quoteFromCanvasY(position!.dy),
+          quote: widget.quoteFromCanvasY(position!.dy),
         ));
         drawingId = 'continuous_${edgePoints.first.epoch}';
 
@@ -76,14 +76,14 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
 
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
-          yCoord: widget.quoteFromCanvasY(position!.dy),
+          quote: widget.quoteFromCanvasY(position!.dy),
         ));
 
         /// Checks if the initial point and the 2nd points are the same.
         if (Offset(edgePoints[1].epoch.toDouble(),
-                edgePoints[1].yCoord.toDouble()) ==
+                edgePoints[1].quote.toDouble()) ==
             Offset(edgePoints.first.epoch.toDouble(),
-                edgePoints.first.yCoord.toDouble())) {
+                edgePoints.first.quote.toDouble())) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
@@ -118,7 +118,7 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
       widget.onAddDrawing(
         <String, List<LineDrawing>>{drawingId: drawingParts},
         isDrawingFinished: isDrawingFinished,
-        isInfinitDrawing: true,
+        isInfiniteDrawing: true,
       );
     });
   }

@@ -3,12 +3,12 @@ class EdgePoint {
   /// Initializes
   const EdgePoint({
     this.epoch = 0,
-    this.yCoord = 0,
+    this.quote = 0,
   });
 
   /// Epoch.
   final int epoch;
 
-  /// Y coordinates.
-  final double yCoord;
+  /// Quote.
+  final double quote;
 }

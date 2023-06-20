@@ -268,11 +268,12 @@ class _DerivChartState extends State<DerivChart> {
       );
 
   /// Adds the new drawing to the list of drawings
-  /// isInfinitDrawing used for drawings which don't have fixed number of points
+  /// isInfiniteDrawing used for drawings which don't have fixed number of
+  /// points
   void _onAddDrawing(
     Map<String, List<Drawing>> addedDrawing, {
     bool isDrawingFinished = false,
-    bool isInfinitDrawing = false,
+    bool isInfiniteDrawing = false,
   }) {
     setState(() {
       final String drawingId = addedDrawing.keys.first;
@@ -298,10 +299,10 @@ class _DerivChartState extends State<DerivChart> {
       if (isDrawingFinished) {
         _drawingToolsRepo.add(_selectedDrawingTool!);
 
-        if (isInfinitDrawing && _shouldStopDrawing) {
+        if (isInfiniteDrawing && _shouldStopDrawing) {
           _selectedDrawingTool = null;
         }
-        if (!isInfinitDrawing) {
+        if (!isInfiniteDrawing) {
           _selectedDrawingTool = null;
         }
       }

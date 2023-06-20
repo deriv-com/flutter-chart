@@ -13,7 +13,7 @@ class LineDrawingCreator extends Creator<LineDrawing> {
     required void Function(
       Map<String, List<LineDrawing>>, {
       bool isDrawingFinished,
-      bool isInfinitDrawing,
+      bool isInfiniteDrawing,
     })
         onAddDrawing,
     required double Function(double) quoteFromCanvasY,
@@ -55,7 +55,7 @@ class _LineDrawingCreatorState extends CreatorState<LineDrawing> {
         /// Draw the initial point of the line.
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
-          yCoord: widget.quoteFromCanvasY(position!.dy),
+          quote: widget.quoteFromCanvasY(position!.dy),
         ));
         _isPenDown = true;
         drawingId = 'line_${edgePoints.first.epoch}';
@@ -73,14 +73,14 @@ class _LineDrawingCreatorState extends CreatorState<LineDrawing> {
 
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
-          yCoord: widget.quoteFromCanvasY(position!.dy),
+          quote: widget.quoteFromCanvasY(position!.dy),
         ));
 
         /// Checks if the initial point and the final point are the same.
         if (Offset(edgePoints[1].epoch.toDouble(),
-                edgePoints[1].yCoord.toDouble()) ==
+                edgePoints[1].quote.toDouble()) ==
             Offset(edgePoints.first.epoch.toDouble(),
-                edgePoints.first.yCoord.toDouble())) {
+                edgePoints.first.quote.toDouble())) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);

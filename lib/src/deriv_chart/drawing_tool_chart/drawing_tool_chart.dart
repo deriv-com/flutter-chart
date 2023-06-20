@@ -25,7 +25,7 @@ class DrawingToolChart extends StatelessWidget {
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished, bool isInfinitDrawing}) onAddDrawing;
+      {bool isDrawingFinished, bool isInfiniteDrawing}) onAddDrawing;
 
   /// Callback to pass new drawing to the parent.
   final void Function({bool isDrawingMoved}) onMoveDrawing;

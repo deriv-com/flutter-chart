@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
@@ -141,13 +142,13 @@ class LineDrawing extends Drawing {
 
     _startPoint = draggableStartPoint.updatePosition(
       startEdgePoint.epoch,
-      startEdgePoint.yCoord,
+      startEdgePoint.quote,
       epochToX,
       quoteToY,
     );
     _endPoint = draggableEndPoint!.updatePosition(
       endEdgePoint.epoch,
-      endEdgePoint.yCoord,
+      endEdgePoint.quote,
       epochToX,
       quoteToY,
     );
@@ -184,7 +185,7 @@ class LineDrawing extends Drawing {
         endQuoteToY,
       );
 
-      if (pattern == 'solid') {
+      if (pattern == DrawingPatterns.solid.name) {
         canvas.drawLine(
           Offset(_vector.x0, _vector.y0),
           Offset(_vector.x1, _vector.y1),

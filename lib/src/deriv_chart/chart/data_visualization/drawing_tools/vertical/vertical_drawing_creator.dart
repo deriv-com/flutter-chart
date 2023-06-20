@@ -11,7 +11,7 @@ class VerticalDrawingCreator extends Creator<VerticalDrawing> {
     required void Function(
       Map<String, List<VerticalDrawing>>, {
       bool isDrawingFinished,
-      bool isInfinitDrawing,
+      bool isInfiniteDrawing,
     })
         onAddDrawing,
     required double Function(double) quoteFromCanvasY,
@@ -37,7 +37,7 @@ class _VerticalDrawingCreatorState extends CreatorState<VerticalDrawing> {
 
       edgePoints.add(EdgePoint(
         epoch: epochFromX!(position!.dx),
-        yCoord: widget.quoteFromCanvasY(position!.dy),
+        quote: widget.quoteFromCanvasY(position!.dy),
       ));
 
       drawingId = 'vertical_${edgePoints.first.epoch}';

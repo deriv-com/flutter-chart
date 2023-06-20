@@ -13,8 +13,8 @@ class DraggableEdgePoint extends EdgePoint {
   /// Initializes
   DraggableEdgePoint({
     int epoch = 0,
-    double yCoord = 0,
-  }) : super(epoch: epoch, yCoord: yCoord);
+    double quote = 0,
+  }) : super(epoch: epoch, quote: quote);
 
   /// Represents whether the whole drawing is currently being dragged or not
   bool isDrawingDragged = false;

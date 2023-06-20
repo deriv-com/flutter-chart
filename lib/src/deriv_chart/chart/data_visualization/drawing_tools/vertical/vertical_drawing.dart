@@ -50,7 +50,7 @@ class VerticalDrawing extends Drawing {
 
     startPoint = draggableStartPoint.updatePosition(
       edgePoint.epoch,
-      edgePoint.yCoord,
+      edgePoint.quote,
       epochToX,
       quoteToY,
     );
