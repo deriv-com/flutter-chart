@@ -17,7 +17,8 @@ class DrawingToolsDialog extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  ///
+  /// Keep the reference to the drawing tools class for
+  /// sharing data between the DerivChart and the DrawingToolsDialog
   final DrawingTools drawingTools;
 
   @override

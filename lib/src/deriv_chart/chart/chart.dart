@@ -46,7 +46,8 @@ class Chart extends StatefulWidget {
   /// Open position marker series.
   final MarkerSeries? markerSeries;
 
-  /// Keep the reference to the drawing tools class
+  /// Keep the reference to the drawing tools class for
+  /// sharing data between the DerivChart and the DrawingToolsDialog
   final DrawingTools drawingTools;
 
   /// Chart's controller

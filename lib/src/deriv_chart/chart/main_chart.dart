@@ -57,23 +57,8 @@ class MainChart extends BasicChart {
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
 
-  /// Existing drawings.
-  // final List<DrawingData>? drawings;
-
-  // /// Callback to pass new drawing to the parent.
-  // final void Function(Map<String, List<Drawing>> addedDrawing,
-  //     {bool isDrawingFinished, bool isInfiniteDrawing}) onAddDrawing;
-
-  // /// A flag to show when to stop drawing only for drawings which don't have
-  // /// fixed number of points like continuous drawing
-  // final bool shouldStopDrawing;
-
-  // /// Selected drawing tool.
-  // final DrawingToolConfig? selectedDrawingTool;
-
-  // /// Callback to clean drawing tool selection.
-  // final VoidCallback clearDrawingToolSelection;
-
+  /// Keep the reference to the drawing tools class for
+  /// sharing data between the DerivChart and the DrawingToolsDialog
   final DrawingTools drawingTools;
 
   /// The function that gets called on crosshair appearance.

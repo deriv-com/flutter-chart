@@ -248,12 +248,14 @@ class LineDrawing extends Drawing {
     final double xDistToStart = position.dx - startXCoord;
     final double yDistToStart = position.dy - startQuoteToY;
 
+    /// Limit the detection to start and end point of the line
     final double dotProduct = (xDistToStart * (endXCoord - startXCoord) +
             yDistToStart * (endQuoteToY - startQuoteToY)) /
         lineLength;
 
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
-    return isWithinRange && distance.abs() <= lineStyle.thickness + 6;
+    return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
+        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
   }
 }
