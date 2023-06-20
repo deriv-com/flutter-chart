@@ -266,10 +266,8 @@ class _DerivChartState extends State<DerivChart> {
         ),
       );
 
-  void _onAddDrawing(
-    Map<String, List<Drawing>> addedDrawing, {
-    bool isDrawingFinished = false,
-  }) {
+  void _onAddDrawing(Map<String, List<Drawing>> addedDrawing,
+      {bool isDrawingFinished = false, int? totalPoints = 0}) {
     setState(() {
       final String drawingId = addedDrawing.keys.first;
 
@@ -279,13 +277,12 @@ class _DerivChartState extends State<DerivChart> {
 
       if (existingDrawing == null) {
         _drawings.add(DrawingData(
-          id: drawingId,
-          config: _selectedDrawingTool!,
-          drawingParts: addedDrawing.values.first,
-          isDrawingFinished: isDrawingFinished,
-        ));
-        if (drawingId.contains('horizontal') ||
-            drawingId.contains('vertical')) {
+            id: drawingId,
+            config: _selectedDrawingTool!,
+            drawingParts: addedDrawing.values.first,
+            isDrawingFinished: isDrawingFinished,
+            totalPoints: totalPoints));
+        if (totalPoints == 1) {
           isFirstPointOfNewDrawing = false;
         }
       } else {

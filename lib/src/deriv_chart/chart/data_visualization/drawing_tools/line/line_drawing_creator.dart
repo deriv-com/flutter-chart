@@ -20,7 +20,7 @@ class LineDrawingCreator extends StatefulWidget {
 
   /// Callback to pass a newly created line drawing to the parent.
   final void Function(Map<String, List<LineDrawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
+      {bool isDrawingFinished, int totalPoints}) onAddDrawing;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
@@ -67,6 +67,9 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
 
   /// Get epoch from x.
   int Function(double x)? epochFromX;
+
+  // total point required to create the drawing
+  final int totalPoints = 2;
 
   @override
   void initState() {
@@ -134,9 +137,8 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
         }
       }
       widget.onAddDrawing(
-        <String, List<LineDrawing>>{_drawingId: _drawingParts},
-        isDrawingFinished: _isDrawingFinished,
-      );
+          <String, List<LineDrawing>>{_drawingId: _drawingParts},
+          isDrawingFinished: _isDrawingFinished, totalPoints: totalPoints);
     });
   }
 

@@ -57,7 +57,7 @@ class Chart extends StatefulWidget {
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
+      {bool isDrawingFinished, int? totalPoints}) onAddDrawing;
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;

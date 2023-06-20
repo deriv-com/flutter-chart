@@ -20,7 +20,7 @@ class RectangleDrawingCreator extends StatefulWidget {
 
   /// Callback to pass a newly created rectangle drawing to the parent.
   final void Function(Map<String, List<RectangleDrawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
+      {bool isDrawingFinished, int totalPoints}) onAddDrawing;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
@@ -66,6 +66,9 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
 
   /// If drawing has been finished.
   bool _isDrawingFinished = false;
+
+  // total point required to create the drawing
+  final int totalPoints = 2;
 
   /// Get epoch from x.
   int Function(double x)? epochFromX;
@@ -131,10 +134,9 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
         }
       }
 
-      widget.onAddDrawing(
-        <String, List<RectangleDrawing>>{_drawingId: _drawingParts},
-        isDrawingFinished: _isDrawingFinished,
-      );
+      widget.onAddDrawing(<String, List<RectangleDrawing>>{
+        _drawingId: _drawingParts,
+      }, isDrawingFinished: _isDrawingFinished);
     });
   }
 
