@@ -89,15 +89,15 @@ class LineDrawing extends Drawing {
   /// Paint the line
   @override
   void onPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingData drawingData,
-    DraggableEdgePoint draggableStartPoint, {
-    DraggableEdgePoint? draggableEndPoint,
-  }) {
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingData drawingData,
+      DraggableEdgePoint draggableStartPoint,
+      {DraggableEdgePoint? draggableEndPoint,
+      List<Tick>? series}) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
     final LineDrawingToolConfig config =
         drawingData.config as LineDrawingToolConfig;

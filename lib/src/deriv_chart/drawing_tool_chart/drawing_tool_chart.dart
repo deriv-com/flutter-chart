@@ -22,6 +22,7 @@ class DrawingToolChart extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  /// series of ticks for getting epoch and quote
   final DataSeries<Tick> series;
 
   /// Existing drawings.
@@ -69,6 +70,7 @@ class DrawingToolChart extends StatelessWidget {
           children: <Widget>[
             if (drawings != null)
               ...drawings!.map((DrawingData drawingData) => DrawingPainter(
+                    series: series,
                     drawingData: drawingData,
                     quoteToCanvasY: chartQuoteToCanvasY,
                     quoteFromCanvasY: chartQuoteFromCanvasY,
@@ -77,7 +79,6 @@ class DrawingToolChart extends StatelessWidget {
                   )),
             if (selectedDrawingTool != null)
               DrawingCreator(
-                series: series,
                 onAddDrawing: onAddDrawing,
                 selectedDrawingTool: selectedDrawingTool!,
                 quoteFromCanvasY: chartQuoteFromCanvasY,
