@@ -26,11 +26,11 @@ class TrendDrawingToolItem extends DrawingToolItem {
         );
 
   @override
-  DrawingToolItemState<DrawingToolConfig> createIndicatorItemState() =>
+  DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState() =>
       TrendDrawingToolItemState();
 }
 
-/// Vertival drawing tool Item State class
+/// Trend drawing tool Item State class
 class TrendDrawingToolItemState
     extends DrawingToolItemState<TrendDrawingToolConfig> {
   LineStyle? _fillStyle;
