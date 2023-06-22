@@ -61,41 +61,41 @@ class TrendDrawing extends Drawing {
   /// store the  ending X Coordinate
   double endXCoord = 0;
 
+  /// the area affected on touch
+  final double _touchTolerance = 5;
+
   /// function to check if the clicked position (Offset) is on
   /// boundary of the rectangle
   bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
     /// width of the rectangle line
     const double lineWidth = 2;
 
-    /// the area affected on touch
-    const double touchTolerance = 4;
-
     final Rect topLineBounds = Rect.fromLTWH(
-      rect.left - touchTolerance,
-      rect.top - touchTolerance,
-      rect.width + touchTolerance * 2,
-      lineWidth + touchTolerance * 2,
+      rect.left - _touchTolerance,
+      rect.top - _touchTolerance,
+      rect.width + _touchTolerance * 2,
+      lineWidth + _touchTolerance * 2,
     );
 
     final Rect leftLineBounds = Rect.fromLTWH(
-      rect.left - touchTolerance,
-      rect.top - touchTolerance,
-      lineWidth + touchTolerance * 2,
-      rect.height + touchTolerance * 2,
+      rect.left - _touchTolerance,
+      rect.top - _touchTolerance,
+      lineWidth + _touchTolerance * 2,
+      rect.height + _touchTolerance * 2,
     );
 
     final Rect rightLineBounds = Rect.fromLTWH(
-      rect.right - lineWidth - touchTolerance * 2,
-      rect.top - touchTolerance,
-      lineWidth + touchTolerance * 2,
-      rect.height + touchTolerance * 2,
+      rect.right - lineWidth - _touchTolerance * 2,
+      rect.top - _touchTolerance,
+      lineWidth + _touchTolerance * 2,
+      rect.height + _touchTolerance * 2,
     );
 
     final Rect bottomLineBounds = Rect.fromLTWH(
-      rect.left - touchTolerance,
-      rect.bottom - lineWidth - touchTolerance * 2,
-      rect.width + touchTolerance * 2,
-      lineWidth + touchTolerance * 2,
+      rect.left - _touchTolerance,
+      rect.bottom - lineWidth - _touchTolerance * 2,
+      rect.width + _touchTolerance * 2,
+      lineWidth + _touchTolerance * 2,
     );
 
     return topLineBounds.contains(position) ||
@@ -257,22 +257,18 @@ class TrendDrawing extends Drawing {
               _mainRect,
               drawingData.isSelected
                   ? paint.glowyLinePaintStyle(
-                      lineStyle.color, lineStyle.thickness)
-                  : Paint()
-                ..color = fillStyle.color.withOpacity(0.2)
-                ..style = PaintingStyle.fill
-                ..strokeWidth = lineStyle.thickness)
+                      fillStyle.color.withOpacity(0.2), lineStyle.thickness)
+                  : paint.fillPaintStyle(
+                      fillStyle.color.withOpacity(0.2), lineStyle.thickness))
           ..drawRect(_mainRect,
               paint.strokeStyle(lineStyle.color, lineStyle.thickness))
           ..drawRect(
               _middleRect,
               drawingData.isSelected
                   ? paint.glowyLinePaintStyle(
-                      lineStyle.color, lineStyle.thickness)
-                  : Paint()
-                ..color = fillStyle.color.withOpacity(0.2)
-                ..style = PaintingStyle.fill
-                ..strokeWidth = lineStyle.thickness)
+                      fillStyle.color.withOpacity(0.2), lineStyle.thickness)
+                  : paint.fillPaintStyle(
+                      fillStyle.color.withOpacity(0.2), lineStyle.thickness))
           ..drawRect(_middleRect,
               paint.strokeStyle(lineStyle.color, lineStyle.thickness));
       }
@@ -337,15 +333,14 @@ class TrendDrawing extends Drawing {
         .abs();
 
     final double base = endXCoord - startXCoord;
-
-    final double height = 2 * lineArea / base;
+    final double lineHeight = 2 * lineArea / base;
 
     if (endingEpoch != 0) {
       return _isClickedOnRectangleBoundary(_mainRect, position) ||
           _isClickedOnRectangleBoundary(_middleRect, position) ||
           startPointDistance <= _markerRadius ||
           endPointDistance <= _markerRadius ||
-          height <= 5;
+          lineHeight <= _touchTolerance;
     }
 
     return false;
