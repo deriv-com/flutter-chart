@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -164,7 +165,7 @@ class TrendDrawing extends Drawing {
 
     final LineStyle lineStyle = config.lineStyle;
     final LineStyle fillStyle = config.fillStyle;
-    final String pattern = config.pattern;
+    final DrawingPatterns pattern = config.pattern;
 
     if (_calculator != null) {
       _startPoint = draggableStartPoint.updatePosition(
@@ -242,7 +243,7 @@ class TrendDrawing extends Drawing {
       final double _distance =
           (quoteToY(_calculator!.min) - quoteToY(_calculator!.max)).abs();
 
-      if (pattern == 'solid') {
+      if (pattern == DrawingPatterns.solid) {
         _middleRect = Rect.fromLTRB(
             startXCoord,
             quoteToY(_calculator!.max) + _distance / 3,

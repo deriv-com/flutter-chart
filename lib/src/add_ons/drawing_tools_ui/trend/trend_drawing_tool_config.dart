@@ -2,6 +2,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_item.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -16,7 +17,7 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
   const TrendDrawingToolConfig({
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
-    this.pattern = 'solid',
+    this.pattern = DrawingPatterns.solid,
   }) : super();
 
   /// Initializes from JSON.
@@ -37,7 +38,7 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
   final LineStyle fillStyle;
 
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
-  final String pattern;
+  final DrawingPatterns pattern;
 
   @override
   DrawingToolItem getItem(

@@ -15,7 +15,8 @@ TrendDrawingToolConfig _$TrendDrawingToolConfigFromJson(
       lineStyle: json['lineStyle'] == null
           ? const LineStyle(thickness: 0.9, color: Colors.white)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-      pattern: json['pattern'] as String? ?? 'solid',
+      pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
+          DrawingPatterns.solid,
     );
 
 Map<String, dynamic> _$TrendDrawingToolConfigToJson(
