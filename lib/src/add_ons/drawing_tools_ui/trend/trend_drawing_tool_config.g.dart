@@ -21,7 +21,13 @@ TrendDrawingToolConfig _$TrendDrawingToolConfigFromJson(
 Map<String, dynamic> _$TrendDrawingToolConfigToJson(
         TrendDrawingToolConfig instance) =>
     <String, dynamic>{
-      'fillStyle': instance.fillStyle,
       'lineStyle': instance.lineStyle,
-      'pattern': instance.pattern,
+      'fillStyle': instance.fillStyle,
+      'pattern': _$DrawingPatternsEnumMap[instance.pattern]!,
     };
+
+const _$DrawingPatternsEnumMap = {
+  DrawingPatterns.solid: 'solid',
+  DrawingPatterns.dotted: 'dotted',
+  DrawingPatterns.dashed: 'dashed',
+};
