@@ -2,7 +2,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +16,12 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
+    required this.series,
     Key? key,
   }) : super(key: key);
+
+  /// series of ticks for getting epoch and quote
+  final DataSeries<Tick>? series;
 
   /// Contains each drawing data
   final DrawingData? drawingData;
@@ -123,13 +126,13 @@ class _DrawingPainterState extends State<DrawingPainter> {
             },
             child: CustomPaint(
               foregroundPainter: _DrawingPainter(
-                drawingData: widget.drawingData!,
-                theme: context.watch<ChartTheme>(),
-                epochToX: xAxis.xFromEpoch,
-                quoteToY: widget.quoteToCanvasY,
-                draggableStartPoint: _draggableStartPoint,
-                draggableEndPoint: _draggableEndPoint,
-              ),
+                  drawingData: widget.drawingData!,
+                  theme: context.watch<ChartTheme>(),
+                  epochToX: xAxis.xFromEpoch,
+                  quoteToY: widget.quoteToCanvasY,
+                  draggableStartPoint: _draggableStartPoint,
+                  draggableEndPoint: _draggableEndPoint,
+                  series: widget.series?.entries),
               size: const Size(double.infinity, double.infinity),
             ),
           )
@@ -144,6 +147,7 @@ class _DrawingPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.draggableStartPoint,
+    this.series,
     this.draggableEndPoint,
   });
 
@@ -153,20 +157,14 @@ class _DrawingPainter extends CustomPainter {
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
   DraggableEdgePoint? draggableEndPoint;
+  List<Tick>? series;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final Drawing drawingPart in drawingData.drawingParts) {
-      drawingPart.onPaint(
-        canvas,
-        size,
-        theme,
-        epochToX,
-        quoteToY,
-        drawingData,
-        draggableStartPoint,
-        draggableEndPoint: draggableEndPoint,
-      );
+      drawingPart.onPaint(canvas, size, theme, epochToX, quoteToY, drawingData,
+          draggableStartPoint,
+          draggableEndPoint: draggableEndPoint, series: series);
     }
   }
 

@@ -32,15 +32,15 @@ class VerticalDrawing extends Drawing {
   /// Paint
   @override
   void onPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingData drawingData,
-    DraggableEdgePoint draggableStartPoint, {
-    DraggableEdgePoint? draggableEndPoint,
-  }) {
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingData drawingData,
+      DraggableEdgePoint draggableStartPoint,
+      {DraggableEdgePoint? draggableEndPoint,
+      List<Tick>? series}) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
     final VerticalDrawingToolConfig config =
         drawingData.config as VerticalDrawingToolConfig;
