@@ -18,9 +18,9 @@ class RectangleDrawing extends Drawing {
   RectangleDrawing({
     required this.drawingPart,
     this.startEpoch = 0,
-    this.startYCoord = 0,
+    this.startQuote = 0,
     this.endEpoch = 0,
-    this.endYCoord = 0,
+    this.endQuote = 0,
   });
 
   /// instance of enum including all possible drawing parts(marker,rectangle)
@@ -30,13 +30,13 @@ class RectangleDrawing extends Drawing {
   final int startEpoch;
 
   /// Starting Y coordinates.
-  final double startYCoord;
+  final double startQuote;
 
   /// Ending epoch.
   final int endEpoch;
 
   /// Ending Y coordinates.
-  final double endYCoord;
+  final double endQuote;
 
   /// Marker radius.
   final double _markerRadius = 10;
@@ -71,13 +71,13 @@ class RectangleDrawing extends Drawing {
 
     _startPoint = draggableStartPoint.updatePosition(
       startEpoch,
-      startYCoord,
+      startQuote,
       epochToX,
       quoteToY,
     );
     _endPoint = draggableEndPoint!.updatePosition(
       endEpoch,
-      endYCoord,
+      endQuote,
       epochToX,
       quoteToY,
     );
@@ -86,13 +86,13 @@ class RectangleDrawing extends Drawing {
     final double startQuoteToY = _startPoint!.y;
 
     final double endXCoord = _endPoint!.x;
-    final double endQuoteToY = _endPoint!.y;
+    final double endYCoord = _endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
-      if (endEpoch != 0 && endQuoteToY != 0) {
+      if (endEpoch != 0 && endYCoord != 0) {
         /// Draw first point
         canvas.drawCircle(
-            Offset(endXCoord, endQuoteToY),
+            Offset(endXCoord, endYCoord),
             _markerRadius,
             drawingData.isSelected
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
@@ -109,7 +109,7 @@ class RectangleDrawing extends Drawing {
     } else if (drawingPart == DrawingParts.rectangle) {
       if (pattern == DrawingPatterns.solid) {
         _rect = Rect.fromPoints(
-            Offset(startXCoord, startQuoteToY), Offset(endXCoord, endQuoteToY));
+            Offset(startXCoord, startQuoteToY), Offset(endXCoord, endYCoord));
 
         canvas
           ..drawRect(
@@ -144,7 +144,7 @@ class RectangleDrawing extends Drawing {
     final double startQuoteToY = _startPoint!.y;
 
     final double endXCoord = _endPoint!.x;
-    final double endQuoteToY = _endPoint!.y;
+    final double endYCoord = _endPoint!.y;
 
     /// inflate the rect to 2px so that the stroke is inclusive and
     /// can be detected
@@ -156,7 +156,7 @@ class RectangleDrawing extends Drawing {
 
     // Calculate the difference between the end Point and the tap point.
     final double endDx = position.dx - endXCoord;
-    final double endDy = position.dy - endQuoteToY;
+    final double endDy = position.dy - endYCoord;
 
     // getting the distance of end point
     final double endPointDistance = sqrt(endDx * endDx + endDy * endDy);

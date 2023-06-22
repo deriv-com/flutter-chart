@@ -102,7 +102,7 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
         _drawingParts.add(RectangleDrawing(
             drawingPart: DrawingParts.marker,
             startEpoch: _startingEpoch!,
-            startYCoord: _startingYPoint!));
+            startQuote: _startingYPoint!));
       } else if (!_isDrawingFinished) {
         /// Draw second point and the rectangle.
         _isPenDown = false;
@@ -121,14 +121,14 @@ class _RectangleDrawingCreatorState extends State<RectangleDrawingCreator> {
             RectangleDrawing(
               drawingPart: DrawingParts.marker,
               endEpoch: _endingEpoch!,
-              endYCoord: _endingYPoint!,
+              endQuote: _endingYPoint!,
             ),
             RectangleDrawing(
               drawingPart: DrawingParts.rectangle,
               startEpoch: _startingEpoch!,
-              startYCoord: _startingYPoint!,
+              startQuote: _startingYPoint!,
               endEpoch: _endingEpoch!,
-              endYCoord: _endingYPoint!,
+              endQuote: _endingYPoint!,
             )
           ]);
         }
