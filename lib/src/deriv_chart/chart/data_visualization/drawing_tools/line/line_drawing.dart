@@ -131,6 +131,7 @@ class LineDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingData drawingData,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
@@ -208,6 +209,7 @@ class LineDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];

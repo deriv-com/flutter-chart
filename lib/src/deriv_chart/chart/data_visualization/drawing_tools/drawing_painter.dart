@@ -43,6 +43,7 @@ class DrawingPainter extends StatefulWidget {
 class _DrawingPainterState extends State<DrawingPainter> {
   bool _isDrawingDragged = false;
   final DraggableEdgePoint _draggableStartPoint = DraggableEdgePoint();
+  final DraggableEdgePoint _draggableMiddlePoint = DraggableEdgePoint();
   final DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
   Offset? _previousPosition;
 
@@ -62,7 +63,18 @@ class _DrawingPainterState extends State<DrawingPainter> {
               xAxis,
               widget.quoteFromCanvasY,
               widget.quoteToCanvasY,
-              isOtherEndDragged: _draggableEndPoint.isDragged,
+              isOtherEndDragged: _draggableEndPoint.isDragged ||
+                  _draggableMiddlePoint.isDragged,
+            );
+          _draggableMiddlePoint
+            ..isDrawingDragged = _isDrawingDragged
+            ..updatePositionWithLocalPositions(
+              details.delta,
+              xAxis,
+              widget.quoteFromCanvasY,
+              widget.quoteToCanvasY,
+              isOtherEndDragged: _draggableEndPoint.isDragged ||
+                  _draggableStartPoint.isDragged,
             );
           _draggableEndPoint
             ..isDrawingDragged = _isDrawingDragged
@@ -71,7 +83,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
               xAxis,
               widget.quoteFromCanvasY,
               widget.quoteToCanvasY,
-              isOtherEndDragged: _draggableStartPoint.isDragged,
+              isOtherEndDragged: _draggableStartPoint.isDragged ||
+                  _draggableMiddlePoint.isDragged,
             );
         });
       }
@@ -106,6 +119,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
             onLongPressUp: () {
               widget.onMoveDrawing(isDrawingMoved: false);
               _draggableStartPoint.isDragged = false;
+              _draggableMiddlePoint.isDragged = false;
               _draggableEndPoint.isDragged = false;
             },
             onPanStart: (DragStartDetails details) {
@@ -117,6 +131,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
             onPanEnd: (DragEndDetails details) {
               setState(() {
                 _draggableStartPoint.isDragged = false;
+                _draggableMiddlePoint.isDragged = false;
                 _draggableEndPoint.isDragged = false;
               });
               widget.onMoveDrawing(isDrawingMoved: false);
@@ -128,6 +143,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
                 draggableStartPoint: _draggableStartPoint,
+                draggableMiddlePoint: _draggableMiddlePoint,
                 draggableEndPoint: _draggableEndPoint,
               ),
               size: const Size(double.infinity, double.infinity),
@@ -144,6 +160,7 @@ class _DrawingPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.draggableStartPoint,
+    this.draggableMiddlePoint,
     this.draggableEndPoint,
   });
 
@@ -152,6 +169,7 @@ class _DrawingPainter extends CustomPainter {
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
+  DraggableEdgePoint? draggableMiddlePoint;
   DraggableEdgePoint? draggableEndPoint;
 
   @override
@@ -165,6 +183,7 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData,
         draggableStartPoint,
+        draggableMiddlePoint: draggableMiddlePoint,
         draggableEndPoint: draggableEndPoint,
       );
     }
@@ -185,6 +204,7 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData.config,
         draggableStartPoint,
+        draggableMiddlePoint: draggableMiddlePoint,
         draggableEndPoint: draggableEndPoint,
       )) {
         return true;
