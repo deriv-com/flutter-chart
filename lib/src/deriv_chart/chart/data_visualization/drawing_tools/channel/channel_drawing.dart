@@ -48,57 +48,6 @@ class ChannelDrawing extends Drawing {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _middlePoint, _endPoint;
 
-  /// Vector of the line
-  Vector getLineVector(
-    double startXCoord,
-    double startQuoteToY,
-    double endXCoord,
-    double endQuoteToY,
-  ) {
-    Vector vec = Vector(
-      x0: startXCoord,
-      y0: startQuoteToY,
-      x1: endXCoord,
-      y1: endQuoteToY,
-    );
-
-    late double earlier, later;
-    if (vec.x0 > vec.x1) {
-      vec = Vector(
-        x0: endXCoord,
-        y0: endQuoteToY,
-        x1: startXCoord,
-        y1: startQuoteToY,
-      );
-    }
-    earlier = vec.x0;
-    later = vec.x1;
-
-    final double startY = getYIntersection(vec, earlier) ?? 0,
-        endingY = getYIntersection(vec, later) ?? 0,
-        startX = earlier,
-        endingX = later;
-
-    return Vector(
-      x0: startX,
-      y0: startY,
-      x1: endingX,
-      y1: endingY,
-    );
-  }
-
-  /// Returns the Parallelogram path
-  Path getParallelogramPath(
-    Vector startVector,
-    Vector endVector,
-  ) =>
-      Path()
-        ..moveTo(startVector.x0, startVector.y0)
-        ..lineTo(startVector.x1, startVector.y1)
-        ..lineTo(endVector.x1, endVector.y1)
-        ..lineTo(endVector.x0, endVector.y0)
-        ..close();
-
   /// Draw the shaded area between two vectors
   void drawParallelogram(
     Canvas canvas,
