@@ -9,15 +9,16 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 abstract class Drawing {
   /// Paint
   void onPaint(
-      Canvas canvas,
-      Size size,
-      ChartTheme theme,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingData drawingData,
-      DraggableEdgePoint draggableStartPoint,
-      {DraggableEdgePoint? draggableEndPoint,
-      List<Tick>? series});
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingData drawingData,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+    List<Tick>? series,
+  });
 
   /// Calculates y intersection based on vector points.
   double? getYIntersection(Vector vector, double x) {

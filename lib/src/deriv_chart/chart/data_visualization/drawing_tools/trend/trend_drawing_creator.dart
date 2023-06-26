@@ -57,8 +57,7 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
         drawingParts.add(TrendDrawing(
           epochFromX: epochFromX,
           drawingPart: DrawingParts.marker,
-          startingEpoch: edgePoints.first.epoch,
-          startingQuote: edgePoints.first.quote,
+          startingEdgePoint: edgePoints.first,
         ));
       } else if (!isDrawingFinished) {
         edgePoints.add(EdgePoint(
@@ -71,34 +70,23 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
 
         drawingParts
           ..removeAt(0)
-          ..add(
+          ..addAll(<TrendDrawing>[
             TrendDrawing(
-              epochFromX: epochFromX,
-              drawingPart: DrawingParts.rectangle,
-              startingEpoch: edgePoints.first.epoch,
-              startingQuote: edgePoints.first.quote,
-              endingEpoch: edgePoints[1].epoch,
-              endingQuote: edgePoints[1].quote,
-            ),
-          )
-          ..add(
+                epochFromX: epochFromX,
+                drawingPart: DrawingParts.rectangle,
+                startingEdgePoint: edgePoints.first,
+                endingEdgePoint: edgePoints[1]),
             TrendDrawing(
-              epochFromX: epochFromX,
-              drawingPart: DrawingParts.line,
-              startingEpoch: edgePoints.first.epoch,
-              startingQuote: edgePoints.first.quote,
-              endingEpoch: edgePoints[1].epoch,
-              endingQuote: edgePoints[1].quote,
-            ),
-          )
-          ..add(TrendDrawing(
-            epochFromX: epochFromX,
-            drawingPart: DrawingParts.marker,
-            startingEpoch: edgePoints.first.epoch,
-            startingQuote: edgePoints.first.quote,
-            endingEpoch: edgePoints[1].epoch,
-            endingQuote: edgePoints[1].quote,
-          ));
+                epochFromX: epochFromX,
+                drawingPart: DrawingParts.line,
+                startingEdgePoint: edgePoints.first,
+                endingEdgePoint: edgePoints[1]),
+            TrendDrawing(
+                epochFromX: epochFromX,
+                drawingPart: DrawingParts.marker,
+                startingEdgePoint: edgePoints.first,
+                endingEdgePoint: edgePoints[1])
+          ]);
       }
 
       widget.onAddDrawing(
