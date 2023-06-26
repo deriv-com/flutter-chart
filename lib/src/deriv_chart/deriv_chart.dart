@@ -92,8 +92,6 @@ class _DerivChartState extends State<DerivChart> {
   final AddOnsRepository<DrawingToolConfig> _drawingToolsRepo =
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
-  // check if first point of any drawing is clicked
-
   /// Selected drawing tool.
   DrawingToolConfig? _selectedDrawingTool;
 
@@ -262,8 +260,10 @@ class _DerivChartState extends State<DerivChart> {
         ),
       );
 
-  void _onAddDrawing(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished = false}) {
+  void _onAddDrawing(
+    Map<String, List<Drawing>> addedDrawing, {
+    bool isDrawingFinished = false,
+  }) {
     setState(() {
       final String drawingId = addedDrawing.keys.first;
 
