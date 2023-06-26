@@ -8,7 +8,6 @@ class DrawingData {
     required this.id,
     required this.config,
     required this.drawingParts,
-    this.totalPoints = 0,
     this.isDrawingFinished = false,
     this.isSelected = true,
   });
@@ -25,9 +24,6 @@ class DrawingData {
   /// If drawing is finished.
   bool isDrawingFinished;
 
-  /// Total Points it takes on screen to create a drawings
-  int? totalPoints;
-
   /// If the drawing is selected by the user.
   bool isSelected;
 
@@ -35,7 +31,6 @@ class DrawingData {
   DrawingData updateConfig(DrawingToolConfig config) => DrawingData(
         id: id,
         config: config,
-        totalPoints: totalPoints,
         drawingParts: drawingParts,
         isDrawingFinished: isDrawingFinished,
       );

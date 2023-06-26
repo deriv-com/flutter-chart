@@ -21,7 +21,6 @@ class Chart extends StatefulWidget {
     required this.granularity,
     required this.onAddDrawing,
     required this.clearDrawingToolSelection,
-    this.isFirstPointOfNewDrawing = false,
     this.drawings,
     this.selectedDrawingTool,
     this.pipSize = 4,
@@ -57,7 +56,7 @@ class Chart extends StatefulWidget {
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished, int? totalPoints}) onAddDrawing;
+      {bool isDrawingFinished}) onAddDrawing;
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
@@ -98,9 +97,6 @@ class Chart extends StatefulWidget {
 
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
-
-  /// check if first point of any drawing is clicked
-  final bool isFirstPointOfNewDrawing;
 
   @override
   State<StatefulWidget> createState() => _ChartState();
@@ -172,7 +168,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                   flex: 3,
                   child: MainChart(
                     drawings: widget.drawings,
-                    isFirstPointOfNewDrawing: widget.isFirstPointOfNewDrawing,
                     onAddDrawing: widget.onAddDrawing,
                     selectedDrawingTool: widget.selectedDrawingTool,
                     clearDrawingToolSelection: widget.clearDrawingToolSelection,

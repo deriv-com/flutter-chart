@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -17,15 +18,15 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
-    this.isFirstPointOfNewDrawing = false,
+    required this.selectedDrawingTool,
     Key? key,
   }) : super(key: key);
 
+  /// Selected drawing tool.
+  final DrawingToolConfig? selectedDrawingTool;
+
   /// Contains each drawing data
   final DrawingData? drawingData;
-
-  /// check if the first point is already clicked
-  final bool isFirstPointOfNewDrawing;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
@@ -133,7 +134,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   quoteToY: widget.quoteToCanvasY,
                   draggableStartPoint: _draggableStartPoint,
                   draggableEndPoint: _draggableEndPoint,
-                  isFirstPointOfNewDrawing: widget.isFirstPointOfNewDrawing),
+                  isDrawingToolSelected: widget.selectedDrawingTool != null),
               size: const Size(double.infinity, double.infinity),
             ),
           )
@@ -148,13 +149,13 @@ class _DrawingPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.draggableStartPoint,
-    this.isFirstPointOfNewDrawing = false,
+    this.isDrawingToolSelected = false,
     this.draggableEndPoint,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
-  final bool isFirstPointOfNewDrawing;
+  final bool isDrawingToolSelected;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
@@ -193,7 +194,7 @@ class _DrawingPainter extends CustomPainter {
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
       )) {
-        if (isFirstPointOfNewDrawing) {
+        if (isDrawingToolSelected) {
           return false;
         }
         return true;

@@ -27,7 +27,6 @@ class MainChart extends BasicChart {
     required this.onAddDrawing,
     required this.clearDrawingToolSelection,
     this.drawings,
-    this.isFirstPointOfNewDrawing = false,
     this.selectedDrawingTool,
     this.isLive = false,
     int pipSize = 4,
@@ -57,9 +56,6 @@ class MainChart extends BasicChart {
   final List<Series>? overlaySeries;
   final DataSeries<Tick> _mainSeries;
 
-  /// check if a point is clicked for a drawing tool
-  final bool isFirstPointOfNewDrawing;
-
   /// List of chart annotations used in the chart.
   final List<ChartAnnotation<ChartObject>>? annotations;
 
@@ -71,7 +67,7 @@ class MainChart extends BasicChart {
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished, int? totalPoints}) onAddDrawing;
+      {bool isDrawingFinished}) onAddDrawing;
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
@@ -282,7 +278,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 DrawingToolChart(
-                  isFirstPointOfNewDrawing: widget.isFirstPointOfNewDrawing,
                   drawings: widget.drawings,
                   onAddDrawing: widget.onAddDrawing,
                   onMoveDrawing: _onMoveDrawing,

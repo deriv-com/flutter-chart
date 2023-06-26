@@ -14,21 +14,17 @@ class DrawingToolChart extends StatelessWidget {
     required this.chartQuoteToCanvasY,
     required this.onMoveDrawing,
     required this.clearDrawingToolSelection,
-    this.isFirstPointOfNewDrawing = false,
     this.drawings,
     this.selectedDrawingTool,
     Key? key,
   }) : super(key: key);
-
-  /// check if the first point is already clicked for the drawing
-  final bool isFirstPointOfNewDrawing;
 
   /// Existing drawings.
   final List<DrawingData>? drawings;
 
   /// Callback to pass new drawing to the parent.
   final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished, int? totalPoints}) onAddDrawing;
+      {bool isDrawingFinished}) onAddDrawing;
 
   /// Callback to pass new drawing to the parent.
   final void Function({bool isDrawingMoved}) onMoveDrawing;
@@ -47,22 +43,13 @@ class DrawingToolChart extends StatelessWidget {
 
   /// Sets drawing as selected and unselects the rest of drawings
   /// if any of the drawing is not finished , it selects the unfinished drawing
+  ///
   void _setIsDrawingSelected(DrawingData drawing) {
-    // check if any of the drawings are not completed
-    final bool isNotFinished = drawings!
-        .any((DrawingData element) => element.isDrawingFinished == false);
-
-    if (!isNotFinished) {
-      drawing.isSelected = !drawing.isSelected;
-    }
+    drawing.isSelected = !drawing.isSelected;
 
     for (final DrawingData data in drawings!) {
-      if (data.id != drawing.id || isNotFinished) {
+      if (data.id != drawing.id) {
         data.isSelected = false;
-      }
-
-      if (!data.isDrawingFinished) {
-        data.isSelected = true;
       }
     }
   }
@@ -79,12 +66,13 @@ class DrawingToolChart extends StatelessWidget {
           children: <Widget>[
             if (drawings != null)
               ...drawings!.map((DrawingData drawingData) => DrawingPainter(
-                  drawingData: drawingData,
-                  quoteToCanvasY: chartQuoteToCanvasY,
-                  quoteFromCanvasY: chartQuoteFromCanvasY,
-                  onMoveDrawing: onMoveDrawing,
-                  setIsDrawingSelected: _setIsDrawingSelected,
-                  isFirstPointOfNewDrawing: isFirstPointOfNewDrawing)),
+                    drawingData: drawingData,
+                    quoteToCanvasY: chartQuoteToCanvasY,
+                    quoteFromCanvasY: chartQuoteFromCanvasY,
+                    onMoveDrawing: onMoveDrawing,
+                    setIsDrawingSelected: _setIsDrawingSelected,
+                    selectedDrawingTool: selectedDrawingTool,
+                  )),
             if (selectedDrawingTool != null)
               DrawingCreator(
                 onAddDrawing: onAddDrawing,

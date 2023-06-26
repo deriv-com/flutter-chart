@@ -93,7 +93,6 @@ class _DerivChartState extends State<DerivChart> {
       AddOnsRepository<DrawingToolConfig>(DrawingToolConfig);
 
   // check if first point of any drawing is clicked
-  bool isFirstPointOfNewDrawing = false;
 
   /// Selected drawing tool.
   DrawingToolConfig? _selectedDrawingTool;
@@ -148,7 +147,6 @@ class _DerivChartState extends State<DerivChart> {
                 mainSeries: widget.mainSeries,
                 pipSize: widget.pipSize,
                 granularity: widget.granularity,
-                isFirstPointOfNewDrawing: isFirstPointOfNewDrawing,
                 controller: widget.controller,
                 overlaySeries: <Series>[
                   ...context
@@ -236,7 +234,6 @@ class _DerivChartState extends State<DerivChart> {
                           onDrawingToolRemoval: (int index) {
                             if (_drawings.isNotEmpty) {
                               setState(() {
-                                isFirstPointOfNewDrawing = false;
                                 _drawings.removeAt(index);
                               });
                             }
@@ -244,7 +241,6 @@ class _DerivChartState extends State<DerivChart> {
                           onDrawingToolSelection:
                               (DrawingToolConfig selectedDrawingTool) {
                             setState(() {
-                              isFirstPointOfNewDrawing = true;
                               _selectedDrawingTool = selectedDrawingTool;
                             });
                           },
@@ -267,7 +263,7 @@ class _DerivChartState extends State<DerivChart> {
       );
 
   void _onAddDrawing(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished = false, int? totalPoints = 0}) {
+      {bool isDrawingFinished = false}) {
     setState(() {
       final String drawingId = addedDrawing.keys.first;
 
@@ -277,16 +273,12 @@ class _DerivChartState extends State<DerivChart> {
 
       if (existingDrawing == null) {
         _drawings.add(DrawingData(
-            id: drawingId,
-            config: _selectedDrawingTool!,
-            drawingParts: addedDrawing.values.first,
-            isDrawingFinished: isDrawingFinished,
-            totalPoints: totalPoints));
-        if (totalPoints == 1) {
-          isFirstPointOfNewDrawing = false;
-        }
+          id: drawingId,
+          config: _selectedDrawingTool!,
+          drawingParts: addedDrawing.values.first,
+          isDrawingFinished: isDrawingFinished,
+        ));
       } else {
-        isFirstPointOfNewDrawing = false;
         existingDrawing
           ..updateDrawingPartList(addedDrawing.values.first)
           ..isSelected = true
@@ -294,7 +286,6 @@ class _DerivChartState extends State<DerivChart> {
       }
 
       if (isDrawingFinished) {
-        isFirstPointOfNewDrawing = false;
         _drawingToolsRepo.add(_selectedDrawingTool!);
         _selectedDrawingTool = null;
       }
