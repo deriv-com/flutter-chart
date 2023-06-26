@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/distance_constants.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
@@ -33,6 +35,38 @@ class HorizontalDrawing extends Drawing {
   /// Keeps the latest position of the horizontal line
   Point? point;
 
+  /// function to add quote labels to the vertical drawing tool
+  void addLabel(
+      Canvas canvas, Size size, Function quoteFromY, double pointYCoord) {
+    const double width = 50; // Width of the rectangle
+    const double height = 20; // Height of the rectangle
+
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: quoteFromY(pointYCoord).toStringAsFixed(3),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout(
+        maxWidth: size.width,
+      );
+
+    final ui.Offset offset = Offset(size.width - 44, pointYCoord - 5);
+    final Rect rect = Rect.fromCenter(
+        center: Offset(size.width - 25, pointYCoord),
+        width: width,
+        height: height);
+
+    canvas.drawRect(
+      rect,
+      Paint()..color = const Color(0xFFCC2E3D),
+    );
+    textPainter.paint(canvas, offset);
+  }
+
   /// Paint
   @override
   void onPaint(
@@ -41,6 +75,7 @@ class HorizontalDrawing extends Drawing {
     ChartTheme theme,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    double Function(double y) quoteFromY,
     DrawingData drawingData,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
@@ -59,7 +94,7 @@ class HorizontalDrawing extends Drawing {
       quoteToY,
     );
 
-    final double pointQuoteToY = point!.y;
+    final double pointYCoord = point!.y;
     final double pointXCoord = point!.x;
 
     if (drawingPart == DrawingParts.line) {
@@ -69,12 +104,13 @@ class HorizontalDrawing extends Drawing {
             endingX = pointXCoord + DrawingToolDistance.horizontalDistance;
 
         canvas.drawLine(
-          Offset(startX, pointQuoteToY),
-          Offset(endingX, pointQuoteToY),
+          Offset(startX, pointYCoord),
+          Offset(endingX, pointYCoord),
           drawingData.isSelected
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
+        addLabel(canvas, size, quoteFromY, pointYCoord);
       }
     }
   }
