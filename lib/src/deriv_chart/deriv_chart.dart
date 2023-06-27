@@ -186,6 +186,14 @@ class _DerivChartState extends State<DerivChart> {
   }
 
   void showDrawingToolsDialog() {
+    /// Remove unfinished drawings before openning the dialog.
+    /// For the scenario where the user adds part of a drawing
+    /// and then opens the dialog.
+    setState(() {
+      _drawings.removeWhere((DrawingData data) => !data.isDrawingFinished);
+      _selectedDrawingTool = null;
+    });
+
     showDialog<void>(
       context: context,
       builder: (
@@ -261,6 +269,7 @@ class _DerivChartState extends State<DerivChart> {
                 drawings: _drawings,
                 onAddDrawing: _onAddDrawing,
                 selectedDrawingTool: _selectedDrawingTool,
+                clearDrawingToolSelection: _clearDrawingToolSelection,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
@@ -298,16 +307,32 @@ class _DerivChartState extends State<DerivChart> {
         _drawings.add(DrawingData(
           id: drawingId,
           config: _selectedDrawingTool!,
-          drawings: addedDrawing.values.first,
+          drawingParts: addedDrawing.values.first,
+          isDrawingFinished: isDrawingFinished,
         ));
       } else {
-        existingDrawing.updateDrawingList(addedDrawing.values.first);
+        existingDrawing
+          ..updateDrawingPartList(addedDrawing.values.first)
+          ..isSelected = true
+          ..isDrawingFinished = isDrawingFinished;
       }
 
       if (isDrawingFinished) {
         _drawingToolsRepo.add(_selectedDrawingTool!);
         _selectedDrawingTool = null;
       }
+
+      if (_drawings.length > 1) {
+        _drawings.removeWhere((DrawingData data) =>
+            data.id != drawingId && !data.isDrawingFinished);
+      }
+    });
+  }
+
+  /// Clean the drawing tool selection.
+  void _clearDrawingToolSelection() {
+    setState(() {
+      _selectedDrawingTool = null;
     });
   }
 }

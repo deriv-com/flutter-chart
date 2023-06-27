@@ -13,6 +13,8 @@ class DrawingCreator extends StatelessWidget {
     required this.onAddDrawing,
     required this.selectedDrawingTool,
     required this.quoteFromCanvasY,
+    required this.clearDrawingToolSelection,
+    required this.removeDrawing,
     Key? key,
   }) : super(key: key);
 
@@ -26,14 +28,25 @@ class DrawingCreator extends StatelessWidget {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
 
+  /// Callback to clean drawing tool selection.
+  final VoidCallback clearDrawingToolSelection;
+
+  /// Callback to remove specific drawing from the list of drawings.
+  final void Function(String drawingId) removeDrawing;
+
   @override
   Widget build(BuildContext context) {
+    // TODO(bahar-deriv): Deligate the creation of drawing to the specific
+    // drawing tool config
     final String drawingToolType = selectedDrawingTool.toJson()['name'];
+
     switch (drawingToolType) {
       case 'dt_line':
         return LineDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
+          clearDrawingToolSelection: clearDrawingToolSelection,
+          removeDrawing: removeDrawing,
         );
       case 'dt_vertical':
         return VerticalDrawingCreator(
