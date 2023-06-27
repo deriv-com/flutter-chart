@@ -12,12 +12,19 @@ LineDrawingToolConfig _$LineDrawingToolConfigFromJson(
       lineStyle: json['lineStyle'] == null
           ? const LineStyle(thickness: 0.9, color: Colors.white)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-      pattern: json['pattern'] as String? ?? 'solid',
+      pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
+          DrawingPatterns.solid,
     );
 
 Map<String, dynamic> _$LineDrawingToolConfigToJson(
         LineDrawingToolConfig instance) =>
     <String, dynamic>{
       'lineStyle': instance.lineStyle,
-      'pattern': instance.pattern,
+      'pattern': _$DrawingPatternsEnumMap[instance.pattern]!,
     };
+
+const _$DrawingPatternsEnumMap = {
+  DrawingPatterns.solid: 'solid',
+  DrawingPatterns.dotted: 'dotted',
+  DrawingPatterns.dashed: 'dashed',
+};

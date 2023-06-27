@@ -22,6 +22,7 @@ class Chart extends StatefulWidget {
     required this.mainSeries,
     required this.granularity,
     required this.onAddDrawing,
+    required this.clearDrawingToolSelection,
     this.drawings,
     this.selectedDrawingTool,
     this.pipSize = 4,
@@ -67,6 +68,9 @@ class Chart extends StatefulWidget {
 
   /// Selected drawing tool.
   final DrawingToolConfig? selectedDrawingTool;
+
+  /// Callback to clean drawing tool selection.
+  final VoidCallback clearDrawingToolSelection;
 
   /// Chart's controller
   final ChartController? controller;
@@ -219,6 +223,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     drawings: widget.drawings,
                     onAddDrawing: widget.onAddDrawing,
                     selectedDrawingTool: widget.selectedDrawingTool,
+                    clearDrawingToolSelection: widget.clearDrawingToolSelection,
                     controller: _controller,
                     mainSeries: widget.mainSeries,
                     overlaySeries: overlaySeries,

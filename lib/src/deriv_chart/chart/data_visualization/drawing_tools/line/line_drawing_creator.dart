@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart'
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../data_model/drawing_parts.dart';
 import './line_drawing.dart';
 
 /// Creates a Line drawing piece by piece collected on every gesture
@@ -12,6 +13,8 @@ class LineDrawingCreator extends StatefulWidget {
   const LineDrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
+    required this.clearDrawingToolSelection,
+    required this.removeDrawing,
     Key? key,
   }) : super(key: key);
 
@@ -21,6 +24,12 @@ class LineDrawingCreator extends StatefulWidget {
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;
+
+  /// Callback to clean drawing tool selection.
+  final VoidCallback clearDrawingToolSelection;
+
+  /// Callback to remove specific drawing from the list of drawings.
+  final void Function(String drawingId) removeDrawing;
 
   @override
   _LineDrawingCreatorState createState() => _LineDrawingCreatorState();
@@ -40,6 +49,12 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
 
   /// Saved starting Y coordinates.
   double? _startingYPoint;
+
+  /// Saved ending epoch.
+  int? _endingEpoch;
+
+  /// Saved ending Y coordinates.
+  double? _endingYPoint;
 
   /// If drawing has been started.
   bool _isPenDown = false;
@@ -73,40 +88,55 @@ class _LineDrawingCreatorState extends State<LineDrawingCreator> {
     setState(() {
       position = details.localPosition;
       if (!_isPenDown) {
+        /// Draw the initial point of the line.
         _startingEpoch = epochFromX!(position!.dx);
         _startingYPoint = widget.quoteFromCanvasY(position!.dy);
         _isPenDown = true;
         _drawingId = 'line_$_startingEpoch';
 
         _drawingParts.add(LineDrawing(
-          drawingPart: 'marker',
+          drawingPart: DrawingParts.marker,
           startEpoch: _startingEpoch!,
           startYCoord: _startingYPoint!,
         ));
       } else if (!_isDrawingFinished) {
+        /// Draw final point and the whole line.
         _isPenDown = false;
         _isDrawingFinished = true;
-        final int endEpoch = epochFromX!(position!.dx);
-        final double endYPoint = widget.quoteFromCanvasY(position!.dy);
+        _endingEpoch = epochFromX!(position!.dx);
+        _endingYPoint = widget.quoteFromCanvasY(position!.dy);
 
-        _drawingParts.addAll(<LineDrawing>[
-          LineDrawing(
-            drawingPart: 'marker',
-            startEpoch: endEpoch,
-            startYCoord: endYPoint,
-          ),
-          LineDrawing(
-            drawingPart: 'line',
-            startEpoch: _startingEpoch!,
-            startYCoord: _startingYPoint!,
-            endEpoch: endEpoch,
-            endYCoord: endYPoint,
-          )
-        ]);
+        /// Checks if the initial point and the final point are the same.
+        if (Offset(_startingEpoch!.toDouble(), _startingYPoint!.toDouble()) ==
+            Offset(_endingEpoch!.toDouble(), _endingYPoint!.toDouble())) {
+          /// If the initial point and the final point are the same,
+          /// remove the drawing and cleazn the drawing tool selection.
+          widget.removeDrawing(_drawingId);
+          widget.clearDrawingToolSelection();
+          return;
+        } else {
+          /// If the initial point and the final point are not the same,
+          /// draw the final point and the whole line.
+          _drawingParts.addAll(<LineDrawing>[
+            LineDrawing(
+              drawingPart: DrawingParts.marker,
+              endEpoch: _endingEpoch!,
+              endYCoord: _endingYPoint!,
+            ),
+            LineDrawing(
+              drawingPart: DrawingParts.line,
+              startEpoch: _startingEpoch!,
+              startYCoord: _startingYPoint!,
+              endEpoch: _endingEpoch!,
+              endYCoord: _endingYPoint!,
+            )
+          ]);
+        }
       }
       widget.onAddDrawing(
-          <String, List<LineDrawing>>{_drawingId: _drawingParts},
-          isDrawingFinished: _isDrawingFinished);
+        <String, List<LineDrawing>>{_drawingId: _drawingParts},
+        isDrawingFinished: _isDrawingFinished,
+      );
     });
   }
 
