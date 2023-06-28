@@ -178,7 +178,7 @@ class _DerivChartState extends State<DerivChart> {
       builder: (
         BuildContext context,
       ) =>
-          ChangeNotifierProvider<AddOnsRepository<IndicatorConfig>>.value(
+          ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
         child: IndicatorsDialog(),
       ),
@@ -199,7 +199,7 @@ class _DerivChartState extends State<DerivChart> {
       builder: (
         BuildContext context,
       ) =>
-          ChangeNotifierProvider<AddOnsRepository<DrawingToolConfig>>.value(
+          ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
         child: DrawingToolsDialog(
           onDrawingToolRemoval: (int index) {
