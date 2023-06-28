@@ -49,4 +49,90 @@ abstract class Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   });
+
+  /// Vector of the line
+  Vector getLineVector(
+    double startXCoord,
+    double startQuoteToY,
+    double endXCoord,
+    double endQuoteToY, {
+    bool exceedStart = false,
+    bool exceedEnd = false,
+  }) {
+    Vector vec = Vector(
+      x0: startXCoord,
+      y0: startQuoteToY,
+      x1: endXCoord,
+      y1: endQuoteToY,
+    );
+
+    late double earlier, later;
+    if (exceedEnd && !exceedStart) {
+      earlier = vec.x0;
+      if (vec.x0 > vec.x1) {
+        later = vec.x1 - 100000;
+      } else {
+        later = vec.x1 + 100000;
+      }
+    }
+    if (exceedStart && !exceedEnd) {
+      later = vec.x1;
+
+      if (vec.x0 > vec.x1) {
+        earlier = vec.x0 + 100000;
+      } else {
+        earlier = vec.x0 - 100000;
+      }
+    }
+
+    if (exceedStart && exceedEnd) {
+      if (vec.x0 > vec.x1) {
+        vec = Vector(
+          x0: endXCoord,
+          y0: endQuoteToY,
+          x1: startXCoord,
+          y1: startQuoteToY,
+        );
+      }
+
+      earlier = vec.x0 - 100000;
+      later = vec.x1 + 100000;
+    }
+
+    if (!exceedEnd && !exceedStart) {
+      if (vec.x0 > vec.x1) {
+        vec = Vector(
+          x0: endXCoord,
+          y0: endQuoteToY,
+          x1: startXCoord,
+          y1: startQuoteToY,
+        );
+      }
+      earlier = vec.x0;
+      later = vec.x1;
+    }
+
+    final double startY = getYIntersection(vec, earlier) ?? 0,
+        endingY = getYIntersection(vec, later) ?? 0,
+        startX = earlier,
+        endingX = later;
+
+    return Vector(
+      x0: startX,
+      y0: startY,
+      x1: endingX,
+      y1: endingY,
+    );
+  }
+
+  /// Returns the Triangle path
+  Path getTrianglePath(
+    Vector startVector,
+    Vector endVector,
+  ) =>
+      Path()
+        ..moveTo(startVector.x0, startVector.y0)
+        ..lineTo(startVector.x1, startVector.y1)
+        ..lineTo(endVector.x1, endVector.y1)
+        ..close();
 }

@@ -484,6 +484,16 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Fill Color`
+  String get labelFillColor {
+    return Intl.message(
+      'Fill Color',
+      name: 'labelFillColor',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {

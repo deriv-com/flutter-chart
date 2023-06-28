@@ -22,71 +22,52 @@ class MessageLookup extends MessageLookupByLibrary {
   static m0(text) => "No results for \"${text}\"";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function>{
-        "informNoResult": m0,
-        "labelBandsCount": MessageLookupByLibrary.simpleMessage("Bands Count"),
-        "labelBaseLinePeriod":
-            MessageLookupByLibrary.simpleMessage("Base Line Period"),
-        "labelChannelFill":
-            MessageLookupByLibrary.simpleMessage("Channel Fill"),
-        "labelColor": MessageLookupByLibrary.simpleMessage("Color"),
-        "labelConversionLinePeriod":
-            MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
-        "labelDistance": MessageLookupByLibrary.simpleMessage("Distance"),
-        "labelDoubleSmoothingPeriod":
-            MessageLookupByLibrary.simpleMessage("Double Smoothing Period"),
-        "labelFastMAPeriod":
-            MessageLookupByLibrary.simpleMessage("Fast MA Period"),
-        "labelField": MessageLookupByLibrary.simpleMessage("Field"),
-        "labelHighPeriod": MessageLookupByLibrary.simpleMessage("High Period"),
-        "labelHistogram": MessageLookupByLibrary.simpleMessage("Histogram"),
-        "labelIsSmooth": MessageLookupByLibrary.simpleMessage("Is Smooth"),
-        "labelJawOffset": MessageLookupByLibrary.simpleMessage("Jaw Offset"),
-        "labelJawPeriod": MessageLookupByLibrary.simpleMessage("Jaw Period"),
-        "labelLaggingSpanOffset":
-            MessageLookupByLibrary.simpleMessage("Lagging Span Offset"),
-        "labelLipsOffset": MessageLookupByLibrary.simpleMessage("Lips Offset"),
-        "labelLipsPeriod": MessageLookupByLibrary.simpleMessage("Lips Period"),
-        "labelLowPeriod": MessageLookupByLibrary.simpleMessage("Low Period"),
-        "labelMaxAF": MessageLookupByLibrary.simpleMessage("Max AF"),
-        "labelMinAF": MessageLookupByLibrary.simpleMessage("Min AF"),
-        "labelOffset": MessageLookupByLibrary.simpleMessage("Offset"),
-        "labelOverBoughtPrice":
-            MessageLookupByLibrary.simpleMessage("Over Bought Price"),
-        "labelOverSoldPrice":
-            MessageLookupByLibrary.simpleMessage("Over Sold Price"),
-        "labelPeriod": MessageLookupByLibrary.simpleMessage("Period"),
-        "labelSearchAssets":
-            MessageLookupByLibrary.simpleMessage("Search assets"),
-        "labelSeries": MessageLookupByLibrary.simpleMessage("Series"),
-        "labelShading": MessageLookupByLibrary.simpleMessage("Shading"),
-        "labelShift": MessageLookupByLibrary.simpleMessage("Shift"),
-        "labelShiftType": MessageLookupByLibrary.simpleMessage("Shift Type"),
-        "labelShowFractals":
-            MessageLookupByLibrary.simpleMessage("Show Fractals"),
-        "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
-        "labelShowZones": MessageLookupByLibrary.simpleMessage("Show Zones"),
-        "labelSignalPeriod": MessageLookupByLibrary.simpleMessage("D% Period"),
-        "labelSlowMAPeriod":
-            MessageLookupByLibrary.simpleMessage("Slow MA Period"),
-        "labelSmoothingPeriod":
-            MessageLookupByLibrary.simpleMessage("Smoothing Period"),
-        "labelSpanBPeriod":
-            MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
-        "labelStandardDeviation":
-            MessageLookupByLibrary.simpleMessage("Standard Deviation"),
-        "labelTeethOffset":
-            MessageLookupByLibrary.simpleMessage("Teeth Offset"),
-        "labelTeethPeriod":
-            MessageLookupByLibrary.simpleMessage("Teeth Period"),
-        "labelType": MessageLookupByLibrary.simpleMessage("Type"),
-        "selectDrawingTool":
-            MessageLookupByLibrary.simpleMessage("Select drawing tool"),
-        "warnCheckAssetSearchingText": MessageLookupByLibrary.simpleMessage(
-            "Try checking your spelling or use a different term"),
-        "warnFailedLoadingDrawingTools": MessageLookupByLibrary.simpleMessage(
-            "Failed to load drawing tools."),
-        "warnFailedLoadingIndicators":
-            MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
-      };
+  static _notInlinedMessages(_) => <String, Function> {
+    "informNoResult" : m0,
+    "labelBandsCount" : MessageLookupByLibrary.simpleMessage("Bands Count"),
+    "labelBaseLinePeriod" : MessageLookupByLibrary.simpleMessage("Base Line Period"),
+    "labelChannelFill" : MessageLookupByLibrary.simpleMessage("Channel Fill"),
+    "labelColor" : MessageLookupByLibrary.simpleMessage("Color"),
+    "labelConversionLinePeriod" : MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
+    "labelDistance" : MessageLookupByLibrary.simpleMessage("Distance"),
+    "labelDoubleSmoothingPeriod" : MessageLookupByLibrary.simpleMessage("Double Smoothing Period"),
+    "labelFastMAPeriod" : MessageLookupByLibrary.simpleMessage("Fast MA Period"),
+    "labelField" : MessageLookupByLibrary.simpleMessage("Field"),
+    "labelFillColor" : MessageLookupByLibrary.simpleMessage("Fill Color"),
+    "labelHighPeriod" : MessageLookupByLibrary.simpleMessage("High Period"),
+    "labelHistogram" : MessageLookupByLibrary.simpleMessage("Histogram"),
+    "labelIsSmooth" : MessageLookupByLibrary.simpleMessage("Is Smooth"),
+    "labelJawOffset" : MessageLookupByLibrary.simpleMessage("Jaw Offset"),
+    "labelJawPeriod" : MessageLookupByLibrary.simpleMessage("Jaw Period"),
+    "labelLaggingSpanOffset" : MessageLookupByLibrary.simpleMessage("Lagging Span Offset"),
+    "labelLipsOffset" : MessageLookupByLibrary.simpleMessage("Lips Offset"),
+    "labelLipsPeriod" : MessageLookupByLibrary.simpleMessage("Lips Period"),
+    "labelLowPeriod" : MessageLookupByLibrary.simpleMessage("Low Period"),
+    "labelMaxAF" : MessageLookupByLibrary.simpleMessage("Max AF"),
+    "labelMinAF" : MessageLookupByLibrary.simpleMessage("Min AF"),
+    "labelOffset" : MessageLookupByLibrary.simpleMessage("Offset"),
+    "labelOverBoughtPrice" : MessageLookupByLibrary.simpleMessage("Over Bought Price"),
+    "labelOverSoldPrice" : MessageLookupByLibrary.simpleMessage("Over Sold Price"),
+    "labelPeriod" : MessageLookupByLibrary.simpleMessage("Period"),
+    "labelSearchAssets" : MessageLookupByLibrary.simpleMessage("Search assets"),
+    "labelSeries" : MessageLookupByLibrary.simpleMessage("Series"),
+    "labelShading" : MessageLookupByLibrary.simpleMessage("Shading"),
+    "labelShift" : MessageLookupByLibrary.simpleMessage("Shift"),
+    "labelShiftType" : MessageLookupByLibrary.simpleMessage("Shift Type"),
+    "labelShowFractals" : MessageLookupByLibrary.simpleMessage("Show Fractals"),
+    "labelShowLines" : MessageLookupByLibrary.simpleMessage("Show Lines"),
+    "labelShowZones" : MessageLookupByLibrary.simpleMessage("Show Zones"),
+    "labelSignalPeriod" : MessageLookupByLibrary.simpleMessage("D% Period"),
+    "labelSlowMAPeriod" : MessageLookupByLibrary.simpleMessage("Slow MA Period"),
+    "labelSmoothingPeriod" : MessageLookupByLibrary.simpleMessage("Smoothing Period"),
+    "labelSpanBPeriod" : MessageLookupByLibrary.simpleMessage("Leading Span B Period"),
+    "labelStandardDeviation" : MessageLookupByLibrary.simpleMessage("Standard Deviation"),
+    "labelTeethOffset" : MessageLookupByLibrary.simpleMessage("Teeth Offset"),
+    "labelTeethPeriod" : MessageLookupByLibrary.simpleMessage("Teeth Period"),
+    "labelType" : MessageLookupByLibrary.simpleMessage("Type"),
+    "selectDrawingTool" : MessageLookupByLibrary.simpleMessage("Select drawing tool"),
+    "warnCheckAssetSearchingText" : MessageLookupByLibrary.simpleMessage("Try checking your spelling or use a different term"),
+    "warnFailedLoadingDrawingTools" : MessageLookupByLibrary.simpleMessage("Failed to load drawing tools."),
+    "warnFailedLoadingIndicators" : MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
+  };
 }
