@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/distance_constants.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
@@ -10,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_label.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
@@ -19,6 +18,7 @@ class HorizontalDrawing extends Drawing {
   /// Initializes
   HorizontalDrawing({
     required this.drawingPart,
+    required this.quoteFromCanvasY,
     this.epoch = 0,
     this.quote = 0,
   });
@@ -35,37 +35,8 @@ class HorizontalDrawing extends Drawing {
   /// Keeps the latest position of the horizontal line
   Point? point;
 
-  /// function to add quote labels to the vertical drawing tool
-  void addLabel(
-      Canvas canvas, Size size, Function quoteFromY, double pointYCoord) {
-    const double width = 50; // Width of the rectangle
-    const double height = 20; // Height of the rectangle
-
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(
-        text: quoteFromY(pointYCoord).toStringAsFixed(3),
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 10,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout(
-        maxWidth: size.width,
-      );
-
-    final ui.Offset offset = Offset(size.width - 44, pointYCoord - 5);
-    final Rect rect = Rect.fromCenter(
-        center: Offset(size.width - 25, pointYCoord),
-        width: width,
-        height: height);
-
-    canvas.drawRect(
-      rect,
-      Paint()..color = const Color(0xFFCC2E3D),
-    );
-    textPainter.paint(canvas, offset);
-  }
+  /// Conversion function for converting quote from chart's canvas' Y position.
+  final double Function(double)? quoteFromCanvasY;
 
   /// Paint
   @override
@@ -75,7 +46,6 @@ class HorizontalDrawing extends Drawing {
     ChartTheme theme,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
-    double Function(double y) quoteFromY,
     DrawingData drawingData,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
@@ -98,11 +68,11 @@ class HorizontalDrawing extends Drawing {
     final double pointXCoord = point!.x;
 
     if (drawingPart == DrawingParts.line) {
-      if (pattern == DrawingPatterns.solid) {
-        final double startX =
-                pointXCoord - DrawingToolDistance.horizontalDistance,
-            endingX = pointXCoord + DrawingToolDistance.horizontalDistance;
+      final double startX =
+              pointXCoord - DrawingToolDistance.horizontalDistance,
+          endingX = pointXCoord + DrawingToolDistance.horizontalDistance;
 
+      if (pattern == DrawingPatterns.solid) {
         canvas.drawLine(
           Offset(startX, pointYCoord),
           Offset(endingX, pointYCoord),
@@ -110,7 +80,15 @@ class HorizontalDrawing extends Drawing {
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
-        addLabel(canvas, size, quoteFromY, pointYCoord);
+
+        DrawingLabel(
+          canvas: canvas,
+          size: size,
+          quoteFromY: quoteFromCanvasY,
+          coord: pointYCoord,
+        )
+          ..setHorizontalLabel()
+          ..drawLabel();
       }
     }
   }

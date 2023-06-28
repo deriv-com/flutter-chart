@@ -166,7 +166,6 @@ class _DrawingPainter extends CustomPainter {
         theme,
         epochToX,
         quoteToY,
-        quoteFromY,
         drawingData,
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,

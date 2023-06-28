@@ -14,7 +14,6 @@ abstract class Drawing {
     ChartTheme theme,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
-    double Function(double y) quoteFromY,
     DrawingData drawingData,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
