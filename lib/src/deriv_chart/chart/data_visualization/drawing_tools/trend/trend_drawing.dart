@@ -101,7 +101,7 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
-  /// Store the complete rectangule between start,end epoch and
+  /// Store the complete rectangle between start,end epoch and
   /// minimum,maximum quote.
   Rect _mainRect = Rect.zero;
 
