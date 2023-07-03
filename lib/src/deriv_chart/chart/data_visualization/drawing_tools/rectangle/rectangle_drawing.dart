@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
@@ -140,34 +138,16 @@ class RectangleDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    final double startXCoord = _startPoint!.x;
-    final double startQuoteToY = _startPoint!.y;
-
-    final double endXCoord = _endPoint!.x;
-    final double endYCoord = _endPoint!.y;
+    draggableEndPoint!.isDragged = false;
+    draggableStartPoint.isDragged = false;
 
     /// inflate the rect to 2px so that the stroke is inclusive and
     /// can be detected
     final Rect _inflatedRect = _rect.inflate(2);
 
-    // Calculate the difference between the start Point and the tap point.
-    final double startDx = position.dx - startXCoord;
-    final double startDy = position.dy - startQuoteToY;
-
-    // Calculate the difference between the end Point and the tap point.
-    final double endDx = position.dx - endXCoord;
-    final double endDy = position.dy - endYCoord;
-
-    // getting the distance of end point
-    final double endPointDistance = sqrt(endDx * endDx + endDy * endDy);
-
-    // getting the distance of start point
-    final double startPointDistance =
-        sqrt(startDx * startDx + startDy * startDy);
-
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, _markerRadius)) {
-      draggableEndPoint!.isDragged = true;
+      draggableEndPoint.isDragged = true;
     }
 
     /// Check if start point clicked
@@ -175,8 +155,8 @@ class RectangleDrawing extends Drawing {
       draggableStartPoint.isDragged = true;
     }
 
-    return endPointDistance <= _markerRadius ||
-        startPointDistance <= _markerRadius ||
+    return draggableStartPoint.isDragged ||
+        draggableEndPoint.isDragged ||
         (_inflatedRect.contains(position) && endEpoch != 0);
   }
 }
