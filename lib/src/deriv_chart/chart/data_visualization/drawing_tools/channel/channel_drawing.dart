@@ -200,6 +200,10 @@ class ChannelDrawing extends Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    draggableStartPoint.isDragged = false;
+    draggableMiddlePoint!.isDragged = false;
+    draggableEndPoint!.isDragged = false;
+
     final double middleXCoord = _middlePoint!.x;
     final double middleQuoteToY = _middlePoint!.y;
 
