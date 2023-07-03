@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
@@ -37,8 +39,19 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
   // /// If drawing has been started.
   bool _isPenDown = false;
 
+  /// Stores coordinate of first point on the graph
+  Offset? firstPointOnGraph;
+
+  void getFirstClickPoint(int x, double y) {
+    setState(() {
+      firstPointOnGraph = Offset(x.toDouble(), y);
+    });
+  }
+
   @override
   void onTap(TapUpDetails details) {
+    final TrendDrawingCreator _widget = widget as TrendDrawingCreator;
+
     if (isDrawingFinished) {
       return;
     }
@@ -54,11 +67,14 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
 
         drawingId = 'trend_${edgePoints.first.epoch}';
 
-        drawingParts.add(TrendDrawing(
-          epochFromX: epochFromX,
-          drawingPart: DrawingParts.marker,
-          startingEdgePoint: edgePoints.first,
-        ));
+        drawingParts.add(
+          TrendDrawing(
+            epochFromX: epochFromX,
+            drawingPart: DrawingParts.marker,
+            startingEdgePoint: edgePoints.first,
+            getFirstActualClick: getFirstClickPoint,
+          ),
+        );
       } else if (!isDrawingFinished) {
         edgePoints.add(EdgePoint(
             epoch: epochFromX!(position!.dx),
@@ -67,6 +83,15 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
         /// Draw final drawing
         _isPenDown = false;
         isDrawingFinished = true;
+
+        // When the second point is on the same y
+        //coordinate as the first point
+        if ((firstPointOnGraph!.dx - edgePoints[1].epoch).abs() <= 200) {
+          /// remove the drawing and clean the drawing tool selection.
+          _widget.removeDrawing(drawingId);
+          _widget.cleanDrawingToolSelection();
+          return;
+        }
 
         drawingParts
           ..removeAt(0)

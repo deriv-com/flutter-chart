@@ -17,12 +17,15 @@ import 'package:deriv_chart/deriv_chart.dart';
 /// Trend drawing tool.
 class TrendDrawing extends Drawing {
   /// Initializes
-  TrendDrawing({
-    required this.drawingPart,
-    required this.epochFromX,
-    this.startingEdgePoint = const EdgePoint(),
-    this.endingEdgePoint = const EdgePoint(),
-  });
+  TrendDrawing(
+      {required this.drawingPart,
+      required this.epochFromX,
+      this.getFirstActualClick,
+      this.startingEdgePoint = const EdgePoint(),
+      this.endingEdgePoint = const EdgePoint()});
+
+  /// Callback to get the coordinate of first click
+  final void Function(int x, double y)? getFirstActualClick;
 
   /// Get epoch from x.
   int Function(double x)? epochFromX;
@@ -98,7 +101,7 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
-  /// Store the complete Rectangule between start,end epoch and
+  /// Store the complete rectangule between start,end epoch and
   /// minimum,maximum quote.
   Rect _mainRect = Rect.zero;
 
@@ -202,7 +205,7 @@ class TrendDrawing extends Drawing {
             ?.where((Tick i) => i.epoch >= startingEdgePoint.epoch)
             .toList();
 
-        final Tick? pointVal = chartValue?[0];
+        final Tick? pointVal = chartValue!.first;
 
         _startPoint = draggableStartPoint.updatePosition(
             pointVal!.epoch, pointVal.quote, epochToX, quoteToY);
@@ -210,12 +213,15 @@ class TrendDrawing extends Drawing {
         startXCoord = _startPoint!.x;
         startYCoord = _startPoint!.y;
 
+        getFirstActualClick!(pointVal.epoch, pointVal.quote);
+
         canvas.drawCircle(
-            Offset(startXCoord, startYCoord),
-            _markerRadius,
-            drawingData.isSelected
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
+          Offset(startXCoord, startYCoord),
+          _markerRadius,
+          drawingData.isSelected
+              ? paint.glowyCirclePaintStyle(lineStyle.color)
+              : paint.transparentCirclePaintStyle(),
+        );
       } else {
         canvas
           ..drawCircle(
