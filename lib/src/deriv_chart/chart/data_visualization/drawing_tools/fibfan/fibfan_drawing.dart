@@ -228,6 +228,9 @@ class FibfanDrawing extends Drawing {
     bool _isVectorHit(Vector vector) =>
         isVectorHit(vector, position, lineStyle);
 
+    draggableStartPoint.isDragged = false;
+    draggableEndPoint!.isDragged = false;
+
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
       draggableStartPoint.isDragged = true;
