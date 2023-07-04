@@ -139,6 +139,9 @@ class LineDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    draggableStartPoint.isDragged = false;
+    draggableEndPoint!.isDragged = false;
+
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
     double startXCoord = _startPoint!.x;
@@ -154,7 +157,7 @@ class LineDrawing extends Drawing {
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      draggableEndPoint!.isDragged = true;
+      draggableEndPoint.isDragged = true;
     }
 
     startXCoord = _vector.x0;
@@ -185,6 +188,6 @@ class LineDrawing extends Drawing {
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
+        (draggableStartPoint.isDragged || draggableEndPoint.isDragged);
   }
 }

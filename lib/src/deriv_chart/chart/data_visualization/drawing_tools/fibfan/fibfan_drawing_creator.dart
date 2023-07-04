@@ -10,12 +10,7 @@ import 'package:flutter/material.dart';
 class FibfanDrawingCreator extends Creator<FibfanDrawing> {
   /// Initializes the fibfan drawing creator.
   const FibfanDrawingCreator({
-    required void Function(
-      Map<String, List<FibfanDrawing>>, {
-      bool isDrawingFinished,
-      bool isInfiniteDrawing,
-    })
-        onAddDrawing,
+    required OnAddDrawing<FibfanDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,

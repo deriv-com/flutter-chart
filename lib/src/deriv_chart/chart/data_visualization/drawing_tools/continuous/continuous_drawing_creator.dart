@@ -10,12 +10,7 @@ import '../data_model/drawing_parts.dart';
 class ContinuousDrawingCreator extends Creator<LineDrawing> {
   /// Initializes the continuous drawing creator.
   const ContinuousDrawingCreator({
-    required void Function(
-      Map<String, List<LineDrawing>>, {
-      bool isDrawingFinished,
-      bool isInfiniteDrawing,
-    })
-        onAddDrawing,
+    required OnAddDrawing<LineDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
