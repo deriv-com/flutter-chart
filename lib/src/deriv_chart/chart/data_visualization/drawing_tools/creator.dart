@@ -5,6 +5,13 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Type for callback to pass a newly created line drawing to the parent.
+typedef OnAddDrawing<T> = void Function(
+  Map<String, List<T>>, {
+  bool isDrawingFinished,
+  bool isInfiniteDrawing,
+});
+
 /// Base class to create a drawing piece by piece collected on every gesture
 abstract class Creator<T extends Drawing> extends StatefulWidget {
   /// Initializes.
@@ -15,8 +22,7 @@ abstract class Creator<T extends Drawing> extends StatefulWidget {
   }) : super(key: key);
 
   /// Callback to pass a newly created line drawing to the parent.
-  final void Function(Map<String, List<T>> addedDrawing,
-      {bool isDrawingFinished, bool isInfiniteDrawing}) onAddDrawing;
+  final OnAddDrawing<T> onAddDrawing;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;

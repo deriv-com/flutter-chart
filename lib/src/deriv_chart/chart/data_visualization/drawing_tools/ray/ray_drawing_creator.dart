@@ -10,12 +10,7 @@ import 'package:flutter/material.dart';
 class RayDrawingCreator extends Creator<LineDrawing> {
   /// Initializes the line drawing creator.
   const RayDrawingCreator({
-    required void Function(
-      Map<String, List<LineDrawing>>, {
-      bool isDrawingFinished,
-      bool isInfiniteDrawing,
-    })
-        onAddDrawing,
+    required OnAddDrawing<LineDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,

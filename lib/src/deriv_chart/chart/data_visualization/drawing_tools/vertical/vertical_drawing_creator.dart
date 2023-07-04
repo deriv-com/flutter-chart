@@ -8,12 +8,7 @@ import './vertical_drawing.dart';
 class VerticalDrawingCreator extends Creator<VerticalDrawing> {
   /// Initializes the vertical drawing creator.
   const VerticalDrawingCreator({
-    required void Function(
-      Map<String, List<VerticalDrawing>>, {
-      bool isDrawingFinished,
-      bool isInfiniteDrawing,
-    })
-        onAddDrawing,
+    required OnAddDrawing<VerticalDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     Key? key,
   }) : super(
