@@ -209,13 +209,11 @@ class FibfanDrawing extends Drawing {
           linePaintStype,
         );
 
-      final Label _label = Label(
+      /// Draw labels
+      Label(
         startEpoch: startXCoord.toInt(),
         endEpoch: endXCoord.toInt(),
-      );
-
-      /// Draw labels
-      _label
+      )
         ..drawLabel(canvas, lineStyle, '0%', _topVector)
         ..drawLabel(canvas, lineStyle, '38.2%', _initialInnerVector)
         ..drawLabel(canvas, lineStyle, '50%', _middleInnerVector)

@@ -80,11 +80,15 @@ class Label {
     String label,
     Vector endVector,
   ) {
-    final Offset labelOffset = startEpoch > endEpoch
+    final Offset labelOffset = (startEpoch > endEpoch && startEpoch > 10)
         ? _getLeftSideLabelsPosition(label, endVector)
-        : _getRightSideLabelsPosition(label, endVector);
-    getTextPainter(label, labelOffset, lineStyle.color)
-      ..layout()
-      ..paint(canvas, labelOffset);
+        : (startEpoch < endEpoch && startEpoch < 325)
+            ? _getRightSideLabelsPosition(label, endVector)
+            : Offset.zero;
+    if (labelOffset != Offset.zero) {
+      getTextPainter(label, labelOffset, lineStyle.color)
+        ..layout()
+        ..paint(canvas, labelOffset);
+    }
   }
 }
