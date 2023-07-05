@@ -29,7 +29,20 @@ void paintDrawingLabel(
   /// Height of the rectangle
   const double _height = 20;
 
-  if (drawingType == 'vertical') {
+  if (drawingType == 'horizontal') {
+    _labelRect = Rect.fromCenter(
+      center: Offset(size.width - 25, coord),
+      width: _width,
+      height: _height,
+    );
+
+    _labelString = quoteFromY!(coord).toStringAsFixed(3);
+
+    _textOffset = Offset(
+      size.width - 44,
+      coord - 5,
+    );
+  } else {
     _labelRect = Rect.fromCenter(
       center: Offset(
         coord,
@@ -47,19 +60,6 @@ void paintDrawingLabel(
     _textOffset = Offset(
       coord - 18,
       size.height - 13,
-    );
-  } else {
-    _labelRect = Rect.fromCenter(
-      center: Offset(size.width - 25, coord),
-      width: _width,
-      height: _height,
-    );
-
-    _labelString = quoteFromY!(coord).toStringAsFixed(3);
-
-    _textOffset = Offset(
-      size.width - 44,
-      coord - 5,
     );
   }
 
