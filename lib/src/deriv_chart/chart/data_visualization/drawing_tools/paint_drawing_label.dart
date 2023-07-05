@@ -65,7 +65,7 @@ void paintDrawingLabel(
 
   final TextPainter textPainter = TextPainter(
     text: TextSpan(
-      text: _labelString, // Concatenate the timeLabel here
+      text: _labelString,
       style: const TextStyle(
         color: Colors.white,
         fontSize: 10,
