@@ -110,8 +110,8 @@ class LineDrawing extends Drawing {
         startQuoteToY,
         endXCoord,
         endQuoteToY,
-        exceedStart: true,
-        exceedEnd: true,
+        exceedStart: exceedStart,
+        exceedEnd: exceedEnd,
       );
 
       if (pattern == DrawingPatterns.solid.name) {

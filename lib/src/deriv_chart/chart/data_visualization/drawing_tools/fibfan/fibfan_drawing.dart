@@ -10,6 +10,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/label.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
@@ -81,6 +82,19 @@ class FibfanDrawing extends Drawing {
     return _isWithinRange && _distance.abs() <= lineStyle.thickness + 6;
   }
 
+  /// Draw the shaded area between two vectors
+  void _drawTriangle(
+    Canvas canvas,
+    DrawingPaintStyle paint,
+    FibfanDrawingToolConfig config,
+    Vector endVector,
+  ) {
+    final LineStyle fillStyle = config.fillStyle;
+    final Path path = getTrianglePath(_baseVector, endVector);
+
+    canvas.drawPath(path, paint.fillPaintStyle(fillStyle.color));
+  }
+
   /// Paint the line
   @override
   void onPaint(
@@ -100,14 +114,10 @@ class FibfanDrawing extends Drawing {
     final Paint linePaintStype =
         paint.linePaintStyle(lineStyle.color, lineStyle.thickness);
 
-    /// Draw the shaded area between two vectors
-    void _drawTriangle(
-      Vector endVector,
-    ) {
-      final LineStyle fillStyle = config.fillStyle;
-      final Path path = getTrianglePath(_baseVector, endVector);
-      canvas.drawPath(path, paint.fillPaintStyle(fillStyle.color));
-    }
+    final Label _label = Label(
+      startEpoch: startEdgePoint.epoch,
+      endEpoch: endEdgePoint.epoch,
+    );
 
     _startPoint = draggableStartPoint.updatePosition(
       startEdgePoint.epoch,
@@ -204,11 +214,19 @@ class FibfanDrawing extends Drawing {
           linePaintStype,
         );
 
+      /// Draw labels
+      _label
+        ..drawLabel(canvas, lineStyle, '0%', _topVector)
+        ..drawLabel(canvas, lineStyle, '38.2%', _initialInnerVector)
+        ..drawLabel(canvas, lineStyle, '50%', _middleInnerVector)
+        ..drawLabel(canvas, lineStyle, '61.8%', _topInnerVector)
+        ..drawLabel(canvas, lineStyle, '100%', _baseVector);
+
       /// Draw shadows
-      _drawTriangle(_topVector);
-      _drawTriangle(_initialInnerVector);
-      _drawTriangle(_middleInnerVector);
-      _drawTriangle(_topInnerVector);
+      _drawTriangle(canvas, paint, config, _topVector);
+      _drawTriangle(canvas, paint, config, _initialInnerVector);
+      _drawTriangle(canvas, paint, config, _middleInnerVector);
+      _drawTriangle(canvas, paint, config, _topInnerVector);
     }
   }
 
@@ -238,13 +256,13 @@ class FibfanDrawing extends Drawing {
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      draggableEndPoint!.isDragged = true;
+      draggableEndPoint.isDragged = true;
     }
     return _isVectorHit(_baseVector) ||
         _isVectorHit(_initialInnerVector) ||
         _isVectorHit(_middleInnerVector) ||
         _isVectorHit(_topInnerVector) ||
         _isVectorHit(_topVector) ||
-        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
+        (draggableStartPoint.isDragged || draggableEndPoint.isDragged);
   }
 }
