@@ -114,11 +114,6 @@ class FibfanDrawing extends Drawing {
     final Paint linePaintStype =
         paint.linePaintStyle(lineStyle.color, lineStyle.thickness);
 
-    final Label _label = Label(
-      startEpoch: startEdgePoint.epoch,
-      endEpoch: endEdgePoint.epoch,
-    );
-
     _startPoint = draggableStartPoint.updatePosition(
       startEdgePoint.epoch,
       startEdgePoint.quote,
@@ -213,6 +208,11 @@ class FibfanDrawing extends Drawing {
           Offset(_topVector.x1, _topVector.y1),
           linePaintStype,
         );
+
+      final Label _label = Label(
+        startEpoch: startXCoord.toInt(),
+        endEpoch: endXCoord.toInt(),
+      );
 
       /// Draw labels
       _label
