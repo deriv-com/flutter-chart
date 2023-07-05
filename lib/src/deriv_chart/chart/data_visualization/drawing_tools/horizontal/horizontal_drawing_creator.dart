@@ -75,10 +75,11 @@ class _HorizontalDrawingCreatorState extends State<HorizontalDrawingCreator> {
       _isDrawingFinished = true;
 
       _drawingParts.add(HorizontalDrawing(
-          drawingPart: DrawingParts.line,
-          epoch: _startingEpoch!,
-          quote: _startingQuote!,
-          quoteFromCanvasY: widget.quoteFromCanvasY));
+        drawingPart: DrawingParts.line,
+        epoch: _startingEpoch!,
+        quote: _startingQuote!,
+        quoteFromCanvasY: widget.quoteFromCanvasY,
+      ));
 
       widget.onAddDrawing(
         <String, List<HorizontalDrawing>>{_drawingId: _drawingParts},

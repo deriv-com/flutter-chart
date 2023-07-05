@@ -7,7 +7,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_label.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/paint_drawing_label.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
@@ -78,15 +78,8 @@ class VerticalDrawing extends Drawing {
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
-
-        DrawingLabel(
-          canvas: canvas,
-          size: size,
-          epochFromX: epochFromX!,
-          coord: xCoord,
-        )
-          ..setVerticalLabel()
-          ..drawLabel();
+        paintDrawingLabel(canvas, size, xCoord, 'vertical', theme,
+            epochFromX: epochFromX);
       }
     }
   }

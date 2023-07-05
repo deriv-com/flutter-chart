@@ -21,7 +21,4 @@ class DrawingPaintStyle {
 
   /// Returns the paint style of the circle marker
   Paint transparentCirclePaintStyle() => Paint()..color = Colors.transparent;
-
-  /// Returns the label Paint Style
-  Paint labelPaintStyle() => Paint()..color = const Color(0xFFCC2E3D);
 }
