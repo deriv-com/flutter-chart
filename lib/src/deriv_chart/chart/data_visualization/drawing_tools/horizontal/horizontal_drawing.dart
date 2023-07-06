@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/paint_drawing_label.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
@@ -19,9 +20,13 @@ class HorizontalDrawing extends Drawing {
   HorizontalDrawing({
     required this.drawingPart,
     required this.quoteFromCanvasY,
+    required this.chartConfig,
     this.epoch = 0,
     this.quote = 0,
   });
+
+  /// Chart config to get pipSize
+  final ChartConfig chartConfig;
 
   /// Part of a drawing: 'horizontal'
   final DrawingParts drawingPart;
@@ -80,8 +85,15 @@ class HorizontalDrawing extends Drawing {
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
-        paintDrawingLabel(canvas, size, pointYCoord, 'horizontal', theme,
-            quoteFromY: quoteFromCanvasY);
+        paintDrawingLabel(
+          canvas,
+          size,
+          pointYCoord,
+          'horizontal',
+          theme,
+          chartConfig,
+          quoteFromY: quoteFromCanvasY,
+        );
       }
     }
   }

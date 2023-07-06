@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/horizontal/horizontal_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
@@ -16,8 +17,12 @@ class DrawingCreator extends StatelessWidget {
     required this.quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
+    required this.chartConfig,
     Key? key,
   }) : super(key: key);
+
+  /// Chart config to get pipSize
+  final ChartConfig chartConfig;
 
   /// Selected drawing tool.
   final DrawingToolConfig selectedDrawingTool;
@@ -46,6 +51,7 @@ class DrawingCreator extends StatelessWidget {
         return HorizontalDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
+          chartConfig: chartConfig,
         );
       case 'dt_line':
         return LineDrawingCreator(
@@ -58,6 +64,7 @@ class DrawingCreator extends StatelessWidget {
         return VerticalDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
+          chartConfig: chartConfig,
         );
       // TODO(maryia-binary): add the rest of drawing tools here
       default:

@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './horizontal_drawing.dart';
@@ -11,8 +12,12 @@ class HorizontalDrawingCreator extends StatefulWidget {
   const HorizontalDrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
+    required this.chartConfig,
     Key? key,
   }) : super(key: key);
+
+  /// Chart config to get pipSize
+  final ChartConfig chartConfig;
 
   /// Callback to pass a newly created horizontal drawing to the parent.
   final void Function(Map<String, List<HorizontalDrawing>> addedDrawing,
@@ -79,6 +84,7 @@ class _HorizontalDrawingCreatorState extends State<HorizontalDrawingCreator> {
         epoch: _startingEpoch!,
         quote: _startingQuote!,
         quoteFromCanvasY: widget.quoteFromCanvasY,
+        chartConfig: widget.chartConfig,
       ));
 
       widget.onAddDrawing(

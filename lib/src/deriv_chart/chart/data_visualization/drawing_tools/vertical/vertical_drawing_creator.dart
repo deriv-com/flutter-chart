@@ -1,7 +1,7 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './vertical_drawing.dart';
@@ -12,8 +12,12 @@ class VerticalDrawingCreator extends StatefulWidget {
   const VerticalDrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
+    required this.chartConfig,
     Key? key,
   }) : super(key: key);
+
+  /// Chart config to get pipSize
+  final ChartConfig chartConfig;
 
   /// Callback to pass a newly created vertical drawing to the parent.
   final void Function(Map<String, List<VerticalDrawing>> addedDrawing,
@@ -79,6 +83,7 @@ class _VerticalDrawingCreatorState extends State<VerticalDrawingCreator> {
         epoch: _startingEpoch!,
         yCoord: _startingYPoint!,
         epochFromX: epochFromX,
+        chartConfig: widget.chartConfig,
       ));
 
       widget.onAddDrawing(

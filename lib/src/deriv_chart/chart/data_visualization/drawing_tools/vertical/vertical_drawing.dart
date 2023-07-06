@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/paint_drawing_label.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
@@ -18,9 +19,13 @@ class VerticalDrawing extends Drawing {
   VerticalDrawing({
     required this.drawingPart,
     required this.epochFromX,
+    required this.chartConfig,
     this.epoch = 0,
     this.yCoord = 0,
   });
+
+  /// Chart config to get pipSize
+  final ChartConfig chartConfig;
 
   /// Get epoch from x.
   int Function(double x)? epochFromX;
@@ -65,7 +70,6 @@ class VerticalDrawing extends Drawing {
 
     final double xCoord = startPoint!.x;
     final double startQuoteToY = startPoint!.y;
-
     if (drawingPart == DrawingParts.line) {
       final double startY = startQuoteToY - 10000,
           endingY = startQuoteToY + 10000;
@@ -78,8 +82,15 @@ class VerticalDrawing extends Drawing {
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
-        paintDrawingLabel(canvas, size, xCoord, 'vertical', theme,
-            epochFromX: epochFromX);
+        paintDrawingLabel(
+          canvas,
+          size,
+          xCoord,
+          'vertical',
+          theme,
+          chartConfig,
+          epochFromX: epochFromX,
+        );
       }
     }
   }

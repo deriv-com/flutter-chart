@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
@@ -10,7 +11,8 @@ void paintDrawingLabel(
   Size size,
   double coord,
   String drawingType,
-  ChartTheme theme, {
+  ChartTheme theme,
+  ChartConfig config, {
   int Function(double x)? epochFromX,
   double Function(double)? quoteFromY,
 }) {
@@ -29,6 +31,9 @@ void paintDrawingLabel(
   /// Height of the rectangle
   const double _height = 20;
 
+  final HorizontalBarrierStyle horizontalBarrierStyle =
+      theme.horizontalBarrierStyle;
+
   if (drawingType == 'horizontal') {
     _labelRect = Rect.fromCenter(
       center: Offset(size.width - 25, coord),
@@ -36,7 +41,7 @@ void paintDrawingLabel(
       height: _height,
     );
 
-    _labelString = quoteFromY!(coord).toStringAsFixed(3);
+    _labelString = quoteFromY!(coord).toStringAsFixed(config.pipSize);
 
     _textOffset = Offset(
       size.width - 44,
@@ -58,7 +63,7 @@ void paintDrawingLabel(
     _labelString = DateFormat('HH:mm:ss').format(_dateTime);
 
     _textOffset = Offset(
-      coord - 18,
+      coord - 19,
       size.height - 13,
     );
   }
@@ -66,8 +71,8 @@ void paintDrawingLabel(
   final TextPainter textPainter = TextPainter(
     text: TextSpan(
       text: _labelString,
-      style: const TextStyle(
-        color: Colors.white,
+      style: TextStyle(
+        color: horizontalBarrierStyle.titleBackgroundColor,
         fontSize: 10,
       ),
     ),
@@ -76,7 +81,7 @@ void paintDrawingLabel(
 
   canvas.drawRect(
     _labelRect,
-    Paint()..color = theme.horizontalBarrierStyle.color,
+    Paint()..color = horizontalBarrierStyle.color,
   );
   textPainter.paint(canvas, _textOffset);
 }

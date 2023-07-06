@@ -2,8 +2,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:provider/provider.dart';
 
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatelessWidget {
@@ -63,13 +65,15 @@ class DrawingToolChart extends StatelessWidget {
           fit: StackFit.expand,
           children: <Widget>[
             if (drawings != null)
-              ...drawings!.map((DrawingData drawingData) => DrawingPainter(
-                    drawingData: drawingData,
-                    quoteToCanvasY: chartQuoteToCanvasY,
-                    quoteFromCanvasY: chartQuoteFromCanvasY,
-                    onMoveDrawing: onMoveDrawing,
-                    setIsDrawingSelected: _setIsDrawingSelected,
-                  )),
+              ...drawings!.map(
+                (DrawingData drawingData) => DrawingPainter(
+                  drawingData: drawingData,
+                  quoteToCanvasY: chartQuoteToCanvasY,
+                  quoteFromCanvasY: chartQuoteFromCanvasY,
+                  onMoveDrawing: onMoveDrawing,
+                  setIsDrawingSelected: _setIsDrawingSelected,
+                ),
+              ),
             if (selectedDrawingTool != null)
               DrawingCreator(
                 onAddDrawing: onAddDrawing,
@@ -77,7 +81,8 @@ class DrawingToolChart extends StatelessWidget {
                 quoteFromCanvasY: chartQuoteFromCanvasY,
                 clearDrawingToolSelection: clearDrawingToolSelection,
                 removeDrawing: removeDrawing,
-              ),
+                chartConfig: context.watch<ChartConfig>(),
+              )
           ],
         ),
       );
