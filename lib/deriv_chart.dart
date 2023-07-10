@@ -28,6 +28,7 @@ export 'src/deriv_chart/chart/x_axis/min_candle_duration_for_data_fit.dart';
 export 'src/deriv_chart/deriv_chart.dart';
 export 'src/misc/chart_controller.dart';
 export 'src/models/candle.dart';
+export 'src/models/chart_axis_config.dart';
 export 'src/models/chart_style.dart';
 export 'src/models/tick.dart';
 export 'src/theme/chart_default_dark_theme.dart';

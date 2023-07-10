@@ -1,9 +1,9 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +21,10 @@ class BasicChart extends StatefulWidget {
     required this.mainSeries,
     this.pipSize = 4,
     this.opacity = 1,
+    ChartAxisConfig? chartAxisConfig,
     Key? key,
-  }) : super(key: key);
+  })  : chartAxisConfig = chartAxisConfig ?? const ChartAxisConfig(),
+        super(key: key);
 
   /// The main series to display on the chart.
   final Series mainSeries;
@@ -32,6 +34,9 @@ class BasicChart extends StatefulWidget {
 
   /// The opacity of the chart's data.
   final double opacity;
+
+  /// The axis configuration of the chart.
+  final ChartAxisConfig chartAxisConfig;
 
   @override
   BasicChartState<BasicChart> createState() => BasicChartState<BasicChart>();
@@ -119,6 +124,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   @override
   void initState() {
     super.initState();
+    _setupChartConfigs();
     setupAnimations();
     _setupGestures();
     _updateChartPosition();
@@ -397,5 +403,10 @@ class BasicChartState<T extends BasicChart> extends State<T>
       verticalPaddingFraction =
           ((verticalPadding + dy) / canvasSize!.height).clamp(0.05, 0.49);
     });
+  }
+
+  void _setupChartConfigs() {
+    topBoundQuoteTarget = widget.chartAxisConfig.topBoundQuoteTarget;
+    bottomBoundQuoteTarget = widget.chartAxisConfig.bottomBoundQuoteTarget;
   }
 }

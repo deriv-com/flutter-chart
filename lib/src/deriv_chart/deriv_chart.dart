@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -35,6 +36,7 @@ class DerivChart extends StatefulWidget {
     this.annotations,
     this.opacity = 1.0,
     this.pipSize = 4,
+    this.chartAxisConfig,
     Key? key,
   }) : super(key: key);
 
@@ -65,6 +67,9 @@ class DerivChart extends StatefulWidget {
 
   /// Chart's annotations
   final List<ChartAnnotation<ChartObject>>? annotations;
+
+  /// Configurations for chart's axes.
+  final ChartAxisConfig? chartAxisConfig;
 
   /// Whether the chart should be showing live data or not.
   ///
@@ -156,6 +161,7 @@ class _DerivChartState extends State<DerivChart> {
               dataFitEnabled: widget.dataFitEnabled,
               opacity: widget.opacity,
               annotations: widget.annotations,
+              chartAxisConfig: widget.chartAxisConfig,
             ),
             Align(
               alignment: Alignment.topLeft,

@@ -4,8 +4,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart'
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +32,7 @@ class MainChart extends BasicChart {
     this.overlaySeries,
     this.annotations,
     double opacity = 1,
+    ChartAxisConfig? chartAxisConfig,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
           mainSeries,
@@ -43,6 +44,7 @@ class MainChart extends BasicChart {
           mainSeries: mainSeries,
           pipSize: pipSize,
           opacity: opacity,
+          chartAxisConfig: chartAxisConfig,
         );
 
   /// The indicator series that are displayed on the main chart.
