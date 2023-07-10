@@ -17,6 +17,10 @@ Proper separation of concerns and adherence to the Single Responsibility Princip
 Avoidance of code duplication and the use of appropriate abstractions.
 Consistent indentation, code grouping, and file organization.
 
+Polymorphism: with example, avoid using String in switch cases as much as possible. 
+
+
+
 Documentation
 
 
