@@ -2,7 +2,7 @@ version: 2.1
 executors:
   flutter_executor:
     docker:
-      - image: cirrusci/flutter:2.8.1
+      - image: cirrusci/flutter:2.10.5
     environment:
       _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
 
@@ -12,7 +12,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - 26:72:b1:08:0f:c1:3b:2b:2d:ea:61:7d:d6:11:63:fb
+            - 85:5e:13:f8:60:b2:55:a1:df:d1:8e:77:17:4c:3b:2d
       - checkout
       - run:
           name: Run Flutter doctor

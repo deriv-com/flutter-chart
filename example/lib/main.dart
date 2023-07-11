@@ -4,6 +4,7 @@ import 'dart:developer' as dev;
 import 'dart:math' as math;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:example/generated/l10n.dart';
 import 'package:example/settings_page.dart';
 import 'package:example/utils/endpoints_helper.dart';
 import 'package:example/utils/market_change_reminder.dart';
@@ -24,11 +25,10 @@ import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
     as connection_bloc;
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:example/generated/l10n.dart';
 
 import 'utils/misc.dart';
 
@@ -310,7 +310,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _updateSampleSLAndTP();
 
-      WidgetsBinding.instance!.addPostFrameCallback(
+      WidgetsBinding.instance?.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(),
       );
     } on TickException catch (e) {
@@ -404,6 +404,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       markerSeries: MarkerSeries(
                         _markers,
                         activeMarker: _activeMarker,
+                        markerIconPainter: MultipliersMarkerIconPainter(),
                       ),
                       annotations: ticks.length > 4
                           ? <ChartAnnotation<ChartObject>>[

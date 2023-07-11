@@ -5,13 +5,15 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 
 import '../chart_data.dart';
+
 import 'marker_painter.dart';
 
 /// Marker series
 class MarkerSeries extends Series {
-  /// Initializes
+  /// Initializes.
   MarkerSeries(
     SplayTreeSet<Marker> entries, {
+    required this.markerIconPainter,
     String? id,
     MarkerStyle? style,
     this.activeMarker,
@@ -35,8 +37,14 @@ class MarkerSeries extends Series {
   /// Exit tick marker.
   final Tick? exitTick;
 
+  /// Painter that draw corresponding marker icon.
+  final MarkerIconPainter markerIconPainter;
+
   @override
-  SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(this);
+  SeriesPainter<MarkerSeries> createPainter() => MarkerPainter(
+        this,
+        markerIconPainter,
+      );
 
   @override
   // TODO(Ramin): Return correct result,

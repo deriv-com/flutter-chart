@@ -2,6 +2,7 @@
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/entry_spot_style.dart';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
@@ -106,11 +107,17 @@ abstract class ChartDefaultTheme implements ChartTheme {
   @override
   LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
 
+  // TODO(Ramin): Use the values from the chart theme itself. so if later the
+  // theme changes the default styles also get updated accordingly.
   @override
   MarkerStyle get markerStyle => MarkerStyle(
         upColor: accentGreenColor,
         downColor: accentRedColor,
       );
+
+  @override
+  EntrySpotStyle get entrySpotStyle =>
+       const EntrySpotStyle();
 
   @override
   HorizontalBarrierStyle get horizontalBarrierStyle => HorizontalBarrierStyle(

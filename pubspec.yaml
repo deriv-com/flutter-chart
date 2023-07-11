@@ -13,7 +13,7 @@ dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: flutter2
+      ref: dev
   equatable: ^2.0.0
   flutter:
     sdk: flutter
@@ -34,9 +34,9 @@ dev_dependencies:
   json_serializable: ^4.1.1
   deriv_lint:
     git:
-      url: git@github.com:boris-deriv/flutter-deriv-packages.git
+      url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: deriv_lint
+      ref: dev
 
 flutter:
   assets:
