@@ -87,6 +87,10 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
   void didUpdateWidget(covariant IndexBaseCrossHair oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateCrossHairDetailSize();
+    if (_longPressPosition != null) {
+      // User has hold the long press
+      _updateCrossHairToPosition(_longPressPosition!.dx);
+    }
   }
 
   void _updateCrossHairDetailSize() {
@@ -201,8 +205,8 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     if (!widget.enabled) {
       return;
     }
-    final Offset position = details.localPosition;
-    _updateCrossHairToPosition(position.dx);
+    _longPressPosition = details.localPosition;
+    _updateCrossHairToPosition(_longPressPosition!.dx);
     _crossHairAnimationController.forward();
   }
 
@@ -210,16 +214,27 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     if (!widget.enabled) {
       return;
     }
-    final Offset position = details.localPosition;
-    _updateCrossHairToPosition(position.dx);
+    _longPressPosition = details.localPosition;
+    _updateCrossHairToPosition(_longPressPosition!.dx);
   }
 
-  void _updateCrossHairToPosition(double x) => setState(
-        () => _crossHairIndex = findClosestIndex(
-          widget.xToIndex(x),
-          widget.ticks,
-        ),
-      );
+  Offset? _longPressPosition;
+
+  void _updateCrossHairToPosition(double x) {
+    int crossHairIndex = findClosestIndex(
+      widget.xToIndex(x),
+      widget.ticks,
+    );
+
+    double crossHairX = widget.indexToX(crossHairIndex);
+
+    while (crossHairX < 0) {
+      crossHairIndex++;
+      crossHairX = widget.indexToX(crossHairIndex);
+    }
+
+    setState(() => _crossHairIndex = crossHairIndex);
+  }
 
   Future<void> _onLongPressEnd(LongPressEndDetails details) async {
     if (!widget.enabled) {
