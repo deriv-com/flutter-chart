@@ -221,11 +221,9 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
   Offset? _longPressPosition;
 
   void _updateCrossHairToPosition(double x) {
-    int crossHairIndex = findClosestIndex(
-      widget.xToIndex(x),
-      widget.ticks,
-    );
+    int crossHairIndex = _getCrossHairIndexFromTouchPosition(x);
 
+    // Keep cross hair index inside chart view port.
     double crossHairX = widget.indexToX(crossHairIndex);
 
     while (crossHairX < 0) {
@@ -235,6 +233,11 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
 
     setState(() => _crossHairIndex = crossHairIndex);
   }
+
+  int _getCrossHairIndexFromTouchPosition(double touchX) => findClosestIndex(
+        widget.xToIndex(touchX),
+        widget.ticks,
+      );
 
   Future<void> _onLongPressEnd(LongPressEndDetails details) async {
     if (!widget.enabled) {
