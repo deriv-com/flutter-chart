@@ -43,7 +43,6 @@ class DrawingToolChart extends StatelessWidget {
 
   /// Sets drawing as selected and unselects the rest of drawings
   /// if any of the drawing is not finished , it selects the unfinished drawing
-  ///
   void _setIsDrawingSelected(DrawingData drawing) {
     drawing.isSelected = !drawing.isSelected;
 
