@@ -1,12 +1,18 @@
 import 'package:flutter/foundation.dart';
 
+/// Default top bound quote.
+const double defaultTopBoundQuote = 60;
+
+/// Default bottom bound quote.
+const double defaultBottomBoundQuote = 30;
+
 /// Configuration for the chart axis.
 @immutable
 class ChartAxisConfig {
   /// Initializes the chart axis configuration.
   const ChartAxisConfig({
-    this.initialTopBoundQuote = 60.0,
-    this.initialBottomBoundQuote = 30.0,
+    this.initialTopBoundQuote = defaultTopBoundQuote,
+    this.initialBottomBoundQuote = defaultBottomBoundQuote,
   });
 
   /// Top quote bound target for animated transition.
@@ -21,8 +27,7 @@ class ChartAxisConfig {
     double? initialBottomBoundQuote,
   }) =>
       ChartAxisConfig(
-        initialTopBoundQuote:
-            initialBottomBoundQuote ?? this.initialTopBoundQuote,
+        initialTopBoundQuote: initialTopBoundQuote ?? this.initialTopBoundQuote,
         initialBottomBoundQuote:
             initialBottomBoundQuote ?? this.initialBottomBoundQuote,
       );
