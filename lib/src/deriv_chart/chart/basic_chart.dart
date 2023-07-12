@@ -124,7 +124,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   @override
   void initState() {
     super.initState();
-    _setupChartConfigs();
+    _setupInitialBounds();
     setupAnimations();
     _setupGestures();
     _updateChartPosition();
@@ -405,8 +405,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
     });
   }
 
-  void _setupChartConfigs() {
-    topBoundQuoteTarget = widget.chartAxisConfig.topBoundQuoteTarget;
-    bottomBoundQuoteTarget = widget.chartAxisConfig.bottomBoundQuoteTarget;
+  void _setupInitialBounds() {
+    topBoundQuoteTarget = widget.chartAxisConfig.initialTopBoundQuote;
+    bottomBoundQuoteTarget = widget.chartAxisConfig.initialBottomBoundQuote;
   }
 }

@@ -5,24 +5,25 @@ import 'package:flutter/foundation.dart';
 class ChartAxisConfig {
   /// Initializes the chart axis configuration.
   const ChartAxisConfig({
-    this.topBoundQuoteTarget = 60.0,
-    this.bottomBoundQuoteTarget = 30.0,
+    this.initialTopBoundQuote = 60.0,
+    this.initialBottomBoundQuote = 30.0,
   });
 
   /// Top quote bound target for animated transition.
-  final double topBoundQuoteTarget;
+  final double initialTopBoundQuote;
 
   /// Bottom quote bound target for animated transition.
-  final double bottomBoundQuoteTarget;
+  final double initialBottomBoundQuote;
 
   /// Creates a copy of this ChartAxisConfig but with the given fields replaced.
   ChartAxisConfig copyWith({
-    double? topBoundQuoteTarget,
-    double? bottomBoundQuoteTarget,
+    double? initialTopBoundQuote,
+    double? initialBottomBoundQuote,
   }) =>
       ChartAxisConfig(
-        topBoundQuoteTarget: topBoundQuoteTarget ?? this.topBoundQuoteTarget,
-        bottomBoundQuoteTarget:
-            bottomBoundQuoteTarget ?? this.bottomBoundQuoteTarget,
+        initialTopBoundQuote:
+            initialBottomBoundQuote ?? this.initialTopBoundQuote,
+        initialBottomBoundQuote:
+            initialBottomBoundQuote ?? this.initialBottomBoundQuote,
       );
 }
