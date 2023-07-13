@@ -1,3 +1,12 @@
+Do a self-review first before passing to review.
+Please make sure all Dart analysis warnings in your changes are fixed and all the tests are passed.
+Can run the following commands before passing to review:
+```
+flutter analyze
+flutter test
+```
+
+
 Readability and Maintainability: Ensure that the code is easy to read, understand, and maintain. Consider the following aspects:
 
 Use meaningful and descriptive names for variables, functions, and classes.
