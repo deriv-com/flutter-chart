@@ -23,7 +23,7 @@ flutter analyze
 flutter test
 ```
 
-
+Some general notes:
 Readability and Maintainability: Ensure that the code is easy to read, understand, and maintain. Consider the following aspects:
 
 Use meaningful and descriptive names for variables, functions, and classes.
@@ -44,6 +44,26 @@ Avoidance of code duplication and the use of appropriate abstractions.
 Consistent indentation, code grouping, and file organization.
 
 Polymorphism: with example, avoid using String in switch cases as much as possible. 
+
+In Flutter, immutability is an important concept that promotes predictable and efficient UI rendering. Immutability refers to the practice of creating objects that cannot be changed after they are created. Instead of modifying an existing object, immutable objects are replaced with new instances that incorporate the desired changes.
+
+Why is immutability encouraged?
+
+Performance benefits: Immutable objects allow Flutter to optimize the rendering process. When a widget is updated, Flutter compares the new widget with the previous one and determines if the UI needs to be rebuilt. Immutable objects make this comparison easier and faster since Flutter can rely on object identity rather than deep value comparisons.
+
+Predictable UI updates: By following immutability principles, you ensure that widget updates are predictable and consistent. Once a widget is created, its properties cannot be modified, reducing the risk of accidental mutations or unexpected behavior.
+
+Guidelines for immutability:
+
+Design widget properties as final: When defining properties for your chart widgets, make them final whenever possible. This enforces immutability and prevents accidental modifications.
+
+Create new instances for updates: Instead of modifying existing widget instances, create new instances with updated properties. This ensures that the UI update mechanism works correctly and minimizes unnecessary rebuilds.
+
+Utilize const constructors: Consider using const constructors when appropriate. const constructors allow Flutter to optimize widget creation by caching and reusing instances with identical properties.
+
+Use immutable data structures: When managing data within your chart package, prefer using immutable data structures such as List and Map. Immutable data structures provide safety against unintended modifications and simplify the reasoning about data flow.
+
+Leverage functional programming principles: Functional programming concepts like pure functions and avoiding side effects can complement the practice of immutability. Consider applying these principles where applicable within your chart package.
 
 
 
