@@ -1,5 +1,17 @@
+**Contributing Guidelines**
+
+Contributions to the **Deriv Flutter chart package** are welcome and encouraged! Whether you're interested in adding new features, fixing bugs, or improving documentation, we appreciate your support in making this package even better. To ensure a smooth and collaborative contribution process, please adhere to the following guidelines:
+
+Familiarize Yourself: Before contributing, Familiarize yourself with the structure and organization of the current chart package. Gain an understanding of the available chart types, data models, and rendering techniques. Study how the current Chart widget and its rendering pipeline work, how it handles the coordinate system, the paintings, the layers it has for each component set (main chart data, indicators, cross-hair, etc), the gestures, and so on. for more information you can refer to [this documentation](https://github.com/regentmarkets/flutter-chart/blob/dev/docs/how_chart_lib_works.md).
+
+Code Style: Follow the established code style conventions in the project. Consistent code formatting enhances readability and maintainability. We have a set of code styling rules which are defined inside the Mobile development team's [deriv_lint package](https://github.com/regentmarkets/flutter-deriv-packages/blob/dev/packages/deriv_lint/lib/analysis_options.yaml). when submitting PR regardless of whether there is CI integration that runs and checks Dart static analyzer, you should also make sure that the `flutter analyze` command runs without any warning and issue.
+Also please check out this [Mobile team's code style convention doc in WikiJS](https://wikijs.deriv.cloud/en/Mobile/code_conventions/flutter_team_coding_conventions).
+
+Pull Requests description: When submitting a pull request, provide a clear and concise description of the changes you've made. Ensure that your code is well-tested, and include relevant documentation updates, if necessary.
+
+Documentation: Apart from code contributions, helping improve the documentation is highly valuable. If you notice areas where the documentation can be enhanced or expanded, feel free to add or edit the documentation of the components.
+In this documentation, there are some general guidelines, to show how we should contribute to the project. 
 For contributing to the package please make sure that you follow:
-Understand the Existing Codebase: Familiarize yourself with the structure and organization of the current chart package. Gain an understanding of the available chart types, data models, and rendering techniques. Study how the current Chart widget and its rendering pipeline work, how it handles the coordinate system, the paintings, the layers it has for each component set (main chart data, indicators, cross-hair, etc), the gestures, and so on. for more information you can refer to [this documentation](https://github.com/regentmarkets/flutter-chart/blob/dev/docs/how_chart_lib_works.md).
 
 Plan the Architecture: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart to know less about what it is rendering and have a consistent rendering step and depend on abstraction to function.
 
