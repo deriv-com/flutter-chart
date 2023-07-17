@@ -1,5 +1,6 @@
 /// ScrollToLastTick callback.
-typedef OnScrollToLastTick = Function(bool);
+
+typedef OnScrollToLastTick = Function({required bool animate});
 
 /// Scale callback;
 typedef OnScale = Function(double);
@@ -38,7 +39,7 @@ class ChartController {
 
   /// Scroll chart visible area to the newest data.
   void scrollToLastTick({bool animate = false}) =>
-      onScrollToLastTick?.call(animate);
+      onScrollToLastTick?.call(animate: animate);
 
   /// Scroll chart visible area to the newest data.
   void scale(double scale) => onScale?.call(scale);

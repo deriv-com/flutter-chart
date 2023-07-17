@@ -2,6 +2,7 @@ library deriv_chart;
 
 export 'generated/l10n.dart';
 export 'src/deriv_chart/chart/chart.dart';
+export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_horizontal_barrier/accumulators_entry_spot_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
@@ -20,6 +21,7 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/active_marker.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker.dart';
+export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/accumulators_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/multipliers_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/options_marker_icon_painter.dart';
