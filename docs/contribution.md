@@ -9,8 +9,9 @@ Also please check out this [Mobile team's code style convention doc in WikiJS](h
 
 Pull Requests description: When submitting a pull request, provide a clear and concise description of the changes you've made. Ensure that your code is well-tested, and include relevant documentation updates, if necessary.
 
-Documentation: Apart from code contributions, helping improve the documentation is highly valuable. If you notice areas where the documentation can be enhanced or expanded, feel free to add or edit the documentation of the components.
-In this documentation, there are some general guidelines, to show how we should contribute to the project. 
+Documentation: Apart from code contributions, helping improve the documentation is highly valuable. Update the documentation and provide clear examples for using the new features or modifications. Include explanations of the API, usage scenarios, and any required configurations. Illustrate the expected results and provide sample code to help users of the package or other contributors to understand how to integrate the new functionality. If you notice areas where the documentation can be enhanced or expanded, feel free to add or edit the documentation of the components.
+
+
 For contributing to the package please make sure that you follow:
 
 Plan the Architecture: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart to know less about what it is rendering and have a consistent rendering step and depend on abstraction to function.
@@ -23,13 +24,13 @@ Handle Customization: Consider adding configuration options or callbacks to enab
 
 Consider Performance: Optimize performance by implementing techniques such as caching, rendering only visible data points, or utilizing hardware acceleration when possible. Ensure that the package performs well on different devices and handles large datasets efficiently.
 
-Documentation and Examples: Update the documentation and provide clear examples for using the new features or modifications. Include explanations of the API, usage scenarios, and any required configurations. Illustrate the expected results and provide sample code to help users of the package or other contributors to understand how to integrate the new functionality.
 
 Test on Real Financial Data: Validate the functionality and accuracy of the financial chart package by testing it with real financial data. Ensure that the charts can handle various data patterns, such as irregular time intervals, different chart types, and large data ranges.
 
 When the new functionality is ready for review please do a self-review first before passing to review.
 Please make sure all Dart analysis warnings in your changes are fixed and all the tests are passed.
 Can run the following commands before passing to review:
+
 ```
 flutter analyze
 flutter test
