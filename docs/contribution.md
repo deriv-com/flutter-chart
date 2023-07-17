@@ -1,6 +1,6 @@
 **Contributing Guidelines**
 
-Contributions to the **Deriv Flutter chart package** are welcome and encouraged! Whether you're interested in adding new features, fixing bugs, or improving documentation, we appreciate your support in making this package even better. To ensure a smooth and collaborative contribution process, please adhere to the following guidelines:
+Contributions to the **Deriv Flutter chart package** are welcome and encouraged! Whether you're interested in adding new features, fixing bugs, or improving documentation, we appreciate your support in making this package better. To ensure a smooth and collaborative contribution process, please adhere to the following guidelines:
 
 **Familiarize Yourself**: Before contributing, Familiarize yourself with the structure and organization of the current chart package. Gain an understanding of the available chart types, data models, and rendering techniques. Study how the current Chart widgets and their rendering pipeline work, how it handles the coordinate system, the paintings, the layers it has for each component set (main chart data, indicators, cross-hair, etc), the gestures, and so on. for more information you can refer to [this documentation](https://github.com/regentmarkets/flutter-chart/blob/dev/docs/how_chart_lib_works.md).
 
@@ -9,18 +9,42 @@ Also please check out this [Mobile team's code style convention doc in WikiJS](h
 
 **Pull Requests description**: When submitting a pull request, provide a clear and concise description of the changes you've made. Ensure that your code is well-tested, and include relevant documentation updates, if necessary.
 
-**Documentation**: Apart from code contributions, helping improve the documentation is highly valuable. Update the documentation and provide clear examples for using the new features or modifications. Include explanations of the API, usage scenarios, and any required configurations. Illustrate the expected results and provide sample code to help users of the package or other contributors to understand how to integrate the new functionality. If you notice areas where the documentation can be enhanced or expanded, feel free to add or edit the documentation of the components.
+**Documentation**: Apart from code contributions, helping improve the documentation is highly valuable. Update the documentation and provide clear examples for using the new features or modifications. Include explanations of the API, usage scenarios, and any required configurations. Illustrate the expected results and provide sample code to help users of the package or other contributors to understand how to integrate the new functionality. If you notice areas where the documentation can be enhanced or expanded, feel free to add or edit the documentation of the components. Like for example in class [AbstractSingleIndicatorSeries](https://github.com/regentmarkets/flutter-chart/blob/1adc9ef463195a33fc331ef9fd0a45a1ab0cb4a8/lib/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/abstract_single_indicator_series.dart#L60) there is provided information that would help others whenever they want to study this section of the code.
+
+```Dart
+...
+  /// The offset of this indicator.
+  ///
+  /// Indicator's data will be shifted by this number of tick while they are
+  /// being painted. For example if we consider `*`s as indicator data on the
+  /// chart below with default [offset] = 0:
+  /// |                                 (Tick5)
+  /// |    *            (Tick3) (Tick4)    *
+  /// | (Tick1)    *             *
+  /// |         (Tick2)   *
+  ///  ------------------------------------------->
+  ///
+  /// Indicator's data with [offset] = 1 will be like:
+  /// |                                 (Tick5)
+  /// |            *    (Tick3) (Tick4)          *
+  /// | (Tick1)            *              *
+  /// |         (Tick2)           *
+  ///  ------------------------------------------->
+  final int offset;
+...
+```
 
 
 *Adding new features or modifying existing ones*:
 
-**Plan the Architecture**: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart to know less about what it is rendering and have a consistent rendering step and depend on abstraction to function.
+**Plan the Architecture**: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart know less about what it is rendering and have a consistent rendering step and depend on abstraction to function. To have functionality in small pieces and components and encapsulate in a way that makes sense. 
 
 **Define a Clear API**: define a clear and intuitive API for adding new features. Consider how the users of the package will interact with the new functionality and design an API that is consistent with the existing package conventions.
 
 **Handle Customization**: Consider adding configuration options or callbacks to enable users to modify chart behavior.
 
-**Consider Performance**: Optimize performance by implementing techniques such as caching, rendering only visible data points, or utilizing hardware acceleration when possible. Ensure that the package performs well on different devices and handles large datasets efficiently.
+**Consider Performance**: Optimize performance by implementing techniques such as caching, and rendering only visible data points. Some examples are already used in implemented features, like calculating the chart's [visible data using binary search](https://github.com/regentmarkets/flutter-chart/blob/1adc9ef463195a33fc331ef9fd0a45a1ab0cb4a8/lib/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart#L204) and [caching indicators' values on real-time chart updates](https://github.com/regentmarkets/flutter-chart/blob/1adc9ef463195a33fc331ef9fd0a45a1ab0cb4a8/lib/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/abstract_single_indicator_series.dart#L17). 
+Ensure that the package performs well on different devices and handles large datasets efficiently. 
 
 **Test on Real Financial Data**: Validate the functionality and accuracy of the financial chart package by testing it with real financial data. Ensure that the charts can handle various data patterns, such as irregular time intervals, different chart types, and large data ranges.
 
