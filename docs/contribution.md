@@ -2,9 +2,9 @@
 
 Contributions to the **Deriv Flutter chart package** are welcome and encouraged! Whether you're interested in adding new features, fixing bugs, or improving documentation, we appreciate your support in making this package even better. To ensure a smooth and collaborative contribution process, please adhere to the following guidelines:
 
-Familiarize Yourself: Before contributing, Familiarize yourself with the structure and organization of the current chart package. Gain an understanding of the available chart types, data models, and rendering techniques. Study how the current Chart widget and its rendering pipeline work, how it handles the coordinate system, the paintings, the layers it has for each component set (main chart data, indicators, cross-hair, etc), the gestures, and so on. for more information you can refer to [this documentation](https://github.com/regentmarkets/flutter-chart/blob/dev/docs/how_chart_lib_works.md).
+Familiarize Yourself: Before contributing, Familiarize yourself with the structure and organization of the current chart package. Gain an understanding of the available chart types, data models, and rendering techniques. Study how the current Chart widgets and their rendering pipeline work, how it handles the coordinate system, the paintings, the layers it has for each component set (main chart data, indicators, cross-hair, etc), the gestures, and so on. for more information you can refer to [this documentation](https://github.com/regentmarkets/flutter-chart/blob/dev/docs/how_chart_lib_works.md).
 
-Code Style: Follow the established code style conventions in the project. Consistent code formatting enhances readability and maintainability. We have a set of code styling rules which are defined inside the Mobile development team's [deriv_lint package](https://github.com/regentmarkets/flutter-deriv-packages/blob/dev/packages/deriv_lint/lib/analysis_options.yaml). when submitting PR regardless of whether there is CI integration that runs and checks Dart static analyzer, you should also make sure that the `flutter analyze` command runs without any warning and issue.
+Code Style: Follow the established code style conventions in the project. Consistent code formatting enhances readability and maintainability. We have a set of code styling rules which are defined inside the Mobile development team's [deriv_lint package](https://github.com/regentmarkets/flutter-deriv-packages/blob/dev/packages/deriv_lint/lib/analysis_options.yaml). 
 Also please check out this [Mobile team's code style convention doc in WikiJS](https://wikijs.deriv.cloud/en/Mobile/code_conventions/flutter_team_coding_conventions).
 
 Pull Requests description: When submitting a pull request, provide a clear and concise description of the changes you've made. Ensure that your code is well-tested, and include relevant documentation updates, if necessary.
@@ -12,29 +12,25 @@ Pull Requests description: When submitting a pull request, provide a clear and c
 Documentation: Apart from code contributions, helping improve the documentation is highly valuable. Update the documentation and provide clear examples for using the new features or modifications. Include explanations of the API, usage scenarios, and any required configurations. Illustrate the expected results and provide sample code to help users of the package or other contributors to understand how to integrate the new functionality. If you notice areas where the documentation can be enhanced or expanded, feel free to add or edit the documentation of the components.
 
 
-For contributing to the package please make sure that you follow:
+Adding new features or modifying existing ones:
 
 Plan the Architecture: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart to know less about what it is rendering and have a consistent rendering step and depend on abstraction to function.
 
 Define a Clear API: define a clear and intuitive API for adding new features. Consider how the users of the package will interact with the new functionality and design an API that is consistent with the existing package conventions.
 
-Write Unit Tests: Ensure that your modifications and new features are thoroughly tested by writing unit tests. Test both the visual representation and the underlying functionality of the charts. Aim for comprehensive test coverage to catch any potential regressions.
-
 Handle Customization: Consider adding configuration options or callbacks to enable users to modify chart behavior.
 
 Consider Performance: Optimize performance by implementing techniques such as caching, rendering only visible data points, or utilizing hardware acceleration when possible. Ensure that the package performs well on different devices and handles large datasets efficiently.
 
-
 Test on Real Financial Data: Validate the functionality and accuracy of the financial chart package by testing it with real financial data. Ensure that the charts can handle various data patterns, such as irregular time intervals, different chart types, and large data ranges.
 
-When the new functionality is ready for review please do a self-review first before passing to review.
-Please make sure all Dart analysis warnings in your changes are fixed and all the tests are passed.
-Can run the following commands before passing to review:
+When the new functionality is ready for review please do a self-review first before passing to review. when submitting PR regardless of whether there is CI integration that runs and checks Dart static analyzer and test, you should also make sure that the following commands also run without any warning or issue:
 
 ```
 flutter analyze
 flutter test
 ```
+
 
 Some general notes:
 Readability and Maintainability: Ensure that the code is easy to read, understand, and maintain. Consider the following aspects:
