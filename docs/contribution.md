@@ -37,7 +37,7 @@ Also please check out this [Mobile team's code style convention doc in WikiJS](h
 
 *Adding new features or modifying existing ones*:
 
-**Plan the Architecture**: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart know less about what it is rendering and have a consistent rendering step and depend on abstraction to function. To have functionality in small pieces and components and encapsulate in a way that makes sense. 
+**Plan the Architecture**: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart know less about what it is rendering and have a consistent rendering step and depend on abstraction to function. To have functionality in small pieces and components and encapsulate them in a way that makes sense. 
 
 **Define a Clear API**: define a clear and intuitive API for adding new features. Consider how the users of the package will interact with the new functionality and design an API that is consistent with the existing package conventions.
 
@@ -48,7 +48,7 @@ Ensure that the package performs well on different devices and handles large dat
 
 **Test on Real Financial Data**: Validate the functionality and accuracy of the financial chart package by testing it with real financial data. Ensure that the charts can handle various data patterns, such as irregular time intervals, different chart types, and large data ranges.
 
-When the new functionality is ready for review please do a self-review first before passing to review. when submitting PR regardless of whether there is CI integration that runs and checks Dart static analyzer and test, you should also make sure that the following commands also run without any warning or issue:
+**Dart analyzer and unit tests**: When the new functionality is ready for review please do a self-review first before passing to review. when submitting PR regardless of whether there is CI integration that runs and checks Dart static analyzer and test, you should also make sure that the following commands also run without any warning or issue:
 
 ```
 flutter analyze
@@ -56,19 +56,14 @@ flutter test
 ```
 
 
-Some general notes:
-Readability and Maintainability: Ensure that the code is easy to read, understand, and maintain. Consider the following aspects:
+****Some general notes****:
+
+**Readability and Maintainability**: Ensure that the code is easy to read, understand, and maintain. Consider the following aspects:
 
 Use meaningful and descriptive names for variables, functions, and classes.
 Break down complex code into smaller, modular functions or methods.
 Follow a consistent coding style and formatting conventions.
 Add comments where necessary to clarify the intent or complex sections.
-
-Performance and Efficiency: Evaluate the code's performance and efficiency. Consider:
-
-Unnecessary or redundant computations, loops, or database queries.
-Potential memory leaks or resource-intensive operations.
-Proper usage of data structures and algorithms for optimal performance.
 
 Code Structure and Organization: Check if the code is well-structured and organized. Look for:
 
@@ -76,7 +71,10 @@ Proper separation of concerns and adherence to the Single Responsibility Princip
 Avoidance of code duplication and the use of appropriate abstractions.
 Consistent indentation, code grouping, and file organization.
 
-Polymorphism: with example, avoid using String in switch cases as much as possible. 
+Polymorphism: with example, avoid using String in switch cases as much as possible.
+
+**Immutability over mutability**:
+For model classes, prefer using immutable objects, we want to gain use of the language features which readily encourages. It will bring more reliability to the code and will increase maintenance. [Immutablity in Flutter](https://dart.academy/immutable-data-patterns-in-dart-and-flutter/#:~:text=There%20are%20a%20number%20of,what%20code%20is%20accessing%20it.)
 
 In Flutter, immutability is an important concept that promotes predictable and efficient UI rendering. Immutability refers to the practice of creating objects that cannot be changed after they are created. Instead of modifying an existing object, immutable objects are replaced with new instances that incorporate the desired changes.
 
@@ -97,9 +95,5 @@ Utilize const constructors: Consider using const constructors when appropriate. 
 Use immutable data structures: When managing data within your chart package, prefer using immutable data structures such as List and Map. Immutable data structures provide safety against unintended modifications and simplify the reasoning about data flow.
 
 Leverage functional programming principles: Functional programming concepts like pure functions and avoiding side effects can complement the practice of immutability. Consider applying these principles where applicable within your chart package.
-
-
-
-Documentation
 
 
