@@ -1,11 +1,11 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:flutter/material.dart';
 import './vertical_drawing.dart';
 
 /// Creates a Vertical line drawing
-class VerticalDrawingCreator extends Creator<VerticalDrawing> {
+class VerticalDrawingCreator extends DrawingCreator<VerticalDrawing> {
   /// Initializes the vertical drawing creator.
   const VerticalDrawingCreator({
     required OnAddDrawing<VerticalDrawing> onAddDrawing,
@@ -18,10 +18,12 @@ class VerticalDrawingCreator extends Creator<VerticalDrawing> {
         );
 
   @override
-  CreatorState<VerticalDrawing> createState() => _VerticalDrawingCreatorState();
+  DrawingCreatorState<VerticalDrawing> createState() =>
+      _VerticalDrawingCreatorState();
 }
 
-class _VerticalDrawingCreatorState extends CreatorState<VerticalDrawing> {
+class _VerticalDrawingCreatorState
+    extends DrawingCreatorState<VerticalDrawing> {
   @override
   void onTap(TapUpDetails details) {
     if (isDrawingFinished) {

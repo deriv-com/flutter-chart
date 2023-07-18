@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// Creates a Line drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a line drawing tool and
 /// until drawing is finished
-class LineDrawingCreator extends Creator<LineDrawing> {
+class LineDrawingCreator extends DrawingCreator<LineDrawing> {
   /// Initializes the line drawing creator.
   const LineDrawingCreator({
     required OnAddDrawing<LineDrawing> onAddDrawing,
@@ -28,10 +28,10 @@ class LineDrawingCreator extends Creator<LineDrawing> {
   final void Function(String drawingId) removeDrawing;
 
   @override
-  CreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
+  DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
 }
 
-class _LineDrawingCreatorState extends CreatorState<LineDrawing> {
+class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
   /// If drawing has been started.
   bool _isPenDown = false;
 

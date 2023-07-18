@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import '../data_model/drawing_parts.dart';
 /// Creates a Continuous drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a continuous drawing tool
 /// and until drawing should be finished.
-class ContinuousDrawingCreator extends Creator<LineDrawing> {
+class ContinuousDrawingCreator extends DrawingCreator<LineDrawing> {
   /// Initializes the continuous drawing creator.
   const ContinuousDrawingCreator({
     required OnAddDrawing<LineDrawing> onAddDrawing,
@@ -33,10 +33,11 @@ class ContinuousDrawingCreator extends Creator<LineDrawing> {
   final bool shouldStopDrawing;
 
   @override
-  CreatorState<LineDrawing> createState() => _ContinuousDrawingCreatorState();
+  DrawingCreatorState<LineDrawing> createState() =>
+      _ContinuousDrawingCreatorState();
 }
 
-class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
+class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
   @override
   void onTap(TapUpDetails details) {
     final ContinuousDrawingCreator _widget = widget as ContinuousDrawingCreator;
