@@ -12,7 +12,8 @@ typedef OnAddDrawing<T> = void Function(
   bool isInfiniteDrawing,
 });
 
-/// Base class to create a drawing piece by piece collected on every gesture
+/// Base class for creating a drawing which will be used by each drawing
+/// creator.
 abstract class Creator<T extends Drawing> extends StatefulWidget {
   /// Initializes.
   const Creator({
@@ -34,39 +35,48 @@ abstract class Creator<T extends Drawing> extends StatefulWidget {
 ///
 abstract class CreatorState<T extends Drawing> extends State<Creator<T>> {
   /// Gesture manager state.
-  late GestureManagerState gestureManager;
+  late final GestureManagerState _gestureManager;
 
   /// Parts of a particular drawing, e.g. marker, line
+  /// /// Keeps track of how many times user tapped on the chart.
+  @protected
   List<T> drawingParts = <T>[];
 
   /// Tapped position.
+  /// /// Keeps track of how many times user tapped on the chart.
+  @protected
   Offset? position;
 
   /// Keeps track of how many times user tapped on the chart.
+  @protected
   int tapCount = 0;
 
   /// Keeps the points tapped by the user to draw the continuous drawing.
+  /// /// Keeps track of how many times user tapped on the chart.
   final List<EdgePoint> edgePoints = <EdgePoint>[];
 
   /// Unique drawing id.
+  @protected
   String drawingId = '';
 
   /// If drawing has been finished.
+  @protected
   bool isDrawingFinished = false;
 
   /// Get epoch from x.
+  @protected
   int Function(double x)? epochFromX;
 
   @override
   void initState() {
     super.initState();
-    gestureManager = context.read<GestureManagerState>()
+    _gestureManager = context.read<GestureManagerState>()
       ..registerCallback(onTap);
   }
 
   @override
   void dispose() {
-    gestureManager.removeCallback(onTap);
+    _gestureManager.removeCallback(onTap);
     super.dispose();
   }
 
@@ -74,10 +84,13 @@ abstract class CreatorState<T extends Drawing> extends State<Creator<T>> {
   void onTap(TapUpDetails details);
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
     final XAxisModel xAxis = context.watch<XAxisModel>();
     epochFromX = xAxis.epochFromX;
-
-    return Container();
   }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

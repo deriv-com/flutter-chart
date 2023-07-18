@@ -63,8 +63,8 @@ class _LineDrawingCreatorState extends CreatorState<LineDrawing> {
         /// Draw final point and the whole line.
         _isPenDown = false;
         isDrawingFinished = true;
-        final int _currentTap = tapCount - 1;
-        final int _previousTap = tapCount - 2;
+        final int currentTap = tapCount - 1;
+        final int previousTap = tapCount - 2;
 
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
@@ -87,12 +87,12 @@ class _LineDrawingCreatorState extends CreatorState<LineDrawing> {
           drawingParts.addAll(<LineDrawing>[
             LineDrawing(
               drawingPart: DrawingParts.marker,
-              endEdgePoint: edgePoints[_currentTap],
+              endEdgePoint: edgePoints[currentTap],
             ),
             LineDrawing(
               drawingPart: DrawingParts.line,
-              startEdgePoint: edgePoints[_previousTap],
-              endEdgePoint: edgePoints[_currentTap],
+              startEdgePoint: edgePoints[previousTap],
+              endEdgePoint: edgePoints[currentTap],
               exceedStart: true,
               exceedEnd: true,
             )

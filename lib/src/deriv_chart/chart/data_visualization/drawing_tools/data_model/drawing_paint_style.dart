@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 class DrawingPaintStyle {
   /// Returns the glowy paint style of the line
   Paint glowyLinePaintStyle(Color color, double thickness) => Paint()
-    ..color = color
+    ..color = Colors.white
     ..strokeWidth = thickness + 3
-    ..strokeCap = StrokeCap.round
-    ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 10);
+    ..strokeCap = StrokeCap.round;
 
   /// Returns the paint style of the the line
   Paint linePaintStyle(Color color, double thickness) => Paint()
@@ -15,9 +14,7 @@ class DrawingPaintStyle {
     ..strokeWidth = thickness;
 
   /// Returns the paint style of the circle marker
-  Paint glowyCirclePaintStyle(Color color) => Paint()
-    ..color = color
-    ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 10);
+  Paint glowyCirclePaintStyle(Color color) => Paint()..color = color;
 
   /// Returns the paint style of the circle marker
   Paint transparentCirclePaintStyle() => Paint()..color = Colors.transparent;
