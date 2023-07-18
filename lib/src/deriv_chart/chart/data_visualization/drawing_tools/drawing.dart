@@ -46,7 +46,9 @@ abstract class Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   });
 }

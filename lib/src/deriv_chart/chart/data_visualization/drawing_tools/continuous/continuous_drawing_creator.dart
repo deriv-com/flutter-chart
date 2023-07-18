@@ -49,6 +49,8 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
     setState(() {
       position = details.localPosition;
       tapCount++;
+      final int currentTap = tapCount - 1;
+      final int previousTap = tapCount - 2;
 
       if (edgePoints.isEmpty) {
         /// Draw the initial point of the continuous.
@@ -56,7 +58,6 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
           epoch: epochFromX!(position!.dx),
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
-        drawingId = 'continuous_${edgePoints.first.epoch}';
 
         drawingParts.add(LineDrawing(
           drawingPart: DrawingParts.marker,
@@ -66,8 +67,6 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
         /// Draw other points and the whole continuous drawing.
 
         isDrawingFinished = true;
-        final int _currentTap = tapCount - 1;
-        final int _previousTap = tapCount - 2;
 
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
@@ -75,10 +74,7 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
         ));
 
         /// Checks if the initial point and the 2nd points are the same.
-        if (Offset(edgePoints[1].epoch.toDouble(),
-                edgePoints[1].quote.toDouble()) ==
-            Offset(edgePoints.first.epoch.toDouble(),
-                edgePoints.first.quote.toDouble())) {
+        if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
@@ -88,30 +84,31 @@ class _ContinuousDrawingCreatorState extends CreatorState<LineDrawing> {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole drawing.
           if (tapCount > 2) {
-            drawingId = 'continuous_${edgePoints[_currentTap].epoch}';
             drawingParts = <LineDrawing>[];
 
             drawingParts.add(LineDrawing(
               drawingPart: DrawingParts.marker,
-              startEdgePoint: edgePoints[_previousTap],
+              startEdgePoint: edgePoints[previousTap],
             ));
           }
           drawingParts.addAll(<LineDrawing>[
             LineDrawing(
               drawingPart: DrawingParts.marker,
-              endEdgePoint: edgePoints[_currentTap],
+              endEdgePoint: edgePoints[currentTap],
             ),
             LineDrawing(
               drawingPart: DrawingParts.line,
-              startEdgePoint: edgePoints[_previousTap],
-              endEdgePoint: edgePoints[_currentTap],
+              startEdgePoint: edgePoints[previousTap],
+              endEdgePoint: edgePoints[currentTap],
             )
           ]);
         }
       }
+      drawingId = 'continuous_${edgePoints[currentTap].epoch}';
 
       widget.onAddDrawing(
-        <String, List<LineDrawing>>{drawingId: drawingParts},
+        drawingId,
+        drawingParts,
         isDrawingFinished: isDrawingFinished,
         isInfiniteDrawing: true,
       );

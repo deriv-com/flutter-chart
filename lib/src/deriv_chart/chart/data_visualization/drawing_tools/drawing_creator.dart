@@ -24,8 +24,12 @@ class DrawingCreator extends StatelessWidget {
   final DrawingToolConfig selectedDrawingTool;
 
   /// Callback to pass a newly created drawing to the parent.
-  final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished, bool isInfiniteDrawing}) onAddDrawing;
+  final void Function(
+    String drawingId,
+    List<Drawing> drawingParts, {
+    bool isDrawingFinished,
+    bool isInfiniteDrawing,
+  }) onAddDrawing;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteFromCanvasY;

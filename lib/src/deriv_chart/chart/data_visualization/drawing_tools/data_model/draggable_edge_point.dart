@@ -46,11 +46,12 @@ class DraggableEdgePoint extends EdgePoint {
   /// A method that takes the gesture delta Offset object as parameter
   /// and sets the draggedPosition field to its value.
   void updatePositionWithLocalPositions(
-      Offset delta,
-      XAxisModel xAxis,
-      double Function(double) quoteFromCanvasY,
-      double Function(double y) quoteToY,
-      {required bool isOtherEndDragged}) {
+    Offset delta,
+    XAxisModel xAxis,
+    double Function(double) quoteFromCanvasY,
+    double Function(double y) quoteToY, {
+    required bool isOtherEndDragged,
+  }) {
     final Offset localPosition = Offset(
             xAxis.xFromEpoch(_draggedPosition.dx.toInt()),
             quoteToY(_draggedPosition.dy)) +
@@ -59,4 +60,19 @@ class DraggableEdgePoint extends EdgePoint {
     _draggedPosition = Offset(xAxis.epochFromX(localPosition.dx).toDouble(),
         quoteFromCanvasY(localPosition.dy));
   }
+
+  /// Creates a copy of this object.
+  DraggableEdgePoint copyWith({
+    int? epoch,
+    double? quote,
+    bool? isDrawingDragged,
+    bool? isDragged,
+  }) =>
+      DraggableEdgePoint(
+        epoch: epoch ?? this.epoch,
+        quote: quote ?? this.quote,
+      )
+        ..isDrawingDragged = isDrawingDragged ?? this.isDrawingDragged
+        ..isDragged = isDragged ?? this.isDragged
+        .._draggedPosition = _draggedPosition;
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DrawingPaintStyle {
   /// Returns the glowy paint style of the line
   Paint glowyLinePaintStyle(Color color, double thickness) => Paint()
-    ..color = Colors.white
+    ..color = color
     ..strokeWidth = thickness + 3
     ..strokeCap = StrokeCap.round;
 

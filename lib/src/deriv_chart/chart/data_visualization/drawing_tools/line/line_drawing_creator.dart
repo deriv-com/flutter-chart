@@ -72,10 +72,7 @@ class _LineDrawingCreatorState extends CreatorState<LineDrawing> {
         ));
 
         /// Checks if the initial point and the final point are the same.
-        if (Offset(edgePoints[1].epoch.toDouble(),
-                edgePoints[1].quote.toDouble()) ==
-            Offset(edgePoints.first.epoch.toDouble(),
-                edgePoints.first.quote.toDouble())) {
+        if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
@@ -100,7 +97,8 @@ class _LineDrawingCreatorState extends CreatorState<LineDrawing> {
         }
       }
       widget.onAddDrawing(
-        <String, List<LineDrawing>>{drawingId: drawingParts},
+        drawingId,
+        drawingParts,
         isDrawingFinished: isDrawingFinished,
       );
     });

@@ -207,11 +207,13 @@ class LineDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    draggableStartPoint.isDragged = false;
-    draggableEndPoint!.isDragged = false;
+    setIsStartPointDragged(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
 
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
@@ -223,12 +225,12 @@ class LineDrawing extends Drawing {
 
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      draggableStartPoint.isDragged = true;
+      setIsStartPointDragged(isDragged: true);
     }
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      draggableEndPoint.isDragged = true;
+      setIsEndPointDragged(isDragged: true);
     }
 
     startXCoord = _vector.x0;
@@ -259,6 +261,6 @@ class LineDrawing extends Drawing {
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (draggableStartPoint.isDragged || draggableEndPoint.isDragged);
+        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
   }
 }

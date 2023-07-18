@@ -44,7 +44,8 @@ class _VerticalDrawingCreatorState extends CreatorState<VerticalDrawing> {
       ));
 
       widget.onAddDrawing(
-        <String, List<VerticalDrawing>>{drawingId: drawingParts},
+        drawingId,
+        drawingParts,
         isDrawingFinished: isDrawingFinished,
       );
     });

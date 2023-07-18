@@ -5,15 +5,19 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Type for callback to pass a newly created line drawing to the parent.
+/// This is a function type used as a callback to pass a newly created drawing
+/// of type [T] to the parent.
 typedef OnAddDrawing<T> = void Function(
-  Map<String, List<T>>, {
+  String drawingId,
+  List<T> drawingParts, {
+  // Map<String, List<T>>, {
   bool isDrawingFinished,
   bool isInfiniteDrawing,
 });
 
-/// Base class for creating a drawing which will be used by each drawing
-/// creator.
+/// This class is an abstract representation of a drawing creator, and it's a
+/// [StatefulWidget]. It is generic, with the type parameter [T] constrained to
+/// be a subclass of Drawing.
 abstract class Creator<T extends Drawing> extends StatefulWidget {
   /// Initializes.
   const Creator({
@@ -22,7 +26,8 @@ abstract class Creator<T extends Drawing> extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  /// Callback to pass a newly created line drawing to the parent.
+  /// A required callback property of type [OnAddDrawing<T>] that is used to
+  /// pass the newly created drawing to the parent.
   final OnAddDrawing<T> onAddDrawing;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
@@ -32,7 +37,9 @@ abstract class Creator<T extends Drawing> extends StatefulWidget {
   CreatorState<Drawing> createState();
 }
 
-///
+/// This class is an abstract representation of the state associated with the
+/// Creator. It extends [State<Creator<T>>] and is generic with the type
+/// parameter [T] constrained to be a subclass of Drawing.
 abstract class CreatorState<T extends Drawing> extends State<Creator<T>> {
   /// Gesture manager state.
   late final GestureManagerState _gestureManager;
