@@ -1,4 +1,4 @@
-**Contributing Guidelines**
+## Contributing Guidelines
 
 Contributions to the **Deriv Flutter chart package** are welcome and encouraged! Whether you're interested in adding new features, fixing bugs, or improving documentation, we appreciate your support in making this package better. To ensure a smooth and collaborative contribution process, please adhere to the following guidelines:
 
@@ -35,9 +35,13 @@ Also please check out this [Mobile team's code style convention doc in WikiJS](h
 ```
 
 
-*Adding new features or modifying existing ones*:
 
-**Plan the Architecture**: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart know less about what it is rendering and have a consistent rendering step and depend on abstraction to function. To have functionality in small pieces and components and encapsulate them in a way that makes sense. 
+_____________
+### The general steps for adding new features or modifying existing ones:
+
+**Plan the Architecture**: Consider the best approach for implementing the new features within the existing package architecture. Determine if it's necessary to introduce new widgets, data models, or rendering techniques. Evaluate the impact on performance, code organization, and maintainability. One key factor is to make the Chart know less about what it is rendering and have a consistent rendering step and depend on abstraction to function. To have functionality in small pieces and components and encapsulate them in a way that makes sense. One example from the package is using defining `ChartData` and `Series` abstractions, in order to delegate functionalities and depend on abstraction and make the functionality of the [Chart widget](https://github.com/regentmarkets/flutter-chart/blob/1adc9ef463195a33fc331ef9fd0a45a1ab0cb4a8/lib/src/deriv_chart/chart/chart.dart#L39) more dynamic and customizable, the `Chart` widget is depending on it. 
+
+It's important to keep in mind that after making some progress in the implementation of a feature we rethink and analyze if any improvement can be done in the structure of the components to make it more scalable, and maintainable and remove duplicated codes.
 
 **Define a Clear API**: define a clear and intuitive API for adding new features. Consider how the users of the package will interact with the new functionality and design an API that is consistent with the existing package conventions.
 
