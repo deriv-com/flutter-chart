@@ -224,7 +224,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         _followCurrentTick != null &&
         _followCurrentTick!) {
       WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
-        _controller.onScrollToLastTick?.call(false);
+        _controller.onScrollToLastTick?.call(animate: false);
       });
     }
   }
@@ -253,7 +253,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         widget.mainSeries.entries!.isNotEmpty) {
       if (widget.mainSeries.entries!.first.epoch !=
           oldWidget.mainSeries.entries!.first.epoch) {
-        _controller.onScrollToLastTick?.call(false);
+        _controller.onScrollToLastTick?.call(animate: false);
       }
     }
   }
