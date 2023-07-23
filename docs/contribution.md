@@ -53,7 +53,7 @@ Ensure that the package performs well on different devices and handles large dat
 
 **5. Test on Real Financial Data**: Validate the functionality and accuracy of the financial chart package by testing it with real financial data. Ensure that the charts can handle various data patterns, such as irregular time intervals, different chart types, and large data ranges.
 
-**6 Dart analyzer and unit tests**: When the new functionality is ready for review please do a self-review first before passing to review. when submitting PR regardless of whether there is CI integration that runs and checks Dart static analyzer and test, you should also make sure that the following commands also run without any warning or issue:
+**6 Dart analyzer and unit tests**: When the new functionality is ready for review please do a self-review first before passing to review. when submitting PR regardless of whether there is CI integration that runs and checks Dart static analyzer and test, you should also make sure that the following commands run on your local machine without any warnings or issues:
 
 ```
 flutter analyze
