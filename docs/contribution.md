@@ -61,7 +61,7 @@ flutter test
 ```
 
 
-****Some general notes****:
+### Some general notes:
 
 **Readability and Maintainability**: Ensure that the code is easy to read, understand, and maintain. Consider the following aspects:
 
@@ -78,7 +78,7 @@ Many functionalities in the package would have two parts, calculation logic, and
 - Avoidance of code duplication and the use of appropriate abstractions.
 Consistent indentation, code grouping, and file organization.
 
-**Immutability**:
+### Immutability:
 For model classes, prefer using immutable objects, and we want to gain use of the language features which is encouraged. It will bring more reliability to the code and will increase maintenance. [Immutablity in Flutter](https://dart.academy/immutable-data-patterns-in-dart-and-flutter/#:~:text=There%20are%20a%20number%20of,what%20code%20is%20accessing%20it.)
 
 Immutability means that once an object is created, its state cannot be changed. Any modification to the object will create a new instance with the updated data, leaving the original object unchanged. On the other hand, mutability means that the object's state can be modified directly after creation.
