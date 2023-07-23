@@ -65,40 +65,32 @@ flutter test
 
 **Readability and Maintainability**: Ensure that the code is easy to read, understand, and maintain. Consider the following aspects:
 
-Use meaningful and descriptive names for variables, functions, and classes.
+- Use meaningful and descriptive names for variables, functions, and classes.
 Break down complex code into smaller, modular functions or methods.
 Follow a consistent coding style and formatting conventions.
 Add comments where necessary to clarify the intent or complex sections.
 
-Code Structure and Organization: Check if the code is well-structured and organized. Look for:
+- Code Structure and Organization: Check if the code is well-structured and organized. Look for:
 
-Proper separation of concerns and adherence to the Single Responsibility Principle (SRP).
-Avoidance of code duplication and the use of appropriate abstractions.
+- Proper separation of concerns and adherence to the Single Responsibility Principle (SRP).
+Many functionalities in the package would have two parts, calculation logic, and painting operations. It's better to keep these two separate to achieve the SRP. One example in the package could be the [Series](https://github.com/regentmarkets/flutter-chart/blob/1adc9ef463195a33fc331ef9fd0a45a1ab0cb4a8/lib/src/deriv_chart/chart/data_visualization/chart_series/series.dart#L11) class which handles the logic of calculation for the Chart series data and it works with a [SeriesPainter](https://github.com/regentmarkets/flutter-chart/blob/1adc9ef463195a33fc331ef9fd0a45a1ab0cb4a8/lib/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart#L8) to delegate the painting operation
+
+- Avoidance of code duplication and the use of appropriate abstractions.
 Consistent indentation, code grouping, and file organization.
 
-Polymorphism: with example, avoid using String in switch cases as much as possible.
+**Immutability**:
+For model classes, prefer using immutable objects, and we want to gain use of the language features which is encouraged. It will bring more reliability to the code and will increase maintenance. [Immutablity in Flutter](https://dart.academy/immutable-data-patterns-in-dart-and-flutter/#:~:text=There%20are%20a%20number%20of,what%20code%20is%20accessing%20it.)
 
-**Immutability over mutability**:
-For model classes, prefer using immutable objects, we want to gain use of the language features which readily encourages. It will bring more reliability to the code and will increase maintenance. [Immutablity in Flutter](https://dart.academy/immutable-data-patterns-in-dart-and-flutter/#:~:text=There%20are%20a%20number%20of,what%20code%20is%20accessing%20it.)
+Immutability means that once an object is created, its state cannot be changed. Any modification to the object will create a new instance with the updated data, leaving the original object unchanged. On the other hand, mutability means that the object's state can be modified directly after creation.
 
-In Flutter, immutability is an important concept that promotes predictable and efficient UI rendering. Immutability refers to the practice of creating objects that cannot be changed after they are created. Instead of modifying an existing object, immutable objects are replaced with new instances that incorporate the desired changes.
+Flutter strongly advocates for immutability, and there are several reasons for this:
 
-Why is immutability encouraged?
+Predictability: Immutable objects have a predictable state throughout their lifetime, making it easier to reason about the flow of data in your application. This will avoid an object to be modified in different places, and can lead to fewer bugs and easier debugging.
 
-Performance benefits: Immutable objects allow Flutter to optimize the rendering process. When a widget is updated, Flutter compares the new widget with the previous one and determines if the UI needs to be rebuilt. Immutable objects make this comparison easier and faster since Flutter can rely on object identity rather than deep value comparisons.
+Consistency: In an immutable approach, objects don't change unexpectedly, which helps maintain a consistent state and behavior within the app.
 
-Predictable UI updates: By following immutability principles, you ensure that widget updates are predictable and consistent. Once a widget is created, its properties cannot be modified, reducing the risk of accidental mutations or unexpected behavior.
+Performance: Immutability can offer performance benefits, especially in the context of Flutter's "Widget tree" where UI elements are rebuilt when the underlying data changes. With immutable objects, Flutter can optimize the UI updates and avoid unnecessary rebuilds.
 
-Guidelines for immutability:
-
-Design widget properties as final: When defining properties for your chart widgets, make them final whenever possible. This enforces immutability and prevents accidental modifications.
-
-Create new instances for updates: Instead of modifying existing widget instances, create new instances with updated properties. This ensures that the UI update mechanism works correctly and minimizes unnecessary rebuilds.
-
-Utilize const constructors: Consider using const constructors when appropriate. const constructors allow Flutter to optimize widget creation by caching and reusing instances with identical properties.
-
-Use immutable data structures: When managing data within your chart package, prefer using immutable data structures such as List and Map. Immutable data structures provide safety against unintended modifications and simplify the reasoning about data flow.
-
-Leverage functional programming principles: Functional programming concepts like pure functions and avoiding side effects can complement the practice of immutability. Consider applying these principles where applicable within your chart package.
+Concurrency: Immutable data is inherently thread-safe, making it easier to work with concurrent programming and avoid data race conditions.
 
 
