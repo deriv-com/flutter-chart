@@ -1,4 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
@@ -139,6 +141,16 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 quoteToY: widget.quoteToCanvasY,
                 draggableStartPoint: _draggableStartPoint,
                 draggableEndPoint: _draggableEndPoint,
+                updatePositionCallback: (
+                  EdgePoint edgePoint,
+                  DraggableEdgePoint draggableEdgePoint,
+                ) =>
+                    draggableEdgePoint.updatePosition(
+                  edgePoint.epoch,
+                  edgePoint.quote,
+                  xAxis.xFromEpoch,
+                  widget.quoteToCanvasY,
+                ),
                 setIsStartPointDragged: ({required bool isDragged}) {
                   _draggableStartPoint =
                       _draggableStartPoint.copyWith(isDragged: isDragged);
@@ -163,6 +175,7 @@ class _DrawingPainter extends CustomPainter {
     required this.quoteToY,
     required this.draggableStartPoint,
     required this.setIsStartPointDragged,
+    required this.updatePositionCallback,
     this.draggableEndPoint,
     this.setIsEndPointDragged,
   });
@@ -175,6 +188,10 @@ class _DrawingPainter extends CustomPainter {
   DraggableEdgePoint? draggableEndPoint;
   final void Function({required bool isDragged}) setIsStartPointDragged;
   final void Function({required bool isDragged})? setIsEndPointDragged;
+  final Point Function(
+    EdgePoint edgePoint,
+    DraggableEdgePoint draggableEdgePoint,
+  ) updatePositionCallback;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -186,6 +203,7 @@ class _DrawingPainter extends CustomPainter {
         epochToX,
         quoteToY,
         drawingData,
+        updatePositionCallback,
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
       );

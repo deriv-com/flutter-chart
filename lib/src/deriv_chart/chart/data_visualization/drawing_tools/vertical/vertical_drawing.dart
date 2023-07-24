@@ -38,6 +38,10 @@ class VerticalDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
@@ -48,12 +52,7 @@ class VerticalDrawing extends Drawing {
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
 
-    startPoint = draggableStartPoint.updatePosition(
-      edgePoint.epoch,
-      edgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
+    startPoint = updatePositionCallback(edgePoint, draggableStartPoint);
 
     final double xCoord = startPoint!.x;
     final double startQuoteToY = startPoint!.y;

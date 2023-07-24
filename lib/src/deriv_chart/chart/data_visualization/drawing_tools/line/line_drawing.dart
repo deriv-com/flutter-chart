@@ -130,6 +130,10 @@ class LineDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
@@ -140,18 +144,8 @@ class LineDrawing extends Drawing {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     final String pattern = config.toJson()['pattern'];
 
-    _startPoint = draggableStartPoint.updatePosition(
-      startEdgePoint.epoch,
-      startEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
-    _endPoint = draggableEndPoint!.updatePosition(
-      endEdgePoint.epoch,
-      endEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
+    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
+    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
