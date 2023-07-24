@@ -14,13 +14,15 @@ class DraggableEdgePoint extends EdgePoint {
   DraggableEdgePoint({
     int epoch = 0,
     double quote = 0,
+    this.isDrawingDragged = false,
+    this.isDragged = false,
   }) : super(epoch: epoch, quote: quote);
 
   /// Represents whether the whole drawing is currently being dragged or not
-  bool isDrawingDragged = false;
+  final bool isDrawingDragged;
 
   /// Represents whether the edge point is currently being dragged or not
-  bool isDragged = false;
+  final bool isDragged;
 
   /// Holds the current position of the edge point when it is being dragged.
   Offset _draggedPosition = Offset.zero;
@@ -71,8 +73,7 @@ class DraggableEdgePoint extends EdgePoint {
       DraggableEdgePoint(
         epoch: epoch ?? this.epoch,
         quote: quote ?? this.quote,
-      )
-        ..isDrawingDragged = isDrawingDragged ?? this.isDrawingDragged
-        ..isDragged = isDragged ?? this.isDragged
-        .._draggedPosition = _draggedPosition;
+        isDrawingDragged: isDrawingDragged ?? this.isDrawingDragged,
+        isDragged: isDragged ?? this.isDragged,
+      ).._draggedPosition = _draggedPosition;
 }
