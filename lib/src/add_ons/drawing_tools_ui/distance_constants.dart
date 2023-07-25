@@ -1,6 +1,6 @@
-///  This class include the distance/value used in the drawing tools .
-///  (i.e. Horizontal , line chart)
-///
+/// This involves calculating the distance from the marker to its
+/// edges for the purpose of creating lines ( horizontal , line drawing tool)
+
 class DrawingToolDistance {
   /// horizontal distance
   static const double horizontalDistance = 999999;
