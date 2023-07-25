@@ -52,6 +52,7 @@ class DrawingToolChart extends StatelessWidget {
                       quoteFromCanvasY: chartQuoteFromCanvasY,
                       onMoveDrawing: drawingTools.onMoveDrawing,
                       setIsDrawingSelected: _setIsDrawingSelected,
+                      selectedDrawingTool: drawingTools.selectedDrawingTool,
                     )),
             if (drawingTools.selectedDrawingTool != null)
               DrawingToolWidget(

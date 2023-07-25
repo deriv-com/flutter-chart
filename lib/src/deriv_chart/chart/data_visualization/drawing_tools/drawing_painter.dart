@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
@@ -19,8 +20,12 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
+    required this.selectedDrawingTool,
     Key? key,
   }) : super(key: key);
+
+  /// Selected drawing tool.
+  final DrawingToolConfig? selectedDrawingTool;
 
   /// Contains each drawing data
   final DrawingData? drawingData;
@@ -140,6 +145,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
                 draggableStartPoint: _draggableStartPoint,
+                isDrawingToolSelected: widget.selectedDrawingTool != null,
                 draggableEndPoint: _draggableEndPoint,
                 updatePositionCallback: (
                   EdgePoint edgePoint,
@@ -176,12 +182,14 @@ class _DrawingPainter extends CustomPainter {
     required this.draggableStartPoint,
     required this.setIsStartPointDragged,
     required this.updatePositionCallback,
+    this.isDrawingToolSelected = false,
     this.draggableEndPoint,
     this.setIsEndPointDragged,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
+  final bool isDrawingToolSelected;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
@@ -229,6 +237,9 @@ class _DrawingPainter extends CustomPainter {
         draggableEndPoint: draggableEndPoint,
         setIsEndPointDragged: setIsEndPointDragged,
       )) {
+        if (isDrawingToolSelected) {
+          return false;
+        }
         return true;
       }
     }
