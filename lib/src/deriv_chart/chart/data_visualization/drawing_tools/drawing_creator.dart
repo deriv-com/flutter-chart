@@ -92,7 +92,9 @@ abstract class DrawingCreatorState<T extends Drawing>
   }
 
   /// Catches each single click on the chart to create a drawing.
-  void onTap(TapUpDetails details);
+  void onTap(TapUpDetails details) {
+    generateDrawingId(runtimeType.toString());
+  }
 
   @override
   void didChangeDependencies() {

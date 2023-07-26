@@ -40,6 +40,7 @@ class ContinuousDrawingCreator extends DrawingCreator<LineDrawing> {
 class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
     final ContinuousDrawingCreator _widget = widget as ContinuousDrawingCreator;
 
     if (_widget.shouldStopDrawing) {
@@ -105,7 +106,6 @@ class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           ]);
         }
       }
-      generateDrawingId('continuous');
 
       widget.onAddDrawing(
         drawingId,

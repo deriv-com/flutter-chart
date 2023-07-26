@@ -26,6 +26,7 @@ class _VerticalDrawingCreatorState
     extends DrawingCreatorState<VerticalDrawing> {
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
     if (isDrawingFinished) {
       return;
     }
@@ -37,7 +38,6 @@ class _VerticalDrawingCreatorState
         quote: widget.quoteFromCanvasY(position!.dy),
       ));
 
-      generateDrawingId('vertical');
       isDrawingFinished = true;
 
       drawingParts.add(VerticalDrawing(

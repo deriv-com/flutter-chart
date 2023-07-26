@@ -37,6 +37,8 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
 
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
+
     final LineDrawingCreator _widget = widget as LineDrawingCreator;
 
     if (isDrawingFinished) {
@@ -53,7 +55,6 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
         _isPenDown = true;
-        generateDrawingId('line');
 
         drawingParts.add(LineDrawing(
           drawingPart: DrawingParts.marker,
