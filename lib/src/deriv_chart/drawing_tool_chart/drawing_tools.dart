@@ -54,12 +54,11 @@ class DrawingTools {
   /// isInfiniteDrawing used for drawings which don't have fixed number of
   /// points
   void onAddDrawing(
-    Map<String, List<Drawing>> addedDrawing, {
+    String drawingId,
+    List<Drawing> drawingParts, {
     bool isDrawingFinished = false,
     bool isInfiniteDrawing = false,
   }) {
-    final String drawingId = addedDrawing.keys.first;
-
     final DrawingData? existingDrawing = drawings.firstWhereOrNull(
       (DrawingData drawing) => drawing.id == drawingId,
     );
@@ -68,12 +67,12 @@ class DrawingTools {
       drawings.add(DrawingData(
         id: drawingId,
         config: selectedDrawingTool!,
-        drawingParts: addedDrawing.values.first,
+        drawingParts: drawingParts,
         isDrawingFinished: isDrawingFinished,
       ));
     } else {
       existingDrawing
-        ..updateDrawingPartList(addedDrawing.values.first)
+        ..updateDrawingPartList(drawingParts)
         ..isSelected = true
         ..isDrawingFinished = isDrawingFinished;
     }

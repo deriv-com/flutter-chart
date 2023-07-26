@@ -1,4 +1,7 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
@@ -23,6 +26,7 @@ class DrawingPainter extends StatefulWidget {
   /// series of ticks for getting epoch and quote
   final DataSeries<Tick>? series;
 
+
   /// Contains each drawing data
   final DrawingData? drawingData;
 
@@ -45,8 +49,8 @@ class DrawingPainter extends StatefulWidget {
 
 class _DrawingPainterState extends State<DrawingPainter> {
   bool _isDrawingDragged = false;
-  final DraggableEdgePoint _draggableStartPoint = DraggableEdgePoint();
-  final DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
+  DraggableEdgePoint _draggableStartPoint = DraggableEdgePoint();
+  DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
   Offset? _previousPosition;
 
   @override
@@ -58,18 +62,20 @@ class _DrawingPainterState extends State<DrawingPainter> {
           widget.drawingData!.isDrawingFinished) {
         setState(() {
           _isDrawingDragged = details.delta != Offset.zero;
-          _draggableStartPoint
-            ..isDrawingDragged = _isDrawingDragged
-            ..updatePositionWithLocalPositions(
+
+          _draggableStartPoint = _draggableStartPoint.copyWith(
+            isDrawingDragged: _isDrawingDragged,
+          )..updatePositionWithLocalPositions(
               details.delta,
               xAxis,
               widget.quoteFromCanvasY,
               widget.quoteToCanvasY,
               isOtherEndDragged: _draggableEndPoint.isDragged,
             );
-          _draggableEndPoint
-            ..isDrawingDragged = _isDrawingDragged
-            ..updatePositionWithLocalPositions(
+
+          _draggableEndPoint = _draggableEndPoint.copyWith(
+            isDrawingDragged: _isDrawingDragged,
+          )..updatePositionWithLocalPositions(
               details.delta,
               xAxis,
               widget.quoteFromCanvasY,
@@ -108,8 +114,12 @@ class _DrawingPainterState extends State<DrawingPainter> {
             },
             onLongPressUp: () {
               widget.onMoveDrawing(isDrawingMoved: false);
-              _draggableStartPoint.isDragged = false;
-              _draggableEndPoint.isDragged = false;
+              _draggableStartPoint = _draggableStartPoint.copyWith(
+                isDragged: false,
+              );
+              _draggableEndPoint = _draggableEndPoint.copyWith(
+                isDragged: false,
+              );
             },
             onPanStart: (DragStartDetails details) {
               widget.onMoveDrawing(isDrawingMoved: true);
@@ -119,8 +129,12 @@ class _DrawingPainterState extends State<DrawingPainter> {
             },
             onPanEnd: (DragEndDetails details) {
               setState(() {
-                _draggableStartPoint.isDragged = false;
-                _draggableEndPoint.isDragged = false;
+                _draggableStartPoint = _draggableStartPoint.copyWith(
+                  isDragged: false,
+                );
+                _draggableEndPoint = _draggableEndPoint.copyWith(
+                  isDragged: false,
+                );
               });
               widget.onMoveDrawing(isDrawingMoved: false);
             },
@@ -153,11 +167,13 @@ class _DrawingPainter extends CustomPainter {
 
   final DrawingData drawingData;
   final ChartTheme theme;
+  final bool isDrawingToolSelected;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
   DraggableEdgePoint? draggableEndPoint;
   List<Tick>? series;
+
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -165,6 +181,7 @@ class _DrawingPainter extends CustomPainter {
       drawingPart.onPaint(canvas, size, theme, epochToX, quoteToY, drawingData,
           draggableStartPoint,
           draggableEndPoint: draggableEndPoint, series: series);
+
     }
   }
 
@@ -183,8 +200,13 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData.config,
         draggableStartPoint,
+        setIsStartPointDragged,
         draggableEndPoint: draggableEndPoint,
+        setIsEndPointDragged: setIsEndPointDragged,
       )) {
+        if (isDrawingToolSelected) {
+          return false;
+        }
         return true;
       }
     }
