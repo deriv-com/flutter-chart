@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
@@ -107,7 +105,7 @@ class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           ]);
         }
       }
-      drawingId = 'continuous_${math.Random().nextInt(1000)}';
+      generateDrawingId('continuous');
 
       widget.onAddDrawing(
         drawingId,
