@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
@@ -53,7 +55,7 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
         _isPenDown = true;
-        drawingId = 'line_${edgePoints.first.epoch}';
+        drawingId = 'line_${math.Random().nextInt(1000)}';
 
         drawingParts.add(LineDrawing(
           drawingPart: DrawingParts.marker,
