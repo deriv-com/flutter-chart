@@ -1,21 +1,17 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
 import 'package:flutter/material.dart';
 import '../data_model/drawing_parts.dart';
 
 /// Creates a Trend drawing right after selecting the trend drawing tool
 /// and until drawing is finished
-class TrendDrawingCreator extends Creator<TrendDrawing> {
+class TrendDrawingCreator extends DrawingCreator<TrendDrawing> {
   /// Initializes the trend drawing creator.
   const TrendDrawingCreator({
-    required void Function(
-      Map<String, List<TrendDrawing>>, {
-      bool isDrawingFinished,
-      bool isInfiniteDrawing,
-    }) onAddDrawing,
+    required OnAddDrawing<TrendDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
-    required this.cleanDrawingToolSelection,
+    required this.clearDrawingToolSelection,
     required this.removeDrawing,
     Key? key,
   }) : super(
@@ -25,16 +21,17 @@ class TrendDrawingCreator extends Creator<TrendDrawing> {
         );
 
   /// Callback to clean drawing tool selection.
-  final VoidCallback cleanDrawingToolSelection;
+  final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
   final void Function(String drawingId) removeDrawing;
 
   @override
-  CreatorState<TrendDrawing> createState() => _TrendDrawingCreatorState();
+  DrawingCreatorState<TrendDrawing> createState() =>
+      _TrendDrawingCreatorState();
 }
 
-class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
+class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
   // /// If drawing has been started.
   bool _isPenDown = false;
 
@@ -87,7 +84,7 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
         if ((firstPointOnGraph!.dx - edgePoints[1].epoch).abs() <= 200) {
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
-          _widget.cleanDrawingToolSelection();
+          _widget.clearDrawingToolSelection();
           return;
         }
 
@@ -112,10 +109,8 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
           ]);
       }
 
-      widget.onAddDrawing(
-        <String, List<TrendDrawing>>{drawingId: drawingParts},
-        isDrawingFinished: isDrawingFinished,
-      );
+      widget.onAddDrawing(drawingId, drawingParts,
+          isDrawingFinished: isDrawingFinished, isInfiniteDrawing: false);
     });
   }
 }
