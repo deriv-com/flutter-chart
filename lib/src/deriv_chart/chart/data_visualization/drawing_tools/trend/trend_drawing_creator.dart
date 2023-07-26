@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
@@ -21,9 +19,10 @@ class TrendDrawingCreator extends Creator<TrendDrawing> {
     required this.removeDrawing,
     Key? key,
   }) : super(
-            key: key,
-            onAddDrawing: onAddDrawing,
-            quoteFromCanvasY: quoteFromCanvasY);
+          key: key,
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+        );
 
   /// Callback to clean drawing tool selection.
   final VoidCallback cleanDrawingToolSelection;
