@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,16 +20,19 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
+    required this.selectedDrawingTool,
     required this.series,
     Key? key,
   }) : super(key: key);
 
-  /// series of ticks for getting epoch and quote
-  final DataSeries<Tick>? series;
-
+  /// Selected drawing tool.
+  final DrawingToolConfig? selectedDrawingTool;
 
   /// Contains each drawing data
   final DrawingData? drawingData;
+
+  /// Series of tick
+  final DataSeries<Tick> series;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
@@ -140,13 +144,33 @@ class _DrawingPainterState extends State<DrawingPainter> {
             },
             child: CustomPaint(
               foregroundPainter: _DrawingPainter(
-                  drawingData: widget.drawingData!,
-                  theme: context.watch<ChartTheme>(),
-                  epochToX: xAxis.xFromEpoch,
-                  quoteToY: widget.quoteToCanvasY,
-                  draggableStartPoint: _draggableStartPoint,
-                  draggableEndPoint: _draggableEndPoint,
-                  series: widget.series?.entries),
+                drawingData: widget.drawingData!,
+                theme: context.watch<ChartTheme>(),
+                epochToX: xAxis.xFromEpoch,
+                quoteToY: widget.quoteToCanvasY,
+                draggableStartPoint: _draggableStartPoint,
+                isDrawingToolSelected: widget.selectedDrawingTool != null,
+                draggableEndPoint: _draggableEndPoint,
+                series: widget.series?.entries,
+                updatePositionCallback: (
+                  EdgePoint edgePoint,
+                  DraggableEdgePoint draggableEdgePoint,
+                ) =>
+                    draggableEdgePoint.updatePosition(
+                  edgePoint.epoch,
+                  edgePoint.quote,
+                  xAxis.xFromEpoch,
+                  widget.quoteToCanvasY,
+                ),
+                setIsStartPointDragged: ({required bool isDragged}) {
+                  _draggableStartPoint =
+                      _draggableStartPoint.copyWith(isDragged: isDragged);
+                },
+                setIsEndPointDragged: ({required bool isDragged}) {
+                  _draggableEndPoint =
+                      _draggableEndPoint.copyWith(isDragged: isDragged);
+                },
+              ),
               size: const Size(double.infinity, double.infinity),
             ),
           )
@@ -161,27 +185,44 @@ class _DrawingPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.draggableStartPoint,
-    this.series,
+    required this.setIsStartPointDragged,
+    required this.updatePositionCallback,
+    this.isDrawingToolSelected = false,
     this.draggableEndPoint,
+    this.setIsEndPointDragged,
+    this.series,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
+  final List<Tick>? series;
   final bool isDrawingToolSelected;
   double Function(int x) epochToX;
   double Function(double y) quoteToY;
   DraggableEdgePoint draggableStartPoint;
   DraggableEdgePoint? draggableEndPoint;
-  List<Tick>? series;
-
+  final void Function({required bool isDragged}) setIsStartPointDragged;
+  final void Function({required bool isDragged})? setIsEndPointDragged;
+  final Point Function(
+    EdgePoint edgePoint,
+    DraggableEdgePoint draggableEdgePoint,
+  ) updatePositionCallback;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final Drawing drawingPart in drawingData.drawingParts) {
-      drawingPart.onPaint(canvas, size, theme, epochToX, quoteToY, drawingData,
-          draggableStartPoint,
-          draggableEndPoint: draggableEndPoint, series: series);
-
+      drawingPart.onPaint(
+        canvas,
+        size,
+        theme,
+        epochToX,
+        quoteToY,
+        drawingData,
+        updatePositionCallback,
+        draggableStartPoint,
+        draggableEndPoint: draggableEndPoint,
+        series: series,
+      );
     }
   }
 

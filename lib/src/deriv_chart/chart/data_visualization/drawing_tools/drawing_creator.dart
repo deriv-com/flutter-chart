@@ -1,9 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing_creator.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
-
+import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -74,43 +72,10 @@ abstract class DrawingCreatorState<T extends Drawing>
   int Function(double x)? epochFromX;
 
   @override
-  Widget build(BuildContext context) {
-    // TODO(bahar-deriv): Deligate the creation of drawing to the specific
-    // drawing tool config
-    final String drawingToolType = selectedDrawingTool.toJson()['name'];
-
-    switch (drawingToolType) {
-      case 'dt_continuous':
-        return ContinuousDrawingCreator(
-          onAddDrawing: onAddDrawing,
-          quoteFromCanvasY: quoteFromCanvasY,
-          clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
-          shouldStopDrawing: shouldStopDrawing!,
-        );
-      case 'dt_line':
-        return LineDrawingCreator(
-          onAddDrawing: onAddDrawing,
-          quoteFromCanvasY: quoteFromCanvasY,
-          clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
-        );
-      case 'dt_trend':
-        return TrendDrawingCreator(
-          onAddDrawing: onAddDrawing,
-          cleanDrawingToolSelection: clearDrawingToolSelection,
-          quoteFromCanvasY: quoteFromCanvasY,
-          removeDrawing: removeDrawing,
-        );
-      case 'dt_vertical':
-        return VerticalDrawingCreator(
-          onAddDrawing: onAddDrawing,
-          quoteFromCanvasY: quoteFromCanvasY,
-        );
-      // TODO(maryia-binary): add the rest of drawing tools here
-      default:
-        return Container();
-    }
+  void initState() {
+    super.initState();
+    _gestureManager = context.read<GestureManagerState>()
+      ..registerCallback(onTap);
   }
 
   @override

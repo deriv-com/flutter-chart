@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
@@ -15,7 +16,7 @@ class DrawingToolChart extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  /// series of ticks for getting epoch and quote
+  /// Series of tick
   final DataSeries<Tick> series;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
@@ -51,11 +52,11 @@ class DrawingToolChart extends StatelessWidget {
           children: <Widget>[
             ...drawingTools.drawings
                 .map((DrawingData drawingData) => DrawingPainter(
-                      series: series,
                       drawingData: drawingData,
                       quoteToCanvasY: chartQuoteToCanvasY,
                       quoteFromCanvasY: chartQuoteFromCanvasY,
                       onMoveDrawing: drawingTools.onMoveDrawing,
+                      series: series,
                       setIsDrawingSelected: _setIsDrawingSelected,
                       selectedDrawingTool: drawingTools.selectedDrawingTool,
                     )),

@@ -124,6 +124,10 @@ class TrendDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
     List<Tick>? series,
@@ -213,6 +217,8 @@ class TrendDrawing extends Drawing {
         startXCoord = _startPoint!.x;
         startYCoord = _startPoint!.y;
 
+        getFirstActualClick!(pointVal.epoch, pointVal.quote);
+
         canvas.drawCircle(
           Offset(startXCoord, startYCoord),
           _markerRadius,
@@ -220,8 +226,6 @@ class TrendDrawing extends Drawing {
               ? paint.glowyCirclePaintStyle(lineStyle.color)
               : paint.transparentCirclePaintStyle(),
         );
-
-        getFirstActualClick!(pointVal.epoch, pointVal.quote);
       } else {
         canvas
           ..drawCircle(
@@ -295,8 +299,10 @@ class TrendDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
