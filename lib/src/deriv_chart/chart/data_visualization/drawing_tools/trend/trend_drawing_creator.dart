@@ -43,9 +43,7 @@ class _TrendDrawingCreatorState extends CreatorState<TrendDrawing> {
   Offset? firstPointOnGraph;
 
   void getFirstClickPoint(int x, double y) {
-    setState(() {
-      firstPointOnGraph = Offset(x.toDouble(), y);
-    });
+    firstPointOnGraph = Offset(x.toDouble(), y);
   }
 
   @override

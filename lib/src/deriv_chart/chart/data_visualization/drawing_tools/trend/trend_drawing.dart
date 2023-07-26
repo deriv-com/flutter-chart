@@ -213,8 +213,6 @@ class TrendDrawing extends Drawing {
         startXCoord = _startPoint!.x;
         startYCoord = _startPoint!.y;
 
-        getFirstActualClick!(pointVal.epoch, pointVal.quote);
-
         canvas.drawCircle(
           Offset(startXCoord, startYCoord),
           _markerRadius,
@@ -222,6 +220,8 @@ class TrendDrawing extends Drawing {
               ? paint.glowyCirclePaintStyle(lineStyle.color)
               : paint.transparentCirclePaintStyle(),
         );
+
+        getFirstActualClick!(pointVal.epoch, pointVal.quote);
       } else {
         canvas
           ..drawCircle(
