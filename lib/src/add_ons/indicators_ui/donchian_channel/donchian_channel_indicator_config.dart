@@ -7,7 +7,6 @@ import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'donchian_channel_indicator_item.dart';
 

@@ -8,7 +8,6 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'data_visualization/models/animation_info.dart';
 import 'helpers/functions/conversion.dart';
 import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';

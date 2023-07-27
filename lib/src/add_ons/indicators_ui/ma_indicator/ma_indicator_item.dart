@@ -4,7 +4,6 @@ import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_indicator_config.dart';
 

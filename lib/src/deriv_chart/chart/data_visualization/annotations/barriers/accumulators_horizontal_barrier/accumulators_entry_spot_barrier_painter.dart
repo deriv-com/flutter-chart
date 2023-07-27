@@ -1,9 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_accumulators_entry_spot.dart';
 import 'package:deriv_chart/src/theme/colors.dart';

@@ -2,16 +2,11 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_fill.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
-
-import '../../chart_data.dart';
-
-import '../series_painter.dart';
 
 /// Donchian Channels series
 class DonchianChannelsSeries extends Series {

@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_funct
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
-import '../series_painter.dart';
 import 'abstract_single_indicator_series.dart';
 import 'models/rsi_options.dart';
 

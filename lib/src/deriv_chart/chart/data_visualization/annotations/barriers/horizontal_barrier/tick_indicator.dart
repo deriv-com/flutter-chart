@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:flutter/material.dart';
 
 import 'candle_indicator_painter.dart';

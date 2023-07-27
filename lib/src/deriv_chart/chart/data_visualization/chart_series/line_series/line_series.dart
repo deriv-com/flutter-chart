@@ -1,7 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../series_painter.dart';
 import 'line_painter.dart';
 
 /// Line series.

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'zigzag_indicator_item.dart';
 

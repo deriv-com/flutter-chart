@@ -2,10 +2,8 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:flutter/material.dart';
 
-import '../../chart_data.dart';
 import '../data_painter.dart';
 
 /// A [DataPainter] for painting two line data and the channel fill inside
