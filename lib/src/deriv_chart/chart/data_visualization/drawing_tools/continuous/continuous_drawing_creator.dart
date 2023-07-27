@@ -1,19 +1,20 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:flutter/material.dart';
+import '../data_model/drawing_parts.dart';
 
-/// Creates a Line drawing piece by piece collected on every gesture
-/// exists in a widget tree starting from selecting a line drawing tool and
-/// until drawing is finished
-class LineDrawingCreator extends DrawingCreator<LineDrawing> {
-  /// Initializes the line drawing creator.
-  const LineDrawingCreator({
+/// Creates a Continuous drawing piece by piece collected on every gesture
+/// exists in a widget tree starting from selecting a continuous drawing tool
+/// and until drawing should be finished.
+class ContinuousDrawingCreator extends DrawingCreator<LineDrawing> {
+  /// Initializes the continuous drawing creator.
+  const ContinuousDrawingCreator({
     required OnAddDrawing<LineDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
+    required this.shouldStopDrawing,
     Key? key,
   }) : super(
           key: key,
@@ -27,52 +28,54 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
   /// Callback to remove specific drawing from the list of drawings.
   final void Function(String drawingId) removeDrawing;
 
+  /// A flag to show when to stop drawing only for drawings which don't have
+  /// fixed number of points like continuous drawing
+  final bool shouldStopDrawing;
+
   @override
-  DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
+  DrawingCreatorState<LineDrawing> createState() =>
+      _ContinuousDrawingCreatorState();
 }
 
-class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
-  /// If drawing has been started.
-  bool _isPenDown = false;
-
+class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
   @override
   void onTap(TapUpDetails details) {
     super.onTap(details);
+    final ContinuousDrawingCreator _widget = widget as ContinuousDrawingCreator;
 
-    final LineDrawingCreator _widget = widget as LineDrawingCreator;
-
-    if (isDrawingFinished) {
+    if (_widget.shouldStopDrawing) {
       return;
+    } else {
+      isDrawingFinished = false;
     }
     setState(() {
       position = details.localPosition;
       tapCount++;
+      final int currentTap = tapCount - 1;
+      final int previousTap = tapCount - 2;
 
-      if (!_isPenDown) {
-        /// Draw the initial point of the line.
+      if (edgePoints.isEmpty) {
+        /// Draw the initial point of the continuous.
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
-        _isPenDown = true;
 
         drawingParts.add(LineDrawing(
           drawingPart: DrawingParts.marker,
           startEdgePoint: edgePoints.first,
         ));
       } else if (!isDrawingFinished) {
-        /// Draw final point and the whole line.
-        _isPenDown = false;
+        /// Draw other points and the whole continuous drawing.
+
         isDrawingFinished = true;
-        final int currentTap = tapCount - 1;
-        final int previousTap = tapCount - 2;
 
         edgePoints.add(EdgePoint(
           epoch: epochFromX!(position!.dx),
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
 
-        /// Checks if the initial point and the final point are the same.
+        /// Checks if the initial point and the 2nd points are the same.
         if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
@@ -81,7 +84,15 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           return;
         } else {
           /// If the initial point and the final point are not the same,
-          /// draw the final point and the whole line.
+          /// draw the final point and the whole drawing.
+          if (tapCount > 2) {
+            drawingParts = <LineDrawing>[];
+
+            drawingParts.add(LineDrawing(
+              drawingPart: DrawingParts.marker,
+              startEdgePoint: edgePoints[previousTap],
+            ));
+          }
           drawingParts.addAll(<LineDrawing>[
             LineDrawing(
               drawingPart: DrawingParts.marker,
@@ -91,16 +102,16 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
               drawingPart: DrawingParts.line,
               startEdgePoint: edgePoints[previousTap],
               endEdgePoint: edgePoints[currentTap],
-              exceedStart: true,
-              exceedEnd: true,
             )
           ]);
         }
       }
+
       widget.onAddDrawing(
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        isInfiniteDrawing: true,
       );
     });
   }
