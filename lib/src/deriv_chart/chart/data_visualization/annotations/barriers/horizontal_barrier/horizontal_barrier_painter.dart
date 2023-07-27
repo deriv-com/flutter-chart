@@ -54,6 +54,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
         series.style as HorizontalBarrierStyle? ?? theme.horizontalBarrierStyle;
 
     _paint = Paint()
+      ..style = PaintingStyle.fill
       ..strokeWidth = 1
       ..color = style.color;
 

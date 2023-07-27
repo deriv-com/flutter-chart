@@ -25,8 +25,15 @@ class MACDIndicatorConfig extends IndicatorConfig {
     this.barStyle = const BarStyle(),
     this.lineStyle = const LineStyle(color: Colors.white),
     this.signalLineStyle = const LineStyle(color: Colors.redAccent),
+    int pipSize = 4,
+    bool showLastIndicator = false,
     String? title,
-  }) : super(isOverlay: false, title: title ?? MACDIndicatorConfig.name);
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? MACDIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory MACDIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -43,6 +50,8 @@ class MACDIndicatorConfig extends IndicatorConfig {
           barStyle: barStyle,
           lineStyle: lineStyle,
           signalLineStyle: signalLineStyle,
+          showLastIndicator: showLastIndicator,
+          pipSize: pipSize,
         ),
       );
 

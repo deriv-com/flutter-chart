@@ -14,7 +14,12 @@ class MACDOptions extends IndicatorOptions {
     this.barStyle = const BarStyle(),
     this.lineStyle = const LineStyle(color: Colors.white),
     this.signalLineStyle = const LineStyle(color: Colors.redAccent),
-  });
+    bool showLastIndicator = false,
+    int pipSize = 4,
+  }) : super(
+          showLastIndicator: showLastIndicator,
+          pipSize: pipSize,
+        );
 
   /// The `period` for the `MACDFastMA`. Default is set to `12`.
   final int fastMAPeriod;

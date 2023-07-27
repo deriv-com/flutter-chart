@@ -26,8 +26,12 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     this.middleLineStyle = const LineStyle(color: Colors.white),
     this.lowerLineStyle = const LineStyle(color: Colors.green),
     this.fillColor = Colors.white12,
+    bool showLastIndicator = false,
     String? title,
-  }) : super(title: title ?? DonchianChannelIndicatorConfig.name);
+  }) : super(
+          title: title ?? DonchianChannelIndicatorConfig.name,
+          showLastIndicator: showLastIndicator,
+        );
 
   /// Initializes from JSON.
   factory DonchianChannelIndicatorConfig.fromJson(Map<String, dynamic> json) =>

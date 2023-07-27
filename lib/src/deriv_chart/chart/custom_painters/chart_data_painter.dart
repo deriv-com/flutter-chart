@@ -148,15 +148,14 @@ class BaseChartDataPainter extends CustomPainter {
         return true;
       }
 
-      final Map<String?, ChartPaintingStyle?> oldStyles =
-          Map<String?, ChartPaintingStyle?>.fromIterable(
+      final Map<String?, Series> oldSeries = Map<String?, Series>.fromIterable(
         oldDelegate.series,
         key: (dynamic series) => series.id,
-        value: (dynamic series) => series.style,
+        value: (dynamic series) => series,
       );
-      return series.any(
-        (Series series) => series.style != oldStyles[series.id],
-      );
+
+      return series
+          .any((Series series) => series.shouldRepaint(oldSeries[series.id]));
     }
 
     return rightBoundEpoch != oldDelegate.rightBoundEpoch ||

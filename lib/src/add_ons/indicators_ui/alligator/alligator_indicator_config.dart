@@ -29,8 +29,12 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.jawLineStyle = const LineStyle(color: Colors.blue),
     this.teethLineStyle = const LineStyle(color: Colors.red),
     this.lipsLineStyle = const LineStyle(color: Colors.green),
+    bool showLastIndicator = false,
     String? title,
-  }) : super(title: title ?? AlligatorIndicatorConfig.name);
+  }) : super(
+          showLastIndicator: showLastIndicator,
+          title: title ?? AlligatorIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory AlligatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -79,18 +83,19 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => AlligatorSeries(
         indicatorInput,
-        jawOffset: jawOffset,
-        teethOffset: teethOffset,
-        lipsOffset: lipsOffset,
-        jawLineStyle: jawLineStyle,
-        teethLineStyle: teethLineStyle,
-        lipsLineStyle: lipsLineStyle,
         alligatorOptions: AlligatorOptions(
           jawPeriod: jawPeriod,
           teethPeriod: teethPeriod,
           lipsPeriod: lipsPeriod,
           showLines: showLines,
           showFractal: showFractal,
+          jawOffset: jawOffset,
+          teethOffset: teethOffset,
+          lipsOffset: lipsOffset,
+          jawLineStyle: jawLineStyle,
+          teethLineStyle: teethLineStyle,
+          lipsLineStyle: lipsLineStyle,
+          showLastIndicator: showLastIndicator,
         ),
       );
 

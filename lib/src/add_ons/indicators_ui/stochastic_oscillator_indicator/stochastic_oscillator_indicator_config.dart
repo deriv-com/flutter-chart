@@ -31,9 +31,13 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
     ),
     this.fastLineStyle = const LineStyle(color: Colors.white),
     this.slowLineStyle = const LineStyle(color: Colors.red),
+    int pipSize = 4,
+    bool showLastIndicator = false,
     String? title,
   }) : super(
           isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
           title: title ?? StochasticOscillatorIndicatorConfig.name,
         );
 

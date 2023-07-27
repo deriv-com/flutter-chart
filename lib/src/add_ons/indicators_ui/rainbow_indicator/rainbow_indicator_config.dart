@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/rainbow_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/color_converter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -16,18 +17,21 @@ part 'rainbow_indicator_config.g.dart';
 
 /// Rainbow Indicator Config
 @JsonSerializable()
+@ColorConverter()
 class RainbowIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
-  RainbowIndicatorConfig({
+  const RainbowIndicatorConfig({
     int period = 50,
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.bandsCount = 10,
-  })  : rainbowColors = _getRainbowColors(bandsCount),
-        super(
+    this.rainbowColors,
+    bool showLastIndicator = false,
+  }) : super(
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,
+          showLastIndicator: showLastIndicator,
         );
 
   /// Initializes from JSON.
@@ -58,17 +62,18 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
   final int bandsCount;
 
   /// List of colors for the different bands in the [RainbowSeries].
-  final List<Color> rainbowColors;
+  final List<Color>? rainbowColors;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       RainbowSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
-        rainbowColors: rainbowColors,
+        rainbowColors: rainbowColors ?? _getRainbowColors(bandsCount),
         rainbowOptions: RainbowOptions(
           period: period,
           movingAverageType: movingAverageType,
           bandsCount: bandsCount,
+          showLastIndicator: showLastIndicator,
         ),
       );
 

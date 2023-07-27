@@ -17,12 +17,22 @@ SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) =>
       maType: $enumDecodeNullable(_$MovingAverageTypeEnumMap, json['maType']) ??
           MovingAverageType.exponential,
       showZones: json['showZones'] as bool? ?? true,
+      lineStyle: json['lineStyle'] == null
+          ? null
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      signalLineStyle: json['signalLineStyle'] == null
+          ? null
+          : LineStyle.fromJson(json['signalLineStyle'] as Map<String, dynamic>),
+      pipSize: json['pipSize'] as int? ?? 4,
+      showLastIndicator: json['showLastIndicator'] as bool? ?? false,
       title: json['title'] as String?,
     );
 
 Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
     <String, dynamic>{
       'title': instance.title,
+      'showLastIndicator': instance.showLastIndicator,
+      'pipSize': instance.pipSize,
       'period': instance.period,
       'smoothingPeriod': instance.smoothingPeriod,
       'doubleSmoothingPeriod': instance.doubleSmoothingPeriod,
@@ -31,6 +41,8 @@ Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
       'overboughtValue': instance.overboughtValue,
       'oversoldValue': instance.oversoldValue,
       'showZones': instance.showZones,
+      'lineStyle': instance.lineStyle,
+      'signalLineStyle': instance.signalLineStyle,
     };
 
 const _$MovingAverageTypeEnumMap = {

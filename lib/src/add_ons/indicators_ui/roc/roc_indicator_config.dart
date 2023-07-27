@@ -20,8 +20,15 @@ class ROCIndicatorConfig extends IndicatorConfig {
     this.period = 14,
     this.fieldType = 'close',
     this.lineStyle,
+    int pipSize = 4,
+    bool showLastIndicator = false,
     String? title,
-  }) : super(isOverlay: false, title: title ?? ROCIndicatorConfig.name);
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? ROCIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory ROCIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -46,7 +53,11 @@ class ROCIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => ROCSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
-        rocOptions: ROCOptions(period: period),
+        rocOptions: ROCOptions(
+          period: period,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+        ),
         lineStyle: lineStyle,
       );
 

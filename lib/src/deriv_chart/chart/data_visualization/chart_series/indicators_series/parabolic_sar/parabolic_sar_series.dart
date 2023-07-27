@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/scatter_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/parabolic_sar_options.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -32,6 +33,16 @@ class ParabolicSARSeries extends AbstractSingleIndicatorSeries {
 
   @override
   SeriesPainter<Series> createPainter() => ScatterPainter(this);
+
+  @override
+  bool shouldRepaint(ChartData? oldDelegate) {
+    if (oldDelegate == null) {
+      return true;
+    }
+
+    final ParabolicSARSeries oldSeries = oldDelegate as ParabolicSARSeries;
+    return options != oldSeries.options || style != oldSeries.style;
+  }
 
   @override
   CachedIndicator<Tick> initializeIndicator() => CustomParabolicSarIndicator(

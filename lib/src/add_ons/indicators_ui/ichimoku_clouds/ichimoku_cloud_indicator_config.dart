@@ -28,8 +28,12 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
     this.spanALineStyle = const LineStyle(color: Colors.green),
     this.spanBLineStyle = const LineStyle(color: Colors.red),
     this.laggingLineStyle = const LineStyle(color: Colors.lime),
+    bool showLastIndicator = false,
     String? title,
-  }) : super(title: title ?? IchimokuCloudIndicatorConfig.name);
+  }) : super(
+          showLastIndicator: showLastIndicator,
+          title: title ?? IchimokuCloudIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory IchimokuCloudIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -77,6 +81,7 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
             baseLinePeriod: baseLinePeriod,
             conversionLinePeriod: conversionLinePeriod,
             leadingSpanBPeriod: spanBPeriod,
+            showLastIndicator: showLastIndicator,
           ));
 
   @override

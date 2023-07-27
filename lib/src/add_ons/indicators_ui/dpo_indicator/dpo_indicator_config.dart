@@ -25,6 +25,8 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
     String fieldType = 'close',
     this.isCentered = true,
     LineStyle? lineStyle,
+    int pipSize = 4,
+    bool showLastIndicator = false,
     String? title,
   }) : super(
           period: period,
@@ -32,6 +34,8 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
           fieldType: fieldType,
           isOverlay: false,
           lineStyle: lineStyle,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
           title: title ?? DPOIndicatorConfig.name,
         );
 
@@ -57,6 +61,8 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
           movingAverageType: movingAverageType,
           isCentered: isCentered,
           lineStyle: lineStyle,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
         ),
       );
 

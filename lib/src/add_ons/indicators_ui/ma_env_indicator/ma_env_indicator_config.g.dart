@@ -26,11 +26,17 @@ MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(
       lowerLineStyle: json['lowerLineStyle'] == null
           ? const LineStyle(color: Colors.red)
           : LineStyle.fromJson(json['lowerLineStyle'] as Map<String, dynamic>),
+      fillColor: json['fillColor'] == null
+          ? Colors.white12
+          : const ColorConverter().fromJson(json['fillColor'] as int),
+      showChannelFill: json['showChannelFill'] as bool? ?? true,
+      showLastIndicator: json['showLastIndicator'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
         MAEnvIndicatorConfig instance) =>
     <String, dynamic>{
+      'showLastIndicator': instance.showLastIndicator,
       'period': instance.period,
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType]!,
@@ -40,6 +46,8 @@ Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
       'upperLineStyle': instance.upperLineStyle,
       'middleLineStyle': instance.middleLineStyle,
       'lowerLineStyle': instance.lowerLineStyle,
+      'fillColor': const ColorConverter().toJson(instance.fillColor),
+      'showChannelFill': instance.showChannelFill,
     };
 
 const _$MovingAverageTypeEnumMap = {

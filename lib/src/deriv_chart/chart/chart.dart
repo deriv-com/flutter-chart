@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -43,6 +44,14 @@ class Chart extends StatefulWidget {
     this.showCrosshair = false,
     this.indicatorsRepo,
     this.maxCurrentTickOffset,
+    this.msPerPx,
+    this.minIntervalWidth,
+    this.maxIntervalWidth,
+    this.verticalPaddingFraction,
+    this.bottomChartTitleMargin,
+    this.showDataFitButton,
+    this.showScrollToLastTickButton,
+    this.loadingAnimationColor,
     Key? key,
   }) : super(key: key);
 
@@ -121,6 +130,33 @@ class Chart extends StatefulWidget {
   /// Max distance between rightBoundEpoch and nowEpoch in pixels.
   final double? maxCurrentTickOffset;
 
+  /// Specifies the zoom level of the chart.
+  final double? msPerPx;
+
+  /// Specifies the minimum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? minIntervalWidth;
+
+  /// Specifies the maximum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? maxIntervalWidth;
+
+  /// Fraction of the chart's height taken by top or bottom padding.
+  /// Quote scaling (drag on quote area) is controlled by this variable.
+  final double? verticalPaddingFraction;
+
+  /// Specifies the margin to prevent overlap.
+  final EdgeInsets? bottomChartTitleMargin;
+
+  /// Whether the data fit button is shown or not.
+  final bool? showDataFitButton;
+
+  /// Whether to show the scroll to last tick button or not.
+  final bool? showScrollToLastTickButton;
+
+  /// The color of the loading animation.
+  final Color? loadingAnimationColor;
+
   /// Chart's indicators
   final Repository<IndicatorConfig>? indicatorsRepo;
 
@@ -196,6 +232,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
       if (widget.annotations != null) ...widget.annotations!,
     ];
 
+    _controller
+      ..getSeriesList = (() => <Series>[
+            if (overlaySeries != null) ...overlaySeries,
+            if (bottomSeries != null) ...bottomSeries,
+          ])
+      ..getConfigsList = (() => <IndicatorConfig>[
+            if (widget.overlayConfigs != null) ...?widget.overlayConfigs,
+            if (widget.bottomConfigs != null) ...?widget.bottomConfigs,
+          ]);
+
     final bool isExpanded = expandedIndex != null;
 
     return MultiProvider(
@@ -213,8 +259,11 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             pipSize: widget.pipSize,
             onVisibleAreaChanged: _onVisibleAreaChanged,
             isLive: widget.isLive,
-            dataFitMode: widget.dataFitEnabled,
+            startWithDataFitMode: widget.dataFitEnabled,
             maxCurrentTickOffset: widget.maxCurrentTickOffset,
+            msPerPx: widget.msPerPx,
+            minIntervalWidth: widget.minIntervalWidth,
+            maxIntervalWidth: widget.maxIntervalWidth,
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -235,35 +284,74 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     isLive: widget.isLive,
                     showLoadingAnimationForHistoricalData:
                         !widget.dataFitEnabled,
-                    showDataFitButton: widget.dataFitEnabled,
+                    showDataFitButton:
+                        widget.showDataFitButton ?? widget.dataFitEnabled,
+                    showScrollToLastTickButton:
+                        widget.showScrollToLastTickButton ?? true,
                     opacity: widget.opacity,
+                    verticalPaddingFraction: widget.verticalPaddingFraction,
                     showCrosshair: widget.showCrosshair,
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                    onCrosshairHover: widget.onCrosshairHover,
+                    onCrosshairHover: (
+                      PointerHoverEvent ev,
+                      EpochToX epochToX,
+                      QuoteToY quoteToY,
+                      EpochFromX epochFromX,
+                      QuoteFromY quoteFromY,
+                    ) =>
+                        widget.onCrosshairHover?.call(
+                      ev,
+                      epochToX,
+                      quoteToY,
+                      epochFromX,
+                      quoteFromY,
+                      null,
+                    ),
+                    loadingAnimationColor: widget.loadingAnimationColor,
                   ),
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)
                   ...bottomSeries!.mapIndexed((int index, Series series) {
                     if (isExpanded && expandedIndex != index) {
-                      return Container();
+                      return const SizedBox.shrink();
                     }
 
                     return Expanded(
                       flex: isExpanded ? bottomSeries.length : 1,
                       child: BottomChart(
                         series: series,
-                        pipSize: widget.pipSize,
+                        granularity: widget.granularity,
+                        pipSize: widget.bottomConfigs?[index].pipSize ??
+                            widget.pipSize,
                         title: widget.bottomConfigs![index].title,
+                        bottomChartTitleMargin: widget.bottomChartTitleMargin,
                         onRemove: () => _onRemove(widget.bottomConfigs![index]),
                         onEdit: () => _onEdit(widget.bottomConfigs![index]),
                         onExpandToggle: () {
-                          expandedIndex = expandedIndex != index ? index : null;
+                          setState(() {
+                            expandedIndex =
+                                expandedIndex != index ? index : null;
+                          });
                         },
                         onSwap: (int offset) => _onSwap(
                             widget.bottomConfigs![index],
                             widget.bottomConfigs![index + offset]),
                         onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                        onCrosshairHover: widget.onCrosshairHover,
+                        onCrosshairHover: (
+                          PointerHoverEvent ev,
+                          EpochToX epochToX,
+                          QuoteToY quoteToY,
+                          EpochFromX epochFromX,
+                          QuoteFromY quoteFromY,
+                        ) =>
+                            widget.onCrosshairHover?.call(
+                          ev,
+                          epochToX,
+                          quoteToY,
+                          epochFromX,
+                          quoteFromY,
+                          widget.bottomConfigs![index],
+                        ),
                         isExpanded: isExpanded,
                         showCrosshair: widget.showCrosshair,
                         showExpandedIcon: bottomSeries.length > 1,
