@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
