@@ -61,6 +61,8 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
   late AnimationController _crossHairAnimationController;
   late Animation<double> _crossHairFadeAnimation;
 
+  Offset? _longPressPosition;
+
   @override
   void initState() {
     super.initState();
@@ -217,8 +219,6 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     _longPressPosition = details.localPosition;
     _updateCrossHairToPosition(_longPressPosition!.dx);
   }
-
-  Offset? _longPressPosition;
 
   void _updateCrossHairToPosition(double x) {
     int crossHairIndex = _getCrossHairIndexFromTouchPosition(x);
