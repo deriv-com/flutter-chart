@@ -21,6 +21,8 @@ class IndexBaseCrossHair extends StatefulWidget {
     this.pipSize = 4,
     this.crossHairContentPadding = 4,
     this.crossHairTextStyle = TextStyles.overLine,
+    this.crossHairTransitionAnimationDuration =
+        const Duration(milliseconds: 100),
     Key? key,
   }) : super(key: key);
 
@@ -47,6 +49,10 @@ class IndexBaseCrossHair extends StatefulWidget {
 
   /// Text style for cross hair detail text.
   final TextStyle crossHairTextStyle;
+
+  /// The animation duration of the cross hair when jumping from one tick to
+  /// another while user kept long press and moving between ticks.
+  final Duration crossHairTransitionAnimationDuration;
 
   @override
   _IndexBaseCrossHairState createState() => _IndexBaseCrossHairState();
@@ -123,7 +129,7 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
               fit: StackFit.expand,
               children: <Widget>[
                 AnimatedPositioned(
-                  duration: const Duration(milliseconds: 100),
+                  duration: widget.crossHairTransitionAnimationDuration,
                   top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
                   left: widget.indexToX(_crossHairIndex!),
                   child: CustomPaint(
@@ -138,13 +144,13 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                       _crossHairIndex!,
                       constraints.maxWidth,
                     ),
-                    duration: const Duration(milliseconds: 100),
+                    duration: widget.crossHairTransitionAnimationDuration,
                     child: _buildCrossHairDetail(),
                   ),
                   AnimatedPositioned(
                     left: widget.indexToX(_crossHairIndex!),
                     top: _crossHairDetailSize!.height,
-                    duration: const Duration(milliseconds: 100),
+                    duration: widget.crossHairTransitionAnimationDuration,
                     child: CustomPaint(
                       size: Size(
                         1,
