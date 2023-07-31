@@ -211,6 +211,7 @@ class _WormChartState extends State<WormChart>
                       xToIndex: _xToIndex,
                       ticks: widget.ticks,
                       enabled: widget.crossHairEnabled,
+                      pipSize: widget.pipSize,
                     ),
                   ],
                 ),

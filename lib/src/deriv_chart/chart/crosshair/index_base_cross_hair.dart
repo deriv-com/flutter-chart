@@ -102,8 +102,10 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
             widget.crossHairTextStyle,
           ) +
           Offset(
-            widget.crossHairContentPadding,
-            widget.crossHairContentPadding,
+            // left and right.
+            widget.crossHairContentPadding * 2,
+            // top and bottom.
+            widget.crossHairContentPadding * 2,
           );
     }
   }
