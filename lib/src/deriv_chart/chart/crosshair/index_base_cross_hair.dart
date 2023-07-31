@@ -90,7 +90,7 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     super.didUpdateWidget(oldWidget);
     _updateCrossHairDetailSize();
     if (_longPressPosition != null) {
-      // User has hold the long press
+      // User has hold the long press during the update transition of the widget
       _updateCrossHairToPosition(_longPressPosition!.dx);
     }
   }
