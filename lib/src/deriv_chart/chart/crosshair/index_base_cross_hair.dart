@@ -23,6 +23,7 @@ class IndexBaseCrossHair extends StatefulWidget {
     this.crossHairTextStyle = TextStyles.overLine,
     this.crossHairTransitionAnimationDuration =
         const Duration(milliseconds: 100),
+    this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -54,6 +55,10 @@ class IndexBaseCrossHair extends StatefulWidget {
   /// another while user kept long press and moving between ticks.
   final Duration crossHairTransitionAnimationDuration;
 
+  /// A temporary solution for the issue when we wrap the worm chart with
+  /// GestureDetector to have the onTap.
+  final VoidCallback? onTap;
+
   @override
   _IndexBaseCrossHairState createState() => _IndexBaseCrossHairState();
 }
@@ -84,6 +89,7 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     );
 
     gestureManager = context.read<GestureManagerState>()
+      ..registerCallback(_onTapUp)
       ..registerCallback(_onLongPressStart)
       ..registerCallback(_onLongPressUpdate)
       ..registerCallback(_onLongPressEnd);
@@ -255,9 +261,14 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     setState(() => _crossHairIndex = null);
   }
 
+  void _onTapUp(TapUpDetails tapUpDetails) {
+    widget.onTap?.call();
+  }
+
   @override
   void dispose() {
     gestureManager
+      ..removeCallback(_onTapUp)
       ..removeCallback(_onLongPressStart)
       ..removeCallback(_onLongPressUpdate)
       ..removeCallback(_onLongPressEnd);

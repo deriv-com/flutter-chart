@@ -36,6 +36,7 @@ class WormChart extends StatefulWidget {
     this.topPadding = 10,
     this.bottomPadding = 10,
     this.crossHairEnabled = false,
+    this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -84,6 +85,16 @@ class WormChart extends StatefulWidget {
   /// Since for applying padding we have used [Canvas.saveLayer] for now and
   /// in case of performance it's relatively expensive, it can be disabled.
   final bool applyTickIndicatorsPadding;
+
+  /// Will be called when the worm chart is tapped.
+  ///
+  /// This behaviour shouldn't be part of the WormChart but currently when we
+  /// wrap the [WormChart] with GestureDetector the gesture functionality of it
+  /// will conflict with the worm chart itself and the cross hair's position
+  /// won't be correct when long press started.
+  /// For now having this callback here in worm chart until a more solid solution
+  /// is found.
+  final VoidCallback? onTap;
 
   @override
   _WormChartState createState() => _WormChartState();
@@ -212,6 +223,7 @@ class _WormChartState extends State<WormChart>
                       ticks: widget.ticks,
                       enabled: widget.crossHairEnabled,
                       pipSize: widget.pipSize,
+                      onTap: widget.onTap,
                     ),
                   ],
                 ),
