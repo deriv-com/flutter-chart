@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
@@ -140,9 +141,11 @@ class LineDrawing extends Drawing {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    final DrawingToolConfig config = drawingData.config;
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
-    final String pattern = config.toJson()['pattern'];
+    final LineDrawingToolConfig config =
+        drawingData.config as LineDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
+    final DrawingPatterns pattern = config.pattern;
 
     _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
     _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
@@ -179,7 +182,7 @@ class LineDrawing extends Drawing {
         endQuoteToY,
       );
 
-      if (pattern == DrawingPatterns.solid.name) {
+      if (pattern == DrawingPatterns.solid) {
         canvas.drawLine(
           Offset(_vector.x0, _vector.y0),
           Offset(_vector.x1, _vector.y1),
