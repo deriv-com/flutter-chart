@@ -1,16 +1,16 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/continuous/continuous_line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:flutter/material.dart';
 import '../data_model/drawing_parts.dart';
 
 /// Creates a Continuous drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a continuous drawing tool
 /// and until drawing should be finished.
-class ContinuousDrawingCreator extends DrawingCreator<LineDrawing> {
+class ContinuousDrawingCreator extends DrawingCreator<ContinuousLineDrawing> {
   /// Initializes the continuous drawing creator.
   const ContinuousDrawingCreator({
-    required OnAddDrawing<LineDrawing> onAddDrawing,
+    required OnAddDrawing<ContinuousLineDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
@@ -33,13 +33,15 @@ class ContinuousDrawingCreator extends DrawingCreator<LineDrawing> {
   final bool shouldStopDrawing;
 
   @override
-  DrawingCreatorState<LineDrawing> createState() =>
+  DrawingCreatorState<ContinuousLineDrawing> createState() =>
       _ContinuousDrawingCreatorState();
 }
 
-class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
+class _ContinuousDrawingCreatorState
+    extends DrawingCreatorState<ContinuousLineDrawing> {
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
     final ContinuousDrawingCreator _widget = widget as ContinuousDrawingCreator;
 
     if (_widget.shouldStopDrawing) {
@@ -60,7 +62,7 @@ class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
 
-        drawingParts.add(LineDrawing(
+        drawingParts.add(ContinuousLineDrawing(
           drawingPart: DrawingParts.marker,
           startEdgePoint: edgePoints.first,
         ));
@@ -85,19 +87,19 @@ class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole drawing.
           if (tapCount > 2) {
-            drawingParts = <LineDrawing>[];
+            drawingParts = <ContinuousLineDrawing>[];
 
-            drawingParts.add(LineDrawing(
+            drawingParts.add(ContinuousLineDrawing(
               drawingPart: DrawingParts.marker,
               startEdgePoint: edgePoints[previousTap],
             ));
           }
-          drawingParts.addAll(<LineDrawing>[
-            LineDrawing(
+          drawingParts.addAll(<ContinuousLineDrawing>[
+            ContinuousLineDrawing(
               drawingPart: DrawingParts.marker,
               endEdgePoint: edgePoints[currentTap],
             ),
-            LineDrawing(
+            ContinuousLineDrawing(
               drawingPart: DrawingParts.line,
               startEdgePoint: edgePoints[previousTap],
               endEdgePoint: edgePoints[currentTap],
@@ -105,7 +107,6 @@ class _ContinuousDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           ]);
         }
       }
-      drawingId = 'continuous_${edgePoints[currentTap].epoch}';
 
       widget.onAddDrawing(
         drawingId,

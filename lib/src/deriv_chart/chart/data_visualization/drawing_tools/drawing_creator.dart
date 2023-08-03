@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
@@ -84,8 +86,15 @@ abstract class DrawingCreatorState<T extends Drawing>
     super.dispose();
   }
 
+  /// Returns the specific drawing id base on selected drawing tool name.
+  void generateDrawingId(String drawingToolName) {
+    drawingId = '${drawingToolName}_${math.Random().nextInt(1000)}';
+  }
+
   /// Catches each single click on the chart to create a drawing.
-  void onTap(TapUpDetails details);
+  void onTap(TapUpDetails details) {
+    generateDrawingId(runtimeType.toString());
+  }
 
   @override
   void didChangeDependencies() {

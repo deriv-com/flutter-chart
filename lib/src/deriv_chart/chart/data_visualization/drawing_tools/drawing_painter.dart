@@ -197,10 +197,10 @@ class _DrawingPainter extends CustomPainter {
   final ChartTheme theme;
   final List<Tick>? series;
   final bool isDrawingToolSelected;
-  double Function(int x) epochToX;
-  double Function(double y) quoteToY;
-  DraggableEdgePoint draggableStartPoint;
-  DraggableEdgePoint? draggableEndPoint;
+  final double Function(int x) epochToX;
+  final double Function(double y) quoteToY;
+  final DraggableEdgePoint draggableStartPoint;
+  final DraggableEdgePoint? draggableEndPoint;
   final void Function({required bool isDragged}) setIsStartPointDragged;
   final void Function({required bool isDragged})? setIsEndPointDragged;
   final Point Function(
