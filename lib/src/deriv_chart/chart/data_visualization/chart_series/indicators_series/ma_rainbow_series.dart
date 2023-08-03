@@ -28,11 +28,11 @@ class RainbowSeries extends Series {
   RainbowSeries(
     IndicatorInput indicatorInput, {
     required RainbowOptions rainbowOptions,
-    List<Color>? rainbowColors,
+    List<LineStyle>? rainbowLineStyles,
     String? id,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
-          rainbowColors: rainbowColors ?? const <Color>[],
+          rainbowLineStyles: rainbowLineStyles ?? const <LineStyle>[],
           id: id,
           rainbowOptions: rainbowOptions,
         );
@@ -41,7 +41,7 @@ class RainbowSeries extends Series {
   RainbowSeries.fromIndicator(
     Indicator<Tick> indicator, {
     required this.rainbowOptions,
-    this.rainbowColors = const <Color>[],
+    this.rainbowLineStyles = const <LineStyle>[],
     String? id,
   })  : _fieldIndicator = indicator,
         super(id ?? 'MARainbow$rainbowOptions');
@@ -54,17 +54,18 @@ class RainbowSeries extends Series {
   /// Rainbow series
   final List<SingleIndicatorSeries> rainbowSeries = <SingleIndicatorSeries>[];
 
-  /// colors of rainbow bands
-  final List<Color> rainbowColors;
+  /// Line styles of rainbow bands
+  final List<LineStyle> rainbowLineStyles;
 
   @override
   SeriesPainter<Series>? createPainter() {
     /// check if we have color for every band
-    final bool useColors = rainbowColors.length == rainbowOptions.bandsCount;
+    final bool useColors =
+        rainbowLineStyles.length == rainbowOptions.bandsCount;
     final List<Indicator<Tick>> indicators = <Indicator<Tick>>[];
     for (int i = 0; i < rainbowOptions.bandsCount; i++) {
       final LineStyle style =
-          LineStyle(color: useColors ? rainbowColors[i] : Colors.red);
+          useColors ? rainbowLineStyles[i] : const LineStyle(color: Colors.red);
       if (i == 0) {
         indicators
             .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions));
@@ -159,7 +160,7 @@ class RainbowSeries extends Series {
 
     final RainbowSeries oldSeries = previous as RainbowSeries;
     return rainbowOptions != oldSeries.rainbowOptions ||
-        rainbowColors != oldSeries.rainbowColors;
+        rainbowLineStyles != oldSeries.rainbowLineStyles;
   }
 
   @override

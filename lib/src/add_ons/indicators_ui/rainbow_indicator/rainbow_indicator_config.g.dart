@@ -15,8 +15,8 @@ RainbowIndicatorConfig _$RainbowIndicatorConfigFromJson(
           MovingAverageType.simple,
       fieldType: json['fieldType'] as String? ?? 'close',
       bandsCount: json['bandsCount'] as int? ?? 10,
-      rainbowColors: (json['rainbowColors'] as List<dynamic>?)
-          ?.map((e) => const ColorConverter().fromJson(e as int))
+      rainbowLineStyles: (json['rainbowLineStyles'] as List<dynamic>?)
+          ?.map((e) => LineStyle.fromJson(e as Map<String, dynamic>))
           .toList(),
       showLastIndicator: json['showLastIndicator'] as bool? ?? false,
     );
@@ -30,8 +30,7 @@ Map<String, dynamic> _$RainbowIndicatorConfigToJson(
           _$MovingAverageTypeEnumMap[instance.movingAverageType]!,
       'fieldType': instance.fieldType,
       'bandsCount': instance.bandsCount,
-      'rainbowColors':
-          instance.rainbowColors?.map(const ColorConverter().toJson).toList(),
+      'rainbowLineStyles': instance.rainbowLineStyles,
     };
 
 const _$MovingAverageTypeEnumMap = {
