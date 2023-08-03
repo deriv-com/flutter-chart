@@ -22,7 +22,7 @@ class DraggableEdgePoint extends EdgePoint {
   final bool isDrawingDragged;
 
   /// Represents whether the edge point is currently being dragged or not
-  bool isDragged;
+  final bool isDragged;
 
   /// Holds the current position of the edge point when it is being dragged.
   Offset _draggedPosition = Offset.zero;

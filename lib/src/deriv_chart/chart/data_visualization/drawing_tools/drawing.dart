@@ -21,9 +21,9 @@ abstract class Drawing {
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
+    List<Tick>? series,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
-    List<Tick>? series,
   });
 
   /// Calculates y intersection based on vector points.

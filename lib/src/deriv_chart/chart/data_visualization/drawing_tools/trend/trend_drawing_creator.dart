@@ -45,6 +45,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
 
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
     final TrendDrawingCreator _widget = widget as TrendDrawingCreator;
 
     if (isDrawingFinished) {
@@ -59,8 +60,6 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             quote: widget.quoteFromCanvasY(position!.dy)));
 
         _isPenDown = true;
-
-        drawingId = 'trend_${edgePoints.first.epoch}';
 
         drawingParts.add(
           TrendDrawing(
@@ -109,8 +108,11 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
           ]);
       }
 
-      widget.onAddDrawing(drawingId, drawingParts,
-          isDrawingFinished: isDrawingFinished, isInfiniteDrawing: false);
+      widget.onAddDrawing(
+        drawingId,
+        drawingParts,
+        isDrawingFinished: isDrawingFinished,
+      );
     });
   }
 }

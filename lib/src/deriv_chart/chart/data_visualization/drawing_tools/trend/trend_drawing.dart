@@ -17,12 +17,13 @@ import 'package:deriv_chart/deriv_chart.dart';
 /// Trend drawing tool.
 class TrendDrawing extends Drawing {
   /// Initializes
-  TrendDrawing(
-      {required this.drawingPart,
-      required this.epochFromX,
-      this.getFirstActualClick,
-      this.startingEdgePoint = const EdgePoint(),
-      this.endingEdgePoint = const EdgePoint()});
+  TrendDrawing({
+    required this.drawingPart,
+    required this.epochFromX,
+    this.getFirstActualClick,
+    this.startingEdgePoint = const EdgePoint(),
+    this.endingEdgePoint = const EdgePoint(),
+  });
 
   /// Callback to get the coordinate of first click
   final void Function(int x, double y)? getFirstActualClick;
@@ -128,9 +129,9 @@ class TrendDrawing extends Drawing {
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
+    List<Tick>? series,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
-    List<Tick>? series,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
@@ -143,9 +144,8 @@ class TrendDrawing extends Drawing {
 
     /// Range of epoch between minimum and maximum epoch
     if (maximumEpoch != 0 && minimumEpoch != 0) {
-      final List<Tick>? epochRange = series
-          ?.where(
-              (Tick i) => i.epoch >= minimumEpoch && i.epoch <= maximumEpoch)
+      final List<Tick>? epochRange = series!
+          .where((Tick i) => i.epoch >= minimumEpoch && i.epoch <= maximumEpoch)
           .toList();
 
       double minValueOf(Tick t) => t.quote;
@@ -169,17 +169,31 @@ class TrendDrawing extends Drawing {
     final DrawingPatterns pattern = config.pattern;
 
     if (_calculator != null) {
-      _startPoint = draggableStartPoint.updatePosition(
-          startingEdgePoint.epoch,
-          _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
-          epochToX,
-          quoteToY);
+      _startPoint = updatePositionCallback(
+          EdgePoint(
+              epoch: startingEdgePoint.epoch,
+              quote:
+                  _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
+          draggableStartPoint);
 
-      _endPoint = draggableEndPoint!.updatePosition(
-          endingEdgePoint.epoch,
-          _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
-          epochToX,
-          quoteToY);
+      _endPoint = updatePositionCallback(
+          EdgePoint(
+              epoch: endingEdgePoint.epoch,
+              quote:
+                  _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
+          draggableEndPoint!);
+
+      // _startPoint = draggableStartPoint.updatePosition(
+      //     startingEdgePoint.epoch,
+      //     _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
+      //     epochToX,
+      //     quoteToY);
+
+      // _endPoint = draggableEndPoint!.updatePosition(
+      //     endingEdgePoint.epoch,
+      //     _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
+      //     epochToX,
+      //     quoteToY);
 
       startXCoord = _startPoint!.x;
       startYCoord = _startPoint!.y;
@@ -211,8 +225,12 @@ class TrendDrawing extends Drawing {
 
         final Tick? pointVal = chartValue!.first;
 
-        _startPoint = draggableStartPoint.updatePosition(
-            pointVal!.epoch, pointVal.quote, epochToX, quoteToY);
+        // _startPoint = draggableStartPoint.updatePosition(
+        //     pointVal!.epoch, pointVal.quote, epochToX, quoteToY);
+
+        _startPoint = updatePositionCallback(
+            EdgePoint(epoch: pointVal!.epoch, quote: pointVal.quote),
+            draggableStartPoint);
 
         startXCoord = _startPoint!.x;
         startYCoord = _startPoint!.y;
@@ -325,11 +343,11 @@ class TrendDrawing extends Drawing {
     }
 
     if (startPointDistance <= _markerRadius) {
-      draggableStartPoint.isDragged = true;
+      setIsStartPointDragged(isDragged: true);
     }
 
     if (endPointDistance <= _markerRadius) {
-      draggableEndPoint!.isDragged = true;
+      setIsEndPointDragged!(isDragged: true);
     }
 
     // For clicking the center line

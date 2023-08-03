@@ -151,7 +151,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 draggableStartPoint: _draggableStartPoint,
                 isDrawingToolSelected: widget.selectedDrawingTool != null,
                 draggableEndPoint: _draggableEndPoint,
-                series: widget.series?.entries,
+                series: widget.series.entries,
                 updatePositionCallback: (
                   EdgePoint edgePoint,
                   DraggableEdgePoint draggableEdgePoint,
@@ -219,9 +219,9 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData,
         updatePositionCallback,
+        series,
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
-        series: series,
       );
     }
   }
