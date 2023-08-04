@@ -104,6 +104,10 @@ class FibfanDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
@@ -114,18 +118,8 @@ class FibfanDrawing extends Drawing {
     final Paint linePaintStype =
         paint.linePaintStyle(lineStyle.color, lineStyle.thickness);
 
-    _startPoint = draggableStartPoint.updatePosition(
-      startEdgePoint.epoch,
-      startEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
-    _endPoint = draggableEndPoint!.updatePosition(
-      endEdgePoint.epoch,
-      endEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
+    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
+    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -237,30 +231,32 @@ class FibfanDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     bool _isVectorHit(Vector vector) =>
         isVectorHit(vector, position, lineStyle);
 
-    draggableStartPoint.isDragged = false;
-    draggableEndPoint!.isDragged = false;
+    setIsStartPointDragged(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
 
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      draggableStartPoint.isDragged = true;
+      setIsStartPointDragged(isDragged: true);
     }
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      draggableEndPoint.isDragged = true;
+      setIsEndPointDragged(isDragged: true);
     }
     return _isVectorHit(_baseVector) ||
         _isVectorHit(_initialInnerVector) ||
         _isVectorHit(_middleInnerVector) ||
         _isVectorHit(_topInnerVector) ||
         _isVectorHit(_topVector) ||
-        (draggableStartPoint.isDragged || draggableEndPoint.isDragged);
+        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
   }
 }

@@ -4,5 +4,5 @@ import 'package:flutter/material.dart';
 /// Build context extensions.
 extension ContextExtension on BuildContext {
   /// Returns [ChartLocalization] of context.
-  ChartLocalization get localization => ChartLocalization.of(this)!;
+  ChartLocalization get localization => ChartLocalization.of(this);
 }

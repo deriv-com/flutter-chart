@@ -1,13 +1,13 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/fibfan_drawing.dart';
 import 'package:flutter/material.dart';
 
 /// Creates a Fibfan drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a line drawing tool and
 /// until drawing is finished
-class FibfanDrawingCreator extends Creator<FibfanDrawing> {
+class FibfanDrawingCreator extends DrawingCreator<FibfanDrawing> {
   /// Initializes the fibfan drawing creator.
   const FibfanDrawingCreator({
     required OnAddDrawing<FibfanDrawing> onAddDrawing,
@@ -28,15 +28,17 @@ class FibfanDrawingCreator extends Creator<FibfanDrawing> {
   final void Function(String drawingId) removeDrawing;
 
   @override
-  CreatorState<FibfanDrawing> createState() => _FibfanDrawingCreatorState();
+  DrawingCreatorState<FibfanDrawing> createState() =>
+      _FibfanDrawingCreatorState();
 }
 
-class _FibfanDrawingCreatorState extends CreatorState<FibfanDrawing> {
+class _FibfanDrawingCreatorState extends DrawingCreatorState<FibfanDrawing> {
   /// If drawing has been started.
   bool _isPenDown = false;
 
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
     final FibfanDrawingCreator _widget = widget as FibfanDrawingCreator;
 
     if (isDrawingFinished) {
@@ -53,7 +55,6 @@ class _FibfanDrawingCreatorState extends CreatorState<FibfanDrawing> {
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
         _isPenDown = true;
-        drawingId = 'line_${edgePoints.first.epoch}';
 
         drawingParts.add(FibfanDrawing(
           drawingPart: DrawingParts.marker,
@@ -72,10 +73,7 @@ class _FibfanDrawingCreatorState extends CreatorState<FibfanDrawing> {
         ));
 
         /// Checks if the initial point and the final point are the same.
-        if (Offset(edgePoints[1].epoch.toDouble(),
-                edgePoints[1].quote.toDouble()) ==
-            Offset(edgePoints.first.epoch.toDouble(),
-                edgePoints.first.quote.toDouble())) {
+        if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
@@ -100,7 +98,8 @@ class _FibfanDrawingCreatorState extends CreatorState<FibfanDrawing> {
         }
       }
       widget.onAddDrawing(
-        <String, List<FibfanDrawing>>{drawingId: drawingParts},
+        drawingId,
+        drawingParts,
         isDrawingFinished: isDrawingFinished,
       );
     });
