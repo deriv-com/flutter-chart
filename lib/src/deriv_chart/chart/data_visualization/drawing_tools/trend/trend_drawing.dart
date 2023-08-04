@@ -258,17 +258,19 @@ class TrendDrawing extends Drawing {
       } else {
         canvas
           ..drawCircle(
-              Offset(startXCoord, _rectCenter),
-              _markerRadius,
-              drawingData.isSelected
-                  ? paint.glowyCirclePaintStyle(lineStyle.color)
-                  : paint.transparentCirclePaintStyle())
+            Offset(startXCoord, _rectCenter),
+            _markerRadius,
+            drawingData.isSelected
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle(),
+          )
           ..drawCircle(
-              Offset(endXCoord, _rectCenter),
-              _markerRadius,
-              drawingData.isSelected
-                  ? paint.glowyCirclePaintStyle(lineStyle.color)
-                  : paint.transparentCirclePaintStyle());
+            Offset(endXCoord, _rectCenter),
+            _markerRadius,
+            drawingData.isSelected
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle(),
+          );
       }
     }
 
@@ -279,42 +281,54 @@ class TrendDrawing extends Drawing {
 
       if (pattern == DrawingPatterns.solid) {
         _middleRect = Rect.fromLTRB(
-            startXCoord,
-            quoteToY(_calculator!.max) + _distance / 3,
-            endXCoord,
-            quoteToY(_calculator!.max) + (_distance - _distance / 3));
+          startXCoord,
+          quoteToY(_calculator!.max) + _distance / 3,
+          endXCoord,
+          quoteToY(_calculator!.max) + (_distance - _distance / 3),
+        );
 
-        _mainRect = Rect.fromLTRB(startXCoord, quoteToY(_calculator!.max),
-            endXCoord, quoteToY(_calculator!.min));
+        _mainRect = Rect.fromLTRB(
+          startXCoord,
+          quoteToY(_calculator!.max),
+          endXCoord,
+          quoteToY(_calculator!.min),
+        );
 
         canvas
           ..drawRect(
-              _mainRect,
-              drawingData.isSelected
-                  ? paint.glowyLinePaintStyle(
-                      fillStyle.color.withOpacity(0.2), lineStyle.thickness)
-                  : paint.fillPaintStyle(
-                      fillStyle.color.withOpacity(0.2), lineStyle.thickness))
-          ..drawRect(_mainRect,
-              paint.strokeStyle(lineStyle.color, lineStyle.thickness))
+            _mainRect,
+            drawingData.isSelected
+                ? paint.glowyLinePaintStyle(
+                    fillStyle.color.withOpacity(0.2), lineStyle.thickness)
+                : paint.fillPaintStyle(
+                    fillStyle.color.withOpacity(0.2), lineStyle.thickness),
+          )
           ..drawRect(
-              _middleRect,
-              drawingData.isSelected
-                  ? paint.glowyLinePaintStyle(
-                      fillStyle.color.withOpacity(0.2), lineStyle.thickness)
-                  : paint.fillPaintStyle(
-                      fillStyle.color.withOpacity(0.2), lineStyle.thickness))
-          ..drawRect(_middleRect,
-              paint.strokeStyle(lineStyle.color, lineStyle.thickness));
+            _mainRect,
+            paint.strokeStyle(lineStyle.color, lineStyle.thickness),
+          )
+          ..drawRect(
+            _middleRect,
+            drawingData.isSelected
+                ? paint.glowyLinePaintStyle(
+                    fillStyle.color.withOpacity(0.2), lineStyle.thickness)
+                : paint.fillPaintStyle(
+                    fillStyle.color.withOpacity(0.2), lineStyle.thickness),
+          )
+          ..drawRect(
+            _middleRect,
+            paint.strokeStyle(lineStyle.color, lineStyle.thickness),
+          );
       }
     }
 
     if (drawingPart == DrawingParts.line) {
       if (pattern == DrawingPatterns.solid) {
         canvas.drawLine(
-            Offset(startXCoord, _rectCenter),
-            Offset(endXCoord, _rectCenter),
-            paint.glowyCirclePaintStyle(lineStyle.color));
+          Offset(startXCoord, _rectCenter),
+          Offset(endXCoord, _rectCenter),
+          paint.glowyCirclePaintStyle(lineStyle.color),
+        );
       }
     }
   }

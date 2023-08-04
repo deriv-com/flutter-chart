@@ -34,7 +34,7 @@ class TrendDrawingCreator extends DrawingCreator<TrendDrawing> {
 }
 
 class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
-  // /// If drawing has been started.
+  /// If drawing has been started.
   bool _isPenDown = false;
 
   /// Stores coordinate of first point on the graph
@@ -60,8 +60,9 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
       if (!_isPenDown) {
         /// Draw the initial point of the line.
         edgePoints.add(EdgePoint(
-            epoch: epochFromX!(position!.dx),
-            quote: widget.quoteFromCanvasY(position!.dy)));
+          epoch: epochFromX!(position!.dx),
+          quote: widget.quoteFromCanvasY(position!.dy),
+        ));
 
         _isPenDown = true;
 
@@ -75,8 +76,9 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
         );
       } else if (!isDrawingFinished) {
         edgePoints.add(EdgePoint(
-            epoch: epochFromX!(position!.dx),
-            quote: widget.quoteFromCanvasY(position!.dy)));
+          epoch: epochFromX!(position!.dx),
+          quote: widget.quoteFromCanvasY(position!.dy),
+        ));
 
         /// Draw final drawing
         _isPenDown = false;
