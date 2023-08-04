@@ -149,7 +149,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               _requestCompleter.complete();
             }
             await _onIntervalSelected(0);
-          } on APIBaseException catch (e) {
+          } on BaseAPIException catch (e) {
             await showDialog<void>(
               context: context,
               builder: (_) => AlertDialog(
@@ -308,7 +308,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       WidgetsBinding.instance.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(),
       );
-    } on TickException catch (e) {
+    } on BaseAPIException catch (e) {
       dev.log(e.message!, error: e);
     } finally {
       _completeRequest();
@@ -367,12 +367,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
   DataSeries<Tick> _getDataSeries(ChartStyle style) {
     if (ticks is List<Candle>) {
       switch (style) {
-        case ChartStyle.candles:
-          return CandleSeries(ticks as List<Candle>);
         case ChartStyle.hollow:
           return HollowCandleSeries(ticks as List<Candle>);
         case ChartStyle.ohlc:
           return OhlcCandleSeries(ticks as List<Candle>);
+        default:
+          return CandleSeries(ticks as List<Candle>);
       }
     }
     return LineSeries(ticks, style: const LineStyle(hasArea: true))
