@@ -1,35 +1,37 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
-/// Vertical drawing tool. A vertical is a vertical line defined by one point
-/// that is infinite in both directions.
-class VerticalDrawing extends Drawing {
+/// Line drawing tool. A line is a vector defined by two points that is
+/// infinite in both directions.
+class ContinuousLineDrawing extends Drawing {
   /// Initializes
-  VerticalDrawing({
-    required this.drawingPart,
-    required this.edgePoint,
-  });
+  ContinuousLineDrawing({
+    required DrawingParts drawingPart,
+    EdgePoint startEdgePoint = const EdgePoint(),
+    EdgePoint endEdgePoint = const EdgePoint(),
+    bool exceedStart = false,
+    bool exceedEnd = false,
+  }) : _lineDrawing = LineDrawing(
+            drawingPart: drawingPart,
+            startEdgePoint: startEdgePoint,
+            endEdgePoint: endEdgePoint,
+            exceedStart: exceedStart,
+            exceedEnd: exceedEnd);
 
-  /// Part of a drawing: 'vertical'
-  final DrawingParts drawingPart;
+  final LineDrawing _lineDrawing;
 
-  /// Starting point of drawing
-  final EdgePoint edgePoint;
-
-  /// Keeps the latest position of the start of drawing
-  Point? startPoint;
-
-  /// Paint
+  /// Paint the line
   @override
   void onPaint(
     Canvas canvas,
@@ -46,36 +48,34 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    final DrawingPaintStyle paint = DrawingPaintStyle();
-    final VerticalDrawingToolConfig config =
-        drawingData.config as VerticalDrawingToolConfig;
+    final ContinuousDrawingToolConfig config =
+        drawingData.config as ContinuousDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
 
-    startPoint = updatePositionCallback(edgePoint, draggableStartPoint);
-
-    final double xCoord = startPoint!.x;
-    final double startQuoteToY = startPoint!.y;
-
-    if (drawingPart == DrawingParts.line) {
-      final double startY = startQuoteToY - 10000,
-          endingY = startQuoteToY + 10000;
-
-      if (pattern == DrawingPatterns.solid) {
-        canvas.drawLine(
-          Offset(xCoord, startY),
-          Offset(xCoord, endingY),
-          drawingData.isSelected
-              ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
-              : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
-        );
-      }
-    }
+    _lineDrawing.onPaint(
+        canvas,
+        size,
+        theme,
+        epochToX,
+        quoteToY,
+        DrawingData(
+          id: drawingData.id,
+          config: LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
+          drawingParts: drawingData.drawingParts,
+          isDrawingFinished: drawingData.isDrawingFinished,
+          isSelected: drawingData.isSelected,
+        ),
+        updatePositionCallback,
+        draggableStartPoint,
+        draggableEndPoint: draggableEndPoint);
   }
 
   /// Calculation for detemining whether a user's touch or click intersects
-  /// with any of the painted areas on the screen
+  /// with any of the painted areas on the screen, for any of the edge points
+  /// it will call "setIsEdgeDragged" callback function to determine which
+  /// point is clicked
   @override
   bool hitTest(
     Offset position,
@@ -88,10 +88,9 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
-  }) {
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
-
-    return position.dx > startPoint!.x - lineStyle.thickness - 5 &&
-        position.dx < startPoint!.x + lineStyle.thickness + 5;
-  }
+  }) =>
+      _lineDrawing.hitTest(position, epochToX, quoteToY, config,
+          draggableStartPoint, setIsStartPointDragged,
+          draggableEndPoint: draggableEndPoint,
+          setIsEndPointDragged: setIsEndPointDragged);
 }

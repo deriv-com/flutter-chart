@@ -42,7 +42,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
             children: <Widget>[
               DropdownButton<DrawingToolConfig>(
                 value: _selectedDrawingTool,
-                hint: Text(ChartLocalization.of(context)!.selectDrawingTool),
+                hint: Text(ChartLocalization.of(context).selectDrawingTool),
                 items: const <DropdownMenuItem<DrawingToolConfig>>[
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Channel'),

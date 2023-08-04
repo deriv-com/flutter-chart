@@ -73,6 +73,10 @@ class ChannelDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
@@ -86,24 +90,10 @@ class ChannelDrawing extends Drawing {
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
 
-    _startPoint = draggableStartPoint.updatePosition(
-      startEdgePoint.epoch,
-      startEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
-    _middlePoint = draggableMiddlePoint!.updatePosition(
-      middleEdgePoint.epoch,
-      middleEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
-    _endPoint = draggableEndPoint!.updatePosition(
-      endEdgePoint.epoch,
-      endEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
+    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
+    _middlePoint =
+        updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
+    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -196,13 +186,16 @@ class ChannelDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    draggableStartPoint.isDragged = false;
-    draggableMiddlePoint!.isDragged = false;
-    draggableEndPoint!.isDragged = false;
+    setIsStartPointDragged(isDragged: false);
+    setIsMiddlePointDragged!(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
 
     final double middleXCoord = _middlePoint!.x;
     final double middleQuoteToY = _middlePoint!.y;
@@ -214,12 +207,12 @@ class ChannelDrawing extends Drawing {
 
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      draggableStartPoint.isDragged = true;
+      setIsStartPointDragged(isDragged: true);
     }
 
     /// Check if middle point clicked
     if (_middlePoint!.isClicked(position, markerRadius)) {
-      draggableMiddlePoint!.isDragged = true;
+      setIsMiddlePointDragged(isDragged: true);
     }
 
     /// Check if end point clicked, since the endPoint position is dependendat
@@ -228,7 +221,7 @@ class ChannelDrawing extends Drawing {
 
     /// Check if end point clicked
     if (endPoint.isClicked(position, markerRadius)) {
-      draggableEndPoint!.isDragged = true;
+      setIsEndPointDragged(isDragged: true);
     }
 
     /// Detect the area between 2 parallel lines

@@ -39,7 +39,7 @@ class AssetItem extends StatelessWidget {
       contentPadding: EdgeInsets.only(left: theme.margin12Chart),
       leading: _buildAssetIcon(),
       title: _buildAssetTitle(theme),
-      onTap: () => onAssetClicked.call(asset, false),
+      onTap: () => onAssetClicked.call(asset: asset, favouriteClicked: false),
       trailing: _buildFavouriteIcon(theme),
     );
   }
@@ -69,7 +69,10 @@ class AssetItem extends StatelessWidget {
               asset.isFavourite ? theme.accentYellowColor : theme.base04Color,
           size: 20,
         ),
-        onPressed: () => onAssetClicked.call(asset, true),
+        onPressed: () => onAssetClicked.call(
+          asset: asset,
+          favouriteClicked: true,
+        ),
       );
 
   Widget _buildAssetIcon() => SymbolIcon(symbolCode: asset.name);

@@ -1,19 +1,14 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:flutter/material.dart';
 import './vertical_drawing.dart';
 
 /// Creates a Vertical line drawing
-class VerticalDrawingCreator extends Creator<VerticalDrawing> {
+class VerticalDrawingCreator extends DrawingCreator<VerticalDrawing> {
   /// Initializes the vertical drawing creator.
   const VerticalDrawingCreator({
-    required void Function(
-      Map<String, List<VerticalDrawing>>, {
-      bool isDrawingFinished,
-      bool isInfiniteDrawing,
-    })
-        onAddDrawing,
+    required OnAddDrawing<VerticalDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     Key? key,
   }) : super(
@@ -23,12 +18,15 @@ class VerticalDrawingCreator extends Creator<VerticalDrawing> {
         );
 
   @override
-  CreatorState<VerticalDrawing> createState() => _VerticalDrawingCreatorState();
+  DrawingCreatorState<VerticalDrawing> createState() =>
+      _VerticalDrawingCreatorState();
 }
 
-class _VerticalDrawingCreatorState extends CreatorState<VerticalDrawing> {
+class _VerticalDrawingCreatorState
+    extends DrawingCreatorState<VerticalDrawing> {
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
     if (isDrawingFinished) {
       return;
     }
@@ -40,7 +38,6 @@ class _VerticalDrawingCreatorState extends CreatorState<VerticalDrawing> {
         quote: widget.quoteFromCanvasY(position!.dy),
       ));
 
-      drawingId = 'vertical_${edgePoints.first.epoch}';
       isDrawingFinished = true;
 
       drawingParts.add(VerticalDrawing(
@@ -49,7 +46,8 @@ class _VerticalDrawingCreatorState extends CreatorState<VerticalDrawing> {
       ));
 
       widget.onAddDrawing(
-        <String, List<VerticalDrawing>>{drawingId: drawingParts},
+        drawingId,
+        drawingParts,
         isDrawingFinished: isDrawingFinished,
       );
     });

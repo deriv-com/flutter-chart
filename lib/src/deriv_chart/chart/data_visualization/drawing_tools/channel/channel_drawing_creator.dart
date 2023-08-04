@@ -1,21 +1,16 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/channel/channel_drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:flutter/material.dart';
 import '../data_model/drawing_parts.dart';
 
 /// Creates a Channel drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting the channel drawing tool
 /// and until drawing should be finished.
-class ChannelDrawingCreator extends Creator<ChannelDrawing> {
+class ChannelDrawingCreator extends DrawingCreator<ChannelDrawing> {
   /// Initializes the channel drawing creator.
   const ChannelDrawingCreator({
-    required void Function(
-      Map<String, List<ChannelDrawing>>, {
-      bool isDrawingFinished,
-      bool isInfiniteDrawing,
-    })
-        onAddDrawing,
+    required OnAddDrawing<ChannelDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
@@ -38,12 +33,14 @@ class ChannelDrawingCreator extends Creator<ChannelDrawing> {
   final bool shouldStopDrawing;
 
   @override
-  CreatorState<ChannelDrawing> createState() => _ChannelDrawingCreatorState();
+  DrawingCreatorState<ChannelDrawing> createState() =>
+      _ChannelDrawingCreatorState();
 }
 
-class _ChannelDrawingCreatorState extends CreatorState<ChannelDrawing> {
+class _ChannelDrawingCreatorState extends DrawingCreatorState<ChannelDrawing> {
   @override
   void onTap(TapUpDetails details) {
+    super.onTap(details);
     final ChannelDrawingCreator _widget = widget as ChannelDrawingCreator;
 
     if (isDrawingFinished) {
@@ -59,7 +56,6 @@ class _ChannelDrawingCreatorState extends CreatorState<ChannelDrawing> {
           epoch: epochFromX!(position!.dx),
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
-        drawingId = 'channle_${edgePoints.first.epoch}';
 
         drawingParts.add(ChannelDrawing(
           drawingPart: DrawingParts.marker,
@@ -72,10 +68,7 @@ class _ChannelDrawingCreatorState extends CreatorState<ChannelDrawing> {
         ));
 
         /// Checks if the initial point and the final point are the same.
-        if (Offset(edgePoints[1].epoch.toDouble(),
-                edgePoints[1].quote.toDouble()) ==
-            Offset(edgePoints.first.epoch.toDouble(),
-                edgePoints.first.quote.toDouble())) {
+        if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
@@ -122,7 +115,8 @@ class _ChannelDrawingCreatorState extends CreatorState<ChannelDrawing> {
         ]);
       }
       widget.onAddDrawing(
-        <String, List<ChannelDrawing>>{drawingId: drawingParts},
+        drawingId,
+        drawingParts,
         isDrawingFinished: isDrawingFinished,
       );
     });

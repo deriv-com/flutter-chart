@@ -47,9 +47,9 @@ class ChannelDrawingToolItemState
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
           _buildColorField(
-              ChartLocalization.of(context)!.labelColor, _currentLineStyle),
+              ChartLocalization.of(context).labelColor, _currentLineStyle),
           _buildColorField(
-              ChartLocalization.of(context)!.labelFillColor, _currentFillStyle),
+              ChartLocalization.of(context).labelFillColor, _currentFillStyle),
           // TODO(maryia-binary): implement _buildPatternField() to set pattern
         ],
       );
@@ -65,7 +65,7 @@ class ChannelDrawingToolItemState
             onColorChanged: (Color selectedColor) {
               setState(() {
                 final LineStyle newColor = style.copyWith(color: selectedColor);
-                if (label == ChartLocalization.of(context)!.labelColor) {
+                if (label == ChartLocalization.of(context).labelColor) {
                   _lineStyle = newColor;
                 } else {
                   _fillStyle = newColor;

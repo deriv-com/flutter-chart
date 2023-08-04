@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
@@ -57,6 +58,10 @@ class LineDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
@@ -64,22 +69,14 @@ class LineDrawing extends Drawing {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    final DrawingToolConfig config = drawingData.config;
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
-    final String pattern = config.toJson()['pattern'];
+    final LineDrawingToolConfig config =
+        drawingData.config as LineDrawingToolConfig;
 
-    _startPoint = draggableStartPoint.updatePosition(
-      startEdgePoint.epoch,
-      startEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
-    _endPoint = draggableEndPoint!.updatePosition(
-      endEdgePoint.epoch,
-      endEdgePoint.quote,
-      epochToX,
-      quoteToY,
-    );
+    final LineStyle lineStyle = config.lineStyle;
+    final DrawingPatterns pattern = config.pattern;
+
+    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
+    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -115,7 +112,7 @@ class LineDrawing extends Drawing {
         exceedEnd: exceedEnd,
       );
 
-      if (pattern == DrawingPatterns.solid.name) {
+      if (pattern == DrawingPatterns.solid) {
         canvas.drawLine(
           Offset(_vector.x0, _vector.y0),
           Offset(_vector.x1, _vector.y1),
@@ -137,10 +134,16 @@ class LineDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
+    setIsStartPointDragged(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
+
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
     double startXCoord = _startPoint!.x;
@@ -151,12 +154,12 @@ class LineDrawing extends Drawing {
 
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      draggableStartPoint.isDragged = true;
+      setIsStartPointDragged(isDragged: true);
     }
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      draggableEndPoint!.isDragged = true;
+      setIsEndPointDragged(isDragged: true);
     }
 
     startXCoord = _vector.x0;
