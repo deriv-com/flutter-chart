@@ -1,3 +1,5 @@
+// ignore_for_file: use_setters_to_change_properties
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
@@ -36,11 +38,13 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
   bool _isPenDown = false;
 
   /// Stores coordinate of first point on the graph
-  Offset? firstPointOnGraph;
+  int? _firstPointEpoch;
 
-  void getFirstClickPoint(int x, double y) {
-    // the actual first point coord
-    firstPointOnGraph = Offset(x.toDouble(), y);
+  static const int touchDistanceThreshold = 200;
+
+  void getfirstPointEpoch(int? epoch) {
+    // the actual first point edge point
+    _firstPointEpoch = epoch;
   }
 
   @override
@@ -66,7 +70,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             epochFromX: epochFromX,
             drawingPart: DrawingParts.marker,
             startingEdgePoint: edgePoints.first,
-            getFirstActualClick: getFirstClickPoint,
+            getFirstActualClick: getfirstPointEpoch,
           ),
         );
       } else if (!isDrawingFinished) {
@@ -77,10 +81,13 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
         /// Draw final drawing
         _isPenDown = false;
         isDrawingFinished = true;
+        final EdgePoint startingEdgePoint = edgePoints.first;
+        final EdgePoint endingEdgePoint = edgePoints[1];
 
         // When the second point is on the same y
-        //coordinate as the first point
-        if ((firstPointOnGraph!.dx - edgePoints[1].epoch).abs() <= 200) {
+        // coordinate as the first point
+        if ((_firstPointEpoch! - endingEdgePoint.epoch).abs() <=
+            touchDistanceThreshold) {
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
           _widget.clearDrawingToolSelection();
@@ -91,20 +98,23 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
           ..removeAt(0)
           ..addAll(<TrendDrawing>[
             TrendDrawing(
-                epochFromX: epochFromX,
-                drawingPart: DrawingParts.rectangle,
-                startingEdgePoint: edgePoints.first,
-                endingEdgePoint: edgePoints[1]),
+              epochFromX: epochFromX,
+              drawingPart: DrawingParts.rectangle,
+              startingEdgePoint: startingEdgePoint,
+              endingEdgePoint: endingEdgePoint,
+            ),
             TrendDrawing(
-                epochFromX: epochFromX,
-                drawingPart: DrawingParts.line,
-                startingEdgePoint: edgePoints.first,
-                endingEdgePoint: edgePoints[1]),
+              epochFromX: epochFromX,
+              drawingPart: DrawingParts.line,
+              startingEdgePoint: startingEdgePoint,
+              endingEdgePoint: endingEdgePoint,
+            ),
             TrendDrawing(
-                epochFromX: epochFromX,
-                drawingPart: DrawingParts.marker,
-                startingEdgePoint: edgePoints.first,
-                endingEdgePoint: edgePoints[1])
+              epochFromX: epochFromX,
+              drawingPart: DrawingParts.marker,
+              startingEdgePoint: startingEdgePoint,
+              endingEdgePoint: endingEdgePoint,
+            )
           ]);
       }
 

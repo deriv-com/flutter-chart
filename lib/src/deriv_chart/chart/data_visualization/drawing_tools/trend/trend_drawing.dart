@@ -26,7 +26,9 @@ class TrendDrawing extends Drawing {
   });
 
   /// Callback to get the coordinate of first click
-  final void Function(int x, double y)? getFirstActualClick;
+  final void Function(
+    int x,
+  )? getFirstActualClick;
 
   /// Get epoch from x.
   int Function(double x)? epochFromX;
@@ -40,8 +42,8 @@ class TrendDrawing extends Drawing {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
-  /// Instance of MinMaxCalculator class for getting the minimum and maximum
-  ///  quote w.r.t epoch
+  /// Instance of MinMaxCalculator class for getting Minimum
+  /// and maximum quote in the trend range with respect to the epoch
   MinMaxCalculator? _calculator;
 
   /// Store the  starting X Coordinate
@@ -53,7 +55,9 @@ class TrendDrawing extends Drawing {
   /// Store the  ending X Coordinate
   double endXCoord = 0;
 
-  /// The area affected on touch
+  /// The area impacted upon interaction with all lines within the
+  /// trend drawing tool. .i.e outer rectangle , inner rectangle
+  /// and center line.
   final double _touchTolerance = 5;
 
   ///  Starting point of drawing
@@ -102,6 +106,26 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
+  // Binary search to find closest index to the [epoch].
+  int _findClosestIndex(int epoch, List<Tick>? entries) {
+    int lo = 0;
+    int hi = entries!.length - 1;
+
+    while (lo <= hi) {
+      final int mid = (hi + lo) ~/ 2;
+      // int getEpochOf(T t, int index) => t.epoch;
+      if (epoch < entries[mid].epoch) {
+        hi = mid - 1;
+      } else if (epoch > entries[mid].epoch) {
+        lo = mid + 1;
+      } else {
+        return mid;
+      }
+    }
+
+    return (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
+  }
+
   /// Store the complete rectangle between start,end epoch and
   /// minimum,maximum quote.
   Rect _mainRect = Rect.zero;
@@ -135,18 +159,20 @@ class TrendDrawing extends Drawing {
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
-    final num minimumEpoch =
+    final int minimumEpoch =
         startXCoord == 0 ? startingEdgePoint.epoch : epochFromX!(startXCoord);
 
     ///  Minimum epoch of the drawing
-    final num maximumEpoch =
+    final int maximumEpoch =
         endXCoord == 0 ? endingEdgePoint.epoch : epochFromX!(endXCoord);
 
     /// Range of epoch between minimum and maximum epoch
     if (maximumEpoch != 0 && minimumEpoch != 0) {
-      final List<Tick>? epochRange = series!
-          .where((Tick i) => i.epoch >= minimumEpoch && i.epoch <= maximumEpoch)
-          .toList();
+      final int minimumEpochIndex = _findClosestIndex(minimumEpoch, series);
+      final int maximumEpochIndex = _findClosestIndex(maximumEpoch, series);
+
+      final List<Tick>? epochRange =
+          series!.sublist(minimumEpochIndex, maximumEpochIndex);
 
       double minValueOf(Tick t) => t.quote;
       double maxValueOf(Tick t) => t.quote;
@@ -183,18 +209,6 @@ class TrendDrawing extends Drawing {
                   _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableEndPoint!);
 
-      // _startPoint = draggableStartPoint.updatePosition(
-      //     startingEdgePoint.epoch,
-      //     _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
-      //     epochToX,
-      //     quoteToY);
-
-      // _endPoint = draggableEndPoint!.updatePosition(
-      //     endingEdgePoint.epoch,
-      //     _calculator!.min + (_calculator!.max - _calculator!.min) / 2,
-      //     epochToX,
-      //     quoteToY);
-
       startXCoord = _startPoint!.x;
       startYCoord = _startPoint!.y;
 
@@ -219,23 +233,20 @@ class TrendDrawing extends Drawing {
 
     if (drawingPart == DrawingParts.marker) {
       if (endingEdgePoint.epoch == 0) {
-        final List<Tick>? chartValue = series
-            ?.where((Tick i) => i.epoch >= startingEdgePoint.epoch)
-            .toList();
+        final int startPointIndex =
+            _findClosestIndex(startingEdgePoint.epoch, series);
 
-        final Tick? pointVal = chartValue!.first;
-
-        // _startPoint = draggableStartPoint.updatePosition(
-        //     pointVal!.epoch, pointVal.quote, epochToX, quoteToY);
+        final Tick? startPointEntry = series![startPointIndex];
 
         _startPoint = updatePositionCallback(
-            EdgePoint(epoch: pointVal!.epoch, quote: pointVal.quote),
+            EdgePoint(
+                epoch: startPointEntry!.epoch, quote: startPointEntry.quote),
             draggableStartPoint);
 
         startXCoord = _startPoint!.x;
         startYCoord = _startPoint!.y;
 
-        getFirstActualClick!(pointVal.epoch, pointVal.quote);
+        getFirstActualClick!(startPointEntry.epoch);
 
         canvas.drawCircle(
           Offset(startXCoord, startYCoord),
@@ -308,7 +319,7 @@ class TrendDrawing extends Drawing {
     }
   }
 
-  // Calculation for detemining whether a user's touch or click intersects
+  /// Calculation for detemining whether a user's touch or click intersects
   /// with any of the painted areas on the screen,
   /// the drawing is selected on clicking on any boundary(line) of the drawing
   @override
@@ -351,6 +362,7 @@ class TrendDrawing extends Drawing {
     }
 
     // For clicking the center line
+
     final double lineArea = (0.5 *
             (startXCoord * _rectCenter +
                 endXCoord * position.dy +
