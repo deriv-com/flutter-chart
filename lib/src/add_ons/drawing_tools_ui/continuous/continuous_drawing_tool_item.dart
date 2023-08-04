@@ -1,26 +1,23 @@
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
-
 import 'package:flutter/material.dart';
-
+import 'package:deriv_chart/deriv_chart.dart';
+import 'continuous_drawing_tool_config.dart';
 import '../callbacks.dart';
 import '../drawing_tool_config.dart';
-import '../drawing_tool_item.dart';
 
-/// Vertical drawing tool item in the list of drawing tool which provide this
-/// drawing tools options menu.
-class VerticalDrawingToolItem extends DrawingToolItem {
+/// Continuous drawing tool item in the list of drawing tools
+class ContinuousDrawingToolItem extends DrawingToolItem {
   /// Initializes
-  const VerticalDrawingToolItem({
+  const ContinuousDrawingToolItem({
     required UpdateDrawingTool updateDrawingTool,
     required VoidCallback deleteDrawingTool,
     Key? key,
-    VerticalDrawingToolConfig config = const VerticalDrawingToolConfig(),
+    ContinuousDrawingToolConfig config = const ContinuousDrawingToolConfig(),
   }) : super(
           key: key,
-          title: 'Vertical',
+          title: 'Continuous',
           config: config,
           updateDrawingTool: updateDrawingTool,
           deleteDrawingTool: deleteDrawingTool,
@@ -28,18 +25,18 @@ class VerticalDrawingToolItem extends DrawingToolItem {
 
   @override
   DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState() =>
-      VerticalDrawingToolItemState();
+      ContinuousDrawingToolItemState();
 }
 
-/// Vertival drawing tool Item State class
-class VerticalDrawingToolItemState
-    extends DrawingToolItemState<VerticalDrawingToolConfig> {
+/// ContinuousDrawingToolItem State class
+class ContinuousDrawingToolItemState
+    extends DrawingToolItemState<ContinuousDrawingToolConfig> {
   LineStyle? _lineStyle;
   DrawingPatterns? _pattern;
 
   @override
-  VerticalDrawingToolConfig createDrawingToolConfig() =>
-      VerticalDrawingToolConfig(
+  ContinuousDrawingToolConfig createDrawingToolConfig() =>
+      ContinuousDrawingToolConfig(
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
       );
@@ -48,6 +45,7 @@ class VerticalDrawingToolItemState
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
           _buildColorField(),
+          // TODO(maryia-binary): implement _buildPatternField() to set pattern
         ],
       );
 
@@ -70,8 +68,8 @@ class VerticalDrawingToolItemState
       );
 
   LineStyle get _currentLineStyle =>
-      _lineStyle ?? (widget.config as VerticalDrawingToolConfig).lineStyle;
+      _lineStyle ?? (widget.config as ContinuousDrawingToolConfig).lineStyle;
 
   DrawingPatterns get _currentPattern =>
-      _pattern ?? (widget.config as VerticalDrawingToolConfig).pattern;
+      _pattern ?? (widget.config as ContinuousDrawingToolConfig).pattern;
 }
