@@ -42,8 +42,8 @@ class TrendDrawing extends Drawing {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
-  /// Instance of MinMaxCalculator class for getting Minimum
-  /// and maximum quote in the trend range with respect to the epoch
+  /// Instance of MinMaxCalculator class that holds the minimum
+  /// and maximum quote in the trend range w.r.t epoch
   MinMaxCalculator? _calculator;
 
   /// Store the  starting X Coordinate
@@ -55,7 +55,7 @@ class TrendDrawing extends Drawing {
   /// Store the  ending X Coordinate
   double endXCoord = 0;
 
-  /// The area impacted upon interaction with all lines within the
+  /// The area impacted upon touch on  all lines within the
   /// trend drawing tool. .i.e outer rectangle , inner rectangle
   /// and center line.
   final double _touchTolerance = 5;

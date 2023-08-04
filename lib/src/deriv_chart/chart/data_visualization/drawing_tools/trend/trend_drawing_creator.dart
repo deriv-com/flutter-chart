@@ -38,13 +38,13 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
   bool _isPenDown = false;
 
   /// Stores coordinate of first point on the graph
-  int? _firstPointEpoch;
+  int? _startingPointEpoch;
 
   static const int touchDistanceThreshold = 200;
 
-  void getfirstPointEpoch(int? epoch) {
-    // the actual first point edge point
-    _firstPointEpoch = epoch;
+  void getStartingPointEpoch(int? epoch) {
+    // the epoch of the starting point that is mapped on the graph
+    _startingPointEpoch = epoch;
   }
 
   @override
@@ -70,7 +70,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             epochFromX: epochFromX,
             drawingPart: DrawingParts.marker,
             startingEdgePoint: edgePoints.first,
-            getFirstActualClick: getfirstPointEpoch,
+            getFirstActualClick: getStartingPointEpoch,
           ),
         );
       } else if (!isDrawingFinished) {
@@ -86,7 +86,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
 
         // When the second point is on the same y
         // coordinate as the first point
-        if ((_firstPointEpoch! - endingEdgePoint.epoch).abs() <=
+        if ((_startingPointEpoch! - endingEdgePoint.epoch).abs() <=
             touchDistanceThreshold) {
           /// remove the drawing and clean the drawing tool selection.
           _widget.removeDrawing(drawingId);
