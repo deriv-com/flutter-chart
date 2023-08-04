@@ -169,7 +169,7 @@ class _WormChartState extends State<WormChart>
           return AnimatedBuilder(
             animation: _rightIndexAnimationController,
             builder: (_, __) {
-              if (_chartSize == Size.zero ||
+              if (!_chartSize.isGraterThanZero ||
                   widget.ticks.length < 2 ||
                   widget.topPadding + widget.bottomPadding >=
                       0.9 * _chartSize.height) {
@@ -262,4 +262,8 @@ int _searchUpperIndex(List<Tick> entries, double rightIndex) {
   return closest >= rightIndex
       ? closest
       : (closest + 1 > entries.length ? closest : closest + 1);
+}
+
+extension _isGraterThanZero on Size {
+  bool get isGraterThanZero => width > 0 && height > 0;
 }
