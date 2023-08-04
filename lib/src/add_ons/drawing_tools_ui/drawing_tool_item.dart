@@ -29,11 +29,11 @@ abstract class DrawingToolItem extends StatefulWidget {
 
   @override
   DrawingToolItemState<DrawingToolConfig> createState() =>
-      createIndicatorItemState();
+      createDrawingToolItemState();
 
   /// Create state object for this widget
   @protected
-  DrawingToolItemState<DrawingToolConfig> createIndicatorItemState();
+  DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState();
 }
 
 /// State class of [DrawingToolItem]

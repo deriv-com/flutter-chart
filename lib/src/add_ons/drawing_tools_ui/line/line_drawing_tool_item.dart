@@ -24,7 +24,7 @@ class LineDrawingToolItem extends DrawingToolItem {
         );
 
   @override
-  DrawingToolItemState<DrawingToolConfig> createIndicatorItemState() =>
+  DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState() =>
       LineDrawingToolItemState();
 }
 
@@ -51,7 +51,7 @@ class LineDrawingToolItemState
   Widget _buildColorField() => Row(
         children: <Widget>[
           Text(
-            ChartLocalization.of(context)!.labelColor,
+            ChartLocalization.of(context).labelColor,
             style: const TextStyle(fontSize: 16),
           ),
           ColorSelector(
