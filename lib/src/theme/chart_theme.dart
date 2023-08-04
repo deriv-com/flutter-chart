@@ -2,6 +2,7 @@
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/entry_spot_style.dart';
 import 'package:flutter/material.dart';
 
 /// An interface for the Chart's theme.
@@ -87,6 +88,9 @@ abstract class ChartTheme {
 
   /// The painting styles of markers.
   MarkerStyle get markerStyle;
+
+  /// The painting styles of accumulators entry spot.
+  EntrySpotStyle get entrySpotStyle;
 
   /// The painting styles horizontal barriers.
   HorizontalBarrierStyle get horizontalBarrierStyle;

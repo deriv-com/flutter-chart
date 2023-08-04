@@ -1,6 +1,6 @@
 /// ScrollToLastTick callback.
 
-typedef OnScrollToLastTick = Function(bool);
+typedef OnScrollToLastTick = Function({required bool animate});
 
 /// Chart widget's controller.
 class ChartController {
@@ -9,5 +9,5 @@ class ChartController {
 
   /// Scroll chart visible area to the newest data.
   void scrollToLastTick({bool animate = false}) =>
-      onScrollToLastTick?.call(animate);
+      onScrollToLastTick?.call(animate: animate);
 }
