@@ -25,7 +25,7 @@ class TrendDrawing extends Drawing {
     this.endingEdgePoint = const EdgePoint(),
   });
 
-  /// Callback to get the coordinate of first click
+  /// Callback to get the epoch of first click on graph
   final void Function(
     int x,
   )? getFirstActualClick;
@@ -106,24 +106,31 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
-  // Binary search to find closest index to the [epoch].
+  /// Binary search to find closest index to the [epoch].
   int _findClosestIndex(int epoch, List<Tick>? entries) {
     int lo = 0;
     int hi = entries!.length - 1;
+    int localEpoch = epoch;
+
+    if (localEpoch > entries[hi].epoch) {
+      localEpoch = entries[hi].epoch;
+    }
 
     while (lo <= hi) {
       final int mid = (hi + lo) ~/ 2;
       // int getEpochOf(T t, int index) => t.epoch;
-      if (epoch < entries[mid].epoch) {
+      if (localEpoch < entries[mid].epoch) {
         hi = mid - 1;
-      } else if (epoch > entries[mid].epoch) {
+      } else if (localEpoch > entries[mid].epoch) {
         lo = mid + 1;
       } else {
         return mid;
       }
     }
 
-    return (entries[lo].epoch - epoch) < (epoch - entries[hi].epoch) ? lo : hi;
+    return (entries[lo].epoch - localEpoch) < (localEpoch - entries[hi].epoch)
+        ? lo
+        : hi;
   }
 
   /// Store the complete rectangle between start,end epoch and

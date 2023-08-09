@@ -42,7 +42,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
 
   static const int touchDistanceThreshold = 200;
 
-  void getStartingPointEpoch(int? epoch) {
+  void setStartingPointEpoch(int? epoch) {
     // the epoch of the starting point that is mapped on the graph
     _startingPointEpoch = epoch;
   }
@@ -71,7 +71,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             epochFromX: epochFromX,
             drawingPart: DrawingParts.marker,
             startingEdgePoint: edgePoints.first,
-            getFirstActualClick: getStartingPointEpoch,
+            getFirstActualClick: setStartingPointEpoch,
           ),
         );
       } else if (!isDrawingFinished) {
