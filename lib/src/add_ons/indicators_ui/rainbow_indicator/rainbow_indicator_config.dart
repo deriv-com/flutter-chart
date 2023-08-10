@@ -28,7 +28,12 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
     this.bandsCount = 10,
     this.rainbowLineStyles,
     bool showLastIndicator = false,
-  }) : super(
+  })  : assert(
+          rainbowLineStyles == null || rainbowLineStyles.length == bandsCount,
+          '''If you provide [rainbowLineStyles] it should have the same length as [bandsCount]. 
+            since the bands count is $bandsCount. the same number of lineStyles should be provided.''',
+        ),
+        super(
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,
