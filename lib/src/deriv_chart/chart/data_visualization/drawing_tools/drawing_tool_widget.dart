@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/continuous/continuous_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
@@ -17,12 +18,16 @@ class DrawingToolWidget extends StatelessWidget {
     required this.quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
+    required this.series,
     this.shouldStopDrawing,
     Key? key,
   }) : super(key: key);
 
   /// Selected drawing tool.
   final DrawingToolConfig selectedDrawingTool;
+
+  /// Series of tick
+  final DataSeries<Tick> series;
 
   /// Callback to pass a newly created drawing to the parent.
   final void Function(
@@ -78,6 +83,7 @@ class DrawingToolWidget extends StatelessWidget {
           clearDrawingToolSelection: clearDrawingToolSelection,
           quoteFromCanvasY: quoteFromCanvasY,
           removeDrawing: removeDrawing,
+          series: series,
         );
 
       // TODO(maryia-binary): add the rest of drawing tools here

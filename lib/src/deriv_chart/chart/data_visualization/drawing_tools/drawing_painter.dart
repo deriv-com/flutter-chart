@@ -21,7 +21,6 @@ class DrawingPainter extends StatefulWidget {
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
     required this.selectedDrawingTool,
-    required this.series,
     Key? key,
   }) : super(key: key);
 
@@ -30,9 +29,6 @@ class DrawingPainter extends StatefulWidget {
 
   /// Contains each drawing data
   final DrawingData? drawingData;
-
-  /// Series of tick
-  final DataSeries<Tick> series;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
@@ -151,7 +147,6 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 draggableStartPoint: _draggableStartPoint,
                 isDrawingToolSelected: widget.selectedDrawingTool != null,
                 draggableEndPoint: _draggableEndPoint,
-                series: widget.series.entries,
                 updatePositionCallback: (
                   EdgePoint edgePoint,
                   DraggableEdgePoint draggableEdgePoint,
@@ -190,12 +185,10 @@ class _DrawingPainter extends CustomPainter {
     this.isDrawingToolSelected = false,
     this.draggableEndPoint,
     this.setIsEndPointDragged,
-    this.series,
   });
 
   final DrawingData drawingData;
   final ChartTheme theme;
-  final List<Tick>? series;
   final bool isDrawingToolSelected;
   final double Function(int x) epochToX;
   final double Function(double y) quoteToY;
@@ -219,7 +212,6 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         drawingData,
         updatePositionCallback,
-        series,
         draggableStartPoint,
         draggableEndPoint: draggableEndPoint,
       );

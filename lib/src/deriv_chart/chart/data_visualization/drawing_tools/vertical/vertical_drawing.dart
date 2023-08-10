@@ -42,7 +42,6 @@ class VerticalDrawing extends Drawing {
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
-    List<Tick>? series,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
