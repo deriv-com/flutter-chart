@@ -55,8 +55,6 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
 
     if (localEpoch > entries[hi].epoch) {
       localEpoch = entries[hi].epoch;
-    } else if (localEpoch < entries[lo].epoch) {
-      localEpoch = entries[lo].epoch;
     }
 
     while (lo <= hi) {
