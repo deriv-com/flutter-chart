@@ -3,16 +3,14 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'basic_chart.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/models/animation_info.dart';
@@ -24,10 +22,7 @@ class MainChart extends BasicChart {
   /// Initializes the main chart to display in the chart widget.
   MainChart({
     required DataSeries<Tick> mainSeries,
-    required this.onAddDrawing,
-    required this.clearDrawingToolSelection,
-    this.drawings,
-    this.selectedDrawingTool,
+    required this.drawingTools,
     this.isLive = false,
     int pipSize = 4,
     Key? key,
@@ -62,18 +57,9 @@ class MainChart extends BasicChart {
   /// The series that hold the list markers.
   final MarkerSeries? markerSeries;
 
-  /// Existing drawings.
-  final List<DrawingData>? drawings;
-
-  /// Callback to pass new drawing to the parent.
-  final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
-
-  /// Selected drawing tool.
-  final DrawingToolConfig? selectedDrawingTool;
-
-  /// Callback to clean drawing tool selection.
-  final VoidCallback clearDrawingToolSelection;
+  /// Keep the reference to the drawing tools class for
+  /// sharing data between the DerivChart and the DrawingToolsDialog
+  final DrawingTools drawingTools;
 
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
@@ -118,8 +104,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   /// The current animation value of crosshair zoom out.
   late Animation<double> crosshairZoomOutAnimation;
 
-  bool _isDrawingMoving = false;
-
   @override
   double get verticalPadding {
     if (canvasSize == null) {
@@ -143,7 +127,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   void initState() {
     super.initState();
 
-    widget.controller?.onScrollToLastTick = (bool animate) {
+    widget.controller?.onScrollToLastTick = ({required bool animate}) {
       xAxis.scrollToLastTick(animate: animate);
     };
   }
@@ -278,15 +262,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 DrawingToolChart(
-                  drawings: widget.drawings,
-                  onAddDrawing: widget.onAddDrawing,
-                  onMoveDrawing: _onMoveDrawing,
-                  selectedDrawingTool: widget.selectedDrawingTool,
-                  clearDrawingToolSelection: widget.clearDrawingToolSelection,
                   chartQuoteToCanvasY: chartQuoteToCanvasY,
                   chartQuoteFromCanvasY: chartQuoteFromCanvasY,
+                  drawingTools: widget.drawingTools,
                 ),
-                if (!_isDrawingMoving) _buildCrosshairArea(),
+                if (!widget.drawingTools.isDrawingMoving) _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
                   Positioned(
                     bottom: 0,
@@ -416,11 +396,5 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     minQuote = safeMin(minQuote, widget.chartDataList.getMinValue());
     maxQuote = safeMax(maxQuote, widget.chartDataList.getMaxValue());
     return <double>[minQuote, maxQuote];
-  }
-
-  void _onMoveDrawing({bool isDrawingMoved = false}) {
-    setState(() {
-      _isDrawingMoving = isDrawingMoved;
-    });
   }
 }

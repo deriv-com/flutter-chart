@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ abstract class DrawingToolConfig extends AddOnConfig {
     switch (json[nameKey]) {
       case HorizontalDrawingToolConfig.name:
         return HorizontalDrawingToolConfig.fromJson(json);
+      case ContinuousDrawingToolConfig.name:
+        return ContinuousDrawingToolConfig.fromJson(json);
       case LineDrawingToolConfig.name:
         return LineDrawingToolConfig.fromJson(json);
       case VerticalDrawingToolConfig.name:

@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -21,24 +22,20 @@ class HorizontalDrawing extends Drawing {
     required this.drawingPart,
     required this.quoteFromCanvasY,
     required this.chartConfig,
-    this.epoch = 0,
-    this.quote = 0,
+    required this.edgePoint,
   });
 
   /// Chart config to get pipSize
-  final ChartConfig chartConfig;
+  final ChartConfig? chartConfig;
 
   /// Part of a drawing: 'horizontal'
   final DrawingParts drawingPart;
 
-  /// Starting epoch.
-  final int epoch;
-
-  /// Starting quote
-  final double quote;
+  /// Starting point of drawing
+  final EdgePoint edgePoint;
 
   /// Keeps the latest position of the horizontal line
-  Point? point;
+  Point? startPoint;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double)? quoteFromCanvasY;
@@ -52,6 +49,10 @@ class HorizontalDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
@@ -62,39 +63,31 @@ class HorizontalDrawing extends Drawing {
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
 
-    point = draggableStartPoint.updatePosition(
-      epoch,
-      quote,
-      epochToX,
-      quoteToY,
-    );
+    startPoint = updatePositionCallback(edgePoint, draggableStartPoint);
 
-    final double pointYCoord = point!.y;
-    final double pointXCoord = point!.x;
+    final double pointYCoord = startPoint!.y;
+    final double pointXCoord = startPoint!.x;
 
-    if (drawingPart == DrawingParts.line) {
-      final double startX =
-              pointXCoord - DrawingToolDistance.horizontalDistance,
-          endingX = pointXCoord + DrawingToolDistance.horizontalDistance;
+    final double startX = pointXCoord - DrawingToolDistance.horizontalDistance,
+        endingX = pointXCoord + DrawingToolDistance.horizontalDistance;
 
-      if (pattern == DrawingPatterns.solid) {
-        canvas.drawLine(
-          Offset(startX, pointYCoord),
-          Offset(endingX, pointYCoord),
-          drawingData.isSelected
-              ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
-              : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
-        );
-        paintDrawingLabel(
-          canvas,
-          size,
-          pointYCoord,
-          'horizontal',
-          theme,
-          chartConfig,
-          quoteFromY: quoteFromCanvasY,
-        );
-      }
+    if (pattern == DrawingPatterns.solid) {
+      canvas.drawLine(
+        Offset(startX, pointYCoord),
+        Offset(endingX, pointYCoord),
+        drawingData.isSelected
+            ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
+            : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
+      );
+      paintDrawingLabel(
+        canvas,
+        size,
+        pointYCoord,
+        'horizontal',
+        theme,
+        chartConfig!,
+        quoteFromY: quoteFromCanvasY,
+      );
     }
   }
 
@@ -106,12 +99,14 @@ class HorizontalDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
 
-    return position.dy > point!.y - lineStyle.thickness - 5 &&
-        position.dy < point!.y + lineStyle.thickness + 5;
+    return position.dy > startPoint!.y - lineStyle.thickness - 5 &&
+        position.dy < startPoint!.y + lineStyle.thickness + 5;
   }
 }

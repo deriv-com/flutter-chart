@@ -1,104 +1,59 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import './horizontal_drawing.dart';
 
 /// Creates a Horizontal line drawing
-class HorizontalDrawingCreator extends StatefulWidget {
+class HorizontalDrawingCreator extends DrawingCreator<HorizontalDrawing> {
   /// Initializes the horizontal drawing creator.
   const HorizontalDrawingCreator({
-    required this.onAddDrawing,
-    required this.quoteFromCanvasY,
-    required this.chartConfig,
+    required OnAddDrawing<HorizontalDrawing> onAddDrawing,
+    required double Function(double) quoteFromCanvasY,
+    required ChartConfig chartConfig,
     Key? key,
-  }) : super(key: key);
-
-  /// Chart config to get pipSize
-  final ChartConfig chartConfig;
-
-  /// Callback to pass a newly created horizontal drawing to the parent.
-  final void Function(Map<String, List<HorizontalDrawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
-
-  /// Conversion function for converting quote from chart's canvas' Y position.
-  final double Function(double) quoteFromCanvasY;
+  }) : super(
+          key: key,
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+          chartConfig: chartConfig,
+        );
 
   @override
-  _HorizontalDrawingCreatorState createState() =>
+  DrawingCreatorState<HorizontalDrawing> createState() =>
       _HorizontalDrawingCreatorState();
 }
 
-class _HorizontalDrawingCreatorState extends State<HorizontalDrawingCreator> {
-  late GestureManagerState gestureManager;
-
-  /// Parts of a particular horizontal drawing, e.g. marker, line
-  final List<HorizontalDrawing> _drawingParts = <HorizontalDrawing>[];
-
-  /// Tapped position.
-  Offset? position;
-
-  /// Saved starting epoch.
-  int? _startingEpoch;
-
-  /// Saved starting quote.
-  double? _startingQuote;
-
-  /// Unique drawing id.
-  String _drawingId = '';
-
-  /// If drawing has been finished.
-  bool _isDrawingFinished = false;
-
-  /// Get epoch from x.
-  int Function(double x)? epochFromX;
-
+class _HorizontalDrawingCreatorState
+    extends DrawingCreatorState<HorizontalDrawing> {
   @override
-  void initState() {
-    super.initState();
-    gestureManager = context.read<GestureManagerState>()
-      ..registerCallback(_onTap);
-  }
-
-  @override
-  void dispose() {
-    gestureManager.removeCallback(_onTap);
-    super.dispose();
-  }
-
-  void _onTap(TapUpDetails details) {
-    if (_isDrawingFinished) {
+  void onTap(TapUpDetails details) {
+    super.onTap(details);
+    if (isDrawingFinished) {
       return;
     }
     setState(() {
       position = details.localPosition;
-      _startingEpoch = epochFromX!(position!.dx);
-      _startingQuote = widget.quoteFromCanvasY(position!.dy);
-      _drawingId = 'horizontal_$_startingEpoch';
-      _isDrawingFinished = true;
 
-      _drawingParts.add(HorizontalDrawing(
-        drawingPart: DrawingParts.line,
-        epoch: _startingEpoch!,
-        quote: _startingQuote!,
-        quoteFromCanvasY: widget.quoteFromCanvasY,
-        chartConfig: widget.chartConfig,
+      edgePoints.add(EdgePoint(
+        epoch: epochFromX!(position!.dx),
+        quote: widget.quoteFromCanvasY(position!.dy),
       ));
 
+      isDrawingFinished = true;
+
+      drawingParts.add(HorizontalDrawing(
+          drawingPart: DrawingParts.line,
+          edgePoint: edgePoints.first,
+          chartConfig: widget.chartConfig,
+          quoteFromCanvasY: widget.quoteFromCanvasY));
+
       widget.onAddDrawing(
-        <String, List<HorizontalDrawing>>{_drawingId: _drawingParts},
-        isDrawingFinished: _isDrawingFinished,
+        drawingId,
+        drawingParts,
+        isDrawingFinished: isDrawingFinished,
       );
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final XAxisModel xAxis = context.watch<XAxisModel>();
-    epochFromX = xAxis.epochFromX;
-
-    return Container();
   }
 }
