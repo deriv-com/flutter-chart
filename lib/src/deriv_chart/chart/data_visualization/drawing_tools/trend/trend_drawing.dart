@@ -20,19 +20,31 @@ class TrendDrawing extends Drawing {
   TrendDrawing({
     required this.drawingPart,
     required this.epochFromX,
-    required this.findClosestIndex,
+    required this.setCalculator,
+    required this.isClickedOnRectangleBoundary,
+    required this.touchTolerance,
     this.startingEdgePoint = const EdgePoint(),
     this.endingEdgePoint = const EdgePoint(),
   });
 
-  /// Callback to get the epoch of first click on graph
-  final int Function(int x, List<Tick>?)? findClosestIndex;
+  /// Function to check if the clicked position (Offset) is on
+  /// boundary of the rectangle
+  final bool Function(Rect rect, Offset position) isClickedOnRectangleBoundary;
+
+  /// Callback that returns the minmax calculator between start and end epoch
+  final MinMaxCalculator? Function(
+      int minimumEpoch, int maximumEpoch, List<Tick>? series) setCalculator;
 
   /// Get epoch from x.
   int Function(double x)? epochFromX;
 
   /// Instance of enum including all possible drawing parts(marker,rectangle)
   final DrawingParts drawingPart;
+
+  /// The area impacted upon touch on  all lines within the
+  /// trend drawing tool. .i.e outer rectangle , inner rectangle
+  /// and center line.
+  final double touchTolerance;
 
   /// Marker radius.
   final double _markerRadius = 10;
@@ -53,56 +65,11 @@ class TrendDrawing extends Drawing {
   /// Store the  ending X Coordinate
   double endXCoord = 0;
 
-  /// The area impacted upon touch on  all lines within the
-  /// trend drawing tool. .i.e outer rectangle , inner rectangle
-  /// and center line.
-  final double _touchTolerance = 5;
-
   ///  Starting point of drawing
   EdgePoint startingEdgePoint;
 
   /// Ending point of drawing
   EdgePoint endingEdgePoint;
-
-  /// Function to check if the clicked position (Offset) is on
-  /// boundary of the rectangle
-  bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
-    /// Width of the rectangle line
-    const double lineWidth = 3;
-
-    final Rect topLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.top - _touchTolerance,
-      rect.width + _touchTolerance * 2,
-      lineWidth + _touchTolerance * 2,
-    );
-
-    final Rect leftLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.top - _touchTolerance,
-      lineWidth + _touchTolerance * 2,
-      rect.height + _touchTolerance * 2,
-    );
-
-    final Rect rightLineBounds = Rect.fromLTWH(
-      rect.right - lineWidth - _touchTolerance * 2,
-      rect.top - _touchTolerance,
-      lineWidth + _touchTolerance * 2,
-      rect.height + _touchTolerance * 2,
-    );
-
-    final Rect bottomLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.bottom - lineWidth - _touchTolerance * 2,
-      rect.width + _touchTolerance * 2 + 2,
-      lineWidth + _touchTolerance * 2 + 2,
-    );
-
-    return topLineBounds.inflate(2).contains(position) ||
-        leftLineBounds.inflate(2).contains(position) ||
-        rightLineBounds.inflate(2).contains(position) ||
-        bottomLineBounds.inflate(2).contains(position);
-  }
 
   /// Store the complete rectangle between start,end epoch and
   /// minimum,maximum quote.
@@ -144,29 +111,11 @@ class TrendDrawing extends Drawing {
     final int maximumEpoch =
         endXCoord == 0 ? endingEdgePoint.epoch : epochFromX!(endXCoord);
 
-    // Range of epoch between minimum and maximum epoch
     if (maximumEpoch != 0 && minimumEpoch != 0) {
-      int minimumEpochIndex = findClosestIndex!(minimumEpoch, series);
-      int maximumEpochIndex = findClosestIndex!(maximumEpoch, series);
+      // setting calculator
+      _calculator = setCalculator(minimumEpoch, maximumEpoch, series);
 
-      if (minimumEpochIndex > maximumEpochIndex) {
-        final int tempEpochIndex = minimumEpochIndex;
-        minimumEpochIndex = maximumEpochIndex;
-        maximumEpochIndex = tempEpochIndex;
-      }
-
-      final List<Tick>? epochRange =
-          series!.sublist(minimumEpochIndex, maximumEpochIndex);
-
-      double minValueOf(Tick t) => t.quote;
-      double maxValueOf(Tick t) => t.quote;
-
-      //  Min max calculator getting the minimum and maximum
-      // epoch from epochrange
-      _calculator = MinMaxCalculator(minValueOf, maxValueOf)
-        ..calculate(epochRange!);
-
-      // Setting the center of the rectangle
+      // center of rectangle
       _rectCenter = quoteToY(_calculator!.min) +
           ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
     }
@@ -353,7 +302,6 @@ class TrendDrawing extends Drawing {
     }
 
     // For clicking the center line
-
     final double lineArea = (0.5 *
             (startXCoord * _rectCenter +
                 endXCoord * position.dy +
@@ -367,11 +315,11 @@ class TrendDrawing extends Drawing {
     final double lineHeight = 2 * lineArea / baseArea;
 
     if (endingEdgePoint.epoch != 0) {
-      return _isClickedOnRectangleBoundary(_mainRect, position) ||
-          _isClickedOnRectangleBoundary(_middleRect, position) ||
+      return isClickedOnRectangleBoundary(_mainRect, position) ||
+          isClickedOnRectangleBoundary(_middleRect, position) ||
           startPointDistance <= _markerRadius ||
           endPointDistance <= _markerRadius ||
-          lineHeight <= _touchTolerance;
+          lineHeight <= touchTolerance;
     }
     return false;
   }

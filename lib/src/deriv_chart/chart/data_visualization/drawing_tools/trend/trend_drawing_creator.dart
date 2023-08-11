@@ -4,6 +4,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/min_max_calculator.dart';
 import 'package:flutter/material.dart';
 import '../data_model/drawing_parts.dart';
 
@@ -45,7 +46,22 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
   /// Stores coordinate of first point on the graph
   int? _startingPointEpoch;
 
+  /// Stores the previously changed minimum epoch
+  int prevMinimumEpoch = 0;
+
+  /// Stores the previously changed maximum epoch
+  int prevMaximumEpoch = 0;
+
+  /// Instance of MinMaxCalculator class that holds the minimum
+  /// and maximum quote in the trend range w.r.t epoch
+  MinMaxCalculator? _calculator;
+
   static const int touchDistanceThreshold = 200;
+
+  /// The area impacted upon touch on  all lines within the
+  /// trend drawing tool. .i.e outer rectangle , inner rectangle
+  /// and center line.
+  final double _touchTolerance = 5;
 
   /// Binary search to find closest index to the [epoch].
   int _findClosestIndex(int epoch, List<Tick>? entries) {
@@ -72,6 +88,74 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
     return (entries[lo].epoch - localEpoch) < (localEpoch - entries[hi].epoch)
         ? lo
         : hi;
+  }
+
+  /// Setting the minmax calculator between the range of
+  /// start and end epoch
+  MinMaxCalculator? _setCalculator(
+      int minimumEpoch, int maximumEpoch, List<Tick>? series) {
+    if (prevMaximumEpoch != maximumEpoch || prevMinimumEpoch != minimumEpoch) {
+      prevMaximumEpoch = maximumEpoch;
+      prevMinimumEpoch = minimumEpoch;
+      int minimumEpochIndex = _findClosestIndex(minimumEpoch, series);
+      int maximumEpochIndex = _findClosestIndex(maximumEpoch, series);
+
+      if (minimumEpochIndex > maximumEpochIndex) {
+        final int tempEpochIndex = minimumEpochIndex;
+        minimumEpochIndex = maximumEpochIndex;
+        maximumEpochIndex = tempEpochIndex;
+      }
+
+      final List<Tick>? epochRange =
+          series!.sublist(minimumEpochIndex, maximumEpochIndex);
+
+      double minValueOf(Tick t) => t.quote;
+      double maxValueOf(Tick t) => t.quote;
+
+      _calculator = MinMaxCalculator(minValueOf, maxValueOf)
+        ..calculate(epochRange!);
+    }
+    return _calculator;
+  }
+
+  /// Function to check if the clicked position (Offset) is on
+  /// boundary of the rectangle
+  bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
+    /// Width of the rectangle line
+    const double lineWidth = 3;
+
+    final Rect topLineBounds = Rect.fromLTWH(
+      rect.left - _touchTolerance,
+      rect.top - _touchTolerance,
+      rect.width + _touchTolerance * 2,
+      lineWidth + _touchTolerance * 2,
+    );
+
+    final Rect leftLineBounds = Rect.fromLTWH(
+      rect.left - _touchTolerance,
+      rect.top - _touchTolerance,
+      lineWidth + _touchTolerance * 2,
+      rect.height + _touchTolerance * 2,
+    );
+
+    final Rect rightLineBounds = Rect.fromLTWH(
+      rect.right - lineWidth - _touchTolerance * 2,
+      rect.top - _touchTolerance,
+      lineWidth + _touchTolerance * 2,
+      rect.height + _touchTolerance * 2,
+    );
+
+    final Rect bottomLineBounds = Rect.fromLTWH(
+      rect.left - _touchTolerance,
+      rect.bottom - lineWidth - _touchTolerance * 2,
+      rect.width + _touchTolerance * 2 + 2,
+      lineWidth + _touchTolerance * 2 + 2,
+    );
+
+    return topLineBounds.inflate(2).contains(position) ||
+        leftLineBounds.inflate(2).contains(position) ||
+        rightLineBounds.inflate(2).contains(position) ||
+        bottomLineBounds.inflate(2).contains(position);
   }
 
   @override
@@ -109,7 +193,9 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             epochFromX: epochFromX,
             drawingPart: DrawingParts.marker,
             startingEdgePoint: edgePoints.first,
-            findClosestIndex: _findClosestIndex,
+            setCalculator: _setCalculator,
+            isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
+            touchTolerance: _touchTolerance,
           ),
         );
       } else if (!isDrawingFinished) {
@@ -143,22 +229,28 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               epochFromX: epochFromX,
               drawingPart: DrawingParts.rectangle,
               startingEdgePoint: startingEdgePoint,
-              findClosestIndex: _findClosestIndex,
               endingEdgePoint: endingEdgePoint,
+              setCalculator: _setCalculator,
+              isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
+              touchTolerance: _touchTolerance,
             ),
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.line,
               startingEdgePoint: startingEdgePoint,
-              findClosestIndex: _findClosestIndex,
               endingEdgePoint: endingEdgePoint,
+              setCalculator: _setCalculator,
+              isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
+              touchTolerance: _touchTolerance,
             ),
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.marker,
               startingEdgePoint: startingEdgePoint,
-              findClosestIndex: _findClosestIndex,
               endingEdgePoint: endingEdgePoint,
+              setCalculator: _setCalculator,
+              isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
+              touchTolerance: _touchTolerance,
             )
           ]);
       }
