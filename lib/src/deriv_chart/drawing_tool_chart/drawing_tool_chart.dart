@@ -1,39 +1,18 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatelessWidget {
   /// Creates chart that expands to available space.
   const DrawingToolChart({
-    required this.onAddDrawing,
     required this.chartQuoteFromCanvasY,
     required this.chartQuoteToCanvasY,
-    required this.onMoveDrawing,
-    required this.clearDrawingToolSelection,
-    this.drawings,
-    this.selectedDrawingTool,
+    required this.drawingTools,
     Key? key,
   }) : super(key: key);
-
-  /// Existing drawings.
-  final List<DrawingData>? drawings;
-
-  /// Callback to pass new drawing to the parent.
-  final void Function(Map<String, List<Drawing>> addedDrawing,
-      {bool isDrawingFinished}) onAddDrawing;
-
-  /// Callback to pass new drawing to the parent.
-  final void Function({bool isDrawingMoved}) onMoveDrawing;
-
-  /// Callback to clean drawing tool selection.
-  final VoidCallback clearDrawingToolSelection;
-
-  /// Selected drawing tool.
-  final DrawingToolConfig? selectedDrawingTool;
 
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double) chartQuoteFromCanvasY;
@@ -41,12 +20,15 @@ class DrawingToolChart extends StatelessWidget {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) chartQuoteToCanvasY;
 
+  /// Contains drawing tools related data and methods
+  final DrawingTools drawingTools;
+
   /// Sets drawing as selected and unselects the rest of drawings
   /// if any of the drawing is not finished , it selects the unfinished drawing
   void _setIsDrawingSelected(DrawingData drawing) {
     drawing.isSelected = !drawing.isSelected;
 
-    for (final DrawingData data in drawings!) {
+    for (final DrawingData data in drawingTools.drawings) {
       if (data.id != drawing.id) {
         data.isSelected = false;
       }
@@ -55,7 +37,8 @@ class DrawingToolChart extends StatelessWidget {
 
   /// Removes specific drawing from the list of drawings
   void removeDrawing(String drawingId) {
-    drawings!.removeWhere((DrawingData data) => data.id == drawingId);
+    drawingTools.drawings
+        .removeWhere((DrawingData data) => data.id == drawingId);
   }
 
   @override
@@ -63,22 +46,24 @@ class DrawingToolChart extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            if (drawings != null)
-              ...drawings!.map((DrawingData drawingData) => DrawingPainter(
-                    drawingData: drawingData,
-                    quoteToCanvasY: chartQuoteToCanvasY,
-                    quoteFromCanvasY: chartQuoteFromCanvasY,
-                    onMoveDrawing: onMoveDrawing,
-                    setIsDrawingSelected: _setIsDrawingSelected,
-                    selectedDrawingTool: selectedDrawingTool,
-                  )),
-            if (selectedDrawingTool != null)
-              DrawingCreator(
-                onAddDrawing: onAddDrawing,
-                selectedDrawingTool: selectedDrawingTool!,
+            ...drawingTools.drawings
+                .map((DrawingData drawingData) => DrawingPainter(
+                      drawingData: drawingData,
+                      quoteToCanvasY: chartQuoteToCanvasY,
+                      quoteFromCanvasY: chartQuoteFromCanvasY,
+                      onMoveDrawing: drawingTools.onMoveDrawing,
+                      setIsDrawingSelected: _setIsDrawingSelected,
+                      selectedDrawingTool: drawingTools.selectedDrawingTool,
+                    )),
+            if (drawingTools.selectedDrawingTool != null)
+              DrawingToolWidget(
+                onAddDrawing: drawingTools.onAddDrawing,
+                selectedDrawingTool: drawingTools.selectedDrawingTool!,
                 quoteFromCanvasY: chartQuoteFromCanvasY,
-                clearDrawingToolSelection: clearDrawingToolSelection,
+                clearDrawingToolSelection:
+                    drawingTools.clearDrawingToolSelection,
                 removeDrawing: removeDrawing,
+                shouldStopDrawing: drawingTools.shouldStopDrawing,
               ),
           ],
         ),
