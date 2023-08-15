@@ -27,7 +27,7 @@ class RectangleDrawingToolItem extends DrawingToolItem {
         );
 
   @override
-  DrawingToolItemState<DrawingToolConfig> createIndicatorItemState() =>
+  DrawingToolItemState<DrawingToolConfig> createDrawingToolItemState() =>
       RectangleDrawingToolItemState();
 }
 
@@ -50,9 +50,10 @@ class RectangleDrawingToolItemState
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
           _buildColorField(
-              ChartLocalization.of(context)!.labelColor, _currentLineStyle),
+              ChartLocalization.of(context).labelColor, _currentLineStyle),
           _buildColorField(
-              ChartLocalization.of(context)!.labelFillColor, _currentFillStyle),
+              ChartLocalization.of(context).labelFillColor, _currentFillStyle),
+          // TODO(maryia-deriv): implement _buildPatternField() to set pattern
         ],
       );
   Widget _buildColorField(String label, LineStyle style) => Row(
@@ -66,7 +67,7 @@ class RectangleDrawingToolItemState
             onColorChanged: (Color selectedColor) {
               setState(() {
                 final LineStyle newColor = style.copyWith(color: selectedColor);
-                if (label == ChartLocalization.of(context)!.labelColor) {
+                if (label == ChartLocalization.of(context).labelColor) {
                   _lineStyle = newColor;
                 } else {
                   _fillStyle = newColor;

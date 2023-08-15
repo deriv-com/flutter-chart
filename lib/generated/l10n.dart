@@ -500,9 +500,10 @@ class ChartLocalization {
     );
   }
 
+  /// `Fill Color`
   String get labelFillColor {
     return Intl.message(
-      'Color',
+      'Fill Color',
       name: 'labelFillColor',
       desc: '',
       args: [],

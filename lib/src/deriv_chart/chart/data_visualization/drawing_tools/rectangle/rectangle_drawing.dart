@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -15,26 +18,12 @@ class RectangleDrawing extends Drawing {
   /// Initializes
   RectangleDrawing({
     required this.drawingPart,
-    this.startEpoch = 0,
-    this.startQuote = 0,
-    this.endEpoch = 0,
-    this.endQuote = 0,
+    this.startEdgePoint = const EdgePoint(),
+    this.endEdgePoint = const EdgePoint(),
   });
 
-  /// instance of enum including all possible drawing parts(marker,rectangle)
+  /// Instance of enum including all possible drawing parts(marker,rectangle)
   final DrawingParts drawingPart;
-
-  /// Starting epoch.
-  final int startEpoch;
-
-  /// Starting Y coordinates.
-  final double startQuote;
-
-  /// Ending epoch.
-  final int endEpoch;
-
-  /// Ending Y coordinates.
-  final double endQuote;
 
   /// Marker radius.
   final double _markerRadius = 10;
@@ -46,6 +35,24 @@ class RectangleDrawing extends Drawing {
   ///  (so it can be used for hitTest as well).
   Rect _rect = Rect.zero;
 
+  /// Store the  starting X Coordinate
+  double startXCoord = 0;
+
+  /// Store the  starting Y Coordinate
+  double startYCoord = 0;
+
+  /// Store the  ending X Coordinate
+  double endXCoord = 0;
+
+  /// Store the  ending t Coordinate
+  double endYCoord = 0;
+
+  ///  Starting point of drawing
+  EdgePoint startEdgePoint;
+
+  /// Ending point of drawing
+  EdgePoint endEdgePoint;
+
   /// Paint the rectangle
   @override
   void onPaint(
@@ -55,6 +62,10 @@ class RectangleDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
@@ -67,27 +78,17 @@ class RectangleDrawing extends Drawing {
 
     final DrawingPatterns pattern = config.pattern;
 
-    _startPoint = draggableStartPoint.updatePosition(
-      startEpoch,
-      startQuote,
-      epochToX,
-      quoteToY,
-    );
-    _endPoint = draggableEndPoint!.updatePosition(
-      endEpoch,
-      endQuote,
-      epochToX,
-      quoteToY,
-    );
+    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
+    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
 
-    final double startXCoord = _startPoint!.x;
-    final double startQuoteToY = _startPoint!.y;
+    startXCoord = _startPoint!.x;
+    startYCoord = _startPoint!.y;
 
-    final double endXCoord = _endPoint!.x;
-    final double endYCoord = _endPoint!.y;
+    endXCoord = _endPoint!.x;
+    endYCoord = _endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
-      if (endEpoch != 0 && endYCoord != 0) {
+      if (endEdgePoint.epoch != 0 && endYCoord != 0) {
         /// Draw first point
         canvas.drawCircle(
             Offset(endXCoord, endYCoord),
@@ -95,10 +96,10 @@ class RectangleDrawing extends Drawing {
             drawingData.isSelected
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
-      } else if (startEpoch != 0 && startQuoteToY != 0) {
+      } else if (startEdgePoint.epoch != 0 && startYCoord != 0) {
         /// Draw second point
         canvas.drawCircle(
-            Offset(startXCoord, startQuoteToY),
+            Offset(startXCoord, startYCoord),
             _markerRadius,
             drawingData.isSelected
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
@@ -107,7 +108,7 @@ class RectangleDrawing extends Drawing {
     } else if (drawingPart == DrawingParts.rectangle) {
       if (pattern == DrawingPatterns.solid) {
         _rect = Rect.fromPoints(
-            Offset(startXCoord, startQuoteToY), Offset(endXCoord, endYCoord));
+            Offset(startXCoord, startYCoord), Offset(endXCoord, endYCoord));
 
         canvas
           ..drawRect(
@@ -135,28 +136,45 @@ class RectangleDrawing extends Drawing {
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    draggableEndPoint!.isDragged = false;
-    draggableStartPoint.isDragged = false;
+    setIsStartPointDragged(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
+
+    // Calculate the difference between the start Point and the tap point.
+    final double startDx = position.dx - startXCoord;
+    final double startDy = position.dy - startYCoord;
+
+    // Calculate the difference between the end Point and the tap point.
+    final double endDx = position.dx - endXCoord;
+    final double endDy = position.dy - endYCoord;
+
+    // Getting the distance of end point
+    final double endPointDistance = sqrt(endDx * endDx + endDy * endDy);
+
+    // Getting the distance of start point
+    final double startPointDistance =
+        sqrt(startDx * startDx + startDy * startDy);
 
     /// inflate the rect to 2px so that the stroke is inclusive and
     /// can be detected
     final Rect _inflatedRect = _rect.inflate(2);
 
     /// Check if end point clicked
-    if (_endPoint!.isClicked(position, _markerRadius)) {
-      draggableEndPoint.isDragged = true;
+    if (endPointDistance <= _markerRadius) {
+      setIsEndPointDragged(isDragged: true);
     }
 
     /// Check if start point clicked
-    if (_startPoint!.isClicked(position, _markerRadius)) {
-      draggableStartPoint.isDragged = true;
+    if (startPointDistance <= _markerRadius) {
+      setIsStartPointDragged(isDragged: true);
     }
 
     return draggableStartPoint.isDragged ||
-        draggableEndPoint.isDragged ||
-        (_inflatedRect.contains(position) && endEpoch != 0);
+        draggableEndPoint!.isDragged ||
+        (_inflatedRect.contains(position) && endEdgePoint.epoch != 0);
   }
 }
