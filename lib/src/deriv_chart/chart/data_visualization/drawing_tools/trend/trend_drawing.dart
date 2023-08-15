@@ -23,8 +23,8 @@ class TrendDrawing extends Drawing {
     required this.setCalculator,
     required this.isClickedOnRectangleBoundary,
     required this.touchTolerance,
-    this.startingEdgePoint = const EdgePoint(),
-    this.endingEdgePoint = const EdgePoint(),
+    this.startEdgePoint = const EdgePoint(),
+    this.endEdgePoint = const EdgePoint(),
   });
 
   /// Function to check if the clicked position (Offset) is on
@@ -66,10 +66,10 @@ class TrendDrawing extends Drawing {
   double endXCoord = 0;
 
   ///  Starting point of drawing
-  EdgePoint startingEdgePoint;
+  EdgePoint startEdgePoint;
 
   /// Ending point of drawing
-  EdgePoint endingEdgePoint;
+  EdgePoint endEdgePoint;
 
   /// Store the complete rectangle between start,end epoch and
   /// minimum,maximum quote.
@@ -105,11 +105,11 @@ class TrendDrawing extends Drawing {
     final List<Tick>? series = drawingData.series;
     //  Maximum epoch of the drawing
     final int minimumEpoch =
-        startXCoord == 0 ? startingEdgePoint.epoch : epochFromX!(startXCoord);
+        startXCoord == 0 ? startEdgePoint.epoch : epochFromX!(startXCoord);
 
     //  Minimum epoch of the drawing
     final int maximumEpoch =
-        endXCoord == 0 ? endingEdgePoint.epoch : epochFromX!(endXCoord);
+        endXCoord == 0 ? endEdgePoint.epoch : epochFromX!(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
       // setting calculator
@@ -130,14 +130,14 @@ class TrendDrawing extends Drawing {
     if (_calculator != null) {
       _startPoint = updatePositionCallback(
           EdgePoint(
-              epoch: startingEdgePoint.epoch,
+              epoch: startEdgePoint.epoch,
               quote:
                   _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableStartPoint);
 
       _endPoint = updatePositionCallback(
           EdgePoint(
-              epoch: endingEdgePoint.epoch,
+              epoch: endEdgePoint.epoch,
               quote:
                   _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableEndPoint!);
@@ -150,7 +150,7 @@ class TrendDrawing extends Drawing {
 
     // If the rectangle vertical side are swapped
     // .i.e dragging left side to the right of the right side
-    if (endXCoord < startXCoord && endingEdgePoint.epoch != 0) {
+    if (endXCoord < startXCoord && endEdgePoint.epoch != 0) {
       final double _tempCoord = endXCoord;
       endXCoord = startXCoord;
       startXCoord = _tempCoord;
@@ -165,10 +165,9 @@ class TrendDrawing extends Drawing {
     }
 
     if (drawingPart == DrawingParts.marker) {
-      if (endingEdgePoint.epoch == 0) {
+      if (endEdgePoint.epoch == 0) {
         _startPoint = updatePositionCallback(
-            EdgePoint(
-                epoch: startingEdgePoint.epoch, quote: startingEdgePoint.quote),
+            EdgePoint(epoch: startEdgePoint.epoch, quote: startEdgePoint.quote),
             draggableStartPoint);
 
         startXCoord = _startPoint!.x;
@@ -273,6 +272,9 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
+    setIsStartPointDragged(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
+
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - _rectCenter;
@@ -298,7 +300,7 @@ class TrendDrawing extends Drawing {
     }
 
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged!(isDragged: true);
+      setIsEndPointDragged(isDragged: true);
     }
 
     // For clicking the center line
@@ -314,7 +316,7 @@ class TrendDrawing extends Drawing {
     final double baseArea = endXCoord - startXCoord;
     final double lineHeight = 2 * lineArea / baseArea;
 
-    if (endingEdgePoint.epoch != 0) {
+    if (endEdgePoint.epoch != 0) {
       return isClickedOnRectangleBoundary(_mainRect, position) ||
           isClickedOnRectangleBoundary(_middleRect, position) ||
           startPointDistance <= _markerRadius ||

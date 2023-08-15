@@ -192,7 +192,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
           TrendDrawing(
             epochFromX: epochFromX,
             drawingPart: DrawingParts.marker,
-            startingEdgePoint: edgePoints.first,
+            startEdgePoint: edgePoints.first,
             setCalculator: _setCalculator,
             isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
             touchTolerance: _touchTolerance,
@@ -228,8 +228,8 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.rectangle,
-              startingEdgePoint: startingEdgePoint,
-              endingEdgePoint: endingEdgePoint,
+              startEdgePoint: startingEdgePoint,
+              endEdgePoint: endingEdgePoint,
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
@@ -237,8 +237,8 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.line,
-              startingEdgePoint: startingEdgePoint,
-              endingEdgePoint: endingEdgePoint,
+              startEdgePoint: startingEdgePoint,
+              endEdgePoint: endingEdgePoint,
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
@@ -246,8 +246,8 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.marker,
-              startingEdgePoint: startingEdgePoint,
-              endingEdgePoint: endingEdgePoint,
+              startEdgePoint: startingEdgePoint,
+              endEdgePoint: endingEdgePoint,
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
