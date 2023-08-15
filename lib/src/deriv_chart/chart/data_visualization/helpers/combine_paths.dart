@@ -50,7 +50,8 @@ import 'package:flutter/material.dart';
             (isBottomBand && firstSeriesTick.quote > secondSeriesTick.quote);
 
     if (newRegion) {
-      // Find intersection point and create a wrap and add point to topband.
+      // Find intersection point and creates a path
+      // with the current set of points.
       final Tick? firstSeriesPreviousTick = firstSeriesEntries[i - 1];
       final Tick? secondSeriesPreviousTick = secondSeriesEntries[i - 1];
       Offset? intersecion;
@@ -75,7 +76,9 @@ import 'package:flutter/material.dart';
       isTopBand = isBottomBand = false;
     } else if (firstSeriesTick.quote == secondSeriesTick.quote) {
       addPoint(topPoints, firstSeriesTick, i);
-      // Create a wrap and and point to topBand.
+      // When both the first and second series's quotes are the same,
+      // it is considered an intersection point,
+      // and a path with the current set of points is created.
       addPath(_createPath(topPoints, bottomPoints), isTopBand: isTopBand);
       topPoints = <Offset>[];
       bottomPoints = <Offset>[];
