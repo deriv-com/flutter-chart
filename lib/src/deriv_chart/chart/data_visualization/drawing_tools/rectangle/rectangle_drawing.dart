@@ -22,6 +22,48 @@ class RectangleDrawing extends Drawing {
     this.endEdgePoint = const EdgePoint(),
   });
 
+  final int _touchTolerance = 10;
+
+  /// Function to check if the clicked position (Offset) is on
+  /// boundary of the rectangle
+  bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
+    /// Width of the rectangle line
+    const double lineWidth = 3;
+
+    final Rect topLineBounds = Rect.fromLTWH(
+      rect.left - _touchTolerance,
+      rect.top - _touchTolerance,
+      rect.width + _touchTolerance * 2,
+      lineWidth + _touchTolerance * 2,
+    );
+
+    final Rect leftLineBounds = Rect.fromLTWH(
+      rect.left - _touchTolerance,
+      rect.top - _touchTolerance,
+      lineWidth + _touchTolerance * 2,
+      rect.height + _touchTolerance * 2,
+    );
+
+    final Rect rightLineBounds = Rect.fromLTWH(
+      rect.right - lineWidth - _touchTolerance * 2,
+      rect.top - _touchTolerance,
+      lineWidth + _touchTolerance * 2,
+      rect.height + _touchTolerance * 2,
+    );
+
+    final Rect bottomLineBounds = Rect.fromLTWH(
+      rect.left - _touchTolerance,
+      rect.bottom - lineWidth - _touchTolerance * 2,
+      rect.width + _touchTolerance * 2 + 2,
+      lineWidth + _touchTolerance * 2 + 2,
+    );
+
+    return topLineBounds.inflate(2).contains(position) ||
+        leftLineBounds.inflate(2).contains(position) ||
+        rightLineBounds.inflate(2).contains(position) ||
+        bottomLineBounds.inflate(2).contains(position);
+  }
+
   /// Instance of enum including all possible drawing parts(marker,rectangle)
   final DrawingParts drawingPart;
 
@@ -35,16 +77,16 @@ class RectangleDrawing extends Drawing {
   ///  (so it can be used for hitTest as well).
   Rect _rect = Rect.zero;
 
-  /// Store the  starting X Coordinate
+  /// Store the starting X Coordinate
   double startXCoord = 0;
 
-  /// Store the  starting Y Coordinate
+  /// Store the starting Y Coordinate
   double startYCoord = 0;
 
-  /// Store the  ending X Coordinate
+  /// Store the ending X Coordinate
   double endXCoord = 0;
 
-  /// Store the  ending t Coordinate
+  /// Store the ending Y Coordinate
   double endYCoord = 0;
 
   ///  Starting point of drawing
@@ -89,7 +131,7 @@ class RectangleDrawing extends Drawing {
 
     if (drawingPart == DrawingParts.marker) {
       if (endEdgePoint.epoch != 0 && endYCoord != 0) {
-        /// Draw first point
+        /// Draw first marker
         canvas.drawCircle(
             Offset(endXCoord, endYCoord),
             _markerRadius,
@@ -97,7 +139,7 @@ class RectangleDrawing extends Drawing {
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (startEdgePoint.epoch != 0 && startYCoord != 0) {
-        /// Draw second point
+        /// Draw second marker
         canvas.drawCircle(
             Offset(startXCoord, startYCoord),
             _markerRadius,
@@ -125,11 +167,9 @@ class RectangleDrawing extends Drawing {
   }
 
   /// Calculation for detemining whether a user's touch or click intersects
-  /// with any of the painted areas on the screen,
-  /// For any of the marker's clicked , the "isDragged" flag is activated
-  /// that allow the dragging of the points and changing the
-  /// width/height of the drawing .If click is anywhere on rectangle, it allows the draging of
-  /// the whole drawing
+  /// with any of the painted lines on the screen,
+  /// the drawing is selected on clicking on any boundary(line) and markers of
+  /// the drawing
   @override
   bool hitTest(
     Offset position,
@@ -144,24 +184,20 @@ class RectangleDrawing extends Drawing {
     setIsStartPointDragged(isDragged: false);
     setIsEndPointDragged!(isDragged: false);
 
-    // Calculate the difference between the start Point and the tap point.
+    // Calculate the difference between the start marker and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - startYCoord;
 
-    // Calculate the difference between the end Point and the tap point.
+    // Calculate the difference between the end marker and the tap point.
     final double endDx = position.dx - endXCoord;
     final double endDy = position.dy - endYCoord;
 
-    // Getting the distance of end point
+    // Getting the distance from end marker
     final double endPointDistance = sqrt(endDx * endDx + endDy * endDy);
 
-    // Getting the distance of start point
+    // Getting the distance from start marker
     final double startPointDistance =
         sqrt(startDx * startDx + startDy * startDy);
-
-    /// inflate the rect to 2px so that the stroke is inclusive and
-    /// can be detected
-    final Rect _inflatedRect = _rect.inflate(2);
 
     /// Check if end point clicked
     if (endPointDistance <= _markerRadius) {
@@ -175,6 +211,7 @@ class RectangleDrawing extends Drawing {
 
     return draggableStartPoint.isDragged ||
         draggableEndPoint!.isDragged ||
-        (_inflatedRect.contains(position) && endEdgePoint.epoch != 0);
+        (_isClickedOnRectangleBoundary(_rect, position) &&
+            endEdgePoint.epoch != 0);
   }
 }

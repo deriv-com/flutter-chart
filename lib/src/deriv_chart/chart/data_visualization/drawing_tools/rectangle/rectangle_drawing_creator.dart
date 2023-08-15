@@ -73,7 +73,10 @@ class _RectangleDrawingCreatorState
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
 
-        if (edgePoints[1] == edgePoints.first) {
+        final EdgePoint startEdgePoint = edgePoints.first;
+        final EdgePoint endEdgePoint = edgePoints[1];
+
+        if (endEdgePoint == startEdgePoint) {
           _widget.removeDrawing(drawingId);
           _widget.clearDrawingToolSelection();
           return;
@@ -81,12 +84,12 @@ class _RectangleDrawingCreatorState
           drawingParts.addAll(<RectangleDrawing>[
             RectangleDrawing(
               drawingPart: DrawingParts.marker,
-              endEdgePoint: edgePoints[1],
+              endEdgePoint: endEdgePoint,
             ),
             RectangleDrawing(
               drawingPart: DrawingParts.rectangle,
-              startEdgePoint: edgePoints.first,
-              endEdgePoint: edgePoints[1],
+              startEdgePoint: startEdgePoint,
+              endEdgePoint: endEdgePoint,
             )
           ]);
         }

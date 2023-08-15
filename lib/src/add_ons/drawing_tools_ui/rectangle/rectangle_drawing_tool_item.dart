@@ -65,14 +65,17 @@ class RectangleDrawingToolItemState
           ColorSelector(
             currentColor: style.color,
             onColorChanged: (Color selectedColor) {
-              setState(() {
-                final LineStyle newColor = style.copyWith(color: selectedColor);
-                if (label == ChartLocalization.of(context).labelColor) {
-                  _lineStyle = newColor;
-                } else {
-                  _fillStyle = newColor;
-                }
-              });
+              setState(
+                () {
+                  final LineStyle newColor =
+                      style.copyWith(color: selectedColor);
+                  if (label == ChartLocalization.of(context).labelColor) {
+                    _lineStyle = newColor;
+                  } else {
+                    _fillStyle = newColor;
+                  }
+                },
+              );
               updateDrawingTool();
             },
           )
