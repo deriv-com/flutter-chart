@@ -18,51 +18,14 @@ class RectangleDrawing extends Drawing {
   /// Initializes
   RectangleDrawing({
     required this.drawingPart,
+    required this.isClickedOnRectangleBoundary,
     this.startEdgePoint = const EdgePoint(),
     this.endEdgePoint = const EdgePoint(),
   });
 
-  final int _touchTolerance = 10;
-
   /// Function to check if the clicked position (Offset) is on
   /// boundary of the rectangle
-  bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
-    /// Width of the rectangle line
-    const double lineWidth = 3;
-
-    final Rect topLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.top - _touchTolerance,
-      rect.width + _touchTolerance * 2,
-      lineWidth + _touchTolerance * 2,
-    );
-
-    final Rect leftLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.top - _touchTolerance,
-      lineWidth + _touchTolerance * 2,
-      rect.height + _touchTolerance * 2,
-    );
-
-    final Rect rightLineBounds = Rect.fromLTWH(
-      rect.right - lineWidth - _touchTolerance * 2,
-      rect.top - _touchTolerance,
-      lineWidth + _touchTolerance * 2,
-      rect.height + _touchTolerance * 2,
-    );
-
-    final Rect bottomLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.bottom - lineWidth - _touchTolerance * 2,
-      rect.width + _touchTolerance * 2 + 2,
-      lineWidth + _touchTolerance * 2 + 2,
-    );
-
-    return topLineBounds.inflate(2).contains(position) ||
-        leftLineBounds.inflate(2).contains(position) ||
-        rightLineBounds.inflate(2).contains(position) ||
-        bottomLineBounds.inflate(2).contains(position);
-  }
+  final bool Function(Rect rect, Offset position) isClickedOnRectangleBoundary;
 
   /// Instance of enum including all possible drawing parts(marker,rectangle)
   final DrawingParts drawingPart;
@@ -211,7 +174,7 @@ class RectangleDrawing extends Drawing {
 
     return draggableStartPoint.isDragged ||
         draggableEndPoint!.isDragged ||
-        (_isClickedOnRectangleBoundary(_rect, position) &&
+        (isClickedOnRectangleBoundary(_rect, position) &&
             endEdgePoint.epoch != 0);
   }
 }
