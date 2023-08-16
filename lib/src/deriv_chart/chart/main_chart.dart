@@ -275,6 +275,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     ),
                   ),
                 DrawingToolChart(
+                  series: widget.mainSeries as DataSeries<Tick>,
                   chartQuoteToCanvasY: chartQuoteToCanvasY,
                   chartQuoteFromCanvasY: chartQuoteFromCanvasY,
                   drawingTools: widget.drawingTools,
