@@ -1,7 +1,9 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/continuous/continuous_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/horizontal/horizontal_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ class DrawingToolWidget extends StatelessWidget {
     required this.clearDrawingToolSelection,
     required this.removeDrawing,
     required this.chartConfig,
+    required this.series,
     this.shouldStopDrawing,
     Key? key,
   }) : super(key: key);
@@ -28,6 +31,9 @@ class DrawingToolWidget extends StatelessWidget {
 
   /// Selected drawing tool.
   final DrawingToolConfig selectedDrawingTool;
+
+  /// Series of tick
+  final DataSeries<Tick> series;
 
   /// Callback to pass a newly created drawing to the parent.
   final void Function(
@@ -83,6 +89,14 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           chartConfig: chartConfig,
+        );
+      case 'dt_trend':
+        return TrendDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          clearDrawingToolSelection: clearDrawingToolSelection,
+          quoteFromCanvasY: quoteFromCanvasY,
+          removeDrawing: removeDrawing,
+          series: series,
         );
 
       // TODO(maryia-binary): add the rest of drawing tools here

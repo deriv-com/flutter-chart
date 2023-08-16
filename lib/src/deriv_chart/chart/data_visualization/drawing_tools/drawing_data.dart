@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 
@@ -10,6 +11,7 @@ class DrawingData {
     required this.drawingParts,
     this.isDrawingFinished = false,
     this.isSelected = true,
+    this.series,
   });
 
   /// Unique id of the current drawing.
@@ -17,6 +19,9 @@ class DrawingData {
 
   /// Configuration of the current drawing.
   final DrawingToolConfig config;
+
+  /// Series of ticks
+  List<Tick>? series;
 
   /// Drawing list.
   final List<Drawing> drawingParts;
