@@ -77,9 +77,9 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                     )),
             if (widget.drawingTools.selectedDrawingTool != null)
               DrawingToolWidget(
-                onAddDrawing: drawingTools.onAddDrawing,
-                selectedDrawingTool: drawingTools.selectedDrawingTool!,
-                quoteFromCanvasY: chartQuoteFromCanvasY,
+                onAddDrawing: widget.drawingTools.onAddDrawing,
+                selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
+                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
                 chartConfig: context.watch<ChartConfig>(),
                 clearDrawingToolSelection:
                     widget.drawingTools.clearDrawingToolSelection,
