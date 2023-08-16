@@ -44,5 +44,7 @@
   "warnFailedLoadingIndicators": "Failed to load indicators.",
   "warnFailedLoadingDrawingTools": "Failed to load drawing tools.",
   "selectDrawingTool": "Select drawing tool",
-  "labelColor": "Color"
+  "labelColor": "Color",
+  "labelFillColor": "Fill Color"
+
 }
