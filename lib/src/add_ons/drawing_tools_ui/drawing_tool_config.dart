@@ -3,6 +3,8 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
+
 import 'package:flutter/material.dart';
 import 'line/line_drawing_tool_config.dart';
 import 'vertical/vertical_drawing_tool_config.dart';
@@ -27,6 +29,8 @@ abstract class DrawingToolConfig extends AddOnConfig {
         return LineDrawingToolConfig.fromJson(json);
       case RectangleDrawingToolConfig.name:
         return RectangleDrawingToolConfig.fromJson(json);
+      case TrendDrawingToolConfig.name:
+        return TrendDrawingToolConfig.fromJson(json);
       case VerticalDrawingToolConfig.name:
         return VerticalDrawingToolConfig.fromJson(json);
 
