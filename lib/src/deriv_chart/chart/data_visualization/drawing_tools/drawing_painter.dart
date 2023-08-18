@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +56,9 @@ class _DrawingPainterState extends State<DrawingPainter> {
   Widget build(BuildContext context) {
     final XAxisModel xAxis = context.watch<XAxisModel>();
 
+    final Repository<DrawingToolConfig> repo =
+        context.watch<Repository<DrawingToolConfig>>();
+
     void _onPanUpdate(DragUpdateDetails details) {
       if (widget.drawingData!.isSelected &&
           widget.drawingData!.isDrawingFinished) {
@@ -82,6 +84,20 @@ class _DrawingPainterState extends State<DrawingPainter> {
               widget.quoteToCanvasY,
               isOtherEndDragged: _draggableStartPoint.isDragged,
             );
+        });
+
+        /// In this part of the code, we are updating the stored drawing tool
+        /// config with lates data from the chart.
+        DrawingToolConfig config = widget.drawingData!.config;
+        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
+          if (element.toJson()['configId'] == config.toJson()['configId']) {
+            config = config.copyWith(
+              edgePoints: <EdgePoint>[_draggableStartPoint, _draggableEndPoint],
+              drawingData: widget.drawingData!,
+            );
+
+            repo.updateAt(index, config);
+          }
         });
       }
     }

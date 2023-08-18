@@ -3,12 +3,16 @@ import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'draggable_edge_point.g.dart';
 
 /// A class that holds draggable edge point data.
 /// Draggable edge points are part of the drawings which added by user clicks
 /// And we want to hanle difftent types of drag events on them.
 /// For example with dots are draggable edge points for the line
 /// ⎯⎯⚪️⎯⎯⎯⚪️⎯⎯
+@JsonSerializable()
 class DraggableEdgePoint extends EdgePoint {
   /// Initializes
   DraggableEdgePoint({
@@ -17,6 +21,13 @@ class DraggableEdgePoint extends EdgePoint {
     this.isDrawingDragged = false,
     this.isDragged = false,
   }) : super(epoch: epoch, quote: quote);
+
+  /// Initializes from JSON.
+  factory DraggableEdgePoint.fromJson(Map<String, dynamic> map) =>
+      _$DraggableEdgePointFromJson(map);
+
+  @override
+  Map<String, dynamic> toJson() => _$DraggableEdgePointToJson(this);
 
   /// Represents whether the whole drawing is currently being dragged or not
   final bool isDrawingDragged;

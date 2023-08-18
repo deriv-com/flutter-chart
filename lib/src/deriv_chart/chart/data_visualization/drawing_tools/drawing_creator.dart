@@ -14,6 +14,7 @@ typedef OnAddDrawing<T> = void Function(
   List<T> drawingParts, {
   bool isDrawingFinished,
   bool isInfiniteDrawing,
+  List<EdgePoint>? edgePoints,
 });
 
 /// This class is an abstract representation of a drawing creator, and it's a

@@ -1,8 +1,11 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatelessWidget {
@@ -41,30 +44,47 @@ class DrawingToolChart extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => ClipRect(
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            ...drawingTools.drawings
-                .map((DrawingData drawingData) => DrawingPainter(
-                      drawingData: drawingData,
-                      quoteToCanvasY: chartQuoteToCanvasY,
-                      quoteFromCanvasY: chartQuoteFromCanvasY,
-                      onMoveDrawing: drawingTools.onMoveDrawing,
-                      setIsDrawingSelected: _setIsDrawingSelected,
-                      selectedDrawingTool: drawingTools.selectedDrawingTool,
-                    )),
-            if (drawingTools.selectedDrawingTool != null)
-              DrawingToolWidget(
-                onAddDrawing: drawingTools.onAddDrawing,
-                selectedDrawingTool: drawingTools.selectedDrawingTool!,
+  Widget build(BuildContext context) {
+    final Repository<DrawingToolConfig> repo =
+        context.watch<Repository<DrawingToolConfig>>();
+
+    /// Restoring drawings from the repository if there are any
+    final List<DrawingData> drawings = repo.items.isNotEmpty
+        ? repo.items
+                .map((DrawingToolConfig config) =>
+                    config.toJson()['drawingData'])
+                .toList()
+                .isNotEmpty
+            ? repo.items
+                .map<DrawingData>((DrawingToolConfig config) =>
+                    config.toJson()['drawingData'])
+                .toList()
+            : drawingTools.drawings
+        : drawingTools.drawings;
+
+    return ClipRect(
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          ...drawings.map((DrawingData drawingData) => DrawingPainter(
+                drawingData: drawingData,
+                quoteToCanvasY: chartQuoteToCanvasY,
                 quoteFromCanvasY: chartQuoteFromCanvasY,
-                clearDrawingToolSelection:
-                    drawingTools.clearDrawingToolSelection,
-                removeDrawing: removeDrawing,
-                shouldStopDrawing: drawingTools.shouldStopDrawing,
-              ),
-          ],
-        ),
-      );
+                onMoveDrawing: drawingTools.onMoveDrawing,
+                setIsDrawingSelected: _setIsDrawingSelected,
+                selectedDrawingTool: drawingTools.selectedDrawingTool,
+              )),
+          if (drawingTools.selectedDrawingTool != null)
+            DrawingToolWidget(
+              onAddDrawing: drawingTools.onAddDrawing,
+              selectedDrawingTool: drawingTools.selectedDrawingTool!,
+              quoteFromCanvasY: chartQuoteFromCanvasY,
+              clearDrawingToolSelection: drawingTools.clearDrawingToolSelection,
+              removeDrawing: removeDrawing,
+              shouldStopDrawing: drawingTools.shouldStopDrawing,
+            ),
+        ],
+      ),
+    );
+  }
 }

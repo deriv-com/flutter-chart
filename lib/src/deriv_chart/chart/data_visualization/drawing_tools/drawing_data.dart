@@ -1,7 +1,11 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'drawing_data.g.dart';
 
 /// A class that hold drawing data.
+@JsonSerializable()
 class DrawingData {
   /// Initializes
   DrawingData({
@@ -11,6 +15,13 @@ class DrawingData {
     this.isDrawingFinished = false,
     this.isSelected = true,
   });
+
+  /// Initializes from JSON.
+  factory DrawingData.fromJson(Map<String, dynamic> json) =>
+      _$DrawingDataFromJson(json);
+
+  /// Serialization to JSON. Serves as value in key-value storage.
+  Map<String, dynamic> toJson() => _$DrawingDataToJson(this);
 
   /// Unique id of the current drawing.
   final String id;

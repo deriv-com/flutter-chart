@@ -3,12 +3,44 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
+import 'continuous/continuous_line_drawing.dart';
+import 'vertical/vertical_drawing.dart';
+
 /// Base class to draw a particular drawing
 abstract class Drawing {
+  /// Initializes [Drawing].
+  const Drawing();
+
+  /// Initializes from JSON.
+  factory Drawing.fromJson(Map<String, dynamic> json) {
+    if (!json.containsKey(classNameKey)) {
+      throw ArgumentError.value(json, 'json', 'Missing indicator name.');
+    }
+
+    switch (json[classNameKey]) {
+      case ContinuousLineDrawing.nameKey:
+        return ContinuousLineDrawing.fromJson(json);
+      case LineDrawing.nameKey:
+        return LineDrawing.fromJson(json);
+      case VerticalDrawing.nameKey:
+        return VerticalDrawing.fromJson(json);
+
+      default:
+        throw ArgumentError.value(json, 'json', 'Invalid indicator name.');
+    }
+  }
+
+  /// Creates a concrete drawing tool from JSON.
+  Map<String, dynamic> toJson();
+
+  /// Key of drawing tool name property in JSON.
+  static const String classNameKey = 'class_name_key';
+
   /// Paint
   void onPaint(
     Canvas canvas,

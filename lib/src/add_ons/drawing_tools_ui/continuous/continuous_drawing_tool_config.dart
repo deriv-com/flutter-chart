@@ -3,6 +3,8 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'continuous_drawing_tool_item.dart';
@@ -46,4 +48,16 @@ class ContinuousDrawingToolConfig extends DrawingToolConfig {
         updateDrawingTool: updateDrawingTool,
         deleteDrawingTool: deleteDrawingTool,
       );
+
+  @override
+  DrawingToolConfig copyWith({
+    String? configId,
+    DrawingData? drawingData,
+    LineStyle? lineStyle,
+    DrawingPatterns? pattern,
+    List<EdgePoint>? edgePoints,
+  }) {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

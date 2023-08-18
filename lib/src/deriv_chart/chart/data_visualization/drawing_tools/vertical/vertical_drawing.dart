@@ -10,15 +10,30 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'vertical_drawing.g.dart';
 
 /// Vertical drawing tool. A vertical is a vertical line defined by one point
 /// that is infinite in both directions.
+@JsonSerializable()
 class VerticalDrawing extends Drawing {
   /// Initializes
   VerticalDrawing({
     required this.drawingPart,
     required this.edgePoint,
   });
+
+  /// Initializes from JSON.
+  factory VerticalDrawing.fromJson(Map<String, dynamic> json) =>
+      _$VerticalDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$VerticalDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of indicator name property in JSON.
+  static const String nameKey = 'VerticalDrawing';
 
   /// Part of a drawing: 'vertical'
   final DrawingParts drawingPart;

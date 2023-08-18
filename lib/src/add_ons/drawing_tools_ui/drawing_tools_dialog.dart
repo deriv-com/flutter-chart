@@ -28,6 +28,8 @@ class DrawingToolsDialog extends StatefulWidget {
 class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
   DrawingToolConfig? _selectedDrawingTool;
 
+  // final String aaa = UniqueKey().toString();
+
   @override
   Widget build(BuildContext context) {
     final Repository<DrawingToolConfig> repo =
@@ -84,8 +86,16 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               itemBuilder: (BuildContext context, int index) =>
                   repo.items[index].getItem(
                 (DrawingToolConfig updatedConfig) {
-                  widget.drawingTools.onDrawingToolUpdate(index, updatedConfig);
-                  repo.updateAt(index, updatedConfig);
+                  DrawingToolConfig config = updatedConfig;
+
+                  config = config.copyWith(
+                    configId: repo.items[index].toJson()['configId'],
+                    edgePoints: repo.items[index].toJson()['edgePoints'],
+                    drawingData: repo.items[index].toJson()['drawingData'],
+                  );
+
+                  widget.drawingTools.onDrawingToolUpdate(index, config);
+                  repo.updateAt(index, config);
                 },
                 () {
                   widget.drawingTools.onDrawingToolRemoval(index);

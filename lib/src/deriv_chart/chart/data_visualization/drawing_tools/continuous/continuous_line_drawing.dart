@@ -11,23 +11,54 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'continuous_line_drawing.g.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
+@JsonSerializable()
 class ContinuousLineDrawing extends Drawing {
   /// Initializes
   ContinuousLineDrawing({
-    required DrawingParts drawingPart,
-    EdgePoint startEdgePoint = const EdgePoint(),
-    EdgePoint endEdgePoint = const EdgePoint(),
-    bool exceedStart = false,
-    bool exceedEnd = false,
+    required this.drawingPart,
+    this.startEdgePoint = const EdgePoint(),
+    this.endEdgePoint = const EdgePoint(),
+    this.exceedStart = false,
+    this.exceedEnd = false,
   }) : _lineDrawing = LineDrawing(
-            drawingPart: drawingPart,
-            startEdgePoint: startEdgePoint,
-            endEdgePoint: endEdgePoint,
-            exceedStart: exceedStart,
-            exceedEnd: exceedEnd);
+          drawingPart: drawingPart,
+          startEdgePoint: startEdgePoint,
+          endEdgePoint: endEdgePoint,
+          exceedStart: exceedStart,
+          exceedEnd: exceedEnd,
+        );
+
+  /// Initializes from JSON.
+  factory ContinuousLineDrawing.fromJson(Map<String, dynamic> json) =>
+      _$ContinuousLineDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ContinuousLineDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Drawing part.
+  final DrawingParts drawingPart;
+
+  /// Start edge point.
+  final EdgePoint startEdgePoint;
+
+  /// End edge point.
+  final EdgePoint endEdgePoint;
+
+  /// Whether the start point is exceeded.
+  final bool exceedStart;
+
+  /// Whether the end point is exceeded.
+  final bool exceedEnd;
+
+  /// Key of indicator name property in JSON.
+  static const String nameKey = 'ContinuousLineDrawing';
 
   final LineDrawing _lineDrawing;
 
@@ -61,7 +92,10 @@ class ContinuousLineDrawing extends Drawing {
         quoteToY,
         DrawingData(
           id: drawingData.id,
-          config: LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
+          config: LineDrawingToolConfig(
+            lineStyle: lineStyle,
+            pattern: pattern,
+          ),
           drawingParts: drawingData.drawingParts,
           isDrawingFinished: drawingData.isDrawingFinished,
           isSelected: drawingData.isSelected,

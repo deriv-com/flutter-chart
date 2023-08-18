@@ -4,6 +4,8 @@ import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 
+import '../chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+
 /// This calss is used to keep all the methods and data related to drawing tools
 /// Which need to be shared between the DerivChart and the DrawingToolsDialog
 class DrawingTools {
@@ -58,6 +60,7 @@ class DrawingTools {
     List<Drawing> drawingParts, {
     bool isDrawingFinished = false,
     bool isInfiniteDrawing = false,
+    List<EdgePoint>? edgePoints,
   }) {
     final DrawingData? existingDrawing = drawings.firstWhereOrNull(
       (DrawingData drawing) => drawing.id == drawingId,
@@ -78,6 +81,17 @@ class DrawingTools {
     }
 
     if (isDrawingFinished) {
+      selectedDrawingTool = selectedDrawingTool!.copyWith(
+        configId: drawingId,
+        edgePoints: edgePoints,
+        drawingData: DrawingData(
+          id: drawingId,
+          config: selectedDrawingTool!,
+          drawingParts: drawingParts,
+          isDrawingFinished: isDrawingFinished,
+        ),
+      );
+
       drawingToolsRepo!.add(selectedDrawingTool!);
 
       if (isInfiniteDrawing && shouldStopDrawing!) {

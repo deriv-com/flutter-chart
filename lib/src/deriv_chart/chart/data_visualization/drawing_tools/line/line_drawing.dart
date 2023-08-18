@@ -13,9 +13,13 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'line_drawing.g.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
+@JsonSerializable()
 class LineDrawing extends Drawing {
   /// Initializes
   LineDrawing({
@@ -25,6 +29,17 @@ class LineDrawing extends Drawing {
     this.exceedStart = false,
     this.exceedEnd = false,
   });
+
+  /// Initializes from JSON.
+  factory LineDrawing.fromJson(Map<String, dynamic> json) =>
+      _$LineDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$LineDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of indicator name property in JSON.
+  static const String nameKey = 'LineDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;

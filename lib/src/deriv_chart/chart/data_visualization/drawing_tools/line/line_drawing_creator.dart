@@ -101,6 +101,7 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }
