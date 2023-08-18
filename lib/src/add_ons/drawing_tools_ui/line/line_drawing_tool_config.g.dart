@@ -9,6 +9,7 @@ part of 'line_drawing_tool_config.dart';
 LineDrawingToolConfig _$LineDrawingToolConfigFromJson(
         Map<String, dynamic> json) =>
     LineDrawingToolConfig(
+      configId: json['configId'] as String?,
       drawingData: json['drawingData'] == null
           ? null
           : DrawingData.fromJson(json['drawingData'] as Map<String, dynamic>),
@@ -21,7 +22,6 @@ LineDrawingToolConfig _$LineDrawingToolConfigFromJson(
               ?.map((e) => EdgePoint.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <EdgePoint>[],
-      configId: json['configId'] as String? ?? 'LineDrawingToolConfig_',
     );
 
 Map<String, dynamic> _$LineDrawingToolConfigToJson(

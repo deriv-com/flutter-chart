@@ -1,6 +1,9 @@
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+
+part 'tick.g.dart';
 
 /// Basic data entry.
 // Since we have field option in indicators menu (Close, High, Hl2, etc),
@@ -12,12 +15,19 @@ import 'package:meta/meta.dart';
 // we can use either <Tick>[] or <Candle>[] as input for
 // Close|High|Hl2|ValueIndicators.
 @immutable
+@JsonSerializable()
 class Tick with EquatableMixin implements IndicatorOHLC, IndicatorResult {
   /// Initializes
   const Tick({
     required this.epoch,
     required this.quote,
   });
+
+  /// Initializes from JSON.
+  factory Tick.fromJson(Map<String, dynamic> json) => _$TickFromJson(json);
+
+  /// Serialization to JSON. Serves as value in key-value storage.
+  Map<String, dynamic> toJson() => _$TickToJson(this);
 
   /// Epoch of the tick
   final int epoch;

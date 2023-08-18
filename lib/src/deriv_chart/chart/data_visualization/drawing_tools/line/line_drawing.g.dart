@@ -30,4 +30,5 @@ Map<String, dynamic> _$LineDrawingToJson(LineDrawing instance) =>
 const _$DrawingPartsEnumMap = {
   DrawingParts.marker: 'marker',
   DrawingParts.line: 'line',
+  DrawingParts.rectangle: 'rectangle',
 };

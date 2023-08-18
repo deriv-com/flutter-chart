@@ -24,4 +24,5 @@ Map<String, dynamic> _$VerticalDrawingToJson(VerticalDrawing instance) =>
 const _$DrawingPartsEnumMap = {
   DrawingParts.marker: 'marker',
   DrawingParts.line: 'line',
+  DrawingParts.rectangle: 'rectangle',
 };

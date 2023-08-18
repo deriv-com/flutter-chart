@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -30,6 +31,8 @@ abstract class Drawing {
         return LineDrawing.fromJson(json);
       case VerticalDrawing.nameKey:
         return VerticalDrawing.fromJson(json);
+      case TrendDrawing.nameKey:
+        return TrendDrawing.fromJson(json);
 
       default:
         throw ArgumentError.value(json, 'json', 'Invalid indicator name.');
@@ -47,6 +50,7 @@ abstract class Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,

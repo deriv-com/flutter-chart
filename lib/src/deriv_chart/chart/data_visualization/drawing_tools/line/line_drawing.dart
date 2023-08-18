@@ -143,6 +143,7 @@ class LineDrawing extends Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingData drawingData,
