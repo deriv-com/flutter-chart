@@ -9,4 +9,7 @@ enum DrawingParts {
   /// Used to show the line.
   @JsonValue('line')
   line,
+
+  /// Used to show the rectangle
+  rectangle
 }
