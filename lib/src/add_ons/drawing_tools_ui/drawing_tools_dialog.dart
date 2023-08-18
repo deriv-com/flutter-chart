@@ -2,6 +2,7 @@ import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -55,6 +56,10 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Line'),
                     value: LineDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Trend'),
+                    value: TrendDrawingToolConfig(),
                   ),
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Vertical'),

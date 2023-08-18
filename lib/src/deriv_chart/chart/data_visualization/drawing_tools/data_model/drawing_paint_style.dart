@@ -19,9 +19,16 @@ class DrawingPaintStyle {
     ..strokeWidth = thickness;
 
   /// Returns the paint style of the inner filling of container
-  Paint fillPaintStyle(Color color) => Paint()
+  Paint fillPaintStyle(Color color, double thickness) => Paint()
     ..color = color.withOpacity(0.2)
-    ..style = PaintingStyle.fill;
+    ..style = PaintingStyle.fill
+    ..strokeWidth = thickness;
+
+  /// Returns the paint style of the outer stroke of the container
+  Paint strokeStyle(Color color, double thickness) => Paint()
+    ..color = color
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = thickness;
 
   /// Returns the paint style of the circle marker
   Paint glowyCirclePaintStyle(Color color) => Paint()..color = color;
