@@ -5,4 +5,7 @@ enum DrawingParts {
 
   /// Used to show the line.
   line,
+
+  /// Used to show the rectangle
+  rectangle
 }
