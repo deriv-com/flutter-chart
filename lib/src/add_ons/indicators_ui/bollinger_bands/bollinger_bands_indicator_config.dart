@@ -3,7 +3,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/bollinger_bands_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/color_converter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -16,6 +18,7 @@ part 'bollinger_bands_indicator_config.g.dart';
 
 /// Bollinger Bands Indicator Config
 @JsonSerializable()
+@ColorConverter()
 class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
   const BollingerBandsIndicatorConfig({
@@ -23,10 +26,17 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.standardDeviation = 2,
+    this.upperLineStyle = const LineStyle(color: Colors.white),
+    this.middleLineStyle = const LineStyle(color: Colors.white),
+    this.lowerLineStyle = const LineStyle(color: Colors.white),
+    this.fillColor = Colors.white12,
+    this.showChannelFill = true,
+    bool showLastIndicator = false,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,
+          showLastIndicator: showLastIndicator,
         );
 
   /// Initializes from JSON.
@@ -43,6 +53,21 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   /// Standard Deviation value
   final double standardDeviation;
 
+  /// Upper line style.
+  final LineStyle upperLineStyle;
+
+  /// Middle line style.
+  final LineStyle middleLineStyle;
+
+  /// Lower line style.
+  final LineStyle lowerLineStyle;
+
+  /// Fill color.
+  final Color fillColor;
+
+  /// Whether the area between upper and lower channel is filled.
+  final bool showChannelFill;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       BollingerBandSeries.fromIndicator(
@@ -51,6 +76,12 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
           period: period,
           movingAverageType: movingAverageType,
           standardDeviationFactor: standardDeviation,
+          upperLineStyle: upperLineStyle,
+          middleLineStyle: middleLineStyle,
+          lowerLineStyle: lowerLineStyle,
+          fillColor: fillColor,
+          showChannelFill: showChannelFill,
+          showLastIndicator: showLastIndicator,
         ),
       );
 

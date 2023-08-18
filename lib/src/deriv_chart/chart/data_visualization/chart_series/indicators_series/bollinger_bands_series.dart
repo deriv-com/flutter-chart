@@ -1,6 +1,9 @@
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -39,9 +42,14 @@ class BollingerBandSeries extends Series {
   })  : _fieldIndicator = indicator,
         super(id ?? 'Bollinger$bbOptions');
 
-  late SingleIndicatorSeries _lowerSeries;
-  late SingleIndicatorSeries _middleSeries;
-  late SingleIndicatorSeries _upperSeries;
+  /// Lower series
+  late SingleIndicatorSeries lowerSeries;
+
+  /// Middle series
+  late SingleIndicatorSeries middleSeries;
+
+  /// Upper series
+  late SingleIndicatorSeries upperSeries;
 
   /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
@@ -58,66 +66,87 @@ class BollingerBandSeries extends Series {
     final CachedIndicator<Tick> bbmSMA =
         MASeries.getMAIndicator(_fieldIndicator, bbOptions);
 
-    _middleSeries = SingleIndicatorSeries(
+    middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => bbmSMA,
       inputIndicator: _fieldIndicator,
       options: bbOptions,
+      style: bbOptions.middleLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        bbOptions.middleLineStyle.color,
+        showLastIndicator: bbOptions.showLastIndicator,
+      ),
     );
 
-    _lowerSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) =>
-            LinePainter(series as DataSeries<Tick>),
-        indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
-              bbmSMA,
-              standardDeviation,
-              k: bbOptions.standardDeviationFactor,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: bbOptions);
+    lowerSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
+        bbmSMA,
+        standardDeviation,
+        k: bbOptions.standardDeviationFactor,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: bbOptions,
+      style: bbOptions.lowerLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        bbOptions.lowerLineStyle.color,
+        showLastIndicator: bbOptions.showLastIndicator,
+      ),
+    );
 
-    _upperSeries = SingleIndicatorSeries(
-        painterCreator: (Series series) =>
-            LinePainter(series as DataSeries<Tick>),
-        indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
-              bbmSMA,
-              standardDeviation,
-              k: bbOptions.standardDeviationFactor,
-            ),
-        inputIndicator: _fieldIndicator,
-        options: bbOptions);
+    upperSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
+        bbmSMA,
+        standardDeviation,
+        k: bbOptions.standardDeviationFactor,
+      ),
+      inputIndicator: _fieldIndicator,
+      options: bbOptions,
+      style: bbOptions.upperLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        bbOptions.upperLineStyle.color,
+        showLastIndicator: bbOptions.showLastIndicator,
+      ),
+    );
 
     _innerSeries
-      ..add(_lowerSeries)
-      ..add(_middleSeries)
-      ..add(_upperSeries);
+      ..add(lowerSeries)
+      ..add(middleSeries)
+      ..add(upperSeries);
 
-    // TODO(ramin): return the painter that paints Channel Fill between bands
-    return null;
+    return ChannelFillPainter(
+      upperSeries,
+      lowerSeries,
+      firstUpperChannelFillColor: bbOptions.fillColor.withOpacity(0.2),
+      secondUpperChannelFillColor: bbOptions.fillColor.withOpacity(0.2),
+    );
   }
 
   @override
   bool didUpdate(ChartData? oldData) {
     final BollingerBandSeries? series = oldData as BollingerBandSeries?;
 
-    final bool lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
-    final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
-    final bool upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
+    final bool lowerUpdated = lowerSeries.didUpdate(series?.lowerSeries);
+    final bool middleUpdated = middleSeries.didUpdate(series?.middleSeries);
+    final bool upperUpdated = upperSeries.didUpdate(series?.upperSeries);
 
     return lowerUpdated || middleUpdated || upperUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _lowerSeries.update(leftEpoch, rightEpoch);
-    _middleSeries.update(leftEpoch, rightEpoch);
-    _upperSeries.update(leftEpoch, rightEpoch);
+    lowerSeries.update(leftEpoch, rightEpoch);
+    middleSeries.update(leftEpoch, rightEpoch);
+    upperSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue
+      // Can just use lowerSeries minValue for min and upperSeries maxValue
       // for max. But to be safe we calculate min and max. from all three series
       <double>[
         _innerSeries
@@ -129,6 +158,15 @@ class BollingerBandSeries extends Series {
       ];
 
   @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    return bbOptions != (previous as BollingerBandSeries).bbOptions;
+  }
+
+  @override
   void paint(
     Canvas canvas,
     Size size,
@@ -138,14 +176,19 @@ class BollingerBandSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _lowerSeries.paint(
+    lowerSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _middleSeries.paint(
+    middleSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _upperSeries.paint(
+    upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
-    // TODO(ramin): call super.paint to paint the Channels fill.
+    if (bbOptions.showChannelFill &&
+        upperSeries.visibleEntries.isNotEmpty &&
+        lowerSeries.visibleEntries.isNotEmpty) {
+      super.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
   }
 
   @override

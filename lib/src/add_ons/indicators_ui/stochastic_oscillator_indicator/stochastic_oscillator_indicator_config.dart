@@ -29,7 +29,17 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
       overboughtValue: 80,
       oversoldValue: 20,
     ),
-  }) : super(isOverlay: false);
+    this.fastLineStyle = const LineStyle(color: Colors.white),
+    this.slowLineStyle = const LineStyle(color: Colors.red),
+    int pipSize = 4,
+    bool showLastIndicator = false,
+    String? title,
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? StochasticOscillatorIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory StochasticOscillatorIndicatorConfig.fromJson(
@@ -69,6 +79,12 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   /// if show the overbought and oversold zones
   /// default is true
   final bool showZones;
+
+  /// Fast line style.
+  final LineStyle fastLineStyle;
+
+  /// Slow line style.
+  final LineStyle slowLineStyle;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => StochasticOscillatorSeries(

@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -30,10 +31,19 @@ class ZigZagSeries extends LineSeries {
   SeriesPainter<DataSeries<Tick>> createPainter() => LinePainter(this);
 
   @override
+  bool shouldRepaint(ChartData? oldDelegate) {
+    if (oldDelegate == null) {
+      return true;
+    }
+
+    return style != (oldDelegate as ZigZagSeries).style;
+  }
+
+  @override
   VisibleEntries<Tick> getVisibleEntries(int startIndex, int endIndex) {
     int firstIndex = startIndex;
     int lastIndex = endIndex;
-    if (entries == null || startIndex < 0 || endIndex >= entries!.length) {
+    if (entries == null || startIndex < 0 || endIndex - 1 > entries!.length) {
       return VisibleEntries<Tick>.empty();
     }
     if (entries![startIndex].quote.isNaN) {

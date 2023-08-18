@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/rsi/rsi_indicator_config.d
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 
@@ -39,6 +40,10 @@ class RSISeries extends AbstractSingleIndicatorSeries {
           id ?? 'RSIIndicator',
           options: rsiOptions,
           style: config.lineStyle,
+          lastTickIndicatorStyle: getLastIndicatorStyle(
+            config.lineStyle.color,
+            showLastIndicator: rsiOptions.showLastIndicator,
+          ),
         );
 
   final Indicator<Tick> _inputIndicator;

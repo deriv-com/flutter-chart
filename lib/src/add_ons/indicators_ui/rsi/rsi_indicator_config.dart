@@ -27,7 +27,15 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.lineStyle = const LineStyle(color: Colors.white),
     this.pinLabels = false,
     this.showZones = true,
-  }) : super(isOverlay: false);
+    int pipSize = 4,
+    bool showLastIndicator = false,
+    String? title,
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? RSIIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory RSIIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -63,7 +71,11 @@ class RSIIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,
-        rsiOptions: RSIOptions(period: period),
+        rsiOptions: RSIOptions(
+          period: period,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+        ),
         showZones: showZones,
       );
 

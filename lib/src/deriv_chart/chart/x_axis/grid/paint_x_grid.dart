@@ -1,24 +1,35 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
-import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/check_new_day.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/time_label.dart';
 import 'package:flutter/material.dart';
 
 /// Paints x-axis grid lines and labels.
 void paintXGrid(
   Canvas canvas,
   Size size, {
-  required List<String> timeLabels,
   required List<double> xCoords,
-  required GridStyle style,
+  required ChartTheme style,
+  required List<DateTime> timestamps,
 }) {
-  assert(timeLabels.length == xCoords.length);
+  assert(timestamps.length == xCoords.length);
+  final GridStyle gridStyle = style.gridStyle;
 
-  _paintTimeGridLines(canvas, size, xCoords, style);
+  _paintTimeGridLines(
+    canvas,
+    size,
+    xCoords,
+    style,
+    gridStyle,
+    timestamps,
+  );
+
   _paintTimeLabels(
     canvas,
     size,
     xCoords: xCoords,
-    timeLabels: timeLabels,
-    style: style,
+    gridStyle: gridStyle,
+    timestamps: timestamps,
   );
 }
 
@@ -26,16 +37,20 @@ void _paintTimeGridLines(
   Canvas canvas,
   Size size,
   List<double> xCoords,
-  GridStyle style,
+  ChartTheme style,
+  GridStyle gridStyle,
+  List<DateTime> time,
 ) {
-  for (final double x in xCoords) {
+  for (int i = 0; i < xCoords.length; i++) {
     canvas.drawLine(
-      Offset(x, 0),
-      Offset(x, size.height - style.xLabelsAreaHeight),
+      Offset(xCoords[i], 0),
+      Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),
       Paint()
-        ..color = style.gridLineColor
+        ..color = checkNewDate(time[i])
+            ? style.verticalBarrierStyle.color
+            : gridStyle.gridLineColor
         ..style = PaintingStyle.stroke
-        ..strokeWidth = style.lineThickness,
+        ..strokeWidth = gridStyle.lineThickness,
     );
   }
 }
@@ -43,19 +58,19 @@ void _paintTimeGridLines(
 void _paintTimeLabels(
   Canvas canvas,
   Size size, {
-  required List<String> timeLabels,
   required List<double> xCoords,
-  required GridStyle style,
+  required GridStyle gridStyle,
+  required List<DateTime> timestamps,
 }) {
-  timeLabels.asMap().forEach((int index, String timeLabel) {
+  for (int index = 0; index < timestamps.length; index++) {
     paintText(
       canvas,
-      text: timeLabel,
+      text: timeLabel(timestamps[index]),
       anchor: Offset(
         xCoords[index],
-        size.height - style.xLabelsAreaHeight / 2,
+        size.height - gridStyle.xLabelsAreaHeight / 2,
       ),
-      style: style.xLabelStyle,
+      style: gridStyle.xLabelStyle,
     );
-  });
+  }
 }

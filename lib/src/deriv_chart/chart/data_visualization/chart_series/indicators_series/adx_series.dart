@@ -1,9 +1,11 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/adx/adx_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
@@ -24,10 +26,17 @@ class ADXSeries extends Series {
     String? id,
   }) : super(id ?? 'ADX$adxOptions');
 
-  late SingleIndicatorSeries _adxSeries;
-  late SingleIndicatorSeries _positiveDISeries;
-  late SingleIndicatorSeries _negativeDISeries;
-  late SingleIndicatorSeries _adxHistogramSeries;
+  /// ADX series
+  late SingleIndicatorSeries adxSeries;
+
+  /// Positive DI series
+  late SingleIndicatorSeries positiveDISeries;
+
+  /// Negative DI series
+  late SingleIndicatorSeries negativeDISeries;
+
+  /// ADX histogram series
+  late SingleIndicatorSeries adxHistogramSeries;
 
   late List<SingleIndicatorSeries> _adxSeriesList;
 
@@ -56,27 +65,35 @@ class ADXSeries extends Series {
       positiveDIIndicator,
       negativeDIIndicator,
       adxPeriod: adxOptions.smoothingPeriod,
-    );
+    )..calculateValues();
 
-    _positiveDISeries = SingleIndicatorSeries(
+    positiveDISeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => positiveDIIndicator,
       inputIndicator: positiveDIIndicator,
       options: adxOptions,
-      style: const LineStyle(color: Colors.green),
+      style: config.positiveLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.positiveLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
-    _negativeDISeries = SingleIndicatorSeries(
+    negativeDISeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => negativeDIIndicator,
       inputIndicator: negativeDIIndicator,
       options: adxOptions,
-      style: const LineStyle(color: Colors.red),
+      style: config.negativeLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.negativeLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
-    _adxHistogramSeries = SingleIndicatorSeries(
+    adxHistogramSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => BarPainter(
         series as DataSeries<Tick>,
         checkColorCallback: ({
@@ -88,10 +105,10 @@ class ADXSeries extends Series {
       indicatorCreator: () => adxHistogramIndicator,
       inputIndicator: adxHistogramIndicator,
       options: adxOptions,
-      style: const BarStyle(),
+      style: config.barStyle,
     );
 
-    _adxSeries = SingleIndicatorSeries(
+    adxSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
         series as DataSeries<Tick>,
         secondaryHorizontalLines: <double>[0],
@@ -99,15 +116,33 @@ class ADXSeries extends Series {
       indicatorCreator: () => adxIndicator,
       inputIndicator: adxIndicator,
       options: adxOptions,
-      style: const LineStyle(color: Colors.white),
+      style: config.lineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.lineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     _adxSeriesList = <SingleIndicatorSeries>[
-      _adxHistogramSeries,
-      _adxSeries,
-      _positiveDISeries,
-      _negativeDISeries,
+      adxSeries,
+      positiveDISeries,
+      negativeDISeries,
     ];
+
+    if (config.showHistogram) {
+      _adxSeriesList.add(adxHistogramSeries);
+    }
+
+    if (config.showShading) {
+      return ChannelFillPainter(
+        positiveDISeries,
+        negativeDISeries,
+        firstUpperChannelFillColor:
+            config.positiveLineStyle.color.withOpacity(0.2),
+        secondUpperChannelFillColor:
+            config.negativeLineStyle.color.withOpacity(0.2),
+      );
+    }
 
     return null;
   }
@@ -117,12 +152,12 @@ class ADXSeries extends Series {
     final ADXSeries? series = oldData as ADXSeries?;
 
     final bool positiveDIUpdated =
-        _positiveDISeries.didUpdate(series?._positiveDISeries);
+        positiveDISeries.didUpdate(series?.positiveDISeries);
     final bool negativeDIUpdated =
-        _negativeDISeries.didUpdate(series?._negativeDISeries);
-    final bool adxUpdated = _adxSeries.didUpdate(series?._adxSeries);
+        negativeDISeries.didUpdate(series?.negativeDISeries);
+    final bool adxUpdated = adxSeries.didUpdate(series?.adxSeries);
     final bool histogramUpdated =
-        _adxHistogramSeries.didUpdate(series?._adxHistogramSeries);
+        adxHistogramSeries.didUpdate(series?.adxHistogramSeries);
 
     return positiveDIUpdated ||
         negativeDIUpdated ||
@@ -142,6 +177,16 @@ class ADXSeries extends Series {
       <double>[_adxSeriesList.getMinValue(), _adxSeriesList.getMaxValue()];
 
   @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    final ADXSeries oldSeries = previous as ADXSeries;
+    return config.toJson().toString() != oldSeries.config.toJson().toString();
+  }
+
+  @override
   void paint(
     Canvas canvas,
     Size size,
@@ -152,22 +197,27 @@ class ADXSeries extends Series {
     ChartTheme theme,
   ) {
     if (config.showSeries) {
-      _positiveDISeries.paint(
+      positiveDISeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-      _negativeDISeries.paint(
+      negativeDISeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-      _adxSeries.paint(
+      adxSeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     }
     if (config.showHistogram) {
-      _adxHistogramSeries.paint(
+      adxHistogramSeries.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
+
+    if (config.showShading) {
+      super.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     }
   }
 
   @override
-  int? getMaxEpoch() => _adxSeries.getMaxEpoch();
+  int? getMaxEpoch() => adxSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _adxSeries.getMinEpoch();
+  int? getMinEpoch() => adxSeries.getMinEpoch();
 }

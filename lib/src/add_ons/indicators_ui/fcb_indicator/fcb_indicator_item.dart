@@ -39,7 +39,7 @@ class FractalChaosBandIndicatorItemState
   @override
   FractalChaosBandIndicatorConfig createIndicatorConfig() =>
       FractalChaosBandIndicatorConfig(
-        channelFill: currentChannelFill,
+        showChannelFill: currentChannelFill,
       );
 
   @override
@@ -73,5 +73,5 @@ class FractalChaosBandIndicatorItemState
   @protected
   bool get currentChannelFill =>
       _channelFill ??
-      (widget.config as FractalChaosBandIndicatorConfig).channelFill;
+      (widget.config as FractalChaosBandIndicatorConfig).showChannelFill;
 }
