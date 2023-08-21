@@ -58,32 +58,32 @@ class RectangleDrawing extends Drawing {
   bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
     /// Width of the rectangle line
     const double lineWidth = 3;
-    const int _touchTolerance = 10;
+    const int touchTolerance = 10;
 
     final List<Rect> rectangleLinesBoundaries = <Rect>[
       Rect.fromLTWH(
-        rect.left - _touchTolerance,
-        rect.top - _touchTolerance,
-        rect.width + _touchTolerance * 2,
-        lineWidth + _touchTolerance * 2,
+        rect.left - touchTolerance,
+        rect.top - touchTolerance,
+        rect.width + touchTolerance * 2,
+        lineWidth + touchTolerance * 2,
       ),
       Rect.fromLTWH(
-        rect.left - _touchTolerance,
-        rect.top - _touchTolerance,
-        lineWidth + _touchTolerance * 2,
-        rect.height + _touchTolerance * 2,
+        rect.left - touchTolerance,
+        rect.top - touchTolerance,
+        lineWidth + touchTolerance * 2,
+        rect.height + touchTolerance * 2,
       ),
       Rect.fromLTWH(
-        rect.right - lineWidth - _touchTolerance * 2,
-        rect.top - _touchTolerance,
-        lineWidth + _touchTolerance * 2,
-        rect.height + _touchTolerance * 2,
+        rect.right - lineWidth - touchTolerance * 2,
+        rect.top - touchTolerance,
+        lineWidth + touchTolerance * 2,
+        rect.height + touchTolerance * 2,
       ),
       Rect.fromLTWH(
-        rect.left - _touchTolerance,
-        rect.bottom - lineWidth - _touchTolerance * 2,
-        rect.width + _touchTolerance * 2 + 2,
-        lineWidth + _touchTolerance * 2 + 2,
+        rect.left - touchTolerance,
+        rect.bottom - lineWidth - touchTolerance * 2,
+        rect.width + touchTolerance * 2 + 2,
+        lineWidth + touchTolerance * 2 + 2,
       ),
     ];
 
