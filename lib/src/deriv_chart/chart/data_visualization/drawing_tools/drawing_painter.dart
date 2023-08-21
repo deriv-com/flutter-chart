@@ -88,12 +88,18 @@ class _DrawingPainterState extends State<DrawingPainter> {
 
         /// In this part of the code, we are updating the stored drawing tool
         /// config with lates data from the chart.
-        DrawingToolConfig config = widget.drawingData!.config;
+        final DrawingData drawingData = widget.drawingData!;
+        DrawingToolConfig config = drawingData.config;
         repo.items.asMap().forEach((int index, DrawingToolConfig element) {
-          if (element.toJson()['configId'] == config.toJson()['configId']) {
+          if (element.toJson()['configId'] == drawingData.toJson()['id']) {
             config = config.copyWith(
+              // configId: drawingData.toJson()['id'],
               edgePoints: <EdgePoint>[_draggableStartPoint, _draggableEndPoint],
               drawingData: widget.drawingData!,
+            );
+
+            config = config.copyWith(
+              drawingData: widget.drawingData!.updateConfig(config),
             );
 
             repo.updateAt(index, config);

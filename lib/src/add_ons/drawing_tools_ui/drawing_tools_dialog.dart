@@ -96,14 +96,21 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                   config = config.copyWith(
                     configId: repo.items[index].toJson()['configId'],
                     edgePoints: repo.items[index].toJson()['edgePoints'],
-                    drawingData: repo.items[index].toJson()['drawingData'],
+                    drawingData: repo.items[index]
+                        .toJson()['drawingData']
+                        .updateConfig(updatedConfig),
                   );
 
-                  widget.drawingTools.onDrawingToolUpdate(index, config);
+                  // config = config.copyWith(
+                  //   drawingData: repo.items[index]
+                  //       .toJson()['drawingData']
+                  //       .updateConfig(updatedConfig),
+                  // );
+
                   repo.updateAt(index, config);
                 },
                 () {
-                  widget.drawingTools.onDrawingToolRemoval(index);
+                  // widget.drawingTools.onDrawingToolRemoval(index);
                   repo.removeAt(index);
                 },
               ),

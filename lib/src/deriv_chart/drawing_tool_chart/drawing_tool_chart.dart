@@ -65,19 +65,24 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
     final Repository<DrawingToolConfig> repo =
         context.watch<Repository<DrawingToolConfig>>();
 
-    /// Restoring drawings from the repository if there are any
-    final List<DrawingData> drawings = repo.items.isNotEmpty
-        ? repo.items
-                .map((DrawingToolConfig config) =>
-                    config.toJson()['drawingData'])
-                .toList()
-                .isNotEmpty
-            ? repo.items
-                .map<DrawingData>((DrawingToolConfig config) =>
-                    config.toJson()['drawingData'])
-                .toList()
-            : widget.drawingTools.drawings
-        : widget.drawingTools.drawings;
+    // // Restoring drawings from the repository if there are any
+    // final List<DrawingData> drawings = repo.items.isNotEmpty
+    //     ? repo.items
+    //             .map((DrawingToolConfig config) =>
+    //                 config.toJson()['drawingData'])
+    //             .toList()
+    //             .isNotEmpty
+    //         ? repo.items
+    //             .map<DrawingData>((DrawingToolConfig config) =>
+    //                 config.toJson()['drawingData'])
+    //             .toList()
+    //         : widget.drawingTools.drawings
+    //     : widget.drawingTools.drawings;
+
+    final List<DrawingData> drawings = repo.items
+        .map<DrawingData>(
+            (DrawingToolConfig config) => config.toJson()['drawingData'])
+        .toList();
 
     return ClipRect(
       child: Stack(
