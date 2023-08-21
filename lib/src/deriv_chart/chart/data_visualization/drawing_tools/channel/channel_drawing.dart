@@ -61,7 +61,8 @@ class ChannelDrawing extends Drawing {
     /// The path for the shaded area between two lines
     final Path path = getParallelogramPath(startVector, endVector);
 
-    canvas.drawPath(path, paint.fillPaintStyle(fillStyle.color));
+    canvas.drawPath(
+        path, paint.fillPaintStyle(fillStyle.color, fillStyle.thickness));
   }
 
   /// Paint the line
