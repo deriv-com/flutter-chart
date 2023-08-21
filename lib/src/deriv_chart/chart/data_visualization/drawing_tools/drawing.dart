@@ -62,19 +62,20 @@ abstract class Drawing {
   }
 
   /// Vector of the line
+  @protected
   Vector getLineVector(
     double startXCoord,
-    double startQuoteToY,
+    double startYCoord,
     double endXCoord,
-    double endQuoteToY, {
+    double endYCoord, {
     bool exceedStart = false,
     bool exceedEnd = false,
   }) {
     Vector vec = Vector(
       x0: startXCoord,
-      y0: startQuoteToY,
+      y0: startYCoord,
       x1: endXCoord,
-      y1: endQuoteToY,
+      y1: endYCoord,
     );
 
     late double earlier, later;
@@ -100,9 +101,9 @@ abstract class Drawing {
       if (vec.x0 > vec.x1) {
         vec = Vector(
           x0: endXCoord,
-          y0: endQuoteToY,
+          y0: endYCoord,
           x1: startXCoord,
-          y1: startQuoteToY,
+          y1: startYCoord,
         );
       }
 
@@ -114,9 +115,9 @@ abstract class Drawing {
       if (vec.x0 > vec.x1) {
         vec = Vector(
           x0: endXCoord,
-          y0: endQuoteToY,
+          y0: endYCoord,
           x1: startXCoord,
-          y1: startQuoteToY,
+          y1: startYCoord,
         );
       }
       earlier = vec.x0;
