@@ -18,14 +18,9 @@ class RectangleDrawing extends Drawing {
   /// Initializes
   RectangleDrawing({
     required this.drawingPart,
-    required this.isClickedOnRectangleBoundary,
     this.startEdgePoint = const EdgePoint(),
     this.endEdgePoint = const EdgePoint(),
   });
-
-  /// Function to check if the clicked position (Offset) is on
-  /// boundary of the rectangle
-  final bool Function(Rect rect, Offset position) isClickedOnRectangleBoundary;
 
   /// Instance of enum including all possible drawing parts(marker,rectangle)
   final DrawingParts drawingPart;
@@ -57,6 +52,44 @@ class RectangleDrawing extends Drawing {
 
   /// Ending point of drawing
   EdgePoint endEdgePoint;
+
+  /// Function to check if the clicked position (Offset) is on
+  /// boundary of the rectangle
+  bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
+    /// Width of the rectangle line
+    const double lineWidth = 3;
+    const int _touchTolerance = 10;
+
+    final List<Rect> rectangleLinesBoundaries = <Rect>[
+      Rect.fromLTWH(
+        rect.left - _touchTolerance,
+        rect.top - _touchTolerance,
+        rect.width + _touchTolerance * 2,
+        lineWidth + _touchTolerance * 2,
+      ),
+      Rect.fromLTWH(
+        rect.left - _touchTolerance,
+        rect.top - _touchTolerance,
+        lineWidth + _touchTolerance * 2,
+        rect.height + _touchTolerance * 2,
+      ),
+      Rect.fromLTWH(
+        rect.right - lineWidth - _touchTolerance * 2,
+        rect.top - _touchTolerance,
+        lineWidth + _touchTolerance * 2,
+        rect.height + _touchTolerance * 2,
+      ),
+      Rect.fromLTWH(
+        rect.left - _touchTolerance,
+        rect.bottom - lineWidth - _touchTolerance * 2,
+        rect.width + _touchTolerance * 2 + 2,
+        lineWidth + _touchTolerance * 2 + 2,
+      ),
+    ];
+
+    return rectangleLinesBoundaries
+        .any((Rect lineBound) => lineBound.inflate(2).contains(position));
+  }
 
   /// Paint the rectangle
   @override
@@ -174,7 +207,7 @@ class RectangleDrawing extends Drawing {
 
     return draggableStartPoint.isDragged ||
         draggableEndPoint!.isDragged ||
-        (isClickedOnRectangleBoundary(_rect, position) &&
+        (_isClickedOnRectangleBoundary(_rect, position) &&
             endEdgePoint.epoch != 0);
   }
 }

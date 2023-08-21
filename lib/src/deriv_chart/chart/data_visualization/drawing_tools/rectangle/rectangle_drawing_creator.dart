@@ -34,48 +34,6 @@ class RectangleDrawingCreator extends DrawingCreator<RectangleDrawing> {
 
 class _RectangleDrawingCreatorState
     extends DrawingCreatorState<RectangleDrawing> {
-  final int _touchTolerance = 10;
-
-  /// Function to check if the clicked position (Offset) is on
-  /// boundary of the rectangle
-  bool _isClickedOnRectangleBoundary(Rect rect, Offset position) {
-    /// Width of the rectangle line
-    const double lineWidth = 3;
-
-    final Rect topLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.top - _touchTolerance,
-      rect.width + _touchTolerance * 2,
-      lineWidth + _touchTolerance * 2,
-    );
-
-    final Rect leftLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.top - _touchTolerance,
-      lineWidth + _touchTolerance * 2,
-      rect.height + _touchTolerance * 2,
-    );
-
-    final Rect rightLineBounds = Rect.fromLTWH(
-      rect.right - lineWidth - _touchTolerance * 2,
-      rect.top - _touchTolerance,
-      lineWidth + _touchTolerance * 2,
-      rect.height + _touchTolerance * 2,
-    );
-
-    final Rect bottomLineBounds = Rect.fromLTWH(
-      rect.left - _touchTolerance,
-      rect.bottom - lineWidth - _touchTolerance * 2,
-      rect.width + _touchTolerance * 2 + 2,
-      lineWidth + _touchTolerance * 2 + 2,
-    );
-
-    return topLineBounds.inflate(2).contains(position) ||
-        leftLineBounds.inflate(2).contains(position) ||
-        rightLineBounds.inflate(2).contains(position) ||
-        bottomLineBounds.inflate(2).contains(position);
-  }
-
   /// If drawing has been started.
   bool _isPenDown = false;
 
@@ -102,7 +60,6 @@ class _RectangleDrawingCreatorState
         drawingParts.add(
           RectangleDrawing(
             drawingPart: DrawingParts.marker,
-            isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
             startEdgePoint: edgePoints.first,
           ),
         );
@@ -127,12 +84,10 @@ class _RectangleDrawingCreatorState
           drawingParts.addAll(<RectangleDrawing>[
             RectangleDrawing(
               drawingPart: DrawingParts.marker,
-              isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               endEdgePoint: endEdgePoint,
             ),
             RectangleDrawing(
               drawingPart: DrawingParts.rectangle,
-              isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               startEdgePoint: startEdgePoint,
               endEdgePoint: endEdgePoint,
             )
