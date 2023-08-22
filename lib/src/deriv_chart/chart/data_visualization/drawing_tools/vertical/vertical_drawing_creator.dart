@@ -44,10 +44,11 @@ class _VerticalDrawingCreatorState
       isDrawingFinished = true;
 
       drawingParts.add(VerticalDrawing(
-          drawingPart: DrawingParts.line,
-          edgePoint: edgePoints.first,
-          chartConfig: widget.chartConfig,
-          epochFromX: epochFromX));
+        drawingPart: DrawingParts.line,
+        edgePoint: edgePoints.first,
+        chartConfig: widget.chartConfig,
+        epochFromX: epochFromX,
+      ));
 
       widget.onAddDrawing(
         drawingId,

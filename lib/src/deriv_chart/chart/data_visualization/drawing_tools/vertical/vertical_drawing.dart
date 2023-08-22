@@ -17,11 +17,12 @@ import 'package:deriv_chart/deriv_chart.dart';
 /// that is infinite in both directions.
 class VerticalDrawing extends Drawing {
   /// Initializes
-  VerticalDrawing(
-      {required this.drawingPart,
-      required this.chartConfig,
-      required this.edgePoint,
-      required this.epochFromX});
+  VerticalDrawing({
+    required this.drawingPart,
+    required this.chartConfig,
+    required this.edgePoint,
+    required this.epochFromX,
+  });
 
   /// Chart config to get pipSize
   final ChartConfig? chartConfig;
@@ -103,7 +104,9 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    config as VerticalDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     return position.dx > startPoint!.x - lineStyle.thickness - 5 &&
         position.dx < startPoint!.x + lineStyle.thickness + 5;

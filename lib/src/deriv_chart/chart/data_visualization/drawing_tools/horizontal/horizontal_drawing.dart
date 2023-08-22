@@ -104,7 +104,9 @@ class HorizontalDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    config as HorizontalDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     return position.dy > startPoint!.y - lineStyle.thickness - 5 &&
         position.dy < startPoint!.y + lineStyle.thickness + 5;
