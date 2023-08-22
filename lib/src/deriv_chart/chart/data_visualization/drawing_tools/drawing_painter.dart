@@ -85,6 +85,24 @@ class _DrawingPainterState extends State<DrawingPainter> {
               isOtherEndDragged: _draggableStartPoint.isDragged,
             );
         });
+
+        // /// In this part of the code, we are updating the stored drawing tool
+        // /// config with lates data from the chart.
+        final DrawingData drawingData = widget.drawingData!;
+        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
+          if (element.toJson()['configId'] == drawingData.toJson()['id']) {
+            DrawingToolConfig updatedConfig;
+
+            updatedConfig = element.copyWith(
+              edgePoints: <EdgePoint>[
+                _draggableStartPoint.getEdgePoint(),
+                _draggableEndPoint.getEdgePoint(),
+              ],
+            );
+
+            repo.updateAt(index, updatedConfig);
+          }
+        });
       }
     }
 

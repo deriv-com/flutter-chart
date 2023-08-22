@@ -78,9 +78,6 @@ class DrawingTools {
       selectedDrawingTool = selectedDrawingTool!.copyWith(
         configId: drawingId,
         edgePoints: edgePoints,
-      );
-
-      selectedDrawingTool = selectedDrawingTool!.copyWith(
         drawingData: DrawingData(
           id: drawingId,
           drawingParts: drawingParts,

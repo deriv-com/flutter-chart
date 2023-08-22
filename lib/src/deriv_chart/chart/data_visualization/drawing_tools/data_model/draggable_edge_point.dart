@@ -74,6 +74,12 @@ class DraggableEdgePoint extends EdgePoint {
         quoteFromCanvasY(localPosition.dy));
   }
 
+  /// Returns the current position of the edge point when it is being dragged.
+  EdgePoint getEdgePoint() => EdgePoint(
+        epoch: _draggedPosition.dx.toInt(),
+        quote: _draggedPosition.dy,
+      );
+
   /// Creates a copy of this object.
   DraggableEdgePoint copyWith({
     int? epoch,

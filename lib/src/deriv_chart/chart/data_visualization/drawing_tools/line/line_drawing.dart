@@ -162,9 +162,10 @@ class LineDrawing extends Drawing {
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    _endPoint = updatePositionCallback(edgePoints[1], draggableEndPoint!);
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
