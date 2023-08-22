@@ -71,6 +71,7 @@ class ContinuousLineDrawing extends Drawing {
     int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -79,8 +80,7 @@ class ContinuousLineDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    final ContinuousDrawingToolConfig config =
-        drawingData.config as ContinuousDrawingToolConfig;
+    config as ContinuousDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
@@ -92,12 +92,12 @@ class ContinuousLineDrawing extends Drawing {
         epochFromX,
         epochToX,
         quoteToY,
+        LineDrawingToolConfig(
+          lineStyle: lineStyle,
+          pattern: pattern,
+        ),
         DrawingData(
           id: drawingData.id,
-          config: LineDrawingToolConfig(
-            lineStyle: lineStyle,
-            pattern: pattern,
-          ),
           drawingParts: drawingData.drawingParts,
           isDrawingFinished: drawingData.isDrawingFinished,
           isSelected: drawingData.isSelected,

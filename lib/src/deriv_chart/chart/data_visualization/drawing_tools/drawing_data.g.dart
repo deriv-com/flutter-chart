@@ -8,8 +8,6 @@ part of 'drawing_data.dart';
 
 DrawingData _$DrawingDataFromJson(Map<String, dynamic> json) => DrawingData(
       id: json['id'] as String,
-      config:
-          DrawingToolConfig.fromJson(json['config'] as Map<String, dynamic>),
       drawingParts: (json['drawingParts'] as List<dynamic>)
           .map((e) => Drawing.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -23,7 +21,6 @@ DrawingData _$DrawingDataFromJson(Map<String, dynamic> json) => DrawingData(
 Map<String, dynamic> _$DrawingDataToJson(DrawingData instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'config': instance.config,
       'series': instance.series,
       'drawingParts': instance.drawingParts,
       'isDrawingFinished': instance.isDrawingFinished,

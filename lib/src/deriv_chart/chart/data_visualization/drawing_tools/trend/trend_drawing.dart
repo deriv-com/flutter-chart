@@ -171,6 +171,7 @@ class TrendDrawing extends Drawing {
     int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -198,8 +199,7 @@ class TrendDrawing extends Drawing {
           ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
     }
 
-    final TrendDrawingToolConfig config =
-        drawingData.config as TrendDrawingToolConfig;
+    config as TrendDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final LineStyle fillStyle = config.fillStyle;

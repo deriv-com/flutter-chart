@@ -53,6 +53,7 @@ abstract class Drawing {
     int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,

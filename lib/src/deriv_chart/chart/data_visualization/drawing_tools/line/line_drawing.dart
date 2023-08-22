@@ -146,6 +146,7 @@ class LineDrawing extends Drawing {
     int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -157,8 +158,7 @@ class LineDrawing extends Drawing {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    final LineDrawingToolConfig config =
-        drawingData.config as LineDrawingToolConfig;
+    config as LineDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;

@@ -47,11 +47,6 @@ class DrawingTools {
     selectedDrawingTool = config;
   }
 
-  /// Callback for updating the drawing data list.
-  void onDrawingToolUpdate(int index, DrawingToolConfig config) {
-    drawings[index] = drawings[index].updateConfig(config);
-  }
-
   /// Callback to add the new drawing to the list of drawings
   /// isInfiniteDrawing used for drawings which don't have fixed number of
   /// points
@@ -69,7 +64,6 @@ class DrawingTools {
     if (existingDrawing == null) {
       drawings.add(DrawingData(
         id: drawingId,
-        config: selectedDrawingTool!,
         drawingParts: drawingParts,
         isDrawingFinished: isDrawingFinished,
       ));
@@ -89,7 +83,6 @@ class DrawingTools {
       selectedDrawingTool = selectedDrawingTool!.copyWith(
         drawingData: DrawingData(
           id: drawingId,
-          config: selectedDrawingTool!,
           drawingParts: drawingParts,
           isDrawingFinished: isDrawingFinished,
         ),

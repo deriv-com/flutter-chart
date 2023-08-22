@@ -53,6 +53,7 @@ class VerticalDrawing extends Drawing {
     int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -62,8 +63,7 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final VerticalDrawingToolConfig config =
-        drawingData.config as VerticalDrawingToolConfig;
+    config as VerticalDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;

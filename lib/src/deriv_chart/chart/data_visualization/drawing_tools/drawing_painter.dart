@@ -85,26 +85,6 @@ class _DrawingPainterState extends State<DrawingPainter> {
               isOtherEndDragged: _draggableStartPoint.isDragged,
             );
         });
-
-        /// In this part of the code, we are updating the stored drawing tool
-        /// config with lates data from the chart.
-        final DrawingData drawingData = widget.drawingData!;
-        DrawingToolConfig config = drawingData.config;
-        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
-          if (element.toJson()['configId'] == drawingData.toJson()['id']) {
-            config = config.copyWith(
-              // configId: drawingData.toJson()['id'],
-              edgePoints: <EdgePoint>[_draggableStartPoint, _draggableEndPoint],
-              drawingData: widget.drawingData!,
-            );
-
-            config = config.copyWith(
-              drawingData: widget.drawingData!.updateConfig(config),
-            );
-
-            repo.updateAt(index, config);
-          }
-        });
       }
     }
 
@@ -163,6 +143,10 @@ class _DrawingPainterState extends State<DrawingPainter> {
             child: CustomPaint(
               foregroundPainter: _DrawingPainter(
                 drawingData: widget.drawingData!,
+                config: repo.items
+                    .where((DrawingToolConfig config) =>
+                        config.toJson()['configId'] == widget.drawingData!.id)
+                    .first,
                 theme: context.watch<ChartTheme>(),
                 epochFromX: xAxis.epochFromX,
                 epochToX: xAxis.xFromEpoch,
@@ -199,6 +183,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
 class _DrawingPainter extends CustomPainter {
   _DrawingPainter({
     required this.drawingData,
+    required this.config,
     required this.theme,
     required this.epochFromX,
     required this.epochToX,
@@ -212,6 +197,7 @@ class _DrawingPainter extends CustomPainter {
   });
 
   final DrawingData drawingData;
+  final DrawingToolConfig config;
   final ChartTheme theme;
   final bool isDrawingToolSelected;
   final int Function(double x) epochFromX;
@@ -236,6 +222,7 @@ class _DrawingPainter extends CustomPainter {
         epochFromX,
         epochToX,
         quoteToY,
+        config,
         drawingData,
         updatePositionCallback,
         draggableStartPoint,
@@ -257,7 +244,7 @@ class _DrawingPainter extends CustomPainter {
         position,
         epochToX,
         quoteToY,
-        drawingData.config,
+        config,
         draggableStartPoint,
         setIsStartPointDragged,
         draggableEndPoint: draggableEndPoint,
