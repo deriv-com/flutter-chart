@@ -185,27 +185,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
     }
 
     for (final Drawing drawing in widget.drawingData!.drawingParts) {
-      drawing.onDrawingMoved(
-        widget.drawingData!,
-        context.read<XAxisModel>().xFromEpoch,
-        widget.quoteToCanvasY,
-        _draggableStartPoint,
-        draggableEndPoint: _draggableEndPoint,
-      );
+      drawing.onDrawingMoved(widget.drawingData!.series!);
     }
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    _updateDrawingsMovement();
-  }
-
-  @override
-  void didUpdateWidget(covariant DrawingPainter oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _updateDrawingsMovement();
   }
 }
 

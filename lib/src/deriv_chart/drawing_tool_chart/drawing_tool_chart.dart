@@ -59,7 +59,9 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   }
 
   @override
-  Widget build(BuildContext context) => ClipRect(
+  Widget build(BuildContext context) {
+    print('drawingTools.length: ${widget.drawingTools.drawings.length}');
+    return ClipRect(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
@@ -87,4 +89,5 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
           ],
         ),
       );
+  }
 }

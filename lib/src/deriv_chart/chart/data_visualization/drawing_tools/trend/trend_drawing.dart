@@ -86,14 +86,9 @@ class TrendDrawing extends Drawing {
   bool _isRectangleSwapped = false;
 
   @override
-  void onDrawingMoved(
-    DrawingData drawingData,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DraggableEdgePoint draggableStartPoint, {
-    DraggableEdgePoint? draggableEndPoint,
-  }) {
-    final List<Tick>? series = drawingData.series;
+  void onDrawingMoved(List<Tick> ticks) {
+
+    print('${DateTime.now()} Trend drawing moved');
 
     final int minimumEpoch =
         startXCoord == 0 ? startEdgePoint.epoch : epochFromX!(startXCoord);
@@ -103,12 +98,7 @@ class TrendDrawing extends Drawing {
         endXCoord == 0 ? endEdgePoint.epoch : epochFromX!(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
-      // setting calculator
-      _calculator = setCalculator(minimumEpoch, maximumEpoch, series);
-
-      // center of rectangle
-      _rectCenter = quoteToY(_calculator!.min) +
-          ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      _calculator = setCalculator(minimumEpoch, maximumEpoch, ticks);
     }
   }
 
@@ -129,7 +119,7 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final List<Tick>? series = drawingData.series;
+
     //  Maximum epoch of the drawing
     final int minimumEpoch =
         startXCoord == 0 ? startEdgePoint.epoch : epochFromX!(startXCoord);

@@ -10,13 +10,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 /// Base class to draw a particular drawing
 abstract class Drawing {
   /// Will be called when the drawing is moved by the user gesture.
-  void onDrawingMoved(
-    DrawingData drawingData,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DraggableEdgePoint draggableStartPoint, {
-    DraggableEdgePoint? draggableEndPoint,
-  }) {}
+  void onDrawingMoved(List<Tick> ticks) {}
 
   /// Paint
   void onPaint(
