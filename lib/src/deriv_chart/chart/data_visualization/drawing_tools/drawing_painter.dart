@@ -100,10 +100,12 @@ class _DrawingPainterState extends State<DrawingPainter> {
         ? GestureDetector(
             onTapUp: (TapUpDetails details) {
               widget.setIsDrawingSelected(widget.drawingData!);
+              _updateDrawingsMovement();
             },
             onLongPressDown: (LongPressDownDetails details) {
               widget.onMoveDrawing(isDrawingMoved: true);
               _previousPosition = details.localPosition;
+              _updateDrawingsMovement();
             },
             onLongPressMoveUpdate: (LongPressMoveUpdateDetails details) {
               final DragUpdateDetails dragDetails =
@@ -111,6 +113,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
               _previousPosition = details.localPosition;
 
               _onPanUpdate(dragDetails);
+              _updateDrawingsMovement();
             },
             onLongPressUp: () {
               widget.onMoveDrawing(isDrawingMoved: false);
@@ -120,12 +123,15 @@ class _DrawingPainterState extends State<DrawingPainter> {
               _draggableEndPoint = _draggableEndPoint.copyWith(
                 isDragged: false,
               );
+              _updateDrawingsMovement();
             },
             onPanStart: (DragStartDetails details) {
               widget.onMoveDrawing(isDrawingMoved: true);
+              _updateDrawingsMovement();
             },
             onPanUpdate: (DragUpdateDetails details) {
               _onPanUpdate(details);
+              _updateDrawingsMovement();
             },
             onPanEnd: (DragEndDetails details) {
               setState(() {
@@ -137,6 +143,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 );
               });
               widget.onMoveDrawing(isDrawingMoved: false);
+              _updateDrawingsMovement();
             },
             child: CustomPaint(
               foregroundPainter: _DrawingPainter(
@@ -170,6 +177,35 @@ class _DrawingPainterState extends State<DrawingPainter> {
             ),
           )
         : const SizedBox();
+  }
+
+  void _updateDrawingsMovement() {
+    if (widget.drawingData == null) {
+      return;
+    }
+
+    for (final Drawing drawing in widget.drawingData!.drawingParts) {
+      drawing.onDrawingMoved(
+        widget.drawingData!,
+        context.read<XAxisModel>().xFromEpoch,
+        widget.quoteToCanvasY,
+        _draggableStartPoint,
+        draggableEndPoint: _draggableEndPoint,
+      );
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _updateDrawingsMovement();
+  }
+
+  @override
+  void didUpdateWidget(covariant DrawingPainter oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateDrawingsMovement();
   }
 }
 
