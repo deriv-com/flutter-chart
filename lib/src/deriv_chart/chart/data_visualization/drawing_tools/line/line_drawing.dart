@@ -129,6 +129,10 @@ class LineDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    // TODO(NA): This is a temporary implementation to demonstrate this
+    //  improvement to check if line drawing needs repainting or not.
+    //  it only considers the draggable edge points. in the real implementation
+    //  we should also consider the line as well.
     if (_isEdgePointInRanges(draggableStartPoint, leftEpoch, rightEpoch) &&
         (draggableEndPoint == null ||
             _isEdgePointInRanges(draggableEndPoint, leftEpoch, rightEpoch))) {

@@ -65,7 +65,6 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
           children: <Widget>[
             ...widget.drawingTools.drawings.map(
               (DrawingData drawingData) => DrawingPainter(
-                key: GlobalObjectKey(drawingData.id),
                 drawingData: drawingData,
                 quoteToCanvasY: widget.chartQuoteToCanvasY,
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
