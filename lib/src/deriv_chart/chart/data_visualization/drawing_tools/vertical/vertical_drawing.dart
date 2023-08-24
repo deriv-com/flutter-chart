@@ -36,15 +36,14 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) =>
-      isEdgePointInRanges(
+      _isEdgePointInRanges(
         draggableStartPoint,
         leftEpoch,
         rightEpoch,
       );
 
-  /// Checks if the edge point is in the range of the chart.
-  @protected
-  bool isEdgePointInRanges(
+  // TODO(Ramin): This can be a helper function, or extension on DraggableEdgePoint.
+  bool _isEdgePointInRanges(
     DraggableEdgePoint edgePoint,
     int leftEpoch,
     int rightEpoch,

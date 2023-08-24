@@ -129,16 +129,22 @@ class LineDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    bool isEdgePointOnRange(EdgePoint edgePoint) =>
-        edgePoint.epoch < rightEpoch && edgePoint.epoch > leftEpoch;
-
-    if (isEdgePointOnRange(draggableStartPoint) &&
-        (draggableEndPoint == null || isEdgePointOnRange(draggableEndPoint))) {
+    if (_isEdgePointInRanges(draggableStartPoint, leftEpoch, rightEpoch) &&
+        (draggableEndPoint == null ||
+            _isEdgePointInRanges(draggableEndPoint, leftEpoch, rightEpoch))) {
       return true;
     }
 
     return false;
   }
+
+  bool _isEdgePointInRanges(
+    DraggableEdgePoint edgePoint,
+    int leftEpoch,
+    int rightEpoch,
+  ) =>
+      edgePoint.draggedPosition.dx >= (leftEpoch - 1000) &&
+      edgePoint.draggedPosition.dx <= (rightEpoch + 1000);
 
   /// Paint the line
   @override
@@ -167,7 +173,6 @@ class LineDrawing extends Drawing {
 
     _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
     _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
-
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
