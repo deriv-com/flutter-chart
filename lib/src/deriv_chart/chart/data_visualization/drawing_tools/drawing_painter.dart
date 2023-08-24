@@ -190,7 +190,11 @@ class _DrawingPainterState extends State<DrawingPainter> {
     }
 
     for (final Drawing drawing in widget.drawingData!.drawingParts) {
-      drawing.onDrawingMoved(widget.drawingData!.series!);
+      drawing.onDrawingMoved(
+        widget.drawingData!.series!,
+        _draggableStartPoint,
+        endPoint: _draggableEndPoint,
+      );
     }
   }
 }

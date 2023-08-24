@@ -201,7 +201,10 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             setCalculator: _setCalculator,
             isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
             touchTolerance: _touchTolerance,
-          )..onDrawingMoved(_widget.series.input),
+          )..onDrawingMoved(
+              _widget.series.input,
+              edgePoints.first,
+            ),
         );
       } else if (!isDrawingFinished) {
         edgePoints.add(
@@ -238,7 +241,11 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
-            )..onDrawingMoved(_widget.series.input),
+            )..onDrawingMoved(
+                _widget.series.input,
+                startingEdgePoint,
+                endPoint: endingEdgePoint,
+              ),
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.line,
@@ -247,7 +254,11 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
-            )..onDrawingMoved(_widget.series.input),
+            )..onDrawingMoved(
+                _widget.series.input,
+                startingEdgePoint,
+                endPoint: endingEdgePoint,
+              ),
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.marker,
@@ -256,7 +267,11 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
-            )..onDrawingMoved(_widget.series.input),
+            )..onDrawingMoved(
+                _widget.series.input,
+                startingEdgePoint,
+                endPoint: endingEdgePoint,
+              )
           ]);
       }
 

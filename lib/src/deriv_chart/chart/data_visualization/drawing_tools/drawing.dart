@@ -17,17 +17,23 @@ abstract class Drawing {
   ///
   /// The method has an empty implementation so only the [Drawing] subclasses
   /// that require this life-cycle method can override it.
-  void onDrawingMoved(List<Tick> ticks) {}
+  ///
+  void onDrawingMoved(
+    List<Tick> ticks,
+    EdgePoint startPoint, {
+    EdgePoint? endPoint,
+  }) {}
 
   /// Is called before repaint the drawing to check if it needs to be
   /// repainted.
   ///
   /// Returns true if the drawing needs to be repainted.
   ///
-  /// Since the [Drawing] class instances are mutable across the painting frames
-  /// there is no instance for the previous frame to compare with and decide
-  /// for repainting.
-  /// Repainting condition for drawing usually decides based on whether they are
+  /// Since the [Drawing] class instances are mutable and live across the
+  /// painting frames, there is no previous instance of it provided in this
+  /// method to compare with and decide for repainting.
+  ///
+  /// Repainting condition for drawing usually is based on whether they are
   /// in the chart visible area or not.
   bool needsRepaint(
     int leftEpoch,

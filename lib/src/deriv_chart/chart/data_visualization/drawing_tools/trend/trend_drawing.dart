@@ -86,7 +86,11 @@ class TrendDrawing extends Drawing {
   bool _isRectangleSwapped = false;
 
   @override
-  void onDrawingMoved(List<Tick> ticks) {
+  void onDrawingMoved(
+    List<Tick> ticks,
+    EdgePoint startPoint, {
+    EdgePoint? endPoint,
+  }) {
     final int minimumEpoch =
         startXCoord == 0 ? startEdgePoint.epoch : epochFromX!(startXCoord);
 
