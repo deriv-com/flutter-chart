@@ -122,6 +122,12 @@ class LineDrawing extends Drawing {
     );
   }
 
+  @override
+  bool needsRepaint() {
+
+    return true;
+  }
+
   /// Paint the line
   @override
   void onPaint(
@@ -149,6 +155,8 @@ class LineDrawing extends Drawing {
 
     _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
     _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+
+    print('### Line: startPoint: ${_startPoint?.x}, endPoint: ${_endPoint?.x}');
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;

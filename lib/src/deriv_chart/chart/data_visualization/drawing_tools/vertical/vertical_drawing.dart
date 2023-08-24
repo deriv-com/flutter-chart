@@ -29,6 +29,12 @@ class VerticalDrawing extends Drawing {
   /// Keeps the latest position of the start of drawing
   Point? startPoint;
 
+  @override
+  bool needsRepaint() {
+    // TODO(NA): based on the current line position variables, decide if it requires repaint.
+    return true;
+  }
+
   /// Paint
   @override
   void onPaint(

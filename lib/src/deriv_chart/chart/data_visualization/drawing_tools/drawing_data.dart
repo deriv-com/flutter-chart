@@ -43,4 +43,17 @@ class DrawingData {
   /// Updates drawing list.
   DrawingData updateDrawingPartList(List<Drawing> drawingParts) =>
       DrawingData(id: id, config: config, drawingParts: drawingParts);
+
+  /// Determines if this [DrawingData] needs to be repainted.
+  ///
+  /// Returns `true` if any of the [drawingParts] needs to be repainted.
+  bool shouldRepaint(DrawingData oldDrawingData) {
+    for (final Drawing drawing in drawingParts) {
+      if (drawing.needsRepaint()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

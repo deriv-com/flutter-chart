@@ -31,6 +31,9 @@ class RayLineDrawing extends Drawing {
 
   final LineDrawing _lineDrawing;
 
+  @override
+  bool needsRepaint() => _lineDrawing.needsRepaint();
+
   /// Paint the line
   @override
   void onPaint(

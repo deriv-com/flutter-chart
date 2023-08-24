@@ -236,7 +236,8 @@ class _DrawingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DrawingPainter oldDelegate) => true;
+  bool shouldRepaint(_DrawingPainter oldDelegate) =>
+      drawingData.shouldRepaint(oldDelegate.drawingData);
 
   @override
   bool shouldRebuildSemantics(_DrawingPainter oldDelegate) => false;

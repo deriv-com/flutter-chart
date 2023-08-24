@@ -87,7 +87,6 @@ class TrendDrawing extends Drawing {
 
   @override
   void onDrawingMoved(List<Tick> ticks) {
-
     print('${DateTime.now()} Trend drawing moved');
 
     final int minimumEpoch =
@@ -100,6 +99,12 @@ class TrendDrawing extends Drawing {
     if (maximumEpoch != 0 && minimumEpoch != 0) {
       _calculator = setCalculator(minimumEpoch, maximumEpoch, ticks);
     }
+  }
+
+  @override
+  bool needsRepaint() {
+    // TODO(NA): based on the current line position variables, decide if it requires repaint.
+    return true;
   }
 
   /// Paint the trend drawing tools

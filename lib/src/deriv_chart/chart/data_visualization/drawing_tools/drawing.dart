@@ -12,6 +12,18 @@ abstract class Drawing {
   /// Will be called when the drawing is moved by the user gesture.
   void onDrawingMoved(List<Tick> ticks) {}
 
+  /// Is called before repaint the drawing to check if it needs to be
+  /// repainted.
+  ///
+  /// Returns true if the drawing needs to be repainted.
+  ///
+  /// Since the [Drawing] class instances are mutable across the painting frames
+  /// there is no instance for the previous frame to compare with and decide
+  /// for repainting.
+  /// Repainting condition for drawing usually decides based on whether they are
+  /// in the chart visible area or not.
+  bool needsRepaint();
+
   /// Paint
   void onPaint(
     Canvas canvas,
