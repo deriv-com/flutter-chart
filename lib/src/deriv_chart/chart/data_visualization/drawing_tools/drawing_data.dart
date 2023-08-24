@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 
 /// A class that hold drawing data.
@@ -47,9 +48,20 @@ class DrawingData {
   /// Determines if this [DrawingData] needs to be repainted.
   ///
   /// Returns `true` if any of the [drawingParts] needs to be repainted.
-  bool shouldRepaint(DrawingData oldDrawingData) {
+  bool shouldRepaint(
+    DrawingData oldDrawingData,
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
     for (final Drawing drawing in drawingParts) {
-      if (drawing.needsRepaint()) {
+      if (drawing.needsRepaint(
+        leftEpoch,
+        rightEpoch,
+        draggableStartPoint,
+        draggableEndPoint: draggableEndPoint,
+      )) {
         return true;
       }
     }

@@ -22,7 +22,12 @@ abstract class Drawing {
   /// for repainting.
   /// Repainting condition for drawing usually decides based on whether they are
   /// in the chart visible area or not.
-  bool needsRepaint();
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  });
 
   /// Paint
   void onPaint(

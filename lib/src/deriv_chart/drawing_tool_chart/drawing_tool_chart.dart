@@ -62,32 +62,33 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   Widget build(BuildContext context) {
     print('drawingTools.length: ${widget.drawingTools.drawings.length}');
     return ClipRect(
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            ...widget.drawingTools.drawings
-                .map((DrawingData drawingData) => DrawingPainter(
-                      drawingData: drawingData,
-                      quoteToCanvasY: widget.chartQuoteToCanvasY,
-                      quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                      onMoveDrawing: widget.drawingTools.onMoveDrawing,
-                      setIsDrawingSelected: _setIsDrawingSelected,
-                      selectedDrawingTool:
-                          widget.drawingTools.selectedDrawingTool,
-                    )),
-            if (widget.drawingTools.selectedDrawingTool != null)
-              DrawingToolWidget(
-                onAddDrawing: widget.drawingTools.onAddDrawing,
-                selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
-                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                clearDrawingToolSelection:
-                    widget.drawingTools.clearDrawingToolSelection,
-                series: widget.series,
-                removeDrawing: removeDrawing,
-                shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
-              ),
-          ],
-        ),
-      );
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          ...widget.drawingTools.drawings.map(
+            (DrawingData drawingData) => DrawingPainter(
+              key: GlobalObjectKey(drawingData.id),
+              drawingData: drawingData,
+              quoteToCanvasY: widget.chartQuoteToCanvasY,
+              quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+              onMoveDrawing: widget.drawingTools.onMoveDrawing,
+              setIsDrawingSelected: _setIsDrawingSelected,
+              selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+            ),
+          ),
+          if (widget.drawingTools.selectedDrawingTool != null)
+            DrawingToolWidget(
+              onAddDrawing: widget.drawingTools.onAddDrawing,
+              selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
+              quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+              clearDrawingToolSelection:
+                  widget.drawingTools.clearDrawingToolSelection,
+              series: widget.series,
+              removeDrawing: removeDrawing,
+              shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
+            ),
+        ],
+      ),
+    );
   }
 }

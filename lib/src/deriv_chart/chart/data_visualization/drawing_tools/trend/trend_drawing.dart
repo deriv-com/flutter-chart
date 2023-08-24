@@ -102,7 +102,12 @@ class TrendDrawing extends Drawing {
   }
 
   @override
-  bool needsRepaint() {
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
     // TODO(NA): based on the current line position variables, decide if it requires repaint.
     return true;
   }

@@ -123,9 +123,21 @@ class LineDrawing extends Drawing {
   }
 
   @override
-  bool needsRepaint() {
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
+    bool isEdgePointOnRange(EdgePoint edgePoint) =>
+        edgePoint.epoch < rightEpoch && edgePoint.epoch > leftEpoch;
 
-    return true;
+    if (isEdgePointOnRange(draggableStartPoint) &&
+        (draggableEndPoint == null || isEdgePointOnRange(draggableEndPoint))) {
+      return true;
+    }
+
+    return false;
   }
 
   /// Paint the line
@@ -156,7 +168,6 @@ class LineDrawing extends Drawing {
     _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
     _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
 
-    print('### Line: startPoint: ${_startPoint?.x}, endPoint: ${_endPoint?.x}');
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;

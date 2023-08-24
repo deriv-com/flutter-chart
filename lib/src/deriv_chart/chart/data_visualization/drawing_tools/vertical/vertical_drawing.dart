@@ -30,9 +30,16 @@ class VerticalDrawing extends Drawing {
   Point? startPoint;
 
   @override
-  bool needsRepaint() {
-    // TODO(NA): based on the current line position variables, decide if it requires repaint.
-    return true;
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
+    final bool shouldRepaint = draggableStartPoint.epoch < rightEpoch &&
+        draggableStartPoint.epoch > leftEpoch;
+
+    return shouldRepaint;
   }
 
   /// Paint
@@ -51,6 +58,8 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    print('#### draggableStartPoint.epoch: ${draggableStartPoint.epoch}');
+
     final DrawingPaintStyle paint = DrawingPaintStyle();
     final VerticalDrawingToolConfig config =
         drawingData.config as VerticalDrawingToolConfig;
