@@ -87,8 +87,6 @@ class TrendDrawing extends Drawing {
 
   @override
   void onDrawingMoved(List<Tick> ticks) {
-    print('${DateTime.now()} Trend drawing moved');
-
     final int minimumEpoch =
         startXCoord == 0 ? startEdgePoint.epoch : epochFromX!(startXCoord);
 
@@ -108,7 +106,7 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    // TODO(NA): based on the current line position variables, decide if it requires repaint.
+    // TODO(NA): return true based on the current position and chart visible range.
     return true;
   }
 

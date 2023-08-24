@@ -249,16 +249,13 @@ class _DrawingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DrawingPainter oldDelegate) {
-    return true;
-    // return drawingData.shouldRepaint(
-    //     oldDelegate.drawingData,
-    //     leftEpoch,
-    //     rightEpoch,
-    //     draggableStartPoint,
-    //     draggableEndPoint: draggableEndPoint,
-    //   );
-  }
+  bool shouldRepaint(_DrawingPainter oldDelegate) => drawingData.shouldRepaint(
+        oldDelegate.drawingData,
+        leftEpoch,
+        rightEpoch,
+        draggableStartPoint,
+        draggableEndPoint: draggableEndPoint,
+      );
 
   @override
   bool shouldRebuildSemantics(_DrawingPainter oldDelegate) => false;

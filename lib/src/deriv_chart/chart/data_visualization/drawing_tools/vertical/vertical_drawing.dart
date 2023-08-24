@@ -35,12 +35,22 @@ class VerticalDrawing extends Drawing {
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
-  }) {
-    final bool shouldRepaint = draggableStartPoint.epoch < rightEpoch &&
-        draggableStartPoint.epoch > leftEpoch;
+  }) =>
+      isEdgePointInRanges(
+        draggableStartPoint,
+        leftEpoch,
+        rightEpoch,
+      );
 
-    return shouldRepaint;
-  }
+  /// Checks if the edge point is in the range of the chart.
+  @protected
+  bool isEdgePointInRanges(
+    DraggableEdgePoint edgePoint,
+    int leftEpoch,
+    int rightEpoch,
+  ) =>
+      edgePoint.draggedPosition.dx >= (leftEpoch - 1000) &&
+      edgePoint.draggedPosition.dx <= (rightEpoch + 1000);
 
   /// Paint
   @override
@@ -58,7 +68,7 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    print('#### draggableStartPoint.epoch: ${draggableStartPoint.epoch}');
+    print('### VerticalDrawing onPaint ${DateTime.now()}');
 
     final DrawingPaintStyle paint = DrawingPaintStyle();
     final VerticalDrawingToolConfig config =
