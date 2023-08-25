@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/misc/debounce.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +60,29 @@ class _DrawingPainterState extends State<DrawingPainter> {
     final Repository<DrawingToolConfig> repo =
         context.watch<Repository<DrawingToolConfig>>();
 
+    /// In this method, we are updating the restored drawing tool
+    /// config with latest data from the chart.
+    void updateDrawingToolConfig() {
+      final Debounce debounce = Debounce();
+      final DrawingData drawingData = widget.drawingData!;
+      debounce.run(() {
+        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
+          if (element.toJson()['configId'] == drawingData.toJson()['id']) {
+            DrawingToolConfig updatedConfig;
+
+            updatedConfig = element.copyWith(
+              edgePoints: <EdgePoint>[
+                _draggableStartPoint.getEdgePoint(),
+                _draggableEndPoint.getEdgePoint(),
+              ],
+            );
+
+            repo.updateAt(index, updatedConfig);
+          }
+        });
+      });
+    }
+
     void _onPanUpdate(DragUpdateDetails details) {
       if (widget.drawingData!.isSelected &&
           widget.drawingData!.isDrawingFinished) {
@@ -86,23 +110,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
             );
         });
 
-        // /// In this part of the code, we are updating the stored drawing tool
-        // /// config with lates data from the chart.
-        final DrawingData drawingData = widget.drawingData!;
-        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
-          if (element.toJson()['configId'] == drawingData.toJson()['id']) {
-            DrawingToolConfig updatedConfig;
-
-            updatedConfig = element.copyWith(
-              edgePoints: <EdgePoint>[
-                _draggableStartPoint.getEdgePoint(),
-                _draggableEndPoint.getEdgePoint(),
-              ],
-            );
-
-            repo.updateAt(index, updatedConfig);
-          }
-        });
+        /// Updating restored DrawingToolConfig with latest data from the chart
+        updateDrawingToolConfig();
       }
     }
 
