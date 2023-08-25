@@ -75,6 +75,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
         fit: StackFit.expand,
         children: <Widget>[
           ...drawings.map((DrawingData drawingData) => DrawingPainter(
+                key: ValueKey<String>(drawingData.id),
                 drawingData: drawingData,
                 quoteToCanvasY: widget.chartQuoteToCanvasY,
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
