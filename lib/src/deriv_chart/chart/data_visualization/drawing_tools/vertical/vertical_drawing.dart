@@ -37,7 +37,7 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) =>
-      draggableStartPoint.isOnViewPortRange(
+      draggableStartPoint.isInViewPortRange(
         leftEpoch,
         rightEpoch,
       );

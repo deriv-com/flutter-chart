@@ -111,9 +111,9 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    if (draggableStartPoint.isOnViewPortRange(leftEpoch, rightEpoch) ||
+    if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
         (draggableEndPoint == null ||
-            draggableEndPoint.isOnViewPortRange(leftEpoch, rightEpoch))) {
+            draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
       return true;
     }
 

@@ -20,7 +20,7 @@ extension DraggableEdgePointExtension on DraggableEdgePoint {
   ///
   /// The view port range is defined by the left and right epoch values.
   /// returns true if the edge point is on the view port range.
-  bool isOnViewPortRange(int leftEpoch, int rightEpoch) =>
+  bool isInViewPortRange(int leftEpoch, int rightEpoch) =>
       draggedPosition.dx >= (leftEpoch - _edgePointOffScreenSafeDistance) &&
       draggedPosition.dx <= (rightEpoch + _edgePointOffScreenSafeDistance);
 }
