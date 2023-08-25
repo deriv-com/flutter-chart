@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -36,20 +37,10 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) =>
-      _isEdgePointInRanges(
-        draggableStartPoint,
+      draggableStartPoint.isOnViewPortRange(
         leftEpoch,
         rightEpoch,
       );
-
-  // TODO(Ramin): This can be a helper function, or extension on DraggableEdgePoint.
-  bool _isEdgePointInRanges(
-    DraggableEdgePoint edgePoint,
-    int leftEpoch,
-    int rightEpoch,
-  ) =>
-      edgePoint.draggedPosition.dx >= (leftEpoch - 1000) &&
-      edgePoint.draggedPosition.dx <= (rightEpoch + 1000);
 
   /// Paint
   @override
@@ -67,6 +58,7 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    print('VerticalDrawing.onPaint ${DateTime.now()}');
     final DrawingPaintStyle paint = DrawingPaintStyle();
     final VerticalDrawingToolConfig config =
         drawingData.config as VerticalDrawingToolConfig;

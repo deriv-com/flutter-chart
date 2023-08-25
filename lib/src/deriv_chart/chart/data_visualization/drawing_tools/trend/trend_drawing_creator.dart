@@ -98,6 +98,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
     List<Tick>? series,
   ) {
     if (prevMaximumEpoch != maximumEpoch || prevMinimumEpoch != minimumEpoch) {
+      print('Calculating minmax calculator ${DateTime.now()}');
       prevMaximumEpoch = maximumEpoch;
       prevMinimumEpoch = minimumEpoch;
       int minimumEpochIndex = _findClosestIndex(minimumEpoch, series);

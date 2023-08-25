@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -133,22 +134,14 @@ class LineDrawing extends Drawing {
     //  improvement to check if line drawing needs repainting or not.
     //  it only considers the draggable edge points. in the real implementation
     //  we should also consider the line as well.
-    if (_isEdgePointInRanges(draggableStartPoint, leftEpoch, rightEpoch) &&
+    if (draggableStartPoint.isOnViewPortRange(leftEpoch, rightEpoch) ||
         (draggableEndPoint == null ||
-            _isEdgePointInRanges(draggableEndPoint, leftEpoch, rightEpoch))) {
+            draggableEndPoint.isOnViewPortRange(leftEpoch, rightEpoch))) {
       return true;
     }
 
     return false;
   }
-
-  bool _isEdgePointInRanges(
-    DraggableEdgePoint edgePoint,
-    int leftEpoch,
-    int rightEpoch,
-  ) =>
-      edgePoint.draggedPosition.dx >= (leftEpoch - 1000) &&
-      edgePoint.draggedPosition.dx <= (rightEpoch + 1000);
 
   /// Paint the line
   @override

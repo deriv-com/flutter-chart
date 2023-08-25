@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -110,8 +111,13 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    // TODO(NA): return true based on the current position and chart visible range.
-    return true;
+    if (draggableStartPoint.isOnViewPortRange(leftEpoch, rightEpoch) ||
+        (draggableEndPoint == null ||
+            draggableEndPoint.isOnViewPortRange(leftEpoch, rightEpoch))) {
+      return true;
+    }
+
+    return false;
   }
 
   /// Paint the trend drawing tools
@@ -130,6 +136,7 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    print('Trend drawing onPaint ${DateTime.now()}');
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     //  Maximum epoch of the drawing
