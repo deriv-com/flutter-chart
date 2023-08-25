@@ -141,9 +141,6 @@ class TrendDrawing extends Drawing {
         endXCoord == 0 ? endEdgePoint.epoch : epochFromX!(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
-      // setting calculator
-      // _calculator = setCalculator(minimumEpoch, maximumEpoch, series);
-
       // center of rectangle
       _rectCenter = quoteToY(_calculator!.min) +
           ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
