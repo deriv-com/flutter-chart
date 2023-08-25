@@ -82,9 +82,6 @@ class ContinuousLineDrawing extends Drawing {
   }) {
     config as ContinuousDrawingToolConfig;
 
-    final LineStyle lineStyle = config.lineStyle;
-    final DrawingPatterns pattern = config.pattern;
-
     _lineDrawing.onPaint(
         canvas,
         size,
@@ -93,8 +90,11 @@ class ContinuousLineDrawing extends Drawing {
         epochToX,
         quoteToY,
         LineDrawingToolConfig(
-          lineStyle: lineStyle,
-          pattern: pattern,
+          configId: config.configId,
+          drawingData: config.drawingData,
+          lineStyle: config.lineStyle,
+          pattern: config.pattern,
+          edgePoints: config.edgePoints,
         ),
         DrawingData(
           id: drawingData.id,

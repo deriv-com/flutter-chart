@@ -113,6 +113,7 @@ class _ContinuousDrawingCreatorState
         drawingParts,
         isDrawingFinished: isDrawingFinished,
         isInfiniteDrawing: true,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

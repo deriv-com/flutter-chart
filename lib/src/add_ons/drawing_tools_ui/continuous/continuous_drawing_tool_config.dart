@@ -16,8 +16,11 @@ part 'continuous_drawing_tool_config.g.dart';
 class ContinuousDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const ContinuousDrawingToolConfig({
+    this.configId,
+    this.drawingData,
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
+    this.edgePoints = const <EdgePoint>[],
   }) : super();
 
   /// Initializes from JSON.
@@ -38,6 +41,15 @@ class ContinuousDrawingToolConfig extends DrawingToolConfig {
   // TODO(maryia-binary): implement 'dotted' and 'dashed' patterns
   final DrawingPatterns pattern;
 
+  /// Drawing tool data.
+  final DrawingData? drawingData;
+
+  /// Drawing tool edge points.
+  final List<EdgePoint> edgePoints;
+
+  /// Drawing tool config id.
+  final String? configId;
+
   @override
   DrawingToolItem getItem(
     UpdateDrawingTool updateDrawingTool,
@@ -50,14 +62,18 @@ class ContinuousDrawingToolConfig extends DrawingToolConfig {
       );
 
   @override
-  DrawingToolConfig copyWith({
+  ContinuousDrawingToolConfig copyWith({
     String? configId,
     DrawingData? drawingData,
     LineStyle? lineStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
-  }) {
-    // TODO: implement copyWith
-    throw UnimplementedError();
-  }
+  }) =>
+      ContinuousDrawingToolConfig(
+        configId: configId ?? this.configId,
+        drawingData: drawingData ?? this.drawingData,
+        lineStyle: lineStyle ?? this.lineStyle,
+        pattern: pattern ?? this.pattern,
+        edgePoints: edgePoints ?? this.edgePoints,
+      );
 }

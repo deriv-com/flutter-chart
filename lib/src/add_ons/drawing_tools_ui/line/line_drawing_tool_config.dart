@@ -30,13 +30,9 @@ class LineDrawingToolConfig extends DrawingToolConfig {
   /// Drawing tool name
   static const String name = 'dt_line';
 
-  // static const String configId = 'LineDrawingToolConfig_';
-  // 'LineDrawingToolConfig_${math.Random().nextInt(1000)}';
-
   @override
   Map<String, dynamic> toJson() => _$LineDrawingToolConfigToJson(this)
     ..putIfAbsent(DrawingToolConfig.nameKey, () => name);
-  // ..putIfAbsent(DrawingToolConfig.configIdKey, () => configId);
 
   /// Drawing tool line style
   final LineStyle lineStyle;
@@ -53,7 +49,17 @@ class LineDrawingToolConfig extends DrawingToolConfig {
 
   /// Drawing tool config id.
   final String? configId;
-  // final String? configId;
+
+  @override
+  DrawingToolItem getItem(
+    UpdateDrawingTool updateDrawingTool,
+    VoidCallback deleteDrawingTool,
+  ) =>
+      LineDrawingToolItem(
+        config: this,
+        updateDrawingTool: updateDrawingTool,
+        deleteDrawingTool: deleteDrawingTool,
+      );
 
   @override
   LineDrawingToolConfig copyWith({
@@ -69,16 +75,5 @@ class LineDrawingToolConfig extends DrawingToolConfig {
         lineStyle: lineStyle ?? this.lineStyle,
         pattern: pattern ?? this.pattern,
         edgePoints: edgePoints ?? this.edgePoints,
-      );
-
-  @override
-  DrawingToolItem getItem(
-    UpdateDrawingTool updateDrawingTool,
-    VoidCallback deleteDrawingTool,
-  ) =>
-      LineDrawingToolItem(
-        config: this,
-        updateDrawingTool: updateDrawingTool,
-        deleteDrawingTool: deleteDrawingTool,
       );
 }

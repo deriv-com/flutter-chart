@@ -133,6 +133,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

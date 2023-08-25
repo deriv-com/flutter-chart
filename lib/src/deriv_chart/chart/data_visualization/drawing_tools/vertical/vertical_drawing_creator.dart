@@ -49,6 +49,7 @@ class _VerticalDrawingCreatorState
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

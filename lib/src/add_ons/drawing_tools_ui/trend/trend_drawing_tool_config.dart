@@ -17,9 +17,12 @@ part 'trend_drawing_tool_config.g.dart';
 class TrendDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const TrendDrawingToolConfig({
+    this.configId,
+    this.drawingData,
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
+    this.edgePoints = const <EdgePoint>[],
   }) : super();
 
   /// Initializes from JSON.
@@ -33,14 +36,23 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
   Map<String, dynamic> toJson() => _$TrendDrawingToolConfigToJson(this)
     ..putIfAbsent(DrawingToolConfig.nameKey, () => name);
 
-  /// Drawing tool line style
-  final LineStyle lineStyle;
-
   /// Drawing tool fill style
   final LineStyle fillStyle;
 
+  /// Drawing tool line style
+  final LineStyle lineStyle;
+
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
   final DrawingPatterns pattern;
+
+  /// Drawing tool data.
+  final DrawingData? drawingData;
+
+  /// Drawing tool edge points.
+  final List<EdgePoint> edgePoints;
+
+  /// Drawing tool config id.
+  final String? configId;
 
   @override
   DrawingToolItem getItem(
@@ -54,14 +66,20 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
       );
 
   @override
-  DrawingToolConfig copyWith({
+  TrendDrawingToolConfig copyWith({
     String? configId,
     DrawingData? drawingData,
+    LineStyle? fillStyle,
     LineStyle? lineStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
-  }) {
-    // TODO: implement copyWith
-    throw UnimplementedError();
-  }
+  }) =>
+      TrendDrawingToolConfig(
+        configId: configId ?? this.configId,
+        drawingData: drawingData ?? this.drawingData,
+        fillStyle: fillStyle ?? this.fillStyle,
+        lineStyle: lineStyle ?? this.lineStyle,
+        pattern: pattern ?? this.pattern,
+        edgePoints: edgePoints ?? this.edgePoints,
+      );
 }
