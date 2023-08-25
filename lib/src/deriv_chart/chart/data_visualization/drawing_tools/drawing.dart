@@ -17,7 +17,6 @@ abstract class Drawing {
   ///
   /// The method has an empty implementation so only the [Drawing] subclasses
   /// that require this life-cycle method can override it.
-  ///
   void onDrawingMoved(
     List<Tick> ticks,
     EdgePoint startPoint, {

@@ -58,7 +58,6 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    print('VerticalDrawing.onPaint ${DateTime.now()}');
     final DrawingPaintStyle paint = DrawingPaintStyle();
     final VerticalDrawingToolConfig config =
         drawingData.config as VerticalDrawingToolConfig;

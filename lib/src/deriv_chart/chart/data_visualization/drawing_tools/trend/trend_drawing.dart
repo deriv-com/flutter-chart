@@ -136,7 +136,6 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    print('Trend drawing onPaint ${DateTime.now()}');
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     //  Maximum epoch of the drawing
