@@ -123,25 +123,15 @@ class LineDrawing extends Drawing {
     );
   }
 
+  // TODO(NO): Return true if LineDrawing's edge points or its line is on chart view port.
   @override
   bool needsRepaint(
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
-  }) {
-    // TODO(NA): This is a temporary implementation to demonstrate this
-    //  improvement to check if line drawing needs repainting or not.
-    //  it only considers the draggable edge points. in the real implementation
-    //  we should also consider the line as well.
-    if (draggableStartPoint.isOnViewPortRange(leftEpoch, rightEpoch) ||
-        (draggableEndPoint == null ||
-            draggableEndPoint.isOnViewPortRange(leftEpoch, rightEpoch))) {
-      return true;
-    }
-
-    return false;
-  }
+  }) =>
+      true;
 
   /// Paint the line
   @override
