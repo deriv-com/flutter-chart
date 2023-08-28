@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ abstract class Drawing {
   const Drawing();
 
   /// Initializes from JSON.
+  /// For restoring drawings add them to the switch statement.
   factory Drawing.fromJson(Map<String, dynamic> json) {
     if (!json.containsKey(classNameKey)) {
       throw ArgumentError.value(json, 'json', 'Missing indicator name.');
@@ -29,6 +31,8 @@ abstract class Drawing {
         return ContinuousLineDrawing.fromJson(json);
       case LineDrawing.nameKey:
         return LineDrawing.fromJson(json);
+      case RayLineDrawing.nameKey:
+        return RayLineDrawing.fromJson(json);
       case VerticalDrawing.nameKey:
         return VerticalDrawing.fromJson(json);
       case TrendDrawing.nameKey:

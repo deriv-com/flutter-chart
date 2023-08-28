@@ -100,6 +100,7 @@ class _RayDrawingCreatorState extends DrawingCreatorState<RayLineDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }
