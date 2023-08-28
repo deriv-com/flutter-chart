@@ -7,15 +7,15 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 class Label {
   /// Initializes the vector label class
   Label({
-    required this.startEpoch,
-    required this.endEpoch,
+    required this.startXCoord,
+    required this.endXCoord,
   });
 
-  /// Start epoch of the drawing
-  int startEpoch;
+  /// Start of the drawing
+  int startXCoord;
 
-  /// End epoch of the drawing
-  int endEpoch;
+  /// End of the drawing
+  int endXCoord;
 
   /// Returns the x position of the label
   double _getX(
@@ -80,9 +80,9 @@ class Label {
     String label,
     Vector endVector,
   ) {
-    final Offset labelOffset = (startEpoch > endEpoch && startEpoch > 10)
+    final Offset labelOffset = (startXCoord > endXCoord && startXCoord > 10)
         ? _getLeftSideLabelsPosition(label, endVector)
-        : (startEpoch < endEpoch && startEpoch < 325)
+        : (startXCoord < endXCoord && startXCoord < 325)
             ? _getRightSideLabelsPosition(label, endVector)
             : Offset.zero;
     if (labelOffset != Offset.zero) {

@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/distance_constants.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
@@ -61,35 +62,35 @@ abstract class Drawing {
   /// Vector of the line
   Vector getLineVector(
     double startXCoord,
-    double startQuoteToY,
+    double startYCoord,
     double endXCoord,
-    double endQuoteToY, {
+    double endYCoord, {
     bool exceedStart = false,
     bool exceedEnd = false,
   }) {
     Vector vec = Vector(
       x0: startXCoord,
-      y0: startQuoteToY,
+      y0: startYCoord,
       x1: endXCoord,
-      y1: endQuoteToY,
+      y1: endYCoord,
     );
 
     late double earlier, later;
     if (exceedEnd && !exceedStart) {
       earlier = vec.x0;
       if (vec.x0 > vec.x1) {
-        later = vec.x1 - 100000;
+        later = vec.x1 - DrawingToolDistance.horizontalDistance;
       } else {
-        later = vec.x1 + 100000;
+        later = vec.x1 + DrawingToolDistance.horizontalDistance;
       }
     }
     if (exceedStart && !exceedEnd) {
       later = vec.x1;
 
       if (vec.x0 > vec.x1) {
-        earlier = vec.x0 + 100000;
+        earlier = vec.x0 + DrawingToolDistance.horizontalDistance;
       } else {
-        earlier = vec.x0 - 100000;
+        earlier = vec.x0 - DrawingToolDistance.horizontalDistance;
       }
     }
 
@@ -97,23 +98,23 @@ abstract class Drawing {
       if (vec.x0 > vec.x1) {
         vec = Vector(
           x0: endXCoord,
-          y0: endQuoteToY,
+          y0: endYCoord,
           x1: startXCoord,
-          y1: startQuoteToY,
+          y1: startYCoord,
         );
       }
 
-      earlier = vec.x0 - 100000;
-      later = vec.x1 + 100000;
+      earlier = vec.x0 - DrawingToolDistance.horizontalDistance;
+      later = vec.x1 + DrawingToolDistance.horizontalDistance;
     }
 
     if (!exceedEnd && !exceedStart) {
       if (vec.x0 > vec.x1) {
         vec = Vector(
           x0: endXCoord,
-          y0: endQuoteToY,
+          y0: endYCoord,
           x1: startXCoord,
-          y1: startQuoteToY,
+          y1: startYCoord,
         );
       }
       earlier = vec.x0;

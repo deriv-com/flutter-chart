@@ -92,7 +92,12 @@ class FibfanDrawing extends Drawing {
     final LineStyle fillStyle = config.fillStyle;
     final Path path = getTrianglePath(_baseVector, endVector);
 
-    canvas.drawPath(path, paint.fillPaintStyle(fillStyle.color));
+    canvas.drawPath(
+        path,
+        paint.fillPaintStyle(
+          fillStyle.color,
+          fillStyle.thickness,
+        ));
   }
 
   /// Paint the line
@@ -205,8 +210,8 @@ class FibfanDrawing extends Drawing {
 
       /// Draw labels
       Label(
-        startEpoch: startXCoord.toInt(),
-        endEpoch: endXCoord.toInt(),
+        startXCoord: startXCoord.toInt(),
+        endXCoord: endXCoord.toInt(),
       )
         ..drawLabel(canvas, lineStyle, '0%', _topVector)
         ..drawLabel(canvas, lineStyle, '38.2%', _initialInnerVector)
