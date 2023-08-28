@@ -27,13 +27,15 @@ class ChannelDrawing extends Drawing {
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
 
-  /// Starting point of drawing
+  /// Starting point of drawing which is used as the start point of initial
+  /// vector
   final EdgePoint startEdgePoint;
 
-  /// Middle point of drawing
+  /// Second point of drawing which is used to draw the end point of initial
+  /// vector
   final EdgePoint middleEdgePoint;
 
-  /// Ending point of drawing
+  /// Ending point of drawing which is used to draw the second(final) vector
   final EdgePoint endEdgePoint;
 
   /// Marker radius.
