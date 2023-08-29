@@ -9,9 +9,6 @@ import '../chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 /// This calss is used to keep all the methods and data related to drawing tools
 /// Which need to be shared between the DerivChart and the DrawingToolsDialog
 class DrawingTools {
-  /// Existing drawings.
-  final List<DrawingData> drawings = <DrawingData>[];
-
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing
   bool? shouldStopDrawing;
@@ -32,13 +29,17 @@ class DrawingTools {
     if (selectedDrawingTool != null) {
       shouldStopDrawing = true;
     }
-    drawings.removeWhere((DrawingData data) => !data.isDrawingFinished);
-    selectedDrawingTool = null;
-  }
 
-  /// Callback to remove a drawing.
-  void onDrawingToolRemoval(int index) {
-    drawings.removeAt(index);
+    /// Remove unfinshed drawings before openning the dialog.
+    final List<DrawingData> unfinishedDrawings = getDrawingData()
+        .where((DrawingData data) => !data.isDrawingFinished)
+        .toList();
+    if (unfinishedDrawings.isNotEmpty) {
+      drawingToolsRepo!
+          .removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
+    }
+
+    clearDrawingToolSelection();
   }
 
   /// Callback for keeping the selected drawing tool data.
@@ -57,24 +58,11 @@ class DrawingTools {
     bool isInfiniteDrawing = false,
     List<EdgePoint>? edgePoints,
   }) {
-    final DrawingData? existingDrawing = drawings.firstWhereOrNull(
+    final DrawingData? existingDrawing = getDrawingData().firstWhereOrNull(
       (DrawingData drawing) => drawing.id == drawingId,
     );
 
     if (existingDrawing == null) {
-      drawings.add(DrawingData(
-        id: drawingId,
-        drawingParts: drawingParts,
-        isDrawingFinished: isDrawingFinished,
-      ));
-    } else {
-      existingDrawing
-        ..updateDrawingPartList(drawingParts)
-        ..isSelected = true
-        ..isDrawingFinished = isDrawingFinished;
-    }
-
-    if (isDrawingFinished) {
       selectedDrawingTool = selectedDrawingTool!.copyWith(
         configId: drawingId,
         edgePoints: edgePoints,
@@ -84,20 +72,35 @@ class DrawingTools {
           isDrawingFinished: isDrawingFinished,
         ),
       );
-
-      drawingToolsRepo!.add(selectedDrawingTool!);
-
-      if (isInfiniteDrawing && shouldStopDrawing!) {
-        selectedDrawingTool = null;
-      }
-      if (!isInfiniteDrawing) {
-        selectedDrawingTool = null;
-      }
+    } else {
+      existingDrawing
+        ..updateDrawingPartList(drawingParts)
+        ..isSelected = true
+        ..isDrawingFinished = isDrawingFinished;
     }
 
-    if (drawings.length > 1) {
-      drawings.removeWhere((DrawingData data) =>
-          data.id != drawingId && !data.isDrawingFinished);
+    if (drawingToolsRepo!.items
+        .where((DrawingToolConfig element) =>
+            element.toJson()['configId'] == drawingId)
+        .isEmpty) {
+      drawingToolsRepo!.add(selectedDrawingTool!);
+    }
+
+    /// Clear the selected drawing tool if the drawing is finished
+    if (isDrawingFinished &&
+        ((isInfiniteDrawing && shouldStopDrawing!) || !isInfiniteDrawing)) {
+      clearDrawingToolSelection();
+    }
+
+    /// Remove any unfinished drawing before adding a new one.
+    final List<DrawingData> unfinishedDrawings = getDrawingData()
+        .where((DrawingData data) =>
+            data.id != drawingId && !data.isDrawingFinished)
+        .toList();
+
+    if (unfinishedDrawings.isNotEmpty) {
+      drawingToolsRepo!
+          .removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
     }
   }
 
@@ -111,4 +114,12 @@ class DrawingTools {
   void onMoveDrawing({bool isDrawingMoved = false}) {
     isDrawingMoving = isDrawingMoved;
   }
+
+  /// A method to get the list of drawing data from the repository
+  List<DrawingData> getDrawingData() => drawingToolsRepo != null
+      ? drawingToolsRepo!.items
+          .map<DrawingData>(
+              (DrawingToolConfig config) => config.toJson()['drawingData'])
+          .toList()
+      : <DrawingData>[];
 }

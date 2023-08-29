@@ -35,11 +35,19 @@ class DrawingToolChart extends StatefulWidget {
 }
 
 class _DrawingToolChartState extends State<DrawingToolChart> {
+  late Repository<DrawingToolConfig> repo;
+
+  /// A method to get the list of drawing data from the repository
+  List<DrawingData> getDrawingData() => repo.items
+      .map<DrawingData>(
+          (DrawingToolConfig config) => config.toJson()['drawingData'])
+      .toList();
+
   /// Sets drawing as selected and unselects the rest of drawings
   void _setIsDrawingSelected(DrawingData drawing) {
     drawing.isSelected = !drawing.isSelected;
 
-    for (final DrawingData data in widget.drawingTools.drawings) {
+    for (final DrawingData data in getDrawingData()) {
       if (data.id != drawing.id) {
         data.isSelected = false;
       }
@@ -48,22 +56,20 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
 
   /// Removes specific drawing from the list of drawings
   void removeDrawing(String drawingId) {
-    widget.drawingTools.drawings
-        .removeWhere((DrawingData data) => data.id == drawingId);
+    getDrawingData().removeWhere((DrawingData data) => data.id == drawingId);
   }
 
   @override
   void didUpdateWidget(DrawingToolChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    for (final DrawingData data in widget.drawingTools.drawings) {
+    for (final DrawingData data in getDrawingData()) {
       data.series = widget.series.entries;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Repository<DrawingToolConfig> repo =
-        context.watch<Repository<DrawingToolConfig>>();
+    repo = context.watch<Repository<DrawingToolConfig>>();
 
     final List<DrawingData> drawings = repo.items
         .map<DrawingData>(
