@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DerivChart extends StatefulWidget {
   /// Initializes
   const DerivChart({
+    required this.drawingTools,
     required this.mainSeries,
     required this.granularity,
     this.markerSeries,
@@ -32,6 +33,14 @@ class DerivChart extends StatefulWidget {
     this.indicatorsRepo,
     this.drawingToolsRepo,
     this.maxCurrentTickOffset,
+    this.msPerPx,
+    this.minIntervalWidth,
+    this.maxIntervalWidth,
+    this.verticalPaddingFraction,
+    this.bottomChartTitleMargin,
+    this.showDataFitButton,
+    this.showScrollToLastTickButton,
+    this.loadingAnimationColor,
     Key? key,
   }) : super(key: key);
 
@@ -95,6 +104,35 @@ class DerivChart extends StatefulWidget {
   /// Chart's drawings
   final Repository<DrawingToolConfig>? drawingToolsRepo;
 
+  final DrawingTools drawingTools;
+
+  /// Specifies the zoom level of the chart.
+  final double? msPerPx;
+
+  /// Specifies the minimum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? minIntervalWidth;
+
+  /// Specifies the maximum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? maxIntervalWidth;
+
+  /// Fraction of the chart's height taken by top or bottom padding.
+  /// Quote scaling (drag on quote area) is controlled by this variable.
+  final double? verticalPaddingFraction;
+
+  /// Specifies the margin to prevent overlap.
+  final EdgeInsets? bottomChartTitleMargin;
+
+  /// Whether the data fit button is shown or not.
+  final bool? showDataFitButton;
+
+  /// Whether to show the scroll to last tick button or not.
+  final bool? showScrollToLastTickButton;
+
+  /// The color of the loading animation.
+  final Color? loadingAnimationColor;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -104,7 +142,7 @@ class _DerivChartState extends State<DerivChart> {
 
   late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
 
-  final DrawingTools _drawingTools = DrawingTools();
+  // final DrawingTools _drawingTools = DrawingTools();
 
   @override
   void initState() {
@@ -166,7 +204,7 @@ class _DerivChartState extends State<DerivChart> {
 
   void showDrawingToolsDialog() {
     setState(() {
-      _drawingTools
+      widget.drawingTools
         ..init()
         ..drawingToolsRepo = _drawingToolsRepo;
     });
@@ -179,7 +217,7 @@ class _DerivChartState extends State<DerivChart> {
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
         child: DrawingToolsDialog(
-          drawingTools: _drawingTools,
+          drawingTools: widget.drawingTools,
         ),
       ),
     );
@@ -229,7 +267,7 @@ class _DerivChartState extends State<DerivChart> {
                       .items
                       .where((IndicatorConfig config) => !config.isOverlay)
                 ],
-                drawingTools: _drawingTools,
+                drawingTools: widget.drawingTools,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,

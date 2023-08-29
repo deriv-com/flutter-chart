@@ -38,8 +38,8 @@ class GatorSeries extends Series {
   /// Gator options
   AlligatorOptions gatorOptions;
 
-  late SingleIndicatorSeries _gatorTopSeries;
-  late SingleIndicatorSeries _gatorBottomSeries;
+  late SingleIndicatorSeries gatorTopSeries;
+  late SingleIndicatorSeries gatorBottomSeries;
 
   /// Gator config
   final GatorIndicatorConfig gatorConfig;
@@ -49,7 +49,7 @@ class GatorSeries extends Series {
 
   @override
   SeriesPainter<Series>? createPainter() {
-    _gatorTopSeries = SingleIndicatorSeries(
+    gatorTopSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => BarPainter(
         series as DataSeries<Tick>,
         checkColorCallback: ({
@@ -70,7 +70,7 @@ class GatorSeries extends Series {
       offset: min(gatorConfig.jawOffset, gatorConfig.teethOffset),
     );
 
-    _gatorBottomSeries = SingleIndicatorSeries(
+    gatorBottomSeries = SingleIndicatorSeries(
       painterCreator: (
         Series series,
       ) =>
@@ -102,23 +102,23 @@ class GatorSeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final GatorSeries? series = oldData as GatorSeries?;
     final bool _gatorBottomUpdated =
-        _gatorBottomSeries.didUpdate(series?._gatorBottomSeries);
+        gatorBottomSeries.didUpdate(series?.gatorBottomSeries);
     final bool _gatorTopUpdated =
-        _gatorTopSeries.didUpdate(series?._gatorTopSeries);
+        gatorTopSeries.didUpdate(series?.gatorTopSeries);
 
     return _gatorTopUpdated || _gatorBottomUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _gatorTopSeries.update(leftEpoch, rightEpoch);
-    _gatorBottomSeries.update(leftEpoch, rightEpoch);
+    gatorTopSeries.update(leftEpoch, rightEpoch);
+    gatorBottomSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
-        <ChartData?>[_gatorBottomSeries, _gatorTopSeries].getMinValue(),
-        <ChartData?>[_gatorBottomSeries, _gatorTopSeries].getMaxValue()
+        <ChartData?>[gatorBottomSeries, gatorTopSeries].getMinValue(),
+        <ChartData?>[gatorBottomSeries, gatorTopSeries].getMaxValue()
       ];
 
   @override
@@ -131,17 +131,17 @@ class GatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _gatorBottomSeries.paint(
+    gatorBottomSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _gatorTopSeries.paint(
+    gatorTopSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
   int? getMaxEpoch() =>
-      <ChartData?>[_gatorBottomSeries, _gatorTopSeries].getMaxEpoch();
+      <ChartData?>[gatorBottomSeries, gatorTopSeries].getMaxEpoch();
 
   @override
   int? getMinEpoch() =>
-      <ChartData?>[_gatorBottomSeries, _gatorTopSeries].getMinEpoch();
+      <ChartData?>[gatorBottomSeries, gatorTopSeries].getMinEpoch();
 }

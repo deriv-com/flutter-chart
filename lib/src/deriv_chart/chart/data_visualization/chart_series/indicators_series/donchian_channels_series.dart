@@ -32,9 +32,9 @@ class DonchianChannelsSeries extends Series {
         // TODO(Ramin): define DonchianChannelOptions class
         super(id ?? 'Donchian$config');
 
-  late LineSeries _upperChannelSeries;
-  late LineSeries _middleChannelSeries;
-  late LineSeries _lowerChannelSeries;
+  late LineSeries upperChannelSeries;
+  late LineSeries middleChannelSeries;
+  late LineSeries lowerChannelSeries;
 
   final HighValueIndicator<Tick> _highIndicator;
   final LowValueIndicator<Tick> _lowIndicator;
@@ -62,17 +62,17 @@ class DonchianChannelsSeries extends Series {
       lowerChannelIndicator,
     )..calculateValues();
 
-    _upperChannelSeries = LineSeries(
+    upperChannelSeries = LineSeries(
       upperChannelIndicator.results,
       style: config.upperLineStyle,
     );
 
-    _lowerChannelSeries = LineSeries(
+    lowerChannelSeries = LineSeries(
       lowerChannelIndicator.results,
       style: config.lowerLineStyle,
     );
 
-    _middleChannelSeries = LineSeries(
+    middleChannelSeries = LineSeries(
       middleChannelIndicator.results,
       style: config.middleLineStyle,
     );
@@ -86,26 +86,26 @@ class DonchianChannelsSeries extends Series {
         oldData as DonchianChannelsSeries?;
 
     final bool upperUpdated =
-        _upperChannelSeries.didUpdate(oldSeries?._upperChannelSeries);
+        upperChannelSeries.didUpdate(oldSeries?.upperChannelSeries);
     final bool middleUpdated =
-        _middleChannelSeries.didUpdate(oldSeries?._middleChannelSeries);
+        middleChannelSeries.didUpdate(oldSeries?.middleChannelSeries);
     final bool lowerUpdated =
-        _lowerChannelSeries.didUpdate(oldSeries?._lowerChannelSeries);
+        lowerChannelSeries.didUpdate(oldSeries?.lowerChannelSeries);
 
     return upperUpdated || middleUpdated || lowerUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _upperChannelSeries.update(leftEpoch, rightEpoch);
-    _middleChannelSeries.update(leftEpoch, rightEpoch);
-    _lowerChannelSeries.update(leftEpoch, rightEpoch);
+    upperChannelSeries.update(leftEpoch, rightEpoch);
+    middleChannelSeries.update(leftEpoch, rightEpoch);
+    lowerChannelSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
-        _lowerChannelSeries.minValue,
-        _upperChannelSeries.maxValue,
+        lowerChannelSeries.minValue,
+        upperChannelSeries.maxValue,
       ];
 
   @override
@@ -118,58 +118,58 @@ class DonchianChannelsSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _upperChannelSeries.paint(
+    upperChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _middleChannelSeries.paint(
+    middleChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _lowerChannelSeries.paint(
+    lowerChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
-    if (_lowerChannelSeries.entries == null ||
-        _upperChannelSeries.entries == null) {
+    if (lowerChannelSeries.entries == null ||
+        upperChannelSeries.entries == null) {
       return;
     }
 
     if (config.showChannelFill &&
-        _upperChannelSeries.visibleEntries.isNotEmpty &&
-        _lowerChannelSeries.visibleEntries.isNotEmpty) {
+        upperChannelSeries.visibleEntries.isNotEmpty &&
+        lowerChannelSeries.visibleEntries.isNotEmpty) {
       final Path fillPath = Path()
         ..moveTo(
-          epochToX(_upperChannelSeries.getEpochOf(
-            _upperChannelSeries.visibleEntries.first,
-            _upperChannelSeries.visibleEntries.startIndex,
+          epochToX(upperChannelSeries.getEpochOf(
+            upperChannelSeries.visibleEntries.first,
+            upperChannelSeries.visibleEntries.startIndex,
           )),
-          quoteToY(_upperChannelSeries.visibleEntries.first.quote),
+          quoteToY(upperChannelSeries.visibleEntries.first.quote),
         );
 
-      for (int i = _upperChannelSeries.visibleEntries.startIndex + 1;
-          i < _upperChannelSeries.visibleEntries.endIndex - 1;
+      for (int i = upperChannelSeries.visibleEntries.startIndex + 1;
+          i < upperChannelSeries.visibleEntries.endIndex - 1;
           i++) {
-        final Tick tick = _upperChannelSeries.entries![i];
+        final Tick tick = upperChannelSeries.entries![i];
         fillPath.lineTo(
-          epochToX(_upperChannelSeries.getEpochOf(tick, i)),
+          epochToX(upperChannelSeries.getEpochOf(tick, i)),
           quoteToY(tick.quote),
         );
       }
 
       // Check for animated upper tick.
-      final Tick lastUpperTick = _upperChannelSeries.entries!.last;
-      final Tick lastUpperVisibleTick = _upperChannelSeries.visibleEntries.last;
+      final Tick lastUpperTick = upperChannelSeries.entries!.last;
+      final Tick lastUpperVisibleTick = upperChannelSeries.visibleEntries.last;
       double? lastVisibleTickX;
 
       if (lastUpperTick == lastUpperVisibleTick &&
-          _upperChannelSeries.prevLastEntry != null) {
+          upperChannelSeries.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
-          epochToX(_upperChannelSeries.getEpochOf(
-            _upperChannelSeries.prevLastEntry!.entry,
-            _upperChannelSeries.prevLastEntry!.index,
+          epochToX(upperChannelSeries.getEpochOf(
+            upperChannelSeries.prevLastEntry!.entry,
+            upperChannelSeries.prevLastEntry!.index,
           )),
           epochToX(lastUpperTick.epoch),
           animationInfo.currentTickPercent,
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _upperChannelSeries.prevLastEntry!.entry.quote,
+          upperChannelSeries.prevLastEntry!.entry.quote,
           lastUpperTick.quote,
           animationInfo.currentTickPercent,
         )!);
@@ -181,22 +181,22 @@ class DonchianChannelsSeries extends Series {
       }
 
       // Check for animated lower tick.
-      final Tick lastLowerTick = _lowerChannelSeries.entries!.last;
-      final Tick lastLowerVisibleTick = _lowerChannelSeries.visibleEntries.last;
+      final Tick lastLowerTick = lowerChannelSeries.entries!.last;
+      final Tick lastLowerVisibleTick = lowerChannelSeries.visibleEntries.last;
 
       if (lastLowerTick == lastLowerVisibleTick &&
-          _lowerChannelSeries.prevLastEntry != null) {
+          lowerChannelSeries.prevLastEntry != null) {
         lastVisibleTickX = ui.lerpDouble(
-          epochToX(_lowerChannelSeries.getEpochOf(
-            _lowerChannelSeries.prevLastEntry!.entry,
-            _lowerChannelSeries.prevLastEntry!.index,
+          epochToX(lowerChannelSeries.getEpochOf(
+            lowerChannelSeries.prevLastEntry!.entry,
+            lowerChannelSeries.prevLastEntry!.index,
           )),
           epochToX(lastLowerTick.epoch),
           animationInfo.currentTickPercent,
         );
 
         final double tickY = quoteToY(ui.lerpDouble(
-          _lowerChannelSeries.prevLastEntry!.entry.quote,
+          lowerChannelSeries.prevLastEntry!.entry.quote,
           lastLowerTick.quote,
           animationInfo.currentTickPercent,
         )!);
@@ -207,12 +207,12 @@ class DonchianChannelsSeries extends Series {
         fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
       }
 
-      for (int i = _lowerChannelSeries.visibleEntries.endIndex - 1;
-          i >= _lowerChannelSeries.visibleEntries.startIndex;
+      for (int i = lowerChannelSeries.visibleEntries.endIndex - 1;
+          i >= lowerChannelSeries.visibleEntries.startIndex;
           i--) {
-        final Tick tick = _lowerChannelSeries.entries![i];
+        final Tick tick = lowerChannelSeries.entries![i];
         fillPath.lineTo(
-          epochToX(_lowerChannelSeries.getEpochOf(tick, i)),
+          epochToX(lowerChannelSeries.getEpochOf(tick, i)),
           quoteToY(tick.quote),
         );
       }
@@ -229,8 +229,8 @@ class DonchianChannelsSeries extends Series {
 
   // min/max epoch for all 3 channels are equal, using only `_loweChannelSeries` min/max.
   @override
-  int? getMaxEpoch() => _lowerChannelSeries.getMaxEpoch();
+  int? getMaxEpoch() => lowerChannelSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _lowerChannelSeries.getMinEpoch();
+  int? getMinEpoch() => lowerChannelSeries.getMinEpoch();
 }

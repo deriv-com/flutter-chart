@@ -1,21 +1,38 @@
+import 'package:deriv_chart/deriv_chart.dart';
+
 /// ScrollToLastTick callback.
 
 typedef OnScrollToLastTick = Function({required bool animate});
 
 /// Scale callback;
-typedef OnScale = Function(double);
+typedef OnScale = double? Function(double);
 
-/// Get X position callback
+/// Scroll callback;
+typedef OnScroll = Function(double);
+
+/// To get X position
 typedef GetXFromEpoch = double? Function(int);
 
-/// Get Y position callback
+/// To get Y position
 typedef GetYFromQuote = double? Function(double);
 
-/// Get epoch callback
+/// To get epoch
 typedef GetEpochFromX = int? Function(double);
 
-/// Get quote callback
-typedef GetQuoteFromY = double Function(double);
+/// To get quote
+typedef GetQuoteFromY = double? Function(double);
+
+/// To get overlay/bottom series
+typedef GetSeriesList = List<Series>? Function();
+
+/// To get overlay/bottom configs
+typedef GetConfigsList = List<AddOnConfig>? Function();
+
+/// Toggles data fit mode
+typedef ToggleDataFitMode = Function({required bool enableDataFit});
+
+/// To get msPerPx
+typedef GetMsPerPx = double? Function();
 
 /// Chart widget's controller.
 class ChartController {
@@ -24,6 +41,12 @@ class ChartController {
 
   /// Called to scale the chart
   OnScale? onScale;
+
+  /// Called to scroll the chart
+  OnScroll? onScroll;
+
+  /// Called to toggle data fit mode
+  ToggleDataFitMode? toggleDataFitMode;
 
   /// Called to get X position from epoch
   GetXFromEpoch? getXFromEpoch;
@@ -37,22 +60,22 @@ class ChartController {
   /// Called to get quote from y position
   GetQuoteFromY? getQuoteFromY;
 
+  /// Called to get overlay and bottom series
+  GetSeriesList? getSeriesList;
+
+  /// Called to get overlay and bottom configs
+  GetConfigsList? getConfigsList;
+
+  /// Called to get msPerPx
+  GetMsPerPx? getMsPerPx;
+
   /// Scroll chart visible area to the newest data.
   void scrollToLastTick({bool animate = false}) =>
       onScrollToLastTick?.call(animate: animate);
 
-  /// Scroll chart visible area to the newest data.
-  void scale(double scale) => onScale?.call(scale);
+  /// Scales the chart.
+  double? scale(double scale) => onScale?.call(scale);
 
-  /// Gets X position from epoch
-  double? xFromEpoch(int epoch) => getXFromEpoch?.call(epoch);
-
-  /// Gets Y position from quote
-  double? yFromQuote(double quote) => getYFromQuote?.call(quote);
-
-  /// Gets epoch from X position
-  int? epochFromX(double x) => getEpochFromX?.call(x);
-
-  /// Gets quote from Y position
-  double? quoteFromY(double y) => getQuoteFromY?.call(y);
+  /// Scroll chart visible area.
+  void scroll(double pxShift) => onScroll?.call(pxShift);
 }

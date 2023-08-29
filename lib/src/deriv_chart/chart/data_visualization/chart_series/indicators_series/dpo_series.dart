@@ -38,7 +38,7 @@ class DPOSeries extends Series {
   })  : _fieldIndicator = indicator,
         super(id ?? 'Ichimoku$dpoOptions');
 
-  late SingleIndicatorSeries _dpoSeries;
+  late SingleIndicatorSeries dpoSeries;
 
   /// Detrended Price Oscillator options
   final DPOOptions dpoOptions;
@@ -55,7 +55,7 @@ class DPOSeries extends Series {
       isCentered: dpoOptions.isCentered,
     );
 
-    _dpoSeries = SingleIndicatorSeries(
+    dpoSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
         series as DataSeries<Tick>,
         secondaryHorizontalLines: <double>[0],
@@ -74,20 +74,20 @@ class DPOSeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final DPOSeries? series = oldData as DPOSeries;
 
-    final bool dpoUpdated = _dpoSeries.didUpdate(series?._dpoSeries);
+    final bool dpoUpdated = dpoSeries.didUpdate(series?.dpoSeries);
 
     return dpoUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _dpoSeries.update(leftEpoch, rightEpoch);
+    dpoSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
-        _dpoSeries.minValue,
-        _dpoSeries.maxValue,
+        dpoSeries.minValue,
+        dpoSeries.maxValue,
       ];
 
   @override
@@ -100,13 +100,13 @@ class DPOSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _dpoSeries.paint(
+    dpoSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
-  int? getMinEpoch() => _dpoSeries.getMinEpoch();
+  int? getMinEpoch() => dpoSeries.getMinEpoch();
 
   @override
-  int? getMaxEpoch() => _dpoSeries.getMaxEpoch();
+  int? getMaxEpoch() => dpoSeries.getMaxEpoch();
 }

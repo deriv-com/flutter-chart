@@ -20,8 +20,8 @@ class SMISeries extends Series {
     String? id,
   }) : super(id ?? 'SMI');
 
-  late SingleIndicatorSeries _smiSeries;
-  late SingleIndicatorSeries _smiSignalSeries;
+  late SingleIndicatorSeries smiSeries;
+  late SingleIndicatorSeries smiSignalSeries;
 
   late List<Series> _innerSeries;
 
@@ -46,7 +46,7 @@ class SMISeries extends Series {
       doubleSmoothingPeriod: smiOptions.doubleSmoothingPeriod,
     );
 
-    _smiSeries = SingleIndicatorSeries(
+    smiSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
         series as DataSeries<Tick>,
         topHorizontalLine: overboughtValue,
@@ -58,7 +58,7 @@ class SMISeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(input),
     );
 
-    _smiSignalSeries = SingleIndicatorSeries(
+    smiSignalSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
@@ -68,7 +68,7 @@ class SMISeries extends Series {
       options: smiOptions,
     );
 
-    _innerSeries = <Series>[_smiSeries, _smiSignalSeries];
+    _innerSeries = <Series>[smiSeries, smiSignalSeries];
 
     return null;
   }
@@ -77,23 +77,23 @@ class SMISeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final SMISeries? oldSeries = oldData as SMISeries?;
 
-    final bool smiUpdated = _smiSeries.didUpdate(oldSeries?._smiSeries);
+    final bool smiUpdated = smiSeries.didUpdate(oldSeries?.smiSeries);
     final bool smiSignalUpdated =
-        _smiSignalSeries.didUpdate(oldSeries?._smiSignalSeries);
+        smiSignalSeries.didUpdate(oldSeries?.smiSignalSeries);
 
     return smiUpdated || smiSignalUpdated;
   }
 
   @override
-  int? getMaxEpoch() => _smiSeries.getMaxEpoch();
+  int? getMaxEpoch() => smiSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _smiSeries.getMinEpoch();
+  int? getMinEpoch() => smiSeries.getMinEpoch();
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _smiSeries.update(leftEpoch, rightEpoch);
-    _smiSignalSeries.update(leftEpoch, rightEpoch);
+    smiSeries.update(leftEpoch, rightEpoch);
+    smiSignalSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
@@ -112,9 +112,9 @@ class SMISeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _smiSeries.paint(
+    smiSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _smiSignalSeries.paint(
+    smiSignalSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 }

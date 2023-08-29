@@ -20,12 +20,12 @@ class IchimokuCloudSeries extends Series {
     String? id,
   }) : super(id ?? 'Ichimoku$ichimokuCloudOptions');
 
-  late SingleIndicatorSeries _conversionLineSeries;
-  late SingleIndicatorSeries _baseLineSeries;
-  late SingleIndicatorSeries _laggingSpanSeries;
-  late SingleIndicatorSeries _spanASeries;
-  late SingleIndicatorSeries _spanBSeries;
-  final List<SingleIndicatorSeries> _ichimokuSeries = <SingleIndicatorSeries>[];
+  late SingleIndicatorSeries conversionLineSeries;
+  late SingleIndicatorSeries baseLineSeries;
+  late SingleIndicatorSeries laggingSpanSeries;
+  late SingleIndicatorSeries spanASeries;
+  late SingleIndicatorSeries spanBSeries;
+  final List<SingleIndicatorSeries> ichimokuSeries = <SingleIndicatorSeries>[];
 
   /// List of [Tick]s to calculate IchimokuCloud on.
   final IndicatorDataInput ticks;
@@ -69,7 +69,7 @@ class IchimokuCloudSeries extends Series {
       period: ichimokuCloudOptions.leadingSpanBPeriod,
     );
 
-    _conversionLineSeries = SingleIndicatorSeries(
+    conversionLineSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => conversionLineIndicator,
@@ -78,7 +78,7 @@ class IchimokuCloudSeries extends Series {
       style: config.conversionLineStyle,
     );
 
-    _baseLineSeries = SingleIndicatorSeries(
+    baseLineSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => baseLineIndicator,
@@ -87,7 +87,7 @@ class IchimokuCloudSeries extends Series {
       style: config.baseLineStyle,
     );
 
-    _laggingSpanSeries = SingleIndicatorSeries(
+    laggingSpanSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => laggingSpanIndicator,
@@ -97,7 +97,7 @@ class IchimokuCloudSeries extends Series {
       style: config.laggingLineStyle,
     );
 
-    _spanASeries = SingleIndicatorSeries(
+    spanASeries = SingleIndicatorSeries(
       painterCreator: (Series series) => null,
       indicatorCreator: () => spanAIndicator,
       inputIndicator: closeValueIndicator,
@@ -106,7 +106,7 @@ class IchimokuCloudSeries extends Series {
       style: config.spanALineStyle,
     );
 
-    _spanBSeries = SingleIndicatorSeries(
+    spanBSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => null,
       indicatorCreator: () => spanBIndicator,
       inputIndicator: closeValueIndicator,
@@ -115,16 +115,16 @@ class IchimokuCloudSeries extends Series {
       style: config.spanBLineStyle,
     );
 
-    _ichimokuSeries
-      ..add(_conversionLineSeries)
-      ..add(_baseLineSeries)
-      ..add(_laggingSpanSeries)
-      ..add(_spanASeries)
-      ..add(_spanBSeries);
+    ichimokuSeries
+      ..add(conversionLineSeries)
+      ..add(baseLineSeries)
+      ..add(laggingSpanSeries)
+      ..add(spanASeries)
+      ..add(spanBSeries);
 
     return ChannelFillPainter(
-      _spanASeries,
-      _spanBSeries,
+      spanASeries,
+      spanBSeries,
       firstUpperChannelFillColor: config.spanALineStyle.color.withOpacity(0.2),
       secondUpperChannelFillColor: config.spanBLineStyle.color.withOpacity(0.2),
     );
@@ -135,13 +135,13 @@ class IchimokuCloudSeries extends Series {
     final IchimokuCloudSeries? series = oldData as IchimokuCloudSeries?;
 
     final bool conversionLineUpdated =
-        _conversionLineSeries.didUpdate(series?._conversionLineSeries);
+        conversionLineSeries.didUpdate(series?.conversionLineSeries);
     final bool baseLineUpdated =
-        _baseLineSeries.didUpdate(series?._baseLineSeries);
+        baseLineSeries.didUpdate(series?.baseLineSeries);
     final bool laggingSpanUpdated =
-        _laggingSpanSeries.didUpdate(series?._laggingSpanSeries);
-    final bool spanAUpdated = _spanASeries.didUpdate(series?._spanASeries);
-    final bool spanBUpdated = _spanBSeries.didUpdate(series?._spanBSeries);
+        laggingSpanSeries.didUpdate(series?.laggingSpanSeries);
+    final bool spanAUpdated = spanASeries.didUpdate(series?.spanASeries);
+    final bool spanBUpdated = spanBSeries.didUpdate(series?.spanBSeries);
 
     return conversionLineUpdated ||
         baseLineUpdated ||
@@ -152,20 +152,20 @@ class IchimokuCloudSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _conversionLineSeries.update(leftEpoch, rightEpoch);
-    _baseLineSeries.update(leftEpoch, rightEpoch);
-    _laggingSpanSeries.update(leftEpoch, rightEpoch);
-    _spanASeries.update(leftEpoch, rightEpoch);
-    _spanBSeries.update(leftEpoch, rightEpoch);
+    conversionLineSeries.update(leftEpoch, rightEpoch);
+    baseLineSeries.update(leftEpoch, rightEpoch);
+    laggingSpanSeries.update(leftEpoch, rightEpoch);
+    spanASeries.update(leftEpoch, rightEpoch);
+    spanBSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() {
-    final double minValue = _ichimokuSeries
+    final double minValue = ichimokuSeries
         .map((SingleIndicatorSeries series) => series.minValue)
         .reduce(safeMin);
 
-    final double maxValue = _ichimokuSeries
+    final double maxValue = ichimokuSeries
         .map((SingleIndicatorSeries series) => series.maxValue)
         .reduce(safeMax);
 
@@ -182,24 +182,24 @@ class IchimokuCloudSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _conversionLineSeries.paint(
+    conversionLineSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _baseLineSeries.paint(
+    baseLineSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _laggingSpanSeries.paint(
+    laggingSpanSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     super.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     if (animationInfo.currentTickPercent == 1) {
-      _spanASeries.resetLastEntryAnimation();
-      _spanBSeries.resetLastEntryAnimation();
+      spanASeries.resetLastEntryAnimation();
+      spanBSeries.resetLastEntryAnimation();
     }
   }
 
   @override
-  int? getMaxEpoch() => _ichimokuSeries.getMaxEpoch();
+  int? getMaxEpoch() => ichimokuSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _ichimokuSeries.getMinEpoch();
+  int? getMinEpoch() => ichimokuSeries.getMinEpoch();
 }

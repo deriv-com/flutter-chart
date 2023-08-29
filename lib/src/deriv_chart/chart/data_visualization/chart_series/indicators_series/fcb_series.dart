@@ -28,12 +28,12 @@ class FractalChaosBandSeries extends Series {
   ///input data
   final IndicatorInput indicatorInput;
 
-  late SingleIndicatorSeries _fcbHighSeries;
-  late SingleIndicatorSeries _fcbLowSeries;
+  late SingleIndicatorSeries fcbHighSeries;
+  late SingleIndicatorSeries fcbLowSeries;
 
   @override
   SeriesPainter<Series>? createPainter() {
-    _fcbHighSeries = SingleIndicatorSeries(
+    fcbHighSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       // Using SMA temporarily until TA's migration branch gets updated.
@@ -42,7 +42,7 @@ class FractalChaosBandSeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: const LineStyle(color: Colors.blue),
     );
-    _fcbLowSeries = SingleIndicatorSeries(
+    fcbLowSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () =>
@@ -57,27 +57,26 @@ class FractalChaosBandSeries extends Series {
   @override
   bool didUpdate(ChartData? oldData) {
     final FractalChaosBandSeries? series = oldData as FractalChaosBandSeries?;
-    final bool _fcbHighUpdated =
-        _fcbHighSeries.didUpdate(series?._fcbHighSeries);
-    final bool _fcbLowUpdated = _fcbLowSeries.didUpdate(series?._fcbLowSeries);
+    final bool _fcbHighUpdated = fcbHighSeries.didUpdate(series?.fcbHighSeries);
+    final bool _fcbLowUpdated = fcbLowSeries.didUpdate(series?.fcbLowSeries);
     return _fcbHighUpdated || _fcbLowUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _fcbHighSeries.update(leftEpoch, rightEpoch);
-    _fcbLowSeries.update(leftEpoch, rightEpoch);
+    fcbHighSeries.update(leftEpoch, rightEpoch);
+    fcbLowSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
         <ChartData>[
-          _fcbHighSeries,
-          _fcbLowSeries,
+          fcbHighSeries,
+          fcbLowSeries,
         ].getMinValue(),
         <ChartData>[
-          _fcbHighSeries,
-          _fcbLowSeries,
+          fcbHighSeries,
+          fcbLowSeries,
         ].getMaxValue()
       ];
 
@@ -91,21 +90,21 @@ class FractalChaosBandSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _fcbLowSeries.paint(
+    fcbLowSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _fcbHighSeries.paint(
+    fcbHighSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
   int? getMaxEpoch() => <ChartData>[
-        _fcbLowSeries,
-        _fcbHighSeries,
+        fcbLowSeries,
+        fcbHighSeries,
       ].getMaxEpoch();
 
   @override
   int? getMinEpoch() => <ChartData>[
-        _fcbLowSeries,
-        _fcbHighSeries,
+        fcbLowSeries,
+        fcbHighSeries,
       ].getMinEpoch();
 }

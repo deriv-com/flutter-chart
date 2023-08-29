@@ -49,7 +49,7 @@ class BottomChart extends BasicChart {
   final VoidCallback? onCrosshairDisappeared;
 
   /// Called when the crosshair cursor is hovered/moved.
-  final OnCrosshairHoverCallback? onCrosshairHover;
+  final OnCrosshairHover? onCrosshairHover;
 
   /// Whether the indicator is expanded or not.
   final bool isExpanded;
@@ -162,6 +162,8 @@ class _BottomChartState extends BasicChartState<BottomChart> {
         mainSeries: widget.mainSeries,
         epochFromCanvasX: xAxis.epochFromX,
         quoteFromCanvasY: chartQuoteFromCanvasY,
+        epochToCanvasX: xAxis.xFromEpoch,
+        quoteToCanvasY: chartQuoteToCanvasY,
         quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
         showCrosshairCursor: widget.showCrosshair,
         onCrosshairDisappeared: widget.onCrosshairDisappeared,

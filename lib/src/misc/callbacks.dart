@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/gestures.dart';
 
 /// Called when chart is scrolled or zoomed.
@@ -16,7 +17,28 @@ typedef VisibleQuoteAreaChangedCallback = Function(
 /// Called when the crosshair is moved
 ///
 /// [ev] is an instance of PointerHoverEvent
+/// [epochToX] is a function to convert epoch value to canvas X.
+/// [quoteToY] is a function to convert value(quote) value to canvas Y.
+/// [epochFromX] is a function to convert canvas X to epoch value.
+/// [quoteFromY] is a function to convert canvas Y to value(quote).
+typedef OnCrosshairHover = void Function(
+  PointerHoverEvent ev,
+  EpochToX epochToX,
+  QuoteToY quoteToY,
+  EpochFromX epochFromX,
+  QuoteFromY quoteFromY,
+);
+
+/// Called when the crosshair is moved
+///
+/// [ev] is an instance of PointerHoverEvent
 /// [epoch] is an epoch value of the crosshair's X position in the chart.
 /// [quote] is an quote value of the crosshair's Y position in the chart.
 typedef OnCrosshairHoverCallback = void Function(
-    PointerHoverEvent ev, int epoch, String quote);
+  PointerHoverEvent ev,
+  EpochToX epochToX,
+  QuoteToY quoteToY,
+  EpochFromX epochFromX,
+  QuoteFromY quoteFromY,
+  AddOnConfig? config,
+);

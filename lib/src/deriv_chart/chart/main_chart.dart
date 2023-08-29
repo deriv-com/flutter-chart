@@ -73,7 +73,7 @@ class MainChart extends BasicChart {
   final VoidCallback? onCrosshairDisappeared;
 
   /// Called when the crosshair cursor is hovered/moved.
-  final OnCrosshairHoverCallback? onCrosshairHover;
+  final OnCrosshairHover? onCrosshairHover;
 
   /// Chart's widget controller.
   final ChartController? controller;
@@ -370,6 +370,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         mainSeries: widget.mainSeries as DataSeries<Tick>,
         epochFromCanvasX: xAxis.epochFromX,
         quoteFromCanvasY: chartQuoteFromCanvasY,
+        epochToCanvasX: xAxis.xFromEpoch,
+        quoteToCanvasY: chartQuoteToCanvasY,
         quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
         showCrosshairCursor: widget.showCrosshair,
         onCrosshairDisappeared: widget.onCrosshairDisappeared,

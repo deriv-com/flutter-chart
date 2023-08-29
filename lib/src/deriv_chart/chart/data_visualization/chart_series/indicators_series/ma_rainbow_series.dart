@@ -50,7 +50,7 @@ class RainbowSeries extends Series {
   /// Rainbow options
   RainbowOptions rainbowOptions;
 
-  final List<SingleIndicatorSeries> _rainbowSeries = <SingleIndicatorSeries>[];
+  final List<SingleIndicatorSeries> rainbowSeries = <SingleIndicatorSeries>[];
 
   /// colors of rainbow bands
   final List<Color> rainbowColors;
@@ -64,7 +64,7 @@ class RainbowSeries extends Series {
       if (i == 0) {
         indicators
             .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions));
-        _rainbowSeries.add(SingleIndicatorSeries(
+        rainbowSeries.add(SingleIndicatorSeries(
           painterCreator: (Series series) =>
               LinePainter(series as DataSeries<Tick>),
           indicatorCreator: () => indicators[0] as CachedIndicator<Tick>,
@@ -75,7 +75,7 @@ class RainbowSeries extends Series {
       } else {
         indicators
             .add(MASeries.getMAIndicator(indicators[i - 1], rainbowOptions));
-        _rainbowSeries.add(SingleIndicatorSeries(
+        rainbowSeries.add(SingleIndicatorSeries(
           painterCreator: (Series series) =>
               LinePainter(series as DataSeries<Tick>),
           indicatorCreator: () => indicators[i] as CachedIndicator<Tick>,
@@ -93,14 +93,13 @@ class RainbowSeries extends Series {
     final RainbowSeries? oldRainbowSeries = oldData as RainbowSeries?;
     if (oldRainbowSeries == null) {
       return false;
-    } else if (oldRainbowSeries._rainbowSeries.length !=
-        _rainbowSeries.length) {
+    } else if (oldRainbowSeries.rainbowSeries.length != rainbowSeries.length) {
       return true;
     }
 
     bool needUpdate = false;
-    for (int i = 0; i < _rainbowSeries.length; i++) {
-      if (_rainbowSeries[i].didUpdate(oldRainbowSeries._rainbowSeries[i])) {
+    for (int i = 0; i < rainbowSeries.length; i++) {
+      if (rainbowSeries[i].didUpdate(oldRainbowSeries.rainbowSeries[i])) {
         needUpdate = true;
       }
     }
@@ -109,7 +108,7 @@ class RainbowSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    for (final SingleIndicatorSeries series in _rainbowSeries) {
+    for (final SingleIndicatorSeries series in rainbowSeries) {
       series.update(leftEpoch, rightEpoch);
     }
   }
@@ -125,7 +124,7 @@ class RainbowSeries extends Series {
   /// Returns minimum value of all series
   double _getMinValue() {
     final List<double> minValues = <double>[];
-    for (final SingleIndicatorSeries series in _rainbowSeries) {
+    for (final SingleIndicatorSeries series in rainbowSeries) {
       minValues.add(series.minValue);
     }
     return minValues.reduce(min);
@@ -134,7 +133,7 @@ class RainbowSeries extends Series {
   /// Returns maximum value of all series
   double _getMaxValue() {
     final List<double> maxValues = <double>[];
-    for (final SingleIndicatorSeries series in _rainbowSeries) {
+    for (final SingleIndicatorSeries series in rainbowSeries) {
       maxValues.add(series.maxValue);
     }
     return maxValues.reduce(max);
@@ -150,7 +149,7 @@ class RainbowSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    for (final SingleIndicatorSeries series in _rainbowSeries) {
+    for (final SingleIndicatorSeries series in rainbowSeries) {
       series.paint(
         canvas,
         size,
@@ -165,9 +164,9 @@ class RainbowSeries extends Series {
 
   @override
   int? getMaxEpoch() =>
-      _rainbowSeries.isNotEmpty ? _rainbowSeries[0].getMaxEpoch() : null;
+      rainbowSeries.isNotEmpty ? rainbowSeries[0].getMaxEpoch() : null;
 
   @override
   int? getMinEpoch() =>
-      _rainbowSeries.isNotEmpty ? _rainbowSeries[0].getMinEpoch() : null;
+      rainbowSeries.isNotEmpty ? rainbowSeries[0].getMinEpoch() : null;
 }

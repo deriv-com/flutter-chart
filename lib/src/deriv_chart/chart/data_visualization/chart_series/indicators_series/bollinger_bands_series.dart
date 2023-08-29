@@ -32,16 +32,16 @@ class BollingerBandSeries extends Series {
   })  : _fieldIndicator = indicator,
         super(id ?? 'Bollinger$bbOptions');
 
-  late SingleIndicatorSeries _lowerSeries;
-  late SingleIndicatorSeries _middleSeries;
-  late SingleIndicatorSeries _upperSeries;
+  late SingleIndicatorSeries lowerSeries;
+  late SingleIndicatorSeries middleSeries;
+  late SingleIndicatorSeries upperSeries;
 
   /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
 
   final Indicator<Tick> _fieldIndicator;
 
-  final List<Series> _innerSeries = <Series>[];
+  final List<Series> innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series>? createPainter() {
@@ -51,7 +51,7 @@ class BollingerBandSeries extends Series {
     final CachedIndicator<Tick> bbmSMA =
         MASeries.getMAIndicator(_fieldIndicator, bbOptions);
 
-    _middleSeries = SingleIndicatorSeries(
+    middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => bbmSMA,
@@ -60,7 +60,7 @@ class BollingerBandSeries extends Series {
       style: bbOptions.middleLineStyle,
     );
 
-    _lowerSeries = SingleIndicatorSeries(
+    lowerSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => BollingerBandsLowerIndicator<Tick>(
@@ -73,7 +73,7 @@ class BollingerBandSeries extends Series {
       style: bbOptions.lowerLineStyle,
     );
 
-    _upperSeries = SingleIndicatorSeries(
+    upperSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => BollingerBandsUpperIndicator<Tick>(
@@ -86,10 +86,10 @@ class BollingerBandSeries extends Series {
       style: bbOptions.upperLineStyle,
     );
 
-    _innerSeries
-      ..add(_lowerSeries)
-      ..add(_middleSeries)
-      ..add(_upperSeries);
+    innerSeries
+      ..add(lowerSeries)
+      ..add(middleSeries)
+      ..add(upperSeries);
 
     // TODO(ramin): return the painter that paints Channel Fill between bands
     return null;
@@ -99,29 +99,29 @@ class BollingerBandSeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final BollingerBandSeries? series = oldData as BollingerBandSeries?;
 
-    final bool lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
-    final bool middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
-    final bool upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
+    final bool lowerUpdated = lowerSeries.didUpdate(series?.lowerSeries);
+    final bool middleUpdated = middleSeries.didUpdate(series?.middleSeries);
+    final bool upperUpdated = upperSeries.didUpdate(series?.upperSeries);
 
     return lowerUpdated || middleUpdated || upperUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _lowerSeries.update(leftEpoch, rightEpoch);
-    _middleSeries.update(leftEpoch, rightEpoch);
-    _upperSeries.update(leftEpoch, rightEpoch);
+    lowerSeries.update(leftEpoch, rightEpoch);
+    middleSeries.update(leftEpoch, rightEpoch);
+    upperSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue
+      // Can just use lowerSeries minValue for min and upperSeries maxValue
       // for max. But to be safe we calculate min and max. from all three series
       <double>[
-        _innerSeries
+        innerSeries
             .map((Series series) => series.minValue)
             .reduce((double a, double b) => safeMin(a, b)),
-        _innerSeries
+        innerSeries
             .map((Series series) => series.maxValue)
             .reduce((double a, double b) => safeMax(a, b)),
       ];
@@ -136,19 +136,19 @@ class BollingerBandSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _lowerSeries.paint(
+    lowerSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _middleSeries.paint(
+    middleSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _upperSeries.paint(
+    upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     // TODO(ramin): call super.paint to paint the Channels fill.
   }
 
   @override
-  int? getMinEpoch() => _innerSeries.getMinEpoch();
+  int? getMinEpoch() => innerSeries.getMinEpoch();
 
   @override
-  int? getMaxEpoch() => _innerSeries.getMaxEpoch();
+  int? getMaxEpoch() => innerSeries.getMaxEpoch();
 }

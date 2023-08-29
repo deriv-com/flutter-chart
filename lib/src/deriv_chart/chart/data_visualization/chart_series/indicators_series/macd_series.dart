@@ -24,9 +24,9 @@ class MACDSeries extends Series {
   ///input data
   final IndicatorInput indicatorInput;
 
-  late SingleIndicatorSeries _macdSeries;
-  late SingleIndicatorSeries _signalMACDSeries;
-  late SingleIndicatorSeries _macdHistogramSeries;
+  late SingleIndicatorSeries macdSeries;
+  late SingleIndicatorSeries signalMACDSeries;
+  late SingleIndicatorSeries macdHistogramSeries;
 
   /// MACD Configuration.
   MACDIndicatorConfig config;
@@ -51,7 +51,7 @@ class MACDSeries extends Series {
             macdIndicator, signalMACDIndicator)
           ..calculateValues();
 
-    _macdSeries = SingleIndicatorSeries(
+    macdSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
           series as DataSeries<Tick>,
           secondaryHorizontalLines: <double>[0]),
@@ -61,7 +61,7 @@ class MACDSeries extends Series {
       options: options,
     );
 
-    _signalMACDSeries = SingleIndicatorSeries(
+    signalMACDSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => signalMACDIndicator,
@@ -70,7 +70,7 @@ class MACDSeries extends Series {
       options: options,
     );
 
-    _macdHistogramSeries = SingleIndicatorSeries(
+    macdHistogramSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => BarPainter(
         series as DataSeries<Tick>,
         checkColorCallback: ({
@@ -92,29 +92,29 @@ class MACDSeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final MACDSeries? series = oldData as MACDSeries;
 
-    final bool macdUpdated = _macdSeries.didUpdate(series?._macdSeries);
+    final bool macdUpdated = macdSeries.didUpdate(series?.macdSeries);
 
     final bool signalMACDUpdated =
-        _signalMACDSeries.didUpdate(series?._signalMACDSeries);
+        signalMACDSeries.didUpdate(series?.signalMACDSeries);
 
     final bool macdHistogramUpdated =
-        _macdHistogramSeries.didUpdate(series?._macdHistogramSeries);
+        macdHistogramSeries.didUpdate(series?.macdHistogramSeries);
 
     return macdUpdated || signalMACDUpdated || macdHistogramUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _macdSeries.update(leftEpoch, rightEpoch);
-    _signalMACDSeries.update(leftEpoch, rightEpoch);
-    _macdHistogramSeries.update(leftEpoch, rightEpoch);
+    macdSeries.update(leftEpoch, rightEpoch);
+    signalMACDSeries.update(leftEpoch, rightEpoch);
+    macdHistogramSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
-        <ChartData>[_macdSeries, _signalMACDSeries, _macdHistogramSeries]
+        <ChartData>[macdSeries, signalMACDSeries, macdHistogramSeries]
             .getMinValue(),
-        <ChartData>[_macdSeries, _signalMACDSeries, _macdHistogramSeries]
+        <ChartData>[macdSeries, signalMACDSeries, macdHistogramSeries]
             .getMaxValue()
       ];
 
@@ -128,25 +128,25 @@ class MACDSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _macdHistogramSeries.paint(
+    macdHistogramSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _macdSeries.paint(
+    macdSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _signalMACDSeries.paint(
+    signalMACDSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
   int? getMaxEpoch() => <ChartData>[
-        _macdSeries,
-        _signalMACDSeries,
-        _macdHistogramSeries,
+        macdSeries,
+        signalMACDSeries,
+        macdHistogramSeries,
       ].getMaxEpoch();
 
   @override
   int? getMinEpoch() => <ChartData>[
-        _macdSeries,
-        _signalMACDSeries,
-        _macdHistogramSeries,
+        macdSeries,
+        signalMACDSeries,
+        macdHistogramSeries,
       ].getMinEpoch();
 }

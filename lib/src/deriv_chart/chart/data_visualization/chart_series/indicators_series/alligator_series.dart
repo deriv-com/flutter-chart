@@ -45,12 +45,12 @@ class AlligatorSeries extends Series {
   /// Alligator options
   AlligatorOptions alligatorOptions;
 
-  SingleIndicatorSeries? _jawSeries;
-  SingleIndicatorSeries? _teethSeries;
-  SingleIndicatorSeries? _lipsSeries;
+  SingleIndicatorSeries? jawSeries;
+  SingleIndicatorSeries? teethSeries;
+  SingleIndicatorSeries? lipsSeries;
 
   SingleIndicatorSeries? _bullishSeries;
-  SingleIndicatorSeries? _bearishSeries;
+  SingleIndicatorSeries? bearishSeries;
 
   /// Shift to future in jaw series
   final int jawOffset;
@@ -73,7 +73,7 @@ class AlligatorSeries extends Series {
   @override
   SeriesPainter<Series>? createPainter() {
     if (alligatorOptions.showLines) {
-      _jawSeries = SingleIndicatorSeries(
+      jawSeries = SingleIndicatorSeries(
         painterCreator: (Series series) =>
             LinePainter(series as DataSeries<Tick>),
         indicatorCreator: () =>
@@ -84,7 +84,7 @@ class AlligatorSeries extends Series {
         offset: jawOffset,
       );
 
-      _teethSeries = SingleIndicatorSeries(
+      teethSeries = SingleIndicatorSeries(
         painterCreator: (
           Series series,
         ) =>
@@ -99,7 +99,7 @@ class AlligatorSeries extends Series {
         offset: teethOffset,
       );
 
-      _lipsSeries = SingleIndicatorSeries(
+      lipsSeries = SingleIndicatorSeries(
         painterCreator: (
           Series series,
         ) =>
@@ -114,7 +114,7 @@ class AlligatorSeries extends Series {
     }
 
     if (alligatorOptions.showFractal) {
-      _bearishSeries = SingleIndicatorSeries(
+      bearishSeries = SingleIndicatorSeries(
         painterCreator: (
           Series series,
         ) =>
@@ -143,14 +143,14 @@ class AlligatorSeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final AlligatorSeries? series = oldData as AlligatorSeries?;
 
-    final bool _jawUpdated = _jawSeries?.didUpdate(series?._jawSeries) ?? false;
+    final bool _jawUpdated = jawSeries?.didUpdate(series?.jawSeries) ?? false;
     final bool _teethUpdated =
-        _teethSeries?.didUpdate(series?._teethSeries) ?? false;
+        teethSeries?.didUpdate(series?.teethSeries) ?? false;
     final bool _lipsUpdated =
-        _lipsSeries?.didUpdate(series?._lipsSeries) ?? false;
+        lipsSeries?.didUpdate(series?.lipsSeries) ?? false;
 
     final bool _bearishUpdated =
-        _bearishSeries?.didUpdate(series?._bearishSeries) ?? false;
+        bearishSeries?.didUpdate(series?.bearishSeries) ?? false;
     final bool _bullishUpdated =
         _bullishSeries?.didUpdate(series?._bullishSeries) ?? false;
 
@@ -163,24 +163,24 @@ class AlligatorSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _jawSeries?.update(leftEpoch, rightEpoch);
-    _teethSeries?.update(leftEpoch, rightEpoch);
-    _lipsSeries?.update(leftEpoch, rightEpoch);
+    jawSeries?.update(leftEpoch, rightEpoch);
+    teethSeries?.update(leftEpoch, rightEpoch);
+    lipsSeries?.update(leftEpoch, rightEpoch);
     _bullishSeries?.update(leftEpoch, rightEpoch);
-    _bearishSeries?.update(leftEpoch, rightEpoch);
+    bearishSeries?.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
         <ChartData?>[
-          _jawSeries,
-          _teethSeries,
-          _lipsSeries,
+          jawSeries,
+          teethSeries,
+          lipsSeries,
         ].getMinValue(),
         <ChartData?>[
-          _jawSeries,
-          _teethSeries,
-          _lipsSeries,
+          jawSeries,
+          teethSeries,
+          lipsSeries,
         ].getMaxValue()
       ];
 
@@ -194,13 +194,13 @@ class AlligatorSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _jawSeries?.paint(
+    jawSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _teethSeries?.paint(
+    teethSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _lipsSeries?.paint(
+    lipsSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _bearishSeries?.paint(
+    bearishSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     _bullishSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
@@ -208,9 +208,9 @@ class AlligatorSeries extends Series {
 
   @override
   int? getMaxEpoch() =>
-      <ChartData?>[_jawSeries, _teethSeries, _lipsSeries].getMaxEpoch();
+      <ChartData?>[jawSeries, teethSeries, lipsSeries].getMaxEpoch();
 
   @override
   int? getMinEpoch() =>
-      <ChartData?>[_jawSeries, _teethSeries, _lipsSeries].getMinEpoch();
+      <ChartData?>[jawSeries, teethSeries, lipsSeries].getMinEpoch();
 }

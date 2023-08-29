@@ -31,15 +31,15 @@ class AroonSeries extends Series {
   /// Configs for `ArronIndicator`
   final AroonIndicatorConfig indicatorConfig;
 
-  late SingleIndicatorSeries _aroonUpSeries;
-  late SingleIndicatorSeries _aroonDownSeries;
+  late SingleIndicatorSeries aroonUpSeries;
+  late SingleIndicatorSeries aroonDownSeries;
 
   /// options
   AroonOptions aroonOption;
 
   @override
   SeriesPainter<Series>? createPainter() {
-    _aroonUpSeries = SingleIndicatorSeries(
+    aroonUpSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => AroonUpIndicator<Tick>.fromIndicator(
@@ -49,7 +49,7 @@ class AroonSeries extends Series {
       style: indicatorConfig.upLineStyle,
       options: aroonOption,
     );
-    _aroonDownSeries = SingleIndicatorSeries(
+    aroonDownSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => AroonDownIndicator<Tick>.fromIndicator(
@@ -66,28 +66,27 @@ class AroonSeries extends Series {
   @override
   bool didUpdate(ChartData? oldData) {
     final AroonSeries? series = oldData as AroonSeries?;
-    final bool _aroonUpUpdated =
-        _aroonUpSeries.didUpdate(series?._aroonUpSeries);
+    final bool _aroonUpUpdated = aroonUpSeries.didUpdate(series?.aroonUpSeries);
     final bool _aroonDownUpdated =
-        _aroonDownSeries.didUpdate(series?._aroonDownSeries);
+        aroonDownSeries.didUpdate(series?.aroonDownSeries);
     return _aroonUpUpdated || _aroonDownUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _aroonUpSeries.update(leftEpoch, rightEpoch);
-    _aroonDownSeries.update(leftEpoch, rightEpoch);
+    aroonUpSeries.update(leftEpoch, rightEpoch);
+    aroonDownSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() => <double>[
         <ChartData>[
-          _aroonUpSeries,
-          _aroonDownSeries,
+          aroonUpSeries,
+          aroonDownSeries,
         ].getMinValue(),
         <ChartData>[
-          _aroonUpSeries,
-          _aroonDownSeries,
+          aroonUpSeries,
+          aroonDownSeries,
         ].getMaxValue()
       ];
 
@@ -101,21 +100,21 @@ class AroonSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _aroonDownSeries.paint(
+    aroonDownSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _aroonUpSeries.paint(
+    aroonUpSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
   int? getMaxEpoch() => <ChartData>[
-        _aroonDownSeries,
-        _aroonUpSeries,
+        aroonDownSeries,
+        aroonUpSeries,
       ].getMaxEpoch();
 
   @override
   int? getMinEpoch() => <ChartData>[
-        _aroonDownSeries,
-        _aroonUpSeries,
+        aroonDownSeries,
+        aroonUpSeries,
       ].getMinEpoch();
 }

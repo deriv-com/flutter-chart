@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dar
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'bottom_chart.dart';
@@ -220,7 +221,21 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     opacity: widget.opacity,
                     showCrosshair: widget.showCrosshair,
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                    onCrosshairHover: widget.onCrosshairHover,
+                    onCrosshairHover: (
+                      PointerHoverEvent ev,
+                      EpochToX epochToX,
+                      QuoteToY quoteToY,
+                      EpochFromX epochFromX,
+                      QuoteFromY quoteFromY,
+                    ) =>
+                        widget.onCrosshairHover?.call(
+                      ev,
+                      epochToX,
+                      quoteToY,
+                      epochFromX,
+                      quoteFromY,
+                      null,
+                    ),
                   ),
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)
@@ -244,7 +259,21 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                             widget.bottomConfigs![index],
                             widget.bottomConfigs![index + offset]),
                         onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                        onCrosshairHover: widget.onCrosshairHover,
+                        onCrosshairHover: (
+                          PointerHoverEvent ev,
+                          EpochToX epochToX,
+                          QuoteToY quoteToY,
+                          EpochFromX epochFromX,
+                          QuoteFromY quoteFromY,
+                        ) =>
+                            widget.onCrosshairHover?.call(
+                          ev,
+                          epochToX,
+                          quoteToY,
+                          epochFromX,
+                          quoteFromY,
+                          widget.bottomConfigs![index],
+                        ),
                         isExpanded: isExpanded,
                         showCrosshair: widget.showCrosshair,
                         showExpandedIcon: bottomSeries.length > 1,

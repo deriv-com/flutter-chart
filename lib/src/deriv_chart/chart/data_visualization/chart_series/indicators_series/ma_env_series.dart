@@ -44,18 +44,18 @@ class MAEnvSeries extends Series {
   /// Moving Average Envelope options
   MAEnvOptions? maEnvOptions;
 
-  late SingleIndicatorSeries _lowerSeries;
-  late SingleIndicatorSeries _middleSeries;
-  late SingleIndicatorSeries _upperSeries;
+  late SingleIndicatorSeries lowerSeries;
+  late SingleIndicatorSeries middleSeries;
+  late SingleIndicatorSeries upperSeries;
 
-  final List<Series> _innerSeries = <Series>[];
+  final List<Series> innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series>? createPainter() {
     final CachedIndicator<Tick> smaIndicator =
         MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!);
 
-    _lowerSeries = SingleIndicatorSeries(
+    lowerSeries = SingleIndicatorSeries(
       painterCreator: (
         Series series,
       ) =>
@@ -70,7 +70,7 @@ class MAEnvSeries extends Series {
       style: maEnvOptions!.lowerLineStyle,
     );
 
-    _middleSeries = SingleIndicatorSeries(
+    middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => smaIndicator,
@@ -79,7 +79,7 @@ class MAEnvSeries extends Series {
       style: maEnvOptions!.middleLineStyle,
     );
 
-    _upperSeries = SingleIndicatorSeries(
+    upperSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => MAEnvUpperIndicator<Tick>(
@@ -92,10 +92,10 @@ class MAEnvSeries extends Series {
       style: maEnvOptions!.upperLineStyle,
     );
 
-    _innerSeries
-      ..add(_lowerSeries)
-      ..add(_middleSeries)
-      ..add(_upperSeries);
+    innerSeries
+      ..add(lowerSeries)
+      ..add(middleSeries)
+      ..add(upperSeries);
 
     return null;
   }
@@ -104,30 +104,30 @@ class MAEnvSeries extends Series {
   bool didUpdate(ChartData? oldData) {
     final MAEnvSeries? series = oldData as MAEnvSeries?;
 
-    final bool _lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
-    final bool _middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
-    final bool _upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
+    final bool _lowerUpdated = lowerSeries.didUpdate(series?.lowerSeries);
+    final bool _middleUpdated = middleSeries.didUpdate(series?.middleSeries);
+    final bool _upperUpdated = upperSeries.didUpdate(series?.upperSeries);
 
     return _lowerUpdated || _middleUpdated || _upperUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _lowerSeries.update(leftEpoch, rightEpoch);
-    _middleSeries.update(leftEpoch, rightEpoch);
-    _upperSeries.update(leftEpoch, rightEpoch);
+    lowerSeries.update(leftEpoch, rightEpoch);
+    middleSeries.update(leftEpoch, rightEpoch);
+    upperSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue
+      // Can just use lowerSeries minValue for min and upperSeries maxValue
       // for max. But to be safe we calculate min and max. from all three series
       // TODO(Ramin): Maybe later we can have these code and getMin/MaxEpochs in a parent class for Indicators like MAEnv, Ichimoku, Bollinger, etc
       <double>[
-        _innerSeries
+        innerSeries
             .map((Series series) => series.minValue)
             .reduce((double a, double b) => safeMin(a, b)),
-        _innerSeries
+        innerSeries
             .map((Series series) => series.maxValue)
             .reduce((double a, double b) => safeMax(a, b)),
       ];
@@ -142,17 +142,17 @@ class MAEnvSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _lowerSeries.paint(
+    lowerSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _middleSeries.paint(
+    middleSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _upperSeries.paint(
+    upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 
   @override
-  int? getMaxEpoch() => _innerSeries.getMaxEpoch();
+  int? getMaxEpoch() => innerSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _innerSeries.getMinEpoch();
+  int? getMinEpoch() => innerSeries.getMinEpoch();
 }

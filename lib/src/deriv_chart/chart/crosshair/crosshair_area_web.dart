@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
@@ -12,6 +13,8 @@ class CrosshairAreaWeb extends StatefulWidget {
     required this.mainSeries,
     required this.epochFromCanvasX,
     required this.quoteFromCanvasY,
+    required this.epochToCanvasX,
+    required this.quoteToCanvasY,
     this.quoteLabelsTouchAreaWidth = 70,
     this.showCrosshairCursor = true,
     this.pipSize = 4,
@@ -34,10 +37,16 @@ class CrosshairAreaWeb extends StatefulWidget {
   final bool showCrosshairCursor;
 
   /// Conversion function for converting chart's canvas' X position to epoch.
-  final int Function(double) epochFromCanvasX;
+  final EpochFromX epochFromCanvasX;
 
   /// Conversion function for converting chart's canvas' Y position to quote.
-  final double Function(double) quoteFromCanvasY;
+  final QuoteFromY quoteFromCanvasY;
+
+  /// Conversion function for converting epoch to chart's canvas' X position.
+  final EpochToX epochToCanvasX;
+
+  /// Conversion function for converting quote to chart's canvas' Y position.
+  final QuoteToY quoteToCanvasY;
 
   /// Called on longpress to show candle/point details.
   final VoidCallback? onCrosshairAppeared;
@@ -46,7 +55,7 @@ class CrosshairAreaWeb extends StatefulWidget {
   final VoidCallback? onCrosshairDisappeared;
 
   /// Called when the crosshair cursor is hovered/moved.
-  final OnCrosshairHoverCallback? onCrosshairHover;
+  final OnCrosshairHover? onCrosshairHover;
 
   @override
   _CrosshairAreaWebState createState() => _CrosshairAreaWebState();
@@ -70,10 +79,13 @@ class _CrosshairAreaWebState extends State<CrosshairAreaWeb> {
               return;
             }
 
-            final double quote = widget.quoteFromCanvasY(ev.localPosition.dy);
-            final int epoch = widget.epochFromCanvasX(ev.localPosition.dx);
-            widget.onCrosshairHover
-                ?.call(ev, epoch, quote.toStringAsFixed(widget.pipSize));
+            widget.onCrosshairHover?.call(
+              ev,
+              widget.epochToCanvasX,
+              widget.quoteToCanvasY,
+              widget.epochFromCanvasX,
+              widget.quoteFromCanvasY,
+            );
           },
         ),
       );
