@@ -165,7 +165,11 @@ class LineDrawing extends Drawing {
     final List<EdgePoint> edgePoints = config.edgePoints;
 
     _startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
-    _endPoint = updatePositionCallback(edgePoints[1], draggableEndPoint!);
+    if (edgePoints.length > 1) {
+      _endPoint = updatePositionCallback(edgePoints[1], draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
