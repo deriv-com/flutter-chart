@@ -8,61 +8,70 @@ import 'package:flutter/material.dart';
 class TextStyles {
   static const String appFontFamily = 'IBMPlexSans';
 
-  static TextStyle display1 = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 34,
-      height: 1.5,
-      fontWeight: FontWeight.normal);
+  static const TextStyle display1 = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 34,
+    height: 1.5,
+    fontWeight: FontWeight.normal,
+  );
 
-  static TextStyle headline = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 24,
-      height: 1.5,
-      fontWeight: FontWeight.w700);
+  static const TextStyle headline = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 24,
+    height: 1.5,
+    fontWeight: FontWeight.w700,
+  );
 
-  static TextStyle title = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 20,
-      height: 1.5,
-      fontWeight: FontWeight.w500);
+  static const TextStyle title = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 20,
+    height: 1.5,
+    fontWeight: FontWeight.w500,
+  );
 
-  static TextStyle lightTitle = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 20,
-      height: 1.5,
-      fontWeight: FontWeight.w300);
+  static const TextStyle lightTitle = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 20,
+    height: 1.5,
+    fontWeight: FontWeight.w300,
+  );
 
-  static TextStyle subheading = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 16,
-      height: 1.25,
-      fontWeight: FontWeight.normal);
+  static const TextStyle subheading = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 16,
+    height: 1.25,
+    fontWeight: FontWeight.normal,
+  );
 
-  static TextStyle body2 = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 14,
-      height: 1.4,
-      fontWeight: FontWeight.w500);
+  static const TextStyle body2 = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 14,
+    height: 1.4,
+    fontWeight: FontWeight.w500,
+  );
 
-  static TextStyle body1Bold = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 14,
-      height: 1.3,
-      fontWeight: FontWeight.bold);
+  static const TextStyle body1Bold = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 14,
+    height: 1.3,
+    fontWeight: FontWeight.bold,
+  );
 
-  static TextStyle body1 = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 14,
-      height: 1.3,
-      fontWeight: FontWeight.normal);
+  static const TextStyle body1 = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 14,
+    height: 1.3,
+    fontWeight: FontWeight.normal,
+  );
 
-  static TextStyle caption = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 12,
-      height: 1.3,
-      fontWeight: FontWeight.normal);
+  static const TextStyle caption = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 12,
+    height: 1.3,
+    fontWeight: FontWeight.normal,
+  );
 
-  static TextStyle caption2 = const TextStyle(
+  static const TextStyle caption2 = TextStyle(
     fontFamily: appFontFamily,
     fontSize: 10,
     height: 1.3,
@@ -70,22 +79,25 @@ class TextStyles {
     fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
   );
 
-  static TextStyle captionBold = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 12,
-      height: 1.3,
-      fontWeight: FontWeight.bold);
+  static const TextStyle captionBold = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 12,
+    height: 1.3,
+    fontWeight: FontWeight.bold,
+  );
 
-  static TextStyle button = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 14,
-      height: 1,
-      fontWeight: FontWeight.w500);
+  static const TextStyle button = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 14,
+    height: 1,
+    fontWeight: FontWeight.w500,
+  );
 
-  static TextStyle overLine = const TextStyle(
-      fontFamily: appFontFamily,
-      fontSize: 10,
-      height: 1.4,
-      fontWeight: FontWeight.w400,
-      fontFeatures: <FontFeature>[FontFeature.tabularFigures()]);
+  static const TextStyle overLine = TextStyle(
+    fontFamily: appFontFamily,
+    fontSize: 10,
+    height: 1.4,
+    fontWeight: FontWeight.w400,
+    fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
+  );
 }

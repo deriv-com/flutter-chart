@@ -10,17 +10,14 @@ import 'package:example/utils/endpoints_helper.dart';
 import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_deriv_api/api/common/active_symbols/active_symbols.dart';
-import 'package:flutter_deriv_api/api/common/models/candle_model.dart';
-import 'package:flutter_deriv_api/api/common/server_time/server_time.dart';
-import 'package:flutter_deriv_api/api/common/tick/exceptions/tick_exception.dart';
-import 'package:flutter_deriv_api/api/common/tick/ohlc.dart';
-import 'package:flutter_deriv_api/api/common/tick/tick.dart' as api_tick;
-import 'package:flutter_deriv_api/api/common/tick/tick_base.dart';
-import 'package:flutter_deriv_api/api/common/tick/tick_history.dart';
-import 'package:flutter_deriv_api/api/common/tick/tick_history_subscription.dart';
-import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
-import 'package:flutter_deriv_api/api/exceptions/api_base_exception.dart';
+import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
+import 'package:flutter_deriv_api/api/manually/ohlc_response_result.dart';
+import 'package:flutter_deriv_api/api/manually/tick.dart' as tick_api;
+import 'package:flutter_deriv_api/api/manually/tick_base.dart';
+import 'package:flutter_deriv_api/api/manually/tick_history_subscription.dart';
+import 'package:flutter_deriv_api/api/response/active_symbols_response_result.dart';
+import 'package:flutter_deriv_api/api/response/ticks_history_response_result.dart';
+import 'package:flutter_deriv_api/api/response/trading_times_response_result.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
@@ -101,7 +98,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   ActiveMarker? _activeMarker;
 
-  late List<ActiveSymbol> _activeSymbols;
+  late List<ActiveSymbolsItem> _activeSymbols;
 
   Asset _symbol = Asset(name: 'R_50');
 
@@ -184,22 +181,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Future<void> _setupMarketChangeReminder() async {
     _marketsChangeReminder?.reset();
     _marketsChangeReminder = MarketChangeReminder(
-      () async => TradingTimes.fetchTradingTimes(
+      () async => (await TradingTimesResponse.fetchTradingTimes(
         const TradingTimesRequest(tradingTimes: 'today'),
-      ),
-      onCurrentTime: () async {
-        final ServerTime serverTime = await ServerTime.fetchTime();
-        return serverTime.time!.toUtc();
-      },
+      ))
+          .tradingTimes!,
       onMarketsStatusChange: (Map<String?, bool>? statusChanges) {
         if (statusChanges == null) {
           return;
         }
 
         for (int i = 0; i < _activeSymbols.length; i++) {
-          if (statusChanges[_activeSymbols[i].symbol!] != null) {
+          if (statusChanges[_activeSymbols[i].symbol] != null) {
             _activeSymbols[i] = _activeSymbols[i].copyWith(
-              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol!],
+              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
             );
           }
         }
@@ -219,19 +213,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _getActiveSymbols() async {
-    _activeSymbols = await ActiveSymbol.fetchActiveSymbols(
+    _activeSymbols = (await ActiveSymbolsResponse.fetchActiveSymbols(
       const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic'),
-    );
+    ))
+        .activeSymbols!;
 
-    final ActiveSymbol firstOpenSymbol = _activeSymbols.firstWhere(
-        (ActiveSymbol activeSymbol) => activeSymbol.exchangeIsOpen!);
+    final ActiveSymbolsItem firstOpenSymbol = _activeSymbols.firstWhere(
+        (ActiveSymbolsItem activeSymbol) => activeSymbol.exchangeIsOpen);
 
     _symbol = Asset(
-      name: firstOpenSymbol.symbol!,
+      name: firstOpenSymbol.symbol,
       displayName: firstOpenSymbol.displayName,
-      market: firstOpenSymbol.market!,
-      subMarket: firstOpenSymbol.submarket!,
-      isOpen: firstOpenSymbol.exchangeIsOpen!,
+      market: firstOpenSymbol.market,
+      subMarket: firstOpenSymbol.submarket,
+      isOpen: firstOpenSymbol.exchangeIsOpen,
     );
 
     _fillMarketSelectorList();
@@ -242,24 +237,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
     final List<Market> markets = <Market>[];
 
-    for (final ActiveSymbol symbol in _activeSymbols) {
+    for (final ActiveSymbolsItem symbol in _activeSymbols) {
       if (!marketTitles.contains(symbol.market)) {
         marketTitles.add(symbol.market);
         markets.add(
           Market.fromAssets(
-            name: symbol.market!,
-            displayName: symbol.marketDisplayName!,
+            name: symbol.market,
+            displayName: symbol.marketDisplayName,
             assets: _activeSymbols
-                .where((ActiveSymbol activeSymbol) =>
+                .where((dynamic activeSymbol) =>
                     activeSymbol.market == symbol.market)
-                .map<Asset>((ActiveSymbol activeSymbol) => Asset(
-                      market: activeSymbol.market!,
+                .map<Asset>((dynamic activeSymbol) => Asset(
+                      market: activeSymbol.market,
                       marketDisplayName: activeSymbol.marketDisplayName,
-                      subMarket: activeSymbol.submarket!,
-                      name: activeSymbol.symbol!,
+                      subMarket: activeSymbol.submarket,
+                      name: activeSymbol.symbol,
                       displayName: activeSymbol.displayName,
                       subMarketDisplayName: activeSymbol.submarketDisplayName,
-                      isOpen: activeSymbol.exchangeIsOpen!,
+                      isOpen: activeSymbol.exchangeIsOpen,
                     ))
                 .toList(),
           ),
@@ -279,7 +274,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       if (_symbol.isOpen) {
         _tickHistorySubscription =
-            await TickHistory.fetchTicksAndSubscribe(request);
+            await TicksHistoryResponse.fetchTicksAndSubscribe(request);
 
         final List<Tick> fetchedTicks =
             _getTicksFromResponse(_tickHistorySubscription!.tickHistory!);
@@ -302,7 +297,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         _tickHistorySubscription = null;
 
         final List<Tick> historyCandles = _getTicksFromResponse(
-          await TickHistory.fetchTickHistory(request),
+          await TicksHistoryResponse.fetchTickHistory(request),
         );
 
         _resetCandlesTo(historyCandles);
@@ -310,7 +305,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _updateSampleSLAndTP();
 
-      WidgetsBinding.instance?.addPostFrameCallback(
+      WidgetsBinding.instance.addPostFrameCallback(
         (Duration timeStamp) => _controller.scrollToLastTick(),
       );
     } on TickException catch (e) {
@@ -335,7 +330,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       return;
     }
 
-    if (newTick is api_tick.Tick) {
+    if (newTick is tick_api.Tick) {
       _onNewTick(Tick(
         epoch: newTick.epoch!.millisecondsSinceEpoch,
         quote: newTick.quote!,
@@ -427,7 +422,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                             ]
                           : null,
                       pipSize:
-                          _tickHistorySubscription?.tickHistory?.pipSize ?? 4,
+                          (_tickHistorySubscription?.tickHistory?.pipSize ?? 4)
+                              .toInt(),
                       granularity: granularity == 0
                           ? 1000 // average ms difference between ticks
                           : granularity * 1000,
@@ -479,7 +475,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           await _tickStreamSubscription?.cancel();
                           ticks.clear();
                           // reconnect to new config
-                          await _connectionBloc.connect(
+                          await _connectionBloc.reconnect(
                             connectionInformation:
                                 await _getConnectionInfoFromPrefs(),
                           );
@@ -656,8 +652,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
             builder: (BuildContext context) => MarketSelector(
               selectedItem: _symbol,
               markets: _markets,
-              onAssetClicked: (Asset asset, bool isFavoriteClicked) {
-                if (!isFavoriteClicked) {
+              onAssetClicked: (
+                  {required Asset asset, required bool favouriteClicked}) {
+                if (!favouriteClicked) {
                   Navigator.of(context).pop();
                   _symbol = asset;
                   _onIntervalSelected(granularity);
@@ -671,7 +668,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Future<void> _loadHistory(int count) async {
     _waitingForHistory = true;
 
-    final TickHistory moreData = await TickHistory.fetchTickHistory(
+    final TicksHistoryResponse moreData =
+        await TicksHistoryResponse.fetchTickHistory(
       TicksHistoryRequest(
         ticksHistory: _symbol.name,
         end: '${ticks.first.epoch ~/ 1000}',
@@ -774,22 +772,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
     }
   }
 
-  List<Tick> _getTicksFromResponse(TickHistory tickHistory) {
+  List<Tick> _getTicksFromResponse(TicksHistoryResponse tickHistory) {
     List<Tick> candles = <Tick>[];
     if (tickHistory.history != null) {
       final int count = tickHistory.history!.prices!.length;
       for (int i = 0; i < count; i++) {
         candles.add(Tick(
-          epoch: tickHistory.history!.times![i]!.millisecondsSinceEpoch,
-          quote: tickHistory.history!.prices![i]!,
+          epoch: tickHistory.history!.times![i].millisecondsSinceEpoch,
+          quote: tickHistory.history!.prices![i],
         ));
       }
     }
 
     if (tickHistory.candles != null) {
       candles = tickHistory.candles!
-          .where((CandleModel? ohlc) => ohlc != null)
-          .map<Candle>((CandleModel? ohlc) => Candle(
+          .where((CandlesItem? ohlc) => ohlc != null)
+          .map<Candle>((CandlesItem? ohlc) => Candle(
                 epoch: ohlc!.epoch!.millisecondsSinceEpoch,
                 high: ohlc.high!,
                 low: ohlc.low!,
