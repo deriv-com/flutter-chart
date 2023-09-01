@@ -13,7 +13,7 @@ class ContinuousDrawingCreator extends DrawingCreator<ContinuousLineDrawing> {
     required OnAddDrawing<ContinuousLineDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     required this.shouldStopDrawing,
     Key? key,
   }) : super(
@@ -25,8 +25,8 @@ class ContinuousDrawingCreator extends DrawingCreator<ContinuousLineDrawing> {
   /// Callback to clean drawing tool selection.
   final VoidCallback clearDrawingToolSelection;
 
-  /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  /// Callback to remove unfinished drawing from the list of drawings.
+  final void Function() removeUnfinishedDrawing;
 
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing
@@ -80,7 +80,7 @@ class _ContinuousDrawingCreatorState
         if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
-          _widget.removeDrawing(drawingId);
+          _widget.removeUnfinishedDrawing();
           _widget.clearDrawingToolSelection();
           return;
         } else {

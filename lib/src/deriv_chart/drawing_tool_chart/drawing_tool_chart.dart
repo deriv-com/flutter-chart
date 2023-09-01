@@ -55,8 +55,11 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   }
 
   /// Removes specific drawing from the list of drawings
-  void removeDrawing(String drawingId) {
-    getDrawingData().removeWhere((DrawingData data) => data.id == drawingId);
+  void removeUnfinishedDrawing() {
+    final List<DrawingData> unfinishedDrawings = getDrawingData()
+        .where((DrawingData data) => !data.isDrawingFinished)
+        .toList();
+    repo.removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
   }
 
   @override
@@ -97,7 +100,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
               clearDrawingToolSelection:
                   widget.drawingTools.clearDrawingToolSelection,
               series: widget.series,
-              removeDrawing: removeDrawing,
+              removeUnfinishedDrawing: removeUnfinishedDrawing,
               shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
             ),
         ],

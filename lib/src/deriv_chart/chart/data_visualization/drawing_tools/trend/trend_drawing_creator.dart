@@ -16,7 +16,7 @@ class TrendDrawingCreator extends DrawingCreator<TrendDrawing> {
     required OnAddDrawing<TrendDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     required this.series,
     Key? key,
   }) : super(
@@ -32,7 +32,7 @@ class TrendDrawingCreator extends DrawingCreator<TrendDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  final void Function() removeUnfinishedDrawing;
 
   @override
   DrawingCreatorState<TrendDrawing> createState() =>
@@ -103,7 +103,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
         if ((_startingPointEpoch! - endingEdgePoint.epoch).abs() <=
             touchDistanceThreshold) {
           /// remove the drawing and clean the drawing tool selection.
-          _widget.removeDrawing(drawingId);
+          _widget.removeUnfinishedDrawing();
           _widget.clearDrawingToolSelection();
           return;
         }

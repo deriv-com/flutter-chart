@@ -19,7 +19,7 @@ class DrawingToolWidget extends StatelessWidget {
     required this.selectedDrawingTool,
     required this.quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     required this.series,
     this.shouldStopDrawing,
     Key? key,
@@ -46,8 +46,8 @@ class DrawingToolWidget extends StatelessWidget {
   /// Callback to clean drawing tool selection.
   final VoidCallback clearDrawingToolSelection;
 
-  /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  /// Callback to remove unfinished drawing from the list of drawings.
+  final void Function() removeUnfinishedDrawing;
 
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing
@@ -65,7 +65,7 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
           shouldStopDrawing: shouldStopDrawing!,
         );
       case 'dt_line':
@@ -73,14 +73,14 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
         );
       case 'dt_ray':
         return RayDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
         );
       case 'dt_vertical':
         return VerticalDrawingCreator(
@@ -92,7 +92,7 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           clearDrawingToolSelection: clearDrawingToolSelection,
           quoteFromCanvasY: quoteFromCanvasY,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
           series: series,
         );
 

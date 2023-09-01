@@ -81,7 +81,16 @@ class ContinuousLineDrawing extends Drawing {
   }) {
     config as ContinuousDrawingToolConfig;
 
-    _lineDrawing.onPaint(
+    final DrawingData lineDrawingData = DrawingData(
+      id: drawingData.id,
+      drawingParts: drawingData.drawingParts,
+      isDrawingFinished: drawingData.isDrawingFinished,
+      isSelected: drawingData.isSelected,
+    );
+
+    /// Draw first line of the continuous drawing which need 2 taps to draw
+    if (config.edgePoints.length <= 2) {
+      _lineDrawing.onPaint(
         canvas,
         size,
         theme,
@@ -95,15 +104,46 @@ class ContinuousLineDrawing extends Drawing {
           pattern: config.pattern,
           edgePoints: config.edgePoints,
         ),
-        DrawingData(
-          id: drawingData.id,
-          drawingParts: drawingData.drawingParts,
-          isDrawingFinished: drawingData.isDrawingFinished,
-          isSelected: drawingData.isSelected,
-        ),
+        lineDrawingData,
         updatePositionCallback,
         draggableStartPoint,
-        draggableEndPoint: draggableEndPoint);
+        draggableEndPoint: draggableEndPoint,
+      );
+    }
+
+    /// Draw other lines of continuous which need more than 1 tap to draw
+    if (config.edgePoints.length > 2) {
+      config.edgePoints
+          .where((EdgePoint element) =>
+              config.edgePoints.indexOf(element) > 1 &&
+              config.edgePoints.indexOf(element) ==
+                  config.edgePoints.length - 1)
+          .forEach((EdgePoint edgePoint) {
+        final int index = config.edgePoints.indexOf(edgePoint);
+        _lineDrawing.onPaint(
+          canvas,
+          size,
+          theme,
+          epochFromX,
+          epochToX,
+          quoteToY,
+          LineDrawingToolConfig(
+            configId: config.configId,
+            drawingData: config.drawingData,
+            lineStyle: config.lineStyle,
+            pattern: config.pattern,
+
+            /// Limit the edge points to only 2 points, since line drawing
+            /// needs only 2 points
+            edgePoints: <EdgePoint>[config.edgePoints[index - 1], edgePoint],
+          ),
+          lineDrawingData,
+          updatePositionCallback,
+          draggableStartPoint,
+          draggableEndPoint: draggableEndPoint,
+        );
+      });
+    }
   }
 
   /// Calculation for detemining whether a user's touch or click intersects
@@ -121,8 +161,14 @@ class ContinuousLineDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) =>
-      _lineDrawing.hitTest(position, epochToX, quoteToY, config,
-          draggableStartPoint, setIsStartPointDragged,
-          draggableEndPoint: draggableEndPoint,
-          setIsEndPointDragged: setIsEndPointDragged);
+      _lineDrawing.hitTest(
+        position,
+        epochToX,
+        quoteToY,
+        config,
+        draggableStartPoint,
+        setIsStartPointDragged,
+        draggableEndPoint: draggableEndPoint,
+        setIsEndPointDragged: setIsEndPointDragged,
+      );
 }
