@@ -104,6 +104,7 @@ class DerivChart extends StatefulWidget {
   /// Chart's drawings
   final Repository<DrawingToolConfig>? drawingToolsRepo;
 
+  /// List of drawing tools
   final DrawingTools drawingTools;
 
   /// Specifies the zoom level of the chart.
@@ -163,6 +164,8 @@ class _DerivChartState extends State<DerivChart> {
           DrawingToolConfig.fromJson(map),
       onEditCallback: showDrawingToolsDialog,
     );
+
+    widget.drawingTools.drawingToolsRepo = widget.drawingToolsRepo;
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {

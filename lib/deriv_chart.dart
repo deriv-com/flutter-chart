@@ -105,3 +105,7 @@ export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
 export 'src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+export 'src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
+export 'src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+export 'src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_config.dart';
+export 'src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
