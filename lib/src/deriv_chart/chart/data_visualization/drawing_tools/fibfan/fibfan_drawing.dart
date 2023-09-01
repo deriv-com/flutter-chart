@@ -11,11 +11,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/label.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
 /// Fibfan drawing tool.
-class FibfanDrawing extends Drawing {
+class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   FibfanDrawing({
     required this.drawingPart,
@@ -120,7 +121,7 @@ class FibfanDrawing extends Drawing {
     final FibfanDrawingToolConfig config =
         drawingData.config as FibfanDrawingToolConfig;
     final LineStyle lineStyle = config.lineStyle;
-    final Paint linePaintStype =
+    final Paint linePaintStyle =
         paint.linePaintStyle(lineStyle.color, lineStyle.thickness);
 
     _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
@@ -185,27 +186,27 @@ class FibfanDrawing extends Drawing {
         ..drawLine(
           Offset(_baseVector.x0, _baseVector.y0),
           Offset(_baseVector.x1, _baseVector.y1),
-          linePaintStype,
+          linePaintStyle,
         )
         ..drawLine(
           Offset(_initialInnerVector.x0, _initialInnerVector.y0),
           Offset(_initialInnerVector.x1, _initialInnerVector.y1),
-          linePaintStype,
+          linePaintStyle,
         )
         ..drawLine(
           Offset(_middleInnerVector.x0, _middleInnerVector.y0),
           Offset(_middleInnerVector.x1, _middleInnerVector.y1),
-          linePaintStype,
+          linePaintStyle,
         )
         ..drawLine(
           Offset(_topInnerVector.x0, _topInnerVector.y0),
           Offset(_topInnerVector.x1, _topInnerVector.y1),
-          linePaintStype,
+          linePaintStyle,
         )
         ..drawLine(
           Offset(_topVector.x0, _topVector.y0),
           Offset(_topVector.x1, _topVector.y1),
-          linePaintStype,
+          linePaintStyle,
         );
 
       /// Draw labels

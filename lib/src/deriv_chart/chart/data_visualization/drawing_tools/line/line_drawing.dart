@@ -11,12 +11,13 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
-class LineDrawing extends Drawing {
+class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   LineDrawing({
     required this.drawingPart,

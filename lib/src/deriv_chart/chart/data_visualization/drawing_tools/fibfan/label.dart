@@ -12,10 +12,10 @@ class Label {
   });
 
   /// Start of the drawing
-  int startXCoord;
+  final int startXCoord;
 
   /// End of the drawing
-  int endXCoord;
+  final int endXCoord;
 
   /// Returns the x position of the label
   double _getX(
