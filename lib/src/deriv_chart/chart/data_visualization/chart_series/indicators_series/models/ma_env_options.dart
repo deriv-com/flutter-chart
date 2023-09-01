@@ -16,7 +16,14 @@ class MAEnvOptions extends MAOptions {
     this.upperLineStyle = const LineStyle(color: Colors.green),
     this.middleLineStyle = const LineStyle(color: Colors.blue),
     this.lowerLineStyle = const LineStyle(color: Colors.red),
-  }) : super(period: period, type: movingAverageType);
+    this.fillColor = Colors.white12,
+    this.showChannelFill = true,
+    bool showLastIndicator = false,
+  }) : super(
+          period: period,
+          type: movingAverageType,
+          showLastIndicator: showLastIndicator,
+        );
 
   /// Shift value
   final double shift;
@@ -33,8 +40,21 @@ class MAEnvOptions extends MAOptions {
   /// Lower line style.
   final LineStyle lowerLineStyle;
 
+  /// Fill color.
+  final Color fillColor;
+
+  /// Whether the area between upper and lower channel is filled.
+  final bool showChannelFill;
+
   @override
   List<Object> get props => super.props
-    ..add(shift)
-    ..add(shiftType);
+    ..addAll(<Object>[
+      shift,
+      shiftType,
+      upperLineStyle,
+      middleLineStyle,
+      lowerLineStyle,
+      fillColor,
+      showChannelFill
+    ]);
 }

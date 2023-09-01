@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import 'grid/time_label.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 
@@ -22,12 +21,15 @@ class XAxis extends StatefulWidget {
     required this.entries,
     required this.child,
     required this.isLive,
+    required this.startWithDataFitMode,
     required this.pipSize,
-    required this.dataFitMode,
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
     this.maxCurrentTickOffset,
+    this.msPerPx,
+    this.minIntervalWidth,
+    this.maxIntervalWidth,
     Key? key,
   }) : super(key: key);
 
@@ -39,6 +41,9 @@ class XAxis extends StatefulWidget {
 
   /// Whether the chart is showing live data.
   final bool isLive;
+
+  /// Starts in data fit mode.
+  final bool startWithDataFitMode;
 
   /// Callback provided by library user.
   final VisibleAreaChangedCallback? onVisibleAreaChanged;
@@ -52,11 +57,19 @@ class XAxis extends StatefulWidget {
   /// Number of digits after decimal point in price
   final int pipSize;
 
-  /// Whether the chart is in data fit mode.
-  final bool dataFitMode;
-
   /// Max distance between rightBoundEpoch and nowEpoch in pixels.
   final double? maxCurrentTickOffset;
+
+  /// Specifies the zoom level of the chart.
+  final double? msPerPx;
+
+  /// Specifies the minimum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? minIntervalWidth;
+
+  /// Specifies the maximum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? maxIntervalWidth;
 
   @override
   _XAxisState createState() => _XAxisState();
@@ -79,12 +92,15 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       granularity: context.read<ChartConfig>().granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
+      startWithDataFitMode: widget.startWithDataFitMode,
       onScale: _onVisibleAreaChanged,
       onScroll: _onVisibleAreaChanged,
       minEpoch: widget.minEpoch,
       maxEpoch: widget.maxEpoch,
-      dataFitMode: widget.dataFitMode,
       maxCurrentTickOffset: widget.maxCurrentTickOffset,
+      msPerPx: widget.msPerPx,
+      minIntervalWidth: widget.minIntervalWidth,
+      maxIntervalWidth: widget.maxIntervalWidth,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -108,7 +124,6 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
 
     _model.update(
-      isDataFitMode: widget.dataFitMode,
       isLive: widget.isLive,
       granularity: context.read<ChartConfig>().granularity,
       entries: widget.entries,
@@ -148,14 +163,14 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
                 RepaintBoundary(
                   child: CustomPaint(
                     painter: XGridPainter(
-                      timeLabels: _noOverlapGridTimestamps
-                          .map<String>((DateTime time) => timeLabel(time))
+                      timestamps: _noOverlapGridTimestamps
+                          .map<DateTime>((DateTime time) => time)
                           .toList(),
                       xCoords: _noOverlapGridTimestamps
                           .map<double>((DateTime time) =>
                               _model.xFromEpoch(time.millisecondsSinceEpoch))
                           .toList(),
-                      style: _chartTheme.gridStyle,
+                      style: _chartTheme,
                     ),
                   ),
                 ),

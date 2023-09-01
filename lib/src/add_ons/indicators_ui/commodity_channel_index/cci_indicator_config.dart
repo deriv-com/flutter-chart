@@ -26,8 +26,15 @@ class CCIIndicatorConfig extends IndicatorConfig {
     ),
     this.showZones = true,
     this.lineStyle = const LineStyle(color: Colors.white),
+    int pipSize = 4,
+    bool showLastIndicator = false,
     String? title,
-  }) : super(isOverlay: false, title: title ?? CCIIndicatorConfig.name);
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? CCIIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory CCIIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -61,6 +68,8 @@ class CCIIndicatorConfig extends IndicatorConfig {
         overboughtLineStyle: oscillatorLinesConfig.overboughtStyle,
         oversoldLineStyle: oscillatorLinesConfig.oversoldStyle,
         showZones: showZones,
+        cciLineStyle: lineStyle,
+        showLastIndicator: showLastIndicator,
       );
 
   @override

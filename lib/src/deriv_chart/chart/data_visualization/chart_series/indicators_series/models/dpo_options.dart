@@ -11,7 +11,14 @@ class DPOOptions extends MAOptions {
     MovingAverageType movingAverageType = MovingAverageType.simple,
     this.isCentered = true,
     this.lineStyle,
-  }) : super(period: period, type: movingAverageType);
+    bool showLastIndicator = false,
+    int pipSize = 4,
+  }) : super(
+          period: period,
+          type: movingAverageType,
+          showLastIndicator: showLastIndicator,
+          pipSize: pipSize,
+        );
 
   /// Line style.
   final LineStyle? lineStyle;

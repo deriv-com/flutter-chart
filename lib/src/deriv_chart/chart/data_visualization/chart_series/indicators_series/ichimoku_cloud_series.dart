@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/ichimoku_clouds/ichimoku_c
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,21 @@ class IchimokuCloudSeries extends Series {
     String? id,
   }) : super(id ?? 'Ichimoku$ichimokuCloudOptions');
 
-  late SingleIndicatorSeries _conversionLineSeries;
-  late SingleIndicatorSeries _baseLineSeries;
-  late SingleIndicatorSeries _laggingSpanSeries;
-  late SingleIndicatorSeries _spanASeries;
-  late SingleIndicatorSeries _spanBSeries;
+  /// Conversion line series.
+  late SingleIndicatorSeries conversionLineSeries;
+
+  /// Base line series.
+  late SingleIndicatorSeries baseLineSeries;
+
+  /// Lagging line series.
+  late SingleIndicatorSeries laggingSpanSeries;
+
+  /// SpanA line series.
+  late SingleIndicatorSeries spanASeries;
+
+  /// SpanB line series.
+  late SingleIndicatorSeries spanBSeries;
+
   final List<SingleIndicatorSeries> _ichimokuSeries = <SingleIndicatorSeries>[];
 
   /// List of [Tick]s to calculate IchimokuCloud on.
@@ -69,25 +80,33 @@ class IchimokuCloudSeries extends Series {
       period: ichimokuCloudOptions.leadingSpanBPeriod,
     );
 
-    _conversionLineSeries = SingleIndicatorSeries(
+    conversionLineSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => conversionLineIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       style: config.conversionLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.conversionLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
-    _baseLineSeries = SingleIndicatorSeries(
+    baseLineSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => baseLineIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       style: config.baseLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.baseLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
-    _laggingSpanSeries = SingleIndicatorSeries(
+    laggingSpanSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => laggingSpanIndicator,
@@ -95,36 +114,48 @@ class IchimokuCloudSeries extends Series {
       options: ichimokuCloudOptions,
       offset: config.laggingSpanOffset,
       style: config.laggingLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.laggingLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
-    _spanASeries = SingleIndicatorSeries(
+    spanASeries = SingleIndicatorSeries(
       painterCreator: (Series series) => null,
       indicatorCreator: () => spanAIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
       style: config.spanALineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.spanALineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
-    _spanBSeries = SingleIndicatorSeries(
+    spanBSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => null,
       indicatorCreator: () => spanBIndicator,
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
       style: config.spanBLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.spanBLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     _ichimokuSeries
-      ..add(_conversionLineSeries)
-      ..add(_baseLineSeries)
-      ..add(_laggingSpanSeries)
-      ..add(_spanASeries)
-      ..add(_spanBSeries);
+      ..add(conversionLineSeries)
+      ..add(baseLineSeries)
+      ..add(laggingSpanSeries)
+      ..add(spanASeries)
+      ..add(spanBSeries);
 
     return ChannelFillPainter(
-      _spanASeries,
-      _spanBSeries,
+      spanASeries,
+      spanBSeries,
       firstUpperChannelFillColor: config.spanALineStyle.color.withOpacity(0.2),
       secondUpperChannelFillColor: config.spanBLineStyle.color.withOpacity(0.2),
     );
@@ -135,13 +166,13 @@ class IchimokuCloudSeries extends Series {
     final IchimokuCloudSeries? series = oldData as IchimokuCloudSeries?;
 
     final bool conversionLineUpdated =
-        _conversionLineSeries.didUpdate(series?._conversionLineSeries);
+        conversionLineSeries.didUpdate(series?.conversionLineSeries);
     final bool baseLineUpdated =
-        _baseLineSeries.didUpdate(series?._baseLineSeries);
+        baseLineSeries.didUpdate(series?.baseLineSeries);
     final bool laggingSpanUpdated =
-        _laggingSpanSeries.didUpdate(series?._laggingSpanSeries);
-    final bool spanAUpdated = _spanASeries.didUpdate(series?._spanASeries);
-    final bool spanBUpdated = _spanBSeries.didUpdate(series?._spanBSeries);
+        laggingSpanSeries.didUpdate(series?.laggingSpanSeries);
+    final bool spanAUpdated = spanASeries.didUpdate(series?.spanASeries);
+    final bool spanBUpdated = spanBSeries.didUpdate(series?.spanBSeries);
 
     return conversionLineUpdated ||
         baseLineUpdated ||
@@ -152,11 +183,11 @@ class IchimokuCloudSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _conversionLineSeries.update(leftEpoch, rightEpoch);
-    _baseLineSeries.update(leftEpoch, rightEpoch);
-    _laggingSpanSeries.update(leftEpoch, rightEpoch);
-    _spanASeries.update(leftEpoch, rightEpoch);
-    _spanBSeries.update(leftEpoch, rightEpoch);
+    conversionLineSeries.update(leftEpoch, rightEpoch);
+    baseLineSeries.update(leftEpoch, rightEpoch);
+    laggingSpanSeries.update(leftEpoch, rightEpoch);
+    spanASeries.update(leftEpoch, rightEpoch);
+    spanBSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
@@ -173,6 +204,16 @@ class IchimokuCloudSeries extends Series {
   }
 
   @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    final IchimokuCloudSeries oldSeries = previous as IchimokuCloudSeries;
+    return config.toJson().toString() != oldSeries.config.toJson().toString();
+  }
+
+  @override
   void paint(
     Canvas canvas,
     Size size,
@@ -182,18 +223,22 @@ class IchimokuCloudSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _conversionLineSeries.paint(
+    conversionLineSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _baseLineSeries.paint(
+    baseLineSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _laggingSpanSeries.paint(
+    laggingSpanSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    spanASeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    spanBSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     super.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
     if (animationInfo.currentTickPercent == 1) {
-      _spanASeries.resetLastEntryAnimation();
-      _spanBSeries.resetLastEntryAnimation();
+      spanASeries.resetLastEntryAnimation();
+      spanBSeries.resetLastEntryAnimation();
     }
   }
 

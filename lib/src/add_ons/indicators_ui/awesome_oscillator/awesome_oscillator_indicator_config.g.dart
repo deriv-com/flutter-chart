@@ -12,6 +12,7 @@ AwesomeOscillatorIndicatorConfig _$AwesomeOscillatorIndicatorConfigFromJson(
       barStyle: json['barStyle'] == null
           ? const BarStyle()
           : BarStyle.fromJson(json['barStyle'] as Map<String, dynamic>),
+      pipSize: json['pipSize'] as int? ?? 4,
       title: json['title'] as String?,
     );
 
@@ -19,5 +20,6 @@ Map<String, dynamic> _$AwesomeOscillatorIndicatorConfigToJson(
         AwesomeOscillatorIndicatorConfig instance) =>
     <String, dynamic>{
       'title': instance.title,
+      'pipSize': instance.pipSize,
       'barStyle': instance.barStyle,
     };

@@ -1,5 +1,4 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
@@ -32,6 +31,14 @@ class DerivChart extends StatefulWidget {
     this.indicatorsRepo,
     this.drawingToolsRepo,
     this.maxCurrentTickOffset,
+    this.msPerPx,
+    this.minIntervalWidth,
+    this.maxIntervalWidth,
+    this.verticalPaddingFraction,
+    this.bottomChartTitleMargin,
+    this.showDataFitButton,
+    this.showScrollToLastTickButton,
+    this.loadingAnimationColor,
     Key? key,
   }) : super(key: key);
 
@@ -88,6 +95,33 @@ class DerivChart extends StatefulWidget {
 
   /// Max distance between rightBoundEpoch and nowEpoch in pixels.
   final double? maxCurrentTickOffset;
+
+  /// Specifies the zoom level of the chart.
+  final double? msPerPx;
+
+  /// Specifies the minimum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? minIntervalWidth;
+
+  /// Specifies the maximum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? maxIntervalWidth;
+
+  /// Fraction of the chart's height taken by top or bottom padding.
+  /// Quote scaling (drag on quote area) is controlled by this variable.
+  final double? verticalPaddingFraction;
+
+  /// Specifies the margin to prevent overlap.
+  final EdgeInsets? bottomChartTitleMargin;
+
+  /// Whether the data fit button is shown or not.
+  final bool? showDataFitButton;
+
+  /// Whether to show the scroll to last tick button or not.
+  final bool? showScrollToLastTickButton;
+
+  /// The color of the loading animation.
+  final Color? loadingAnimationColor;
 
   /// Chart's indicators
   final Repository<IndicatorConfig>? indicatorsRepo;
@@ -170,7 +204,6 @@ class _DerivChartState extends State<DerivChart> {
         ..init()
         ..drawingToolsRepo = _drawingToolsRepo;
     });
-
     showDialog<void>(
       context: context,
       builder: (
@@ -244,6 +277,14 @@ class _DerivChartState extends State<DerivChart> {
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
                 maxCurrentTickOffset: widget.maxCurrentTickOffset,
+                msPerPx: widget.msPerPx,
+                minIntervalWidth: widget.minIntervalWidth,
+                maxIntervalWidth: widget.maxIntervalWidth,
+                verticalPaddingFraction: widget.verticalPaddingFraction,
+                bottomChartTitleMargin: widget.bottomChartTitleMargin,
+                showDataFitButton: widget.showDataFitButton,
+                showScrollToLastTickButton: widget.showScrollToLastTickButton,
+                loadingAnimationColor: widget.loadingAnimationColor,
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),

@@ -75,6 +75,7 @@ class _MarkerAreaState extends State<MarkerArea> {
           duration: animationDuration,
           opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
           child: CustomPaint(
+            child: Container(),
             painter: _MarkerPainter(
                 series: widget.markerSeries,
                 epochToX: xAxis.xFromEpoch,
