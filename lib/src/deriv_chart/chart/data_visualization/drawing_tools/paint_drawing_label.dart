@@ -26,17 +26,17 @@ void paintDrawingLabel(
   String _labelString = '';
 
   /// Width of the rectangle
-  const double _width = 50;
+  const double _width = 46;
 
   /// Height of the rectangle
-  const double _height = 20;
+  const double _height = 24;
 
   final HorizontalBarrierStyle horizontalBarrierStyle =
       theme.horizontalBarrierStyle;
 
   if (drawingType == 'horizontal') {
     _labelRect = Rect.fromCenter(
-      center: Offset(size.width - 25, coord),
+      center: Offset(size.width - 26, coord),
       width: _width,
       height: _height,
     );
@@ -79,8 +79,11 @@ void paintDrawingLabel(
     textDirection: ui.TextDirection.ltr,
   )..layout(maxWidth: size.width);
 
-  canvas.drawRect(
-    _labelRect,
+  final RRect roundedRect =
+      RRect.fromRectAndRadius(_labelRect, const Radius.circular(4));
+
+  canvas.drawRRect(
+    roundedRect,
     Paint()..color = horizontalBarrierStyle.color,
   );
   textPainter.paint(canvas, _textOffset);
