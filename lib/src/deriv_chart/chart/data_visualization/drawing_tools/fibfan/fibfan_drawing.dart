@@ -44,11 +44,11 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
   /// Marker radius.
   final double markerRadius = 10;
 
-  Vector _baseVector = const Vector.zero();
-  Vector _topVector = const Vector.zero();
+  Vector _zeroDegreeVector = const Vector.zero();
   Vector _initialInnerVector = const Vector.zero();
   Vector _middleInnerVector = const Vector.zero();
-  Vector _topInnerVector = const Vector.zero();
+  Vector _finalInnerVector = const Vector.zero();
+  Vector _baseVector = const Vector.zero();
 
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
@@ -82,6 +82,17 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
 
     return _isWithinRange && _distance.abs() <= lineStyle.thickness + 6;
   }
+
+  /// Returns the Triangle path
+  Path getTrianglePath(
+    Vector startVector,
+    Vector endVector,
+  ) =>
+      Path()
+        ..moveTo(startVector.x0, startVector.y0)
+        ..lineTo(startVector.x1, startVector.y1)
+        ..lineTo(endVector.x1, endVector.y1)
+        ..close();
 
   /// Draw the shaded area between two vectors
   void _drawTriangle(
@@ -165,21 +176,31 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
             exceedEnd: true,
           );
 
+      /// Defines the degree of initial inner vector from the base vector
+      const double _initialVectorDegree = 0.618;
+
+      /// Defines the degree of middle inner vector from the  base vector
+      const double _middleVectorDegree = 0.5;
+
+      /// Defines the degree of final inner vector from the base vector
+      const double _finalVectorDegree = 0.382;
+
       /// Add vectors
-      _baseVector = _getLineVector(endXCoord, startQuoteToY);
-      _topVector = _getLineVector(endXCoord, endQuoteToY);
+      _zeroDegreeVector = _getLineVector(endXCoord, endQuoteToY);
       _initialInnerVector = _getLineVector(
         endXCoord,
-        ((endQuoteToY - startQuoteToY) * 0.382) + startQuoteToY,
+        ((endQuoteToY - startQuoteToY) * _initialVectorDegree) + startQuoteToY,
       );
+
       _middleInnerVector = _getLineVector(
         endXCoord,
-        ((endQuoteToY - startQuoteToY) * 0.5) + startQuoteToY,
+        ((endQuoteToY - startQuoteToY) * _middleVectorDegree) + startQuoteToY,
       );
-      _topInnerVector = _getLineVector(
+      _finalInnerVector = _getLineVector(
         endXCoord,
-        ((endQuoteToY - startQuoteToY) * 0.618) + startQuoteToY,
+        ((endQuoteToY - startQuoteToY) * _finalVectorDegree) + startQuoteToY,
       );
+      _baseVector = _getLineVector(endXCoord, startQuoteToY);
 
       /// Draw vectors
       canvas
@@ -189,8 +210,8 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
           linePaintStyle,
         )
         ..drawLine(
-          Offset(_initialInnerVector.x0, _initialInnerVector.y0),
-          Offset(_initialInnerVector.x1, _initialInnerVector.y1),
+          Offset(_finalInnerVector.x0, _finalInnerVector.y0),
+          Offset(_finalInnerVector.x1, _finalInnerVector.y1),
           linePaintStyle,
         )
         ..drawLine(
@@ -199,13 +220,13 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
           linePaintStyle,
         )
         ..drawLine(
-          Offset(_topInnerVector.x0, _topInnerVector.y0),
-          Offset(_topInnerVector.x1, _topInnerVector.y1),
+          Offset(_initialInnerVector.x0, _initialInnerVector.y0),
+          Offset(_initialInnerVector.x1, _initialInnerVector.y1),
           linePaintStyle,
         )
         ..drawLine(
-          Offset(_topVector.x0, _topVector.y0),
-          Offset(_topVector.x1, _topVector.y1),
+          Offset(_zeroDegreeVector.x0, _zeroDegreeVector.y0),
+          Offset(_zeroDegreeVector.x1, _zeroDegreeVector.y1),
           linePaintStyle,
         );
 
@@ -214,17 +235,21 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         startXCoord: startXCoord.toInt(),
         endXCoord: endXCoord.toInt(),
       )
-        ..drawLabel(canvas, lineStyle, '0%', _topVector)
-        ..drawLabel(canvas, lineStyle, '38.2%', _initialInnerVector)
-        ..drawLabel(canvas, lineStyle, '50%', _middleInnerVector)
-        ..drawLabel(canvas, lineStyle, '61.8%', _topInnerVector)
-        ..drawLabel(canvas, lineStyle, '100%', _baseVector);
+        ..drawLabel(
+            canvas, lineStyle, zeroDegreeVectorPercentage, _zeroDegreeVector)
+        ..drawLabel(canvas, lineStyle, initialInnerVectorPercentage,
+            _initialInnerVector)
+        ..drawLabel(
+            canvas, lineStyle, middleInnerVectorPercentage, _middleInnerVector)
+        ..drawLabel(
+            canvas, lineStyle, finalInnerVectorPercentage, _finalInnerVector)
+        ..drawLabel(canvas, lineStyle, baseVectorPercentage, _baseVector);
 
       /// Draw shadows
-      _drawTriangle(canvas, paint, config, _topVector);
+      _drawTriangle(canvas, paint, config, _zeroDegreeVector);
       _drawTriangle(canvas, paint, config, _initialInnerVector);
       _drawTriangle(canvas, paint, config, _middleInnerVector);
-      _drawTriangle(canvas, paint, config, _topInnerVector);
+      _drawTriangle(canvas, paint, config, _finalInnerVector);
     }
   }
 
@@ -259,10 +284,10 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
       setIsEndPointDragged(isDragged: true);
     }
     return _isVectorHit(_baseVector) ||
-        _isVectorHit(_initialInnerVector) ||
+        _isVectorHit(_finalInnerVector) ||
         _isVectorHit(_middleInnerVector) ||
-        _isVectorHit(_topInnerVector) ||
-        _isVectorHit(_topVector) ||
+        _isVectorHit(_initialInnerVector) ||
+        _isVectorHit(_zeroDegreeVector) ||
         (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
   }
 }

@@ -3,6 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
+/// A constant for the zero degree vector label
+const String zeroDegreeVectorPercentage = '0';
+
+/// A constant for the initial inner vector label
+const String initialInnerVectorPercentage = '38.2';
+
+/// A constant for the middle vector label
+const String middleInnerVectorPercentage = '50';
+
+/// A constant for the final vector label
+const String finalInnerVectorPercentage = '61.8';
+
+/// A constant for the base vector label
+const String baseVectorPercentage = '100';
+
 /// A class for drawing the vector label
 class Label {
   /// Initializes the vector label class
@@ -23,12 +38,12 @@ class Label {
     bool isRightSide = false,
   }) {
     switch (label) {
-      case '0%':
+      case zeroDegreeVectorPercentage:
         return isRightSide ? 345 : 25;
-      case '38.2%':
-      case '61.8%':
+      case initialInnerVectorPercentage:
+      case finalInnerVectorPercentage:
         return isRightSide ? 325 : 40;
-      case '50%':
+      case middleInnerVectorPercentage:
         return isRightSide ? 335 : 30;
       default:
         return isRightSide ? 330 : 10;
@@ -63,7 +78,7 @@ class Label {
     );
 
     final TextSpan textSpan = TextSpan(
-      text: label,
+      text: '$label%',
       style: textStyle,
     );
 
