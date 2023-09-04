@@ -6,11 +6,15 @@ class LoadingAnimationArea extends StatefulWidget {
   /// Creates loading animation area.
   const LoadingAnimationArea({
     required this.loadingRightBoundX,
+    this.loadingAnimationColor,
     Key? key,
   }) : super(key: key);
 
   ///  The right bound in the chart area when loading area is showing.
   final double loadingRightBoundX;
+
+  /// The color of the loading animation.
+  final Color? loadingAnimationColor;
 
   @override
   _LoadingAnimationAreaState createState() => _LoadingAnimationAreaState();
@@ -50,6 +54,7 @@ class _LoadingAnimationAreaState extends State<LoadingAnimationArea>
           painter: LoadingPainter(
             loadingAnimationProgress: _loadingAnimationController.value,
             loadingRightBoundX: widget.loadingRightBoundX,
+            loadingAnimationColor: widget.loadingAnimationColor,
           ),
         ),
       ),

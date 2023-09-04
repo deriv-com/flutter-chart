@@ -41,8 +41,12 @@ int findClosestIndex(double index, List<Tick> ticks) {
 
 /// Binary search to find closest index to the [epoch].
 int findClosestIndexBinarySearch(int epoch, List<Tick>? entries) {
+  if (entries == null || entries.isEmpty) {
+    return 0;
+  }
+
   int lo = 0;
-  int hi = entries!.length - 1;
+  int hi = entries.length - 1;
   int localEpoch = epoch;
 
   if (localEpoch > entries[hi].epoch) {
@@ -59,6 +63,11 @@ int findClosestIndexBinarySearch(int epoch, List<Tick>? entries) {
     } else {
       return mid;
     }
+  }
+
+  // Check if hi is less than 0
+  if (hi < 0) {
+    return lo; // or another appropriate value to indicate the closest index
   }
 
   return (entries[lo].epoch - localEpoch) < (localEpoch - entries[hi].epoch)

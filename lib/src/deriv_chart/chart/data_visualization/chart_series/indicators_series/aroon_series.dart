@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -31,7 +32,10 @@ class AroonSeries extends Series {
   /// Configs for `ArronIndicator`
   final AroonIndicatorConfig indicatorConfig;
 
+  /// Arron up series
   late SingleIndicatorSeries aroonUpSeries;
+
+  /// Arron down series
   late SingleIndicatorSeries aroonDownSeries;
 
   /// options
@@ -48,6 +52,10 @@ class AroonSeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: indicatorConfig.upLineStyle,
       options: aroonOption,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        indicatorConfig.upLineStyle.color,
+        showLastIndicator: indicatorConfig.showLastIndicator,
+      ),
     );
     aroonDownSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
@@ -58,6 +66,10 @@ class AroonSeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       options: aroonOption,
       style: indicatorConfig.downLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        indicatorConfig.downLineStyle.color,
+        showLastIndicator: indicatorConfig.showLastIndicator,
+      ),
     );
 
     return null;

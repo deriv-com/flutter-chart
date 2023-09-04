@@ -38,7 +38,10 @@ class GatorSeries extends Series {
   /// Gator options
   AlligatorOptions gatorOptions;
 
+  /// Gator top series
   late SingleIndicatorSeries gatorTopSeries;
+
+  /// Gator bottom series
   late SingleIndicatorSeries gatorBottomSeries;
 
   /// Gator config
@@ -63,7 +66,8 @@ class GatorSeries extends Series {
           jawPeriod: gatorOptions.jawPeriod,
           jawOffset: gatorConfig.jawOffset,
           teethPeriod: gatorOptions.teethPeriod,
-          teethOffset: gatorConfig.teethOffset),
+          teethOffset: gatorConfig.teethOffset)
+        ..calculateValues(),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
       style: barStyle,
@@ -88,7 +92,7 @@ class GatorSeries extends Series {
         teethOffset: gatorConfig.teethOffset,
         lipsOffset: gatorConfig.lipsOffset,
         lipsPeriod: gatorOptions.lipsPeriod,
-      ),
+      )..calculateValues(),
       inputIndicator: _fieldIndicator,
       options: gatorOptions,
       style: barStyle,

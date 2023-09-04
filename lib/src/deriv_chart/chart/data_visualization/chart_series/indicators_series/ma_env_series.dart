@@ -1,6 +1,8 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -44,8 +46,13 @@ class MAEnvSeries extends Series {
   /// Moving Average Envelope options
   MAEnvOptions? maEnvOptions;
 
+  /// Lower series
   late SingleIndicatorSeries lowerSeries;
+
+  /// Middle series
   late SingleIndicatorSeries middleSeries;
+
+  /// Upper series
   late SingleIndicatorSeries upperSeries;
 
   final List<Series> innerSeries = <Series>[];
@@ -68,6 +75,10 @@ class MAEnvSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
       style: maEnvOptions!.lowerLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        maEnvOptions!.lowerLineStyle.color,
+        showLastIndicator: maEnvOptions!.showLastIndicator,
+      ),
     );
 
     middleSeries = SingleIndicatorSeries(
@@ -77,6 +88,10 @@ class MAEnvSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
       style: maEnvOptions!.middleLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        maEnvOptions!.middleLineStyle.color,
+        showLastIndicator: maEnvOptions!.showLastIndicator,
+      ),
     );
 
     upperSeries = SingleIndicatorSeries(
@@ -90,6 +105,10 @@ class MAEnvSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
       style: maEnvOptions!.upperLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        maEnvOptions!.upperLineStyle.color,
+        showLastIndicator: maEnvOptions!.showLastIndicator,
+      ),
     );
 
     innerSeries
@@ -97,7 +116,12 @@ class MAEnvSeries extends Series {
       ..add(middleSeries)
       ..add(upperSeries);
 
-    return null;
+    return ChannelFillPainter(
+      upperSeries,
+      lowerSeries,
+      firstUpperChannelFillColor: maEnvOptions?.fillColor.withOpacity(0.2),
+      secondUpperChannelFillColor: maEnvOptions?.fillColor.withOpacity(0.2),
+    );
   }
 
   @override
@@ -133,6 +157,15 @@ class MAEnvSeries extends Series {
       ];
 
   @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    return maEnvOptions != (previous as MAEnvSeries).maEnvOptions;
+  }
+
+  @override
   void paint(
     Canvas canvas,
     Size size,
@@ -148,6 +181,14 @@ class MAEnvSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+
+    if (maEnvOptions != null &&
+        maEnvOptions!.showChannelFill &&
+        upperSeries.visibleEntries.isNotEmpty &&
+        lowerSeries.visibleEntries.isNotEmpty) {
+      super.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
   }
 
   @override

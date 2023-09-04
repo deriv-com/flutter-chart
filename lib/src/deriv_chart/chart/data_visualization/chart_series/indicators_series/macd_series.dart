@@ -1,11 +1,9 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/macd_indicator/macd_indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
@@ -24,8 +22,13 @@ class MACDSeries extends Series {
   ///input data
   final IndicatorInput indicatorInput;
 
+  /// MACD Series
   late SingleIndicatorSeries macdSeries;
+
+  /// Signal MACD Series
   late SingleIndicatorSeries signalMACDSeries;
+
+  /// MACD Histogram Series
   late SingleIndicatorSeries macdHistogramSeries;
 
   /// MACD Configuration.
@@ -59,6 +62,10 @@ class MACDSeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: options.lineStyle,
       options: options,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        options.lineStyle.color,
+        showLastIndicator: options.showLastIndicator,
+      ),
     );
 
     signalMACDSeries = SingleIndicatorSeries(
@@ -68,6 +75,10 @@ class MACDSeries extends Series {
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
       style: options.signalLineStyle,
       options: options,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        options.signalLineStyle.color,
+        showLastIndicator: options.showLastIndicator,
+      ),
     );
 
     macdHistogramSeries = SingleIndicatorSeries(

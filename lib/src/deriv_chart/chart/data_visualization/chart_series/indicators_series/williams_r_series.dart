@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
@@ -19,7 +20,9 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
     this.overboughtValue = -20,
     this.oversoldValue = -80,
     this.showZones = true,
-    this.overboughtSoldLineStyles =
+    this.overboughtLineStyle =
+        const LineStyle(color: Colors.white, thickness: 0.5),
+    this.oversoldLineStyle =
         const LineStyle(color: Colors.white, thickness: 0.5),
     LineStyle? lineStyle,
     String? id,
@@ -28,6 +31,12 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
           id ?? 'WilliamsR',
           options: _options,
           style: lineStyle,
+          lastTickIndicatorStyle: lineStyle != null
+              ? getLastIndicatorStyle(
+                  lineStyle.color,
+                  showLastIndicator: _options.showLastIndicator,
+                )
+              : null,
         );
 
   final IndicatorDataInput _indicatorDataInput;
@@ -40,8 +49,11 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
   /// Oversold value
   final double oversoldValue;
 
-  /// The line style for overbought/sold horizontal lines.
-  final LineStyle overboughtSoldLineStyles;
+  /// LineStyle of overbought line
+  final LineStyle overboughtLineStyle;
+
+  /// LineStyle of oversold line
+  final LineStyle oversoldLineStyle;
 
   /// Whether to show overbought/sold lines and zones channel fill.
   final bool showZones;
@@ -52,10 +64,11 @@ class WilliamsRSeries extends AbstractSingleIndicatorSeries {
           this,
           topHorizontalLine: overboughtValue,
           bottomHorizontalLine: oversoldValue,
-          secondaryHorizontalLinesStyle: overboughtSoldLineStyles,
+          secondaryHorizontalLinesStyle: overboughtLineStyle,
           // TODO(NA): Zero line style will be removed from
           // OscillatorLinePainter
-          topHorizontalLinesStyle: overboughtSoldLineStyles,
+          topHorizontalLinesStyle: overboughtLineStyle,
+          bottomHorizontalLinesStyle: oversoldLineStyle,
         )
       : LinePainter(this);
 

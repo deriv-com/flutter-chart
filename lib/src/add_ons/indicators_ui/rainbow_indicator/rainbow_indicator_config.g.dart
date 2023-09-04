@@ -15,16 +15,22 @@ RainbowIndicatorConfig _$RainbowIndicatorConfigFromJson(
           MovingAverageType.simple,
       fieldType: json['fieldType'] as String? ?? 'close',
       bandsCount: json['bandsCount'] as int? ?? 10,
+      rainbowLineStyles: (json['rainbowLineStyles'] as List<dynamic>?)
+          ?.map((e) => LineStyle.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      showLastIndicator: json['showLastIndicator'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$RainbowIndicatorConfigToJson(
         RainbowIndicatorConfig instance) =>
     <String, dynamic>{
+      'showLastIndicator': instance.showLastIndicator,
       'period': instance.period,
       'movingAverageType':
           _$MovingAverageTypeEnumMap[instance.movingAverageType]!,
       'fieldType': instance.fieldType,
       'bandsCount': instance.bandsCount,
+      'rainbowLineStyles': instance.rainbowLineStyles,
     };
 
 const _$MovingAverageTypeEnumMap = {

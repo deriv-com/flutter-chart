@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -27,11 +28,11 @@ class RainbowSeries extends Series {
   RainbowSeries(
     IndicatorInput indicatorInput, {
     required RainbowOptions rainbowOptions,
-    List<Color>? rainbowColors,
+    List<LineStyle>? rainbowLineStyles,
     String? id,
   }) : this.fromIndicator(
           CloseValueIndicator<Tick>(indicatorInput),
-          rainbowColors: rainbowColors ?? const <Color>[],
+          rainbowLineStyles: rainbowLineStyles ?? const <LineStyle>[],
           id: id,
           rainbowOptions: rainbowOptions,
         );
@@ -40,7 +41,7 @@ class RainbowSeries extends Series {
   RainbowSeries.fromIndicator(
     Indicator<Tick> indicator, {
     required this.rainbowOptions,
-    this.rainbowColors = const <Color>[],
+    this.rainbowLineStyles = const <LineStyle>[],
     String? id,
   })  : _fieldIndicator = indicator,
         super(id ?? 'MARainbow$rainbowOptions');
@@ -50,17 +51,21 @@ class RainbowSeries extends Series {
   /// Rainbow options
   RainbowOptions rainbowOptions;
 
+  /// Rainbow series
   final List<SingleIndicatorSeries> rainbowSeries = <SingleIndicatorSeries>[];
 
-  /// colors of rainbow bands
-  final List<Color> rainbowColors;
+  /// Line styles of rainbow bands
+  final List<LineStyle> rainbowLineStyles;
 
   @override
   SeriesPainter<Series>? createPainter() {
     /// check if we have color for every band
-    final bool useColors = rainbowColors.length == rainbowOptions.bandsCount;
+    final bool useColors =
+        rainbowLineStyles.length == rainbowOptions.bandsCount;
     final List<Indicator<Tick>> indicators = <Indicator<Tick>>[];
     for (int i = 0; i < rainbowOptions.bandsCount; i++) {
+      final LineStyle style =
+          useColors ? rainbowLineStyles[i] : const LineStyle(color: Colors.red);
       if (i == 0) {
         indicators
             .add(MASeries.getMAIndicator(_fieldIndicator, rainbowOptions));
@@ -70,7 +75,11 @@ class RainbowSeries extends Series {
           indicatorCreator: () => indicators[0] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
-          style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
+          style: style,
+          lastTickIndicatorStyle: getLastIndicatorStyle(
+            style.color,
+            showLastIndicator: rainbowOptions.showLastIndicator,
+          ),
         ));
       } else {
         indicators
@@ -81,7 +90,11 @@ class RainbowSeries extends Series {
           indicatorCreator: () => indicators[i] as CachedIndicator<Tick>,
           inputIndicator: _fieldIndicator,
           options: rainbowOptions,
-          style: LineStyle(color: useColors ? rainbowColors[i] : Colors.red),
+          style: style,
+          lastTickIndicatorStyle: getLastIndicatorStyle(
+            style.color,
+            showLastIndicator: rainbowOptions.showLastIndicator,
+          ),
         ));
       }
     }
@@ -137,6 +150,17 @@ class RainbowSeries extends Series {
       maxValues.add(series.maxValue);
     }
     return maxValues.reduce(max);
+  }
+
+  @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    final RainbowSeries oldSeries = previous as RainbowSeries;
+    return rainbowOptions != oldSeries.rainbowOptions ||
+        rainbowLineStyles != oldSeries.rainbowLineStyles;
   }
 
   @override

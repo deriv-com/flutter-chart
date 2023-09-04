@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -26,7 +27,10 @@ class StochasticOscillatorSeries extends Series {
     String? id,
   }) : super(id ?? 'StochasticOscillator');
 
+  /// Fast percent StochasticOscillator indicator series.
   late SingleIndicatorSeries fastPercentStochasticIndicatorSeries;
+
+  /// Slow percent StochasticOscillator indicator series.
   late SingleIndicatorSeries slowStochasticIndicatorSeries;
 
   ///input data
@@ -69,6 +73,10 @@ class StochasticOscillatorSeries extends Series {
         inputIndicator: inputIndicator,
         options: stochasticOscillatorOptions,
         style: config.fastLineStyle,
+        lastTickIndicatorStyle: getLastIndicatorStyle(
+          config.fastLineStyle.color,
+          showLastIndicator: config.showLastIndicator,
+        ),
       );
 
       slowStochasticIndicatorSeries = SingleIndicatorSeries(
@@ -79,6 +87,10 @@ class StochasticOscillatorSeries extends Series {
         inputIndicator: inputIndicator,
         options: stochasticOscillatorOptions,
         style: config.slowLineStyle,
+        lastTickIndicatorStyle: getLastIndicatorStyle(
+          config.slowLineStyle.color,
+          showLastIndicator: config.showLastIndicator,
+        ),
       );
     } else {
       fastPercentStochasticIndicatorSeries = SingleIndicatorSeries(
@@ -97,6 +109,10 @@ class StochasticOscillatorSeries extends Series {
         options: stochasticOscillatorOptions,
         inputIndicator: inputIndicator,
         style: config.fastLineStyle,
+        lastTickIndicatorStyle: getLastIndicatorStyle(
+          config.fastLineStyle.color,
+          showLastIndicator: config.showLastIndicator,
+        ),
       );
 
       slowStochasticIndicatorSeries = SingleIndicatorSeries(
@@ -106,6 +122,10 @@ class StochasticOscillatorSeries extends Series {
         inputIndicator: inputIndicator,
         options: stochasticOscillatorOptions,
         style: config.slowLineStyle,
+        lastTickIndicatorStyle: getLastIndicatorStyle(
+          config.slowLineStyle.color,
+          showLastIndicator: config.showLastIndicator,
+        ),
       );
     }
     return null;

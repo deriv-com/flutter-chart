@@ -1,8 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
-
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,10 @@ class SMISeries extends Series {
     String? id,
   }) : super(id ?? 'SMI');
 
+  /// SMI series.
   late SingleIndicatorSeries smiSeries;
+
+  /// SMI signal series.
   late SingleIndicatorSeries smiSignalSeries;
 
   late List<Series> _innerSeries;
@@ -44,7 +46,7 @@ class SMISeries extends Series {
       period: smiOptions.period,
       smoothingPeriod: smiOptions.smoothingPeriod,
       doubleSmoothingPeriod: smiOptions.doubleSmoothingPeriod,
-    );
+    )..calculateValues();
 
     smiSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
@@ -54,8 +56,15 @@ class SMISeries extends Series {
         secondaryHorizontalLinesStyle: const LineStyle(),
       ),
       indicatorCreator: () => smiIndicator,
+      style: smiOptions.lineStyle,
       options: smiOptions,
       inputIndicator: CloseValueIndicator<Tick>(input),
+      lastTickIndicatorStyle: smiOptions.lineStyle != null
+          ? getLastIndicatorStyle(
+              smiOptions.lineStyle!.color,
+              showLastIndicator: smiOptions.showLastIndicator,
+            )
+          : null,
     );
 
     smiSignalSeries = SingleIndicatorSeries(
@@ -64,8 +73,14 @@ class SMISeries extends Series {
       indicatorCreator: () =>
           MASeries.getMAIndicator(smiIndicator, smiOptions.signalOptions),
       inputIndicator: smiIndicator,
-      style: const LineStyle(color: Colors.red),
+      style: smiOptions.signalLineStyle ?? const LineStyle(color: Colors.red),
       options: smiOptions,
+      lastTickIndicatorStyle: smiOptions.signalLineStyle != null
+          ? getLastIndicatorStyle(
+              smiOptions.signalLineStyle!.color,
+              showLastIndicator: smiOptions.showLastIndicator,
+            )
+          : null,
     );
 
     _innerSeries = <Series>[smiSeries, smiSignalSeries];

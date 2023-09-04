@@ -180,15 +180,21 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    config as TrendDrawingToolConfig;
+
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final List<Tick>? series = drawingData.series;
+    final List<Tick>? series = config.drawingData!.series;
+
+    final List<EdgePoint> edgePoints = config.edgePoints;
+
     //  Maximum epoch of the drawing
     final int minimumEpoch =
-        startXCoord == 0 ? startEdgePoint.epoch : epochFromX(startXCoord);
+        startXCoord == 0 ? edgePoints[0].epoch : epochFromX(startXCoord);
 
     //  Minimum epoch of the drawing
-    final int maximumEpoch =
-        endXCoord == 0 ? endEdgePoint.epoch : epochFromX(endXCoord);
+    final int maximumEpoch = endXCoord == 0
+        ? (edgePoints.length > 1 ? edgePoints[1].epoch : endEdgePoint.epoch)
+        : epochFromX(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
       // setting calculator
@@ -199,8 +205,6 @@ class TrendDrawing extends Drawing {
           ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
     }
 
-    config as TrendDrawingToolConfig;
-
     final LineStyle lineStyle = config.lineStyle;
     final LineStyle fillStyle = config.fillStyle;
     final DrawingPatterns pattern = config.pattern;
@@ -208,14 +212,16 @@ class TrendDrawing extends Drawing {
     if (_calculator != null) {
       _startPoint = updatePositionCallback(
           EdgePoint(
-              epoch: startEdgePoint.epoch,
+              epoch: edgePoints[0].epoch,
               quote:
                   _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableStartPoint);
 
       _endPoint = updatePositionCallback(
           EdgePoint(
-              epoch: endEdgePoint.epoch,
+              epoch: (edgePoints.length > 1
+                  ? edgePoints[1].epoch
+                  : endEdgePoint.epoch),
               quote:
                   _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableEndPoint!);
@@ -245,7 +251,7 @@ class TrendDrawing extends Drawing {
     if (drawingPart == DrawingParts.marker) {
       if (endEdgePoint.epoch == 0) {
         _startPoint = updatePositionCallback(
-            EdgePoint(epoch: startEdgePoint.epoch, quote: startEdgePoint.quote),
+            EdgePoint(epoch: edgePoints[0].epoch, quote: edgePoints[0].quote),
             draggableStartPoint);
 
         startXCoord = _startPoint!.x;

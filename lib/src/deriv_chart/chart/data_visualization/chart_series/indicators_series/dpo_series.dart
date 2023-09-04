@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -38,6 +39,7 @@ class DPOSeries extends Series {
   })  : _fieldIndicator = indicator,
         super(id ?? 'Ichimoku$dpoOptions');
 
+  /// DPO Series
   late SingleIndicatorSeries dpoSeries;
 
   /// Detrended Price Oscillator options
@@ -65,6 +67,12 @@ class DPOSeries extends Series {
       options: dpoOptions,
       offset: dpoOptions.isCentered ? -dpoIndicator.timeShift : 0,
       style: dpoOptions.lineStyle,
+      lastTickIndicatorStyle: dpoOptions.lineStyle != null
+          ? getLastIndicatorStyle(
+              dpoOptions.lineStyle!.color,
+              showLastIndicator: dpoOptions.showLastIndicator,
+            )
+          : null,
     );
 
     return null;

@@ -1,4 +1,5 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:flutter/gestures.dart';
 
 /// Called when chart is scrolled or zoomed.
@@ -32,8 +33,11 @@ typedef OnCrosshairHover = void Function(
 /// Called when the crosshair is moved
 ///
 /// [ev] is an instance of PointerHoverEvent
-/// [epoch] is an epoch value of the crosshair's X position in the chart.
-/// [quote] is an quote value of the crosshair's Y position in the chart.
+/// [epochToX] is a function to convert epoch value to canvas X.
+/// [quoteToY] is a function to convert value(quote) value to canvas Y.
+/// [epochFromX] is a function to convert canvas X to epoch value.
+/// [quoteFromY] is a function to convert canvas Y to value(quote).
+/// [config] is the config of the Indicator if it the hover is in BottomChart.
 typedef OnCrosshairHoverCallback = void Function(
   PointerHoverEvent ev,
   EpochToX epochToX,

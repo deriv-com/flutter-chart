@@ -54,7 +54,6 @@ export 'src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 export 'src/deriv_chart/chart/worm_chart/worm_chart.dart';
 export 'src/deriv_chart/chart/x_axis/min_candle_duration_for_data_fit.dart';
-export 'src/deriv_chart/deriv_chart.dart';
 export 'src/misc/chart_controller.dart';
 export 'src/misc/callbacks.dart';
 export 'src/models/candle.dart';

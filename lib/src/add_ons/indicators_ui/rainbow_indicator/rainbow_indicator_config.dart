@@ -3,7 +3,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/rainbow_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/color_converter.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -16,18 +18,26 @@ part 'rainbow_indicator_config.g.dart';
 
 /// Rainbow Indicator Config
 @JsonSerializable()
+@ColorConverter()
 class RainbowIndicatorConfig extends MAIndicatorConfig {
   /// Initializes
-  RainbowIndicatorConfig({
+  const RainbowIndicatorConfig({
     int period = 50,
     MovingAverageType movingAverageType = MovingAverageType.simple,
     String fieldType = 'close',
     this.bandsCount = 10,
-  })  : rainbowColors = _getRainbowColors(bandsCount),
+    this.rainbowLineStyles,
+    bool showLastIndicator = false,
+  })  : assert(
+          rainbowLineStyles == null || rainbowLineStyles.length == bandsCount,
+          '''If you provide [rainbowLineStyles] it should have the same length as [bandsCount]. 
+            since the bands count is $bandsCount. the same number of lineStyles should be provided.''',
+        ),
         super(
           period: period,
           movingAverageType: movingAverageType,
           fieldType: fieldType,
+          showLastIndicator: showLastIndicator,
         );
 
   /// Initializes from JSON.
@@ -57,18 +67,22 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
   /// Rainbow Moving Averages bands count
   final int bandsCount;
 
-  /// List of colors for the different bands in the [RainbowSeries].
-  final List<Color> rainbowColors;
+  /// List of line styles for the different bands in the [RainbowSeries].
+  final List<LineStyle>? rainbowLineStyles;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) =>
       RainbowSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
-        rainbowColors: rainbowColors,
+        rainbowLineStyles: rainbowLineStyles ??
+            _getRainbowColors(bandsCount)
+                .map((Color color) => LineStyle(color: color))
+                .toList(),
         rainbowOptions: RainbowOptions(
           period: period,
           movingAverageType: movingAverageType,
           bandsCount: bandsCount,
+          showLastIndicator: showLastIndicator,
         ),
       );
 

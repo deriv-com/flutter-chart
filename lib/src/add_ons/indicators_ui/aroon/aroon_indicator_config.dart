@@ -21,8 +21,15 @@ class AroonIndicatorConfig extends IndicatorConfig {
     this.period = 14,
     this.upLineStyle = const LineStyle(color: Colors.green),
     this.downLineStyle = const LineStyle(color: Colors.red),
+    int pipSize = 4,
+    bool showLastIndicator = false,
     String? title,
-  }) : super(isOverlay: false, title: title ?? AroonIndicatorConfig.name);
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? AroonIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory AroonIndicatorConfig.fromJson(Map<String, dynamic> json) =>

@@ -33,8 +33,12 @@ import 'zigzag_indicator/zigzag_indicator_config.dart';
 @immutable
 abstract class IndicatorConfig extends AddOnConfig {
   /// Initializes
-  const IndicatorConfig({required this.title, bool isOverlay = true})
-      : super(isOverlay: isOverlay);
+  const IndicatorConfig({
+    required this.title,
+    bool isOverlay = true,
+    this.showLastIndicator = false,
+    this.pipSize = 4,
+  }) : super(isOverlay: isOverlay);
 
   /// Creates a concrete indicator config from JSON.
   factory IndicatorConfig.fromJson(Map<String, dynamic> json) {
@@ -95,6 +99,12 @@ abstract class IndicatorConfig extends AddOnConfig {
 
   /// The title of the indicator.
   final String title;
+
+  /// Whether to show last indicator or not.
+  final bool showLastIndicator;
+
+  /// Number of digits after decimal point in price.
+  final int pipSize;
 
   /// Key of indicator name property in JSON.
   static const String nameKey = 'name';

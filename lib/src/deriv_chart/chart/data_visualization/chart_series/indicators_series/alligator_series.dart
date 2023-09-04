@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -28,16 +29,9 @@ class AlligatorSeries extends Series {
     IndicatorInput indicatorInput, {
     required this.alligatorOptions,
     String? id,
-    this.jawOffset = 8,
-    this.teethOffset = 5,
-    this.lipsOffset = 3,
-    this.jawLineStyle = const LineStyle(color: Colors.blue),
-    this.teethLineStyle = const LineStyle(color: Colors.red),
-    this.lipsLineStyle = const LineStyle(color: Colors.green),
   })  : _fieldIndicator = HL2Indicator<Tick>(indicatorInput),
         _indicatorInput = indicatorInput,
-        super(id ??
-            'Alligator$alligatorOptions$jawOffset$teethOffset$lipsOffset');
+        super(id ?? 'Alligator$alligatorOptions');
 
   final Indicator<Tick> _fieldIndicator;
   final IndicatorInput _indicatorInput;
@@ -45,30 +39,18 @@ class AlligatorSeries extends Series {
   /// Alligator options
   AlligatorOptions alligatorOptions;
 
+  /// Jaw series
   SingleIndicatorSeries? jawSeries;
+
+  /// Teeth series
   SingleIndicatorSeries? teethSeries;
+
+  /// Lips series
   SingleIndicatorSeries? lipsSeries;
 
   SingleIndicatorSeries? _bullishSeries;
+
   SingleIndicatorSeries? bearishSeries;
-
-  /// Shift to future in jaw series
-  final int jawOffset;
-
-  /// Shift to future in teeth series
-  final int teethOffset;
-
-  /// Shift to future in lips series
-  final int lipsOffset;
-
-  /// Jaw line style.
-  final LineStyle jawLineStyle;
-
-  /// Teeth line style.
-  final LineStyle teethLineStyle;
-
-  /// Lips line style.
-  final LineStyle lipsLineStyle;
 
   @override
   SeriesPainter<Series>? createPainter() {
@@ -80,8 +62,12 @@ class AlligatorSeries extends Series {
             MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.jawPeriod),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
-        style: jawLineStyle,
-        offset: jawOffset,
+        style: alligatorOptions.jawLineStyle,
+        offset: alligatorOptions.jawOffset,
+        lastTickIndicatorStyle: getLastIndicatorStyle(
+          alligatorOptions.jawLineStyle.color,
+          showLastIndicator: alligatorOptions.showLastIndicator,
+        ),
       );
 
       teethSeries = SingleIndicatorSeries(
@@ -95,8 +81,12 @@ class AlligatorSeries extends Series {
         ),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
-        style: teethLineStyle,
-        offset: teethOffset,
+        style: alligatorOptions.teethLineStyle,
+        offset: alligatorOptions.teethOffset,
+        lastTickIndicatorStyle: getLastIndicatorStyle(
+          alligatorOptions.teethLineStyle.color,
+          showLastIndicator: alligatorOptions.showLastIndicator,
+        ),
       );
 
       lipsSeries = SingleIndicatorSeries(
@@ -108,8 +98,12 @@ class AlligatorSeries extends Series {
             MMAIndicator<Tick>(_fieldIndicator, alligatorOptions.lipsPeriod),
         inputIndicator: _fieldIndicator,
         options: alligatorOptions,
-        style: lipsLineStyle,
-        offset: lipsOffset,
+        style: alligatorOptions.lipsLineStyle,
+        offset: alligatorOptions.lipsOffset,
+        lastTickIndicatorStyle: getLastIndicatorStyle(
+          alligatorOptions.lipsLineStyle.color,
+          showLastIndicator: alligatorOptions.showLastIndicator,
+        ),
       );
     }
 
@@ -183,6 +177,15 @@ class AlligatorSeries extends Series {
           lipsSeries,
         ].getMaxValue()
       ];
+
+  @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    return alligatorOptions != (previous as AlligatorSeries).alligatorOptions;
+  }
 
   @override
   void paint(

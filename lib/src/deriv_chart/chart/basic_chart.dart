@@ -225,11 +225,15 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
     /// Builds the widget once the animation is finished
     /// so that the y-axis is correctly filled.
-    topBoundQuoteAnimationController.addListener(() {
-      if (topBoundQuoteAnimationController.isCompleted) {
-        setState(() {});
-      }
-    });
+    topBoundQuoteAnimationController.addListener(_quoteAnimationListener);
+    bottomBoundQuoteAnimationController.addListener(_quoteAnimationListener);
+  }
+
+  void _quoteAnimationListener() {
+    if (topBoundQuoteAnimationController.isCompleted &&
+        bottomBoundQuoteAnimationController.isCompleted) {
+      setState(() {});
+    }
   }
 
   void _clearGestures() {

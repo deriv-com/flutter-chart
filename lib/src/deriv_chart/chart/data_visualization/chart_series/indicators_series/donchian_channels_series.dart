@@ -1,10 +1,7 @@
-import 'dart:ui' as ui;
-
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_fill.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
@@ -32,8 +29,13 @@ class DonchianChannelsSeries extends Series {
         // TODO(Ramin): define DonchianChannelOptions class
         super(id ?? 'Donchian$config');
 
+  /// Upper channel series.
   late LineSeries upperChannelSeries;
+
+  /// Middle channel series.
   late LineSeries middleChannelSeries;
+
+  /// Lower channel series.
   late LineSeries lowerChannelSeries;
 
   final HighValueIndicator<Tick> _highIndicator;
@@ -65,19 +67,50 @@ class DonchianChannelsSeries extends Series {
     upperChannelSeries = LineSeries(
       upperChannelIndicator.results,
       style: config.upperLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.upperLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     lowerChannelSeries = LineSeries(
       lowerChannelIndicator.results,
       style: config.lowerLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.lowerLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     middleChannelSeries = LineSeries(
       middleChannelIndicator.results,
       style: config.middleLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.middleLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
-    // TODO(ramin): return the painter that paints Channel Fill between bands
+
+    if (config.showChannelFill) {
+      return ChannelFillPainter(
+        upperChannelSeries,
+        lowerChannelSeries,
+        firstUpperChannelFillColor: config.fillColor.withOpacity(0.2),
+        secondUpperChannelFillColor: config.fillColor.withOpacity(0.2),
+      );
+    }
+
     return null;
+  }
+
+  @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    final DonchianChannelsSeries oldSeries = previous as DonchianChannelsSeries;
+    return config.toJson().toString() != oldSeries.config.toJson().toString();
   }
 
   @override
@@ -125,105 +158,11 @@ class DonchianChannelsSeries extends Series {
     lowerChannelSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
-    if (lowerChannelSeries.entries == null ||
-        upperChannelSeries.entries == null) {
-      return;
-    }
-
     if (config.showChannelFill &&
         upperChannelSeries.visibleEntries.isNotEmpty &&
         lowerChannelSeries.visibleEntries.isNotEmpty) {
-      final Path fillPath = Path()
-        ..moveTo(
-          epochToX(upperChannelSeries.getEpochOf(
-            upperChannelSeries.visibleEntries.first,
-            upperChannelSeries.visibleEntries.startIndex,
-          )),
-          quoteToY(upperChannelSeries.visibleEntries.first.quote),
-        );
-
-      for (int i = upperChannelSeries.visibleEntries.startIndex + 1;
-          i < upperChannelSeries.visibleEntries.endIndex - 1;
-          i++) {
-        final Tick tick = upperChannelSeries.entries![i];
-        fillPath.lineTo(
-          epochToX(upperChannelSeries.getEpochOf(tick, i)),
-          quoteToY(tick.quote),
-        );
-      }
-
-      // Check for animated upper tick.
-      final Tick lastUpperTick = upperChannelSeries.entries!.last;
-      final Tick lastUpperVisibleTick = upperChannelSeries.visibleEntries.last;
-      double? lastVisibleTickX;
-
-      if (lastUpperTick == lastUpperVisibleTick &&
-          upperChannelSeries.prevLastEntry != null) {
-        lastVisibleTickX = ui.lerpDouble(
-          epochToX(upperChannelSeries.getEpochOf(
-            upperChannelSeries.prevLastEntry!.entry,
-            upperChannelSeries.prevLastEntry!.index,
-          )),
-          epochToX(lastUpperTick.epoch),
-          animationInfo.currentTickPercent,
-        );
-
-        final double tickY = quoteToY(ui.lerpDouble(
-          upperChannelSeries.prevLastEntry!.entry.quote,
-          lastUpperTick.quote,
-          animationInfo.currentTickPercent,
-        )!);
-
-        fillPath.lineTo(lastVisibleTickX!, tickY);
-      } else {
-        lastVisibleTickX = epochToX(lastUpperVisibleTick.epoch);
-        fillPath.lineTo(lastVisibleTickX, quoteToY(lastUpperVisibleTick.quote));
-      }
-
-      // Check for animated lower tick.
-      final Tick lastLowerTick = lowerChannelSeries.entries!.last;
-      final Tick lastLowerVisibleTick = lowerChannelSeries.visibleEntries.last;
-
-      if (lastLowerTick == lastLowerVisibleTick &&
-          lowerChannelSeries.prevLastEntry != null) {
-        lastVisibleTickX = ui.lerpDouble(
-          epochToX(lowerChannelSeries.getEpochOf(
-            lowerChannelSeries.prevLastEntry!.entry,
-            lowerChannelSeries.prevLastEntry!.index,
-          )),
-          epochToX(lastLowerTick.epoch),
-          animationInfo.currentTickPercent,
-        );
-
-        final double tickY = quoteToY(ui.lerpDouble(
-          lowerChannelSeries.prevLastEntry!.entry.quote,
-          lastLowerTick.quote,
-          animationInfo.currentTickPercent,
-        )!);
-
-        fillPath.lineTo(lastVisibleTickX!, tickY);
-      } else {
-        lastVisibleTickX = epochToX(lastLowerVisibleTick.epoch);
-        fillPath.lineTo(lastVisibleTickX, quoteToY(lastLowerVisibleTick.quote));
-      }
-
-      for (int i = lowerChannelSeries.visibleEntries.endIndex - 1;
-          i >= lowerChannelSeries.visibleEntries.startIndex;
-          i--) {
-        final Tick tick = lowerChannelSeries.entries![i];
-        fillPath.lineTo(
-          epochToX(lowerChannelSeries.getEpochOf(tick, i)),
-          quoteToY(tick.quote),
-        );
-      }
-
-      fillPath.close();
-
-      paintFill(
-        canvas,
-        fillPath,
-        config.fillColor,
-      );
+      super.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     }
   }
 

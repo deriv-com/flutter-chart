@@ -12,13 +12,27 @@ abstract class IndicatorOptions extends Equatable {
   /// Initializes
   ///
   /// Provides const constructor for sub-classes
-  const IndicatorOptions();
+  const IndicatorOptions({
+    this.showLastIndicator = false,
+    this.pipSize = 4,
+  });
+
+  /// Whether to show last indicator or not.
+  final bool showLastIndicator;
+
+  /// Number of digits after decimal point in price.
+  final int pipSize;
 }
 
 /// Moving Average indicator options
 class MAOptions extends IndicatorOptions {
   /// Initializes
-  const MAOptions({this.period = 20, this.type = MovingAverageType.simple});
+  const MAOptions({
+    this.period = 20,
+    this.type = MovingAverageType.simple,
+    bool showLastIndicator = false,
+    int pipSize = 4,
+  }) : super(showLastIndicator: showLastIndicator, pipSize: pipSize);
 
   /// The average of this number of past data which will be calculated as
   /// MA value.

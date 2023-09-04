@@ -24,6 +24,8 @@ class MAIndicatorConfig extends IndicatorConfig {
     LineStyle? lineStyle,
     int? offset,
     bool isOverlay = true,
+    int pipSize = 4,
+    bool showLastIndicator = false,
     String? title,
   })  : period = period ?? 50,
         movingAverageType = movingAverageType ?? MovingAverageType.simple,
@@ -31,7 +33,12 @@ class MAIndicatorConfig extends IndicatorConfig {
         offset = offset ?? 0,
         lineStyle =
             lineStyle ?? const LineStyle(color: Colors.yellow, thickness: 0.6),
-        super(isOverlay: isOverlay, title: title ?? MAIndicatorConfig.name);
+        super(
+          isOverlay: isOverlay,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? MAIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory MAIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -62,7 +69,11 @@ class MAIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
-        MAOptions(period: period, type: movingAverageType),
+        MAOptions(
+          period: period,
+          type: movingAverageType,
+          showLastIndicator: showLastIndicator,
+        ),
         offset: offset,
         style: lineStyle,
       );

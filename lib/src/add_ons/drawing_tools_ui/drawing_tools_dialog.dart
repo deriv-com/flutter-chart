@@ -69,7 +69,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                   ),
                   // TODO(maryia-binary): add the rest of drawing tools above
                 ],
-                onChanged: (dynamic config) {
+                onChanged: (DrawingToolConfig? config) {
                   setState(() {
                     _selectedDrawingTool = config;
                   });
@@ -78,8 +78,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               const SizedBox(width: 16),
               ElevatedButton(
                 child: const Text('Add'),
-                onPressed: _selectedDrawingTool != null &&
-                        _selectedDrawingTool is DrawingToolConfig
+                onPressed: _selectedDrawingTool != null
                     ? () {
                         widget.drawingTools
                             .onDrawingToolSelection(_selectedDrawingTool!);

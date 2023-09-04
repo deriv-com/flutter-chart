@@ -62,6 +62,9 @@ Duration timeGridInterval(
   PxFromMs pxFromMs, {
   double minDistanceBetweenLines = 100,
   List<Duration> intervals = const <Duration>[
+    Duration(seconds: 1),
+    Duration(seconds: 2),
+    Duration(seconds: 3),
     Duration(seconds: 5),
     Duration(seconds: 10),
     Duration(seconds: 30),

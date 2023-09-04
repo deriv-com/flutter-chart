@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/fcb_indicator/fcb_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -20,38 +22,59 @@ class FractalChaosBandSeries extends Series {
   /// Initializes
   FractalChaosBandSeries(
     this.indicatorInput, {
+    required this.config,
     String? id,
-    // ignore: avoid_unused_constructor_parameters
-    bool channelFill = false,
   }) : super(id ?? 'FCB');
 
   ///input data
   final IndicatorInput indicatorInput;
 
+  /// FCB high series
   late SingleIndicatorSeries fcbHighSeries;
+
+  /// FCB low series
   late SingleIndicatorSeries fcbLowSeries;
+
+  /// Configuration of FCB Indicator.
+  final FractalChaosBandIndicatorConfig config;
 
   @override
   SeriesPainter<Series>? createPainter() {
     fcbHighSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
-      // Using SMA temporarily until TA's migration branch gets updated.
-      indicatorCreator: () =>
-          SMAIndicator<Tick>(CloseValueIndicator<Tick>(indicatorInput), 10),
+      indicatorCreator: () => FCBHighIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.blue),
+      style: config.highLineStyle,
     );
     fcbLowSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
-      indicatorCreator: () =>
-          SMAIndicator<Tick>(CloseValueIndicator<Tick>(indicatorInput), 10),
+      indicatorCreator: () => FCBLowIndicator<Tick>(indicatorInput),
       inputIndicator: CloseValueIndicator<Tick>(indicatorInput),
-      style: const LineStyle(color: Colors.blue),
+      style: config.lowLineStyle,
     );
 
+    if (config.showChannelFill) {
+      return ChannelFillPainter(
+        fcbHighSeries,
+        fcbLowSeries,
+        firstUpperChannelFillColor: config.fillColor.withOpacity(0.2),
+        secondUpperChannelFillColor: config.fillColor.withOpacity(0.2),
+      );
+    }
+
     return null;
+  }
+
+  @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    final FractalChaosBandSeries oldSeries = previous as FractalChaosBandSeries;
+    return config.toJson().toString() != oldSeries.config.toJson().toString();
   }
 
   @override
@@ -94,6 +117,13 @@ class FractalChaosBandSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     fcbHighSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+
+    if (config.showChannelFill &&
+        fcbHighSeries.visibleEntries.isNotEmpty &&
+        fcbLowSeries.visibleEntries.isNotEmpty) {
+      super.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
   }
 
   @override

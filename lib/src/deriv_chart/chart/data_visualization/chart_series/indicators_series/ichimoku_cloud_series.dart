@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/ichimoku_clouds/ichimoku_c
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,21 @@ class IchimokuCloudSeries extends Series {
     String? id,
   }) : super(id ?? 'Ichimoku$ichimokuCloudOptions');
 
+  /// Conversion line series.
   late SingleIndicatorSeries conversionLineSeries;
+
+  /// Base line series.
   late SingleIndicatorSeries baseLineSeries;
+
+  /// Lagging line series.
   late SingleIndicatorSeries laggingSpanSeries;
+
+  /// SpanA line series.
   late SingleIndicatorSeries spanASeries;
+
+  /// SpanB line series.
   late SingleIndicatorSeries spanBSeries;
+
   final List<SingleIndicatorSeries> ichimokuSeries = <SingleIndicatorSeries>[];
 
   /// List of [Tick]s to calculate IchimokuCloud on.
@@ -76,6 +87,10 @@ class IchimokuCloudSeries extends Series {
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       style: config.conversionLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.conversionLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     baseLineSeries = SingleIndicatorSeries(
@@ -85,6 +100,10 @@ class IchimokuCloudSeries extends Series {
       inputIndicator: closeValueIndicator,
       options: ichimokuCloudOptions,
       style: config.baseLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.baseLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     laggingSpanSeries = SingleIndicatorSeries(
@@ -95,6 +114,10 @@ class IchimokuCloudSeries extends Series {
       options: ichimokuCloudOptions,
       offset: config.laggingSpanOffset,
       style: config.laggingLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.laggingLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     spanASeries = SingleIndicatorSeries(
@@ -104,6 +127,10 @@ class IchimokuCloudSeries extends Series {
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
       style: config.spanALineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.spanALineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     spanBSeries = SingleIndicatorSeries(
@@ -113,6 +140,10 @@ class IchimokuCloudSeries extends Series {
       options: ichimokuCloudOptions,
       offset: ichimokuCloudOptions.baseLinePeriod,
       style: config.spanBLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        config.spanBLineStyle.color,
+        showLastIndicator: config.showLastIndicator,
+      ),
     );
 
     ichimokuSeries
@@ -173,6 +204,16 @@ class IchimokuCloudSeries extends Series {
   }
 
   @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    final IchimokuCloudSeries oldSeries = previous as IchimokuCloudSeries;
+    return config.toJson().toString() != oldSeries.config.toJson().toString();
+  }
+
+  @override
   void paint(
     Canvas canvas,
     Size size,
@@ -187,6 +228,10 @@ class IchimokuCloudSeries extends Series {
     baseLineSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     laggingSpanSeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    spanASeries.paint(
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    spanBSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     super.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);

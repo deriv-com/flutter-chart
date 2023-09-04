@@ -1,6 +1,8 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
@@ -32,8 +34,13 @@ class BollingerBandSeries extends Series {
   })  : _fieldIndicator = indicator,
         super(id ?? 'Bollinger$bbOptions');
 
+  /// Lower series
   late SingleIndicatorSeries lowerSeries;
+
+  /// Middle series
   late SingleIndicatorSeries middleSeries;
+
+  /// Upper series
   late SingleIndicatorSeries upperSeries;
 
   /// Bollinger bands options
@@ -58,6 +65,10 @@ class BollingerBandSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: bbOptions,
       style: bbOptions.middleLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        bbOptions.middleLineStyle.color,
+        showLastIndicator: bbOptions.showLastIndicator,
+      ),
     );
 
     lowerSeries = SingleIndicatorSeries(
@@ -71,6 +82,10 @@ class BollingerBandSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: bbOptions,
       style: bbOptions.lowerLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        bbOptions.lowerLineStyle.color,
+        showLastIndicator: bbOptions.showLastIndicator,
+      ),
     );
 
     upperSeries = SingleIndicatorSeries(
@@ -84,6 +99,10 @@ class BollingerBandSeries extends Series {
       inputIndicator: _fieldIndicator,
       options: bbOptions,
       style: bbOptions.upperLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        bbOptions.upperLineStyle.color,
+        showLastIndicator: bbOptions.showLastIndicator,
+      ),
     );
 
     innerSeries
@@ -91,8 +110,12 @@ class BollingerBandSeries extends Series {
       ..add(middleSeries)
       ..add(upperSeries);
 
-    // TODO(ramin): return the painter that paints Channel Fill between bands
-    return null;
+    return ChannelFillPainter(
+      upperSeries,
+      lowerSeries,
+      firstUpperChannelFillColor: bbOptions.fillColor.withOpacity(0.2),
+      secondUpperChannelFillColor: bbOptions.fillColor.withOpacity(0.2),
+    );
   }
 
   @override
@@ -127,6 +150,15 @@ class BollingerBandSeries extends Series {
       ];
 
   @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    return bbOptions != (previous as BollingerBandSeries).bbOptions;
+  }
+
+  @override
   void paint(
     Canvas canvas,
     Size size,
@@ -143,7 +175,12 @@ class BollingerBandSeries extends Series {
     upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
 
-    // TODO(ramin): call super.paint to paint the Channels fill.
+    if (bbOptions.showChannelFill &&
+        upperSeries.visibleEntries.isNotEmpty &&
+        lowerSeries.visibleEntries.isNotEmpty) {
+      super.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
   }
 
   @override

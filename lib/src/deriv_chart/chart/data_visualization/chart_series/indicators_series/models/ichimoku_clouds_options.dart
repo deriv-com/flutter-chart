@@ -7,7 +7,8 @@ class IchimokuCloudOptions extends IndicatorOptions {
     this.conversionLinePeriod = 9,
     this.baseLinePeriod = 26,
     this.leadingSpanBPeriod = 52,
-  });
+    bool showLastIndicator = false,
+  }) : super(showLastIndicator: showLastIndicator);
 
   /// The `period` for the `IchimokuConversionLine`. Default is set to `9`.
   final int conversionLinePeriod;
