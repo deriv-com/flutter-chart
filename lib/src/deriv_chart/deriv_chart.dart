@@ -133,33 +133,6 @@ class DerivChart extends StatefulWidget {
   /// List of drawing tools
   final DrawingTools drawingTools;
 
-  /// Specifies the zoom level of the chart.
-  final double? msPerPx;
-
-  /// Specifies the minimum interval width
-  /// that is used for calculating the maximum msPerPx.
-  final double? minIntervalWidth;
-
-  /// Specifies the maximum interval width
-  /// that is used for calculating the maximum msPerPx.
-  final double? maxIntervalWidth;
-
-  /// Fraction of the chart's height taken by top or bottom padding.
-  /// Quote scaling (drag on quote area) is controlled by this variable.
-  final double? verticalPaddingFraction;
-
-  /// Specifies the margin to prevent overlap.
-  final EdgeInsets? bottomChartTitleMargin;
-
-  /// Whether the data fit button is shown or not.
-  final bool? showDataFitButton;
-
-  /// Whether to show the scroll to last tick button or not.
-  final bool? showScrollToLastTickButton;
-
-  /// The color of the loading animation.
-  final Color? loadingAnimationColor;
-
   @override
   _DerivChartState createState() => _DerivChartState();
 }

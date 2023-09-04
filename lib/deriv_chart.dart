@@ -1,6 +1,7 @@
 library deriv_chart;
 
 export 'generated/l10n.dart';
+export 'src/deriv_chart/deriv_chart.dart';
 export 'src/deriv_chart/chart/chart.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_horizontal_barrier/accumulators_entry_spot_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
@@ -108,3 +109,4 @@ export 'src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart'
 export 'src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 export 'src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_config.dart';
 export 'src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
+export 'src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
