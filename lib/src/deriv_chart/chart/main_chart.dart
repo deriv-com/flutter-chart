@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
@@ -13,9 +14,16 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../misc/callbacks.dart';
+import '../../theme/chart_theme.dart';
 import 'basic_chart.dart';
+import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
+import 'data_visualization/chart_series/data_series.dart';
+import 'data_visualization/chart_series/series.dart';
+import 'data_visualization/markers/marker_series.dart';
 import 'data_visualization/models/animation_info.dart';
+import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';
 

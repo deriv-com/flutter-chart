@@ -1,6 +1,9 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
+import '../data_series.dart';
 import '../series_painter.dart';
+import 'line_series.dart';
 import 'oscillator_line_painter.dart';
 
 /// Oscillator Line Series.
@@ -30,6 +33,7 @@ class OscillatorLineSeries extends LineSeries {
   final double _topHorizontalLine;
   final double _bottomHorizontalLine;
   final LineStyle? _secondaryHorizontalLinesStyle;
+
   // ignore: unused_field
   final LineStyle? _mainHorizontalLinesStyle;
 
