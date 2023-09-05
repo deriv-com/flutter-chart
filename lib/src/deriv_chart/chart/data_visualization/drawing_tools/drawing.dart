@@ -136,16 +136,4 @@ abstract class Drawing {
       y1: endingY,
     );
   }
-
-  /// Returns the Parallelogram path
-  Path getParallelogramPath(
-    Vector startVector,
-    Vector endVector,
-  ) =>
-      Path()
-        ..moveTo(startVector.x0, startVector.y0)
-        ..lineTo(startVector.x1, startVector.y1)
-        ..lineTo(endVector.x1, endVector.y1)
-        ..lineTo(endVector.x0, endVector.y0)
-        ..close();
 }
