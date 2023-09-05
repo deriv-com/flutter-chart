@@ -74,6 +74,7 @@ class Label {
   TextPainter getTextPainter(String label, Offset textOffset, Color color) {
     final TextStyle textStyle = TextStyle(
       color: color,
+      fontWeight: FontWeight.bold,
       fontSize: 13,
     );
 

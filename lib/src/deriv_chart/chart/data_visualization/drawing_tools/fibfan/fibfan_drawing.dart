@@ -202,8 +202,28 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
       );
       _baseVector = _getLineVector(endXCoord, startQuoteToY);
 
-      /// Draw vectors
+      /// Draw shadows
+      _drawTriangle(canvas, paint, config, _zeroDegreeVector);
+      _drawTriangle(canvas, paint, config, _initialInnerVector);
+      _drawTriangle(canvas, paint, config, _middleInnerVector);
+      _drawTriangle(canvas, paint, config, _finalInnerVector);
+
+      /// Draw markers again to hide their overlap with shadows
       canvas
+        ..drawCircle(
+            Offset(startXCoord, startQuoteToY),
+            markerRadius,
+            drawingData.isSelected
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle())
+        ..drawCircle(
+            Offset(endXCoord, endQuoteToY),
+            markerRadius,
+            drawingData.isSelected
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle())
+
+        /// Draw vectors
         ..drawLine(
           Offset(_baseVector.x0, _baseVector.y0),
           Offset(_baseVector.x1, _baseVector.y1),
@@ -244,12 +264,6 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         ..drawLabel(
             canvas, lineStyle, finalInnerVectorPercentage, _finalInnerVector)
         ..drawLabel(canvas, lineStyle, baseVectorPercentage, _baseVector);
-
-      /// Draw shadows
-      _drawTriangle(canvas, paint, config, _zeroDegreeVector);
-      _drawTriangle(canvas, paint, config, _initialInnerVector);
-      _drawTriangle(canvas, paint, config, _middleInnerVector);
-      _drawTriangle(canvas, paint, config, _finalInnerVector);
     }
   }
 
@@ -288,6 +302,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         _isVectorHit(_middleInnerVector) ||
         _isVectorHit(_initialInnerVector) ||
         _isVectorHit(_zeroDegreeVector) ||
-        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
+        (_startPoint!.isClicked(position, markerRadius) ||
+            _endPoint!.isClicked(position, markerRadius));
   }
 }
