@@ -164,17 +164,45 @@ class ChannelDrawing extends Drawing {
     } else if (drawingPart == DrawingParts.line) {
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw second line
+
+        drawParallelogram(
+          canvas,
+          config,
+          paint,
+          _initialVector,
+          _finalVector,
+        );
         if (pattern == DrawingPatterns.solid) {
-          canvas.drawLine(
-            Offset(_finalVector.x0, _finalVector.y0),
-            Offset(_finalVector.x1, _finalVector.y1),
-            drawingData.isSelected
-                ? paint.glowyLinePaintStyle(
-                    lineStyle.color, lineStyle.thickness)
-                : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
-          );
+          /// Drawing the markers in the final spte again to hide the overlap
+          /// of fill coler and the markers
+          canvas
+            ..drawCircle(
+                Offset(startXCoord, startQuoteToY),
+                markerRadius,
+                drawingData.isSelected
+                    ? paint.glowyCirclePaintStyle(lineStyle.color)
+                    : paint.transparentCirclePaintStyle())
+            ..drawCircle(
+                Offset(middleXCoord, middleQuoteToY),
+                markerRadius,
+                drawingData.isSelected
+                    ? paint.glowyCirclePaintStyle(lineStyle.color)
+                    : paint.transparentCirclePaintStyle())
+            ..drawCircle(
+                Offset(middleXCoord, middleQuoteToY - height),
+                markerRadius,
+                drawingData.isSelected
+                    ? paint.glowyCirclePaintStyle(lineStyle.color)
+                    : paint.transparentCirclePaintStyle())
+            ..drawLine(
+              Offset(_finalVector.x0, _finalVector.y0),
+              Offset(_finalVector.x1, _finalVector.y1),
+              drawingData.isSelected
+                  ? paint.glowyLinePaintStyle(
+                      lineStyle.color, lineStyle.thickness)
+                  : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
+            );
         }
-        drawParallelogram(canvas, config, paint, _initialVector, _finalVector);
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
         /// Draw first line
         if (pattern == DrawingPatterns.solid) {
