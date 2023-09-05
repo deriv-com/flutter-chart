@@ -190,6 +190,7 @@ class LineDrawing extends Drawing {
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
+        (_startPoint!.isClicked(position, markerRadius) ||
+            _endPoint!.isClicked(position, markerRadius));
   }
 }

@@ -271,8 +271,8 @@ class ChannelDrawing extends Drawing {
     final Path path = getParallelogramPath(_initialVector, _finalVector);
 
     return (isDrawingFinished && path.contains(position)) ||
-        (draggableStartPoint.isDragged ||
-            draggableMiddlePoint!.isDragged ||
-            draggableEndPoint!.isDragged);
+        (_startPoint!.isClicked(position, markerRadius) ||
+            _middlePoint!.isClicked(position, markerRadius) ||
+            endPoint.isClicked(position, markerRadius));
   }
 }
