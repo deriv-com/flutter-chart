@@ -194,6 +194,16 @@ class ChannelDrawing extends Drawing {
                 drawingData.isSelected
                     ? paint.glowyCirclePaintStyle(lineStyle.color)
                     : paint.transparentCirclePaintStyle())
+
+            /// Draw first line again to hide the overlap of fill color and line
+            ..drawLine(
+              Offset(_initialVector.x0, _initialVector.y0),
+              Offset(_initialVector.x1, _initialVector.y1),
+              drawingData.isSelected
+                  ? paint.glowyLinePaintStyle(
+                      lineStyle.color, lineStyle.thickness)
+                  : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
+            )
             ..drawLine(
               Offset(_finalVector.x0, _finalVector.y0),
               Offset(_finalVector.x1, _finalVector.y1),
