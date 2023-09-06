@@ -225,8 +225,7 @@ class TrendDrawing extends Drawing {
             drawingData.isSelected
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
-                : paint.fillPaintStyle(
-                    fillStyle.color.withOpacity(0.2), lineStyle.thickness),
+                : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
           )
           ..drawRect(
             _mainRect,
@@ -237,8 +236,7 @@ class TrendDrawing extends Drawing {
             drawingData.isSelected
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
-                : paint.fillPaintStyle(
-                    fillStyle.color.withOpacity(0.2), lineStyle.thickness),
+                : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
           )
           ..drawRect(
             _middleRect,
