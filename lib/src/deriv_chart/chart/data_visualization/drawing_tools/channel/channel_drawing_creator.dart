@@ -118,6 +118,7 @@ class _ChannelDrawingCreatorState extends DrawingCreatorState<ChannelDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

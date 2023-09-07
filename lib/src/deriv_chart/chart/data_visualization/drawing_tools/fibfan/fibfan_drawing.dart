@@ -153,9 +153,14 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     final LineStyle lineStyle = config.lineStyle;
     final Paint linePaintStyle =
         paint.linePaintStyle(lineStyle.color, lineStyle.thickness);
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _endPoint = updatePositionCallback(edgePoints[1], draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;

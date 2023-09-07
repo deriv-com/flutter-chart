@@ -101,6 +101,7 @@ class _FibfanDrawingCreatorState extends DrawingCreatorState<FibfanDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

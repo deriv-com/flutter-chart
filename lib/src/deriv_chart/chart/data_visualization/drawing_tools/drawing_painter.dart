@@ -75,6 +75,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
             updatedConfig = element.copyWith(
               edgePoints: <EdgePoint>[
                 _draggableStartPoint.getEdgePoint(),
+                _draggableMiddlePoint.getEdgePoint(),
                 _draggableEndPoint.getEdgePoint(),
               ],
             );

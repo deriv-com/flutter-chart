@@ -122,11 +122,21 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _middlePoint =
-        updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _middlePoint =
+          updatePositionCallback(edgePoints[1], draggableMiddlePoint!);
+    } else {
+      _middlePoint =
+          updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
+    }
+    if (edgePoints.length > 2) {
+      _endPoint = updatePositionCallback(edgePoints[2], draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -182,7 +192,6 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     } else if (drawingPart == DrawingParts.line) {
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw second line
-
         drawParallelogram(
           canvas,
           config,
@@ -191,8 +200,8 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
           _finalVector,
         );
         if (pattern == DrawingPatterns.solid) {
-          /// Drawing the markers in the final spte again to hide the overlap
-          /// of fill coler and the markers
+          /// Drawing the markers in the final step again to hide the overlap
+          /// of fill color and the markers
           canvas
             ..drawCircle(
                 Offset(startXCoord, startQuoteToY),

@@ -37,8 +37,4 @@ class DrawingData {
 
   /// If the drawing is selected by the user.
   bool isSelected;
-
-  /// Updates drawing list.
-  DrawingData updateDrawingPartList(List<Drawing> drawingParts) =>
-      DrawingData(id: id, drawingParts: drawingParts);
 }
