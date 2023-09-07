@@ -218,6 +218,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
         endPoint: _draggableEndPoint,
       );
     }
+
+    setState(() {});
   }
 }
 
