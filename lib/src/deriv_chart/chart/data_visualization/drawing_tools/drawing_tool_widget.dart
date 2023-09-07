@@ -130,6 +130,7 @@ class DrawingToolWidget extends StatelessWidget {
         return VerticalDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
+          chartConfig: chartConfig,
         );
 
       // TODO(maryia-binary): add the rest of drawing tools here
