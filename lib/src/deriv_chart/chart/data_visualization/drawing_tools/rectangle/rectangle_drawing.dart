@@ -105,6 +105,7 @@ class RectangleDrawing extends Drawing {
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
@@ -174,7 +175,9 @@ class RectangleDrawing extends Drawing {
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
     void Function({required bool isDragged}) setIsStartPointDragged, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
     setIsStartPointDragged(isDragged: false);
@@ -210,4 +213,14 @@ class RectangleDrawing extends Drawing {
         (_isClickedOnRectangleBoundary(_rect, position) &&
             endEdgePoint.epoch != 0);
   }
+
+  // TODO(NA): return when the rectangle drawing is inside the epoch range.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
 }
