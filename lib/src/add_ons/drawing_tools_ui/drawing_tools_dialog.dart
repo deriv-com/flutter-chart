@@ -1,6 +1,8 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
@@ -47,8 +49,16 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 hint: Text(ChartLocalization.of(context).selectDrawingTool),
                 items: const <DropdownMenuItem<DrawingToolConfig>>[
                   DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Channel'),
+                    value: ChannelDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Continuous'),
                     value: ContinuousDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Fib Fan'),
+                    value: FibfanDrawingToolConfig(),
                   ),
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Horizontal'),
