@@ -10,11 +10,16 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'channel_drawing.g.dart';
 
 /// Channel drawing tool. A channel is 2 parallel lines that
 /// created with 3 points.
+@JsonSerializable()
 class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   ChannelDrawing({
@@ -24,6 +29,17 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     this.endEdgePoint = const EdgePoint(),
     this.isDrawingFinished = false,
   });
+
+  /// Initializes from JSON.
+  factory ChannelDrawing.fromJson(Map<String, dynamic> json) =>
+      _$ChannelDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ChannelDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of indicator name property in JSON.
+  static const String nameKey = 'ChannelDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
@@ -86,8 +102,10 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -100,8 +118,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    final ChannelDrawingToolConfig config =
-        drawingData.config as ChannelDrawingToolConfig;
+    config as ChannelDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;

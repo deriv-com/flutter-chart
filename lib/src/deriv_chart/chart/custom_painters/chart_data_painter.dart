@@ -2,7 +2,6 @@
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.

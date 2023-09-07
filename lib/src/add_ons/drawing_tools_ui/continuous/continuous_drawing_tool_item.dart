@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'continuous_drawing_tool_config.dart';
 import '../callbacks.dart';
-import '../drawing_tool_config.dart';
 
 /// Continuous drawing tool item in the list of drawing tools
 class ContinuousDrawingToolItem extends DrawingToolItem {

@@ -67,7 +67,7 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
           shouldStopDrawing: shouldStopDrawing!,
         );
       case 'dt_continuous':
@@ -83,7 +83,7 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
         );
       case 'dt_line':
         return LineDrawingCreator(

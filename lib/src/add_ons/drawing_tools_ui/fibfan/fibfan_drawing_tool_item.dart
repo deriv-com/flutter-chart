@@ -4,7 +4,6 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dar
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../callbacks.dart';
-import '../drawing_tool_config.dart';
 
 /// Fibfan drawing tool item in the list of drawing tools
 class FibfanDrawingToolItem extends DrawingToolItem {
