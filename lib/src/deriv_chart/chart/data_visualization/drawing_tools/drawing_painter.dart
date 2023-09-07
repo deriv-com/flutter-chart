@@ -50,6 +50,7 @@ class DrawingPainter extends StatefulWidget {
 class _DrawingPainterState extends State<DrawingPainter> {
   bool _isDrawingDragged = false;
   DraggableEdgePoint _draggableStartPoint = DraggableEdgePoint();
+  DraggableEdgePoint _draggableMiddlePoint = DraggableEdgePoint();
   DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
   Offset? _previousPosition;
 
@@ -96,7 +97,18 @@ class _DrawingPainterState extends State<DrawingPainter> {
               xAxis,
               widget.quoteFromCanvasY,
               widget.quoteToCanvasY,
-              isOtherEndDragged: _draggableEndPoint.isDragged,
+              isOtherEndDragged: _draggableEndPoint.isDragged ||
+                  _draggableMiddlePoint.isDragged,
+            );
+          _draggableMiddlePoint = _draggableMiddlePoint.copyWith(
+            isDrawingDragged: _isDrawingDragged,
+          )..updatePositionWithLocalPositions(
+              details.delta,
+              xAxis,
+              widget.quoteFromCanvasY,
+              widget.quoteToCanvasY,
+              isOtherEndDragged: _draggableEndPoint.isDragged ||
+                  _draggableStartPoint.isDragged,
             );
 
           _draggableEndPoint = _draggableEndPoint.copyWith(
@@ -106,7 +118,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
               xAxis,
               widget.quoteFromCanvasY,
               widget.quoteToCanvasY,
-              isOtherEndDragged: _draggableStartPoint.isDragged,
+              isOtherEndDragged: _draggableStartPoint.isDragged ||
+                  _draggableMiddlePoint.isDragged,
             );
         });
 
@@ -146,6 +159,9 @@ class _DrawingPainterState extends State<DrawingPainter> {
               _draggableStartPoint = _draggableStartPoint.copyWith(
                 isDragged: false,
               );
+              _draggableMiddlePoint = _draggableMiddlePoint.copyWith(
+                isDragged: false,
+              );
               _draggableEndPoint = _draggableEndPoint.copyWith(
                 isDragged: false,
               );
@@ -159,6 +175,9 @@ class _DrawingPainterState extends State<DrawingPainter> {
             onPanEnd: (DragEndDetails details) {
               setState(() {
                 _draggableStartPoint = _draggableStartPoint.copyWith(
+                  isDragged: false,
+                );
+                _draggableMiddlePoint = _draggableMiddlePoint.copyWith(
                   isDragged: false,
                 );
                 _draggableEndPoint = _draggableEndPoint.copyWith(
@@ -179,6 +198,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
                 draggableStartPoint: _draggableStartPoint,
+                draggableMiddlePoint: _draggableMiddlePoint,
                 isDrawingToolSelected: widget.selectedDrawingTool != null,
                 draggableEndPoint: _draggableEndPoint,
                 updatePositionCallback: (
@@ -194,6 +214,10 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 setIsStartPointDragged: ({required bool isDragged}) {
                   _draggableStartPoint =
                       _draggableStartPoint.copyWith(isDragged: isDragged);
+                },
+                setIsMiddlePointDragged: ({required bool isDragged}) {
+                  _draggableMiddlePoint =
+                      _draggableMiddlePoint.copyWith(isDragged: isDragged);
                 },
                 setIsEndPointDragged: ({required bool isDragged}) {
                   _draggableEndPoint =
@@ -219,7 +243,9 @@ class _DrawingPainter extends CustomPainter {
     required this.setIsStartPointDragged,
     required this.updatePositionCallback,
     this.isDrawingToolSelected = false,
+    this.draggableMiddlePoint,
     this.draggableEndPoint,
+    this.setIsMiddlePointDragged,
     this.setIsEndPointDragged,
   });
 
@@ -231,8 +257,10 @@ class _DrawingPainter extends CustomPainter {
   final double Function(int x) epochToX;
   final double Function(double y) quoteToY;
   final DraggableEdgePoint draggableStartPoint;
+  final DraggableEdgePoint? draggableMiddlePoint;
   final DraggableEdgePoint? draggableEndPoint;
   final void Function({required bool isDragged}) setIsStartPointDragged;
+  final void Function({required bool isDragged})? setIsMiddlePointDragged;
   final void Function({required bool isDragged})? setIsEndPointDragged;
   final Point Function(
     EdgePoint edgePoint,
@@ -253,6 +281,7 @@ class _DrawingPainter extends CustomPainter {
         drawingData,
         updatePositionCallback,
         draggableStartPoint,
+        draggableMiddlePoint: draggableMiddlePoint,
         draggableEndPoint: draggableEndPoint,
       );
     }
@@ -274,7 +303,9 @@ class _DrawingPainter extends CustomPainter {
         config,
         draggableStartPoint,
         setIsStartPointDragged,
+        draggableMiddlePoint: draggableMiddlePoint,
         draggableEndPoint: draggableEndPoint,
+        setIsMiddlePointDragged: setIsMiddlePointDragged,
         setIsEndPointDragged: setIsEndPointDragged,
       )) {
         if (isDrawingToolSelected) {

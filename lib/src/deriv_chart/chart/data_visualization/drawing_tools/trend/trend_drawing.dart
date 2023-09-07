@@ -178,6 +178,7 @@ class TrendDrawing extends Drawing {
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     config as TrendDrawingToolConfig;
@@ -309,8 +310,7 @@ class TrendDrawing extends Drawing {
             drawingData.isSelected
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
-                : paint.fillPaintStyle(
-                    fillStyle.color.withOpacity(0.2), lineStyle.thickness),
+                : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
           )
           ..drawRect(
             _mainRect,
@@ -321,8 +321,7 @@ class TrendDrawing extends Drawing {
             drawingData.isSelected
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
-                : paint.fillPaintStyle(
-                    fillStyle.color.withOpacity(0.2), lineStyle.thickness),
+                : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
           )
           ..drawRect(
             _middleRect,
@@ -353,7 +352,9 @@ class TrendDrawing extends Drawing {
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
     void Function({required bool isDragged}) setIsStartPointDragged, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
     setIsStartPointDragged(isDragged: false);
