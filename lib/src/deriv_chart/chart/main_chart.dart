@@ -285,6 +285,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   Widget _buildDrawingToolChart() => MultipleAnimatedBuilder(
         animations: <Listenable>[
           topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController,
         ],
         builder: (_, Widget? child) => DrawingToolChart(
           series: widget.mainSeries as DataSeries<Tick>,
