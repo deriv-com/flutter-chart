@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
@@ -68,6 +69,9 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     value: RayDrawingToolConfig(),
                   ),
                   DropdownMenuItem<DrawingToolConfig>(
+                      child: Text('Rectangle'),
+                      value: RectangleDrawingToolConfig()),
+                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Trend'),
                     value: TrendDrawingToolConfig(),
                   ),
@@ -75,6 +79,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     child: Text('Vertical'),
                     value: VerticalDrawingToolConfig(),
                   ),
+                  // TODO(maryia-binary): add the rest of drawing tools above
                 ],
                 onChanged: (dynamic config) {
                   setState(() {
