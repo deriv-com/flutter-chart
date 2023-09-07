@@ -9,12 +9,13 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 
 /// Channel drawing tool. A channel is 2 parallel lines that
 /// created with 3 points.
-class ChannelDrawing extends Drawing {
+class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   ChannelDrawing({
     required this.drawingPart,
