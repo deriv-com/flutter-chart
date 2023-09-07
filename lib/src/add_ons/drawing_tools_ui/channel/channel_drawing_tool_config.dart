@@ -70,6 +70,7 @@ class ChannelDrawingToolConfig extends DrawingToolConfig {
     String? configId,
     DrawingData? drawingData,
     LineStyle? lineStyle,
+    LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
   }) =>
@@ -77,6 +78,7 @@ class ChannelDrawingToolConfig extends DrawingToolConfig {
         configId: configId ?? this.configId,
         drawingData: drawingData ?? this.drawingData,
         lineStyle: lineStyle ?? this.lineStyle,
+        fillStyle: fillStyle ?? this.fillStyle,
         pattern: pattern ?? this.pattern,
         edgePoints: edgePoints ?? this.edgePoints,
       );

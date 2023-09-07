@@ -65,6 +65,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
     String? configId,
     DrawingData? drawingData,
     LineStyle? lineStyle,
+    LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
   }) =>

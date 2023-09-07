@@ -61,6 +61,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
     String? configId,
     DrawingData? drawingData,
     LineStyle? lineStyle,
+    LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
   });
