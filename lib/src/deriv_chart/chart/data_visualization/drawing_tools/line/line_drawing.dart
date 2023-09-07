@@ -80,6 +80,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
@@ -156,7 +157,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
     void Function({required bool isDragged}) setIsStartPointDragged, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
     setIsStartPointDragged(isDragged: false);
@@ -208,6 +211,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
+        (_startPoint!.isClicked(position, markerRadius) ||
+            _endPoint!.isClicked(position, markerRadius));
   }
 }
