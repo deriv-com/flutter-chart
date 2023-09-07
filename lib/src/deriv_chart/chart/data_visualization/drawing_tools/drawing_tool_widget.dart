@@ -1,6 +1,8 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/channel/channel_drawing_creator.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/continuous/continuous_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/fibfan_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_drawing_creator.dart';
@@ -60,6 +62,14 @@ class DrawingToolWidget extends StatelessWidget {
     final String drawingToolType = selectedDrawingTool.toJson()['name'];
 
     switch (drawingToolType) {
+      case 'dt_channel':
+        return ChannelDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+          clearDrawingToolSelection: clearDrawingToolSelection,
+          removeDrawing: removeDrawing,
+          shouldStopDrawing: shouldStopDrawing!,
+        );
       case 'dt_continuous':
         return ContinuousDrawingCreator(
           onAddDrawing: onAddDrawing,
@@ -67,6 +77,13 @@ class DrawingToolWidget extends StatelessWidget {
           clearDrawingToolSelection: clearDrawingToolSelection,
           removeDrawing: removeDrawing,
           shouldStopDrawing: shouldStopDrawing!,
+        );
+      case 'dt_fibfan':
+        return FibfanDrawingCreator(
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+          clearDrawingToolSelection: clearDrawingToolSelection,
+          removeDrawing: removeDrawing,
         );
       case 'dt_line':
         return LineDrawingCreator(
