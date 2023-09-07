@@ -2,8 +2,10 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatefulWidget {
@@ -79,6 +81,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 onAddDrawing: widget.drawingTools.onAddDrawing,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                chartConfig: context.watch<ChartConfig>(),
                 clearDrawingToolSelection:
                     widget.drawingTools.clearDrawingToolSelection,
                 series: widget.series,

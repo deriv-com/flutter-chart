@@ -145,7 +145,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     setIsStartPointDragged(isDragged: false);
     setIsEndPointDragged!(isDragged: false);
 
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    config as LineDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     double startXCoord = _startPoint!.x;
     double startQuoteToY = _startPoint!.y;
