@@ -88,9 +88,20 @@ class ContinuousLineDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
-  }) =>
-      _lineDrawing.hitTest(position, epochToX, quoteToY, config,
-          draggableStartPoint, setIsStartPointDragged,
-          draggableEndPoint: draggableEndPoint,
-          setIsEndPointDragged: setIsEndPointDragged);
+  }) {
+    config as ContinuousDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
+    final DrawingPatterns pattern = config.pattern;
+
+    return _lineDrawing.hitTest(
+        position,
+        epochToX,
+        quoteToY,
+        LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
+        draggableStartPoint,
+        setIsStartPointDragged,
+        draggableEndPoint: draggableEndPoint,
+        setIsEndPointDragged: setIsEndPointDragged);
+  }
 }
