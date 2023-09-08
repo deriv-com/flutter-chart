@@ -4,8 +4,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/fibfan_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/horizontal/horizontal_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +35,14 @@ abstract class Drawing {
         return ContinuousLineDrawing.fromJson(json);
       case FibfanDrawing.nameKey:
         return FibfanDrawing.fromJson(json);
+      case HorizontalDrawing.nameKey:
+        return HorizontalDrawing.fromJson(json);
       case LineDrawing.nameKey:
         return LineDrawing.fromJson(json);
       case RayLineDrawing.nameKey:
         return RayLineDrawing.fromJson(json);
+      case RectangleDrawing.nameKey:
+        return RectangleDrawing.fromJson(json);
       case TrendDrawing.nameKey:
         return TrendDrawing.fromJson(json);
       case VerticalDrawing.nameKey:
@@ -59,6 +65,7 @@ abstract class Drawing {
     Size size,
     ChartTheme theme,
     int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,

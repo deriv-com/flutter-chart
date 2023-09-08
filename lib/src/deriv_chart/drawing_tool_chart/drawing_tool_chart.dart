@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dar
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatefulWidget {
@@ -46,6 +47,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
       .toList();
 
   /// Sets drawing as selected and unselects the rest of drawings
+  /// if any of the drawing is not finished , it selects the unfinished drawing
   void _setIsDrawingSelected(DrawingData drawing) {
     drawing.isSelected = !drawing.isSelected;
 
@@ -99,6 +101,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
               onAddDrawing: widget.drawingTools.onAddDrawing,
               selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
               quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+              chartConfig: context.watch<ChartConfig>(),
               clearDrawingToolSelection:
                   widget.drawingTools.clearDrawingToolSelection,
               series: widget.series,

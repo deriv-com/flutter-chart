@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'vertical_drawing.dart';
+part of 'horizontal_drawing.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-VerticalDrawing _$VerticalDrawingFromJson(Map<String, dynamic> json) =>
-    VerticalDrawing(
+HorizontalDrawing _$HorizontalDrawingFromJson(Map<String, dynamic> json) =>
+    HorizontalDrawing(
       drawingPart: $enumDecode(_$DrawingPartsEnumMap, json['drawingPart']),
       chartConfig: json['chartConfig'] == null
           ? null
@@ -17,7 +17,7 @@ VerticalDrawing _$VerticalDrawingFromJson(Map<String, dynamic> json) =>
         ? null
         : Point.fromJson(json['startPoint'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$VerticalDrawingToJson(VerticalDrawing instance) =>
+Map<String, dynamic> _$HorizontalDrawingToJson(HorizontalDrawing instance) =>
     <String, dynamic>{
       'chartConfig': instance.chartConfig,
       'drawingPart': _$DrawingPartsEnumMap[instance.drawingPart]!,

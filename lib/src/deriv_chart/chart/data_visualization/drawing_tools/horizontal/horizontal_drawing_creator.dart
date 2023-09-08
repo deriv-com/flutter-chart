@@ -1,15 +1,15 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
-import './vertical_drawing.dart';
+import './horizontal_drawing.dart';
 
-/// Creates a Vertical line drawing
-class VerticalDrawingCreator extends DrawingCreator<VerticalDrawing> {
-  /// Initializes the vertical drawing creator.
-  const VerticalDrawingCreator({
-    required OnAddDrawing<VerticalDrawing> onAddDrawing,
+/// Creates a Horizontal line drawing
+class HorizontalDrawingCreator extends DrawingCreator<HorizontalDrawing> {
+  /// Initializes the horizontal drawing creator.
+  const HorizontalDrawingCreator({
+    required OnAddDrawing<HorizontalDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required ChartConfig chartConfig,
     Key? key,
@@ -21,12 +21,12 @@ class VerticalDrawingCreator extends DrawingCreator<VerticalDrawing> {
         );
 
   @override
-  DrawingCreatorState<VerticalDrawing> createState() =>
-      _VerticalDrawingCreatorState();
+  DrawingCreatorState<HorizontalDrawing> createState() =>
+      _HorizontalDrawingCreatorState();
 }
 
-class _VerticalDrawingCreatorState
-    extends DrawingCreatorState<VerticalDrawing> {
+class _HorizontalDrawingCreatorState
+    extends DrawingCreatorState<HorizontalDrawing> {
   @override
   void onTap(TapUpDetails details) {
     super.onTap(details);
@@ -43,7 +43,7 @@ class _VerticalDrawingCreatorState
 
       isDrawingFinished = true;
 
-      drawingParts.add(VerticalDrawing(
+      drawingParts.add(HorizontalDrawing(
         drawingPart: DrawingParts.line,
         edgePoint: edgePoints.first,
         chartConfig: widget.chartConfig,

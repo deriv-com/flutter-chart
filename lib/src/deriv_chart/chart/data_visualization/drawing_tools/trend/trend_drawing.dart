@@ -38,7 +38,7 @@ class TrendDrawing extends Drawing {
   Map<String, dynamic> toJson() => _$TrendDrawingToJson(this)
     ..putIfAbsent(Drawing.classNameKey, () => nameKey);
 
-  /// Key of indicator name property in JSON.
+  /// Key of drawing tool name property in JSON.
   static const String nameKey = 'TrendDrawing';
 
   /// Instance of enum including all possible drawing parts(marker,rectangle)
@@ -171,6 +171,7 @@ class TrendDrawing extends Drawing {
     Size size,
     ChartTheme theme,
     int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,

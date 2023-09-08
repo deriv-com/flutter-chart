@@ -199,6 +199,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 epochFromX: xAxis.epochFromX,
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
+                quoteFromY: widget.quoteFromCanvasY,
                 draggableStartPoint: _draggableStartPoint,
                 draggableMiddlePoint: _draggableMiddlePoint,
                 isDrawingToolSelected: widget.selectedDrawingTool != null,
@@ -241,6 +242,7 @@ class _DrawingPainter extends CustomPainter {
     required this.epochFromX,
     required this.epochToX,
     required this.quoteToY,
+    required this.quoteFromY,
     required this.draggableStartPoint,
     required this.setIsStartPointDragged,
     required this.updatePositionCallback,
@@ -269,6 +271,7 @@ class _DrawingPainter extends CustomPainter {
     DraggableEdgePoint draggableEdgePoint,
   ) updatePositionCallback;
 
+  double Function(double) quoteFromY;
   @override
   void paint(Canvas canvas, Size size) {
     for (final Drawing drawingPart in drawingData.drawingParts) {
@@ -277,6 +280,7 @@ class _DrawingPainter extends CustomPainter {
         size,
         theme,
         epochFromX,
+        quoteFromY,
         epochToX,
         quoteToY,
         config,

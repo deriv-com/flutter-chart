@@ -1,8 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
-import 'line_painter.dart';
-
 /// Line series.
 class LineSeries extends DataSeries<Tick> {
   /// Initializes a line series.

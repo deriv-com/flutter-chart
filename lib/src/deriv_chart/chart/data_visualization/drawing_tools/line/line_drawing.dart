@@ -40,7 +40,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   Map<String, dynamic> toJson() => _$LineDrawingToJson(this)
     ..putIfAbsent(Drawing.classNameKey, () => nameKey);
 
-  /// Key of indicator name property in JSON.
+  /// Key of drawing tool name property in JSON.
   static const String nameKey = 'LineDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
@@ -73,6 +73,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     Size size,
     ChartTheme theme,
     int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
@@ -167,7 +168,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     setIsStartPointDragged(isDragged: false);
     setIsEndPointDragged!(isDragged: false);
 
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    config as LineDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     double startXCoord = _startPoint!.x;
     double startQuoteToY = _startPoint!.y;
