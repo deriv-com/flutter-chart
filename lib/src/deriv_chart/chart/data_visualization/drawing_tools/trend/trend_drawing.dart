@@ -193,11 +193,11 @@ class TrendDrawing extends Drawing {
 
     //  Maximum epoch of the drawing
     final int minimumEpoch =
-        startXCoord == 0 ? edgePoints[0].epoch : epochFromX(startXCoord);
+        startXCoord == 0 ? edgePoints.first.epoch : epochFromX(startXCoord);
 
     //  Minimum epoch of the drawing
     final int maximumEpoch = endXCoord == 0
-        ? (edgePoints.length > 1 ? edgePoints[1].epoch : endEdgePoint.epoch)
+        ? (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch)
         : epochFromX(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
@@ -216,7 +216,7 @@ class TrendDrawing extends Drawing {
     if (_calculator != null) {
       _startPoint = updatePositionCallback(
           EdgePoint(
-              epoch: edgePoints[0].epoch,
+              epoch: edgePoints.first.epoch,
               quote:
                   _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableStartPoint);
@@ -224,7 +224,7 @@ class TrendDrawing extends Drawing {
       _endPoint = updatePositionCallback(
           EdgePoint(
               epoch: (edgePoints.length > 1
-                  ? edgePoints[1].epoch
+                  ? edgePoints.last.epoch
                   : endEdgePoint.epoch),
               quote:
                   _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
@@ -255,7 +255,8 @@ class TrendDrawing extends Drawing {
     if (drawingPart == DrawingParts.marker) {
       if (endEdgePoint.epoch == 0) {
         _startPoint = updatePositionCallback(
-            EdgePoint(epoch: edgePoints[0].epoch, quote: edgePoints[0].quote),
+            EdgePoint(
+                epoch: edgePoints.first.epoch, quote: edgePoints.last.quote),
             draggableStartPoint);
 
         startXCoord = _startPoint!.x;

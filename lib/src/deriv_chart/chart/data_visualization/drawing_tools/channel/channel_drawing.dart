@@ -125,7 +125,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     final DrawingPatterns pattern = config.pattern;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
     if (edgePoints.length > 1) {
       _middlePoint =
           updatePositionCallback(edgePoints[1], draggableMiddlePoint!);
@@ -134,7 +134,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
           updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
     }
     if (edgePoints.length > 2) {
-      _endPoint = updatePositionCallback(edgePoints[2], draggableEndPoint!);
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
     } else {
       _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
     }

@@ -95,9 +95,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final DrawingPatterns pattern = config.pattern;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
     if (edgePoints.length > 1) {
-      _endPoint = updatePositionCallback(edgePoints[1], draggableEndPoint!);
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
     } else {
       _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
     }

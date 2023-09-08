@@ -78,7 +78,7 @@ class VerticalDrawing extends Drawing {
     final DrawingPatterns pattern = config.pattern;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
 
     final double xCoord = startPoint!.x;
     final double startQuoteToY = startPoint!.y;
