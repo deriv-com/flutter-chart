@@ -43,7 +43,7 @@ class LineDrawingToolItemState
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
           _buildColorField(),
-          // TODO(maryia-binary): implement _buildPatternField() to set pattern
+          _buildPatternField(),
         ],
       );
 
@@ -62,6 +62,38 @@ class LineDrawingToolItemState
               updateDrawingTool();
             },
           )
+        ],
+      );
+
+  // DrawingPatterns selectedOption = DrawingPatterns.solid;
+
+  Widget _buildPatternField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelPattern,
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(width: 10),
+          DropdownButton<DrawingPatterns>(
+            value: _currentPattern,
+            onChanged: (DrawingPatterns? newValue) {
+              setState(() {
+                // selectedOption = newValue!;
+                _pattern = newValue;
+              });
+              updateDrawingTool();
+            },
+            items: DrawingPatterns.values
+                .map((DrawingPatterns value) =>
+                    DropdownMenuItem<DrawingPatterns>(
+                      value: value,
+                      child: Text(value
+                          .toString()
+                          .split('.')
+                          .last), // Convert enum to string
+                    ))
+                .toList(),
+          ),
         ],
       );
 
