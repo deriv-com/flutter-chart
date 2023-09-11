@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -85,6 +86,40 @@ class TrendDrawing extends Drawing {
   /// side is dragged to the right of the right side
   bool _isRectangleSwapped = false;
 
+  @override
+  void onDrawingMoved(
+    List<Tick> ticks,
+    EdgePoint startPoint, {
+    EdgePoint? endPoint,
+  }) {
+    final int minimumEpoch =
+        startXCoord == 0 ? startEdgePoint.epoch : epochFromX!(startXCoord);
+
+    //  Minimum epoch of the drawing
+    final int maximumEpoch =
+        endXCoord == 0 ? endEdgePoint.epoch : epochFromX!(endXCoord);
+
+    if (maximumEpoch != 0 && minimumEpoch != 0) {
+      _calculator = setCalculator(minimumEpoch, maximumEpoch, ticks);
+    }
+  }
+
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
+    if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
+        (draggableEndPoint == null ||
+            draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
+      return true;
+    }
+
+    return false;
+  }
+
   /// Paint the trend drawing tools
   @override
   void onPaint(
@@ -103,7 +138,7 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final List<Tick>? series = drawingData.series;
+
     //  Maximum epoch of the drawing
     final int minimumEpoch =
         startXCoord == 0 ? startEdgePoint.epoch : epochFromX!(startXCoord);
@@ -113,9 +148,6 @@ class TrendDrawing extends Drawing {
         endXCoord == 0 ? endEdgePoint.epoch : epochFromX!(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
-      // setting calculator
-      _calculator = setCalculator(minimumEpoch, maximumEpoch, series);
-
       // center of rectangle
       _rectCenter = quoteToY(_calculator!.min) +
           ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);

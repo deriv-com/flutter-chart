@@ -112,6 +112,16 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         ));
   }
 
+  // TODO(NA): Return true if FibfanDrawing's on chart view port.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
+
   /// Paint the line
   @override
   void onPaint(

@@ -8,6 +8,38 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 
 /// Base class to draw a particular drawing
 abstract class Drawing {
+  /// Will be called when the drawing is moved by the user gesture.
+  ///
+  /// Some drawing tools might required to handle some logic after the drawing
+  /// is moved and we don't want this logic be done in the [onPaint] method
+  /// because it runs more often and it might cause performance issues.
+  ///
+  /// The method has an empty implementation so only the [Drawing] subclasses
+  /// that require this life-cycle method can override it.
+  void onDrawingMoved(
+    List<Tick> ticks,
+    EdgePoint startPoint, {
+    EdgePoint? endPoint,
+  }) {}
+
+  /// Is called before repaint the drawing to check if it needs to be
+  /// repainted.
+  ///
+  /// Returns true if the drawing needs to be repainted.
+  ///
+  /// Since the [Drawing] class instances are mutable and live across the
+  /// painting frames, there is no previous instance of it provided in this
+  /// method to compare with and decide for repainting.
+  ///
+  /// Repainting condition for drawing usually is based on whether they are
+  /// in the chart visible area or not.
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  });
+
   /// Paint
   void onPaint(
     Canvas canvas,
