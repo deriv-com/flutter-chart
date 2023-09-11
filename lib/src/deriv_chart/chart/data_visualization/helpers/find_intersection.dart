@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 /// [p2] is second point of line 1.
 /// [p3] is first point of line 2.
 /// [p4] is second point of line 2.
+///
+/// Returns `null` if the two lines don't have an intersection.
 Offset? findIntersection(Offset p1, Offset p2, Offset p3, Offset p4) {
   if ((p1.dx == p2.dx && p1.dy == p2.dy) ||
       (p3.dx == p4.dx && p3.dy == p4.dy)) {
