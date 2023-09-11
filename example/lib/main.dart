@@ -370,7 +370,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   DataSeries<Tick> _getDataSeries(ChartStyle style) {
-    if (ticks is List<Candle>) {
+    if (ticks is List<Candle> && style != ChartStyle.line) {
       switch (style) {
         case ChartStyle.hollow:
           return HollowCandleSeries(ticks as List<Candle>);

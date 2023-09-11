@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -25,7 +26,15 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.lipsOffset = 3,
     this.showLines = true,
     this.showFractal = false,
-  }) : super();
+    this.jawLineStyle = const LineStyle(color: Colors.blue),
+    this.teethLineStyle = const LineStyle(color: Colors.red),
+    this.lipsLineStyle = const LineStyle(color: Colors.green),
+    bool showLastIndicator = false,
+    String? title,
+  }) : super(
+          showLastIndicator: showLastIndicator,
+          title: title ?? AlligatorIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory AlligatorIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -62,18 +71,31 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
   /// show fractal indicator or not
   final bool showFractal;
 
+  /// Jaw line style.
+  final LineStyle jawLineStyle;
+
+  /// Teeth line style.
+  final LineStyle teethLineStyle;
+
+  /// Lips line style.
+  final LineStyle lipsLineStyle;
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => AlligatorSeries(
         indicatorInput,
-        jawOffset: jawOffset,
-        teethOffset: teethOffset,
-        lipsOffset: lipsOffset,
         alligatorOptions: AlligatorOptions(
           jawPeriod: jawPeriod,
           teethPeriod: teethPeriod,
           lipsPeriod: lipsPeriod,
           showLines: showLines,
           showFractal: showFractal,
+          jawOffset: jawOffset,
+          teethOffset: teethOffset,
+          lipsOffset: lipsOffset,
+          jawLineStyle: jawLineStyle,
+          teethLineStyle: teethLineStyle,
+          lipsLineStyle: lipsLineStyle,
+          showLastIndicator: showLastIndicator,
         ),
       );
 

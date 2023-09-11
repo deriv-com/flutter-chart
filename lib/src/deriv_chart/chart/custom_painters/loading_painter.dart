@@ -7,6 +7,7 @@ class LoadingPainter extends CustomPainter {
   LoadingPainter({
     required this.loadingAnimationProgress,
     required this.loadingRightBoundX,
+    this.loadingAnimationColor,
   });
 
   /// The progress shown in `double` for the loading.
@@ -15,6 +16,9 @@ class LoadingPainter extends CustomPainter {
   /// The right bound of the loading area in X axis.
   final double loadingRightBoundX;
 
+  /// The color of the loading animation.
+  final Color? loadingAnimationColor;
+
   @override
   void paint(Canvas canvas, Size size) {
     paintLoadingAnimation(
@@ -22,6 +26,7 @@ class LoadingPainter extends CustomPainter {
       size: size,
       loadingAnimationProgress: loadingAnimationProgress,
       loadingRightBoundX: loadingRightBoundX,
+      color: loadingAnimationColor,
     );
   }
 

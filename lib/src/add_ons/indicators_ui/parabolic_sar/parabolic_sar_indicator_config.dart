@@ -21,7 +21,8 @@ class ParabolicSARConfig extends IndicatorConfig {
     this.minAccelerationFactor = 0.02,
     this.maxAccelerationFactor = 0.2,
     this.scatterStyle = const ScatterStyle(),
-  }) : super();
+    String? title,
+  }) : super(title: title ?? ParabolicSARConfig.name);
 
   /// Initializes from JSON.
   factory ParabolicSARConfig.fromJson(Map<String, dynamic> json) =>

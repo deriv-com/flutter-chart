@@ -7,16 +7,19 @@ part of 'zigzag_indicator_config.dart';
 // **************************************************************************
 
 ZigZagIndicatorConfig _$ZigZagIndicatorConfigFromJson(
-    Map<String, dynamic> json) {
-  return ZigZagIndicatorConfig(
-    distance: (json['distance'] as num).toDouble(),
-    lineStyle: LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-  );
-}
+        Map<String, dynamic> json) =>
+    ZigZagIndicatorConfig(
+      distance: (json['distance'] as num?)?.toDouble() ?? 10,
+      lineStyle: json['lineStyle'] == null
+          ? const LineStyle(thickness: 0.9, color: Colors.blue)
+          : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      title: json['title'] as String?,
+    );
 
 Map<String, dynamic> _$ZigZagIndicatorConfigToJson(
         ZigZagIndicatorConfig instance) =>
     <String, dynamic>{
+      'title': instance.title,
       'distance': instance.distance,
       'lineStyle': instance.lineStyle,
     };

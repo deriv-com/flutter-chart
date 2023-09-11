@@ -13,6 +13,12 @@ typedef EpochToX = double Function(int);
 /// Conversion function to convert value(quote) value to canvas Y.
 typedef QuoteToY = double Function(double);
 
+/// Conversion function to convert canvas X to epoch value.
+typedef EpochFromX = int Function(double);
+
+/// Conversion function to convert canvas Y to value(quote).
+typedef QuoteFromY = double Function(double);
+
 /// Any data that the chart takes and makes it paint its self on the chart's
 /// canvas including Line, CandleStick data, Markers, barriers etc..
 abstract class ChartData {

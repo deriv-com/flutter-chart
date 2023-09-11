@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/macd_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -20,20 +22,38 @@ class MACDIndicatorConfig extends IndicatorConfig {
     this.fastMAPeriod = 12,
     this.slowMAPeriod = 26,
     this.signalPeriod = 9,
-  }) : super(isOverlay: false);
+    this.barStyle = const BarStyle(),
+    this.lineStyle = const LineStyle(color: Colors.white),
+    this.signalLineStyle = const LineStyle(color: Colors.redAccent),
+    int pipSize = 4,
+    bool showLastIndicator = false,
+    String? title,
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? MACDIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory MACDIndicatorConfig.fromJson(Map<String, dynamic> json) =>
       _$MACDIndicatorConfigFromJson(json);
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) => MACDSeries(indicatorInput,
-      config: this,
-      options: MACDOptions(
-        fastMAPeriod: fastMAPeriod,
-        slowMAPeriod: slowMAPeriod,
-        signalPeriod: signalPeriod,
-      ));
+  Series getSeries(IndicatorInput indicatorInput) => MACDSeries(
+        indicatorInput,
+        config: this,
+        options: MACDOptions(
+          fastMAPeriod: fastMAPeriod,
+          slowMAPeriod: slowMAPeriod,
+          signalPeriod: signalPeriod,
+          barStyle: barStyle,
+          lineStyle: lineStyle,
+          signalLineStyle: signalLineStyle,
+          showLastIndicator: showLastIndicator,
+          pipSize: pipSize,
+        ),
+      );
 
   /// Unique name for this indicator.
   static const String name = 'macd';
@@ -50,6 +70,15 @@ class MACDIndicatorConfig extends IndicatorConfig {
 
   /// The period to calculate the Signal value.
   final int signalPeriod;
+
+  /// Histogram bar style
+  final BarStyle barStyle;
+
+  /// Line style.
+  final LineStyle lineStyle;
+
+  /// Signal line style.
+  final LineStyle signalLineStyle;
 
   @override
   IndicatorItem getItem(

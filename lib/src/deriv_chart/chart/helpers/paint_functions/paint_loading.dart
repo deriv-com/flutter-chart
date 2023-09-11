@@ -8,9 +8,10 @@ void paintLoadingAnimation({
   required Size size,
   required double loadingAnimationProgress,
   required double loadingRightBoundX,
+  Color? color,
 }) {
   final Paint loadingPaint = Paint()
-    ..color = Colors.white12
+    ..color = color ?? Colors.white12
     ..strokeWidth = 1
     ..style = PaintingStyle.fill;
 

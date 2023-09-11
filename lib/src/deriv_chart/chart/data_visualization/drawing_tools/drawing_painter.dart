@@ -9,7 +9,6 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 
 /// Paints every existing drawing.
 class DrawingPainter extends StatefulWidget {

@@ -1,5 +1,9 @@
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_axis_config.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
@@ -8,13 +12,19 @@ import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../misc/callbacks.dart';
+import '../../theme/chart_theme.dart';
 import 'basic_chart.dart';
+import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
+import 'data_visualization/chart_series/data_series.dart';
+import 'data_visualization/chart_series/series.dart';
+import 'data_visualization/markers/marker_series.dart';
 import 'data_visualization/models/animation_info.dart';
+import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';
 
@@ -29,13 +39,20 @@ class MainChart extends BasicChart {
     Key? key,
     this.showLoadingAnimationForHistoricalData = true,
     this.showDataFitButton = false,
+    this.showScrollToLastTickButton = true,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
+    this.onCrosshairDisappeared,
+    this.onCrosshairHover,
     this.overlaySeries,
     this.annotations,
+    this.verticalPaddingFraction,
+    this.loadingAnimationColor,
     double opacity = 1,
     ChartAxisConfig? chartAxisConfig,
+    VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
+    this.showCrosshair = false,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
           mainSeries,
@@ -48,6 +65,7 @@ class MainChart extends BasicChart {
           pipSize: pipSize,
           opacity: opacity,
           chartAxisConfig: chartAxisConfig,
+          onQuoteAreaChanged: onQuoteAreaChanged,
         );
 
   /// The indicator series that are displayed on the main chart.
@@ -67,6 +85,12 @@ class MainChart extends BasicChart {
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
 
+  /// Called when the crosshair is dismissed.
+  final VoidCallback? onCrosshairDisappeared;
+
+  /// Called when the crosshair cursor is hovered/moved.
+  final OnCrosshairHover? onCrosshairHover;
+
   /// Chart's widget controller.
   final ChartController? controller;
 
@@ -79,8 +103,21 @@ class MainChart extends BasicChart {
   /// Whether to show the data fit button or not.
   final bool showDataFitButton;
 
+  /// Whether to show the scroll to last tick button or not.
+  final bool showScrollToLastTickButton;
+
   /// Convenience list to access all chart data.
   final List<ChartData> chartDataList;
+
+  /// Whether the crosshair should be shown or not.
+  final bool showCrosshair;
+
+  /// Fraction of the chart's height taken by top or bottom padding.
+  /// Quote scaling (drag on quote area) is controlled by this variable.
+  final double? verticalPaddingFraction;
+
+  /// The color of the loading animation.
+  final Color? loadingAnimationColor;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -130,9 +167,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   void initState() {
     super.initState();
 
-    widget.controller?.onScrollToLastTick = ({required bool animate}) {
-      xAxis.scrollToLastTick(animate: animate);
-    };
+    if (widget.verticalPaddingFraction != null) {
+      verticalPaddingFraction = widget.verticalPaddingFraction!;
+    }
+
+    _setupController();
   }
 
   @override
@@ -188,6 +227,40 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     super.setupAnimations();
     _setupBlinkingAnimation();
     _setupCrosshairZoomOutAnimation();
+  }
+
+  void _setupController() {
+    widget.controller?.onScrollToLastTick = ({required bool animate}) {
+      xAxis.scrollToLastTick(animate: animate);
+    };
+
+    widget.controller?.onScale = (double scale) {
+      xAxis
+        ..onScaleAndPanStart(ScaleStartDetails())
+        ..onScaleUpdate(ScaleUpdateDetails(scale: scale));
+      return xAxis.msPerPx;
+    };
+
+    widget.controller?.onScroll = (double pxShift) {
+      xAxis.scrollBy(pxShift);
+    };
+
+    widget.controller?.toggleDataFitMode = ({required bool enableDataFit}) {
+      if (enableDataFit) {
+        xAxis.enableDataFit();
+      } else {
+        xAxis.disableDataFit();
+      }
+    };
+
+    widget.controller?.getXFromEpoch = (int epoch) => xAxis.xFromEpoch(epoch);
+    widget.controller?.getYFromQuote =
+        (double quote) => chartQuoteToCanvasY(quote);
+
+    widget.controller?.getEpochFromX = (double x) => xAxis.epochFromX(x);
+    widget.controller?.getQuoteFromY = (double y) => chartQuoteFromCanvasY(y);
+
+    widget.controller?.getMsPerPx = () => xAxis.msPerPx;
   }
 
   void _setupCrosshairZoomOutAnimation() {
@@ -265,8 +338,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 _buildDrawingToolChart(),
-                if (!widget.drawingTools.isDrawingMoving) _buildCrosshairArea(),
-                if (_isScrollToLastTickAvailable)
+                if (!widget.drawingTools.isDrawingMoving)
+                  kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
+                if (widget.showScrollToLastTickButton &&
+                    _isScrollToLastTickAvailable)
                   Positioned(
                     bottom: 0,
                     right: quoteLabelsTouchAreaWidth,
@@ -302,6 +377,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         loadingRightBoundX: widget._mainSeries.input.isEmpty
             ? xAxis.width!
             : xAxis.xFromEpoch(widget._mainSeries.input.first.epoch),
+        loadingAnimationColor: widget.loadingAnimationColor,
       );
 
   Widget _buildAnnotations() => MultipleAnimatedBuilder(
@@ -349,6 +425,18 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         ),
       );
 
+  Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
+        mainSeries: widget.mainSeries as DataSeries<Tick>,
+        epochFromCanvasX: xAxis.epochFromX,
+        quoteFromCanvasY: chartQuoteFromCanvasY,
+        epochToCanvasX: xAxis.xFromEpoch,
+        quoteToCanvasY: chartQuoteToCanvasY,
+        quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
+        showCrosshairCursor: widget.showCrosshair,
+        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+        onCrosshairHover: widget.onCrosshairHover,
+      );
+
   Widget _buildScrollToLastTickButton() => Material(
         type: MaterialType.circle,
         color: Colors.transparent,
@@ -356,6 +444,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         child: IconButton(
           icon: const Icon(Icons.arrow_forward),
           onPressed: xAxis.scrollToLastTick,
+          color: context.read<ChartTheme>().base01Color,
         ),
       );
 
