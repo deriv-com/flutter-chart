@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,8 +25,12 @@ abstract class DrawingCreator<T extends Drawing> extends StatefulWidget {
   const DrawingCreator({
     required this.onAddDrawing,
     required this.quoteFromCanvasY,
+    this.chartConfig,
     Key? key,
   }) : super(key: key);
+
+  /// Chart config to get pipSize
+  final ChartConfig? chartConfig;
 
   /// A required callback property of type [OnAddDrawing<T>] that is used to
   /// pass the newly created drawing to the parent.
@@ -93,6 +98,8 @@ abstract class DrawingCreatorState<T extends Drawing>
 
   /// Catches each single click on the chart to create a drawing.
   void onTap(TapUpDetails details) {
+    // TODO(bahar-deriv): We need to apply some refactors here once all the
+    // drawing tools merged. Duplicated codes should be moved here.
     generateDrawingId(runtimeType.toString());
   }
 

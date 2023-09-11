@@ -334,11 +334,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
-                DrawingToolChart(
-                  chartQuoteToCanvasY: chartQuoteToCanvasY,
-                  chartQuoteFromCanvasY: chartQuoteFromCanvasY,
-                  drawingTools: widget.drawingTools,
-                ),
+                _buildDrawingToolChart(),
                 if (!widget.drawingTools.isDrawingMoving)
                   kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&
@@ -359,6 +355,19 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
             ),
           );
         },
+      );
+
+  Widget _buildDrawingToolChart() => MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController,
+        ],
+        builder: (_, Widget? child) => DrawingToolChart(
+          series: widget.mainSeries as DataSeries<Tick>,
+          chartQuoteToCanvasY: chartQuoteToCanvasY,
+          chartQuoteFromCanvasY: chartQuoteFromCanvasY,
+          drawingTools: widget.drawingTools,
+        ),
       );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(

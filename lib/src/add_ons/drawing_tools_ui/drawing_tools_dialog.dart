@@ -1,6 +1,12 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -44,17 +50,40 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 hint: Text(ChartLocalization.of(context).selectDrawingTool),
                 items: const <DropdownMenuItem<DrawingToolConfig>>[
                   DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Channel'),
+                    value: ChannelDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Continuous'),
                     value: ContinuousDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Fib Fan'),
+                    value: FibfanDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Horizontal'),
+                    value: HorizontalDrawingToolConfig(),
                   ),
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Line'),
                     value: LineDrawingToolConfig(),
                   ),
                   DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Ray'),
+                    value: RayDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
+                      child: Text('Rectangle'),
+                      value: RectangleDrawingToolConfig()),
+                  DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Trend'),
+                    value: TrendDrawingToolConfig(),
+                  ),
+                  DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Vertical'),
                     value: VerticalDrawingToolConfig(),
-                  ),
+                  )
                   // TODO(maryia-binary): add the rest of drawing tools above
                 ],
                 onChanged: (dynamic config) {
