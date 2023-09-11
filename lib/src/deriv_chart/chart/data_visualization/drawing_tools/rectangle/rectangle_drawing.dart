@@ -213,4 +213,14 @@ class RectangleDrawing extends Drawing {
         (_isClickedOnRectangleBoundary(_rect, position) &&
             endEdgePoint.epoch != 0);
   }
+
+  // TODO(NA): return when the rectangle drawing is inside the epoch range.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
 }

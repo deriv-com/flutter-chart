@@ -40,6 +40,16 @@ class HorizontalDrawing extends Drawing {
   /// Conversion function for converting quote from chart's canvas' Y position.
   final double Function(double)? quoteFromCanvasY;
 
+  // TODO(NA): Return true when the horizontal drawing is in the epoch range.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
+
   /// Paint
   @override
   void onPaint(
