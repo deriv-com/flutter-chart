@@ -1,4 +1,6 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -42,10 +44,26 @@ class MASeries extends AbstractSingleIndicatorSeries {
           options: options,
           style: style ?? const LineStyle(thickness: 0.5),
           offset: offset,
+          lastTickIndicatorStyle: style != null
+              ? getLastIndicatorStyle(
+                  style.color,
+                  showLastIndicator: options.showLastIndicator,
+                )
+              : null,
         );
 
   @override
   SeriesPainter<Series> createPainter() => LinePainter(this);
+
+  @override
+  bool shouldRepaint(ChartData? oldDelegate) {
+    if (oldDelegate == null) {
+      return true;
+    }
+
+    final MASeries oldSeries = oldDelegate as MASeries;
+    return options != oldSeries.options || style != oldSeries.style;
+  }
 
   @override
   CachedIndicator<Tick> initializeIndicator() =>

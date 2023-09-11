@@ -1,14 +1,15 @@
 import 'dart:collection';
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
 import '../chart_data.dart';
-<<<<<<< HEAD
-
-=======
->>>>>>> 901a55f4 (Maryia/78669/add drawing tools list (#195))
+import '../chart_series/series.dart';
+import 'active_marker.dart';
+import 'marker.dart';
+import 'marker_icon_painters/marker_icon_painter.dart';
 import 'marker_painter.dart';
 
 /// Marker series

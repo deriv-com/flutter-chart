@@ -13,7 +13,7 @@ import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 
 /// Drawing tools dialog with available drawing tools.
 class DrawingToolsDialog extends StatefulWidget {
@@ -36,8 +36,8 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final AddOnsRepository<DrawingToolConfig> repo =
-        context.watch<AddOnsRepository<DrawingToolConfig>>();
+    final Repository<DrawingToolConfig> repo =
+        context.watch<Repository<DrawingToolConfig>>();
 
     return AnimatedPopupDialog(
       child: Column(
@@ -109,9 +109,9 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: repo.getAddOns().length,
+              itemCount: repo.items.length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.getAddOns()[index].getItem(
+                  repo.items[index].getItem(
                 (DrawingToolConfig updatedConfig) {
                   widget.drawingTools.onDrawingToolUpdate(index, updatedConfig);
                   repo.updateAt(index, updatedConfig);

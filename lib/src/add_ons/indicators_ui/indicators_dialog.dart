@@ -6,7 +6,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicato
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
-import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +38,8 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final AddOnsRepository<IndicatorConfig> repo =
-        context.watch<AddOnsRepository<IndicatorConfig>>();
+    final Repository<IndicatorConfig> repo =
+        context.watch<Repository<IndicatorConfig>>();
 
     return AnimatedPopupDialog(
       child: Column(
@@ -50,92 +50,92 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
               DropdownButton<IndicatorConfig>(
                 value: _selectedIndicator,
                 hint: const Text('Select indicator'),
-                items: <DropdownMenuItem<IndicatorConfig>>[
-                  const DropdownMenuItem<IndicatorConfig>(
+                items: const <DropdownMenuItem<IndicatorConfig>>[
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Moving average'),
                     value: MAIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Moving average envelope'),
                     value: MAEnvIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Bollinger bands'),
                     value: BollingerBandsIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Donchian channel'),
                     value: DonchianChannelIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Alligator'),
                     value: AlligatorIndicatorConfig(),
                   ),
                   DropdownMenuItem<IndicatorConfig>(
-                    child: const Text('Rainbow'),
+                    child: Text('Rainbow'),
                     value: RainbowIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('ZigZag'),
                     value: ZigZagIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Ichimoku Clouds'),
                     value: IchimokuCloudIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Parabolic SAR'),
                     value: ParabolicSARConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('RSI'),
                     value: RSIIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Commodity Channel Index'),
                     value: CCIIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('FCB'),
                     value: FractalChaosBandIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('StochasticOscillator'),
                     value: StochasticOscillatorIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('ADX'),
                     value: ADXIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('DPO'),
                     value: DPOIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Stochastic Momentum Index'),
                     value: SMIIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Williams %R'),
                     value: WilliamsRIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('AwesomeOscillator'),
                     value: AwesomeOscillatorIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('MACD'),
                     value: MACDIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Aroon'),
                     value: AroonIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Price Rate Of Changes'),
                     value: ROCIndicatorConfig(),
                   ),
-                  const DropdownMenuItem<IndicatorConfig>(
+                  DropdownMenuItem<IndicatorConfig>(
                     child: Text('Gator Oscillator'),
                     value: GatorIndicatorConfig(),
                   )
@@ -162,9 +162,9 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: repo.addOns.length,
+              itemCount: repo.items.length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.addOns[index].getItem(
+                  repo.items[index].getItem(
                 (IndicatorConfig updatedConfig) =>
                     repo.updateAt(index, updatedConfig),
                 () {

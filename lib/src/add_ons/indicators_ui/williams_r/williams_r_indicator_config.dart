@@ -27,7 +27,15 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
       oversoldValue: -80,
       overboughtValue: -20,
     ),
-  }) : super(isOverlay: false);
+    int pipSize = 4,
+    bool showLastIndicator = false,
+    String? title,
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? WilliamsRIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory WilliamsRIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -58,10 +66,17 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
   @override
   Series getSeries(IndicatorInput indicatorInput) => WilliamsRSeries(
         indicatorInput,
-        WilliamsROptions(period),
+        WilliamsROptions(
+          period,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+        ),
         overboughtValue: oscillatorLimits.overboughtValue,
         oversoldValue: oscillatorLimits.oversoldValue,
+        overboughtLineStyle: oscillatorLimits.overboughtStyle,
+        oversoldLineStyle: oscillatorLimits.oversoldStyle,
         showZones: showZones,
+        lineStyle: lineStyle,
       );
 
   @override

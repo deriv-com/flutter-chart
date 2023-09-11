@@ -40,13 +40,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_deriv_api/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
-<<<<<<< HEAD
-  shared_preferences_ios:
-    :path: ".symlinks/plugins/shared_preferences_ios/ios"
-=======
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/ios"
->>>>>>> 87b82f3e (sahani/migrate_flutter_to_version_3_10 (#225))
   vibration:
     :path: ".symlinks/plugins/vibration/ios"
 
