@@ -69,21 +69,22 @@ class RayLineDrawing extends Drawing {
     final DrawingPatterns pattern = config.pattern;
 
     _lineDrawing.onPaint(
-        canvas,
-        size,
-        theme,
-        epochToX,
-        quoteToY,
-        DrawingData(
-          id: drawingData.id,
-          config: LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
-          drawingParts: drawingData.drawingParts,
-          isDrawingFinished: drawingData.isDrawingFinished,
-          isSelected: drawingData.isSelected,
-        ),
-        updatePositionCallback,
-        draggableStartPoint,
-        draggableEndPoint: draggableEndPoint);
+      canvas,
+      size,
+      theme,
+      epochToX,
+      quoteToY,
+      DrawingData(
+        id: drawingData.id,
+        config: LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
+        drawingParts: drawingData.drawingParts,
+        isDrawingFinished: drawingData.isDrawingFinished,
+        isSelected: drawingData.isSelected,
+      ),
+      updatePositionCallback,
+      draggableStartPoint,
+      draggableEndPoint: draggableEndPoint,
+    );
   }
 
   /// Calculation for detemining whether a user's touch or click intersects
@@ -102,9 +103,20 @@ class RayLineDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
-  }) =>
-      _lineDrawing.hitTest(position, epochToX, quoteToY, config,
-          draggableStartPoint, setIsStartPointDragged,
-          draggableEndPoint: draggableEndPoint,
-          setIsEndPointDragged: setIsEndPointDragged);
+  }) {
+    config as RayDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
+    final DrawingPatterns pattern = config.pattern;
+
+    return _lineDrawing.hitTest(
+        position,
+        epochToX,
+        quoteToY,
+        LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
+        draggableStartPoint,
+        setIsStartPointDragged,
+        draggableEndPoint: draggableEndPoint,
+        setIsEndPointDragged: setIsEndPointDragged);
+  }
 }

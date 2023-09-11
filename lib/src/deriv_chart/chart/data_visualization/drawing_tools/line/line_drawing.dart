@@ -50,7 +50,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
-  // TODO(NA): Return true if LineDrawing's edge points or its line is on chart view port.
+  // TODO(NA): Return true when the line drawing is in epoch range.
   @override
   bool needsRepaint(
     int leftEpoch,
@@ -155,7 +155,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     setIsStartPointDragged(isDragged: false);
     setIsEndPointDragged!(isDragged: false);
 
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    config as LineDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     double startXCoord = _startPoint!.x;
     double startQuoteToY = _startPoint!.y;
