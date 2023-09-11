@@ -66,16 +66,16 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            ...widget.drawingTools.drawings
-                .map((DrawingData drawingData) => DrawingPainter(
-                      drawingData: drawingData,
-                      quoteToCanvasY: widget.chartQuoteToCanvasY,
-                      quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                      onMoveDrawing: widget.drawingTools.onMoveDrawing,
-                      setIsDrawingSelected: _setIsDrawingSelected,
-                      selectedDrawingTool:
-                          widget.drawingTools.selectedDrawingTool,
-                    )),
+            ...widget.drawingTools.drawings.map(
+              (DrawingData drawingData) => DrawingPainter(
+                drawingData: drawingData,
+                quoteToCanvasY: widget.chartQuoteToCanvasY,
+                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                onMoveDrawing: widget.drawingTools.onMoveDrawing,
+                setIsDrawingSelected: _setIsDrawingSelected,
+                selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+              ),
+            ),
             if (widget.drawingTools.selectedDrawingTool != null)
               DrawingToolWidget(
                 onAddDrawing: widget.drawingTools.onAddDrawing,

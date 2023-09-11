@@ -286,4 +286,14 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
             _middlePoint!.isClicked(position, markerRadius) ||
             endPoint.isClicked(position, markerRadius));
   }
+
+  // TODO(NA): return true if the channel drawing is in epoch range.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
 }

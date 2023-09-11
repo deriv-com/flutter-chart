@@ -93,7 +93,10 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
-      int minimumEpoch, int maximumEpoch, List<Tick>? series) {
+    int minimumEpoch,
+    int maximumEpoch,
+    List<Tick>? series,
+  ) {
     if (prevMaximumEpoch != maximumEpoch || prevMinimumEpoch != minimumEpoch) {
       prevMaximumEpoch = maximumEpoch;
       prevMinimumEpoch = minimumEpoch;
@@ -196,7 +199,10 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
             setCalculator: _setCalculator,
             isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
             touchTolerance: _touchTolerance,
-          ),
+          )..onDrawingMoved(
+              _widget.series.input,
+              edgePoints.first,
+            ),
         );
       } else if (!isDrawingFinished) {
         edgePoints.add(
@@ -233,7 +239,11 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
-            ),
+            )..onDrawingMoved(
+                _widget.series.input,
+                startingEdgePoint,
+                endPoint: endingEdgePoint,
+              ),
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.line,
@@ -242,7 +252,11 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
-            ),
+            )..onDrawingMoved(
+                _widget.series.input,
+                startingEdgePoint,
+                endPoint: endingEdgePoint,
+              ),
             TrendDrawing(
               epochFromX: epochFromX,
               drawingPart: DrawingParts.marker,
@@ -251,7 +265,11 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               setCalculator: _setCalculator,
               isClickedOnRectangleBoundary: _isClickedOnRectangleBoundary,
               touchTolerance: _touchTolerance,
-            )
+            )..onDrawingMoved(
+                _widget.series.input,
+                startingEdgePoint,
+                endPoint: endingEdgePoint,
+              )
           ]);
       }
 

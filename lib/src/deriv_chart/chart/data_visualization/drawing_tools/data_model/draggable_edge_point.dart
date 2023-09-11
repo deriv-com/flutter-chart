@@ -27,6 +27,12 @@ class DraggableEdgePoint extends EdgePoint {
   /// Holds the current position of the edge point when it is being dragged.
   Offset _draggedPosition = Offset.zero;
 
+  /// Updated position of the edge point when it is being dragged.
+  ///
+  /// This would be obsolete when we keep [epoch] and [quote] fields updated
+  /// with user's dragging. And we can use them instead of this field.
+  Offset get draggedPosition => _draggedPosition;
+
   /// A callback method that takes the relative x and y positions as parameter,
   /// sets the draggedPosition field to its value and return epoch and quote
   /// values.

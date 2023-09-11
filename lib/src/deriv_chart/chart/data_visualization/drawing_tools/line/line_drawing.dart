@@ -50,6 +50,16 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
+  // TODO(NA): Return true when the line drawing is in epoch range.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
+
   /// Paint the line
   @override
   void onPaint(
