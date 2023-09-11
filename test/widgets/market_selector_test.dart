@@ -136,7 +136,6 @@ void main() {
     testWidgets('Add to favourites by clicking star icon', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          onAssetClicked: (asset, isFavouriteClicked) {},
           markets: [
             Market(subMarkets: [r50SubMarket])
           ],
@@ -163,7 +162,6 @@ void main() {
         (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          onAssetClicked: (asset, isFavouriteClicked) {},
           markets: [
             Market(subMarkets: [r25SubMarket])
           ],
@@ -195,7 +193,7 @@ void main() {
           ChartLocalization.delegate,
         ],
         supportedLocales: ChartLocalization.delegate.supportedLocales,
-        home: MarketSelector(markets: [],),
+        home: MarketSelector(markets: []),
       ));
 
       await tester.pumpAndSettle();

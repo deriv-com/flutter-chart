@@ -1,11 +1,15 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/abstract_single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/roc_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
+
+import '../series.dart';
+import '../series_painter.dart';
 
 /// ROC series.
 class ROCSeries extends AbstractSingleIndicatorSeries {
