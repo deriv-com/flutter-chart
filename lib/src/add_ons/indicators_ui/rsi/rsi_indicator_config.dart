@@ -1,8 +1,9 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/rsi_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/rsi_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -27,7 +28,15 @@ class RSIIndicatorConfig extends IndicatorConfig {
     this.lineStyle = const LineStyle(color: Colors.white),
     this.pinLabels = false,
     this.showZones = true,
-  }) : super(isOverlay: false);
+    int pipSize = 4,
+    bool showLastIndicator = false,
+    String? title,
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? RSIIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory RSIIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -63,7 +72,11 @@ class RSIIndicatorConfig extends IndicatorConfig {
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,
-        rsiOptions: RSIOptions(period: period),
+        rsiOptions: RSIOptions(
+          period: period,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+        ),
         showZones: showZones,
       );
 

@@ -58,6 +58,9 @@ class XAxisModel extends ChangeNotifier {
     bool startWithDataFitMode = false,
     int? minEpoch,
     int? maxEpoch,
+    double? msPerPx,
+    double? minIntervalWidth,
+    double? maxIntervalWidth,
     this.onScale,
     this.onScroll,
   }) {
@@ -72,10 +75,13 @@ class XAxisModel extends ChangeNotifier {
 
     _lastEpoch = DateTime.now().millisecondsSinceEpoch;
     _granularity = granularity;
-    _msPerPx = _defaultMsPerPx;
+    _msPerPx = msPerPx ?? _defaultMsPerPx;
     _isLive = isLive;
+    _maxCurrentTickOffset = maxCurrentTickOffset;
     _rightBoundEpoch = _maxRightBoundEpoch;
     _dataFitMode = startWithDataFitMode;
+    _minIntervalWidth = minIntervalWidth ?? 1;
+    _maxIntervalWidth = maxIntervalWidth ?? 80;
 
     _updateEntries(entries);
 
@@ -83,7 +89,7 @@ class XAxisModel extends ChangeNotifier {
       ..addListener(() {
         final double diff =
             _scrollAnimationController.value - (_prevScrollAnimationValue ?? 0);
-        _scrollBy(diff);
+        scrollBy(diff);
 
         if (hasHitLimit) {
           _scrollAnimationController.stop();
@@ -96,16 +102,16 @@ class XAxisModel extends ChangeNotifier {
   /// Limits panning to the right.
   final double maxCurrentTickOffset;
 
-  // TODO(NA): Allow customization of this setting.
-  /// Scaling will not resize intervals to be smaller than this.
-  static const int minIntervalWidth = 1;
+  late double _minIntervalWidth;
 
-  // TODO(NA): Allow customization of this setting.
-  /// Scaling will not resize intervals to be bigger than this.
-  static const int maxIntervalWidth = 80;
+  late double _maxIntervalWidth;
 
   /// Default to this interval width on granularity change.
   final double defaultIntervalWidth;
+
+  /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
+  /// Limits panning to the right.
+  late double _maxCurrentTickOffset;
 
   late bool _isLive;
 
@@ -152,10 +158,10 @@ class XAxisModel extends ChangeNotifier {
   set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
-  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, maxCurrentTickOffset);
+  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, _maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, _maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -176,10 +182,10 @@ class XAxisModel extends ChangeNotifier {
   double get msPerPx => _msPerPx;
 
   /// Min value for [_msPerPx]. Limits zooming in.
-  double get _minMsPerPx => _granularity / maxIntervalWidth;
+  double get _minMsPerPx => _granularity / _maxIntervalWidth;
 
   /// Max value for [_msPerPx]. Limits zooming out.
-  double get _maxMsPerPx => _granularity / minIntervalWidth;
+  double get _maxMsPerPx => _granularity / _minIntervalWidth;
 
   /// Starting value for [_msPerPx].
   double get _defaultMsPerPx => _granularity / defaultIntervalWidth;
@@ -227,7 +233,7 @@ class XAxisModel extends ChangeNotifier {
         }
         break;
       case ViewingMode.constantScrollSpeed:
-        _scrollBy(_panSpeed * elapsedMs);
+        scrollBy(_panSpeed * elapsedMs);
         break;
       case ViewingMode.stationary:
         break;
@@ -304,7 +310,12 @@ class XAxisModel extends ChangeNotifier {
   /// Updates chart's isLive property.
   ///
   /// Should be called before [_updateGranularity] and [_updateEntries]
-  void _updateIsLive(bool? isLive) => _isLive = isLive ?? true;
+  void _updateIsLive(bool? isLive) {
+    if (isLive == null || _isLive == isLive) {
+      return;
+    }
+    _isLive = isLive;
+  }
 
   /// Fits available data to screen.
   void _fitData() {
@@ -407,7 +418,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    _scrollBy(-details.delta.dx);
+    scrollBy(-details.delta.dx);
   }
 
   /// Called at the end of scale and pan gestures.
@@ -415,39 +426,41 @@ class XAxisModel extends ChangeNotifier {
     _triggerScrollMomentum(details.velocity);
   }
 
+  /// Called to scale the chart
+  void scale(double scale) {
+    _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
+    onScale?.call();
+    notifyListeners();
+  }
+
+  /// Called to scroll the chart
+  void scrollBy(double pxShift) {
+    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
+    _clampRightBoundEpoch();
+    onScroll?.call();
+    notifyListeners();
+  }
+
   void _scaleWithNowFixed(ScaleUpdateDetails details) {
     final double nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
-    _scale(details.scale);
+    scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
     final double focalToRightBound = width! - details.focalPoint.dx;
     final int focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
-    _scale(details.scale);
+    scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
   }
 
-  void _scale(double scale) {
-    _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
-    onScale?.call();
-    notifyListeners();
-  }
-
   void _scrollTo(int rightBoundEpoch) {
-    if (_rightBoundEpoch != rightBoundEpoch) {
+    if (width != null && _rightBoundEpoch != rightBoundEpoch) {
       _rightBoundEpoch = rightBoundEpoch;
       _clampRightBoundEpoch();
       onScroll?.call();
       notifyListeners();
     }
-  }
-
-  void _scrollBy(double pxShift) {
-    _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
-    _clampRightBoundEpoch();
-    onScroll?.call();
-    notifyListeners();
   }
 
   /// Animate scrolling to current tick.
@@ -457,7 +470,7 @@ class XAxisModel extends ChangeNotifier {
     final int target = _shiftEpoch(
             // _lastEntryEpoch will be removed later.
             (_entries?.isNotEmpty ?? false) ? _entries!.last.epoch : _nowEpoch,
-            maxCurrentTickOffset) +
+            _maxCurrentTickOffset) +
         duration.inMilliseconds;
 
     final double distance = target > _rightBoundEpoch

@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'paint_x_grid.dart';
@@ -7,30 +7,30 @@ import 'paint_x_grid.dart';
 class XGridPainter extends CustomPainter {
   /// Creates x-axis painter.
   XGridPainter({
-    required this.timeLabels,
     required this.xCoords,
     required this.style,
+    required this.timestamps,
   });
-
-  /// Time labels.
-  final List<String> timeLabels;
 
   /// X-coordinates of time labels.
   final List<double> xCoords;
 
   /// Style of the grid.
-  final GridStyle style;
+  final ChartTheme style;
+
+  /// List of DateTime on screen
+  final List<DateTime> timestamps;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (timeLabels.isEmpty || xCoords.isEmpty) {
+    if (timestamps.isEmpty || xCoords.isEmpty) {
       return;
     }
 
     paintXGrid(
       canvas,
       size,
-      timeLabels: timeLabels,
+      timestamps: timestamps,
       xCoords: xCoords,
       style: style,
     );
@@ -38,7 +38,7 @@ class XGridPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(XGridPainter oldDelegate) =>
-      timeLabels != oldDelegate.timeLabels ||
+      timestamps != oldDelegate.timestamps ||
       xCoords != oldDelegate.xCoords ||
       style != oldDelegate.style;
 

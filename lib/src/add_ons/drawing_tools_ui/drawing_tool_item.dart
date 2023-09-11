@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'callbacks.dart';
 import 'drawing_tool_config.dart';
 
@@ -41,14 +41,13 @@ abstract class DrawingToolItemState<T extends DrawingToolConfig>
     extends State<DrawingToolItem> {
   /// Drawing tools repository
   @protected
-  late AddOnsRepository<DrawingToolConfig> drawingToolsRepo;
+  late Repository<DrawingToolConfig> drawingToolsRepo;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    drawingToolsRepo =
-        Provider.of<AddOnsRepository<DrawingToolConfig>>(context);
+    drawingToolsRepo = Provider.of<Repository<DrawingToolConfig>>(context);
   }
 
   @override

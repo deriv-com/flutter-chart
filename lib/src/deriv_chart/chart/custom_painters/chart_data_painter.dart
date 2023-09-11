@@ -1,11 +1,14 @@
 // ignore_for_file: unnecessary_null_comparison
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
+
+import '../data_visualization/chart_series/line_series/line_series.dart';
+import '../data_visualization/chart_series/ohlc_series/candle/candle_series.dart';
+import '../data_visualization/chart_series/series.dart';
 
 /// A `CustomPainter` which paints the chart data inside the chart.
 class ChartDataPainter extends BaseChartDataPainter {
@@ -57,8 +60,7 @@ class ChartDataPainter extends BaseChartDataPainter {
   @override
   bool shouldRepaint(covariant ChartDataPainter oldDelegate) {
     bool styleChanged() =>
-        (mainSeries is LineSeries && oldDelegate.mainSeries is CandleSeries) ||
-        (mainSeries is CandleSeries && oldDelegate.mainSeries is LineSeries) ||
+        (mainSeries.runtimeType != oldDelegate.mainSeries.runtimeType) ||
         (mainSeries is LineSeries &&
             theme.lineStyle != oldDelegate.theme.lineStyle) ||
         (mainSeries is CandleSeries &&
@@ -68,8 +70,8 @@ class ChartDataPainter extends BaseChartDataPainter {
         mainSeries.shouldRepaint(oldDelegate.mainSeries);
 
     return super.shouldRepaint(oldDelegate) ||
-        visibleAnimationChanged() ||
-        styleChanged();
+        styleChanged() ||
+        visibleAnimationChanged();
   }
 }
 
@@ -149,15 +151,14 @@ class BaseChartDataPainter extends CustomPainter {
         return true;
       }
 
-      final Map<String?, ChartPaintingStyle?> oldStyles =
-          Map<String?, ChartPaintingStyle?>.fromIterable(
+      final Map<String?, Series> oldSeries = Map<String?, Series>.fromIterable(
         oldDelegate.series,
         key: (dynamic series) => series.id,
-        value: (dynamic series) => series.style,
+        value: (dynamic series) => series,
       );
-      return series.any(
-        (Series series) => series.style != oldStyles[series.id],
-      );
+
+      return series
+          .any((Series series) => series.shouldRepaint(oldSeries[series.id]));
     }
 
     return rightBoundEpoch != oldDelegate.rightBoundEpoch ||

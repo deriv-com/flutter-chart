@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 
@@ -18,7 +18,7 @@ class DrawingTools {
   DrawingToolConfig? selectedDrawingTool;
 
   /// Keep the reference to the drawing tools repository.
-  AddOnsRepository<DrawingToolConfig>? drawingToolsRepo;
+  Repository<DrawingToolConfig>? drawingToolsRepo;
 
   /// For tracking the drawing movement
   bool isDrawingMoving = false;

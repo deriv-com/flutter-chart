@@ -6,53 +6,49 @@ part of 'ma_env_indicator_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(Map<String, dynamic> json) {
-  return MAEnvIndicatorConfig(
-    period: json['period'] as int,
-    movingAverageType:
-        _$enumDecode(_$MovingAverageTypeEnumMap, json['movingAverageType']),
-    fieldType: json['fieldType'] as String,
-    shift: (json['shift'] as num).toDouble(),
-    shiftType: _$enumDecode(_$ShiftTypeEnumMap, json['shiftType']),
-  );
-}
+MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(
+        Map<String, dynamic> json) =>
+    MAEnvIndicatorConfig(
+      period: json['period'] as int? ?? 50,
+      movingAverageType: $enumDecodeNullable(
+              _$MovingAverageTypeEnumMap, json['movingAverageType']) ??
+          MovingAverageType.simple,
+      fieldType: json['fieldType'] as String? ?? 'close',
+      shift: (json['shift'] as num?)?.toDouble() ?? 5,
+      shiftType: $enumDecodeNullable(_$ShiftTypeEnumMap, json['shiftType']) ??
+          ShiftType.percent,
+      upperLineStyle: json['upperLineStyle'] == null
+          ? const LineStyle(color: Colors.green)
+          : LineStyle.fromJson(json['upperLineStyle'] as Map<String, dynamic>),
+      middleLineStyle: json['middleLineStyle'] == null
+          ? const LineStyle(color: Colors.blue)
+          : LineStyle.fromJson(json['middleLineStyle'] as Map<String, dynamic>),
+      lowerLineStyle: json['lowerLineStyle'] == null
+          ? const LineStyle(color: Colors.red)
+          : LineStyle.fromJson(json['lowerLineStyle'] as Map<String, dynamic>),
+      fillColor: json['fillColor'] == null
+          ? Colors.white12
+          : const ColorConverter().fromJson(json['fillColor'] as int),
+      showChannelFill: json['showChannelFill'] as bool? ?? true,
+      showLastIndicator: json['showLastIndicator'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
         MAEnvIndicatorConfig instance) =>
     <String, dynamic>{
+      'showLastIndicator': instance.showLastIndicator,
       'period': instance.period,
       'movingAverageType':
-          _$MovingAverageTypeEnumMap[instance.movingAverageType],
+          _$MovingAverageTypeEnumMap[instance.movingAverageType]!,
       'fieldType': instance.fieldType,
-      'shiftType': _$ShiftTypeEnumMap[instance.shiftType],
+      'shiftType': _$ShiftTypeEnumMap[instance.shiftType]!,
       'shift': instance.shift,
+      'upperLineStyle': instance.upperLineStyle,
+      'middleLineStyle': instance.middleLineStyle,
+      'lowerLineStyle': instance.lowerLineStyle,
+      'fillColor': const ColorConverter().toJson(instance.fillColor),
+      'showChannelFill': instance.showChannelFill,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$MovingAverageTypeEnumMap = {
   MovingAverageType.simple: 'simple',

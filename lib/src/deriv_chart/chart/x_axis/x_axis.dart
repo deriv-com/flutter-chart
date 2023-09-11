@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import 'grid/time_label.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 
@@ -27,6 +26,10 @@ class XAxis extends StatefulWidget {
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
+    this.maxCurrentTickOffset,
+    this.msPerPx,
+    this.minIntervalWidth,
+    this.maxIntervalWidth,
     Key? key,
   }) : super(key: key);
 
@@ -53,6 +56,20 @@ class XAxis extends StatefulWidget {
 
   /// Number of digits after decimal point in price
   final int pipSize;
+
+  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
+  final double? maxCurrentTickOffset;
+
+  /// Specifies the zoom level of the chart.
+  final double? msPerPx;
+
+  /// Specifies the minimum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? minIntervalWidth;
+
+  /// Specifies the maximum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? maxIntervalWidth;
 
   @override
   _XAxisState createState() => _XAxisState();
@@ -84,6 +101,9 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       maxEpoch: widget.maxEpoch,
       maxCurrentTickOffset: chartConfig.chartAxisConfig.maxCurrentTickOffset,
       defaultIntervalWidth: chartConfig.chartAxisConfig.defaultIntervalWidth,
+      msPerPx: widget.msPerPx,
+      minIntervalWidth: widget.minIntervalWidth,
+      maxIntervalWidth: widget.maxIntervalWidth,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -143,21 +163,21 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             return Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                if (context.read<ChartConfig>().chartAxisConfig.showEpochGrid)
-                  RepaintBoundary(
-                    child: CustomPaint(
-                      painter: XGridPainter(
-                        timeLabels: _noOverlapGridTimestamps
-                            .map<String>((DateTime time) => timeLabel(time))
-                            .toList(),
-                        xCoords: _noOverlapGridTimestamps
-                            .map<double>((DateTime time) =>
-                                _model.xFromEpoch(time.millisecondsSinceEpoch))
-                            .toList(),
-                        style: _chartTheme.gridStyle,
-                      ),
+              if (context.read<ChartConfig>().chartAxisConfig.showEpochGrid)
+                RepaintBoundary(
+                  child: CustomPaint(
+                    painter: XGridPainter(
+                      timestamps: _noOverlapGridTimestamps
+                          .map<DateTime>((DateTime time) => time)
+                          .toList(),
+                      xCoords: _noOverlapGridTimestamps
+                          .map<double>((DateTime time) =>
+                              _model.xFromEpoch(time.millisecondsSinceEpoch))
+                          .toList(),
+                      style: _chartTheme,
                     ),
                   ),
+                ),
                 Padding(
                   padding: EdgeInsets.only(
                     bottom: _chartTheme.gridStyle.xLabelsAreaHeight,

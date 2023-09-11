@@ -8,7 +8,12 @@ class RainbowOptions extends MAOptions {
     this.bandsCount = 10,
     int period = 50,
     MovingAverageType movingAverageType = MovingAverageType.simple,
-  }) : super(period: period, type: movingAverageType);
+    bool showLastIndicator = false,
+  }) : super(
+          period: period,
+          type: movingAverageType,
+          showLastIndicator: showLastIndicator,
+        );
 
   /// number of rainbow bands
   final int bandsCount;
