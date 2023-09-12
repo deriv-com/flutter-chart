@@ -96,6 +96,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
           xAxis.epochFromX,
           widget.drawingData!.series!,
           _draggableStartPoint,
+          middlePoint: _draggableMiddlePoint,
           endPoint: _draggableEndPoint,
         );
       }
@@ -144,7 +145,6 @@ class _DrawingPainterState extends State<DrawingPainter> {
 
         /// Updating restored DrawingToolConfig with latest data from the chart
         updateDrawingToolConfig();
-        _updateDrawingsMovement();
       }
     }
 
@@ -163,10 +163,12 @@ class _DrawingPainterState extends State<DrawingPainter> {
             child: GestureDetector(
               onTapUp: (TapUpDetails details) {
                 widget.setIsDrawingSelected(widget.drawingData!);
+                _updateDrawingsMovement();
               },
               onLongPressDown: (LongPressDownDetails details) {
                 widget.onMoveDrawing(isDrawingMoved: true);
                 _previousPosition = details.localPosition;
+                _updateDrawingsMovement();
               },
               onLongPressMoveUpdate: (LongPressMoveUpdateDetails details) {
                 final DragUpdateDetails dragDetails =
@@ -174,6 +176,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 _previousPosition = details.localPosition;
 
                 _onPanUpdate(dragDetails);
+                _updateDrawingsMovement();
               },
               onLongPressUp: () {
                 widget.onMoveDrawing(isDrawingMoved: false);
@@ -186,12 +189,15 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 _draggableEndPoint = _draggableEndPoint.copyWith(
                   isDragged: false,
                 );
+                _updateDrawingsMovement();
               },
               onPanStart: (DragStartDetails details) {
                 widget.onMoveDrawing(isDrawingMoved: true);
+                _updateDrawingsMovement();
               },
               onPanUpdate: (DragUpdateDetails details) {
                 _onPanUpdate(details);
+                _updateDrawingsMovement();
               },
               onPanEnd: (DragEndDetails details) {
                 setState(() {
@@ -206,6 +212,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   );
                 });
                 widget.onMoveDrawing(isDrawingMoved: false);
+                _updateDrawingsMovement();
               },
               child: CustomPaint(
                 foregroundPainter: _DrawingPainter(
