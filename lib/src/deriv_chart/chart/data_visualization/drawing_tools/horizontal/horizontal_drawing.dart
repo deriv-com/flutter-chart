@@ -95,15 +95,15 @@ class HorizontalDrawing extends Drawing {
             ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
             : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
       );
-      paintDrawingLabel(
-        canvas,
-        size,
-        pointYCoord,
-        'horizontal',
-        theme,
-        chartConfig!,
-        quoteFromY: quoteFromY,
-      );
+      // paintDrawingLabel(
+      //   canvas,
+      //   size,
+      //   pointYCoord,
+      //   'horizontal',
+      //   theme,
+      //   chartConfig!,
+      //   quoteFromY: quoteFromY,
+      // );
     }
   }
 
