@@ -1,5 +1,6 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../data_painter.dart';

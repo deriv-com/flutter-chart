@@ -6,6 +6,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:flutter/material.dart';
 
+import 'horizontal_barrier.dart';
+import 'tick_indicator.dart';
+
 /// A class for painting horizontal barriers.
 class HorizontalBarrierPainter<T extends HorizontalBarrier>
     extends SeriesPainter<T> {

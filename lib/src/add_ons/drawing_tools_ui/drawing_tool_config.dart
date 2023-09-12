@@ -1,13 +1,18 @@
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
+
 import 'package:flutter/material.dart';
 import 'line/line_drawing_tool_config.dart';
 import 'vertical/vertical_drawing_tool_config.dart';
@@ -26,12 +31,20 @@ abstract class DrawingToolConfig extends AddOnConfig {
     }
 
     switch (json[nameKey]) {
+      case ChannelDrawingToolConfig.name:
+        return ChannelDrawingToolConfig.fromJson(json);
       case ContinuousDrawingToolConfig.name:
         return ContinuousDrawingToolConfig.fromJson(json);
+      case FibfanDrawingToolConfig.name:
+        return FibfanDrawingToolConfig.fromJson(json);
+      case HorizontalDrawingToolConfig.name:
+        return HorizontalDrawingToolConfig.fromJson(json);
       case LineDrawingToolConfig.name:
         return LineDrawingToolConfig.fromJson(json);
       case RayDrawingToolConfig.name:
         return RayDrawingToolConfig.fromJson(json);
+      case RectangleDrawingToolConfig.name:
+        return RectangleDrawingToolConfig.fromJson(json);
       case TrendDrawingToolConfig.name:
         return TrendDrawingToolConfig.fromJson(json);
       case VerticalDrawingToolConfig.name:
@@ -55,6 +68,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
     String? configId,
     DrawingData? drawingData,
     LineStyle? lineStyle,
+    LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
   });

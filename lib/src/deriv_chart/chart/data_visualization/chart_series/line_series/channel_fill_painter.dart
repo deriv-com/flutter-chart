@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:flutter/material.dart';
 
 import '../data_painter.dart';

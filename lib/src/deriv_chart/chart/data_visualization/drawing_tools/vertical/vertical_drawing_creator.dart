@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import './vertical_drawing.dart';
 
@@ -10,11 +11,13 @@ class VerticalDrawingCreator extends DrawingCreator<VerticalDrawing> {
   const VerticalDrawingCreator({
     required OnAddDrawing<VerticalDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
+    required ChartConfig chartConfig,
     Key? key,
   }) : super(
           key: key,
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
+          chartConfig: chartConfig,
         );
 
   @override

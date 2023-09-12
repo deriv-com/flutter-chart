@@ -1,6 +1,5 @@
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -44,6 +43,18 @@ class VerticalDrawing extends Drawing {
   /// Keeps the latest position of the start of drawing
   Point? startPoint;
 
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      draggableStartPoint.isInViewPortRange(
+        leftEpoch,
+        rightEpoch,
+      );
+
   /// Paint
   @override
   void onPaint(
@@ -51,6 +62,7 @@ class VerticalDrawing extends Drawing {
     Size size,
     ChartTheme theme,
     int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
@@ -60,6 +72,7 @@ class VerticalDrawing extends Drawing {
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
@@ -73,7 +86,6 @@ class VerticalDrawing extends Drawing {
 
     final double xCoord = startPoint!.x;
     final double startQuoteToY = startPoint!.y;
-
     if (drawingPart == DrawingParts.line) {
       final double startY = startQuoteToY - 10000,
           endingY = startQuoteToY + 10000;
@@ -100,10 +112,14 @@ class VerticalDrawing extends Drawing {
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
     void Function({required bool isDragged}) setIsStartPointDragged, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    config as VerticalDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     return position.dx > startPoint!.x - lineStyle.thickness - 5 &&
         position.dx < startPoint!.x + lineStyle.thickness + 5;

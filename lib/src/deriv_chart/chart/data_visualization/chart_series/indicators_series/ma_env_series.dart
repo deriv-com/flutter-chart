@@ -55,6 +55,7 @@ class MAEnvSeries extends Series {
   /// Upper series
   late SingleIndicatorSeries upperSeries;
 
+  /// Inner Series
   final List<Series> innerSeries = <Series>[];
 
   @override

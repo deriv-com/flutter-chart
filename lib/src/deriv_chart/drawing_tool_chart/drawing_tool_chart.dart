@@ -1,9 +1,7 @@
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,6 +42,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
       .toList();
 
   /// Sets drawing as selected and unselects the rest of drawings
+  /// if any of the drawing is not finished , it selects the unfinished drawing
   void _setIsDrawingSelected(DrawingData drawing) {
     drawing.isSelected = !drawing.isSelected;
 
@@ -97,6 +96,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
               onAddDrawing: widget.drawingTools.onAddDrawing,
               selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
               quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+              chartConfig: context.watch<ChartConfig>(),
               clearDrawingToolSelection:
                   widget.drawingTools.clearDrawingToolSelection,
               series: widget.series,

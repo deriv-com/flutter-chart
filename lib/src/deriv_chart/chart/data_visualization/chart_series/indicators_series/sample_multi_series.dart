@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:flutter/material.dart';
 
 import 'models/indicator_options.dart';

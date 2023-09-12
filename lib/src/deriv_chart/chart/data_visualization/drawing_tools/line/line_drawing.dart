@@ -11,8 +11,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'line_drawing.g.dart';
@@ -20,7 +22,7 @@ part 'line_drawing.g.dart';
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
 @JsonSerializable()
-class LineDrawing extends Drawing {
+class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   LineDrawing({
     required this.drawingPart,
@@ -38,7 +40,7 @@ class LineDrawing extends Drawing {
   Map<String, dynamic> toJson() => _$LineDrawingToJson(this)
     ..putIfAbsent(Drawing.classNameKey, () => nameKey);
 
-  /// Key of indicator name property in JSON.
+  /// Key of drawing tool name property in JSON.
   static const String nameKey = 'LineDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
@@ -64,79 +66,6 @@ class LineDrawing extends Drawing {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
-  /// Vector of the line
-  Vector getLineVector(
-    double startXCoord,
-    double startQuoteToY,
-    double endXCoord,
-    double endQuoteToY,
-  ) {
-    Vector vec = Vector(
-      x0: startXCoord,
-      y0: startQuoteToY,
-      x1: endXCoord,
-      y1: endQuoteToY,
-    );
-
-    late double earlier, later;
-    if (exceedEnd && !exceedStart) {
-      earlier = vec.x0;
-      if (vec.x0 > vec.x1) {
-        later = vec.x1 - 1000;
-      } else {
-        later = vec.x1 + 1000;
-      }
-    }
-    if (exceedStart && !exceedEnd) {
-      later = vec.x1;
-
-      if (vec.x0 > vec.x1) {
-        earlier = vec.x0 + 1000;
-      } else {
-        earlier = vec.x0 - 1000;
-      }
-    }
-
-    if (exceedStart && exceedEnd) {
-      if (vec.x0 > vec.x1) {
-        vec = Vector(
-          x0: endXCoord,
-          y0: endQuoteToY,
-          x1: startXCoord,
-          y1: startQuoteToY,
-        );
-      }
-
-      earlier = vec.x0 - 1000;
-      later = vec.x1 + 1000;
-    }
-
-    if (!exceedEnd && !exceedStart) {
-      if (vec.x0 > vec.x1) {
-        vec = Vector(
-          x0: endXCoord,
-          y0: endQuoteToY,
-          x1: startXCoord,
-          y1: startQuoteToY,
-        );
-      }
-      earlier = vec.x0;
-      later = vec.x1;
-    }
-
-    final double startY = getYIntersection(vec, earlier) ?? 0,
-        endingY = getYIntersection(vec, later) ?? 0,
-        startX = earlier,
-        endingX = later;
-
-    return Vector(
-      x0: startX,
-      y0: startY,
-      x1: endingX,
-      y1: endingY,
-    );
-  }
-
   /// Paint the line
   @override
   void onPaint(
@@ -144,6 +73,7 @@ class LineDrawing extends Drawing {
     Size size,
     ChartTheme theme,
     int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
@@ -153,6 +83,7 @@ class LineDrawing extends Drawing {
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
@@ -164,9 +95,9 @@ class LineDrawing extends Drawing {
     final DrawingPatterns pattern = config.pattern;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
     if (edgePoints.length > 1) {
-      _endPoint = updatePositionCallback(edgePoints[1], draggableEndPoint!);
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
     } else {
       _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
     }
@@ -201,6 +132,8 @@ class LineDrawing extends Drawing {
         startQuoteToY,
         endXCoord,
         endQuoteToY,
+        exceedStart: exceedStart,
+        exceedEnd: exceedEnd,
       );
 
       if (pattern == DrawingPatterns.solid) {
@@ -227,13 +160,17 @@ class LineDrawing extends Drawing {
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
     void Function({required bool isDragged}) setIsStartPointDragged, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
     setIsStartPointDragged(isDragged: false);
     setIsEndPointDragged!(isDragged: false);
 
-    final LineStyle lineStyle = config.toJson()['lineStyle'];
+    config as LineDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     double startXCoord = _startPoint!.x;
     double startQuoteToY = _startPoint!.y;
@@ -279,6 +216,7 @@ class LineDrawing extends Drawing {
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (draggableStartPoint.isDragged || draggableEndPoint!.isDragged);
+        (_startPoint!.isClicked(position, markerRadius) ||
+            _endPoint!.isClicked(position, markerRadius));
   }
 }

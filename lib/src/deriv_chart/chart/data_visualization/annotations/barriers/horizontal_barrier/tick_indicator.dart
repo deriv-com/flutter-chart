@@ -4,6 +4,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'candle_indicator_painter.dart';
+import 'horizontal_barrier.dart';
 import 'horizontal_barrier_painter.dart';
 
 /// Tick indicator.

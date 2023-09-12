@@ -47,10 +47,22 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 value: _selectedDrawingTool,
                 hint: Text(ChartLocalization.of(context).selectDrawingTool),
                 items: const <DropdownMenuItem<DrawingToolConfig>>[
+                  // DropdownMenuItem<DrawingToolConfig>(
+                  //   child: Text('Channel'),
+                  //   value: ChannelDrawingToolConfig(),
+                  // ),
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Continuous'),
                     value: ContinuousDrawingToolConfig(),
                   ),
+                  // DropdownMenuItem<DrawingToolConfig>(
+                  //   child: Text('Fib Fan'),
+                  //   value: FibfanDrawingToolConfig(),
+                  // ),
+                  // DropdownMenuItem<DrawingToolConfig>(
+                  //   child: Text('Horizontal'),
+                  //   value: HorizontalDrawingToolConfig(),
+                  // ),
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Line'),
                     value: LineDrawingToolConfig(),
@@ -59,6 +71,9 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     child: Text('Ray'),
                     value: RayDrawingToolConfig(),
                   ),
+                  // DropdownMenuItem<DrawingToolConfig>(
+                  //     child: Text('Rectangle'),
+                  //     value: RectangleDrawingToolConfig()),
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Trend'),
                     value: TrendDrawingToolConfig(),
@@ -66,7 +81,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                   DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Vertical'),
                     value: VerticalDrawingToolConfig(),
-                  ),
+                  )
                   // TODO(maryia-binary): add the rest of drawing tools above
                 ],
                 onChanged: (DrawingToolConfig? config) {

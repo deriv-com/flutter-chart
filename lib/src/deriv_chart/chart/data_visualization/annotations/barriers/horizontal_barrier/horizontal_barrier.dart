@@ -1,6 +1,8 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 
+import '../barrier.dart';
 import 'horizontal_barrier_painter.dart';
 
 /// Horizontal barrier class.

@@ -7,14 +7,11 @@ import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_pai
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'basic_chart.dart';
-import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';
 
 /// The main chart to display in the chart widget.
@@ -350,6 +347,19 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
             ),
           );
         },
+      );
+
+  Widget _buildDrawingToolChart() => MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController,
+        ],
+        builder: (_, Widget? child) => DrawingToolChart(
+          series: widget.mainSeries as DataSeries<Tick>,
+          chartQuoteToCanvasY: chartQuoteToCanvasY,
+          chartQuoteFromCanvasY: chartQuoteFromCanvasY,
+          drawingTools: widget.drawingTools,
+        ),
       );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(

@@ -3,13 +3,15 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'continuous_line_drawing.g.dart';
@@ -56,7 +58,7 @@ class ContinuousLineDrawing extends Drawing {
   /// Whether the end point is exceeded.
   final bool exceedEnd;
 
-  /// Key of indicator name property in JSON.
+  /// Key of drawing tool name property in JSON.
   static const String nameKey = 'ContinuousLineDrawing';
 
   final LineDrawing _lineDrawing;
@@ -68,6 +70,7 @@ class ContinuousLineDrawing extends Drawing {
     Size size,
     ChartTheme theme,
     int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
     DrawingToolConfig config,
@@ -77,6 +80,7 @@ class ContinuousLineDrawing extends Drawing {
       DraggableEdgePoint draggableEdgePoint,
     ) updatePositionCallback,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
     config as ContinuousDrawingToolConfig;
@@ -95,6 +99,7 @@ class ContinuousLineDrawing extends Drawing {
         size,
         theme,
         epochFromX,
+        quoteFromY,
         epochToX,
         quoteToY,
         LineDrawingToolConfig(
@@ -125,6 +130,7 @@ class ContinuousLineDrawing extends Drawing {
           size,
           theme,
           epochFromX,
+          quoteFromY,
           epochToX,
           quoteToY,
           LineDrawingToolConfig(
@@ -158,17 +164,24 @@ class ContinuousLineDrawing extends Drawing {
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
     void Function({required bool isDragged}) setIsStartPointDragged, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
-  }) =>
-      _lineDrawing.hitTest(
+  }) {
+    config as ContinuousDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
+    final DrawingPatterns pattern = config.pattern;
+
+    return _lineDrawing.hitTest(
         position,
         epochToX,
         quoteToY,
-        config,
+        LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
         draggableStartPoint,
         setIsStartPointDragged,
         draggableEndPoint: draggableEndPoint,
-        setIsEndPointDragged: setIsEndPointDragged,
-      );
+        setIsEndPointDragged: setIsEndPointDragged);
+  }
 }

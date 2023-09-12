@@ -6,7 +6,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barr
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:flutter/material.dart';
 
+import 'horizontal_barrier.dart';
 import 'horizontal_barrier_painter.dart';
+import 'tick_indicator.dart';
 
 /// A class for painting candle indicators.
 class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
