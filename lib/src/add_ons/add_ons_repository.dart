@@ -100,7 +100,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     if (_prefs != null) {
       await _prefs!.setStringList(
         addOnsKey,
-        items.map((T config) => jsonEncode(config.toJson())).toList(),
+        items.map((AddOnConfig config) => jsonEncode(config)).toList(),
       );
     }
   }

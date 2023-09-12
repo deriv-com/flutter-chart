@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -58,6 +59,44 @@ abstract class Drawing {
 
   /// Key of drawing tool name property in JSON.
   static const String classNameKey = 'class_name_key';
+
+  /// Will be called when the drawing is moved by the user gesture.
+  ///
+  /// Some drawing tools might required to handle some logic after the drawing
+  /// is moved and we don't want this logic be done in the [onPaint] method
+  /// because it runs more often and it might cause performance issues.
+  ///
+  /// The method has an empty implementation so only the [Drawing] subclasses
+  /// that require this life-cycle method can override it.
+  ///
+  // TODO(Bahar-Deriv): Decide if we need to pass the [draggableMiddlePoint]
+  /// and change the method name
+  void onDrawingMoved(
+    int Function(double x) epochFromX,
+    List<Tick> ticks,
+    EdgePoint startPoint, {
+    EdgePoint? middlePoint,
+    EdgePoint? endPoint,
+  }) {}
+
+  /// Is called before repaint the drawing to check if it needs to be
+  /// repainted.
+  ///
+  /// Returns true if the drawing needs to be repainted.
+  ///
+  /// Since the [Drawing] class instances are mutable and live across the
+  /// painting frames, there is no previous instance of it provided in this
+  /// method to compare with and decide for repainting.
+  ///
+  /// Repainting condition for drawing usually is based on whether they are
+  /// in the chart visible area or not.
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  });
 
   /// Paint
   void onPaint(

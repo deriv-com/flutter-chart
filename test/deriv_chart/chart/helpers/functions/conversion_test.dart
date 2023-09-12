@@ -276,7 +276,7 @@ void main() {
           bottomBoundQuote: 89.2345,
           canvasHeight: 1024,
           topPadding: 123,
-          bottomPadding: 24,
+          bottomPadding: 0,
         ),
         equals(89.2345),
       );

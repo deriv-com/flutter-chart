@@ -1,5 +1,6 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'drawing_data.g.dart';
@@ -37,4 +38,29 @@ class DrawingData {
 
   /// If the drawing is selected by the user.
   bool isSelected;
+
+  /// Determines if this [DrawingData] needs to be repainted.
+  /// Returns `true` if any of the [drawingParts] needs to be repainted.
+  bool shouldRepaint(
+    DrawingData oldDrawingData,
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
+    for (final Drawing drawing in drawingParts) {
+      if (drawing.needsRepaint(
+        leftEpoch,
+        rightEpoch,
+        draggableStartPoint,
+        draggableMiddlePoint: draggableMiddlePoint,
+        draggableEndPoint: draggableEndPoint,
+      )) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

@@ -52,6 +52,17 @@ class HorizontalDrawing extends Drawing {
   /// Keeps the latest position of the horizontal line
   Point? startPoint;
 
+  // TODO(NA): Return true when the horizontal drawing is in the epoch range.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
+
   /// Paint
   @override
   void onPaint(
