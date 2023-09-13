@@ -54,6 +54,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
   DraggableEdgePoint _draggableMiddlePoint = DraggableEdgePoint();
   DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
   Offset? _previousPosition;
+  final Debounce _updateDebounce = Debounce();
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +66,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
     /// In this method, we are updating the restored drawing tool
     /// config with latest data from the chart.
     void updateDrawingToolConfig() {
-      final Debounce debounce = Debounce();
       final DrawingData drawingData = widget.drawingData!;
-      debounce.run(() {
+      _updateDebounce.run(() {
         repo.items.asMap().forEach((int index, DrawingToolConfig element) {
           if (element.configId == drawingData.id) {
             DrawingToolConfig updatedConfig;
