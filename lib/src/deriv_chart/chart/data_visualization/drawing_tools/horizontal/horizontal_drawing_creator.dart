@@ -14,11 +14,11 @@ class HorizontalDrawingCreator extends DrawingCreator<HorizontalDrawing> {
     required ChartConfig chartConfig,
     Key? key,
   }) : super(
-    key: key,
-    onAddDrawing: onAddDrawing,
-    quoteFromCanvasY: quoteFromCanvasY,
-    chartConfig: chartConfig,
-  );
+          key: key,
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+          chartConfig: chartConfig,
+        );
 
   @override
   DrawingCreatorState<HorizontalDrawing> createState() =>
