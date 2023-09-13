@@ -68,6 +68,7 @@ class _CrosshairAreaWebState extends State<CrosshairAreaWeb> {
   Widget build(BuildContext context) => Positioned.fill(
         right: widget.quoteLabelsTouchAreaWidth,
         child: MouseRegion(
+          opaque: false,
           cursor: widget.showCrosshairCursor
               ? SystemMouseCursors.precise
               : SystemMouseCursors.basic,
