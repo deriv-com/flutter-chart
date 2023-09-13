@@ -75,8 +75,7 @@ class DrawingTools {
     }
 
     if (drawingToolsRepo!.items
-        .where((DrawingToolConfig element) =>
-            element.toJson()['configId'] == drawingId)
+        .where((DrawingToolConfig element) => element.configId == drawingId)
         .isEmpty) {
       drawingToolsRepo!.add(selectedDrawingTool!);
     }

@@ -69,7 +69,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
       final DrawingData drawingData = widget.drawingData!;
       debounce.run(() {
         repo.items.asMap().forEach((int index, DrawingToolConfig element) {
-          if (element.toJson()['configId'] == drawingData.toJson()['id']) {
+          if (element.configId == drawingData.id) {
             DrawingToolConfig updatedConfig;
 
             updatedConfig = element.copyWith(
@@ -219,7 +219,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   drawingData: widget.drawingData!,
                   config: repo.items
                       .where((DrawingToolConfig config) =>
-                          config.toJson()['configId'] == widget.drawingData!.id)
+                          config.configId == widget.drawingData!.id)
                       .first,
                   theme: context.watch<ChartTheme>(),
                   epochFromX: xAxis.epochFromX,
