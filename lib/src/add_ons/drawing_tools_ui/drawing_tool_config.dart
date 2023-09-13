@@ -21,8 +21,12 @@ import 'vertical/vertical_drawing_tool_config.dart';
 @immutable
 abstract class DrawingToolConfig extends AddOnConfig {
   /// Initializes
-  const DrawingToolConfig({bool isOverlay = true})
-      : super(isOverlay: isOverlay);
+  const DrawingToolConfig({
+    required this.configId,
+    required this.drawingData,
+    required this.edgePoints,
+    bool isOverlay = true,
+  }) : super(isOverlay: isOverlay);
 
   /// Creates a concrete drawing tool config from JSON.
   factory DrawingToolConfig.fromJson(Map<String, dynamic> json) {
@@ -36,7 +40,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
       case ContinuousDrawingToolConfig.name:
         return ContinuousDrawingToolConfig.fromJson(json);
       case FibfanDrawingToolConfig.name:
-        return FibfanDrawingToolConfig.fromJson(json);  
+        return FibfanDrawingToolConfig.fromJson(json);
       case HorizontalDrawingToolConfig.name:
         return HorizontalDrawingToolConfig.fromJson(json);
       case LineDrawingToolConfig.name:
@@ -56,6 +60,15 @@ abstract class DrawingToolConfig extends AddOnConfig {
             json, 'json', 'Unidentified drawing tool name.');
     }
   }
+
+  /// Drawing tool data.
+  final DrawingData? drawingData;
+
+  /// Drawing tool edge points.
+  final List<EdgePoint> edgePoints;
+
+  /// Drawing tool config id.
+  final String? configId;
 
   /// Key of drawing tool name property in JSON.
   static const String nameKey = 'name';

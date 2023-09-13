@@ -16,13 +16,17 @@ part 'trend_drawing_tool_config.g.dart';
 class TrendDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const TrendDrawingToolConfig({
-    this.configId,
-    this.drawingData,
+    String? configId,
+    DrawingData? drawingData,
+    List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
-    this.edgePoints = const <EdgePoint>[],
-  }) : super();
+  }) : super(
+          configId: configId,
+          drawingData: drawingData,
+          edgePoints: edgePoints,
+        );
 
   /// Initializes from JSON.
   factory TrendDrawingToolConfig.fromJson(Map<String, dynamic> json) =>
@@ -43,15 +47,6 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
 
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
   final DrawingPatterns pattern;
-
-  /// Drawing tool data.
-  final DrawingData? drawingData;
-
-  /// Drawing tool edge points.
-  final List<EdgePoint> edgePoints;
-
-  /// Drawing tool config id.
-  final String? configId;
 
   @override
   DrawingToolItem getItem(

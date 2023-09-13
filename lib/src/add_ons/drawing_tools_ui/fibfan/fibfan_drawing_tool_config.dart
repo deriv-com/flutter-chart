@@ -16,12 +16,16 @@ part 'fibfan_drawing_tool_config.g.dart';
 class FibfanDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const FibfanDrawingToolConfig({
-    this.configId,
-    this.drawingData,
+    String? configId,
+    DrawingData? drawingData,
+    List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
-    this.edgePoints = const <EdgePoint>[],
-  }) : super();
+  }) : super(
+          configId: configId,
+          drawingData: drawingData,
+          edgePoints: edgePoints,
+        );
 
   /// Initializes from JSON.
   factory FibfanDrawingToolConfig.fromJson(Map<String, dynamic> json) =>
@@ -39,15 +43,6 @@ class FibfanDrawingToolConfig extends DrawingToolConfig {
 
   /// Drawing tool fill style
   final LineStyle fillStyle;
-
-  /// Drawing tool data.
-  final DrawingData? drawingData;
-
-  /// Drawing tool edge points.
-  final List<EdgePoint> edgePoints;
-
-  /// Drawing tool config id.
-  final String? configId;
 
   @override
   DrawingToolItem getItem(
