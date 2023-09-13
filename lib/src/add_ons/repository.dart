@@ -19,4 +19,7 @@ abstract class Repository<T> extends ChangeNotifier {
 
   /// Swaps two elements of a list.
   void swap(int index1, int index2);
+
+  ///
+  void clear();
 }

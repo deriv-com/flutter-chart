@@ -127,7 +127,7 @@ class DerivChart extends StatefulWidget {
   final Repository<IndicatorConfig>? indicatorsRepo;
 
   /// Chart's drawings
-  final Repository<DrawingToolConfig>? drawingToolsRepo;
+  final AddOnsRepository<DrawingToolConfig>? drawingToolsRepo;
 
   /// List of drawing tools
   final DrawingTools drawingTools;
@@ -169,7 +169,10 @@ class _DerivChartState extends State<DerivChart> {
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
-        <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
+        <AddOnsRepository<AddOnConfig>>[
+      _indicatorsRepo,
+      widget.drawingToolsRepo ?? _drawingToolsRepo
+    ];
 
     _stateRepos.asMap().forEach((int index, dynamic element) {
       try {

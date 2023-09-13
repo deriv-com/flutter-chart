@@ -88,6 +88,18 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     notifyListeners();
   }
 
+
+  /// Removes indicator/drawing tool at [index] from repository and
+  /// updates storage.
+  @override
+  void clear() {
+    items.clear();
+    _writeToPrefs();
+    notifyListeners();
+  }
+
+
+
   /// Swaps two elements of a list and updates storage.
   @override
   void swap(int index1, int index2) {
