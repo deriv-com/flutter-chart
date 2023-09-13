@@ -127,10 +127,10 @@ class DerivChart extends StatefulWidget {
   final Repository<IndicatorConfig>? indicatorsRepo;
 
   /// Chart's drawings
-  final AddOnsRepository<DrawingToolConfig>? drawingToolsRepo;
+  final Repository<DrawingToolConfig>? drawingToolsRepo;
 
-  /// List of drawing tools
-  final DrawingTools drawingTools;
+  /// Drawing tools
+  final DrawingTools? drawingTools;
 
   @override
   _DerivChartState createState() => _DerivChartState();
@@ -141,7 +141,7 @@ class _DerivChartState extends State<DerivChart> {
 
   late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
 
-  // final DrawingTools _drawingTools = DrawingTools();
+  final DrawingTools _drawingTools = DrawingTools();
 
   @override
   void initState() {
@@ -162,17 +162,12 @@ class _DerivChartState extends State<DerivChart> {
           DrawingToolConfig.fromJson(map),
       onEditCallback: showDrawingToolsDialog,
     );
-
-    widget.drawingTools.drawingToolsRepo = widget.drawingToolsRepo;
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
-        <AddOnsRepository<AddOnConfig>>[
-      _indicatorsRepo,
-      widget.drawingToolsRepo ?? _drawingToolsRepo
-    ];
+        <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
 
     _stateRepos.asMap().forEach((int index, dynamic element) {
       try {
@@ -208,7 +203,7 @@ class _DerivChartState extends State<DerivChart> {
 
   void showDrawingToolsDialog() {
     setState(() {
-      widget.drawingTools
+      _drawingTools
         ..init()
         ..drawingToolsRepo = _drawingToolsRepo;
     });
@@ -220,7 +215,7 @@ class _DerivChartState extends State<DerivChart> {
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
         child: DrawingToolsDialog(
-          drawingTools: widget.drawingTools,
+          drawingTools: _drawingTools,
         ),
       ),
     );
@@ -270,7 +265,7 @@ class _DerivChartState extends State<DerivChart> {
                       .items
                       .where((IndicatorConfig config) => !config.isOverlay)
                 ],
-                drawingTools: widget.drawingTools,
+                drawingTools: widget.drawingTools ?? _drawingTools,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
