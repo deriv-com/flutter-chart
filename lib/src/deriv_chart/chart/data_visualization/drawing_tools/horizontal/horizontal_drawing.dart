@@ -52,26 +52,37 @@ class HorizontalDrawing extends Drawing {
   /// Keeps the latest position of the horizontal line
   Point? startPoint;
 
+  // TODO(NA): Return true when the horizontal drawing is in the epoch range.
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      true;
+
   /// Paint
   @override
   void onPaint(
-      Canvas canvas,
-      Size size,
-      ChartTheme theme,
-      int Function(double x) epochFromX,
-      double Function(double) quoteFromY,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      DrawingData drawingData,
-      Point Function(
-          EdgePoint edgePoint,
-          DraggableEdgePoint draggableEdgePoint,
-          ) updatePositionCallback,
-      DraggableEdgePoint draggableStartPoint, {
-        DraggableEdgePoint? draggableMiddlePoint,
-        DraggableEdgePoint? draggableEndPoint,
-      }) {
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DrawingData drawingData,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
     config as HorizontalDrawingToolConfig;
 
@@ -111,17 +122,17 @@ class HorizontalDrawing extends Drawing {
   /// with any of the painted areas on the screen
   @override
   bool hitTest(
-      Offset position,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      DraggableEdgePoint draggableStartPoint,
-      void Function({required bool isDragged}) setIsStartPointDragged, {
-        DraggableEdgePoint? draggableMiddlePoint,
-        DraggableEdgePoint? draggableEndPoint,
-        void Function({required bool isDragged})? setIsMiddlePointDragged,
-        void Function({required bool isDragged})? setIsEndPointDragged,
-      }) {
+    Offset position,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isDragged}) setIsStartPointDragged, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isDragged})? setIsMiddlePointDragged,
+    void Function({required bool isDragged})? setIsEndPointDragged,
+  }) {
     config as HorizontalDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;

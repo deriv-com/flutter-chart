@@ -17,13 +17,17 @@ part 'rectangle_drawing_tool_config.g.dart';
 class RectangleDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const RectangleDrawingToolConfig({
-    this.configId,
-    this.drawingData,
+    String? configId,
+    DrawingData? drawingData,
+    List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
-    this.edgePoints = const <EdgePoint>[],
-  }) : super();
+  }) : super(
+          configId: configId,
+          drawingData: drawingData,
+          edgePoints: edgePoints,
+        );
 
   /// Initializes from JSON.
   factory RectangleDrawingToolConfig.fromJson(Map<String, dynamic> json) =>
@@ -44,15 +48,6 @@ class RectangleDrawingToolConfig extends DrawingToolConfig {
 
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
   final DrawingPatterns pattern;
-
-  /// Drawing tool data.
-  final DrawingData? drawingData;
-
-  /// Drawing tool edge points.
-  final List<EdgePoint> edgePoints;
-
-  /// Drawing tool config id.
-  final String? configId;
 
   @override
   DrawingToolItem getItem(

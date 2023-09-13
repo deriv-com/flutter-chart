@@ -63,6 +63,21 @@ class ContinuousLineDrawing extends Drawing {
 
   final LineDrawing _lineDrawing;
 
+  @override
+  bool needsRepaint(
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
+      _lineDrawing.needsRepaint(
+        leftEpoch,
+        rightEpoch,
+        draggableStartPoint,
+        draggableEndPoint: draggableEndPoint,
+      );
+
   /// Paint the line
   @override
   void onPaint(

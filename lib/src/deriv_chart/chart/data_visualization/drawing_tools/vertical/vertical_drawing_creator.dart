@@ -46,6 +46,7 @@ class _VerticalDrawingCreatorState
       drawingParts.add(VerticalDrawing(
         drawingPart: DrawingParts.line,
         edgePoint: edgePoints.first,
+        chartConfig: widget.chartConfig,
       ));
 
       widget.onAddDrawing(

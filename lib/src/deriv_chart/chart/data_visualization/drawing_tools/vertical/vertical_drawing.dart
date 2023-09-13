@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
@@ -7,8 +9,11 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/paint_drawing_label.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'vertical_drawing.g.dart';
@@ -20,6 +25,7 @@ class VerticalDrawing extends Drawing {
   /// Initializes
   VerticalDrawing({
     required this.drawingPart,
+    required this.chartConfig,
     required this.edgePoint,
   });
 
@@ -31,8 +37,11 @@ class VerticalDrawing extends Drawing {
   Map<String, dynamic> toJson() => _$VerticalDrawingToJson(this)
     ..putIfAbsent(Drawing.classNameKey, () => nameKey);
 
-  /// Key of indicator name property in JSON.
+  /// Key of drawing tool name property in JSON.
   static const String nameKey = 'VerticalDrawing';
+
+  /// Chart config to get pipSize
+  final ChartConfig? chartConfig;
 
   /// Part of a drawing: 'vertical'
   final DrawingParts drawingPart;
@@ -48,6 +57,7 @@ class VerticalDrawing extends Drawing {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       draggableStartPoint.isInViewPortRange(
@@ -82,7 +92,7 @@ class VerticalDrawing extends Drawing {
     final DrawingPatterns pattern = config.pattern;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    startPoint = updatePositionCallback(edgePoints[0], draggableStartPoint);
+    startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
 
     final double xCoord = startPoint!.x;
     final double startQuoteToY = startPoint!.y;
@@ -97,6 +107,15 @@ class VerticalDrawing extends Drawing {
           drawingData.isSelected
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
+        );
+        paintDrawingLabel(
+          canvas,
+          size,
+          xCoord,
+          'vertical',
+          theme,
+          chartConfig!,
+          epochFromX: epochFromX,
         );
       }
     }
