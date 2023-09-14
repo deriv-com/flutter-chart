@@ -82,11 +82,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
           TrendDrawing(
             drawingPart: DrawingParts.marker,
             startEdgePoint: edgePoints.first,
-          )..onDrawingMoved(
-              epochFromX!,
-              _widget.series.input,
-              edgePoints.first,
-            ),
+          ),
         );
       } else if (!isDrawingFinished) {
         edgePoints.add(
@@ -119,32 +115,17 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
               drawingPart: DrawingParts.rectangle,
               startEdgePoint: startingEdgePoint,
               endEdgePoint: endingEdgePoint,
-            )..onDrawingMoved(
-                epochFromX!,
-                _widget.series.input,
-                startingEdgePoint,
-                endPoint: endingEdgePoint,
-              ),
+            ),
             TrendDrawing(
               drawingPart: DrawingParts.line,
               startEdgePoint: startingEdgePoint,
               endEdgePoint: endingEdgePoint,
-            )..onDrawingMoved(
-                epochFromX!,
-                _widget.series.input,
-                startingEdgePoint,
-                endPoint: endingEdgePoint,
-              ),
+            ),
             TrendDrawing(
               drawingPart: DrawingParts.marker,
               startEdgePoint: startingEdgePoint,
               endEdgePoint: endingEdgePoint,
-            )..onDrawingMoved(
-                epochFromX!,
-                _widget.series.input,
-                startingEdgePoint,
-                endPoint: endingEdgePoint,
-              )
+            )
           ]);
       }
 

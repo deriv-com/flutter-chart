@@ -165,25 +165,7 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
-  @override
-  void onDrawingMoved(
-    int Function(double x) epochFromX,
-    List<Tick> ticks,
-    EdgePoint startPoint, {
-    EdgePoint? middlePoint,
-    EdgePoint? endPoint,
-  }) {
-    final int minimumEpoch =
-        startXCoord == 0 ? startEdgePoint.epoch : epochFromX(startXCoord);
-
-    //  Minimum epoch of the drawing
-    final int maximumEpoch =
-        endXCoord == 0 ? endEdgePoint.epoch : epochFromX(endXCoord);
-
-    if (maximumEpoch != 0 && minimumEpoch != 0) {
-      _calculator = _setCalculator(minimumEpoch, maximumEpoch, ticks);
-    }
-  }
+  // TODO(Bahar-deriv): implement onDrawingMoved here later
 
   @override
   bool needsRepaint(
@@ -225,7 +207,7 @@ class TrendDrawing extends Drawing {
     config as TrendDrawingToolConfig;
 
     final DrawingPaintStyle paint = DrawingPaintStyle();
-
+    final List<Tick>? series = config.drawingData!.series;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
     //  Maximum epoch of the drawing
@@ -238,6 +220,9 @@ class TrendDrawing extends Drawing {
         : epochFromX(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
+      // setting calculator
+      _calculator = _setCalculator(minimumEpoch, maximumEpoch, series);
+
       // center of rectangle
       _rectCenter = quoteToY(_calculator!.min) +
           ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);

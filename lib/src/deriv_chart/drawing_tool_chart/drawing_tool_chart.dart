@@ -49,13 +49,15 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   /// Sets drawing as selected and unselects the rest of drawings
   /// if any of the drawing is not finished , it selects the unfinished drawing
   void _setIsDrawingSelected(DrawingData drawing) {
-    drawing.isSelected = !drawing.isSelected;
+    setState(() {
+      drawing.isSelected = !drawing.isSelected;
 
-    for (final DrawingData data in getDrawingData()) {
-      if (data.id != drawing.id) {
-        data.isSelected = false;
+      for (final DrawingData data in getDrawingData()) {
+        if (data.id != drawing.id) {
+          data.isSelected = false;
+        }
       }
-    }
+    });
   }
 
   /// Removes specific drawing from the list of drawings
