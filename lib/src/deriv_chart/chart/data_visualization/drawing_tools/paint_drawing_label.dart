@@ -26,7 +26,7 @@ void paintDrawingLabel(
   String _labelString = '';
 
   /// Width of the rectangle
-  const double _width = 46;
+  const double _width = 80;
 
   /// Height of the rectangle
   const double _height = 24;
@@ -60,10 +60,10 @@ void paintDrawingLabel(
     final DateTime _dateTime =
         DateTime.fromMillisecondsSinceEpoch(epochFromX!(coord), isUtc: true);
 
-    _labelString = DateFormat('HH:mm:ss').format(_dateTime);
+    _labelString = DateFormat('MM-dd HH:mm:ss').format(_dateTime);
 
     _textOffset = Offset(
-      coord - 19,
+      coord - 32,
       size.height - 13,
     );
   }
