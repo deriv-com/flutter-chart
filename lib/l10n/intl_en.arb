@@ -48,5 +48,6 @@
   "warnFailedLoadingDrawingTools": "Failed to load drawing tools.",
   "selectDrawingTool": "Select drawing tool",
   "labelColor": "Color",
-  "labelFillColor": "Fill Color"
+  "labelFillColor": "Fill Color",
+  "labelPattern": "Pattern"
 }

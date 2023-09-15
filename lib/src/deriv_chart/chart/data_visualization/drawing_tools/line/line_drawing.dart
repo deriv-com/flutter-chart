@@ -11,6 +11,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_patterns/dasshed.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -103,7 +104,6 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     config as LineDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
-    final DrawingPatterns pattern = config.pattern;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
     _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
@@ -147,8 +147,17 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
         exceedEnd: exceedEnd,
       );
 
-      if (pattern == DrawingPatterns.solid) {
+      if (lineStyle.pattern == DrawingPatterns.solid) {
         canvas.drawLine(
+          Offset(_vector.x0, _vector.y0),
+          Offset(_vector.x1, _vector.y1),
+          drawingData.isSelected
+              ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
+              : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
+        );
+      } else if (lineStyle.pattern == DrawingPatterns.dashed) {
+        drawDashedLine(
+          canvas,
           Offset(_vector.x0, _vector.y0),
           Offset(_vector.x1, _vector.y1),
           drawingData.isSelected

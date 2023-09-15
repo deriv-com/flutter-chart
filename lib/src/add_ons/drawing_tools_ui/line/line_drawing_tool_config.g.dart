@@ -18,10 +18,11 @@ LineDrawingToolConfig _$LineDrawingToolConfigFromJson(
               .toList() ??
           const <EdgePoint>[],
       lineStyle: json['lineStyle'] == null
-          ? const LineStyle(thickness: 0.9, color: Colors.white)
+          ? const LineStyle(
+              thickness: 0.9,
+              color: Colors.white,
+              pattern: DrawingPatterns.solid)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
-      pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
-          DrawingPatterns.solid,
     );
 
 Map<String, dynamic> _$LineDrawingToolConfigToJson(
@@ -31,11 +32,4 @@ Map<String, dynamic> _$LineDrawingToolConfigToJson(
       'edgePoints': instance.edgePoints,
       'configId': instance.configId,
       'lineStyle': instance.lineStyle,
-      'pattern': _$DrawingPatternsEnumMap[instance.pattern]!,
     };
-
-const _$DrawingPatternsEnumMap = {
-  DrawingPatterns.solid: 'solid',
-  DrawingPatterns.dotted: 'dotted',
-  DrawingPatterns.dashed: 'dashed',
-};

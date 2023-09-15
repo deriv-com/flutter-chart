@@ -509,6 +509,16 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Pattern`
+  String get labelPattern {
+    return Intl.message(
+      'Pattern',
+      name: 'labelPattern',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {

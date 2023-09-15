@@ -3,7 +3,6 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
@@ -121,7 +120,6 @@ class ContinuousLineDrawing extends Drawing {
           configId: config.configId,
           drawingData: config.drawingData,
           lineStyle: config.lineStyle,
-          pattern: config.pattern,
           edgePoints: config.edgePoints,
         ),
         lineDrawingData,
@@ -152,7 +150,6 @@ class ContinuousLineDrawing extends Drawing {
             configId: config.configId,
             drawingData: config.drawingData,
             lineStyle: config.lineStyle,
-            pattern: config.pattern,
 
             /// Limit the edge points to only 2 points, since line drawing
             /// needs only 2 points
@@ -187,13 +184,12 @@ class ContinuousLineDrawing extends Drawing {
     config as ContinuousDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
-    final DrawingPatterns pattern = config.pattern;
 
     return _lineDrawing.hitTest(
         position,
         epochToX,
         quoteToY,
-        LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
+        LineDrawingToolConfig(lineStyle: lineStyle),
         draggableStartPoint,
         setIsStartPointDragged,
         draggableEndPoint: draggableEndPoint,

@@ -33,19 +33,17 @@ class LineDrawingToolItem extends DrawingToolItem {
 class LineDrawingToolItemState
     extends DrawingToolItemState<LineDrawingToolConfig> {
   LineStyle? _lineStyle;
-  DrawingPatterns? _pattern;
 
   @override
   LineDrawingToolConfig createDrawingToolConfig() => LineDrawingToolConfig(
         lineStyle: _currentLineStyle,
-        pattern: _currentPattern,
       );
 
   @override
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
           _buildColorField(),
-          // TODO(maryia-binary): implement _buildPatternField() to set pattern
+          _buildPatternField(),
         ],
       );
 
@@ -67,9 +65,38 @@ class LineDrawingToolItemState
         ],
       );
 
+  // DrawingPatterns selectedOption = DrawingPatterns.solid;
+
+  Widget _buildPatternField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelPattern,
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(width: 10),
+          DropdownButton<DrawingPatterns>(
+            value: _currentLineStyle.pattern,
+            onChanged: (DrawingPatterns? selectedPattern) {
+              setState(() {
+                _lineStyle =
+                    _currentLineStyle.copyWith(pattern: selectedPattern);
+              });
+              updateDrawingTool();
+            },
+            items: DrawingPatterns.values
+                .map((DrawingPatterns value) =>
+                    DropdownMenuItem<DrawingPatterns>(
+                      value: value,
+                      child: Text(value
+                          .toString()
+                          .split('.')
+                          .last), // Convert enum to string
+                    ))
+                .toList(),
+          ),
+        ],
+      );
+
   LineStyle get _currentLineStyle =>
       _lineStyle ?? (widget.config as LineDrawingToolConfig).lineStyle;
-
-  DrawingPatterns get _currentPattern =>
-      _pattern ?? (widget.config as LineDrawingToolConfig).pattern;
 }

@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/color_converter.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';
@@ -14,6 +15,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   const LineStyle({
     this.color = const Color(0xFF85ACB0),
     this.thickness = 1,
+    this.pattern = DrawingPatterns.solid,
     this.hasArea = false,
   });
 
@@ -30,6 +32,9 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   /// Line thickness.
   final double thickness;
 
+  /// Line pattern.
+  final DrawingPatterns pattern;
+
   /// Whether the line series has area or not.
   final bool hasArea;
 
@@ -37,17 +42,20 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   LineStyle copyWith({
     Color? color,
     double? thickness,
+    DrawingPatterns? pattern,
     bool? hasArea,
   }) =>
       LineStyle(
         color: color ?? this.color,
         thickness: thickness ?? this.thickness,
+        pattern: pattern ?? this.pattern,
         hasArea: hasArea ?? this.hasArea,
       );
 
   @override
-  String toString() => '${super.toString()}$color, $thickness, $hasArea';
+  String toString() =>
+      '${super.toString()}$color, $thickness, $pattern, $hasArea';
 
   @override
-  List<Object> get props => <Object>[color, thickness, hasArea];
+  List<Object> get props => <Object>[color, thickness, pattern, hasArea];
 }
