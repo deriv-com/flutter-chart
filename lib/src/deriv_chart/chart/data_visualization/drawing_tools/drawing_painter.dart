@@ -21,6 +21,7 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
+    required this.setIsDrawingHovered,
     required this.selectedDrawingTool,
     Key? key,
   }) : super(key: key);
@@ -46,6 +47,9 @@ class DrawingPainter extends StatefulWidget {
 
   /// Callback to set if drawing is selected (tapped).
   final void Function(DrawingData drawing) setIsDrawingSelected;
+
+  /// Callback to set if drawing is selected (tapped).
+  final void Function(DrawingData drawing) setIsDrawingHovered;
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
@@ -54,6 +58,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
   DraggableEdgePoint _draggableMiddlePoint = DraggableEdgePoint();
   DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
   Offset? _previousPosition;
+  bool isTouchHeld = false;
 
   @override
   Widget build(BuildContext context) {
@@ -141,11 +146,31 @@ class _DrawingPainterState extends State<DrawingPainter> {
     }
 
     return widget.drawingData != null
-        ? GestureDetector(
+        ? MouseRegion(
+            onEnter: (PointerEnterEvent event) {
+              if (!widget.drawingData!.isSelected) {
+                widget.setIsDrawingHovered(widget.drawingData!);
+              }
+            },
+            onExit: (PointerExitEvent event) {
+              if (widget.drawingData!.isSelected && !isTouchHeld) {
+                widget.setIsDrawingSelected(widget.drawingData!);
+              }
+            },
+            hitTestBehavior: HitTestBehavior.deferToChild,
+            child: GestureDetector(
+              onTapDown: (TapDownDetails details) {
+                isTouchHeld = true;
+                if (!widget.drawingData!.isSelected) {
+                  widget.setIsDrawingSelected(widget.drawingData!);
+                }
+              },
             onTapUp: (TapUpDetails details) {
               widget.setIsDrawingSelected(widget.drawingData!);
+                isTouchHeld = false;
             },
             onLongPressDown: (LongPressDownDetails details) {
+                isTouchHeld = true;
               widget.onMoveDrawing(isDrawingMoved: true);
               _previousPosition = details.localPosition;
             },
@@ -157,6 +182,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
               _onPanUpdate(dragDetails);
             },
             onLongPressUp: () {
+                isTouchHeld = false;
               widget.onMoveDrawing(isDrawingMoved: false);
               _draggableStartPoint = _draggableStartPoint.copyWith(
                 isDragged: false,
@@ -169,12 +195,14 @@ class _DrawingPainterState extends State<DrawingPainter> {
               );
             },
             onPanStart: (DragStartDetails details) {
+                isTouchHeld = true;
               widget.onMoveDrawing(isDrawingMoved: true);
             },
             onPanUpdate: (DragUpdateDetails details) {
               _onPanUpdate(details);
             },
             onPanEnd: (DragEndDetails details) {
+                isTouchHeld = false;
               setState(() {
                 _draggableStartPoint = _draggableStartPoint.copyWith(
                   isDragged: false,
@@ -203,6 +231,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 draggableStartPoint: _draggableStartPoint,
                 draggableMiddlePoint: _draggableMiddlePoint,
                 isDrawingToolSelected: widget.selectedDrawingTool != null,
+                  isTouchHeld: isTouchHeld,
                 draggableEndPoint: _draggableEndPoint,
                 updatePositionCallback: (
                   EdgePoint edgePoint,
@@ -215,21 +244,27 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   widget.quoteToCanvasY,
                 ),
                 setIsStartPointDragged: ({required bool isDragged}) {
+                    if (isTouchHeld) {
                   _draggableStartPoint =
                       _draggableStartPoint.copyWith(isDragged: isDragged);
+                    }
                 },
                 setIsMiddlePointDragged: ({required bool isDragged}) {
+                    if (isTouchHeld) {
                   _draggableMiddlePoint =
                       _draggableMiddlePoint.copyWith(isDragged: isDragged);
+                    }
                 },
                 setIsEndPointDragged: ({required bool isDragged}) {
+                    if (isTouchHeld) {
                   _draggableEndPoint =
                       _draggableEndPoint.copyWith(isDragged: isDragged);
+                    }
                 },
               ),
               size: const Size(double.infinity, double.infinity),
             ),
-          )
+            ))
         : const SizedBox();
   }
 }
@@ -246,6 +281,7 @@ class _DrawingPainter extends CustomPainter {
     required this.draggableStartPoint,
     required this.setIsStartPointDragged,
     required this.updatePositionCallback,
+    this.isTouchHeld = false,
     this.isDrawingToolSelected = false,
     this.draggableMiddlePoint,
     this.draggableEndPoint,
@@ -263,6 +299,7 @@ class _DrawingPainter extends CustomPainter {
   final DraggableEdgePoint draggableStartPoint;
   final DraggableEdgePoint? draggableMiddlePoint;
   final DraggableEdgePoint? draggableEndPoint;
+  final bool isTouchHeld;
   final void Function({required bool isDragged}) setIsStartPointDragged;
   final void Function({required bool isDragged})? setIsMiddlePointDragged;
   final void Function({required bool isDragged})? setIsEndPointDragged;
@@ -320,9 +357,10 @@ class _DrawingPainter extends CustomPainter {
         return true;
       }
     }
-
+    if (!isTouchHeld && drawingData.isDrawingFinished) {
     /// For deselecting the drawing when tapping outside of the drawing.
     drawingData.isSelected = false;
+    }
     return false;
   }
 }

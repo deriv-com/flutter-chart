@@ -61,6 +61,17 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
     repo.removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
   }
 
+  /// Sets drawing as selected and unselects the rest of drawings
+  /// if any of the drawing is not finished , it selects the unfinished drawing
+  void _setIsDrawingHovered(DrawingData drawing) {
+    final bool noneSelected =
+        getDrawingData().every((DrawingData data) => !data.isSelected);
+
+    if (noneSelected) {
+      drawing.isSelected = !drawing.isSelected;
+    }
+  }
+
   @override
   void didUpdateWidget(DrawingToolChart oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -89,6 +100,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
                 onMoveDrawing: widget.drawingTools.onMoveDrawing,
                 setIsDrawingSelected: _setIsDrawingSelected,
+                setIsDrawingHovered: _setIsDrawingHovered,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
               )),
           if (widget.drawingTools.selectedDrawingTool != null)

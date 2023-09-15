@@ -176,9 +176,6 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     config as LineDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
@@ -196,7 +193,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      setIsEndPointDragged(isDragged: true);
+      setIsEndPointDragged!(isDragged: true);
     }
 
     startXCoord = _vector.x0;

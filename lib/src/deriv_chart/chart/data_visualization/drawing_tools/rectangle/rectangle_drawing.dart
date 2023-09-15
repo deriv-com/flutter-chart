@@ -202,9 +202,6 @@ class RectangleDrawing extends Drawing {
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     // Calculate the difference between the start marker and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - startYCoord;
@@ -222,12 +219,12 @@ class RectangleDrawing extends Drawing {
 
     /// Check if end point clicked
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged(isDragged: true);
+      setIsEndPointDragged!(isDragged: true);
     }
 
     /// Check if start point clicked
     if (startPointDistance <= _markerRadius) {
-      setIsStartPointDragged(isDragged: true);
+      setIsStartPointDragged!(isDragged: true);
     }
 
     return draggableStartPoint.isDragged ||

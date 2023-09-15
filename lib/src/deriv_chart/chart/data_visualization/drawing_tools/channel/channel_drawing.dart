@@ -274,10 +274,6 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsMiddlePointDragged!(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     final double middleXCoord = _middlePoint!.x;
     final double middleQuoteToY = _middlePoint!.y;
 
@@ -293,7 +289,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if middle point clicked
     if (_middlePoint!.isClicked(position, markerRadius)) {
-      setIsMiddlePointDragged(isDragged: true);
+      setIsMiddlePointDragged!(isDragged: true);
     }
 
     /// Check if end point clicked, since the endPoint position is dependendat
@@ -302,7 +298,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if end point clicked
     if (endPoint.isClicked(position, markerRadius)) {
-      setIsEndPointDragged(isDragged: true);
+      setIsEndPointDragged!(isDragged: true);
     }
 
     /// Detect the area between 2 parallel lines

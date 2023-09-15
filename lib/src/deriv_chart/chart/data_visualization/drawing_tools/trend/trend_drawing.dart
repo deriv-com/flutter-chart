@@ -395,9 +395,6 @@ class TrendDrawing extends Drawing {
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - _rectCenter;
@@ -423,7 +420,7 @@ class TrendDrawing extends Drawing {
     }
 
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged(isDragged: true);
+      setIsEndPointDragged!(isDragged: true);
     }
 
     // For clicking the center line

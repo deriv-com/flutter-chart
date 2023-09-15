@@ -323,9 +323,6 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     bool _isVectorHit(Vector vector) =>
         isVectorHit(vector, position, lineStyle);
 
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
       setIsStartPointDragged(isDragged: true);
@@ -333,7 +330,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      setIsEndPointDragged(isDragged: true);
+      setIsEndPointDragged!(isDragged: true);
     }
     return _isVectorHit(_baseVector) ||
         _isVectorHit(_finalInnerVector) ||

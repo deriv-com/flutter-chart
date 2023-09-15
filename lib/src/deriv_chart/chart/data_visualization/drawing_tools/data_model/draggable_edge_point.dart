@@ -49,11 +49,11 @@ class DraggableEdgePoint extends EdgePoint {
   /// values.
   Point updatePosition(
     int epoch,
-    double yCoord,
+    double quote,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
   ) {
-    final Offset oldPosition = Offset(epoch.toDouble(), yCoord);
+    final Offset oldPosition = Offset(epoch.toDouble(), quote);
     _draggedPosition = isDrawingDragged ? _draggedPosition : oldPosition;
 
     final double x = epochToX(_draggedPosition.dx.toInt());
