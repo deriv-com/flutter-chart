@@ -12,10 +12,15 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/label.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'fibfan_drawing.g.dart';
 
 /// Fibfan drawing tool.
+@JsonSerializable()
 class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   FibfanDrawing({
@@ -25,6 +30,17 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     this.exceedStart = false,
     this.exceedEnd = false,
   });
+
+  /// Initializes from JSON.
+  factory FibfanDrawing.fromJson(Map<String, dynamic> json) =>
+      _$FibfanDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$FibfanDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'FibfanDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
@@ -118,6 +134,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       true;
@@ -128,8 +145,11 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -140,14 +160,19 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final FibfanDrawingToolConfig config =
-        drawingData.config as FibfanDrawingToolConfig;
+    config as FibfanDrawingToolConfig;
+
     final LineStyle lineStyle = config.lineStyle;
     final Paint linePaintStyle =
         paint.linePaintStyle(lineStyle.color, lineStyle.thickness);
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;

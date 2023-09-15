@@ -10,10 +10,15 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'rectangle_drawing.g.dart';
 
 /// Rectangle drawing tool.
+@JsonSerializable()
 class RectangleDrawing extends Drawing {
   /// Initializes
   RectangleDrawing({
@@ -21,6 +26,17 @@ class RectangleDrawing extends Drawing {
     this.startEdgePoint = const EdgePoint(),
     this.endEdgePoint = const EdgePoint(),
   });
+
+  /// Initializes from JSON.
+  factory RectangleDrawing.fromJson(Map<String, dynamic> json) =>
+      _$RectangleDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$RectangleDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'RectangleDrawing';
 
   /// Instance of enum including all possible drawing parts(marker,rectangle)
   final DrawingParts drawingPart;
@@ -97,8 +113,11 @@ class RectangleDrawing extends Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -109,16 +128,19 @@ class RectangleDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final RectangleDrawingToolConfig config =
-        drawingData.config as RectangleDrawingToolConfig;
+    config as RectangleDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final LineStyle fillStyle = config.fillStyle;
-
     final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     startXCoord = _startPoint!.x;
     startYCoord = _startPoint!.y;
@@ -220,6 +242,7 @@ class RectangleDrawing extends Drawing {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       true;

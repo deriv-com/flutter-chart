@@ -3,6 +3,9 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
@@ -17,8 +20,12 @@ import 'vertical/vertical_drawing_tool_config.dart';
 @immutable
 abstract class DrawingToolConfig extends AddOnConfig {
   /// Initializes
-  const DrawingToolConfig({bool isOverlay = true})
-      : super(isOverlay: isOverlay);
+  const DrawingToolConfig({
+    required this.configId,
+    required this.drawingData,
+    required this.edgePoints,
+    bool isOverlay = true,
+  }) : super(isOverlay: isOverlay);
 
   /// Creates a concrete drawing tool config from JSON.
   factory DrawingToolConfig.fromJson(Map<String, dynamic> json) {
@@ -32,7 +39,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
       case ContinuousDrawingToolConfig.name:
         return ContinuousDrawingToolConfig.fromJson(json);
       case FibfanDrawingToolConfig.name:
-        return FibfanDrawingToolConfig.fromJson(json);  
+        return FibfanDrawingToolConfig.fromJson(json);
       case HorizontalDrawingToolConfig.name:
         return HorizontalDrawingToolConfig.fromJson(json);
       case LineDrawingToolConfig.name:
@@ -53,8 +60,29 @@ abstract class DrawingToolConfig extends AddOnConfig {
     }
   }
 
+  /// Drawing tool data.
+  final DrawingData? drawingData;
+
+  /// Drawing tool edge points.
+  final List<EdgePoint> edgePoints;
+
+  /// Drawing tool config id.
+  final String? configId;
+
   /// Key of drawing tool name property in JSON.
   static const String nameKey = 'name';
+
+  /// Key of drawing tool config id property in JSON.
+  static String configIdKey = 'configId';
+
+  /// Creates a copy of this object.
+  DrawingToolConfig copyWith({
+    String? configId,
+    DrawingData? drawingData,
+    LineStyle? lineStyle,
+    LineStyle? fillStyle,
+    List<EdgePoint>? edgePoints,
+  });
 
   /// Creates drawing tool.
   DrawingToolItem getItem(

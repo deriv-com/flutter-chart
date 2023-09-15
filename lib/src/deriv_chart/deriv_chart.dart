@@ -27,6 +27,7 @@ class DerivChart extends StatefulWidget {
   const DerivChart({
     required this.mainSeries,
     required this.granularity,
+    required this.activeSymbol,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -61,6 +62,9 @@ class DerivChart extends StatefulWidget {
   /// Open position marker series.
   final MarkerSeries? markerSeries;
 
+  /// Current active symbol.
+  final String activeSymbol;
+
   /// Chart's controller
   final ChartController? controller;
 
@@ -93,7 +97,6 @@ class DerivChart extends StatefulWidget {
   final List<ChartAnnotation<ChartObject>>? annotations;
 
   /// Whether the chart should be showing live data or not.
-  ///
   /// In case of being true the chart will keep auto-scrolling when its visible
   /// area is on the newest ticks/candles.
   final bool isLive;
@@ -158,20 +161,30 @@ class _DerivChartState extends State<DerivChart> {
   void initState() {
     super.initState();
 
-    loadSavedIndicatorsAndDrawingTools();
     _initRepos();
+    loadSavedIndicatorsAndDrawingTools();
+  }
+
+  @override
+  void didUpdateWidget(covariant DerivChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.activeSymbol != oldWidget.activeSymbol) {
+      loadSavedIndicatorsAndDrawingTools();
+    }
   }
 
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       onEditCallback: showIndicatorsDialog,
+      currentSymbol: widget.activeSymbol,
     );
 
     _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
       createAddOn: (Map<String, dynamic> map) =>
           DrawingToolConfig.fromJson(map),
       onEditCallback: showDrawingToolsDialog,
+      currentSymbol: widget.activeSymbol,
     );
   }
 
@@ -182,7 +195,7 @@ class _DerivChartState extends State<DerivChart> {
 
     _stateRepos.asMap().forEach((int index, dynamic element) {
       try {
-        element.loadFromPrefs(prefs);
+        element.loadFromPrefs(prefs, widget.activeSymbol);
       } on Exception {
         // ignore: unawaited_futures
         showDialog<void>(

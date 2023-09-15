@@ -44,15 +44,16 @@ class _HorizontalDrawingCreatorState
       isDrawingFinished = true;
 
       drawingParts.add(HorizontalDrawing(
-          drawingPart: DrawingParts.line,
-          edgePoint: edgePoints.first,
-          chartConfig: widget.chartConfig,
-          quoteFromCanvasY: widget.quoteFromCanvasY));
+        drawingPart: DrawingParts.line,
+        edgePoint: edgePoints.first,
+        chartConfig: widget.chartConfig,
+      ));
 
       widget.onAddDrawing(
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

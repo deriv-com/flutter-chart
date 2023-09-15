@@ -34,6 +34,8 @@ class DrawingToolsDialog extends StatefulWidget {
 class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
   DrawingToolConfig? _selectedDrawingTool;
 
+  // final String aaa = UniqueKey().toString();
+
   @override
   Widget build(BuildContext context) {
     final Repository<DrawingToolConfig> repo =
@@ -86,7 +88,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                   )
                   // TODO(maryia-binary): add the rest of drawing tools above
                 ],
-                onChanged: (dynamic config) {
+                onChanged: (DrawingToolConfig? config) {
                   setState(() {
                     _selectedDrawingTool = config;
                   });
@@ -95,8 +97,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               const SizedBox(width: 16),
               ElevatedButton(
                 child: const Text('Add'),
-                onPressed: _selectedDrawingTool != null &&
-                        _selectedDrawingTool is DrawingToolConfig
+                onPressed: _selectedDrawingTool != null
                     ? () {
                         widget.drawingTools
                             .onDrawingToolSelection(_selectedDrawingTool!);
@@ -113,11 +114,17 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               itemBuilder: (BuildContext context, int index) =>
                   repo.items[index].getItem(
                 (DrawingToolConfig updatedConfig) {
-                  widget.drawingTools.onDrawingToolUpdate(index, updatedConfig);
-                  repo.updateAt(index, updatedConfig);
+                  DrawingToolConfig config = updatedConfig;
+
+                  config = config.copyWith(
+                    configId: repo.items[index].configId,
+                    edgePoints: repo.items[index].edgePoints,
+                    drawingData: repo.items[index].drawingData,
+                  );
+
+                  repo.updateAt(index, config);
                 },
                 () {
-                  widget.drawingTools.onDrawingToolRemoval(index);
                   repo.removeAt(index);
                 },
               ),

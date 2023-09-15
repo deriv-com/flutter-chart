@@ -11,13 +11,18 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_patterns/dasshed.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'line_drawing.g.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
+@JsonSerializable()
 class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   LineDrawing({
@@ -27,6 +32,17 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     this.exceedStart = false,
     this.exceedEnd = false,
   });
+
+  /// Initializes from JSON.
+  factory LineDrawing.fromJson(Map<String, dynamic> json) =>
+      _$LineDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$LineDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'LineDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
@@ -57,6 +73,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       true;
@@ -67,8 +84,11 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -81,14 +101,17 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    final LineDrawingToolConfig config =
-        drawingData.config as LineDrawingToolConfig;
+    config as LineDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
-    final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -124,8 +147,17 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
         exceedEnd: exceedEnd,
       );
 
-      if (pattern == DrawingPatterns.solid) {
+      if (lineStyle.pattern == DrawingPatterns.solid) {
         canvas.drawLine(
+          Offset(_vector.x0, _vector.y0),
+          Offset(_vector.x1, _vector.y1),
+          drawingData.isSelected
+              ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
+              : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
+        );
+      } else if (lineStyle.pattern == DrawingPatterns.dashed) {
+        drawDashedLine(
+          canvas,
           Offset(_vector.x0, _vector.y0),
           Offset(_vector.x1, _vector.y1),
           drawingData.isSelected

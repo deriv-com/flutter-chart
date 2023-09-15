@@ -10,11 +10,16 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'channel_drawing.g.dart';
 
 /// Channel drawing tool. A channel is 2 parallel lines that
 /// created with 3 points.
+@JsonSerializable()
 class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   ChannelDrawing({
@@ -24,6 +29,17 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     this.endEdgePoint = const EdgePoint(),
     this.isDrawingFinished = false,
   });
+
+  /// Initializes from JSON.
+  factory ChannelDrawing.fromJson(Map<String, dynamic> json) =>
+      _$ChannelDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ChannelDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'ChannelDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
@@ -86,8 +102,11 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -100,16 +119,25 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    final ChannelDrawingToolConfig config =
-        drawingData.config as ChannelDrawingToolConfig;
+    config as ChannelDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _middlePoint =
-        updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _middlePoint =
+          updatePositionCallback(edgePoints[1], draggableMiddlePoint!);
+    } else {
+      _middlePoint =
+          updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
+    }
+    if (edgePoints.length > 2) {
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -165,7 +193,6 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     } else if (drawingPart == DrawingParts.line) {
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw second line
-
         drawParallelogram(
           canvas,
           config,
@@ -174,8 +201,8 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
           _finalVector,
         );
         if (pattern == DrawingPatterns.solid) {
-          /// Drawing the markers in the final spte again to hide the overlap
-          /// of fill coler and the markers
+          /// Drawing the markers in the final step again to hide the overlap
+          /// of fill color and the markers
           canvas
             ..drawCircle(
                 Offset(startXCoord, startQuoteToY),
@@ -293,6 +320,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       true;

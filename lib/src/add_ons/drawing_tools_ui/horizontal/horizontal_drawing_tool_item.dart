@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
-import '../drawing_tool_config.dart';
 import '../drawing_tool_item.dart';
 
 /// Horizontal drawing tool item in the list of drawing tool which provide this

@@ -14,23 +14,34 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'vertical_drawing.g.dart';
 
 /// Vertical drawing tool. A vertical is a vertical line defined by one point
 /// that is infinite in both directions.
+@JsonSerializable()
 class VerticalDrawing extends Drawing {
   /// Initializes
   VerticalDrawing({
     required this.drawingPart,
     required this.chartConfig,
     required this.edgePoint,
-    required this.epochFromX,
   });
+
+  /// Initializes from JSON.
+  factory VerticalDrawing.fromJson(Map<String, dynamic> json) =>
+      _$VerticalDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$VerticalDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'VerticalDrawing';
 
   /// Chart config to get pipSize
   final ChartConfig? chartConfig;
-
-  /// Get epoch from x.
-  int Function(double x)? epochFromX;
 
   /// Part of a drawing: 'vertical'
   final DrawingParts drawingPart;
@@ -46,6 +57,7 @@ class VerticalDrawing extends Drawing {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       draggableStartPoint.isInViewPortRange(
@@ -59,8 +71,11 @@ class VerticalDrawing extends Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
     Point Function(
       EdgePoint edgePoint,
@@ -71,13 +86,13 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final VerticalDrawingToolConfig config =
-        drawingData.config as VerticalDrawingToolConfig;
+    config as VerticalDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    startPoint = updatePositionCallback(edgePoint, draggableStartPoint);
+    startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
 
     final double xCoord = startPoint!.x;
     final double startQuoteToY = startPoint!.y;

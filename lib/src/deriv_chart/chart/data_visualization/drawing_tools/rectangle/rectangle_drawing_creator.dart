@@ -13,7 +13,7 @@ class RectangleDrawingCreator extends DrawingCreator<RectangleDrawing> {
     required OnAddDrawing<RectangleDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     Key? key,
   }) : super(
           key: key,
@@ -25,7 +25,7 @@ class RectangleDrawingCreator extends DrawingCreator<RectangleDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  final void Function() removeUnfinishedDrawing;
 
   @override
   _RectangleDrawingCreatorState createState() =>
@@ -77,7 +77,7 @@ class _RectangleDrawingCreatorState
         final EdgePoint endEdgePoint = edgePoints[1];
 
         if (endEdgePoint == startEdgePoint) {
-          _widget.removeDrawing(drawingId);
+          _widget.removeUnfinishedDrawing();
           _widget.clearDrawingToolSelection();
           return;
         } else {
@@ -99,6 +99,7 @@ class _RectangleDrawingCreatorState
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

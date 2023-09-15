@@ -1,4 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -6,7 +7,6 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'line_drawing_tool_config.dart';
 import '../callbacks.dart';
-import '../drawing_tool_config.dart';
 
 /// Line drawing tool item in the list of drawing tools
 class LineDrawingToolItem extends DrawingToolItem {
@@ -33,19 +33,17 @@ class LineDrawingToolItem extends DrawingToolItem {
 class LineDrawingToolItemState
     extends DrawingToolItemState<LineDrawingToolConfig> {
   LineStyle? _lineStyle;
-  DrawingPatterns? _pattern;
 
   @override
   LineDrawingToolConfig createDrawingToolConfig() => LineDrawingToolConfig(
         lineStyle: _currentLineStyle,
-        pattern: _currentPattern,
       );
 
   @override
   Widget getDrawingToolOptions() => Column(
         children: <Widget>[
           _buildColorField(),
-          // TODO(maryia-binary): implement _buildPatternField() to set pattern
+          _buildPatternField(),
         ],
       );
 
@@ -67,9 +65,38 @@ class LineDrawingToolItemState
         ],
       );
 
+  // DrawingPatterns selectedOption = DrawingPatterns.solid;
+
+  Widget _buildPatternField() => Row(
+        children: <Widget>[
+          Text(
+            ChartLocalization.of(context).labelPattern,
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(width: 10),
+          DropdownButton<DrawingPatterns>(
+            value: _currentLineStyle.pattern,
+            onChanged: (DrawingPatterns? selectedPattern) {
+              setState(() {
+                _lineStyle =
+                    _currentLineStyle.copyWith(pattern: selectedPattern);
+              });
+              updateDrawingTool();
+            },
+            items: DrawingPatterns.values
+                .map((DrawingPatterns value) =>
+                    DropdownMenuItem<DrawingPatterns>(
+                      value: value,
+                      child: Text(value
+                          .toString()
+                          .split('.')
+                          .last), // Convert enum to string
+                    ))
+                .toList(),
+          ),
+        ],
+      );
+
   LineStyle get _currentLineStyle =>
       _lineStyle ?? (widget.config as LineDrawingToolConfig).lineStyle;
-
-  DrawingPatterns get _currentPattern =>
-      _pattern ?? (widget.config as LineDrawingToolConfig).pattern;
 }

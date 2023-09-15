@@ -1,10 +1,12 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/misc/debounce.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -52,10 +54,55 @@ class _DrawingPainterState extends State<DrawingPainter> {
   DraggableEdgePoint _draggableMiddlePoint = DraggableEdgePoint();
   DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
   Offset? _previousPosition;
+  final Debounce _updateDebounce = Debounce();
 
   @override
   Widget build(BuildContext context) {
     final XAxisModel xAxis = context.watch<XAxisModel>();
+
+    final Repository<DrawingToolConfig> repo =
+        context.watch<Repository<DrawingToolConfig>>();
+
+    /// In this method, we are updating the restored drawing tool
+    /// config with latest data from the chart.
+    void updateDrawingToolConfig() {
+      final DrawingData drawingData = widget.drawingData!;
+      _updateDebounce.run(() {
+        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
+          if (element.configId == drawingData.id) {
+            DrawingToolConfig updatedConfig;
+
+            updatedConfig = element.copyWith(
+              edgePoints: <EdgePoint>[
+                _draggableStartPoint.getEdgePoint(),
+                _draggableMiddlePoint.getEdgePoint(),
+                _draggableEndPoint.getEdgePoint(),
+              ],
+            );
+
+            repo.updateAt(index, updatedConfig);
+          }
+        });
+      });
+    }
+
+    void _updateDrawingsMovement() {
+      if (widget.drawingData == null) {
+        return;
+      }
+
+      for (final Drawing drawing in widget.drawingData!.drawingParts) {
+        drawing.onDrawingMoved(
+          xAxis.epochFromX,
+          widget.drawingData!.series!,
+          _draggableStartPoint,
+          middlePoint: _draggableMiddlePoint,
+          endPoint: _draggableEndPoint,
+        );
+      }
+
+      setState(() {});
+    }
 
     void _onPanUpdate(DragUpdateDetails details) {
       if (widget.drawingData!.isSelected &&
@@ -95,6 +142,9 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   _draggableMiddlePoint.isDragged,
             );
         });
+
+        /// Updating restored DrawingToolConfig with latest data from the chart
+        updateDrawingToolConfig();
       }
     }
 
@@ -167,7 +217,12 @@ class _DrawingPainterState extends State<DrawingPainter> {
               child: CustomPaint(
                 foregroundPainter: _DrawingPainter(
                   drawingData: widget.drawingData!,
+                  config: repo.items
+                      .where((DrawingToolConfig config) =>
+                          config.configId == widget.drawingData!.id)
+                      .first,
                   theme: context.watch<ChartTheme>(),
+                  epochFromX: xAxis.epochFromX,
                   epochToX: xAxis.xFromEpoch,
                   quoteToY: widget.quoteToCanvasY,
                   quoteFromY: widget.quoteFromCanvasY,
@@ -205,28 +260,14 @@ class _DrawingPainterState extends State<DrawingPainter> {
           )
         : const SizedBox();
   }
-
-  void _updateDrawingsMovement() {
-    if (widget.drawingData == null) {
-      return;
-    }
-
-    for (final Drawing drawing in widget.drawingData!.drawingParts) {
-      drawing.onDrawingMoved(
-        widget.drawingData!.series!,
-        _draggableStartPoint,
-        endPoint: _draggableEndPoint,
-      );
-    }
-
-    setState(() {});
-  }
 }
 
 class _DrawingPainter extends CustomPainter {
   _DrawingPainter({
     required this.drawingData,
+    required this.config,
     required this.theme,
+    required this.epochFromX,
     required this.epochToX,
     required this.quoteToY,
     required this.quoteFromY,
@@ -243,8 +284,10 @@ class _DrawingPainter extends CustomPainter {
   });
 
   final DrawingData drawingData;
+  final DrawingToolConfig config;
   final ChartTheme theme;
   final bool isDrawingToolSelected;
+  final int Function(double x) epochFromX;
   final double Function(int x) epochToX;
   final double Function(double y) quoteToY;
   final DraggableEdgePoint draggableStartPoint;
@@ -273,8 +316,11 @@ class _DrawingPainter extends CustomPainter {
         canvas,
         size,
         theme,
+        epochFromX,
+        quoteFromY,
         epochToX,
         quoteToY,
+        config,
         drawingData,
         updatePositionCallback,
         draggableStartPoint,
@@ -303,7 +349,7 @@ class _DrawingPainter extends CustomPainter {
         position,
         epochToX,
         quoteToY,
-        drawingData.config,
+        config,
         draggableStartPoint,
         setIsStartPointDragged,
         draggableMiddlePoint: draggableMiddlePoint,

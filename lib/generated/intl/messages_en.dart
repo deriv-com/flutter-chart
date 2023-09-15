@@ -23,7 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(text) => "No results for \"${text}\"";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function>{
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "informNoResult": m0,
         "labelBandsCount": MessageLookupByLibrary.simpleMessage("Bands Count"),
         "labelBaseLinePeriod":
@@ -57,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Over Bought Price"),
         "labelOverSoldPrice":
             MessageLookupByLibrary.simpleMessage("Over Sold Price"),
+        "labelPattern": MessageLookupByLibrary.simpleMessage("Pattern"),
         "labelPeriod": MessageLookupByLibrary.simpleMessage("Period"),
         "labelSearchAssets":
             MessageLookupByLibrary.simpleMessage("Search assets"),
