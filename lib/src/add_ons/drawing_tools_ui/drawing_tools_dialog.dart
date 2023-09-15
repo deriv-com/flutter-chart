@@ -34,8 +34,6 @@ class DrawingToolsDialog extends StatefulWidget {
 class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
   DrawingToolConfig? _selectedDrawingTool;
 
-  // final String aaa = UniqueKey().toString();
-
   @override
   Widget build(BuildContext context) {
     final Repository<DrawingToolConfig> repo =

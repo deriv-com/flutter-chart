@@ -31,8 +31,8 @@ class DrawingTools {
     }
 
     /// Remove unfinshed drawings before openning the dialog.
-    final List<DrawingData> unfinishedDrawings = getDrawingData()
-        .where((DrawingData data) => !data.isDrawingFinished)
+    final List<DrawingData?> unfinishedDrawings = getDrawingData()
+        .where((DrawingData? data) => !data!.isDrawingFinished)
         .toList();
     if (unfinishedDrawings.isNotEmpty) {
       drawingToolsRepo!
@@ -59,7 +59,7 @@ class DrawingTools {
     List<EdgePoint>? edgePoints,
   }) {
     final DrawingData? existingDrawing = getDrawingData().firstWhereOrNull(
-      (DrawingData drawing) => drawing.id == drawingId,
+      (DrawingData? drawing) => drawing!.id == drawingId,
     );
 
     if (existingDrawing == null) {
@@ -87,9 +87,9 @@ class DrawingTools {
     }
 
     /// Remove any unfinished drawing before adding a new one.
-    final List<DrawingData> unfinishedDrawings = getDrawingData()
-        .where((DrawingData data) =>
-            data.id != drawingId && !data.isDrawingFinished)
+    final List<DrawingData?> unfinishedDrawings = getDrawingData()
+        .where((DrawingData? data) =>
+            data!.id != drawingId && !data.isDrawingFinished)
         .toList();
 
     if (unfinishedDrawings.isNotEmpty) {
@@ -110,10 +110,9 @@ class DrawingTools {
   }
 
   /// A method to get the list of drawing data from the repository
-  List<DrawingData> getDrawingData() => drawingToolsRepo != null
+  List<DrawingData?> getDrawingData() => drawingToolsRepo != null
       ? drawingToolsRepo!.items
-          .map<DrawingData>(
-              (DrawingToolConfig config) => config.toJson()['drawingData'])
+          .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
           .toList()
       : <DrawingData>[];
 }

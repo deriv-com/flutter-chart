@@ -125,6 +125,10 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     final DrawingPatterns pattern = config.pattern;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
+    /// Since we want to draw a marker on the screen base on the user click,
+    /// we need to call the onPaint function each time any record added to
+    /// edgePoints list, so we need to check the edgePoints list lenght to
+    /// know which marker should be drawn
     _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
     if (edgePoints.length > 1) {
       _middlePoint =

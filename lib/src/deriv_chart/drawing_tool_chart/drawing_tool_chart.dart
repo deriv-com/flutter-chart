@@ -41,9 +41,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   late Repository<DrawingToolConfig> repo;
 
   /// A method to get the list of drawing data from the repository
-  List<DrawingData> getDrawingData() => repo.items
-      .map<DrawingData>(
-          (DrawingToolConfig config) => config.toJson()['drawingData'])
+  List<DrawingData?> getDrawingData() => repo.items
+      .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
       .toList();
 
   /// Sets drawing as selected and unselects the rest of drawings
@@ -52,8 +51,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
     setState(() {
       drawing.isSelected = !drawing.isSelected;
 
-      for (final DrawingData data in getDrawingData()) {
-        if (data.id != drawing.id) {
+      for (final DrawingData? data in getDrawingData()) {
+        if (data!.id != drawing.id) {
           data.isSelected = false;
         }
       }
@@ -62,8 +61,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
 
   /// Removes specific drawing from the list of drawings
   void removeUnfinishedDrawing() {
-    final List<DrawingData> unfinishedDrawings = getDrawingData()
-        .where((DrawingData data) => !data.isDrawingFinished)
+    final List<DrawingData?> unfinishedDrawings = getDrawingData()
+        .where((DrawingData? data) => !data!.isDrawingFinished)
         .toList();
     repo.removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
   }
@@ -71,8 +70,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   @override
   void didUpdateWidget(DrawingToolChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    for (final DrawingData data in getDrawingData()) {
-      data.series = widget.series.entries;
+    for (final DrawingData? data in getDrawingData()) {
+      data!.series = widget.series.entries;
     }
   }
 
@@ -80,17 +79,16 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   Widget build(BuildContext context) {
     repo = context.watch<Repository<DrawingToolConfig>>();
 
-    final List<DrawingData> drawings = repo.items
-        .map<DrawingData>(
-            (DrawingToolConfig config) => config.toJson()['drawingData'])
+    final List<DrawingData?> drawings = repo.items
+        .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
         .toList();
 
     return ClipRect(
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          ...drawings.map((DrawingData drawingData) => DrawingPainter(
-                key: ValueKey<String>(drawingData.id),
+          ...drawings.map((DrawingData? drawingData) => DrawingPainter(
+                key: ValueKey<String>(drawingData!.id),
                 drawingData: drawingData,
                 quoteToCanvasY: widget.chartQuoteToCanvasY,
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
