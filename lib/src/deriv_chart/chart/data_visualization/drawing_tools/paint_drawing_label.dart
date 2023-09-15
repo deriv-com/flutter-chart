@@ -16,75 +16,80 @@ void paintDrawingLabel(
   int Function(double x)? epochFromX,
   double Function(double)? quoteFromY,
 }) {
-  /// Outline Rectangle of the label
-  Rect _labelRect = Rect.zero;
-
-  /// Offset from where the text starts
-  Offset _textOffset = Offset.zero;
-
   /// Name of the of label
   String _labelString = '';
-
-  /// Width of the rectangle
-  const double _width = 80;
-
-  /// Height of the rectangle
-  const double _height = 24;
 
   final HorizontalBarrierStyle horizontalBarrierStyle =
       theme.horizontalBarrierStyle;
 
   if (drawingType == 'horizontal') {
-    _labelRect = Rect.fromCenter(
-      center: Offset(size.width - 26, coord),
-      width: _width,
-      height: _height,
-    );
-
+ 
     _labelString = quoteFromY!(coord).toStringAsFixed(config.pipSize);
 
-    _textOffset = Offset(
-      size.width - 44,
-      coord - 5,
-    );
   } else {
-    _labelRect = Rect.fromCenter(
-      center: Offset(
-        coord,
-        size.height - 6,
-      ),
-      width: _width,
-      height: _height,
-    );
-
+  
     final DateTime _dateTime =
         DateTime.fromMillisecondsSinceEpoch(epochFromX!(coord), isUtc: true);
 
     _labelString = DateFormat('MM-dd HH:mm:ss').format(_dateTime);
-
-    _textOffset = Offset(
-      coord - 32,
-      size.height - 13,
-    );
   }
 
+  const double padding = 6;
   final TextPainter textPainter = TextPainter(
     text: TextSpan(
       text: _labelString,
       style: TextStyle(
-        color: horizontalBarrierStyle.titleBackgroundColor,
-        fontSize: 10,
+          color: horizontalBarrierStyle.titleBackgroundColor,
+          fontSize: horizontalBarrierStyle.textStyle.fontSize,
+          height: horizontalBarrierStyle.textStyle.height,
+          fontFeatures: horizontalBarrierStyle.textStyle.fontFeatures,
+          fontWeight: horizontalBarrierStyle.textStyle.fontWeight
       ),
     ),
     textDirection: ui.TextDirection.ltr,
+    maxLines: 1,
   )..layout(maxWidth: size.width);
 
-  final RRect roundedRect =
-      RRect.fromRectAndRadius(_labelRect, const Radius.circular(4));
+
+  final double rectWidth = textPainter.width + 2 * padding;
+  const double rectHeight = 24;
+
+  RRect rect = RRect.zero;
+
+  if (drawingType == 'horizontal') {
+    rect = RRect.fromLTRBR(
+      size.width - rectWidth - 1,
+      coord - (rectHeight / 2),
+      size.width - 4,
+      coord + (rectHeight / 2),
+      const Radius.circular(4),
+    );
+  } else {
+    rect = RRect.fromLTRBR(
+      coord - (rectWidth / 2),
+      size.height - rectHeight,
+      coord + (rectWidth / 2),
+      size.height,
+      const Radius.circular(4),
+    );
+  }
+
 
   canvas.drawRRect(
-    roundedRect,
-    Paint()..color = horizontalBarrierStyle.color,
+    rect,
+    Paint()
+      ..color = horizontalBarrierStyle.color
+      ..style = PaintingStyle.fill,
   );
-  textPainter.paint(canvas, _textOffset);
+  if (drawingType == 'horizontal') {
+    textPainter.paint(
+        canvas,
+        Offset(size.width - rectWidth + padding - 2,
+            coord - textPainter.height / 2));
+  } else {
+    textPainter.paint(
+        canvas,
+        Offset(coord - textPainter.width / 2,
+            size.height - textPainter.height - padding + 1));
+  }
 }
