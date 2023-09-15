@@ -15,6 +15,7 @@ void paintDrawingLabel(
   ChartConfig config, {
   int Function(double x)? epochFromX,
   double Function(double)? quoteFromY,
+  Color color = Colors.white,
 }) {
   /// Name of the of label
   String _labelString = '';
@@ -33,13 +34,13 @@ void paintDrawingLabel(
 
     _labelString = DateFormat('MM-dd HH:mm:ss').format(_dateTime);
   }
-
+  
   const double padding = 6;
   final TextPainter textPainter = TextPainter(
     text: TextSpan(
       text: _labelString,
       style: TextStyle(
-          color: horizontalBarrierStyle.titleBackgroundColor,
+          color: calculateTextColor(color),
           fontSize: horizontalBarrierStyle.textStyle.fontSize,
           height: horizontalBarrierStyle.textStyle.height,
           fontFeatures: horizontalBarrierStyle.textStyle.fontFeatures,
@@ -78,7 +79,7 @@ void paintDrawingLabel(
   canvas.drawRRect(
     rect,
     Paint()
-      ..color = horizontalBarrierStyle.color
+      ..color = color
       ..style = PaintingStyle.fill,
   );
   if (drawingType == 'horizontal') {

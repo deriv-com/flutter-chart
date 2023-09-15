@@ -116,6 +116,7 @@ class VerticalDrawing extends Drawing {
           theme,
           chartConfig!,
           epochFromX: epochFromX,
+          color: lineStyle.color  
         );
       }
     }

@@ -114,6 +114,7 @@ class HorizontalDrawing extends Drawing {
         theme,
         chartConfig!,
         quoteFromY: quoteFromY,
+        color: lineStyle.color  
       );
     }
   }
