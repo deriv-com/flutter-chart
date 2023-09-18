@@ -165,25 +165,7 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
-  @override
-  void onDrawingMoved(
-    int Function(double x) epochFromX,
-    List<Tick> ticks,
-    EdgePoint startPoint, {
-    EdgePoint? middlePoint,
-    EdgePoint? endPoint,
-  }) {
-    final int minimumEpoch =
-        startXCoord == 0 ? startEdgePoint.epoch : epochFromX(startXCoord);
-
-    //  Minimum epoch of the drawing
-    final int maximumEpoch =
-        endXCoord == 0 ? endEdgePoint.epoch : epochFromX(endXCoord);
-
-    if (maximumEpoch != 0 && minimumEpoch != 0) {
-      _calculator = _setCalculator(minimumEpoch, maximumEpoch, ticks);
-    }
-  }
+  // TODO(Bahar-deriv): implement onDrawingMoved here later
 
   @override
   bool needsRepaint(
@@ -225,8 +207,13 @@ class TrendDrawing extends Drawing {
     config as TrendDrawingToolConfig;
 
     final DrawingPaintStyle paint = DrawingPaintStyle();
-
+    final List<Tick>? series = config.drawingData!.series;
     final List<EdgePoint> edgePoints = config.edgePoints;
+
+    if (config.drawingData!.series == null) {
+      return;
+    }
+
 
     //  Maximum epoch of the drawing
     final int minimumEpoch =
@@ -238,9 +225,14 @@ class TrendDrawing extends Drawing {
         : epochFromX(endXCoord);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
-      // center of rectangle
-      _rectCenter = quoteToY(_calculator!.min) +
-          ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      // setting calculator
+      _calculator = _setCalculator(minimumEpoch, maximumEpoch, series);
+
+      if (_calculator != null) {
+        // center of rectangle
+        _rectCenter = quoteToY(_calculator!.min) +
+            ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      }
     }
 
     final LineStyle lineStyle = config.lineStyle;
@@ -395,6 +387,9 @@ class TrendDrawing extends Drawing {
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
+    setIsStartPointDragged(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
+
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - _rectCenter;
@@ -420,7 +415,7 @@ class TrendDrawing extends Drawing {
     }
 
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged!(isDragged: true);
+      setIsEndPointDragged(isDragged: true);
     }
 
     // For clicking the center line
