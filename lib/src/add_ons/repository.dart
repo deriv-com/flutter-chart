@@ -22,4 +22,10 @@ abstract class Repository<T> extends ChangeNotifier {
 
   ///
   void clear();
+
+  ///
+  void onMouseEnter(int index);
+
+  ///
+  void onMouseExit(int index);
 }

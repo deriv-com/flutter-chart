@@ -88,7 +88,6 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     notifyListeners();
   }
 
-
   /// Removes indicator/drawing tool at [index] from repository and
   /// updates storage.
   @override
@@ -97,8 +96,6 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     _writeToPrefs();
     notifyListeners();
   }
-
-
 
   /// Swaps two elements of a list and updates storage.
   @override
@@ -115,5 +112,13 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
         items.map((T config) => jsonEncode(config.toJson())).toList(),
       );
     }
+  }
+
+  @override
+  void onMouseEnter(int index) {
+  }
+
+  @override
+  void onMouseExit(int index) {
   }
 }

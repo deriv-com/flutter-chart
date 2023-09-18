@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -93,7 +95,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          ...drawings.map((DrawingData drawingData) => DrawingPainter(
+          ...drawings.mapIndexed((int index, DrawingData drawingData) =>
+              DrawingPainter(
                 key: ValueKey<String>(drawingData.id),
                 drawingData: drawingData,
                 quoteToCanvasY: widget.chartQuoteToCanvasY,
@@ -102,6 +105,10 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 setIsDrawingSelected: _setIsDrawingSelected,
                 setIsDrawingHovered: _setIsDrawingHovered,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+                onMouseEnter: (PointerEnterEvent event) =>
+                    repo.onMouseEnter(index),
+                onMouseExit: (PointerExitEvent event) =>
+                    repo.onMouseExit(index),
               )),
           if (widget.drawingTools.selectedDrawingTool != null)
             DrawingToolWidget(

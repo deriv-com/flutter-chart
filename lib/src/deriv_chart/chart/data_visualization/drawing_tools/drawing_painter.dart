@@ -23,6 +23,8 @@ class DrawingPainter extends StatefulWidget {
     required this.setIsDrawingSelected,
     required this.setIsDrawingHovered,
     required this.selectedDrawingTool,
+    required this.onMouseEnter,
+    required this.onMouseExit,
     Key? key,
   }) : super(key: key);
 
@@ -50,6 +52,12 @@ class DrawingPainter extends StatefulWidget {
 
   /// Callback to set if drawing is selected (tapped).
   final void Function(DrawingData drawing) setIsDrawingHovered;
+
+  /// Callback to notify mouse enter over the addon.
+  final void Function(PointerEnterEvent event) onMouseEnter;
+
+  /// Callback to notify mouse exit over the addon.
+  final void Function(PointerExitEvent event) onMouseExit;
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
@@ -150,12 +158,11 @@ class _DrawingPainterState extends State<DrawingPainter> {
             onEnter: (PointerEnterEvent event) {
               if (!widget.drawingData!.isSelected) {
                 widget.setIsDrawingHovered(widget.drawingData!);
+                widget.onMouseEnter(event);
               }
             },
             onExit: (PointerExitEvent event) {
-              if (widget.drawingData!.isSelected && !isTouchHeld) {
-                widget.setIsDrawingSelected(widget.drawingData!);
-              }
+              widget.onMouseExit(event);
             },
             hitTestBehavior: HitTestBehavior.deferToChild,
             child: GestureDetector(
