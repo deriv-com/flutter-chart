@@ -102,25 +102,27 @@ class TrendDrawing extends Drawing {
     if (prevMaximumEpoch != maximumEpoch || prevMinimumEpoch != minimumEpoch) {
       prevMaximumEpoch = maximumEpoch;
       prevMinimumEpoch = minimumEpoch;
-      int minimumEpochIndex =
-          findClosestIndexBinarySearch(minimumEpoch, series);
-      int maximumEpochIndex =
-          findClosestIndexBinarySearch(maximumEpoch, series);
+      if (series!.isNotEmpty) {
+        int minimumEpochIndex =
+            findClosestIndexBinarySearch(minimumEpoch, series);
+        int maximumEpochIndex =
+            findClosestIndexBinarySearch(maximumEpoch, series);
 
-      if (minimumEpochIndex > maximumEpochIndex) {
-        final int tempEpochIndex = minimumEpochIndex;
-        minimumEpochIndex = maximumEpochIndex;
-        maximumEpochIndex = tempEpochIndex;
+        if (minimumEpochIndex > maximumEpochIndex) {
+          final int tempEpochIndex = minimumEpochIndex;
+          minimumEpochIndex = maximumEpochIndex;
+          maximumEpochIndex = tempEpochIndex;
+        }
+
+        final List<Tick>? epochRange =
+            series!.sublist(minimumEpochIndex, maximumEpochIndex);
+
+        double minValueOf(Tick t) => t.quote;
+        double maxValueOf(Tick t) => t.quote;
+
+        _calculator = MinMaxCalculator(minValueOf, maxValueOf)
+          ..calculate(epochRange!);
       }
-
-      final List<Tick>? epochRange =
-          series!.sublist(minimumEpochIndex, maximumEpochIndex);
-
-      double minValueOf(Tick t) => t.quote;
-      double maxValueOf(Tick t) => t.quote;
-
-      _calculator = MinMaxCalculator(minValueOf, maxValueOf)
-        ..calculate(epochRange!);
     }
     return _calculator;
   }
@@ -165,7 +167,25 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
-  // TODO(Bahar-deriv): implement onDrawingMoved here later
+  @override
+  void onDrawingMoved(
+    int Function(double x) epochFromX,
+    List<Tick> ticks,
+    EdgePoint startPoint, {
+    EdgePoint? middlePoint,
+    EdgePoint? endPoint,
+  }) {
+    final int minimumEpoch =
+        startXCoord == 0 ? startEdgePoint.epoch : epochFromX(startXCoord);
+
+    //  Minimum epoch of the drawing
+    final int maximumEpoch =
+        endXCoord == 0 ? endEdgePoint.epoch : epochFromX(endXCoord);
+
+    if (maximumEpoch != 0 && minimumEpoch != 0) {
+      _calculator = _setCalculator(minimumEpoch, maximumEpoch, ticks);
+    }
+  }
 
   @override
   bool needsRepaint(
@@ -210,11 +230,11 @@ class TrendDrawing extends Drawing {
     final List<Tick>? series = config.drawingData!.series;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    if (config.drawingData!.series == null) {
+    if (series == null) {
       return;
     }
 
-
+    
     //  Maximum epoch of the drawing
     final int minimumEpoch =
         startXCoord == 0 ? edgePoints.first.epoch : epochFromX(startXCoord);
@@ -224,22 +244,21 @@ class TrendDrawing extends Drawing {
         ? (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch)
         : epochFromX(endXCoord);
 
-    if (maximumEpoch != 0 && minimumEpoch != 0) {
-      // setting calculator
-      _calculator = _setCalculator(minimumEpoch, maximumEpoch, series);
 
-      if (_calculator != null) {
-        // center of rectangle
-        _rectCenter = quoteToY(_calculator!.min) +
-            ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
-      }
-    }
+    _calculator = _setCalculator(minimumEpoch, maximumEpoch, series);
+
 
     final LineStyle lineStyle = config.lineStyle;
     final LineStyle fillStyle = config.fillStyle;
     final DrawingPatterns pattern = config.pattern;
 
     if (_calculator != null) {
+      if (maximumEpoch != 0 && minimumEpoch != 0) {
+        // center of rectangle
+        _rectCenter = quoteToY(_calculator!.min) +
+            ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      }
+
       _startPoint = updatePositionCallback(
           EdgePoint(
               epoch: edgePoints.first.epoch,
@@ -387,9 +406,6 @@ class TrendDrawing extends Drawing {
     void Function({required bool isDragged})? setIsMiddlePointDragged,
     void Function({required bool isDragged})? setIsEndPointDragged,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - _rectCenter;
@@ -415,7 +431,7 @@ class TrendDrawing extends Drawing {
     }
 
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged(isDragged: true);
+      setIsEndPointDragged!(isDragged: true);
     }
 
     // For clicking the center line
