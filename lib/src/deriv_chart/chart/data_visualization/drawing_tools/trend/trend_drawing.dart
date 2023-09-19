@@ -102,25 +102,27 @@ class TrendDrawing extends Drawing {
     if (prevMaximumEpoch != maximumEpoch || prevMinimumEpoch != minimumEpoch) {
       prevMaximumEpoch = maximumEpoch;
       prevMinimumEpoch = minimumEpoch;
-      int minimumEpochIndex =
-          findClosestIndexBinarySearch(minimumEpoch, series);
-      int maximumEpochIndex =
-          findClosestIndexBinarySearch(maximumEpoch, series);
+      if (series!.isNotEmpty) {
+        int minimumEpochIndex =
+            findClosestIndexBinarySearch(minimumEpoch, series);
+        int maximumEpochIndex =
+            findClosestIndexBinarySearch(maximumEpoch, series);
 
-      if (minimumEpochIndex > maximumEpochIndex) {
-        final int tempEpochIndex = minimumEpochIndex;
-        minimumEpochIndex = maximumEpochIndex;
-        maximumEpochIndex = tempEpochIndex;
+        if (minimumEpochIndex > maximumEpochIndex) {
+          final int tempEpochIndex = minimumEpochIndex;
+          minimumEpochIndex = maximumEpochIndex;
+          maximumEpochIndex = tempEpochIndex;
+        }
+
+        final List<Tick>? epochRange =
+            series!.sublist(minimumEpochIndex, maximumEpochIndex);
+
+        double minValueOf(Tick t) => t.quote;
+        double maxValueOf(Tick t) => t.quote;
+
+        _calculator = MinMaxCalculator(minValueOf, maxValueOf)
+          ..calculate(epochRange!);
       }
-
-      final List<Tick>? epochRange =
-          series!.sublist(minimumEpochIndex, maximumEpochIndex);
-
-      double minValueOf(Tick t) => t.quote;
-      double maxValueOf(Tick t) => t.quote;
-
-      _calculator = MinMaxCalculator(minValueOf, maxValueOf)
-        ..calculate(epochRange!);
     }
     return _calculator;
   }
@@ -225,9 +227,14 @@ class TrendDrawing extends Drawing {
     config as TrendDrawingToolConfig;
 
     final DrawingPaintStyle paint = DrawingPaintStyle();
-
+    final List<Tick>? series = config.drawingData!.series;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
+    if (series == null) {
+      return;
+    }
+
+    
     //  Maximum epoch of the drawing
     final int minimumEpoch =
         startXCoord == 0 ? edgePoints.first.epoch : epochFromX(startXCoord);
@@ -237,17 +244,21 @@ class TrendDrawing extends Drawing {
         ? (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch)
         : epochFromX(endXCoord);
 
-    if (maximumEpoch != 0 && minimumEpoch != 0) {
-      // center of rectangle
-      _rectCenter = quoteToY(_calculator!.min) +
-          ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
-    }
+
+    _calculator = _setCalculator(minimumEpoch, maximumEpoch, series);
+
 
     final LineStyle lineStyle = config.lineStyle;
     final LineStyle fillStyle = config.fillStyle;
     final DrawingPatterns pattern = config.pattern;
 
     if (_calculator != null) {
+      if (maximumEpoch != 0 && minimumEpoch != 0) {
+        // center of rectangle
+        _rectCenter = quoteToY(_calculator!.min) +
+            ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      }
+
       _startPoint = updatePositionCallback(
           EdgePoint(
               epoch: edgePoints.first.epoch,
