@@ -13,15 +13,11 @@ DrawingData _$DrawingDataFromJson(Map<String, dynamic> json) => DrawingData(
           .toList(),
       isDrawingFinished: json['isDrawingFinished'] as bool? ?? false,
       isSelected: json['isSelected'] as bool? ?? true,
-      series: (json['series'] as List<dynamic>?)
-          ?.map((e) => Tick.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
 
 Map<String, dynamic> _$DrawingDataToJson(DrawingData instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'series': instance.series,
       'drawingParts': instance.drawingParts,
       'isDrawingFinished': instance.isDrawingFinished,
       'isSelected': instance.isSelected,

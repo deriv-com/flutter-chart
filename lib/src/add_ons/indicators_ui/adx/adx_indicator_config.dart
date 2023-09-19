@@ -56,7 +56,8 @@ class ADXIndicatorConfig extends IndicatorConfig {
   /// The period value for smoothing the ADX series.
   final int smoothingPeriod;
 
-  /// Whether to add channel fill between the Positive and Negative DI Indicator.
+  /// Whether to add channel fill between the Positive and Negative DI
+  /// Indicator.
   final bool showChannelFill;
 
   /// Whether to show the histogram Series or not.

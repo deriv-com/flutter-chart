@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
@@ -321,12 +321,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     markerSeries: widget.markerSeries!,
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
-                DrawingToolChart(
-                  series: widget.mainSeries as DataSeries<Tick>,
-                  chartQuoteToCanvasY: chartQuoteToCanvasY,
-                  chartQuoteFromCanvasY: chartQuoteFromCanvasY,
-                  drawingTools: widget.drawingTools,
-                ),
+                _buildDrawingToolChart(),
                 if (!widget.drawingTools.isDrawingMoving)
                   kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&

@@ -75,13 +75,6 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
     }
   }
 
-  @override
-  void didUpdateWidget(DrawingToolChart oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    for (final DrawingData data in getDrawingData()) {
-      data.series = widget.series.entries;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +103,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                     widget.drawingTools.onMouseEnter(index),
                 onMouseExit: (PointerExitEvent event) =>
                     widget.drawingTools.onMouseExit(index),
+               series: widget.series,
               )),
           if (widget.drawingTools.selectedDrawingTool != null)
             DrawingToolWidget(

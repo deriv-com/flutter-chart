@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/channel/channel_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
@@ -109,6 +110,7 @@ abstract class Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DrawingData drawingData,
+    DataSeries<Tick> series,
     Point Function(
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,

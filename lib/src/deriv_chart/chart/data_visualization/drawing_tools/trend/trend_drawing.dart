@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
@@ -167,25 +168,7 @@ class TrendDrawing extends Drawing {
         bottomLineBounds.inflate(2).contains(position);
   }
 
-  @override
-  void onDrawingMoved(
-    int Function(double x) epochFromX,
-    List<Tick> ticks,
-    EdgePoint startPoint, {
-    EdgePoint? middlePoint,
-    EdgePoint? endPoint,
-  }) {
-    final int minimumEpoch =
-        startXCoord == 0 ? startEdgePoint.epoch : epochFromX(startXCoord);
-
-    //  Minimum epoch of the drawing
-    final int maximumEpoch =
-        endXCoord == 0 ? endEdgePoint.epoch : epochFromX(endXCoord);
-
-    if (maximumEpoch != 0 && minimumEpoch != 0) {
-      _calculator = _setCalculator(minimumEpoch, maximumEpoch, ticks);
-    }
-  }
+  // TODO(Bahar-deriv): implement onDrawingMoved here later
 
   @override
   bool needsRepaint(
@@ -216,6 +199,7 @@ class TrendDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DrawingData drawingData,
+    DataSeries<Tick> series,
     Point Function(
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
@@ -227,14 +211,12 @@ class TrendDrawing extends Drawing {
     config as TrendDrawingToolConfig;
 
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final List<Tick>? series = config.drawingData!.series;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    if (series == null) {
+    if (series.entries == null) {
       return;
-    }
+    }  
 
-    
     //  Maximum epoch of the drawing
     final int minimumEpoch =
         startXCoord == 0 ? edgePoints.first.epoch : epochFromX(startXCoord);
@@ -244,9 +226,14 @@ class TrendDrawing extends Drawing {
         ? (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch)
         : epochFromX(endXCoord);
 
+    if (maximumEpoch != 0 && minimumEpoch != 0) {
+      // setting calculator
+      _calculator = _setCalculator(minimumEpoch, maximumEpoch, series.entries);
 
-    _calculator = _setCalculator(minimumEpoch, maximumEpoch, series);
-
+      // center of rectangle
+      _rectCenter = quoteToY(_calculator!.min) +
+          ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+    }
 
     final LineStyle lineStyle = config.lineStyle;
     final LineStyle fillStyle = config.fillStyle;
@@ -298,7 +285,7 @@ class TrendDrawing extends Drawing {
     }
 
     if (drawingPart == DrawingParts.marker) {
-      if (endEdgePoint.epoch == 0) {
+      if (edgePoints.length == 1) {
         _startPoint = updatePositionCallback(
             EdgePoint(
                 epoch: edgePoints.first.epoch, quote: edgePoints.last.quote),
