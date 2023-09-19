@@ -113,12 +113,4 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       );
     }
   }
-
-  @override
-  void onMouseEnter(int index) {
-  }
-
-  @override
-  void onMouseExit(int index) {
-  }
 }

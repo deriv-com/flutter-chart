@@ -106,9 +106,9 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 setIsDrawingHovered: _setIsDrawingHovered,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
                 onMouseEnter: (PointerEnterEvent event) =>
-                    repo.onMouseEnter(index),
+                    widget.drawingTools.onMouseEnter(index),
                 onMouseExit: (PointerExitEvent event) =>
-                    repo.onMouseExit(index),
+                    widget.drawingTools.onMouseExit(index),
               )),
           if (widget.drawingTools.selectedDrawingTool != null)
             DrawingToolWidget(
