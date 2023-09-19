@@ -14,7 +14,6 @@ class DrawingData {
     required this.drawingParts,
     this.isDrawingFinished = false,
     this.isSelected = true,
-    this.series,
   });
 
   /// Initializes from JSON.
@@ -26,9 +25,6 @@ class DrawingData {
 
   /// Unique id of the current drawing.
   final String id;
-
-  /// Series of ticks
-  List<Tick>? series;
 
   /// Drawing list.
   final List<Drawing> drawingParts;

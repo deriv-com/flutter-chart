@@ -68,14 +68,6 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   }
 
   @override
-  void didUpdateWidget(DrawingToolChart oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    for (final DrawingData? data in getDrawingData()) {
-      data!.series = widget.series.entries;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     repo = context.watch<Repository<DrawingToolConfig>>();
 
@@ -95,6 +87,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 onMoveDrawing: widget.drawingTools.onMoveDrawing,
                 setIsDrawingSelected: _setIsDrawingSelected,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+                series: widget.series,
               )),
           if (widget.drawingTools.selectedDrawingTool != null)
             DrawingToolWidget(

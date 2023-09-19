@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
@@ -196,6 +197,7 @@ class TrendDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DrawingData drawingData,
+    DataSeries<Tick> series,
     Point Function(
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
@@ -207,7 +209,6 @@ class TrendDrawing extends Drawing {
     config as TrendDrawingToolConfig;
 
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final List<Tick>? series = config.drawingData!.series;
     final List<EdgePoint> edgePoints = config.edgePoints;
 
     //  Maximum epoch of the drawing
@@ -221,7 +222,7 @@ class TrendDrawing extends Drawing {
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
       // setting calculator
-      _calculator = _setCalculator(minimumEpoch, maximumEpoch, series);
+      _calculator = _setCalculator(minimumEpoch, maximumEpoch, series.entries);
 
       // center of rectangle
       _rectCenter = quoteToY(_calculator!.min) +

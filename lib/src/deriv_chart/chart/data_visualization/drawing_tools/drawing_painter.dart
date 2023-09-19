@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
@@ -7,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/misc/debounce.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,7 @@ class DrawingPainter extends StatefulWidget {
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
     required this.selectedDrawingTool,
+    required this.series,
     Key? key,
   }) : super(key: key);
 
@@ -46,6 +49,9 @@ class DrawingPainter extends StatefulWidget {
 
   /// Callback to set if drawing is selected (tapped).
   final void Function(DrawingData drawing) setIsDrawingSelected;
+
+  /// Series of tick
+  final DataSeries<Tick> series;
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
@@ -75,6 +81,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
             updatedConfig = element.copyWith(
               edgePoints: <EdgePoint>[
                 _draggableStartPoint.getEdgePoint(),
+                // TODO(Bahar-Deriv): Change the way storing edge points
                 if (element.configId!.contains('Channel'))
                   _draggableMiddlePoint.getEdgePoint(),
                 _draggableEndPoint.getEdgePoint(),
@@ -95,7 +102,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
       for (final Drawing drawing in widget.drawingData!.drawingParts) {
         drawing.onDrawingMoved(
           xAxis.epochFromX,
-          widget.drawingData!.series!,
+          widget.series.entries!,
           _draggableStartPoint,
           middlePoint: _draggableMiddlePoint,
           endPoint: _draggableEndPoint,
@@ -218,6 +225,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
               child: CustomPaint(
                 foregroundPainter: _DrawingPainter(
                   drawingData: widget.drawingData!,
+                  series: widget.series,
                   config: repo.items
                       .where((DrawingToolConfig config) =>
                           config.configId == widget.drawingData!.id)
@@ -266,6 +274,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
 class _DrawingPainter extends CustomPainter {
   _DrawingPainter({
     required this.drawingData,
+    required this.series,
     required this.config,
     required this.theme,
     required this.epochFromX,
@@ -285,6 +294,7 @@ class _DrawingPainter extends CustomPainter {
   });
 
   final DrawingData drawingData;
+  final DataSeries<Tick> series;
   final DrawingToolConfig config;
   final ChartTheme theme;
   final bool isDrawingToolSelected;
@@ -323,6 +333,7 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         config,
         drawingData,
+        series,
         updatePositionCallback,
         draggableStartPoint,
         draggableMiddlePoint: draggableMiddlePoint,
