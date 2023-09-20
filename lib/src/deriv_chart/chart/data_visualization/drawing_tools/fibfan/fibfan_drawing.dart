@@ -294,15 +294,15 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         startXCoord: startXCoord.toInt(),
         endXCoord: endXCoord.toInt(),
       )
-        ..drawLabel(
-            canvas, lineStyle, zeroDegreeVectorPercentage, _zeroDegreeVector)
-        ..drawLabel(canvas, lineStyle, initialInnerVectorPercentage,
+        ..drawLabel(canvas, size, lineStyle, zeroDegreeVectorPercentage,
+            _zeroDegreeVector)
+        ..drawLabel(canvas, size, lineStyle, initialInnerVectorPercentage,
             _initialInnerVector)
-        ..drawLabel(
-            canvas, lineStyle, middleInnerVectorPercentage, _middleInnerVector)
-        ..drawLabel(
-            canvas, lineStyle, finalInnerVectorPercentage, _finalInnerVector)
-        ..drawLabel(canvas, lineStyle, baseVectorPercentage, _baseVector);
+        ..drawLabel(canvas, size, lineStyle, middleInnerVectorPercentage,
+            _middleInnerVector)
+        ..drawLabel(canvas, size, lineStyle, finalInnerVectorPercentage,
+            _finalInnerVector)
+        ..drawLabel(canvas, size, lineStyle, baseVectorPercentage, _baseVector);
     }
   }
 
