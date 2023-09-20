@@ -1,6 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'drawing_data.g.dart';

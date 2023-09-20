@@ -51,6 +51,7 @@ int findClosestIndexBinarySearch(int epoch, List<Tick>? entries) {
 
   if (localEpoch > entries[hi].epoch) {
     localEpoch = entries[hi].epoch;
+    return hi;
   }
 
   while (lo <= hi) {

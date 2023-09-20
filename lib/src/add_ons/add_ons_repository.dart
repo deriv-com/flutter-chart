@@ -31,7 +31,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   List<T> get items => _addOns;
 
   /// Storage key of saved indicators/drawing tools.
-  String get addOnsKey => 'addOns_${T.toString()}$currentSymbol';
+  String get addOnsKey => 'addOns_${T.toString()}_$currentSymbol';
 
   /// Called to create an AddOnConfig object from a map.
   CreateAddOn<T> createAddOn;

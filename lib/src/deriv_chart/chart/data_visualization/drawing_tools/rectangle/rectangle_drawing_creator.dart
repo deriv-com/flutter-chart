@@ -25,7 +25,7 @@ class RectangleDrawingCreator extends DrawingCreator<RectangleDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
-  final void Function() removeUnfinishedDrawing;
+  final VoidCallback removeUnfinishedDrawing;
 
   @override
   _RectangleDrawingCreatorState createState() =>

@@ -32,7 +32,7 @@ class TrendDrawingCreator extends DrawingCreator<TrendDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
-  final void Function() removeUnfinishedDrawing;
+  final VoidCallback removeUnfinishedDrawing;
 
   @override
   DrawingCreatorState<TrendDrawing> createState() =>

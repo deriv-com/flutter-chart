@@ -25,7 +25,8 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove unfinished drawing from the list of drawings.
-  final void Function() removeUnfinishedDrawing;
+  final VoidCallback removeUnfinishedDrawing;
+
   @override
   DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
 }
