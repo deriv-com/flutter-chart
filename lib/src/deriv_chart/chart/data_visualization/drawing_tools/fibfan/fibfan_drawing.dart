@@ -294,15 +294,15 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         startXCoord: startXCoord.toInt(),
         endXCoord: endXCoord.toInt(),
       )
-        ..drawLabel(
-            canvas, lineStyle, zeroDegreeVectorPercentage, _zeroDegreeVector)
-        ..drawLabel(canvas, lineStyle, initialInnerVectorPercentage,
+        ..drawLabel(canvas, size, lineStyle, zeroDegreeVectorPercentage,
+            _zeroDegreeVector)
+        ..drawLabel(canvas, size, lineStyle, initialInnerVectorPercentage,
             _initialInnerVector)
-        ..drawLabel(
-            canvas, lineStyle, middleInnerVectorPercentage, _middleInnerVector)
-        ..drawLabel(
-            canvas, lineStyle, finalInnerVectorPercentage, _finalInnerVector)
-        ..drawLabel(canvas, lineStyle, baseVectorPercentage, _baseVector);
+        ..drawLabel(canvas, size, lineStyle, middleInnerVectorPercentage,
+            _middleInnerVector)
+        ..drawLabel(canvas, size, lineStyle, finalInnerVectorPercentage,
+            _finalInnerVector)
+        ..drawLabel(canvas, size, lineStyle, baseVectorPercentage, _baseVector);
     }
   }
 
@@ -326,6 +326,9 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     bool _isVectorHit(Vector vector) =>
         isVectorHit(vector, position, lineStyle);
 
+    setIsStartPointDragged(isDragged: false);
+    setIsEndPointDragged!(isDragged: false);
+
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
       setIsStartPointDragged(isDragged: true);
@@ -333,7 +336,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      setIsEndPointDragged!(isDragged: true);
+      setIsEndPointDragged(isDragged: true);
     }
     return _isVectorHit(_baseVector) ||
         _isVectorHit(_finalInnerVector) ||
