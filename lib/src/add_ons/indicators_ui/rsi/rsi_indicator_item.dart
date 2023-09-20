@@ -2,9 +2,11 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillato
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
 import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+
 import 'package:flutter/material.dart';
-import '../indicator_config.dart';
+
 import '../callbacks.dart';
+import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'rsi_indicator_config.dart';
 

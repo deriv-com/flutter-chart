@@ -12,7 +12,6 @@ import '../series_painter.dart';
 import 'abstract_single_indicator_series.dart';
 import 'models/rsi_options.dart';
 
-
 /// RSI series.
 class RSISeries extends AbstractSingleIndicatorSeries {
   /// Initializes an RSI Indicator.

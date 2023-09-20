@@ -15,7 +15,6 @@ import 'donchian_channel_indicator_item.dart';
 
 part 'donchian_channel_indicator_config.g.dart';
 
-
 /// Donchian Channel Indicator Config
 @JsonSerializable()
 @ColorConverter()

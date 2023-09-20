@@ -13,8 +13,6 @@ import 'horizontal_barrier.dart';
 import 'horizontal_barrier_painter.dart';
 import 'tick_indicator.dart';
 
-
-
 /// A class for painting candle indicators.
 class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
   /// Initializes [series].

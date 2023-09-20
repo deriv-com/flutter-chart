@@ -7,7 +7,6 @@ import '../barrier.dart';
 import '../horizontal_barrier/horizontal_barrier.dart';
 import 'accumulators_entry_spot_barrier_painter.dart';
 
-
 /// [AccumulatorsEntrySpotBarrier] creates a dot and a dashed horizontal barrier
 /// to the previous x epoch where accumulators marker was painted.
 /// Example is below.
