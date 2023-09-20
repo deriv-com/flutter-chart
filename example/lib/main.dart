@@ -379,8 +379,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
         as DataSeries<Tick>;
   }
 
-  final DrawingTools drawingTools = DrawingTools();
-
   @override
   Widget build(BuildContext context) => Material(
         color: const Color(0xFF0E0E0E),
@@ -443,7 +441,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           (_connectionBloc.state
                               is connection_bloc.ConnectionConnectedState),
                       opacity: _symbol.isOpen ? 1.0 : 0.5,
-                      drawingTools: drawingTools,
                       onCrosshairAppeared: () =>
                           Vibration.vibrate(duration: 50),
                       onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
