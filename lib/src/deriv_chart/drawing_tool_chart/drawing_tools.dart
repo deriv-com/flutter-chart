@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import '../chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 
 /// Callback to notify mouse enter over the addon.

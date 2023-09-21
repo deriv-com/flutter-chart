@@ -1,7 +1,10 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
+import 'series.dart';
 
 /// A class responsible to paint its [series] data.
 abstract class SeriesPainter<S extends Series> {
