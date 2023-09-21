@@ -128,10 +128,10 @@ abstract class Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   });
 }

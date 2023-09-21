@@ -128,7 +128,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(endXCoord, endQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
@@ -136,7 +136,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       }
@@ -154,7 +154,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawLine(
           Offset(_vector.x0, _vector.y0),
           Offset(_vector.x1, _vector.y1),
-          drawingData.isSelected
+          drawingData.shouldHighlight
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
@@ -173,11 +173,11 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     config as LineDrawingToolConfig;
 
@@ -191,12 +191,16 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      setIsStartPointDragged(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      setIsEndPointDragged!(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
 
     startXCoord = _vector.x0;

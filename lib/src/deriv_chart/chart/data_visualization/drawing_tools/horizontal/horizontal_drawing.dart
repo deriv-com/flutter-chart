@@ -105,7 +105,7 @@ class HorizontalDrawing extends Drawing {
       canvas.drawLine(
         Offset(startX, pointYCoord),
         Offset(endingX, pointYCoord),
-        drawingData.isSelected
+        drawingData.shouldHighlight
             ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
             : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
       );
@@ -117,7 +117,7 @@ class HorizontalDrawing extends Drawing {
         theme,
         chartConfig!,
         quoteFromY: quoteFromY,
-        color: lineStyle.color  
+        color: lineStyle.color,
       );
     }
   }
@@ -131,11 +131,11 @@ class HorizontalDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     config as HorizontalDrawingToolConfig;
 

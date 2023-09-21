@@ -23,7 +23,7 @@ class DrawingPainter extends StatefulWidget {
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
     required this.setIsDrawingSelected,
-    required this.setIsDrawingHovered,
+    required this.isDrawingMoving,
     required this.selectedDrawingTool,
     required this.onMouseEnter,
     required this.onMouseExit,
@@ -40,6 +40,9 @@ class DrawingPainter extends StatefulWidget {
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
 
+  /// Whether a drawing is moved or not.
+  final bool isDrawingMoving;
+
   @override
   _DrawingPainterState createState() => _DrawingPainterState();
 
@@ -53,14 +56,12 @@ class DrawingPainter extends StatefulWidget {
   /// Callback to set if drawing is selected (tapped).
   final void Function(DrawingData drawing) setIsDrawingSelected;
 
-  /// Callback to set if drawing is selected (tapped).
-  final void Function(DrawingData drawing) setIsDrawingHovered;
-
   /// Callback to notify mouse enter over the addon.
   final void Function(PointerEnterEvent event) onMouseEnter;
 
   /// Callback to notify mouse exit over the addon.
   final void Function(PointerExitEvent event) onMouseExit;
+
   /// Series of tick
   final DataSeries<Tick> series;
 }
@@ -72,6 +73,10 @@ class _DrawingPainterState extends State<DrawingPainter> {
   DraggableEdgePoint _draggableEndPoint = DraggableEdgePoint();
   Offset? _previousPosition;
   bool isTouchHeld = false;
+  bool isOverStartPoint = false;
+  bool isOverMiddlePoint = false;
+  bool isOverEndPoint = false;
+
   final Debounce _updateDebounce = Debounce();
 
   @override
@@ -181,21 +186,46 @@ class _DrawingPainterState extends State<DrawingPainter> {
     return widget.drawingData != null
         ? MouseRegion(
             onEnter: (PointerEnterEvent event) {
-              if (!widget.drawingData!.isSelected) {
-                widget.setIsDrawingHovered(widget.drawingData!);
+              if (!isTouchHeld && !widget.isDrawingMoving) {
+                widget.drawingData!.isHovered = true;
                 widget.onMouseEnter(event);
               }
             },
             onExit: (PointerExitEvent event) {
-              widget.onMouseExit(event);
+              if (!isTouchHeld && !widget.isDrawingMoving) {
+                widget.drawingData!.isHovered = false;
+                widget.onMouseExit(event);
+              }
             },
             hitTestBehavior: HitTestBehavior.deferToChild,
             child: RepaintBoundary(
               child: GestureDetector(
+                onTapDown: (TapDownDetails details) {
+                  isTouchHeld = true;
+                  if (details.kind == PointerDeviceKind.mouse &&
+                      !widget.drawingData!.isSelected) {
+                    widget.setIsDrawingSelected(widget.drawingData!);
+                    _updateDrawingsMovement();
+                  }
+
+                  _draggableStartPoint = _draggableStartPoint.copyWith(
+                    isDragged: isOverStartPoint,
+                  );
+
+                  _draggableMiddlePoint = _draggableMiddlePoint.copyWith(
+                    isDragged: isOverMiddlePoint,
+                  );
+
+                  _draggableEndPoint = _draggableEndPoint.copyWith(
+                    isDragged: isOverEndPoint,
+                  );
+                },
                 onTapUp: (TapUpDetails details) {
-                  widget.setIsDrawingSelected(widget.drawingData!);
                   isTouchHeld = false;
-                  _updateDrawingsMovement();
+                  if (details.kind != PointerDeviceKind.mouse) {
+                    widget.setIsDrawingSelected(widget.drawingData!);
+                    _updateDrawingsMovement();
+                  }
                 },
                 onLongPressDown: (LongPressDownDetails details) {
                   widget.onMoveDrawing(isDrawingMoved: true);
@@ -280,17 +310,14 @@ class _DrawingPainterState extends State<DrawingPainter> {
                       xAxis.xFromEpoch,
                       widget.quoteToCanvasY,
                     ),
-                    setIsStartPointDragged: ({required bool isDragged}) {
-                      _draggableStartPoint =
-                          _draggableStartPoint.copyWith(isDragged: isDragged);
+                    setIsOverStartPoint: ({required bool isOverPoint}) {
+                      isOverStartPoint = isOverPoint;
                     },
-                    setIsMiddlePointDragged: ({required bool isDragged}) {
-                      _draggableMiddlePoint =
-                          _draggableMiddlePoint.copyWith(isDragged: isDragged);
+                    setIsOverMiddlePoint: ({required bool isOverPoint}) {
+                      isOverMiddlePoint = isOverPoint;
                     },
-                    setIsEndPointDragged: ({required bool isDragged}) {
-                      _draggableEndPoint =
-                          _draggableEndPoint.copyWith(isDragged: isDragged);
+                    setIsOverEndPoint: ({required bool isOverPoint}) {
+                      isOverEndPoint = isOverPoint;
                     },
                   ),
                 ),
@@ -311,7 +338,7 @@ class _DrawingPainter extends CustomPainter {
     required this.quoteToY,
     required this.quoteFromY,
     required this.draggableStartPoint,
-    required this.setIsStartPointDragged,
+    required this.setIsOverStartPoint,
     required this.updatePositionCallback,
     required this.leftEpoch,
     required this.rightEpoch,
@@ -319,8 +346,8 @@ class _DrawingPainter extends CustomPainter {
     this.isTouchHeld = false,
     this.draggableMiddlePoint,
     this.draggableEndPoint,
-    this.setIsMiddlePointDragged,
-    this.setIsEndPointDragged,
+    this.setIsOverMiddlePoint,
+    this.setIsOverEndPoint,
   });
 
   final DrawingData drawingData;
@@ -335,9 +362,9 @@ class _DrawingPainter extends CustomPainter {
   final DraggableEdgePoint draggableStartPoint;
   final DraggableEdgePoint? draggableMiddlePoint;
   final DraggableEdgePoint? draggableEndPoint;
-  final void Function({required bool isDragged}) setIsStartPointDragged;
-  final void Function({required bool isDragged})? setIsMiddlePointDragged;
-  final void Function({required bool isDragged})? setIsEndPointDragged;
+  final void Function({required bool isOverPoint}) setIsOverStartPoint;
+  final void Function({required bool isOverPoint})? setIsOverMiddlePoint;
+  final void Function({required bool isOverPoint})? setIsOverEndPoint;
   final Point Function(
     EdgePoint edgePoint,
     DraggableEdgePoint draggableEdgePoint,
@@ -394,11 +421,11 @@ class _DrawingPainter extends CustomPainter {
         quoteToY,
         config,
         draggableStartPoint,
-        setIsStartPointDragged,
+        setIsOverStartPoint,
         draggableMiddlePoint: draggableMiddlePoint,
         draggableEndPoint: draggableEndPoint,
-        setIsMiddlePointDragged: setIsMiddlePointDragged,
-        setIsEndPointDragged: setIsEndPointDragged,
+        setIsOverMiddlePoint: setIsOverMiddlePoint,
+        setIsOverEndPoint: setIsOverEndPoint,
       )) {
         if (isDrawingToolSelected) {
           return false;
@@ -408,10 +435,11 @@ class _DrawingPainter extends CustomPainter {
     }
 
     if (!isTouchHeld && drawingData.isDrawingFinished) {
-    /// For deselecting the drawing when tapping outside of the drawing.
-    drawingData.isSelected = false;
+      /// For deselecting the drawing when tapping outside of the drawing.
+      drawingData
+        ..isSelected = false
+        ..isHovered = false;
     }
     return false;
   }
-  
 }

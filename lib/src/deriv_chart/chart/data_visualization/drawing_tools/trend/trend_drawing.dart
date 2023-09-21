@@ -215,7 +215,7 @@ class TrendDrawing extends Drawing {
 
     if (series.entries == null) {
       return;
-    }  
+    }
 
     //  Maximum epoch of the drawing
     final int minimumEpoch =
@@ -297,7 +297,7 @@ class TrendDrawing extends Drawing {
         canvas.drawCircle(
           Offset(startXCoord, startYCoord),
           _markerRadius,
-          drawingData.isSelected
+          drawingData.shouldHighlight
               ? paint.glowyCirclePaintStyle(lineStyle.color)
               : paint.transparentCirclePaintStyle(),
         );
@@ -306,14 +306,14 @@ class TrendDrawing extends Drawing {
           ..drawCircle(
             Offset(startXCoord, _rectCenter),
             _markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle(),
           )
           ..drawCircle(
             Offset(endXCoord, _rectCenter),
             _markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle(),
           );
@@ -343,7 +343,7 @@ class TrendDrawing extends Drawing {
         canvas
           ..drawRect(
             _mainRect,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
                 : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
@@ -354,7 +354,7 @@ class TrendDrawing extends Drawing {
           )
           ..drawRect(
             _middleRect,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
                 : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
@@ -387,11 +387,11 @@ class TrendDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
@@ -414,11 +414,15 @@ class TrendDrawing extends Drawing {
     }
 
     if (startPointDistance <= _markerRadius) {
-      setIsStartPointDragged(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged!(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
 
     // For clicking the center line

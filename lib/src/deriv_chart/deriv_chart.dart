@@ -1,6 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
@@ -12,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DerivChart extends StatefulWidget {
   /// Initializes
   const DerivChart({
-    required this.drawingTools,
     required this.mainSeries,
     required this.granularity,
     // required this.activeSymbol,
@@ -32,6 +30,7 @@ class DerivChart extends StatefulWidget {
     this.pipSize = 4,
     this.indicatorsRepo,
     this.drawingToolsRepo,
+    this.drawingTools,
     this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,

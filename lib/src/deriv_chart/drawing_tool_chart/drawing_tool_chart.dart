@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/gestures.dart';
@@ -64,18 +63,6 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
     repo.removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
   }
 
-  /// Sets drawing as selected and unselects the rest of drawings
-  /// if any of the drawing is not finished , it selects the unfinished drawing
-  void _setIsDrawingHovered(DrawingData drawing) {
-    final bool noneSelected =
-        getDrawingData().every((DrawingData data) => !data.isSelected);
-
-    if (noneSelected) {
-      drawing.isSelected = !drawing.isSelected;
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     repo = context.watch<Repository<DrawingToolConfig>>();
@@ -97,13 +84,13 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
                 onMoveDrawing: widget.drawingTools.onMoveDrawing,
                 setIsDrawingSelected: _setIsDrawingSelected,
-                setIsDrawingHovered: _setIsDrawingHovered,
+                isDrawingMoving: widget.drawingTools.isDrawingMoving,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
                 onMouseEnter: (PointerEnterEvent event) =>
                     widget.drawingTools.onMouseEnter(index),
                 onMouseExit: (PointerExitEvent event) =>
                     widget.drawingTools.onMouseExit(index),
-               series: widget.series,
+                series: widget.series,
               )),
           if (widget.drawingTools.selectedDrawingTool != null)
             DrawingToolWidget(

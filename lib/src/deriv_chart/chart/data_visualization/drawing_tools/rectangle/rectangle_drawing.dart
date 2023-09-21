@@ -157,7 +157,7 @@ class RectangleDrawing extends Drawing {
         canvas.drawCircle(
             Offset(endXCoord, endYCoord),
             _markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (startEdgePoint.epoch != 0 && startYCoord != 0) {
@@ -165,7 +165,7 @@ class RectangleDrawing extends Drawing {
         canvas.drawCircle(
             Offset(startXCoord, startYCoord),
             _markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       }
@@ -177,7 +177,7 @@ class RectangleDrawing extends Drawing {
         canvas
           ..drawRect(
               _rect,
-              drawingData.isSelected
+              drawingData.shouldHighlight
                   ? paint.glowyLinePaintStyle(
                       fillStyle.color.withOpacity(0.3), lineStyle.thickness)
                   : paint.fillPaintStyle(
@@ -199,11 +199,11 @@ class RectangleDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     // Calculate the difference between the start marker and the tap point.
     final double startDx = position.dx - startXCoord;
@@ -222,12 +222,16 @@ class RectangleDrawing extends Drawing {
 
     /// Check if end point clicked
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged!(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
 
     /// Check if start point clicked
     if (startPointDistance <= _markerRadius) {
-      setIsStartPointDragged!(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     return draggableStartPoint.isDragged ||

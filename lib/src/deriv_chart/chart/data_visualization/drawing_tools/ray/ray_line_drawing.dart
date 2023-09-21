@@ -134,11 +134,11 @@ class RayLineDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     config as RayDrawingToolConfig;
 
@@ -151,8 +151,8 @@ class RayLineDrawing extends Drawing {
         quoteToY,
         LineDrawingToolConfig(lineStyle: lineStyle, pattern: pattern),
         draggableStartPoint,
-        setIsStartPointDragged,
+        setIsOverStartPoint,
         draggableEndPoint: draggableEndPoint,
-        setIsEndPointDragged: setIsEndPointDragged);
+        setIsOverEndPoint: setIsOverEndPoint);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'drawing_data.g.dart';
@@ -13,7 +12,8 @@ class DrawingData {
     required this.id,
     required this.drawingParts,
     this.isDrawingFinished = false,
-    this.isSelected = true,
+    this.isSelected = false,
+    this.isHovered = false,
   });
 
   /// Initializes from JSON.
@@ -34,6 +34,12 @@ class DrawingData {
 
   /// If the drawing is selected by the user.
   bool isSelected;
+
+  /// If the drawing is hovered by the user.
+  bool isHovered;
+
+  /// If the drawing should be highlighted or not.
+  bool get shouldHighlight => isSelected || isHovered;
 
   /// Determines if this [DrawingData] needs to be repainted.
   /// Returns `true` if any of the [drawingParts] needs to be repainted.
