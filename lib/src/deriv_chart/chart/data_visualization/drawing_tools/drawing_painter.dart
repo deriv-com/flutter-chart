@@ -226,6 +226,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                     widget.setIsDrawingSelected(widget.drawingData!);
                     _updateDrawingsMovement();
                   }
+                  widget.onMoveDrawing(isDrawingMoved: false);
                 },
                 onLongPressDown: (LongPressDownDetails details) {
                   widget.onMoveDrawing(isDrawingMoved: true);
