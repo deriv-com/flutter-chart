@@ -190,15 +190,12 @@ class _DerivChartState extends State<DerivChart> {
       onEditCallback: showDrawingToolsDialog,
       // currentSymbol: widget.activeSymbol,
     );
-
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<dynamic> _stateRepos = <dynamic>[
-      _indicatorsRepo,
-      widget.drawingToolsRepo ?? _drawingToolsRepo
-    ];
+    final List<AddOnsRepository<AddOnConfig>> _stateRepos =
+        <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
 
     _stateRepos.asMap().forEach((int index, dynamic element) {
       try {
