@@ -91,18 +91,19 @@ class TrendDrawing extends Drawing {
   final double _touchTolerance = 5;
 
   /// Stores the previously changed minimum epoch
-  int prevMinimumEpoch = 0;
+  int _prevMinimumEpoch = 0;
 
   /// Stores the previously changed maximum epoch
-  int prevMaximumEpoch = 0;
+  int _prevMaximumEpoch = 0;
 
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
       int minimumEpoch, int maximumEpoch, List<Tick>? series) {
-    if (prevMaximumEpoch != maximumEpoch || prevMinimumEpoch != minimumEpoch) {
-      prevMaximumEpoch = maximumEpoch;
-      prevMinimumEpoch = minimumEpoch;
+    if (_prevMaximumEpoch != maximumEpoch ||
+        _prevMinimumEpoch != minimumEpoch) {
+      _prevMaximumEpoch = maximumEpoch;
+      _prevMinimumEpoch = minimumEpoch;
       if (series!.isNotEmpty) {
         int minimumEpochIndex =
             findClosestIndexBinarySearch(minimumEpoch, series);
@@ -218,21 +219,25 @@ class TrendDrawing extends Drawing {
     }
 
     //  Maximum epoch of the drawing
-    final int minimumEpoch =
-        startXCoord == 0 ? edgePoints.first.epoch : epochFromX(startXCoord);
+    final int minimumEpoch = draggableStartPoint.isDragged
+        ? draggableStartPoint.draggedEdgePoint.epoch
+        : edgePoints.first.epoch;
 
     //  Minimum epoch of the drawing
-    final int maximumEpoch = endXCoord == 0
-        ? (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch)
-        : epochFromX(endXCoord);
+    final int maximumEpoch = draggableEndPoint != null &&
+            draggableEndPoint.isDragged
+        ? draggableEndPoint.draggedEdgePoint.epoch
+        : (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
       // setting calculator
       _calculator = _setCalculator(minimumEpoch, maximumEpoch, series.entries);
 
-      // center of rectangle
-      _rectCenter = quoteToY(_calculator!.min) +
-          ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      if (_calculator != null) {
+        // center of rectangle
+        _rectCenter = quoteToY(_calculator!.min) +
+            ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      }
     }
 
     final LineStyle lineStyle = config.lineStyle;

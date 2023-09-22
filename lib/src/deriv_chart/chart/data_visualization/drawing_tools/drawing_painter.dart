@@ -88,27 +88,37 @@ class _DrawingPainterState extends State<DrawingPainter> {
 
     /// In this method, we are updating the restored drawing tool
     /// config with latest data from the chart.
-    void updateDrawingToolConfig() {
+    void updateDrawingToolConfig({bool shouldDebounce = true}) {
+      void updateConfig() {
       final DrawingData drawingData = widget.drawingData!;
-      _updateDebounce.run(() {
-        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
-          if (element.configId == drawingData.id) {
-            DrawingToolConfig updatedConfig;
+        final int index = repo.items.indexWhere(
+          (DrawingToolConfig item) => item.configId == drawingData.id,
+        );
 
-            updatedConfig = element.copyWith(
+        if (index > -1) {
+          final DrawingToolConfig config = repo.items[index];
+
+          final DrawingToolConfig updatedConfig = config.copyWith(
               edgePoints: <EdgePoint>[
                 _draggableStartPoint.getEdgePoint(),
                 // TODO(Bahar-Deriv): Change the way storing edge points
-                if (element.configId!.contains('Channel'))
+              if (config.configId!.contains('Channel'))
                   _draggableMiddlePoint.getEdgePoint(),
                 _draggableEndPoint.getEdgePoint(),
               ],
             );
-
             repo.updateAt(index, updatedConfig);
           }
+      }
+
+      if (shouldDebounce) {
+        _updateDebounce.run(() {
+          updateConfig();
         });
-      });
+      } else {
+        _updateDebounce.timer?.cancel();
+        updateConfig();
+      }
     }
 
     void _updateDrawingsMovement() {
@@ -255,6 +265,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                     isDragged: false,
                   );
                   _updateDrawingsMovement();
+                  updateDrawingToolConfig(shouldDebounce: false);
                 },
                 onPanStart: (DragStartDetails details) {
                   widget.onMoveDrawing(isDrawingMoved: true);
@@ -280,6 +291,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   });
                   widget.onMoveDrawing(isDrawingMoved: false);
                   _updateDrawingsMovement();
+                  updateDrawingToolConfig(shouldDebounce: false);
                 },
                 child: CustomPaint(
                   foregroundPainter: _DrawingPainter(
