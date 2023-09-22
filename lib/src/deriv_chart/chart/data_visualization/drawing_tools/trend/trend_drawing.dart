@@ -219,13 +219,13 @@ class TrendDrawing extends Drawing {
     }
 
     //  Maximum epoch of the drawing
-    final int minimumEpoch = draggableStartPoint.isDragged
+    final int minimumEpoch = draggableStartPoint.draggedEdgePoint.epoch != 0
         ? draggableStartPoint.draggedEdgePoint.epoch
         : edgePoints.first.epoch;
 
     //  Minimum epoch of the drawing
     final int maximumEpoch = draggableEndPoint != null &&
-            draggableEndPoint.isDragged
+            draggableEndPoint.draggedEdgePoint.epoch != 0
         ? draggableEndPoint.draggedEdgePoint.epoch
         : (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch);
 
