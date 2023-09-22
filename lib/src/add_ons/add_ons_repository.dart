@@ -13,8 +13,14 @@ typedef CreateAddOn<T extends AddOnConfig> = T Function(
 class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     implements Repository<T> {
   /// Initializes
-  AddOnsRepository({required this.createAddOn, this.onEditCallback})
-      : _addOns = <T>[];
+  AddOnsRepository({
+    required this.createAddOn,
+    required this.currentSymbol,
+    this.onEditCallback,
+  }) : _addOns = <T>[];
+
+  /// Current symbol.
+  String currentSymbol;
 
   /// List containing addOns
   final List<T> _addOns;
@@ -25,7 +31,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   List<T> get items => _addOns;
 
   /// Storage key of saved indicators/drawing tools.
-  String get addOnsKey => 'addOns_${T.toString()}';
+  String get addOnsKey => 'addOns_${T.toString()}_$currentSymbol';
 
   /// Called to create an AddOnConfig object from a map.
   CreateAddOn<T> createAddOn;
@@ -34,8 +40,9 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   VoidCallback? onEditCallback;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
-  void loadFromPrefs(SharedPreferences prefs) {
+  void loadFromPrefs(SharedPreferences prefs, String symbol) {
     _prefs = prefs;
+    currentSymbol = symbol;
 
     if (!prefs.containsKey(addOnsKey)) {
       // No saved indicators or drawing tools.

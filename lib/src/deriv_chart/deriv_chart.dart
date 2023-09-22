@@ -27,7 +27,7 @@ class DerivChart extends StatefulWidget {
   const DerivChart({
     required this.mainSeries,
     required this.granularity,
-    // required this.activeSymbol,
+    required this.activeSymbol,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -64,7 +64,7 @@ class DerivChart extends StatefulWidget {
   final MarkerSeries? markerSeries;
 
   /// Current active symbol.
-  // final String activeSymbol;
+  final String activeSymbol;
 
   /// Chart's controller
   final ChartController? controller;
@@ -166,30 +166,34 @@ class _DerivChartState extends State<DerivChart> {
     super.initState();
 
     _initRepos();
-    loadSavedIndicatorsAndDrawingTools();
   }
 
   @override
   void didUpdateWidget(covariant DerivChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // if (widget.activeSymbol != oldWidget.activeSymbol) {
-    //   loadSavedIndicatorsAndDrawingTools();
-    // }
+
+    if (widget.drawingToolsRepo == null &&
+        widget.activeSymbol != oldWidget.activeSymbol) {
+      loadSavedIndicatorsAndDrawingTools();
+    }
   }
 
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       onEditCallback: showIndicatorsDialog,
-      // currentSymbol: widget.activeSymbol,
+      currentSymbol: widget.activeSymbol,
     );
 
     _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
       createAddOn: (Map<String, dynamic> map) =>
           DrawingToolConfig.fromJson(map),
       onEditCallback: showDrawingToolsDialog,
-      // currentSymbol: widget.activeSymbol,
+      currentSymbol: widget.activeSymbol,
     );
+    if (widget.drawingToolsRepo == null) {
+      loadSavedIndicatorsAndDrawingTools();
+    }
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
