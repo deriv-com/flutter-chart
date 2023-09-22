@@ -201,9 +201,11 @@ class _DerivChartState extends State<DerivChart> {
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
 
-    _stateRepos.asMap().forEach((int index, dynamic element) {
+    _stateRepos
+        .asMap()
+        .forEach((int index, AddOnsRepository<AddOnConfig> element) {
       try {
-        element.loadFromPrefs(prefs);
+        element.loadFromPrefs(prefs, widget.activeSymbol);
       } on Exception {
         // ignore: unawaited_futures
         showDialog<void>(
