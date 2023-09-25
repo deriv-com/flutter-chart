@@ -37,12 +37,14 @@ class VerticalDrawingToolItemState
     extends DrawingToolItemState<VerticalDrawingToolConfig> {
   LineStyle? _lineStyle;
   DrawingPatterns? _pattern;
+  bool? _enableLabel;
 
   @override
   VerticalDrawingToolConfig createDrawingToolConfig() =>
       VerticalDrawingToolConfig(
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
+          enableLabel: _getEnableLanel
       );
 
   @override
@@ -75,4 +77,8 @@ class VerticalDrawingToolItemState
 
   DrawingPatterns get _currentPattern =>
       _pattern ?? (widget.config as VerticalDrawingToolConfig).pattern;
+
+
+  bool get _getEnableLanel =>
+      _enableLabel ?? (widget.config as VerticalDrawingToolConfig).enableLabel;
 }

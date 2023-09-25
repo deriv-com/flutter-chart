@@ -111,6 +111,7 @@ class VerticalDrawing extends Drawing {
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
+        if (config.enableLabel) {
         paintDrawingLabel(
           canvas,
           size,
@@ -121,6 +122,7 @@ class VerticalDrawing extends Drawing {
           epochFromX: epochFromX,
           color: lineStyle.color,
         );
+        }
       }
     }
   }

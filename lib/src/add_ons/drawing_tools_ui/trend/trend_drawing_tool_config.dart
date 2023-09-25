@@ -68,6 +68,7 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
     LineStyle? lineStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       TrendDrawingToolConfig(
         configId: configId ?? this.configId,
