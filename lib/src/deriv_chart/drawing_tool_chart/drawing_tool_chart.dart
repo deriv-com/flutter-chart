@@ -71,7 +71,9 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   Widget build(BuildContext context) {
     repo = context.watch<Repository<DrawingToolConfig>>();
 
-    final List<DrawingData?> drawings = repo.items
+    final List<DrawingToolConfig> configs = repo.items.toList();
+
+    final List<DrawingData?> drawings = configs
         .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
         .toList();
 
@@ -79,16 +81,21 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          ...drawings.map((DrawingData? drawingData) => DrawingPainter(
-                key: ValueKey<String>(drawingData!.id),
-                drawingData: drawingData,
-                quoteToCanvasY: widget.chartQuoteToCanvasY,
-                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                onMoveDrawing: widget.drawingTools.onMoveDrawing,
-                setIsDrawingSelected: _setIsDrawingSelected,
-                selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
-                series: widget.series,
-              )),
+          if (drawings.isNotEmpty)
+            ...drawings.map((DrawingData? drawingData) => DrawingPainter(
+                  key: ValueKey<String>(drawingData!.id),
+                  drawingData: drawingData,
+                  drawingConfig: configs
+                      .where((DrawingToolConfig config) =>
+                          config.configId == drawingData.id)
+                      .firstOrNull,
+                  quoteToCanvasY: widget.chartQuoteToCanvasY,
+                  quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                  onMoveDrawing: widget.drawingTools.onMoveDrawing,
+                  setIsDrawingSelected: _setIsDrawingSelected,
+                  selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+                  series: widget.series,
+                )),
           if (widget.drawingTools.selectedDrawingTool != null)
             DrawingToolWidget(
               onAddDrawing: widget.drawingTools.onAddDrawing,

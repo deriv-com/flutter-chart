@@ -19,6 +19,7 @@ class DrawingPainter extends StatefulWidget {
   /// Initializes
   const DrawingPainter({
     required this.drawingData,
+    required this.drawingConfig,
     required this.quoteToCanvasY,
     required this.quoteFromCanvasY,
     required this.onMoveDrawing,
@@ -33,6 +34,9 @@ class DrawingPainter extends StatefulWidget {
 
   /// Contains each drawing data
   final DrawingData? drawingData;
+
+  /// Drawing tool config.
+  final DrawingToolConfig? drawingConfig;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
@@ -72,25 +76,20 @@ class _DrawingPainterState extends State<DrawingPainter> {
     /// In this method, we are updating the restored drawing tool
     /// config with latest data from the chart.
     void updateDrawingToolConfig() {
-      final DrawingData drawingData = widget.drawingData!;
       _updateDebounce.run(() {
-        repo.items.asMap().forEach((int index, DrawingToolConfig element) {
-          if (element.configId == drawingData.id) {
-            DrawingToolConfig updatedConfig;
+        DrawingToolConfig updatedConfig;
 
-            updatedConfig = element.copyWith(
-              edgePoints: <EdgePoint>[
-                _draggableStartPoint.getEdgePoint(),
-                // TODO(Bahar-Deriv): Change the way storing edge points
-                if (element.configId!.contains('Channel'))
-                  _draggableMiddlePoint.getEdgePoint(),
-                _draggableEndPoint.getEdgePoint(),
-              ],
-            );
-
-            repo.updateAt(index, updatedConfig);
-          }
-        });
+        updatedConfig = widget.drawingConfig!.copyWith(
+          edgePoints: <EdgePoint>[
+            _draggableStartPoint.getEdgePoint(),
+            // TODO(Bahar-Deriv): Change the way storing edge points
+            if (widget.drawingConfig!.configId!.contains('Channel'))
+              _draggableMiddlePoint.getEdgePoint(),
+            _draggableEndPoint.getEdgePoint(),
+          ],
+        );
+        final int index = repo.items.indexOf(widget.drawingConfig!);
+        repo.updateAt(index, updatedConfig);
       });
     }
 
@@ -166,7 +165,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
       );
     }
 
-    return widget.drawingData != null
+    return (widget.drawingData != null || widget.drawingConfig != null)
         ? RepaintBoundary(
             child: GestureDetector(
               onTapUp: (TapUpDetails details) {
@@ -226,10 +225,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 foregroundPainter: _DrawingPainter(
                   drawingData: widget.drawingData!,
                   series: widget.series,
-                  config: repo.items
-                      .where((DrawingToolConfig config) =>
-                          config.configId == widget.drawingData!.id)
-                      .first,
+                  config: widget.drawingConfig!,
                   theme: context.watch<ChartTheme>(),
                   epochFromX: xAxis.epochFromX,
                   epochToX: xAxis.xFromEpoch,
