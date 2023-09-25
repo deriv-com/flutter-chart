@@ -64,30 +64,39 @@ class CrosshairAreaWeb extends StatefulWidget {
 class _CrosshairAreaWebState extends State<CrosshairAreaWeb> {
   XAxisModel get xAxis => context.read<XAxisModel>();
 
+  void _onCrosshairHover(Offset globalPosition, Offset localPosition) {
+    if (widget.onCrosshairHover == null) {
+      return;
+    }
+
+    widget.onCrosshairHover?.call(
+      globalPosition,
+      localPosition,
+      widget.epochToCanvasX,
+      widget.quoteToCanvasY,
+      widget.epochFromCanvasX,
+      widget.quoteFromCanvasY,
+    );
+  }
+
   @override
   Widget build(BuildContext context) => Positioned.fill(
         right: widget.quoteLabelsTouchAreaWidth,
-        child: MouseRegion(
-          opaque: false,
-          cursor: widget.showCrosshairCursor
-              ? SystemMouseCursors.precise
-              : SystemMouseCursors.basic,
-          child: const SizedBox.expand(),
-          onExit: (PointerExitEvent ev) =>
-              widget.onCrosshairDisappeared?.call(),
-          onHover: (PointerHoverEvent ev) {
-            if (widget.onCrosshairHover == null) {
-              return;
-            }
-
-            widget.onCrosshairHover?.call(
-              ev,
-              widget.epochToCanvasX,
-              widget.quoteToCanvasY,
-              widget.epochFromCanvasX,
-              widget.quoteFromCanvasY,
-            );
-          },
+        child: Listener(
+          behavior: HitTestBehavior.translucent,
+          onPointerMove: (PointerMoveEvent ev) =>
+              _onCrosshairHover(ev.position, ev.localPosition),
+          child: MouseRegion(
+            opaque: false,
+            cursor: widget.showCrosshairCursor
+                ? SystemMouseCursors.precise
+                : SystemMouseCursors.basic,
+            onExit: (PointerExitEvent ev) =>
+                widget.onCrosshairDisappeared?.call(),
+            onHover: (PointerHoverEvent ev) =>
+                _onCrosshairHover(ev.position, ev.localPosition),
+            child: const SizedBox.expand(),
+          ),
         ),
       );
 }
