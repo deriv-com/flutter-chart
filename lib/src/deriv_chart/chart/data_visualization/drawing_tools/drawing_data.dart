@@ -33,9 +33,11 @@ class DrawingData {
   bool isDrawingFinished;
 
   /// If the drawing is selected by the user.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool isSelected;
 
   /// If the drawing is hovered by the user.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool isHovered;
 
   /// If the drawing should be highlighted or not.

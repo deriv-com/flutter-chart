@@ -335,8 +335,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     quoteToCanvasY: chartQuoteToCanvasY,
                   ),
                 _buildDrawingToolChart(),
-                if (!widget.drawingTools.isDrawingMoving)
-                  kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
+                if (kIsWeb) _buildCrosshairAreaWeb(),
+                if (!kIsWeb && !widget.drawingTools.isDrawingMoving)
+                  _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
                   Positioned(
