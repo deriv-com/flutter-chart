@@ -90,7 +90,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
     /// config with latest data from the chart.
     void updateDrawingToolConfig({bool shouldDebounce = true}) {
       void updateConfig() {
-      final DrawingData drawingData = widget.drawingData!;
+        final DrawingData drawingData = widget.drawingData!;
         final int index = repo.items.indexWhere(
           (DrawingToolConfig item) => item.configId == drawingData.id,
         );
@@ -99,16 +99,16 @@ class _DrawingPainterState extends State<DrawingPainter> {
           final DrawingToolConfig config = repo.items[index];
 
           final DrawingToolConfig updatedConfig = config.copyWith(
-              edgePoints: <EdgePoint>[
-                _draggableStartPoint.getEdgePoint(),
-                // TODO(Bahar-Deriv): Change the way storing edge points
+            edgePoints: <EdgePoint>[
+              _draggableStartPoint.getEdgePoint(),
+              // TODO(Bahar-Deriv): Change the way storing edge points
               if (config.configId!.contains('Channel'))
-                  _draggableMiddlePoint.getEdgePoint(),
-                _draggableEndPoint.getEdgePoint(),
-              ],
-            );
-            repo.updateAt(index, updatedConfig);
-          }
+                _draggableMiddlePoint.getEdgePoint(),
+              _draggableEndPoint.getEdgePoint(),
+            ],
+          );
+          repo.updateAt(index, updatedConfig);
+        }
       }
 
       if (shouldDebounce) {
@@ -197,13 +197,17 @@ class _DrawingPainterState extends State<DrawingPainter> {
         ? MouseRegion(
             onEnter: (PointerEnterEvent event) {
               if (!isTouchHeld && !widget.isDrawingMoving) {
-                widget.drawingData!.isHovered = true;
+                setState(() {
+                  widget.drawingData!.isHovered = true;
+                });
                 widget.onMouseEnter(event);
               }
             },
             onExit: (PointerExitEvent event) {
               if (!isTouchHeld && !widget.isDrawingMoving) {
-                widget.drawingData!.isHovered = false;
+                setState(() {
+                  widget.drawingData!.isHovered = false;
+                });
                 widget.onMouseExit(event);
               }
             },
