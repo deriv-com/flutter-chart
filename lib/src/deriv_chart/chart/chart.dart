@@ -287,14 +287,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     showCrosshair: widget.showCrosshair,
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
                     onCrosshairHover: (
-                      PointerHoverEvent ev,
+                      Offset globalPosition,
+                      Offset localPosition,
                       EpochToX epochToX,
                       QuoteToY quoteToY,
                       EpochFromX epochFromX,
                       QuoteFromY quoteFromY,
                     ) =>
                         widget.onCrosshairHover?.call(
-                      ev,
+                      globalPosition,
+                      localPosition,
                       epochToX,
                       quoteToY,
                       epochFromX,
@@ -332,14 +334,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                             widget.bottomConfigs![index + offset]),
                         onCrosshairDisappeared: widget.onCrosshairDisappeared,
                         onCrosshairHover: (
-                          PointerHoverEvent ev,
+                          Offset globalPosition,
+                          Offset localPosition,
                           EpochToX epochToX,
                           QuoteToY quoteToY,
                           EpochFromX epochFromX,
                           QuoteFromY quoteFromY,
                         ) =>
                             widget.onCrosshairHover?.call(
-                          ev,
+                          globalPosition,
+                          localPosition,
                           epochToX,
                           quoteToY,
                           epochFromX,

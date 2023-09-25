@@ -196,20 +196,16 @@ class _DrawingPainterState extends State<DrawingPainter> {
     return widget.drawingData != null
         ? MouseRegion(
             onEnter: (PointerEnterEvent event) {
-              if (!isTouchHeld && !widget.isDrawingMoving) {
-                setState(() {
-                  widget.drawingData!.isHovered = true;
-                });
-                widget.onMouseEnter(event);
-              }
+              setState(() {
+                widget.drawingData!.isHovered = true;
+              });
+              widget.onMouseEnter(event);
             },
             onExit: (PointerExitEvent event) {
-              if (!isTouchHeld && !widget.isDrawingMoving) {
-                setState(() {
-                  widget.drawingData!.isHovered = false;
-                });
-                widget.onMouseExit(event);
-              }
+              setState(() {
+                widget.drawingData!.isHovered = false;
+              });
+              widget.onMouseExit(event);
             },
             hitTestBehavior: HitTestBehavior.deferToChild,
             child: RepaintBoundary(

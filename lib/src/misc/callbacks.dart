@@ -17,13 +17,15 @@ typedef VisibleQuoteAreaChangedCallback = Function(
 
 /// Called when the crosshair is moved
 ///
-/// [ev] is an instance of PointerHoverEvent
+/// [globalPosition] of the pointer.
+/// [localPosition] of the pointer.
 /// [epochToX] is a function to convert epoch value to canvas X.
 /// [quoteToY] is a function to convert value(quote) value to canvas Y.
 /// [epochFromX] is a function to convert canvas X to epoch value.
 /// [quoteFromY] is a function to convert canvas Y to value(quote).
 typedef OnCrosshairHover = void Function(
-  PointerHoverEvent ev,
+  Offset globalPosition,
+  Offset localPosition,
   EpochToX epochToX,
   QuoteToY quoteToY,
   EpochFromX epochFromX,
@@ -32,14 +34,16 @@ typedef OnCrosshairHover = void Function(
 
 /// Called when the crosshair is moved
 ///
-/// [ev] is an instance of PointerHoverEvent
+/// [globalPosition] of the pointer.
+/// [localPosition] of the pointer.
 /// [epochToX] is a function to convert epoch value to canvas X.
 /// [quoteToY] is a function to convert value(quote) value to canvas Y.
 /// [epochFromX] is a function to convert canvas X to epoch value.
 /// [quoteFromY] is a function to convert canvas Y to value(quote).
 /// [config] is the config of the Indicator if it the hover is in BottomChart.
 typedef OnCrosshairHoverCallback = void Function(
-  PointerHoverEvent ev,
+  Offset globalPosition,
+  Offset localPosition,
   EpochToX epochToX,
   QuoteToY quoteToY,
   EpochFromX epochFromX,
