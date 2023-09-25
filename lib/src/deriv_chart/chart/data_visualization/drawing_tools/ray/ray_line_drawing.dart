@@ -124,6 +124,7 @@ class RayLineDrawing extends Drawing {
           drawingParts: drawingData.drawingParts,
           isDrawingFinished: drawingData.isDrawingFinished,
           isSelected: drawingData.isSelected,
+          isHovered: drawingData.isHovered,
         ),
         series,
         updatePositionCallback,

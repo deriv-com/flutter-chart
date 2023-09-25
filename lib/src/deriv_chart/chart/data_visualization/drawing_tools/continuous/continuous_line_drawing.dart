@@ -108,6 +108,7 @@ class ContinuousLineDrawing extends Drawing {
       drawingParts: drawingData.drawingParts,
       isDrawingFinished: drawingData.isDrawingFinished,
       isSelected: drawingData.isSelected,
+      isHovered: drawingData.isHovered,
     );
 
     /// Draw first line of the continuous drawing which need 2 taps to draw
