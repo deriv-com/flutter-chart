@@ -17,9 +17,7 @@ TrendDrawing _$TrendDrawingFromJson(Map<String, dynamic> json) => TrendDrawing(
     )
       ..startXCoord = (json['startXCoord'] as num).toDouble()
       ..startYCoord = (json['startYCoord'] as num).toDouble()
-      ..endXCoord = (json['endXCoord'] as num).toDouble()
-      ..prevMinimumEpoch = json['prevMinimumEpoch'] as int
-      ..prevMaximumEpoch = json['prevMaximumEpoch'] as int;
+      ..endXCoord = (json['endXCoord'] as num).toDouble();
 
 Map<String, dynamic> _$TrendDrawingToJson(TrendDrawing instance) =>
     <String, dynamic>{
@@ -29,8 +27,6 @@ Map<String, dynamic> _$TrendDrawingToJson(TrendDrawing instance) =>
       'endXCoord': instance.endXCoord,
       'startEdgePoint': instance.startEdgePoint,
       'endEdgePoint': instance.endEdgePoint,
-      'prevMinimumEpoch': instance.prevMinimumEpoch,
-      'prevMaximumEpoch': instance.prevMaximumEpoch,
     };
 
 const _$DrawingPartsEnumMap = {

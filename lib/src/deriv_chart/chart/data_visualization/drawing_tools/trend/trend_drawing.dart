@@ -91,18 +91,19 @@ class TrendDrawing extends Drawing {
   final double _touchTolerance = 5;
 
   /// Stores the previously changed minimum epoch
-  int prevMinimumEpoch = 0;
+  int _prevMinimumEpoch = 0;
 
   /// Stores the previously changed maximum epoch
-  int prevMaximumEpoch = 0;
+  int _prevMaximumEpoch = 0;
 
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
       int minimumEpoch, int maximumEpoch, List<Tick>? series) {
-    if (prevMaximumEpoch != maximumEpoch || prevMinimumEpoch != minimumEpoch) {
-      prevMaximumEpoch = maximumEpoch;
-      prevMinimumEpoch = minimumEpoch;
+    if (_prevMaximumEpoch != maximumEpoch ||
+        _prevMinimumEpoch != minimumEpoch) {
+      _prevMaximumEpoch = maximumEpoch;
+      _prevMinimumEpoch = minimumEpoch;
       int minimumEpochIndex =
           findClosestIndexBinarySearch(minimumEpoch, series);
       int maximumEpochIndex =
@@ -218,9 +219,11 @@ class TrendDrawing extends Drawing {
       // setting calculator
       _calculator = _setCalculator(minimumEpoch, maximumEpoch, series.entries);
 
-      // center of rectangle
-      _rectCenter = quoteToY(_calculator!.min) +
-          ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      if (_calculator != null) {
+        // center of rectangle
+        _rectCenter = quoteToY(_calculator!.min) +
+            ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      }
     }
 
     final LineStyle lineStyle = config.lineStyle;
