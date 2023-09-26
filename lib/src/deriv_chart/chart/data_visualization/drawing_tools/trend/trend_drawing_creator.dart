@@ -96,7 +96,7 @@ class _TrendDrawingCreatorState extends DrawingCreatorState<TrendDrawing> {
         _isPenDown = false;
         isDrawingFinished = true;
         final EdgePoint startingEdgePoint = edgePoints.first;
-        final EdgePoint endingEdgePoint = edgePoints[1];
+        final EdgePoint endingEdgePoint = edgePoints.last;
 
         // When the second point is on the same y
         // coordinate as the first point

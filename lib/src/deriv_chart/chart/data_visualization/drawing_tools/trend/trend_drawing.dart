@@ -90,41 +90,29 @@ class TrendDrawing extends Drawing {
   /// and center line.
   final double _touchTolerance = 5;
 
-  /// Stores the previously changed minimum epoch
-  int _prevMinimumEpoch = 0;
-
-  /// Stores the previously changed maximum epoch
-  int _prevMaximumEpoch = 0;
-
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
-      int minimumEpoch, int maximumEpoch, List<Tick>? series) {
-    if (_prevMaximumEpoch != maximumEpoch ||
-        _prevMinimumEpoch != minimumEpoch) {
-      _prevMaximumEpoch = maximumEpoch;
-      _prevMinimumEpoch = minimumEpoch;
-      int minimumEpochIndex =
-          findClosestIndexBinarySearch(minimumEpoch, series);
-      int maximumEpochIndex =
-          findClosestIndexBinarySearch(maximumEpoch, series);
+    int minimumEpoch,
+    int maximumEpoch,
+    List<Tick>? series,
+  ) {
+    int minimumEpochIndex = findClosestIndexBinarySearch(minimumEpoch, series);
+    int maximumEpochIndex = findClosestIndexBinarySearch(maximumEpoch, series);
 
-      if (minimumEpochIndex > maximumEpochIndex) {
-        final int tempEpochIndex = minimumEpochIndex;
-        minimumEpochIndex = maximumEpochIndex;
-        maximumEpochIndex = tempEpochIndex;
-      }
-
-      final List<Tick>? epochRange =
-          series!.sublist(minimumEpochIndex, maximumEpochIndex);
-
-      double minValueOf(Tick t) => t.quote;
-      double maxValueOf(Tick t) => t.quote;
-
-      _calculator = MinMaxCalculator(minValueOf, maxValueOf)
-        ..calculate(epochRange!);
+    if (minimumEpochIndex > maximumEpochIndex) {
+      final int tempEpochIndex = minimumEpochIndex;
+      minimumEpochIndex = maximumEpochIndex;
+      maximumEpochIndex = tempEpochIndex;
     }
-    return _calculator;
+
+    final List<Tick>? epochRange =
+        series!.sublist(minimumEpochIndex, maximumEpochIndex);
+
+    double minValueOf(Tick t) => t.quote;
+    double maxValueOf(Tick t) => t.quote;
+
+    return MinMaxCalculator(minValueOf, maxValueOf)..calculate(epochRange!);
   }
 
   /// Function to check if the clicked position (Offset) is on
@@ -176,9 +164,15 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-  }) =>
-      // TODO(NA): implement needsRepaint
-      true;
+  }) {
+    if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
+        (draggableEndPoint == null ||
+            draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
+      return true;
+    }
+
+    return false;
+  }
 
   /// Paint the trend drawing tools
   @override
