@@ -164,15 +164,8 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-  }) {
-    if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
-        (draggableEndPoint == null ||
-            draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
-      return true;
-    }
-
-    return false;
-  }
+  }) =>
+      true;
 
   /// Paint the trend drawing tools
   @override
@@ -201,13 +194,15 @@ class TrendDrawing extends Drawing {
     final List<EdgePoint> edgePoints = config.edgePoints;
 
     //  Maximum epoch of the drawing
-    final int minimumEpoch =
-        startXCoord == 0 ? edgePoints.first.epoch : epochFromX(startXCoord);
+    final int minimumEpoch = draggableStartPoint.getEdgePoint().epoch != 0
+        ? draggableStartPoint.getEdgePoint().epoch
+        : edgePoints.first.epoch;
 
     //  Minimum epoch of the drawing
-    final int maximumEpoch = endXCoord == 0
-        ? (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch)
-        : epochFromX(endXCoord);
+    final int maximumEpoch = draggableEndPoint != null &&
+            draggableEndPoint.getEdgePoint().epoch != 0
+        ? draggableEndPoint.getEdgePoint().epoch
+        : (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {
       // setting calculator
