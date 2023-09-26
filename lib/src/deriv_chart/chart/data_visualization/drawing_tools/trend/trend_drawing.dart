@@ -176,6 +176,7 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
+      // TODO(NA): implement needsRepaint
       true;
 
   /// Paint the trend drawing tools
