@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
@@ -12,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'basic_chart.dart';
 import 'multiple_animated_builder.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
-import 'package:deriv_chart/src/models/tick.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';

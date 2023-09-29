@@ -12,8 +12,8 @@ class DrawingData {
     required this.id,
     required this.drawingParts,
     this.isDrawingFinished = false,
-    this.isSelected = false,
     this.isHovered = false,
+    this.isSelected = true,
   });
 
   /// Initializes from JSON.

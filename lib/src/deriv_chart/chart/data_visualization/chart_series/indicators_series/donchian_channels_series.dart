@@ -15,8 +15,6 @@ import '../line_series/line_series.dart';
 import '../series.dart';
 import '../series_painter.dart';
 
-
-
 /// Donchian Channels series
 class DonchianChannelsSeries extends Series {
   /// Initializes

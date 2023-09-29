@@ -24,6 +24,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
   const DrawingToolConfig({
     required this.configId,
     required this.drawingData,
+    // TODO(Bahar-Deriv): Move edgePoints to drawingData.
     required this.edgePoints,
     bool isOverlay = true,
   }) : super(isOverlay: isOverlay);

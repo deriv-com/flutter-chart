@@ -12,6 +12,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatefulWidget {
   /// Creates chart that expands to available space.
@@ -43,9 +44,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   late Repository<DrawingToolConfig> repo;
 
   /// A method to get the list of drawing data from the repository
-  List<DrawingData> getDrawingData() => repo.items
-      .map<DrawingData>(
-          (DrawingToolConfig config) => config.toJson()['drawingData'])
+  List<DrawingData?> getDrawingData() => repo.items
+      .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
       .toList();
 
   /// Sets drawing as selected and unselects the rest of drawings
@@ -53,8 +53,9 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   void _setIsDrawingSelected(DrawingData drawing) {
     setState(() {
       drawing.isSelected = !drawing.isSelected;
-      for (final DrawingData data in getDrawingData()) {
-        if (data.id != drawing.id) {
+
+      for (final DrawingData? data in getDrawingData()) {
+        if (data!.id != drawing.id) {
           data.isSelected = false;
         }
       }
@@ -63,8 +64,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
 
   /// Removes specific drawing from the list of drawings
   void removeUnfinishedDrawing() {
-    final List<DrawingData> unfinishedDrawings = getDrawingData()
-        .where((DrawingData data) => !data.isDrawingFinished)
+    final List<DrawingData?> unfinishedDrawings = getDrawingData()
+        .where((DrawingData? data) => !data!.isDrawingFinished)
         .toList();
     repo.removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
   }
@@ -73,31 +74,33 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   Widget build(BuildContext context) {
     repo = context.watch<Repository<DrawingToolConfig>>();
 
-    final List<DrawingData> drawings = repo.items
-        .map<DrawingData>(
-            (DrawingToolConfig config) => config.toJson()['drawingData'])
+    final List<DrawingToolConfig> configs = repo.items.toList();
+
+    final List<DrawingData?> drawings = configs
+        .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
         .toList();
 
     return ClipRect(
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          ...drawings.mapIndexed((int index, DrawingData drawingData) =>
-              DrawingPainter(
-                key: ValueKey<String>(drawingData.id),
-                drawingData: drawingData,
-                quoteToCanvasY: widget.chartQuoteToCanvasY,
-                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                onMoveDrawing: widget.drawingTools.onMoveDrawing,
-                setIsDrawingSelected: _setIsDrawingSelected,
-                isDrawingMoving: widget.drawingTools.isDrawingMoving,
-                selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
-                onMouseEnter: (PointerEnterEvent event) =>
+          if (drawings.isNotEmpty)
+            ...drawings.mapIndexed((int index, DrawingData? drawingData) => 
+            DrawingPainter(
+                  key: ValueKey<String>(drawingData!.id),
+                  drawingData: drawingData,
+                  quoteToCanvasY: widget.chartQuoteToCanvasY,
+                     onMouseEnter: (PointerEnterEvent event) =>
                     widget.drawingTools.onMouseEnter(index),
                 onMouseExit: (PointerExitEvent event) =>
                     widget.drawingTools.onMouseExit(index),
-                series: widget.series,
-              )),
+                  quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                  isDrawingMoving: widget.drawingTools.isDrawingMoving,
+                  onMoveDrawing: widget.drawingTools.onMoveDrawing,
+                  setIsDrawingSelected: _setIsDrawingSelected,
+                  selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+                  series: widget.series,
+                )),
           if (widget.drawingTools.selectedDrawingTool != null)
             DrawingToolWidget(
               onAddDrawing: widget.drawingTools.onAddDrawing,

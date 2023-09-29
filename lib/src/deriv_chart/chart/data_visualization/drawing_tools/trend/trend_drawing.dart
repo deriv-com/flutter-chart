@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -90,43 +89,29 @@ class TrendDrawing extends Drawing {
   /// and center line.
   final double _touchTolerance = 5;
 
-  /// Stores the previously changed minimum epoch
-  int _prevMinimumEpoch = 0;
-
-  /// Stores the previously changed maximum epoch
-  int _prevMaximumEpoch = 0;
-
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
-      int minimumEpoch, int maximumEpoch, List<Tick>? series) {
-    if (_prevMaximumEpoch != maximumEpoch ||
-        _prevMinimumEpoch != minimumEpoch) {
-      _prevMaximumEpoch = maximumEpoch;
-      _prevMinimumEpoch = minimumEpoch;
-      if (series!.isNotEmpty) {
-        int minimumEpochIndex =
-            findClosestIndexBinarySearch(minimumEpoch, series);
-        int maximumEpochIndex =
-            findClosestIndexBinarySearch(maximumEpoch, series);
+    int minimumEpoch,
+    int maximumEpoch,
+    List<Tick>? series,
+  ) {
+    int minimumEpochIndex = findClosestIndexBinarySearch(minimumEpoch, series);
+    int maximumEpochIndex = findClosestIndexBinarySearch(maximumEpoch, series);
 
-        if (minimumEpochIndex > maximumEpochIndex) {
-          final int tempEpochIndex = minimumEpochIndex;
-          minimumEpochIndex = maximumEpochIndex;
-          maximumEpochIndex = tempEpochIndex;
-        }
-
-        final List<Tick>? epochRange =
-            series!.sublist(minimumEpochIndex, maximumEpochIndex);
-
-        double minValueOf(Tick t) => t.quote;
-        double maxValueOf(Tick t) => t.quote;
-
-        _calculator = MinMaxCalculator(minValueOf, maxValueOf)
-          ..calculate(epochRange!);
-      }
+    if (minimumEpochIndex > maximumEpochIndex) {
+      final int tempEpochIndex = minimumEpochIndex;
+      minimumEpochIndex = maximumEpochIndex;
+      maximumEpochIndex = tempEpochIndex;
     }
-    return _calculator;
+
+    final List<Tick>? epochRange =
+        series!.sublist(minimumEpochIndex, maximumEpochIndex);
+
+    double minValueOf(Tick t) => t.quote;
+    double maxValueOf(Tick t) => t.quote;
+
+    return MinMaxCalculator(minValueOf, maxValueOf)..calculate(epochRange!);
   }
 
   /// Function to check if the clicked position (Offset) is on
@@ -178,15 +163,8 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-  }) {
-    if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
-        (draggableEndPoint == null ||
-            draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
-      return true;
-    }
-
-    return false;
-  }
+  }) =>
+      true;
 
   /// Paint the trend drawing tools
   @override
@@ -214,19 +192,15 @@ class TrendDrawing extends Drawing {
     final DrawingPaintStyle paint = DrawingPaintStyle();
     final List<EdgePoint> edgePoints = config.edgePoints;
 
-    if (series.entries == null) {
-      return;
-    }
-
     //  Maximum epoch of the drawing
-    final int minimumEpoch = draggableStartPoint.draggedEdgePoint.epoch != 0
-        ? draggableStartPoint.draggedEdgePoint.epoch
+    final int minimumEpoch = draggableStartPoint.getEdgePoint().epoch != 0
+        ? draggableStartPoint.getEdgePoint().epoch
         : edgePoints.first.epoch;
 
     //  Minimum epoch of the drawing
     final int maximumEpoch = draggableEndPoint != null &&
-            draggableEndPoint.draggedEdgePoint.epoch != 0
-        ? draggableEndPoint.draggedEdgePoint.epoch
+            draggableEndPoint.getEdgePoint().epoch != 0
+        ? draggableEndPoint.getEdgePoint().epoch
         : (edgePoints.length > 1 ? edgePoints.last.epoch : endEdgePoint.epoch);
 
     if (maximumEpoch != 0 && minimumEpoch != 0) {

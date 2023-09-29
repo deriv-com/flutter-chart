@@ -7,7 +7,6 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import '../callbacks.dart';
 
-
 /// Fibfan drawing tool item in the list of drawing tools
 class FibfanDrawingToolItem extends DrawingToolItem {
   /// Initializes

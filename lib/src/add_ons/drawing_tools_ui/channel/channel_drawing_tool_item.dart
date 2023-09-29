@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'channel_drawing_tool_config.dart';
 import '../callbacks.dart';
 
-
 /// Channel drawing tool item in the list of drawing tools
 class ChannelDrawingToolItem extends DrawingToolItem {
   /// Initializes

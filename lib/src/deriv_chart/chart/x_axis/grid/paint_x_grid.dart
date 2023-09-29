@@ -1,9 +1,9 @@
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/check_new_day.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/time_label.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 
 /// Paints x-axis grid lines and labels.
 void paintXGrid(

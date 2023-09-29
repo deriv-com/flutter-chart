@@ -44,16 +44,22 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     _prefs = prefs;
     currentSymbol = symbol;
 
+    items.clear();
+
     if (!prefs.containsKey(addOnsKey)) {
       // No saved indicators or drawing tools.
       return;
     }
 
     final List<String> encodedAddOns = prefs.getStringList(addOnsKey)!;
-    items.clear();
 
-    for (final String encodedAddOn in encodedAddOns) {
-      final T addOnConfig = createAddOn.call(jsonDecode(encodedAddOn));
+    final List<Map<String, dynamic>> decodedAddons = encodedAddOns
+        .map<Map<String, dynamic>>(
+            (String encodedAddOn) => jsonDecode(encodedAddOn))
+        .toList();
+
+    for (final Map<String, dynamic> decodedAddon in decodedAddons) {
+      final T addOnConfig = createAddOn.call(decodedAddon);
       items.add(addOnConfig);
     }
   }
