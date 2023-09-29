@@ -1,8 +1,10 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'ray_drawing_tool_item.dart';
@@ -14,9 +16,16 @@ part 'ray_drawing_tool_config.g.dart';
 class RayDrawingToolConfig extends DrawingToolConfig {
   /// Initializes
   const RayDrawingToolConfig({
+    String? configId,
+    DrawingData? drawingData,
+    List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
-  }) : super();
+  }) : super(
+          configId: configId,
+          drawingData: drawingData,
+          edgePoints: edgePoints,
+        );
 
   /// Initializes from JSON.
   factory RayDrawingToolConfig.fromJson(Map<String, dynamic> json) =>
@@ -45,5 +54,22 @@ class RayDrawingToolConfig extends DrawingToolConfig {
         config: this,
         updateDrawingTool: updateDrawingTool,
         deleteDrawingTool: deleteDrawingTool,
+      );
+
+  @override
+  RayDrawingToolConfig copyWith({
+    String? configId,
+    DrawingData? drawingData,
+    LineStyle? lineStyle,
+    LineStyle? fillStyle,
+    DrawingPatterns? pattern,
+    List<EdgePoint>? edgePoints,
+  }) =>
+      RayDrawingToolConfig(
+        configId: configId ?? this.configId,
+        drawingData: drawingData ?? this.drawingData,
+        lineStyle: lineStyle ?? this.lineStyle,
+        pattern: pattern ?? this.pattern,
+        edgePoints: edgePoints ?? this.edgePoints,
       );
 }

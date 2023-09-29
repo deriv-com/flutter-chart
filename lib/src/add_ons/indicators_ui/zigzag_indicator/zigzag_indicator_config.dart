@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/zigzag_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'zigzag_indicator_item.dart';
 
