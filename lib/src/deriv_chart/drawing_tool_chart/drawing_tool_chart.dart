@@ -12,7 +12,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatefulWidget {
   /// Creates chart that expands to available space.
@@ -85,15 +84,13 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
         fit: StackFit.expand,
         children: <Widget>[
           if (drawings.isNotEmpty)
-            ...drawings.mapIndexed((int index, DrawingData? drawingData) => 
-            DrawingPainter(
+            ...drawings.mapIndexed((int index, DrawingData? drawingData) =>
+                DrawingPainter(
                   key: ValueKey<String>(drawingData!.id),
                   drawingData: drawingData,
                   quoteToCanvasY: widget.chartQuoteToCanvasY,
-                     onMouseEnter: (PointerEnterEvent event) =>
-                    widget.drawingTools.onMouseEnter(index),
-                onMouseExit: (PointerExitEvent event) =>
-                    widget.drawingTools.onMouseExit(index),
+                  onMouseEnter: () => widget.drawingTools.onMouseEnter(index),
+                  onMouseExit: () => widget.drawingTools.onMouseExit(index),
                   quoteFromCanvasY: widget.chartQuoteFromCanvasY,
                   isDrawingMoving: widget.drawingTools.isDrawingMoving,
                   onMoveDrawing: widget.drawingTools.onMoveDrawing,

@@ -57,10 +57,10 @@ class DrawingPainter extends StatefulWidget {
   final void Function(DrawingData drawing) setIsDrawingSelected;
 
   /// Callback to notify mouse enter over the addon.
-  final void Function(PointerEnterEvent event) onMouseEnter;
+  final void Function() onMouseEnter;
 
   /// Callback to notify mouse exit over the addon.
-  final void Function(PointerExitEvent event) onMouseExit;
+  final void Function() onMouseExit;
 
   /// Series of tick
   final DataSeries<Tick> series;
@@ -78,6 +78,20 @@ class _DrawingPainterState extends State<DrawingPainter> {
   bool isOverEndPoint = false;
 
   final Debounce _updateDebounce = Debounce();
+
+  void _onMouseEnter() {
+    setState(() {
+      widget.drawingData!.isHovered = true;
+    });
+    widget.onMouseEnter();
+  }
+
+  void _onMouseExit() {
+    setState(() {
+      widget.drawingData!.isHovered = false;
+    });
+    widget.onMouseExit();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,16 +210,14 @@ class _DrawingPainterState extends State<DrawingPainter> {
     return widget.drawingData != null
         ? MouseRegion(
             onEnter: (PointerEnterEvent event) {
-              setState(() {
-                widget.drawingData!.isHovered = true;
-              });
-              widget.onMouseEnter(event);
+              if (!isTouchHeld && !widget.isDrawingMoving) {
+                _onMouseEnter();
+              }
             },
             onExit: (PointerExitEvent event) {
-              setState(() {
-                widget.drawingData!.isHovered = false;
-              });
-              widget.onMouseExit(event);
+              if (!isTouchHeld && !widget.isDrawingMoving) {
+                _onMouseExit();
+              }
             },
             hitTestBehavior: HitTestBehavior.deferToChild,
             child: RepaintBoundary(
@@ -254,6 +266,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                 },
                 onLongPressUp: () {
                   widget.onMoveDrawing(isDrawingMoved: false);
+                  _onMouseExit();
                   isTouchHeld = false;
                   _draggableStartPoint = _draggableStartPoint.copyWith(
                     isDragged: false,
@@ -290,6 +303,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                     );
                   });
                   widget.onMoveDrawing(isDrawingMoved: false);
+                  _onMouseExit();
                   _updateDrawingsMovement();
                   updateDrawingToolConfig(shouldDebounce: false);
                 },

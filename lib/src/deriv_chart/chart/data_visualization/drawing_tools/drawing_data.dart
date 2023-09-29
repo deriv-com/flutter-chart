@@ -13,7 +13,7 @@ class DrawingData {
     required this.drawingParts,
     this.isDrawingFinished = false,
     this.isHovered = false,
-    this.isSelected = true,
+    this.isSelected = false,
   });
 
   /// Initializes from JSON.
