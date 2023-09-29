@@ -13,7 +13,7 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
     required OnAddDrawing<LineDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     Key? key,
   }) : super(
           key: key,
@@ -24,8 +24,8 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
   /// Callback to clean drawing tool selection.
   final VoidCallback clearDrawingToolSelection;
 
-  /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  /// Callback to remove unfinished drawing from the list of drawings.
+  final VoidCallback removeUnfinishedDrawing;
 
   @override
   DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
@@ -76,7 +76,7 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
         if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
-          _widget.removeDrawing(drawingId);
+          _widget.removeUnfinishedDrawing();
           _widget.clearDrawingToolSelection();
           return;
         } else {
@@ -101,6 +101,7 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

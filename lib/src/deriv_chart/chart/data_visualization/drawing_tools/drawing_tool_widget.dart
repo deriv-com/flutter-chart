@@ -1,6 +1,7 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/channel/channel_drawing_creator.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/continuous/continuous_drawing_creator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/horizontal/horizontal_drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/fibfan_drawing_creator.dart';
@@ -10,6 +11,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing_creator.dart';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/vertical/vertical_drawing_creator.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -24,7 +26,7 @@ class DrawingToolWidget extends StatelessWidget {
     required this.selectedDrawingTool,
     required this.quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     required this.chartConfig,
     required this.series,
     this.shouldStopDrawing,
@@ -46,6 +48,7 @@ class DrawingToolWidget extends StatelessWidget {
     List<Drawing> drawingParts, {
     bool isDrawingFinished,
     bool isInfiniteDrawing,
+    List<EdgePoint>? edgePoints,
   }) onAddDrawing;
 
   /// Conversion function for converting quote to chart's canvas' Y position.
@@ -54,8 +57,8 @@ class DrawingToolWidget extends StatelessWidget {
   /// Callback to clean drawing tool selection.
   final VoidCallback clearDrawingToolSelection;
 
-  /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  /// Callback to remove unfinished drawing from the list of drawings.
+  final VoidCallback removeUnfinishedDrawing;
 
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing
@@ -73,7 +76,7 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
           shouldStopDrawing: shouldStopDrawing!,
         );
       case 'dt_continuous':
@@ -81,7 +84,7 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
           shouldStopDrawing: shouldStopDrawing!,
         );
       case 'dt_fibfan':
@@ -89,7 +92,7 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
         );
       case 'dt_horizontal':
         return HorizontalDrawingCreator(
@@ -102,28 +105,28 @@ class DrawingToolWidget extends StatelessWidget {
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
         );
       case 'dt_ray':
         return RayDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
         );
       case 'dt_rectangle':
         return RectangleDrawingCreator(
           onAddDrawing: onAddDrawing,
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
         );
       case 'dt_trend':
         return TrendDrawingCreator(
           onAddDrawing: onAddDrawing,
           clearDrawingToolSelection: clearDrawingToolSelection,
           quoteFromCanvasY: quoteFromCanvasY,
-          removeDrawing: removeDrawing,
+          removeUnfinishedDrawing: removeUnfinishedDrawing,
           series: series,
         );
       case 'dt_vertical':

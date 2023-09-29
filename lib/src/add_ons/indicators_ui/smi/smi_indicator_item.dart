@@ -1,4 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/dropdown_menu.dart'
     as deriv_dropdown;
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
@@ -7,7 +8,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:flutter/material.dart' hide DropdownMenu;
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'smi_indicator_config.dart';
 
