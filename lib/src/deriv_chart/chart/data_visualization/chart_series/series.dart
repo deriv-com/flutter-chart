@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/chart_painting_style.dart';
 import 'package:flutter/material.dart';
 
-
 /// Base class of all chart series.
 abstract class Series implements ChartData {
   /// Initializes a base class of all chart series.

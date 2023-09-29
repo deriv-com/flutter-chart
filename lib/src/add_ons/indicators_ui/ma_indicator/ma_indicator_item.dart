@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'ma_indicator_config.dart';
 
