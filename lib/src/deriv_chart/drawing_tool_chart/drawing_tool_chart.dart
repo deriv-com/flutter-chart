@@ -68,6 +68,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
           children: <Widget>[
             ...widget.drawingTools.drawings.map(
               (DrawingData drawingData) => DrawingPainter(
+                key: ValueKey<String>('''${drawingData.id}_${context.watch<ChartConfig>().granularity}'''),
                 drawingData: drawingData,
                 quoteToCanvasY: widget.chartQuoteToCanvasY,
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,

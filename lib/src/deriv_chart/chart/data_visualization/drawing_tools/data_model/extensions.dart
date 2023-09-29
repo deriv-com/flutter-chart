@@ -12,7 +12,11 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 ///
 /// When we know how visually can represent the edge point (circle, square, etc)
 /// we can improve this value.
-const double _edgePointOffScreenSafeDistance = 1000;
+///
+/// Currently as for a safe number we consider the half of screen width for a
+/// [DraggableEdgePoint] to be considered as off screen.
+double _edgePointOffScreenSafeDistance(int leftEpoch, int rightEpoch) =>
+    (rightEpoch - leftEpoch) / 2;
 
 /// An extension on DraggableEdgePoint class that adds some helper methods.
 extension DraggableEdgePointExtension on DraggableEdgePoint {
@@ -21,6 +25,9 @@ extension DraggableEdgePointExtension on DraggableEdgePoint {
   /// The view port range is defined by the left and right epoch values.
   /// returns true if the edge point is on the view port range.
   bool isInViewPortRange(int leftEpoch, int rightEpoch) =>
-      draggedPosition.dx >= (leftEpoch - _edgePointOffScreenSafeDistance) &&
-      draggedPosition.dx <= (rightEpoch + _edgePointOffScreenSafeDistance);
+      draggedPosition.dx >=
+          (leftEpoch -
+              _edgePointOffScreenSafeDistance(leftEpoch, rightEpoch)) &&
+      draggedPosition.dx <=
+          (rightEpoch + _edgePointOffScreenSafeDistance(leftEpoch, rightEpoch));
 }
