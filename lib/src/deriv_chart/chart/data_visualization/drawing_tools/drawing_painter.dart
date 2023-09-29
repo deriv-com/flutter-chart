@@ -102,8 +102,8 @@ class _DrawingPainterState extends State<DrawingPainter> {
 
     /// In this method, we are updating the restored drawing tool
     /// config with latest data from the chart.
-    void updateDrawingToolConfig({bool shouldDebounce = true}) {
-      void updateConfig() {
+    void updateDrawingToolConfig() {
+      _updateDebounce.run(() {
         final DrawingData drawingData = widget.drawingData!;
         final int index = repo.items.indexWhere(
           (DrawingToolConfig item) => item.configId == drawingData.id,
@@ -123,16 +123,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
           );
           repo.updateAt(index, updatedConfig);
         }
-      }
-
-      if (shouldDebounce) {
-        _updateDebounce.run(() {
-          updateConfig();
-        });
-      } else {
-        _updateDebounce.timer?.cancel();
-        updateConfig();
-      }
+      });
     }
 
     void _updateDrawingsMovement() {
@@ -278,7 +269,6 @@ class _DrawingPainterState extends State<DrawingPainter> {
                     isDragged: false,
                   );
                   _updateDrawingsMovement();
-                  updateDrawingToolConfig(shouldDebounce: false);
                 },
                 onPanStart: (DragStartDetails details) {
                   widget.onMoveDrawing(isDrawingMoved: true);
@@ -305,7 +295,6 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   widget.onMoveDrawing(isDrawingMoved: false);
                   _onMouseExit();
                   _updateDrawingsMovement();
-                  updateDrawingToolConfig(shouldDebounce: false);
                 },
                 child: CustomPaint(
                   foregroundPainter: _DrawingPainter(
