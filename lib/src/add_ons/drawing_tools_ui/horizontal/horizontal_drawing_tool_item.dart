@@ -39,14 +39,12 @@ class HorizontalDrawingToolItemState
   DrawingPatterns? _pattern;
   bool? _enableLabel;
 
-
   @override
   HorizontalDrawingToolConfig createDrawingToolConfig() =>
       HorizontalDrawingToolConfig(
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
-          enableLabel: _getEnableLanel
-
+        enableLabel: _getEnableLanel,
       );
 
   @override
@@ -74,8 +72,6 @@ class HorizontalDrawingToolItemState
           ),
         ],
       );
-
-
 
   Widget _buildColorField() => Row(
         children: <Widget>[

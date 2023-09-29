@@ -11,7 +11,6 @@ typedef OnMouseEnterCallback = void Function(int index);
 /// Callback to notify mouse exit over the addon.
 typedef OnMouseExitCallback = void Function(int index);
 
-
 /// This calss is used to keep all the methods and data related to drawing tools
 /// Which need to be shared between the DerivChart and the DrawingToolsDialog
 class DrawingTools {

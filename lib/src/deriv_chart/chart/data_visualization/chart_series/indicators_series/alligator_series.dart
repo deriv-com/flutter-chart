@@ -48,7 +48,6 @@ class AlligatorSeries extends Series {
   /// Lips series
   SingleIndicatorSeries? lipsSeries;
 
-
   /// Bullish Series
   SingleIndicatorSeries? bullishSeries;
 

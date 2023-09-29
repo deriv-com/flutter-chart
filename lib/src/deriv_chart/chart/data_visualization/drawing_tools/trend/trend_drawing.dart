@@ -380,7 +380,6 @@ class TrendDrawing extends Drawing {
 
     final LineStyle lineStyle = config.lineStyle;
 
-
     // Calculate the difference between the end Point and the tap point.
     final double endDx = position.dx - endXCoord;
     final double endDy = position.dy - _rectCenter;
@@ -421,7 +420,7 @@ class TrendDrawing extends Drawing {
 
     final double baseArea = endXCoord - startXCoord;
     final double lineHeight = 2 * lineArea / baseArea;
-    
+
     if (endEdgePoint.epoch != 0) {
       return _isClickedOnRectangleBoundary(_mainRect, position) ||
           _isClickedOnRectangleBoundary(_middleRect, position) ||

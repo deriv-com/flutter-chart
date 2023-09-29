@@ -40,7 +40,6 @@ class ADXSeries extends Series {
   /// ADX histogram series
   late SingleIndicatorSeries adxHistogramSeries;
 
-
   /// ADX Series List
   late List<SingleIndicatorSeries> adxSeriesList;
 
@@ -180,7 +179,6 @@ class ADXSeries extends Series {
   List<double> recalculateMinMax() =>
       <double>[adxSeriesList.getMinValue(), adxSeriesList.getMaxValue()];
 
- 
   @override
   bool shouldRepaint(ChartData? previous) {
     if (previous == null) {

@@ -169,7 +169,7 @@ class _DerivChartState extends State<DerivChart> {
     loadSavedIndicatorsAndDrawingTools();
   }
 
-@override
+  @override
   void didUpdateWidget(covariant DerivChart oldWidget) {
     super.didUpdateWidget(oldWidget);
 

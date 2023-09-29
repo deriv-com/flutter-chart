@@ -24,33 +24,29 @@ void paintDrawingLabel(
       theme.horizontalBarrierStyle;
 
   if (drawingType == 'horizontal') {
- 
     _labelString = quoteFromY!(coord).toStringAsFixed(config.pipSize);
-
   } else {
-  
     final DateTime _dateTime =
         DateTime.fromMillisecondsSinceEpoch(epochFromX!(coord), isUtc: true);
 
     _labelString = DateFormat('MM-dd HH:mm:ss').format(_dateTime);
   }
-  
+
   const double padding = 6;
   final TextPainter textPainter = TextPainter(
     text: TextSpan(
       text: _labelString,
       style: TextStyle(
-          color: calculateTextColor(color),
-          fontSize: horizontalBarrierStyle.textStyle.fontSize,
-          height: horizontalBarrierStyle.textStyle.height,
-          fontFeatures: horizontalBarrierStyle.textStyle.fontFeatures,
-          fontWeight: horizontalBarrierStyle.textStyle.fontWeight
+        color: calculateTextColor(color),
+        fontSize: horizontalBarrierStyle.textStyle.fontSize,
+        height: horizontalBarrierStyle.textStyle.height,
+        fontFeatures: horizontalBarrierStyle.textStyle.fontFeatures,
+        fontWeight: horizontalBarrierStyle.textStyle.fontWeight,
       ),
     ),
     textDirection: ui.TextDirection.ltr,
     maxLines: 1,
   )..layout(maxWidth: size.width);
-
 
   final double rectWidth = textPainter.width + 2 * padding;
   const double rectHeight = 24;
@@ -74,7 +70,6 @@ void paintDrawingLabel(
       const Radius.circular(4),
     );
   }
-
 
   canvas.drawRRect(
     rect,

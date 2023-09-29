@@ -11,7 +11,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
-
 import 'horizontal_barrier.dart';
 import 'tick_indicator.dart';
 

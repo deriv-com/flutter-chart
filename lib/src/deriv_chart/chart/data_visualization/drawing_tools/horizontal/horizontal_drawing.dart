@@ -110,16 +110,16 @@ class HorizontalDrawing extends Drawing {
             : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
       );
       if (config.enableLabel) {
-      paintDrawingLabel(
-        canvas,
-        size,
-        pointYCoord,
-        'horizontal',
-        theme,
-        chartConfig!,
-        quoteFromY: quoteFromY,
-        color: lineStyle.color,
-      );
+        paintDrawingLabel(
+          canvas,
+          size,
+          pointYCoord,
+          'horizontal',
+          theme,
+          chartConfig!,
+          quoteFromY: quoteFromY,
+          color: lineStyle.color,
+        );
       }
     }
   }

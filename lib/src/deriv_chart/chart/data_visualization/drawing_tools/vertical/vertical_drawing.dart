@@ -108,16 +108,16 @@ class VerticalDrawing extends Drawing {
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
         if (config.enableLabel) {
-        paintDrawingLabel(
-          canvas,
-          size,
-          xCoord,
-          'vertical',
-          theme,
-          chartConfig!,
-          epochFromX: epochFromX,
-          color: lineStyle.color,
-        );
+          paintDrawingLabel(
+            canvas,
+            size,
+            xCoord,
+            'vertical',
+            theme,
+            chartConfig!,
+            epochFromX: epochFromX,
+            color: lineStyle.color,
+          );
         }
       }
     }

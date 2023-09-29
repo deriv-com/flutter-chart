@@ -9,7 +9,6 @@ import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import '../data_model/drawing_parts.dart';
 
-
 /// Creates a Trend drawing right after selecting the trend drawing tool
 /// and until drawing is finished
 class TrendDrawingCreator extends DrawingCreator<TrendDrawing> {

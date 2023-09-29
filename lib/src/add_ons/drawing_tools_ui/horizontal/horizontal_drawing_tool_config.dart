@@ -22,7 +22,7 @@ class HorizontalDrawingToolConfig extends DrawingToolConfig {
     List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
-      this.enableLabel = true
+    this.enableLabel = true,
   }) : super(
           configId: configId,
           drawingData: drawingData,
@@ -48,7 +48,6 @@ class HorizontalDrawingToolConfig extends DrawingToolConfig {
 
   /// For enabling the label
   final bool enableLabel;
-
 
   @override
   DrawingToolItem getItem(
