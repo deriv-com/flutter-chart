@@ -3,11 +3,11 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart'
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
 import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
-import '../indicator_config.dart';
 import '../indicator_item.dart';
 import 'cci_indicator_config.dart';
 

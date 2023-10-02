@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/distance_constants.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
@@ -11,19 +12,35 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/paint_drawing_label.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'horizontal_drawing.g.dart';
 
 /// Horizontal drawing tool.
 /// A tool used to draw straight infinite horizontal line on the chart
+@JsonSerializable()
 class HorizontalDrawing extends Drawing {
   /// Initializes
   HorizontalDrawing({
     required this.drawingPart,
-    required this.quoteFromCanvasY,
     required this.chartConfig,
     required this.edgePoint,
   });
+
+  /// Initializes from JSON.
+  factory HorizontalDrawing.fromJson(Map<String, dynamic> json) =>
+      _$HorizontalDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$HorizontalDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'HorizontalDrawing';
 
   /// Chart config to get pipSize
   final ChartConfig? chartConfig;
@@ -37,15 +54,13 @@ class HorizontalDrawing extends Drawing {
   /// Keeps the latest position of the horizontal line
   Point? startPoint;
 
-  /// Conversion function for converting quote from chart's canvas' Y position.
-  final double Function(double)? quoteFromCanvasY;
-
   // TODO(NA): Return true when the horizontal drawing is in the epoch range.
   @override
   bool needsRepaint(
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       true;
@@ -56,9 +71,13 @@ class HorizontalDrawing extends Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
+    DataSeries<Tick> series,
     Point Function(
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
@@ -68,13 +87,13 @@ class HorizontalDrawing extends Drawing {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final HorizontalDrawingToolConfig config =
-        drawingData.config as HorizontalDrawingToolConfig;
+    config as HorizontalDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    startPoint = updatePositionCallback(edgePoint, draggableStartPoint);
+    startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
 
     final double pointYCoord = startPoint!.y;
     final double pointXCoord = startPoint!.x;
@@ -97,7 +116,7 @@ class HorizontalDrawing extends Drawing {
         'horizontal',
         theme,
         chartConfig!,
-        quoteFromY: quoteFromCanvasY,
+        quoteFromY: quoteFromY,
       );
     }
   }

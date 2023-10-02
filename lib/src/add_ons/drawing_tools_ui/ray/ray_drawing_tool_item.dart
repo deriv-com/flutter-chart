@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'ray_drawing_tool_config.dart';
 import '../callbacks.dart';
-import '../drawing_tool_config.dart';
 
 /// Ray drawing tool item in the list of drawing tools
 class RayDrawingToolItem extends DrawingToolItem {

@@ -1,14 +1,25 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'point.g.dart';
+
 /// A class that holds point data
 /// This class is equivalent to Offest but with customized methods
+@JsonSerializable()
 class Point {
   /// Initializes
   const Point({
     required this.x,
     required this.y,
   });
+
+  /// Initializes from JSON.
+  factory Point.fromJson(Map<String, dynamic> json) => _$PointFromJson(json);
+
+  /// Converts to JSON.
+  Map<String, dynamic> toJson() => _$PointToJson(this);
 
   /// Related x for the point
   final double x;
