@@ -166,7 +166,6 @@ class _DerivChartState extends State<DerivChart> {
     super.initState();
 
     _initRepos();
-    loadSavedIndicatorsAndDrawingTools();
   }
 
   @override
