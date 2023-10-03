@@ -26,7 +26,7 @@ class ChannelDrawingCreator extends DrawingCreator<ChannelDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
-  final void Function() removeUnfinishedDrawing;
+  final VoidCallback removeUnfinishedDrawing;
 
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing

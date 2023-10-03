@@ -89,7 +89,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     notifyListeners();
   }
 
-  /// Removes indicator/drawing tool at [index] from repository and
+  /// Removes all indicator/drawing tool from repository and
   /// updates storage.
   @override
   void removeAt(int index) {
