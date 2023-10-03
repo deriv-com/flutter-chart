@@ -50,12 +50,17 @@ class BollingerBandSeries extends Series {
   /// Upper series
   late SingleIndicatorSeries upperSeries;
 
+
+  /// Inner Series
+  final List<Series> innerSeries = <Series>[];
+
+
   /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
 
+  /// Field Indicator
   final Indicator<Tick> _fieldIndicator;
 
-  final List<Series> innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series>? createPainter() {

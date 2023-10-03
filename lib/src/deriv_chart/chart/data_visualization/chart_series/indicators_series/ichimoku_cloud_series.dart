@@ -42,6 +42,8 @@ class IchimokuCloudSeries extends Series {
   /// SpanB line series.
   late SingleIndicatorSeries spanBSeries;
 
+
+  /// Ichimoku series.
   final List<SingleIndicatorSeries> ichimokuSeries = <SingleIndicatorSeries>[];
 
   /// List of [Tick]s to calculate IchimokuCloud on.
