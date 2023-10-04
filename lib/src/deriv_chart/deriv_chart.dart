@@ -48,6 +48,7 @@ class DerivChart extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
+    this.minElapsedTimeToFollow,
     this.verticalPaddingFraction,
     this.bottomChartTitleMargin,
     this.showDataFitButton,
@@ -123,6 +124,11 @@ class DerivChart extends StatefulWidget {
   /// Specifies the maximum interval width
   /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
+
+  /// Specifies the minimum time in milliseconds before which it can update the
+  /// rightBoundEpoch when the chart is in follow mode.  This is used to control
+  /// the number of frames painted each second.
+  final int? minElapsedTimeToFollow;
 
   /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
@@ -307,6 +313,7 @@ class _DerivChartState extends State<DerivChart> {
                 msPerPx: widget.msPerPx,
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,
+                minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
                 verticalPaddingFraction: widget.verticalPaddingFraction,
                 bottomChartTitleMargin: widget.bottomChartTitleMargin,
                 showDataFitButton: widget.showDataFitButton,
