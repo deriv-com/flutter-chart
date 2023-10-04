@@ -329,11 +329,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 super.build(context),
                 _buildSeries(),
                 _buildAnnotations(),
-                if (widget.markerSeries != null)
-                  MarkerArea(
-                    markerSeries: widget.markerSeries!,
-                    quoteToCanvasY: chartQuoteToCanvasY,
-                  ),
+                if (widget.markerSeries != null) _buildMarkerArea(),
                 _buildDrawingToolChart(),
                 if (!widget.drawingTools.isDrawingMoving)
                   kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
@@ -469,6 +465,17 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
             ),
           ),
+        ),
+      );
+
+  Widget _buildMarkerArea() => MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController
+        ],
+        builder: (BuildContext context, _) => MarkerArea(
+          markerSeries: widget.markerSeries!,
+          quoteToCanvasY: chartQuoteToCanvasY,
         ),
       );
 
