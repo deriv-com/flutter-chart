@@ -48,6 +48,9 @@ class MainChart extends BasicChart {
     this.annotations,
     this.verticalPaddingFraction,
     this.loadingAnimationColor,
+    this.showCurrentTickBlinkAnimation = true,
+    Duration? currentTickAnimationDuration,
+    Duration? quoteBoundsAnimationDuration,
     double opacity = 1,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
     this.showCrosshair = false,
@@ -63,6 +66,8 @@ class MainChart extends BasicChart {
           pipSize: pipSize,
           opacity: opacity,
           onQuoteAreaChanged: onQuoteAreaChanged,
+          currentTickAnimationDuration: currentTickAnimationDuration,
+          quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         );
 
   /// The indicator series that are displayed on the main chart.
@@ -115,6 +120,9 @@ class MainChart extends BasicChart {
 
   /// The color of the loading animation.
   final Color? loadingAnimationColor;
+
+  /// Whether to show current tick blink animation or not.
+  final bool showCurrentTickBlinkAnimation;
 
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
@@ -177,7 +185,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
     didUpdateChartData(oldChart);
 
-    if (widget.isLive != oldChart.isLive) {
+    if (widget.isLive != oldChart.isLive ||
+        widget.showCurrentTickBlinkAnimation !=
+            oldChart.showCurrentTickBlinkAnimation) {
       _updateBlinkingAnimationStatus();
     }
 
@@ -188,7 +198,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   }
 
   void _updateBlinkingAnimationStatus() {
-    if (widget.isLive) {
+    if (widget.isLive && widget.showCurrentTickBlinkAnimation) {
       _currentTickBlinkingController.repeat(reverse: true);
     } else {
       _currentTickBlinkingController
@@ -287,12 +297,16 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     _currentTickBlinkingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
-    )..repeat(reverse: true);
+    );
 
     _currentTickBlinkAnimation = CurvedAnimation(
       parent: _currentTickBlinkingController,
       curve: Curves.easeInOut,
     );
+
+    if (widget.showCurrentTickBlinkAnimation) {
+      _currentTickBlinkingController.repeat(reverse: true);
+    }
   }
 
   @override

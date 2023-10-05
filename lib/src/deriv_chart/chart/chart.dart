@@ -54,6 +54,9 @@ class Chart extends StatefulWidget {
     this.minIntervalWidth,
     this.maxIntervalWidth,
     this.minElapsedTimeToFollow,
+    this.currentTickAnimationDuration,
+    this.quoteBoundsAnimationDuration,
+    this.showCurrentTickBlinkAnimation,
     this.verticalPaddingFraction,
     this.bottomChartTitleMargin,
     this.showDataFitButton,
@@ -144,6 +147,15 @@ class Chart extends StatefulWidget {
   /// the number of frames painted each second.
   final int? minElapsedTimeToFollow;
 
+  /// Duration of the current tick animated transition.
+  final Duration? currentTickAnimationDuration;
+
+  /// Duration of quote bounds animated transition.
+  final Duration? quoteBoundsAnimationDuration;
+
+  /// Whether to show current tick blink animation or not.
+  final bool? showCurrentTickBlinkAnimation;
+
   /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   final double? verticalPaddingFraction;
@@ -213,6 +225,23 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         (Theme.of(context).brightness == Brightness.dark
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
+  }
+
+  void _onCrosshairHover(
+    PointerHoverEvent ev,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+  ) {
+    widget.onCrosshairHover?.call(
+      ev,
+      epochToX,
+      quoteToY,
+      epochFromX,
+      quoteFromY,
+      null,
+    );
   }
 
   @override
@@ -293,22 +322,14 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     verticalPaddingFraction: widget.verticalPaddingFraction,
                     showCrosshair: widget.showCrosshair,
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                    onCrosshairHover: (
-                      PointerHoverEvent ev,
-                      EpochToX epochToX,
-                      QuoteToY quoteToY,
-                      EpochFromX epochFromX,
-                      QuoteFromY quoteFromY,
-                    ) =>
-                        widget.onCrosshairHover?.call(
-                      ev,
-                      epochToX,
-                      quoteToY,
-                      epochFromX,
-                      quoteFromY,
-                      null,
-                    ),
+                    onCrosshairHover: _onCrosshairHover,
                     loadingAnimationColor: widget.loadingAnimationColor,
+                    currentTickAnimationDuration:
+                        widget.currentTickAnimationDuration,
+                    quoteBoundsAnimationDuration:
+                        widget.quoteBoundsAnimationDuration,
+                    showCurrentTickBlinkAnimation:
+                        widget.showCurrentTickBlinkAnimation ?? true,
                   ),
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)
