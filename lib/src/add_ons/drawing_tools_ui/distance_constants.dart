@@ -3,5 +3,5 @@
 
 class DrawingToolDistance {
   /// horizontal distance
-  static const double horizontalDistance = 999999;
+  static const double horizontalDistance = 99999;
 }
