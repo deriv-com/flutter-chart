@@ -1,10 +1,11 @@
 // ignore_for_file: use_setters_to_change_properties
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import '../data_model/drawing_parts.dart';
 

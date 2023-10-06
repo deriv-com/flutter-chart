@@ -17,7 +17,7 @@ class Debounce {
   /// The function to be executed after the debounce window.
   VoidCallback? action;
 
-  /// Internal timer to manage the debounce window.
+  /// Timer to manage the debounce window and to cancel.
   Timer? _timer;
 
   /// Runs the provided [action] function after the debounce window.

@@ -22,6 +22,7 @@ VerticalDrawingToolConfig _$VerticalDrawingToolConfigFromJson(
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
       pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
           DrawingPatterns.solid,
+      enableLabel: json['enableLabel'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$VerticalDrawingToolConfigToJson(
@@ -32,6 +33,7 @@ Map<String, dynamic> _$VerticalDrawingToolConfigToJson(
       'configId': instance.configId,
       'lineStyle': instance.lineStyle,
       'pattern': _$DrawingPatternsEnumMap[instance.pattern]!,
+      'enableLabel': instance.enableLabel,
     };
 
 const _$DrawingPatternsEnumMap = {

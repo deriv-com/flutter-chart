@@ -63,6 +63,7 @@ class FibfanDrawingToolConfig extends DrawingToolConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       FibfanDrawingToolConfig(
         configId: configId ?? this.configId,
