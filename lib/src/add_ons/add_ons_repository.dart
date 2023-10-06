@@ -89,6 +89,8 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     notifyListeners();
   }
 
+
+
   /// Removes indicator/drawing tool at [index] from repository and
   /// updates storage.
   @override
@@ -97,6 +99,16 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       return;
     }
     items.removeAt(index);
+    _writeToPrefs();
+    notifyListeners();
+  }
+
+
+  /// Removes all indicator/drawing tool from repository and
+  /// updates storage.
+  @override
+  void clear() {
+    items.clear();
     _writeToPrefs();
     notifyListeners();
   }
@@ -113,7 +125,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     if (_prefs != null) {
       await _prefs!.setStringList(
         addOnsKey,
-        items.map((AddOnConfig config) => jsonEncode(config)).toList(),
+        items.map((T config) => jsonEncode(config.toJson())).toList(),
       );
     }
   }

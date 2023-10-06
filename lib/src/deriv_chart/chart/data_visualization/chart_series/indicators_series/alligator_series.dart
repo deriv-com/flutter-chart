@@ -48,8 +48,11 @@ class AlligatorSeries extends Series {
   /// Lips series
   SingleIndicatorSeries? lipsSeries;
 
-  SingleIndicatorSeries? _bullishSeries;
-  SingleIndicatorSeries? _bearishSeries;
+  /// Bullish Series
+  SingleIndicatorSeries? bullishSeries;
+
+  /// Bearish Series
+  SingleIndicatorSeries? bearishSeries;
 
   @override
   SeriesPainter<Series>? createPainter() {
@@ -107,7 +110,7 @@ class AlligatorSeries extends Series {
     }
 
     if (alligatorOptions.showFractal) {
-      _bearishSeries = SingleIndicatorSeries(
+      bearishSeries = SingleIndicatorSeries(
         painterCreator: (
           Series series,
         ) =>
@@ -117,7 +120,7 @@ class AlligatorSeries extends Series {
         options: alligatorOptions,
         style: const LineStyle(color: Colors.redAccent),
       );
-      _bullishSeries = SingleIndicatorSeries(
+      bullishSeries = SingleIndicatorSeries(
         painterCreator: (
           Series series,
         ) =>
@@ -143,9 +146,9 @@ class AlligatorSeries extends Series {
         lipsSeries?.didUpdate(series?.lipsSeries) ?? false;
 
     final bool _bearishUpdated =
-        _bearishSeries?.didUpdate(series?._bearishSeries) ?? false;
+        bearishSeries?.didUpdate(series?.bearishSeries) ?? false;
     final bool _bullishUpdated =
-        _bullishSeries?.didUpdate(series?._bullishSeries) ?? false;
+        bullishSeries?.didUpdate(series?.bullishSeries) ?? false;
 
     return _jawUpdated ||
         _teethUpdated ||
@@ -159,8 +162,8 @@ class AlligatorSeries extends Series {
     jawSeries?.update(leftEpoch, rightEpoch);
     teethSeries?.update(leftEpoch, rightEpoch);
     lipsSeries?.update(leftEpoch, rightEpoch);
-    _bullishSeries?.update(leftEpoch, rightEpoch);
-    _bearishSeries?.update(leftEpoch, rightEpoch);
+    bullishSeries?.update(leftEpoch, rightEpoch);
+    bearishSeries?.update(leftEpoch, rightEpoch);
   }
 
   @override
@@ -202,9 +205,9 @@ class AlligatorSeries extends Series {
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     lipsSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _bearishSeries?.paint(
+    bearishSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _bullishSeries?.paint(
+    bullishSeries?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
   }
 

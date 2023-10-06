@@ -12,7 +12,8 @@ class DrawingData {
     required this.id,
     required this.drawingParts,
     this.isDrawingFinished = false,
-    this.isSelected = true,
+    this.isHovered = false,
+    this.isSelected = false,
   });
 
   /// Initializes from JSON.
@@ -32,7 +33,15 @@ class DrawingData {
   bool isDrawingFinished;
 
   /// If the drawing is selected by the user.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool isSelected;
+
+  /// If the drawing is hovered by the user.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool isHovered;
+
+  /// If the drawing should be highlighted or not.
+  bool get shouldHighlight => isSelected || isHovered;
 
   /// Determines if this [DrawingData] needs to be repainted.
   /// Returns `true` if any of the [drawingParts] needs to be repainted.

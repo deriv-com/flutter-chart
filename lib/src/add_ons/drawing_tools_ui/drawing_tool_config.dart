@@ -85,6 +85,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   });
 
   /// Creates drawing tool.

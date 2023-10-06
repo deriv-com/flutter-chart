@@ -44,6 +44,7 @@ class DerivChart extends StatefulWidget {
     this.pipSize = 4,
     this.indicatorsRepo,
     this.drawingToolsRepo,
+    this.drawingTools,
     this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
@@ -164,6 +165,9 @@ class DerivChart extends StatefulWidget {
   /// Chart's drawings
   final Repository<DrawingToolConfig>? drawingToolsRepo;
 
+  /// Drawing tools
+  final DrawingTools? drawingTools;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -180,13 +184,14 @@ class _DerivChartState extends State<DerivChart> {
     super.initState();
 
     _initRepos();
-    loadSavedIndicatorsAndDrawingTools();
   }
 
   @override
   void didUpdateWidget(covariant DerivChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.activeSymbol != oldWidget.activeSymbol) {
+
+    if (widget.drawingToolsRepo == null &&
+        widget.activeSymbol != oldWidget.activeSymbol) {
       loadSavedIndicatorsAndDrawingTools();
     }
   }
@@ -204,6 +209,9 @@ class _DerivChartState extends State<DerivChart> {
       onEditCallback: showDrawingToolsDialog,
       currentSymbol: widget.activeSymbol,
     );
+    if (widget.drawingToolsRepo == null) {
+      loadSavedIndicatorsAndDrawingTools();
+    }
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
@@ -211,7 +219,9 @@ class _DerivChartState extends State<DerivChart> {
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
 
-    _stateRepos.asMap().forEach((int index, dynamic element) {
+    _stateRepos
+        .asMap()
+        .forEach((int index, AddOnsRepository<AddOnConfig> element) {
       try {
         element.loadFromPrefs(prefs, widget.activeSymbol);
       } on Exception {
@@ -307,7 +317,7 @@ class _DerivChartState extends State<DerivChart> {
                       .items
                       .where((IndicatorConfig config) => !config.isOverlay)
                 ],
-                drawingTools: _drawingTools,
+                drawingTools: widget.drawingTools ?? _drawingTools,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,

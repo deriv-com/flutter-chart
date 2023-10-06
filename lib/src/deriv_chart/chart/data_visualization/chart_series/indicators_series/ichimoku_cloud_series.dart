@@ -42,7 +42,9 @@ class IchimokuCloudSeries extends Series {
   /// SpanB line series.
   late SingleIndicatorSeries spanBSeries;
 
-  final List<SingleIndicatorSeries> _ichimokuSeries = <SingleIndicatorSeries>[];
+
+  /// Ichimoku series.
+  final List<SingleIndicatorSeries> ichimokuSeries = <SingleIndicatorSeries>[];
 
   /// List of [Tick]s to calculate IchimokuCloud on.
   final IndicatorDataInput ticks;
@@ -152,7 +154,7 @@ class IchimokuCloudSeries extends Series {
       ),
     );
 
-    _ichimokuSeries
+    ichimokuSeries
       ..add(conversionLineSeries)
       ..add(baseLineSeries)
       ..add(laggingSpanSeries)
@@ -198,11 +200,11 @@ class IchimokuCloudSeries extends Series {
 
   @override
   List<double> recalculateMinMax() {
-    final double minValue = _ichimokuSeries
+    final double minValue = ichimokuSeries
         .map((SingleIndicatorSeries series) => series.minValue)
         .reduce(safeMin);
 
-    final double maxValue = _ichimokuSeries
+    final double maxValue = ichimokuSeries
         .map((SingleIndicatorSeries series) => series.maxValue)
         .reduce(safeMax);
 
@@ -249,8 +251,8 @@ class IchimokuCloudSeries extends Series {
   }
 
   @override
-  int? getMaxEpoch() => _ichimokuSeries.getMaxEpoch();
+  int? getMaxEpoch() => ichimokuSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _ichimokuSeries.getMinEpoch();
+  int? getMinEpoch() => ichimokuSeries.getMinEpoch();
 }

@@ -64,6 +64,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       LineDrawingToolConfig(
         configId: configId ?? this.configId,

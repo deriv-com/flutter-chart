@@ -68,6 +68,7 @@ class RectangleDrawingToolConfig extends DrawingToolConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       RectangleDrawingToolConfig(
         configId: configId ?? this.configId,

@@ -37,18 +37,36 @@ class VerticalDrawingToolItemState
     extends DrawingToolItemState<VerticalDrawingToolConfig> {
   LineStyle? _lineStyle;
   DrawingPatterns? _pattern;
+  bool? _enableLabel;
 
   @override
   VerticalDrawingToolConfig createDrawingToolConfig() =>
       VerticalDrawingToolConfig(
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
+        enableLabel: _getEnableLanel,
       );
 
   @override
   Widget getDrawingToolOptions() => Column(
+        children: <Widget>[_buildColorField(), _buildEnableLabel()],
+      );
+
+  Widget _buildEnableLabel() => Row(
         children: <Widget>[
-          _buildColorField(),
+          const Text(
+            'Enable Label',
+            style: TextStyle(fontSize: 10),
+          ),
+          Switch(
+            value: _getEnableLanel,
+            onChanged: (bool value) {
+              setState(() {
+                _enableLabel = value;
+              });
+              updateDrawingTool();
+            },
+          ),
         ],
       );
 
@@ -75,4 +93,7 @@ class VerticalDrawingToolItemState
 
   DrawingPatterns get _currentPattern =>
       _pattern ?? (widget.config as VerticalDrawingToolConfig).pattern;
+
+  bool get _getEnableLanel =>
+      _enableLabel ?? (widget.config as VerticalDrawingToolConfig).enableLabel;
 }
