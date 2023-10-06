@@ -177,7 +177,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(middleXCoord, middleQuoteToY - height),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
@@ -185,7 +185,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (middleEdgePoint.epoch != 0 && middleQuoteToY != 0) {
@@ -193,7 +193,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(middleXCoord, middleQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       }
@@ -214,19 +214,19 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
             ..drawCircle(
                 Offset(startXCoord, startQuoteToY),
                 markerRadius,
-                drawingData.isSelected
+                drawingData.shouldHighlight
                     ? paint.glowyCirclePaintStyle(lineStyle.color)
                     : paint.transparentCirclePaintStyle())
             ..drawCircle(
                 Offset(middleXCoord, middleQuoteToY),
                 markerRadius,
-                drawingData.isSelected
+                drawingData.shouldHighlight
                     ? paint.glowyCirclePaintStyle(lineStyle.color)
                     : paint.transparentCirclePaintStyle())
             ..drawCircle(
                 Offset(middleXCoord, middleQuoteToY - height),
                 markerRadius,
-                drawingData.isSelected
+                drawingData.shouldHighlight
                     ? paint.glowyCirclePaintStyle(lineStyle.color)
                     : paint.transparentCirclePaintStyle())
 
@@ -234,7 +234,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
             ..drawLine(
               Offset(_initialVector.x0, _initialVector.y0),
               Offset(_initialVector.x1, _initialVector.y1),
-              drawingData.isSelected
+              drawingData.shouldHighlight
                   ? paint.glowyLinePaintStyle(
                       lineStyle.color, lineStyle.thickness)
                   : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
@@ -242,7 +242,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
             ..drawLine(
               Offset(_finalVector.x0, _finalVector.y0),
               Offset(_finalVector.x1, _finalVector.y1),
-              drawingData.isSelected
+              drawingData.shouldHighlight
                   ? paint.glowyLinePaintStyle(
                       lineStyle.color, lineStyle.thickness)
                   : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
@@ -254,7 +254,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
           canvas.drawLine(
             Offset(_initialVector.x0, _initialVector.y0),
             Offset(_initialVector.x1, _initialVector.y1),
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
                     lineStyle.color, lineStyle.thickness)
                 : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
@@ -275,16 +275,12 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsMiddlePointDragged!(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     final double middleXCoord = _middlePoint!.x;
     final double middleQuoteToY = _middlePoint!.y;
 
@@ -295,12 +291,16 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      setIsStartPointDragged(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if middle point clicked
     if (_middlePoint!.isClicked(position, markerRadius)) {
-      setIsMiddlePointDragged(isDragged: true);
+      setIsOverMiddlePoint!(isOverPoint: true);
+    } else {
+      setIsOverMiddlePoint!(isOverPoint: false);
     }
 
     /// Check if end point clicked, since the endPoint position is dependendat
@@ -309,7 +309,9 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if end point clicked
     if (endPoint.isClicked(position, markerRadius)) {
-      setIsEndPointDragged(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
 
     /// Detect the area between 2 parallel lines

@@ -9,15 +9,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_pai
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../misc/callbacks.dart';
-import '../../theme/chart_theme.dart';
 import 'basic_chart.dart';
+import 'multiple_animated_builder.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';
@@ -26,7 +23,10 @@ import 'data_visualization/markers/marker_series.dart';
 import 'data_visualization/models/animation_info.dart';
 import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
-import 'multiple_animated_builder.dart';
+import '../../misc/callbacks.dart';
+import '../../theme/chart_theme.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// The main chart to display in the chart widget.
 class MainChart extends BasicChart {
@@ -348,8 +348,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     ),
                   ),
                 _buildDrawingToolChart(),
-                if (!widget.drawingTools.isDrawingMoving)
-                  kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
+                if (kIsWeb) _buildCrosshairAreaWeb(),
+                if (!kIsWeb && !widget.drawingTools.isDrawingMoving)
+                  _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
                   Positioned(

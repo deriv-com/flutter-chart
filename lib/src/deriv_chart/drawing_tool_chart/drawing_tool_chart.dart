@@ -1,14 +1,15 @@
+import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatefulWidget {
@@ -82,15 +83,15 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
         fit: StackFit.expand,
         children: <Widget>[
           if (drawings.isNotEmpty)
-            ...drawings.map((DrawingData? drawingData) => DrawingPainter(
+            ...drawings.mapIndexed((int index, DrawingData? drawingData) =>
+                DrawingPainter(
                   key: ValueKey<String>(drawingData!.id),
                   drawingData: drawingData,
-                  drawingConfig: configs
-                      .where((DrawingToolConfig config) =>
-                          config.configId == drawingData.id)
-                      .firstOrNull,
                   quoteToCanvasY: widget.chartQuoteToCanvasY,
+                  onMouseEnter: () => widget.drawingTools.onMouseEnter(index),
+                  onMouseExit: () => widget.drawingTools.onMouseExit(index),
                   quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                  isDrawingMoving: widget.drawingTools.isDrawingMoving,
                   onMoveDrawing: widget.drawingTools.onMoveDrawing,
                   setIsDrawingSelected: _setIsDrawingSelected,
                   selectedDrawingTool: widget.drawingTools.selectedDrawingTool,

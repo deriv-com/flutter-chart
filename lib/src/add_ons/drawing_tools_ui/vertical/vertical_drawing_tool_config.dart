@@ -22,6 +22,7 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
     List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
+    this.enableLabel = true,
   }) : super(
           configId: configId,
           drawingData: drawingData,
@@ -45,6 +46,9 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
   final DrawingPatterns pattern;
 
+  /// For enabling the label
+  final bool enableLabel;
+
   @override
   DrawingToolItem getItem(
     UpdateDrawingTool updateDrawingTool,
@@ -64,12 +68,14 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       VerticalDrawingToolConfig(
         configId: configId ?? this.configId,
         drawingData: drawingData ?? this.drawingData,
+        edgePoints: edgePoints ?? this.edgePoints,
         lineStyle: lineStyle ?? this.lineStyle,
         pattern: pattern ?? this.pattern,
-        edgePoints: edgePoints ?? this.edgePoints,
+        enableLabel: enableLabel ?? this.enableLabel,
       );
 }

@@ -68,6 +68,7 @@ class ChannelDrawingToolConfig extends DrawingToolConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       ChannelDrawingToolConfig(
         configId: configId ?? this.configId,
