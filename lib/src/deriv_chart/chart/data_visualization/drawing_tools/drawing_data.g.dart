@@ -12,7 +12,6 @@ DrawingData _$DrawingDataFromJson(Map<String, dynamic> json) => DrawingData(
           .map((e) => Drawing.fromJson(e as Map<String, dynamic>))
           .toList(),
       isDrawingFinished: json['isDrawingFinished'] as bool? ?? false,
-      isSelected: json['isSelected'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$DrawingDataToJson(DrawingData instance) =>
@@ -20,5 +19,4 @@ Map<String, dynamic> _$DrawingDataToJson(DrawingData instance) =>
       'id': instance.id,
       'drawingParts': instance.drawingParts,
       'isDrawingFinished': instance.isDrawingFinished,
-      'isSelected': instance.isSelected,
     };

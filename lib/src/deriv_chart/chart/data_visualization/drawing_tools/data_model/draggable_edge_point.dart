@@ -36,28 +36,28 @@ class DraggableEdgePoint extends EdgePoint {
   final bool isDragged;
 
   /// Holds the current position of the edge point when it is being dragged.
-  Offset _draggedPosition = Offset.zero;
+  EdgePoint _draggedEdgePoint = const EdgePoint();
 
   /// Updated position of the edge point when it is being dragged.
   ///
   /// This would be obsolete when we keep [epoch] and [quote] fields updated
   /// with user's dragging. And we can use them instead of this field.
-  Offset get draggedPosition => _draggedPosition;
+  EdgePoint get draggedEdgePoint => _draggedEdgePoint;
 
   /// A callback method that takes the relative x and y positions as parameter,
   /// sets the draggedPosition field to its value and return epoch and quote
   /// values.
   Point updatePosition(
     int epoch,
-    double yCoord,
+    double quote,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
   ) {
-    final Offset oldPosition = Offset(epoch.toDouble(), yCoord);
-    _draggedPosition = isDrawingDragged ? _draggedPosition : oldPosition;
+    final EdgePoint oldEdgePoint = EdgePoint(epoch: epoch, quote: quote);
+    _draggedEdgePoint = isDrawingDragged ? _draggedEdgePoint : oldEdgePoint;
 
-    final double x = epochToX(_draggedPosition.dx.toInt());
-    final double y = quoteToY(_draggedPosition.dy);
+    final double x = epochToX(_draggedEdgePoint.epoch);
+    final double y = quoteToY(_draggedEdgePoint.quote);
 
     return Point(x: x, y: y);
   }
@@ -72,18 +72,20 @@ class DraggableEdgePoint extends EdgePoint {
     required bool isOtherEndDragged,
   }) {
     final Offset localPosition = Offset(
-            xAxis.xFromEpoch(_draggedPosition.dx.toInt()),
-            quoteToY(_draggedPosition.dy)) +
+            xAxis.xFromEpoch(_draggedEdgePoint.epoch),
+            quoteToY(_draggedEdgePoint.quote)) +
         (isOtherEndDragged ? Offset.zero : delta);
 
-    _draggedPosition = Offset(xAxis.epochFromX(localPosition.dx).toDouble(),
-        quoteFromCanvasY(localPosition.dy));
+    _draggedEdgePoint = EdgePoint(
+      epoch: xAxis.epochFromX(localPosition.dx),
+      quote: quoteFromCanvasY(localPosition.dy),
+    );
   }
 
   /// Returns the current position of the edge point when it is being dragged.
   EdgePoint getEdgePoint() => EdgePoint(
-        epoch: _draggedPosition.dx.toInt(),
-        quote: _draggedPosition.dy,
+        epoch: _draggedEdgePoint.epoch,
+        quote: _draggedEdgePoint.quote,
       );
 
   /// Creates a copy of this object.
@@ -98,5 +100,5 @@ class DraggableEdgePoint extends EdgePoint {
         quote: quote ?? this.quote,
         isDrawingDragged: isDrawingDragged ?? this.isDrawingDragged,
         isDragged: isDragged ?? this.isDragged,
-      ).._draggedPosition = _draggedPosition;
+      ).._draggedEdgePoint = _draggedEdgePoint;
 }

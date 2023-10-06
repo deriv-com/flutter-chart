@@ -40,7 +40,8 @@ class ADXSeries extends Series {
   /// ADX histogram series
   late SingleIndicatorSeries adxHistogramSeries;
 
-  late List<SingleIndicatorSeries> _adxSeriesList;
+  /// ADX Series List
+  late List<SingleIndicatorSeries> adxSeriesList;
 
   /// List of [Tick]s to calculate ADX on.
   final IndicatorDataInput ticks;
@@ -125,14 +126,14 @@ class ADXSeries extends Series {
       ),
     );
 
-    _adxSeriesList = <SingleIndicatorSeries>[
+    adxSeriesList = <SingleIndicatorSeries>[
       adxSeries,
       positiveDISeries,
       negativeDISeries,
     ];
 
     if (config.showHistogram) {
-      _adxSeriesList.add(adxHistogramSeries);
+      adxSeriesList.add(adxHistogramSeries);
     }
 
     if (config.showShading) {
@@ -169,14 +170,14 @@ class ADXSeries extends Series {
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    for (final SingleIndicatorSeries series in _adxSeriesList) {
+    for (final SingleIndicatorSeries series in adxSeriesList) {
       series.update(leftEpoch, rightEpoch);
     }
   }
 
   @override
   List<double> recalculateMinMax() =>
-      <double>[_adxSeriesList.getMinValue(), _adxSeriesList.getMaxValue()];
+      <double>[adxSeriesList.getMinValue(), adxSeriesList.getMaxValue()];
 
   @override
   bool shouldRepaint(ChartData? previous) {

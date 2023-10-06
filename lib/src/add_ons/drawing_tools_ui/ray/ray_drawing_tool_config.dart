@@ -64,6 +64,7 @@ class RayDrawingToolConfig extends DrawingToolConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       RayDrawingToolConfig(
         configId: configId ?? this.configId,

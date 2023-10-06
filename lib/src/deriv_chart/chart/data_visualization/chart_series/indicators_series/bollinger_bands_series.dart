@@ -50,12 +50,17 @@ class BollingerBandSeries extends Series {
   /// Upper series
   late SingleIndicatorSeries upperSeries;
 
+
+  /// Inner Series
+  final List<Series> innerSeries = <Series>[];
+
+
   /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
 
+  /// Field Indicator
   final Indicator<Tick> _fieldIndicator;
 
-  final List<Series> _innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series>? createPainter() {
@@ -112,7 +117,7 @@ class BollingerBandSeries extends Series {
       ),
     );
 
-    _innerSeries
+    innerSeries
       ..add(lowerSeries)
       ..add(middleSeries)
       ..add(upperSeries);
@@ -148,10 +153,10 @@ class BollingerBandSeries extends Series {
       // Can just use lowerSeries minValue for min and upperSeries maxValue
       // for max. But to be safe we calculate min and max. from all three series
       <double>[
-        _innerSeries
+        innerSeries
             .map((Series series) => series.minValue)
             .reduce((double a, double b) => safeMin(a, b)),
-        _innerSeries
+        innerSeries
             .map((Series series) => series.maxValue)
             .reduce((double a, double b) => safeMax(a, b)),
       ];
@@ -191,8 +196,8 @@ class BollingerBandSeries extends Series {
   }
 
   @override
-  int? getMinEpoch() => _innerSeries.getMinEpoch();
+  int? getMinEpoch() => innerSeries.getMinEpoch();
 
   @override
-  int? getMaxEpoch() => _innerSeries.getMaxEpoch();
+  int? getMaxEpoch() => innerSeries.getMaxEpoch();
 }

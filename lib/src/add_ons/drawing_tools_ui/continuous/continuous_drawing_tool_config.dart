@@ -64,6 +64,7 @@ class ContinuousDrawingToolConfig extends DrawingToolConfig {
     LineStyle? fillStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
+    bool? enableLabel,
   }) =>
       ContinuousDrawingToolConfig(
         configId: configId ?? this.configId,

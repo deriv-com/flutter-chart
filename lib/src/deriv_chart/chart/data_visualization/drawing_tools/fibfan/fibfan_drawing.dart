@@ -189,7 +189,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(endXCoord, endQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
@@ -197,7 +197,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       }
@@ -252,13 +252,13 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         ..drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle())
         ..drawCircle(
             Offset(endXCoord, endQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle())
 
@@ -316,27 +316,28 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     bool _isVectorHit(Vector vector) =>
         isVectorHit(vector, position, lineStyle);
 
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      setIsStartPointDragged(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      setIsEndPointDragged(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
     return _isVectorHit(_baseVector) ||
         _isVectorHit(_finalInnerVector) ||

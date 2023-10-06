@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -292,14 +291,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     showCrosshair: widget.showCrosshair,
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
                     onCrosshairHover: (
-                      PointerHoverEvent ev,
+                      Offset globalPosition,
+                      Offset localPosition,
                       EpochToX epochToX,
                       QuoteToY quoteToY,
                       EpochFromX epochFromX,
                       QuoteFromY quoteFromY,
                     ) =>
                         widget.onCrosshairHover?.call(
-                      ev,
+                      globalPosition,
+                      localPosition,
                       epochToX,
                       quoteToY,
                       epochFromX,
@@ -337,14 +338,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                             widget.bottomConfigs![index + offset]),
                         onCrosshairDisappeared: widget.onCrosshairDisappeared,
                         onCrosshairHover: (
-                          PointerHoverEvent ev,
+                          Offset globalPosition,
+                          Offset localPosition,
                           EpochToX epochToX,
                           QuoteToY quoteToY,
                           EpochFromX epochFromX,
                           QuoteFromY quoteFromY,
                         ) =>
                             widget.onCrosshairHover?.call(
-                          ev,
+                          globalPosition,
+                          localPosition,
                           epochToX,
                           quoteToY,
                           epochFromX,

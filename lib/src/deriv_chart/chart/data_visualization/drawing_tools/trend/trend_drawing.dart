@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
@@ -220,6 +219,12 @@ class TrendDrawing extends Drawing {
     final DrawingPatterns pattern = config.pattern;
 
     if (_calculator != null) {
+      if (maximumEpoch != 0 && minimumEpoch != 0) {
+        // center of rectangle
+        _rectCenter = quoteToY(_calculator!.min) +
+            ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
+      }
+
       _startPoint = updatePositionCallback(
           EdgePoint(
               epoch: edgePoints.first.epoch,
@@ -259,7 +264,7 @@ class TrendDrawing extends Drawing {
     }
 
     if (drawingPart == DrawingParts.marker) {
-      if (endEdgePoint.epoch == 0) {
+      if (edgePoints.length == 1) {
         _startPoint = updatePositionCallback(
             EdgePoint(
                 epoch: edgePoints.first.epoch, quote: edgePoints.last.quote),
@@ -271,7 +276,7 @@ class TrendDrawing extends Drawing {
         canvas.drawCircle(
           Offset(startXCoord, startYCoord),
           _markerRadius,
-          drawingData.isSelected
+          drawingData.shouldHighlight
               ? paint.glowyCirclePaintStyle(lineStyle.color)
               : paint.transparentCirclePaintStyle(),
         );
@@ -280,14 +285,14 @@ class TrendDrawing extends Drawing {
           ..drawCircle(
             Offset(startXCoord, _rectCenter),
             _markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle(),
           )
           ..drawCircle(
             Offset(endXCoord, _rectCenter),
             _markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle(),
           );
@@ -317,7 +322,7 @@ class TrendDrawing extends Drawing {
         canvas
           ..drawRect(
             _mainRect,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
                 : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
@@ -328,7 +333,7 @@ class TrendDrawing extends Drawing {
           )
           ..drawRect(
             _middleRect,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
                     fillStyle.color.withOpacity(0.2), lineStyle.thickness)
                 : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
@@ -361,18 +366,19 @@ class TrendDrawing extends Drawing {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - _rectCenter;
+
+    config as TrendDrawingToolConfig;
+
+    final LineStyle lineStyle = config.lineStyle;
 
     // Calculate the difference between the end Point and the tap point.
     final double endDx = position.dx - endXCoord;
@@ -391,11 +397,15 @@ class TrendDrawing extends Drawing {
     }
 
     if (startPointDistance <= _markerRadius) {
-      setIsStartPointDragged(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     if (endPointDistance <= _markerRadius) {
-      setIsEndPointDragged(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
 
     // For clicking the center line
@@ -416,7 +426,9 @@ class TrendDrawing extends Drawing {
           _isClickedOnRectangleBoundary(_middleRect, position) ||
           startPointDistance <= _markerRadius ||
           endPointDistance <= _markerRadius ||
-          lineHeight <= _touchTolerance;
+          (lineHeight <= lineStyle.thickness + 6 &&
+              position.dx > startXCoord &&
+              position.dx < endXCoord);
     }
     return false;
   }

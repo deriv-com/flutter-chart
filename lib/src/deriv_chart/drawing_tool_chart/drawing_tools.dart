@@ -1,14 +1,25 @@
 import 'package:collection/collection.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
-
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 import '../chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+
+/// Callback to notify mouse enter over the addon.
+typedef OnMouseEnterCallback = void Function(int index);
+
+/// Callback to notify mouse exit over the addon.
+typedef OnMouseExitCallback = void Function(int index);
 
 /// This calss is used to keep all the methods and data related to drawing tools
 /// Which need to be shared between the DerivChart and the DrawingToolsDialog
 class DrawingTools {
+  /// Initializes
+  DrawingTools({
+    this.onMouseEnterCallback,
+    this.onMouseExitCallback,
+  });
+
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing
   bool? shouldStopDrawing;
@@ -21,6 +32,12 @@ class DrawingTools {
 
   /// For tracking the drawing movement
   bool isDrawingMoving = false;
+
+  /// Callback to notify mouse enter over the addon.
+  OnMouseEnterCallback? onMouseEnterCallback;
+
+  /// Callback to notify mouse exit over the addon.
+  OnMouseExitCallback? onMouseExitCallback;
 
   /// Remove unfinished drawings before openning the dialog.
   /// For the scenario where the user adds part of a drawing
@@ -70,6 +87,7 @@ class DrawingTools {
           id: drawingId,
           drawingParts: drawingParts,
           isDrawingFinished: isDrawingFinished,
+          isSelected: true,
         ),
       );
     }
@@ -107,6 +125,16 @@ class DrawingTools {
   // ignore: use_setters_to_change_properties
   void onMoveDrawing({bool isDrawingMoved = false}) {
     isDrawingMoving = isDrawingMoved;
+  }
+
+  /// Called when mouse enters over a drawing tool.
+  void onMouseEnter(int index) {
+    onMouseEnterCallback?.call(index);
+  }
+
+  /// Called when mouse leaves over a drawing tool.
+  void onMouseExit(int index) {
+    onMouseExitCallback?.call(index);
   }
 
   /// A method to get the list of drawing data from the repository
