@@ -1,4 +1,3 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/check_new_day.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/time_label.dart';
