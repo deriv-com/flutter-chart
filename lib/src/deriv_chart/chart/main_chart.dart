@@ -49,8 +49,8 @@ class MainChart extends BasicChart {
     this.verticalPaddingFraction,
     this.loadingAnimationColor,
     this.showCurrentTickBlinkAnimation = true,
-    Duration? currentTickAnimationDuration,
-    Duration? quoteBoundsAnimationDuration,
+    super.currentTickAnimationDuration,
+    super.quoteBoundsAnimationDuration,
     double opacity = 1,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
     this.showCrosshair = false,
@@ -66,8 +66,6 @@ class MainChart extends BasicChart {
           pipSize: pipSize,
           opacity: opacity,
           onQuoteAreaChanged: onQuoteAreaChanged,
-          currentTickAnimationDuration: currentTickAnimationDuration,
-          quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         );
 
   /// The indicator series that are displayed on the main chart.

@@ -30,7 +30,7 @@ class XAxis extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
-    this.minElapsedTimeToFollow,
+    this.minElapsedTimeToFollow = 0,
     Key? key,
   }) : super(key: key);
 
@@ -75,7 +75,7 @@ class XAxis extends StatefulWidget {
   /// Specifies the minimum time in milliseconds before which it can update the
   /// rightBoundEpoch when the chart is in follow mode.  This is used to control
   /// the number of frames painted each second.
-  final int? minElapsedTimeToFollow;
+  final int minElapsedTimeToFollow;
 
   @override
   _XAxisState createState() => _XAxisState();

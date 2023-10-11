@@ -24,6 +24,8 @@ import 'data_visualization/markers/marker_series.dart';
 import 'data_visualization/models/chart_object.dart';
 import 'main_chart.dart';
 
+const Duration _defaultDuration = Duration(milliseconds: 300);
+
 /// Interactive chart widget.
 class Chart extends StatefulWidget {
   /// Creates chart that expands to available space.
@@ -52,7 +54,7 @@ class Chart extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
-    this.minElapsedTimeToFollow,
+    this.minElapsedTimeToFollow = 0,
     this.currentTickAnimationDuration,
     this.quoteBoundsAnimationDuration,
     this.showCurrentTickBlinkAnimation,
@@ -144,7 +146,7 @@ class Chart extends StatefulWidget {
   /// Specifies the minimum time in milliseconds before which it can update the
   /// rightBoundEpoch when the chart is in follow mode.  This is used to control
   /// the number of frames painted each second.
-  final int? minElapsedTimeToFollow;
+  final int minElapsedTimeToFollow;
 
   /// Duration of the current tick animated transition.
   final Duration? currentTickAnimationDuration;
@@ -326,9 +328,9 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairHover: _onCrosshairHover,
                     loadingAnimationColor: widget.loadingAnimationColor,
                     currentTickAnimationDuration:
-                        widget.currentTickAnimationDuration,
+                        widget.currentTickAnimationDuration ?? _defaultDuration,
                     quoteBoundsAnimationDuration:
-                        widget.quoteBoundsAnimationDuration,
+                        widget.quoteBoundsAnimationDuration ?? _defaultDuration,
                     showCurrentTickBlinkAnimation:
                         widget.showCurrentTickBlinkAnimation ?? true,
                   ),

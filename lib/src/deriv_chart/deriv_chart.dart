@@ -49,7 +49,7 @@ class DerivChart extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
-    this.minElapsedTimeToFollow,
+    this.minElapsedTimeToFollow = 0,
     this.currentTickAnimationDuration,
     this.quoteBoundsAnimationDuration,
     this.showCurrentTickBlinkAnimation,
@@ -132,7 +132,7 @@ class DerivChart extends StatefulWidget {
   /// Specifies the minimum time in milliseconds before which it can update the
   /// rightBoundEpoch when the chart is in follow mode.  This is used to control
   /// the number of frames painted each second.
-  final int? minElapsedTimeToFollow;
+  final int minElapsedTimeToFollow;
 
   /// Duration of the current tick animated transition.
   final Duration? currentTickAnimationDuration;

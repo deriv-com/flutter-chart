@@ -60,7 +60,7 @@ class XAxisModel extends ChangeNotifier {
     double? msPerPx,
     double? minIntervalWidth,
     double? maxIntervalWidth,
-    int? minElapsedTimeToFollow,
+    int minElapsedTimeToFollow = 0,
     this.onScale,
     this.onScroll,
   }) {
@@ -103,7 +103,7 @@ class XAxisModel extends ChangeNotifier {
 
   late double _maxIntervalWidth;
 
-  late int? _minElapsedTimeToFollow;
+  late int _minElapsedTimeToFollow;
 
   // TODO(NA): Allow customization of this setting.
   /// Default to this interval width on granularity change.
@@ -220,8 +220,7 @@ class XAxisModel extends ChangeNotifier {
     // TODO(NA): Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
-        if (_minElapsedTimeToFollow != null &&
-            elapsedMs < _minElapsedTimeToFollow!) {
+        if (elapsedMs < _minElapsedTimeToFollow) {
           return;
         }
         _scrollTo(_rightBoundEpoch + elapsedMs);
