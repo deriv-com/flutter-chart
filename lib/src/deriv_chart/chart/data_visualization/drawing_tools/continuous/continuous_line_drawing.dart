@@ -138,6 +138,7 @@ class ContinuousLineDrawing extends Drawing {
 
     /// Draw other lines of continuous which need more than 1 tap to draw
     if (config.edgePoints.length > 2) {
+      // TODO(NA): Refactor this code to avoid using indexOf
       config.edgePoints
           .where((EdgePoint element) =>
               config.edgePoints.indexOf(element) > 1 &&
