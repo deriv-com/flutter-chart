@@ -478,5 +478,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         _controller.onScrollToLastTick?.call(animate: false);
       }
     }
+
+    // Check if the the expanded bottom indicator is moved/removed.
+    if (expandedIndex != null &&
+        oldWidget.bottomConfigs?.length != widget.bottomConfigs?.length &&
+        expandedIndex! < (oldWidget.bottomConfigs?.length ?? 0)) {
+      final int? newIndex = widget.bottomConfigs
+          ?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
+      if (newIndex != expandedIndex) {
+        expandedIndex = newIndex == -1 ? null : newIndex;
+      }
+    }
   }
 }
