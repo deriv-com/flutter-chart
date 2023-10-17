@@ -2,9 +2,11 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/helpers/combine_paths.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data_painter.dart';
@@ -93,10 +95,24 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
     addAreaPath(canvas, size, firstLineAreaPath,
         firstDataPathInfo.startPosition.dx, firstDataPathInfo.endPosition.dx);
 
-    final Path firstUpperChannelFill = Path.combine(
-        PathOperation.intersect, channelFillPath, firstLineAreaPath);
-    final Path secondUpperChannelFill = Path.combine(
-        PathOperation.difference, channelFillPath, firstLineAreaPath);
+    Path firstUpperChannelFill, secondUpperChannelFill;
+
+    if (kIsWeb) {
+      final (Path, Path) paths = combinePaths(
+          firstSeries,
+          firstSeries.entries ?? <Tick>[],
+          secondSeries.entries ?? <Tick>[],
+          epochToX,
+          quoteToY);
+
+      firstUpperChannelFill = paths.$1;
+      secondUpperChannelFill = paths.$2;
+    } else {
+      firstUpperChannelFill = Path.combine(
+          PathOperation.intersect, channelFillPath, firstLineAreaPath);
+      secondUpperChannelFill = Path.combine(
+          PathOperation.difference, channelFillPath, firstLineAreaPath);
+    }
 
     canvas
       ..drawPath(firstDataPathInfo.path, firstLinePaint)
