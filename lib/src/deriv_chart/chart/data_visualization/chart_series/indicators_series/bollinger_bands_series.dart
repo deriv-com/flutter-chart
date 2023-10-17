@@ -50,10 +50,8 @@ class BollingerBandSeries extends Series {
   /// Upper series
   late SingleIndicatorSeries upperSeries;
 
-
   /// Inner Series
   final List<Series> innerSeries = <Series>[];
-
 
   /// Bollinger bands options
   final BollingerBandsOptions bbOptions;
@@ -61,14 +59,13 @@ class BollingerBandSeries extends Series {
   /// Field Indicator
   final Indicator<Tick> _fieldIndicator;
 
-
   @override
   SeriesPainter<Series>? createPainter() {
     final StandardDeviationIndicator<Tick> standardDeviation =
         StandardDeviationIndicator<Tick>(_fieldIndicator, bbOptions.period);
 
     final CachedIndicator<Tick> bbmSMA =
-        MASeries.getMAIndicator(_fieldIndicator, bbOptions);
+        MASeries.getMAIndicator(_fieldIndicator, bbOptions)..calculateValues();
 
     middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
