@@ -1,18 +1,40 @@
 name: example
 description: A new Flutter project.
 version: 1.0.0+1
+publish_to: none
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   deriv_chart:
     path: ../
-  vibration: ^1.4.0
+  vibration: ^1.7.6
+  intl: ^0.18.0
+  flutter_localizations:
+    sdk: flutter
+  pref: ^2.7.1
+  flutter_deriv_api:
+    git:
+      url: git@github.com:regentmarkets/flutter-deriv-api.git
+      ref: flutter-version-3
 
 dev_dependencies:
+  deriv_lint:
+    git:
+      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      path: packages/deriv_lint
+      ref: flutter-version-3
+  flutter_test:
+    sdk: flutter
+  intl_utils: ^2.8.2
 
 flutter:
   uses-material-design: true
+
+flutter_intl:
+  main_locale: en
+  enabled: true
+  class_name: ExampleLocalization
