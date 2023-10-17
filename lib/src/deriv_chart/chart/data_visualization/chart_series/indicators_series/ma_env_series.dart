@@ -61,7 +61,8 @@ class MAEnvSeries extends Series {
   @override
   SeriesPainter<Series>? createPainter() {
     final CachedIndicator<Tick> smaIndicator =
-        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!);
+        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!)
+          ..calculateValues();
 
     lowerSeries = SingleIndicatorSeries(
       painterCreator: (

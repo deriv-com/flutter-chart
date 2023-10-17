@@ -30,6 +30,7 @@ class XAxis extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
+    this.minElapsedTimeToFollow = 0,
     Key? key,
   }) : super(key: key);
 
@@ -71,6 +72,11 @@ class XAxis extends StatefulWidget {
   /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
 
+  /// Specifies the minimum time in milliseconds before which it can update the
+  /// rightBoundEpoch when the chart is in follow mode.  This is used to control
+  /// the number of frames painted each second.
+  final int minElapsedTimeToFollow;
+
   @override
   _XAxisState createState() => _XAxisState();
 }
@@ -104,6 +110,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       msPerPx: widget.msPerPx,
       minIntervalWidth: widget.minIntervalWidth,
       maxIntervalWidth: widget.maxIntervalWidth,
+      minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -130,6 +137,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       isLive: widget.isLive,
       granularity: context.read<ChartConfig>().granularity,
       entries: widget.entries,
+      minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
     );
   }
 
