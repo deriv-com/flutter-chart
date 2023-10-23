@@ -12,9 +12,10 @@ To update the position of the dragged drawing, the drawing must be repainted on 
 
 The drawing data is retrieved based on the chart's symbol, and this data is stored in the shared preferences under the chart's symbol key.
 
-# Drawing Tool Chart
+## Drawing Tool Chart
 
-A widget named DrawingToolChart is embedded within MainChart, enabling users to sketch particular shapes on DerivChart. This feature comprises two main parts: DrawingToolWidget and DrawingPainter. The DrawingPainter is specifically tasked with painting and repainting the drawings and is invoked for every drawing added to the chart.
+DrawingToolChart widget is embedded within MainChart, enabling users to sketch particular shapes on DerivChart. This feature comprises two main parts: DrawingToolWidget and DrawingPainter. The DrawingPainter is specifically tasked with painting and repainting the drawings and is invoked for every drawing added to the chart.
+In other words, for each drawing a DrawingPainter widget is added on the DrawingToolChart stack, and DrawingToolWidget is for when any drawing tool is selected.
 
 ## DrawingToolWidget
 
@@ -31,3 +32,11 @@ A stateful widget which is responsible for painting and repainting the drawings 
 In this widget we make drawings selectable by means of gesture and `hitTest` of `CustomPainter`. `hitTest` method checks if the user has clicked on a drawing or not, if yes it will return true. Inside `CustomPaint` we are calling `onPaint` and `hitTest` for each drawingPart.
 
 ![plot](drawing_tools.png)
+
+## EdgePoints
+
+EdgePoint is a term we coined to keep the data of points required to create a drawing. For instance, a line necessitates two points, while a channel requires three. Whenever a user taps on Deriv-chart to create a drawing, a new instance of this class is generated within each drawing creator. This instance contains data obtained from Deriv_chart's gesture detector. These EdgePoints are then passed as a list to the onAddDrawing callback for drawing creation.
+
+## DraggableEdgePints
+
+This class extends from EdgePoint. It incorporates functions to compute the edgePoints' positions after they are dragged (utilizing data obtained from the DrawingPainter gestureDetector). These instances will be created as the state of the drawing_painter widget. Subsequently, they will be passed to CustomPaint, where onPaint and hitTest methods utilize them for drawing selection and repainting the drawings on the chart.
