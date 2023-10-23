@@ -25,7 +25,7 @@ void paintXGrid(
     style,
     gridStyle,
     timestamps,
-    granularity
+    granularity,
   );
 
   _paintTimeLabels(

@@ -30,7 +30,7 @@ class XGridPainter extends CustomPainter {
     if (timestamps.isEmpty || xCoords.isEmpty) {
       return;
     }
-    
+
     paintXGrid(
       canvas,
       size,
