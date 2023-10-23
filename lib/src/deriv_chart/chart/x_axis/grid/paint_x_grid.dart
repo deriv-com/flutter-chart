@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/check_new_day.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/check_new_month.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/time_label.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
@@ -12,6 +13,7 @@ void paintXGrid(
   required List<double> xCoords,
   required ChartTheme style,
   required List<DateTime> timestamps,
+  required int granularity,
 }) {
   assert(timestamps.length == xCoords.length);
   final GridStyle gridStyle = style.gridStyle;
@@ -23,6 +25,7 @@ void paintXGrid(
     style,
     gridStyle,
     timestamps,
+    granularity
   );
 
   _paintTimeLabels(
@@ -41,13 +44,17 @@ void _paintTimeGridLines(
   ChartTheme style,
   GridStyle gridStyle,
   List<DateTime> time,
+  int granularity,
 ) {
   for (int i = 0; i < xCoords.length; i++) {
+    final Function seperatorFunc =
+        granularity > 600000 ? checkNewMonth : checkNewDate;
+    
     canvas.drawLine(
       Offset(xCoords[i], 0),
       Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),
       Paint()
-        ..color = checkNewDate(time[i])
+        ..color = seperatorFunc(time[i])
             ? style.verticalBarrierStyle.color
             : gridStyle.gridLineColor
         ..style = PaintingStyle.stroke

@@ -10,6 +10,7 @@ class XGridPainter extends CustomPainter {
     required this.xCoords,
     required this.style,
     required this.timestamps,
+    required this.granularity,
   });
 
   /// X-coordinates of time labels.
@@ -21,15 +22,19 @@ class XGridPainter extends CustomPainter {
   /// List of DateTime on screen
   final List<DateTime> timestamps;
 
+  /// granularity for ticks
+  final int granularity;
+
   @override
   void paint(Canvas canvas, Size size) {
     if (timestamps.isEmpty || xCoords.isEmpty) {
       return;
     }
-
+    
     paintXGrid(
       canvas,
       size,
+      granularity: granularity,
       timestamps: timestamps,
       xCoords: xCoords,
       style: style,
