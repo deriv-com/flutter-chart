@@ -4,7 +4,7 @@ The process initiates by opening the drawing tools dialog and selecting a prefer
 
 The GestureDetector on the Deriv chart, used by the 'drawing_creator' captures the user's input. By invoking the `onAddDrawing` callback within the onTap method, the drawing will be painted on the chart.
 
-Any modifications or adjustments to the drawing can be made by the user through the drawing tools dialog, triggering an update in the drawing configuration.
+Any modifications or adjustments to the drawing can be made by the user through the drawing tools dialog, it will end up in triggering an update in the drawing configuration within drawing_tools_dialog widget.
 
 To enable the drawings to be draggable, a distinct gesture is assigned to each drawing added to the chart. This gesture, embedded within the DrawingPainter, identifies any user taps on the drawing and designates the drawing as selected or deselected. The user can then drag the selected drawing across the chart.
 
