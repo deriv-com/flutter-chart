@@ -1,0 +1,32 @@
+name: CI/CD for Deriv Package
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v6
+        with:
+          flutter-version: '3.10.6'
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Run Tests
+        run: flutter test
+
+      - name: Build Package
+        run: flutter pub publish
+        env:
+          PUB_PUBLISH_TO: 'none' # This will prevent actual publishing in the CI environment
+
+# Add more steps as needed, e.g., publishing to Pub, deploying to Firebase, etc.
