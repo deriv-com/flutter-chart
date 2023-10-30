@@ -9,6 +9,14 @@ part of 'ray_drawing_tool_config.dart';
 RayDrawingToolConfig _$RayDrawingToolConfigFromJson(
         Map<String, dynamic> json) =>
     RayDrawingToolConfig(
+      configId: json['configId'] as String?,
+      drawingData: json['drawingData'] == null
+          ? null
+          : DrawingData.fromJson(json['drawingData'] as Map<String, dynamic>),
+      edgePoints: (json['edgePoints'] as List<dynamic>?)
+              ?.map((e) => EdgePoint.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <EdgePoint>[],
       lineStyle: json['lineStyle'] == null
           ? const LineStyle(thickness: 0.9, color: Colors.white)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
@@ -19,6 +27,9 @@ RayDrawingToolConfig _$RayDrawingToolConfigFromJson(
 Map<String, dynamic> _$RayDrawingToolConfigToJson(
         RayDrawingToolConfig instance) =>
     <String, dynamic>{
+      'drawingData': instance.drawingData,
+      'edgePoints': instance.edgePoints,
+      'configId': instance.configId,
       'lineStyle': instance.lineStyle,
       'pattern': _$DrawingPatternsEnumMap[instance.pattern]!,
     };

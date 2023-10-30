@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -24,6 +23,8 @@ import 'data_visualization/chart_series/series.dart';
 import 'data_visualization/markers/marker_series.dart';
 import 'data_visualization/models/chart_object.dart';
 import 'main_chart.dart';
+
+const Duration _defaultDuration = Duration(milliseconds: 300);
 
 /// Interactive chart widget.
 class Chart extends StatefulWidget {
@@ -53,6 +54,10 @@ class Chart extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
+    this.minElapsedTimeToFollow = 0,
+    this.currentTickAnimationDuration,
+    this.quoteBoundsAnimationDuration,
+    this.showCurrentTickBlinkAnimation,
     this.verticalPaddingFraction,
     this.bottomChartTitleMargin,
     this.showDataFitButton,
@@ -138,6 +143,20 @@ class Chart extends StatefulWidget {
   /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
 
+  /// Specifies the minimum time in milliseconds before which it can update the
+  /// rightBoundEpoch when the chart is in follow mode.  This is used to control
+  /// the number of frames painted each second.
+  final int minElapsedTimeToFollow;
+
+  /// Duration of the current tick animated transition.
+  final Duration? currentTickAnimationDuration;
+
+  /// Duration of quote bounds animated transition.
+  final Duration? quoteBoundsAnimationDuration;
+
+  /// Whether to show current tick blink animation or not.
+  final bool? showCurrentTickBlinkAnimation;
+
   /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   final double? verticalPaddingFraction;
@@ -209,6 +228,25 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             : ChartDefaultLightTheme());
   }
 
+  void _onCrosshairHover(
+    Offset globalPosition,
+    Offset localPosition,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+  ) {
+    widget.onCrosshairHover?.call(
+      globalPosition,
+      localPosition,
+      epochToX,
+      quoteToY,
+      epochFromX,
+      quoteFromY,
+      null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ChartConfig chartConfig = ChartConfig(
@@ -261,6 +299,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             msPerPx: widget.msPerPx,
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
+            minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -286,22 +325,14 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     verticalPaddingFraction: widget.verticalPaddingFraction,
                     showCrosshair: widget.showCrosshair,
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                    onCrosshairHover: (
-                      PointerHoverEvent ev,
-                      EpochToX epochToX,
-                      QuoteToY quoteToY,
-                      EpochFromX epochFromX,
-                      QuoteFromY quoteFromY,
-                    ) =>
-                        widget.onCrosshairHover?.call(
-                      ev,
-                      epochToX,
-                      quoteToY,
-                      epochFromX,
-                      quoteFromY,
-                      null,
-                    ),
+                    onCrosshairHover: _onCrosshairHover,
                     loadingAnimationColor: widget.loadingAnimationColor,
+                    currentTickAnimationDuration:
+                        widget.currentTickAnimationDuration ?? _defaultDuration,
+                    quoteBoundsAnimationDuration:
+                        widget.quoteBoundsAnimationDuration ?? _defaultDuration,
+                    showCurrentTickBlinkAnimation:
+                        widget.showCurrentTickBlinkAnimation ?? true,
                   ),
                 ),
                 if (bottomSeries?.isNotEmpty ?? false)
@@ -332,14 +363,16 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                             widget.bottomConfigs![index + offset]),
                         onCrosshairDisappeared: widget.onCrosshairDisappeared,
                         onCrosshairHover: (
-                          PointerHoverEvent ev,
+                          Offset globalPosition,
+                          Offset localPosition,
                           EpochToX epochToX,
                           QuoteToY quoteToY,
                           EpochFromX epochFromX,
                           QuoteFromY quoteFromY,
                         ) =>
                             widget.onCrosshairHover?.call(
-                          ev,
+                          globalPosition,
+                          localPosition,
                           epochToX,
                           quoteToY,
                           epochFromX,
@@ -443,6 +476,17 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
       if (widget.mainSeries.entries!.first.epoch !=
           oldWidget.mainSeries.entries!.first.epoch) {
         _controller.onScrollToLastTick?.call(animate: false);
+      }
+    }
+
+    // Check if the the expanded bottom indicator is moved/removed.
+    if (expandedIndex != null &&
+        oldWidget.bottomConfigs?.length != widget.bottomConfigs?.length &&
+        expandedIndex! < (oldWidget.bottomConfigs?.length ?? 0)) {
+      final int? newIndex = widget.bottomConfigs
+          ?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
+      if (newIndex != expandedIndex) {
+        expandedIndex = newIndex == -1 ? null : newIndex;
       }
     }
   }

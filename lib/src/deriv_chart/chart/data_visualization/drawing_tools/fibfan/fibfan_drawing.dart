@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
@@ -12,10 +13,16 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/label.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'fibfan_drawing.g.dart';
 
 /// Fibfan drawing tool.
+@JsonSerializable()
 class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   FibfanDrawing({
@@ -25,6 +32,17 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     this.exceedStart = false,
     this.exceedEnd = false,
   });
+
+  /// Initializes from JSON.
+  factory FibfanDrawing.fromJson(Map<String, dynamic> json) =>
+      _$FibfanDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$FibfanDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'FibfanDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
@@ -118,6 +136,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       true;
@@ -128,9 +147,13 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
+    DataSeries<Tick> series,
     Point Function(
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
@@ -140,14 +163,19 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     DraggableEdgePoint? draggableEndPoint,
   }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
-    final FibfanDrawingToolConfig config =
-        drawingData.config as FibfanDrawingToolConfig;
+    config as FibfanDrawingToolConfig;
+
     final LineStyle lineStyle = config.lineStyle;
     final Paint linePaintStyle =
         paint.linePaintStyle(lineStyle.color, lineStyle.thickness);
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -161,7 +189,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(endXCoord, endQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
@@ -169,7 +197,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       }
@@ -224,13 +252,13 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         ..drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle())
         ..drawCircle(
             Offset(endXCoord, endQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle())
 
@@ -266,15 +294,15 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         startXCoord: startXCoord.toInt(),
         endXCoord: endXCoord.toInt(),
       )
-        ..drawLabel(
-            canvas, lineStyle, zeroDegreeVectorPercentage, _zeroDegreeVector)
-        ..drawLabel(canvas, lineStyle, initialInnerVectorPercentage,
+        ..drawLabel(canvas, size, lineStyle, zeroDegreeVectorPercentage,
+            _zeroDegreeVector)
+        ..drawLabel(canvas, size, lineStyle, initialInnerVectorPercentage,
             _initialInnerVector)
-        ..drawLabel(
-            canvas, lineStyle, middleInnerVectorPercentage, _middleInnerVector)
-        ..drawLabel(
-            canvas, lineStyle, finalInnerVectorPercentage, _finalInnerVector)
-        ..drawLabel(canvas, lineStyle, baseVectorPercentage, _baseVector);
+        ..drawLabel(canvas, size, lineStyle, middleInnerVectorPercentage,
+            _middleInnerVector)
+        ..drawLabel(canvas, size, lineStyle, finalInnerVectorPercentage,
+            _finalInnerVector)
+        ..drawLabel(canvas, size, lineStyle, baseVectorPercentage, _baseVector);
     }
   }
 
@@ -288,27 +316,28 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     final LineStyle lineStyle = config.toJson()['lineStyle'];
     bool _isVectorHit(Vector vector) =>
         isVectorHit(vector, position, lineStyle);
 
-    setIsStartPointDragged(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      setIsStartPointDragged(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if end point clicked
     if (_endPoint!.isClicked(position, markerRadius)) {
-      setIsEndPointDragged(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
     return _isVectorHit(_baseVector) ||
         _isVectorHit(_finalInnerVector) ||

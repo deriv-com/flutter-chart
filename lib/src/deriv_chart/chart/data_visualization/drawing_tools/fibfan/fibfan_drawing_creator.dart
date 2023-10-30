@@ -13,7 +13,7 @@ class FibfanDrawingCreator extends DrawingCreator<FibfanDrawing> {
     required OnAddDrawing<FibfanDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     Key? key,
   }) : super(
           key: key,
@@ -25,7 +25,7 @@ class FibfanDrawingCreator extends DrawingCreator<FibfanDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  final VoidCallback removeUnfinishedDrawing;
 
   @override
   DrawingCreatorState<FibfanDrawing> createState() =>
@@ -76,7 +76,7 @@ class _FibfanDrawingCreatorState extends DrawingCreatorState<FibfanDrawing> {
         if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
-          _widget.removeDrawing(drawingId);
+          _widget.removeUnfinishedDrawing();
           _widget.clearDrawingToolSelection();
           return;
         } else {
@@ -101,6 +101,7 @@ class _FibfanDrawingCreatorState extends DrawingCreatorState<FibfanDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

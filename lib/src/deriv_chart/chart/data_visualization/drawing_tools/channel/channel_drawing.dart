@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
@@ -10,11 +11,17 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'channel_drawing.g.dart';
 
 /// Channel drawing tool. A channel is 2 parallel lines that
 /// created with 3 points.
+@JsonSerializable()
 class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
   /// Initializes
   ChannelDrawing({
@@ -24,6 +31,17 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     this.endEdgePoint = const EdgePoint(),
     this.isDrawingFinished = false,
   });
+
+  /// Initializes from JSON.
+  factory ChannelDrawing.fromJson(Map<String, dynamic> json) =>
+      _$ChannelDrawingFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ChannelDrawingToJson(this)
+    ..putIfAbsent(Drawing.classNameKey, () => nameKey);
+
+  /// Key of drawing tool name property in JSON.
+  static const String nameKey = 'ChannelDrawing';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
@@ -86,9 +104,13 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
+    DrawingToolConfig config,
     DrawingData drawingData,
+    DataSeries<Tick> series,
     Point Function(
       EdgePoint edgePoint,
       DraggableEdgePoint draggableEdgePoint,
@@ -100,16 +122,29 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    final ChannelDrawingToolConfig config =
-        drawingData.config as ChannelDrawingToolConfig;
+    config as ChannelDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
+    final List<EdgePoint> edgePoints = config.edgePoints;
 
-    _startPoint = updatePositionCallback(startEdgePoint, draggableStartPoint);
-    _middlePoint =
-        updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
-    _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    /// Since we want to draw a marker on the screen base on the user click,
+    /// we need to call the onPaint function each time any record added to
+    /// edgePoints list, so we need to check the edgePoints list lenght to
+    /// know which marker should be drawn
+    _startPoint = updatePositionCallback(edgePoints.first, draggableStartPoint);
+    if (edgePoints.length > 1) {
+      _middlePoint =
+          updatePositionCallback(edgePoints[1], draggableMiddlePoint!);
+    } else {
+      _middlePoint =
+          updatePositionCallback(middleEdgePoint, draggableMiddlePoint!);
+    }
+    if (edgePoints.length > 2) {
+      _endPoint = updatePositionCallback(edgePoints.last, draggableEndPoint!);
+    } else {
+      _endPoint = updatePositionCallback(endEdgePoint, draggableEndPoint!);
+    }
 
     final double startXCoord = _startPoint!.x;
     final double startQuoteToY = _startPoint!.y;
@@ -142,7 +177,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(middleXCoord, middleQuoteToY - height),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
@@ -150,7 +185,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       } else if (middleEdgePoint.epoch != 0 && middleQuoteToY != 0) {
@@ -158,14 +193,13 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
         canvas.drawCircle(
             Offset(middleXCoord, middleQuoteToY),
             markerRadius,
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyCirclePaintStyle(lineStyle.color)
                 : paint.transparentCirclePaintStyle());
       }
     } else if (drawingPart == DrawingParts.line) {
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw second line
-
         drawParallelogram(
           canvas,
           config,
@@ -174,25 +208,25 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
           _finalVector,
         );
         if (pattern == DrawingPatterns.solid) {
-          /// Drawing the markers in the final spte again to hide the overlap
-          /// of fill coler and the markers
+          /// Drawing the markers in the final step again to hide the overlap
+          /// of fill color and the markers
           canvas
             ..drawCircle(
                 Offset(startXCoord, startQuoteToY),
                 markerRadius,
-                drawingData.isSelected
+                drawingData.shouldHighlight
                     ? paint.glowyCirclePaintStyle(lineStyle.color)
                     : paint.transparentCirclePaintStyle())
             ..drawCircle(
                 Offset(middleXCoord, middleQuoteToY),
                 markerRadius,
-                drawingData.isSelected
+                drawingData.shouldHighlight
                     ? paint.glowyCirclePaintStyle(lineStyle.color)
                     : paint.transparentCirclePaintStyle())
             ..drawCircle(
                 Offset(middleXCoord, middleQuoteToY - height),
                 markerRadius,
-                drawingData.isSelected
+                drawingData.shouldHighlight
                     ? paint.glowyCirclePaintStyle(lineStyle.color)
                     : paint.transparentCirclePaintStyle())
 
@@ -200,7 +234,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
             ..drawLine(
               Offset(_initialVector.x0, _initialVector.y0),
               Offset(_initialVector.x1, _initialVector.y1),
-              drawingData.isSelected
+              drawingData.shouldHighlight
                   ? paint.glowyLinePaintStyle(
                       lineStyle.color, lineStyle.thickness)
                   : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
@@ -208,7 +242,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
             ..drawLine(
               Offset(_finalVector.x0, _finalVector.y0),
               Offset(_finalVector.x1, _finalVector.y1),
-              drawingData.isSelected
+              drawingData.shouldHighlight
                   ? paint.glowyLinePaintStyle(
                       lineStyle.color, lineStyle.thickness)
                   : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
@@ -220,7 +254,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
           canvas.drawLine(
             Offset(_initialVector.x0, _initialVector.y0),
             Offset(_initialVector.x1, _initialVector.y1),
-            drawingData.isSelected
+            drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
                     lineStyle.color, lineStyle.thickness)
                 : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
@@ -241,16 +275,12 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     double Function(double y) quoteToY,
     DrawingToolConfig config,
     DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isDragged}) setIsStartPointDragged, {
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isDragged})? setIsMiddlePointDragged,
-    void Function({required bool isDragged})? setIsEndPointDragged,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
-    setIsStartPointDragged(isDragged: false);
-    setIsMiddlePointDragged!(isDragged: false);
-    setIsEndPointDragged!(isDragged: false);
-
     final double middleXCoord = _middlePoint!.x;
     final double middleQuoteToY = _middlePoint!.y;
 
@@ -261,12 +291,16 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if start point clicked
     if (_startPoint!.isClicked(position, markerRadius)) {
-      setIsStartPointDragged(isDragged: true);
+      setIsOverStartPoint(isOverPoint: true);
+    } else {
+      setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if middle point clicked
     if (_middlePoint!.isClicked(position, markerRadius)) {
-      setIsMiddlePointDragged(isDragged: true);
+      setIsOverMiddlePoint!(isOverPoint: true);
+    } else {
+      setIsOverMiddlePoint!(isOverPoint: false);
     }
 
     /// Check if end point clicked, since the endPoint position is dependendat
@@ -275,7 +309,9 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Check if end point clicked
     if (endPoint.isClicked(position, markerRadius)) {
-      setIsEndPointDragged(isDragged: true);
+      setIsOverEndPoint!(isOverPoint: true);
+    } else {
+      setIsOverEndPoint!(isOverPoint: false);
     }
 
     /// Detect the area between 2 parallel lines
@@ -293,6 +329,7 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     int leftEpoch,
     int rightEpoch,
     DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       true;

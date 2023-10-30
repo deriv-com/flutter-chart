@@ -8,15 +8,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_pai
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../misc/callbacks.dart';
-import '../../theme/chart_theme.dart';
 import 'basic_chart.dart';
+import 'multiple_animated_builder.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';
@@ -25,7 +22,10 @@ import 'data_visualization/markers/marker_series.dart';
 import 'data_visualization/models/animation_info.dart';
 import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
-import 'multiple_animated_builder.dart';
+import '../../misc/callbacks.dart';
+import '../../theme/chart_theme.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// The main chart to display in the chart widget.
 class MainChart extends BasicChart {
@@ -48,6 +48,9 @@ class MainChart extends BasicChart {
     this.annotations,
     this.verticalPaddingFraction,
     this.loadingAnimationColor,
+    this.showCurrentTickBlinkAnimation = true,
+    super.currentTickAnimationDuration,
+    super.quoteBoundsAnimationDuration,
     double opacity = 1,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
     this.showCrosshair = false,
@@ -116,6 +119,9 @@ class MainChart extends BasicChart {
   /// The color of the loading animation.
   final Color? loadingAnimationColor;
 
+  /// Whether to show current tick blink animation or not.
+  final bool showCurrentTickBlinkAnimation;
+
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
 }
@@ -177,7 +183,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
     didUpdateChartData(oldChart);
 
-    if (widget.isLive != oldChart.isLive) {
+    if (widget.isLive != oldChart.isLive ||
+        widget.showCurrentTickBlinkAnimation !=
+            oldChart.showCurrentTickBlinkAnimation) {
       _updateBlinkingAnimationStatus();
     }
 
@@ -188,7 +196,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   }
 
   void _updateBlinkingAnimationStatus() {
-    if (widget.isLive) {
+    if (widget.isLive && widget.showCurrentTickBlinkAnimation) {
       _currentTickBlinkingController.repeat(reverse: true);
     } else {
       _currentTickBlinkingController
@@ -287,12 +295,16 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     _currentTickBlinkingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
-    )..repeat(reverse: true);
+    );
 
     _currentTickBlinkAnimation = CurvedAnimation(
       parent: _currentTickBlinkingController,
       curve: Curves.easeInOut,
     );
+
+    if (widget.showCurrentTickBlinkAnimation) {
+      _currentTickBlinkingController.repeat(reverse: true);
+    }
   }
 
   @override
@@ -329,14 +341,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 super.build(context),
                 _buildSeries(),
                 _buildAnnotations(),
-                if (widget.markerSeries != null)
-                  MarkerArea(
-                    markerSeries: widget.markerSeries!,
-                    quoteToCanvasY: chartQuoteToCanvasY,
-                  ),
+                if (widget.markerSeries != null) _buildMarkerArea(),
                 _buildDrawingToolChart(),
-                if (!widget.drawingTools.isDrawingMoving)
-                  kIsWeb ? _buildCrosshairAreaWeb() : _buildCrosshairArea(),
+                if (kIsWeb) _buildCrosshairAreaWeb(),
+                if (!kIsWeb && !widget.drawingTools.isDrawingMoving)
+                  _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
                   Positioned(
@@ -469,6 +478,17 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
             ),
           ),
+        ),
+      );
+
+  Widget _buildMarkerArea() => MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController
+        ],
+        builder: (BuildContext context, _) => MarkerArea(
+          markerSeries: widget.markerSeries!,
+          quoteToCanvasY: chartQuoteToCanvasY,
         ),
       );
 

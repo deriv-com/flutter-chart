@@ -16,6 +16,8 @@ import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';
 import 'y_axis/quote_grid.dart';
 
+const Duration _defaultDuration = Duration(milliseconds: 300);
+
 /// The basic chart that other charts extend from.
 class BasicChart extends StatefulWidget {
   ///Initializes a basic chart.
@@ -25,6 +27,8 @@ class BasicChart extends StatefulWidget {
     this.opacity = 1,
     Key? key,
     this.onQuoteAreaChanged,
+    this.currentTickAnimationDuration = _defaultDuration,
+    this.quoteBoundsAnimationDuration = _defaultDuration,
   }) : super(key: key);
 
   /// The main series to display on the chart.
@@ -38,6 +42,12 @@ class BasicChart extends StatefulWidget {
 
   /// Callback provided by library user.
   final VisibleQuoteAreaChangedCallback? onQuoteAreaChanged;
+
+  /// Duration of the current tick animated transition.
+  final Duration currentTickAnimationDuration;
+
+  /// Duration of quote bounds animated transition.
+  final Duration quoteBoundsAnimationDuration;
 
   @override
   BasicChartState<BasicChart> createState() => BasicChartState<BasicChart>();
@@ -68,10 +78,6 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   /// Padding should be at least half of barrier label height.
   static const double minPadding = 10;
-
-  /// Duration of quote bounds animated transition.
-  final Duration quoteBoundsAnimationDuration =
-      const Duration(milliseconds: 300);
 
   /// Top quote bound target for animated transition.
   double topBoundQuoteTarget = 60;
@@ -150,6 +156,16 @@ class BasicChartState<T extends BasicChart> extends State<T>
         widget.mainSeries.didUpdate(oldChart.mainSeries)) {
       _playNewTickAnimation();
     }
+
+    if (widget.currentTickAnimationDuration.inMilliseconds !=
+        oldChart.currentTickAnimationDuration.inMilliseconds) {
+      _setupCurrentTickAnimation();
+    }
+
+    if (widget.quoteBoundsAnimationDuration.inMilliseconds !=
+        oldChart.quoteBoundsAnimationDuration.inMilliseconds) {
+      _setupBoundsAnimation();
+    }
   }
 
   @override
@@ -206,7 +222,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
   void _setupCurrentTickAnimation() {
     _currentTickAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: widget.currentTickAnimationDuration,
     );
     currentTickAnimation = CurvedAnimation(
       parent: _currentTickAnimationController,
@@ -218,12 +234,12 @@ class BasicChartState<T extends BasicChart> extends State<T>
     topBoundQuoteAnimationController = AnimationController.unbounded(
       value: topBoundQuoteTarget,
       vsync: this,
-      duration: quoteBoundsAnimationDuration,
+      duration: widget.quoteBoundsAnimationDuration,
     );
     bottomBoundQuoteAnimationController = AnimationController.unbounded(
       value: bottomBoundQuoteTarget,
       vsync: this,
-      duration: quoteBoundsAnimationDuration,
+      duration: widget.quoteBoundsAnimationDuration,
     );
 
     /// Builds the widget once the animation is finished

@@ -13,7 +13,7 @@ class ChannelDrawingCreator extends DrawingCreator<ChannelDrawing> {
     required OnAddDrawing<ChannelDrawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
-    required this.removeDrawing,
+    required this.removeUnfinishedDrawing,
     required this.shouldStopDrawing,
     Key? key,
   }) : super(
@@ -26,7 +26,7 @@ class ChannelDrawingCreator extends DrawingCreator<ChannelDrawing> {
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove specific drawing from the list of drawings.
-  final void Function(String drawingId) removeDrawing;
+  final VoidCallback removeUnfinishedDrawing;
 
   /// A flag to show when to stop drawing only for drawings which don't have
   /// fixed number of points like continuous drawing
@@ -71,7 +71,7 @@ class _ChannelDrawingCreatorState extends DrawingCreatorState<ChannelDrawing> {
         if (edgePoints[1] == edgePoints.first) {
           /// If the initial point and the 2nd point are the same,
           /// remove the drawing and clean the drawing tool selection.
-          _widget.removeDrawing(drawingId);
+          _widget.removeUnfinishedDrawing();
           _widget.clearDrawingToolSelection();
           return;
         } else {
@@ -118,6 +118,7 @@ class _ChannelDrawingCreatorState extends DrawingCreatorState<ChannelDrawing> {
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

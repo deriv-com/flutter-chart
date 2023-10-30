@@ -1,11 +1,15 @@
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
+import 'package:collection/collection.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
+import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// A wigdet for encapsulating drawing tools related business logic
 class DrawingToolChart extends StatefulWidget {
@@ -35,61 +39,81 @@ class DrawingToolChart extends StatefulWidget {
 }
 
 class _DrawingToolChartState extends State<DrawingToolChart> {
+  late Repository<DrawingToolConfig> repo;
+
+  /// A method to get the list of drawing data from the repository
+  List<DrawingData?> getDrawingData() => repo.items
+      .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
+      .toList();
+
   /// Sets drawing as selected and unselects the rest of drawings
   /// if any of the drawing is not finished , it selects the unfinished drawing
   void _setIsDrawingSelected(DrawingData drawing) {
-    drawing.isSelected = !drawing.isSelected;
+    setState(() {
+      drawing.isSelected = !drawing.isSelected;
 
-    for (final DrawingData data in widget.drawingTools.drawings) {
-      if (data.id != drawing.id) {
-        data.isSelected = false;
+      for (final DrawingData? data in getDrawingData()) {
+        if (data!.id != drawing.id) {
+          data.isSelected = false;
+        }
       }
-    }
+    });
   }
 
   /// Removes specific drawing from the list of drawings
-  void removeDrawing(String drawingId) {
-    widget.drawingTools.drawings
-        .removeWhere((DrawingData data) => data.id == drawingId);
+  void removeUnfinishedDrawing() {
+    final List<DrawingData?> unfinishedDrawings = getDrawingData()
+        .where((DrawingData? data) => !data!.isDrawingFinished)
+        .toList();
+    repo.removeAt(getDrawingData().indexOf(unfinishedDrawings.first));
   }
 
   @override
-  void didUpdateWidget(DrawingToolChart oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    for (final DrawingData data in widget.drawingTools.drawings) {
-      data.series = widget.series.entries;
-    }
-  }
+  Widget build(BuildContext context) {
+    repo = context.watch<Repository<DrawingToolConfig>>();
 
-  @override
-  Widget build(BuildContext context) => ClipRect(
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            ...widget.drawingTools.drawings.map(
-              (DrawingData drawingData) => DrawingPainter(
-                key: ValueKey<String>('''${drawingData.id}_${context.watch<ChartConfig>().granularity}'''),
+    final List<DrawingToolConfig> configs = repo.items.toList();
+
+    final List<DrawingData?> drawings = configs
+        .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
+        .toList();
+
+    return ClipRect(
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          if (drawings.isNotEmpty)
+            ...drawings.mapIndexed(
+              (int index, DrawingData? drawingData) => DrawingPainter(
+                key: ValueKey<String>(
+                  '''${drawingData.id}_${context.watch<ChartConfig>().granularity}''',
+                ),
                 drawingData: drawingData,
                 quoteToCanvasY: widget.chartQuoteToCanvasY,
+                onMouseEnter: () => widget.drawingTools.onMouseEnter(index),
+                onMouseExit: () => widget.drawingTools.onMouseExit(index),
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                isDrawingMoving: widget.drawingTools.isDrawingMoving,
                 onMoveDrawing: widget.drawingTools.onMoveDrawing,
                 setIsDrawingSelected: _setIsDrawingSelected,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+                series: widget.series,
               ),
             ),
-            if (widget.drawingTools.selectedDrawingTool != null)
-              DrawingToolWidget(
-                onAddDrawing: widget.drawingTools.onAddDrawing,
-                selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
-                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                chartConfig: context.watch<ChartConfig>(),
-                clearDrawingToolSelection:
-                    widget.drawingTools.clearDrawingToolSelection,
-                series: widget.series,
-                removeDrawing: removeDrawing,
-                shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
-              ),
-          ],
-        ),
-      );
+          if (widget.drawingTools.selectedDrawingTool != null)
+            DrawingToolWidget(
+              onAddDrawing: widget.drawingTools.onAddDrawing,
+              selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
+              quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+              chartConfig: context.watch<ChartConfig>(),
+              clearDrawingToolSelection:
+                  widget.drawingTools.clearDrawingToolSelection,
+              series: widget.series,
+              removeUnfinishedDrawing: removeUnfinishedDrawing,
+              shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
+            ),
+        ],
+      ),
+    );
+  }
 }

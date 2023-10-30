@@ -27,6 +27,7 @@ class DerivChart extends StatefulWidget {
   const DerivChart({
     required this.mainSeries,
     required this.granularity,
+    required this.activeSymbol,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -43,10 +44,15 @@ class DerivChart extends StatefulWidget {
     this.pipSize = 4,
     this.indicatorsRepo,
     this.drawingToolsRepo,
+    this.drawingTools,
     this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
+    this.minElapsedTimeToFollow = 0,
+    this.currentTickAnimationDuration,
+    this.quoteBoundsAnimationDuration,
+    this.showCurrentTickBlinkAnimation,
     this.verticalPaddingFraction,
     this.bottomChartTitleMargin,
     this.showDataFitButton,
@@ -60,6 +66,9 @@ class DerivChart extends StatefulWidget {
 
   /// Open position marker series.
   final MarkerSeries? markerSeries;
+
+  /// Current active symbol.
+  final String activeSymbol;
 
   /// Chart's controller
   final ChartController? controller;
@@ -93,7 +102,6 @@ class DerivChart extends StatefulWidget {
   final List<ChartAnnotation<ChartObject>>? annotations;
 
   /// Whether the chart should be showing live data or not.
-  ///
   /// In case of being true the chart will keep auto-scrolling when its visible
   /// area is on the newest ticks/candles.
   final bool isLive;
@@ -121,6 +129,20 @@ class DerivChart extends StatefulWidget {
   /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
 
+  /// Specifies the minimum time in milliseconds before which it can update the
+  /// rightBoundEpoch when the chart is in follow mode.  This is used to control
+  /// the number of frames painted each second.
+  final int minElapsedTimeToFollow;
+
+  /// Duration of the current tick animated transition.
+  final Duration? currentTickAnimationDuration;
+
+  /// Duration of quote bounds animated transition.
+  final Duration? quoteBoundsAnimationDuration;
+
+  /// Whether to show current tick blink animation or not.
+  final bool? showCurrentTickBlinkAnimation;
+
   /// Fraction of the chart's height taken by top or bottom padding.
   /// Quote scaling (drag on quote area) is controlled by this variable.
   final double? verticalPaddingFraction;
@@ -143,6 +165,9 @@ class DerivChart extends StatefulWidget {
   /// Chart's drawings
   final Repository<DrawingToolConfig>? drawingToolsRepo;
 
+  /// Drawing tools
+  final DrawingTools? drawingTools;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -158,21 +183,35 @@ class _DerivChartState extends State<DerivChart> {
   void initState() {
     super.initState();
 
-    loadSavedIndicatorsAndDrawingTools();
     _initRepos();
+  }
+
+  @override
+  void didUpdateWidget(covariant DerivChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.drawingToolsRepo == null &&
+        widget.activeSymbol != oldWidget.activeSymbol) {
+      loadSavedIndicatorsAndDrawingTools();
+    }
   }
 
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       onEditCallback: showIndicatorsDialog,
+      currentSymbol: widget.activeSymbol,
     );
 
     _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
       createAddOn: (Map<String, dynamic> map) =>
           DrawingToolConfig.fromJson(map),
       onEditCallback: showDrawingToolsDialog,
+      currentSymbol: widget.activeSymbol,
     );
+    if (widget.drawingToolsRepo == null) {
+      loadSavedIndicatorsAndDrawingTools();
+    }
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
@@ -180,9 +219,11 @@ class _DerivChartState extends State<DerivChart> {
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
 
-    _stateRepos.asMap().forEach((int index, dynamic element) {
+    _stateRepos
+        .asMap()
+        .forEach((int index, AddOnsRepository<AddOnConfig> element) {
       try {
-        element.loadFromPrefs(prefs);
+        element.loadFromPrefs(prefs, widget.activeSymbol);
       } on Exception {
         // ignore: unawaited_futures
         showDialog<void>(
@@ -276,7 +317,7 @@ class _DerivChartState extends State<DerivChart> {
                       .items
                       .where((IndicatorConfig config) => !config.isOverlay)
                 ],
-                drawingTools: _drawingTools,
+                drawingTools: widget.drawingTools ?? _drawingTools,
                 markerSeries: widget.markerSeries,
                 theme: widget.theme,
                 onCrosshairAppeared: widget.onCrosshairAppeared,
@@ -294,6 +335,13 @@ class _DerivChartState extends State<DerivChart> {
                 msPerPx: widget.msPerPx,
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,
+                minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
+                currentTickAnimationDuration:
+                    widget.currentTickAnimationDuration,
+                quoteBoundsAnimationDuration:
+                    widget.quoteBoundsAnimationDuration,
+                showCurrentTickBlinkAnimation:
+                    widget.showCurrentTickBlinkAnimation,
                 verticalPaddingFraction: widget.verticalPaddingFraction,
                 bottomChartTitleMargin: widget.bottomChartTitleMargin,
                 showDataFitButton: widget.showDataFitButton,

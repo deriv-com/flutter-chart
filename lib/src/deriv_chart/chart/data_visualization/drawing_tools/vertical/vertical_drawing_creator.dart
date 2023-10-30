@@ -47,13 +47,13 @@ class _VerticalDrawingCreatorState
         drawingPart: DrawingParts.line,
         edgePoint: edgePoints.first,
         chartConfig: widget.chartConfig,
-        epochFromX: epochFromX,
       ));
 
       widget.onAddDrawing(
         drawingId,
         drawingParts,
         isDrawingFinished: isDrawingFinished,
+        edgePoints: <EdgePoint>[...edgePoints],
       );
     });
   }

@@ -55,12 +55,14 @@ class MAEnvSeries extends Series {
   /// Upper series
   late SingleIndicatorSeries upperSeries;
 
-  final List<Series> _innerSeries = <Series>[];
+  /// Inner Series
+  final List<Series> innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series>? createPainter() {
     final CachedIndicator<Tick> smaIndicator =
-        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!);
+        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!)
+          ..calculateValues();
 
     lowerSeries = SingleIndicatorSeries(
       painterCreator: (
@@ -111,7 +113,7 @@ class MAEnvSeries extends Series {
       ),
     );
 
-    _innerSeries
+    innerSeries
       ..add(lowerSeries)
       ..add(middleSeries)
       ..add(upperSeries);
@@ -148,10 +150,10 @@ class MAEnvSeries extends Series {
       // for max. But to be safe we calculate min and max. from all three series
       // TODO(Ramin): Maybe later we can have these code and getMin/MaxEpochs in a parent class for Indicators like MAEnv, Ichimoku, Bollinger, etc
       <double>[
-        _innerSeries
+        innerSeries
             .map((Series series) => series.minValue)
             .reduce((double a, double b) => safeMin(a, b)),
-        _innerSeries
+        innerSeries
             .map((Series series) => series.maxValue)
             .reduce((double a, double b) => safeMax(a, b)),
       ];
@@ -192,8 +194,8 @@ class MAEnvSeries extends Series {
   }
 
   @override
-  int? getMaxEpoch() => _innerSeries.getMaxEpoch();
+  int? getMaxEpoch() => innerSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _innerSeries.getMinEpoch();
+  int? getMinEpoch() => innerSeries.getMinEpoch();
 }

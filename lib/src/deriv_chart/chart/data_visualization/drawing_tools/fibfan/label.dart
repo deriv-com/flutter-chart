@@ -18,6 +18,13 @@ const String finalInnerVectorPercentage = '61.8';
 /// A constant for the base vector label
 const String baseVectorPercentage = '100';
 
+/// A constant for the label horizontal padding
+const double labelHorizontalPadding = 25;
+
+/// A constant for the chart horizontal padding
+// TODO(NA): Remove this constant and calculate the y axis label width
+const double chartPadding = 60;
+
 /// A class for drawing the vector label
 class Label {
   /// Initializes the vector label class
@@ -34,25 +41,17 @@ class Label {
 
   /// Returns the x position of the label
   double _getX(
-    String label, {
+    String label,
+    Size size, {
     bool isRightSide = false,
-  }) {
-    switch (label) {
-      case zeroDegreeVectorPercentage:
-        return isRightSide ? 345 : 25;
-      case initialInnerVectorPercentage:
-      case finalInnerVectorPercentage:
-        return isRightSide ? 325 : 40;
-      case middleInnerVectorPercentage:
-        return isRightSide ? 335 : 30;
-      default:
-        return isRightSide ? 330 : 10;
-    }
-  }
+  }) =>
+      isRightSide
+          ? size.width - chartPadding - labelHorizontalPadding
+          : labelHorizontalPadding;
 
   /// Returns the position of the label on the right side of the chart
-  Offset _getRightSideLabelsPosition(String label, Vector vector) {
-    final double x = _getX(label, isRightSide: true);
+  Offset _getRightSideLabelsPosition(String label, Size size, Vector vector) {
+    final double x = _getX(label, size, isRightSide: true);
 
     final double y = (((vector.y1 - vector.y0) / (vector.x1 - vector.x0)) *
             (x - vector.x0)) +
@@ -62,7 +61,7 @@ class Label {
 
   /// Returns the position of the label on the left side of the chart
   Offset _getLeftSideLabelsPosition(String label, Vector vector) {
-    final double x = _getX(label);
+    final double x = _getX(label, Size.zero);
 
     final double y = (((vector.y1 - vector.y0) / (vector.x1 - vector.x0)) *
             (x - vector.x0)) +
@@ -92,14 +91,15 @@ class Label {
   /// Draw the vector label
   void drawLabel(
     Canvas canvas,
+    Size size,
     LineStyle lineStyle,
     String label,
     Vector endVector,
   ) {
     final Offset labelOffset = (startXCoord > endXCoord && startXCoord > 10)
         ? _getLeftSideLabelsPosition(label, endVector)
-        : (startXCoord < endXCoord && startXCoord < 325)
-            ? _getRightSideLabelsPosition(label, endVector)
+        : (startXCoord < endXCoord && startXCoord < size.width - chartPadding)
+            ? _getRightSideLabelsPosition(label, size, endVector)
             : Offset.zero;
     if (labelOffset != Offset.zero) {
       getTextPainter(label, labelOffset, lineStyle.color)

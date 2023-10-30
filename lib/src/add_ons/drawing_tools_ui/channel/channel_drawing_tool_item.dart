@@ -1,11 +1,12 @@
+import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'channel_drawing_tool_config.dart';
 import '../callbacks.dart';
-import '../drawing_tool_config.dart';
 
 /// Channel drawing tool item in the list of drawing tools
 class ChannelDrawingToolItem extends DrawingToolItem {
