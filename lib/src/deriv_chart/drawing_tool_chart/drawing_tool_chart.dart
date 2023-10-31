@@ -86,7 +86,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
             ...drawings.mapIndexed(
               (int index, DrawingData? drawingData) => DrawingPainter(
                 key: ValueKey<String>(
-                  '''${drawingData.id}_${context.watch<ChartConfig>().granularity}''',
+                  '''${drawingData?.id}_${context.watch<ChartConfig>().granularity}''',
                 ),
                 drawingData: drawingData,
                 quoteToCanvasY: widget.chartQuoteToCanvasY,
