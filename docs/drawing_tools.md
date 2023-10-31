@@ -2,15 +2,15 @@
 
 The process initiates by opening the drawing tools dialog and selecting a preferred drawing tool. Subsequently, the user can add specific taps on the Deriv chart to start drawing with default configurations.
 
-The GestureDetector on the Deriv chart, used by the 'drawing_creator' captures the user's input. By invoking the `onAddDrawing` callback within the onTap method, the drawing will be painted on the chart.
+The GestureDetector on the Deriv chart, utilized by the `drawingCreator` captures user input. Within the `onTap` method, every captured input will be added to the list of edgePoints. Simultaneously, the `drawingParts` list is created to store the drawing parts. Both lists are then passed to the `onAddDrawing` callback, which adds the complete drawing to the drawing repository and saves it in shared preferences based on the active Symbol, so the drawing data can be retrieved based on the chart's symbol.
+
+During the addition of drawing parts to the `drawingParts` list, each instance of the drawing is initialized. This initialization triggers the relevant `onPaint` method, allowing each drawing part to be painted to the chart. Since we maintain a list of `drawingParts`, each of which is an instance of a drawing, every drawing part has its own `onPaint` and `hitTest` methods inherited from CustomPaint. Consequently, any modifications in the drawing's position, such as dragging, result in the `repaint` and `hitTest` methods being invoked for each drawing part. For a more detailed explanation, please refer to the sections titled DrawingPainter, EdgePoints, and DraggableEdgePoints.
 
 Any modifications or adjustments to the drawing can be made by the user through the drawing tools dialog, it will end up in triggering an update in the drawing configuration within drawing_tools_dialog widget.
 
 To enable the drawings to be draggable, a distinct gesture is assigned to each drawing added to the chart. This gesture, embedded within the DrawingPainter, identifies any user taps on the drawing and designates the drawing as selected or deselected. The user can then drag the selected drawing across the chart.
 
 To update the position of the dragged drawing, the drawing must be repainted on the chart. This operation is performed by the CustomPaint component within the DrawingPainter.
-
-The drawing data is retrieved based on the chart's symbol, and this data is stored in the shared preferences under the chart's symbol key.
 
 ## Drawing Tool Chart
 
