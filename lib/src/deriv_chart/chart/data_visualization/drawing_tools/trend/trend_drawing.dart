@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
@@ -163,8 +164,17 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-  }) =>
-      true;
+  }) {
+    {
+      if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
+          (draggableEndPoint == null ||
+              draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
+        return true;
+      }
+
+      return false;
+    }
+  }
 
   /// Paint the trend drawing tools
   @override
@@ -187,6 +197,7 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
+    print('onPaint ${DateTime.now()}');
     config as TrendDrawingToolConfig;
 
     final DrawingPaintStyle paint = DrawingPaintStyle();

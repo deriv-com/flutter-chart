@@ -79,40 +79,42 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
         .toList();
 
     return ClipRect(
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          if (drawings.isNotEmpty)
-            ...drawings.mapIndexed(
-              (int index, DrawingData? drawingData) => DrawingPainter(
-                key: ValueKey<String>(
-                  '''${drawingData?.id}_${context.watch<ChartConfig>().granularity}''',
+      child: RepaintBoundary(
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            if (drawings.isNotEmpty)
+              ...drawings.mapIndexed(
+                (int index, DrawingData? drawingData) => DrawingPainter(
+                  key: ValueKey<String>(
+                    '''${drawingData?.id}_${context.watch<ChartConfig>().granularity}''',
+                  ),
+                  drawingData: drawingData,
+                  quoteToCanvasY: widget.chartQuoteToCanvasY,
+                  onMouseEnter: () => widget.drawingTools.onMouseEnter(index),
+                  onMouseExit: () => widget.drawingTools.onMouseExit(index),
+                  quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                  isDrawingMoving: widget.drawingTools.isDrawingMoving,
+                  onMoveDrawing: widget.drawingTools.onMoveDrawing,
+                  setIsDrawingSelected: _setIsDrawingSelected,
+                  selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
+                  series: widget.series,
                 ),
-                drawingData: drawingData,
-                quoteToCanvasY: widget.chartQuoteToCanvasY,
-                onMouseEnter: () => widget.drawingTools.onMouseEnter(index),
-                onMouseExit: () => widget.drawingTools.onMouseExit(index),
-                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                isDrawingMoving: widget.drawingTools.isDrawingMoving,
-                onMoveDrawing: widget.drawingTools.onMoveDrawing,
-                setIsDrawingSelected: _setIsDrawingSelected,
-                selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
-                series: widget.series,
               ),
-            ),
-          if (widget.drawingTools.selectedDrawingTool != null)
-            DrawingToolWidget(
-              onAddDrawing: widget.drawingTools.onAddDrawing,
-              selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
-              quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-              chartConfig: context.watch<ChartConfig>(),
-              clearDrawingToolSelection:
-                  widget.drawingTools.clearDrawingToolSelection,
-              series: widget.series,
-              removeUnfinishedDrawing: removeUnfinishedDrawing,
-              shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
-            ),
-        ],
+            if (widget.drawingTools.selectedDrawingTool != null)
+              DrawingToolWidget(
+                onAddDrawing: widget.drawingTools.onAddDrawing,
+                selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
+                quoteFromCanvasY: widget.chartQuoteFromCanvasY,
+                chartConfig: context.watch<ChartConfig>(),
+                clearDrawingToolSelection:
+                    widget.drawingTools.clearDrawingToolSelection,
+                series: widget.series,
+                removeUnfinishedDrawing: removeUnfinishedDrawing,
+                shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
+              ),
+          ],
+        ),
       ),
     );
   }
