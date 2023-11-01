@@ -66,7 +66,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show Fractals"),
         "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
         "labelShowZones": MessageLookupByLibrary.simpleMessage("Show Zones"),
-        "labelSignalPeriod": MessageLookupByLibrary.simpleMessage("D% Period"),
+        "labelSignalPeriod":
+            MessageLookupByLibrary.simpleMessage("Signal Period"),
         "labelSlowMAPeriod":
             MessageLookupByLibrary.simpleMessage("Slow MA Period"),
         "labelSmoothingPeriod":
