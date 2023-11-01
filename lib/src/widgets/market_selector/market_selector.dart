@@ -48,9 +48,6 @@ class MarketSelector extends StatefulWidget {
   /// The theme of the chart which the market selector is being placed inside.
   final ChartTheme? theme;
 
-  /// The theme of the chart which the market selector is being placed inside.
-  final ChartTheme? theme;
-
   @override
   _MarketSelectorState createState() => _MarketSelectorState();
 }

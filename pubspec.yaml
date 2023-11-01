@@ -25,13 +25,6 @@ dependencies:
   provider: ^6.0.5
   shared_preferences: ^2.1.0
 
-  equatable: ^2.0.5
-  intl: ^0.18.0
-  json_annotation: ^4.8.0
-  provider: ^6.0.5
-  shared_preferences: ^2.1.0
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
