@@ -32,7 +32,7 @@ dev_dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: flutter-version-3
+      ref: dev
 
   build_runner: ^2.3.3
   intl_utils: ^2.8.2
