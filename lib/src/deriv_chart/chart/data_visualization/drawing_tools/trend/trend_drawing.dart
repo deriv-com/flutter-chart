@@ -197,7 +197,6 @@ class TrendDrawing extends Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
-    print('onPaint ${DateTime.now()}');
     config as TrendDrawingToolConfig;
 
     final DrawingPaintStyle paint = DrawingPaintStyle();
