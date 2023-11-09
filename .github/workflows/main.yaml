@@ -1,0 +1,46 @@
+name: flutter-chart
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.10.2"
+          channel: stable
+          cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: 🤫 Set SSH Key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{secrets.READ_GITHUB_SSH_KEY}}
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: ✨ Check Formatting
+        run: dart format
+
+      - name: 🕵️ Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: 🧪 Run Tests
+        run: flutter test
+
+      - name: Build Example app
+        working-directory: ./example
+        run: flutter build apk --target-platform android-arm,android-arm64,android-x64

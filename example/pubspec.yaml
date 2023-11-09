@@ -18,18 +18,25 @@ dependencies:
   pref: ^2.7.1
   flutter_deriv_api:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-api.git
-      ref: flutter-version-3
+      url: git@github.com:sahani-deriv/flutter-deriv-api.git
+      ref: version-fix
 
 dev_dependencies:
   deriv_lint:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: git@github.com:sahani-deriv/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: flutter-version-3
+      ref: dev
   flutter_test:
     sdk: flutter
   intl_utils: ^2.8.2
+
+dependency_overrides:
+  deriv_dependency_injector:
+    git:
+      url: git@github.com:sahani-deriv/flutter-deriv-packages.git
+      path: packages/deriv_dependency_injector
+      ref: dev
 
 flutter:
   uses-material-design: true
