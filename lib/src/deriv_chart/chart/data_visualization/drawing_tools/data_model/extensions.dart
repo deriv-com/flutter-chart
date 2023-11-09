@@ -12,7 +12,18 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 ///
 /// When we know how visually can represent the edge point (circle, square, etc)
 /// we can improve this value.
-const double _edgePointOffScreenSafeDistance = 1000;
+///
+/// Currently as for a safe number we consider the half of screen width for a
+/// [DraggableEdgePoint] to be considered as off screen. This will ensure on all
+/// granularities the [DraggableEdgePoint] is fully out of the view port.
+///
+///       view port      half of screen outside
+///    ------^-------- ---^---
+///   |               |   *  |    -> edge point is NOT considered as off screen.
+///   |               |      |
+///   |               |      |  * -> edge point is considered as off screen.
+double _edgePointOffScreenSafeDistance(int leftEpoch, int rightEpoch) =>
+    (rightEpoch - leftEpoch) / 2;
 
 /// An extension on DraggableEdgePoint class that adds some helper methods.
 extension DraggableEdgePointExtension on DraggableEdgePoint {
@@ -21,6 +32,9 @@ extension DraggableEdgePointExtension on DraggableEdgePoint {
   /// The view port range is defined by the left and right epoch values.
   /// returns true if the edge point is on the view port range.
   bool isInViewPortRange(int leftEpoch, int rightEpoch) =>
-      draggedEdgePoint.epoch >= (leftEpoch - _edgePointOffScreenSafeDistance) &&
-      draggedEdgePoint.epoch <= (rightEpoch + _edgePointOffScreenSafeDistance);
+      draggedEdgePoint.epoch >=
+          (leftEpoch -
+              _edgePointOffScreenSafeDistance(leftEpoch, rightEpoch)) &&
+      draggedEdgePoint.epoch <=
+          (rightEpoch + _edgePointOffScreenSafeDistance(leftEpoch, rightEpoch));
 }
