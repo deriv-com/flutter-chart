@@ -432,5 +432,16 @@ class AccumulatorBarrierPainter
         Offset(size.width, quoteToY(series.highBarrier)),
         _linePaint,
       );
+
+    if (series.profit != null) {
+      paintText(
+        canvas,
+        text: series.profit!,
+        anchor:
+            Offset(epochToX(series.tick.epoch), quoteToY(series.tick.quote)) +
+                const Offset(30, 0),
+        style: const TextStyle(color: Colors.white, fontSize: 12),
+      );
+    }
   }
 }

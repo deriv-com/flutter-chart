@@ -126,6 +126,7 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
     this.tick, {
     required this.lowBarrier,
     required this.highBarrier,
+    required this.profit,
     String? id,
     HorizontalBarrierStyle? style,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
@@ -142,6 +143,7 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
   final Tick tick;
   final double lowBarrier;
   final double highBarrier;
+  final String? profit;
 
   @override
   SeriesPainter<Series> createPainter() => AccumulatorBarrierPainter(this);
