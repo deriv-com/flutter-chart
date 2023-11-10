@@ -421,17 +421,41 @@ class AccumulatorBarrierPainter
       animationInfo: animationInfo,
     );
 
+    final Offset highBarrierPosition = Offset(
+      epochToX(series.tick.epoch),
+      quoteToY(series.highBarrier),
+    );
+
+    final Offset lowBarrierPosition = Offset(
+      epochToX(series.tick.epoch),
+      quoteToY(series.lowBarrier),
+    );
+
     canvas
       ..drawLine(
-        Offset(epochToX(series.tick.epoch), quoteToY(series.lowBarrier)),
+        lowBarrierPosition,
         Offset(size.width, quoteToY(series.lowBarrier)),
         _linePaint,
       )
       ..drawLine(
-        Offset(epochToX(series.tick.epoch), quoteToY(series.highBarrier)),
+        highBarrierPosition,
         Offset(size.width, quoteToY(series.highBarrier)),
         _linePaint,
       );
+
+    paintText(
+      canvas,
+      text: (series.lowBarrier - series.tick.quote).toStringAsFixed(2),
+      anchor: lowBarrierPosition + const Offset(30, 10),
+      style: const TextStyle(color: Colors.white, fontSize: 12),
+    );
+
+    paintText(
+      canvas,
+      text: (series.highBarrier - series.tick.quote).toStringAsFixed(2),
+      anchor: highBarrierPosition + const Offset(30, -10),
+      style: const TextStyle(color: Colors.white, fontSize: 12),
+    );
 
     if (series.profit != null) {
       paintText(
