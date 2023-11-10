@@ -1,4 +1,4 @@
-name: flutter-chart
+name: Flutter Analyze, Test & Build
 
 on:
   push:
