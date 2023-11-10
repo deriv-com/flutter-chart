@@ -119,3 +119,30 @@ class IconTickIndicator extends TickIndicator {
   @override
   SeriesPainter<Series> createPainter() => IconBarrierPainter(this);
 }
+
+class AccumulatorTickIndicator extends HorizontalBarrier {
+  /// Initializes a tick indicator.
+  AccumulatorTickIndicator(
+    this.tick, {
+    required this.lowBarrier,
+    required this.highBarrier,
+    String? id,
+    HorizontalBarrierStyle? style,
+    HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
+  }) : super(
+          tick.quote,
+          epoch: tick.epoch,
+          id: id,
+          style: style ??
+              const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
+          visibility: visibility,
+          longLine: false,
+        );
+
+  final Tick tick;
+  final double lowBarrier;
+  final double highBarrier;
+
+  @override
+  SeriesPainter<Series> createPainter() => AccumulatorBarrierPainter(this);
+}

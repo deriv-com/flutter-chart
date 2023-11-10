@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/tick_indicator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
@@ -390,6 +391,46 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
       ..paint(
         canvas,
         _barrierPosition! - Offset(innerIconSize / 2, innerIconSize / 2),
+      );
+  }
+}
+
+///
+class AccumulatorBarrierPainter
+    extends HorizontalBarrierPainter<AccumulatorTickIndicator> {
+  /// Initializes [IconBarrierPainter].
+  AccumulatorBarrierPainter(AccumulatorTickIndicator series) : super(series);
+
+  final Paint _linePaint = Paint()
+    ..strokeWidth = 1
+    ..color = Colors.grey;
+
+  @override
+  void onPaint({
+    required Canvas canvas,
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+    required AnimationInfo animationInfo,
+  }) {
+    super.onPaint(
+      canvas: canvas,
+      size: size,
+      epochToX: epochToX,
+      quoteToY: quoteToY,
+      animationInfo: animationInfo,
+    );
+
+    canvas
+      ..drawLine(
+        Offset(epochToX(series.tick.epoch), quoteToY(series.lowBarrier)),
+        Offset(size.width, quoteToY(series.lowBarrier)),
+        _linePaint,
+      )
+      ..drawLine(
+        Offset(epochToX(series.tick.epoch), quoteToY(series.highBarrier)),
+        Offset(size.width, quoteToY(series.highBarrier)),
+        _linePaint,
       );
   }
 }
