@@ -27,7 +27,7 @@ jobs:
       - name: 🤫 Set SSH Key
         uses: webfactory/ssh-agent@v0.8.0
         with:
-          ssh-private-key: ${{secrets.READ_GITHUB_SSH_KEY}}
+          ssh-private-key: ${{secrets.SSH_PRIVATE_KEY}}
 
       - name: 📦 Install Dependencies
         run: flutter pub get
