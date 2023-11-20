@@ -68,7 +68,7 @@ class ADXSeries extends Series {
       positiveDIIndicator,
       negativeDIIndicator,
       adxPeriod: adxOptions.smoothingPeriod,
-    )..calculateValues();
+    );
 
     positiveDISeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>

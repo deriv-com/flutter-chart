@@ -52,16 +52,16 @@ class MACDSeries extends Series {
       indicatorInput,
       fastMAPeriod: config.fastMAPeriod,
       slowMAPeriod: config.slowMAPeriod,
-    )..calculateValues();
+    );
 
     final SignalMACDIndicator<Tick> signalMACDIndicator =
-        SignalMACDIndicator<Tick>.fromIndicator(macdIndicator)
-          ..calculateValues();
+        SignalMACDIndicator<Tick>.fromIndicator(macdIndicator);
 
     final MACDHistogramIndicator<Tick> macdHistogramIndicator =
         MACDHistogramIndicator<Tick>.fromIndicator(
-            macdIndicator, signalMACDIndicator)
-          ..calculateValues();
+      macdIndicator,
+      signalMACDIndicator,
+    );
 
     macdSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(

@@ -56,7 +56,7 @@ class SMISeries extends Series {
       period: smiOptions.period,
       smoothingPeriod: smiOptions.smoothingPeriod,
       doubleSmoothingPeriod: smiOptions.doubleSmoothingPeriod,
-    )..calculateValues();
+    );
 
     smiSeries = SingleIndicatorSeries(
       painterCreator: (Series series) => OscillatorLinePainter(
