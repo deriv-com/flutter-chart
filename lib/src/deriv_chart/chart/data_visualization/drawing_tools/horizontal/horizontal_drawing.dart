@@ -64,7 +64,7 @@ class HorizontalDrawing extends Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) =>
-      false;
+      true;
 
 
   /// Paint
