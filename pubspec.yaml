@@ -17,9 +17,9 @@ dependencies:
 
   deriv_technical_analysis:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: git@github.com:ramin-deriv/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: flutter-version-3
+      ref: ramin/fix_overflow_issue_2
 
   equatable: ^2.0.5
   intl: ^0.18.0
