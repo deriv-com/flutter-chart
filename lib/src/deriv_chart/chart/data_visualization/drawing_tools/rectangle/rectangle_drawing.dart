@@ -256,7 +256,6 @@ class RectangleDrawing extends Drawing {
               draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
         return true;
       }
-
       return false;
     }
   }
