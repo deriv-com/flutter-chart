@@ -141,8 +141,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     DraggableEdgePoint? draggableEndPoint,
   }) =>
       draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
-      (draggableEndPoint == null ||
-          draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch));
+      (draggableEndPoint?.isInViewPortRange(leftEpoch, rightEpoch) ?? true);
 
   /// Paint the line
   @override
