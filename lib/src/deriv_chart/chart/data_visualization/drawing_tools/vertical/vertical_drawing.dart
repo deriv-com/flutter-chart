@@ -62,9 +62,9 @@ class VerticalDrawing extends Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   }) {
-      if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch)) {
-        return true;
-      }
+    if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch)) {
+      return true;
+    }
     return false;
   }
 
