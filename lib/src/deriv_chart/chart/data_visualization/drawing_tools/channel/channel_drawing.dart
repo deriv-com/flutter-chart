@@ -332,12 +332,8 @@ class ChannelDrawing extends Drawing with LineVectorDrawingMixin {
     DraggableEdgePoint draggableStartPoint, {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
-  }) {
-    if (draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
-        (draggableEndPoint == null ||
-            draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch))) {
-      return true;
-    }
-    return false;
-  }
+  }) =>
+      draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch) ||
+      (draggableEndPoint == null ||
+          draggableEndPoint.isInViewPortRange(leftEpoch, rightEpoch));
 }
