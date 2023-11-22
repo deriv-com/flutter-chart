@@ -69,7 +69,6 @@ class DonchianChannelsSeries extends Series {
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       inputIndicator: upperChannelIndicator,
-      // upperChannelIndicator.results,
       style: config.upperLineStyle,
       lastTickIndicatorStyle: getLastIndicatorStyle(
         config.upperLineStyle.color,
