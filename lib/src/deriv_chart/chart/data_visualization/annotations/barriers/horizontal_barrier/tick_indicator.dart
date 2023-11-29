@@ -126,6 +126,8 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
     this.tick, {
     required this.lowBarrier,
     required this.highBarrier,
+    required this.highBarrierDisplay,
+    required this.lowBarrierDisplay,
     required this.profit,
     String? id,
     HorizontalBarrierStyle? style,
@@ -143,6 +145,8 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
   final Tick tick;
   final double lowBarrier;
   final double highBarrier;
+  final String highBarrierDisplay;
+  final String lowBarrierDisplay;
   final String? profit;
 
   @override
