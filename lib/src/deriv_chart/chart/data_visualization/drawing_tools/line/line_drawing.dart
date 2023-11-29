@@ -68,6 +68,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
+// This condition will always return true since a LineDrawing,
+// when created horizontally or near horizontal, will
+// be positioned outside the chart's viewport.
   @override
   bool needsRepaint(
     int leftEpoch,

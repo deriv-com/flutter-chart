@@ -131,7 +131,9 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         ));
   }
 
-  // TODO(NA): Return true if FibfanDrawing's on chart view port.
+// This condition will always return true since Fibfan drawing,
+// will always be out of chart's viewport considering it
+// expand infinitely.
   @override
   bool needsRepaint(
     int leftEpoch,
