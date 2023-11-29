@@ -68,7 +68,7 @@ class DonchianChannelsSeries extends Series {
     upperChannelSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
-      inputIndicator: upperChannelIndicator,
+      inputIndicator: _highIndicator,
       style: config.upperLineStyle,
       lastTickIndicatorStyle: getLastIndicatorStyle(
         config.upperLineStyle.color,
@@ -78,7 +78,7 @@ class DonchianChannelsSeries extends Series {
     );
 
     lowerChannelSeries = SingleIndicatorSeries(
-      inputIndicator: lowerChannelIndicator,
+      inputIndicator: _lowIndicator,
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => lowerChannelIndicator,
@@ -90,7 +90,7 @@ class DonchianChannelsSeries extends Series {
     );
 
     middleChannelSeries = SingleIndicatorSeries(
-      inputIndicator: middleChannelIndicator,
+      inputIndicator: _lowIndicator,
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => middleChannelIndicator,
