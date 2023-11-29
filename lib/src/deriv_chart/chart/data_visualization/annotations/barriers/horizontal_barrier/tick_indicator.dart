@@ -142,11 +142,22 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
           longLine: false,
         );
 
+  /// The which this tick indicator will be pointing to.
   final Tick tick;
+
+  /// The low barrier value.
   final double lowBarrier;
+
+  /// The high barrier value.
   final double highBarrier;
+
+  /// The low barrier display value.
   final String highBarrierDisplay;
+
+  /// The high barrier display value.
   final String lowBarrierDisplay;
+
+  /// [Optional] The profit value which is being shown in the middle of the tick indicator.
   final String? profit;
 
   @override
