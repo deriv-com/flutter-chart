@@ -16,7 +16,7 @@ dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: dev
+      ref: flutter-version-3
 
   equatable: ^2.0.5
   intl: ^0.18.0
@@ -31,7 +31,7 @@ dev_dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: dev
+      ref: flutter-version-3
 
   build_runner: ^2.3.3
   intl_utils: ^2.8.2

@@ -1,11 +1,12 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 import '../../chart_data.dart';
@@ -45,18 +46,25 @@ class MAEnvSeries extends Series {
   /// Moving Average Envelope options
   MAEnvOptions? maEnvOptions;
 
-  late SingleIndicatorSeries _lowerSeries;
-  late SingleIndicatorSeries _middleSeries;
-  late SingleIndicatorSeries _upperSeries;
+  /// Lower series
+  late SingleIndicatorSeries lowerSeries;
 
-  final List<Series> _innerSeries = <Series>[];
+  /// Middle series
+  late SingleIndicatorSeries middleSeries;
+
+  /// Upper series
+  late SingleIndicatorSeries upperSeries;
+
+  /// Inner Series
+  final List<Series> innerSeries = <Series>[];
 
   @override
   SeriesPainter<Series>? createPainter() {
     final CachedIndicator<Tick> smaIndicator =
-        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!);
+        MASeries.getMAIndicator(_fieldIndicator, maEnvOptions!)
+          ..calculateValues();
 
-    _lowerSeries = SingleIndicatorSeries(
+    lowerSeries = SingleIndicatorSeries(
       painterCreator: (
         Series series,
       ) =>
@@ -68,19 +76,27 @@ class MAEnvSeries extends Series {
       ),
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
-      style: const LineStyle(color: Colors.red),
+      style: maEnvOptions!.lowerLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        maEnvOptions!.lowerLineStyle.color,
+        showLastIndicator: maEnvOptions!.showLastIndicator,
+      ),
     );
 
-    _middleSeries = SingleIndicatorSeries(
+    middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => smaIndicator,
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
-      style: const LineStyle(color: Colors.blue),
+      style: maEnvOptions!.middleLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        maEnvOptions!.middleLineStyle.color,
+        showLastIndicator: maEnvOptions!.showLastIndicator,
+      ),
     );
 
-    _upperSeries = SingleIndicatorSeries(
+    upperSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>
           LinePainter(series as DataSeries<Tick>),
       indicatorCreator: () => MAEnvUpperIndicator<Tick>(
@@ -90,48 +106,66 @@ class MAEnvSeries extends Series {
       ),
       inputIndicator: _fieldIndicator,
       options: maEnvOptions,
-      style: const LineStyle(color: Colors.green),
+      style: maEnvOptions!.upperLineStyle,
+      lastTickIndicatorStyle: getLastIndicatorStyle(
+        maEnvOptions!.upperLineStyle.color,
+        showLastIndicator: maEnvOptions!.showLastIndicator,
+      ),
     );
 
-    _innerSeries
-      ..add(_lowerSeries)
-      ..add(_middleSeries)
-      ..add(_upperSeries);
+    innerSeries
+      ..add(lowerSeries)
+      ..add(middleSeries)
+      ..add(upperSeries);
 
-    return null;
+    return ChannelFillPainter(
+      upperSeries,
+      lowerSeries,
+      firstUpperChannelFillColor: maEnvOptions?.fillColor.withOpacity(0.2),
+      secondUpperChannelFillColor: maEnvOptions?.fillColor.withOpacity(0.2),
+    );
   }
 
   @override
   bool didUpdate(ChartData? oldData) {
     final MAEnvSeries? series = oldData as MAEnvSeries?;
 
-    final bool _lowerUpdated = _lowerSeries.didUpdate(series?._lowerSeries);
-    final bool _middleUpdated = _middleSeries.didUpdate(series?._middleSeries);
-    final bool _upperUpdated = _upperSeries.didUpdate(series?._upperSeries);
+    final bool _lowerUpdated = lowerSeries.didUpdate(series?.lowerSeries);
+    final bool _middleUpdated = middleSeries.didUpdate(series?.middleSeries);
+    final bool _upperUpdated = upperSeries.didUpdate(series?.upperSeries);
 
     return _lowerUpdated || _middleUpdated || _upperUpdated;
   }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {
-    _lowerSeries.update(leftEpoch, rightEpoch);
-    _middleSeries.update(leftEpoch, rightEpoch);
-    _upperSeries.update(leftEpoch, rightEpoch);
+    lowerSeries.update(leftEpoch, rightEpoch);
+    middleSeries.update(leftEpoch, rightEpoch);
+    upperSeries.update(leftEpoch, rightEpoch);
   }
 
   @override
   List<double> recalculateMinMax() =>
-      // Can just use _lowerSeries minValue for min and _upperSeries maxValue
+      // Can just use lowerSeries minValue for min and upperSeries maxValue
       // for max. But to be safe we calculate min and max. from all three series
       // TODO(Ramin): Maybe later we can have these code and getMin/MaxEpochs in a parent class for Indicators like MAEnv, Ichimoku, Bollinger, etc
       <double>[
-        _innerSeries
+        innerSeries
             .map((Series series) => series.minValue)
             .reduce((double a, double b) => safeMin(a, b)),
-        _innerSeries
+        innerSeries
             .map((Series series) => series.maxValue)
             .reduce((double a, double b) => safeMax(a, b)),
       ];
+
+  @override
+  bool shouldRepaint(ChartData? previous) {
+    if (previous == null) {
+      return true;
+    }
+
+    return maEnvOptions != (previous as MAEnvSeries).maEnvOptions;
+  }
 
   @override
   void paint(
@@ -143,17 +177,25 @@ class MAEnvSeries extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
-    _lowerSeries.paint(
+    lowerSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _middleSeries.paint(
+    middleSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    _upperSeries.paint(
+    upperSeries.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+
+    if (maEnvOptions != null &&
+        maEnvOptions!.showChannelFill &&
+        upperSeries.visibleEntries.isNotEmpty &&
+        lowerSeries.visibleEntries.isNotEmpty) {
+      super.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    }
   }
 
   @override
-  int? getMaxEpoch() => _innerSeries.getMaxEpoch();
+  int? getMaxEpoch() => innerSeries.getMaxEpoch();
 
   @override
-  int? getMinEpoch() => _innerSeries.getMinEpoch();
+  int? getMinEpoch() => innerSeries.getMinEpoch();
 }

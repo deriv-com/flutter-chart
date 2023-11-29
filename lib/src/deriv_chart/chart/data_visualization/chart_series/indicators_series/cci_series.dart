@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -33,6 +34,7 @@ class CCISeries extends AbstractSingleIndicatorSeries {
         const LineStyle(color: Colors.white, thickness: 0.5),
     LineStyle cciLineStyle = const LineStyle(),
     this.showZones = true,
+    this.showLastIndicator = false,
     String? id,
   })  : _options = options,
         super(
@@ -40,6 +42,10 @@ class CCISeries extends AbstractSingleIndicatorSeries {
           id ?? 'CCISeries',
           options: options,
           style: cciLineStyle,
+          lastTickIndicatorStyle: getLastIndicatorStyle(
+            cciLineStyle.color,
+            showLastIndicator: showLastIndicator,
+          ),
         );
 
   final IndicatorInput _indicatorInput;
@@ -63,6 +69,9 @@ class CCISeries extends AbstractSingleIndicatorSeries {
 
   /// Whether to fill overbought/sold zones.
   final bool showZones;
+
+  /// Whether to show last indicator or not.
+  final bool showLastIndicator;
 
   @override
   SeriesPainter<Series> createPainter() => showZones

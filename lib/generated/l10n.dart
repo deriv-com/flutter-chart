@@ -469,6 +469,46 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Failed to load drawing tools.`
+  String get warnFailedLoadingDrawingTools {
+    return Intl.message(
+      'Failed to load drawing tools.',
+      name: 'warnFailedLoadingDrawingTools',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select drawing tool`
+  String get selectDrawingTool {
+    return Intl.message(
+      'Select drawing tool',
+      name: 'selectDrawingTool',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color`
+  String get labelColor {
+    return Intl.message(
+      'Color',
+      name: 'labelColor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fill Color`
+  String get labelFillColor {
+    return Intl.message(
+      'Fill Color',
+      name: 'labelFillColor',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {

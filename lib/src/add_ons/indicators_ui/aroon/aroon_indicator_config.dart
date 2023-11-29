@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/aroon_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,7 +19,17 @@ class AroonIndicatorConfig extends IndicatorConfig {
   /// Initializes
   const AroonIndicatorConfig({
     this.period = 14,
-  }) : super(isOverlay: false);
+    this.upLineStyle = const LineStyle(color: Colors.green),
+    this.downLineStyle = const LineStyle(color: Colors.red),
+    int pipSize = 4,
+    bool showLastIndicator = false,
+    String? title,
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          showLastIndicator: showLastIndicator,
+          title: title ?? AroonIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory AroonIndicatorConfig.fromJson(Map<String, dynamic> json) =>
@@ -33,6 +44,12 @@ class AroonIndicatorConfig extends IndicatorConfig {
 
   /// The period
   final int period;
+
+  /// Up line style.
+  final LineStyle upLineStyle;
+
+  /// Down line style.
+  final LineStyle downLineStyle;
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => AroonSeries(

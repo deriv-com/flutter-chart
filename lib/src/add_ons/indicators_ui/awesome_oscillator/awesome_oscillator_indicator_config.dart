@@ -16,8 +16,15 @@ part 'awesome_oscillator_indicator_config.g.dart';
 @JsonSerializable()
 class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
   /// Initializes
-  const AwesomeOscillatorIndicatorConfig({this.barStyle = const BarStyle()})
-      : super(isOverlay: false);
+  const AwesomeOscillatorIndicatorConfig({
+    this.barStyle = const BarStyle(),
+    int pipSize = 4,
+    String? title,
+  }) : super(
+          isOverlay: false,
+          pipSize: pipSize,
+          title: title ?? AwesomeOscillatorIndicatorConfig.name,
+        );
 
   /// Initializes from JSON.
   factory AwesomeOscillatorIndicatorConfig.fromJson(
@@ -28,8 +35,10 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
   final BarStyle barStyle;
 
   @override
-  Series getSeries(IndicatorInput indicatorInput) =>
-      AwesomeOscillatorSeries(indicatorInput, barStyle: barStyle);
+  Series getSeries(IndicatorInput indicatorInput) => AwesomeOscillatorSeries(
+        indicatorInput,
+        barStyle: barStyle,
+      );
 
   /// Unique name for this indicator.
   static const String name = 'AwesomeOscillator';

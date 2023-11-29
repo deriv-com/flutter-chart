@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import 'grid/time_label.dart';
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
 
@@ -27,6 +26,11 @@ class XAxis extends StatefulWidget {
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
+    this.maxCurrentTickOffset,
+    this.msPerPx,
+    this.minIntervalWidth,
+    this.maxIntervalWidth,
+    this.minElapsedTimeToFollow = 0,
     Key? key,
   }) : super(key: key);
 
@@ -54,6 +58,25 @@ class XAxis extends StatefulWidget {
   /// Number of digits after decimal point in price
   final int pipSize;
 
+  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
+  final double? maxCurrentTickOffset;
+
+  /// Specifies the zoom level of the chart.
+  final double? msPerPx;
+
+  /// Specifies the minimum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? minIntervalWidth;
+
+  /// Specifies the maximum interval width
+  /// that is used for calculating the maximum msPerPx.
+  final double? maxIntervalWidth;
+
+  /// Specifies the minimum time in milliseconds before which it can update the
+  /// rightBoundEpoch when the chart is in follow mode.  This is used to control
+  /// the number of frames painted each second.
+  final int minElapsedTimeToFollow;
+
   @override
   _XAxisState createState() => _XAxisState();
 }
@@ -80,6 +103,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       onScroll: _onVisibleAreaChanged,
       minEpoch: widget.minEpoch,
       maxEpoch: widget.maxEpoch,
+      maxCurrentTickOffset: widget.maxCurrentTickOffset,
+      msPerPx: widget.msPerPx,
+      minIntervalWidth: widget.minIntervalWidth,
+      maxIntervalWidth: widget.maxIntervalWidth,
+      minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();
@@ -106,6 +134,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       isLive: widget.isLive,
       granularity: context.read<ChartConfig>().granularity,
       entries: widget.entries,
+      minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
     );
   }
 
@@ -142,14 +171,14 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
                 RepaintBoundary(
                   child: CustomPaint(
                     painter: XGridPainter(
-                      timeLabels: _noOverlapGridTimestamps
-                          .map<String>((DateTime time) => timeLabel(time))
+                      timestamps: _noOverlapGridTimestamps
+                          .map<DateTime>((DateTime time) => time)
                           .toList(),
                       xCoords: _noOverlapGridTimestamps
                           .map<double>((DateTime time) =>
                               _model.xFromEpoch(time.millisecondsSinceEpoch))
                           .toList(),
-                      style: _chartTheme.gridStyle,
+                      style: _chartTheme,
                     ),
                   ),
                 ),

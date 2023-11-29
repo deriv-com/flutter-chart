@@ -23,13 +23,21 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(text) => "No results for \"${text}\"";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
+<<<<<<< HEAD
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+=======
+  static _notInlinedMessages(_) => <String, Function>{
+>>>>>>> upstream/fe-changes
         "informNoResult": m0,
         "labelBandsCount": MessageLookupByLibrary.simpleMessage("Bands Count"),
         "labelBaseLinePeriod":
             MessageLookupByLibrary.simpleMessage("Base Line Period"),
         "labelChannelFill":
             MessageLookupByLibrary.simpleMessage("Channel Fill"),
+<<<<<<< HEAD
+=======
+        "labelColor": MessageLookupByLibrary.simpleMessage("Color"),
+>>>>>>> upstream/fe-changes
         "labelConversionLinePeriod":
             MessageLookupByLibrary.simpleMessage("Conversion Line Period"),
         "labelDistance": MessageLookupByLibrary.simpleMessage("Distance"),
@@ -38,6 +46,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelFastMAPeriod":
             MessageLookupByLibrary.simpleMessage("Fast MA Period"),
         "labelField": MessageLookupByLibrary.simpleMessage("Field"),
+<<<<<<< HEAD
+=======
+        "labelFillColor": MessageLookupByLibrary.simpleMessage("Fill Color"),
+>>>>>>> upstream/fe-changes
         "labelHighPeriod": MessageLookupByLibrary.simpleMessage("High Period"),
         "labelHistogram": MessageLookupByLibrary.simpleMessage("Histogram"),
         "labelIsSmooth": MessageLookupByLibrary.simpleMessage("Is Smooth"),
@@ -66,8 +78,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show Fractals"),
         "labelShowLines": MessageLookupByLibrary.simpleMessage("Show Lines"),
         "labelShowZones": MessageLookupByLibrary.simpleMessage("Show Zones"),
+<<<<<<< HEAD
         "labelSignalPeriod":
             MessageLookupByLibrary.simpleMessage("Signal Period"),
+=======
+        "labelSignalPeriod": MessageLookupByLibrary.simpleMessage("D% Period"),
+>>>>>>> upstream/fe-changes
         "labelSlowMAPeriod":
             MessageLookupByLibrary.simpleMessage("Slow MA Period"),
         "labelSmoothingPeriod":
@@ -81,8 +97,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelTeethPeriod":
             MessageLookupByLibrary.simpleMessage("Teeth Period"),
         "labelType": MessageLookupByLibrary.simpleMessage("Type"),
+<<<<<<< HEAD
         "warnCheckAssetSearchingText": MessageLookupByLibrary.simpleMessage(
             "Try checking your spelling or use a different term"),
+=======
+        "selectDrawingTool":
+            MessageLookupByLibrary.simpleMessage("Select drawing tool"),
+        "warnCheckAssetSearchingText": MessageLookupByLibrary.simpleMessage(
+            "Try checking your spelling or use a different term"),
+        "warnFailedLoadingDrawingTools": MessageLookupByLibrary.simpleMessage(
+            "Failed to load drawing tools."),
+>>>>>>> upstream/fe-changes
         "warnFailedLoadingIndicators":
             MessageLookupByLibrary.simpleMessage("Failed to load indicators.")
       };

@@ -21,18 +21,18 @@ class FieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-    children: <Widget>[
-      Text(label, style: const TextStyle(fontSize: 10)),
-      const SizedBox(width: 4),
-      SizedBox(
-        width: 20,
-        child: TextFormField(
-          style: const TextStyle(fontSize: 10),
-          initialValue: initialValue,
-          keyboardType: TextInputType.number,
-          onChanged: onValueChanged,
-        ),
-      ),
-    ],
-  );
+        children: <Widget>[
+          Text(label, style: const TextStyle(fontSize: 10)),
+          const SizedBox(width: 4),
+          SizedBox(
+            width: 20,
+            child: TextFormField(
+              style: const TextStyle(fontSize: 10),
+              initialValue: initialValue,
+              keyboardType: TextInputType.number,
+              onChanged: onValueChanged,
+            ),
+          ),
+        ],
+      );
 }

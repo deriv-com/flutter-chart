@@ -95,7 +95,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
   CandleStyle get candleStyle => CandleStyle(
         positiveColor: accentGreenColor,
         negativeColor: accentRedColor,
-        lineColor: base04Color,
+        neutralColor: base04Color,
       );
 
   @override

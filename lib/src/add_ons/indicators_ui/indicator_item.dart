@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
 
 import 'callbacks.dart';
 import 'indicator_config.dart';
-import 'indicator_repository.dart';
 
 /// Representing and indicator item in indicators list dialog.
 abstract class IndicatorItem extends StatefulWidget {
@@ -42,13 +42,13 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
     extends State<IndicatorItem> {
   /// Indicators repository
   @protected
-  late IndicatorsRepository indicatorsRepo;
+  late Repository<IndicatorConfig> indicatorsRepo;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    indicatorsRepo = Provider.of<IndicatorsRepository>(context);
+    indicatorsRepo = Provider.of<Repository<IndicatorConfig>>(context);
   }
 
   @override

@@ -369,6 +369,21 @@ class _FullscreenChartState extends State<FullscreenChart> {
     });
   }
 
+  DataSeries<Tick> _getDataSeries(ChartStyle style) {
+    if (ticks is List<Candle> && style != ChartStyle.line) {
+      switch (style) {
+        case ChartStyle.hollow:
+          return HollowCandleSeries(ticks as List<Candle>);
+        case ChartStyle.ohlc:
+          return OhlcCandleSeries(ticks as List<Candle>);
+        default:
+          return CandleSeries(ticks as List<Candle>);
+      }
+    }
+    return LineSeries(ticks, style: const LineStyle(hasArea: true))
+        as DataSeries<Tick>;
+  }
+
   @override
   Widget build(BuildContext context) => Material(
         color: const Color(0xFF0E0E0E),
@@ -379,7 +394,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    // ignore: unnecessary_null_comparison
                     child: _markets == null
                         ? const SizedBox.shrink()
                         : _buildMarketSelectorButton(),
@@ -394,18 +408,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 children: <Widget>[
                   ClipRect(
                     child: DerivChart(
-                      mainSeries:
-                          style == ChartStyle.candles && ticks is List<Candle>
-                              ? CandleSeries(ticks as List<Candle>)
-                              : LineSeries(
-                                  ticks,
-                                  style: const LineStyle(hasArea: true),
-                                ) as DataSeries<Tick>,
+                      mainSeries: _getDataSeries(style),
                       markerSeries: MarkerSeries(
                         _markers,
                         activeMarker: _activeMarker,
                         markerIconPainter: MultipliersMarkerIconPainter(),
                       ),
+                      activeSymbol: _symbol.name,
                       annotations: ticks.length > 4
                           ? <ChartAnnotation<ChartObject>>[
                               ..._sampleBarriers,
@@ -701,16 +710,31 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   IconButton _buildChartTypeButton() => IconButton(
         icon: Icon(
-          style == ChartStyle.line ? Icons.show_chart : Icons.insert_chart,
+          style == ChartStyle.line
+              ? Icons.show_chart
+              : style == ChartStyle.candles
+                  ? Icons.insert_chart
+                  : style == ChartStyle.hollow
+                      ? Icons.insert_chart_outlined_outlined
+                      : Icons.add_chart,
           color: Colors.white,
         ),
         onPressed: () {
           Vibration.vibrate(duration: 50);
           setState(() {
-            if (style == ChartStyle.candles) {
-              style = ChartStyle.line;
-            } else {
-              style = ChartStyle.candles;
+            switch (style) {
+              case ChartStyle.ohlc:
+                style = ChartStyle.line;
+                return;
+              case ChartStyle.line:
+                style = ChartStyle.candles;
+                return;
+              case ChartStyle.candles:
+                style = ChartStyle.hollow;
+                return;
+              default:
+                style = ChartStyle.ohlc;
+                return;
             }
           });
         },

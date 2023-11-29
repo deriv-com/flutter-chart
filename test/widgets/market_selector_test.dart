@@ -167,8 +167,13 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
+<<<<<<< HEAD
           markets: <Market>[
             Market(subMarkets: <SubMarket>[r25SubMarket])
+=======
+          markets: [
+            Market(subMarkets: [r25SubMarket])
+>>>>>>> upstream/fe-changes
           ],
         ),
       ));
@@ -200,9 +205,13 @@ void main() {
           ChartLocalization.delegate,
         ],
         supportedLocales: ChartLocalization.delegate.supportedLocales,
+<<<<<<< HEAD
         home: const MarketSelector(
           markets: <Market>[],
         ),
+=======
+        home: MarketSelector(markets: []),
+>>>>>>> upstream/fe-changes
       ));
 
       await tester.pumpAndSettle();
