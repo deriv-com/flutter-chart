@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
@@ -25,7 +26,6 @@ import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import '../../misc/callbacks.dart';
 import '../../theme/chart_theme.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// The main chart to display in the chart widget.

@@ -1,7 +1,7 @@
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/oscillator_limit.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 
 import 'package:flutter/material.dart';
