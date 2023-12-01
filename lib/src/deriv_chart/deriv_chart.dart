@@ -1,11 +1,8 @@
-import 'package:deriv_chart/generated/l10n.dart';
-import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
-import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/chart.dart';
@@ -17,7 +14,6 @@ import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dar
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
-import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';

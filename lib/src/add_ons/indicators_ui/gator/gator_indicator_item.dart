@@ -1,4 +1,4 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
 import 'package:flutter/material.dart';
 

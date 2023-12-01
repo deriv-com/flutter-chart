@@ -1,5 +1,4 @@
 import 'package:deriv_chart/generated/l10n.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_item.dart';

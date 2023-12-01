@@ -13,6 +13,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../drawing_tool_chart/drawing_tool_chart.dart';
 import 'basic_chart.dart';
 import 'multiple_animated_builder.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
@@ -25,7 +26,6 @@ import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import '../../misc/callbacks.dart';
 import '../../theme/chart_theme.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// The main chart to display in the chart widget.
