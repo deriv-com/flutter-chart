@@ -25,7 +25,6 @@ import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import '../../misc/callbacks.dart';
 import '../../theme/chart_theme.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// The main chart to display in the chart widget.
