@@ -11,6 +11,7 @@ class XGridPainter extends CustomPainter {
     required this.style,
     required this.timestamps,
     required this.granularity,
+    required this.msPerPx,
   });
 
   /// X-coordinates of time labels.
@@ -22,6 +23,9 @@ class XGridPainter extends CustomPainter {
   /// List of DateTime on screen
   final List<DateTime> timestamps;
   
+  ///
+  final double msPerPx;
+
   /// granularity for ticks
   final int granularity;
 
@@ -38,6 +42,7 @@ class XGridPainter extends CustomPainter {
       xCoords: xCoords,
       style: style,
       granularity: granularity,
+      msPerPx: msPerPx,
     );
   }
 

@@ -13,6 +13,7 @@ void paintXGrid(
   required ChartTheme style,
   required List<DateTime> timestamps,
   required int granularity,
+  required double msPerPx,
 }) {
   assert(timestamps.length == xCoords.length);
   final GridStyle gridStyle = style.gridStyle;
@@ -25,6 +26,7 @@ void paintXGrid(
     gridStyle,
     timestamps,
     granularity,
+    msPerPx,
   );
 
   _paintTimeLabels(
@@ -44,6 +46,7 @@ void _paintTimeGridLines(
   GridStyle gridStyle,
   List<DateTime> time,
   int granularity,
+  double msPerPx,
 ) {
   for (int i = 0; i < xCoords.length; i++) {
     canvas.drawLine(
@@ -51,7 +54,7 @@ void _paintTimeGridLines(
       Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),
       Paint()
         // checking if granularity is <= 10 minutes
-        ..color = (granularity <= 600000 && checkNewDate(time[i]))
+        ..color = (msPerPx < 300000 && checkNewDate(time[i]))
             ? style.verticalBarrierStyle.color
             : gridStyle.gridLineColor
         ..style = PaintingStyle.stroke

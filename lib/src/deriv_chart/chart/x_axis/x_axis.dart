@@ -180,6 +180,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
                           .toList(),
                       style: _chartTheme,
                       granularity: context.read<ChartConfig>().granularity,
+                      msPerPx: _model.msPerPx,
                     ),
                   ),
                 ),
