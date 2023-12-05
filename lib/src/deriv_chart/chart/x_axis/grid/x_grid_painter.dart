@@ -10,7 +10,6 @@ class XGridPainter extends CustomPainter {
     required this.xCoords,
     required this.style,
     required this.timestamps,
-    required this.granularity,
     required this.msPerPx,
   });
 
@@ -26,8 +25,6 @@ class XGridPainter extends CustomPainter {
   ///
   final double msPerPx;
 
-  /// granularity for ticks
-  final int granularity;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -41,7 +38,6 @@ class XGridPainter extends CustomPainter {
       timestamps: timestamps,
       xCoords: xCoords,
       style: style,
-      granularity: granularity,
       msPerPx: msPerPx,
     );
   }
