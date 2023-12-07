@@ -119,3 +119,55 @@ class IconTickIndicator extends TickIndicator {
   @override
   SeriesPainter<Series> createPainter() => IconBarrierPainter(this);
 }
+
+class AccumulatorTickIndicator extends HorizontalBarrier {
+  /// Initializes a tick indicator.
+  AccumulatorTickIndicator(
+    this.tick, {
+    required this.lowBarrier,
+    required this.highBarrier,
+    required this.highBarrierDisplay,
+    required this.lowBarrierDisplay,
+    required this.profit,
+    required this.barrierSpotDistance,
+    required this.barrierEpoch,
+    String? id,
+    HorizontalBarrierStyle? style,
+    HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
+  }) : super(
+          tick.quote,
+          epoch: tick.epoch,
+          id: id,
+          style: style ??
+              const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
+          visibility: visibility,
+          longLine: false,
+        );
+
+  /// The price difference between the barrier and the [tick] quote.
+  final String barrierSpotDistance;
+
+  /// The which this tick indicator will be pointing to.
+  final Tick tick;
+
+  /// The low barrier value.
+  final double lowBarrier;
+
+  /// The high barrier value.
+  final double highBarrier;
+
+  /// The low barrier display value.
+  final String highBarrierDisplay;
+
+  /// The high barrier display value.
+  final String lowBarrierDisplay;
+
+  /// [Optional] The profit value which is being shown in the middle of the tick indicator.
+  final String? profit;
+
+  /// The [epoch] of the tick that the barriers belong to.
+  final int barrierEpoch;
+
+  @override
+  SeriesPainter<Series> createPainter() => AccumulatorBarrierPainter(this);
+}
