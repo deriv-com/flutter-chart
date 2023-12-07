@@ -422,12 +422,12 @@ class AccumulatorBarrierPainter
     );
 
     final Offset highBarrierPosition = Offset(
-      epochToX(series.tick.epoch),
+      epochToX(series.barrierEpoch),
       quoteToY(series.highBarrier),
     );
 
     final Offset lowBarrierPosition = Offset(
-      epochToX(series.tick.epoch),
+      epochToX(series.barrierEpoch),
       quoteToY(series.lowBarrier),
     );
 

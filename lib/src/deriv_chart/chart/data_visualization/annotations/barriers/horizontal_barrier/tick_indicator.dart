@@ -130,6 +130,7 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
     required this.lowBarrierDisplay,
     required this.profit,
     required this.barrierSpotDistance,
+    required this.barrierEpoch,
     String? id,
     HorizontalBarrierStyle? style,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
@@ -163,6 +164,9 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
 
   /// [Optional] The profit value which is being shown in the middle of the tick indicator.
   final String? profit;
+
+  /// The [epoch] of the tick that the barriers belong to.
+  final int barrierEpoch;
 
   @override
   SeriesPainter<Series> createPainter() => AccumulatorBarrierPainter(this);
