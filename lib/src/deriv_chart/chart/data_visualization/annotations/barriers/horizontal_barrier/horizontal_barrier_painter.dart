@@ -445,14 +445,14 @@ class AccumulatorBarrierPainter
 
     paintText(
       canvas,
-      text: (series.lowBarrier - series.tick.quote).toStringAsFixed(2),
+      text: '-${series.barrierSpotDistance}',
       anchor: lowBarrierPosition + const Offset(30, 10),
       style: const TextStyle(color: Colors.white, fontSize: 12),
     );
 
     paintText(
       canvas,
-      text: (series.highBarrier - series.tick.quote).toStringAsFixed(2),
+      text: '+${series.barrierSpotDistance}',
       anchor: highBarrierPosition + const Offset(30, -10),
       style: const TextStyle(color: Colors.white, fontSize: 12),
     );

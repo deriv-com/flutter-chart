@@ -129,6 +129,7 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
     required this.highBarrierDisplay,
     required this.lowBarrierDisplay,
     required this.profit,
+    required this.barrierSpotDistance,
     String? id,
     HorizontalBarrierStyle? style,
     HorizontalBarrierVisibility visibility = HorizontalBarrierVisibility.normal,
@@ -141,6 +142,9 @@ class AccumulatorTickIndicator extends HorizontalBarrier {
           visibility: visibility,
           longLine: false,
         );
+
+  /// The price difference between the barrier and the [tick] quote.
+  final String barrierSpotDistance;
 
   /// The which this tick indicator will be pointing to.
   final Tick tick;
