@@ -7,8 +7,8 @@ class AlligatorOptions extends IndicatorOptions {
     this.jawPeriod = 13,
     this.teethPeriod = 8,
     this.lipsPeriod = 5,
-    this.showLines=true,
-    this.showFractal=false,
+    this.showLines = true,
+    this.showFractal = false,
   }) : super();
 
   /// Smoothing period for jaw series

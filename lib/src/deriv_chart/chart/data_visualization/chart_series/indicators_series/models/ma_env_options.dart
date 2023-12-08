@@ -20,5 +20,7 @@ class MAEnvOptions extends MAOptions {
   final ShiftType shiftType;
 
   @override
-  List<Object> get props => super.props..add(shift)..add(shiftType);
+  List<Object> get props => super.props
+    ..add(shift)
+    ..add(shiftType);
 }
