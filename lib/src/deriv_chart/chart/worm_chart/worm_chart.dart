@@ -117,7 +117,7 @@ class _WormChartState extends State<WormChart>
     _rightIndexAnimationController = AnimationController.unbounded(
       vsync: this,
       duration: widget.updateAnimationDuration,
-      value: 1,
+      value: widget.ticks.length.toDouble() + 1,
     );
   }
 
