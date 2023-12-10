@@ -334,6 +334,7 @@ class _DerivChartState extends State<DerivChart> {
                 dataFitEnabled: widget.dataFitEnabled,
                 opacity: widget.opacity,
                 annotations: widget.annotations,
+                chartAxisConfig: widget.chartAxisConfig,
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
                 maxCurrentTickOffset: widget.maxCurrentTickOffset,
