@@ -116,8 +116,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
       );
 
   @override
-  EntrySpotStyle get entrySpotStyle =>
-       const EntrySpotStyle();
+  EntrySpotStyle get entrySpotStyle => const EntrySpotStyle();
 
   @override
   HorizontalBarrierStyle get horizontalBarrierStyle => HorizontalBarrierStyle(

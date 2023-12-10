@@ -15,7 +15,7 @@ class ROCIndicatorItem extends IndicatorItem {
     required UpdateIndicator updateIndicator,
     required VoidCallback deleteIndicator,
     Key? key,
-    ROCIndicatorConfig config=const ROCIndicatorConfig(),
+    ROCIndicatorConfig config = const ROCIndicatorConfig(),
   }) : super(
           key: key,
           title: 'ROC',
