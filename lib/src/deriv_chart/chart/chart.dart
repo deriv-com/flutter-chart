@@ -54,7 +54,6 @@ class Chart extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
-    this.minElapsedTimeToFollow = 0,
     this.currentTickAnimationDuration,
     this.quoteBoundsAnimationDuration,
     this.showCurrentTickBlinkAnimation,
@@ -142,11 +141,6 @@ class Chart extends StatefulWidget {
   /// Specifies the maximum interval width
   /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
-
-  /// Specifies the minimum time in milliseconds before which it can update the
-  /// rightBoundEpoch when the chart is in follow mode.  This is used to control
-  /// the number of frames painted each second.
-  final int minElapsedTimeToFollow;
 
   /// Duration of the current tick animated transition.
   final Duration? currentTickAnimationDuration;
@@ -305,7 +299,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             msPerPx: widget.msPerPx,
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
-            minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
             scrollAnimationDuration: currentTickAnimationDuration,
             child: Column(
               children: <Widget>[

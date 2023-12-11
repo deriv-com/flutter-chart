@@ -61,7 +61,6 @@ class XAxisModel extends ChangeNotifier {
     double? msPerPx,
     double? minIntervalWidth,
     double? maxIntervalWidth,
-    int minElapsedTimeToFollow = 0,
     this.onScale,
     this.onScroll,
   }) {
@@ -83,7 +82,6 @@ class XAxisModel extends ChangeNotifier {
     _dataFitMode = startWithDataFitMode;
     _minIntervalWidth = minIntervalWidth ?? 1;
     _maxIntervalWidth = maxIntervalWidth ?? 80;
-    _minElapsedTimeToFollow = minElapsedTimeToFollow;
 
     _updateEntries(entries);
 
@@ -103,8 +101,6 @@ class XAxisModel extends ChangeNotifier {
   late double _minIntervalWidth;
 
   late double _maxIntervalWidth;
-
-  late int _minElapsedTimeToFollow;
 
   // TODO(NA): Allow customization of this setting.
   /// Default to this interval width on granularity change.
@@ -236,9 +232,6 @@ class XAxisModel extends ChangeNotifier {
     // TODO(NA): Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
-        if (elapsedMs < _minElapsedTimeToFollow) {
-          return;
-        }
         _scrollTo(_rightBoundEpoch + elapsedMs);
         break;
       case ViewingMode.fitData:
@@ -329,12 +322,6 @@ class XAxisModel extends ChangeNotifier {
       return;
     }
     _isLive = isLive;
-  }
-
-  void _updateMinElapsedTimeToFollow(int? minElapsedTimeToFollow) {
-    if (minElapsedTimeToFollow != null) {
-      _minElapsedTimeToFollow = minElapsedTimeToFollow;
-    }
   }
 
   /// Fits available data to screen and to disable data fit mode.
@@ -546,12 +533,10 @@ class XAxisModel extends ChangeNotifier {
     List<Tick>? entries,
     int? minEpoch,
     int? maxEpoch,
-    int? minElapsedTimeToFollow,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
-    _updateMinElapsedTimeToFollow(minElapsedTimeToFollow);
 
     _minEpoch = minEpoch ?? _minEpoch;
     _maxEpoch = maxEpoch ?? _maxEpoch;
