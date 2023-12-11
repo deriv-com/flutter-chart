@@ -300,6 +300,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
             minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
+            scrollAnimationDuration:
+                widget.currentTickAnimationDuration ?? _defaultDuration,
             child: Column(
               children: <Widget>[
                 Expanded(

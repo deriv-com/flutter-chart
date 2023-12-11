@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'functions/calc_no_overlay_time_gaps.dart';
@@ -145,6 +146,7 @@ class XAxisModel extends ChangeNotifier {
   late int _nowEpoch;
   late int _rightBoundEpoch;
   double _panSpeed = 0;
+  int? _lastRightBoundEpochStart;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -209,6 +211,20 @@ class XAxisModel extends ChangeNotifier {
     return ViewingMode.stationary;
   }
 
+  /// Called on each tick's curve animation
+  /// Updates scroll position if the [_currentViewingMode] in follow mode.
+  void scrollAnimationListener(int offsetEpoch) {
+    if (_currentViewingMode == ViewingMode.followCurrentTick) {
+      if (offsetEpoch == 0) {
+        _lastRightBoundEpochStart = _rightBoundEpoch;
+      }
+
+      if (_lastRightBoundEpochStart != null) {
+        _scrollTo(_lastRightBoundEpochStart! + offsetEpoch);
+      }
+    }
+  }
+
   /// Called on each frame.
   /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
@@ -226,13 +242,7 @@ class XAxisModel extends ChangeNotifier {
         _scrollTo(_rightBoundEpoch + elapsedMs);
         break;
       case ViewingMode.fitData:
-        _fitData();
-
-        /// Switch to [ViewingMode.followCurrentTick] once reached zoom out
-        /// limit.
-        if (_msPerPx == _maxMsPerPx) {
-          disableDataFit();
-        }
+        fitAvailableData();
         break;
       case ViewingMode.constantScrollSpeed:
         scrollBy(_panSpeed * elapsedMs);
@@ -327,6 +337,17 @@ class XAxisModel extends ChangeNotifier {
     }
   }
 
+  /// Fits available data to screen and to disable data fit mode.
+  void fitAvailableData() {
+    _fitData();
+
+    /// Switch to [ViewingMode.followCurrentTick] once reached zoom out
+    /// limit.
+    if (_msPerPx == _maxMsPerPx) {
+      disableDataFit();
+    }
+  }
+
   /// Fits available data to screen.
   void _fitData() {
     if (width != null && (_entries?.isNotEmpty ?? false)) {
@@ -346,6 +367,10 @@ class XAxisModel extends ChangeNotifier {
   /// Enables data fit viewing mode.
   void enableDataFit() {
     _dataFitMode = true;
+    if (kIsWeb) {
+      fitAvailableData();
+    }
+
     notifyListeners();
   }
 
