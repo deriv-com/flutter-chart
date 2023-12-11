@@ -279,6 +279,12 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     final bool isExpanded = expandedIndex != null;
 
+    final Duration currentTickAnimationDuration =
+        widget.currentTickAnimationDuration ?? _defaultDuration;
+
+    final Duration quoteBoundsAnimationDuration =
+        widget.quoteBoundsAnimationDuration ?? _defaultDuration;
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
@@ -300,8 +306,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
             minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
-            scrollAnimationDuration:
-                widget.currentTickAnimationDuration ?? _defaultDuration,
+            scrollAnimationDuration: currentTickAnimationDuration,
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -329,10 +334,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
                     onCrosshairHover: _onCrosshairHover,
                     loadingAnimationColor: widget.loadingAnimationColor,
-                    currentTickAnimationDuration:
-                        widget.currentTickAnimationDuration ?? _defaultDuration,
-                    quoteBoundsAnimationDuration:
-                        widget.quoteBoundsAnimationDuration ?? _defaultDuration,
+                    currentTickAnimationDuration: currentTickAnimationDuration,
+                    quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
                     showCurrentTickBlinkAnimation:
                         widget.showCurrentTickBlinkAnimation ?? true,
                   ),
@@ -351,6 +354,10 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         pipSize: widget.bottomConfigs?[index].pipSize ??
                             widget.pipSize,
                         title: widget.bottomConfigs![index].title,
+                        currentTickAnimationDuration:
+                            currentTickAnimationDuration,
+                        quoteBoundsAnimationDuration:
+                            quoteBoundsAnimationDuration,
                         bottomChartTitleMargin: widget.bottomChartTitleMargin,
                         onRemove: () => _onRemove(widget.bottomConfigs![index]),
                         onEdit: () => _onEdit(widget.bottomConfigs![index]),

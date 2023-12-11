@@ -34,6 +34,8 @@ class BottomChart extends BasicChart {
     this.showMoveUpIcon = false,
     this.showMoveDownIcon = false,
     this.bottomChartTitleMargin,
+    super.currentTickAnimationDuration,
+    super.quoteBoundsAnimationDuration,
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
 
   /// For candles: Duration of one candle in ms.
