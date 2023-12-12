@@ -142,7 +142,6 @@ class XAxisModel extends ChangeNotifier {
   late int _nowEpoch;
   late int _rightBoundEpoch;
   double _panSpeed = 0;
-  int? _lastRightBoundEpochStart;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
@@ -211,13 +210,7 @@ class XAxisModel extends ChangeNotifier {
   /// Updates scroll position if the [_currentViewingMode] in follow mode.
   void scrollAnimationListener(int offsetEpoch) {
     if (_currentViewingMode == ViewingMode.followCurrentTick) {
-      if (offsetEpoch == 0) {
-        _lastRightBoundEpochStart = _rightBoundEpoch;
-      }
-
-      if (_lastRightBoundEpochStart != null) {
-        _scrollTo(_lastRightBoundEpochStart! + offsetEpoch);
-      }
+      _scrollTo(_rightBoundEpoch + offsetEpoch);
     }
   }
 

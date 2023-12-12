@@ -124,10 +124,18 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
 
       final int granularity = context.read<ChartConfig>().granularity;
 
+      int prevOffsetEpoch = 0;
+
       scrollAnimation.addListener(
         () {
+          if (scrollAnimation.value == 0) {
+            prevOffsetEpoch = 0;
+          }
+
           final int offsetEpoch = (scrollAnimation.value * granularity).toInt();
-          _model.scrollAnimationListener(offsetEpoch);
+
+          _model.scrollAnimationListener(offsetEpoch - prevOffsetEpoch);
+          prevOffsetEpoch = offsetEpoch;
         },
       );
 
