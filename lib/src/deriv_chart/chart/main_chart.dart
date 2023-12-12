@@ -396,20 +396,18 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           if (widget.annotations != null)
             ...widget.annotations!
                 .map(
-                  (ChartData annotation) => RepaintBoundary(
-                    child: CustomPaint(
-                      key: ValueKey<String>(annotation.id),
-                      painter: ChartPainter(
-                        animationInfo: AnimationInfo(
-                          currentTickPercent: currentTickAnimation.value,
-                          blinkingPercent: _currentTickBlinkAnimation.value,
-                        ),
-                        chartData: annotation,
-                        chartConfig: context.watch<ChartConfig>(),
-                        theme: context.watch<ChartTheme>(),
-                        epochToCanvasX: xAxis.xFromEpoch,
-                        quoteToCanvasY: chartQuoteToCanvasY,
+                  (ChartData annotation) => CustomPaint(
+                    key: ValueKey<String>(annotation.id),
+                    painter: ChartPainter(
+                      animationInfo: AnimationInfo(
+                        currentTickPercent: currentTickAnimation.value,
+                        blinkingPercent: _currentTickBlinkAnimation.value,
                       ),
+                      chartData: annotation,
+                      chartConfig: context.watch<ChartConfig>(),
+                      theme: context.watch<ChartTheme>(),
+                      epochToCanvasX: xAxis.xFromEpoch,
+                      quoteToCanvasY: chartQuoteToCanvasY,
                     ),
                   ),
                 )
