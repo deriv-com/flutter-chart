@@ -395,7 +395,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
             Stack(fit: StackFit.expand, children: <Widget>[
           if (widget.annotations != null)
             ...widget.annotations!
-                .map((ChartData annotation) => CustomPaint(
+                .map(
+                  (ChartData annotation) => RepaintBoundary(
+                    child: CustomPaint(
                       key: ValueKey<String>(annotation.id),
                       painter: ChartPainter(
                         animationInfo: AnimationInfo(
@@ -408,7 +410,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                         epochToCanvasX: xAxis.xFromEpoch,
                         quoteToCanvasY: chartQuoteToCanvasY,
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList()
         ]),
       );
