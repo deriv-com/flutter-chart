@@ -460,6 +460,7 @@ class XAxisModel extends ChangeNotifier {
     final double nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
     scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
+    _clampRightBoundEpoch();
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
@@ -467,6 +468,7 @@ class XAxisModel extends ChangeNotifier {
     final int focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
     scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
+    _clampRightBoundEpoch();
   }
 
   void _scrollTo(int rightBoundEpoch) {
