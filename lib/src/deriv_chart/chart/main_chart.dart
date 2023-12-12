@@ -390,24 +390,28 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         animations: <Animation<double>>[
           currentTickAnimation,
           _currentTickBlinkAnimation,
+          topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController,
         ],
         builder: (BuildContext context, _) =>
             Stack(fit: StackFit.expand, children: <Widget>[
           if (widget.annotations != null)
             ...widget.annotations!
                 .map(
-                  (ChartData annotation) => CustomPaint(
-                    key: ValueKey<String>(annotation.id),
-                    painter: ChartPainter(
-                      animationInfo: AnimationInfo(
-                        currentTickPercent: currentTickAnimation.value,
-                        blinkingPercent: _currentTickBlinkAnimation.value,
+                  (ChartData annotation) => RepaintBoundary(
+                    child: CustomPaint(
+                      key: ValueKey<String>(annotation.id),
+                      painter: ChartPainter(
+                        animationInfo: AnimationInfo(
+                          currentTickPercent: currentTickAnimation.value,
+                          blinkingPercent: _currentTickBlinkAnimation.value,
+                        ),
+                        chartData: annotation,
+                        chartConfig: context.watch<ChartConfig>(),
+                        theme: context.watch<ChartTheme>(),
+                        epochToCanvasX: xAxis.xFromEpoch,
+                        quoteToCanvasY: chartQuoteToCanvasY,
                       ),
-                      chartData: annotation,
-                      chartConfig: context.watch<ChartConfig>(),
-                      theme: context.watch<ChartTheme>(),
-                      epochToCanvasX: xAxis.xFromEpoch,
-                      quoteToCanvasY: chartQuoteToCanvasY,
                     ),
                   ),
                 )
