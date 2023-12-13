@@ -209,6 +209,10 @@ class XAxisModel extends ChangeNotifier {
   /// Called on each tick's curve animation
   /// Updates scroll position if the [_currentViewingMode] in follow mode.
   void scrollAnimationListener(int offsetEpoch) {
+    _nowEpoch = (_entries?.isNotEmpty ?? false)
+        ? _entries!.last.epoch
+        : _nowEpoch + offsetEpoch;
+
     if (_currentViewingMode == ViewingMode.followCurrentTick) {
       _scrollTo(_rightBoundEpoch + offsetEpoch);
     }
