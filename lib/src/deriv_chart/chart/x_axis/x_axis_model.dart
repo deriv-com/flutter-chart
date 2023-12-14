@@ -18,7 +18,7 @@ import 'grid/calc_time_grid.dart';
 const double autoPanOffset = 30;
 
 /// Padding around data used in data-fit mode.
-const EdgeInsets dataFitPadding = EdgeInsets.only(left: 16, right: 120);
+const EdgeInsets defaultDataFitPadding = EdgeInsets.only(left: 16, right: 120);
 
 /// Modes that control chart's zoom and scroll behaviour without user
 /// interaction.
@@ -61,6 +61,7 @@ class XAxisModel extends ChangeNotifier {
     double? msPerPx,
     double? minIntervalWidth,
     double? maxIntervalWidth,
+    EdgeInsets? dataFitPadding,
     this.onScale,
     this.onScroll,
   }) {
@@ -83,6 +84,8 @@ class XAxisModel extends ChangeNotifier {
     _minIntervalWidth = minIntervalWidth ?? 1;
     _maxIntervalWidth = maxIntervalWidth ?? 80;
 
+    _dataFitPadding = dataFitPadding ?? defaultDataFitPadding;
+
     _updateEntries(entries);
 
     _scrollAnimationController = animationController
@@ -101,6 +104,9 @@ class XAxisModel extends ChangeNotifier {
   late double _minIntervalWidth;
 
   late double _maxIntervalWidth;
+
+  /// Padding around data used in data-fit mode.
+  late EdgeInsets _dataFitPadding;
 
   // TODO(NA): Allow customization of this setting.
   /// Default to this interval width on granularity change.
@@ -340,11 +346,11 @@ class XAxisModel extends ChangeNotifier {
       // `entries.length * granularity` gives ms duration with market gaps
       // excluded.
       final int msDataDuration = _entries!.length * granularity;
-      final double pxTargetDataWidth = width! - dataFitPadding.horizontal;
+      final double pxTargetDataWidth = width! - _dataFitPadding.horizontal;
 
       _msPerPx =
           (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
-      _scrollTo(_shiftEpoch(lastEntryEpoch, dataFitPadding.right));
+      _scrollTo(_shiftEpoch(lastEntryEpoch, _dataFitPadding.right));
     }
   }
 
@@ -532,6 +538,7 @@ class XAxisModel extends ChangeNotifier {
     List<Tick>? entries,
     int? minEpoch,
     int? maxEpoch,
+    EdgeInsets? dataFitPadding,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
@@ -539,6 +546,7 @@ class XAxisModel extends ChangeNotifier {
 
     _minEpoch = minEpoch ?? _minEpoch;
     _maxEpoch = maxEpoch ?? _maxEpoch;
+    _dataFitPadding = dataFitPadding ?? _dataFitPadding;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.

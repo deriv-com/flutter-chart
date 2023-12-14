@@ -54,6 +54,7 @@ class Chart extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
+    this.dataFitPadding,
     this.currentTickAnimationDuration,
     this.quoteBoundsAnimationDuration,
     this.showCurrentTickBlinkAnimation,
@@ -141,6 +142,9 @@ class Chart extends StatefulWidget {
   /// Specifies the maximum interval width
   /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
+
+  /// Padding around data used in data-fit mode.
+  final EdgeInsets? dataFitPadding;
 
   /// Duration of the current tick animated transition.
   final Duration? currentTickAnimationDuration;
@@ -299,6 +303,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             msPerPx: widget.msPerPx,
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
+            dataFitPadding: widget.dataFitPadding,
             scrollAnimationDuration: currentTickAnimationDuration,
             child: Column(
               children: <Widget>[
