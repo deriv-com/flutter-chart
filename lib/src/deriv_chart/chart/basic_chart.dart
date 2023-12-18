@@ -146,10 +146,10 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   /// Whether the chart data did update or not.
   void didUpdateChartData(BasicChart oldChart) {
-    if (widget.mainSeries.id == oldChart.mainSeries.id &&
-        widget.mainSeries.didUpdate(oldChart.mainSeries)) {
-      _playNewTickAnimation();
+    if (widget.mainSeries.id == oldChart.mainSeries.id) {
+      widget.mainSeries.didUpdate(oldChart.mainSeries);
     }
+    _playNewTickAnimation();
   }
 
   @override
