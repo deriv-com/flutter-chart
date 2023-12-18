@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/tick_indicator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
@@ -392,80 +391,5 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
         canvas,
         _barrierPosition! - Offset(innerIconSize / 2, innerIconSize / 2),
       );
-  }
-}
-
-///
-class AccumulatorBarrierPainter
-    extends HorizontalBarrierPainter<AccumulatorTickIndicator> {
-  /// Initializes [IconBarrierPainter].
-  AccumulatorBarrierPainter(AccumulatorTickIndicator series) : super(series);
-
-  final Paint _linePaint = Paint()
-    ..strokeWidth = 1
-    ..color = Colors.grey;
-
-  @override
-  void onPaint({
-    required Canvas canvas,
-    required Size size,
-    required EpochToX epochToX,
-    required QuoteToY quoteToY,
-    required AnimationInfo animationInfo,
-  }) {
-    super.onPaint(
-      canvas: canvas,
-      size: size,
-      epochToX: epochToX,
-      quoteToY: quoteToY,
-      animationInfo: animationInfo,
-    );
-
-    final Offset highBarrierPosition = Offset(
-      epochToX(series.barrierEpoch),
-      quoteToY(series.highBarrier),
-    );
-
-    final Offset lowBarrierPosition = Offset(
-      epochToX(series.barrierEpoch),
-      quoteToY(series.lowBarrier),
-    );
-
-    canvas
-      ..drawLine(
-        lowBarrierPosition,
-        Offset(size.width, quoteToY(series.lowBarrier)),
-        _linePaint,
-      )
-      ..drawLine(
-        highBarrierPosition,
-        Offset(size.width, quoteToY(series.highBarrier)),
-        _linePaint,
-      );
-
-    paintText(
-      canvas,
-      text: '-${series.barrierSpotDistance}',
-      anchor: lowBarrierPosition + const Offset(30, 10),
-      style: const TextStyle(color: Colors.white, fontSize: 12),
-    );
-
-    paintText(
-      canvas,
-      text: '+${series.barrierSpotDistance}',
-      anchor: highBarrierPosition + const Offset(30, -10),
-      style: const TextStyle(color: Colors.white, fontSize: 12),
-    );
-
-    if (series.profit != null) {
-      paintText(
-        canvas,
-        text: series.profit!,
-        anchor:
-            Offset(epochToX(series.tick.epoch), quoteToY(series.tick.quote)) +
-                const Offset(30, 0),
-        style: const TextStyle(color: Colors.white, fontSize: 12),
-      );
-    }
   }
 }
