@@ -5,12 +5,14 @@ void paintBlinkingGlow(
   Canvas canvas,
   Offset center,
   double animationProgress,
-  Color color,
-) =>
+  Color color, {
+  int fullSize = 12,
+  int alpha = 50,
+}) =>
     canvas.drawCircle(
       center,
-      12 * animationProgress,
-      Paint()..color = color.withAlpha(50),
+      fullSize * animationProgress,
+      Paint()..color = color.withAlpha(alpha),
     );
 
 /// Paints a dot on [center].
