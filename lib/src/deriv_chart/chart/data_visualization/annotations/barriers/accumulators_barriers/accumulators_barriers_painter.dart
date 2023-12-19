@@ -9,7 +9,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
 
-///
+/// Accumulator barriers painter.
 class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
   /// Initializes [AccumulatorBarriersPainter].
   AccumulatorBarriersPainter(super.series);
@@ -93,14 +93,14 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
       barrierX,
       quoteToY(lBarrierY),
     );
-    final Path path1 = Path()
+    final Path upperTrianglePath = Path()
       ..moveTo(highBarrierPosition.dx - 0, highBarrierPosition.dy - 0)
       ..lineTo(highBarrierPosition.dx + 4, highBarrierPosition.dy + 0)
       ..lineTo(highBarrierPosition.dx + 0, highBarrierPosition.dy + 5)
       ..lineTo(highBarrierPosition.dx + -4, highBarrierPosition.dy + 0)
       ..close();
 
-    final Path path2 = Path()
+    final Path lowerTrianglePath = Path()
       ..moveTo(lowBarrierPosition.dx - 0, lowBarrierPosition.dy - 0)
       ..lineTo(lowBarrierPosition.dx + 4, lowBarrierPosition.dy + 0)
       ..lineTo(lowBarrierPosition.dx + 0, lowBarrierPosition.dy - 5)
@@ -131,10 +131,10 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
     }
 
     canvas
-      ..drawPath(path1, _linePaint)
-      ..drawPath(path2, _linePaint)
-      ..drawPath(path1, _linePaintFill)
-      ..drawPath(path2, _linePaintFill);
+      ..drawPath(upperTrianglePath, _linePaint)
+      ..drawPath(lowerTrianglePath, _linePaint)
+      ..drawPath(upperTrianglePath, _linePaintFill)
+      ..drawPath(lowerTrianglePath, _linePaintFill);
 
     paintText(
       canvas,
