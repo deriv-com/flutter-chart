@@ -93,18 +93,46 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
       barrierX,
       quoteToY(lBarrierY),
     );
+
+    const int triangleEdge = 4;
+    const int triangleHeight = 5;
+
     final Path upperTrianglePath = Path()
-      ..moveTo(highBarrierPosition.dx - 0, highBarrierPosition.dy - 0)
-      ..lineTo(highBarrierPosition.dx + 4, highBarrierPosition.dy + 0)
-      ..lineTo(highBarrierPosition.dx + 0, highBarrierPosition.dy + 5)
-      ..lineTo(highBarrierPosition.dx + -4, highBarrierPosition.dy + 0)
+      ..moveTo(
+        highBarrierPosition.dx,
+        highBarrierPosition.dy,
+      )
+      ..lineTo(
+        highBarrierPosition.dx + triangleEdge,
+        highBarrierPosition.dy,
+      )
+      ..lineTo(
+        highBarrierPosition.dx,
+        highBarrierPosition.dy + triangleHeight,
+      )
+      ..lineTo(
+        highBarrierPosition.dx + -triangleEdge,
+        highBarrierPosition.dy,
+      )
       ..close();
 
     final Path lowerTrianglePath = Path()
-      ..moveTo(lowBarrierPosition.dx - 0, lowBarrierPosition.dy - 0)
-      ..lineTo(lowBarrierPosition.dx + 4, lowBarrierPosition.dy + 0)
-      ..lineTo(lowBarrierPosition.dx + 0, lowBarrierPosition.dy - 5)
-      ..lineTo(lowBarrierPosition.dx + -4, lowBarrierPosition.dy + 0)
+      ..moveTo(
+        lowBarrierPosition.dx,
+        lowBarrierPosition.dy,
+      )
+      ..lineTo(
+        lowBarrierPosition.dx + triangleEdge,
+        lowBarrierPosition.dy,
+      )
+      ..lineTo(
+        lowBarrierPosition.dx,
+        lowBarrierPosition.dy - triangleHeight,
+      )
+      ..lineTo(
+        lowBarrierPosition.dx + -triangleEdge,
+        lowBarrierPosition.dy,
+      )
       ..close();
 
     canvas
