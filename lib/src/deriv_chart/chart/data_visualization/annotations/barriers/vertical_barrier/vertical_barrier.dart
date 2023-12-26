@@ -12,7 +12,7 @@ class VerticalBarrier extends Barrier {
   /// Initializes a vertical barrier class.
   VerticalBarrier(
     int epoch, {
-    double? value,
+    double? quote,
     String? id,
     String? title,
     BarrierStyle? style,
@@ -21,7 +21,7 @@ class VerticalBarrier extends Barrier {
           id: id,
           title: title,
           epoch: epoch,
-          value: value,
+          quote: quote,
           style: style,
           longLine: longLine,
         );
@@ -36,7 +36,7 @@ class VerticalBarrier extends Barrier {
   }) =>
       VerticalBarrier(
         tick.epoch,
-        value: tick.quote,
+        quote: tick.quote,
         id: id,
         title: title,
         style: style,
@@ -47,7 +47,7 @@ class VerticalBarrier extends Barrier {
   SeriesPainter<Series> createPainter() => VerticalBarrierPainter(this);
 
   @override
-  BarrierObject createObject() => VerticalBarrierObject(epoch!, value: value);
+  BarrierObject createObject() => VerticalBarrierObject(epoch!, quote: quote);
 
   @override
   List<double> recalculateMinMax() =>

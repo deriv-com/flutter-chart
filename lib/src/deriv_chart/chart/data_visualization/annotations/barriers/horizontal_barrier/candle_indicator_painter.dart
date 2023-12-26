@@ -74,14 +74,14 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
     if (series.previousObject == null) {
-      animatedValue = series.value!;
+      animatedValue = series.quote!;
     } else {
       final BarrierObject previousBarrier = series.previousObject!;
       // Calculating animated values regarding `currentTickPercent` in
       // transition animation from previousObject to new object
       animatedValue = lerpDouble(
-        previousBarrier.value!,
-        series.value!,
+        previousBarrier.quote!,
+        series.quote!,
         animationInfo.currentTickPercent,
       )!;
     }
