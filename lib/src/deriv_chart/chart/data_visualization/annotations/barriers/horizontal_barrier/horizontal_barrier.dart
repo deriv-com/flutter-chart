@@ -8,7 +8,7 @@ import 'horizontal_barrier_painter.dart';
 class HorizontalBarrier extends Barrier {
   /// Initializes a horizontal barrier.
   HorizontalBarrier(
-    double value, {
+    double quote, {
     int? epoch,
     String? id,
     String? title,
@@ -19,7 +19,7 @@ class HorizontalBarrier extends Barrier {
           id: id,
           title: title,
           epoch: epoch,
-          value: value,
+          quote: quote,
           style: style,
           longLine: longLine,
         );
@@ -41,7 +41,7 @@ class HorizontalBarrier extends Barrier {
           : <double>[double.nan, double.nan];
 
   @override
-  BarrierObject createObject() => BarrierObject(leftEpoch: epoch, value: value);
+  BarrierObject createObject() => BarrierObject(leftEpoch: epoch, quote: quote);
 }
 
 /// Horizontal barrier visibility behavior and whether it contributes in

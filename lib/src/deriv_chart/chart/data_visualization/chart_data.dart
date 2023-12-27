@@ -33,7 +33,7 @@ abstract class ChartData {
   ///  new frame.
   bool shouldRepaint(ChartData? oldData);
 
-  /// Updates this [ChartData] after tye chart's epoch boundaries changes.
+  /// Updates this [ChartData] after the chart's epoch boundaries changes.
   void update(int leftEpoch, int rightEpoch);
 
   /// The minimum value this [ChartData] has at the current X-Axis epoch range

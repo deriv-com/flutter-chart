@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_barriers.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
@@ -10,26 +10,21 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:flutter/material.dart';
 
 /// Accumulator barriers painter.
-class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
-  /// Initializes [AccumulatorBarriersPainter].
-  AccumulatorBarriersPainter(super.series);
+class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
+  /// Initializes [AccumulatorIndicatorPainter].
+  AccumulatorIndicatorPainter(super.series);
 
-  /// Initializes [AccumulatorBarriersPainter].
+  /// Initializes [AccumulatorIndicatorPainter].
 
   final Paint _linePaint = Paint()
     ..strokeWidth = 1
-    ..color = Colors.grey
     ..style = PaintingStyle.stroke;
 
   final Paint _linePaintFill = Paint()
     ..strokeWidth = 1
-    ..color = Colors.grey
     ..style = PaintingStyle.fill;
 
-  final Paint _rectPaint = Paint()
-    ..color =
-        Colors.grey.withOpacity(0.08) // Set the alpha value for transparency
-    ..style = PaintingStyle.fill;
+  final Paint _rectPaint = Paint()..style = PaintingStyle.fill;
 
   @override
   void onPaint({
@@ -54,7 +49,7 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
     _linePaintFill.color = color;
     _rectPaint.color = color.withOpacity(0.08);
 
-    final AccumulatorBarriers indicator = series;
+    final AccumulatorIndicator indicator = series;
 
     double barrierX = epochToX(indicator.barrierEpoch);
     double hBarrierY = indicator.highBarrier;

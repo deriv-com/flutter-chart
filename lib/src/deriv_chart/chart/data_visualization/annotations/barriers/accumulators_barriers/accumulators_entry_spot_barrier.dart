@@ -58,7 +58,7 @@ class AccumulatorsEntrySpotBarrier extends Barrier {
           id: id,
           title: title,
           epoch: endingEpoch,
-          value: value,
+          quote: value,
           style: style,
           longLine: longLine,
         );
@@ -87,5 +87,5 @@ class AccumulatorsEntrySpotBarrier extends Barrier {
 
   @override
   BarrierObject createObject() =>
-      BarrierObject(leftEpoch: startingEpoch, rightEpoch: epoch, value: value);
+      BarrierObject(leftEpoch: startingEpoch, rightEpoch: epoch, quote: quote);
 }

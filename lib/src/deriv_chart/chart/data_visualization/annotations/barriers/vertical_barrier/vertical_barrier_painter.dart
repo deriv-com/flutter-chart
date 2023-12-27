@@ -38,8 +38,8 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
 
       if (series.previousObject == null) {
         animatedEpoch = series.epoch;
-        if (series.value != null) {
-          dotY = quoteToY(series.value!);
+        if (series.quote != null) {
+          dotY = quoteToY(series.quote!);
         }
       } else {
         final VerticalBarrierObject prevObject =
@@ -48,10 +48,10 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
                 animationInfo.currentTickPercent)!
             .toInt();
 
-        if (series.annotationObject.value != null && prevObject.value != null) {
+        if (series.annotationObject.quote != null && prevObject.quote != null) {
           dotY = quoteToY(lerpDouble(
-              prevObject.value,
-              series.annotationObject.value,
+              prevObject.quote,
+              series.annotationObject.quote,
               animationInfo.currentTickPercent)!);
         }
       }
