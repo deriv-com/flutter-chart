@@ -1,10 +1,11 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,14 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
 
   final Paint _rectPaint = Paint()..style = PaintingStyle.fill;
 
+  late Paint _paint;
+
+  /// Padding between lines.
+  static const double padding = 4;
+
+  /// Right margin.
+  static const double rightMargin = 4;
+
   @override
   void onPaint({
     required Canvas canvas,
@@ -34,8 +43,16 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
   }) {
-    // Change the barrier color based on the contract status and tick quote.
+    final HorizontalBarrierStyle style =
+        series.style as HorizontalBarrierStyle? ?? theme.horizontalBarrierStyle;
 
+    _paint = Paint()
+      ..strokeWidth = 1
+      ..color = style.color;
+
+    BarrierArrowType arrowType = BarrierArrowType.none;
+
+    // Change the barrier color based on the contract status and tick quote.
     Color color = theme.base03Color;
     if (series.isActiveContract) {
       color = theme.accentGreenColor;
@@ -52,8 +69,11 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     final AccumulatorIndicator indicator = series;
 
     double barrierX = epochToX(indicator.barrierEpoch);
-    double hBarrierY = indicator.highBarrier;
-    double lBarrierY = indicator.lowBarrier;
+    double hBarrierQuote = indicator.highBarrier;
+    double lBarrierQuote = indicator.lowBarrier;
+
+    double tickX = epochToX(indicator.tick.epoch);
+    double tickQuote = indicator.tick.quote;
 
     if (indicator.previousObject != null) {
       final AccumulatorObject? previousIndicator = indicator.previousObject;
@@ -65,29 +85,112 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
           ) ??
           barrierX;
 
-      hBarrierY = ui.lerpDouble(
+      hBarrierQuote = ui.lerpDouble(
             previousIndicator.highBarrier,
             indicator.highBarrier,
             animationInfo.currentTickPercent,
           ) ??
-          hBarrierY;
+          hBarrierQuote;
 
-      lBarrierY = ui.lerpDouble(
+      lBarrierQuote = ui.lerpDouble(
             previousIndicator.lowBarrier,
             indicator.lowBarrier,
             animationInfo.currentTickPercent,
           ) ??
-          lBarrierY;
+          lBarrierQuote;
+
+      tickX = ui.lerpDouble(
+            epochToX(previousIndicator.tick.epoch),
+            epochToX(indicator.tick.epoch),
+            animationInfo.currentTickPercent,
+          ) ??
+          tickX;
+
+      tickQuote = ui.lerpDouble(
+            previousIndicator.tick.quote,
+            indicator.tick.quote,
+            animationInfo.currentTickPercent,
+          ) ??
+          tickQuote;
     }
+
     final Offset highBarrierPosition = Offset(
       barrierX,
-      quoteToY(hBarrierY),
+      quoteToY(hBarrierQuote),
     );
 
     final Offset lowBarrierPosition = Offset(
       barrierX,
-      quoteToY(lBarrierY),
+      quoteToY(lBarrierQuote),
     );
+
+    final Offset tickPosition = Offset(
+      tickX,
+      quoteToY(tickQuote),
+    );
+
+    final TextPainter valuePainter = makeTextPainter(
+      tickQuote.toStringAsFixed(chartConfig.pipSize),
+      style.textStyle,
+    );
+
+    Offset labelCenterPosition = Offset(
+        size.width - rightMargin - padding - valuePainter.width / 2,
+        tickPosition.dy);
+
+    final Rect labelArea = Rect.fromCenter(
+      center: labelCenterPosition,
+      width: valuePainter.width + padding * 2,
+      height: style.labelHeight,
+    );
+
+    if (series.labelVisibility ==
+        HorizontalBarrierVisibility.keepBarrierLabelVisible) {
+      final double labelHalfHeight = style.labelHeight / 2;
+
+      if (labelCenterPosition.dy - labelHalfHeight < 0) {
+        labelCenterPosition = Offset(labelCenterPosition.dx, labelHalfHeight);
+        arrowType = BarrierArrowType.upward;
+      } else if (labelCenterPosition.dy + labelHalfHeight > size.height) {
+        labelCenterPosition =
+            Offset(labelCenterPosition.dx, size.height - labelHalfHeight);
+        arrowType = BarrierArrowType.downward;
+      }
+    }
+
+    // Label.
+    paintLabelBackground(canvas, labelArea, style.labelShape, _paint);
+    paintWithTextPainter(
+      canvas,
+      painter: valuePainter,
+      anchor: labelArea.center,
+    );
+
+    // Arrows.
+    if (style.hasArrow) {
+      final double arrowMidX = labelArea.left - style.arrowSize - 6;
+      if (arrowType == BarrierArrowType.upward) {
+        _paintUpwardArrows(
+          canvas,
+          center: Offset(arrowMidX, tickPosition.dy),
+          arrowSize: style.arrowSize,
+        );
+      } else if (arrowType == BarrierArrowType.downward) {
+        // TODO(Anonymous): Rotate arrows like in `paintMarker` instead of
+        // defining two identical paths only different in rotation.
+        _paintDownwardArrows(
+          canvas,
+          center: Offset(arrowMidX, tickPosition.dy),
+          arrowSize: style.arrowSize,
+        );
+      }
+    }
+
+    // Blinking dot.
+    if (style.hasBlinkingDot) {
+      paintBlinkingDot(canvas, tickPosition.dx, tickPosition.dy, animationInfo,
+          style.blinkingDotColor);
+    }
 
     const int triangleEdge = 4;
     const int triangleHeight = 5;
@@ -198,5 +301,97 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       color,
       fullSize: 6,
     );
+  }
+
+  /// Paints a background based on the given [LabelShape] for the label text.
+  void paintLabelBackground(
+      Canvas canvas, Rect rect, LabelShape shape, Paint paint,
+      {double radius = 4}) {
+    if (shape == LabelShape.rectangle) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, Radius.elliptical(radius, 4)),
+        paint,
+      );
+    } else if (shape == LabelShape.pentagon) {
+      canvas.drawPath(
+        getCurrentTickLabelBackgroundPath(
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+        ),
+        paint,
+      );
+    }
+  }
+
+  void _paintUpwardArrows(
+    Canvas canvas, {
+    required Offset center,
+    required double arrowSize,
+  }) {
+    final Paint arrowPaint = Paint()
+      ..color = _paint.color
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
+    canvas
+      ..drawPath(
+          getUpwardArrowPath(
+            center.dx,
+            center.dy + arrowSize - 1,
+            size: arrowSize,
+          ),
+          arrowPaint)
+      ..drawPath(
+          getUpwardArrowPath(
+            center.dx,
+            center.dy,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.64))
+      ..drawPath(
+          getUpwardArrowPath(
+            center.dx,
+            center.dy - arrowSize + 1,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.32));
+  }
+
+  void _paintDownwardArrows(
+    Canvas canvas, {
+    required Offset center,
+    required double arrowSize,
+  }) {
+    final Paint arrowPaint = Paint()
+      ..color = _paint.color
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
+    canvas
+      ..drawPath(
+          getDownwardArrowPath(
+            center.dx,
+            center.dy - arrowSize + 1,
+            size: arrowSize,
+          ),
+          arrowPaint)
+      ..drawPath(
+          getDownwardArrowPath(
+            center.dx,
+            center.dy,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.64))
+      ..drawPath(
+          getDownwardArrowPath(
+            center.dx,
+            center.dy + arrowSize - 1,
+            size: arrowSize,
+          ),
+          arrowPaint..color = _paint.color.withOpacity(0.32));
   }
 }

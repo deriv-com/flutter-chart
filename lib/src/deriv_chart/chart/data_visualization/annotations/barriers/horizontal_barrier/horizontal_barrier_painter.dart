@@ -107,7 +107,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
     // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
-      _paintBlinkingDot(canvas, dotX, y, animationInfo, style.blinkingDotColor);
+      paintBlinkingDot(canvas, dotX, y, animationInfo, style.blinkingDotColor);
     }
 
     final TextPainter valuePainter = makeTextPainter(
@@ -223,22 +223,6 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     }
   }
 
-  void _paintBlinkingDot(
-    Canvas canvas,
-    double dotX,
-    double y,
-    AnimationInfo animationInfo,
-    Color color,
-  ) {
-    paintDot(canvas, Offset(dotX, y), color);
-
-    paintBlinkingGlow(
-      canvas,
-      Offset(dotX, y),
-      animationInfo.blinkingPercent,
-      color,
-    );
-  }
 
   void _paintLine(
     Canvas canvas,

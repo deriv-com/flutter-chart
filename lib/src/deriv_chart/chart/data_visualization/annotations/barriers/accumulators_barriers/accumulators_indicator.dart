@@ -18,8 +18,12 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
     required this.barrierEpoch,
     required this.isActiveContract,
     String? id,
+    HorizontalBarrierStyle? style =
+        const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
+    this.labelVisibility = HorizontalBarrierVisibility.normal,
   }) : super(
           id ?? 'AccumulatorTickIndicator',
+          style: style,
         );
 
   /// The price difference between the barrier and the [tick] quote.
@@ -48,6 +52,9 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
 
   /// Weathers there is an active contract or not.
   final bool isActiveContract;
+
+  /// Tick quote label visibility behavior.
+  final HorizontalBarrierVisibility labelVisibility;
 
   @override
   SeriesPainter<Series> createPainter() => AccumulatorIndicatorPainter(this);
