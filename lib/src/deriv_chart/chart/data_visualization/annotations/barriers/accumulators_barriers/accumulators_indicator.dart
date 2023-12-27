@@ -2,12 +2,12 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
 
-import 'accumulators_barriers_painter.dart';
+import 'accumulators_indicator_painter.dart';
 
 /// Accumulator Barriers.
-class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
+class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   /// Initializes a tick indicator.
-  AccumulatorBarriers(
+  AccumulatorIndicator(
     this.tick, {
     required this.lowBarrier,
     required this.highBarrier,
@@ -50,7 +50,7 @@ class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
   final bool isActiveContract;
 
   @override
-  SeriesPainter<Series> createPainter() => AccumulatorBarriersPainter(this);
+  SeriesPainter<Series> createPainter() => AccumulatorIndicatorPainter(this);
 
   @override
   AccumulatorObject createObject() => AccumulatorObject(
