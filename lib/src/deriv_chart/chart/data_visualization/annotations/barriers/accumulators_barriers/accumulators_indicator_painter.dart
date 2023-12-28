@@ -186,6 +186,15 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       }
     }
 
+    if (arrowType == BarrierArrowType.none) {
+      final double lineStartX = tickPosition.dx;
+      final double lineEndX = labelArea.left;
+
+      if (lineStartX < lineEndX && style.hasLine) {
+        _paintLine(canvas, lineStartX, lineEndX, tickPosition.dy, style);
+      }
+    }
+
     // Blinking dot.
     if (style.hasBlinkingDot) {
       paintBlinkingDot(canvas, tickPosition.dx, tickPosition.dy, animationInfo,
@@ -393,5 +402,27 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
             size: arrowSize,
           ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
+  }
+
+  void _paintLine(
+    Canvas canvas,
+    double mainLineStartX,
+    double mainLineEndX,
+    double y,
+    HorizontalBarrierStyle style,
+  ) {
+    if (style.isDashed) {
+      paintHorizontalDashedLine(
+        canvas,
+        mainLineEndX,
+        mainLineStartX,
+        y,
+        style.color,
+        1,
+      );
+    } else {
+      canvas.drawLine(
+          Offset(mainLineStartX, y), Offset(mainLineEndX, y), _paint);
+    }
   }
 }
