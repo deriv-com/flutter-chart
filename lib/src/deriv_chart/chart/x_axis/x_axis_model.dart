@@ -3,8 +3,8 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
-import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:flutter/material.dart';
 
 import 'functions/calc_no_overlay_time_gaps.dart';
@@ -53,6 +53,7 @@ class XAxisModel extends ChangeNotifier {
     required int granularity,
     required AnimationController animationController,
     required bool isLive,
+    required this.maxCurrentTickOffset,
     bool startWithDataFitMode = false,
     int? minEpoch,
     int? maxEpoch,
@@ -90,10 +91,9 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
-  // TODO(NA): Allow customization of this setting.
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
-  static const double maxCurrentTickOffset = 150;
+  final double maxCurrentTickOffset;
 
   // TODO(NA): Allow customization of this setting.
   /// Scaling will not resize intervals to be smaller than this.

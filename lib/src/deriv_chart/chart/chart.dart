@@ -29,7 +29,7 @@ class Chart extends StatefulWidget {
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
-    this.chartAxisConfig,
+    this.chartAxisConfig = const ChartAxisConfig(),
     Key? key,
   }) : super(key: key);
 
@@ -81,7 +81,7 @@ class Chart extends StatefulWidget {
   final double opacity;
 
   /// Configurations for chart's axes.
-  final ChartAxisConfig? chartAxisConfig;
+  final ChartAxisConfig chartAxisConfig;
 
   @override
   State<StatefulWidget> createState() => _ChartState();
@@ -147,6 +147,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             onVisibleAreaChanged: _onVisibleAreaChanged,
             isLive: widget.isLive,
             startWithDataFitMode: widget.dataFitEnabled,
+            maxCurrentTickOffset:
+                widget.chartAxisConfig.maxCurrentTickOffset,
             child: Column(
               children: <Widget>[
                 Expanded(

@@ -36,7 +36,7 @@ class DerivChart extends StatefulWidget {
     this.annotations,
     this.opacity = 1.0,
     this.pipSize = 4,
-    this.chartAxisConfig,
+    this.chartAxisConfig = const ChartAxisConfig(),
     Key? key,
   }) : super(key: key);
 
@@ -69,7 +69,7 @@ class DerivChart extends StatefulWidget {
   final List<ChartAnnotation<ChartObject>>? annotations;
 
   /// Configurations for chart's axes.
-  final ChartAxisConfig? chartAxisConfig;
+  final ChartAxisConfig chartAxisConfig;
 
   /// Whether the chart should be showing live data or not.
   ///
