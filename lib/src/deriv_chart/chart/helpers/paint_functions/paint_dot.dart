@@ -31,15 +31,14 @@ void paintDot(
         ..strokeWidth = 1,
     );
 
-
 /// Paints a blinking dot on [center].
 void paintBlinkingDot(
-    Canvas canvas,
-    double dotX,
-    double y,
-    AnimationInfo animationInfo,
-    Color color,
-    ) {
+  Canvas canvas,
+  double dotX,
+  double y,
+  AnimationInfo animationInfo,
+  Color color,
+) {
   paintDot(canvas, Offset(dotX, y), color);
 
   paintBlinkingGlow(

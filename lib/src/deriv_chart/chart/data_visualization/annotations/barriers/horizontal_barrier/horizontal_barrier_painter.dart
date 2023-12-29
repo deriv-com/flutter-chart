@@ -223,7 +223,6 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     }
   }
 
-
   void _paintLine(
     Canvas canvas,
     double mainLineStartX,

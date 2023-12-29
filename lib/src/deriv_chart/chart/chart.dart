@@ -147,8 +147,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             onVisibleAreaChanged: _onVisibleAreaChanged,
             isLive: widget.isLive,
             startWithDataFitMode: widget.dataFitEnabled,
-            maxCurrentTickOffset:
-                widget.chartAxisConfig.maxCurrentTickOffset,
+            maxCurrentTickOffset: widget.chartAxisConfig.maxCurrentTickOffset,
             child: Column(
               children: <Widget>[
                 Expanded(
