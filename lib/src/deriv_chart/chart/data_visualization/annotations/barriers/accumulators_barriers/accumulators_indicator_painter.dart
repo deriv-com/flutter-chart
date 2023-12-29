@@ -32,6 +32,9 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
   /// Padding between lines.
   static const double padding = 4;
 
+  /// Padding between tick and text.
+  static const double tickTextPadding = 12;
+
   /// Right margin.
   static const double rightMargin = 4;
 
@@ -54,8 +57,12 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
 
     // Change the barrier color based on the contract status and tick quote.
     Color color = theme.base03Color;
-    if (series.isActiveContract) {
-      color = theme.accentGreenColor;
+    if (series.profit != null) {
+      if (series.profit! > 0) {
+        color = theme.accentGreenColor;
+      } else if (series.profit! < 0) {
+        color = theme.accentRedColor;
+      }
     }
 
     if (series.tick.quote > series.highBarrier ||
@@ -74,6 +81,8 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
 
     double tickX = epochToX(indicator.tick.epoch);
     double tickQuote = indicator.tick.quote;
+
+    double? animatedProfit = indicator.profit;
 
     if (indicator.previousObject != null) {
       final AccumulatorObject? previousIndicator = indicator.previousObject;
@@ -112,6 +121,15 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
             animationInfo.currentTickPercent,
           ) ??
           tickQuote;
+
+      if (indicator.profit != null && previousIndicator.profit != null) {
+        animatedProfit = ui.lerpDouble(
+              previousIndicator.profit,
+              indicator.profit!,
+              animationInfo.currentTickPercent,
+            ) ??
+            animatedProfit;
+      }
     }
 
     final Offset highBarrierPosition = Offset(
@@ -158,13 +176,10 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       }
     }
 
-    // Label.
-    paintLabelBackground(canvas, labelArea, style.labelShape, _paint);
-    paintWithTextPainter(
-      canvas,
-      painter: valuePainter,
-      anchor: labelArea.center,
-    );
+    // draw the transparent color.
+    final Rect rect = Rect.fromPoints(
+        highBarrierPosition, Offset(size.width, lowBarrierPosition.dy));
+    canvas.drawRect(rect, _rectPaint);
 
     // Arrows.
     if (style.hasArrow) {
@@ -186,13 +201,78 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       }
     }
 
+    // Line.
     if (arrowType == BarrierArrowType.none) {
       final double lineStartX = tickPosition.dx;
       final double lineEndX = labelArea.left;
 
+      // To erase the line behind profit.
+      if (animatedProfit != null && animatedProfit != 0) {
+        canvas.saveLayer(
+          Rect.fromLTRB(
+              lineStartX, tickPosition.dy - 1, lineEndX, tickPosition.dy + 1),
+          Paint(),
+        );
+      }
       if (lineStartX < lineEndX && style.hasLine) {
         _paintLine(canvas, lineStartX, lineEndX, tickPosition.dy, style);
       }
+    }
+
+    // profit
+    if (animatedProfit != null && animatedProfit != 0) {
+      final TextPainter profitPainter = makeTextPainter(
+        '${animatedProfit < 0 ? '' : '+'}${animatedProfit.toStringAsFixed(2)}',
+        style.textStyle.copyWith(color: color, fontSize: 26),
+      );
+
+      final TextPainter currencyPainter = makeTextPainter(
+        indicator.currency ?? '',
+        style.textStyle.copyWith(color: color, fontSize: 14),
+      );
+
+      final double textWidth =
+          profitPainter.width + currencyPainter.width + padding;
+      final double availableWidth = labelArea.left - tickPosition.dx;
+      late final double textStartX;
+      if (textWidth + tickTextPadding > availableWidth) {
+        textStartX = tickPosition.dx + tickTextPadding;
+      } else {
+        textStartX = tickPosition.dx + (availableWidth / 2) - (textWidth / 2);
+      }
+      final Offset profitPosition =
+          Offset(textStartX + profitPainter.width / 2, tickPosition.dy);
+
+      final Offset currencyPosition = Offset(
+          textStartX +
+              profitPainter.width +
+              currencyPainter.width / 2 +
+              padding,
+          tickPosition.dy);
+
+      final Rect profitArea = Rect.fromCenter(
+        center: Offset(textStartX + textWidth / 2, tickPosition.dy),
+        width: textWidth + padding * 2,
+        height: style.labelHeight,
+      );
+
+      // Erase the line behind title.
+      if (arrowType == BarrierArrowType.none) {
+        canvas
+          ..drawRect(profitArea, Paint()..blendMode = BlendMode.clear)
+          ..restore();
+      }
+      paintWithTextPainter(
+        canvas,
+        painter: profitPainter,
+        anchor: profitPosition,
+      );
+
+      paintWithTextPainter(
+        canvas,
+        painter: currencyPainter,
+        anchor: currencyPosition,
+      );
     }
 
     // Blinking dot.
@@ -285,9 +365,13 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       style: TextStyle(color: color, fontSize: 12),
     );
 
-    final Rect rect = Rect.fromPoints(
-        highBarrierPosition, Offset(size.width, lowBarrierPosition.dy));
-    canvas.drawRect(rect, _rectPaint);
+    // Label.
+    paintLabelBackground(canvas, labelArea, style.labelShape, _paint);
+    paintWithTextPainter(
+      canvas,
+      painter: valuePainter,
+      anchor: labelArea.center,
+    );
   }
 
   void _paintBlinkingGlow(

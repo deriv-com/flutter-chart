@@ -8,6 +8,7 @@ class AccumulatorObject extends ChartObject {
     required this.barrierEpoch,
     required this.lowBarrier,
     required this.highBarrier,
+    required this.profit,
   }) : super(barrierEpoch, null, lowBarrier, highBarrier);
 
   /// The which this tick indicator will be pointing to.
@@ -22,13 +23,19 @@ class AccumulatorObject extends ChartObject {
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
 
+  /// [Optional] The profit value which is being shown in the
+  /// middle of the tick indicator.
+  final double? profit;
+
   @override
   bool operator ==(covariant AccumulatorObject other) =>
       tick == other.tick &&
       barrierEpoch == other.barrierEpoch &&
       lowBarrier == other.lowBarrier &&
-      highBarrier == other.highBarrier;
+      highBarrier == other.highBarrier &&
+      profit == other.profit;
 
   @override
-  int get hashCode => Object.hash(tick, barrierEpoch, lowBarrier, highBarrier);
+  int get hashCode =>
+      Object.hash(tick, barrierEpoch, lowBarrier, highBarrier, profit);
 }

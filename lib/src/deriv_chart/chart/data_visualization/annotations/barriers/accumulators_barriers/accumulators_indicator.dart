@@ -13,10 +13,11 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
     required this.highBarrier,
     required this.highBarrierDisplay,
     required this.lowBarrierDisplay,
-    required this.profit,
     required this.barrierSpotDistance,
     required this.barrierEpoch,
     required this.isActiveContract,
+    this.profit,
+    this.currency,
     String? id,
     HorizontalBarrierStyle? style =
         const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
@@ -45,7 +46,10 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   final String lowBarrierDisplay;
 
   /// [Optional] The profit value which is being shown in the middle of the tick indicator.
-  final String? profit;
+  final double? profit;
+
+  /// The currency of the current asset.
+  final String? currency;
 
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
@@ -65,6 +69,7 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
         barrierEpoch: barrierEpoch,
         lowBarrier: lowBarrier,
         highBarrier: highBarrier,
+        profit: profit,
       );
 
   @override
