@@ -5,7 +5,7 @@ void main() {
   group('BarrierObject', () {
     test('Barrier with epoch values isOnEpochRange and isOnValueRange', () {
       const BarrierObject barrierObject =
-          BarrierObject(leftEpoch: 10, rightEpoch: 20, value: 10.2);
+          BarrierObject(leftEpoch: 10, rightEpoch: 20, quote: 10.2);
 
       expect(barrierObject.isOnEpochRange(5, 9), false);
 
@@ -30,7 +30,7 @@ void main() {
 
     test('Horizontal Barrier without epoch isOnEpochRange and isOnValueRange',
         () {
-      const BarrierObject hBarrierObject = BarrierObject(value: 10.2);
+      const BarrierObject hBarrierObject = BarrierObject(quote: 10.2);
 
       // A horizontal line which will be visible in the entire x-axis view port
       expect(hBarrierObject.isOnEpochRange(5, 9), true);
