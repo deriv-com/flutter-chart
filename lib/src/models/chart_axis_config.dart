@@ -34,10 +34,12 @@ class ChartAxisConfig {
   ChartAxisConfig copyWith({
     double? initialTopBoundQuote,
     double? initialBottomBoundQuote,
+    double? maxCurrentTickOffset,
   }) =>
       ChartAxisConfig(
         initialTopBoundQuote: initialTopBoundQuote ?? this.initialTopBoundQuote,
         initialBottomBoundQuote:
             initialBottomBoundQuote ?? this.initialBottomBoundQuote,
+        maxCurrentTickOffset: maxCurrentTickOffset ?? this.maxCurrentTickOffset,
       );
 }
