@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
 
@@ -15,9 +16,7 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
     required this.lowBarrierDisplay,
     required this.barrierSpotDistance,
     required this.barrierEpoch,
-    required this.isActiveContract,
-    this.profit,
-    this.currency,
+    this.activeContract,
     String? id,
     HorizontalBarrierStyle? style =
         const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
@@ -45,17 +44,11 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   /// The high barrier display value.
   final String lowBarrierDisplay;
 
-  /// [Optional] The profit value which is being shown in the middle of the tick indicator.
-  final double? profit;
-
-  /// The currency of the current asset.
-  final String? currency;
+  /// [Optional] Active contract information.
+  final AccumulatorsActiveContract? activeContract;
 
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
-
-  /// Weathers there is an active contract or not.
-  final bool isActiveContract;
 
   /// Tick quote label visibility behavior.
   final HorizontalBarrierVisibility labelVisibility;
@@ -69,7 +62,7 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
         barrierEpoch: barrierEpoch,
         lowBarrier: lowBarrier,
         highBarrier: highBarrier,
-        profit: profit,
+        profit: activeContract?.profit,
       );
 
   @override

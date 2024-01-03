@@ -57,10 +57,10 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
 
     // Change the barrier color based on the contract status and tick quote.
     Color color = theme.base03Color;
-    if (series.profit != null) {
-      if (series.profit! > 0) {
+    if (series.activeContract?.profit != null) {
+      if (series.activeContract!.profit! > 0) {
         color = theme.accentGreenColor;
-      } else if (series.profit! < 0) {
+      } else if (series.activeContract!.profit! < 0) {
         color = theme.accentRedColor;
       }
     }
@@ -82,7 +82,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     double tickX = epochToX(indicator.tick.epoch);
     double tickQuote = indicator.tick.quote;
 
-    double? animatedProfit = indicator.profit;
+    double? animatedProfit = indicator.activeContract?.profit;
 
     if (indicator.previousObject != null) {
       final AccumulatorObject? previousIndicator = indicator.previousObject;
@@ -122,10 +122,11 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
           ) ??
           tickQuote;
 
-      if (indicator.profit != null && previousIndicator.profit != null) {
+      if (indicator.activeContract?.profit != null &&
+          previousIndicator.profit != null) {
         animatedProfit = ui.lerpDouble(
               previousIndicator.profit,
-              indicator.profit!,
+              indicator.activeContract?.profit!,
               animationInfo.currentTickPercent,
             ) ??
             animatedProfit;
@@ -227,7 +228,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       );
 
       final TextPainter currencyPainter = makeTextPainter(
-        indicator.currency ?? '',
+        indicator.activeContract?.currency ?? '',
         style.textStyle.copyWith(color: color, fontSize: 14),
       );
 
