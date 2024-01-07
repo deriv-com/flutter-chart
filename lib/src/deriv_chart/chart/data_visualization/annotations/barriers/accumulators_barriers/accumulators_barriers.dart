@@ -17,6 +17,7 @@ class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
     required this.barrierSpotDistance,
     required this.barrierEpoch,
     required this.isActiveContract,
+    this.barrierEndEpoch,
     String? id,
   }) : super(
           id ?? 'AccumulatorTickIndicator',
@@ -45,6 +46,9 @@ class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
 
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
+
+  /// The [epoch] of the tick that the barriers belong to.
+  final int? barrierEndEpoch;
 
   /// Weathers there is an active contract or not.
   final bool isActiveContract;

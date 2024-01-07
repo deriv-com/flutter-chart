@@ -135,15 +135,19 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
       )
       ..close();
 
+    final double endX = indicator.barrierEndEpoch == null
+        ? size.width
+        : epochToX(series.barrierEndEpoch!);
+
     canvas
       ..drawLine(
         lowBarrierPosition,
-        Offset(size.width, lowBarrierPosition.dy),
+        Offset(endX, lowBarrierPosition.dy),
         _linePaint,
       )
       ..drawLine(
         highBarrierPosition,
-        Offset(size.width, highBarrierPosition.dy),
+        Offset(endX, highBarrierPosition.dy),
         _linePaint,
       );
 
