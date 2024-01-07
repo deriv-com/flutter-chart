@@ -1,6 +1,6 @@
 name: deriv_chart
 description: Chart for multiplier flutter app.
-version: 0.0.1
+version: 0.1.1
 publish_to: none
 
 environment:
