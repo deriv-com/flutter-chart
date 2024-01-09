@@ -135,9 +135,7 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorIndicator> {
       )
       ..close();
 
-    final double endX = indicator.barrierEndEpoch == null
-        ? size.width
-        : epochToX(series.barrierEndEpoch!);
+    final double endX = size.width;
 
     canvas
       ..drawLine(
