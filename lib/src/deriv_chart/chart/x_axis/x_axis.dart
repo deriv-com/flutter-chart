@@ -27,6 +27,7 @@ class XAxis extends StatefulWidget {
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
+    this.maxCurrentTickOffset = 150,
     Key? key,
   }) : super(key: key);
 
@@ -54,6 +55,10 @@ class XAxis extends StatefulWidget {
   /// Number of digits after decimal point in price
   final int pipSize;
 
+  /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
+  /// Limits panning to the right.
+  final double maxCurrentTickOffset;
+
   @override
   _XAxisState createState() => _XAxisState();
 }
@@ -80,6 +85,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       onScroll: _onVisibleAreaChanged,
       minEpoch: widget.minEpoch,
       maxEpoch: widget.maxEpoch,
+      maxCurrentTickOffset: widget.maxCurrentTickOffset,
     );
 
     _ticker = createTicker(_model.onNewFrame)..start();

@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_barriers.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
@@ -10,7 +10,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:flutter/material.dart';
 
 /// Accumulator barriers painter.
-class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
+class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorIndicator> {
   /// Initializes [AccumulatorBarriersPainter].
   AccumulatorBarriersPainter(super.series);
 
@@ -42,7 +42,7 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
     // Change the barrier color based on the contract status and tick quote.
 
     Color color = theme.base03Color;
-    if (series.isActiveContract) {
+    if (series.activeContract != null) {
       color = theme.accentGreenColor;
     }
 
@@ -54,7 +54,7 @@ class AccumulatorBarriersPainter extends SeriesPainter<AccumulatorBarriers> {
     _linePaintFill.color = color;
     _rectPaint.color = color.withOpacity(0.08);
 
-    final AccumulatorBarriers indicator = series;
+    final AccumulatorIndicator indicator = series;
 
     double barrierX = epochToX(indicator.barrierEpoch);
     double hBarrierY = indicator.highBarrier;

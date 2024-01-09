@@ -8,7 +8,7 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   /// Initializes a base class of barrier.
   Barrier({
     this.epoch,
-    this.value,
+    this.quote,
     String? id,
     this.title,
     this.longLine = true,
@@ -27,7 +27,7 @@ abstract class Barrier extends ChartAnnotation<BarrierObject> {
   final int? epoch;
 
   /// The value that this barrier points to.
-  final double? value;
+  final double? quote;
 
   @override
   int? getMaxEpoch() => epoch;

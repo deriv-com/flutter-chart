@@ -1,26 +1,30 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
 
-import 'accumulators_barriers_painter.dart';
+import 'accumulators_indicator_painter.dart';
 
 /// Accumulator Barriers.
-class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
+class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   /// Initializes a tick indicator.
-  AccumulatorBarriers(
+  AccumulatorIndicator(
     this.tick, {
     required this.lowBarrier,
     required this.highBarrier,
     required this.highBarrierDisplay,
     required this.lowBarrierDisplay,
-    required this.profit,
     required this.barrierSpotDistance,
     required this.barrierEpoch,
-    required this.isActiveContract,
     this.barrierEndEpoch,
+    this.activeContract,
     String? id,
+    HorizontalBarrierStyle? style =
+        const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
+    this.labelVisibility = HorizontalBarrierVisibility.normal,
   }) : super(
           id ?? 'AccumulatorTickIndicator',
+          style: style,
         );
 
   /// The price difference between the barrier and the [tick] quote.
@@ -41,8 +45,8 @@ class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
   /// The high barrier display value.
   final String lowBarrierDisplay;
 
-  /// [Optional] The profit value which is being shown in the middle of the tick indicator.
-  final String? profit;
+  /// [Optional] Active contract information.
+  final AccumulatorsActiveContract? activeContract;
 
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
@@ -50,11 +54,11 @@ class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
   /// The [epoch] of the tick that the barriers belong to.
   final int? barrierEndEpoch;
 
-  /// Weathers there is an active contract or not.
-  final bool isActiveContract;
+  /// Tick quote label visibility behavior.
+  final HorizontalBarrierVisibility labelVisibility;
 
   @override
-  SeriesPainter<Series> createPainter() => AccumulatorBarriersPainter(this);
+  SeriesPainter<Series> createPainter() => AccumulatorIndicatorPainter(this);
 
   @override
   AccumulatorObject createObject() => AccumulatorObject(
@@ -62,6 +66,7 @@ class AccumulatorBarriers extends ChartAnnotation<AccumulatorObject> {
         barrierEpoch: barrierEpoch,
         lowBarrier: lowBarrier,
         highBarrier: highBarrier,
+        profit: activeContract?.profit,
       );
 
   @override
