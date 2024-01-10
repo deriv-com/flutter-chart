@@ -253,9 +253,16 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 _buildSeries(),
                 _buildAnnotations(),
                 if (widget.markerSeries != null)
-                  MarkerArea(
-                    markerSeries: widget.markerSeries!,
-                    quoteToCanvasY: chartQuoteToCanvasY,
+                  MultipleAnimatedBuilder(
+                    animations: <Listenable>[
+                      currentTickAnimation,
+                      topBoundQuoteAnimationController,
+                      bottomBoundQuoteAnimationController,
+                    ],
+                    builder: (_, __) => MarkerArea(
+                      markerSeries: widget.markerSeries!,
+                      quoteToCanvasY: chartQuoteToCanvasY,
+                    ),
                   ),
                 _buildCrosshairArea(),
                 if (_isScrollToLastTickAvailable)
