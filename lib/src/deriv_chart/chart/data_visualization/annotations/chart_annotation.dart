@@ -77,10 +77,12 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
       isOnRange = annotationObject.isOnEpochRange(leftEpoch, rightEpoch);
 
   @override
-  List<double> recalculateMinMax() => <double>[
-        annotationObject.bottomValue ?? double.nan,
-        annotationObject.topValue ?? double.nan
-      ];
+  List<double> recalculateMinMax() => isOnRange
+      ? <double>[
+          annotationObject.bottomValue ?? double.nan,
+          annotationObject.topValue ?? double.nan
+        ]
+      : <double>[double.nan, double.nan];
 
   /// Prepares the [annotationObject] of this [ChartAnnotation].
   T createObject();

@@ -9,7 +9,8 @@ class AccumulatorObject extends ChartObject {
     required this.lowBarrier,
     required this.highBarrier,
     required this.profit,
-  }) : super(barrierEpoch, null, lowBarrier, highBarrier);
+    this.barrierEndEpoch,
+  }) : super(barrierEpoch, barrierEndEpoch, lowBarrier, highBarrier);
 
   /// The which this tick indicator will be pointing to.
   final Tick tick;
@@ -22,6 +23,8 @@ class AccumulatorObject extends ChartObject {
 
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
+
+  final int? barrierEndEpoch;
 
   /// [Optional] The profit value which is being shown in the
   /// middle of the tick indicator.

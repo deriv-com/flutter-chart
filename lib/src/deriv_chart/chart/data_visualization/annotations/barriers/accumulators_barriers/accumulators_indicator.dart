@@ -8,8 +8,7 @@ import 'accumulators_indicator_painter.dart';
 /// Accumulator Barriers.
 class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   /// Initializes a tick indicator.
-  AccumulatorIndicator(
-    this.tick, {
+  AccumulatorIndicator(this.tick, {
     required this.lowBarrier,
     required this.highBarrier,
     required this.highBarrierDisplay,
@@ -19,12 +18,12 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
     this.activeContract,
     String? id,
     HorizontalBarrierStyle? style =
-        const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
+    const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
     this.labelVisibility = HorizontalBarrierVisibility.normal,
   }) : super(
-          id ?? 'AccumulatorTickIndicator',
-          style: style,
-        );
+    id ?? 'AccumulatorTickIndicator',
+    style: style,
+  );
 
   /// The price difference between the barrier and the [tick] quote.
   final String barrierSpotDistance;
@@ -57,7 +56,8 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   SeriesPainter<Series> createPainter() => AccumulatorIndicatorPainter(this);
 
   @override
-  AccumulatorObject createObject() => AccumulatorObject(
+  AccumulatorObject createObject() =>
+      AccumulatorObject(
         tick: tick,
         barrierEpoch: barrierEpoch,
         lowBarrier: lowBarrier,
@@ -75,21 +75,20 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
 /// Accumulator Barriers.
 class AccumulatorClosedIndicator extends ChartAnnotation<AccumulatorObject> {
   /// Initializes a tick indicator.
-  AccumulatorClosedIndicator(
-      this.tick, {
-        required this.lowBarrier,
-        required this.highBarrier,
-        required this.highBarrierDisplay,
-        required this.lowBarrierDisplay,
-        required this.barrierSpotDistance,
-        required this.barrierEpoch,
-        required this.barrierEndEpoch,
-        this.activeContract,
-        String? id,
-        HorizontalBarrierStyle? style =
-        const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
-        this.labelVisibility = HorizontalBarrierVisibility.normal,
-      }) : super(
+  AccumulatorClosedIndicator(this.tick, {
+    required this.lowBarrier,
+    required this.highBarrier,
+    required this.highBarrierDisplay,
+    required this.lowBarrierDisplay,
+    required this.barrierSpotDistance,
+    required this.barrierEpoch,
+    required this.barrierEndEpoch,
+    this.activeContract,
+    String? id,
+    HorizontalBarrierStyle? style =
+    const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
+    this.labelVisibility = HorizontalBarrierVisibility.normal,
+  }) : super(
     id ?? 'AccumulatorTickIndicator',
     style: style,
   );
@@ -125,16 +124,19 @@ class AccumulatorClosedIndicator extends ChartAnnotation<AccumulatorObject> {
   final HorizontalBarrierVisibility labelVisibility;
 
   @override
-  SeriesPainter<Series> createPainter() => AccumulatorClosedIndicatorPainter(this);
+  SeriesPainter<Series> createPainter() =>
+      AccumulatorClosedIndicatorPainter(this);
 
   @override
-  AccumulatorObject createObject() => AccumulatorObject(
-    tick: tick,
-    barrierEpoch: barrierEpoch,
-    lowBarrier: lowBarrier,
-    highBarrier: highBarrier,
-    profit: activeContract?.profit,
-  );
+  AccumulatorObject createObject() =>
+      AccumulatorObject(
+        tick: tick,
+        barrierEpoch: barrierEpoch,
+        lowBarrier: lowBarrier,
+        highBarrier: highBarrier,
+        profit: activeContract?.profit,
+        barrierEndEpoch: barrierEndEpoch,
+      );
 
   @override
   int? getMaxEpoch() => barrierEpoch;
