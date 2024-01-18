@@ -75,7 +75,11 @@ void _paintTimeLabels(
         xCoords[index],
         size.height - gridStyle.xLabelsAreaHeight / 2,
       ),
-      style: gridStyle.xLabelStyle,
+      style: TextStyle(
+        fontSize: 10,
+        height: 1.3,
+        color: gridStyle.xLabelStyle.color,
+      ),
     );
   }
 }
