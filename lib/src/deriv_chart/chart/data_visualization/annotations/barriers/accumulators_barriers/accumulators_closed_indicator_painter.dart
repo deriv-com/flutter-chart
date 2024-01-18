@@ -84,7 +84,11 @@ class AccumulatorClosedIndicatorPainter
     // draw the transparent color.
     final Rect rect = Rect.fromPoints(
       highBarrierPosition,
-      Offset(epochToX(series.barrierEndEpoch), lowBarrierPosition.dy),
+      Offset(
+          series.barrierEndEpoch != null
+              ? epochToX(series.barrierEndEpoch!)
+              : size.width,
+          lowBarrierPosition.dy),
     );
     canvas.drawRect(rect, _rectPaint);
 
@@ -132,12 +136,20 @@ class AccumulatorClosedIndicatorPainter
     canvas
       ..drawLine(
         lowBarrierPosition,
-        Offset(epochToX(series.barrierEndEpoch), lowBarrierPosition.dy),
+        Offset(
+            series.barrierEndEpoch != null
+                ? epochToX(series.barrierEndEpoch!)
+                : size.width,
+            lowBarrierPosition.dy),
         _linePaint,
       )
       ..drawLine(
         highBarrierPosition,
-        Offset(epochToX(series.barrierEndEpoch), highBarrierPosition.dy),
+        Offset(
+            series.barrierEndEpoch != null
+                ? epochToX(series.barrierEndEpoch!)
+                : size.width,
+            highBarrierPosition.dy),
         _linePaint,
       )
       ..drawPath(upperTrianglePath, _linePaint)
