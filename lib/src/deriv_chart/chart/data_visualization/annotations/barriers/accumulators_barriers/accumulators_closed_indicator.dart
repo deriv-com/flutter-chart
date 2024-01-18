@@ -15,7 +15,7 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
     required this.lowBarrierDisplay,
     required this.barrierSpotDistance,
     required this.barrierEpoch,
-    required this.barrierExitEpoch,
+    required this.barrierEndEpoch,
     required this.activeContract,
     super.style,
     String? id,
@@ -46,7 +46,7 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
   final int barrierEpoch;
 
   /// The [epoch] of the tick that the barriers belong to.
-  final int barrierExitEpoch;
+  final int barrierEndEpoch;
 
   @override
   SeriesPainter<Series> createPainter() =>
@@ -59,7 +59,7 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
         lowBarrier: lowBarrier,
         highBarrier: highBarrier,
         profit: activeContract?.profit,
-        barrierEndEpoch: barrierExitEpoch,
+        barrierEndEpoch: barrierEndEpoch,
       );
 
   @override
