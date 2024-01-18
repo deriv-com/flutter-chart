@@ -75,12 +75,12 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
         !isOnRange) {
       return <double>[double.nan, double.nan];
     }
-    final double barriersDelta =
-        annotationObject.highBarrier - annotationObject.lowBarrier;
+    final double halfOfBarriersDelta =
+        (annotationObject.highBarrier - annotationObject.lowBarrier) / 2;
 
     return <double>[
-      annotationObject.bottomValue! - barriersDelta / 2,
-      annotationObject.topValue! + barriersDelta / 2,
+      annotationObject.bottomValue! - halfOfBarriersDelta,
+      annotationObject.topValue! + halfOfBarriersDelta,
     ];
   }
 }
