@@ -1,5 +1,4 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
 
@@ -8,7 +7,8 @@ import 'accumulators_indicator_painter.dart';
 /// Accumulator Barriers.
 class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   /// Initializes a tick indicator.
-  AccumulatorIndicator(this.tick, {
+  AccumulatorIndicator(
+    this.tick, {
     required this.lowBarrier,
     required this.highBarrier,
     required this.highBarrierDisplay,
@@ -18,12 +18,12 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
     this.activeContract,
     String? id,
     HorizontalBarrierStyle? style =
-    const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
+        const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
     this.labelVisibility = HorizontalBarrierVisibility.normal,
   }) : super(
-    id ?? 'AccumulatorTickIndicator',
-    style: style,
-  );
+          id ?? 'AccumulatorTickIndicator',
+          style: style,
+        );
 
   /// The price difference between the barrier and the [tick] quote.
   final String barrierSpotDistance;
@@ -56,8 +56,7 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   SeriesPainter<Series> createPainter() => AccumulatorIndicatorPainter(this);
 
   @override
-  AccumulatorObject createObject() =>
-      AccumulatorObject(
+  AccumulatorObject createObject() => AccumulatorObject(
         tick: tick,
         barrierEpoch: barrierEpoch,
         lowBarrier: lowBarrier,
@@ -70,5 +69,20 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
 
   @override
   int? getMinEpoch() => barrierEpoch;
-}
 
+  @override
+  List<double> recalculateMinMax() {
+    if (annotationObject.bottomValue == null ||
+        annotationObject.topValue == null ||
+        !isOnRange) {
+      return <double>[double.nan, double.nan];
+    }
+    final double barriersDelta =
+        annotationObject.highBarrier - annotationObject.lowBarrier;
+
+    return <double>[
+      annotationObject.bottomValue! - barriersDelta / 2,
+      annotationObject.topValue! + barriersDelta / 2
+    ];
+  }
+}

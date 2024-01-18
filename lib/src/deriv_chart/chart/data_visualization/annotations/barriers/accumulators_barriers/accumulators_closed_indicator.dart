@@ -67,4 +67,20 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
 
   @override
   int? getMinEpoch() => barrierEpoch;
+
+  @override
+  List<double> recalculateMinMax() {
+    if (annotationObject.bottomValue == null ||
+        annotationObject.topValue == null ||
+        !isOnRange) {
+      return <double>[double.nan, double.nan];
+    }
+    final double barriersDelta =
+        annotationObject.highBarrier - annotationObject.lowBarrier;
+
+    return <double>[
+      annotationObject.bottomValue! - barriersDelta / 2,
+      annotationObject.topValue! + barriersDelta / 2,
+    ];
+  }
 }
