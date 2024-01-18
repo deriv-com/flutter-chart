@@ -1,35 +1,31 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
 
-import 'accumulators_indicator_painter.dart';
+import 'accumulators_closed_indicator_painter.dart';
 
-/// Accumulator Barriers.
-class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
+/// Accumulator Closed Contract Barriers.
+class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
   /// Initializes a tick indicator.
-  AccumulatorIndicator(this.tick, {
+  AccumulatorsClosedIndicator(
+    this.exitTick, {
     required this.lowBarrier,
     required this.highBarrier,
     required this.highBarrierDisplay,
     required this.lowBarrierDisplay,
     required this.barrierSpotDistance,
     required this.barrierEpoch,
-    this.activeContract,
+    required this.barrierExitEpoch,
+    required this.activeContract,
+    super.style,
     String? id,
-    HorizontalBarrierStyle? style =
-    const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
-    this.labelVisibility = HorizontalBarrierVisibility.normal,
-  }) : super(
-    id ?? 'AccumulatorTickIndicator',
-    style: style,
-  );
+  }) : super(id ?? 'AccumulatorsClosedIndicator');
 
-  /// The price difference between the barrier and the [tick] quote.
+  /// The price difference between the barrier and the barrier Tick quote.
   final String barrierSpotDistance;
 
   /// The which this tick indicator will be pointing to.
-  final Tick tick;
+  final Tick exitTick;
 
   /// The low barrier value.
   final double lowBarrier;
@@ -49,20 +45,21 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
 
-  /// Tick quote label visibility behavior.
-  final HorizontalBarrierVisibility labelVisibility;
+  /// The [epoch] of the tick that the barriers belong to.
+  final int barrierExitEpoch;
 
   @override
-  SeriesPainter<Series> createPainter() => AccumulatorIndicatorPainter(this);
+  SeriesPainter<Series> createPainter() =>
+      AccumulatorClosedIndicatorPainter(this);
 
   @override
-  AccumulatorObject createObject() =>
-      AccumulatorObject(
-        tick: tick,
+  AccumulatorObject createObject() => AccumulatorObject(
+        tick: exitTick,
         barrierEpoch: barrierEpoch,
         lowBarrier: lowBarrier,
         highBarrier: highBarrier,
         profit: activeContract?.profit,
+        barrierEndEpoch: barrierExitEpoch,
       );
 
   @override
@@ -71,4 +68,3 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   @override
   int? getMinEpoch() => barrierEpoch;
 }
-
