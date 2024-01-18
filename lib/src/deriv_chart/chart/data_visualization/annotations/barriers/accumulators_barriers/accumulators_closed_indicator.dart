@@ -50,7 +50,7 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
 
   @override
   SeriesPainter<Series> createPainter() =>
-      AccumulatorClosedIndicatorPainter(this);
+      AccumulatorsClosedIndicatorPainter(this);
 
   @override
   AccumulatorObject createObject() => AccumulatorObject(

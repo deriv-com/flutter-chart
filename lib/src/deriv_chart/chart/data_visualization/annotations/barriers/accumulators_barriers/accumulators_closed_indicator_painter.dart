@@ -7,10 +7,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:flutter/material.dart';
 
 /// Accumulator barriers painter.
-class AccumulatorClosedIndicatorPainter
+class AccumulatorsClosedIndicatorPainter
     extends SeriesPainter<AccumulatorsClosedIndicator> {
-  /// Initializes [AccumulatorClosedIndicatorPainter].
-  AccumulatorClosedIndicatorPainter(super.series);
+  /// Initializes [AccumulatorsClosedIndicatorPainter].
+  AccumulatorsClosedIndicatorPainter(super.series);
 
   final Paint _linePaint = Paint()
     ..strokeWidth = 1
