@@ -122,6 +122,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     final ChartConfig chartConfig = ChartConfig(
       pipSize: widget.pipSize,
       granularity: widget.granularity,
+      chartAxisConfig: widget.chartAxisConfig,
     );
 
     final List<ChartData> chartDataList = <ChartData>[

@@ -286,9 +286,11 @@ class BasicChartState<T extends BasicChart> extends State<T>
           return Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              _buildQuoteGridLine(gridLineQuotes),
+              if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                _buildQuoteGridLine(gridLineQuotes),
               _buildChartData(),
-              _buildQuoteGridLabel(gridLineQuotes),
+              if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                _buildQuoteGridLabel(gridLineQuotes),
             ],
           );
         },

@@ -18,6 +18,8 @@ class ChartAxisConfig {
     this.initialTopBoundQuote = defaultTopBoundQuote,
     this.initialBottomBoundQuote = defaultBottomBoundQuote,
     this.maxCurrentTickOffset = defaultMaxCurrentTickOffset,
+    this.showQuoteGrid = true,
+    this.showEpochGrid = true,
   });
 
   /// Top quote bound target for animated transition.
@@ -29,6 +31,12 @@ class ChartAxisConfig {
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
   final double maxCurrentTickOffset;
+
+  /// Show Quote Grid lines and labels.
+  final bool showQuoteGrid;
+
+  /// Show Epoch Grid lines and labels.
+  final bool showEpochGrid;
 
   /// Creates a copy of this ChartAxisConfig but with the given fields replaced.
   ChartAxisConfig copyWith({

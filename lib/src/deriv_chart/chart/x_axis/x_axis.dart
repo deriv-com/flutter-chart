@@ -145,20 +145,21 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
             return Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                RepaintBoundary(
-                  child: CustomPaint(
-                    painter: XGridPainter(
-                      timeLabels: _noOverlapGridTimestamps
-                          .map<String>((DateTime time) => timeLabel(time))
-                          .toList(),
-                      xCoords: _noOverlapGridTimestamps
-                          .map<double>((DateTime time) =>
-                              _model.xFromEpoch(time.millisecondsSinceEpoch))
-                          .toList(),
-                      style: _chartTheme.gridStyle,
+                if (context.read<ChartConfig>().chartAxisConfig.showEpochGrid)
+                  RepaintBoundary(
+                    child: CustomPaint(
+                      painter: XGridPainter(
+                        timeLabels: _noOverlapGridTimestamps
+                            .map<String>((DateTime time) => timeLabel(time))
+                            .toList(),
+                        xCoords: _noOverlapGridTimestamps
+                            .map<double>((DateTime time) =>
+                                _model.xFromEpoch(time.millisecondsSinceEpoch))
+                            .toList(),
+                        style: _chartTheme.gridStyle,
+                      ),
                     ),
                   ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(
                     bottom: _chartTheme.gridStyle.xLabelsAreaHeight,
