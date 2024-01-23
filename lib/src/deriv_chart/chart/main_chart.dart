@@ -124,7 +124,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     super.initState();
 
     widget.controller?.onScrollToLastTick = ({required bool animate}) {
-      xAxis.scrollToLastTick(animate: animate);
+      if (mounted) {
+        xAxis.scrollToLastTick(animate: animate);
+      }
     };
   }
 
