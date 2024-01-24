@@ -18,6 +18,7 @@ class ChartAxisConfig {
     this.initialTopBoundQuote = defaultTopBoundQuote,
     this.initialBottomBoundQuote = defaultBottomBoundQuote,
     this.maxCurrentTickOffset = defaultMaxCurrentTickOffset,
+    this.defaultIntervalWidth = 20,
     this.showQuoteGrid = true,
     this.showEpochGrid = true,
   });
@@ -37,6 +38,11 @@ class ChartAxisConfig {
 
   /// Show Epoch Grid lines and labels.
   final bool showEpochGrid;
+
+  /// The default distance between two ticks in pixels.
+  ///
+  /// Default to this interval width on granularity change.
+  final double defaultIntervalWidth;
 
   /// Creates a copy of this ChartAxisConfig but with the given fields replaced.
   ChartAxisConfig copyWith({

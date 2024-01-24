@@ -54,6 +54,7 @@ class XAxisModel extends ChangeNotifier {
     required AnimationController animationController,
     required bool isLive,
     required this.maxCurrentTickOffset,
+    this.defaultIntervalWidth = 20,
     bool startWithDataFitMode = false,
     int? minEpoch,
     int? maxEpoch,
@@ -103,9 +104,8 @@ class XAxisModel extends ChangeNotifier {
   /// Scaling will not resize intervals to be bigger than this.
   static const int maxIntervalWidth = 80;
 
-  // TODO(NA): Allow customization of this setting.
   /// Default to this interval width on granularity change.
-  static const int defaultIntervalWidth = 20;
+  final double defaultIntervalWidth;
 
   late bool _isLive;
 
