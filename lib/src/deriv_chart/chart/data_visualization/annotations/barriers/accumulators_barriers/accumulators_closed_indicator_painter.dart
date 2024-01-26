@@ -160,97 +160,100 @@ class AccumulatorsClosedIndicatorPainter
     // Draw exit tick position.
     paintDot(canvas, exitTickPosition, color);
 
-    // draw dialog
-    const double dotPadding = 5;
-    const int dialogTriangleEdge = 6;
-    const int dialogTriangleHeight = 4;
+    if (indicator.showExitDialog) {
+      // draw dialog
+      const double dotPadding = 5;
+      const int dialogTriangleEdge = 6;
+      const int dialogTriangleHeight = 4;
 
-    final Path dialogTrianglePath = Path()
-      ..moveTo(
-        exitTickPosition.dx - dotPadding,
-        exitTickPosition.dy,
-      )
-      ..lineTo(
-        exitTickPosition.dx - dotPadding - dialogTriangleHeight,
-        exitTickPosition.dy - dialogTriangleEdge / 2,
-      )
-      ..lineTo(
-        exitTickPosition.dx - dotPadding - dialogTriangleHeight,
-        exitTickPosition.dy + dialogTriangleEdge / 2,
-      )
-      ..lineTo(
-        exitTickPosition.dx - dotPadding,
-        exitTickPosition.dy,
-      )
-      ..close();
+      final Path dialogTrianglePath = Path()
+        ..moveTo(
+          exitTickPosition.dx - dotPadding,
+          exitTickPosition.dy,
+        )
+        ..lineTo(
+          exitTickPosition.dx - dotPadding - dialogTriangleHeight,
+          exitTickPosition.dy - dialogTriangleEdge / 2,
+        )
+        ..lineTo(
+          exitTickPosition.dx - dotPadding - dialogTriangleHeight,
+          exitTickPosition.dy + dialogTriangleEdge / 2,
+        )
+        ..lineTo(
+          exitTickPosition.dx - dotPadding,
+          exitTickPosition.dy,
+        )
+        ..close();
 
-    canvas
-      ..drawPath(dialogTrianglePath, _linePaintFill)
-      ..drawPath(dialogTrianglePath, _linePaint);
+      canvas
+        ..drawPath(dialogTrianglePath, _linePaintFill)
+        ..drawPath(dialogTrianglePath, _linePaint);
 
-    if (indicator.activeContract?.profit != null) {
-      final double profit = indicator.activeContract!.profit!;
-      final String profitText =
-          '${profit < 0 ? '' : '+'}${profit.toStringAsFixed(2)}';
-      final String currencyText = '${indicator.activeContract?.currency ?? ''}';
-      final TextPainter profitPainter = makeTextPainter(
-        '$profitText $currencyText',
-        style.textStyle.copyWith(
-            color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
-      );
+      if (indicator.activeContract?.profit != null) {
+        final double profit = indicator.activeContract!.profit!;
+        final String profitText =
+            '${profit < 0 ? '' : '+'}${profit.toStringAsFixed(2)}';
+        final String currencyText =
+            '${indicator.activeContract?.currency ?? ''}';
+        final TextPainter profitPainter = makeTextPainter(
+          '$profitText $currencyText',
+          style.textStyle.copyWith(
+              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+        );
 
-      final TextPainter winLossPainter = makeTextPainter(
-        indicator.activeContract!.profit! > 0 ? 'Won:' : 'Loss:',
-        style.textStyle.copyWith(
-            color: Colors.white, fontSize: 10, fontWeight: FontWeight.w400),
-      );
+        final TextPainter winLossPainter = makeTextPainter(
+          indicator.activeContract!.profit! > 0 ? 'Won:' : 'Loss:',
+          style.textStyle.copyWith(
+              color: Colors.white, fontSize: 10, fontWeight: FontWeight.w400),
+        );
 
-      final double textHeight = profitPainter.height + winLossPainter.height;
-      final double textWidth = profitPainter.width;
+        final double textHeight = profitPainter.height + winLossPainter.height;
+        final double textWidth = profitPainter.width;
 
-      final double dialogRightSide =
-          exitTickPosition.dx - dotPadding - dialogTriangleHeight - padding;
-      final double dialogLeftSide = dialogRightSide - textWidth;
+        final double dialogRightSide =
+            exitTickPosition.dx - dotPadding - dialogTriangleHeight - padding;
+        final double dialogLeftSide = dialogRightSide - textWidth;
 
-      final double dialogDownSide = exitTickPosition.dy + textHeight / 2;
-      final double dialogUpSide = exitTickPosition.dy - textHeight / 2;
+        final double dialogDownSide = exitTickPosition.dy + textHeight / 2;
+        final double dialogUpSide = exitTickPosition.dy - textHeight / 2;
 
-      final Rect dialogRect = Rect.fromLTRB(
-        dialogLeftSide - padding,
-        dialogUpSide - padding,
-        dialogRightSide + padding,
-        dialogDownSide + padding,
-      );
-      final RRect rRect =
-          RRect.fromRectAndRadius(dialogRect, const Radius.circular(4));
+        final Rect dialogRect = Rect.fromLTRB(
+          dialogLeftSide - padding,
+          dialogUpSide - padding,
+          dialogRightSide + padding,
+          dialogDownSide + padding,
+        );
+        final RRect rRect =
+            RRect.fromRectAndRadius(dialogRect, const Radius.circular(4));
 
-      _rectPaint.color = color.withOpacity(1);
-      canvas.drawRRect(rRect, _rectPaint);
+        _rectPaint.color = color.withOpacity(1);
+        canvas.drawRRect(rRect, _rectPaint);
 
-      final Offset winLossPosition = Offset(
-        dialogLeftSide + winLossPainter.width / 2,
-        exitTickPosition.dy - textHeight / 2 + winLossPainter.height / 2,
-      );
+        final Offset winLossPosition = Offset(
+          dialogLeftSide + winLossPainter.width / 2,
+          exitTickPosition.dy - textHeight / 2 + winLossPainter.height / 2,
+        );
 
-      paintWithTextPainter(
-        canvas,
-        painter: winLossPainter,
-        anchor: winLossPosition,
-      );
+        paintWithTextPainter(
+          canvas,
+          painter: winLossPainter,
+          anchor: winLossPosition,
+        );
 
-      final Offset profitPosition = Offset(
-        dialogLeftSide + profitPainter.width / 2,
-        exitTickPosition.dy -
-            textHeight / 2 +
-            profitPainter.height / 2 +
-            winLossPainter.height,
-      );
+        final Offset profitPosition = Offset(
+          dialogLeftSide + profitPainter.width / 2,
+          exitTickPosition.dy -
+              textHeight / 2 +
+              profitPainter.height / 2 +
+              winLossPainter.height,
+        );
 
-      paintWithTextPainter(
-        canvas,
-        painter: profitPainter,
-        anchor: profitPosition,
-      );
+        paintWithTextPainter(
+          canvas,
+          painter: profitPainter,
+          anchor: profitPosition,
+        );
+      }
     }
   }
 }

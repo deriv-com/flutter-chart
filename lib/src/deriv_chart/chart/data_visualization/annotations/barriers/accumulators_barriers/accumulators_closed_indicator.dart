@@ -16,6 +16,7 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
     required this.barrierSpotDistance,
     required this.barrierEpoch,
     required this.activeContract,
+    this.showExitDialog = true,
     this.barrierEndEpoch,
     super.style,
     String? id,
@@ -47,6 +48,9 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
 
   /// The End if the barrier, if [null] the barriers will go to the end of the screen.
   final int? barrierEndEpoch;
+
+  /// Show exit dialog.
+  final bool showExitDialog;
 
   @override
   SeriesPainter<Series> createPainter() =>
