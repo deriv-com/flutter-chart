@@ -7,6 +7,7 @@ void main() {
       minCandleDurationForDataFit(
         const Duration(seconds: 30),
         236,
+        20,
       ),
       const Duration(seconds: 6),
     );
