@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_wrapper.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -291,7 +291,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
       child: Ink(
         color: _chartTheme.base08Color,
         child: GestureManager(
-          child: XAxis(
+          child: XAxisWrapper(
             maxEpoch: chartDataList.getMaxEpoch(),
             minEpoch: chartDataList.getMinEpoch(),
             entries: widget.mainSeries.input,

@@ -4,15 +4,11 @@ import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import 'grid/x_grid_painter.dart';
 import 'x_axis_model.dart';
-
-const Duration _defaultDuration = Duration(milliseconds: 300);
 
 /// X-axis widget.
 ///
@@ -26,6 +22,7 @@ class XAxis extends StatefulWidget {
     required this.isLive,
     required this.startWithDataFitMode,
     required this.pipSize,
+    required this.scrollAnimationDuration,
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
@@ -34,7 +31,6 @@ class XAxis extends StatefulWidget {
     this.minIntervalWidth,
     this.maxIntervalWidth,
     this.dataFitPadding,
-    this.scrollAnimationDuration = _defaultDuration,
     Key? key,
   }) : super(key: key);
 
@@ -83,16 +79,20 @@ class XAxis extends StatefulWidget {
   final Duration scrollAnimationDuration;
 
   @override
-  _XAxisState createState() => _XAxisState();
+  XAxisState createState() => XAxisState();
 }
 
-class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
+/// XAxisState
+class XAxisState extends State<XAxis> with TickerProviderStateMixin {
   late XAxisModel _model;
-  Ticker? _ticker;
-  AnimationController? _scrollAnimationController;
+
   late AnimationController _rightEpochAnimationController;
 
+  /// GestureManager
   late GestureManagerState gestureManager;
+
+  /// XAxisModel
+  XAxisModel get model => _model;
 
   @override
   void initState() {
@@ -116,52 +116,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       dataFitPadding: widget.dataFitPadding,
     );
 
-    if (kIsWeb) {
-      _scrollAnimationController = AnimationController(
-        vsync: this,
-        duration: widget.scrollAnimationDuration,
-      );
-
-      final CurvedAnimation scrollAnimation = CurvedAnimation(
-        parent: _scrollAnimationController!,
-        curve: Curves.easeOut,
-      );
-
-      final int granularity = context.read<ChartConfig>().granularity;
-
-      int prevOffsetEpoch = 0;
-
-      scrollAnimation.addListener(
-        () {
-          if (scrollAnimation.value == 0) {
-            prevOffsetEpoch = 0;
-          }
-
-          final int offsetEpoch = (scrollAnimation.value * granularity).toInt();
-
-          _model.scrollAnimationListener(offsetEpoch - prevOffsetEpoch);
-          prevOffsetEpoch = offsetEpoch;
-        },
-      );
-
-      fitData();
-    } else {
-      _ticker = createTicker(_model.onNewFrame)..start();
-    }
-
     gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_model.onScaleAndPanStart)
       ..registerCallback(_model.onScaleUpdate)
       ..registerCallback(_model.onPanUpdate)
       ..registerCallback(_model.onScaleAndPanEnd);
-  }
-
-  void fitData() {
-    if (_model.dataFitEnabled) {
-      WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
-        _model.fitAvailableData();
-      });
-    }
   }
 
   void _onVisibleAreaChanged() {
@@ -181,23 +140,11 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       entries: widget.entries,
       dataFitPadding: widget.dataFitPadding,
     );
-
-    if (kIsWeb &&
-        _scrollAnimationController != null &&
-        oldWidget.entries != widget.entries) {
-      _scrollAnimationController!
-        ..reset()
-        ..forward();
-
-      fitData();
-    }
   }
 
   @override
   void dispose() {
-    _ticker?.dispose();
     _rightEpochAnimationController.dispose();
-    _scrollAnimationController?.dispose();
 
     gestureManager
       ..removeCallback(_model.onScaleAndPanStart)
