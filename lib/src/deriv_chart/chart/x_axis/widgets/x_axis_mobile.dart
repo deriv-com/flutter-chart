@@ -1,8 +1,8 @@
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_base.dart';
 import 'package:flutter/scheduler.dart';
 
 /// XAxisMobile
-class XAxisMobile extends XAxis {
+class XAxisMobile extends XAxisBase {
   /// Initialize
   const XAxisMobile({
     required super.entries,

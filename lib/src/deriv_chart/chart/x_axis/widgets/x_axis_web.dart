@@ -1,10 +1,10 @@
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_base.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// XAxisWeb
-class XAxisWeb extends XAxis {
+class XAxisWeb extends XAxisBase {
   /// Initialize
   const XAxisWeb({
     required super.entries,
@@ -66,7 +66,7 @@ class _XAxisStateWeb extends XAxisState {
   }
 
   @override
-  void didUpdateWidget(XAxis oldWidget) {
+  void didUpdateWidget(XAxisBase oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (_scrollAnimationController != null &&

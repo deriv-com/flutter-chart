@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_mobile.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_web.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_mobile.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_web.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

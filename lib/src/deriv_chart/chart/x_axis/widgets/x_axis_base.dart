@@ -7,16 +7,16 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'grid/x_grid_painter.dart';
-import 'x_axis_model.dart';
+import '../grid/x_grid_painter.dart';
+import '../x_axis_model.dart';
 
 /// X-axis widget.
 ///
 /// Draws x-axis grid and manages [XAxisModel].
 /// Exposes the model to all descendants.
-class XAxis extends StatefulWidget {
+class XAxisBase extends StatefulWidget {
   /// Creates x-axis the size of child.
-  const XAxis({
+  const XAxisBase({
     required this.entries,
     required this.child,
     required this.isLive,
@@ -83,7 +83,7 @@ class XAxis extends StatefulWidget {
 }
 
 /// XAxisState
-class XAxisState extends State<XAxis> with TickerProviderStateMixin {
+class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
   late XAxisModel _model;
 
   late AnimationController _rightEpochAnimationController;
@@ -131,7 +131,7 @@ class XAxisState extends State<XAxis> with TickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(XAxis oldWidget) {
+  void didUpdateWidget(XAxisBase oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     _model.update(
