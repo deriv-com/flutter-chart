@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/models/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';

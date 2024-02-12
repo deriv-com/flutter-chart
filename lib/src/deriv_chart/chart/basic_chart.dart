@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.da
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter_web.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/models/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/foundation.dart';

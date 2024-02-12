@@ -8,7 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_pai
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/models/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

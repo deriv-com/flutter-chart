@@ -5,12 +5,13 @@ import 'dart:math';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../functions/calc_no_overlay_time_gaps.dart';
-import '../gaps/gap_manager.dart';
-import '../gaps/helpers.dart';
-import '../grid/calc_time_grid.dart';
+import 'functions/calc_no_overlay_time_gaps.dart';
+import 'gaps/gap_manager.dart';
+import 'gaps/helpers.dart';
+import 'grid/calc_time_grid.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from
 /// the [XAxisModel.leftBoundEpoch].
@@ -356,6 +357,10 @@ class XAxisModel extends ChangeNotifier {
   /// Enables data fit viewing mode.
   void enableDataFit() {
     _dataFitMode = true;
+    if (kIsWeb) {
+      fitAvailableData();
+    }
+
     notifyListeners();
   }
 

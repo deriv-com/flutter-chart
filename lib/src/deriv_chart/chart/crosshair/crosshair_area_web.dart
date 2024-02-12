@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/models/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

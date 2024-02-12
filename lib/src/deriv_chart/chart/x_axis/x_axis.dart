@@ -10,7 +10,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import 'grid/x_grid_painter.dart';
-import 'models/x_axis_model.dart';
+import 'x_axis_model.dart';
 
 const Duration _defaultDuration = Duration(milliseconds: 300);
 

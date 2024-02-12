@@ -1,4 +1,4 @@
-import 'models/x_axis_model.dart';
+import 'x_axis_model.dart';
 
 /// Minimum candle duration with which [entriesDuration] can fit into available
 /// width in data fit mode.
