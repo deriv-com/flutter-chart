@@ -33,11 +33,7 @@ class YGridLabelPainter extends CustomPainter {
       paintText(
         canvas,
         text: quote.toStringAsFixed(pipSize),
-        style: TextStyle(
-          fontSize: 10,
-          height: 1.3,
-          color: style.yLabelStyle.color,
-        ),
+        style: style.yLabelStyle,
         anchor: Offset(size.width - style.labelHorizontalPadding, y),
         anchorAlignment: Alignment.centerRight,
       );

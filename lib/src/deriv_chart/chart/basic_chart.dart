@@ -1,10 +1,12 @@
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter_web.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -394,12 +396,19 @@ class BasicChartState<T extends BasicChart> extends State<T>
         builder: (BuildContext context, _) => RepaintBoundary(
           child: CustomPaint(
             size: canvasSize!,
-            painter: YGridLabelPainter(
-              gridLineQuotes: gridLineQuotes,
-              pipSize: widget.pipSize,
-              quoteToCanvasY: chartQuoteToCanvasY,
-              style: context.watch<ChartTheme>().gridStyle,
-            ),
+            painter: kIsWeb
+                ? YGridLabelPainterWeb(
+                    gridLineQuotes: gridLineQuotes,
+                    pipSize: widget.pipSize,
+                    quoteToCanvasY: chartQuoteToCanvasY,
+                    style: context.watch<ChartTheme>().gridStyle,
+                  )
+                : YGridLabelPainter(
+                    gridLineQuotes: gridLineQuotes,
+                    pipSize: widget.pipSize,
+                    quoteToCanvasY: chartQuoteToCanvasY,
+                    style: context.watch<ChartTheme>().gridStyle,
+                  ),
           ),
         ),
       );
