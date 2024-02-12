@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 /// A class that paints a lable on the Y axis of grid for web.
 class YGridLabelPainterWeb extends YGridLabelPainter {
   /// Initialize
-  YGridLabelPainterWeb(
-      {required super.gridLineQuotes,
-      required super.pipSize,
-      required super.quoteToCanvasY,
-      required super.style});
+  YGridLabelPainterWeb({
+    required super.gridLineQuotes,
+    required super.pipSize,
+    required super.quoteToCanvasY,
+    required super.style,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -7,12 +7,11 @@ import 'package:flutter/material.dart';
 
 const Duration _defaultDuration = Duration(milliseconds: 300);
 
-/// X-axis widget.
+/// X-axis wrapper widget.
 ///
-/// Draws x-axis grid and manages [XAxisModel].
-/// Exposes the model to all descendants.
+/// Renders x-axis web widget or mobile widget based on the [kIsWeb] flag.
 class XAxisWrapper extends StatelessWidget {
-  /// Creates x-axis the size of child.
+  /// Initialize
   const XAxisWrapper({
     required this.entries,
     required this.child,
@@ -78,7 +77,6 @@ class XAxisWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      // Render web widget
       return XAxisWeb(
         child: child,
         entries: entries,
@@ -96,7 +94,6 @@ class XAxisWrapper extends StatelessWidget {
         scrollAnimationDuration: scrollAnimationDuration,
       );
     } else {
-      // Render mobile widget
       return XAxisMobile(
         child: child,
         entries: entries,
