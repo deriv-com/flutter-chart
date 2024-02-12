@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/models/x_axis_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'draggable_edge_point.g.dart';
