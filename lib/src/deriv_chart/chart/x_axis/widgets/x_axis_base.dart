@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../grid/x_grid_painter.dart';
 import '../x_axis_model.dart';
 
-/// X-axis widget.
+/// X-axis base widget.
 ///
 /// Draws x-axis grid and manages [XAxisModel].
 /// Exposes the model to all descendants.

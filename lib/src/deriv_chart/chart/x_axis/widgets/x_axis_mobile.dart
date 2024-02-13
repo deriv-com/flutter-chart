@@ -1,7 +1,10 @@
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_base.dart';
 import 'package:flutter/scheduler.dart';
 
-/// XAxisMobile
+/// A class representing the X-axis for a mobile-based chart.
+///
+/// This class extends [XAxisBase], providing additional functionality
+/// specific to mobile-based chart.
 class XAxisMobile extends XAxisBase {
   /// Initialize
   const XAxisMobile({

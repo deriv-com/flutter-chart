@@ -3,7 +3,10 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// XAxisWeb
+/// A class representing the X-axis for a web-based chart.
+///
+/// This class extends [XAxisBase], providing additional functionality
+/// specific to web-based chart.
 class XAxisWeb extends XAxisBase {
   /// Initialize
   const XAxisWeb({
