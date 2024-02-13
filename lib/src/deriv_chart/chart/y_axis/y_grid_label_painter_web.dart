@@ -2,7 +2,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.dart';
 import 'package:flutter/material.dart';
 
-/// A class that paints a lable on the Y axis of grid for web.
+/// A painter for drawing Y-axis grid labels in a web-based chart.
+///
+/// This painter extends [YGridLabelPainter] to provide custom drawing
+/// functionality specific to web-based charts.
 class YGridLabelPainterWeb extends YGridLabelPainter {
   /// Initialize
   YGridLabelPainterWeb({
