@@ -98,6 +98,12 @@ void _paintTimeLabelsWeb(
   required GridStyle gridStyle,
   required List<DateTime> timestamps,
 }) {
+  final TextStyle textStyle = TextStyle(
+    fontSize: gridStyle.xLabelStyle.fontSize,
+    height: gridStyle.xLabelStyle.height,
+    color: gridStyle.xLabelStyle.color,
+  );
+
   for (int index = 0; index < timestamps.length; index++) {
     paintText(
       canvas,
@@ -106,11 +112,7 @@ void _paintTimeLabelsWeb(
         xCoords[index],
         size.height - gridStyle.xLabelsAreaHeight / 2,
       ),
-      style: TextStyle(
-        fontSize: gridStyle.xLabelStyle.fontSize,
-        height: gridStyle.xLabelStyle.height,
-        color: gridStyle.xLabelStyle.color,
-      ),
+      style: textStyle,
     );
   }
 }

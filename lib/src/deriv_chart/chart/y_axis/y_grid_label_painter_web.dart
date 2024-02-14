@@ -17,17 +17,19 @@ class YGridLabelPainterWeb extends YGridLabelPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final TextStyle textStyle = TextStyle(
+      fontSize: style.yLabelStyle.fontSize,
+      height: style.yLabelStyle.height,
+      color: style.yLabelStyle.color,
+    );
+
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
 
       paintText(
         canvas,
         text: quote.toStringAsFixed(pipSize),
-        style: TextStyle(
-          fontSize: style.yLabelStyle.fontSize,
-          height: style.yLabelStyle.height,
-          color: style.yLabelStyle.color,
-        ),
+        style: textStyle,
         anchor: Offset(size.width - style.labelHorizontalPadding, y),
         anchorAlignment: Alignment.centerRight,
       );
