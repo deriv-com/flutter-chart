@@ -84,13 +84,35 @@ class AccumulatorsClosedIndicatorPainter
     // draw the transparent color.
     final Rect rect = Rect.fromPoints(
       highBarrierPosition,
-      Offset(
-          series.barrierEndEpoch != null
-              ? epochToX(series.barrierEndEpoch!)
-              : size.width,
-          lowBarrierPosition.dy),
+      Offset(size.width, lowBarrierPosition.dy),
     );
     canvas.drawRect(rect, _rectPaint);
+
+    // draw the transparent color. fffffffffffffffff
+
+    final TextPainter highBarrierLabelPainter = makeTextPainter(
+      indicator.highBarrierDisplay,
+      style.textStyle.copyWith(
+        color: Colors.white,
+      ),
+    );
+
+    final TextPainter lowBarrierLabelPainter = makeTextPainter(
+      indicator.lowBarrierDisplay,
+      style.textStyle.copyWith(
+        color: Colors.white,
+      ),
+    );
+
+    Offset highBarrierLabelAnchor = Offset(
+        size.width - (highBarrierLabelPainter.width / 2) - 2 * padding,
+        highBarrierPosition.dy);
+
+    Offset lowBarrierLabelAnchor = Offset(
+        size.width - (lowBarrierLabelPainter.width / 2) - 2 * padding,
+        lowBarrierPosition.dy);
+
+    double barrierEndX = highBarrierLabelAnchor.dx;
 
     const int triangleEdge = 4;
     const int triangleHeight = 5;
@@ -136,20 +158,12 @@ class AccumulatorsClosedIndicatorPainter
     canvas
       ..drawLine(
         lowBarrierPosition,
-        Offset(
-            series.barrierEndEpoch != null
-                ? epochToX(series.barrierEndEpoch!)
-                : size.width,
-            lowBarrierPosition.dy),
+        Offset(barrierEndX, lowBarrierPosition.dy),
         _linePaint,
       )
       ..drawLine(
         highBarrierPosition,
-        Offset(
-            series.barrierEndEpoch != null
-                ? epochToX(series.barrierEndEpoch!)
-                : size.width,
-            highBarrierPosition.dy),
+        Offset(barrierEndX, highBarrierPosition.dy),
         _linePaint,
       )
       ..drawPath(upperTrianglePath, _linePaint)
@@ -157,103 +171,32 @@ class AccumulatorsClosedIndicatorPainter
       ..drawPath(upperTrianglePath, _linePaintFill)
       ..drawPath(lowerTrianglePath, _linePaintFill);
 
+    final Rect highBarrierLabelRect = Rect.fromCenter(
+      center: highBarrierLabelAnchor,
+      height: highBarrierLabelPainter.height + padding * 2,
+      width: highBarrierLabelPainter.width + padding * 2,
+    );
+
+    final Rect lowBarrierLabelRect = Rect.fromCenter(
+      center: lowBarrierLabelAnchor,
+      height: lowBarrierLabelPainter.height + padding * 2,
+      width: lowBarrierLabelPainter.width + padding * 2,
+    );
+    late RRect rRect;
+    rRect =
+        RRect.fromRectAndRadius(highBarrierLabelRect, const Radius.circular(4));
+    canvas.drawRRect(rRect, _linePaintFill);
+    rRect =
+        RRect.fromRectAndRadius(lowBarrierLabelRect, const Radius.circular(4));
+    canvas.drawRRect(rRect, _linePaintFill);
+
+    paintWithTextPainter(canvas,
+        painter: highBarrierLabelPainter, anchor: highBarrierLabelAnchor);
+
+    paintWithTextPainter(canvas,
+        painter: lowBarrierLabelPainter, anchor: lowBarrierLabelAnchor);
+
     // Draw exit tick position.
     paintDot(canvas, exitTickPosition, color);
-
-    if (indicator.showExitDialog) {
-      // draw dialog
-      const double dotPadding = 5;
-      const int dialogTriangleEdge = 6;
-      const int dialogTriangleHeight = 4;
-
-      final Path dialogTrianglePath = Path()
-        ..moveTo(
-          exitTickPosition.dx - dotPadding,
-          exitTickPosition.dy,
-        )
-        ..lineTo(
-          exitTickPosition.dx - dotPadding - dialogTriangleHeight,
-          exitTickPosition.dy - dialogTriangleEdge / 2,
-        )
-        ..lineTo(
-          exitTickPosition.dx - dotPadding - dialogTriangleHeight,
-          exitTickPosition.dy + dialogTriangleEdge / 2,
-        )
-        ..lineTo(
-          exitTickPosition.dx - dotPadding,
-          exitTickPosition.dy,
-        )
-        ..close();
-
-      canvas
-        ..drawPath(dialogTrianglePath, _linePaintFill)
-        ..drawPath(dialogTrianglePath, _linePaint);
-
-      if (indicator.activeContract?.profit != null) {
-        final double profit = indicator.activeContract!.profit!;
-        final String profitText =
-            '${profit < 0 ? '' : '+'}${profit.toStringAsFixed(2)}';
-        final String currencyText =
-            '${indicator.activeContract?.currency ?? ''}';
-        final TextPainter profitPainter = makeTextPainter(
-          '$profitText $currencyText',
-          style.textStyle.copyWith(
-              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
-        );
-
-        final TextPainter winLossPainter = makeTextPainter(
-          indicator.activeContract!.profit! > 0 ? 'Won:' : 'Loss:',
-          style.textStyle.copyWith(
-              color: Colors.white, fontSize: 10, fontWeight: FontWeight.w400),
-        );
-
-        final double textHeight = profitPainter.height + winLossPainter.height;
-        final double textWidth = profitPainter.width;
-
-        final double dialogRightSide =
-            exitTickPosition.dx - dotPadding - dialogTriangleHeight - padding;
-        final double dialogLeftSide = dialogRightSide - textWidth;
-
-        final double dialogDownSide = exitTickPosition.dy + textHeight / 2;
-        final double dialogUpSide = exitTickPosition.dy - textHeight / 2;
-
-        final Rect dialogRect = Rect.fromLTRB(
-          dialogLeftSide - padding,
-          dialogUpSide - padding,
-          dialogRightSide + padding,
-          dialogDownSide + padding,
-        );
-        final RRect rRect =
-            RRect.fromRectAndRadius(dialogRect, const Radius.circular(4));
-
-        _rectPaint.color = color.withOpacity(1);
-        canvas.drawRRect(rRect, _rectPaint);
-
-        final Offset winLossPosition = Offset(
-          dialogLeftSide + winLossPainter.width / 2,
-          exitTickPosition.dy - textHeight / 2 + winLossPainter.height / 2,
-        );
-
-        paintWithTextPainter(
-          canvas,
-          painter: winLossPainter,
-          anchor: winLossPosition,
-        );
-
-        final Offset profitPosition = Offset(
-          dialogLeftSide + profitPainter.width / 2,
-          exitTickPosition.dy -
-              textHeight / 2 +
-              profitPainter.height / 2 +
-              winLossPainter.height,
-        );
-
-        paintWithTextPainter(
-          canvas,
-          painter: profitPainter,
-          anchor: profitPosition,
-        );
-      }
-    }
   }
 }

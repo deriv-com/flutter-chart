@@ -16,8 +16,6 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
     required this.barrierSpotDistance,
     required this.barrierEpoch,
     required this.activeContract,
-    this.showExitDialog = true,
-    this.barrierEndEpoch,
     super.style,
     String? id,
   }) : super(id ?? 'AccumulatorsClosedIndicator');
@@ -46,12 +44,6 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
 
-  /// The End if the barrier, if [null] the barriers will go to the end of the screen.
-  final int? barrierEndEpoch;
-
-  /// Show exit dialog.
-  final bool showExitDialog;
-
   @override
   SeriesPainter<Series> createPainter() =>
       AccumulatorsClosedIndicatorPainter(this);
@@ -63,7 +55,6 @@ class AccumulatorsClosedIndicator extends ChartAnnotation<AccumulatorObject> {
         lowBarrier: lowBarrier,
         highBarrier: highBarrier,
         profit: activeContract?.profit,
-        barrierEndEpoch: barrierEndEpoch,
       );
 
   @override
