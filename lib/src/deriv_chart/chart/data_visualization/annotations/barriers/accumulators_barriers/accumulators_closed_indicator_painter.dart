@@ -88,8 +88,7 @@ class AccumulatorsClosedIndicatorPainter
     );
     canvas.drawRect(rect, _rectPaint);
 
-    // draw the transparent color. fffffffffffffffff
-
+    // Barriers and barriers value labels.
     final TextPainter highBarrierLabelPainter = makeTextPainter(
       indicator.highBarrierDisplay,
       style.textStyle.copyWith(
@@ -104,15 +103,15 @@ class AccumulatorsClosedIndicatorPainter
       ),
     );
 
-    Offset highBarrierLabelAnchor = Offset(
+    final Offset highBarrierLabelAnchor = Offset(
         size.width - (highBarrierLabelPainter.width / 2) - 2 * padding,
         highBarrierPosition.dy);
 
-    Offset lowBarrierLabelAnchor = Offset(
+    final Offset lowBarrierLabelAnchor = Offset(
         size.width - (lowBarrierLabelPainter.width / 2) - 2 * padding,
         lowBarrierPosition.dy);
 
-    double barrierEndX = highBarrierLabelAnchor.dx;
+    final double barrierEndX = highBarrierLabelAnchor.dx;
 
     const int triangleEdge = 4;
     const int triangleHeight = 5;
