@@ -4,6 +4,7 @@ export 'generated/l10n.dart';
 export 'src/deriv_chart/chart/chart.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_closed_indicator.dart';
+export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_recently_closed_indicator.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_entry_spot_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
