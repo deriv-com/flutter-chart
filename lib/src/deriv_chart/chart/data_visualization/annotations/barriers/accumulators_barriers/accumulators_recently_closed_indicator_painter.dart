@@ -85,10 +85,8 @@ class AccumulatorsRecentlyClosedIndicatorPainter
     final Rect rect = Rect.fromPoints(
       highBarrierPosition,
       Offset(
-          series.barrierEndEpoch != null
-              ? epochToX(series.barrierEndEpoch!)
-              : size.width,
-          lowBarrierPosition.dy),
+            epochToX(series.barrierEndEpoch),
+           lowBarrierPosition.dy),
     );
     canvas.drawRect(rect, _rectPaint);
 
