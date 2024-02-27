@@ -230,7 +230,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       );
 
       final TextPainter currencyPainter = makeTextPainter(
-        indicator.activeContract?.currency ?? '',
+        indicator.activeContract?.profitUnit ?? '',
         style.textStyle.copyWith(color: color, fontSize: 14),
       );
 

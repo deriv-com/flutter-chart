@@ -196,7 +196,7 @@ class AccumulatorsClosedIndicatorPainter
           indicator.activeContract!.fractionalDigits,
         )}';
         final String currencyText =
-            '${indicator.activeContract?.currency ?? ''}';
+            '${indicator.activeContract?.profitUnit ?? ''}';
         final TextPainter profitPainter = makeTextPainter(
           '$profitText $currencyText',
           style.textStyle.copyWith(
