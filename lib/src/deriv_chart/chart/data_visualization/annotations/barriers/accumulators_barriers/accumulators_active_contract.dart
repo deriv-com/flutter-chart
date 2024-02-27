@@ -4,6 +4,7 @@ class AccumulatorsActiveContract {
   const AccumulatorsActiveContract({
     required this.profit,
     required this.currency,
+    required this.fractionalDigits,
   });
 
   /// Profit value of the current contract.
@@ -11,4 +12,8 @@ class AccumulatorsActiveContract {
 
   /// The currency of the current contract.
   final String? currency;
+
+  /// The number of decimal places to show the correct formatting of the profit
+  /// value.
+  final int fractionalDigits;
 }
