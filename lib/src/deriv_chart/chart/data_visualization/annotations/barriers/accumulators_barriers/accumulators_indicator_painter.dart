@@ -223,12 +223,14 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     // profit
     if (animatedProfit != null && animatedProfit != 0) {
       final TextPainter profitPainter = makeTextPainter(
-        '${animatedProfit < 0 ? '' : '+'}${animatedProfit.toStringAsFixed(2)}',
+        '${animatedProfit < 0 ? '' : '+'}${animatedProfit.toStringAsFixed(
+          indicator.activeContract!.fractionalDigits,
+        )}',
         style.textStyle.copyWith(color: color, fontSize: 26),
       );
 
       final TextPainter currencyPainter = makeTextPainter(
-        indicator.activeContract?.currency ?? '',
+        indicator.activeContract?.profitUnit ?? '',
         style.textStyle.copyWith(color: color, fontSize: 14),
       );
 
