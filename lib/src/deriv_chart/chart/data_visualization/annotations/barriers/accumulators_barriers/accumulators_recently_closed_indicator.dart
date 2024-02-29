@@ -5,21 +5,22 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accu
 import 'accumulators_recently_closed_indicator_painter.dart';
 
 /// Accumulator Closed Contract Barriers.
-class AccumulatorsRecentlyClosedIndicator extends ChartAnnotation<AccumulatorObject> {
+class AccumulatorsRecentlyClosedIndicator
+    extends ChartAnnotation<AccumulatorObject> {
   /// Initializes a tick indicator.
   AccumulatorsRecentlyClosedIndicator(
-      this.exitTick, {
-        required this.lowBarrier,
-        required this.highBarrier,
-        required this.highBarrierDisplay,
-        required this.lowBarrierDisplay,
-        required this.barrierSpotDistance,
-        required this.barrierEpoch,
-        required this.activeContract,
-        required this.barrierEndEpoch,
-        super.style,
-        String? id,
-      }) : super(id ?? 'AccumulatorsClosedIndicator');
+    this.exitTick, {
+    required this.lowBarrier,
+    required this.highBarrier,
+    required this.highBarrierDisplay,
+    required this.lowBarrierDisplay,
+    required this.barrierSpotDistance,
+    required this.barrierEpoch,
+    required this.activeContract,
+    required this.barrierEndEpoch,
+    super.style,
+    String? id,
+  }) : super(id ?? 'AccumulatorsClosedIndicator');
 
   /// The price difference between the barrier and the barrier Tick quote.
   final String barrierSpotDistance;
@@ -54,13 +55,13 @@ class AccumulatorsRecentlyClosedIndicator extends ChartAnnotation<AccumulatorObj
 
   @override
   AccumulatorObject createObject() => AccumulatorObject(
-    tick: exitTick,
-    barrierEpoch: barrierEpoch,
-    lowBarrier: lowBarrier,
-    highBarrier: highBarrier,
-    profit: activeContract?.profit,
-    barrierEndEpoch: barrierEndEpoch,
-  );
+        tick: exitTick,
+        barrierEpoch: barrierEpoch,
+        lowBarrier: lowBarrier,
+        highBarrier: highBarrier,
+        profit: activeContract?.profit,
+        barrierEndEpoch: barrierEndEpoch,
+      );
 
   @override
   int? getMaxEpoch() => barrierEpoch;
