@@ -350,18 +350,20 @@ class BasicChartState<T extends BasicChart> extends State<T>
   Widget _buildQuoteGridLine(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
         animations: getQuoteGridAnimations(),
-        builder: (BuildContext context, _) => CustomPaint(
-          painter: YGridLinePainter(
-            gridLineQuotes: gridLineQuotes,
-            quoteToCanvasY: chartQuoteToCanvasY,
-            style: context.watch<ChartTheme>().gridStyle,
-            labelWidth: (gridLineQuotes.isNotEmpty)
-                ? labelWidth(
-                    gridLineQuotes.first,
-                    context.watch<ChartTheme>().gridStyle.yLabelStyle,
-                    widget.pipSize,
-                  )
-                : 0,
+        builder: (BuildContext context, _) => RepaintBoundary(
+          child: CustomPaint(
+            painter: YGridLinePainter(
+              gridLineQuotes: gridLineQuotes,
+              quoteToCanvasY: chartQuoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+              labelWidth: (gridLineQuotes.isNotEmpty)
+                  ? labelWidth(
+                      gridLineQuotes.first,
+                      context.watch<ChartTheme>().gridStyle.yLabelStyle,
+                      widget.pipSize,
+                    )
+                  : 0,
+            ),
           ),
         ),
       );
@@ -389,13 +391,15 @@ class BasicChartState<T extends BasicChart> extends State<T>
   Widget _buildQuoteGridLabel(List<double> gridLineQuotes) =>
       MultipleAnimatedBuilder(
         animations: getQuoteLabelAnimations(),
-        builder: (BuildContext context, _) => CustomPaint(
-          size: canvasSize!,
-          painter: YGridLabelPainter(
-            gridLineQuotes: gridLineQuotes,
-            pipSize: widget.pipSize,
-            quoteToCanvasY: chartQuoteToCanvasY,
-            style: context.watch<ChartTheme>().gridStyle,
+        builder: (BuildContext context, _) => RepaintBoundary(
+          child: CustomPaint(
+            size: canvasSize!,
+            painter: YGridLabelPainter(
+              gridLineQuotes: gridLineQuotes,
+              pipSize: widget.pipSize,
+              quoteToCanvasY: chartQuoteToCanvasY,
+              style: context.watch<ChartTheme>().gridStyle,
+            ),
           ),
         ),
       );

@@ -10,6 +10,7 @@ class XGridPainter extends CustomPainter {
     required this.xCoords,
     required this.style,
     required this.timestamps,
+    required this.msPerPx,
   });
 
   /// X-coordinates of time labels.
@@ -20,6 +21,10 @@ class XGridPainter extends CustomPainter {
 
   /// List of DateTime on screen
   final List<DateTime> timestamps;
+  
+  /// Specifies the zoom level of the chart.
+  final double msPerPx;
+
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -33,6 +38,7 @@ class XGridPainter extends CustomPainter {
       timestamps: timestamps,
       xCoords: xCoords,
       style: style,
+      msPerPx: msPerPx,
     );
   }
 

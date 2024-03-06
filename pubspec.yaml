@@ -1,7 +1,6 @@
 name: deriv_chart
 description: Chart for multiplier flutter app.
 version: 0.0.1
-
 publish_to: none
 
 environment:
@@ -19,7 +18,7 @@ dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
-      ref: flutter-version-3
+      ref: dev
 
   equatable: ^2.0.5
   intl: ^0.18.0
@@ -35,7 +34,7 @@ dev_dependencies:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-packages.git
       path: packages/deriv_lint
-      ref: flutter-version-3
+      ref: dev
 
   build_runner: ^2.3.3
   intl_utils: ^2.8.2

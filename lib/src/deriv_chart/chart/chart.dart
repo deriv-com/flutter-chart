@@ -54,7 +54,6 @@ class Chart extends StatefulWidget {
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
-    this.minElapsedTimeToFollow = 0,
     this.currentTickAnimationDuration,
     this.quoteBoundsAnimationDuration,
     this.showCurrentTickBlinkAnimation,
@@ -142,11 +141,6 @@ class Chart extends StatefulWidget {
   /// Specifies the maximum interval width
   /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
-
-  /// Specifies the minimum time in milliseconds before which it can update the
-  /// rightBoundEpoch when the chart is in follow mode.  This is used to control
-  /// the number of frames painted each second.
-  final int minElapsedTimeToFollow;
 
   /// Duration of the current tick animated transition.
   final Duration? currentTickAnimationDuration;
@@ -279,6 +273,12 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     final bool isExpanded = expandedIndex != null;
 
+    final Duration currentTickAnimationDuration =
+        widget.currentTickAnimationDuration ?? _defaultDuration;
+
+    final Duration quoteBoundsAnimationDuration =
+        widget.quoteBoundsAnimationDuration ?? _defaultDuration;
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
@@ -299,7 +299,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             msPerPx: widget.msPerPx,
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
-            minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
+            scrollAnimationDuration: currentTickAnimationDuration,
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -327,10 +327,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
                     onCrosshairHover: _onCrosshairHover,
                     loadingAnimationColor: widget.loadingAnimationColor,
-                    currentTickAnimationDuration:
-                        widget.currentTickAnimationDuration ?? _defaultDuration,
-                    quoteBoundsAnimationDuration:
-                        widget.quoteBoundsAnimationDuration ?? _defaultDuration,
+                    currentTickAnimationDuration: currentTickAnimationDuration,
+                    quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
                     showCurrentTickBlinkAnimation:
                         widget.showCurrentTickBlinkAnimation ?? true,
                   ),
@@ -349,6 +347,10 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         pipSize: widget.bottomConfigs?[index].pipSize ??
                             widget.pipSize,
                         title: widget.bottomConfigs![index].title,
+                        currentTickAnimationDuration:
+                            currentTickAnimationDuration,
+                        quoteBoundsAnimationDuration:
+                            quoteBoundsAnimationDuration,
                         bottomChartTitleMargin: widget.bottomChartTitleMargin,
                         onRemove: () => _onRemove(widget.bottomConfigs![index]),
                         onEdit: () => _onEdit(widget.bottomConfigs![index]),
