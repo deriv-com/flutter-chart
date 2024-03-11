@@ -90,6 +90,9 @@ class TrendDrawing extends Drawing {
   /// and center line.
   final double _touchTolerance = 5;
 
+  /// When two point overlap with each other
+  bool _pointOverlap = false;
+
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
@@ -260,10 +263,11 @@ class TrendDrawing extends Drawing {
       _isRectangleSwapped = false;
     }
 
-    /// When both points are dragged to same point
-    if (_calculator != null && quoteToY(_calculator!.max).isNaN) {
-      return;
-    }
+    /// When both points are dragged to same point or difference between points
+    ///  is very less
+    _pointOverlap = _calculator != null && quoteToY(_calculator!.max).isNaN ||
+        (startXCoord - endXCoord).abs() <= 10;
+    
 
     if (drawingPart == DrawingParts.marker) {
       if (edgePoints.length == 1) {
@@ -283,25 +287,33 @@ class TrendDrawing extends Drawing {
               : paint.transparentCirclePaintStyle(),
         );
       } else {
-        canvas
-          ..drawCircle(
-            Offset(startXCoord, _rectCenter),
+        if (_pointOverlap) {
+          canvas.drawCircle(
+            Offset(startXCoord, startYCoord),
             _markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle(),
-          )
-          ..drawCircle(
-            Offset(endXCoord, _rectCenter),
-            _markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle(),
+            paint.glowyCirclePaintStyle(lineStyle.color),
           );
+        } else {
+          canvas
+            ..drawCircle(
+              Offset(startXCoord, _rectCenter),
+              _markerRadius,
+              drawingData.shouldHighlight
+                  ? paint.glowyCirclePaintStyle(lineStyle.color)
+                  : paint.transparentCirclePaintStyle(),
+            )
+            ..drawCircle(
+              Offset(endXCoord, _rectCenter),
+              _markerRadius,
+              drawingData.shouldHighlight
+                  ? paint.glowyCirclePaintStyle(lineStyle.color)
+                  : paint.transparentCirclePaintStyle(),
+            );
+        }
       }
     }
 
-    if (drawingPart == DrawingParts.rectangle) {
+    if (drawingPart == DrawingParts.rectangle && !_pointOverlap) {
       /// Store the distance between minimum and maximum quote of the drawing
       final double _distance =
           (quoteToY(_calculator!.min) - quoteToY(_calculator!.max)).abs();
@@ -347,7 +359,7 @@ class TrendDrawing extends Drawing {
       }
     }
 
-    if (drawingPart == DrawingParts.line) {
+    if (drawingPart == DrawingParts.line && !_pointOverlap) {
       if (pattern == DrawingPatterns.solid) {
         canvas.drawLine(
           Offset(startXCoord, _rectCenter),
@@ -410,6 +422,10 @@ class TrendDrawing extends Drawing {
       setIsOverEndPoint!(isOverPoint: false);
     }
 
+    if (_pointOverlap) {
+      setIsOverEndPoint(isOverPoint: true);
+      setIsOverStartPoint(isOverPoint: false);
+    }
     // For clicking the center line
     final double lineArea = (0.5 *
             (startXCoord * _rectCenter +
@@ -426,6 +442,7 @@ class TrendDrawing extends Drawing {
     if (endEdgePoint.epoch != 0) {
       return _isClickedOnRectangleBoundary(_mainRect, position) ||
           _isClickedOnRectangleBoundary(_middleRect, position) ||
+          _pointOverlap ||
           startPointDistance <= _markerRadius ||
           endPointDistance <= _markerRadius ||
           (lineHeight <= lineStyle.thickness + 6 &&
