@@ -11,9 +11,11 @@ SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) =>
       period: json['period'] as int? ?? 10,
       smoothingPeriod: json['smoothingPeriod'] as int? ?? 3,
       doubleSmoothingPeriod: json['doubleSmoothingPeriod'] as int? ?? 3,
-      overboughtValue: (json['overboughtValue'] as num?)?.toDouble() ?? 40,
-      oversoldValue: (json['oversoldValue'] as num?)?.toDouble() ?? -40,
       signalPeriod: json['signalPeriod'] as int? ?? 10,
+      smiOscillatorLimits: json['smiOscillatorLimits'] == null
+          ? const OscillatorLinesConfig(oversoldValue: -40, overboughtValue: 40)
+          : OscillatorLinesConfig.fromJson(
+              json['smiOscillatorLimits'] as Map<String, dynamic>),
       maType: $enumDecodeNullable(_$MovingAverageTypeEnumMap, json['maType']) ??
           MovingAverageType.exponential,
       showZones: json['showZones'] as bool? ?? true,
@@ -38,8 +40,7 @@ Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
       'doubleSmoothingPeriod': instance.doubleSmoothingPeriod,
       'signalPeriod': instance.signalPeriod,
       'maType': _$MovingAverageTypeEnumMap[instance.maType]!,
-      'overboughtValue': instance.overboughtValue,
-      'oversoldValue': instance.oversoldValue,
+      'smiOscillatorLimits': instance.smiOscillatorLimits,
       'showZones': instance.showZones,
       'lineStyle': instance.lineStyle,
       'signalLineStyle': instance.signalLineStyle,

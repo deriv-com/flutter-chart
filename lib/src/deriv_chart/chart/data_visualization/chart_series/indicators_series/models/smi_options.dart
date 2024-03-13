@@ -6,6 +6,8 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 class SMIOptions extends IndicatorOptions {
   /// Initializes
   const SMIOptions({
+    this.overboughtStyle = const LineStyle(),
+    this.oversoldStyle = const LineStyle(),
     this.period = 10,
     this.smoothingPeriod = 3,
     this.doubleSmoothingPeriod = 3,
@@ -36,6 +38,12 @@ class SMIOptions extends IndicatorOptions {
 
   ///  Line style.
   final LineStyle? lineStyle;
+
+  /// overbought style
+  final LineStyle overboughtStyle;
+
+  /// oversold style
+  final LineStyle oversoldStyle;
 
   /// Signal line style.
   final LineStyle? signalLineStyle;
