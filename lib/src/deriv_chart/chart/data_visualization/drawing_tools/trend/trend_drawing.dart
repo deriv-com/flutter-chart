@@ -394,7 +394,7 @@ class TrendDrawing extends Drawing {
     void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
     final double startDx = position.dx - startXCoord;
-    final double overlapDistance = sqrt(startDx * startDx);
+    final double overlapDistance = startDx.abs();
 
     // To check if the points are on top of each other
     if (_isPointOverlapped && overlapDistance <= _markerRadius) {
