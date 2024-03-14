@@ -91,7 +91,7 @@ class TrendDrawing extends Drawing {
   final double _touchTolerance = 5;
 
   /// When two point overlap with each other
-  bool _pointOverlap = false;
+  bool _isPointOverlapped = false;
 
   /// Setting the minmax calculator between the range of
   /// start and end epoch
@@ -230,29 +230,27 @@ class TrendDrawing extends Drawing {
             ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
       }
 
-      final double minCalculatorValue = _calculator!.min;
-      final double maxCalculatorValue = _calculator!.max;
-      final bool isMidpointNaN =
-          minCalculatorValue.isNaN || maxCalculatorValue.isNaN;
+      final double minValue = _calculator!.min;
+      final double maxValue = _calculator!.max;
+      final bool isMidpointNaN = minValue.isNaN || maxValue.isNaN;
 
       _startPoint = updatePositionCallback(
           EdgePoint(
               epoch: edgePoints.first.epoch,
               quote: isMidpointNaN
                   ? endEdgePoint.quote
-                  : minCalculatorValue +
-                      (maxCalculatorValue - minCalculatorValue) / 2),
+                  : minValue + (maxValue - minValue) / 2),
           draggableStartPoint);
 
       _endPoint = updatePositionCallback(
           EdgePoint(
-              epoch: (edgePoints.length > 1
-                  ? edgePoints.last.epoch
-                  : endEdgePoint.epoch),
-              quote: isMidpointNaN
-                  ? endEdgePoint.quote
-                  : (minCalculatorValue +
-                      (maxCalculatorValue - minCalculatorValue) / 2)),
+            epoch: (edgePoints.length > 1
+                ? edgePoints.last.epoch
+                : endEdgePoint.epoch),
+            quote: isMidpointNaN
+                ? endEdgePoint.quote
+                : (minValue + (maxValue - minValue) / 2),
+          ),
           draggableEndPoint!);
 
       startXCoord = _startPoint!.x;
@@ -274,10 +272,10 @@ class TrendDrawing extends Drawing {
 
     /// When both points are dragged to same point or difference between points
     ///  is very less
-    _pointOverlap = _calculator != null && quoteToY(_calculator!.max).isNaN ||
+    _isPointOverlapped = _calculator != null && quoteToY(_calculator!.max).isNaN ||
         (startXCoord - endXCoord).abs() <= 10;
 
-    if (_pointOverlap && endEdgePoint.epoch != 0) {
+    if (_isPointOverlapped && endEdgePoint.epoch != 0) {
       canvas.drawCircle(
         Offset(startXCoord, startYCoord),
         _markerRadius,
@@ -399,7 +397,7 @@ class TrendDrawing extends Drawing {
     final double overlapDistance = sqrt(startDx * startDx);
 
     // To check if the points are on top of each other
-    if (_pointOverlap && overlapDistance <= _markerRadius) {
+    if (_isPointOverlapped && overlapDistance <= _markerRadius) {
       setIsOverEndPoint!(isOverPoint: true);
       setIsOverStartPoint(isOverPoint: false);
       return true;
