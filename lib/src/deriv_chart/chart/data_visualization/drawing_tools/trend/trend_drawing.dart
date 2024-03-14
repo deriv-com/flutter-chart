@@ -230,11 +230,18 @@ class TrendDrawing extends Drawing {
             ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
       }
 
+      final double minCalculatorValue = _calculator!.min;
+      final double maxCalculatorValue = _calculator!.max;
+      final bool isMidpointNaN =
+          minCalculatorValue.isNaN || maxCalculatorValue.isNaN;
+
       _startPoint = updatePositionCallback(
           EdgePoint(
               epoch: edgePoints.first.epoch,
-              quote:
-                  _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
+              quote: isMidpointNaN
+                  ? endEdgePoint.quote
+                  : minCalculatorValue +
+                      (maxCalculatorValue - minCalculatorValue) / 2),
           draggableStartPoint);
 
       _endPoint = updatePositionCallback(
@@ -242,8 +249,10 @@ class TrendDrawing extends Drawing {
               epoch: (edgePoints.length > 1
                   ? edgePoints.last.epoch
                   : endEdgePoint.epoch),
-              quote:
-                  _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
+              quote: isMidpointNaN
+                  ? endEdgePoint.quote
+                  : (minCalculatorValue +
+                      (maxCalculatorValue - minCalculatorValue) / 2)),
           draggableEndPoint!);
 
       startXCoord = _startPoint!.x;
@@ -267,7 +276,6 @@ class TrendDrawing extends Drawing {
     ///  is very less
     _pointOverlap = _calculator != null && quoteToY(_calculator!.max).isNaN ||
         (startXCoord - endXCoord).abs() <= 10;
-    
 
     if (drawingPart == DrawingParts.marker) {
       if (edgePoints.length == 1) {
@@ -386,8 +394,17 @@ class TrendDrawing extends Drawing {
     void Function({required bool isOverPoint})? setIsOverMiddlePoint,
     void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
-    // Calculate the difference between the start Point and the tap point.
     final double startDx = position.dx - startXCoord;
+    final double overlapDistance = sqrt(startDx * startDx);
+
+    // To check if the points are on top of each other
+    if (_pointOverlap && overlapDistance <= _markerRadius) {
+      setIsOverEndPoint!(isOverPoint: true);
+      setIsOverStartPoint(isOverPoint: false);
+      return true;
+    }
+
+    // Calculate the difference between the start Point and the tap point.
     final double startDy = position.dy - _rectCenter;
 
     config as TrendDrawingToolConfig;
@@ -421,11 +438,6 @@ class TrendDrawing extends Drawing {
     } else {
       setIsOverEndPoint!(isOverPoint: false);
     }
-
-    if (_pointOverlap) {
-      setIsOverEndPoint(isOverPoint: true);
-      setIsOverStartPoint(isOverPoint: false);
-    }
     // For clicking the center line
     final double lineArea = (0.5 *
             (startXCoord * _rectCenter +
@@ -442,7 +454,6 @@ class TrendDrawing extends Drawing {
     if (endEdgePoint.epoch != 0) {
       return _isClickedOnRectangleBoundary(_mainRect, position) ||
           _isClickedOnRectangleBoundary(_middleRect, position) ||
-          _pointOverlap ||
           startPointDistance <= _markerRadius ||
           endPointDistance <= _markerRadius ||
           (lineHeight <= lineStyle.thickness + 6 &&
