@@ -277,6 +277,15 @@ class TrendDrawing extends Drawing {
     _pointOverlap = _calculator != null && quoteToY(_calculator!.max).isNaN ||
         (startXCoord - endXCoord).abs() <= 10;
 
+    if (_pointOverlap && endEdgePoint.epoch != 0) {
+      canvas.drawCircle(
+        Offset(startXCoord, startYCoord),
+        _markerRadius,
+        paint.glowyCirclePaintStyle(lineStyle.color),
+      );
+      return;
+    }
+
     if (drawingPart == DrawingParts.marker) {
       if (edgePoints.length == 1) {
         _startPoint = updatePositionCallback(
@@ -295,33 +304,25 @@ class TrendDrawing extends Drawing {
               : paint.transparentCirclePaintStyle(),
         );
       } else {
-        if (_pointOverlap) {
-          canvas.drawCircle(
-            Offset(startXCoord, startYCoord),
+        canvas
+          ..drawCircle(
+            Offset(startXCoord, _rectCenter),
             _markerRadius,
-            paint.glowyCirclePaintStyle(lineStyle.color),
+            drawingData.shouldHighlight
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle(),
+          )
+          ..drawCircle(
+            Offset(endXCoord, _rectCenter),
+            _markerRadius,
+            drawingData.shouldHighlight
+                ? paint.glowyCirclePaintStyle(lineStyle.color)
+                : paint.transparentCirclePaintStyle(),
           );
-        } else {
-          canvas
-            ..drawCircle(
-              Offset(startXCoord, _rectCenter),
-              _markerRadius,
-              drawingData.shouldHighlight
-                  ? paint.glowyCirclePaintStyle(lineStyle.color)
-                  : paint.transparentCirclePaintStyle(),
-            )
-            ..drawCircle(
-              Offset(endXCoord, _rectCenter),
-              _markerRadius,
-              drawingData.shouldHighlight
-                  ? paint.glowyCirclePaintStyle(lineStyle.color)
-                  : paint.transparentCirclePaintStyle(),
-            );
-        }
       }
     }
 
-    if (drawingPart == DrawingParts.rectangle && !_pointOverlap) {
+    if (drawingPart == DrawingParts.rectangle) {
       /// Store the distance between minimum and maximum quote of the drawing
       final double _distance =
           (quoteToY(_calculator!.min) - quoteToY(_calculator!.max)).abs();
@@ -367,7 +368,7 @@ class TrendDrawing extends Drawing {
       }
     }
 
-    if (drawingPart == DrawingParts.line && !_pointOverlap) {
+    if (drawingPart == DrawingParts.line) {
       if (pattern == DrawingPatterns.solid) {
         canvas.drawLine(
           Offset(startXCoord, _rectCenter),
