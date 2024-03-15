@@ -33,7 +33,7 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
-    required this.drawingTools,
+    this.drawingTools,
     this.pipSize = 4,
     this.controller,
     this.overlayConfigs,
@@ -83,7 +83,7 @@ class Chart extends StatefulWidget {
 
   /// Keep the reference to the drawing tools class for
   /// sharing data between the DerivChart and the DrawingToolsDialog
-  final DrawingTools drawingTools;
+  final DrawingTools? drawingTools;
 
   /// Chart's controller
   final ChartController? controller;

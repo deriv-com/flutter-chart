@@ -33,7 +33,7 @@ class MainChart extends BasicChart {
   /// Initializes the main chart to display in the chart widget.
   MainChart({
     required DataSeries<Tick> mainSeries,
-    required this.drawingTools,
+    this.drawingTools,
     this.isLive = false,
     int pipSize = 4,
     Key? key,
@@ -83,7 +83,7 @@ class MainChart extends BasicChart {
 
   /// Keep the reference to the drawing tools class for
   /// sharing data between the DerivChart and the DrawingToolsDialog
-  final DrawingTools drawingTools;
+  final DrawingTools? drawingTools;
 
   /// The function that gets called on crosshair appearance.
   final VoidCallback? onCrosshairAppeared;
@@ -345,12 +345,14 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   _buildLoadingAnimation(),
                 // _buildQuoteGridLabel(gridLineQuotes),
                 super.build(context),
-                _buildSeries(),
+                if (widget.overlaySeries != null)
+                  _buildSeries(widget.overlaySeries!),
                 _buildAnnotations(),
                 if (widget.markerSeries != null) _buildMarkerArea(),
-                _buildDrawingToolChart(),
+                if (widget.drawingTools != null)
+                  _buildDrawingToolChart(widget.drawingTools!),
                 if (kIsWeb) _buildCrosshairAreaWeb(),
-                if (!kIsWeb && !widget.drawingTools.isDrawingMoving)
+                if (!kIsWeb && !(widget.drawingTools?.isDrawingMoving ?? true))
                   _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
@@ -372,7 +374,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         },
       );
 
-  Widget _buildDrawingToolChart() => MultipleAnimatedBuilder(
+  Widget _buildDrawingToolChart(DrawingTools drawingTools) =>
+      MultipleAnimatedBuilder(
         animations: <Listenable>[
           topBoundQuoteAnimationController,
           bottomBoundQuoteAnimationController,
@@ -381,7 +384,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           series: widget.mainSeries as DataSeries<Tick>,
           chartQuoteToCanvasY: chartQuoteToCanvasY,
           chartQuoteFromCanvasY: chartQuoteFromCanvasY,
-          drawingTools: widget.drawingTools,
+          drawingTools: drawingTools,
         ),
       );
 
@@ -461,7 +464,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       );
 
   // Main series and indicators on top of main series.
-  Widget _buildSeries() => MultipleAnimatedBuilder(
+  Widget _buildSeries(List<Series> series) => MultipleAnimatedBuilder(
         animations: <Listenable>[
           topBoundQuoteAnimationController,
           bottomBoundQuoteAnimationController,
@@ -473,7 +476,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               animationInfo: AnimationInfo(
                 currentTickPercent: currentTickAnimation.value,
               ),
-              series: widget.overlaySeries!,
+              series: series,
               chartConfig: context.watch<ChartConfig>(),
               theme: context.watch<ChartTheme>(),
               epochToCanvasX: xAxis.xFromEpoch,
