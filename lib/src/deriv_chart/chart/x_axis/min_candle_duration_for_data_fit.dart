@@ -16,7 +16,7 @@ Duration minCandleDurationForDataFit(
   Duration entriesDuration,
   double chartWidth,
 ) {
-  final double availableWidth = chartWidth - dataFitPadding.horizontal;
+  final double availableWidth = chartWidth - defaultDataFitPadding.horizontal;
   final double msPerPx = entriesDuration.inMilliseconds / availableWidth;
   return Duration(
     milliseconds: (msPerPx * XAxisModel.defaultIntervalWidth).ceil(),
