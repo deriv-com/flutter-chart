@@ -28,6 +28,8 @@ class SMIIndicatorConfig extends IndicatorConfig {
     this.smiOscillatorLimits = const OscillatorLinesConfig(
       oversoldValue: -40,
       overboughtValue: 40,
+      overboughtStyle: LineStyle(),
+      oversoldStyle: LineStyle(),
     ),
     this.maType = MovingAverageType.exponential,
     this.showZones = true,

@@ -13,7 +13,11 @@ SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) =>
       doubleSmoothingPeriod: json['doubleSmoothingPeriod'] as int? ?? 3,
       signalPeriod: json['signalPeriod'] as int? ?? 10,
       smiOscillatorLimits: json['smiOscillatorLimits'] == null
-          ? const OscillatorLinesConfig(oversoldValue: -40, overboughtValue: 40)
+          ? const OscillatorLinesConfig(
+              oversoldValue: -40,
+              overboughtValue: 40,
+              overboughtStyle: LineStyle(),
+              oversoldStyle: LineStyle())
           : OscillatorLinesConfig.fromJson(
               json['smiOscillatorLimits'] as Map<String, dynamic>),
       maType: $enumDecodeNullable(_$MovingAverageTypeEnumMap, json['maType']) ??
