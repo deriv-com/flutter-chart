@@ -90,9 +90,6 @@ class TrendDrawing extends Drawing {
   /// and center line.
   final double _touchTolerance = 5;
 
-  /// When two point overlap with each other
-  bool _isPointOverlapped = false;
-
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
@@ -230,27 +227,20 @@ class TrendDrawing extends Drawing {
             ((quoteToY(_calculator!.max) - quoteToY(_calculator!.min)) / 2);
       }
 
-      final double minValue = _calculator!.min;
-      final double maxValue = _calculator!.max;
-      final bool isMidpointNaN = minValue.isNaN || maxValue.isNaN;
-
       _startPoint = updatePositionCallback(
           EdgePoint(
               epoch: edgePoints.first.epoch,
-              quote: isMidpointNaN
-                  ? endEdgePoint.quote
-                  : minValue + (maxValue - minValue) / 2),
+              quote:
+                  _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableStartPoint);
 
       _endPoint = updatePositionCallback(
           EdgePoint(
-            epoch: (edgePoints.length > 1
-                ? edgePoints.last.epoch
-                : endEdgePoint.epoch),
-            quote: isMidpointNaN
-                ? endEdgePoint.quote
-                : (minValue + (maxValue - minValue) / 2),
-          ),
+              epoch: (edgePoints.length > 1
+                  ? edgePoints.last.epoch
+                  : endEdgePoint.epoch),
+              quote:
+                  _calculator!.min + (_calculator!.max - _calculator!.min) / 2),
           draggableEndPoint!);
 
       startXCoord = _startPoint!.x;
@@ -270,17 +260,8 @@ class TrendDrawing extends Drawing {
       _isRectangleSwapped = false;
     }
 
-    /// When both points are dragged to same point or difference between points
-    ///  is very less
-    _isPointOverlapped = _calculator != null && quoteToY(_calculator!.max).isNaN ||
-        (startXCoord - endXCoord).abs() <= 10;
-
-    if (_isPointOverlapped && endEdgePoint.epoch != 0) {
-      canvas.drawCircle(
-        Offset(startXCoord, startYCoord),
-        _markerRadius,
-        paint.glowyCirclePaintStyle(lineStyle.color),
-      );
+    /// When both points are dragged to same point
+    if (_calculator != null && quoteToY(_calculator!.max).isNaN) {
       return;
     }
 
@@ -393,17 +374,8 @@ class TrendDrawing extends Drawing {
     void Function({required bool isOverPoint})? setIsOverMiddlePoint,
     void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
-    final double startDx = position.dx - startXCoord;
-    final double overlapDistance = startDx.abs();
-
-    // To check if the points are on top of each other
-    if (_isPointOverlapped && overlapDistance <= _markerRadius) {
-      setIsOverEndPoint!(isOverPoint: true);
-      setIsOverStartPoint(isOverPoint: false);
-      return true;
-    }
-
     // Calculate the difference between the start Point and the tap point.
+    final double startDx = position.dx - startXCoord;
     final double startDy = position.dy - _rectCenter;
 
     config as TrendDrawingToolConfig;
@@ -437,6 +409,7 @@ class TrendDrawing extends Drawing {
     } else {
       setIsOverEndPoint!(isOverPoint: false);
     }
+
     // For clicking the center line
     final double lineArea = (0.5 *
             (startXCoord * _rectCenter +
