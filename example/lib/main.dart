@@ -69,7 +69,7 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
-  static const String defaultAppID = '16929';
+  static const String defaultAppID = '36544';
   static const String defaultEndpoint = 'blue.derivws.com';
 
   List<Tick> ticks = <Tick>[];
