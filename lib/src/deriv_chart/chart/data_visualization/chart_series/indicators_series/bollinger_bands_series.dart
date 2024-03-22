@@ -65,7 +65,7 @@ class BollingerBandSeries extends Series {
         StandardDeviationIndicator<Tick>(_fieldIndicator, bbOptions.period);
 
     final CachedIndicator<Tick> bbmSMA =
-        MASeries.getMAIndicator(_fieldIndicator, bbOptions)..calculateValues();
+        MASeries.getMAIndicator(_fieldIndicator, bbOptions);
 
     middleSeries = SingleIndicatorSeries(
       painterCreator: (Series series) =>

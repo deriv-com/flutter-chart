@@ -133,7 +133,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<void> _connectToAPI() async {
     _connectionBloc = connection_bloc.ConnectionCubit(ConnectionInformation(
-        endpoint: defaultEndpoint, appId: defaultAppID, brand: 'deriv'))
+      endpoint: defaultEndpoint,
+      appId: defaultAppID,
+      brand: 'deriv',
+      authEndpoint: "",
+    ))
       ..stream.listen((connection_bloc.ConnectionState connectionState) async {
         if (connectionState is! connection_bloc.ConnectionConnectedState) {
           // Calling this since we show some status labels when NOT connected.
@@ -858,6 +862,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       endpoint: endpoint != null
           ? generateEndpointUrl(endpoint: endpoint)
           : defaultEndpoint,
+      authEndpoint: '',
     );
   }
 }
