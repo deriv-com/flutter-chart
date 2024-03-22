@@ -93,6 +93,9 @@ class TrendDrawing extends Drawing {
   /// When two point overlap with each other
   bool _isPointOverlapped = false;
 
+  /// It holds the last valid of maximum tick from calculator
+  double _maxYCoord = 0;
+
   /// Setting the minmax calculator between the range of
   /// start and end epoch
   MinMaxCalculator? _setCalculator(
@@ -272,16 +275,23 @@ class TrendDrawing extends Drawing {
 
     /// When both points are dragged to same point or difference between points
     ///  is very less
-    _isPointOverlapped = _calculator != null && quoteToY(_calculator!.max).isNaN ||
-        (startXCoord - endXCoord).abs() <= 10;
+    _isPointOverlapped =
+        _calculator != null && quoteToY(_calculator!.max).isNaN ||
+            (startXCoord - endXCoord).abs() <= 10;
 
-    if (_isPointOverlapped && endEdgePoint.epoch != 0) {
-      canvas.drawCircle(
-        Offset(startXCoord, startYCoord),
-        _markerRadius,
-        paint.glowyCirclePaintStyle(lineStyle.color),
-      );
-      return;
+    if (_calculator != null) {
+      if (!quoteToY(_calculator!.max).isNaN && edgePoints.length != 1) {
+        _maxYCoord = quoteToY(_calculator!.max);
+      }
+
+      if (_isPointOverlapped && endEdgePoint.epoch != 0) {
+        canvas.drawCircle(
+          Offset(startXCoord, _maxYCoord),
+          _markerRadius,
+          paint.glowyCirclePaintStyle(lineStyle.color),
+        );
+        return;
+      }
     }
 
     if (drawingPart == DrawingParts.marker) {
