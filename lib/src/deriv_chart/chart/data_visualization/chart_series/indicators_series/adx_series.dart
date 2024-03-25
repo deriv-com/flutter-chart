@@ -204,8 +204,10 @@ class ADXSeries extends Series {
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
       negativeDISeries.paint(
           canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-      adxSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      if (chartConfig.granularity != 1000) {
+        adxSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+            chartConfig, theme);
+      }
     }
     if (config.showHistogram) {
       adxHistogramSeries.paint(
