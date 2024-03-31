@@ -53,7 +53,7 @@ class MainChart extends BasicChart {
     super.currentTickAnimationDuration,
     super.quoteBoundsAnimationDuration,
     double opacity = 1,
-    ChartAxisConfig? chartAxisConfig,
+    ChartAxisConfig chartAxisConfig = const ChartAxisConfig(),
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
     this.showCrosshair = false,
   })  : _mainSeries = mainSeries,
@@ -352,7 +352,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 if (widget.drawingTools != null)
                   _buildDrawingToolChart(widget.drawingTools!),
                 if (kIsWeb) _buildCrosshairAreaWeb(),
-                if (!kIsWeb && !(widget.drawingTools?.isDrawingMoving ?? true))
+                if (!kIsWeb &&
+                    widget.drawingTools != null &&
+                    !widget.drawingTools!.isDrawingMoving)
                   _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
@@ -399,12 +401,16 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         animations: <Animation<double>>[
           currentTickAnimation,
           _currentTickBlinkAnimation,
+          topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController,
         ],
         builder: (BuildContext context, _) =>
             Stack(fit: StackFit.expand, children: <Widget>[
           if (widget.annotations != null)
             ...widget.annotations!
-                .map((ChartData annotation) => CustomPaint(
+                .map(
+                  (ChartData annotation) => RepaintBoundary(
+                    child: CustomPaint(
                       key: ValueKey<String>(annotation.id),
                       painter: ChartPainter(
                         animationInfo: AnimationInfo(
@@ -417,7 +423,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                         epochToCanvasX: xAxis.xFromEpoch,
                         quoteToCanvasY: chartQuoteToCanvasY,
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList()
         ]),
       );

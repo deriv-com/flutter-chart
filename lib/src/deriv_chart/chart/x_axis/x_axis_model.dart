@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/models/time_range.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'functions/calc_no_overlay_time_gaps.dart';
@@ -17,7 +18,7 @@ import 'grid/calc_time_grid.dart';
 const double autoPanOffset = 30;
 
 /// Padding around data used in data-fit mode.
-const EdgeInsets dataFitPadding = EdgeInsets.only(left: 16, right: 120);
+const EdgeInsets defaultDataFitPadding = EdgeInsets.only(left: 16, right: 120);
 
 /// Modes that control chart's zoom and scroll behaviour without user
 /// interaction.
@@ -62,6 +63,7 @@ class XAxisModel extends ChangeNotifier {
     double? minIntervalWidth,
     double? maxIntervalWidth,
     int minElapsedTimeToFollow = 0,
+    EdgeInsets? dataFitPadding,
     this.onScale,
     this.onScroll,
   }) {
@@ -84,6 +86,8 @@ class XAxisModel extends ChangeNotifier {
     _minIntervalWidth = minIntervalWidth ?? 1;
     _maxIntervalWidth = maxIntervalWidth ?? 80;
     _minElapsedTimeToFollow = minElapsedTimeToFollow;
+
+    _dataFitPadding = dataFitPadding ?? defaultDataFitPadding;
 
     _updateEntries(entries);
 
@@ -109,6 +113,9 @@ class XAxisModel extends ChangeNotifier {
   late double _maxIntervalWidth;
 
   late int _minElapsedTimeToFollow;
+
+  /// Padding around data used in data-fit mode.
+  late EdgeInsets _dataFitPadding;
 
   /// Default to this interval width on granularity change.
   final double defaultIntervalWidth;
@@ -213,6 +220,18 @@ class XAxisModel extends ChangeNotifier {
     return ViewingMode.stationary;
   }
 
+  /// Called on each tick's curve animation
+  /// Updates scroll position if the [_currentViewingMode] in follow mode.
+  void scrollAnimationListener(int offsetEpoch) {
+    _nowEpoch = (_entries?.isNotEmpty ?? false)
+        ? _entries!.last.epoch
+        : _nowEpoch + offsetEpoch;
+
+    if (_currentViewingMode == ViewingMode.followCurrentTick) {
+      _scrollTo(_rightBoundEpoch + offsetEpoch);
+    }
+  }
+
   /// Called on each frame.
   /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
@@ -230,13 +249,7 @@ class XAxisModel extends ChangeNotifier {
         _scrollTo(_rightBoundEpoch + elapsedMs);
         break;
       case ViewingMode.fitData:
-        _fitData();
-
-        /// Switch to [ViewingMode.followCurrentTick] once reached zoom out
-        /// limit.
-        if (_msPerPx == _maxMsPerPx) {
-          disableDataFit();
-        }
+        fitAvailableData();
         break;
       case ViewingMode.constantScrollSpeed:
         scrollBy(_panSpeed * elapsedMs);
@@ -325,9 +338,14 @@ class XAxisModel extends ChangeNotifier {
     _isLive = isLive;
   }
 
-  void _updateMinElapsedTimeToFollow(int? minElapsedTimeToFollow) {
-    if (minElapsedTimeToFollow != null) {
-      _minElapsedTimeToFollow = minElapsedTimeToFollow;
+  /// Fits available data to screen and to disable data fit mode.
+  void fitAvailableData() {
+    _fitData();
+
+    /// Switch to [ViewingMode.followCurrentTick] once reached zoom out
+    /// limit.
+    if (_msPerPx == _maxMsPerPx) {
+      disableDataFit();
     }
   }
 
@@ -339,17 +357,21 @@ class XAxisModel extends ChangeNotifier {
       // `entries.length * granularity` gives ms duration with market gaps
       // excluded.
       final int msDataDuration = _entries!.length * granularity;
-      final double pxTargetDataWidth = width! - dataFitPadding.horizontal;
+      final double pxTargetDataWidth = width! - _dataFitPadding.horizontal;
 
       _msPerPx =
           (msDataDuration / pxTargetDataWidth).clamp(_minMsPerPx, _maxMsPerPx);
-      _scrollTo(_shiftEpoch(lastEntryEpoch, dataFitPadding.right));
+      _scrollTo(_shiftEpoch(lastEntryEpoch, _dataFitPadding.right));
     }
   }
 
   /// Enables data fit viewing mode.
   void enableDataFit() {
     _dataFitMode = true;
+    if (kIsWeb) {
+      fitAvailableData();
+    }
+
     notifyListeners();
   }
 
@@ -459,6 +481,7 @@ class XAxisModel extends ChangeNotifier {
     final double nowToRightBound = pxBetween(_nowEpoch, rightBoundEpoch);
     scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(_nowEpoch, nowToRightBound);
+    _clampRightBoundEpoch();
   }
 
   void _scaleWithFocalPointFixed(ScaleUpdateDetails details) {
@@ -466,6 +489,7 @@ class XAxisModel extends ChangeNotifier {
     final int focalEpoch = _shiftEpoch(rightBoundEpoch, -focalToRightBound);
     scale(details.scale);
     _rightBoundEpoch = _shiftEpoch(focalEpoch, focalToRightBound);
+    _clampRightBoundEpoch();
   }
 
   void _scrollTo(int rightBoundEpoch) {
@@ -526,14 +550,15 @@ class XAxisModel extends ChangeNotifier {
     int? minEpoch,
     int? maxEpoch,
     int? minElapsedTimeToFollow,
+    EdgeInsets? dataFitPadding,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
-    _updateMinElapsedTimeToFollow(minElapsedTimeToFollow);
 
     _minEpoch = minEpoch ?? _minEpoch;
     _maxEpoch = maxEpoch ?? _maxEpoch;
+    _dataFitPadding = dataFitPadding ?? _dataFitPadding;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.

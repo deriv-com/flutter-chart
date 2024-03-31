@@ -5,24 +5,24 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import 'grid/x_grid_painter.dart';
-import 'x_axis_model.dart';
+import '../grid/x_grid_painter.dart';
+import '../x_axis_model.dart';
 
-/// X-axis widget.
+/// X-axis base widget.
 ///
 /// Draws x-axis grid and manages [XAxisModel].
 /// Exposes the model to all descendants.
-class XAxis extends StatefulWidget {
+class XAxisBase extends StatefulWidget {
   /// Creates x-axis the size of child.
-  const XAxis({
+  const XAxisBase({
     required this.entries,
     required this.child,
     required this.isLive,
     required this.startWithDataFitMode,
     required this.pipSize,
+    required this.scrollAnimationDuration,
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
@@ -31,6 +31,7 @@ class XAxis extends StatefulWidget {
     this.minIntervalWidth,
     this.maxIntervalWidth,
     this.minElapsedTimeToFollow = 0,
+    this.dataFitPadding,
     Key? key,
   }) : super(key: key);
 
@@ -76,17 +77,27 @@ class XAxis extends StatefulWidget {
   /// rightBoundEpoch when the chart is in follow mode.  This is used to control
   /// the number of frames painted each second.
   final int minElapsedTimeToFollow;
+  /// Padding around data used in data-fit mode.
+  final EdgeInsets? dataFitPadding;
+
+  /// Duration of the scroll animation.
+  final Duration scrollAnimationDuration;
 
   @override
-  _XAxisState createState() => _XAxisState();
+  XAxisState createState() => XAxisState();
 }
 
-class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
+/// XAxisState
+class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
   late XAxisModel _model;
-  late Ticker _ticker;
+
   late AnimationController _rightEpochAnimationController;
 
+  /// GestureManager
   late GestureManagerState gestureManager;
+
+  /// XAxisModel
+  XAxisModel get model => _model;
 
   @override
   void initState() {
@@ -111,9 +122,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       minIntervalWidth: widget.minIntervalWidth,
       maxIntervalWidth: widget.maxIntervalWidth,
       minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
+      dataFitPadding: widget.dataFitPadding,
     );
-
-    _ticker = createTicker(_model.onNewFrame)..start();
 
     gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_model.onScaleAndPanStart)
@@ -130,7 +140,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(XAxis oldWidget) {
+  void didUpdateWidget(XAxisBase oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     _model.update(
@@ -138,12 +148,12 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       granularity: context.read<ChartConfig>().granularity,
       entries: widget.entries,
       minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
+      dataFitPadding: widget.dataFitPadding,
     );
   }
 
   @override
   void dispose() {
-    _ticker.dispose();
     _rightEpochAnimationController.dispose();
 
     gestureManager
@@ -183,6 +193,7 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
                               _model.xFromEpoch(time.millisecondsSinceEpoch))
                           .toList(),
                       style: _chartTheme,
+                      msPerPx: _model.msPerPx,
                     ),
                   ),
                 ),

@@ -12,6 +12,7 @@ export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.da
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/tick_indicator.dart';
+export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_data.dart';
@@ -22,7 +23,6 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/aroon_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/bollinger_bands_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/cci_series.dart';
-export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/donchian_channels_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/dpo_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/fcb_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/indicators_series/gator_series.dart';
@@ -53,6 +53,7 @@ export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/mu
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/options_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 export 'src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+export 'src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
 export 'src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 export 'src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';

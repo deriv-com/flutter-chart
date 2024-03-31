@@ -26,6 +26,8 @@ class SMISeries extends Series {
     required this.smiOptions,
     this.overboughtValue = 40,
     this.oversoldValue = -40,
+    this.overboughtStyle = const LineStyle(),
+    this.oversoldStyle = const LineStyle(),
     String? id,
   }) : super(id ?? 'SMI');
 
@@ -46,6 +48,12 @@ class SMISeries extends Series {
   /// Oversold value.
   final double oversoldValue;
 
+  /// Overbought style.
+  final LineStyle overboughtStyle;
+
+  /// Oversold style.
+  final LineStyle oversoldStyle;
+
   /// SMI Options
   final SMIOptions smiOptions;
 
@@ -64,6 +72,8 @@ class SMISeries extends Series {
         topHorizontalLine: overboughtValue,
         bottomHorizontalLine: oversoldValue,
         secondaryHorizontalLinesStyle: const LineStyle(),
+        topHorizontalLinesStyle: overboughtStyle,
+        bottomHorizontalLinesStyle: oversoldStyle,
       ),
       indicatorCreator: () => smiIndicator,
       style: smiOptions.lineStyle,

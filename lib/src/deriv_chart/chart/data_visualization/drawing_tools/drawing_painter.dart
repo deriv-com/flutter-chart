@@ -213,12 +213,18 @@ class _DrawingPainterState extends State<DrawingPainter> {
             hitTestBehavior: HitTestBehavior.deferToChild,
             child: RepaintBoundary(
               child: GestureDetector(
-                onTapDown: (TapDownDetails details) {
-                  isTouchHeld = true;
+                onTapUp: (TapUpDetails details) {
+                  isTouchHeld = false;
+                  if (details.kind != PointerDeviceKind.mouse) {
+                    widget.setIsDrawingSelected(widget.drawingData!);
+                    _updateDrawingsMovement();
+                  }
+                  widget.onMoveDrawing(isDrawingMoved: false);
+                },
+                onLongPressDown: (LongPressDownDetails details) {
                   if (details.kind == PointerDeviceKind.mouse &&
                       !widget.drawingData!.isSelected) {
                     widget.setIsDrawingSelected(widget.drawingData!);
-                    _updateDrawingsMovement();
                   }
 
                   _draggableStartPoint = _draggableStartPoint.copyWith(
@@ -232,20 +238,6 @@ class _DrawingPainterState extends State<DrawingPainter> {
                   _draggableEndPoint = _draggableEndPoint.copyWith(
                     isDragged: isOverEndPoint,
                   );
-                },
-                onTapUp: (TapUpDetails details) {
-                  isTouchHeld = false;
-                  if (details.kind != PointerDeviceKind.mouse) {
-                    widget.setIsDrawingSelected(widget.drawingData!);
-                    _updateDrawingsMovement();
-                  }
-                  widget.onMoveDrawing(isDrawingMoved: false);
-                },
-                onLongPressDown: (LongPressDownDetails details) {
-                  widget.onMoveDrawing(isDrawingMoved: true);
-                  isTouchHeld = true;
-                  _previousPosition = details.localPosition;
-                  _updateDrawingsMovement();
                 },
                 onLongPressMoveUpdate: (LongPressMoveUpdateDetails details) {
                   final DragUpdateDetails dragDetails =

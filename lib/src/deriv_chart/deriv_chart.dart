@@ -52,6 +52,7 @@ class DerivChart extends StatefulWidget {
     this.minIntervalWidth,
     this.maxIntervalWidth,
     this.minElapsedTimeToFollow = 0,
+    this.dataFitPadding,
     this.currentTickAnimationDuration,
     this.quoteBoundsAnimationDuration,
     this.showCurrentTickBlinkAnimation,
@@ -138,6 +139,8 @@ class DerivChart extends StatefulWidget {
   /// rightBoundEpoch when the chart is in follow mode.  This is used to control
   /// the number of frames painted each second.
   final int minElapsedTimeToFollow;
+  /// Padding around data used in data-fit mode.
+  final EdgeInsets? dataFitPadding;
 
   /// Duration of the current tick animated transition.
   final Duration? currentTickAnimationDuration;
@@ -342,6 +345,7 @@ class _DerivChartState extends State<DerivChart> {
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,
                 minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
+                dataFitPadding: widget.dataFitPadding,
                 currentTickAnimationDuration:
                     widget.currentTickAnimationDuration,
                 quoteBoundsAnimationDuration:

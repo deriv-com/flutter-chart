@@ -130,7 +130,9 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
         ));
   }
 
-  // TODO(NA): Return true if FibfanDrawing's on chart view port.
+// This condition will always return true since Fibfan drawing,
+// will always be out of chart's viewport considering it
+// expand infinitely.
   @override
   bool needsRepaint(
     int leftEpoch,
@@ -184,15 +186,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
     final double endQuoteToY = _endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
-      if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
-        /// Draw second point
-        canvas.drawCircle(
-            Offset(endXCoord, endQuoteToY),
-            markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
-      } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
+      if (edgePoints.length == 1) {
         /// Draw first point
         canvas.drawCircle(
             Offset(startXCoord, startQuoteToY),
@@ -248,6 +242,8 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
       _drawTriangle(canvas, paint, config, _finalInnerVector);
 
       /// Draw markers again to hide their overlap with shadows
+      /// The second cicle is getting created here as the lines and
+      /// second marker are getting created at same time
       canvas
         ..drawCircle(
             Offset(startXCoord, startQuoteToY),

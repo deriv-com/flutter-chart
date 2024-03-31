@@ -78,13 +78,16 @@ class _MarkerAreaState extends State<MarkerArea> {
         AnimatedOpacity(
           duration: animationDuration,
           opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
-          child: CustomPaint(
-            child: const SizedBox.shrink(),
-            painter: _MarkerPainter(
+          child: RepaintBoundary(
+            child: CustomPaint(
+              child: Container(),
+              painter: _MarkerPainter(
                 series: widget.markerSeries,
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
-                theme: context.watch<ChartTheme>()),
+                theme: context.watch<ChartTheme>(),
+              ),
+            ),
           ),
         ),
         AnimatedActiveMarker(

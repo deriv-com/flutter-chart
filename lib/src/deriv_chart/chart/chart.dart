@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_wrapper.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
@@ -57,6 +57,7 @@ class Chart extends StatefulWidget {
     this.minIntervalWidth,
     this.maxIntervalWidth,
     this.minElapsedTimeToFollow = 0,
+    this.dataFitPadding,
     this.currentTickAnimationDuration,
     this.quoteBoundsAnimationDuration,
     this.showCurrentTickBlinkAnimation,
@@ -152,6 +153,9 @@ class Chart extends StatefulWidget {
   /// rightBoundEpoch when the chart is in follow mode.  This is used to control
   /// the number of frames painted each second.
   final int minElapsedTimeToFollow;
+
+  /// Padding around data used in data-fit mode.
+  final EdgeInsets? dataFitPadding;
 
   /// Duration of the current tick animated transition.
   final Duration? currentTickAnimationDuration;
@@ -285,6 +289,12 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     final bool isExpanded = expandedIndex != null;
 
+    final Duration currentTickAnimationDuration =
+        widget.currentTickAnimationDuration ?? _defaultDuration;
+
+    final Duration quoteBoundsAnimationDuration =
+        widget.quoteBoundsAnimationDuration ?? _defaultDuration;
+
     return MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
@@ -293,7 +303,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
       child: Ink(
         color: _chartTheme.base08Color,
         child: GestureManager(
-          child: XAxis(
+          child: XAxisWrapper(
             maxEpoch: chartDataList.getMaxEpoch(),
             minEpoch: chartDataList.getMinEpoch(),
             entries: widget.mainSeries.input,
@@ -305,7 +315,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             msPerPx: widget.msPerPx,
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
-            minElapsedTimeToFollow: widget.minElapsedTimeToFollow,
+            dataFitPadding: widget.dataFitPadding,
+            scrollAnimationDuration: currentTickAnimationDuration,
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -334,10 +345,8 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,
                     onCrosshairHover: _onCrosshairHover,
                     loadingAnimationColor: widget.loadingAnimationColor,
-                    currentTickAnimationDuration:
-                        widget.currentTickAnimationDuration ?? _defaultDuration,
-                    quoteBoundsAnimationDuration:
-                        widget.quoteBoundsAnimationDuration ?? _defaultDuration,
+                    currentTickAnimationDuration: currentTickAnimationDuration,
+                    quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
                     showCurrentTickBlinkAnimation:
                         widget.showCurrentTickBlinkAnimation ?? true,
                   ),
@@ -356,6 +365,10 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         pipSize: widget.bottomConfigs?[index].pipSize ??
                             widget.pipSize,
                         title: widget.bottomConfigs![index].title,
+                        currentTickAnimationDuration:
+                            currentTickAnimationDuration,
+                        quoteBoundsAnimationDuration:
+                            quoteBoundsAnimationDuration,
                         bottomChartTitleMargin: widget.bottomChartTitleMargin,
                         onRemove: () => _onRemove(widget.bottomConfigs![index]),
                         onEdit: () => _onEdit(widget.bottomConfigs![index]),

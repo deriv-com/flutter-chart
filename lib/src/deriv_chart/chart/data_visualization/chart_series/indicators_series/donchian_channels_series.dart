@@ -11,9 +11,12 @@ import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
 
-import '../line_series/line_series.dart';
+import '../data_series.dart';
+import '../line_series/line_painter.dart';
 import '../series.dart';
 import '../series_painter.dart';
+
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 
 /// Donchian Channels series
 class DonchianChannelsSeries extends Series {
@@ -40,13 +43,13 @@ class DonchianChannelsSeries extends Series {
         super(id ?? 'Donchian$config');
 
   /// Upper channel series.
-  late LineSeries upperChannelSeries;
+  late SingleIndicatorSeries upperChannelSeries;
 
   /// Middle channel series.
-  late LineSeries middleChannelSeries;
+  late SingleIndicatorSeries middleChannelSeries;
 
   /// Lower channel series.
-  late LineSeries lowerChannelSeries;
+  late SingleIndicatorSeries lowerChannelSeries;
 
   final HighValueIndicator<Tick> _highIndicator;
   final LowValueIndicator<Tick> _lowIndicator;
@@ -60,31 +63,37 @@ class DonchianChannelsSeries extends Series {
         HighestValueIndicator<Tick>(
       _highIndicator,
       config.highPeriod,
-    )..calculateValues();
+    );
 
     final LowestValueIndicator<Tick> lowerChannelIndicator =
         LowestValueIndicator<Tick>(
       _lowIndicator,
       config.lowPeriod,
-    )..calculateValues();
+    );
 
     final DonchianMiddleChannelIndicator<Tick> middleChannelIndicator =
         DonchianMiddleChannelIndicator<Tick>(
       upperChannelIndicator,
       lowerChannelIndicator,
-    )..calculateValues();
+    );
 
-    upperChannelSeries = LineSeries(
-      upperChannelIndicator.results,
+    upperChannelSeries = SingleIndicatorSeries(
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      inputIndicator: _highIndicator,
       style: config.upperLineStyle,
       lastTickIndicatorStyle: getLastIndicatorStyle(
         config.upperLineStyle.color,
         showLastIndicator: config.showLastIndicator,
       ),
+      indicatorCreator: () => upperChannelIndicator,
     );
 
-    lowerChannelSeries = LineSeries(
-      lowerChannelIndicator.results,
+    lowerChannelSeries = SingleIndicatorSeries(
+      inputIndicator: _lowIndicator,
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      indicatorCreator: () => lowerChannelIndicator,
       style: config.lowerLineStyle,
       lastTickIndicatorStyle: getLastIndicatorStyle(
         config.lowerLineStyle.color,
@@ -92,8 +101,11 @@ class DonchianChannelsSeries extends Series {
       ),
     );
 
-    middleChannelSeries = LineSeries(
-      middleChannelIndicator.results,
+    middleChannelSeries = SingleIndicatorSeries(
+      inputIndicator: _lowIndicator,
+      painterCreator: (Series series) =>
+          LinePainter(series as DataSeries<Tick>),
+      indicatorCreator: () => middleChannelIndicator,
       style: config.middleLineStyle,
       lastTickIndicatorStyle: getLastIndicatorStyle(
         config.middleLineStyle.color,
