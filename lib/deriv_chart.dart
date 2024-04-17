@@ -8,6 +8,7 @@ export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulato
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_entry_spot_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
+export 'src/deriv_chart/chart/data_visualization/annotations/barriers/entry_tick_annotation.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/combined_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/tick_indicator.dart';
@@ -41,6 +42,7 @@ export 'src/theme/chart_default_light_theme.dart';
 export 'src/theme/chart_theme.dart';
 export 'src/theme/painting_styles/barrier_style.dart';
 export 'src/theme/painting_styles/candle_style.dart';
+export 'src/theme/painting_styles/entry_exit_marker_style.dart';
 export 'src/theme/painting_styles/grid_style.dart';
 export 'src/theme/painting_styles/line_style.dart';
 export 'src/theme/painting_styles/marker_style.dart';
