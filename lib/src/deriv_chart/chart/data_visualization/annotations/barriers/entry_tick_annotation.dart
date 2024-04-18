@@ -20,7 +20,7 @@ class EntryTickAnnotation extends ChartAnnotation<BarrierObject> {
     String? id,
   }) : super(id ?? 'EntryTickAnnotation $style', style: style);
 
-  /// The which this tick annotation will be pointing to.
+  /// The tick which this tick annotation will be pointing to.
   final Tick tick;
 
   @override
