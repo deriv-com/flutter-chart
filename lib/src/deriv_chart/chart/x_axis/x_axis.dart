@@ -110,6 +110,8 @@ class _XAxisState extends State<XAxis> with TickerProviderStateMixin {
       isLive: widget.isLive,
       granularity: context.read<ChartConfig>().granularity,
       entries: widget.entries,
+      maxCurrentTickOffset:
+          context.read<ChartConfig>().chartAxisConfig.maxCurrentTickOffset,
     );
   }
 

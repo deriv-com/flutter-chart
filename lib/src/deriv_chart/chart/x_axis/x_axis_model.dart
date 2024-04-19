@@ -53,7 +53,7 @@ class XAxisModel extends ChangeNotifier {
     required int granularity,
     required AnimationController animationController,
     required bool isLive,
-    required this.maxCurrentTickOffset,
+    required double maxCurrentTickOffset,
     this.defaultIntervalWidth = 20,
     bool startWithDataFitMode = false,
     int? minEpoch,
@@ -61,6 +61,8 @@ class XAxisModel extends ChangeNotifier {
     this.onScale,
     this.onScroll,
   }) {
+    _maxCurrentTickOffset = maxCurrentTickOffset;
+
     _nowEpoch = entries.isNotEmpty
         ? entries.last.epoch
         : DateTime.now().millisecondsSinceEpoch;
@@ -92,9 +94,7 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
-  /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
-  /// Limits panning to the right.
-  final double maxCurrentTickOffset;
+  double _maxCurrentTickOffset = 200;
 
   // TODO(NA): Allow customization of this setting.
   /// Scaling will not resize intervals to be smaller than this.
@@ -152,10 +152,10 @@ class XAxisModel extends ChangeNotifier {
   set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
-  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, maxCurrentTickOffset);
+  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, _maxCurrentTickOffset);
 
   /// Current scrolling upper bound.
-  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, maxCurrentTickOffset);
+  int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, _maxCurrentTickOffset);
 
   /// Has hit left or right panning limit.
   bool get hasHitLimit =>
@@ -457,7 +457,7 @@ class XAxisModel extends ChangeNotifier {
     final int target = _shiftEpoch(
             // _lastEntryEpoch will be removed later.
             (_entries?.isNotEmpty ?? false) ? _entries!.last.epoch : _nowEpoch,
-            maxCurrentTickOffset) +
+            _maxCurrentTickOffset) +
         duration.inMilliseconds;
 
     final double distance = target > _rightBoundEpoch
@@ -492,19 +492,20 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Updates the [XAxisModel] model variables.
-  void update({
-    bool? isLive,
-    int? granularity,
-    List<Tick>? entries,
-    int? minEpoch,
-    int? maxEpoch,
-  }) {
+  void update(
+      {bool? isLive,
+      int? granularity,
+      List<Tick>? entries,
+      int? minEpoch,
+      int? maxEpoch,
+      double? maxCurrentTickOffset}) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
 
     _minEpoch = minEpoch ?? _minEpoch;
     _maxEpoch = maxEpoch ?? _maxEpoch;
+    _maxCurrentTickOffset = maxCurrentTickOffset ?? _maxCurrentTickOffset;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.
