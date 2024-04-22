@@ -492,13 +492,14 @@ class XAxisModel extends ChangeNotifier {
   }
 
   /// Updates the [XAxisModel] model variables.
-  void update(
-      {bool? isLive,
-      int? granularity,
-      List<Tick>? entries,
-      int? minEpoch,
-      int? maxEpoch,
-      double? maxCurrentTickOffset}) {
+  void update({
+    bool? isLive,
+    int? granularity,
+    List<Tick>? entries,
+    int? minEpoch,
+    int? maxEpoch,
+    double? maxCurrentTickOffset,
+  }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
     _updateEntries(entries);
