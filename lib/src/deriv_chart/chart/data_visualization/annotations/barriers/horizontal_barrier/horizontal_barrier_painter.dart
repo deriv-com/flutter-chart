@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
@@ -112,7 +113,10 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
     // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
-      _paintBlinkingDot(canvas, dotX, y, animationInfo, style.blinkingDotColor);
+      yAxisClipping(canvas, size, () {
+        _paintBlinkingDot(
+            canvas, dotX!, y, animationInfo, style.blinkingDotColor);
+      });
     }
 
     final TextPainter valuePainter = makeTextPainter(
@@ -140,7 +144,9 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       }
 
       if (lineStartX < lineEndX && style.hasLine) {
-        _paintLine(canvas, lineStartX, lineEndX, y, style);
+        yAxisClipping(canvas, size, () {
+          _paintLine(canvas, lineStartX, lineEndX, y, style);
+        });
       }
     }
 
