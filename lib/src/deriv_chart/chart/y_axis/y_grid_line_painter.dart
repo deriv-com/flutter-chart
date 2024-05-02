@@ -29,18 +29,27 @@ class YGridLinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
-
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(
-          size.width - labelWidth - style.labelHorizontalPadding * 2,
-          y,
-        ),
-        Paint()
-          ..color = style.gridLineColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = style.lineThickness,
+      final Rect clipRect = Rect.fromLTWH(
+        0,
+        0,
+        size.width - 70,
+        size.height,
       );
+      canvas
+        ..save()
+        ..clipRect(clipRect)
+        ..drawLine(
+          Offset(0, y),
+          Offset(
+            size.width - labelWidth - style.labelHorizontalPadding * 2,
+            y,
+          ),
+          Paint()
+            ..color = style.gridLineColor
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = style.lineThickness,
+        )
+        ..restore();
     }
   }
 

@@ -54,8 +54,18 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         path.startPosition.dx,
         path.endPosition.dx,
       );
+      final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
+    );
 
-      canvas.drawPath(path.path, areaPaint);
+     canvas
+      ..save()
+      ..clipRect(clipRect)
+      ..drawPath(path.path, areaPaint)
+      ..restore();
     }
   }
 

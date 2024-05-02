@@ -57,17 +57,27 @@ void _paintTimeGridLines(
   double msPerPx,
 ) {
   for (int i = 0; i < xCoords.length; i++) {
-    canvas.drawLine(
-      Offset(xCoords[i], 0),
-      Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),
-      Paint()
-        // checking if msPerPx is <  300000
-        ..color = (msPerPx < 300000 && checkNewDate(time[i]))
-            ? style.verticalBarrierStyle.color
-            : gridStyle.gridLineColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = gridStyle.lineThickness,
+    final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
     );
+    canvas
+      ..save()
+      ..clipRect(clipRect)
+      ..drawLine(
+        Offset(xCoords[i], 0),
+        Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),
+        Paint()
+          // checking if msPerPx is <  300000
+          ..color = (msPerPx < 300000 && checkNewDate(time[i]))
+              ? style.verticalBarrierStyle.color
+              : gridStyle.gridLineColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = gridStyle.lineThickness,
+      )
+      ..restore();
   }
 }
 
