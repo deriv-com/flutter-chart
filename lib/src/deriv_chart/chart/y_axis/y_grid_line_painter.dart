@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
@@ -29,16 +30,8 @@ class YGridLinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
-      final Rect clipRect = Rect.fromLTWH(
-        0,
-        0,
-        size.width - 70,
-        size.height,
-      );
-      canvas
-        ..save()
-        ..clipRect(clipRect)
-        ..drawLine(
+      performClipping(canvas, size, () {
+        canvas.drawLine(
           Offset(0, y),
           Offset(
             size.width - labelWidth - style.labelHorizontalPadding * 2,
@@ -48,8 +41,8 @@ class YGridLinePainter extends CustomPainter {
             ..color = style.gridLineColor
             ..style = PaintingStyle.stroke
             ..strokeWidth = style.lineThickness,
-        )
-        ..restore();
+        );
+      });
     }
   }
 

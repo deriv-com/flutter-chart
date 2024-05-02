@@ -77,17 +77,12 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    final Rect clipRect = Rect.fromLTWH(
-      0,
-      0,
-      size.width - 70,
-      size.height,
-    );
-    canvas
-      ..save()
-      ..clipRect(clipRect)
-      ..drawPath(linePath.path, _linePaint!)
-      ..restore();
+    performClipping(canvas, size, () {
+      canvas.drawPath(
+        linePath.path,
+        _linePaint!,
+      );
+    });
 
     if (_topHorizontalLine != null) {
       Path topIntersections;
@@ -122,11 +117,9 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
       }
 
-      canvas
-        ..save()
-        ..clipRect(clipRect)
-        ..drawPath(topIntersections, _topZonesPaint)
-        ..restore();
+      performClipping(canvas, size, () {
+        canvas.drawPath(topIntersections, _topZonesPaint);
+      });
     }
 
     if (_bottomHorizontalLine != null) {
@@ -162,11 +155,9 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
       }
 
-      canvas
-        ..save()
-        ..clipRect(clipRect)
-        ..drawPath(bottomIntersection, _bottomZonesPaint)
-        ..restore();
+      performClipping(canvas, size, () {
+        canvas.drawPath(bottomIntersection, _bottomZonesPaint);
+      });
 
       // canvas.drawPath(bottomIntersection, _bottomZonesPaint);
     }
@@ -192,36 +183,33 @@ class OscillatorLinePainter extends LinePainter {
 
     if (_topHorizontalLine != null) {
       paint.color = topHorizontalLinesStyle.color;
-      canvas
-        ..save()
-        ..clipRect(clipRect)
-        ..drawLine(
+      performClipping(canvas, size, () {
+        canvas.drawLine(
             Offset(0, quoteToY(_topHorizontalLine!)),
             Offset(
                 size.width -
                     labelWidth(_topHorizontalLine!, textStyle.textStyle,
                         chartConfig.pipSize),
                 quoteToY(_topHorizontalLine!)),
-            paint)
-        ..restore();
+            paint);
+      });
     }
 
     if (_bottomHorizontalLine != null) {
       paint
         ..color = bottomHorizontalLinesStyle.color
         ..strokeWidth = bottomHorizontalLinesStyle.thickness;
-      canvas
-        ..save()
-        ..clipRect(clipRect)
-        ..drawLine(
+
+      performClipping(canvas, size, () {
+        canvas.drawLine(
             Offset(0, quoteToY(_bottomHorizontalLine!)),
             Offset(
                 size.width -
                     labelWidth(_topHorizontalLine!, textStyle.textStyle,
                         chartConfig.pipSize),
                 quoteToY(_bottomHorizontalLine!)),
-            paint)
-        ..restore();
+            paint);
+      });
     }
 
     _paintLabels(size, quoteToY, canvas);
@@ -241,12 +229,13 @@ class OscillatorLinePainter extends LinePainter {
       size.height,
     );
     for (final double line in _secondaryHorizontalLines) {
-      canvas
-        ..save()
-        ..clipRect(clipRect)
-        ..drawLine(Offset(0, quoteToY(line)),
-            Offset(size.width, quoteToY(line)), horizontalLinePaint)
-        ..restore();
+      performClipping(canvas, size, () {
+        canvas.drawLine(
+          Offset(0, quoteToY(line)),
+          Offset(size.width, quoteToY(line)),
+          horizontalLinePaint,
+        );
+      });
     }
   }
 

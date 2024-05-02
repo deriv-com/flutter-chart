@@ -18,6 +18,16 @@ double safeMax(double a, double b) {
   return compareValues.reduce(max);
 }
 
+/// Wraps the painting logic with a clipping rect to avoid overflows.
+void performClipping(Canvas canvas, Size size, VoidCallback paintingLogic) {
+  final Rect clipRect = Rect.fromLTWH(0, 0, size.width - 70, size.height);
+  canvas
+    ..save()
+    ..clipRect(clipRect);
+  paintingLogic();
+  canvas.restore();
+}
+
 List<double> _checkNan(double a, double b) {
   if (a.isNaN) {
     if (b.isNaN) {

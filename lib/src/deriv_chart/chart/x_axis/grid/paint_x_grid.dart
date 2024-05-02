@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/check_new_day.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/time_label.dart';
@@ -57,16 +58,8 @@ void _paintTimeGridLines(
   double msPerPx,
 ) {
   for (int i = 0; i < xCoords.length; i++) {
-    final Rect clipRect = Rect.fromLTWH(
-      0,
-      0,
-      size.width - 70,
-      size.height,
-    );
-    canvas
-      ..save()
-      ..clipRect(clipRect)
-      ..drawLine(
+    performClipping(canvas, size, () {
+      canvas.drawLine(
         Offset(xCoords[i], 0),
         Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),
         Paint()
@@ -76,8 +69,8 @@ void _paintTimeGridLines(
               : gridStyle.gridLineColor
           ..style = PaintingStyle.stroke
           ..strokeWidth = gridStyle.lineThickness,
-      )
-      ..restore();
+      );
+    });
   }
 }
 

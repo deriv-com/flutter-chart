@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/helpers/combine_paths.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/foundation.dart';
@@ -113,20 +114,14 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
       secondUpperChannelFill = Path.combine(
           PathOperation.difference, channelFillPath, firstLineAreaPath);
     }
-    final Rect clipRect = Rect.fromLTWH(
-      0,
-      0,
-      size.width - 70,
-      size.height,
-    );
-    canvas
-      ..save()
-      ..clipRect(clipRect)
-      ..drawPath(firstDataPathInfo.path, firstLinePaint)
-      ..drawPath(secondDataPathInfo.path, secondLinePaint)
-      ..drawPath(firstUpperChannelFill, firstChannelFillPaint)
-      ..drawPath(secondUpperChannelFill, secondChannelFillPaint)
-      ..restore();
+    
+    performClipping(canvas, size, () {
+      canvas
+        ..drawPath(firstDataPathInfo.path, firstLinePaint)
+        ..drawPath(secondDataPathInfo.path, secondLinePaint)
+        ..drawPath(firstUpperChannelFill, firstChannelFillPaint)
+        ..drawPath(secondUpperChannelFill, secondChannelFillPaint);
+    });
   }
 
   void _createPathReverse(
