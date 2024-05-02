@@ -35,7 +35,7 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
       if (!tick.quote.isNaN) {
         final double x = epochToX(getEpochOf(tick, i));
         final double y = quoteToY(tick.quote);
-        performClipping(canvas, size, () {
+        yAxisClipping(canvas, size, () {
           canvas.drawCircle(Offset(x, y), style.radius, dotPaint);
         });
       }

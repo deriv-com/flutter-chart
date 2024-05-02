@@ -43,6 +43,7 @@ abstract class OhlcPainter extends DataPainter<DataSeries<Candle>> {
 
       onPaintCandle(
           canvas,
+          size,
           OhlcPainting(
             width: candleWidth,
             xCenter: epochToX(getEpochOf(candle, i)),
@@ -122,7 +123,7 @@ abstract class OhlcPainter extends DataPainter<DataSeries<Candle>> {
       width: candleWidth,
     );
 
-    onPaintCandle(canvas, lastCandlePainting, prevLastCandlePainting);
+    onPaintCandle(canvas, size, lastCandlePainting, prevLastCandlePainting);
   }
 
   /// Paints [DataSeries.visibleEntries].
@@ -130,6 +131,7 @@ abstract class OhlcPainter extends DataPainter<DataSeries<Candle>> {
   /// chart type
   void onPaintCandle(
     Canvas canvas,
+    Size size,
     OhlcPainting currentPainting,
     OhlcPainting prevPainting,
   );

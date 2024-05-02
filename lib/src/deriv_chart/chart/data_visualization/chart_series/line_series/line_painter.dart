@@ -56,7 +56,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         path.endPosition.dx,
       );
 
-      performClipping(canvas, size, () {
+      yAxisClipping(canvas, size, () {
         canvas.drawPath(path.path, areaPaint);
       });
     }
@@ -70,7 +70,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     Size size,
     Paint linePaint,
   ) {
-    performClipping(canvas, size, () {
+    yAxisClipping(canvas, size, () {
       canvas.drawPath(path, linePaint);
     });
   }

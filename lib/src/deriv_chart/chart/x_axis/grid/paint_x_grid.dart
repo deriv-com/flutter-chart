@@ -58,7 +58,7 @@ void _paintTimeGridLines(
   double msPerPx,
 ) {
   for (int i = 0; i < xCoords.length; i++) {
-    performClipping(canvas, size, () {
+    yAxisClipping(canvas, size, () {
       canvas.drawLine(
         Offset(xCoords[i], 0),
         Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),

@@ -115,7 +115,7 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
           PathOperation.difference, channelFillPath, firstLineAreaPath);
     }
     
-    performClipping(canvas, size, () {
+    yAxisClipping(canvas, size, () {
       canvas
         ..drawPath(firstDataPathInfo.path, firstLinePaint)
         ..drawPath(secondDataPathInfo.path, secondLinePaint)

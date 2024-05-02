@@ -19,7 +19,7 @@ double safeMax(double a, double b) {
 }
 
 /// Wraps the painting logic with a clipping rect to avoid overflows.
-void performClipping(Canvas canvas, Size size, VoidCallback paintingLogic) {
+void yAxisClipping(Canvas canvas, Size size, VoidCallback paintingLogic) {
   final Rect clipRect = Rect.fromLTWH(0, 0, size.width - 70, size.height);
   canvas
     ..save()

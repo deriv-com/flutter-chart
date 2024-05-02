@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class HollowCandlePainter extends OhlcPainter {
   @override
   void onPaintCandle(
     Canvas canvas,
+    Size size,
     OhlcPainting currentPainting,
     OhlcPainting prevPainting,
   ) {
@@ -34,15 +36,17 @@ class HollowCandlePainter extends OhlcPainter {
             ? _positiveColor
             : _neutralColor;
 
-    _drawWick(canvas, _candleColor, currentPainting);
+    yAxisClipping(canvas, size, () {
+      _drawWick(canvas, _candleColor, currentPainting);
 
-    if (currentPainting.yOpen == currentPainting.yClose) {
-      _drawLine(canvas, _candleColor, currentPainting);
-    } else if (currentPainting.yOpen < currentPainting.yClose) {
-      _drawFilledRect(canvas, _candleColor, currentPainting);
-    } else {
-      _drawHollowRect(canvas, _candleColor, currentPainting);
-    }
+      if (currentPainting.yOpen == currentPainting.yClose) {
+        _drawLine(canvas, _candleColor, currentPainting);
+      } else if (currentPainting.yOpen < currentPainting.yClose) {
+        _drawFilledRect(canvas, _candleColor, currentPainting);
+      } else {
+        _drawHollowRect(canvas, _candleColor, currentPainting);
+      }
+    });
   }
 
   void _drawWick(Canvas canvas, Color color, OhlcPainting currentPainting) {

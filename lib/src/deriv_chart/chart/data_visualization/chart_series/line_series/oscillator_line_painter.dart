@@ -77,7 +77,7 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    performClipping(canvas, size, () {
+    yAxisClipping(canvas, size, () {
       canvas.drawPath(
         linePath.path,
         _linePaint!,
@@ -117,7 +117,7 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
       }
 
-      performClipping(canvas, size, () {
+      yAxisClipping(canvas, size, () {
         canvas.drawPath(topIntersections, _topZonesPaint);
       });
     }
@@ -155,7 +155,7 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
       }
 
-      performClipping(canvas, size, () {
+      yAxisClipping(canvas, size, () {
         canvas.drawPath(bottomIntersection, _bottomZonesPaint);
       });
 
@@ -174,16 +174,9 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = topHorizontalLinesStyle.thickness;
 
-    final Rect clipRect = Rect.fromLTWH(
-      0,
-      0,
-      size.width - 70,
-      size.height,
-    );
-
     if (_topHorizontalLine != null) {
       paint.color = topHorizontalLinesStyle.color;
-      performClipping(canvas, size, () {
+      yAxisClipping(canvas, size, () {
         canvas.drawLine(
             Offset(0, quoteToY(_topHorizontalLine!)),
             Offset(
@@ -200,7 +193,7 @@ class OscillatorLinePainter extends LinePainter {
         ..color = bottomHorizontalLinesStyle.color
         ..strokeWidth = bottomHorizontalLinesStyle.thickness;
 
-      performClipping(canvas, size, () {
+      yAxisClipping(canvas, size, () {
         canvas.drawLine(
             Offset(0, quoteToY(_bottomHorizontalLine!)),
             Offset(
@@ -222,14 +215,9 @@ class OscillatorLinePainter extends LinePainter {
       ..color = horizontalLineStyle.color
       ..style = PaintingStyle.stroke
       ..strokeWidth = horizontalLineStyle.thickness;
-    final Rect clipRect = Rect.fromLTWH(
-      0,
-      0,
-      size.width - 70,
-      size.height,
-    );
+
     for (final double line in _secondaryHorizontalLines) {
-      performClipping(canvas, size, () {
+      yAxisClipping(canvas, size, () {
         canvas.drawLine(
           Offset(0, quoteToY(line)),
           Offset(size.width, quoteToY(line)),
