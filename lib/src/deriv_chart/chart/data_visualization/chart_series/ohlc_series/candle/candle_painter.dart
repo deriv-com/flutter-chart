@@ -1,10 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/models/candle.dart';
-import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../data_painter.dart';
-import '../../data_series.dart';
 import '../ohlc_painting.dart';
 import '../ohlc_painter.dart';
 
@@ -39,10 +36,8 @@ class CandlePainter extends OhlcPainter {
         Offset(currentPainting.xCenter, currentPainting.yLow),
         _linePaint,
       );
-    });
 
-    if (currentPainting.yOpen == currentPainting.yClose) {
-      yAxisClipping(canvas, size, () {
+      if (currentPainting.yOpen == currentPainting.yClose) {
         canvas.drawLine(
           Offset(currentPainting.xCenter - currentPainting.width / 2,
               currentPainting.yOpen),
@@ -50,9 +45,7 @@ class CandlePainter extends OhlcPainter {
               currentPainting.yOpen),
           _linePaint,
         );
-      });
-    } else if (currentPainting.yOpen > currentPainting.yClose) {
-      yAxisClipping(canvas, size, () {
+      } else if (currentPainting.yOpen > currentPainting.yClose) {
         canvas.drawRect(
           Rect.fromLTRB(
             currentPainting.xCenter - currentPainting.width / 2,
@@ -62,9 +55,7 @@ class CandlePainter extends OhlcPainter {
           ),
           _positiveCandlePaint,
         );
-      });
-    } else {
-      yAxisClipping(canvas, size, () {
+      } else {
         canvas.drawRect(
           Rect.fromLTRB(
             currentPainting.xCenter - currentPainting.width / 2,
@@ -74,7 +65,7 @@ class CandlePainter extends OhlcPainter {
           ),
           _negativeCandlePaint,
         );
-      });
-    }
+      }
+    });
   }
 }
