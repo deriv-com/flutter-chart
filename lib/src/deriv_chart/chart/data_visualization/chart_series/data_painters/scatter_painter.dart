@@ -24,6 +24,13 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
       return;
     }
 
+    final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
+    );
+
     final ScatterStyle style =
         series.style as ScatterStyle? ?? const ScatterStyle();
 
@@ -39,7 +46,11 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
       if (!tick.quote.isNaN) {
         final double x = epochToX(getEpochOf(tick, i));
         final double y = quoteToY(tick.quote);
-        canvas.drawCircle(Offset(x, y), style.radius, dotPaint);
+        canvas
+          ..save()
+          ..clipRect(clipRect)
+          ..drawCircle(Offset(x, y), style.radius, dotPaint)
+          ..restore();
       }
     }
   }

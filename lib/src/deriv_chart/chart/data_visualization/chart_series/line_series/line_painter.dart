@@ -33,7 +33,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     final DataLinePathInfo path = createPath(epochToX, quoteToY, animationInfo);
 
-    paintLines(canvas, path.path, linePaint);
+    paintLines(canvas, path.path, size, linePaint);
 
     if (style.hasArea) {
       final Paint areaPaint = Paint()
@@ -64,9 +64,22 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   void paintLines(
     Canvas canvas,
     Path path,
+    Size size,
     Paint linePaint,
   ) {
-    canvas.drawPath(path, linePaint);
+    final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
+    );
+
+    // Draw the adjusted path
+    canvas
+      ..save()
+      ..clipRect(clipRect)
+      ..drawPath(path, linePaint)
+      ..restore();
   }
 
   /// Creates the path of the given [series] and returns it.

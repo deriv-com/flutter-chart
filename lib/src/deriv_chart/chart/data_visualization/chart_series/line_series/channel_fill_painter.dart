@@ -113,12 +113,20 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
       secondUpperChannelFill = Path.combine(
           PathOperation.difference, channelFillPath, firstLineAreaPath);
     }
-
+    final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
+    );
     canvas
+      ..save()
+      ..clipRect(clipRect)
       ..drawPath(firstDataPathInfo.path, firstLinePaint)
       ..drawPath(secondDataPathInfo.path, secondLinePaint)
       ..drawPath(firstUpperChannelFill, firstChannelFillPaint)
-      ..drawPath(secondUpperChannelFill, secondChannelFillPaint);
+      ..drawPath(secondUpperChannelFill, secondChannelFillPaint)
+      ..restore();
   }
 
   void _createPathReverse(

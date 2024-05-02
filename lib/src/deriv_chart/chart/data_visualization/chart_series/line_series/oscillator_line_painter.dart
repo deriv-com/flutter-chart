@@ -77,7 +77,17 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    canvas.drawPath(linePath.path, _linePaint!);
+    final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
+    );
+    canvas
+      ..save()
+      ..clipRect(clipRect)
+      ..drawPath(linePath.path, _linePaint!)
+      ..restore();
 
     if (_topHorizontalLine != null) {
       Path topIntersections;
@@ -112,7 +122,11 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
       }
 
-      canvas.drawPath(topIntersections, _topZonesPaint);
+      canvas
+        ..save()
+        ..clipRect(clipRect)
+        ..drawPath(topIntersections, _topZonesPaint)
+        ..restore();
     }
 
     if (_bottomHorizontalLine != null) {
@@ -148,7 +162,13 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
       }
 
-      canvas.drawPath(bottomIntersection, _bottomZonesPaint);
+      canvas
+        ..save()
+        ..clipRect(clipRect)
+        ..drawPath(bottomIntersection, _bottomZonesPaint)
+        ..restore();
+
+      // canvas.drawPath(bottomIntersection, _bottomZonesPaint);
     }
 
     _paintHorizontalLines(canvas, quoteToY, size);
@@ -163,31 +183,45 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = topHorizontalLinesStyle.thickness;
 
+    final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
+    );
+
     if (_topHorizontalLine != null) {
       paint.color = topHorizontalLinesStyle.color;
-      canvas.drawLine(
-          Offset(0, quoteToY(_topHorizontalLine!)),
-          Offset(
-              size.width -
-                  labelWidth(_topHorizontalLine!, textStyle.textStyle,
-                      chartConfig.pipSize),
-              quoteToY(_topHorizontalLine!)),
-          paint);
+      canvas
+        ..save()
+        ..clipRect(clipRect)
+        ..drawLine(
+            Offset(0, quoteToY(_topHorizontalLine!)),
+            Offset(
+                size.width -
+                    labelWidth(_topHorizontalLine!, textStyle.textStyle,
+                        chartConfig.pipSize),
+                quoteToY(_topHorizontalLine!)),
+            paint)
+        ..restore();
     }
 
     if (_bottomHorizontalLine != null) {
       paint
         ..color = bottomHorizontalLinesStyle.color
         ..strokeWidth = bottomHorizontalLinesStyle.thickness;
-
-      canvas.drawLine(
-          Offset(0, quoteToY(_bottomHorizontalLine!)),
-          Offset(
-              size.width -
-                  labelWidth(_topHorizontalLine!, textStyle.textStyle,
-                      chartConfig.pipSize),
-              quoteToY(_bottomHorizontalLine!)),
-          paint);
+      canvas
+        ..save()
+        ..clipRect(clipRect)
+        ..drawLine(
+            Offset(0, quoteToY(_bottomHorizontalLine!)),
+            Offset(
+                size.width -
+                    labelWidth(_topHorizontalLine!, textStyle.textStyle,
+                        chartConfig.pipSize),
+                quoteToY(_bottomHorizontalLine!)),
+            paint)
+        ..restore();
     }
 
     _paintLabels(size, quoteToY, canvas);
@@ -200,10 +234,19 @@ class OscillatorLinePainter extends LinePainter {
       ..color = horizontalLineStyle.color
       ..style = PaintingStyle.stroke
       ..strokeWidth = horizontalLineStyle.thickness;
-
+    final Rect clipRect = Rect.fromLTWH(
+      0,
+      0,
+      size.width - 70,
+      size.height,
+    );
     for (final double line in _secondaryHorizontalLines) {
-      canvas.drawLine(Offset(0, quoteToY(line)),
-          Offset(size.width, quoteToY(line)), horizontalLinePaint);
+      canvas
+        ..save()
+        ..clipRect(clipRect)
+        ..drawLine(Offset(0, quoteToY(line)),
+            Offset(size.width, quoteToY(line)), horizontalLinePaint)
+        ..restore();
     }
   }
 
