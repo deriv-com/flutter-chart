@@ -205,7 +205,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
       curve: Curves.easeOut,
     );
     _currentTickAnimationController.addListener(() {
-      if (_currentTickAnimationController.isAnimating) {
+      if (_currentTickAnimationController.status != AnimationStatus.completed) {
         _isTickAnimationPlaying = true;
       } else {
         _isTickAnimationPlaying = false;
