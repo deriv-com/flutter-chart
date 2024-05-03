@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +30,7 @@ class YGridLinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
-      yAxisClipping(canvas, size, () {
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawLine(
           Offset(0, y),
           Offset(

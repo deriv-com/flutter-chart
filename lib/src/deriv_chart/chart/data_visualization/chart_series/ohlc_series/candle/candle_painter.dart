@@ -30,7 +30,7 @@ class CandlePainter extends OhlcPainter {
     _positiveCandlePaint = Paint()..color = style.positiveColor;
     _negativeCandlePaint = Paint()..color = style.negativeColor;
 
-    yAxisClipping(canvas, size, () {
+    YAxisConfig.instance.yAxisClipping(canvas, size, () {
       canvas.drawLine(
         Offset(currentPainting.xCenter, currentPainting.yHigh),
         Offset(currentPainting.xCenter, currentPainting.yLow),

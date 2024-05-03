@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/helpers/com
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -77,7 +78,7 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    yAxisClipping(canvas, size, () {
+    YAxisConfig.instance.yAxisClipping(canvas, size, () {
       canvas.drawPath(
         linePath.path,
         _linePaint!,
@@ -117,7 +118,7 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
       }
 
-      yAxisClipping(canvas, size, () {
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawPath(topIntersections, _topZonesPaint);
       });
     }
@@ -155,7 +156,7 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
       }
 
-      yAxisClipping(canvas, size, () {
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawPath(bottomIntersection, _bottomZonesPaint);
       });
 
@@ -176,7 +177,7 @@ class OscillatorLinePainter extends LinePainter {
 
     if (_topHorizontalLine != null) {
       paint.color = topHorizontalLinesStyle.color;
-      yAxisClipping(canvas, size, () {
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawLine(
             Offset(0, quoteToY(_topHorizontalLine!)),
             Offset(
@@ -193,7 +194,7 @@ class OscillatorLinePainter extends LinePainter {
         ..color = bottomHorizontalLinesStyle.color
         ..strokeWidth = bottomHorizontalLinesStyle.thickness;
 
-      yAxisClipping(canvas, size, () {
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawLine(
             Offset(0, quoteToY(_bottomHorizontalLine!)),
             Offset(
@@ -217,7 +218,7 @@ class OscillatorLinePainter extends LinePainter {
       ..strokeWidth = horizontalLineStyle.thickness;
 
     for (final double line in _secondaryHorizontalLines) {
-      yAxisClipping(canvas, size, () {
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawLine(
           Offset(0, quoteToY(line)),
           Offset(size.width, quoteToY(line)),

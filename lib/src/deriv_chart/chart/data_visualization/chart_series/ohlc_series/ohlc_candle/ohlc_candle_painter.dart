@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class OhlcCandlePainter extends OhlcPainter {
             ? _positiveColor
             : _neutralColor;
 
-    yAxisClipping(canvas, size, () {
+    YAxisConfig.instance.yAxisClipping(canvas, size, () {
       _drawWick(canvas, _candleColor, currentPainting);
       _drawOpenCloseLines(canvas, _candleColor, currentPainting);
     });

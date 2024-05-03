@@ -1,7 +1,7 @@
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/check_new_day.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/grid/time_label.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:flutter/foundation.dart';
@@ -58,7 +58,7 @@ void _paintTimeGridLines(
   double msPerPx,
 ) {
   for (int i = 0; i < xCoords.length; i++) {
-    yAxisClipping(canvas, size, () {
+    YAxisConfig.instance.yAxisClipping(canvas, size, () {
       canvas.drawLine(
         Offset(xCoords[i], 0),
         Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),

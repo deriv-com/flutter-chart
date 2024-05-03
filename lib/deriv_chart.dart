@@ -118,3 +118,6 @@ export 'src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
 export 'src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
 export 'src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
 export 'src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
+export 'src/deriv_chart/chart/y_axis/y_axis_config.dart';
+
+

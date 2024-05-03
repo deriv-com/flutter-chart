@@ -4,11 +4,11 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -113,7 +113,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
     // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
-      yAxisClipping(canvas, size, () {
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
         _paintBlinkingDot(
             canvas, dotX!, y, animationInfo, style.blinkingDotColor);
       });
@@ -144,7 +144,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       }
 
       if (lineStartX < lineEndX && style.hasLine) {
-        yAxisClipping(canvas, size, () {
+        YAxisConfig.instance.yAxisClipping(canvas, size, () {
           _paintLine(canvas, lineStartX, lineEndX, y, style);
         });
       }
