@@ -171,6 +171,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   void _playNewTickAnimation() {
     if (_isTickAnimationPlaying) {
+      /// To avoid animation restart when it's already playing.
       _currentTickAnimationController.forward();
     } else {
       _currentTickAnimationController
