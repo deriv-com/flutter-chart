@@ -1,7 +1,11 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:flutter/material.dart';
 
+import '../../chart_data.dart';
 import '../data_painter.dart';
+import '../data_series.dart';
 
 /// A [DataPainter] for painting scatter.
 class ScatterPainter extends DataPainter<DataSeries<Tick>> {
@@ -35,7 +39,7 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
       if (!tick.quote.isNaN) {
         final double x = epochToX(getEpochOf(tick, i));
         final double y = quoteToY(tick.quote);
-          canvas.drawCircle(Offset(x, y), style.radius, dotPaint);
+        canvas.drawCircle(Offset(x, y), style.radius, dotPaint);
       }
     }
   }
