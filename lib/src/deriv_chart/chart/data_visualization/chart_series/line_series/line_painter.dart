@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     final DataLinePathInfo path = createPath(epochToX, quoteToY, animationInfo);
 
-    paintLines(canvas, path.path, size, linePaint);
+    paintLines(canvas, path.path, linePaint);
 
     if (style.hasArea) {
       final Paint areaPaint = Paint()
@@ -55,8 +54,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         path.startPosition.dx,
         path.endPosition.dx,
       );
-        
-        canvas.drawPath(path.path, areaPaint);
+      canvas.drawPath(path.path, areaPaint);
     }
   }
 
@@ -65,10 +63,9 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   void paintLines(
     Canvas canvas,
     Path path,
-    Size size,
     Paint linePaint,
   ) {
-      canvas.drawPath(path, linePaint);
+    canvas.drawPath(path, linePaint);
   }
 
   /// Creates the path of the given [series] and returns it.
