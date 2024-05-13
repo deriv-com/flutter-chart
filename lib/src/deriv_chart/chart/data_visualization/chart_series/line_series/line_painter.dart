@@ -56,9 +56,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         path.endPosition.dx,
       );
         
-       YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawPath(path.path, areaPaint);
-      });
     }
   }
 
@@ -70,9 +68,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     Size size,
     Paint linePaint,
   ) {
-    YAxisConfig.instance.yAxisClipping(canvas, size, () {
       canvas.drawPath(path, linePaint);
-    });
   }
 
   /// Creates the path of the given [series] and returns it.

@@ -78,12 +78,10 @@ class OscillatorLinePainter extends LinePainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = style.thickness;
 
-    YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      canvas.drawPath(
+     canvas.drawPath(
         linePath.path,
         _linePaint!,
       );
-    });
 
     if (_topHorizontalLine != null) {
       Path topIntersections;
@@ -118,9 +116,9 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, bottomAreaPath, topRect);
       }
 
-      YAxisConfig.instance.yAxisClipping(canvas, size, () {
+      // YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawPath(topIntersections, _topZonesPaint);
-      });
+      // });
     }
 
     if (_bottomHorizontalLine != null) {
@@ -156,9 +154,9 @@ class OscillatorLinePainter extends LinePainter {
             Path.combine(PathOperation.intersect, topAreaPath, bottomRect);
       }
 
-      YAxisConfig.instance.yAxisClipping(canvas, size, () {
+      // YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawPath(bottomIntersection, _bottomZonesPaint);
-      });
+      // });
 
       // canvas.drawPath(bottomIntersection, _bottomZonesPaint);
     }
@@ -177,7 +175,7 @@ class OscillatorLinePainter extends LinePainter {
 
     if (_topHorizontalLine != null) {
       paint.color = topHorizontalLinesStyle.color;
-      YAxisConfig.instance.yAxisClipping(canvas, size, () {
+      // YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawLine(
             Offset(0, quoteToY(_topHorizontalLine!)),
             Offset(
@@ -186,7 +184,7 @@ class OscillatorLinePainter extends LinePainter {
                         chartConfig.pipSize),
                 quoteToY(_topHorizontalLine!)),
             paint);
-      });
+      // });
     }
 
     if (_bottomHorizontalLine != null) {
@@ -194,7 +192,7 @@ class OscillatorLinePainter extends LinePainter {
         ..color = bottomHorizontalLinesStyle.color
         ..strokeWidth = bottomHorizontalLinesStyle.thickness;
 
-      YAxisConfig.instance.yAxisClipping(canvas, size, () {
+      // YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawLine(
             Offset(0, quoteToY(_bottomHorizontalLine!)),
             Offset(
@@ -203,7 +201,7 @@ class OscillatorLinePainter extends LinePainter {
                         chartConfig.pipSize),
                 quoteToY(_bottomHorizontalLine!)),
             paint);
-      });
+      // });
     }
 
     _paintLabels(size, quoteToY, canvas);
@@ -218,13 +216,13 @@ class OscillatorLinePainter extends LinePainter {
       ..strokeWidth = horizontalLineStyle.thickness;
 
     for (final double line in _secondaryHorizontalLines) {
-      YAxisConfig.instance.yAxisClipping(canvas, size, () {
+      // YAxisConfig.instance.yAxisClipping(canvas, size, () {
         canvas.drawLine(
           Offset(0, quoteToY(line)),
           Offset(size.width, quoteToY(line)),
           horizontalLinePaint,
         );
-      });
+      // });
     }
   }
 

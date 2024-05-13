@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/min_max_calculator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -314,8 +315,10 @@ abstract class DataSeries<T extends Tick> extends Series {
     ChartConfig chartConfig,
     ChartTheme theme,
   ) {
+    YAxisConfig.instance.yAxisClipping(canvas, size, () {
     super.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    });
 
     _lastTickIndicator?.paint(
         canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);

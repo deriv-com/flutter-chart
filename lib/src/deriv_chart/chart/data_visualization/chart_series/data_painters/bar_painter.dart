@@ -50,13 +50,6 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
 
     final double barWidth = intervalWidth * 0.6;
 
-    final double adjustedCanvasWidth = size.width - 80;
-
-    // Define the clipping region to create an empty space on the right
-    final Rect clipRect = Rect.fromLTRB(0, 0, adjustedCanvasWidth, size.height);
-
-    // Clip the canvas to the defined region
-    canvas.clipRect(clipRect);
 
     // Painting visible bars except the last one that might be animated.
     for (int i = series.visibleEntries.startIndex;
