@@ -160,6 +160,9 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
     topBoundQuoteAnimationController.dispose();
     bottomBoundQuoteAnimationController.dispose();
+
+    _isTickAnimationPlaying = false;
+
     _clearGestures();
     super.dispose();
   }
