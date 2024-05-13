@@ -54,6 +54,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
         path.startPosition.dx,
         path.endPosition.dx,
       );
+
       canvas.drawPath(path.path, areaPaint);
     }
   }

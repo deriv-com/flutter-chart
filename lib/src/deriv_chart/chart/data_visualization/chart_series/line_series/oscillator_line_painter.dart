@@ -202,11 +202,8 @@ class OscillatorLinePainter extends LinePainter {
       ..strokeWidth = horizontalLineStyle.thickness;
 
     for (final double line in _secondaryHorizontalLines) {
-      canvas.drawLine(
-        Offset(0, quoteToY(line)),
-        Offset(size.width, quoteToY(line)),
-        horizontalLinePaint,
-      );
+      canvas.drawLine(Offset(0, quoteToY(line)),
+          Offset(size.width, quoteToY(line)), horizontalLinePaint);
     }
   }
 
