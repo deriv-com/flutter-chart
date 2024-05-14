@@ -343,8 +343,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
             fit: StackFit.expand,
             children: <Widget>[
               _buildQuoteGridLine(gridLineQuotes),
-              _buildQuoteGridLabel(gridLineQuotes),
               _buildChartData(),
+              _buildQuoteGridLabel(gridLineQuotes),
             ],
           );
         },
@@ -359,8 +359,9 @@ class BasicChartState<T extends BasicChart> extends State<T>
           )
         : 0;
 
-    YAxisConfig.instance.setLabelWidth(calculatedLabelWidth+ context.watch<ChartTheme>().gridStyle.labelHorizontalPadding * 2);
- 
+    YAxisConfig.instance.setLabelWidth(calculatedLabelWidth +
+        context.watch<ChartTheme>().gridStyle.labelHorizontalPadding * 2);
+
     return MultipleAnimatedBuilder(
       animations: getQuoteGridAnimations(),
       builder: (BuildContext context, _) => RepaintBoundary(
