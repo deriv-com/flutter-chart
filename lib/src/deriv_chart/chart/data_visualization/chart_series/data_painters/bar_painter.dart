@@ -50,7 +50,6 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
 
     final double barWidth = intervalWidth * 0.6;
 
-
     // Painting visible bars except the last one that might be animated.
     for (int i = series.visibleEntries.startIndex;
         i < series.visibleEntries.endIndex - 1;

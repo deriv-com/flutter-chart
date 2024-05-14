@@ -316,8 +316,8 @@ abstract class DataSeries<T extends Tick> extends Series {
     ChartTheme theme,
   ) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-    super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      super.paint(
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
     });
 
     _lastTickIndicator?.paint(

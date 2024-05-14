@@ -30,19 +30,17 @@ class YGridLinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
-      YAxisConfig.instance.yAxisClipping(canvas, size, () {
-        canvas.drawLine(
-          Offset(0, y),
-          Offset(
-            size.width - labelWidth - style.labelHorizontalPadding * 2,
-            y,
-          ),
-          Paint()
-            ..color = style.gridLineColor
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = style.lineThickness,
-        );
-      });
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(
+          size.width - labelWidth - style.labelHorizontalPadding * 2,
+          y,
+        ),
+        Paint()
+          ..color = style.gridLineColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = style.lineThickness,
+      );
     }
   }
 
