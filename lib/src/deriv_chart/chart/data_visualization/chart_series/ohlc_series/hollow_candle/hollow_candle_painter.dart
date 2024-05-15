@@ -20,7 +20,6 @@ class HollowCandlePainter extends OhlcPainter {
   @override
   void onPaintCandle(
     Canvas canvas,
-    Size size,
     OhlcPainting currentPainting,
     OhlcPainting prevPainting,
   ) {
@@ -36,17 +35,15 @@ class HollowCandlePainter extends OhlcPainter {
             ? _positiveColor
             : _neutralColor;
 
-    YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      _drawWick(canvas, _candleColor, currentPainting);
+    _drawWick(canvas, _candleColor, currentPainting);
 
-      if (currentPainting.yOpen == currentPainting.yClose) {
-        _drawLine(canvas, _candleColor, currentPainting);
-      } else if (currentPainting.yOpen < currentPainting.yClose) {
-        _drawFilledRect(canvas, _candleColor, currentPainting);
-      } else {
-        _drawHollowRect(canvas, _candleColor, currentPainting);
-      }
-    });
+    if (currentPainting.yOpen == currentPainting.yClose) {
+      _drawLine(canvas, _candleColor, currentPainting);
+    } else if (currentPainting.yOpen < currentPainting.yClose) {
+      _drawFilledRect(canvas, _candleColor, currentPainting);
+    } else {
+      _drawHollowRect(canvas, _candleColor, currentPainting);
+    }
   }
 
   void _drawWick(Canvas canvas, Color color, OhlcPainting currentPainting) {

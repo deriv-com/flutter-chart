@@ -17,7 +17,6 @@ class CandlePainter extends OhlcPainter {
   @override
   void onPaintCandle(
     Canvas canvas,
-    Size size,
     OhlcPainting currentPainting,
     OhlcPainting prevPainting,
   ) {
@@ -30,42 +29,40 @@ class CandlePainter extends OhlcPainter {
     _positiveCandlePaint = Paint()..color = style.positiveColor;
     _negativeCandlePaint = Paint()..color = style.negativeColor;
 
-    YAxisConfig.instance.yAxisClipping(canvas, size, () {
+    canvas.drawLine(
+      Offset(currentPainting.xCenter, currentPainting.yHigh),
+      Offset(currentPainting.xCenter, currentPainting.yLow),
+      _linePaint,
+    );
+
+    if (currentPainting.yOpen == currentPainting.yClose) {
       canvas.drawLine(
-        Offset(currentPainting.xCenter, currentPainting.yHigh),
-        Offset(currentPainting.xCenter, currentPainting.yLow),
+        Offset(currentPainting.xCenter - currentPainting.width / 2,
+            currentPainting.yOpen),
+        Offset(currentPainting.xCenter + currentPainting.width / 2,
+            currentPainting.yOpen),
         _linePaint,
       );
-
-      if (currentPainting.yOpen == currentPainting.yClose) {
-        canvas.drawLine(
-          Offset(currentPainting.xCenter - currentPainting.width / 2,
-              currentPainting.yOpen),
-          Offset(currentPainting.xCenter + currentPainting.width / 2,
-              currentPainting.yOpen),
-          _linePaint,
-        );
-      } else if (currentPainting.yOpen > currentPainting.yClose) {
-        canvas.drawRect(
-          Rect.fromLTRB(
-            currentPainting.xCenter - currentPainting.width / 2,
-            currentPainting.yClose,
-            currentPainting.xCenter + currentPainting.width / 2,
-            currentPainting.yOpen,
-          ),
-          _positiveCandlePaint,
-        );
-      } else {
-        canvas.drawRect(
-          Rect.fromLTRB(
-            currentPainting.xCenter - currentPainting.width / 2,
-            currentPainting.yOpen,
-            currentPainting.xCenter + currentPainting.width / 2,
-            currentPainting.yClose,
-          ),
-          _negativeCandlePaint,
-        );
-      }
-    });
+    } else if (currentPainting.yOpen > currentPainting.yClose) {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          currentPainting.xCenter - currentPainting.width / 2,
+          currentPainting.yClose,
+          currentPainting.xCenter + currentPainting.width / 2,
+          currentPainting.yOpen,
+        ),
+        _positiveCandlePaint,
+      );
+    } else {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          currentPainting.xCenter - currentPainting.width / 2,
+          currentPainting.yOpen,
+          currentPainting.xCenter + currentPainting.width / 2,
+          currentPainting.yClose,
+        ),
+        _negativeCandlePaint,
+      );
+    }
   }
 }

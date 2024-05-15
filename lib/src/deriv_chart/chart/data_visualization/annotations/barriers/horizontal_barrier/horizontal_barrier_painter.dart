@@ -113,6 +113,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
     // Blinking dot.
     if (style.hasBlinkingDot && dotX != null) {
+      // to hide the blinking spot on yAxis
       YAxisConfig.instance.yAxisClipping(canvas, size, () {
         _paintBlinkingDot(
             canvas, dotX!, y, animationInfo, style.blinkingDotColor);
@@ -144,9 +145,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       }
 
       if (lineStartX < lineEndX && style.hasLine) {
-        YAxisConfig.instance.yAxisClipping(canvas, size, () {
-          _paintLine(canvas, lineStartX, lineEndX, y, style);
-        });
+        _paintLine(canvas, lineStartX, lineEndX, y, style);
       }
     }
 
