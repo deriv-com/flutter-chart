@@ -1,7 +1,9 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/models/candle.dart';
+import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../data_painter.dart';
+import '../../data_series.dart';
 import '../ohlc_painting.dart';
 import '../ohlc_painter.dart';
 
