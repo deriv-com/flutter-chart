@@ -109,18 +109,36 @@ class HorizontalDrawing extends Drawing {
             ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
             : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
       );
-      if (config.enableLabel) {
-        paintDrawingLabel(
-          canvas,
-          size,
-          pointYCoord,
-          'horizontal',
-          theme,
-          chartConfig!,
-          quoteFromY: quoteFromY,
-          color: lineStyle.color,
-        );
-      }
+    }
+  }
+
+  // Paint the label
+  @override
+  void onLabelPaint(
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DrawingData drawingData,
+    DataSeries<Tick> series,
+  ) {
+    config as HorizontalDrawingToolConfig;
+    final LineStyle lineStyle = config.lineStyle;
+    if (config.enableLabel) {
+      paintDrawingLabel(
+        canvas,
+        size,
+        startPoint!.y,
+        'horizontal',
+        theme,
+        chartConfig!,
+        quoteFromY: quoteFromY,
+        color: lineStyle.color,
+      );
     }
   }
 

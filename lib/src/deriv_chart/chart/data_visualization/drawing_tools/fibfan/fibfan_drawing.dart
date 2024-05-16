@@ -144,6 +144,21 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
   }) =>
       true;
 
+  // Paint the label
+  @override
+  void onLabelPaint(
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DrawingData drawingData,
+    DataSeries<Tick> series,
+  ) {}
+
   /// Paint the line
   @override
   void onPaint(
@@ -243,7 +258,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
       _drawTriangle(canvas, paint, config, _finalInnerVector);
 
       /// Draw markers again to hide their overlap with shadows
-      /// The second cicle is getting created here as the lines and 
+      /// The second cicle is getting created here as the lines and
       /// second marker are getting created at same time
       canvas
         ..drawCircle(

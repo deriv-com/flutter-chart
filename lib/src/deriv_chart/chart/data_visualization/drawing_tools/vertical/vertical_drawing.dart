@@ -64,6 +64,35 @@ class VerticalDrawing extends Drawing {
   }) =>
       draggableStartPoint.isInViewPortRange(leftEpoch, rightEpoch);
 
+  //Paint the label
+  @override
+  void onLabelPaint(
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DrawingData drawingData,
+    DataSeries<Tick> series,
+  ) {
+    config as VerticalDrawingToolConfig;
+    if (config.enableLabel) {
+      paintDrawingLabel(
+        canvas,
+        size,
+        startPoint!.x,
+        'vertical',
+        theme,
+        chartConfig!,
+        epochFromX: epochFromX,
+        color: config.lineStyle.color,
+      );
+    }
+  }
+
   /// Paint
   @override
   void onPaint(
@@ -108,18 +137,6 @@ class VerticalDrawing extends Drawing {
               ? paint.glowyLinePaintStyle(lineStyle.color, lineStyle.thickness)
               : paint.linePaintStyle(lineStyle.color, lineStyle.thickness),
         );
-        if (config.enableLabel) {
-          paintDrawingLabel(
-            canvas,
-            size,
-            xCoord,
-            'vertical',
-            theme,
-            chartConfig!,
-            epochFromX: epochFromX,
-            color: lineStyle.color,
-          );
-        }
       }
     }
   }
