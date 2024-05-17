@@ -144,21 +144,6 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
   }) =>
       true;
 
-  // Paint the label
-  @override
-  void onLabelPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingToolConfig config,
-    DrawingData drawingData,
-    DataSeries<Tick> series,
-  ) {}
-
   /// Paint the line
   @override
   void onPaint(

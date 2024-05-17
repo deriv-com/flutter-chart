@@ -132,21 +132,6 @@ class RayLineDrawing extends Drawing {
         draggableEndPoint: draggableEndPoint);
   }
 
-  // Paint the label
-  @override
-  void onLabelPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingToolConfig config,
-    DrawingData drawingData,
-    DataSeries<Tick> series,
-  ) {}
-
   /// Calculation for detemining whether a user's touch or click intersects
   /// with any of the painted areas on the screen, for any of the edge points
   /// it will call "setIsEdgeDragged" callback function to determine which

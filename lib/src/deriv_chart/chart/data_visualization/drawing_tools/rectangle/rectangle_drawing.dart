@@ -189,21 +189,6 @@ class RectangleDrawing extends Drawing {
     }
   }
 
-  // Paint the label
-  @override
-  void onLabelPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingToolConfig config,
-    DrawingData drawingData,
-    DataSeries<Tick> series,
-  ) {}
-
   /// Calculation for detemining whether a user's touch or click intersects
   /// with any of the painted lines on the screen,
   /// the drawing is selected on clicking on any boundary(line) and markers of

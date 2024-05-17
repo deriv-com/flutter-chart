@@ -93,7 +93,7 @@ abstract class Drawing {
     DrawingToolConfig config,
     DrawingData drawingData,
     DataSeries<Tick> series,
-   );
+   ){}
 
   /// Is called before repaint the drawing to check if it needs to be
   /// repainted.
