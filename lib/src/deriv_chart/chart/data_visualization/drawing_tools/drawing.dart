@@ -79,9 +79,7 @@ abstract class Drawing {
     EdgePoint? endPoint,
   }) {}
 
-
-
-   /// Paints Label
+  /// Paints Label
   void onLabelPaint(
     Canvas canvas,
     Size size,
@@ -93,7 +91,7 @@ abstract class Drawing {
     DrawingToolConfig config,
     DrawingData drawingData,
     DataSeries<Tick> series,
-   ){}
+  ) {}
 
   /// Is called before repaint the drawing to check if it needs to be
   /// repainted.
@@ -134,8 +132,6 @@ abstract class Drawing {
     DraggableEdgePoint? draggableMiddlePoint,
     DraggableEdgePoint? draggableEndPoint,
   });
-
-
 
   /// Calculates whether a user's touch or click intersects
   /// with any of the painted areas on the screen
