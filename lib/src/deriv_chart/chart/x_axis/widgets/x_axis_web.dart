@@ -73,6 +73,8 @@ class _XAxisStateWeb extends XAxisState {
     super.didUpdateWidget(oldWidget);
 
     if (_scrollAnimationController != null &&
+        oldWidget.entries.isNotEmpty &&
+        widget.entries.isNotEmpty &&
         oldWidget.entries.last.epoch != widget.entries.last.epoch) {
       _scrollAnimationController!
         ..reset()
