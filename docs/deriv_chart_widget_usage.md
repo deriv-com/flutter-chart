@@ -13,7 +13,7 @@ _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       onEditCallback: () {
        // handle showing editing any indicator
       },
-      //A string acts as a key for the set of indicators that are saved. so we can have a separate set of saved indicators per key
+      // A string acts as a key for the set of indicators that are saved. so we can have a separate set of saved indicators per key
       // For example we can have saved indicators per symbol if we pass the symbol code every time it changes to the indicator repo.
       sharedPrefKey: 'R_100',
     );
