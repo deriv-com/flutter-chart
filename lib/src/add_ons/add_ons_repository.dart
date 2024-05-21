@@ -15,12 +15,14 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   /// Initializes
   AddOnsRepository({
     required this.createAddOn,
-    required this.currentSymbol,
+    required this.sharedPrefKey,
     this.onEditCallback,
   }) : _addOns = <T>[];
 
-  /// Current symbol.
-  String currentSymbol;
+  /// Key String acts as a key for the set of indicators that are saved.
+  ///
+  /// We can have separate set of saved indicators per key.
+  String sharedPrefKey;
 
   /// List containing addOns
   final List<T> _addOns;
@@ -31,7 +33,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   List<T> get items => _addOns;
 
   /// Storage key of saved indicators/drawing tools.
-  String get addOnsKey => 'addOns_${T.toString()}_$currentSymbol';
+  String get addOnsKey => 'addOns_${T.toString()}_$sharedPrefKey';
 
   /// Called to create an AddOnConfig object from a map.
   CreateAddOn<T> createAddOn;
@@ -42,7 +44,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs, String symbol) {
     _prefs = prefs;
-    currentSymbol = symbol;
+    sharedPrefKey = symbol;
 
     items.clear();
 
