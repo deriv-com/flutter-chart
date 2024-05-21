@@ -11,8 +11,8 @@ _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       // Is called when fetching the saved indicators from the shared preferences.
       // To handle how an IndicatorConfig object should be created from a saved JSON object.
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
-      onEditCallback: () {
-       // handle showing editing any indicator
+      onEditCallback: (int index) {
+       // handle edit of an indicator on index from _indicatorsRepo.items
       },
       // A string acts as a key for the set of indicators that are saved. so we can have a separate set of saved indicators per key
       // For example we can have saved indicators per symbol if we pass the symbol code every time it changes to the indicator repo.
