@@ -1,4 +1,4 @@
-#### How to use DerivChart chart component
+### How to use DerivChart chart component
 
 `DerivChart` is a wrapper around the `chart` widget that provides the ability to add/remove indicators and manage saving/restoring added ones in storage.
 By default, this widget shows two buttons at the top left to add/remove indicators and drawing tools. This can be used when you don't need to customize the look and functionalities of the menus and dialogs for adding/removing indicators and changing their settings and want to use the chart's default menu interfaces.
