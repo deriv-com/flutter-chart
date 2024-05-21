@@ -9,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 typedef CreateAddOn<T extends AddOnConfig> = T Function(
     Map<String, dynamic> map);
 
+/// Called when the edit icon is clicked on an add-on.
+typedef OnEditAddOn = Function(int index);
+
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
 class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     implements Repository<T> {
@@ -39,7 +42,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   CreateAddOn<T> createAddOn;
 
   /// Called when the edit icon is clicked.
-  VoidCallback? onEditCallback;
+  OnEditAddOn? onEditCallback;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs, String symbol) {
@@ -77,7 +80,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   /// Called when the edit icon is clicked.
   @override
   void editAt(int index) {
-    onEditCallback?.call();
+    onEditCallback?.call(index);
   }
 
   /// Updates indicator or drawing tool at [index] and updates storage.
@@ -91,8 +94,6 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     notifyListeners();
   }
 
-
-
   /// Removes indicator/drawing tool at [index] from repository and
   /// updates storage.
   @override
@@ -104,7 +105,6 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     _writeToPrefs();
     notifyListeners();
   }
-
 
   /// Removes all indicator/drawing tool from repository and
   /// updates storage.
