@@ -173,10 +173,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
       gridLineQuotes = yAxisModel.gridQuotes();
 
   void _playNewTickAnimation() {
-    if (_isTickAnimationPlaying) {
-      /// To avoid animation restart when it's already playing.
-      _currentTickAnimationController.forward();
-    } else {
+    if (!_isTickAnimationPlaying) {
       _currentTickAnimationController
         ..reset()
         ..forward();
