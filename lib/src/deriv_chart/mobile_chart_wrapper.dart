@@ -22,6 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'deriv_chart.dart';
+
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
 class MobileChartWrapper extends StatefulWidget {
   /// Initializes
@@ -29,6 +31,7 @@ class MobileChartWrapper extends StatefulWidget {
     required this.mainSeries,
     required this.granularity,
     required this.activeSymbol,
+    required this.scaffoldContext,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -159,6 +162,9 @@ class MobileChartWrapper extends StatefulWidget {
   /// The color of the loading animation.
   final Color? loadingAnimationColor;
 
+  /// The context of the scaffold.
+  final BuildContext scaffoldContext;
+
   @override
   _MobileChartWrapperState createState() => _MobileChartWrapperState();
 }
@@ -229,12 +235,8 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
   }
 
   void showIndicatorsDialog() {
-    showDialog<void>(
-      context: context,
-      builder: (
-        BuildContext context,
-      ) =>
-          ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
+    Scaffold.of(widget.scaffoldContext).showBottomSheet(
+      (_) => ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
         child: IndicatorsDialog(),
       ),
@@ -247,12 +249,9 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
         ..init()
         ..drawingToolsRepo = _drawingToolsRepo;
     });
-    showDialog<void>(
-      context: context,
-      builder: (
-        BuildContext context,
-      ) =>
-          ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
+
+    Scaffold.of(widget.scaffoldContext).showBottomSheet(
+      (_) => ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
         child: DrawingToolsDialog(
           drawingTools: _drawingTools,
@@ -262,7 +261,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
   }
 
   Widget _buildIndicatorsIcon() => Align(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.topRight,
         child: IconButton(
           icon: const Icon(Icons.architecture),
           onPressed: showIndicatorsDialog,
@@ -270,7 +269,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       );
 
   Widget _buildDrawingToolsIcon() => Align(
-        alignment: const FractionalOffset(0.1, 0),
+        alignment: const FractionalOffset(0.9, 0),
         child: IconButton(
           icon: const Icon(Icons.drive_file_rename_outline_outlined),
           onPressed: showDrawingToolsDialog,
@@ -289,57 +288,25 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
         ],
         child: Builder(
           builder: (BuildContext context) => Stack(
-            children: <Widget>[
-              Chart(
+            fit: StackFit.expand,
+            children: [
+              DerivChart(
+                indicatorsRepo: _indicatorsRepo,
+                controller: widget.controller,
                 mainSeries: widget.mainSeries,
+                markerSeries: widget.markerSeries,
                 pipSize: widget.pipSize,
                 granularity: widget.granularity,
-                controller: widget.controller,
-                overlayConfigs: <IndicatorConfig>[
-                  ...context
-                      .watch<Repository<IndicatorConfig>>()
-                      .items
-                      .where((IndicatorConfig config) => config.isOverlay)
-                ],
-                bottomConfigs: <IndicatorConfig>[
-                  ...context
-                      .watch<Repository<IndicatorConfig>>()
-                      .items
-                      .where((IndicatorConfig config) => !config.isOverlay)
-                ],
-                drawingTools: _drawingTools,
-                markerSeries: widget.markerSeries,
-                theme: widget.theme,
-                onCrosshairAppeared: widget.onCrosshairAppeared,
-                onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                onCrosshairHover: widget.onCrosshairHover,
                 onVisibleAreaChanged: widget.onVisibleAreaChanged,
-                onQuoteAreaChanged: widget.onQuoteAreaChanged,
                 isLive: widget.isLive,
                 dataFitEnabled: widget.dataFitEnabled,
                 opacity: widget.opacity,
+                chartAxisConfig: widget.chartAxisConfig,
                 annotations: widget.annotations,
-                showCrosshair: widget.showCrosshair,
-                indicatorsRepo: _indicatorsRepo,
-                maxCurrentTickOffset: widget.maxCurrentTickOffset,
-                msPerPx: widget.msPerPx,
-                minIntervalWidth: widget.minIntervalWidth,
-                maxIntervalWidth: widget.maxIntervalWidth,
-                dataFitPadding: widget.dataFitPadding,
-                currentTickAnimationDuration:
-                    widget.currentTickAnimationDuration,
-                quoteBoundsAnimationDuration:
-                    widget.quoteBoundsAnimationDuration,
-                showCurrentTickBlinkAnimation:
-                    widget.showCurrentTickBlinkAnimation,
-                verticalPaddingFraction: widget.verticalPaddingFraction,
-                bottomChartTitleMargin: widget.bottomChartTitleMargin,
-                showDataFitButton: widget.showDataFitButton,
-                showScrollToLastTickButton: widget.showScrollToLastTickButton,
-                loadingAnimationColor: widget.loadingAnimationColor,
+                activeSymbol: 'default',
               ),
-              _buildIndicatorsIcon(),
               _buildDrawingToolsIcon(),
+              _buildIndicatorsIcon(),
             ],
           ),
         ),

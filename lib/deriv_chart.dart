@@ -2,6 +2,7 @@ library deriv_chart;
 
 export 'generated/l10n.dart';
 export 'src/deriv_chart/deriv_chart.dart';
+export 'src/deriv_chart/mobile_chart_wrapper.dart';
 export 'src/deriv_chart/chart/chart.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_closed_indicator.dart';
