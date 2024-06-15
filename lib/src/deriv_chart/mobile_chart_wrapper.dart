@@ -277,38 +277,26 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       );
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: <ChangeNotifierProvider<Repository<AddOnConfig>>>[
-          ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
-            value: _indicatorsRepo,
+  Widget build(BuildContext context) => Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          DerivChart(
+            indicatorsRepo: _indicatorsRepo,
+            controller: widget.controller,
+            mainSeries: widget.mainSeries,
+            markerSeries: widget.markerSeries,
+            pipSize: widget.pipSize,
+            granularity: widget.granularity,
+            onVisibleAreaChanged: widget.onVisibleAreaChanged,
+            isLive: widget.isLive,
+            dataFitEnabled: widget.dataFitEnabled,
+            opacity: widget.opacity,
+            chartAxisConfig: widget.chartAxisConfig,
+            annotations: widget.annotations,
+            activeSymbol: widget.activeSymbol,
           ),
-          ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
-            value: _drawingToolsRepo,
-          ),
+          _buildDrawingToolsIcon(),
+          _buildIndicatorsIcon(),
         ],
-        child: Builder(
-          builder: (BuildContext context) => Stack(
-            fit: StackFit.expand,
-            children: [
-              DerivChart(
-                indicatorsRepo: _indicatorsRepo,
-                controller: widget.controller,
-                mainSeries: widget.mainSeries,
-                markerSeries: widget.markerSeries,
-                pipSize: widget.pipSize,
-                granularity: widget.granularity,
-                onVisibleAreaChanged: widget.onVisibleAreaChanged,
-                isLive: widget.isLive,
-                dataFitEnabled: widget.dataFitEnabled,
-                opacity: widget.opacity,
-                chartAxisConfig: widget.chartAxisConfig,
-                annotations: widget.annotations,
-                activeSymbol: 'default',
-              ),
-              _buildDrawingToolsIcon(),
-              _buildIndicatorsIcon(),
-            ],
-          ),
-        ),
       );
 }
