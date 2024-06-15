@@ -31,7 +31,6 @@ class MobileChartWrapper extends StatefulWidget {
     required this.mainSeries,
     required this.granularity,
     required this.activeSymbol,
-    required this.scaffoldContext,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -162,9 +161,6 @@ class MobileChartWrapper extends StatefulWidget {
   /// The color of the loading animation.
   final Color? loadingAnimationColor;
 
-  /// The context of the scaffold.
-  final BuildContext scaffoldContext;
-
   @override
   _MobileChartWrapperState createState() => _MobileChartWrapperState();
 }
@@ -235,8 +231,9 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
   }
 
   void showIndicatorsDialog() {
-    Scaffold.of(widget.scaffoldContext).showBottomSheet(
-      (_) => ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
         child: IndicatorsDialog(),
       ),
@@ -250,8 +247,10 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
         ..drawingToolsRepo = _drawingToolsRepo;
     });
 
-    Scaffold.of(widget.scaffoldContext).showBottomSheet(
-      (_) => ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
+    showModalBottomSheet(
+      context: context,
+      builder: (_) =>
+          ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
         child: DrawingToolsDialog(
           drawingTools: _drawingTools,
