@@ -268,20 +268,14 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     );
   }
 
-  Widget _buildIndicatorsIcon() => Align(
-        alignment: Alignment.topRight,
-        child: IconButton(
-          icon: const Icon(Icons.architecture),
-          onPressed: showIndicatorsDialog,
-        ),
+  Widget _buildIndicatorsIcon() => IconButton(
+        icon: const Icon(Icons.architecture),
+        onPressed: showIndicatorsDialog,
       );
 
-  Widget _buildDrawingToolsIcon() => Align(
-        alignment: const FractionalOffset(0.9, 0),
-        child: IconButton(
-          icon: const Icon(Icons.drive_file_rename_outline_outlined),
-          onPressed: showDrawingToolsDialog,
-        ),
+  Widget _buildDrawingToolsIcon() => IconButton(
+        icon: const Icon(Icons.drive_file_rename_outline_outlined),
+        onPressed: showDrawingToolsDialog,
       );
 
   @override
@@ -290,6 +284,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
         children: <Widget>[
           DerivChart(
             indicatorsRepo: _indicatorsRepo,
+            drawingToolsRepo: _drawingToolsRepo,
             controller: widget.controller,
             mainSeries: widget.mainSeries,
             markerSeries: widget.markerSeries,
@@ -303,8 +298,18 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
             annotations: widget.annotations,
             activeSymbol: widget.activeSymbol,
           ),
-          if (widget.showIndicatorsOption) _buildDrawingToolsIcon(),
-          if (widget.showDrawingToolsOption) _buildIndicatorsIcon(),
+          Align(alignment: Alignment.topRight, child: _buildOptions()),
         ],
+      );
+
+  Widget _buildOptions() => Container(
+        color: Colors.yellow,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            if (widget.showIndicatorsOption) _buildIndicatorsIcon(),
+            if (widget.showDrawingToolsOption) _buildDrawingToolsIcon(),
+          ],
+        ),
       );
 }
