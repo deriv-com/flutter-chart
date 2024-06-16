@@ -9,7 +9,6 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_co
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
-import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'drawing_tool_config.dart';
@@ -39,7 +38,8 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
     final Repository<DrawingToolConfig> repo =
         context.watch<Repository<DrawingToolConfig>>();
 
-    return AnimatedPopupDialog(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.4,
       child: Column(
         children: <Widget>[
           Row(

@@ -18,6 +18,7 @@ import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
+import 'package:deriv_chart/src/widgets/chart_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,6 +60,8 @@ class MobileChartWrapper extends StatefulWidget {
     this.showDataFitButton,
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
+    this.showIndicatorsOption = true,
+    this.showDrawingToolsOption = false,
     Key? key,
   }) : super(key: key);
 
@@ -161,6 +164,12 @@ class MobileChartWrapper extends StatefulWidget {
   /// The color of the loading animation.
   final Color? loadingAnimationColor;
 
+  /// Whether to show the indicators option or not.
+  final bool showIndicatorsOption;
+
+  /// Whether to show the drawing tools option or not.
+  final bool showDrawingToolsOption;
+
   @override
   _MobileChartWrapperState createState() => _MobileChartWrapperState();
 }
@@ -235,7 +244,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       context: context,
       builder: (_) => ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
-        child: IndicatorsDialog(),
+        child: ChartBottomSheet(child: IndicatorsDialog()),
       ),
     );
   }
@@ -252,8 +261,8 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       builder: (_) =>
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
-        child: DrawingToolsDialog(
-          drawingTools: _drawingTools,
+        child: ChartBottomSheet(
+          child: DrawingToolsDialog(drawingTools: _drawingTools),
         ),
       ),
     );
@@ -294,8 +303,8 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
             annotations: widget.annotations,
             activeSymbol: widget.activeSymbol,
           ),
-          _buildDrawingToolsIcon(),
-          _buildIndicatorsIcon(),
+          if (widget.showIndicatorsOption) _buildDrawingToolsIcon(),
+          if (widget.showDrawingToolsOption) _buildIndicatorsIcon(),
         ],
       );
 }

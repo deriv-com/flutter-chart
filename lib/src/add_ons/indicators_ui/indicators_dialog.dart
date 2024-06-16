@@ -42,141 +42,139 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
 
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.4,
-      child: Material(
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                DropdownButton<IndicatorConfig>(
-                  value: _selectedIndicator,
-                  hint: const Text('Select indicator'),
-                  items: const <DropdownMenuItem<IndicatorConfig>>[
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Moving average'),
-                      value: MAIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Moving average envelope'),
-                      value: MAEnvIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Bollinger bands'),
-                      value: BollingerBandsIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Donchian channel'),
-                      value: DonchianChannelIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Alligator'),
-                      value: AlligatorIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Rainbow'),
-                      value: RainbowIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('ZigZag'),
-                      value: ZigZagIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Ichimoku Clouds'),
-                      value: IchimokuCloudIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Parabolic SAR'),
-                      value: ParabolicSARConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('RSI'),
-                      value: RSIIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Commodity Channel Index'),
-                      value: CCIIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('FCB'),
-                      value: FractalChaosBandIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('StochasticOscillator'),
-                      value: StochasticOscillatorIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('ADX'),
-                      value: ADXIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('DPO'),
-                      value: DPOIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Stochastic Momentum Index'),
-                      value: SMIIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Williams %R'),
-                      value: WilliamsRIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('AwesomeOscillator'),
-                      value: AwesomeOscillatorIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('MACD'),
-                      value: MACDIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Aroon'),
-                      value: AroonIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Price Rate Of Changes'),
-                      value: ROCIndicatorConfig(),
-                    ),
-                    DropdownMenuItem<IndicatorConfig>(
-                      child: Text('Gator Oscillator'),
-                      value: GatorIndicatorConfig(),
-                    )
-                    // Add new indicators here.
-                  ],
-                  onChanged: (IndicatorConfig? config) {
-                    setState(() {
-                      _selectedIndicator = config;
-                    });
-                  },
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  child: const Text('Add'),
-                  onPressed: _selectedIndicator != null
-                      ? () {
-                          repo.add(_selectedIndicator!);
-                          setState(() {});
-                        }
-                      : null,
-                ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: repo.items.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    repo.items[index].getItem(
-                  (IndicatorConfig updatedConfig) =>
-                      repo.updateAt(index, updatedConfig),
-                  () {
-                    repo.removeAt(index);
-                    setState(() {});
-                  },
-                ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              DropdownButton<IndicatorConfig>(
+                value: _selectedIndicator,
+                hint: const Text('Select indicator'),
+                items: const <DropdownMenuItem<IndicatorConfig>>[
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Moving average'),
+                    value: MAIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Moving average envelope'),
+                    value: MAEnvIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Bollinger bands'),
+                    value: BollingerBandsIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Donchian channel'),
+                    value: DonchianChannelIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Alligator'),
+                    value: AlligatorIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Rainbow'),
+                    value: RainbowIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('ZigZag'),
+                    value: ZigZagIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Ichimoku Clouds'),
+                    value: IchimokuCloudIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Parabolic SAR'),
+                    value: ParabolicSARConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('RSI'),
+                    value: RSIIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Commodity Channel Index'),
+                    value: CCIIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('FCB'),
+                    value: FractalChaosBandIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('StochasticOscillator'),
+                    value: StochasticOscillatorIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('ADX'),
+                    value: ADXIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('DPO'),
+                    value: DPOIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Stochastic Momentum Index'),
+                    value: SMIIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Williams %R'),
+                    value: WilliamsRIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('AwesomeOscillator'),
+                    value: AwesomeOscillatorIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('MACD'),
+                    value: MACDIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Aroon'),
+                    value: AroonIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Price Rate Of Changes'),
+                    value: ROCIndicatorConfig(),
+                  ),
+                  DropdownMenuItem<IndicatorConfig>(
+                    child: Text('Gator Oscillator'),
+                    value: GatorIndicatorConfig(),
+                  )
+                  // Add new indicators here.
+                ],
+                onChanged: (IndicatorConfig? config) {
+                  setState(() {
+                    _selectedIndicator = config;
+                  });
+                },
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                child: const Text('Add'),
+                onPressed: _selectedIndicator != null
+                    ? () {
+                        repo.add(_selectedIndicator!);
+                        setState(() {});
+                      }
+                    : null,
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: repo.items.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  repo.items[index].getItem(
+                (IndicatorConfig updatedConfig) =>
+                    repo.updateAt(index, updatedConfig),
+                () {
+                  repo.removeAt(index);
+                  setState(() {});
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
