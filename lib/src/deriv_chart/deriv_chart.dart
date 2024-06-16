@@ -251,7 +251,7 @@ class _DerivChartState extends State<DerivChart> {
       ) =>
           ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
-        child: IndicatorsDialog(),
+        child: AnimatedPopupDialog(child: IndicatorsDialog()),
       ),
     );
   }
@@ -269,8 +269,8 @@ class _DerivChartState extends State<DerivChart> {
       ) =>
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
-        child: DrawingToolsDialog(
-          drawingTools: _drawingTools,
+        child: AnimatedPopupDialog(
+          child: DrawingToolsDialog(drawingTools: _drawingTools),
         ),
       ),
     );

@@ -244,7 +244,13 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       context: context,
       builder: (_) => ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
-        child: ChartBottomSheet(child: IndicatorsDialog()),
+        child: ChartBottomSheet(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.4,
+            // TODO(Ramin): replace with the new indicators list widget.
+            child: IndicatorsDialog(),
+          ),
+        ),
       ),
     );
   }
@@ -262,7 +268,11 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
         child: ChartBottomSheet(
-          child: DrawingToolsDialog(drawingTools: _drawingTools),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.4,
+            // TODO(Ramin): replace with the new drawing tools list widget.
+            child: DrawingToolsDialog(drawingTools: _drawingTools),
+          ),
         ),
       ),
     );
@@ -302,14 +312,11 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
         ],
       );
 
-  Widget _buildOptions() => Container(
-        color: Colors.yellow,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            if (widget.showIndicatorsOption) _buildIndicatorsIcon(),
-            if (widget.showDrawingToolsOption) _buildDrawingToolsIcon(),
-          ],
-        ),
+  Widget _buildOptions() => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (widget.showIndicatorsOption) _buildIndicatorsIcon(),
+          if (widget.showDrawingToolsOption) _buildDrawingToolsIcon(),
+        ],
       );
 }

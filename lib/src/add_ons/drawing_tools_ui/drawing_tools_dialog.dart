@@ -38,98 +38,95 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
     final Repository<DrawingToolConfig> repo =
         context.watch<Repository<DrawingToolConfig>>();
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.4,
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              DropdownButton<DrawingToolConfig>(
-                value: _selectedDrawingTool,
-                hint: Text(ChartLocalization.of(context).selectDrawingTool),
-                items: const <DropdownMenuItem<DrawingToolConfig>>[
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Channel'),
-                    value: ChannelDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Continuous'),
-                    value: ContinuousDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Fib Fan'),
-                    value: FibfanDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Horizontal'),
-                    value: HorizontalDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Line'),
-                    value: LineDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Ray'),
-                    value: RayDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
-                      child: Text('Rectangle'),
-                      value: RectangleDrawingToolConfig()),
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Trend'),
-                    value: TrendDrawingToolConfig(),
-                  ),
-                  DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Vertical'),
-                    value: VerticalDrawingToolConfig(),
-                  )
-                  // TODO(maryia-binary): add the rest of drawing tools above
-                ],
-                onChanged: (DrawingToolConfig? config) {
-                  setState(() {
-                    _selectedDrawingTool = config;
-                  });
-                },
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                child: const Text('Add'),
-                onPressed: _selectedDrawingTool != null
-                    ? () {
-                        widget.drawingTools
-                            .onDrawingToolSelection(_selectedDrawingTool!);
-                        Navigator.of(context).pop();
-                      }
-                    : null,
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: repo.items.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  repo.items[index].getItem(
-                (DrawingToolConfig updatedConfig) {
-                  DrawingToolConfig config = updatedConfig;
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            DropdownButton<DrawingToolConfig>(
+              value: _selectedDrawingTool,
+              hint: Text(ChartLocalization.of(context).selectDrawingTool),
+              items: const <DropdownMenuItem<DrawingToolConfig>>[
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Channel'),
+                  value: ChannelDrawingToolConfig(),
+                ),
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Continuous'),
+                  value: ContinuousDrawingToolConfig(),
+                ),
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Fib Fan'),
+                  value: FibfanDrawingToolConfig(),
+                ),
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Horizontal'),
+                  value: HorizontalDrawingToolConfig(),
+                ),
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Line'),
+                  value: LineDrawingToolConfig(),
+                ),
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Ray'),
+                  value: RayDrawingToolConfig(),
+                ),
+                DropdownMenuItem<DrawingToolConfig>(
+                    child: Text('Rectangle'),
+                    value: RectangleDrawingToolConfig()),
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Trend'),
+                  value: TrendDrawingToolConfig(),
+                ),
+                DropdownMenuItem<DrawingToolConfig>(
+                  child: Text('Vertical'),
+                  value: VerticalDrawingToolConfig(),
+                )
+                // TODO(maryia-binary): add the rest of drawing tools above
+              ],
+              onChanged: (DrawingToolConfig? config) {
+                setState(() {
+                  _selectedDrawingTool = config;
+                });
+              },
+            ),
+            const SizedBox(width: 16),
+            ElevatedButton(
+              child: const Text('Add'),
+              onPressed: _selectedDrawingTool != null
+                  ? () {
+                      widget.drawingTools
+                          .onDrawingToolSelection(_selectedDrawingTool!);
+                      Navigator.of(context).pop();
+                    }
+                  : null,
+            ),
+          ],
+        ),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: repo.items.length,
+            itemBuilder: (BuildContext context, int index) =>
+                repo.items[index].getItem(
+              (DrawingToolConfig updatedConfig) {
+                DrawingToolConfig config = updatedConfig;
 
-                  config = config.copyWith(
-                    configId: repo.items[index].configId,
-                    edgePoints: repo.items[index].edgePoints,
-                    drawingData: repo.items[index].drawingData,
-                  );
+                config = config.copyWith(
+                  configId: repo.items[index].configId,
+                  edgePoints: repo.items[index].edgePoints,
+                  drawingData: repo.items[index].drawingData,
+                );
 
-                  repo.updateAt(index, config);
-                },
-                () {
-                  repo.removeAt(index);
-                },
-              ),
+                repo.updateAt(index, config);
+              },
+              () {
+                repo.removeAt(index);
+              },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
