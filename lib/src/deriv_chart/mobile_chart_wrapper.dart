@@ -255,7 +255,9 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
   }
 
   @override
-  Widget build(BuildContext context) => DerivChart(
+  Widget build(BuildContext context) =>
+      // TODO(Ramin): Check if we can consider using Chart widget directly.
+      DerivChart(
         indicatorsRepo: _indicatorsRepo ??
             AddOnsRepository<IndicatorConfig>(
               createAddOn: (Map<String, dynamic> map) =>
