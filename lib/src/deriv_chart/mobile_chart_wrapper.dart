@@ -198,25 +198,34 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
   }
 
   void _initRepos() {
-    _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
-      createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
-      onEditCallback: (_) => showIndicatorsDialog(),
-      sharedPrefKey: widget.activeSymbol,
-    );
+    if (widget.showIndicatorsOption) {
+      _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
+        createAddOn: (Map<String, dynamic> map) =>
+            IndicatorConfig.fromJson(map),
+        onEditCallback: (_) => showIndicatorsDialog(),
+        sharedPrefKey: widget.activeSymbol,
+      );
+    }
 
-    _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
-      createAddOn: (Map<String, dynamic> map) =>
-          DrawingToolConfig.fromJson(map),
-      onEditCallback: (_) => showDrawingToolsDialog(),
-      sharedPrefKey: widget.activeSymbol,
-    );
+    if (widget.showDrawingToolsOption) {
+      _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
+        createAddOn: (Map<String, dynamic> map) =>
+            DrawingToolConfig.fromJson(map),
+        onEditCallback: (_) => showDrawingToolsDialog(),
+        sharedPrefKey: widget.activeSymbol,
+      );
+    }
+
     loadSavedIndicatorsAndDrawingTools();
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
-        <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
+        <AddOnsRepository<AddOnConfig>>[
+      if (widget.showIndicatorsOption) _indicatorsRepo,
+      if (widget.showDrawingToolsOption) _drawingToolsRepo,
+    ];
 
     _stateRepos
         .asMap()
