@@ -1,6 +1,6 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
@@ -23,7 +23,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'deriv_chart.dart';
 
-/// A wrapper around the [Chart] which handles adding indicators to the chart.
+/// The mobile version wrapper around the [Chart] which handles adding
+/// indicators to the chart.
 class MobileChartWrapper extends StatefulWidget {
   /// Initializes
   const MobileChartWrapper({
@@ -171,6 +172,9 @@ class MobileChartWrapper extends StatefulWidget {
 class _MobileChartWrapperState extends State<MobileChartWrapper> {
   AddOnsRepository<IndicatorConfig>? _indicatorsRepo;
 
+  // TODO(Ramin): Add AddOnsRepository<DrawingToolsConfig>? and DrawingTools
+  //  for drawing tools.
+
   @override
   void initState() {
     super.initState();
@@ -191,7 +195,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
   void _setupController() {
     widget.toolsController?.onShowIndicatorsToolsMenu = () {
       if (_indicatorsRepo != null) {
-        showIndicatorsDialog(_indicatorsRepo!);
+        _showIndicatorsSheet(_indicatorsRepo!);
       }
     };
   }
@@ -201,7 +205,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
         createAddOn: (Map<String, dynamic> map) =>
             IndicatorConfig.fromJson(map),
-        onEditCallback: (_) => showIndicatorsDialog(_indicatorsRepo!),
+        onEditCallback: (_) => _showIndicatorsSheet(_indicatorsRepo!),
         sharedPrefKey: widget.activeSymbol,
       );
     }
@@ -238,7 +242,9 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     });
   }
 
-  void showIndicatorsDialog(AddOnsRepository<IndicatorConfig> indicatorsRepo) {
+  void _showIndicatorsSheet(AddOnsRepository<IndicatorConfig> indicatorsRepo) {
+    // Show indicators menu as modal bottom sheet so it's dismissible by tapping
+    // outside.
     showModalBottomSheet(
       context: context,
       builder: (_) => ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
