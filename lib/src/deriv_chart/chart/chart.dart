@@ -52,7 +52,6 @@ class Chart extends StatefulWidget {
     this.chartAxisConfig = const ChartAxisConfig(),
     this.showCrosshair = false,
     this.indicatorsRepo,
-    this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
@@ -133,9 +132,6 @@ class Chart extends StatefulWidget {
 
   /// Whether the crosshair should be shown or not.
   final bool showCrosshair;
-
-  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
-  final double? maxCurrentTickOffset;
 
   /// Specifies the zoom level of the chart.
   final double? msPerPx;
@@ -305,7 +301,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             onVisibleAreaChanged: _onVisibleAreaChanged,
             isLive: widget.isLive,
             startWithDataFitMode: widget.dataFitEnabled,
-            maxCurrentTickOffset: widget.maxCurrentTickOffset,
             msPerPx: widget.msPerPx,
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,

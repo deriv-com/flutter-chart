@@ -17,7 +17,6 @@ class XAxisMobile extends XAxisBase {
     super.onVisibleAreaChanged,
     super.minEpoch,
     super.maxEpoch,
-    super.maxCurrentTickOffset,
     super.msPerPx,
     super.minIntervalWidth,
     super.maxIntervalWidth,

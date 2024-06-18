@@ -47,7 +47,6 @@ class DerivChart extends StatefulWidget {
     this.indicatorsRepo,
     this.drawingToolsRepo,
     this.drawingTools,
-    this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
@@ -119,9 +118,6 @@ class DerivChart extends StatefulWidget {
 
   /// Whether the crosshair should be shown or not.
   final bool showCrosshair;
-
-  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
-  final double? maxCurrentTickOffset;
 
   /// Specifies the zoom level of the chart.
   final double? msPerPx;
@@ -334,7 +330,6 @@ class _DerivChartState extends State<DerivChart> {
                 annotations: widget.annotations,
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
-                maxCurrentTickOffset: widget.maxCurrentTickOffset,
                 msPerPx: widget.msPerPx,
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,
@@ -350,6 +345,7 @@ class _DerivChartState extends State<DerivChart> {
                 showDataFitButton: widget.showDataFitButton,
                 showScrollToLastTickButton: widget.showScrollToLastTickButton,
                 loadingAnimationColor: widget.loadingAnimationColor,
+                chartAxisConfig: widget.chartAxisConfig,
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),
