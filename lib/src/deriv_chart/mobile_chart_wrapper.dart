@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
@@ -29,6 +30,7 @@ class MobileChartWrapper extends StatefulWidget {
     required this.mainSeries,
     required this.granularity,
     required this.activeSymbol,
+    this.toolsController,
     this.markerSeries,
     this.controller,
     this.onCrosshairAppeared,
@@ -57,7 +59,6 @@ class MobileChartWrapper extends StatefulWidget {
     this.showDataFitButton,
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
-    this.showIndicatorsOption = true,
     Key? key,
   }) : super(key: key);
 
@@ -72,6 +73,9 @@ class MobileChartWrapper extends StatefulWidget {
 
   /// Chart's controller
   final ChartController? controller;
+
+  /// Chart's tools controller.
+  final ToolsController? toolsController;
 
   /// Number of digits after decimal point in price.
   final int pipSize;
@@ -160,9 +164,6 @@ class MobileChartWrapper extends StatefulWidget {
   /// The color of the loading animation.
   final Color? loadingAnimationColor;
 
-  /// Whether to show the indicators option or not.
-  final bool showIndicatorsOption;
-
   @override
   _MobileChartWrapperState createState() => _MobileChartWrapperState();
 }
@@ -175,6 +176,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     super.initState();
 
     _initRepos();
+    _setupController();
   }
 
   @override
@@ -186,8 +188,16 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     }
   }
 
+  void _setupController() {
+    widget.toolsController?.onShowIndicatorsToolsMenu = () {
+      if (_indicatorsRepo != null) {
+        showIndicatorsDialog(_indicatorsRepo!);
+      }
+    };
+  }
+
   void _initRepos() {
-    if (widget.showIndicatorsOption) {
+    if (widget.toolsController?.indicatorsEnabled ?? false) {
       _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
         createAddOn: (Map<String, dynamic> map) =>
             IndicatorConfig.fromJson(map),
@@ -246,7 +256,17 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
 
   @override
   Widget build(BuildContext context) => DerivChart(
-        indicatorsRepo: _indicatorsRepo,
+        indicatorsRepo: _indicatorsRepo ??
+            AddOnsRepository<IndicatorConfig>(
+              createAddOn: (Map<String, dynamic> map) =>
+                  IndicatorConfig.fromJson(map),
+              sharedPrefKey: widget.activeSymbol,
+            ),
+        drawingToolsRepo: AddOnsRepository<DrawingToolConfig>(
+          createAddOn: (Map<String, dynamic> map) =>
+              DrawingToolConfig.fromJson(map),
+          sharedPrefKey: widget.activeSymbol,
+        ),
         controller: widget.controller,
         mainSeries: widget.mainSeries,
         markerSeries: widget.markerSeries,
