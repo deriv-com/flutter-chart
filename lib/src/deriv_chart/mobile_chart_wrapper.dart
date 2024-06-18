@@ -1,7 +1,5 @@
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
@@ -10,7 +8,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
@@ -61,7 +58,6 @@ class MobileChartWrapper extends StatefulWidget {
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
     this.showIndicatorsOption = true,
-    this.showDrawingToolsOption = false,
     Key? key,
   }) : super(key: key);
 
@@ -167,19 +163,12 @@ class MobileChartWrapper extends StatefulWidget {
   /// Whether to show the indicators option or not.
   final bool showIndicatorsOption;
 
-  /// Whether to show the drawing tools option or not.
-  final bool showDrawingToolsOption;
-
   @override
   _MobileChartWrapperState createState() => _MobileChartWrapperState();
 }
 
 class _MobileChartWrapperState extends State<MobileChartWrapper> {
   AddOnsRepository<IndicatorConfig>? _indicatorsRepo;
-
-  AddOnsRepository<DrawingToolConfig>? _drawingToolsRepo;
-
-  final DrawingTools _drawingTools = DrawingTools();
 
   @override
   void initState() {
@@ -207,15 +196,6 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       );
     }
 
-    if (widget.showDrawingToolsOption) {
-      _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
-        createAddOn: (Map<String, dynamic> map) =>
-            DrawingToolConfig.fromJson(map),
-        onEditCallback: (_) => showDrawingToolsDialog(_drawingToolsRepo!),
-        sharedPrefKey: widget.activeSymbol,
-      );
-    }
-
     loadSavedIndicatorsAndDrawingTools();
   }
 
@@ -224,7 +204,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[
       if (_indicatorsRepo != null) _indicatorsRepo!,
-      if (_drawingToolsRepo != null) _drawingToolsRepo!,
+      // TODO(Ramin): add drawing tools repo here.
     ];
 
     _stateRepos
@@ -264,78 +244,20 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     );
   }
 
-  void showDrawingToolsDialog(
-    AddOnsRepository<DrawingToolConfig> drawingToolsRepo,
-  ) {
-    setState(() {
-      _drawingTools
-        ..init()
-        ..drawingToolsRepo = _drawingToolsRepo;
-    });
-
-    showModalBottomSheet(
-      context: context,
-      builder: (_) =>
-          ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
-        value: drawingToolsRepo,
-        child: ChartBottomSheet(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4,
-            // TODO(Ramin): replace with the new drawing tools list widget.
-            child: DrawingToolsDialog(drawingTools: _drawingTools),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIndicatorsIcon() => IconButton(
-        icon: const Icon(Icons.architecture),
-        onPressed: () {
-          if (_indicatorsRepo != null) {
-            showIndicatorsDialog(_indicatorsRepo!);
-          }
-        },
-      );
-
-  Widget _buildDrawingToolsIcon() => IconButton(
-        icon: const Icon(Icons.drive_file_rename_outline_outlined),
-        onPressed: () {
-          if (_drawingToolsRepo != null) {
-            showDrawingToolsDialog(_drawingToolsRepo!);
-          }
-        },
-      );
-
   @override
-  Widget build(BuildContext context) => Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          DerivChart(
-            indicatorsRepo: _indicatorsRepo,
-            drawingToolsRepo: _drawingToolsRepo,
-            controller: widget.controller,
-            mainSeries: widget.mainSeries,
-            markerSeries: widget.markerSeries,
-            pipSize: widget.pipSize,
-            granularity: widget.granularity,
-            onVisibleAreaChanged: widget.onVisibleAreaChanged,
-            isLive: widget.isLive,
-            dataFitEnabled: widget.dataFitEnabled,
-            opacity: widget.opacity,
-            chartAxisConfig: widget.chartAxisConfig,
-            annotations: widget.annotations,
-            activeSymbol: widget.activeSymbol,
-          ),
-          Align(alignment: Alignment.topRight, child: _buildOptions()),
-        ],
-      );
-
-  Widget _buildOptions() => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          if (widget.showIndicatorsOption) _buildIndicatorsIcon(),
-          if (widget.showDrawingToolsOption) _buildDrawingToolsIcon(),
-        ],
+  Widget build(BuildContext context) => DerivChart(
+        indicatorsRepo: _indicatorsRepo,
+        controller: widget.controller,
+        mainSeries: widget.mainSeries,
+        markerSeries: widget.markerSeries,
+        pipSize: widget.pipSize,
+        granularity: widget.granularity,
+        onVisibleAreaChanged: widget.onVisibleAreaChanged,
+        isLive: widget.isLive,
+        dataFitEnabled: widget.dataFitEnabled,
+        opacity: widget.opacity,
+        chartAxisConfig: widget.chartAxisConfig,
+        annotations: widget.annotations,
+        activeSymbol: widget.activeSymbol,
       );
 }
