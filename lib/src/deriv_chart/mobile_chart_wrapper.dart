@@ -175,9 +175,9 @@ class MobileChartWrapper extends StatefulWidget {
 }
 
 class _MobileChartWrapperState extends State<MobileChartWrapper> {
-  late AddOnsRepository<IndicatorConfig> _indicatorsRepo;
+  AddOnsRepository<IndicatorConfig>? _indicatorsRepo;
 
-  late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
+  AddOnsRepository<DrawingToolConfig>? _drawingToolsRepo;
 
   final DrawingTools _drawingTools = DrawingTools();
 
@@ -202,7 +202,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
         createAddOn: (Map<String, dynamic> map) =>
             IndicatorConfig.fromJson(map),
-        onEditCallback: (_) => showIndicatorsDialog(),
+        onEditCallback: (_) => showIndicatorsDialog(_indicatorsRepo!),
         sharedPrefKey: widget.activeSymbol,
       );
     }
@@ -211,7 +211,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
         createAddOn: (Map<String, dynamic> map) =>
             DrawingToolConfig.fromJson(map),
-        onEditCallback: (_) => showDrawingToolsDialog(),
+        onEditCallback: (_) => showDrawingToolsDialog(_drawingToolsRepo!),
         sharedPrefKey: widget.activeSymbol,
       );
     }
@@ -223,8 +223,8 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[
-      if (widget.showIndicatorsOption) _indicatorsRepo,
-      if (widget.showDrawingToolsOption) _drawingToolsRepo,
+      if (_indicatorsRepo != null) _indicatorsRepo!,
+      if (_drawingToolsRepo != null) _drawingToolsRepo!,
     ];
 
     _stateRepos
@@ -248,11 +248,11 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     });
   }
 
-  void showIndicatorsDialog() {
+  void showIndicatorsDialog(AddOnsRepository<IndicatorConfig> indicatorsRepo) {
     showModalBottomSheet(
       context: context,
       builder: (_) => ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
-        value: _indicatorsRepo,
+        value: indicatorsRepo,
         child: ChartBottomSheet(
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.4,
@@ -264,7 +264,9 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
     );
   }
 
-  void showDrawingToolsDialog() {
+  void showDrawingToolsDialog(
+    AddOnsRepository<DrawingToolConfig> drawingToolsRepo,
+  ) {
     setState(() {
       _drawingTools
         ..init()
@@ -275,7 +277,7 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
       context: context,
       builder: (_) =>
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
-        value: _drawingToolsRepo,
+        value: drawingToolsRepo,
         child: ChartBottomSheet(
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.4,
@@ -289,12 +291,20 @@ class _MobileChartWrapperState extends State<MobileChartWrapper> {
 
   Widget _buildIndicatorsIcon() => IconButton(
         icon: const Icon(Icons.architecture),
-        onPressed: showIndicatorsDialog,
+        onPressed: () {
+          if (_indicatorsRepo != null) {
+            showIndicatorsDialog(_indicatorsRepo!);
+          }
+        },
       );
 
   Widget _buildDrawingToolsIcon() => IconButton(
         icon: const Icon(Icons.drive_file_rename_outline_outlined),
-        onPressed: showDrawingToolsDialog,
+        onPressed: () {
+          if (_drawingToolsRepo != null) {
+            showDrawingToolsDialog(_drawingToolsRepo!);
+          }
+        },
       );
 
   @override
