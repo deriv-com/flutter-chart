@@ -328,9 +328,9 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
             ),
           if (widget.showExpandedIcon)
             _buildIcon(
-              iconData: widget.viewMode == BottomIndicatorViewMode.expanded
-                  ? Icons.fullscreen_exit
-                  : Icons.fullscreen,
+              iconData: widget.viewMode == BottomIndicatorViewMode.normal
+                  ? Icons.remove_red_eye
+                  : Icons.remove_red_eye_outlined,
               onPressed: () {
                 widget.onExpandToggle?.call();
               },
@@ -353,7 +353,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
   Widget _buildBottomChartOptions(BuildContext context) => Container(
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          color: theme.base07Color.withOpacity(0.5),
+          color: theme.base07Color,
           borderRadius: BorderRadius.circular(2),
         ),
         child: Row(

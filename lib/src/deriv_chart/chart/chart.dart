@@ -347,7 +347,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             child: Column(
               children: <Widget>[
                 Expanded(
-                  flex: 3,
+                  flex: 3000,
                   child: MainChart(
                     drawingTools: widget.drawingTools,
                     controller: _controller,
@@ -528,13 +528,9 @@ abstract class ChartBottomIndicatorsSection {
 
   final VoidCallback triggerRebuild;
 
-  int? expandedIndex;
-
   List<Widget> getBottomIndicatorsWidget(BuildContext context);
 
-  void didUpdate(ChartBottomIndicatorsSection oldWidget) {
-    expandedIndex = oldWidget.expandedIndex;
-  }
+  void didUpdate(ChartBottomIndicatorsSection oldWidget) {}
 }
 
 /// Chart bottom indicators section for web.
@@ -556,9 +552,12 @@ class ChartBottomIndicatorsSectionWeb extends ChartBottomIndicatorsSection {
     super.onCrosshairHover,
   });
 
+  int? expandedIndex;
+
   @override
   void didUpdate(covariant ChartBottomIndicatorsSectionWeb oldWidget) {
     super.didUpdate(oldWidget);
+    expandedIndex = oldWidget.expandedIndex;
 
     // Check if the the expanded bottom indicator is moved/removed.
     if (expandedIndex != null &&
@@ -673,34 +672,46 @@ class ChartBottomIndicatorsSectionMobile extends ChartBottomIndicatorsSection {
     super.onCrosshairAppeared,
     super.onCrosshairDisappeared,
     super.onCrosshairHover,
-  });
+  }) {
+    _collapsedMap = Map<int, bool>.fromEntries(
+      bottomSeries.mapIndexed(
+        (int index, Series series) => MapEntry<int, bool>(index, false),
+      ),
+    );
+    print('bottomSeries: $bottomSeries');
+  }
+
+  Map<int, bool> _collapsedMap = <int, bool>{};
 
   @override
   void didUpdate(covariant ChartBottomIndicatorsSectionMobile oldWidget) {
     super.didUpdate(oldWidget);
+    _collapsedMap = oldWidget._collapsedMap;
     // Check if the the expanded bottom indicator is moved/removed.
-    if (expandedIndex != null &&
-        oldWidget.bottomConfigs?.length != bottomConfigs?.length &&
-        expandedIndex! < (oldWidget.bottomConfigs?.length ?? 0)) {
-      final int? newIndex =
-          bottomConfigs?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
-      if (newIndex != expandedIndex) {
-        expandedIndex = newIndex == -1 ? null : newIndex;
-      }
-    }
+    // if (expandedIndex != null &&
+    //     oldWidget.bottomConfigs?.length != bottomConfigs?.length &&
+    //     expandedIndex! < (oldWidget.bottomConfigs?.length ?? 0)) {
+    //   final int? newIndex =
+    //       bottomConfigs?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
+    //   if (newIndex != expandedIndex) {
+    //     expandedIndex = newIndex == -1 ? null : newIndex;
+    //   }
+    // }
   }
 
   @override
   List<Widget> getBottomIndicatorsWidget(BuildContext context) {
-    final bool isExpanded = expandedIndex != null;
+    final int numberOfUnhidden =
+        _collapsedMap.values.where((element) => !element).length;
+
     return bottomSeries.mapIndexed((int index, Series series) {
+      final collapsed = _collapsedMap[index] ?? false;
+
       final Widget bottomChart = BottomChartMobile(
         series: series,
-        viewMode: expandedIndex == null
+        viewMode: !collapsed
             ? BottomIndicatorViewMode.normal
-            : (expandedIndex == index
-                ? BottomIndicatorViewMode.expanded
-                : BottomIndicatorViewMode.collapsed),
+            : BottomIndicatorViewMode.collapsed,
         granularity: granularity,
         pipSize: bottomConfigs?[index].pipSize ?? pipSize,
         title: bottomConfigs![index].title,
@@ -709,41 +720,45 @@ class ChartBottomIndicatorsSectionMobile extends ChartBottomIndicatorsSection {
         quoteBoundsAnimationDuration:
             quoteBoundsAnimationDuration ?? _defaultDuration,
         bottomChartTitleMargin: bottomChartTitleMargin,
-        onRemove: () => _onRemove(bottomConfigs![index]),
-        onEdit: () => _onEdit(bottomConfigs![index]),
+        onRemove: () => _onRemove(bottomConfigs![index], index),
+        onEdit: () => _onEdit(bottomConfigs![index], index),
         onExpandToggle: () {
-          expandedIndex = expandedIndex != index ? index : null;
+          _collapsedMap[index] = !collapsed;
           triggerRebuild();
         },
         onSwap: (int offset) =>
             _onSwap(bottomConfigs![index], bottomConfigs![index + offset]),
         showExpandedIcon: bottomSeries.length > 1,
-        showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
-        showMoveDownIcon: !isExpanded &&
-            bottomSeries.length > 1 &&
-            index != bottomSeries.length - 1,
+        showMoveUpIcon: bottomSeries.length > 1 && index != 0,
+        showMoveDownIcon:
+            bottomSeries.length > 1 && index != bottomSeries.length - 1,
       );
 
-      return isExpanded && expandedIndex != index
+      final flexNumber = ((bottomSeries.length * 1000) /
+              (numberOfUnhidden == 0
+                  ? (bottomSeries.length)
+                  : numberOfUnhidden))
+          .ceil();
+
+      print('##### Number of unhidden: $numberOfUnhidden Flex: $flexNumber');
+
+      return collapsed
           ? bottomChart
           : Expanded(
-              flex: isExpanded && expandedIndex == index
-                  ? bottomSeries.length
-                  : 1,
+              flex: flexNumber - (bottomSeries.length - numberOfUnhidden) * 40,
               child: bottomChart,
             );
     }).toList();
   }
 
-  void _onEdit(IndicatorConfig config) {
+  void _onEdit(IndicatorConfig config, int index) {
     if (indicatorsRepo != null) {
-      final int index = indicatorsRepo!.items.indexOf(config);
       indicatorsRepo!.editAt(index);
     }
   }
 
-  void _onRemove(IndicatorConfig config) {
-    expandedIndex = null;
+  void _onRemove(IndicatorConfig config, int index) {
+    _collapsedMap.remove(index);
 
     if (indicatorsRepo != null) {
       final int index = indicatorsRepo!.items.indexOf(config);
