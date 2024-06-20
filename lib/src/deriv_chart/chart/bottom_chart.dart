@@ -290,71 +290,67 @@ class BottomChartMobile extends BasicChart {
 class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
   ChartTheme get theme => context.read<ChartTheme>();
 
-  Widget _buildBottomChartOptions(BuildContext context) {
-    Widget _buildIcon({
-      required IconData iconData,
-      void Function()? onPressed,
-    }) =>
-        Material(
-          type: MaterialType.circle,
-          color: Colors.transparent,
-          clipBehavior: Clip.antiAlias,
-          child: IconButton(
-            icon: Icon(
-              iconData,
-              size: 16,
-              color: theme.base01Color,
-            ),
-            onPressed: onPressed,
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
+  Widget _buildIcon({
+    required IconData iconData,
+    void Function()? onPressed,
+  }) =>
+      Material(
+        type: MaterialType.circle,
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        child: IconButton(
+          icon: Icon(
+            iconData,
+            size: 16,
+            color: theme.base01Color,
           ),
-        );
+          onPressed: onPressed,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      );
 
-    Widget _buildIcons() => Row(
-          children: <Widget>[
-            if (widget.showMoveUpIcon)
-              _buildIcon(
-                iconData: Icons.arrow_upward,
-                onPressed: () {
-                  widget.onSwap?.call(-1);
-                },
-              ),
-            if (widget.showMoveDownIcon)
-              _buildIcon(
-                iconData: Icons.arrow_downward,
-                onPressed: () {
-                  widget.onSwap?.call(1);
-                },
-              ),
-            if (widget.showExpandedIcon)
-              _buildIcon(
-                iconData: widget.viewMode == BottomIndicatorViewMode.expanded
-                    ? Icons.fullscreen_exit
-                    : Icons.fullscreen,
-                onPressed: () {
-                  widget.onExpandToggle?.call();
-                },
-              ),
+  Widget _buildIcons() => Row(
+        children: <Widget>[
+          if (widget.showMoveUpIcon)
             _buildIcon(
-              iconData: Icons.settings,
+              iconData: Icons.arrow_upward,
               onPressed: () {
-                widget.onEdit?.call();
+                widget.onSwap?.call(-1);
               },
             ),
+          if (widget.showMoveDownIcon)
             _buildIcon(
-              iconData: Icons.delete,
+              iconData: Icons.arrow_downward,
               onPressed: () {
-                widget.onRemove?.call();
+                widget.onSwap?.call(1);
               },
             ),
-          ],
-        );
+          if (widget.showExpandedIcon)
+            _buildIcon(
+              iconData: widget.viewMode == BottomIndicatorViewMode.expanded
+                  ? Icons.fullscreen_exit
+                  : Icons.fullscreen,
+              onPressed: () {
+                widget.onExpandToggle?.call();
+              },
+            ),
+          _buildIcon(
+            iconData: Icons.settings,
+            onPressed: () {
+              widget.onEdit?.call();
+            },
+          ),
+          _buildIcon(
+            iconData: Icons.delete,
+            onPressed: () {
+              widget.onRemove?.call();
+            },
+          ),
+        ],
+      );
 
-    return Positioned(
-      top: 15,
-      left: widget.bottomChartTitleMargin?.left ?? 10,
-      child: Container(
+  Widget _buildBottomChartOptions(BuildContext context) => Container(
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
           color: theme.base07Color,
@@ -373,9 +369,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
             _buildIcons(),
           ],
         ),
-      ),
-    );
-  }
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -387,22 +381,33 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
     return Provider<ChartConfig>.value(
       value: chartConfig,
       child: ClipRect(
-        child: Stack(
-          children: <Widget>[
-            if (widget.viewMode == BottomIndicatorViewMode.expanded)
-              Column(
+        child: widget.viewMode == BottomIndicatorViewMode.collapsed
+            ? Column(
                 children: <Widget>[
-                  Divider(
-                    height: 0.5,
-                    thickness: 1,
-                    color: theme.base01Color,
-                  ),
-                  Expanded(child: super.build(context)),
+                  _buildBottomChartOptions(context),
+                  SizedBox(height: 0, child: super.build(context)),
+                ],
+              )
+            : Stack(
+                children: <Widget>[
+                  if (widget.viewMode != BottomIndicatorViewMode.collapsed)
+                    Column(
+                      children: <Widget>[
+                        Divider(
+                          height: 0.5,
+                          thickness: 1,
+                          color: theme.base01Color,
+                        ),
+                        Expanded(child: super.build(context)),
+                      ],
+                    ),
+                  Positioned(
+                    top: 15,
+                    left: widget.bottomChartTitleMargin?.left ?? 10,
+                    child: _buildBottomChartOptions(context),
+                  )
                 ],
               ),
-            _buildBottomChartOptions(context)
-          ],
-        ),
       ),
     );
   }

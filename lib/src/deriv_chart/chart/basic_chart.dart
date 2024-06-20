@@ -476,10 +476,12 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   void _updateChartPosition() =>
       WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
-        final RenderBox box =
-            _key.currentContext!.findRenderObject() as RenderBox;
-        final Offset position = box.localToGlobal(Offset.zero);
-        chartPosition = Offset(position.dx, position.dy);
+        final RenderBox? box =
+            _key.currentContext?.findRenderObject() as RenderBox?;
+        final Offset? position = box?.localToGlobal(Offset.zero);
+        if (position != null) {
+          chartPosition = Offset(position.dx, position.dy);
+        }
       });
 
   bool _onQuoteLabelsTouchArea(Offset position) =>

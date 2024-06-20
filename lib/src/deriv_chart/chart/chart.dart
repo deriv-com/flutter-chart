@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_wrapper.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
@@ -201,20 +202,35 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
         _getIndicatorSeries(widget.bottomConfigs);
 
     if (bottomSeries != null) {
-      _bottomIndicatorsSection = ChartBottomIndicatorsSectionWeb(
-        bottomSeries: bottomSeries,
-        granularity: widget.granularity,
-        triggerRebuild: () => setState(() {}),
-        currentTickAnimationDuration: widget.currentTickAnimationDuration,
-        quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
-        bottomChartTitleMargin: widget.bottomChartTitleMargin,
-        indicatorsRepo: widget.indicatorsRepo,
-        showCrosshair: widget.showCrosshair,
-        bottomConfigs: widget.bottomConfigs,
-        onCrosshairAppeared: widget.onCrosshairAppeared,
-        onCrosshairDisappeared: widget.onCrosshairDisappeared,
-        onCrosshairHover: widget.onCrosshairHover,
-      );
+      _bottomIndicatorsSection = kIsWeb
+          ? ChartBottomIndicatorsSectionWeb(
+              bottomSeries: bottomSeries,
+              granularity: widget.granularity,
+              triggerRebuild: () => setState(() {}),
+              currentTickAnimationDuration: widget.currentTickAnimationDuration,
+              quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
+              bottomChartTitleMargin: widget.bottomChartTitleMargin,
+              indicatorsRepo: widget.indicatorsRepo,
+              showCrosshair: widget.showCrosshair,
+              bottomConfigs: widget.bottomConfigs,
+              onCrosshairAppeared: widget.onCrosshairAppeared,
+              onCrosshairDisappeared: widget.onCrosshairDisappeared,
+              onCrosshairHover: widget.onCrosshairHover,
+            )
+          : ChartBottomIndicatorsSectionMobile(
+              bottomSeries: bottomSeries,
+              granularity: widget.granularity,
+              triggerRebuild: () => setState(() {}),
+              currentTickAnimationDuration: widget.currentTickAnimationDuration,
+              quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
+              bottomChartTitleMargin: widget.bottomChartTitleMargin,
+              indicatorsRepo: widget.indicatorsRepo,
+              showCrosshair: widget.showCrosshair,
+              bottomConfigs: widget.bottomConfigs,
+              onCrosshairAppeared: widget.onCrosshairAppeared,
+              onCrosshairDisappeared: widget.onCrosshairDisappeared,
+              onCrosshairHover: widget.onCrosshairHover,
+            );
     }
   }
 
@@ -435,20 +451,35 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     final oldInstance = _bottomIndicatorsSection;
 
     if (bottomSeries != null) {
-      _bottomIndicatorsSection = ChartBottomIndicatorsSectionWeb(
-        bottomSeries: bottomSeries,
-        granularity: widget.granularity,
-        triggerRebuild: () => setState(() {}),
-        currentTickAnimationDuration: widget.currentTickAnimationDuration,
-        quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
-        bottomChartTitleMargin: widget.bottomChartTitleMargin,
-        indicatorsRepo: widget.indicatorsRepo,
-        showCrosshair: widget.showCrosshair,
-        bottomConfigs: widget.bottomConfigs,
-        onCrosshairAppeared: widget.onCrosshairAppeared,
-        onCrosshairDisappeared: widget.onCrosshairDisappeared,
-        onCrosshairHover: widget.onCrosshairHover,
-      );
+      _bottomIndicatorsSection = kIsWeb
+          ? ChartBottomIndicatorsSectionWeb(
+              bottomSeries: bottomSeries,
+              granularity: widget.granularity,
+              triggerRebuild: () => setState(() {}),
+              currentTickAnimationDuration: widget.currentTickAnimationDuration,
+              quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
+              bottomChartTitleMargin: widget.bottomChartTitleMargin,
+              indicatorsRepo: widget.indicatorsRepo,
+              showCrosshair: widget.showCrosshair,
+              bottomConfigs: widget.bottomConfigs,
+              onCrosshairAppeared: widget.onCrosshairAppeared,
+              onCrosshairDisappeared: widget.onCrosshairDisappeared,
+              onCrosshairHover: widget.onCrosshairHover,
+            )
+          : ChartBottomIndicatorsSectionMobile(
+              bottomSeries: bottomSeries,
+              granularity: widget.granularity,
+              triggerRebuild: () => setState(() {}),
+              currentTickAnimationDuration: widget.currentTickAnimationDuration,
+              quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
+              bottomChartTitleMargin: widget.bottomChartTitleMargin,
+              indicatorsRepo: widget.indicatorsRepo,
+              showCrosshair: widget.showCrosshair,
+              bottomConfigs: widget.bottomConfigs,
+              onCrosshairAppeared: widget.onCrosshairAppeared,
+              onCrosshairDisappeared: widget.onCrosshairDisappeared,
+              onCrosshairHover: widget.onCrosshairHover,
+            );
 
       if (oldInstance != null) {
         _bottomIndicatorsSection!.didUpdate(oldInstance);
@@ -497,12 +528,18 @@ abstract class ChartBottomIndicatorsSection {
 
   final VoidCallback triggerRebuild;
 
+  int? expandedIndex;
+
   List<Widget> getBottomIndicatorsWidget(BuildContext context);
 
-  void didUpdate(ChartBottomIndicatorsSection oldWidget);
+  void didUpdate(ChartBottomIndicatorsSection oldWidget) {
+    expandedIndex = oldWidget.expandedIndex;
+  }
 }
 
+/// Chart bottom indicators section for web.
 class ChartBottomIndicatorsSectionWeb extends ChartBottomIndicatorsSection {
+  /// Creates chart bottom indicators section for web.
   ChartBottomIndicatorsSectionWeb({
     required super.bottomSeries,
     required super.granularity,
@@ -519,10 +556,10 @@ class ChartBottomIndicatorsSectionWeb extends ChartBottomIndicatorsSection {
     super.onCrosshairHover,
   });
 
-  int? expandedIndex;
-
   @override
   void didUpdate(covariant ChartBottomIndicatorsSectionWeb oldWidget) {
+    super.didUpdate(oldWidget);
+
     // Check if the the expanded bottom indicator is moved/removed.
     if (expandedIndex != null &&
         oldWidget.bottomConfigs?.length != bottomConfigs?.length &&
@@ -592,6 +629,139 @@ class ChartBottomIndicatorsSectionWeb extends ChartBottomIndicatorsSection {
         ),
       );
     }).toList();
+  }
+
+  void _onEdit(IndicatorConfig config) {
+    if (indicatorsRepo != null) {
+      final int index = indicatorsRepo!.items.indexOf(config);
+      indicatorsRepo!.editAt(index);
+    }
+  }
+
+  void _onRemove(IndicatorConfig config) {
+    expandedIndex = null;
+
+    if (indicatorsRepo != null) {
+      final int index = indicatorsRepo!.items.indexOf(config);
+      indicatorsRepo!.removeAt(index);
+    }
+  }
+
+  void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
+    if (indicatorsRepo != null) {
+      final int index1 = indicatorsRepo!.items.indexOf(config1);
+      final int index2 = indicatorsRepo!.items.indexOf(config2);
+      indicatorsRepo!.swap(index1, index2);
+    }
+  }
+}
+
+/// Chart bottom indicators section for mobile.
+class ChartBottomIndicatorsSectionMobile extends ChartBottomIndicatorsSection {
+  /// Creates chart bottom indicators section for mobile.
+  ChartBottomIndicatorsSectionMobile({
+    required super.bottomSeries,
+    required super.granularity,
+    required super.triggerRebuild,
+    super.currentTickAnimationDuration,
+    super.quoteBoundsAnimationDuration,
+    super.bottomChartTitleMargin,
+    super.pipSize = 4,
+    super.indicatorsRepo,
+    super.showCrosshair = false,
+    super.bottomConfigs,
+    super.onCrosshairAppeared,
+    super.onCrosshairDisappeared,
+    super.onCrosshairHover,
+  });
+
+  @override
+  void didUpdate(covariant ChartBottomIndicatorsSectionMobile oldWidget) {
+    super.didUpdate(oldWidget);
+    // Check if the the expanded bottom indicator is moved/removed.
+    if (expandedIndex != null &&
+        oldWidget.bottomConfigs?.length != bottomConfigs?.length &&
+        expandedIndex! < (oldWidget.bottomConfigs?.length ?? 0)) {
+      final int? newIndex =
+          bottomConfigs?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
+      if (newIndex != expandedIndex) {
+        expandedIndex = newIndex == -1 ? null : newIndex;
+      }
+    }
+  }
+
+  @override
+  List<Widget> getBottomIndicatorsWidget(BuildContext context) {
+    final bool isExpanded = expandedIndex != null;
+    return bottomSeries
+        .mapIndexed(
+            (int index, Series series) => isExpanded && expandedIndex != index
+                ? BottomChartMobile(
+                    series: series,
+                    viewMode: !isExpanded
+                        ? BottomIndicatorViewMode.normal
+                        : (expandedIndex == index
+                            ? BottomIndicatorViewMode.expanded
+                            : BottomIndicatorViewMode.collapsed),
+                    granularity: granularity,
+                    pipSize: bottomConfigs?[index].pipSize ?? pipSize,
+                    title: bottomConfigs![index].title,
+                    currentTickAnimationDuration:
+                        currentTickAnimationDuration ?? _defaultDuration,
+                    quoteBoundsAnimationDuration:
+                        quoteBoundsAnimationDuration ?? _defaultDuration,
+                    bottomChartTitleMargin: bottomChartTitleMargin,
+                    onRemove: () => _onRemove(bottomConfigs![index]),
+                    onEdit: () => _onEdit(bottomConfigs![index]),
+                    onExpandToggle: () {
+                      expandedIndex = expandedIndex != index ? index : null;
+                      triggerRebuild();
+                    },
+                    onSwap: (int offset) => _onSwap(
+                        bottomConfigs![index], bottomConfigs![index + offset]),
+                    showExpandedIcon: bottomSeries.length > 1,
+                    showMoveUpIcon:
+                        !isExpanded && bottomSeries.length > 1 && index != 0,
+                    showMoveDownIcon: !isExpanded &&
+                        bottomSeries.length > 1 &&
+                        index != bottomSeries.length - 1,
+                  )
+                : Expanded(
+                    flex: isExpanded && expandedIndex == index
+                        ? bottomSeries.length
+                        : 1,
+                    child: BottomChartMobile(
+                      series: series,
+                      viewMode: expandedIndex == null
+                          ? BottomIndicatorViewMode.normal
+                          : (expandedIndex == index
+                              ? BottomIndicatorViewMode.expanded
+                              : BottomIndicatorViewMode.collapsed),
+                      granularity: granularity,
+                      pipSize: bottomConfigs?[index].pipSize ?? pipSize,
+                      title: bottomConfigs![index].title,
+                      currentTickAnimationDuration:
+                          currentTickAnimationDuration ?? _defaultDuration,
+                      quoteBoundsAnimationDuration:
+                          quoteBoundsAnimationDuration ?? _defaultDuration,
+                      bottomChartTitleMargin: bottomChartTitleMargin,
+                      onRemove: () => _onRemove(bottomConfigs![index]),
+                      onEdit: () => _onEdit(bottomConfigs![index]),
+                      onExpandToggle: () {
+                        expandedIndex = expandedIndex != index ? index : null;
+                        triggerRebuild();
+                      },
+                      onSwap: (int offset) => _onSwap(bottomConfigs![index],
+                          bottomConfigs![index + offset]),
+                      showExpandedIcon: bottomSeries.length > 1,
+                      showMoveUpIcon:
+                          !isExpanded && bottomSeries.length > 1 && index != 0,
+                      showMoveDownIcon: !isExpanded &&
+                          bottomSeries.length > 1 &&
+                          index != bottomSeries.length - 1,
+                    ),
+                  ))
+        .toList();
   }
 
   void _onEdit(IndicatorConfig config) {
