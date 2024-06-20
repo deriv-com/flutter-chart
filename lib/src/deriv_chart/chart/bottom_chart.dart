@@ -353,17 +353,20 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
   Widget _buildBottomChartOptions(BuildContext context) => Container(
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          color: theme.base07Color,
+          color: theme.base07Color.withOpacity(0.5),
           borderRadius: BorderRadius.circular(2),
         ),
         child: Row(
           children: <Widget>[
+            // Different styling for mobile version.
             BottomIndicatorTitle(
               widget.title,
               theme.textStyle(
                 color: theme.base01Color,
-                textStyle:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 12,
+                ),
               ),
             ),
             _buildIcons(),
@@ -384,8 +387,12 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
         child: widget.viewMode == BottomIndicatorViewMode.collapsed
             ? Column(
                 children: <Widget>[
-                  _buildBottomChartOptions(context),
-                  SizedBox(height: 0, child: super.build(context)),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: widget.bottomChartTitleMargin?.left ?? 10,
+                    ),
+                    child: _buildBottomChartOptions(context),
+                  ),
                 ],
               )
             : Stack(
@@ -402,7 +409,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
                       ],
                     ),
                   Positioned(
-                    top: 15,
+                    top: 4,
                     left: widget.bottomChartTitleMargin?.left ?? 10,
                     child: _buildBottomChartOptions(context),
                   )
