@@ -693,75 +693,46 @@ class ChartBottomIndicatorsSectionMobile extends ChartBottomIndicatorsSection {
   @override
   List<Widget> getBottomIndicatorsWidget(BuildContext context) {
     final bool isExpanded = expandedIndex != null;
-    return bottomSeries
-        .mapIndexed(
-            (int index, Series series) => isExpanded && expandedIndex != index
-                ? BottomChartMobile(
-                    series: series,
-                    viewMode: !isExpanded
-                        ? BottomIndicatorViewMode.normal
-                        : (expandedIndex == index
-                            ? BottomIndicatorViewMode.expanded
-                            : BottomIndicatorViewMode.collapsed),
-                    granularity: granularity,
-                    pipSize: bottomConfigs?[index].pipSize ?? pipSize,
-                    title: bottomConfigs![index].title,
-                    currentTickAnimationDuration:
-                        currentTickAnimationDuration ?? _defaultDuration,
-                    quoteBoundsAnimationDuration:
-                        quoteBoundsAnimationDuration ?? _defaultDuration,
-                    bottomChartTitleMargin: bottomChartTitleMargin,
-                    onRemove: () => _onRemove(bottomConfigs![index]),
-                    onEdit: () => _onEdit(bottomConfigs![index]),
-                    onExpandToggle: () {
-                      expandedIndex = expandedIndex != index ? index : null;
-                      triggerRebuild();
-                    },
-                    onSwap: (int offset) => _onSwap(
-                        bottomConfigs![index], bottomConfigs![index + offset]),
-                    showExpandedIcon: bottomSeries.length > 1,
-                    showMoveUpIcon:
-                        !isExpanded && bottomSeries.length > 1 && index != 0,
-                    showMoveDownIcon: !isExpanded &&
-                        bottomSeries.length > 1 &&
-                        index != bottomSeries.length - 1,
-                  )
-                : Expanded(
-                    flex: isExpanded && expandedIndex == index
-                        ? bottomSeries.length
-                        : 1,
-                    child: BottomChartMobile(
-                      series: series,
-                      viewMode: expandedIndex == null
-                          ? BottomIndicatorViewMode.normal
-                          : (expandedIndex == index
-                              ? BottomIndicatorViewMode.expanded
-                              : BottomIndicatorViewMode.collapsed),
-                      granularity: granularity,
-                      pipSize: bottomConfigs?[index].pipSize ?? pipSize,
-                      title: bottomConfigs![index].title,
-                      currentTickAnimationDuration:
-                          currentTickAnimationDuration ?? _defaultDuration,
-                      quoteBoundsAnimationDuration:
-                          quoteBoundsAnimationDuration ?? _defaultDuration,
-                      bottomChartTitleMargin: bottomChartTitleMargin,
-                      onRemove: () => _onRemove(bottomConfigs![index]),
-                      onEdit: () => _onEdit(bottomConfigs![index]),
-                      onExpandToggle: () {
-                        expandedIndex = expandedIndex != index ? index : null;
-                        triggerRebuild();
-                      },
-                      onSwap: (int offset) => _onSwap(bottomConfigs![index],
-                          bottomConfigs![index + offset]),
-                      showExpandedIcon: bottomSeries.length > 1,
-                      showMoveUpIcon:
-                          !isExpanded && bottomSeries.length > 1 && index != 0,
-                      showMoveDownIcon: !isExpanded &&
-                          bottomSeries.length > 1 &&
-                          index != bottomSeries.length - 1,
-                    ),
-                  ))
-        .toList();
+    return bottomSeries.mapIndexed((int index, Series series) {
+      final Widget bottomChart = BottomChartMobile(
+        series: series,
+        viewMode: expandedIndex == null
+            ? BottomIndicatorViewMode.normal
+            : (expandedIndex == index
+                ? BottomIndicatorViewMode.expanded
+                : BottomIndicatorViewMode.collapsed),
+        granularity: granularity,
+        pipSize: bottomConfigs?[index].pipSize ?? pipSize,
+        title: bottomConfigs![index].title,
+        currentTickAnimationDuration:
+            currentTickAnimationDuration ?? _defaultDuration,
+        quoteBoundsAnimationDuration:
+            quoteBoundsAnimationDuration ?? _defaultDuration,
+        bottomChartTitleMargin: bottomChartTitleMargin,
+        onRemove: () => _onRemove(bottomConfigs![index]),
+        onEdit: () => _onEdit(bottomConfigs![index]),
+        onExpandToggle: () {
+          expandedIndex = expandedIndex != index ? index : null;
+          triggerRebuild();
+        },
+        onSwap: (int offset) =>
+            _onSwap(bottomConfigs![index], bottomConfigs![index + offset]),
+        showExpandedIcon: bottomSeries.length > 1,
+        showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
+        showMoveDownIcon: !isExpanded &&
+            bottomSeries.length > 1 &&
+            index != bottomSeries.length - 1,
+      );
+
+      return isExpanded && expandedIndex != index
+          ? bottomChart
+          : Expanded(
+              flex: isExpanded && expandedIndex == index
+                  ? bottomSeries.length
+                  : 1,
+              child: bottomChart,
+            );
+    }).toList();
   }
 
   void _onEdit(IndicatorConfig config) {
