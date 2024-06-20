@@ -190,13 +190,32 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
   late ChartTheme _chartTheme;
   late List<Series>? bottomSeries;
   late List<Series>? overlaySeries;
-  int? expandedIndex;
+  ChartBottomIndicatorsSection? _bottomIndicatorsSection;
 
   @override
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized().addObserver(this);
     _initChartController();
+    final List<Series>? bottomSeries =
+        _getIndicatorSeries(widget.bottomConfigs);
+
+    if (bottomSeries != null) {
+      _bottomIndicatorsSection = ChartBottomIndicatorsSectionWeb(
+        bottomSeries: bottomSeries,
+        granularity: widget.granularity,
+        triggerRebuild: () => setState(() {}),
+        currentTickAnimationDuration: widget.currentTickAnimationDuration,
+        quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
+        bottomChartTitleMargin: widget.bottomChartTitleMargin,
+        indicatorsRepo: widget.indicatorsRepo,
+        showCrosshair: widget.showCrosshair,
+        bottomConfigs: widget.bottomConfigs,
+        onCrosshairAppeared: widget.onCrosshairAppeared,
+        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+        onCrosshairHover: widget.onCrosshairHover,
+      );
+    }
   }
 
   @override
@@ -281,8 +300,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             if (widget.bottomConfigs != null) ...?widget.bottomConfigs,
           ]);
 
-    final bool isExpanded = expandedIndex != null;
-
     final Duration currentTickAnimationDuration =
         widget.currentTickAnimationDuration ?? _defaultDuration;
 
@@ -345,96 +362,15 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                         widget.showCurrentTickBlinkAnimation ?? true,
                   ),
                 ),
-                if (bottomSeries?.isNotEmpty ?? false)
-                  ...bottomSeries!.mapIndexed((int index, Series series) {
-                    if (isExpanded && expandedIndex != index) {
-                      return const SizedBox.shrink();
-                    }
-
-                    return Expanded(
-                      flex: isExpanded ? bottomSeries.length : 1,
-                      child: BottomChart(
-                        series: series,
-                        granularity: widget.granularity,
-                        pipSize: widget.bottomConfigs?[index].pipSize ??
-                            widget.pipSize,
-                        title: widget.bottomConfigs![index].title,
-                        currentTickAnimationDuration:
-                            currentTickAnimationDuration,
-                        quoteBoundsAnimationDuration:
-                            quoteBoundsAnimationDuration,
-                        bottomChartTitleMargin: widget.bottomChartTitleMargin,
-                        onRemove: () => _onRemove(widget.bottomConfigs![index]),
-                        onEdit: () => _onEdit(widget.bottomConfigs![index]),
-                        onExpandToggle: () {
-                          setState(() {
-                            expandedIndex =
-                                expandedIndex != index ? index : null;
-                          });
-                        },
-                        onSwap: (int offset) => _onSwap(
-                            widget.bottomConfigs![index],
-                            widget.bottomConfigs![index + offset]),
-                        onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                        onCrosshairHover: (
-                          Offset globalPosition,
-                          Offset localPosition,
-                          EpochToX epochToX,
-                          QuoteToY quoteToY,
-                          EpochFromX epochFromX,
-                          QuoteFromY quoteFromY,
-                        ) =>
-                            widget.onCrosshairHover?.call(
-                          globalPosition,
-                          localPosition,
-                          epochToX,
-                          quoteToY,
-                          epochFromX,
-                          quoteFromY,
-                          widget.bottomConfigs![index],
-                        ),
-                        isExpanded: isExpanded,
-                        showCrosshair: widget.showCrosshair,
-                        showExpandedIcon: bottomSeries.length > 1,
-                        showMoveUpIcon: !isExpanded &&
-                            bottomSeries.length > 1 &&
-                            index != 0,
-                        showMoveDownIcon: !isExpanded &&
-                            bottomSeries.length > 1 &&
-                            index != bottomSeries.length - 1,
-                      ),
-                    );
-                  }).toList()
+                if (_bottomIndicatorsSection != null)
+                  ..._bottomIndicatorsSection!
+                      .getBottomIndicatorsWidget(context),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void _onEdit(IndicatorConfig config) {
-    if (widget.indicatorsRepo != null) {
-      final int index = widget.indicatorsRepo!.items.indexOf(config);
-      widget.indicatorsRepo!.editAt(index);
-    }
-  }
-
-  void _onRemove(IndicatorConfig config) {
-    expandedIndex = null;
-
-    if (widget.indicatorsRepo != null) {
-      final int index = widget.indicatorsRepo!.items.indexOf(config);
-      widget.indicatorsRepo!.removeAt(index);
-    }
-  }
-
-  void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
-    if (widget.indicatorsRepo != null) {
-      final int index1 = widget.indicatorsRepo!.items.indexOf(config1);
-      final int index2 = widget.indicatorsRepo!.items.indexOf(config2);
-      widget.indicatorsRepo!.swap(index1, index2);
-    }
   }
 
   void _onVisibleAreaChanged(int leftBoundEpoch, int rightBoundEpoch) {
@@ -493,15 +429,192 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
       }
     }
 
+    final List<Series>? bottomSeries =
+        _getIndicatorSeries(widget.bottomConfigs);
+
+    final oldInstance = _bottomIndicatorsSection;
+
+    if (bottomSeries != null) {
+      _bottomIndicatorsSection = ChartBottomIndicatorsSectionWeb(
+        bottomSeries: bottomSeries,
+        granularity: widget.granularity,
+        triggerRebuild: () => setState(() {}),
+        currentTickAnimationDuration: widget.currentTickAnimationDuration,
+        quoteBoundsAnimationDuration: widget.quoteBoundsAnimationDuration,
+        bottomChartTitleMargin: widget.bottomChartTitleMargin,
+        indicatorsRepo: widget.indicatorsRepo,
+        showCrosshair: widget.showCrosshair,
+        bottomConfigs: widget.bottomConfigs,
+        onCrosshairAppeared: widget.onCrosshairAppeared,
+        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+        onCrosshairHover: widget.onCrosshairHover,
+      );
+
+      if (oldInstance != null) {
+        _bottomIndicatorsSection!.didUpdate(oldInstance);
+      }
+    }
+  }
+}
+
+abstract class ChartBottomIndicatorsSection {
+  ChartBottomIndicatorsSection({
+    required this.bottomSeries,
+    required this.granularity,
+    required this.triggerRebuild,
+    this.currentTickAnimationDuration,
+    this.quoteBoundsAnimationDuration,
+    this.bottomChartTitleMargin,
+    this.pipSize = 4,
+    this.indicatorsRepo,
+    this.showCrosshair = false,
+    this.bottomConfigs,
+    this.onCrosshairAppeared,
+    this.onCrosshairDisappeared,
+    this.onCrosshairHover,
+  });
+
+  final List<Series> bottomSeries;
+  final int granularity;
+  final Duration? currentTickAnimationDuration;
+  final Duration? quoteBoundsAnimationDuration;
+  final List<IndicatorConfig>? bottomConfigs;
+  final int pipSize;
+  final EdgeInsets? bottomChartTitleMargin;
+  final bool showCrosshair;
+
+  /// Called when crosshair details appear after long press.
+  final VoidCallback? onCrosshairAppeared;
+
+  /// Called when the crosshair is dismissed.
+  final VoidCallback? onCrosshairDisappeared;
+
+  /// Called when the crosshair cursor is hovered/moved.
+  final OnCrosshairHoverCallback? onCrosshairHover;
+
+  /// Chart's indicators
+  final Repository<IndicatorConfig>? indicatorsRepo;
+
+  final VoidCallback triggerRebuild;
+
+  List<Widget> getBottomIndicatorsWidget(BuildContext context);
+
+  void didUpdate(ChartBottomIndicatorsSection oldWidget);
+}
+
+class ChartBottomIndicatorsSectionWeb extends ChartBottomIndicatorsSection {
+  ChartBottomIndicatorsSectionWeb({
+    required super.bottomSeries,
+    required super.granularity,
+    required super.triggerRebuild,
+    super.currentTickAnimationDuration,
+    super.quoteBoundsAnimationDuration,
+    super.bottomChartTitleMargin,
+    super.pipSize = 4,
+    super.indicatorsRepo,
+    super.showCrosshair = false,
+    super.bottomConfigs,
+    super.onCrosshairAppeared,
+    super.onCrosshairDisappeared,
+    super.onCrosshairHover,
+  });
+
+  int? expandedIndex;
+
+  @override
+  void didUpdate(covariant ChartBottomIndicatorsSectionWeb oldWidget) {
     // Check if the the expanded bottom indicator is moved/removed.
     if (expandedIndex != null &&
-        oldWidget.bottomConfigs?.length != widget.bottomConfigs?.length &&
+        oldWidget.bottomConfigs?.length != bottomConfigs?.length &&
         expandedIndex! < (oldWidget.bottomConfigs?.length ?? 0)) {
-      final int? newIndex = widget.bottomConfigs
-          ?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
+      final int? newIndex =
+          bottomConfigs?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
       if (newIndex != expandedIndex) {
         expandedIndex = newIndex == -1 ? null : newIndex;
       }
+    }
+  }
+
+  @override
+  List<Widget> getBottomIndicatorsWidget(BuildContext context) {
+    final bool isExpanded = expandedIndex != null;
+
+    return bottomSeries.mapIndexed((int index, Series series) {
+      if (isExpanded && expandedIndex != index) {
+        return const SizedBox.shrink();
+      }
+
+      return Expanded(
+        flex: isExpanded ? bottomSeries.length : 1,
+        child: BottomChart(
+          series: series,
+          granularity: granularity,
+          pipSize: bottomConfigs?[index].pipSize ?? pipSize,
+          title: bottomConfigs![index].title,
+          currentTickAnimationDuration:
+              currentTickAnimationDuration ?? _defaultDuration,
+          quoteBoundsAnimationDuration:
+              quoteBoundsAnimationDuration ?? _defaultDuration,
+          bottomChartTitleMargin: bottomChartTitleMargin,
+          onRemove: () => _onRemove(bottomConfigs![index]),
+          onEdit: () => _onEdit(bottomConfigs![index]),
+          onExpandToggle: () {
+            expandedIndex = expandedIndex != index ? index : null;
+            triggerRebuild();
+          },
+          onSwap: (int offset) =>
+              _onSwap(bottomConfigs![index], bottomConfigs![index + offset]),
+          onCrosshairDisappeared: onCrosshairDisappeared,
+          onCrosshairHover: (
+            Offset globalPosition,
+            Offset localPosition,
+            EpochToX epochToX,
+            QuoteToY quoteToY,
+            EpochFromX epochFromX,
+            QuoteFromY quoteFromY,
+          ) =>
+              onCrosshairHover?.call(
+            globalPosition,
+            localPosition,
+            epochToX,
+            quoteToY,
+            epochFromX,
+            quoteFromY,
+            bottomConfigs![index],
+          ),
+          isExpanded: isExpanded,
+          showCrosshair: showCrosshair,
+          showExpandedIcon: bottomSeries.length > 1,
+          showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
+          showMoveDownIcon: !isExpanded &&
+              bottomSeries.length > 1 &&
+              index != bottomSeries.length - 1,
+        ),
+      );
+    }).toList();
+  }
+
+  void _onEdit(IndicatorConfig config) {
+    if (indicatorsRepo != null) {
+      final int index = indicatorsRepo!.items.indexOf(config);
+      indicatorsRepo!.editAt(index);
+    }
+  }
+
+  void _onRemove(IndicatorConfig config) {
+    expandedIndex = null;
+
+    if (indicatorsRepo != null) {
+      final int index = indicatorsRepo!.items.indexOf(config);
+      indicatorsRepo!.removeAt(index);
+    }
+  }
+
+  void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
+    if (indicatorsRepo != null) {
+      final int index1 = indicatorsRepo!.items.indexOf(config1);
+      final int index2 = indicatorsRepo!.items.indexOf(config2);
+      indicatorsRepo!.swap(index1, index2);
     }
   }
 }
