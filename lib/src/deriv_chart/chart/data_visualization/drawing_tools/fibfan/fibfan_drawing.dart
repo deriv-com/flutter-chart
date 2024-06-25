@@ -243,7 +243,7 @@ class FibfanDrawing extends Drawing with LineVectorDrawingMixin {
       _drawTriangle(canvas, paint, config, _finalInnerVector);
 
       /// Draw markers again to hide their overlap with shadows
-      /// The second cicle is getting created here as the lines and 
+      /// The second cicle is getting created here as the lines and
       /// second marker are getting created at same time
       canvas
         ..drawCircle(
