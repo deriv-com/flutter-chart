@@ -104,7 +104,6 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
-
   late double _minIntervalWidth;
 
   late double _maxIntervalWidth;
