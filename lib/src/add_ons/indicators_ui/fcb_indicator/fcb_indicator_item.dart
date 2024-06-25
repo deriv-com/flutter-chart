@@ -1,6 +1,5 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:flutter/material.dart';
-
 import '../callbacks.dart';
 import '../indicator_config.dart';
 import '../indicator_item.dart';

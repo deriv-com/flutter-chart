@@ -29,6 +29,7 @@ class AccumulatorObject extends ChartObject {
   /// The [epoch] of the tick that the barriers belong to.
   final int barrierEpoch;
 
+  /// Barrier End Epoch
   final int? barrierEndEpoch;
 
   /// [Optional] The profit value which is being shown in the
