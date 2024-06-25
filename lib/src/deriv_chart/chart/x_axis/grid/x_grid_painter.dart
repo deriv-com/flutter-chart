@@ -21,10 +21,9 @@ class XGridPainter extends CustomPainter {
 
   /// List of DateTime on screen
   final List<DateTime> timestamps;
-  
+
   /// Specifies the zoom level of the chart.
   final double msPerPx;
-
 
   @override
   void paint(Canvas canvas, Size size) {
