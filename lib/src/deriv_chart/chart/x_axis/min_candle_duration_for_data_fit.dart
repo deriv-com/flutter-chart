@@ -12,13 +12,18 @@ import 'x_axis_model.dart';
 ///
 /// [entriesDuration] is a total duration of all entries.
 /// [chartWidth] is pixel width of the chart widget.
+/// [chartDefaultIntervalWidth] is the default interval width in pixels for the
+/// The chart also should be set to have this default value on its first build
+/// after changing interval. can be customized in chart as well using
+/// [ChartAxisConfig].
 Duration minCandleDurationForDataFit(
   Duration entriesDuration,
   double chartWidth,
+  double chartDefaultIntervalWidth,
 ) {
   final double availableWidth = chartWidth - defaultDataFitPadding.horizontal;
   final double msPerPx = entriesDuration.inMilliseconds / availableWidth;
   return Duration(
-    milliseconds: (msPerPx * XAxisModel.defaultIntervalWidth).ceil(),
+    milliseconds: (msPerPx * chartDefaultIntervalWidth).ceil(),
   );
 }

@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter_we
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/foundation.dart';
@@ -28,11 +29,13 @@ class BasicChart extends StatefulWidget {
     required this.mainSeries,
     this.pipSize = 4,
     this.opacity = 1,
+    ChartAxisConfig? chartAxisConfig,
     Key? key,
     this.onQuoteAreaChanged,
     this.currentTickAnimationDuration = _defaultDuration,
     this.quoteBoundsAnimationDuration = _defaultDuration,
-  }) : super(key: key);
+  })  : chartAxisConfig = chartAxisConfig ?? const ChartAxisConfig(),
+        super(key: key);
 
   /// The main series to display on the chart.
   final Series mainSeries;
@@ -42,6 +45,9 @@ class BasicChart extends StatefulWidget {
 
   /// The opacity of the chart's data.
   final double opacity;
+
+  /// The axis configuration of the chart.
+  final ChartAxisConfig chartAxisConfig;
 
   /// Callback provided by library user.
   final VisibleQuoteAreaChangedCallback? onQuoteAreaChanged;
@@ -131,9 +137,12 @@ class BasicChartState<T extends BasicChart> extends State<T>
   /// The xAxis model of the chart.
   XAxisModel get xAxis => context.read<XAxisModel>();
 
+  bool _isTickAnimationPlaying = false;
+
   @override
   void initState() {
     super.initState();
+    _setupInitialBounds();
     setupAnimations();
     _setupGestures();
     _updateChartPosition();
@@ -155,9 +164,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   /// Whether the chart data did update or not.
   void didUpdateChartData(BasicChart oldChart) {
-    if (widget.mainSeries.id == oldChart.mainSeries.id &&
-        widget.mainSeries.didUpdate(oldChart.mainSeries)) {
-      _playNewTickAnimation();
+    if (widget.mainSeries.id == oldChart.mainSeries.id) {
+      widget.mainSeries.didUpdate(oldChart.mainSeries);
     }
 
     if (widget.currentTickAnimationDuration.inMilliseconds !=
@@ -169,6 +177,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
         oldChart.quoteBoundsAnimationDuration.inMilliseconds) {
       _setupBoundsAnimation();
     }
+
+    _playNewTickAnimation();
   }
 
   @override
@@ -177,6 +187,9 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
     topBoundQuoteAnimationController.dispose();
     bottomBoundQuoteAnimationController.dispose();
+
+    _isTickAnimationPlaying = false;
+
     _clearGestures();
     super.dispose();
   }
@@ -201,9 +214,11 @@ class BasicChartState<T extends BasicChart> extends State<T>
   }
 
   void _playNewTickAnimation() {
-    _currentTickAnimationController
-      ..reset()
-      ..forward();
+    if (!_isTickAnimationPlaying) {
+      _currentTickAnimationController
+        ..reset()
+        ..forward();
+    }
   }
 
   YAxisModel _setupYAxisModel(Size canvasSize) => yAxisModel = YAxisModel(
@@ -231,6 +246,13 @@ class BasicChartState<T extends BasicChart> extends State<T>
       parent: _currentTickAnimationController,
       curve: Curves.easeOut,
     );
+    _currentTickAnimationController.addListener(() {
+      if (_currentTickAnimationController.status != AnimationStatus.completed) {
+        _isTickAnimationPlaying = true;
+      } else {
+        _isTickAnimationPlaying = false;
+      }
+    });
   }
 
   void _setupBoundsAnimation() {
@@ -342,9 +364,11 @@ class BasicChartState<T extends BasicChart> extends State<T>
           return Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              _buildQuoteGridLine(gridLineQuotes),
+              if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                _buildQuoteGridLine(gridLineQuotes),
               _buildChartData(),
-              _buildQuoteGridLabel(gridLineQuotes),
+              if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                _buildQuoteGridLabel(gridLineQuotes),
             ],
           );
         },
@@ -486,5 +510,10 @@ class BasicChartState<T extends BasicChart> extends State<T>
         gridLineQuotes!.last,
       );
     }
+  }
+
+  void _setupInitialBounds() {
+    topBoundQuoteTarget = widget.chartAxisConfig.initialTopBoundQuote;
+    bottomBoundQuoteTarget = widget.chartAxisConfig.initialBottomBoundQuote;
   }
 }

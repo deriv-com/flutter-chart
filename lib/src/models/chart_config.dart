@@ -1,3 +1,4 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -8,7 +9,11 @@ part 'chart_config.g.dart';
 @JsonSerializable()
 class ChartConfig {
   /// Initializes chart's general configuration.
-  const ChartConfig({required this.granularity, this.pipSize = 4});
+  const ChartConfig({
+    required this.granularity,
+    this.chartAxisConfig = const ChartAxisConfig(),
+    this.pipSize = 4,
+  });
 
   /// Initializes from JSON.
   factory ChartConfig.fromJson(Map<String, dynamic> json) =>
@@ -22,6 +27,9 @@ class ChartConfig {
 
   /// Granularity.
   final int granularity;
+
+  /// Chart Axis configuration.
+  final ChartAxisConfig chartAxisConfig;
 
   @override
   bool operator ==(covariant ChartConfig other) =>

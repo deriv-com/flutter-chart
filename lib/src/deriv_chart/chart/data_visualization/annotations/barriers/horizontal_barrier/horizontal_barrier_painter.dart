@@ -72,7 +72,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
     if (series.previousObject == null) {
-      animatedValue = series.value;
+      animatedValue = series.quote;
       if (series.epoch != null) {
         dotX = epochToX(series.epoch!);
       }
@@ -82,8 +82,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       // transition animation
       // from previousObject to new object
       animatedValue = ui.lerpDouble(
-        previousBarrier.value,
-        series.value,
+        previousBarrier.quote,
+        series.quote,
         animationInfo.currentTickPercent,
       );
 
@@ -115,7 +115,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     if (style.hasBlinkingDot && dotX != null) {
       // to hide the blinking spot on yAxis
       YAxisConfig.instance.yAxisClipping(canvas, size, () {
-        _paintBlinkingDot(
+        paintBlinkingDot(
             canvas, dotX!, y, animationInfo, style.blinkingDotColor);
       });
     }
@@ -231,23 +231,6 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
         paint,
       );
     }
-  }
-
-  void _paintBlinkingDot(
-    Canvas canvas,
-    double dotX,
-    double y,
-    AnimationInfo animationInfo,
-    Color color,
-  ) {
-    paintDot(canvas, Offset(dotX, y), color);
-
-    paintBlinkingGlow(
-      canvas,
-      Offset(dotX, y),
-      animationInfo.blinkingPercent,
-      color,
-    );
   }
 
   void _paintLine(

@@ -6,11 +6,11 @@ class BarrierObject extends ChartObject {
   const BarrierObject({
     int? leftEpoch,
     int? rightEpoch,
-    this.value,
-  }) : super(leftEpoch, rightEpoch, value, value);
+    this.quote,
+  }) : super(leftEpoch, rightEpoch, quote, quote);
 
   /// Barrier's value.
-  final double? value;
+  final double? quote;
 }
 
 /// Vertical barrier object.
@@ -18,8 +18,8 @@ class VerticalBarrierObject extends BarrierObject {
   /// Initializes a vertical barrier object.
   const VerticalBarrierObject(
     this.epoch, {
-    double? value,
-  }) : super(leftEpoch: epoch, rightEpoch: epoch, value: value);
+    double? quote,
+  }) : super(leftEpoch: epoch, rightEpoch: epoch, quote: quote);
 
   /// Epoch of the vertical barrier.
   final int epoch;

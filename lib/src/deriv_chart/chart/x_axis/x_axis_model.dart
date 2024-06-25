@@ -3,8 +3,8 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
-import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -54,10 +54,11 @@ class XAxisModel extends ChangeNotifier {
     required int granularity,
     required AnimationController animationController,
     required bool isLive,
+    required double maxCurrentTickOffset,
+    this.defaultIntervalWidth = 20,
     bool startWithDataFitMode = false,
     int? minEpoch,
     int? maxEpoch,
-    double? maxCurrentTickOffset,
     double? msPerPx,
     double? minIntervalWidth,
     double? maxIntervalWidth,
@@ -65,6 +66,8 @@ class XAxisModel extends ChangeNotifier {
     this.onScale,
     this.onScroll,
   }) {
+    _maxCurrentTickOffset = maxCurrentTickOffset;
+
     _nowEpoch = entries.isNotEmpty
         ? entries.last.epoch
         : DateTime.now().millisecondsSinceEpoch;
@@ -78,7 +81,7 @@ class XAxisModel extends ChangeNotifier {
     _granularity = granularity;
     _msPerPx = msPerPx ?? _defaultMsPerPx;
     _isLive = isLive;
-    _maxCurrentTickOffset = maxCurrentTickOffset ?? 150;
+    _maxCurrentTickOffset = maxCurrentTickOffset;
     _rightBoundEpoch = _maxRightBoundEpoch;
     _dataFitMode = startWithDataFitMode;
     _minIntervalWidth = minIntervalWidth ?? 1;
@@ -101,6 +104,7 @@ class XAxisModel extends ChangeNotifier {
       });
   }
 
+
   late double _minIntervalWidth;
 
   late double _maxIntervalWidth;
@@ -108,13 +112,12 @@ class XAxisModel extends ChangeNotifier {
   /// Padding around data used in data-fit mode.
   late EdgeInsets _dataFitPadding;
 
-  // TODO(NA): Allow customization of this setting.
   /// Default to this interval width on granularity change.
-  static const int defaultIntervalWidth = 20;
+  final double defaultIntervalWidth;
 
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
-  late double _maxCurrentTickOffset;
+  double _maxCurrentTickOffset = 200;
 
   late bool _isLive;
 
@@ -539,6 +542,7 @@ class XAxisModel extends ChangeNotifier {
     int? minEpoch,
     int? maxEpoch,
     EdgeInsets? dataFitPadding,
+    double? maxCurrentTickOffset,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
@@ -547,6 +551,7 @@ class XAxisModel extends ChangeNotifier {
     _minEpoch = minEpoch ?? _minEpoch;
     _maxEpoch = maxEpoch ?? _maxEpoch;
     _dataFitPadding = dataFitPadding ?? _dataFitPadding;
+    _maxCurrentTickOffset = maxCurrentTickOffset ?? _maxCurrentTickOffset;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.

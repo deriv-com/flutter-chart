@@ -7,6 +7,7 @@ class GridStyle with EquatableMixin {
   /// Initializes a style for defining the style of the chart's grid.
   const GridStyle({
     this.gridLineColor = const Color(0xFF151717),
+    this.gridLineHighlightColor = const Color(0xFF262A2A),
     this.xLabelStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -32,6 +33,10 @@ class GridStyle with EquatableMixin {
   /// The color of the grid lines.
   final Color gridLineColor;
 
+  /// The color of grid lines for highlighting some points on the chart.
+  /// e.g. beginning of days/months.
+  final Color gridLineHighlightColor;
+
   /// The text style of the labels on time axes
   final TextStyle xLabelStyle;
 
@@ -55,6 +60,7 @@ class GridStyle with EquatableMixin {
   @override
   List<Object> get props => <Object>[
         gridLineColor,
+        gridLineHighlightColor,
         xLabelStyle,
         yLabelStyle,
         labelHorizontalPadding,

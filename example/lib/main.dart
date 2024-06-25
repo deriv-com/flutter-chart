@@ -38,6 +38,7 @@ void main() {
 class MyApp extends StatelessWidget {
   /// Intiialize
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
@@ -68,8 +69,8 @@ class FullscreenChart extends StatefulWidget {
 }
 
 class _FullscreenChartState extends State<FullscreenChart> {
-  static const String defaultAppID = '1089';
-  static const String defaultEndpoint = 'blue.binaryws.com';
+  static const String defaultAppID = '36544';
+  static const String defaultEndpoint = 'blue.derivws.com';
 
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
@@ -136,7 +137,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       endpoint: defaultEndpoint,
       appId: defaultAppID,
       brand: 'deriv',
-      authEndpoint: "",
+      authEndpoint: '',
     ))
       ..stream.listen((connection_bloc.ConnectionState connectionState) async {
         if (connectionState is! connection_bloc.ConnectionConnectedState) {

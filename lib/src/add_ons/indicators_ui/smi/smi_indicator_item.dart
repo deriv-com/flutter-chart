@@ -1,10 +1,12 @@
-import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
-import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/dropdown_menu.dart'
     as deriv_dropdown;
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/field_widget.dart';
+
+import 'package:flutter/material.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/oscillator_lines/oscillator_lines_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/ma_series.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart' hide DropdownMenu;
 
 import '../callbacks.dart';
@@ -69,7 +71,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   Widget _buildPeriodField() => FieldWidget(
-        label: context.localization.labelPeriod,
+        label: ChartLocalization.of(context).labelPeriod,
         initialValue: _currentPeriod.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -82,7 +84,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   Widget _buildSmoothingPeriodField() => FieldWidget(
-        label: context.localization.labelSmoothingPeriod,
+        label: ChartLocalization.of(context).labelSmoothingPeriod,
         initialValue: _currentSmoothingPeriod.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -95,7 +97,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   Widget _buildDoubleSmoothingPeriodField() => FieldWidget(
-        label: context.localization.labelDoubleSmoothingPeriod,
+        label: ChartLocalization.of(context).labelDoubleSmoothingPeriod,
         initialValue: _currentDoubleSmoothingPeriod.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -108,7 +110,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       );
 
   Widget _buildSignalPeriodField() => FieldWidget(
-        label: context.localization.labelSignalPeriod,
+        label: ChartLocalization.of(context).labelSignalPeriod,
         initialValue: _currentSignalPeriod.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -134,7 +136,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       _signalPeriod ?? (widget.config as SMIIndicatorConfig).signalPeriod;
 
   Widget _buildOverBoughtPriceField() => FieldWidget(
-        label: context.localization.labelOverBoughtPrice,
+        label: ChartLocalization.of(context).labelOverBoughtPrice,
         initialValue: _currentOverboughtValue.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -151,7 +153,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
       (widget.config as SMIIndicatorConfig).smiOscillatorLimits.overboughtValue;
 
   Widget _buildOverSoldPriceField() => FieldWidget(
-        label: context.localization.labelOverSoldPrice,
+        label: ChartLocalization.of(context).labelOverSoldPrice,
         initialValue: _currentOversoldValue.toString(),
         onValueChanged: (String text) {
           if (text.isNotEmpty) {
@@ -173,7 +175,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   Widget _buildMATypeField() => deriv_dropdown.DropdownMenu<MovingAverageType>(
         initialValue: _currentMAType,
         items: MovingAverageType.values,
-        label: context.localization.labelType,
+        label: ChartLocalization.of(context).labelType,
         labelForItem: (MovingAverageType type) => type.name,
         onItemSelected: (MovingAverageType? newType) => setState(
           () {

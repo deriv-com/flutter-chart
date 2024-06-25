@@ -1,5 +1,6 @@
+import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,7 @@ class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
   Widget _buildPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelPeriod,
+            ChartLocalization.of(context).labelPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

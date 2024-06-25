@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/misc/extensions.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -53,7 +53,7 @@ class MACDIndicatorItemState extends IndicatorItemState<MACDIndicatorConfig> {
   Widget _buildFastMAPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelFastMAPeriod,
+            ChartLocalization.of(context).labelFastMAPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -81,7 +81,7 @@ class MACDIndicatorItemState extends IndicatorItemState<MACDIndicatorConfig> {
   Widget _buildSlowMAPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelSlowMAPeriod,
+            ChartLocalization.of(context).labelSlowMAPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -109,7 +109,7 @@ class MACDIndicatorItemState extends IndicatorItemState<MACDIndicatorConfig> {
   Widget _buildSignalPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelSignalPeriod,
+            ChartLocalization.of(context).labelSignalPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

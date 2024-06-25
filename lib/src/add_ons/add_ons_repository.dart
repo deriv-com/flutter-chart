@@ -9,18 +9,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 typedef CreateAddOn<T extends AddOnConfig> = T Function(
     Map<String, dynamic> map);
 
+/// Called when the edit icon is clicked on an add-on.
+typedef OnEditAddOn = Function(int index);
+
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
 class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     implements Repository<T> {
   /// Initializes
   AddOnsRepository({
     required this.createAddOn,
-    required this.currentSymbol,
+    required this.sharedPrefKey,
     this.onEditCallback,
   }) : _addOns = <T>[];
 
-  /// Current symbol.
-  String currentSymbol;
+  /// Key String acts as a key for the set of indicators that are saved.
+  ///
+  /// We can have separate set of saved indicators per key.
+  String sharedPrefKey;
 
   /// List containing addOns
   final List<T> _addOns;
@@ -31,18 +36,18 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   List<T> get items => _addOns;
 
   /// Storage key of saved indicators/drawing tools.
-  String get addOnsKey => 'addOns_${T.toString()}_$currentSymbol';
+  String get addOnsKey => 'addOns_${T.toString()}_$sharedPrefKey';
 
   /// Called to create an AddOnConfig object from a map.
   CreateAddOn<T> createAddOn;
 
   /// Called when the edit icon is clicked.
-  VoidCallback? onEditCallback;
+  OnEditAddOn? onEditCallback;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs, String symbol) {
     _prefs = prefs;
-    currentSymbol = symbol;
+    sharedPrefKey = symbol;
 
     items.clear();
 
@@ -75,7 +80,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   /// Called when the edit icon is clicked.
   @override
   void editAt(int index) {
-    onEditCallback?.call();
+    onEditCallback?.call(index);
   }
 
   /// Updates indicator or drawing tool at [index] and updates storage.
@@ -89,8 +94,6 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     notifyListeners();
   }
 
-
-
   /// Removes indicator/drawing tool at [index] from repository and
   /// updates storage.
   @override
@@ -102,7 +105,6 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     _writeToPrefs();
     notifyListeners();
   }
-
 
   /// Removes all indicator/drawing tool from repository and
   /// updates storage.

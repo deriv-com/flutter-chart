@@ -1,8 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_entry_marker.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_exit_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_entry_exit_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -33,11 +32,10 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         epochToX(series.entryTick!.epoch),
         quoteToY(series.entryTick!.quote),
       );
-      paintEntryMarker(
+      paintEntryExitMarker(
         canvas,
         center,
         style.entryMarkerStyle,
-        theme.base08Color,
       );
     }
 
@@ -46,7 +44,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
         epochToX(series.exitTick!.epoch),
         quoteToY(series.exitTick!.quote),
       );
-      paintExitMarker(canvas, center, style.exitMarkerStyle);
+      paintEntryExitMarker(canvas, center, style.exitMarkerStyle);
     }
 
     for (final Marker marker in series.visibleEntries) {

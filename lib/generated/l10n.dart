@@ -280,10 +280,10 @@ class ChartLocalization {
     );
   }
 
-  /// `D% Period`
+  /// `Signal Period`
   String get labelSignalPeriod {
     return Intl.message(
-      'D% Period',
+      'Signal Period',
       name: 'labelSignalPeriod',
       desc: '',
       args: [],

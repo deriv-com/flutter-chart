@@ -2,7 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +19,11 @@ class IndexBaseCrossHair extends StatefulWidget {
     required this.ticks,
     this.enabled = false,
     this.pipSize = 4,
+    this.crossHairContentPadding = 4,
+    this.crossHairTextStyle = TextStyles.overLine,
+    this.crossHairTransitionAnimationDuration =
+        const Duration(milliseconds: 100),
+    this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -40,6 +45,20 @@ class IndexBaseCrossHair extends StatefulWidget {
   /// Whether cross-hair is enabled or not.
   final bool enabled;
 
+  /// Inner padding for cross hair details card.
+  final double crossHairContentPadding;
+
+  /// Text style for cross hair detail text.
+  final TextStyle crossHairTextStyle;
+
+  /// The animation duration of the cross hair when jumping from one tick to
+  /// another while user kept long press and moving between ticks.
+  final Duration crossHairTransitionAnimationDuration;
+
+  /// A temporary solution for the issue when we wrap the worm chart with
+  /// GestureDetector to have the onTap.
+  final VoidCallback? onTap;
+
   @override
   _IndexBaseCrossHairState createState() => _IndexBaseCrossHairState();
 }
@@ -47,10 +66,13 @@ class IndexBaseCrossHair extends StatefulWidget {
 class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     with SingleTickerProviderStateMixin {
   int? _crossHairIndex;
+  Size? _crossHairDetailSize;
   late GestureManagerState gestureManager;
 
   late AnimationController _crossHairAnimationController;
   late Animation<double> _crossHairFadeAnimation;
+
+  Offset? _longPressPosition;
 
   @override
   void initState() {
@@ -67,9 +89,37 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     );
 
     gestureManager = context.read<GestureManagerState>()
+      ..registerCallback(_onTapUp)
       ..registerCallback(_onLongPressStart)
       ..registerCallback(_onLongPressUpdate)
       ..registerCallback(_onLongPressEnd);
+
+    _updateCrossHairDetailSize();
+  }
+
+  @override
+  void didUpdateWidget(covariant IndexBaseCrossHair oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateCrossHairDetailSize();
+    if (_longPressPosition != null) {
+      // User has hold the long press during the update transition of the widget
+      _updateCrossHairToPosition(_longPressPosition!.dx);
+    }
+  }
+
+  void _updateCrossHairDetailSize() {
+    if (widget.ticks.isNotEmpty) {
+      _crossHairDetailSize = _calculateTextSize(
+            widget.ticks.first.quote.toStringAsFixed(widget.pipSize),
+            widget.crossHairTextStyle,
+          ) +
+          Offset(
+            // left and right.
+            widget.crossHairContentPadding * 2,
+            // top and bottom.
+            widget.crossHairContentPadding * 2,
+          );
+    }
   }
 
   @override
@@ -84,7 +134,8 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
             child: Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                Positioned(
+                AnimatedPositioned(
+                  duration: widget.crossHairTransitionAnimationDuration,
                   top: widget.quoteToY(widget.ticks[_crossHairIndex!].quote),
                   left: widget.indexToX(_crossHairIndex!),
                   child: CustomPaint(
@@ -92,46 +143,86 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                     painter: const CrosshairDotPainter(),
                   ),
                 ),
-                Positioned(
-                  width: constraints.maxWidth,
-                  left: widget.indexToX(_crossHairIndex!) -
-                      constraints.maxWidth / 2,
-                  child: Column(
-                    children: <Widget>[
-                      _buildCrossHairDetail(),
-                      CustomPaint(
-                        size: Size(1, constraints.maxHeight),
-                        painter: const CrosshairLinePainter(),
-                      ),
-                    ],
+                if (_crossHairDetailSize != null) ...<Widget>[
+                  AnimatedPositioned(
+                    left: _getCrossHairDetailCardLeftPosition(
+                      _crossHairDetailSize!.width,
+                      _crossHairIndex!,
+                      constraints.maxWidth,
+                    ),
+                    duration: widget.crossHairTransitionAnimationDuration,
+                    child: _buildCrossHairDetail(),
                   ),
-                ),
+                  AnimatedPositioned(
+                    left: widget.indexToX(_crossHairIndex!),
+                    top: _crossHairDetailSize!.height,
+                    duration: widget.crossHairTransitionAnimationDuration,
+                    child: CustomPaint(
+                      size: Size(
+                        1,
+                        constraints.maxHeight - _crossHairDetailSize!.height,
+                      ),
+                      painter: const CrosshairLinePainter(),
+                    ),
+                  )
+                ]
               ],
             ),
           );
         },
       );
 
-  Align _buildCrossHairDetail() => Align(
-        alignment: Alignment.topCenter,
-        child: Container(
-          padding: const EdgeInsets.all(4),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            color: Color(0xFF323738),
+  /// Calculates a left position for cross hair details card to keep it inside
+  /// Chart's area.
+  double _getCrossHairDetailCardLeftPosition(
+    double crossHairDetailWidth,
+    int crossHairIndex,
+    double chartWidth,
+  ) {
+    final double leftPosition =
+        widget.indexToX(crossHairIndex) - crossHairDetailWidth / 2;
+
+    if (leftPosition < 0) {
+      return 0;
+    } else if (leftPosition + crossHairDetailWidth > chartWidth) {
+      return chartWidth - crossHairDetailWidth;
+    }
+
+    return leftPosition;
+  }
+
+  Size _calculateTextSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout();
+    return textPainter.size;
+  }
+
+  Widget _buildCrossHairDetail() => _crossHairDetailSize != null
+      ? Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            padding: EdgeInsets.all(widget.crossHairContentPadding),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              color: Color(0xFF323738),
+            ),
+            child: Text(
+              '''${widget.ticks[_crossHairIndex!].quote.toStringAsFixed(widget.pipSize)}''',
+              style: widget.crossHairTextStyle,
+            ),
           ),
-          child: Text(
-            '''${widget.ticks[_crossHairIndex!].quote.toStringAsFixed(widget.pipSize)}''',
-          ),
-        ),
-      );
+        )
+      : const SizedBox.shrink();
 
   void _onLongPressStart(LongPressStartDetails details) {
     if (!widget.enabled) {
       return;
     }
-    final Offset position = details.localPosition;
-    _updateCrossHairToPosition(position.dx);
+    _longPressPosition = details.localPosition;
+    _updateCrossHairToPosition(_longPressPosition!.dx);
     _crossHairAnimationController.forward();
   }
 
@@ -139,15 +230,27 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     if (!widget.enabled) {
       return;
     }
-    final Offset position = details.localPosition;
-    _updateCrossHairToPosition(position.dx);
+    _longPressPosition = details.localPosition;
+    _updateCrossHairToPosition(_longPressPosition!.dx);
   }
 
-  void _updateCrossHairToPosition(double x) => setState(
-        () => _crossHairIndex = findClosestIndex(
-          widget.xToIndex(x),
-          widget.ticks,
-        ),
+  void _updateCrossHairToPosition(double x) {
+    int crossHairIndex = _getCrossHairIndexFromTouchPosition(x);
+
+    // Keep cross hair index inside chart view port.
+    double crossHairX = widget.indexToX(crossHairIndex);
+
+    while (crossHairX < 0) {
+      crossHairIndex++;
+      crossHairX = widget.indexToX(crossHairIndex);
+    }
+
+    setState(() => _crossHairIndex = crossHairIndex);
+  }
+
+  int _getCrossHairIndexFromTouchPosition(double touchX) => findClosestIndex(
+        widget.xToIndex(touchX),
+        widget.ticks,
       );
 
   Future<void> _onLongPressEnd(LongPressEndDetails details) async {
@@ -158,9 +261,14 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
     setState(() => _crossHairIndex = null);
   }
 
+  void _onTapUp(TapUpDetails tapUpDetails) {
+    widget.onTap?.call();
+  }
+
   @override
   void dispose() {
     gestureManager
+      ..removeCallback(_onTapUp)
       ..removeCallback(_onLongPressStart)
       ..removeCallback(_onLongPressUpdate)
       ..removeCallback(_onLongPressEnd);

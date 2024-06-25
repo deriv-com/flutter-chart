@@ -1,5 +1,5 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_config.dart';
-import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../callbacks.dart';
@@ -64,7 +64,7 @@ class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   Widget buildJawOffsetField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelJawOffset,
+            ChartLocalization.of(context).labelJawOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -90,7 +90,7 @@ class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   Widget buildJawPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelJawPeriod,
+            ChartLocalization.of(context).labelJawPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -116,7 +116,7 @@ class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   Widget buildTeethOffsetField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelTeethOffset,
+            ChartLocalization.of(context).labelTeethOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -142,7 +142,7 @@ class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   Widget buildTeethPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelTeethPeriod,
+            ChartLocalization.of(context).labelTeethPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -168,7 +168,7 @@ class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   Widget buildLipsOffsetField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelLipsOffset,
+            ChartLocalization.of(context).labelLipsOffset,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),
@@ -194,7 +194,7 @@ class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   Widget buildLipsPeriodField() => Row(
         children: <Widget>[
           Text(
-            context.localization.labelLipsPeriod,
+            ChartLocalization.of(context).labelLipsPeriod,
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 4),

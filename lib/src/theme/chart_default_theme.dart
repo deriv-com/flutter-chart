@@ -107,6 +107,8 @@ abstract class ChartDefaultTheme implements ChartTheme {
   @override
   LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
 
+  // TODO(Ramin): Use the values from the chart theme itself. so if later the
+  // theme changes the default styles also get updated accordingly.
   @override
   MarkerStyle get markerStyle => MarkerStyle(
         upColor: accentGreenColor,
@@ -114,8 +116,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
       );
 
   @override
-  EntrySpotStyle get entrySpotStyle =>
-       const EntrySpotStyle();
+  EntrySpotStyle get entrySpotStyle => const EntrySpotStyle();
 
   @override
   HorizontalBarrierStyle get horizontalBarrierStyle => HorizontalBarrierStyle(
@@ -125,7 +126,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
       );
 
   @override
-  VerticalBarrierStyle get verticalBarrierStyle => VerticalBarrierStyle(
+  VerticalBarrierStyle get verticalBarrierStyle => const VerticalBarrierStyle(
         textStyle: TextStyles.overLine,
       );
 

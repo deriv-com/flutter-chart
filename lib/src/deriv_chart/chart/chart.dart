@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart'
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_wrapper.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
+import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
@@ -32,7 +33,7 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
-    required this.drawingTools,
+    this.drawingTools,
     this.pipSize = 4,
     this.controller,
     this.overlayConfigs,
@@ -48,9 +49,9 @@ class Chart extends StatefulWidget {
     this.dataFitEnabled = false,
     this.opacity = 1.0,
     this.annotations,
+    this.chartAxisConfig = const ChartAxisConfig(),
     this.showCrosshair = false,
     this.indicatorsRepo,
-    this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
@@ -81,7 +82,7 @@ class Chart extends StatefulWidget {
 
   /// Keep the reference to the drawing tools class for
   /// sharing data between the DerivChart and the DrawingToolsDialog
-  final DrawingTools drawingTools;
+  final DrawingTools? drawingTools;
 
   /// Chart's controller
   final ChartController? controller;
@@ -126,11 +127,11 @@ class Chart extends StatefulWidget {
   /// Chart's opacity, Will be applied on the [mainSeries].
   final double opacity;
 
+  /// Configurations for chart's axes.
+  final ChartAxisConfig chartAxisConfig;
+
   /// Whether the crosshair should be shown or not.
   final bool showCrosshair;
-
-  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
-  final double? maxCurrentTickOffset;
 
   /// Specifies the zoom level of the chart.
   final double? msPerPx;
@@ -250,6 +251,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
     final ChartConfig chartConfig = ChartConfig(
       pipSize: widget.pipSize,
       granularity: widget.granularity,
+      chartAxisConfig: widget.chartAxisConfig,
     );
 
     final List<Series>? overlaySeries =
@@ -299,7 +301,6 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
             onVisibleAreaChanged: _onVisibleAreaChanged,
             isLive: widget.isLive,
             startWithDataFitMode: widget.dataFitEnabled,
-            maxCurrentTickOffset: widget.maxCurrentTickOffset,
             msPerPx: widget.msPerPx,
             minIntervalWidth: widget.minIntervalWidth,
             maxIntervalWidth: widget.maxIntervalWidth,
@@ -327,6 +328,7 @@ class _ChartState extends State<Chart> with WidgetsBindingObserver {
                     showScrollToLastTickButton:
                         widget.showScrollToLastTickButton ?? true,
                     opacity: widget.opacity,
+                    chartAxisConfig: widget.chartAxisConfig,
                     verticalPaddingFraction: widget.verticalPaddingFraction,
                     showCrosshair: widget.showCrosshair,
                     onCrosshairDisappeared: widget.onCrosshairDisappeared,

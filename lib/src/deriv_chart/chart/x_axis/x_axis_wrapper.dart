@@ -21,7 +21,6 @@ class XAxisWrapper extends StatelessWidget {
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
-    this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
@@ -54,9 +53,6 @@ class XAxisWrapper extends StatelessWidget {
   /// Number of digits after decimal point in price
   final int pipSize;
 
-  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
-  final double? maxCurrentTickOffset;
-
   /// Specifies the zoom level of the chart.
   final double? msPerPx;
 
@@ -86,7 +82,6 @@ class XAxisWrapper extends StatelessWidget {
         onVisibleAreaChanged: onVisibleAreaChanged,
         minEpoch: minEpoch,
         maxEpoch: maxEpoch,
-        maxCurrentTickOffset: maxCurrentTickOffset,
         msPerPx: msPerPx,
         minIntervalWidth: minIntervalWidth,
         maxIntervalWidth: maxIntervalWidth,
@@ -103,7 +98,6 @@ class XAxisWrapper extends StatelessWidget {
         onVisibleAreaChanged: onVisibleAreaChanged,
         minEpoch: minEpoch,
         maxEpoch: maxEpoch,
-        maxCurrentTickOffset: maxCurrentTickOffset,
         msPerPx: msPerPx,
         minIntervalWidth: minIntervalWidth,
         maxIntervalWidth: maxIntervalWidth,

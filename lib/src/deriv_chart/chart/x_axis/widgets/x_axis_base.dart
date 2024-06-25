@@ -26,7 +26,6 @@ class XAxisBase extends StatefulWidget {
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
-    this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
@@ -57,9 +56,6 @@ class XAxisBase extends StatefulWidget {
 
   /// Number of digits after decimal point in price
   final int pipSize;
-
-  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
-  final double? maxCurrentTickOffset;
 
   /// Specifies the zoom level of the chart.
   final double? msPerPx;
@@ -98,10 +94,12 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    final ChartConfig chartConfig = context.read<ChartConfig>();
+
     _rightEpochAnimationController = AnimationController.unbounded(vsync: this);
     _model = XAxisModel(
       entries: widget.entries,
-      granularity: context.read<ChartConfig>().granularity,
+      granularity: chartConfig.granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
       startWithDataFitMode: widget.startWithDataFitMode,
@@ -109,7 +107,8 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
       onScroll: _onVisibleAreaChanged,
       minEpoch: widget.minEpoch,
       maxEpoch: widget.maxEpoch,
-      maxCurrentTickOffset: widget.maxCurrentTickOffset,
+      maxCurrentTickOffset: chartConfig.chartAxisConfig.maxCurrentTickOffset,
+      defaultIntervalWidth: chartConfig.chartAxisConfig.defaultIntervalWidth,
       msPerPx: widget.msPerPx,
       minIntervalWidth: widget.minIntervalWidth,
       maxIntervalWidth: widget.maxIntervalWidth,
@@ -139,6 +138,8 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
       granularity: context.read<ChartConfig>().granularity,
       entries: widget.entries,
       dataFitPadding: widget.dataFitPadding,
+      maxCurrentTickOffset:
+          context.read<ChartConfig>().chartAxisConfig.maxCurrentTickOffset,
     );
   }
 
@@ -171,21 +172,23 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
             return Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                RepaintBoundary(
-                  child: CustomPaint(
-                    painter: XGridPainter(
-                      timestamps: _noOverlapGridTimestamps
-                          .map<DateTime>((DateTime time) => time)
-                          .toList(),
-                      xCoords: _noOverlapGridTimestamps
-                          .map<double>((DateTime time) =>
-                              _model.xFromEpoch(time.millisecondsSinceEpoch))
-                          .toList(),
-                      style: _chartTheme,
-                      msPerPx: _model.msPerPx,
+                if (context.read<ChartConfig>().chartAxisConfig.showEpochGrid)
+                  RepaintBoundary(
+                    child: CustomPaint(
+                      painter: XGridPainter(
+                        timestamps: _noOverlapGridTimestamps
+                            .map<DateTime>(
+                                (DateTime time) => /*timeLabel(time)*/ time)
+                            .toList(),
+                        xCoords: _noOverlapGridTimestamps
+                            .map<double>((DateTime time) =>
+                                _model.xFromEpoch(time.millisecondsSinceEpoch))
+                            .toList(),
+                        style: _chartTheme,
+                        msPerPx: _model.msPerPx,
+                      ),
                     ),
                   ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(
                     bottom: _chartTheme.gridStyle.xLabelsAreaHeight,

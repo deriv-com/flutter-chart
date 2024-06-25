@@ -13,6 +13,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/char
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -42,10 +43,10 @@ class DerivChart extends StatefulWidget {
     this.annotations,
     this.opacity = 1.0,
     this.pipSize = 4,
+    this.chartAxisConfig = const ChartAxisConfig(),
     this.indicatorsRepo,
     this.drawingToolsRepo,
     this.drawingTools,
-    this.maxCurrentTickOffset,
     this.msPerPx,
     this.minIntervalWidth,
     this.maxIntervalWidth,
@@ -101,6 +102,9 @@ class DerivChart extends StatefulWidget {
   /// Chart's annotations
   final List<ChartAnnotation<ChartObject>>? annotations;
 
+  /// Configurations for chart's axes.
+  final ChartAxisConfig chartAxisConfig;
+
   /// Whether the chart should be showing live data or not.
   /// In case of being true the chart will keep auto-scrolling when its visible
   /// area is on the newest ticks/candles.
@@ -114,9 +118,6 @@ class DerivChart extends StatefulWidget {
 
   /// Whether the crosshair should be shown or not.
   final bool showCrosshair;
-
-  /// Max distance between rightBoundEpoch and nowEpoch in pixels.
-  final double? maxCurrentTickOffset;
 
   /// Specifies the zoom level of the chart.
   final double? msPerPx;
@@ -197,15 +198,15 @@ class _DerivChartState extends State<DerivChart> {
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
-      onEditCallback: showIndicatorsDialog,
-      currentSymbol: widget.activeSymbol,
+      onEditCallback: (_) => showIndicatorsDialog(),
+      sharedPrefKey: widget.activeSymbol,
     );
 
     _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
       createAddOn: (Map<String, dynamic> map) =>
           DrawingToolConfig.fromJson(map),
-      onEditCallback: showDrawingToolsDialog,
-      currentSymbol: widget.activeSymbol,
+      onEditCallback: (_) => showDrawingToolsDialog(),
+      sharedPrefKey: widget.activeSymbol,
     );
     if (widget.drawingToolsRepo == null) {
       loadSavedIndicatorsAndDrawingTools();
@@ -329,7 +330,6 @@ class _DerivChartState extends State<DerivChart> {
                 annotations: widget.annotations,
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
-                maxCurrentTickOffset: widget.maxCurrentTickOffset,
                 msPerPx: widget.msPerPx,
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,
@@ -345,6 +345,7 @@ class _DerivChartState extends State<DerivChart> {
                 showDataFitButton: widget.showDataFitButton,
                 showScrollToLastTickButton: widget.showScrollToLastTickButton,
                 loadingAnimationColor: widget.loadingAnimationColor,
+                chartAxisConfig: widget.chartAxisConfig,
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),

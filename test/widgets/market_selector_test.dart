@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/widgets/market_selector/animated_highlight.dart';
 import 'package:deriv_chart/src/widgets/market_selector/asset_item.dart';
@@ -43,11 +45,11 @@ void main() {
     });
 
     testWidgets('SelectedItem is ignored when it is not present in markets',
-        (tester) async {
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r50SubMarket])
           ],
           selectedItem: r25Favourite,
         ),
@@ -58,11 +60,11 @@ void main() {
       expect(find.byType(AnimatedHighlight), findsNothing);
     });
 
-    testWidgets('Selected asset is highlighted', (tester) async {
+    testWidgets('Selected asset is highlighted', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r25SubMarket, r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r25SubMarket, r50SubMarket])
           ],
           selectedItem: r25Favourite,
         ),
@@ -74,11 +76,11 @@ void main() {
       expect(find.byType(AnimatedHighlight), findsNWidgets(2));
     });
 
-    testWidgets('1 asset that is favourite', (tester) async {
+    testWidgets('1 asset that is favourite', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r25SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r25SubMarket])
           ],
         ),
       ));
@@ -88,11 +90,11 @@ void main() {
       expect(find.text('Volatility 25 Index'), findsNWidgets(2));
     });
 
-    testWidgets('1 asset that is NOT favourite', (tester) async {
+    testWidgets('1 asset that is NOT favourite', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r50SubMarket])
           ],
         ),
       ));
@@ -102,13 +104,14 @@ void main() {
       expect(find.text('Volatility 50 Index'), findsNWidgets(1));
     });
 
-    testWidgets('Favourite asset passed from outside', (tester) async {
+    testWidgets('Favourite asset passed from outside',
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r50SubMarket])
           ],
-          favouriteAssets: [r50],
+          favouriteAssets: <Asset>[r50],
         ),
       ));
 
@@ -118,13 +121,13 @@ void main() {
     });
 
     testWidgets('Favourite asset passed from outside NOT exist',
-        (tester) async {
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r50SubMarket])
           ],
-          favouriteAssets: [r25Favourite],
+          favouriteAssets: <Asset>[r25Favourite],
         ),
       ));
 
@@ -133,11 +136,12 @@ void main() {
       expect(find.text('Volatility 50 Index'), findsNWidgets(1));
     });
 
-    testWidgets('Add to favourites by clicking star icon', (tester) async {
+    testWidgets('Add to favourites by clicking star icon',
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r50SubMarket])
           ],
         ),
       ));
@@ -148,7 +152,8 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      final favouriteIconFinder = find.byKey(ValueKey<String>('R_50-fav-icon'));
+      final Finder favouriteIconFinder =
+          find.byKey(const ValueKey<String>('R_50-fav-icon'));
       await tester.tap(favouriteIconFinder);
 
       await tester.pump();
@@ -159,11 +164,11 @@ void main() {
     });
 
     testWidgets('No Favourites section when we remove the only favourite item',
-        (tester) async {
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r25SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r25SubMarket])
           ],
         ),
       ));
@@ -172,8 +177,10 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      final favouriteIconFinder = find.byKey(ValueKey<String>('R_25-fav-icon'));
-      // There are two AssetItems for R_25, one in Favourites list and one in the assets list, We tap the first
+      final Finder favouriteIconFinder =
+          find.byKey(const ValueKey<String>('R_25-fav-icon'));
+      // There are two AssetItems for R_25, one in Favourites list and one
+      // in the assets list, We tap the first
       await tester.tap(favouriteIconFinder.first);
       await tester.pump();
 
@@ -184,16 +191,18 @@ void main() {
 
     testWidgets(
         'Search bar TextField appears/disappear on switching to search mode on/off',
-        (tester) async {
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
-        localizationsDelegates: [
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           ChartLocalization.delegate,
         ],
         supportedLocales: ChartLocalization.delegate.supportedLocales,
-        home: MarketSelector(markets: []),
+        home: const MarketSelector(
+          markets: <Market>[],
+        ),
       ));
 
       await tester.pumpAndSettle();
@@ -201,7 +210,8 @@ void main() {
       await tester.tap(find.byIcon(Icons.search));
       await tester.pump();
 
-      final textFieldKey = ValueKey<String>('search-bar-text-field');
+      const ValueKey<String> textFieldKey =
+          ValueKey<String>('search-bar-text-field');
 
       expect(find.byKey(textFieldKey), findsOneWidget);
 
@@ -211,9 +221,9 @@ void main() {
       expect(find.byKey(textFieldKey), findsNothing);
     });
 
-    testWidgets('Clearing search bar TextField', (tester) async {
+    testWidgets('Clearing search bar TextField', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
-        localizationsDelegates: [
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -221,15 +231,16 @@ void main() {
         ],
         supportedLocales: ChartLocalization.delegate.supportedLocales,
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r25SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r25SubMarket])
           ],
         ),
       ));
 
       await tester.pumpAndSettle();
 
-      final textFieldKey = ValueKey<String>('search-bar-text-field');
+      const ValueKey<String> textFieldKey =
+          ValueKey<String>('search-bar-text-field');
 
       await tester.tap(find.byIcon(Icons.search));
       await tester.pump();
@@ -246,9 +257,9 @@ void main() {
     });
 
     testWidgets('Filtering assets shows the assets containing filter text',
-        (tester) async {
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
-        localizationsDelegates: [
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -256,8 +267,8 @@ void main() {
         ],
         supportedLocales: ChartLocalization.delegate.supportedLocales,
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r25SubMarket, r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r25SubMarket, r50SubMarket])
           ],
         ),
       ));
@@ -269,8 +280,8 @@ void main() {
       await tester.tap(find.byIcon(Icons.search));
       await tester.pump();
 
-      final searchTextFieldFinder =
-          find.byKey(ValueKey<String>('search-bar-text-field'));
+      final Finder searchTextFieldFinder =
+          find.byKey(const ValueKey<String>('search-bar-text-field'));
 
       await tester.enterText(searchTextFieldFinder, '50');
       await tester.pump();
@@ -288,11 +299,12 @@ void main() {
       );
     });
 
-    testWidgets('Shows closed tag on closed assets', (tester) async {
+    testWidgets('Shows closed tag on closed assets',
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: MarketSelector(
-          markets: [
-            Market(subMarkets: [r25SubMarket, r50SubMarket])
+          markets: <Market>[
+            Market(subMarkets: <SubMarket>[r25SubMarket, r50SubMarket])
           ],
         ),
       ));

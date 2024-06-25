@@ -43,7 +43,7 @@ class AccumulatorsEntrySpotBarrierPainter<
     // If previous object is null then its first load and no need to perform
     // transition animation from previousObject to new object.
     if (series.previousObject == null) {
-      animatedValue = series.value;
+      animatedValue = series.quote;
       if (series.epoch != null) {
         dotX = epochToX(series.epoch!);
       }
@@ -53,8 +53,8 @@ class AccumulatorsEntrySpotBarrierPainter<
       // transition animation
       // from previousObject to new object
       animatedValue = ui.lerpDouble(
-        previousBarrier.value,
-        series.value,
+        previousBarrier.quote,
+        series.quote,
         animationInfo.currentTickPercent,
       );
 
