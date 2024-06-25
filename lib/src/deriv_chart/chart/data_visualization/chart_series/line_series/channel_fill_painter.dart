@@ -114,7 +114,7 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
       secondUpperChannelFill = Path.combine(
           PathOperation.difference, channelFillPath, firstLineAreaPath);
     }
-    
+
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       canvas
         ..drawPath(firstDataPathInfo.path, firstLinePaint)
