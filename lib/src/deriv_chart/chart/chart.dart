@@ -187,7 +187,6 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   late ChartController _controller;
   late ChartTheme _chartTheme;
   late List<Series>? bottomSeries;
-  late List<Series>? overlaySeries;
   int? expandedIndex;
 
   @override
@@ -305,7 +304,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
             scrollAnimationDuration: currentTickAnimationDuration,
             child: Column(
               children: <Widget>[
-                buildMainChartFlex(context),
+                buildMainChartFlex(context, overlaySeries),
                 if (bottomSeries?.isNotEmpty ?? false)
                   ...buildBottomIndicatorsList(context, bottomSeries!)
               ],
@@ -316,7 +315,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     );
   }
 
-  Widget buildMainChartFlex(BuildContext context);
+  Widget buildMainChartFlex(BuildContext context, List<Series>? overlaySeries);
 
   List<Widget> buildBottomIndicatorsList(
     BuildContext context,
@@ -418,7 +417,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
 class _ChartStateWeb extends _ChartState {
   @override
-  Widget buildMainChartFlex(BuildContext context) {
+  Widget buildMainChartFlex(BuildContext context, List<Series>? overlaySeries) {
     final Duration currentTickAnimationDuration =
         widget.currentTickAnimationDuration ?? _defaultDuration;
 
