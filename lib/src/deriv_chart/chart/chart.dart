@@ -38,7 +38,7 @@ class Chart extends StatefulWidget {
     this.pipSize = 4,
     this.controller,
     this.overlayConfigs,
-    this.bottomConfigs,
+    this.bottomConfigs = const <IndicatorConfig>[],
     this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
@@ -76,7 +76,7 @@ class Chart extends StatefulWidget {
 
   /// List of bottom indicator series to add on chart separate from the
   /// [mainSeries].
-  final List<IndicatorConfig>? bottomConfigs;
+  final List<IndicatorConfig> bottomConfigs;
 
   /// Open position marker series.
   final MarkerSeries? markerSeries;
@@ -275,7 +275,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
           ])
       ..getConfigsList = (() => <IndicatorConfig>[
             if (widget.overlayConfigs != null) ...?widget.overlayConfigs,
-            if (widget.bottomConfigs != null) ...?widget.bottomConfigs,
+            ...widget.bottomConfigs,
           ]);
 
     final Duration currentTickAnimationDuration =
@@ -397,10 +397,10 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
 
     // Check if the the expanded bottom indicator is moved/removed.
     if (expandedIndex != null &&
-        oldWidget.bottomConfigs?.length != widget.bottomConfigs?.length &&
-        expandedIndex! < (oldWidget.bottomConfigs?.length ?? 0)) {
-      final int? newIndex = widget.bottomConfigs
-          ?.indexOf(oldWidget.bottomConfigs![expandedIndex!]);
+        oldWidget.bottomConfigs.length != widget.bottomConfigs.length &&
+        expandedIndex! < (oldWidget.bottomConfigs.length)) {
+      final int? newIndex =
+          widget.bottomConfigs.indexOf(oldWidget.bottomConfigs[expandedIndex!]);
       if (newIndex != expandedIndex) {
         expandedIndex = newIndex == -1 ? null : newIndex;
       }
@@ -467,20 +467,20 @@ class _ChartStateWeb extends _ChartState {
               child: BottomChart(
                 series: series,
                 granularity: widget.granularity,
-                pipSize: widget.bottomConfigs?[index].pipSize ?? widget.pipSize,
-                title: widget.bottomConfigs![index].title,
+                pipSize: widget.bottomConfigs[index].pipSize,
+                title: widget.bottomConfigs[index].title,
                 currentTickAnimationDuration: currentTickAnimationDuration,
                 quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
                 bottomChartTitleMargin: widget.bottomChartTitleMargin,
-                onRemove: () => _onRemove(widget.bottomConfigs![index]),
-                onEdit: () => _onEdit(widget.bottomConfigs![index]),
+                onRemove: () => _onRemove(widget.bottomConfigs[index]),
+                onEdit: () => _onEdit(widget.bottomConfigs[index]),
                 onExpandToggle: () {
                   setState(() {
                     expandedIndex = expandedIndex != index ? index : null;
                   });
                 },
-                onSwap: (int offset) => _onSwap(widget.bottomConfigs![index],
-                    widget.bottomConfigs![index + offset]),
+                onSwap: (int offset) => _onSwap(widget.bottomConfigs[index],
+                    widget.bottomConfigs[index + offset]),
                 onCrosshairDisappeared: widget.onCrosshairDisappeared,
                 onCrosshairHover: (
                   Offset globalPosition,
@@ -497,7 +497,7 @@ class _ChartStateWeb extends _ChartState {
                   quoteToY,
                   epochFromX,
                   quoteFromY,
-                  widget.bottomConfigs![index],
+                  widget.bottomConfigs[index],
                 ),
                 isExpanded: isExpanded,
                 showCrosshair: widget.showCrosshair,
@@ -522,11 +522,23 @@ class _ChartStateMobile extends _ChartState {
   void initState() {
     super.initState();
     _hiddenBottomIndicators = Map<int, bool>.fromIterable(
-      List<int>.generate(
-          widget.bottomConfigs?.length ?? 0, (int index) => index),
+      List<int>.generate(widget.bottomConfigs.length, (int index) => index),
       key: (dynamic index) => index,
       value: (dynamic index) => false,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant Chart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.bottomConfigs.length > oldWidget.bottomConfigs.length) {
+      for (int i = oldWidget.bottomConfigs.length;
+          i < widget.bottomConfigs.length;
+          i++) {
+        _hiddenBottomIndicators[i] = false;
+      }
+    }
   }
 
   @override
@@ -543,7 +555,7 @@ class _ChartStateMobile extends _ChartState {
 
     final bool isExpanded = expandedIndex != null;
 
-    final bottomIndicatorsList =
+    final List<Widget> bottomIndicatorsList =
         bottomSeries!.mapIndexed((int index, Series series) {
       if (isExpanded && expandedIndex != index) {
         return const SizedBox.shrink();
@@ -555,21 +567,21 @@ class _ChartStateMobile extends _ChartState {
             ? BottomIndicatorViewMode.collapsed
             : BottomIndicatorViewMode.normal,
         granularity: widget.granularity,
-        pipSize: widget.bottomConfigs?[index].pipSize ?? widget.pipSize,
-        title: widget.bottomConfigs![index].title,
+        pipSize: widget.bottomConfigs[index].pipSize,
+        title: widget.bottomConfigs[index].title,
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: widget.bottomChartTitleMargin,
-        onRemove: () => _onRemove(widget.bottomConfigs![index]),
-        onEdit: () => _onEdit(widget.bottomConfigs![index]),
+        onRemove: () => _onRemove(widget.bottomConfigs[index]),
+        onEdit: () => _onEdit(widget.bottomConfigs[index]),
         onExpandToggle: () {
           setState(() {
             _hiddenBottomIndicators[index] =
                 !(_hiddenBottomIndicators[index] ?? false);
           });
         },
-        onSwap: (int offset) => _onSwap(widget.bottomConfigs![index],
-            widget.bottomConfigs![index + offset]),
+        onSwap: (int offset) => _onSwap(
+            widget.bottomConfigs[index], widget.bottomConfigs[index + offset]),
         showExpandedIcon: bottomSeries.length > 1,
         showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
         showMoveDownIcon: !isExpanded &&
@@ -586,47 +598,70 @@ class _ChartStateMobile extends _ChartState {
     }).toList();
 
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) => Column(
-              children: <Widget>[
-                Expanded(
-                  child: MainChart(
-                    drawingTools: widget.drawingTools,
-                    controller: _controller,
-                    mainSeries: widget.mainSeries,
-                    overlaySeries: overlaySeries,
-                    annotations: widget.annotations,
-                    markerSeries: widget.markerSeries,
-                    pipSize: widget.pipSize,
-                    onCrosshairAppeared: widget.onCrosshairAppeared,
-                    onQuoteAreaChanged: widget.onQuoteAreaChanged,
-                    isLive: widget.isLive,
-                    showLoadingAnimationForHistoricalData:
-                        !widget.dataFitEnabled,
-                    showDataFitButton:
-                        widget.showDataFitButton ?? widget.dataFitEnabled,
-                    showScrollToLastTickButton:
-                        widget.showScrollToLastTickButton ?? true,
-                    opacity: widget.opacity,
-                    chartAxisConfig: widget.chartAxisConfig,
-                    verticalPaddingFraction: widget.verticalPaddingFraction,
-                    showCrosshair: widget.showCrosshair,
-                    onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                    onCrosshairHover: _onCrosshairHover,
-                    loadingAnimationColor: widget.loadingAnimationColor,
-                    currentTickAnimationDuration: currentTickAnimationDuration,
-                    quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-                    showCurrentTickBlinkAnimation:
-                        widget.showCurrentTickBlinkAnimation ?? true,
-                  ),
-                ),
-                if (_hiddenBottomIndicators.values.any((bool value) => value))
-                  ...bottomIndicatorsList
-                else
-                  SizedBox(
-                    height: 0.5 * constraints.maxHeight,
-                    child: Column(children: bottomIndicatorsList),
-                  ),
-              ],
-            ));
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final double bottomSectionSize =
+          1 - (0.65 - 0.125 * (bottomIndicatorsList.length - 1));
+      final bool allBottomIndicatorsHidden =
+          _hiddenBottomIndicators.values.every((bool value) => value);
+
+      print('###### BottomSectionSize : $bottomSectionSize, '
+          'allhidden: $allBottomIndicatorsHidden');
+
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: MainChart(
+              drawingTools: widget.drawingTools,
+              controller: _controller,
+              mainSeries: widget.mainSeries,
+              overlaySeries: overlaySeries,
+              annotations: widget.annotations,
+              markerSeries: widget.markerSeries,
+              pipSize: widget.pipSize,
+              onCrosshairAppeared: widget.onCrosshairAppeared,
+              onQuoteAreaChanged: widget.onQuoteAreaChanged,
+              isLive: widget.isLive,
+              showLoadingAnimationForHistoricalData: !widget.dataFitEnabled,
+              showDataFitButton:
+                  widget.showDataFitButton ?? widget.dataFitEnabled,
+              showScrollToLastTickButton:
+                  widget.showScrollToLastTickButton ?? true,
+              opacity: widget.opacity,
+              chartAxisConfig: widget.chartAxisConfig,
+              verticalPaddingFraction: widget.verticalPaddingFraction,
+              showCrosshair: widget.showCrosshair,
+              onCrosshairDisappeared: widget.onCrosshairDisappeared,
+              onCrosshairHover: _onCrosshairHover,
+              loadingAnimationColor: widget.loadingAnimationColor,
+              currentTickAnimationDuration: currentTickAnimationDuration,
+              quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+              showCurrentTickBlinkAnimation:
+                  widget.showCurrentTickBlinkAnimation ?? true,
+            ),
+          ),
+          if (allBottomIndicatorsHidden)
+            ...bottomIndicatorsList
+          else
+            SizedBox(
+              height: bottomSectionSize * constraints.maxHeight,
+              child: Column(children: bottomIndicatorsList),
+            ),
+        ],
+      );
+    });
+  }
+
+  @override
+  void _onRemove(IndicatorConfig config) {
+    super._onRemove(config);
+
+    // TODO(Ramin): remove from hiddenBottomIndicators
+  }
+
+  @override
+  void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
+    super._onSwap(config1, config2);
+
+    // TODO(Ramin): Swap hiddenBottomIndicators
   }
 }
