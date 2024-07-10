@@ -563,9 +563,7 @@ class _ChartStateMobile extends _ChartState {
 
       final Widget bottomChart = BottomChartMobile(
         series: series,
-        viewMode: _hiddenBottomIndicators[index] ?? false
-            ? BottomIndicatorViewMode.collapsed
-            : BottomIndicatorViewMode.normal,
+        isHidden: _hiddenBottomIndicators[index] ?? false,
         granularity: widget.granularity,
         pipSize: widget.bottomConfigs[index].pipSize,
         title: widget.bottomConfigs[index].title,
@@ -582,7 +580,7 @@ class _ChartStateMobile extends _ChartState {
         },
         onSwap: (int offset) => _onSwap(
             widget.bottomConfigs[index], widget.bottomConfigs[index + offset]),
-        showExpandedIcon: bottomSeries.length > 1,
+        showExpandedIcon: true,
         showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
         showMoveDownIcon: !isExpanded &&
             bottomSeries.length > 1 &&

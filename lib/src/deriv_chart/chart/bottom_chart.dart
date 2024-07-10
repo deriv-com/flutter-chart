@@ -110,44 +110,44 @@ class _BottomChartState extends BasicChartState<BottomChart> {
         );
 
     Widget _buildIcons() => Row(
-      children: <Widget>[
-        if (widget.showMoveUpIcon)
-          _buildIcon(
-            iconData: Icons.arrow_upward,
-            onPressed: () {
-              widget.onSwap?.call(-1);
-            },
-          ),
-        if (widget.showMoveDownIcon)
-          _buildIcon(
-            iconData: Icons.arrow_downward,
-            onPressed: () {
-              widget.onSwap?.call(1);
-            },
-          ),
-        if (widget.showExpandedIcon)
-          _buildIcon(
-            iconData: widget.isExpanded
-                ? Icons.fullscreen_exit
-                : Icons.fullscreen,
-            onPressed: () {
-              widget.onExpandToggle?.call();
-            },
-          ),
-        _buildIcon(
-          iconData: Icons.settings,
-          onPressed: () {
-            widget.onEdit?.call();
-          },
-        ),
-        _buildIcon(
-          iconData: Icons.delete,
-          onPressed: () {
-            widget.onRemove?.call();
-          },
-        ),
-      ],
-    );
+          children: <Widget>[
+            if (widget.showMoveUpIcon)
+              _buildIcon(
+                iconData: Icons.arrow_upward,
+                onPressed: () {
+                  widget.onSwap?.call(-1);
+                },
+              ),
+            if (widget.showMoveDownIcon)
+              _buildIcon(
+                iconData: Icons.arrow_downward,
+                onPressed: () {
+                  widget.onSwap?.call(1);
+                },
+              ),
+            if (widget.showExpandedIcon)
+              _buildIcon(
+                iconData: widget.isExpanded
+                    ? Icons.fullscreen_exit
+                    : Icons.fullscreen,
+                onPressed: () {
+                  widget.onExpandToggle?.call();
+                },
+              ),
+            _buildIcon(
+              iconData: Icons.settings,
+              onPressed: () {
+                widget.onEdit?.call();
+              },
+            ),
+            _buildIcon(
+              iconData: Icons.delete,
+              onPressed: () {
+                widget.onRemove?.call();
+              },
+            ),
+          ],
+        );
 
     return Positioned(
       top: 15,
@@ -165,7 +165,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
               theme.textStyle(
                 color: theme.base01Color,
                 textStyle:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
             _buildIcons(),
@@ -176,16 +176,16 @@ class _BottomChartState extends BasicChartState<BottomChart> {
   }
 
   Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
-    mainSeries: widget.mainSeries,
-    epochFromCanvasX: xAxis.epochFromX,
-    quoteFromCanvasY: chartQuoteFromCanvasY,
-    epochToCanvasX: xAxis.xFromEpoch,
-    quoteToCanvasY: chartQuoteToCanvasY,
-    quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
-    showCrosshairCursor: widget.showCrosshair,
-    onCrosshairDisappeared: widget.onCrosshairDisappeared,
-    onCrosshairHover: widget.onCrosshairHover,
-  );
+        mainSeries: widget.mainSeries,
+        epochFromCanvasX: xAxis.epochFromX,
+        quoteFromCanvasY: chartQuoteFromCanvasY,
+        epochToCanvasX: xAxis.xFromEpoch,
+        quoteToCanvasY: chartQuoteToCanvasY,
+        quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
+        showCrosshairCursor: widget.showCrosshair,
+        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+        onCrosshairHover: widget.onCrosshairHover,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +241,7 @@ class BottomChartMobile extends BasicChart {
     this.onEdit,
     this.onExpandToggle,
     this.onSwap,
-    this.viewMode = BottomIndicatorViewMode.normal,
+    this.isHidden = false,
     this.showExpandedIcon = false,
     this.showMoveUpIcon = false,
     this.showMoveDownIcon = false,
@@ -266,7 +266,8 @@ class BottomChartMobile extends BasicChart {
   /// Called when an indicator is to moved up/down.
   final SwapCallback? onSwap;
 
-  final BottomIndicatorViewMode viewMode;
+  /// Whether the indicator is hidden or not.
+  final bool isHidden;
 
   /// The title of the bottom chart.
   final String title;
@@ -311,68 +312,62 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       );
 
   Widget _buildIcons() => Row(
-    children: <Widget>[
-      if (widget.showMoveUpIcon)
-        _buildIcon(
-          iconData: Icons.arrow_upward,
-          onPressed: () {
-            widget.onSwap?.call(-1);
-          },
-        ),
-      if (widget.showMoveDownIcon)
-        _buildIcon(
-          iconData: Icons.arrow_downward,
-          onPressed: () {
-            widget.onSwap?.call(1);
-          },
-        ),
-      if (widget.showExpandedIcon)
-        _buildIcon(
-          iconData: widget.viewMode == BottomIndicatorViewMode.normal
-              ? Icons.remove_red_eye
-              : Icons.remove_red_eye_outlined,
-          onPressed: () {
-            widget.onExpandToggle?.call();
-          },
-        ),
-      _buildIcon(
-        iconData: Icons.settings,
-        onPressed: () {
-          widget.onEdit?.call();
-        },
-      ),
-      _buildIcon(
-        iconData: Icons.delete,
-        onPressed: () {
-          widget.onRemove?.call();
-        },
-      ),
-    ],
-  );
+        children: <Widget>[
+          if (widget.showMoveUpIcon)
+            _buildIcon(
+              iconData: Icons.arrow_upward,
+              onPressed: () {
+                widget.onSwap?.call(-1);
+              },
+            ),
+          if (widget.showMoveDownIcon)
+            _buildIcon(
+              iconData: Icons.arrow_downward,
+              onPressed: () {
+                widget.onSwap?.call(1);
+              },
+            ),
+          if (widget.showExpandedIcon)
+            _buildIcon(
+              iconData: widget.isHidden
+                  ? Icons.remove_red_eye_outlined
+                  : Icons.remove_red_eye,
+              onPressed: () {
+                widget.onExpandToggle?.call();
+              },
+            ),
+          _buildIcon(
+            iconData: Icons.delete,
+            onPressed: () {
+              widget.onRemove?.call();
+            },
+          ),
+        ],
+      );
 
   Widget _buildBottomChartOptions(BuildContext context) => Container(
-    padding: const EdgeInsets.all(2),
-    decoration: BoxDecoration(
-      color: theme.base07Color,
-      borderRadius: BorderRadius.circular(2),
-    ),
-    child: Row(
-      children: <Widget>[
-        // Different styling for mobile version.
-        BottomIndicatorTitle(
-          widget.title,
-          theme.textStyle(
-            color: theme.base01Color,
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 12,
-            ),
-          ),
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: theme.base07Color,
+          borderRadius: BorderRadius.circular(2),
         ),
-        _buildIcons(),
-      ],
-    ),
-  );
+        child: Row(
+          children: <Widget>[
+            // Different styling for mobile version.
+            BottomIndicatorTitle(
+              widget.title,
+              theme.textStyle(
+                color: theme.base01Color,
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            _buildIcons(),
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -384,37 +379,37 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
     return Provider<ChartConfig>.value(
       value: chartConfig,
       child: ClipRect(
-        child: widget.viewMode == BottomIndicatorViewMode.collapsed
+        child: widget.isHidden
             ? Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                left: widget.bottomChartTitleMargin?.left ?? 10,
-              ),
-              child: _buildBottomChartOptions(context),
-            ),
-          ],
-        )
-            : Stack(
-          children: <Widget>[
-            if (widget.viewMode != BottomIndicatorViewMode.collapsed)
-              Column(
                 children: <Widget>[
-                  Divider(
-                    height: 0.5,
-                    thickness: 1,
-                    color: theme.base01Color,
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: widget.bottomChartTitleMargin?.left ?? 10,
+                    ),
+                    child: _buildBottomChartOptions(context),
                   ),
-                  Expanded(child: super.build(context)),
+                ],
+              )
+            : Stack(
+                children: <Widget>[
+                  if (!widget.isHidden)
+                    Column(
+                      children: <Widget>[
+                        Divider(
+                          height: 0.5,
+                          thickness: 1,
+                          color: theme.base01Color,
+                        ),
+                        Expanded(child: super.build(context)),
+                      ],
+                    ),
+                  Positioned(
+                    top: 4,
+                    left: widget.bottomChartTitleMargin?.left ?? 10,
+                    child: _buildBottomChartOptions(context),
+                  )
                 ],
               ),
-            Positioned(
-              top: 4,
-              left: widget.bottomChartTitleMargin?.left ?? 10,
-              child: _buildBottomChartOptions(context),
-            )
-          ],
-        ),
       ),
     );
   }
@@ -429,5 +424,3 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
     );
   }
 }
-
-enum BottomIndicatorViewMode { expanded, collapsed, normal }
