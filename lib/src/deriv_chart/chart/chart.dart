@@ -543,6 +543,48 @@ class _ChartStateMobile extends _ChartState {
 
     final bool isExpanded = expandedIndex != null;
 
+    final bottomIndicatorsList =
+        bottomSeries!.mapIndexed((int index, Series series) {
+      if (isExpanded && expandedIndex != index) {
+        return const SizedBox.shrink();
+      }
+
+      final Widget bottomChart = BottomChartMobile(
+        series: series,
+        viewMode: _hiddenBottomIndicators[index] ?? false
+            ? BottomIndicatorViewMode.collapsed
+            : BottomIndicatorViewMode.normal,
+        granularity: widget.granularity,
+        pipSize: widget.bottomConfigs?[index].pipSize ?? widget.pipSize,
+        title: widget.bottomConfigs![index].title,
+        currentTickAnimationDuration: currentTickAnimationDuration,
+        quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+        bottomChartTitleMargin: widget.bottomChartTitleMargin,
+        onRemove: () => _onRemove(widget.bottomConfigs![index]),
+        onEdit: () => _onEdit(widget.bottomConfigs![index]),
+        onExpandToggle: () {
+          setState(() {
+            _hiddenBottomIndicators[index] =
+                !(_hiddenBottomIndicators[index] ?? false);
+          });
+        },
+        onSwap: (int offset) => _onSwap(widget.bottomConfigs![index],
+            widget.bottomConfigs![index + offset]),
+        showExpandedIcon: bottomSeries.length > 1,
+        showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
+        showMoveDownIcon: !isExpanded &&
+            bottomSeries.length > 1 &&
+            index != bottomSeries.length - 1,
+      );
+
+      return (_hiddenBottomIndicators[index] ?? false)
+          ? bottomChart
+          : Expanded(
+              flex: isExpanded ? bottomSeries.length : 1,
+              child: bottomChart,
+            );
+    }).toList();
+
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) => Column(
               children: <Widget>[
@@ -577,60 +619,13 @@ class _ChartStateMobile extends _ChartState {
                         widget.showCurrentTickBlinkAnimation ?? true,
                   ),
                 ),
-                SizedBox(
-                  height: 0.5 * constraints.maxHeight,
-                  child: Column(
-                    children: <Widget>[
-                      ...bottomSeries!.mapIndexed((int index, Series series) {
-                        if (isExpanded && expandedIndex != index) {
-                          return const SizedBox.shrink();
-                        }
-
-                        final Widget bottomChart = BottomChartMobile(
-                          series: series,
-                          viewMode: _hiddenBottomIndicators[index] ?? false
-                              ? BottomIndicatorViewMode.collapsed
-                              : BottomIndicatorViewMode.normal,
-                          granularity: widget.granularity,
-                          pipSize: widget.bottomConfigs?[index].pipSize ??
-                              widget.pipSize,
-                          title: widget.bottomConfigs![index].title,
-                          currentTickAnimationDuration:
-                              currentTickAnimationDuration,
-                          quoteBoundsAnimationDuration:
-                              quoteBoundsAnimationDuration,
-                          bottomChartTitleMargin: widget.bottomChartTitleMargin,
-                          onRemove: () =>
-                              _onRemove(widget.bottomConfigs![index]),
-                          onEdit: () => _onEdit(widget.bottomConfigs![index]),
-                          onExpandToggle: () {
-                            setState(() {
-                              _hiddenBottomIndicators[index] =
-                                  !(_hiddenBottomIndicators[index] ?? false);
-                            });
-                          },
-                          onSwap: (int offset) => _onSwap(
-                              widget.bottomConfigs![index],
-                              widget.bottomConfigs![index + offset]),
-                          showExpandedIcon: bottomSeries.length > 1,
-                          showMoveUpIcon: !isExpanded &&
-                              bottomSeries.length > 1 &&
-                              index != 0,
-                          showMoveDownIcon: !isExpanded &&
-                              bottomSeries.length > 1 &&
-                              index != bottomSeries.length - 1,
-                        );
-
-                        return (_hiddenBottomIndicators[index] ?? false)
-                            ? bottomChart
-                            : Expanded(
-                                flex: isExpanded ? bottomSeries.length : 1,
-                                child: bottomChart,
-                              );
-                      }).toList()
-                    ],
+                if (_hiddenBottomIndicators.values.any((bool value) => value))
+                  ...bottomIndicatorsList
+                else
+                  SizedBox(
+                    height: 0.5 * constraints.maxHeight,
+                    child: Column(children: bottomIndicatorsList),
                   ),
-                ),
               ],
             ));
   }
