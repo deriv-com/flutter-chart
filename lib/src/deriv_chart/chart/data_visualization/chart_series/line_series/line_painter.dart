@@ -123,7 +123,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
   ) {
     final Tick lastTick = series.entries!.last;
     final Tick lastVisibleTick = series.visibleEntries.last;
-    late Offset lastVisibleTickPosition;
+    Offset? lastVisibleTickPosition;
 
     if (!lastVisibleTick.quote.isNaN) {
       if (lastTick == lastVisibleTick && series.prevLastEntry != null) {

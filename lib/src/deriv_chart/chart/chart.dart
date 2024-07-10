@@ -604,9 +604,6 @@ class _ChartStateMobile extends _ChartState {
       final bool allBottomIndicatorsHidden =
           _hiddenBottomIndicators.values.every((bool value) => value);
 
-      print('###### BottomSectionSize : $bottomSectionSize, '
-          'allhidden: $allBottomIndicatorsHidden');
-
       return Column(
         children: <Widget>[
           Expanded(
@@ -653,7 +650,7 @@ class _ChartStateMobile extends _ChartState {
 
   @override
   void _onRemove(IndicatorConfig config) {
-    final int index = widget.indicatorsRepo!.items.indexOf(config);
+    final int index = widget.bottomConfigs.indexOf(config);
     _hiddenBottomIndicators.remove(index);
 
     final Map<int, bool> newMap = <int, bool>{};
@@ -672,8 +669,8 @@ class _ChartStateMobile extends _ChartState {
     super._onSwap(config1, config2);
 
     if (widget.indicatorsRepo != null) {
-      final int index1 = widget.indicatorsRepo!.items.indexOf(config1);
-      final int index2 = widget.indicatorsRepo!.items.indexOf(config2);
+      final int index1 = widget.bottomConfigs.indexOf(config1);
+      final int index2 = widget.bottomConfigs.indexOf(config2);
 
       // Swap values in hiddenBottomIndicators
       final bool temp = _hiddenBottomIndicators[index1] ?? false;
