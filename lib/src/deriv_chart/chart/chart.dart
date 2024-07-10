@@ -653,15 +653,33 @@ class _ChartStateMobile extends _ChartState {
 
   @override
   void _onRemove(IndicatorConfig config) {
-    super._onRemove(config);
+    final int index = widget.indicatorsRepo!.items.indexOf(config);
+    _hiddenBottomIndicators.remove(index);
 
-    // TODO(Ramin): remove from hiddenBottomIndicators
+    final Map<int, bool> newMap = <int, bool>{};
+
+    for (int i = 0; i < _hiddenBottomIndicators.values.length; i++) {
+      newMap[i] = _hiddenBottomIndicators.values.elementAt(i);
+    }
+
+    _hiddenBottomIndicators = newMap;
+
+    super._onRemove(config);
   }
 
   @override
   void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
     super._onSwap(config1, config2);
 
-    // TODO(Ramin): Swap hiddenBottomIndicators
+    if (widget.indicatorsRepo != null) {
+      final int index1 = widget.indicatorsRepo!.items.indexOf(config1);
+      final int index2 = widget.indicatorsRepo!.items.indexOf(config2);
+
+      // Swap values in hiddenBottomIndicators
+      final bool temp = _hiddenBottomIndicators[index1] ?? false;
+      _hiddenBottomIndicators[index1] =
+          _hiddenBottomIndicators[index2] ?? false;
+      _hiddenBottomIndicators[index2] = temp;
+    }
   }
 }
