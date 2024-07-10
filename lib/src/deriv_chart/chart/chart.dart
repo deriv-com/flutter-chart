@@ -566,7 +566,8 @@ class _ChartStateMobile extends _ChartState {
         isHidden: _hiddenBottomIndicators[index] ?? false,
         granularity: widget.granularity,
         pipSize: widget.bottomConfigs[index].pipSize,
-        title: widget.bottomConfigs[index].title,
+        title: '${widget.bottomConfigs[index].title} '
+            '(${widget.bottomConfigs[index].configSummary})',
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: widget.bottomChartTitleMargin,

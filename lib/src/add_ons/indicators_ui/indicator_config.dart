@@ -109,6 +109,9 @@ abstract class IndicatorConfig extends AddOnConfig {
   /// Key of indicator name property in JSON.
   static const String nameKey = 'name';
 
+  /// Indicator config summary
+  String get configSummary => '';
+
   /// Indicators supported field types
   static final Map<String, FieldIndicatorBuilder> supportedFieldTypes =
       <String, FieldIndicatorBuilder>{

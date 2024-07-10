@@ -81,6 +81,9 @@ class MACDIndicatorConfig extends IndicatorConfig {
   final LineStyle signalLineStyle;
 
   @override
+  String get configSummary => '$fastMAPeriod, $slowMAPeriod, $signalPeriod';
+
+  @override
   IndicatorItem getItem(
     UpdateIndicator updateIndicator,
     VoidCallback deleteIndicator,
