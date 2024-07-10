@@ -178,7 +178,7 @@ class Chart extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() =>
-      kIsWeb ? _ChartStateWeb() : _ChartStateWeb();
+      kIsWeb ? _ChartStateWeb() : _ChartStateMobile();
 }
 
 // ignore: prefer_mixin
@@ -512,5 +512,126 @@ class _ChartStateWeb extends _ChartState {
           }).toList()
       ],
     );
+  }
+}
+
+class _ChartStateMobile extends _ChartState {
+  Map<int, bool> _hiddenBottomIndicators = <int, bool>{};
+
+  @override
+  void initState() {
+    super.initState();
+    _hiddenBottomIndicators = Map<int, bool>.fromIterable(
+      List<int>.generate(
+          widget.bottomConfigs?.length ?? 0, (int index) => index),
+      key: (dynamic index) => index,
+      value: (dynamic index) => false,
+    );
+  }
+
+  @override
+  Widget buildChartsLayout(
+    BuildContext context,
+    List<Series>? overlaySeries,
+    List<Series>? bottomSeries,
+  ) {
+    final Duration currentTickAnimationDuration =
+        widget.currentTickAnimationDuration ?? _defaultDuration;
+
+    final Duration quoteBoundsAnimationDuration =
+        widget.quoteBoundsAnimationDuration ?? _defaultDuration;
+
+    final bool isExpanded = expandedIndex != null;
+
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) => Column(
+              children: <Widget>[
+                Expanded(
+                  child: MainChart(
+                    drawingTools: widget.drawingTools,
+                    controller: _controller,
+                    mainSeries: widget.mainSeries,
+                    overlaySeries: overlaySeries,
+                    annotations: widget.annotations,
+                    markerSeries: widget.markerSeries,
+                    pipSize: widget.pipSize,
+                    onCrosshairAppeared: widget.onCrosshairAppeared,
+                    onQuoteAreaChanged: widget.onQuoteAreaChanged,
+                    isLive: widget.isLive,
+                    showLoadingAnimationForHistoricalData:
+                        !widget.dataFitEnabled,
+                    showDataFitButton:
+                        widget.showDataFitButton ?? widget.dataFitEnabled,
+                    showScrollToLastTickButton:
+                        widget.showScrollToLastTickButton ?? true,
+                    opacity: widget.opacity,
+                    chartAxisConfig: widget.chartAxisConfig,
+                    verticalPaddingFraction: widget.verticalPaddingFraction,
+                    showCrosshair: widget.showCrosshair,
+                    onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                    onCrosshairHover: _onCrosshairHover,
+                    loadingAnimationColor: widget.loadingAnimationColor,
+                    currentTickAnimationDuration: currentTickAnimationDuration,
+                    quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+                    showCurrentTickBlinkAnimation:
+                        widget.showCurrentTickBlinkAnimation ?? true,
+                  ),
+                ),
+                SizedBox(
+                  height: 0.5 * constraints.maxHeight,
+                  child: Column(
+                    children: <Widget>[
+                      ...bottomSeries!.mapIndexed((int index, Series series) {
+                        if (isExpanded && expandedIndex != index) {
+                          return const SizedBox.shrink();
+                        }
+
+                        final Widget bottomChart = BottomChartMobile(
+                          series: series,
+                          viewMode: _hiddenBottomIndicators[index] ?? false
+                              ? BottomIndicatorViewMode.collapsed
+                              : BottomIndicatorViewMode.normal,
+                          granularity: widget.granularity,
+                          pipSize: widget.bottomConfigs?[index].pipSize ??
+                              widget.pipSize,
+                          title: widget.bottomConfigs![index].title,
+                          currentTickAnimationDuration:
+                              currentTickAnimationDuration,
+                          quoteBoundsAnimationDuration:
+                              quoteBoundsAnimationDuration,
+                          bottomChartTitleMargin: widget.bottomChartTitleMargin,
+                          onRemove: () =>
+                              _onRemove(widget.bottomConfigs![index]),
+                          onEdit: () => _onEdit(widget.bottomConfigs![index]),
+                          onExpandToggle: () {
+                            setState(() {
+                              _hiddenBottomIndicators[index] =
+                                  !(_hiddenBottomIndicators[index] ?? false);
+                            });
+                          },
+                          onSwap: (int offset) => _onSwap(
+                              widget.bottomConfigs![index],
+                              widget.bottomConfigs![index + offset]),
+                          showExpandedIcon: bottomSeries.length > 1,
+                          showMoveUpIcon: !isExpanded &&
+                              bottomSeries.length > 1 &&
+                              index != 0,
+                          showMoveDownIcon: !isExpanded &&
+                              bottomSeries.length > 1 &&
+                              index != bottomSeries.length - 1,
+                        );
+
+                        return (_hiddenBottomIndicators[index] ?? false)
+                            ? bottomChart
+                            : Expanded(
+                                flex: isExpanded ? bottomSeries.length : 1,
+                                child: bottomChart,
+                              );
+                      }).toList()
+                    ],
+                  ),
+                ),
+              ],
+            ));
   }
 }
