@@ -518,31 +518,6 @@ class _ChartStateWeb extends _ChartState {
 }
 
 class _ChartStateMobile extends _ChartState {
-  Map<int, bool> _hiddenBottomIndicators = <int, bool>{};
-
-  @override
-  void initState() {
-    super.initState();
-    _hiddenBottomIndicators = Map<int, bool>.fromIterable(
-      List<int>.generate(widget.bottomConfigs.length, (int index) => index),
-      key: (dynamic index) => index,
-      value: (dynamic index) => false,
-    );
-  }
-
-  @override
-  void didUpdateWidget(covariant Chart oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.bottomConfigs.length > oldWidget.bottomConfigs.length) {
-      for (int i = oldWidget.bottomConfigs.length;
-          i < widget.bottomConfigs.length;
-          i++) {
-        _hiddenBottomIndicators[i] = false;
-      }
-    }
-  }
-
   @override
   Widget buildChartsLayout(
     BuildContext context,
@@ -555,17 +530,13 @@ class _ChartStateMobile extends _ChartState {
     final Duration quoteBoundsAnimationDuration =
         widget.quoteBoundsAnimationDuration ?? _defaultDuration;
 
-    final bool isExpanded = expandedIndex != null;
-
     final List<Widget> bottomIndicatorsList =
         bottomSeries!.mapIndexed((int index, Series series) {
-      if (isExpanded && expandedIndex != index) {
-        return const SizedBox.shrink();
-      }
+      final repository = widget.indicatorsRepo;
 
       final Widget bottomChart = BottomChartMobile(
         series: series,
-        isHidden: _hiddenBottomIndicators[index] ?? false,
+        isHidden: repository?.getHiddenStatus(index) ?? false,
         granularity: widget.granularity,
         pipSize: widget.bottomConfigs[index].pipSize,
         title: '${widget.bottomConfigs[index].displayTitle} '
@@ -574,24 +545,25 @@ class _ChartStateMobile extends _ChartState {
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
         onHideUnhideToggle: () {
+          // TODO(Ramin): check if we can remove this setState.
           setState(() {
-            _hiddenBottomIndicators[index] =
-                !(_hiddenBottomIndicators[index] ?? false);
+            repository?.updateHiddenStatus(
+              index: index,
+              hidden: !repository.getHiddenStatus(index),
+            );
           });
         },
         onSwap: (int offset) => _onSwap(
             widget.bottomConfigs[index], widget.bottomConfigs[index + offset]),
         showHideIcon: true,
-        showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
-        showMoveDownIcon: !isExpanded &&
-            bottomSeries.length > 1 &&
-            index != bottomSeries.length - 1,
+        showMoveUpIcon: bottomSeries.length > 1 && index != 0,
+        showMoveDownIcon:
+            bottomSeries.length > 1 && index != bottomSeries.length - 1,
       );
 
-      return (_hiddenBottomIndicators[index] ?? false)
+      return (repository?.getHiddenStatus(index) ?? false)
           ? bottomChart
           : Expanded(
-              flex: isExpanded ? bottomSeries.length : 1,
               child: bottomChart,
             );
     }).toList();
@@ -600,8 +572,6 @@ class _ChartStateMobile extends _ChartState {
         builder: (BuildContext context, BoxConstraints constraints) {
       final double bottomSectionSize =
           1 - (0.65 - 0.125 * (bottomIndicatorsList.length - 1));
-      final bool allBottomIndicatorsHidden =
-          _hiddenBottomIndicators.values.every((bool value) => value);
 
       return Column(
         children: <Widget>[
@@ -635,7 +605,7 @@ class _ChartStateMobile extends _ChartState {
                   widget.showCurrentTickBlinkAnimation ?? true,
             ),
           ),
-          if (allBottomIndicatorsHidden)
+          if (_isAllBottomIndicatorsHidden())
             ...bottomIndicatorsList
           else
             SizedBox(
@@ -647,35 +617,13 @@ class _ChartStateMobile extends _ChartState {
     });
   }
 
-  @override
-  void _onRemove(IndicatorConfig config) {
-    final int index = widget.bottomConfigs.indexOf(config);
-    _hiddenBottomIndicators.remove(index);
-
-    final Map<int, bool> newMap = <int, bool>{};
-
-    for (int i = 0; i < _hiddenBottomIndicators.values.length; i++) {
-      newMap[i] = _hiddenBottomIndicators.values.elementAt(i);
+  bool _isAllBottomIndicatorsHidden() {
+    for (int i = 0; i < widget.bottomConfigs.length; i++) {
+      if (widget.indicatorsRepo?.getHiddenStatus(i) ?? false) {
+        return false;
+      }
     }
 
-    _hiddenBottomIndicators = newMap;
-
-    super._onRemove(config);
-  }
-
-  @override
-  void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
-    super._onSwap(config1, config2);
-
-    if (widget.indicatorsRepo != null) {
-      final int index1 = widget.bottomConfigs.indexOf(config1);
-      final int index2 = widget.bottomConfigs.indexOf(config2);
-
-      // Swap values in hiddenBottomIndicators
-      final bool temp = _hiddenBottomIndicators[index1] ?? false;
-      _hiddenBottomIndicators[index1] =
-          _hiddenBottomIndicators[index2] ?? false;
-      _hiddenBottomIndicators[index2] = temp;
-    }
+    return true;
   }
 }

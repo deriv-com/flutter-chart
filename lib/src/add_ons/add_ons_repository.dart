@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// List containing addOns
   final List<T> _addOns;
+  final List<bool> _hiddenStatus = <bool>[];
   SharedPreferences? _prefs;
 
   /// List of indicators.
@@ -50,6 +52,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     sharedPrefKey = symbol;
 
     items.clear();
+    _hiddenStatus.clear();
 
     if (!prefs.containsKey(addOnsKey)) {
       // No saved indicators or drawing tools.
@@ -66,6 +69,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     for (final Map<String, dynamic> decodedAddon in decodedAddons) {
       final T addOnConfig = createAddOn.call(decodedAddon);
       items.add(addOnConfig);
+      _hiddenStatus.add(false);
     }
   }
 
@@ -73,6 +77,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   @override
   void add(T addOnConfig) {
     items.add(addOnConfig);
+    _hiddenStatus.add(false);
     _writeToPrefs();
     notifyListeners();
   }
@@ -102,6 +107,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       return;
     }
     items.removeAt(index);
+    _hiddenStatus.removeAt(index);
     _writeToPrefs();
     notifyListeners();
   }
@@ -111,6 +117,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   @override
   void clear() {
     items.clear();
+    _hiddenStatus.clear();
     _writeToPrefs();
     notifyListeners();
   }
@@ -119,6 +126,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   @override
   void swap(int index1, int index2) {
     items.swap(index1, index2);
+    _hiddenStatus.swap(index1, index2);
     _writeToPrefs();
     notifyListeners();
   }
@@ -131,46 +139,13 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       );
     }
   }
-}
 
-class AddOnWrapper<T extends AddOnConfig> {
-  AddOnWrapper(this.config, this.hidden);
-
-  final T config;
-  final bool hidden;
-
-  AddOnWrapper<T> copyWith({
-    T? config,
-    bool? hidden,
-  }) =>
-      AddOnWrapper<T>(
-        config ?? this.config,
-        hidden ?? this.hidden,
-      );
-}
-
-/// Holds indicators/drawing tools that were added to the Chart during runtime.
-class AddOnsRepositoryV2<T extends AddOnConfig> extends AddOnsRepository<T>
-    implements Repository<T> {
-  /// Initializes
-  AddOnsRepositoryV2({
-    required super.createAddOn,
-    required super.sharedPrefKey,
-    super.onEditCallback,
-  })  : _addOnWrapper = <AddOnWrapper<T>>[],
-        super();
-
-  /// List containing addOns
-  final List<AddOnWrapper<T>> _addOnWrapper;
-
-  /// List of indicators.
+  /// Updates the hidden status of an indicator or drawing tool.
   @override
-  List<T> get items =>
-      _addOnWrapper.map((AddOnWrapper<T> addOn) => addOn.config).toList();
-
-  /// Hides the add-on at [index].
   void updateHiddenStatus({required int index, required bool hidden}) {
-    _addOnWrapper[index] = _addOnWrapper[index].copyWith(hidden: true);
-    notifyListeners();
+    _hiddenStatus[index] = hidden;
   }
+
+  @override
+  bool getHiddenStatus(int index) => _hiddenStatus[index];
 }

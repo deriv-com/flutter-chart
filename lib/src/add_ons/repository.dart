@@ -28,4 +28,10 @@ abstract class Repository<T> extends ChangeNotifier {
 
   /// Clears all indicator and drawing tools
   void clear();
+
+  /// Updates the hidden status of an indicator or drawing tool.
+  void updateHiddenStatus({required int index, required bool hidden});
+
+  /// Retrieves the hidden status of an indicator or drawing tool.
+  bool getHiddenStatus(int index);
 }
