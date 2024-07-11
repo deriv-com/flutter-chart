@@ -96,8 +96,8 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
           if (widget.showHideIcon)
             _buildIcon(
               iconData: widget.isHidden
-                  ? Icons.visibility_outlined
-                  : Icons.visibility_off_outlined,
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
               onPressed: () {
                 widget.onHideUnhideToggle?.call();
               },
@@ -126,6 +126,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
           borderRadius: BorderRadius.circular(Dimens.margin04),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             // Different styling for mobile version.
             BottomIndicatorTitle(
@@ -138,6 +139,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
                 ),
               ),
             ),
+            const SizedBox(width: Dimens.margin16),
             _buildIcons(),
           ],
         ),
@@ -154,15 +156,14 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       value: chartConfig,
       child: ClipRect(
         child: widget.isHidden
-            ? Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: widget.bottomChartTitleMargin?.left ?? 10,
-                    ),
-                    child: _buildBottomChartOptions(context),
+            ? Container(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: widget.bottomChartTitleMargin?.left ?? 10,
                   ),
-                ],
+                  child: _buildBottomChartOptions(context),
+                ),
               )
             : Stack(
                 children: <Widget>[
