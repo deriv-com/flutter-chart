@@ -132,3 +132,45 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     }
   }
 }
+
+class AddOnWrapper<T extends AddOnConfig> {
+  AddOnWrapper(this.config, this.hidden);
+
+  final T config;
+  final bool hidden;
+
+  AddOnWrapper<T> copyWith({
+    T? config,
+    bool? hidden,
+  }) =>
+      AddOnWrapper<T>(
+        config ?? this.config,
+        hidden ?? this.hidden,
+      );
+}
+
+/// Holds indicators/drawing tools that were added to the Chart during runtime.
+class AddOnsRepositoryV2<T extends AddOnConfig> extends AddOnsRepository<T>
+    implements Repository<T> {
+  /// Initializes
+  AddOnsRepositoryV2({
+    required super.createAddOn,
+    required super.sharedPrefKey,
+    super.onEditCallback,
+  })  : _addOnWrapper = <AddOnWrapper<T>>[],
+        super();
+
+  /// List containing addOns
+  final List<AddOnWrapper<T>> _addOnWrapper;
+
+  /// List of indicators.
+  @override
+  List<T> get items =>
+      _addOnWrapper.map((AddOnWrapper<T> addOn) => addOn.config).toList();
+
+  /// Hides the add-on at [index].
+  void updateHiddenStatus({required int index, required bool hidden}) {
+    _addOnWrapper[index] = _addOnWrapper[index].copyWith(hidden: true);
+    notifyListeners();
+  }
+}
