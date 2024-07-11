@@ -67,6 +67,14 @@ class MAIndicatorConfig extends IndicatorConfig {
   final int offset;
 
   @override
+  String get displayTitle => 'MA';
+
+  @override
+  String get configSummary =>
+      '$period, ${fieldType.characters.first.toUpperCase()}, '
+      '${movingAverageType.shortTitle}, $offset';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => MASeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         MAOptions(

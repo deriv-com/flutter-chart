@@ -151,4 +151,32 @@ extension MATypesExtension on MovingAverageType {
 
   String _getCapitalizedTitle() =>
       '${name[0].toUpperCase()}${name.substring(1)}';
+
+  /// Gets the short title of enum.
+  String get shortTitle {
+    switch (this) {
+      case MovingAverageType.exponential:
+        return 'EMA';
+      case MovingAverageType.weighted:
+        return 'WMA';
+      case MovingAverageType.hull:
+        return 'HMA';
+      case MovingAverageType.zeroLag:
+        return 'ZMA';
+      case MovingAverageType.timeSeries:
+        return 'TSMA';
+      case MovingAverageType.doubleExponential:
+        return 'DEMA';
+      case MovingAverageType.tripleExponential:
+        return 'TEMA';
+      case MovingAverageType.triangular:
+        return 'TMA';
+      case MovingAverageType.wellesWilder:
+        return 'SSMA';
+      case MovingAverageType.variable:
+        return 'VMA';
+      default:
+        return 'MA';
+    }
+  }
 }
