@@ -157,14 +157,14 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       child: ClipRect(
         child: widget.isHidden
             ? Container(
-                alignment: Alignment.topLeft,
-                child: Padding(
+          alignment: Alignment.topLeft,
+              child: Padding(
                   padding: EdgeInsets.only(
                     left: widget.bottomChartTitleMargin?.left ?? 10,
                   ),
                   child: _buildBottomChartOptions(context),
                 ),
-              )
+            )
             : Stack(
                 children: <Widget>[
                   if (!widget.isHidden)

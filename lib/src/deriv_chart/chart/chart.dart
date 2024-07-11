@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_wrapper.dart';
@@ -567,11 +568,11 @@ class _ChartStateMobile extends _ChartState {
         isHidden: _hiddenBottomIndicators[index] ?? false,
         granularity: widget.granularity,
         pipSize: widget.bottomConfigs[index].pipSize,
-        title: '${widget.bottomConfigs[index].title} '
+        title: '${widget.bottomConfigs[index].displayTitle} '
             '(${widget.bottomConfigs[index].configSummary})',
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-        bottomChartTitleMargin: widget.bottomChartTitleMargin,
+        bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
         onRemove: () => _onRemove(widget.bottomConfigs[index]),
         onEdit: () => _onEdit(widget.bottomConfigs[index]),
         onHideUnhideToggle: () {

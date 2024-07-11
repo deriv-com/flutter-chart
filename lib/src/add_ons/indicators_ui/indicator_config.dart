@@ -112,6 +112,9 @@ abstract class IndicatorConfig extends AddOnConfig {
   /// Indicator config summary
   String get configSummary => '';
 
+  /// Display title.
+  String get displayTitle => title;
+
   /// Indicators supported field types
   static final Map<String, FieldIndicatorBuilder> supportedFieldTypes =
       <String, FieldIndicatorBuilder>{
