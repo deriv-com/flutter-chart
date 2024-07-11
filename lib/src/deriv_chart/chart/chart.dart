@@ -604,6 +604,12 @@ class _ChartStateMobile extends _ChartState {
                   widget.showCurrentTickBlinkAnimation ?? true,
             ),
           ),
+          Divider(
+            height: 0.5,
+            thickness: 1,
+            color: context.read<ChartTheme>().hoverColor,
+          ),
+          const SizedBox(height: Dimens.margin04),
           if (_isAllBottomIndicatorsHidden)
             ...bottomIndicatorsList
           else

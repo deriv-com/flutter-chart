@@ -148,26 +148,19 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       value: chartConfig,
       child: ClipRect(
         child: widget.isHidden
-            ? Container(
-          alignment: Alignment.topLeft,
-              child: Padding(
-                  padding: EdgeInsets.only(
-                    left: widget.bottomChartTitleMargin?.left ?? 10,
-                  ),
-                  child: _buildBottomChartOptions(context),
-                ),
-            )
+            ? Column(
+                children: <Widget>[
+                  _buildCollapsedBottomChart(context),
+                  _buildDivider(),
+                ],
+              )
             : Stack(
                 children: <Widget>[
                   if (!widget.isHidden)
                     Column(
                       children: <Widget>[
-                        Divider(
-                          height: 0.5,
-                          thickness: 1,
-                          color: theme.base01Color,
-                        ),
                         Expanded(child: super.build(context)),
+                        _buildDivider(),
                       ],
                     ),
                   Positioned(
@@ -180,6 +173,25 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       ),
     );
   }
+
+  Widget _buildDivider() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimens.margin04),
+        child: Divider(
+          height: 0.5,
+          thickness: 1,
+          color: theme.hoverColor,
+        ),
+      );
+
+  Widget _buildCollapsedBottomChart(BuildContext context) => Container(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: widget.bottomChartTitleMargin?.left ?? 10,
+          ),
+          child: _buildBottomChartOptions(context),
+        ),
+      );
 
   @override
   void didUpdateWidget(BottomChartMobile oldChart) {
