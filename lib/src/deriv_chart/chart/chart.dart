@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
@@ -570,7 +569,7 @@ class _ChartStateMobile extends _ChartState {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       final double bottomSectionSize =
-          1 - (0.65 - 0.125 * (bottomIndicatorsList.length - 1));
+          _getBottomIndicatorsSectionHeightFraction(bottomIndicatorsList);
 
       return Column(
         children: <Widget>[
@@ -621,6 +620,11 @@ class _ChartStateMobile extends _ChartState {
       );
     });
   }
+
+  double _getBottomIndicatorsSectionHeightFraction(
+    List<Widget> bottomIndicatorsList,
+  ) =>
+      1 - (0.65 - 0.125 * (bottomIndicatorsList.length - 1));
 
   bool get _isAllBottomIndicatorsHidden {
     for (int i = 0; i < widget.bottomConfigs.length; i++) {

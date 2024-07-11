@@ -227,5 +227,3 @@ class _BottomChartState extends BasicChartState<BottomChart> {
     );
   }
 }
-
-
