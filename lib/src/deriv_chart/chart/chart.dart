@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
@@ -532,7 +533,7 @@ class _ChartStateMobile extends _ChartState {
 
     final List<Widget> bottomIndicatorsList =
         bottomSeries!.mapIndexed((int index, Series series) {
-      final repository = widget.indicatorsRepo;
+      final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
       final Widget bottomChart = BottomChartMobile(
         series: series,
@@ -605,7 +606,7 @@ class _ChartStateMobile extends _ChartState {
                   widget.showCurrentTickBlinkAnimation ?? true,
             ),
           ),
-          if (_isAllBottomIndicatorsHidden())
+          if (_isAllBottomIndicatorsHidden)
             ...bottomIndicatorsList
           else
             SizedBox(
@@ -617,9 +618,9 @@ class _ChartStateMobile extends _ChartState {
     });
   }
 
-  bool _isAllBottomIndicatorsHidden() {
+  bool get _isAllBottomIndicatorsHidden {
     for (int i = 0; i < widget.bottomConfigs.length; i++) {
-      if (widget.indicatorsRepo?.getHiddenStatus(i) ?? false) {
+      if (!(widget.indicatorsRepo?.getHiddenStatus(i) ?? true)) {
         return false;
       }
     }
