@@ -18,6 +18,7 @@ import '../../models/tick.dart';
 import '../../theme/chart_default_dark_theme.dart';
 import '../../theme/chart_theme.dart';
 import 'bottom_chart.dart';
+import 'bottom_chart_mobile.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';
