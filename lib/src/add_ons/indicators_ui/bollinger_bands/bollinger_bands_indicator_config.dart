@@ -69,6 +69,15 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   final bool showChannelFill;
 
   @override
+  String get displayTitle => 'BB';
+
+  @override
+  String get configSummary =>
+      '$period, ${fieldType.characters.first.toUpperCase()}, '
+      '$standardDeviation, ${movingAverageType.shortTitle}, '
+      '${showChannelFill ? 'Y' : 'N'}';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) =>
       BollingerBandSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
