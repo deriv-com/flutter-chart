@@ -655,14 +655,14 @@ class _ChartStateMobile extends _ChartState {
   }
 
   Widget _buildOverlayIndicatorsLabels() {
-    final List<IndicatorConfig>? overlayConfigs = widget.indicatorsRepo?.items
-        .where((IndicatorConfig config) => config.isOverlay)
-        .toList();
-
     final List<Widget> overlayIndicatorsLabels = <Widget>[];
-    if (overlayConfigs != null) {
-      for (int i = 0; i < overlayConfigs.length; i++) {
-        final IndicatorConfig config = overlayConfigs[i];
+    if (widget.indicatorsRepo != null) {
+      for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
+        final IndicatorConfig config = widget.indicatorsRepo!.items[i];
+        if (!config.isOverlay) {
+          continue;
+        }
+
         overlayIndicatorsLabels.add(IndicatorLabelMobile(
           title: '${config.displayTitle} '
               '(${config.configSummary})',
@@ -676,6 +676,9 @@ class _ChartStateMobile extends _ChartState {
       }
     }
 
-    return Column(children: overlayIndicatorsLabels);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: overlayIndicatorsLabels,
+    );
   }
 }
