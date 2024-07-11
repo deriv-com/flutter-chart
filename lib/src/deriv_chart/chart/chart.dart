@@ -574,7 +574,7 @@ class _ChartStateMobile extends _ChartState {
         bottomChartTitleMargin: widget.bottomChartTitleMargin,
         onRemove: () => _onRemove(widget.bottomConfigs[index]),
         onEdit: () => _onEdit(widget.bottomConfigs[index]),
-        onExpandToggle: () {
+        onHideUnhideToggle: () {
           setState(() {
             _hiddenBottomIndicators[index] =
                 !(_hiddenBottomIndicators[index] ?? false);
@@ -582,7 +582,7 @@ class _ChartStateMobile extends _ChartState {
         },
         onSwap: (int offset) => _onSwap(
             widget.bottomConfigs[index], widget.bottomConfigs[index + offset]),
-        showExpandedIcon: true,
+        showHideIcon: true,
         showMoveUpIcon: !isExpanded && bottomSeries.length > 1 && index != 0,
         showMoveDownIcon: !isExpanded &&
             bottomSeries.length > 1 &&

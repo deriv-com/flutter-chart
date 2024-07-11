@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:deriv_chart/src/widgets/bottom_indicator_title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,9 +8,9 @@ import 'basic_chart.dart';
 import 'bottom_chart.dart';
 import 'data_visualization/chart_series/series.dart';
 
-/// The chart to add the bottom indicators too.
+/// Mobile version of the chart to add the bottom indicators too.
 class BottomChartMobile extends BasicChart {
-  /// Initializes a bottom chart.
+  /// Initializes a bottom chart mobile.
   const BottomChartMobile({
     required Series series,
     required this.granularity,
@@ -18,10 +19,10 @@ class BottomChartMobile extends BasicChart {
     Key? key,
     this.onRemove,
     this.onEdit,
-    this.onExpandToggle,
+    this.onHideUnhideToggle,
     this.onSwap,
     this.isHidden = false,
-    this.showExpandedIcon = false,
+    this.showHideIcon = false,
     this.showMoveUpIcon = false,
     this.showMoveDownIcon = false,
     this.bottomChartTitleMargin,
@@ -40,7 +41,7 @@ class BottomChartMobile extends BasicChart {
   final VoidCallback? onEdit;
 
   /// Called when an indicator is to be expanded.
-  final VoidCallback? onExpandToggle;
+  final VoidCallback? onHideUnhideToggle;
 
   /// Called when an indicator is to moved up/down.
   final SwapCallback? onSwap;
@@ -51,8 +52,8 @@ class BottomChartMobile extends BasicChart {
   /// The title of the bottom chart.
   final String title;
 
-  /// Whether the expanded icon should be shown or not.
-  final bool showExpandedIcon;
+  /// Whether the hide/unhide icon should be shown or not.
+  final bool showHideIcon;
 
   /// Whether the move up icon should be shown or not.
   final bool showMoveUpIcon;
@@ -92,6 +93,15 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
 
   Widget _buildIcons() => Row(
         children: <Widget>[
+          if (widget.showHideIcon)
+            _buildIcon(
+              iconData: widget.isHidden
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
+              onPressed: () {
+                widget.onHideUnhideToggle?.call();
+              },
+            ),
           if (widget.showMoveUpIcon)
             _buildIcon(
               iconData: Icons.arrow_upward,
@@ -106,29 +116,14 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
                 widget.onSwap?.call(1);
               },
             ),
-          if (widget.showExpandedIcon)
-            _buildIcon(
-              iconData: widget.isHidden
-                  ? Icons.remove_red_eye_outlined
-                  : Icons.remove_red_eye,
-              onPressed: () {
-                widget.onExpandToggle?.call();
-              },
-            ),
-          _buildIcon(
-            iconData: Icons.delete,
-            onPressed: () {
-              widget.onRemove?.call();
-            },
-          ),
         ],
       );
 
   Widget _buildBottomChartOptions(BuildContext context) => Container(
-        padding: const EdgeInsets.all(2),
+        padding: const EdgeInsets.all(Dimens.margin04),
         decoration: BoxDecoration(
-          color: theme.base07Color,
-          borderRadius: BorderRadius.circular(2),
+          color: theme.hoverColor,
+          borderRadius: BorderRadius.circular(Dimens.margin04),
         ),
         child: Row(
           children: <Widget>[

@@ -40,6 +40,8 @@ abstract class ChartTheme {
 
   Color get base08Color;
 
+  Color get hoverColor;
+
   double get margin04Chart;
 
   double get margin08Chart;
