@@ -144,6 +144,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   @override
   void updateHiddenStatus({required int index, required bool hidden}) {
     _hiddenStatus[index] = hidden;
+    notifyListeners();
   }
 
   @override

@@ -547,12 +547,10 @@ class _ChartStateMobile extends _ChartState {
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
         onHideUnhideToggle: () {
           // TODO(Ramin): check if we can remove this setState.
-          setState(() {
-            repository?.updateHiddenStatus(
-              index: index,
-              hidden: !repository.getHiddenStatus(index),
-            );
-          });
+          repository?.updateHiddenStatus(
+            index: index,
+            hidden: !repository.getHiddenStatus(index),
+          );
         },
         onSwap: (int offset) => _onSwap(
             widget.bottomConfigs[index], widget.bottomConfigs[index + offset]),
