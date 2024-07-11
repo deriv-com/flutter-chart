@@ -573,8 +573,6 @@ class _ChartStateMobile extends _ChartState {
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
-        onRemove: () => _onRemove(widget.bottomConfigs[index]),
-        onEdit: () => _onEdit(widget.bottomConfigs[index]),
         onHideUnhideToggle: () {
           setState(() {
             _hiddenBottomIndicators[index] =

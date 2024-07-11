@@ -17,8 +17,6 @@ class BottomChartMobile extends BasicChart {
     required this.title,
     int pipSize = 4,
     Key? key,
-    this.onRemove,
-    this.onEdit,
     this.onHideUnhideToggle,
     this.onSwap,
     this.isHidden = false,
@@ -33,12 +31,6 @@ class BottomChartMobile extends BasicChart {
   /// For candles: Duration of one candle in ms.
   /// For ticks: Average ms difference between two consecutive ticks.
   final int granularity;
-
-  /// Called when an indicator is to be removed.
-  final VoidCallback? onRemove;
-
-  /// Called when an indicator is to be edited.
-  final VoidCallback? onEdit;
 
   /// Called when an indicator is to be expanded.
   final VoidCallback? onHideUnhideToggle;
