@@ -530,25 +530,35 @@ class _ChartStateMobile extends _ChartState {
     final Duration quoteBoundsAnimationDuration =
         widget.quoteBoundsAnimationDuration ?? _defaultDuration;
 
-    final List<Widget> bottomIndicatorsList =
-        bottomSeries!.mapIndexed((int index, Series series) {
+    final List<Widget> bottomIndicatorsList = widget.indicatorsRepo!.items
+        .mapIndexed((int index, IndicatorConfig config) {
+      if (config.isOverlay) {
+        return const SizedBox.shrink();
+      }
+
+      final Series series = config.getSeries(
+        IndicatorInput(
+          widget.mainSeries.input,
+          widget.granularity,
+        ),
+      );
       final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
       final Widget bottomChart = BottomChartMobile(
         series: series,
         isHidden: repository?.getHiddenStatus(index) ?? false,
         granularity: widget.granularity,
-        pipSize: widget.bottomConfigs[index].pipSize,
-        title: '${widget.bottomConfigs[index].displayTitle} '
-            '(${widget.bottomConfigs[index].configSummary})',
+        pipSize: config.pipSize,
+        title: '${config.displayTitle} '
+            '(${config.configSummary})',
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
         onHideUnhideToggle: () =>
             _onIndicatorHideToggleTapped(repository, index),
-        onSwap: (int offset) => _onSwap(
-            widget.bottomConfigs[index], widget.bottomConfigs[index + offset]),
-        showMoveUpIcon: bottomSeries.length > 1 && index != 0,
+        onSwap: (int offset) =>
+            _onSwap(config, widget.indicatorsRepo!.items[index + offset]),
+        showMoveUpIcon: bottomSeries!.length > 1 && index != 0,
         showMoveDownIcon:
             bottomSeries.length > 1 && index != bottomSeries.length - 1,
       );
@@ -559,6 +569,24 @@ class _ChartStateMobile extends _ChartState {
               child: bottomChart,
             );
     }).toList();
+
+    final List<Series> overlaySeries = <Series>[];
+
+    if (widget.indicatorsRepo != null) {
+      for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
+        final IndicatorConfig config = widget.indicatorsRepo!.items[i];
+        if (widget.indicatorsRepo!.getHiddenStatus(i) || !config.isOverlay) {
+          continue;
+        }
+
+        overlaySeries.add(config.getSeries(
+          IndicatorInput(
+            widget.mainSeries.input,
+            widget.granularity,
+          ),
+        ));
+      }
+    }
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
