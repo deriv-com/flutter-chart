@@ -20,7 +20,6 @@ class BottomChartMobile extends BasicChart {
     this.onHideUnhideToggle,
     this.onSwap,
     this.isHidden = false,
-    this.showHideIcon = false,
     this.showMoveUpIcon = false,
     this.showMoveDownIcon = false,
     this.bottomChartTitleMargin,
@@ -44,9 +43,6 @@ class BottomChartMobile extends BasicChart {
   /// The title of the bottom chart.
   final String title;
 
-  /// Whether the hide/unhide icon should be shown or not.
-  final bool showHideIcon;
-
   /// Whether the move up icon should be shown or not.
   final bool showMoveUpIcon;
 
@@ -62,80 +58,6 @@ class BottomChartMobile extends BasicChart {
 
 class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
   ChartTheme get theme => context.read<ChartTheme>();
-
-  Widget _buildIcon({
-    required IconData iconData,
-    void Function()? onPressed,
-  }) =>
-      Material(
-        type: MaterialType.circle,
-        color: Colors.transparent,
-        clipBehavior: Clip.antiAlias,
-        child: IconButton(
-          icon: Icon(
-            iconData,
-            size: 16,
-            color: theme.base01Color,
-          ),
-          onPressed: onPressed,
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-        ),
-      );
-
-  Widget _buildIcons() => Row(
-        children: <Widget>[
-          if (widget.showHideIcon)
-            _buildIcon(
-              iconData: widget.isHidden
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              onPressed: () {
-                widget.onHideUnhideToggle?.call();
-              },
-            ),
-          if (widget.showMoveUpIcon)
-            _buildIcon(
-              iconData: Icons.arrow_upward,
-              onPressed: () {
-                widget.onSwap?.call(-1);
-              },
-            ),
-          if (widget.showMoveDownIcon)
-            _buildIcon(
-              iconData: Icons.arrow_downward,
-              onPressed: () {
-                widget.onSwap?.call(1);
-              },
-            ),
-        ],
-      );
-
-  Widget _buildBottomChartOptions(BuildContext context) => Container(
-        padding: const EdgeInsets.all(Dimens.margin04),
-        decoration: BoxDecoration(
-          color: theme.hoverColor,
-          borderRadius: BorderRadius.circular(Dimens.margin04),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // Different styling for mobile version.
-            BottomIndicatorTitle(
-              widget.title,
-              theme.textStyle(
-                color: theme.base01Color,
-                textStyle: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            const SizedBox(width: Dimens.margin16),
-            _buildIcons(),
-          ],
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -166,13 +88,22 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
                   Positioned(
                     top: 4,
                     left: widget.bottomChartTitleMargin?.left ?? 10,
-                    child: _buildBottomChartOptions(context),
+                    child: _buildIndicatorLabelMobile(),
                   )
                 ],
               ),
       ),
     );
   }
+
+  Widget _buildIndicatorLabelMobile() => IndicatorLabelMobile(
+        title: widget.title,
+        showMoveUpIcon: widget.showMoveUpIcon,
+        showMoveDownIcon: widget.showMoveDownIcon,
+        isHidden: widget.isHidden,
+        onHideUnhideToggle: widget.onHideUnhideToggle,
+        onSwap: widget.onSwap,
+      );
 
   Widget _buildDivider() => Padding(
         padding: const EdgeInsets.symmetric(vertical: Dimens.margin04),
@@ -189,7 +120,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
           padding: EdgeInsets.only(
             left: widget.bottomChartTitleMargin?.left ?? 10,
           ),
-          child: _buildBottomChartOptions(context),
+          child: _buildIndicatorLabelMobile(),
         ),
       );
 
@@ -202,4 +133,117 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       maxEpoch: widget.mainSeries.getMaxEpoch(),
     );
   }
+}
+
+/// Bottom chart options for mobile.
+class IndicatorLabelMobile extends StatelessWidget {
+  /// Initializes a bottom chart indicator label.
+  const IndicatorLabelMobile({
+    required this.title,
+    required this.showMoveUpIcon,
+    required this.showMoveDownIcon,
+    required this.isHidden,
+    this.onHideUnhideToggle,
+    this.onSwap,
+    super.key,
+  });
+
+  /// The title of the indicator.
+  final String title;
+
+  /// Whether to show the move up icon.
+  final bool showMoveUpIcon;
+
+  /// Whether to show the move down icon.
+  final bool showMoveDownIcon;
+
+  /// Whether the indicator is hidden or not.
+  final bool isHidden;
+
+  /// Called when an indicator is to be expanded.
+  final VoidCallback? onHideUnhideToggle;
+
+  /// Called when an indicator is to moved up/down.
+  final SwapCallback? onSwap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ChartTheme theme = context.read<ChartTheme>();
+    return Container(
+      padding: const EdgeInsets.all(Dimens.margin04),
+      decoration: BoxDecoration(
+        color: theme.hoverColor,
+        borderRadius: BorderRadius.circular(Dimens.margin04),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          // Different styling for mobile version.
+          BottomIndicatorTitle(
+            title,
+            theme.textStyle(
+              color: theme.base01Color,
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          const SizedBox(width: Dimens.margin16),
+          _buildIcons(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIcons(BuildContext context) => Row(
+        children: <Widget>[
+          _buildIcon(
+            iconData: isHidden
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            context: context,
+            onPressed: () {
+              onHideUnhideToggle?.call();
+            },
+          ),
+          if (showMoveUpIcon)
+            _buildIcon(
+              iconData: Icons.arrow_upward,
+              context: context,
+              onPressed: () {
+                onSwap?.call(-1);
+              },
+            ),
+          if (showMoveDownIcon)
+            _buildIcon(
+              iconData: Icons.arrow_downward,
+              context: context,
+              onPressed: () {
+                onSwap?.call(1);
+              },
+            ),
+        ],
+      );
+
+  Widget _buildIcon({
+    required IconData iconData,
+    required BuildContext context,
+    void Function()? onPressed,
+  }) =>
+      Material(
+        type: MaterialType.circle,
+        color: Colors.transparent,
+        clipBehavior: Clip.antiAlias,
+        child: IconButton(
+          icon: Icon(
+            iconData,
+            size: 16,
+            color: context.read<ChartTheme>().base01Color,
+          ),
+          onPressed: onPressed,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      );
 }

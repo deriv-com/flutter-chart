@@ -544,16 +544,10 @@ class _ChartStateMobile extends _ChartState {
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
-        onHideUnhideToggle: () {
-          // TODO(Ramin): check if we can remove this setState.
-          repository?.updateHiddenStatus(
-            index: index,
-            hidden: !repository.getHiddenStatus(index),
-          );
-        },
+        onHideUnhideToggle: () =>
+            _onIndicatorHideToggleTapped(repository, index),
         onSwap: (int offset) => _onSwap(
             widget.bottomConfigs[index], widget.bottomConfigs[index + offset]),
-        showHideIcon: true,
         showMoveUpIcon: bottomSeries.length > 1 && index != 0,
         showMoveDownIcon:
             bottomSeries.length > 1 && index != bottomSeries.length - 1,
@@ -574,33 +568,47 @@ class _ChartStateMobile extends _ChartState {
       return Column(
         children: <Widget>[
           Expanded(
-            child: MainChart(
-              drawingTools: widget.drawingTools,
-              controller: _controller,
-              mainSeries: widget.mainSeries,
-              overlaySeries: overlaySeries,
-              annotations: widget.annotations,
-              markerSeries: widget.markerSeries,
-              pipSize: widget.pipSize,
-              onCrosshairAppeared: widget.onCrosshairAppeared,
-              onQuoteAreaChanged: widget.onQuoteAreaChanged,
-              isLive: widget.isLive,
-              showLoadingAnimationForHistoricalData: !widget.dataFitEnabled,
-              showDataFitButton:
-                  widget.showDataFitButton ?? widget.dataFitEnabled,
-              showScrollToLastTickButton:
-                  widget.showScrollToLastTickButton ?? true,
-              opacity: widget.opacity,
-              chartAxisConfig: widget.chartAxisConfig,
-              verticalPaddingFraction: widget.verticalPaddingFraction,
-              showCrosshair: widget.showCrosshair,
-              onCrosshairDisappeared: widget.onCrosshairDisappeared,
-              onCrosshairHover: _onCrosshairHover,
-              loadingAnimationColor: widget.loadingAnimationColor,
-              currentTickAnimationDuration: currentTickAnimationDuration,
-              quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-              showCurrentTickBlinkAnimation:
-                  widget.showCurrentTickBlinkAnimation ?? true,
+            child: Stack(
+              children: <Widget>[
+                MainChart(
+                  drawingTools: widget.drawingTools,
+                  controller: _controller,
+                  mainSeries: widget.mainSeries,
+                  overlaySeries: overlaySeries,
+                  annotations: widget.annotations,
+                  markerSeries: widget.markerSeries,
+                  pipSize: widget.pipSize,
+                  onCrosshairAppeared: widget.onCrosshairAppeared,
+                  onQuoteAreaChanged: widget.onQuoteAreaChanged,
+                  isLive: widget.isLive,
+                  showLoadingAnimationForHistoricalData: !widget.dataFitEnabled,
+                  showDataFitButton:
+                      widget.showDataFitButton ?? widget.dataFitEnabled,
+                  showScrollToLastTickButton:
+                      widget.showScrollToLastTickButton ?? true,
+                  opacity: widget.opacity,
+                  chartAxisConfig: widget.chartAxisConfig,
+                  verticalPaddingFraction: widget.verticalPaddingFraction,
+                  showCrosshair: widget.showCrosshair,
+                  onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                  onCrosshairHover: _onCrosshairHover,
+                  loadingAnimationColor: widget.loadingAnimationColor,
+                  currentTickAnimationDuration: currentTickAnimationDuration,
+                  quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+                  showCurrentTickBlinkAnimation:
+                      widget.showCurrentTickBlinkAnimation ?? true,
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Dimens.margin08,
+                      horizontal: Dimens.margin04,
+                    ),
+                    child: _buildOverlayIndicatorsLabels(),
+                  ),
+                ),
+              ],
             ),
           ),
           Divider(
@@ -621,6 +629,16 @@ class _ChartStateMobile extends _ChartState {
     });
   }
 
+  void _onIndicatorHideToggleTapped(
+    Repository<IndicatorConfig>? repository,
+    int index,
+  ) {
+    repository?.updateHiddenStatus(
+      index: index,
+      hidden: !repository.getHiddenStatus(index),
+    );
+  }
+
   double _getBottomIndicatorsSectionHeightFraction(
     List<Widget> bottomIndicatorsList,
   ) =>
@@ -634,5 +652,30 @@ class _ChartStateMobile extends _ChartState {
     }
 
     return true;
+  }
+
+  Widget _buildOverlayIndicatorsLabels() {
+    final List<IndicatorConfig>? overlayConfigs = widget.indicatorsRepo?.items
+        .where((IndicatorConfig config) => config.isOverlay)
+        .toList();
+
+    final List<Widget> overlayIndicatorsLabels = <Widget>[];
+    if (overlayConfigs != null) {
+      for (int i = 0; i < overlayConfigs.length; i++) {
+        final IndicatorConfig config = overlayConfigs[i];
+        overlayIndicatorsLabels.add(IndicatorLabelMobile(
+          title: '${config.displayTitle} '
+              '(${config.configSummary})',
+          showMoveUpIcon: false,
+          showMoveDownIcon: false,
+          isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,
+          onHideUnhideToggle: () {
+            _onIndicatorHideToggleTapped(widget.indicatorsRepo, i);
+          },
+        ));
+      }
+    }
+
+    return Column(children: overlayIndicatorsLabels);
   }
 }
