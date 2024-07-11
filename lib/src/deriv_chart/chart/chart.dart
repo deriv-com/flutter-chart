@@ -673,13 +673,14 @@ class _ChartStateMobile extends _ChartState {
       1 - (0.65 - 0.125 * (bottomIndicatorsList.length - 1));
 
   bool get _isAllBottomIndicatorsHidden {
-    for (int i = 0; i < widget.bottomConfigs.length; i++) {
-      if (!(widget.indicatorsRepo?.getHiddenStatus(i) ?? true)) {
-        return false;
+    bool isAllHidden = true;
+    for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
+      if (!widget.indicatorsRepo!.items[i].isOverlay &&
+          !(widget.indicatorsRepo?.getHiddenStatus(i) ?? false)) {
+        isAllHidden = false;
       }
     }
-
-    return true;
+    return isAllHidden;
   }
 
   Widget _buildOverlayIndicatorsLabels() {
