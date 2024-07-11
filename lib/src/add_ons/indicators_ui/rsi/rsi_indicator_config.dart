@@ -68,6 +68,12 @@ class RSIIndicatorConfig extends IndicatorConfig {
   /// Whether to paint [oscillatorLinesConfig] zones fill.
   final bool showZones;
 
+  /// Indicator config summary
+  @override
+  String get configSummary =>
+      '$period, ${fieldType.characters.first.toUpperCase()}, '
+      '${showZones ? 'Y' : 'N'}';
+
   @override
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
