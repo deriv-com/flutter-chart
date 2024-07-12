@@ -565,6 +565,8 @@ class _ChartStateMobile extends _ChartState {
       );
       final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
+      final int indexInBottomConfigs = widget.bottomConfigs.indexOf(config);
+
       final Widget bottomChart = BottomChartMobile(
         series: series,
         isHidden: repository?.getHiddenStatus(index) ?? false,
@@ -579,9 +581,9 @@ class _ChartStateMobile extends _ChartState {
             _onIndicatorHideToggleTapped(repository, index),
         onSwap: (int offset) =>
             _onSwap(config, widget.indicatorsRepo!.items[index + offset]),
-        showMoveUpIcon: bottomSeries!.length > 1 && index != 0,
-        showMoveDownIcon:
-            bottomSeries.length > 1 && index != bottomSeries.length - 1,
+        showMoveUpIcon: bottomSeries!.length > 1 && indexInBottomConfigs != 0,
+        showMoveDownIcon: bottomSeries.length > 1 &&
+            indexInBottomConfigs != bottomSeries.length - 1,
       );
 
       return (repository?.getHiddenStatus(index) ?? false)
