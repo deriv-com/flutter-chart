@@ -518,6 +518,27 @@ class _ChartStateWeb extends _ChartState {
 }
 
 class _ChartStateMobile extends _ChartState {
+  double _bottomSectionHeight = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bottomSectionHeight =
+        _getBottomIndicatorsSectionHeightFraction(widget.bottomConfigs.length);
+  }
+
+  @override
+  void didUpdateWidget(covariant Chart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.bottomConfigs.length != widget.bottomConfigs.length) {
+      _bottomSectionHeight = _getBottomIndicatorsSectionHeightFraction(
+        widget.bottomConfigs.length,
+      );
+    }
+  }
+
   @override
   Widget buildChartsLayout(
     BuildContext context,
@@ -589,72 +610,70 @@ class _ChartStateMobile extends _ChartState {
     }
 
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      final double bottomSectionSize =
-          _getBottomIndicatorsSectionHeightFraction(bottomIndicatorsList);
-
-      return Column(
-        children: <Widget>[
-          Expanded(
-            child: Stack(
+        builder: (BuildContext context, BoxConstraints constraints) => Column(
               children: <Widget>[
-                MainChart(
-                  drawingTools: widget.drawingTools,
-                  controller: _controller,
-                  mainSeries: widget.mainSeries,
-                  overlaySeries: overlaySeries,
-                  annotations: widget.annotations,
-                  markerSeries: widget.markerSeries,
-                  pipSize: widget.pipSize,
-                  onCrosshairAppeared: widget.onCrosshairAppeared,
-                  onQuoteAreaChanged: widget.onQuoteAreaChanged,
-                  isLive: widget.isLive,
-                  showLoadingAnimationForHistoricalData: !widget.dataFitEnabled,
-                  showDataFitButton:
-                      widget.showDataFitButton ?? widget.dataFitEnabled,
-                  showScrollToLastTickButton:
-                      widget.showScrollToLastTickButton ?? true,
-                  opacity: widget.opacity,
-                  chartAxisConfig: widget.chartAxisConfig,
-                  verticalPaddingFraction: widget.verticalPaddingFraction,
-                  showCrosshair: widget.showCrosshair,
-                  onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                  onCrosshairHover: _onCrosshairHover,
-                  loadingAnimationColor: widget.loadingAnimationColor,
-                  currentTickAnimationDuration: currentTickAnimationDuration,
-                  quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-                  showCurrentTickBlinkAnimation:
-                      widget.showCurrentTickBlinkAnimation ?? true,
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: Dimens.margin08,
-                      horizontal: Dimens.margin04,
-                    ),
-                    child: _buildOverlayIndicatorsLabels(),
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      MainChart(
+                        drawingTools: widget.drawingTools,
+                        controller: _controller,
+                        mainSeries: widget.mainSeries,
+                        overlaySeries: overlaySeries,
+                        annotations: widget.annotations,
+                        markerSeries: widget.markerSeries,
+                        pipSize: widget.pipSize,
+                        onCrosshairAppeared: widget.onCrosshairAppeared,
+                        onQuoteAreaChanged: widget.onQuoteAreaChanged,
+                        isLive: widget.isLive,
+                        showLoadingAnimationForHistoricalData:
+                            !widget.dataFitEnabled,
+                        showDataFitButton:
+                            widget.showDataFitButton ?? widget.dataFitEnabled,
+                        showScrollToLastTickButton:
+                            widget.showScrollToLastTickButton ?? true,
+                        opacity: widget.opacity,
+                        chartAxisConfig: widget.chartAxisConfig,
+                        verticalPaddingFraction: widget.verticalPaddingFraction,
+                        showCrosshair: widget.showCrosshair,
+                        onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                        onCrosshairHover: _onCrosshairHover,
+                        loadingAnimationColor: widget.loadingAnimationColor,
+                        currentTickAnimationDuration:
+                            currentTickAnimationDuration,
+                        quoteBoundsAnimationDuration:
+                            quoteBoundsAnimationDuration,
+                        showCurrentTickBlinkAnimation:
+                            widget.showCurrentTickBlinkAnimation ?? true,
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Dimens.margin08,
+                            horizontal: Dimens.margin04,
+                          ),
+                          child: _buildOverlayIndicatorsLabels(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                Divider(
+                  height: 0.5,
+                  thickness: 1,
+                  color: context.read<ChartTheme>().hoverColor,
+                ),
+                const SizedBox(height: Dimens.margin04),
+                if (_isAllBottomIndicatorsHidden)
+                  ...bottomIndicatorsList
+                else
+                  SizedBox(
+                    height: _bottomSectionHeight * constraints.maxHeight,
+                    child: Column(children: bottomIndicatorsList),
+                  ),
               ],
-            ),
-          ),
-          Divider(
-            height: 0.5,
-            thickness: 1,
-            color: context.read<ChartTheme>().hoverColor,
-          ),
-          const SizedBox(height: Dimens.margin04),
-          if (_isAllBottomIndicatorsHidden)
-            ...bottomIndicatorsList
-          else
-            SizedBox(
-              height: bottomSectionSize * constraints.maxHeight,
-              child: Column(children: bottomIndicatorsList),
-            ),
-        ],
-      );
-    });
+            ));
   }
 
   void _onIndicatorHideToggleTapped(
@@ -667,10 +686,8 @@ class _ChartStateMobile extends _ChartState {
     );
   }
 
-  double _getBottomIndicatorsSectionHeightFraction(
-    List<Widget> bottomIndicatorsList,
-  ) =>
-      1 - (0.65 - 0.125 * (bottomIndicatorsList.length - 1));
+  double _getBottomIndicatorsSectionHeightFraction(int bottomIndicatorsCount) =>
+      1 - (0.65 - 0.125 * (bottomIndicatorsCount - 1));
 
   bool get _isAllBottomIndicatorsHidden {
     bool isAllHidden = true;
