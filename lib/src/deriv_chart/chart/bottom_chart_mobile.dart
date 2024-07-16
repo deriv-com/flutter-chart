@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
+import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:deriv_chart/src/widgets/bottom_indicator_title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -183,9 +184,9 @@ class IndicatorLabelMobile extends StatelessWidget {
             title,
             theme.textStyle(
               color: theme.base01Color,
-              textStyle: const TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 12,
+              textStyle: theme.textStyle(
+                textStyle: TextStyles.caption,
+                color: theme.base01Color,
               ),
             ),
           ),
