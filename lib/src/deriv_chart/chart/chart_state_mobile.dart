@@ -48,8 +48,7 @@ class _ChartStateMobile extends _ChartState {
       );
       final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-      final int indexInBottomConfigs =
-          referenceIndexOf(widget.bottomConfigs, config);
+      final int indexInBottomConfigs = widget.bottomConfigs.indexOf(config);
 
       final Widget bottomChart = BottomChartMobile(
         key: ValueKey<IndicatorConfig>(config),
@@ -161,15 +160,6 @@ class _ChartStateMobile extends _ChartState {
                   ),
               ],
             ));
-  }
-
-  int referenceIndexOf(List<dynamic> list, dynamic element) {
-    for (int i = 0; i < list.length; i++) {
-      if (identical(list[i], element)) {
-        return i;
-      }
-    }
-    return -1;
   }
 
   void _onIndicatorHideToggleTapped(
