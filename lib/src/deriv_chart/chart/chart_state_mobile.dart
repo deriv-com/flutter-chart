@@ -56,8 +56,7 @@ class _ChartStateMobile extends _ChartState {
         isHidden: repository?.getHiddenStatus(index) ?? false,
         granularity: widget.granularity,
         pipSize: config.pipSize,
-        title: '${config.displayTitle} '
-            '(${config.configSummary})',
+        title: '${config.shortTitle} (${config.configSummary})',
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
@@ -196,8 +195,7 @@ class _ChartStateMobile extends _ChartState {
         }
 
         overlayIndicatorsLabels.add(IndicatorLabelMobile(
-          title: '${config.displayTitle} '
-              '(${config.configSummary})',
+          title: '${config.shortTitle} (${config.configSummary})',
           showMoveUpIcon: false,
           showMoveDownIcon: false,
           isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,

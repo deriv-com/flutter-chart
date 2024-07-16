@@ -84,7 +84,7 @@ class MACDIndicatorConfig extends IndicatorConfig {
   String get configSummary => '$fastMAPeriod, $slowMAPeriod, $signalPeriod';
 
   @override
-  String get displayTitle => 'MACD';
+  String get shortTitle => 'MACD';
 
   @override
   IndicatorItem getItem(

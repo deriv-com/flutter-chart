@@ -69,7 +69,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   final bool showChannelFill;
 
   @override
-  String get displayTitle => 'BB';
+  String get shortTitle => 'BB';
 
   @override
   String get configSummary => '$period, ${fieldType[0].toUpperCase()}, '

@@ -67,7 +67,7 @@ class MAIndicatorConfig extends IndicatorConfig {
   final int offset;
 
   @override
-  String get displayTitle => 'MA';
+  String get shortTitle => 'MA';
 
   @override
   String get configSummary =>
