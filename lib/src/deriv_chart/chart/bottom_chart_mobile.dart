@@ -189,7 +189,7 @@ class IndicatorLabelMobile extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: Dimens.margin16),
+          const SizedBox(width: Dimens.margin08),
           _buildIcons(context),
         ],
       ),
@@ -231,19 +231,22 @@ class IndicatorLabelMobile extends StatelessWidget {
     required BuildContext context,
     void Function()? onPressed,
   }) =>
-      Material(
-        type: MaterialType.circle,
-        color: Colors.transparent,
-        clipBehavior: Clip.antiAlias,
-        child: IconButton(
-          icon: Icon(
-            iconData,
-            size: 16,
-            color: context.read<ChartTheme>().base01Color,
+      Padding(
+        padding: const EdgeInsets.only(left: Dimens.margin08),
+        child: Material(
+          type: MaterialType.circle,
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
+          child: IconButton(
+            icon: Icon(
+              iconData,
+              size: 16,
+              color: context.read<ChartTheme>().base01Color,
+            ),
+            onPressed: onPressed,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
           ),
-          onPressed: onPressed,
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
         ),
       );
 }
