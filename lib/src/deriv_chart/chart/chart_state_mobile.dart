@@ -64,8 +64,8 @@ class _ChartStateMobile extends _ChartState {
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
         onHideUnhideToggle: () =>
             _onIndicatorHideToggleTapped(repository, index),
-        onSwap: (int offset) => _onSwap(config,
-            widget.indicatorsRepo!.items[indexInBottomConfigs + offset]),
+        onSwap: (int offset) => _onSwap(
+            config, widget.bottomConfigs[indexInBottomConfigs + offset]),
         showMoveUpIcon: bottomSeries!.length > 1 && indexInBottomConfigs != 0,
         showMoveDownIcon: bottomSeries.length > 1 &&
             indexInBottomConfigs != bottomSeries.length - 1,
