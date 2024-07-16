@@ -71,7 +71,7 @@ class MAIndicatorConfig extends IndicatorConfig {
 
   @override
   String get configSummary =>
-      '$period, ${fieldType.characters.first.toUpperCase()}, '
+      '$period, ${fieldType[0].toUpperCase()}, '
       '${movingAverageType.shortTitle}, $offset';
 
   @override

@@ -72,8 +72,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   String get displayTitle => 'BB';
 
   @override
-  String get configSummary =>
-      '$period, ${fieldType.characters.first.toUpperCase()}, '
+  String get configSummary => '$period, ${fieldType[0].toUpperCase()}, '
       '$standardDeviation, ${movingAverageType.shortTitle}, '
       '${showChannelFill ? 'Y' : 'N'}';
 

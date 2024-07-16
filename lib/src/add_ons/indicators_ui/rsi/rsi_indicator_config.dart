@@ -70,8 +70,7 @@ class RSIIndicatorConfig extends IndicatorConfig {
 
   /// Indicator config summary
   @override
-  String get configSummary =>
-      '$period, ${fieldType.characters.first.toUpperCase()}, '
+  String get configSummary => '$period, ${fieldType[0].toUpperCase()}, '
       '${showZones ? 'Y' : 'N'}';
 
   @override
