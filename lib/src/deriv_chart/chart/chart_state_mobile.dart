@@ -48,7 +48,15 @@ class _ChartStateMobile extends _ChartState {
       );
       final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-      final int indexInBottomConfigs = widget.bottomConfigs.indexOf(config);
+      // TODO(Ramin): add id for indicators config
+      //  Because we don't have id for indicator configs, if two indicators of
+      // the same type have the same config we can't distinguish between them.
+      // and using normal List.indexOf will use equatable == which will compare
+      // based on the config objects values, which they will be exactly the same.
+      // Because of this reason until we add id for indicators config we find
+      // the index using reference (pointer) comparison.
+      final int indexInBottomConfigs =
+          referenceIndexOf(widget.bottomConfigs, config);
 
       final Widget bottomChart = BottomChartMobile(
         series: series,
@@ -158,6 +166,15 @@ class _ChartStateMobile extends _ChartState {
                   ),
               ],
             ));
+  }
+
+  int referenceIndexOf(List<dynamic> list, dynamic element) {
+    for (int i = 0; i < list.length; i++) {
+      if (identical(list[i], element)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   void _onIndicatorHideToggleTapped(
