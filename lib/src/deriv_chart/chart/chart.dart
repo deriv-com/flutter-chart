@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
@@ -44,7 +46,7 @@ class Chart extends StatefulWidget {
     this.pipSize = 4,
     this.controller,
     this.overlayConfigs,
-    this.bottomConfigs = const <IndicatorConfig>[],
+    this.bottomConfigs = const <AddOnConfigWrapper<IndicatorConfig>>[],
     this.markerSeries,
     this.theme,
     this.onCrosshairAppeared,
@@ -78,11 +80,11 @@ class Chart extends StatefulWidget {
   final DataSeries<Tick> mainSeries;
 
   /// List of overlay indicator series to add on chart beside the [mainSeries].
-  final List<IndicatorConfig>? overlayConfigs;
+  final List<AddOnConfigWrapper<IndicatorConfig>>? overlayConfigs;
 
   /// List of bottom indicator series to add on chart separate from the
   /// [mainSeries].
-  final List<IndicatorConfig> bottomConfigs;
+  final List<AddOnConfigWrapper<IndicatorConfig>> bottomConfigs;
 
   /// Open position marker series.
   final MarkerSeries? markerSeries;
@@ -212,13 +214,16 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     _controller = widget.controller ?? ChartController();
   }
 
-  List<Series>? _getIndicatorSeries(List<IndicatorConfig>? configs) {
+  List<Series>? _getIndicatorSeries(
+    List<AddOnConfigWrapper<IndicatorConfig>>? configs,
+  ) {
     if (configs == null) {
       return null;
     }
 
     return configs
-        .map((IndicatorConfig indicatorConfig) => indicatorConfig.getSeries(
+        .map((AddOnConfigWrapper<IndicatorConfig> indicatorConfig) =>
+            indicatorConfig.addOnConfig.getSeries(
               IndicatorInput(
                 widget.mainSeries.input,
                 widget.granularity,
@@ -279,7 +284,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
             if (overlaySeries != null) ...overlaySeries,
             if (bottomSeries != null) ...bottomSeries,
           ])
-      ..getConfigsList = (() => <IndicatorConfig>[
+      ..getConfigsList = (() => <AddOnConfigWrapper<IndicatorConfig>>[
             if (widget.overlayConfigs != null) ...?widget.overlayConfigs,
             ...widget.bottomConfigs,
           ]);
@@ -321,14 +326,14 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     List<Series>? bottomSeries,
   );
 
-  void _onEdit(IndicatorConfig config) {
+  void _onEdit(AddOnConfigWrapper<IndicatorConfig> config) {
     if (widget.indicatorsRepo != null) {
       final int index = widget.indicatorsRepo!.items.indexOf(config);
       widget.indicatorsRepo!.editAt(index);
     }
   }
 
-  void _onRemove(IndicatorConfig config) {
+  void _onRemove(AddOnConfigWrapper<IndicatorConfig> config) {
     expandedIndex = null;
 
     if (widget.indicatorsRepo != null) {
@@ -337,7 +342,10 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     }
   }
 
-  void _onSwap(IndicatorConfig config1, IndicatorConfig config2) {
+  void _onSwap(
+    AddOnConfigWrapper<IndicatorConfig> config1,
+    AddOnConfigWrapper<IndicatorConfig> config2,
+  ) {
     if (widget.indicatorsRepo != null) {
       final int index1 = widget.indicatorsRepo!.items.indexOf(config1);
       final int index2 = widget.indicatorsRepo!.items.indexOf(config2);

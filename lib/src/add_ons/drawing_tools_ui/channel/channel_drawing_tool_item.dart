@@ -1,4 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
@@ -37,11 +38,14 @@ class ChannelDrawingToolItemState
   DrawingPatterns? _pattern;
 
   @override
-  ChannelDrawingToolConfig createDrawingToolConfig() =>
-      ChannelDrawingToolConfig(
-        fillStyle: _currentFillStyle,
-        lineStyle: _currentLineStyle,
-        pattern: _currentPattern,
+  AddOnConfigWrapper<ChannelDrawingToolConfig> createDrawingToolConfig() =>
+      AddOnConfigWrapper<ChannelDrawingToolConfig>(
+        ChannelDrawingToolConfig(
+          fillStyle: _currentFillStyle,
+          lineStyle: _currentLineStyle,
+          pattern: _currentPattern,
+        ),
+        DateTime.now().millisecondsSinceEpoch.toString(),
       );
 
   @override

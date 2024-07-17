@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -93,9 +95,15 @@ class DrawingTools {
     }
 
     if (drawingToolsRepo!.items
-        .where((DrawingToolConfig element) => element.configId == drawingId)
+        .where((AddOnConfigWrapper<DrawingToolConfig> element) =>
+            element.addOnConfig.configId == drawingId)
         .isEmpty) {
-      drawingToolsRepo!.add(selectedDrawingTool!);
+      drawingToolsRepo!.add(
+        AddOnConfigWrapper<DrawingToolConfig>(
+          selectedDrawingTool!,
+          DateTime.now().millisecondsSinceEpoch.toString(),
+        ),
+      );
     }
 
     /// Clear the selected drawing tool if the drawing is finished
@@ -140,7 +148,8 @@ class DrawingTools {
   /// A method to get the list of drawing data from the repository
   List<DrawingData?> getDrawingData() => drawingToolsRepo != null
       ? drawingToolsRepo!.items
-          .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
+          .map<DrawingData?>((AddOnConfigWrapper<DrawingToolConfig> config) =>
+              config.addOnConfig.drawingData)
           .toList()
       : <DrawingData>[];
 }

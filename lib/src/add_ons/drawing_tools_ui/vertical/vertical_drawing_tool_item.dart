@@ -1,4 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
@@ -40,11 +42,14 @@ class VerticalDrawingToolItemState
   bool? _enableLabel;
 
   @override
-  VerticalDrawingToolConfig createDrawingToolConfig() =>
-      VerticalDrawingToolConfig(
-        lineStyle: _currentLineStyle,
-        pattern: _currentPattern,
-        enableLabel: _getEnableLanel,
+  AddOnConfigWrapper<VerticalDrawingToolConfig> createDrawingToolConfig() =>
+      AddOnConfigWrapper<VerticalDrawingToolConfig>(
+        VerticalDrawingToolConfig(
+          lineStyle: _currentLineStyle,
+          pattern: _currentPattern,
+          enableLabel: _getEnableLanel,
+        ),
+        DateTime.now().millisecondsSinceEpoch.toString(),
       );
 
   @override

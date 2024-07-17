@@ -1,3 +1,5 @@
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
@@ -107,20 +109,24 @@ class _DrawingPainterState extends State<DrawingPainter> {
       _updateDebounce.run(() {
         final DrawingData drawingData = widget.drawingData!;
         final int index = repo.items.indexWhere(
-          (DrawingToolConfig item) => item.configId == drawingData.id,
+          (AddOnConfigWrapper<DrawingToolConfig> item) =>
+              // Use wrapper model class id instead.
+              item.addOnConfig.configId == drawingData.id,
         );
 
         if (index > -1) {
-          final DrawingToolConfig config = repo.items[index];
+          final AddOnConfigWrapper<DrawingToolConfig> config =
+              repo.items[index];
 
-          final DrawingToolConfig updatedConfig = config.copyWith(
-            edgePoints: <EdgePoint>[
+          final AddOnConfigWrapper<DrawingToolConfig> updatedConfig =
+              config.copyWith(
+            addOnConfig: config.addOnConfig.copyWith(edgePoints: <EdgePoint>[
               _draggableStartPoint.getEdgePoint(),
               // TODO(Bahar-Deriv): Change the way storing edge points
-              if (config.configId!.contains('Channel'))
+              if (config.addOnConfig.configId!.contains('Channel'))
                 _draggableMiddlePoint.getEdgePoint(),
               _draggableEndPoint.getEdgePoint(),
-            ],
+            ]),
           );
           repo.updateAt(index, updatedConfig);
         }
@@ -299,9 +305,12 @@ class _DrawingPainterState extends State<DrawingPainter> {
                     drawingData: widget.drawingData!,
                     series: widget.series,
                     config: repo.items
-                        .where((DrawingToolConfig config) =>
-                            config.configId == widget.drawingData!.id)
-                        .first,
+                        .where((AddOnConfigWrapper<DrawingToolConfig> config) =>
+                            // TODO(Ramin): use id from wrapper model instead.
+                            config.addOnConfig.configId ==
+                            widget.drawingData!.id)
+                        .first
+                        .addOnConfig,
                     theme: context.watch<ChartTheme>(),
                     epochFromX: xAxis.epochFromX,
                     epochToX: xAxis.xFromEpoch,

@@ -1,4 +1,6 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
@@ -36,9 +38,13 @@ class LineDrawingToolItemState
   DrawingPatterns? _pattern;
 
   @override
-  LineDrawingToolConfig createDrawingToolConfig() => LineDrawingToolConfig(
-        lineStyle: _currentLineStyle,
-        pattern: _currentPattern,
+  AddOnConfigWrapper<LineDrawingToolConfig> createDrawingToolConfig() =>
+      AddOnConfigWrapper<LineDrawingToolConfig>(
+        LineDrawingToolConfig(
+          lineStyle: _currentLineStyle,
+          pattern: _currentPattern,
+        ),
+        DateTime.now().millisecondsSinceEpoch.toString(),
       );
 
   @override

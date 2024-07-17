@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +71,7 @@ abstract class DrawingToolItemState<T extends DrawingToolConfig>
 
   /// Returns the [DrawingToolConfig] which can be used to create the Series for
   /// this drawing tool.
-  T createDrawingToolConfig();
+  AddOnConfigWrapper<T> createDrawingToolConfig();
 
   /// Creates the menu options widget for this drawing tool.
   Widget getDrawingToolOptions();

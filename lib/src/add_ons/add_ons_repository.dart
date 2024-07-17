@@ -5,9 +5,12 @@ import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'add_on_config_wrapper.dart';
+
 /// Called to create an AddOnConfig object from a map.
-typedef CreateAddOn<T extends AddOnConfig> = T Function(
-    Map<String, dynamic> map);
+typedef CreateAddOn<T extends AddOnConfig> = AddOnConfigWrapper<T> Function(
+  Map<String, dynamic> map,
+);
 
 /// Called when the edit icon is clicked on an add-on.
 typedef OnEditAddOn = Function(int index);
@@ -20,7 +23,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     required this.createAddOn,
     required this.sharedPrefKey,
     this.onEditCallback,
-  }) : _addOns = <T>[];
+  }) : _addOns = <AddOnConfigWrapper<T>>[];
 
   /// Key String acts as a key for the set of indicators that are saved.
   ///
@@ -28,13 +31,13 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   String sharedPrefKey;
 
   /// List containing addOns
-  final List<T> _addOns;
+  final List<AddOnConfigWrapper<T>> _addOns;
   final List<bool> _hiddenStatus = <bool>[];
   SharedPreferences? _prefs;
 
   /// List of indicators.
   @override
-  List<T> get items => _addOns;
+  List<AddOnConfigWrapper<T>> get items => _addOns;
 
   /// Storage key of saved indicators/drawing tools.
   String get addOnsKey => 'addOns_${T.toString()}_$sharedPrefKey';
@@ -66,7 +69,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
         .toList();
 
     for (final Map<String, dynamic> decodedAddon in decodedAddons) {
-      final T addOnConfig = createAddOn.call(decodedAddon);
+      final AddOnConfigWrapper<T> addOnConfig = createAddOn.call(decodedAddon);
       items.add(addOnConfig);
       _hiddenStatus.add(false);
     }
@@ -74,7 +77,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// Adds a new indicator or drawing tool and updates storage.
   @override
-  void add(T addOnConfig) {
+  void add(AddOnConfigWrapper<T> addOnConfig) {
     items.add(addOnConfig);
     _hiddenStatus.add(false);
     _writeToPrefs();
@@ -89,7 +92,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// Updates indicator or drawing tool at [index] and updates storage.
   @override
-  void updateAt(int index, T addOnConfig) {
+  void updateAt(int index, AddOnConfigWrapper<T> addOnConfig) {
     if (index < 0 || index >= items.length) {
       return;
     }
@@ -134,7 +137,10 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     if (_prefs != null) {
       await _prefs!.setStringList(
         addOnsKey,
-        items.map((T config) => jsonEncode(config.toJson())).toList(),
+        items
+            .map((AddOnConfigWrapper<T> config) =>
+                jsonEncode(config.addOnConfig.toJson()))
+            .toList(),
       );
     }
   }

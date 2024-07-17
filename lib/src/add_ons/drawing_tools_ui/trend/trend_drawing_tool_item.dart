@@ -1,4 +1,6 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dart';
@@ -39,10 +41,14 @@ class TrendDrawingToolItemState
   DrawingPatterns? _pattern;
 
   @override
-  TrendDrawingToolConfig createDrawingToolConfig() => TrendDrawingToolConfig(
-        fillStyle: _currentFillStyle,
-        lineStyle: _currentLineStyle,
-        pattern: _currentPattern,
+  AddOnConfigWrapper<TrendDrawingToolConfig> createDrawingToolConfig() =>
+      AddOnConfigWrapper<TrendDrawingToolConfig>(
+        TrendDrawingToolConfig(
+          fillStyle: _currentFillStyle,
+          lineStyle: _currentLineStyle,
+          pattern: _currentPattern,
+        ),
+        DateTime.now().millisecondsSinceEpoch.toString(),
       );
 
   @override
@@ -55,6 +61,7 @@ class TrendDrawingToolItemState
           // TODO(maryia-deriv): implement _buildPatternField() to set pattern
         ],
       );
+
   Widget _buildColorField(String label, LineStyle style) => Row(
         children: <Widget>[
           Text(

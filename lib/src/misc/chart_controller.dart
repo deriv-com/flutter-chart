@@ -1,4 +1,5 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 
 /// ScrollToLastTick callback.
 
@@ -26,7 +27,7 @@ typedef GetQuoteFromY = double? Function(double);
 typedef GetSeriesList = List<Series>? Function();
 
 /// To get overlay/bottom configs
-typedef GetConfigsList = List<AddOnConfig>? Function();
+typedef GetConfigsList = List<AddOnConfigWrapper<AddOnConfig>>? Function();
 
 /// Toggles data fit mode
 typedef ToggleDataFitMode = Function({required bool enableDataFit});

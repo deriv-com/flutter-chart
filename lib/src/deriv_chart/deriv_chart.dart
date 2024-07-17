@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
@@ -197,14 +198,21 @@ class _DerivChartState extends State<DerivChart> {
 
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
-      createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
+      createAddOn: (Map<String, dynamic> map) =>
+          AddOnConfigWrapper<IndicatorConfig>(
+        IndicatorConfig.fromJson(map),
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ),
       onEditCallback: (_) => showIndicatorsDialog(),
       sharedPrefKey: widget.activeSymbol,
     );
 
     _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
       createAddOn: (Map<String, dynamic> map) =>
-          DrawingToolConfig.fromJson(map),
+          AddOnConfigWrapper<DrawingToolConfig>(
+        DrawingToolConfig.fromJson(map),
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ),
       onEditCallback: (_) => showDrawingToolsDialog(),
       sharedPrefKey: widget.activeSymbol,
     );
@@ -273,7 +281,7 @@ class _DerivChartState extends State<DerivChart> {
   }
 
   Widget _buildIndicatorsIcon() => Align(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.topRight,
         child: IconButton(
           icon: const Icon(Icons.architecture),
           onPressed: showIndicatorsDialog,
@@ -281,7 +289,7 @@ class _DerivChartState extends State<DerivChart> {
       );
 
   Widget _buildDrawingToolsIcon() => Align(
-        alignment: const FractionalOffset(0.1, 0),
+        alignment: const FractionalOffset(0.9, 0),
         child: IconButton(
           icon: const Icon(Icons.drive_file_rename_outline_outlined),
           onPressed: showDrawingToolsDialog,
@@ -304,17 +312,15 @@ class _DerivChartState extends State<DerivChart> {
                 pipSize: widget.pipSize,
                 granularity: widget.granularity,
                 controller: widget.controller,
-                overlayConfigs: <IndicatorConfig>[
-                  ...context
-                      .watch<Repository<IndicatorConfig>>()
-                      .items
-                      .where((IndicatorConfig config) => config.isOverlay)
+                overlayConfigs: <AddOnConfigWrapper<IndicatorConfig>>[
+                  ...context.watch<Repository<IndicatorConfig>>().items.where(
+                      (AddOnConfigWrapper<IndicatorConfig> config) =>
+                          config.addOnConfig.isOverlay)
                 ],
-                bottomConfigs: <IndicatorConfig>[
-                  ...context
-                      .watch<Repository<IndicatorConfig>>()
-                      .items
-                      .where((IndicatorConfig config) => !config.isOverlay)
+                bottomConfigs: <AddOnConfigWrapper<IndicatorConfig>>[
+                  ...context.watch<Repository<IndicatorConfig>>().items.where(
+                      (AddOnConfigWrapper<IndicatorConfig> config) =>
+                          !config.addOnConfig.isOverlay)
                 ],
                 drawingTools: widget.drawingTools ?? _drawingTools,
                 markerSeries: widget.markerSeries,

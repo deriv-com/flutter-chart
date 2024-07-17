@@ -1,4 +1,5 @@
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/continuous/continuous_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
@@ -110,14 +111,16 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               shrinkWrap: true,
               itemCount: repo.items.length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.items[index].getItem(
-                (DrawingToolConfig updatedConfig) {
-                  DrawingToolConfig config = updatedConfig;
+                  repo.items[index].addOnConfig.getItem(
+                (AddOnConfigWrapper<DrawingToolConfig> updatedConfig) {
+                  AddOnConfigWrapper<DrawingToolConfig> config = updatedConfig;
 
                   config = config.copyWith(
-                    configId: repo.items[index].configId,
-                    edgePoints: repo.items[index].edgePoints,
-                    drawingData: repo.items[index].drawingData,
+                    addOnConfig: config.addOnConfig.copyWith(
+                      configId: repo.items[index].addOnConfig.configId,
+                      edgePoints: repo.items[index].addOnConfig.edgePoints,
+                      drawingData: repo.items[index].addOnConfig.drawingData,
+                    ),
                   );
 
                   repo.updateAt(index, config);

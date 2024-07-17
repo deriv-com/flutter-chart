@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
@@ -43,7 +45,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
 
   /// A method to get the list of drawing data from the repository
   List<DrawingData?> getDrawingData() => repo.items
-      .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
+      .map<DrawingData?>((AddOnConfigWrapper<DrawingToolConfig> config) =>
+          config.addOnConfig.drawingData)
       .toList();
 
   /// Sets drawing as selected and unselects the rest of drawings
@@ -72,10 +75,12 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
   Widget build(BuildContext context) {
     repo = context.watch<Repository<DrawingToolConfig>>();
 
-    final List<DrawingToolConfig> configs = repo.items.toList();
+    final List<AddOnConfigWrapper<DrawingToolConfig>> configs =
+        repo.items.toList();
 
     final List<DrawingData?> drawings = configs
-        .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
+        .map<DrawingData?>((AddOnConfigWrapper<DrawingToolConfig> config) =>
+            config.addOnConfig.drawingData)
         .toList();
 
     return ClipRect(

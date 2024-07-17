@@ -1,3 +1,5 @@
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/commodity_channel_index/cci_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
@@ -152,7 +154,12 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
                     ? () {
-                        repo.add(_selectedIndicator!);
+                        repo.add(
+                          AddOnConfigWrapper(
+                            _selectedIndicator!,
+                            DateTime.now().millisecondsSinceEpoch.toString(),
+                          ),
+                        );
                         setState(() {});
                       }
                     : null,
@@ -164,9 +171,11 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
               shrinkWrap: true,
               itemCount: repo.items.length,
               itemBuilder: (BuildContext context, int index) =>
-                  repo.items[index].getItem(
-                (IndicatorConfig updatedConfig) =>
-                    repo.updateAt(index, updatedConfig),
+                  repo.items[index].addOnConfig.getItem(
+                (IndicatorConfig updatedConfig) => repo.updateAt(
+                  index,
+                  repo.items[index].copyWith(addOnConfig: updatedConfig),
+                ),
                 () {
                   repo.removeAt(index);
                   setState(() {});

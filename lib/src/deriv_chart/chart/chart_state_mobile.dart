@@ -35,12 +35,12 @@ class _ChartStateMobile extends _ChartState {
         widget.quoteBoundsAnimationDuration ?? _defaultDuration;
 
     final List<Widget> bottomIndicatorsList = widget.indicatorsRepo!.items
-        .mapIndexed((int index, IndicatorConfig config) {
-      if (config.isOverlay) {
+        .mapIndexed((int index, AddOnConfigWrapper<IndicatorConfig> config) {
+      if (config.addOnConfig.isOverlay) {
         return const SizedBox.shrink();
       }
 
-      final Series series = config.getSeries(
+      final Series series = config.addOnConfig.getSeries(
         IndicatorInput(
           widget.mainSeries.input,
           widget.granularity,
@@ -48,22 +48,16 @@ class _ChartStateMobile extends _ChartState {
       );
       final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-      // TODO(Ramin): add id for indicators config
-      // Because we don't have id for indicator configs, if two indicators of
-      // the same type have the same config we can't distinguish between them.
-      // and using normal List.indexOf will use equatable == which will compare
-      // based on the config objects values, and will return the wrong index.
-      // Because of this reason until we add id for indicators config we find
-      // the index using reference (pointer) comparison.
-      final int indexInBottomConfigs =
-          referenceIndexOf(widget.bottomConfigs, config);
+      final int indexInBottomConfigs = widget.bottomConfigs.indexOf(config);
 
       final Widget bottomChart = BottomChartMobile(
+        key: ValueKey<String>('BottomIndicator-${config.id}'),
         series: series,
         isHidden: repository?.getHiddenStatus(index) ?? false,
         granularity: widget.granularity,
-        pipSize: config.pipSize,
-        title: '${config.shortTitle} (${config.configSummary})',
+        pipSize: config.addOnConfig.pipSize,
+        title:
+            '${config.addOnConfig.shortTitle} (${config.addOnConfig.configSummary})',
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
@@ -87,7 +81,8 @@ class _ChartStateMobile extends _ChartState {
 
     if (widget.indicatorsRepo != null) {
       for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-        final IndicatorConfig config = widget.indicatorsRepo!.items[i];
+        final IndicatorConfig config =
+            widget.indicatorsRepo!.items[i].addOnConfig;
         if (widget.indicatorsRepo!.getHiddenStatus(i) || !config.isOverlay) {
           continue;
         }
@@ -193,7 +188,7 @@ class _ChartStateMobile extends _ChartState {
   bool get _isAllBottomIndicatorsHidden {
     bool isAllHidden = true;
     for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-      if (!widget.indicatorsRepo!.items[i].isOverlay &&
+      if (!widget.indicatorsRepo!.items[i].addOnConfig.isOverlay &&
           !(widget.indicatorsRepo?.getHiddenStatus(i) ?? false)) {
         isAllHidden = false;
       }
@@ -205,7 +200,8 @@ class _ChartStateMobile extends _ChartState {
     final List<Widget> overlayIndicatorsLabels = <Widget>[];
     if (widget.indicatorsRepo != null) {
       for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-        final IndicatorConfig config = widget.indicatorsRepo!.items[i];
+        final IndicatorConfig config =
+            widget.indicatorsRepo!.items[i].addOnConfig;
         if (!config.isOverlay) {
           continue;
         }

@@ -1,4 +1,6 @@
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/generated/l10n.dart';
+import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
@@ -35,9 +37,13 @@ class FibfanDrawingToolItemState
   LineStyle? _lineStyle;
 
   @override
-  FibfanDrawingToolConfig createDrawingToolConfig() => FibfanDrawingToolConfig(
-        fillStyle: _currentFillStyle,
-        lineStyle: _currentLineStyle,
+  AddOnConfigWrapper<FibfanDrawingToolConfig> createDrawingToolConfig() =>
+      AddOnConfigWrapper<FibfanDrawingToolConfig>(
+        FibfanDrawingToolConfig(
+          fillStyle: _currentFillStyle,
+          lineStyle: _currentLineStyle,
+        ),
+        DateTime.now().millisecondsSinceEpoch.toString(),
       );
 
   @override
