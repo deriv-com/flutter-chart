@@ -51,7 +51,6 @@ class _ChartStateMobile extends _ChartState {
       final int indexInBottomConfigs = widget.bottomConfigs.indexOf(config);
 
       final Widget bottomChart = BottomChartMobile(
-        key: ValueKey<IndicatorConfig>(config),
         series: series,
         isHidden: repository?.getHiddenStatus(index) ?? false,
         granularity: widget.granularity,

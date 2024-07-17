@@ -26,7 +26,7 @@ class YAxisConfig {
   ///drawing over the Y-axis labels.
   void yAxisClipping(Canvas canvas, Size size, VoidCallback paintingLogic) {
     final Rect clipRect =
-        Rect.fromLTWH(0, 0, size.width - cachedLabelWidth!, size.height);
+        Rect.fromLTWH(0, 0, size.width - (cachedLabelWidth ?? 0), size.height);
     canvas
       ..save()
       ..clipRect(clipRect);
