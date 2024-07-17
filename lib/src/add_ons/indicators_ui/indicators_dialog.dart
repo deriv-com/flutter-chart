@@ -1,4 +1,3 @@
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/add_on_config_wrapper.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/commodity_channel_index/cci_indicator_config.dart';
@@ -155,7 +154,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 onPressed: _selectedIndicator != null
                     ? () {
                         repo.add(
-                          AddOnConfigWrapper(
+                          AddOnConfigWrapper<IndicatorConfig>(
                             _selectedIndicator!,
                             generateRandomId(),
                           ),
