@@ -32,8 +32,11 @@ abstract class Repository<T> extends ChangeNotifier {
   void clear();
 
   /// Updates the hidden status of an indicator or drawing tool.
-  void updateHiddenStatus({required int index, required bool hidden});
+  void updateHiddenStatus({
+    required AddOnConfigWrapper<T> addOn,
+    required bool hidden,
+  });
 
   /// Retrieves the hidden status of an indicator or drawing tool.
-  bool getHiddenStatus(int index);
+  bool getHiddenStatus(AddOnConfigWrapper<T> addOn);
 }

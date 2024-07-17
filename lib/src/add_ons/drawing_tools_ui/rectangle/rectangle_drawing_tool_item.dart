@@ -48,7 +48,7 @@ class RectangleDrawingToolItemState
           lineStyle: _currentLineStyle,
           pattern: _currentPattern,
         ),
-        generateRandomId(),
+        generateRandomUniqueId(),
       );
 
   @override

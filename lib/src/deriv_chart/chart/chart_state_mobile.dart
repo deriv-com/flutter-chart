@@ -53,7 +53,7 @@ class _ChartStateMobile extends _ChartState {
       final Widget bottomChart = BottomChartMobile(
         key: ValueKey<String>('BottomIndicator-${config.id}'),
         series: series,
-        isHidden: repository?.getHiddenStatus(index) ?? false,
+        isHidden: repository?.getHiddenStatus(config) ?? false,
         granularity: widget.granularity,
         pipSize: config.addOnConfig.pipSize,
         title: '${config.addOnConfig.shortTitle} '
@@ -62,7 +62,7 @@ class _ChartStateMobile extends _ChartState {
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
         onHideUnhideToggle: () =>
-            _onIndicatorHideToggleTapped(repository, index),
+            _onIndicatorHideToggleTapped(repository, config),
         onSwap: (int offset) => _onSwap(
             config, widget.bottomConfigs[indexInBottomConfigs + offset]),
         showMoveUpIcon: bottomSeries!.length > 1 && indexInBottomConfigs != 0,
@@ -70,7 +70,7 @@ class _ChartStateMobile extends _ChartState {
             indexInBottomConfigs != bottomSeries.length - 1,
       );
 
-      return (repository?.getHiddenStatus(index) ?? false)
+      return (repository?.getHiddenStatus(config) ?? false)
           ? bottomChart
           : Expanded(
               child: bottomChart,
@@ -81,13 +81,14 @@ class _ChartStateMobile extends _ChartState {
 
     if (widget.indicatorsRepo != null) {
       for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-        final IndicatorConfig config =
-            widget.indicatorsRepo!.items[i].addOnConfig;
-        if (widget.indicatorsRepo!.getHiddenStatus(i) || !config.isOverlay) {
+        final AddOnConfigWrapper<IndicatorConfig> config =
+            widget.indicatorsRepo!.items[i];
+        if (widget.indicatorsRepo!.getHiddenStatus(config) ||
+            !config.addOnConfig.isOverlay) {
           continue;
         }
 
-        overlaySeries.add(config.getSeries(
+        overlaySeries.add(config.addOnConfig.getSeries(
           IndicatorInput(
             widget.mainSeries.input,
             widget.granularity,
@@ -174,45 +175,39 @@ class _ChartStateMobile extends _ChartState {
 
   void _onIndicatorHideToggleTapped(
     Repository<IndicatorConfig>? repository,
-    int index,
+    AddOnConfigWrapper<IndicatorConfig> config,
   ) {
     repository?.updateHiddenStatus(
-      index: index,
-      hidden: !repository.getHiddenStatus(index),
+      addOn: config,
+      hidden: !repository.getHiddenStatus(config),
     );
   }
 
   double _getBottomIndicatorsSectionHeightFraction(int bottomIndicatorsCount) =>
       1 - (0.65 - 0.125 * (bottomIndicatorsCount - 1));
 
-  bool get _isAllBottomIndicatorsHidden {
-    bool isAllHidden = true;
-    for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-      if (!widget.indicatorsRepo!.items[i].addOnConfig.isOverlay &&
-          !(widget.indicatorsRepo?.getHiddenStatus(i) ?? false)) {
-        isAllHidden = false;
-      }
-    }
-    return isAllHidden;
-  }
+  bool get _isAllBottomIndicatorsHidden =>
+      widget.bottomConfigs.every((AddOnConfigWrapper<IndicatorConfig> config) =>
+          widget.indicatorsRepo!.getHiddenStatus(config));
 
   Widget _buildOverlayIndicatorsLabels() {
     final List<Widget> overlayIndicatorsLabels = <Widget>[];
     if (widget.indicatorsRepo != null) {
       for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-        final IndicatorConfig config =
-            widget.indicatorsRepo!.items[i].addOnConfig;
-        if (!config.isOverlay) {
+        final AddOnConfigWrapper<IndicatorConfig> config =
+            widget.indicatorsRepo!.items[i];
+        if (!config.addOnConfig.isOverlay) {
           continue;
         }
 
         overlayIndicatorsLabels.add(IndicatorLabelMobile(
-          title: '${config.shortTitle} (${config.configSummary})',
+          title: '${config.addOnConfig.shortTitle}'
+              ' (${config.addOnConfig.configSummary})',
           showMoveUpIcon: false,
           showMoveDownIcon: false,
-          isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,
+          isHidden: widget.indicatorsRepo?.getHiddenStatus(config) ?? false,
           onHideUnhideToggle: () {
-            _onIndicatorHideToggleTapped(widget.indicatorsRepo, i);
+            _onIndicatorHideToggleTapped(widget.indicatorsRepo, config);
           },
         ));
       }

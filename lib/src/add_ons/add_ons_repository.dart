@@ -32,7 +32,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// List containing addOns
   final List<AddOnConfigWrapper<T>> _addOns;
-  final List<bool> _hiddenStatus = <bool>[];
+  final Map<String, bool> _hiddenStatus = <String, bool>{};
   SharedPreferences? _prefs;
 
   /// List of indicators.
@@ -71,7 +71,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     for (final Map<String, dynamic> decodedAddon in decodedAddons) {
       final AddOnConfigWrapper<T> addOnConfig = createAddOn.call(decodedAddon);
       items.add(addOnConfig);
-      _hiddenStatus.add(false);
+      _hiddenStatus[addOnConfig.id] = false;
     }
   }
 
@@ -79,7 +79,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   @override
   void add(AddOnConfigWrapper<T> addOnConfig) {
     items.add(addOnConfig);
-    _hiddenStatus.add(false);
+    _hiddenStatus[addOnConfig.id] = false;
     _writeToPrefs();
     notifyListeners();
   }
@@ -108,8 +108,8 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     if (index < 0 || index >= items.length) {
       return;
     }
-    items.removeAt(index);
-    _hiddenStatus.removeAt(index);
+    final AddOnConfigWrapper<T> removedItem = items.removeAt(index);
+    _hiddenStatus.removeWhere((String key, _) => key == removedItem.id);
     _writeToPrefs();
     notifyListeners();
   }
@@ -128,7 +128,6 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   @override
   void swap(int index1, int index2) {
     items.swap(index1, index2);
-    _hiddenStatus.swap(index1, index2);
     _writeToPrefs();
     notifyListeners();
   }
@@ -147,11 +146,15 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// Updates the hidden status of an indicator or drawing tool.
   @override
-  void updateHiddenStatus({required int index, required bool hidden}) {
-    _hiddenStatus[index] = hidden;
+  void updateHiddenStatus({
+    required AddOnConfigWrapper<T> addOn,
+    required bool hidden,
+  }) {
+    _hiddenStatus[addOn.id] = hidden;
     notifyListeners();
   }
 
   @override
-  bool getHiddenStatus(int index) => _hiddenStatus[index];
+  bool getHiddenStatus(AddOnConfigWrapper<T> addOn) =>
+      _hiddenStatus[addOn.id] ?? false;
 }

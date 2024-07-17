@@ -42,7 +42,7 @@ class FibfanDrawingToolItemState
           fillStyle: _currentFillStyle,
           lineStyle: _currentLineStyle,
         ),
-        generateRandomId(),
+        generateRandomUniqueId(),
       );
 
   @override

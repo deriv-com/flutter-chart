@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 
 /// Config wrapper for add-ons such as indicators and drawing tools.
@@ -28,4 +30,6 @@ class AddOnConfigWrapper<T> with EquatableMixin {
 }
 
 /// Generates a random id for the add-on config.
-String generateRandomId() => DateTime.now().microsecondsSinceEpoch.toString();
+String generateRandomUniqueId() =>
+    '${DateTime.now().microsecondsSinceEpoch.toString()}'
+    '${Random().nextInt(10000)}';

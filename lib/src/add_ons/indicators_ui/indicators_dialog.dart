@@ -156,7 +156,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                         repo.add(
                           AddOnConfigWrapper<IndicatorConfig>(
                             _selectedIndicator!,
-                            generateRandomId(),
+                            generateRandomUniqueId(),
                           ),
                         );
                         setState(() {});

@@ -48,7 +48,7 @@ class HorizontalDrawingToolItemState
           pattern: _currentPattern,
           enableLabel: _getEnableLanel,
         ),
-        generateRandomId(),
+        generateRandomUniqueId(),
       );
 
   @override

@@ -48,7 +48,7 @@ class VerticalDrawingToolItemState
           pattern: _currentPattern,
           enableLabel: _getEnableLanel,
         ),
-        generateRandomId(),
+        generateRandomUniqueId(),
       );
 
   @override

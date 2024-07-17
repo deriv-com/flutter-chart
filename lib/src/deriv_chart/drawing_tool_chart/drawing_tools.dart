@@ -100,7 +100,7 @@ class DrawingTools {
       drawingToolsRepo!.add(
         AddOnConfigWrapper<DrawingToolConfig>(
           selectedDrawingTool!,
-          generateRandomId(),
+          generateRandomUniqueId(),
         ),
       );
     }
