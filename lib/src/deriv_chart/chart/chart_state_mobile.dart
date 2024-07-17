@@ -34,7 +34,7 @@ class _ChartStateMobile extends _ChartState {
     final Duration quoteBoundsAnimationDuration =
         widget.quoteBoundsAnimationDuration ?? _defaultDuration;
 
-    final List<Widget> bottomIndicatorsList = widget.indicatorsRepo!.items
+    final List<Widget> bottomIndicatorsList = widget.bottomConfigs
         .mapIndexed((int index, AddOnConfigWrapper<IndicatorConfig> config) {
       if (config.addOnConfig.isOverlay) {
         return const SizedBox.shrink();
@@ -47,8 +47,6 @@ class _ChartStateMobile extends _ChartState {
         ),
       );
       final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
-
-      final int indexInBottomConfigs = widget.bottomConfigs.indexOf(config);
 
       final Widget bottomChart = BottomChartMobile(
         key: ValueKey<String>('BottomIndicator-${config.id}'),
@@ -63,11 +61,11 @@ class _ChartStateMobile extends _ChartState {
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
         onHideUnhideToggle: () =>
             _onIndicatorHideToggleTapped(repository, config),
-        onSwap: (int offset) => _onSwap(
-            config, widget.bottomConfigs[indexInBottomConfigs + offset]),
-        showMoveUpIcon: bottomSeries!.length > 1 && indexInBottomConfigs != 0,
-        showMoveDownIcon: bottomSeries.length > 1 &&
-            indexInBottomConfigs != bottomSeries.length - 1,
+        onSwap: (int offset) =>
+            _onSwap(config, widget.bottomConfigs[index + offset]),
+        showMoveUpIcon: bottomSeries!.length > 1 && index != 0,
+        showMoveDownIcon:
+            bottomSeries.length > 1 && index != bottomSeries.length - 1,
       );
 
       return (repository?.getHiddenStatus(config) ?? false)
@@ -77,25 +75,18 @@ class _ChartStateMobile extends _ChartState {
             );
     }).toList();
 
-    final List<Series> overlaySeries = <Series>[];
-
-    if (widget.indicatorsRepo != null) {
-      for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-        final AddOnConfigWrapper<IndicatorConfig> config =
-            widget.indicatorsRepo!.items[i];
-        if (widget.indicatorsRepo!.getHiddenStatus(config) ||
-            !config.addOnConfig.isOverlay) {
-          continue;
-        }
-
-        overlaySeries.add(config.addOnConfig.getSeries(
-          IndicatorInput(
-            widget.mainSeries.input,
-            widget.granularity,
-          ),
-        ));
-      }
-    }
+    final List<Series> overlaySeriesToShow = widget.overlayConfigs
+            ?.where((AddOnConfigWrapper<IndicatorConfig> config) =>
+                !(widget.indicatorsRepo?.getHiddenStatus(config) ?? false))
+            .map((AddOnConfigWrapper<IndicatorConfig> config) =>
+                config.addOnConfig.getSeries(
+                  IndicatorInput(
+                    widget.mainSeries.input,
+                    widget.granularity,
+                  ),
+                ))
+            .toList() ??
+        <Series>[];
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) => Column(
@@ -107,7 +98,7 @@ class _ChartStateMobile extends _ChartState {
                         drawingTools: widget.drawingTools,
                         controller: _controller,
                         mainSeries: widget.mainSeries,
-                        overlaySeries: overlaySeries,
+                        overlaySeries: overlaySeriesToShow,
                         annotations: widget.annotations,
                         markerSeries: widget.markerSeries,
                         pipSize: widget.pipSize,
@@ -162,15 +153,6 @@ class _ChartStateMobile extends _ChartState {
                   ),
               ],
             ));
-  }
-
-  int referenceIndexOf(List<dynamic> list, dynamic element) {
-    for (int i = 0; i < list.length; i++) {
-      if (identical(list[i], element)) {
-        return i;
-      }
-    }
-    return -1;
   }
 
   void _onIndicatorHideToggleTapped(
