@@ -49,7 +49,7 @@ class HorizontalDrawingToolItemState
           pattern: _currentPattern,
           enableLabel: _getEnableLanel,
         ),
-        DateTime.now().millisecondsSinceEpoch.toString(),
+        generateRandomId(),
       );
 
   @override

@@ -26,3 +26,6 @@ class AddOnConfigWrapper<T> with EquatableMixin {
   @override
   List<Object?> get props => <Object?>[addOnConfig, id];
 }
+
+/// Generates a random id for the add-on config.
+String generateRandomId() => DateTime.now().microsecondsSinceEpoch.toString();

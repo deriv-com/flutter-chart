@@ -157,7 +157,7 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                         repo.add(
                           AddOnConfigWrapper(
                             _selectedIndicator!,
-                            DateTime.now().millisecondsSinceEpoch.toString(),
+                            generateRandomId(),
                           ),
                         );
                         setState(() {});

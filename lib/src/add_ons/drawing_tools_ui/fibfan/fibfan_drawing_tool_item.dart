@@ -43,7 +43,7 @@ class FibfanDrawingToolItemState
           fillStyle: _currentFillStyle,
           lineStyle: _currentLineStyle,
         ),
-        DateTime.now().millisecondsSinceEpoch.toString(),
+        generateRandomId(),
       );
 
   @override

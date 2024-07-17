@@ -201,7 +201,7 @@ class _DerivChartState extends State<DerivChart> {
       createAddOn: (Map<String, dynamic> map) =>
           AddOnConfigWrapper<IndicatorConfig>(
         IndicatorConfig.fromJson(map),
-        DateTime.now().millisecondsSinceEpoch.toString(),
+        generateRandomId(),
       ),
       onEditCallback: (_) => showIndicatorsDialog(),
       sharedPrefKey: widget.activeSymbol,
@@ -211,7 +211,7 @@ class _DerivChartState extends State<DerivChart> {
       createAddOn: (Map<String, dynamic> map) =>
           AddOnConfigWrapper<DrawingToolConfig>(
         DrawingToolConfig.fromJson(map),
-        DateTime.now().millisecondsSinceEpoch.toString(),
+        generateRandomId(),
       ),
       onEditCallback: (_) => showDrawingToolsDialog(),
       sharedPrefKey: widget.activeSymbol,

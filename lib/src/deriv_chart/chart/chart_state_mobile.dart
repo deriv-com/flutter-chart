@@ -56,8 +56,8 @@ class _ChartStateMobile extends _ChartState {
         isHidden: repository?.getHiddenStatus(index) ?? false,
         granularity: widget.granularity,
         pipSize: config.addOnConfig.pipSize,
-        title:
-            '${config.addOnConfig.shortTitle} (${config.addOnConfig.configSummary})',
+        title: '${config.addOnConfig.shortTitle} '
+            '(${config.addOnConfig.configSummary})',
         currentTickAnimationDuration: currentTickAnimationDuration,
         quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
         bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),

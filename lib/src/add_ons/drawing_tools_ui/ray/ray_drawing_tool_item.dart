@@ -44,7 +44,7 @@ class RayDrawingToolItemState
           lineStyle: _currentLineStyle,
           pattern: _currentPattern,
         ),
-        DateTime.now().millisecondsSinceEpoch.toString(),
+        generateRandomId(),
       );
 
   @override

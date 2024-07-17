@@ -101,7 +101,7 @@ class DrawingTools {
       drawingToolsRepo!.add(
         AddOnConfigWrapper<DrawingToolConfig>(
           selectedDrawingTool!,
-          DateTime.now().millisecondsSinceEpoch.toString(),
+          generateRandomId(),
         ),
       );
     }
