@@ -19,9 +19,9 @@ abstract class AddOnConfig with EquatableMixin {
 
   /// The number of this add-on.
   ///
-  /// The default value is 0, that means there is only one add-on of this type
-  /// added by the user. in case the user adds more than one add-on of the same
-  /// type, the number will be incremented by 1 for each new add-on.
+  /// The default value is 0, that means this instance is the first add-on of
+  /// this type added by the user. in case the user adds more than one add-on
+  /// of the same type, the number will be incremented by 1 for each new add-on.
   final int number;
 
   @override
