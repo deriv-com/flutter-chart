@@ -43,7 +43,8 @@ class CCIIndicatorItemState extends IndicatorItemState<CCIIndicatorConfig> {
   bool? _showZones;
 
   @override
-  CCIIndicatorConfig createIndicatorConfig() => CCIIndicatorConfig(
+  CCIIndicatorConfig createIndicatorConfig() =>
+      (widget.config as CCIIndicatorConfig).copyWith(
         period: _currentPeriod,
         oscillatorLinesConfig: OscillatorLinesConfig(
           overboughtValue: _currentOverBoughtPrice,

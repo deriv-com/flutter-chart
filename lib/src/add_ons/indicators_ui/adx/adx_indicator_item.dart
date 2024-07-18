@@ -39,7 +39,8 @@ class ADXIndicatorItemState extends IndicatorItemState<ADXIndicatorConfig> {
   bool? _showSeries;
 
   @override
-  ADXIndicatorConfig createIndicatorConfig() => ADXIndicatorConfig(
+  ADXIndicatorConfig createIndicatorConfig() =>
+      (widget.config as ADXIndicatorConfig).copyWith(
         period: _currentPeriod,
         smoothingPeriod: _currentSmoothingPeriod,
         showChannelFill: _currentChannelFill,

@@ -42,7 +42,8 @@ class MAEnvIndicatorItemState extends MAIndicatorItemState {
   ShiftType? shiftType;
 
   @override
-  MAEnvIndicatorConfig createIndicatorConfig() => MAEnvIndicatorConfig(
+  MAEnvIndicatorConfig createIndicatorConfig() =>
+      (widget.config as MAEnvIndicatorConfig).copyWith(
         shiftType: getCurrentShiftType(),
         shift: getCurrentShift(),
         fieldType: getCurrentField(),

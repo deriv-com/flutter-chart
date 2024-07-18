@@ -40,7 +40,7 @@ class StochasticOscillatorIndicatorItemState
 
   @override
   StochasticOscillatorIndicatorConfig createIndicatorConfig() =>
-      StochasticOscillatorIndicatorConfig(
+      (widget.config as StochasticOscillatorIndicatorConfig).copyWith(
         period: _currentPeriod,
         overBoughtPrice: _currentOverBoughtPrice,
         overSoldPrice: _currentOverSoldPrice,

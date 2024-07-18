@@ -34,7 +34,8 @@ class ROCIndicatorItemState extends IndicatorItemState<ROCIndicatorConfig> {
   String? _field;
 
   @override
-  ROCIndicatorConfig createIndicatorConfig() => ROCIndicatorConfig(
+  ROCIndicatorConfig createIndicatorConfig() =>
+      (widget.config as ROCIndicatorConfig).copyWith(
         period: _currentPeriod,
         fieldType: _currentField,
       );

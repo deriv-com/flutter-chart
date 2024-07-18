@@ -33,7 +33,7 @@ class AwesomeOscillatorIndicatorItemState
     extends IndicatorItemState<AwesomeOscillatorIndicatorConfig> {
   @override
   AwesomeOscillatorIndicatorConfig createIndicatorConfig() =>
-      const AwesomeOscillatorIndicatorConfig();
+      widget.config as AwesomeOscillatorIndicatorConfig;
 
   @override
   Widget getIndicatorOptions() => Container();

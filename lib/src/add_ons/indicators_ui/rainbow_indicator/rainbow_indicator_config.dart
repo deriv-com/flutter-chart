@@ -28,6 +28,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
     this.bandsCount = 10,
     this.rainbowLineStyles,
     bool showLastIndicator = false,
+    super.number,
   })  : assert(
           rainbowLineStyles == null || rainbowLineStyles.length == bandsCount,
           '''If you provide [rainbowLineStyles] it should have the same length as [bandsCount]. 
@@ -95,5 +96,30 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  RainbowIndicatorConfig copyWith({
+    int? period,
+    MovingAverageType? movingAverageType,
+    String? fieldType,
+    LineStyle? lineStyle,
+    List<LineStyle>? rainbowLineStyles,
+    int? offset,
+    bool? isOverlay,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+    int? bandsCount,
+  }) =>
+      RainbowIndicatorConfig(
+        period: period ?? this.period,
+        movingAverageType: movingAverageType ?? this.movingAverageType,
+        fieldType: fieldType ?? this.fieldType,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        number: number ?? this.number,
+        bandsCount: bandsCount ?? this.bandsCount,
+        rainbowLineStyles: rainbowLineStyles ?? this.rainbowLineStyles,
       );
 }

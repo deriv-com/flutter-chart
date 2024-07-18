@@ -38,7 +38,8 @@ class GatorIndicatorItemState extends IndicatorItemState<GatorIndicatorConfig> {
   int? _lipsPeriod;
 
   @override
-  GatorIndicatorConfig createIndicatorConfig() => GatorIndicatorConfig(
+  GatorIndicatorConfig createIndicatorConfig() =>
+      (widget.config as GatorIndicatorConfig).copyWith(
         jawPeriod: currentJawPeriod,
         jawOffset: currentJawOffset,
         teethPeriod: currentTeethPeriod,

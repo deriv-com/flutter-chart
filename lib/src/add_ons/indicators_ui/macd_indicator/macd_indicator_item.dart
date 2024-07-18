@@ -35,7 +35,8 @@ class MACDIndicatorItemState extends IndicatorItemState<MACDIndicatorConfig> {
   int? _signalPeriod;
 
   @override
-  MACDIndicatorConfig createIndicatorConfig() => MACDIndicatorConfig(
+  MACDIndicatorConfig createIndicatorConfig() =>
+      (widget.config as MACDIndicatorConfig).copyWith(
         fastMAPeriod: _currentFastMAPeriod,
         slowMAPeriod: _currentSlowMAPeriod,
         signalPeriod: _currentSignalPeriod,

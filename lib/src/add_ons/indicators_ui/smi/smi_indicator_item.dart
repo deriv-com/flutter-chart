@@ -46,16 +46,17 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   int? _signalPeriod;
 
   @override
-  SMIIndicatorConfig createIndicatorConfig() => SMIIndicatorConfig(
-      period: _currentPeriod,
-      smoothingPeriod: _currentSmoothingPeriod,
-      doubleSmoothingPeriod: _currentDoubleSmoothingPeriod,
-      maType: _currentMAType,
-      signalPeriod: _currentSignalPeriod,
-      smiOscillatorLimits: OscillatorLinesConfig(
-        overboughtValue: _currentOverboughtValue,
-        oversoldValue: _currentOversoldValue,
-      ));
+  SMIIndicatorConfig createIndicatorConfig() =>
+      (widget.config as SMIIndicatorConfig).copyWith(
+          period: _currentPeriod,
+          smoothingPeriod: _currentSmoothingPeriod,
+          doubleSmoothingPeriod: _currentDoubleSmoothingPeriod,
+          maType: _currentMAType,
+          signalPeriod: _currentSignalPeriod,
+          smiOscillatorLimits: OscillatorLinesConfig(
+            overboughtValue: _currentOverboughtValue,
+            oversoldValue: _currentOversoldValue,
+          ));
 
   @override
   Widget getIndicatorOptions() => Column(

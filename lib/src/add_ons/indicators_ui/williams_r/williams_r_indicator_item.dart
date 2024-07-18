@@ -40,13 +40,14 @@ class WilliamsRIndicatorItemState
   bool? _showZones;
 
   @override
-  WilliamsRIndicatorConfig createIndicatorConfig() => WilliamsRIndicatorConfig(
-      period: _currentPeriod,
-      showZones: _currentShowZones,
-      oscillatorLimits: OscillatorLinesConfig(
-        overboughtValue: _currentOverBoughtPrice,
-        oversoldValue: _currentOverSoldPrice,
-      ));
+  WilliamsRIndicatorConfig createIndicatorConfig() =>
+      (widget.config as WilliamsRIndicatorConfig).copyWith(
+          period: _currentPeriod,
+          showZones: _currentShowZones,
+          oscillatorLimits: OscillatorLinesConfig(
+            overboughtValue: _currentOverBoughtPrice,
+            oversoldValue: _currentOverSoldPrice,
+          ));
 
   @override
   Widget getIndicatorOptions() => Column(
