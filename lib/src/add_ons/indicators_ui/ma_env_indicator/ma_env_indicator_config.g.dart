@@ -31,11 +31,13 @@ MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(
           : const ColorConverter().fromJson(json['fillColor'] as int),
       showChannelFill: json['showChannelFill'] as bool? ?? true,
       showLastIndicator: json['showLastIndicator'] as bool? ?? false,
+      number: json['number'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
         MAEnvIndicatorConfig instance) =>
     <String, dynamic>{
+      'number': instance.number,
       'showLastIndicator': instance.showLastIndicator,
       'period': instance.period,
       'movingAverageType':

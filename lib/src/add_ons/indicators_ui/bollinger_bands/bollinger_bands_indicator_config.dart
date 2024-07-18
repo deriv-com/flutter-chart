@@ -104,4 +104,37 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
       );
+
+  @override
+  BollingerBandsIndicatorConfig copyWith({
+    int? period,
+    MovingAverageType? movingAverageType,
+    String? fieldType,
+    double? standardDeviation,
+    LineStyle? upperLineStyle,
+    LineStyle? middleLineStyle,
+    LineStyle? lowerLineStyle,
+    Color? fillColor,
+    bool? showChannelFill,
+    bool? showLastIndicator,
+    int? number,
+    int? pipSize,
+    bool? isOverlay,
+    LineStyle? lineStyle,
+    int? offset,
+    String? title,
+  }) =>
+      BollingerBandsIndicatorConfig(
+        period: period ?? this.period,
+        movingAverageType: movingAverageType ?? this.movingAverageType,
+        fieldType: fieldType ?? this.fieldType,
+        standardDeviation: standardDeviation ?? this.standardDeviation,
+        upperLineStyle: upperLineStyle ?? this.upperLineStyle,
+        middleLineStyle: middleLineStyle ?? this.middleLineStyle,
+        lowerLineStyle: lowerLineStyle ?? this.lowerLineStyle,
+        fillColor: fillColor ?? this.fillColor,
+        showChannelFill: showChannelFill ?? this.showChannelFill,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        number: number ?? this.number,
+      );
 }

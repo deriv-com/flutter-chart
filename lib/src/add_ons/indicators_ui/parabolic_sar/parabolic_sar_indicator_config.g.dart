@@ -16,10 +16,12 @@ ParabolicSARConfig _$ParabolicSARConfigFromJson(Map<String, dynamic> json) =>
           ? const ScatterStyle()
           : ScatterStyle.fromJson(json['scatterStyle'] as Map<String, dynamic>),
       title: json['title'] as String?,
+      number: json['number'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$ParabolicSARConfigToJson(ParabolicSARConfig instance) =>
     <String, dynamic>{
+      'number': instance.number,
       'title': instance.title,
       'minAccelerationFactor': instance.minAccelerationFactor,
       'maxAccelerationFactor': instance.maxAccelerationFactor,

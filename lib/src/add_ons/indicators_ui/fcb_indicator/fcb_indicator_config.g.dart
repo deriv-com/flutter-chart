@@ -21,13 +21,17 @@ FractalChaosBandIndicatorConfig _$FractalChaosBandIndicatorConfigFromJson(
       showChannelFill: json['showChannelFill'] as bool? ?? false,
       showLastIndicator: json['showLastIndicator'] as bool? ?? false,
       title: json['title'] as String?,
+      number: json['number'] as int? ?? 0,
+      pipSize: json['pipSize'] as int? ?? 4,
     );
 
 Map<String, dynamic> _$FractalChaosBandIndicatorConfigToJson(
         FractalChaosBandIndicatorConfig instance) =>
     <String, dynamic>{
+      'number': instance.number,
       'title': instance.title,
       'showLastIndicator': instance.showLastIndicator,
+      'pipSize': instance.pipSize,
       'highLineStyle': instance.highLineStyle,
       'lowLineStyle': instance.lowLineStyle,
       'fillColor': const ColorConverter().toJson(instance.fillColor),

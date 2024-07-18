@@ -28,13 +28,17 @@ AlligatorIndicatorConfig _$AlligatorIndicatorConfigFromJson(
           : LineStyle.fromJson(json['lipsLineStyle'] as Map<String, dynamic>),
       showLastIndicator: json['showLastIndicator'] as bool? ?? false,
       title: json['title'] as String?,
+      number: json['number'] as int? ?? 0,
+      pipSize: json['pipSize'] as int? ?? 4,
     );
 
 Map<String, dynamic> _$AlligatorIndicatorConfigToJson(
         AlligatorIndicatorConfig instance) =>
     <String, dynamic>{
+      'number': instance.number,
       'title': instance.title,
       'showLastIndicator': instance.showLastIndicator,
+      'pipSize': instance.pipSize,
       'jawOffset': instance.jawOffset,
       'jawPeriod': instance.jawPeriod,
       'teethOffset': instance.teethOffset,
