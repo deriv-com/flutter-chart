@@ -34,6 +34,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
     this.fillColor = Colors.white12,
     this.showChannelFill = true,
     bool showLastIndicator = false,
+    super.number,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -98,5 +99,40 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  MAEnvIndicatorConfig copyWith({
+    int? period,
+    MovingAverageType? movingAverageType,
+    String? fieldType,
+    double? shift,
+    ShiftType? shiftType,
+    LineStyle? upperLineStyle,
+    LineStyle? middleLineStyle,
+    LineStyle? lowerLineStyle,
+    Color? fillColor,
+    bool? showChannelFill,
+    bool? showLastIndicator,
+    int? number,
+    int? pipSize,
+    bool? isOverlay,
+    int? offset,
+    LineStyle? lineStyle,
+    String? title,
+  }) =>
+      MAEnvIndicatorConfig(
+        period: period ?? this.period,
+        movingAverageType: movingAverageType ?? this.movingAverageType,
+        fieldType: fieldType ?? this.fieldType,
+        shift: shift ?? this.shift,
+        shiftType: shiftType ?? this.shiftType,
+        upperLineStyle: upperLineStyle ?? this.upperLineStyle,
+        middleLineStyle: middleLineStyle ?? this.middleLineStyle,
+        lowerLineStyle: lowerLineStyle ?? this.lowerLineStyle,
+        fillColor: fillColor ?? this.fillColor,
+        showChannelFill: showChannelFill ?? this.showChannelFill,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        number: number ?? this.number,
       );
 }

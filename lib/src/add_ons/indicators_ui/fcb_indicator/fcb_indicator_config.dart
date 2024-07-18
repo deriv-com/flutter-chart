@@ -25,6 +25,8 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
     this.showChannelFill = false,
     bool showLastIndicator = false,
     String? title,
+    super.number,
+    super.pipSize,
   }) : super(
           showLastIndicator: showLastIndicator,
           title: title ?? FractalChaosBandIndicatorConfig.name,
@@ -68,5 +70,27 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  FractalChaosBandIndicatorConfig copyWith({
+    LineStyle? highLineStyle,
+    LineStyle? lowLineStyle,
+    Color? fillColor,
+    bool? showChannelFill,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+    int? pipSize,
+  }) =>
+      FractalChaosBandIndicatorConfig(
+        highLineStyle: highLineStyle ?? this.highLineStyle,
+        lowLineStyle: lowLineStyle ?? this.lowLineStyle,
+        fillColor: fillColor ?? this.fillColor,
+        showChannelFill: showChannelFill ?? this.showChannelFill,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
+        pipSize: pipSize ?? this.pipSize,
       );
 }

@@ -20,6 +20,7 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
     this.distance = 10,
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     String? title,
+    super.number,
   }) : super(title: title ?? ZigZagIndicatorConfig.name);
 
   /// Initializes from JSON.
@@ -55,5 +56,21 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  ZigZagIndicatorConfig copyWith({
+    double? distance,
+    LineStyle? lineStyle,
+    String? title,
+    int? number,
+    bool? showLastIndicator,
+    int? pipSize,
+  }) =>
+      ZigZagIndicatorConfig(
+        distance: distance ?? this.distance,
+        lineStyle: lineStyle ?? this.lineStyle,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

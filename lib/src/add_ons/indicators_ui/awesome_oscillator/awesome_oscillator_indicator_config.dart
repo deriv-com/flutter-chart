@@ -20,6 +20,8 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
     this.barStyle = const BarStyle(),
     int pipSize = 4,
     String? title,
+    super.number,
+    super.showLastIndicator,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -57,5 +59,21 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  AwesomeOscillatorIndicatorConfig copyWith({
+    BarStyle? barStyle,
+    String? title,
+    bool? showLastIndicator,
+    int? pipSize,
+    int? number,
+  }) =>
+      AwesomeOscillatorIndicatorConfig(
+        barStyle: barStyle ?? this.barStyle,
+        title: title ?? this.title,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        pipSize: pipSize ?? this.pipSize,
+        number: number ?? this.number,
       );
 }

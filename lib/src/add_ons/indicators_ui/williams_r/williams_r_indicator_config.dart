@@ -30,6 +30,7 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -88,5 +89,30 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  WilliamsRIndicatorConfig copyWith({
+    int? period,
+    LineStyle? lineStyle,
+    LineStyle? zeroHorizontalLinesStyle,
+    bool? showZones,
+    OscillatorLinesConfig? oscillatorLimits,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+  }) =>
+      WilliamsRIndicatorConfig(
+        period: period ?? this.period,
+        lineStyle: lineStyle ?? this.lineStyle,
+        zeroHorizontalLinesStyle:
+            zeroHorizontalLinesStyle ?? this.zeroHorizontalLinesStyle,
+        showZones: showZones ?? this.showZones,
+        oscillatorLimits: oscillatorLimits ?? this.oscillatorLimits,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

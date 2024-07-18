@@ -28,6 +28,7 @@ class MACDIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -95,5 +96,31 @@ class MACDIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  MACDIndicatorConfig copyWith({
+    int? fastMAPeriod,
+    int? slowMAPeriod,
+    int? signalPeriod,
+    BarStyle? barStyle,
+    LineStyle? lineStyle,
+    LineStyle? signalLineStyle,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+  }) =>
+      MACDIndicatorConfig(
+        fastMAPeriod: fastMAPeriod ?? this.fastMAPeriod,
+        slowMAPeriod: slowMAPeriod ?? this.slowMAPeriod,
+        signalPeriod: signalPeriod ?? this.signalPeriod,
+        barStyle: barStyle ?? this.barStyle,
+        lineStyle: lineStyle ?? this.lineStyle,
+        signalLineStyle: signalLineStyle ?? this.signalLineStyle,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

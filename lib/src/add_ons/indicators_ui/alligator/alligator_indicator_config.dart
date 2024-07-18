@@ -31,6 +31,8 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     this.lipsLineStyle = const LineStyle(color: Colors.green),
     bool showLastIndicator = false,
     String? title,
+    super.number,
+    super.pipSize,
   }) : super(
           showLastIndicator: showLastIndicator,
           title: title ?? AlligatorIndicatorConfig.name,
@@ -108,5 +110,41 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  AlligatorIndicatorConfig copyWith({
+    int? jawPeriod,
+    int? teethPeriod,
+    int? lipsPeriod,
+    int? jawOffset,
+    int? teethOffset,
+    int? lipsOffset,
+    bool? showLines,
+    bool? showFractal,
+    LineStyle? jawLineStyle,
+    LineStyle? teethLineStyle,
+    LineStyle? lipsLineStyle,
+    bool? showLastIndicator,
+    String? title,
+    int? pipSize,
+    int? number,
+  }) =>
+      AlligatorIndicatorConfig(
+        jawPeriod: jawPeriod ?? this.jawPeriod,
+        teethPeriod: teethPeriod ?? this.teethPeriod,
+        lipsPeriod: lipsPeriod ?? this.lipsPeriod,
+        jawOffset: jawOffset ?? this.jawOffset,
+        teethOffset: teethOffset ?? this.teethOffset,
+        lipsOffset: lipsOffset ?? this.lipsOffset,
+        showLines: showLines ?? this.showLines,
+        showFractal: showFractal ?? this.showFractal,
+        jawLineStyle: jawLineStyle ?? this.jawLineStyle,
+        teethLineStyle: teethLineStyle ?? this.teethLineStyle,
+        lipsLineStyle: lipsLineStyle ?? this.lipsLineStyle,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
+        pipSize: pipSize ?? this.pipSize,
       );
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:deriv_chart/src/add_ons/indicators_ui/aroon/aroon_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/commodity_channel_index/cci_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_oscillator_indicator_config.dart';
@@ -152,7 +154,23 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 child: const Text('Add'),
                 onPressed: _selectedIndicator != null
                     ? () {
-                        repo.add(_selectedIndicator!);
+                        IndicatorConfig config = _selectedIndicator!;
+
+                        final Iterable<IndicatorConfig> indicatorsOfSameType =
+                            repo.items.where((IndicatorConfig item) =>
+                                item.runtimeType == config.runtimeType);
+
+                        if (indicatorsOfSameType.isNotEmpty) {
+                          final int postFixNumber = indicatorsOfSameType
+                                  .map<int>(
+                                      (IndicatorConfig item) => item.number)
+                                  .reduce(max) +
+                              1;
+
+                          config = config.copyWith(number: postFixNumber);
+                        }
+
+                        repo.add(config);
                         setState(() {});
                       }
                     : null,

@@ -29,6 +29,7 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
     this.laggingLineStyle = const LineStyle(color: Colors.lime),
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           showLastIndicator: showLastIndicator,
           title: title ?? IchimokuCloudIndicatorConfig.name,
@@ -92,5 +93,36 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  IchimokuCloudIndicatorConfig copyWith({
+    int? baseLinePeriod,
+    int? conversionLinePeriod,
+    int? laggingSpanOffset,
+    int? spanBPeriod,
+    LineStyle? conversionLineStyle,
+    LineStyle? baseLineStyle,
+    LineStyle? spanALineStyle,
+    LineStyle? spanBLineStyle,
+    LineStyle? laggingLineStyle,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+    int? pipSize,
+  }) =>
+      IchimokuCloudIndicatorConfig(
+        baseLinePeriod: baseLinePeriod ?? this.baseLinePeriod,
+        conversionLinePeriod: conversionLinePeriod ?? this.conversionLinePeriod,
+        laggingSpanOffset: laggingSpanOffset ?? this.laggingSpanOffset,
+        spanBPeriod: spanBPeriod ?? this.spanBPeriod,
+        conversionLineStyle: conversionLineStyle ?? this.conversionLineStyle,
+        baseLineStyle: baseLineStyle ?? this.baseLineStyle,
+        spanALineStyle: spanALineStyle ?? this.spanALineStyle,
+        spanBLineStyle: spanBLineStyle ?? this.spanBLineStyle,
+        laggingLineStyle: laggingLineStyle ?? this.laggingLineStyle,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

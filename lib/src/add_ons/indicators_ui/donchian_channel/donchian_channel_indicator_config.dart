@@ -30,6 +30,8 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     this.fillColor = Colors.white12,
     bool showLastIndicator = false,
     String? title,
+    super.number,
+    super.pipSize,
   }) : super(
           title: title ?? DonchianChannelIndicatorConfig.name,
           showLastIndicator: showLastIndicator,
@@ -86,5 +88,33 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  DonchianChannelIndicatorConfig copyWith({
+    int? highPeriod,
+    int? lowPeriod,
+    bool? showChannelFill,
+    LineStyle? upperLineStyle,
+    LineStyle? middleLineStyle,
+    LineStyle? lowerLineStyle,
+    Color? fillColor,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+    int? pipSize,
+  }) =>
+      DonchianChannelIndicatorConfig(
+        highPeriod: highPeriod ?? this.highPeriod,
+        lowPeriod: lowPeriod ?? this.lowPeriod,
+        showChannelFill: showChannelFill ?? this.showChannelFill,
+        upperLineStyle: upperLineStyle ?? this.upperLineStyle,
+        middleLineStyle: middleLineStyle ?? this.middleLineStyle,
+        lowerLineStyle: lowerLineStyle ?? this.lowerLineStyle,
+        fillColor: fillColor ?? this.fillColor,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
+        pipSize: pipSize ?? this.pipSize,
       );
 }

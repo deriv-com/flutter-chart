@@ -23,6 +23,7 @@ class ROCIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -70,5 +71,25 @@ class ROCIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  ROCIndicatorConfig copyWith({
+    int? period,
+    String? fieldType,
+    LineStyle? lineStyle,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+  }) =>
+      ROCIndicatorConfig(
+        period: period ?? this.period,
+        fieldType: fieldType ?? this.fieldType,
+        lineStyle: lineStyle ?? this.lineStyle,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

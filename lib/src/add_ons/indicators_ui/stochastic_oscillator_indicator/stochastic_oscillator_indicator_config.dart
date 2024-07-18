@@ -35,6 +35,7 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -104,5 +105,40 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  StochasticOscillatorIndicatorConfig copyWith({
+    int? period,
+    String? fieldType,
+    double? overBoughtPrice,
+    double? overSoldPrice,
+    LineStyle? lineStyle,
+    OscillatorLinesConfig? oscillatorLinesConfig,
+    bool? isSmooth,
+    bool? showZones,
+    LineStyle? fastLineStyle,
+    LineStyle? slowLineStyle,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+  }) =>
+      StochasticOscillatorIndicatorConfig(
+        period: period ?? this.period,
+        fieldType: fieldType ?? this.fieldType,
+        overBoughtPrice: overBoughtPrice ?? this.overBoughtPrice,
+        overSoldPrice: overSoldPrice ?? this.overSoldPrice,
+        lineStyle: lineStyle ?? this.lineStyle,
+        oscillatorLinesConfig:
+            oscillatorLinesConfig ?? this.oscillatorLinesConfig,
+        isSmooth: isSmooth ?? this.isSmooth,
+        showZones: showZones ?? this.showZones,
+        fastLineStyle: fastLineStyle ?? this.fastLineStyle,
+        slowLineStyle: slowLineStyle ?? this.slowLineStyle,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

@@ -38,6 +38,7 @@ class SMIIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -111,5 +112,38 @@ class SMIIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  SMIIndicatorConfig copyWith({
+    int? period,
+    int? smoothingPeriod,
+    int? doubleSmoothingPeriod,
+    int? signalPeriod,
+    MovingAverageType? maType,
+    OscillatorLinesConfig? smiOscillatorLimits,
+    bool? showZones,
+    LineStyle? lineStyle,
+    LineStyle? signalLineStyle,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+  }) =>
+      SMIIndicatorConfig(
+        period: period ?? this.period,
+        smoothingPeriod: smoothingPeriod ?? this.smoothingPeriod,
+        doubleSmoothingPeriod:
+            doubleSmoothingPeriod ?? this.doubleSmoothingPeriod,
+        signalPeriod: signalPeriod ?? this.signalPeriod,
+        maType: maType ?? this.maType,
+        smiOscillatorLimits: smiOscillatorLimits ?? this.smiOscillatorLimits,
+        showZones: showZones ?? this.showZones,
+        lineStyle: lineStyle ?? this.lineStyle,
+        signalLineStyle: signalLineStyle ?? this.signalLineStyle,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

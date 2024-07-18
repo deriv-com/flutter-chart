@@ -29,6 +29,7 @@ class CCIIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -81,5 +82,28 @@ class CCIIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  CCIIndicatorConfig copyWith({
+    int? period,
+    OscillatorLinesConfig? oscillatorLinesConfig,
+    LineStyle? lineStyle,
+    bool? showZones,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+  }) =>
+      CCIIndicatorConfig(
+        period: period ?? this.period,
+        oscillatorLinesConfig:
+            oscillatorLinesConfig ?? this.oscillatorLinesConfig,
+        lineStyle: lineStyle ?? this.lineStyle,
+        showZones: showZones ?? this.showZones,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

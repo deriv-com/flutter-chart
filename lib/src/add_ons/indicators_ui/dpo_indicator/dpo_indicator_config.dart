@@ -28,6 +28,7 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -75,5 +76,31 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  DPOIndicatorConfig copyWith({
+    int? period,
+    MovingAverageType? movingAverageType,
+    String? fieldType,
+    bool? isCentered,
+    LineStyle? lineStyle,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+    int? offset,
+    bool? isOverlay,
+  }) =>
+      DPOIndicatorConfig(
+        period: period ?? this.period,
+        movingAverageType: movingAverageType ?? this.movingAverageType,
+        fieldType: fieldType ?? this.fieldType,
+        isCentered: isCentered ?? this.isCentered,
+        lineStyle: lineStyle ?? this.lineStyle,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

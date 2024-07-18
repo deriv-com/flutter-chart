@@ -24,6 +24,7 @@ class AroonIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     bool showLastIndicator = false,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -67,5 +68,25 @@ class AroonIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  AroonIndicatorConfig copyWith({
+    int? period,
+    LineStyle? upLineStyle,
+    LineStyle? downLineStyle,
+    int? pipSize,
+    bool? showLastIndicator,
+    String? title,
+    int? number,
+  }) =>
+      AroonIndicatorConfig(
+        period: period ?? this.period,
+        upLineStyle: upLineStyle ?? this.upLineStyle,
+        downLineStyle: downLineStyle ?? this.downLineStyle,
+        pipSize: pipSize ?? this.pipSize,
+        showLastIndicator: showLastIndicator ?? this.showLastIndicator,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

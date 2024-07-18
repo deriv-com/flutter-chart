@@ -27,6 +27,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
     this.barStyle = const BarStyle(),
     int pipSize = 4,
     String? title,
+    super.number,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -86,5 +87,32 @@ class GatorIndicatorConfig extends IndicatorConfig {
         config: this,
         updateIndicator: updateIndicator,
         deleteIndicator: deleteIndicator,
+      );
+
+  @override
+  GatorIndicatorConfig copyWith({
+    int? jawPeriod,
+    int? teethPeriod,
+    int? lipsPeriod,
+    int? jawOffset,
+    int? teethOffset,
+    int? lipsOffset,
+    BarStyle? barStyle,
+    int? pipSize,
+    String? title,
+    int? number,
+    bool? showLastIndicator,
+  }) =>
+      GatorIndicatorConfig(
+        jawPeriod: jawPeriod ?? this.jawPeriod,
+        teethPeriod: teethPeriod ?? this.teethPeriod,
+        lipsPeriod: lipsPeriod ?? this.lipsPeriod,
+        jawOffset: jawOffset ?? this.jawOffset,
+        teethOffset: teethOffset ?? this.teethOffset,
+        lipsOffset: lipsOffset ?? this.lipsOffset,
+        barStyle: barStyle ?? this.barStyle,
+        pipSize: pipSize ?? this.pipSize,
+        title: title ?? this.title,
+        number: number ?? this.number,
       );
 }

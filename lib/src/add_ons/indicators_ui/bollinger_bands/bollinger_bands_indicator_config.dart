@@ -32,6 +32,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
     this.fillColor = Colors.white12,
     this.showChannelFill = true,
     bool showLastIndicator = false,
+    super.number,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
