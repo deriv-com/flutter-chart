@@ -5,7 +5,7 @@ import 'repository.dart';
 
 /// Extension on Repository<IndicatorConfig>.
 extension AddOnsRepositoryIndicatorConfigExtension
-on Repository<IndicatorConfig> {
+    on Repository<IndicatorConfig> {
   /// Gets the next number for a new indicator.
   int getNumberForNewAddOn(IndicatorConfig addOn) {
     final Iterable<IndicatorConfig> indicatorsOfSameType = items
@@ -13,8 +13,8 @@ on Repository<IndicatorConfig> {
 
     if (indicatorsOfSameType.isNotEmpty) {
       final int postFixNumber = indicatorsOfSameType
-          .map<int>((IndicatorConfig item) => item.number)
-          .reduce(max) +
+              .map<int>((IndicatorConfig item) => item.number)
+              .reduce(max) +
           1;
 
       return postFixNumber;
