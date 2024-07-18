@@ -71,6 +71,7 @@ export 'src/models/indicator_input.dart';
 export 'src/models/tick.dart';
 export 'src/add_ons/add_on_config.dart';
 export 'src/add_ons/add_ons_repository.dart';
+export 'src/add_ons/extensions.dart';
 export 'src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 export 'src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 export 'src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_widget.dart';
