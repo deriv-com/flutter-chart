@@ -78,6 +78,9 @@ class RSIIndicatorConfig extends IndicatorConfig {
   String get title => 'Relative Strength Index (RSI)';
 
   @override
+  String get shortTitle => 'RSI';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,

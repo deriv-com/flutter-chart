@@ -17,7 +17,7 @@ abstract class IndicatorItem extends StatefulWidget {
   }) : super(key: key);
 
   /// Title
-  @Deprecated('Use config.title instead')
+  @Deprecated('The widget uses config.shortTitle instead.')
   final String title;
 
   /// Contains indicator configuration.
@@ -56,7 +56,7 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
   Widget build(BuildContext context) => ListTile(
         contentPadding: const EdgeInsets.all(0),
         leading: Text(
-          '${widget.config.title}'
+          '${widget.config.shortTitle}'
           ' ${widget.config.number > 0 ? widget.config.number : ''}',
           style: const TextStyle(fontSize: 10),
         ),
