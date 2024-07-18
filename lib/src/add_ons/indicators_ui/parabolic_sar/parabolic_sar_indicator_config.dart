@@ -72,15 +72,14 @@ class ParabolicSARConfig extends IndicatorConfig {
     int? number,
     bool? showLastIndicator,
     int? pipSize,
-  }) {
-    return ParabolicSARConfig(
-      minAccelerationFactor:
-          minAccelerationFactor ?? this.minAccelerationFactor,
-      maxAccelerationFactor:
-          maxAccelerationFactor ?? this.maxAccelerationFactor,
-      scatterStyle: scatterStyle ?? this.scatterStyle,
-      title: title ?? this.title,
-      number: number ?? this.number,
-    );
-  }
+  }) =>
+      ParabolicSARConfig(
+        minAccelerationFactor:
+            minAccelerationFactor ?? this.minAccelerationFactor,
+        maxAccelerationFactor:
+            maxAccelerationFactor ?? this.maxAccelerationFactor,
+        scatterStyle: scatterStyle ?? this.scatterStyle,
+        title: title ?? this.title,
+        number: number ?? this.number,
+      );
 }
