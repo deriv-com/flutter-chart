@@ -38,6 +38,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
           movingAverageType: movingAverageType,
           fieldType: fieldType,
           showLastIndicator: showLastIndicator,
+          title: BollingerBandsIndicatorConfig.name,
         );
 
   /// Initializes from JSON.
@@ -76,6 +77,9 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
   String get configSummary => '$period, ${fieldType[0].toUpperCase()}, '
       '$standardDeviation, ${movingAverageType.shortTitle}, '
       '${showChannelFill ? 'Y' : 'N'}';
+
+  @override
+  String get title => 'Bollinger Bands';
 
   @override
   Series getSeries(IndicatorInput indicatorInput) =>

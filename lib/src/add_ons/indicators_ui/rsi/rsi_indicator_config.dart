@@ -75,6 +75,9 @@ class RSIIndicatorConfig extends IndicatorConfig {
       '${showZones ? 'Y' : 'N'}';
 
   @override
+  String get title => 'Relative Strength Index (RSI)';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => RSISeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         this,

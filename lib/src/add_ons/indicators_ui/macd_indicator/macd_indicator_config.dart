@@ -88,6 +88,9 @@ class MACDIndicatorConfig extends IndicatorConfig {
   String get shortTitle => 'MACD';
 
   @override
+  String get title => 'MACD';
+
+  @override
   IndicatorItem getItem(
     UpdateIndicator updateIndicator,
     VoidCallback deleteIndicator,
