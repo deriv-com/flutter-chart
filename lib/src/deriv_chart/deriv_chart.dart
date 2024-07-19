@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
+import 'package:deriv_chart/src/add_ons/extensions.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
@@ -159,6 +160,12 @@ class DerivChart extends StatefulWidget {
   final Color? loadingAnimationColor;
 
   /// Chart's indicators
+  ///
+  /// The configs of [indicatorsRepo] should be unique on the property
+  /// [IndicatorConfig.title] and [IndicatorConfig.number].
+  ///
+  /// Method [AddOnsRepositoryIndicatorConfigExtension.getNumberForNewAddOn]
+  /// can be used to get a unique number for a new indicator.
   final Repository<IndicatorConfig>? indicatorsRepo;
 
   /// Chart's drawings
