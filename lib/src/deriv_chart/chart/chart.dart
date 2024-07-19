@@ -184,6 +184,7 @@ class Chart extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() =>
+      // TODO(Ramin): Make this customizable from outside.
       kIsWeb ? _ChartStateWeb() : _ChartStateMobile();
 }
 
