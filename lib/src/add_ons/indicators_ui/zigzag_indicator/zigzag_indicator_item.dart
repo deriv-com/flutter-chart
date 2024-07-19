@@ -36,7 +36,7 @@ class ZigZagIndicatorItemState
   double? distance;
 
   @override
-  ZigZagIndicatorConfig createIndicatorConfig() =>
+  ZigZagIndicatorConfig updateIndicatorConfig() =>
       (widget.config as ZigZagIndicatorConfig).copyWith(
         distance: getCurrentDistance(),
       );

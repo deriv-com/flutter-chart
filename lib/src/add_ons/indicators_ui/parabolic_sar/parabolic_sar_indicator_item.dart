@@ -41,7 +41,7 @@ class ParabolicSARIndicatorItemState
   ScatterStyle? _scatterStyle;
 
   @override
-  ParabolicSARConfig createIndicatorConfig() =>
+  ParabolicSARConfig updateIndicatorConfig() =>
       (widget.config as ParabolicSARConfig).copyWith(
         minAccelerationFactor: _currentMinAccelerationFactor,
         maxAccelerationFactor: _currentMaxAccelerationFactor,

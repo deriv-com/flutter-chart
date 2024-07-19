@@ -69,14 +69,14 @@ abstract class IndicatorItemState<T extends IndicatorConfig>
 
   /// Updates indicator based on its current config values.
   void updateIndicator() =>
-      widget.updateIndicator.call(createIndicatorConfig());
+      widget.updateIndicator.call(updateIndicatorConfig());
 
   /// Removes this indicator.
   void removeIndicator() => widget.deleteIndicator.call();
 
-  /// Returns the [IndicatorConfig] which can be used to create the Series for
-  /// this indicator.
-  T createIndicatorConfig();
+  /// Updates the current [widget.config] with the latest values set in menus
+  /// options and returns the updated config.
+  T updateIndicatorConfig();
 
   /// Creates the menu options widget for this indicator.
   Widget getIndicatorOptions();

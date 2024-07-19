@@ -36,7 +36,7 @@ class FractalChaosBandIndicatorItemState
   bool? _channelFill;
 
   @override
-  FractalChaosBandIndicatorConfig createIndicatorConfig() =>
+  FractalChaosBandIndicatorConfig updateIndicatorConfig() =>
       (widget.config as FractalChaosBandIndicatorConfig).copyWith(
         showChannelFill: currentChannelFill,
       );

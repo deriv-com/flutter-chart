@@ -54,7 +54,7 @@ class MAIndicatorItemState extends IndicatorItemState<MAIndicatorConfig> {
   LineStyle? lineStyle;
 
   @override
-  MAIndicatorConfig createIndicatorConfig() =>
+  MAIndicatorConfig updateIndicatorConfig() =>
       (widget.config as MAIndicatorConfig).copyWith(
         period: getCurrentPeriod(),
         movingAverageType: getCurrentType(),

@@ -35,7 +35,7 @@ class BollingerBandsIndicatorItemState extends MAIndicatorItemState {
   double? _standardDeviation;
 
   @override
-  BollingerBandsIndicatorConfig createIndicatorConfig() =>
+  BollingerBandsIndicatorConfig updateIndicatorConfig() =>
       (widget.config as BollingerBandsIndicatorConfig).copyWith(
         period: getCurrentPeriod(),
         movingAverageType: getCurrentType(),

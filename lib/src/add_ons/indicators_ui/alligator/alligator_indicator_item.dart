@@ -41,7 +41,7 @@ class AlligatorIndicatorItemState
   bool? _showFractal;
 
   @override
-  AlligatorIndicatorConfig createIndicatorConfig() =>
+  AlligatorIndicatorConfig updateIndicatorConfig() =>
       (widget.config as AlligatorIndicatorConfig).copyWith(
         jawPeriod: currentJawPeriod,
         jawOffset: currentJawOffset,

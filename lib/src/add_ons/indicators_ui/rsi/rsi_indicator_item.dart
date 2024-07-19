@@ -43,7 +43,7 @@ class RSIIndicatorItemState extends IndicatorItemState<RSIIndicatorConfig> {
   bool? _showZones;
 
   @override
-  RSIIndicatorConfig createIndicatorConfig() =>
+  RSIIndicatorConfig updateIndicatorConfig() =>
       (widget.config as RSIIndicatorConfig).copyWith(
         period: _getCurrentPeriod(),
         oscillatorLinesConfig: OscillatorLinesConfig(

@@ -34,7 +34,7 @@ class AroonIndicatorItemState extends IndicatorItemState<AroonIndicatorConfig> {
   int? _period;
 
   @override
-  AroonIndicatorConfig createIndicatorConfig() =>
+  AroonIndicatorConfig updateIndicatorConfig() =>
       (widget.config as AroonIndicatorConfig).copyWith(
         period: _currentPeriod,
       );

@@ -40,7 +40,7 @@ class WilliamsRIndicatorItemState
   bool? _showZones;
 
   @override
-  WilliamsRIndicatorConfig createIndicatorConfig() =>
+  WilliamsRIndicatorConfig updateIndicatorConfig() =>
       (widget.config as WilliamsRIndicatorConfig).copyWith(
           period: _currentPeriod,
           showZones: _currentShowZones,

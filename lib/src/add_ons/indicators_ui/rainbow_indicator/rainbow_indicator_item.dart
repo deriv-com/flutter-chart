@@ -38,7 +38,7 @@ class RainbowIndicatorItemState extends MAIndicatorItemState {
   int? bandsCount;
 
   @override
-  MAIndicatorConfig createIndicatorConfig() =>
+  MAIndicatorConfig updateIndicatorConfig() =>
       (widget.config as RainbowIndicatorConfig).copyWith(
         bandsCount: getCurrentBandsCount(),
         period: getCurrentPeriod(),

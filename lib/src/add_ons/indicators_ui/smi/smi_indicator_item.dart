@@ -46,7 +46,7 @@ class SMIIndicatorItemState extends IndicatorItemState<SMIIndicatorConfig> {
   int? _signalPeriod;
 
   @override
-  SMIIndicatorConfig createIndicatorConfig() =>
+  SMIIndicatorConfig updateIndicatorConfig() =>
       (widget.config as SMIIndicatorConfig).copyWith(
           period: _currentPeriod,
           smoothingPeriod: _currentSmoothingPeriod,
