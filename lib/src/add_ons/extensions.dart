@@ -6,6 +6,8 @@ import 'repository.dart';
 /// Extension on Repository<IndicatorConfig>.
 extension AddOnsRepositoryIndicatorConfigExtension
     on Repository<IndicatorConfig> {
+  // TODO(Ramin): Later will do this will be internally handled inside the
+  // repository. When Web can update.
   /// Gets the next number for a new indicator.
   int getNumberForNewAddOn(IndicatorConfig addOn) {
     final Iterable<IndicatorConfig> indicatorsOfSameType = items

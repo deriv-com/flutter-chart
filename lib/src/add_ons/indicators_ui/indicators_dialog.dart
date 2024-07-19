@@ -154,6 +154,8 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                 onPressed: _selectedIndicator != null
                     ? () {
                         final IndicatorConfig config = _selectedIndicator!;
+                        // TODO(Ramin): later this will handled internally by
+                        // the repository itself.
                         final int postFixNumber =
                             repo.getNumberForNewAddOn(config);
                         repo.add(config.copyWith(number: postFixNumber));
