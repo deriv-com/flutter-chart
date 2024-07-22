@@ -30,8 +30,8 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   /// List containing addOns
   final List<T> _addOns;
   // TODO(Ramin): once we handle setting [AddOnConfig.number] inside this class
-  // we can use [title + number] as the id for config objects and can change
-  // this to Map<String, bool> to store hidden status.
+  // we can use [runtimeType + number] as the id for config objects and can
+  // change this to Map<String, bool> to store hidden status.
   final List<bool> _hiddenStatus = <bool>[];
   SharedPreferences? _prefs;
 
