@@ -38,7 +38,7 @@ class IchimokuCloudIndicatorItemState
 
   @override
   IchimokuCloudIndicatorConfig updateIndicatorConfig() =>
-      IchimokuCloudIndicatorConfig(
+      (widget.config as IchimokuCloudIndicatorConfig).copyWith(
         baseLinePeriod: _currentBaseLinePeriod,
         conversionLinePeriod: _currentConversionLinePeriod,
         laggingSpanOffset: _currentLaggingSpanOffset,
