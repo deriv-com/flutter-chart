@@ -108,6 +108,11 @@ class _ChartStateMobile extends _ChartState {
                 Expanded(
                   child: Stack(
                     children: <Widget>[
+                      if (context
+                          .read<ChartConfig>()
+                          .chartAxisConfig
+                          .showQuoteGrid)
+                        _buildMainChartFrame(context),
                       MainChart(
                         drawingTools: widget.drawingTools,
                         controller: _controller,
@@ -139,11 +144,6 @@ class _ChartStateMobile extends _ChartState {
                         showCurrentTickBlinkAnimation:
                             widget.showCurrentTickBlinkAnimation ?? true,
                       ),
-                      if (context
-                          .read<ChartConfig>()
-                          .chartAxisConfig
-                          .showQuoteGrid)
-                        _buildMainChartFrame(context),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
