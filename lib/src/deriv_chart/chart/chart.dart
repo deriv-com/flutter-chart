@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';

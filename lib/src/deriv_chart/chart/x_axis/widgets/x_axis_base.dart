@@ -162,12 +162,22 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
         value: _model,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
+            final ChartTheme _chartTheme = context.watch<ChartTheme>();
+            final double yAxisLabelsAreaWidth = (widget.entries.isNotEmpty
+                    ? labelWidth(
+                        widget.entries.first.quote,
+                        _chartTheme.gridStyle.yLabelStyle,
+                        widget.pipSize,
+                      )
+                    : 100) +
+                _chartTheme.gridStyle.labelHorizontalPadding;
             // Update x-axis width.
             context.watch<XAxisModel>().width = constraints.maxWidth;
+            context.watch<XAxisModel>().graphAreaWidth =
+                constraints.maxWidth - yAxisLabelsAreaWidth;
 
             final List<DateTime> _noOverlapGridTimestamps =
                 _model.getNoOverlapGridTimestamps();
-            final ChartTheme _chartTheme = context.watch<ChartTheme>();
 
             return Stack(
               fit: StackFit.expand,
@@ -199,12 +209,7 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
                     alignment: Alignment.bottomRight,
                     child: Container(
                       width: widget.entries.isNotEmpty
-                          ? labelWidth(
-                                widget.entries.first.quote,
-                                _chartTheme.gridStyle.yLabelStyle,
-                                widget.pipSize,
-                              ) +
-                              _chartTheme.gridStyle.labelHorizontalPadding
+                          ? yAxisLabelsAreaWidth
                           : 100,
                       height: _chartTheme.gridStyle.xLabelsAreaHeight,
                       color: _chartTheme.base08Color,

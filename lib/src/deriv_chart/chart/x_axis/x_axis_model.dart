@@ -129,6 +129,12 @@ class XAxisModel extends ChangeNotifier {
   /// Canvas width.
   double? width;
 
+  /// Canvas width, excluding the Y-axis labels area.
+  double? graphAreaWidth;
+
+  double? get rightPadding =>
+      width != null && graphAreaWidth != null ? width! - graphAreaWidth! : null;
+
   /// Called on scale.
   final VoidCallback? onScale;
 

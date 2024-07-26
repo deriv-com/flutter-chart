@@ -139,6 +139,11 @@ class _ChartStateMobile extends _ChartState {
                         showCurrentTickBlinkAnimation:
                             widget.showCurrentTickBlinkAnimation ?? true,
                       ),
+                      if (context
+                          .read<ChartConfig>()
+                          .chartAxisConfig
+                          .showQuoteGrid)
+                        _buildMainChartFrame(context),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
@@ -169,6 +174,15 @@ class _ChartStateMobile extends _ChartState {
               ],
             ));
   }
+
+  Widget _buildMainChartFrame(BuildContext context) => Container(
+        constraints: const BoxConstraints.expand(),
+        child: MobileChartFrameDividers(
+          color: context.read<ChartTheme>().hoverColor,
+          rightPadding: (context.read<XAxisModel>().rightPadding ?? 0) +
+              _chartTheme.gridStyle.labelHorizontalPadding,
+        ),
+      );
 
   int referenceIndexOf(List<dynamic> list, dynamic element) {
     for (int i = 0; i < list.length; i++) {
