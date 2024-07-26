@@ -152,11 +152,12 @@ class _ChartStateMobile extends _ChartState {
                     ],
                   ),
                 ),
-                Divider(
-                  height: 0.5,
-                  thickness: 1,
-                  color: context.read<ChartTheme>().hoverColor,
-                ),
+                if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                  Divider(
+                    height: 0.5,
+                    thickness: 1,
+                    color: context.read<ChartTheme>().hoverColor,
+                  ),
                 const SizedBox(height: Dimens.margin04),
                 if (_isAllBottomIndicatorsHidden)
                   ...bottomIndicatorsList
