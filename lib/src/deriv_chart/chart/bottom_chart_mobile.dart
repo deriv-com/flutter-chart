@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'basic_chart.dart';
 import 'bottom_chart.dart';
 import 'data_visualization/chart_series/series.dart';
+import 'x_axis/x_axis_model.dart';
 
 /// Mobile version of the chart to add the bottom indicators too.
 class BottomChartMobile extends BasicChart {
@@ -16,6 +18,7 @@ class BottomChartMobile extends BasicChart {
     required Series series,
     required this.granularity,
     required this.title,
+    this.showFrame = true,
     int pipSize = 4,
     Key? key,
     this.onHideUnhideToggle,
@@ -53,6 +56,9 @@ class BottomChartMobile extends BasicChart {
   /// Specifies the margin to prevent overlap.
   final EdgeInsets? bottomChartTitleMargin;
 
+  /// Whether to show the frame or not.
+  final bool showFrame;
+
   @override
   _BottomChartMobileState createState() => _BottomChartMobileState();
 }
@@ -79,6 +85,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
               )
             : Stack(
                 children: <Widget>[
+                  if (widget.showFrame) _buildChartFrame(context),
                   if (!widget.isHidden)
                     Column(
                       children: <Widget>[
@@ -96,6 +103,16 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       ),
     );
   }
+
+  Widget _buildChartFrame(BuildContext context) => Container(
+        constraints: const BoxConstraints.expand(),
+        child: MobileChartFrameDividers(
+          color: context.read<ChartTheme>().hoverColor,
+          rightPadding: (context.read<XAxisModel>().rightPadding ?? 0) +
+              context.read<ChartTheme>().gridStyle.labelHorizontalPadding,
+          sides: const ChartFrameSides(right: true),
+        ),
+      );
 
   Widget _buildIndicatorLabelMobile() => IndicatorLabelMobile(
         title: widget.title,

@@ -34,55 +34,61 @@ class _ChartStateMobile extends _ChartState {
     final Duration quoteBoundsAnimationDuration =
         widget.quoteBoundsAnimationDuration ?? _defaultDuration;
 
-    final List<Widget> bottomIndicatorsList = widget.indicatorsRepo!.items
-        .mapIndexed((int index, IndicatorConfig config) {
-      if (config.isOverlay) {
-        return const SizedBox.shrink();
-      }
+    List<Widget> getBottomIndicatorsList(BuildContext context) =>
+        widget.indicatorsRepo!.items
+            .mapIndexed((int index, IndicatorConfig config) {
+          if (config.isOverlay) {
+            return const SizedBox.shrink();
+          }
 
-      final Series series = config.getSeries(
-        IndicatorInput(
-          widget.mainSeries.input,
-          widget.granularity,
-        ),
-      );
-      final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
+          final Series series = config.getSeries(
+            IndicatorInput(
+              widget.mainSeries.input,
+              widget.granularity,
+            ),
+          );
+          final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-      // TODO(Ramin): add id for indicators config
-      // Because we don't have id for indicator configs, if two indicators of
-      // the same type have the same config we can't distinguish between them.
-      // and using normal List.indexOf will use equatable == which will compare
-      // based on the config objects values, and will return the wrong index.
-      // Because of this reason until we add id for indicators config we find
-      // the index using reference (pointer) comparison.
-      final int indexInBottomConfigs =
-          referenceIndexOf(widget.bottomConfigs, config);
+          // TODO(Ramin): add id for indicators config
+          // Because we don't have id for indicator configs, if two indicators of
+          // the same type have the same config we can't distinguish between them.
+          // and using normal List.indexOf will use equatable == which will compare
+          // based on the config objects values, and will return the wrong index.
+          // Because of this reason until we add id for indicators config we find
+          // the index using reference (pointer) comparison.
+          final int indexInBottomConfigs =
+              referenceIndexOf(widget.bottomConfigs, config);
 
-      final Widget bottomChart = BottomChartMobile(
-        series: series,
-        isHidden: repository?.getHiddenStatus(index) ?? false,
-        granularity: widget.granularity,
-        pipSize: config.pipSize,
-        title: '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
-            ' (${config.configSummary})',
-        currentTickAnimationDuration: currentTickAnimationDuration,
-        quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-        bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
-        onHideUnhideToggle: () =>
-            _onIndicatorHideToggleTapped(repository, index),
-        onSwap: (int offset) => _onSwap(
-            config, widget.bottomConfigs[indexInBottomConfigs + offset]),
-        showMoveUpIcon: bottomSeries!.length > 1 && indexInBottomConfigs != 0,
-        showMoveDownIcon: bottomSeries.length > 1 &&
-            indexInBottomConfigs != bottomSeries.length - 1,
-      );
+          final Widget bottomChart = BottomChartMobile(
+            series: series,
+            isHidden: repository?.getHiddenStatus(index) ?? false,
+            granularity: widget.granularity,
+            pipSize: config.pipSize,
+            title:
+                '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
+                ' (${config.configSummary})',
+            currentTickAnimationDuration: currentTickAnimationDuration,
+            quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+            bottomChartTitleMargin:
+                const EdgeInsets.only(left: Dimens.margin04),
+            onHideUnhideToggle: () =>
+                _onIndicatorHideToggleTapped(repository, index),
+            onSwap: (int offset) => _onSwap(
+                config, widget.bottomConfigs[indexInBottomConfigs + offset]),
+            showMoveUpIcon:
+                bottomSeries!.length > 1 && indexInBottomConfigs != 0,
+            showMoveDownIcon: bottomSeries.length > 1 &&
+                indexInBottomConfigs != bottomSeries.length - 1,
+            showFrame:
+                context.read<ChartConfig>().chartAxisConfig.showQuoteGrid,
+          );
 
-      return (repository?.getHiddenStatus(index) ?? false)
-          ? bottomChart
-          : Expanded(
-              child: bottomChart,
-            );
-    }).toList();
+          return (repository?.getHiddenStatus(index) ?? false)
+              ? bottomChart
+              : Expanded(
+                  child: bottomChart,
+                );
+        }).toList();
 
     final List<Series> overlaySeries = <Series>[];
 
@@ -102,78 +108,77 @@ class _ChartStateMobile extends _ChartState {
       }
     }
 
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) => Column(
+    return LayoutBuilder(builder: (
+      BuildContext context,
+      BoxConstraints constraints,
+    ) {
+      final List<Widget> bottomIndicatorsList =
+          getBottomIndicatorsList(context);
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: Stack(
               children: <Widget>[
-                Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      if (context
-                          .read<ChartConfig>()
-                          .chartAxisConfig
-                          .showQuoteGrid)
-                        _buildMainChartFrame(context),
-                      MainChart(
-                        drawingTools: widget.drawingTools,
-                        controller: _controller,
-                        mainSeries: widget.mainSeries,
-                        overlaySeries: overlaySeries,
-                        annotations: widget.annotations,
-                        markerSeries: widget.markerSeries,
-                        pipSize: widget.pipSize,
-                        onCrosshairAppeared: widget.onCrosshairAppeared,
-                        onQuoteAreaChanged: widget.onQuoteAreaChanged,
-                        isLive: widget.isLive,
-                        showLoadingAnimationForHistoricalData:
-                            !widget.dataFitEnabled,
-                        showDataFitButton:
-                            widget.showDataFitButton ?? widget.dataFitEnabled,
-                        showScrollToLastTickButton:
-                            widget.showScrollToLastTickButton ?? true,
-                        opacity: widget.opacity,
-                        chartAxisConfig: widget.chartAxisConfig,
-                        verticalPaddingFraction: widget.verticalPaddingFraction,
-                        showCrosshair: widget.showCrosshair,
-                        onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                        onCrosshairHover: _onCrosshairHover,
-                        loadingAnimationColor: widget.loadingAnimationColor,
-                        currentTickAnimationDuration:
-                            currentTickAnimationDuration,
-                        quoteBoundsAnimationDuration:
-                            quoteBoundsAnimationDuration,
-                        showCurrentTickBlinkAnimation:
-                            widget.showCurrentTickBlinkAnimation ?? true,
-                      ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: Dimens.margin08,
-                            horizontal: Dimens.margin04,
-                          ),
-                          child: _buildOverlayIndicatorsLabels(),
-                        ),
-                      ),
-                    ],
+                if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                  _buildMainChartFrame(context),
+                MainChart(
+                  drawingTools: widget.drawingTools,
+                  controller: _controller,
+                  mainSeries: widget.mainSeries,
+                  overlaySeries: overlaySeries,
+                  annotations: widget.annotations,
+                  markerSeries: widget.markerSeries,
+                  pipSize: widget.pipSize,
+                  onCrosshairAppeared: widget.onCrosshairAppeared,
+                  onQuoteAreaChanged: widget.onQuoteAreaChanged,
+                  isLive: widget.isLive,
+                  showLoadingAnimationForHistoricalData: !widget.dataFitEnabled,
+                  showDataFitButton:
+                      widget.showDataFitButton ?? widget.dataFitEnabled,
+                  showScrollToLastTickButton:
+                      widget.showScrollToLastTickButton ?? true,
+                  opacity: widget.opacity,
+                  chartAxisConfig: widget.chartAxisConfig,
+                  verticalPaddingFraction: widget.verticalPaddingFraction,
+                  showCrosshair: widget.showCrosshair,
+                  onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                  onCrosshairHover: _onCrosshairHover,
+                  loadingAnimationColor: widget.loadingAnimationColor,
+                  currentTickAnimationDuration: currentTickAnimationDuration,
+                  quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+                  showCurrentTickBlinkAnimation:
+                      widget.showCurrentTickBlinkAnimation ?? true,
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Dimens.margin08,
+                      horizontal: Dimens.margin04,
+                    ),
+                    child: _buildOverlayIndicatorsLabels(),
                   ),
                 ),
-                if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid &&
-                    bottomIndicatorsList.isNotEmpty)
-                  Divider(
-                    height: 0.5,
-                    thickness: 1,
-                    color: context.read<ChartTheme>().hoverColor,
-                  ),
-                const SizedBox(height: Dimens.margin04),
-                if (_isAllBottomIndicatorsHidden)
-                  ...bottomIndicatorsList
-                else
-                  SizedBox(
-                    height: _bottomSectionHeight * constraints.maxHeight,
-                    child: Column(children: bottomIndicatorsList),
-                  ),
               ],
-            ));
+            ),
+          ),
+          if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid &&
+              bottomIndicatorsList.isNotEmpty)
+            Divider(
+              height: 0.5,
+              thickness: 1,
+              color: context.read<ChartTheme>().hoverColor,
+            ),
+          if (_isAllBottomIndicatorsHidden)
+            ...bottomIndicatorsList
+          else
+            SizedBox(
+              height: _bottomSectionHeight * constraints.maxHeight,
+              child: Column(children: bottomIndicatorsList),
+            ),
+        ],
+      );
+    });
   }
 
   Widget _buildMainChartFrame(BuildContext context) => Container(
