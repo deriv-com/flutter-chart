@@ -49,13 +49,7 @@ class _ChartStateMobile extends _ChartState {
           );
           final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-          // TODO(Ramin): add id for indicators config
-          // Because we don't have id for indicator configs, if two indicators of
-          // the same type have the same config we can't distinguish between them.
-          // and using normal List.indexOf will use equatable == which will compare
-          // based on the config objects values, and will return the wrong index.
-          // Because of this reason until we add id for indicators config we find
-          // the index using reference (pointer) comparison.
+          // TODO(Ramin): Use the key (type + number) once it's implemented.
           final int indexInBottomConfigs =
               referenceIndexOf(widget.bottomConfigs, config);
 
