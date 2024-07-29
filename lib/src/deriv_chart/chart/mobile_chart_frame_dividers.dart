@@ -26,28 +26,34 @@ class MobileChartFrameDividers extends StatelessWidget {
 }
 
 class _ChartFramePainter extends CustomPainter {
-  _ChartFramePainter(this.rightPadding, this.color, this.thickness);
+  _ChartFramePainter(this.rightPadding, this.color, this.thickness)
+      : _paint = Paint()
+          ..color = color
+          ..strokeWidth = thickness;
 
   final double rightPadding;
   final Color color;
   final double thickness;
 
+  final Paint _paint;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..strokeWidth = thickness;
-
     canvas
       ..drawLine(
         Offset.zero,
         Offset(size.width - rightPadding, 0),
-        paint,
+        _paint,
       )
       ..drawLine(
         Offset(size.width - rightPadding, 0),
         Offset(size.width - rightPadding, size.height),
-        paint,
+        _paint,
+      )
+      ..drawLine(
+        Offset(0, size.height),
+        Offset(size.width - rightPadding, size.height),
+        _paint,
       );
   }
 

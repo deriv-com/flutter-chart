@@ -157,7 +157,8 @@ class _ChartStateMobile extends _ChartState {
                     ],
                   ),
                 ),
-                if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid &&
+                    bottomIndicatorsList.isNotEmpty)
                   Divider(
                     height: 0.5,
                     thickness: 1,
