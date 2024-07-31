@@ -21,6 +21,7 @@ class ChartAxisConfig {
     this.defaultIntervalWidth = 20,
     this.showQuoteGrid = true,
     this.showEpochGrid = true,
+    this.showFrame = false,
   });
 
   /// Top quote bound target for animated transition.
@@ -38,6 +39,11 @@ class ChartAxisConfig {
 
   /// Show Epoch Grid lines and labels.
   final bool showEpochGrid;
+
+  /// Show the chart frame and indicators dividers.
+  ///
+  /// Used in the mobile chart.
+  final bool showFrame;
 
   /// The default distance between two ticks in pixels.
   ///

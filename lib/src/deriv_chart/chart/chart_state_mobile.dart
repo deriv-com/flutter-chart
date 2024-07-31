@@ -73,8 +73,7 @@ class _ChartStateMobile extends _ChartState {
                 bottomSeries!.length > 1 && indexInBottomConfigs != 0,
             showMoveDownIcon: bottomSeries.length > 1 &&
                 indexInBottomConfigs != bottomSeries.length - 1,
-            showFrame:
-                context.read<ChartConfig>().chartAxisConfig.showQuoteGrid,
+            showFrame: context.read<ChartConfig>().chartAxisConfig.showFrame,
           );
 
           return (repository?.getHiddenStatus(index) ?? false)
@@ -113,7 +112,7 @@ class _ChartStateMobile extends _ChartState {
           Expanded(
             child: Stack(
               children: <Widget>[
-                if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid)
+                if (context.read<ChartConfig>().chartAxisConfig.showFrame)
                   _buildMainChartFrame(context),
                 MainChart(
                   drawingTools: widget.drawingTools,
@@ -156,7 +155,7 @@ class _ChartStateMobile extends _ChartState {
               ],
             ),
           ),
-          if (context.read<ChartConfig>().chartAxisConfig.showQuoteGrid &&
+          if (context.read<ChartConfig>().chartAxisConfig.showFrame &&
               bottomIndicatorsList.isNotEmpty)
             Divider(
               height: 0.5,
