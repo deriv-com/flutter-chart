@@ -22,7 +22,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 ///   |               |   *  |    -> edge point is NOT considered as off screen.
 ///   |               |      |
 ///   |               |      |  * -> edge point is considered as off screen.
-double _edgePointOffScreenSafeDistance(int leftEpoch, int rightEpoch) =>
+double edgePointOffScreenSafeDistance(int leftEpoch, int rightEpoch) =>
     (rightEpoch - leftEpoch) / 2;
 
 /// An extension on DraggableEdgePoint class that adds some helper methods.
@@ -33,8 +33,7 @@ extension DraggableEdgePointExtension on DraggableEdgePoint {
   /// returns true if the edge point is on the view port range.
   bool isInViewPortRange(int leftEpoch, int rightEpoch) =>
       draggedEdgePoint.epoch >=
-          (leftEpoch -
-              _edgePointOffScreenSafeDistance(leftEpoch, rightEpoch)) &&
+          (leftEpoch - edgePointOffScreenSafeDistance(leftEpoch, rightEpoch)) &&
       draggedEdgePoint.epoch <=
-          (rightEpoch + _edgePointOffScreenSafeDistance(leftEpoch, rightEpoch));
+          (rightEpoch + edgePointOffScreenSafeDistance(leftEpoch, rightEpoch));
 }
