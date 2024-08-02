@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
 /// Any component other than chart data (line or candle) which can take a
@@ -42,11 +43,19 @@ abstract class ChartObject {
       _isLeftEpochOnRange(leftBoundEpoch, rightBoundEpoch) ||
       _isRightEpochOnRange(leftBoundEpoch, rightBoundEpoch);
 
-  bool _isRightEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) =>
-      rightEpoch! > leftBoundEpoch && rightEpoch! < rightBoundEpoch;
+  bool _isRightEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) {
+    final double safeDistance =
+        edgePointOffScreenSafeDistance(leftBoundEpoch, rightBoundEpoch);
+    return rightEpoch! > leftBoundEpoch - safeDistance &&
+        rightEpoch! < rightBoundEpoch + safeDistance;
+  }
 
-  bool _isLeftEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) =>
-      leftEpoch! > leftBoundEpoch && leftEpoch! < rightBoundEpoch;
+  bool _isLeftEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) {
+    final double safeDistance =
+        edgePointOffScreenSafeDistance(leftBoundEpoch, rightBoundEpoch);
+    return leftEpoch! > leftBoundEpoch - safeDistance &&
+        leftEpoch! < rightBoundEpoch + safeDistance;
+  }
 
   bool _coversEpochRange(int leftBoundEpoch, int rightBoundEpoch) =>
       leftEpoch! <= leftBoundEpoch && rightEpoch! >= rightBoundEpoch;
