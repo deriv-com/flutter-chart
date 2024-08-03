@@ -1,28 +1,26 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 
 // TODO(NA): consider EdgePoint radius as well in this calculation.
-/// The distance from the edge point to the edge of the screen to be considered
-/// as off screen for a [DraggableEdgePoint].
+/// The distance from the left and right sides of the chart viewport that should
+/// still be considered part of the visible area. This ensures that a point is
+/// fully out of the viewport before it is considered off-screen.
 ///
-/// This is to make sure the [DraggableEdgePoint] is fully out of the view port.
+/// For [DraggableEdgePoint]s, since the position is defined by its center
+/// point, we should also consider its radius to improve accuracy.
+/// When we know how the edge point is visually represented (circle, square,
+/// etc.), we can refine this value.
 ///
-/// Since the position of a [DraggableEdgePoint] is its center point, we should
-/// also consider its radius as well if we want to improve this value and make
-/// it accurate.
-///
-/// When we know how visually can represent the edge point (circle, square, etc)
-/// we can improve this value.
-///
-/// Currently as for a safe number we consider the half of screen width for a
-/// [DraggableEdgePoint] to be considered as off screen. This will ensure on all
-/// granularities the [DraggableEdgePoint] is fully out of the view port.
+/// Currently, as a safe distance, we consider half of the screen's viewport
+/// from [leftEpoch] to [rightEpoch] as the buffer zone for a point to be
+/// considered off-screen. This ensures that the point is fully out of the
+/// viewport at all granularities.
 ///
 ///       view port      half of screen outside
 ///    ------^-------- ---^---
 ///   |               |   *  |    -> edge point is NOT considered as off screen.
 ///   |               |      |
 ///   |               |      |  * -> edge point is considered as off screen.
-double getPointOffScreenSafeDistance(int leftEpoch, int rightEpoch) =>
+double getPointOffScreenBufferDistance(int leftEpoch, int rightEpoch) =>
     (rightEpoch - leftEpoch) / 2;
 
 /// An extension on DraggableEdgePoint class that adds some helper methods.
@@ -33,7 +31,8 @@ extension DraggableEdgePointExtension on DraggableEdgePoint {
   /// returns true if the edge point is on the view port range.
   bool isInViewPortRange(int leftEpoch, int rightEpoch) =>
       draggedEdgePoint.epoch >=
-          (leftEpoch - getPointOffScreenSafeDistance(leftEpoch, rightEpoch)) &&
+          (leftEpoch -
+              getPointOffScreenBufferDistance(leftEpoch, rightEpoch)) &&
       draggedEdgePoint.epoch <=
-          (rightEpoch + getPointOffScreenSafeDistance(leftEpoch, rightEpoch));
+          (rightEpoch + getPointOffScreenBufferDistance(leftEpoch, rightEpoch));
 }

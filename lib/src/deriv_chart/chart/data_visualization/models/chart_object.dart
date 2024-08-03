@@ -44,17 +44,17 @@ abstract class ChartObject {
       _isRightEpochOnRange(leftBoundEpoch, rightBoundEpoch);
 
   bool _isRightEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) {
-    final double safeDistance =
-        getPointOffScreenSafeDistance(leftBoundEpoch, rightBoundEpoch);
-    return rightEpoch! > leftBoundEpoch - safeDistance &&
-        rightEpoch! < rightBoundEpoch + safeDistance;
+    final double bufferDistance =
+        getPointOffScreenBufferDistance(leftBoundEpoch, rightBoundEpoch);
+    return rightEpoch! > leftBoundEpoch - bufferDistance &&
+        rightEpoch! < rightBoundEpoch + bufferDistance;
   }
 
   bool _isLeftEpochOnRange(int leftBoundEpoch, int rightBoundEpoch) {
-    final double safeDistance =
-        getPointOffScreenSafeDistance(leftBoundEpoch, rightBoundEpoch);
-    return leftEpoch! > leftBoundEpoch - safeDistance &&
-        leftEpoch! < rightBoundEpoch + safeDistance;
+    final double bufferDistance =
+        getPointOffScreenBufferDistance(leftBoundEpoch, rightBoundEpoch);
+    return leftEpoch! > leftBoundEpoch - bufferDistance &&
+        leftEpoch! < rightBoundEpoch + bufferDistance;
   }
 
   bool _coversEpochRange(int leftBoundEpoch, int rightBoundEpoch) =>
