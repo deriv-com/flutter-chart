@@ -1,31 +1,45 @@
+// ignore_for_file: always_specify_types
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BarrierObject', () {
     test('Barrier with epoch values isOnEpochRange and isOnValueRange', () {
-      const BarrierObject barrierObject =
-          BarrierObject(leftEpoch: 10, rightEpoch: 20, quote: 10.2);
+      const int leftEpoch = 30;
+      const int rightEpoch = 50;
 
-      expect(barrierObject.isOnEpochRange(5, 9), false);
+      // considering safe distance as well which is half of the visible range
+      // Visible range: 30 - 50, Safe distance: 10
+      //                          visible range
+      //              safe range                 safe range
+      //                        |               |
+      //                |       |               |        |
+      //  0  5  10  15  20  25  30  35  40  45  50  55  60  65  70  75  80
 
-      // Right side partially visible
-      expect(barrierObject.isOnEpochRange(5, 11), true);
+      // Completely in range.
+      const object1 = BarrierObject(leftEpoch: 35, rightEpoch: 40, quote: 10);
+      expect(object1.isOnEpochRange(leftEpoch, rightEpoch), true);
 
-      // Fully visible
-      expect(barrierObject.isOnEpochRange(5, 21), true);
+      // Covers the chart visible range.
+      const object2 = BarrierObject(leftEpoch: 25, rightEpoch: 55, quote: 10);
+      expect(object2.isOnEpochRange(leftEpoch, rightEpoch), true);
 
-      // Covers the chart visible range
-      expect(barrierObject.isOnEpochRange(12, 18), true);
+      // Right side of the object on left safe range.
+      const object3 = BarrierObject(leftEpoch: 15, rightEpoch: 25, quote: 10);
+      expect(object3.isOnEpochRange(leftEpoch, rightEpoch), true);
 
-      // Left side partially visible
-      expect(barrierObject.isOnEpochRange(15, 21), true);
+      // Outside of the safe range on the left.
+      const object4 = BarrierObject(leftEpoch: 5, rightEpoch: 15, quote: 10);
+      expect(object4.isOnEpochRange(leftEpoch, rightEpoch), false);
 
-      expect(barrierObject.isOnEpochRange(21, 24), false);
+      // Left side of the object on the right safe range.
+      const object5 = BarrierObject(leftEpoch: 55, rightEpoch: 65, quote: 10);
+      expect(object5.isOnEpochRange(leftEpoch, rightEpoch), true);
 
-      expect(barrierObject.isOnValueRange(5, 9), false);
-      expect(barrierObject.isOnValueRange(5, 11), true);
-      expect(barrierObject.isOnValueRange(11, 13), false);
+      // Outside of the safe range on the right.
+      const object6 = BarrierObject(leftEpoch: 65, rightEpoch: 70, quote: 10);
+      expect(object6.isOnEpochRange(leftEpoch, rightEpoch), false);
     });
 
     test('Horizontal Barrier without epoch isOnEpochRange and isOnValueRange',
@@ -47,15 +61,20 @@ void main() {
     test('Vertical Barrier isOnEpochRange and isOnValueRange', () {
       const BarrierObject barrierObject = VerticalBarrierObject(10);
 
-      expect(barrierObject.isOnEpochRange(5, 9), false);
+      // Inside visible range.
       expect(barrierObject.isOnEpochRange(5, 11), true);
-      expect(barrierObject.isOnEpochRange(5, 21), true);
-      expect(barrierObject.isOnEpochRange(15, 21), false);
-      expect(barrierObject.isOnEpochRange(21, 24), false);
 
-      expect(barrierObject.isOnValueRange(5, 9), true);
-      expect(barrierObject.isOnValueRange(5, 11), true);
-      expect(barrierObject.isOnValueRange(11, 13), true);
+      // In right safe range.
+      expect(barrierObject.isOnEpochRange(5, 9), true);
+
+      // Inside left safe range.
+      expect(barrierObject.isOnEpochRange(11, 16), true);
+
+      // Outside on the left.
+      expect(barrierObject.isOnEpochRange(15, 18), false);
+
+      // Outside on the right.
+      expect(barrierObject.isOnEpochRange(1, 6), false);
     });
   });
 }
