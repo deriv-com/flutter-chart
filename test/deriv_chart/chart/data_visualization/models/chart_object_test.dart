@@ -9,10 +9,10 @@ void main() {
       const int leftEpoch = 30;
       const int rightEpoch = 50;
 
-      // considering safe distance as well which is half of the visible range
+      // considering buffer distance as well which is half of the visible range
       // Visible range: 30 - 50, Safe distance: 10
       //                          visible range
-      //              safe range                 safe range
+      //              buffer zone                buffer zone
       //                        |               |
       //                |       |               |        |
       //  0  5  10  15  20  25  30  35  40  45  50  55  60  65  70  75  80
@@ -25,19 +25,19 @@ void main() {
       const object2 = BarrierObject(leftEpoch: 25, rightEpoch: 55, quote: 10);
       expect(object2.isOnEpochRange(leftEpoch, rightEpoch), true);
 
-      // Right side of the object on left safe range.
+      // Right side of the object on left buffer zone.
       const object3 = BarrierObject(leftEpoch: 15, rightEpoch: 25, quote: 10);
       expect(object3.isOnEpochRange(leftEpoch, rightEpoch), true);
 
-      // Outside of the safe range on the left.
+      // Outside of the buffer zone on the left.
       const object4 = BarrierObject(leftEpoch: 5, rightEpoch: 15, quote: 10);
       expect(object4.isOnEpochRange(leftEpoch, rightEpoch), false);
 
-      // Left side of the object on the right safe range.
+      // Left side of the object on the right buffer zone.
       const object5 = BarrierObject(leftEpoch: 55, rightEpoch: 65, quote: 10);
       expect(object5.isOnEpochRange(leftEpoch, rightEpoch), true);
 
-      // Outside of the safe range on the right.
+      // Outside of the buffer zone on the right.
       const object6 = BarrierObject(leftEpoch: 65, rightEpoch: 70, quote: 10);
       expect(object6.isOnEpochRange(leftEpoch, rightEpoch), false);
     });
@@ -64,10 +64,10 @@ void main() {
       // Inside visible range.
       expect(barrierObject.isOnEpochRange(5, 11), true);
 
-      // In right safe range.
+      // In right buffer zone.
       expect(barrierObject.isOnEpochRange(5, 9), true);
 
-      // Inside left safe range.
+      // Inside left buffer zone.
       expect(barrierObject.isOnEpochRange(11, 16), true);
 
       // Outside on the left.
