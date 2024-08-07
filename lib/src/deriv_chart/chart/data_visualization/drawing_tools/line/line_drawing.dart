@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:ui' as ui;
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
@@ -127,20 +127,55 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     if (drawingPart == DrawingParts.marker) {
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw first point
-        canvas.drawCircle(
-            Offset(endXCoord, endQuoteToY),
-            markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
+        if (drawingData.shouldHighlight) {
+          canvas
+            ..drawCircle(
+                Offset(endXCoord, endQuoteToY),
+                12,
+                Paint()
+                  ..color = lineStyle.color
+                  ..shader = ui.Gradient.linear(
+                    const Offset(0, 0),
+                    Offset(0, size.height),
+                    <Color>[
+                      lineStyle.color.withOpacity(0.6),
+                      lineStyle.color.withOpacity(0.08),
+                    ],
+                  )
+                  ..style = PaintingStyle.fill)
+            ..drawCircle(
+                Offset(endXCoord, endQuoteToY),
+                4,
+                Paint()
+                  ..color = lineStyle.color
+                  ..style = PaintingStyle.fill);
+        }
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
         /// Draw second point
-        canvas.drawCircle(
-            Offset(startXCoord, startQuoteToY),
-            markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
+
+        if (drawingData.shouldHighlight) {
+          canvas
+            ..drawCircle(
+                Offset(startXCoord, startQuoteToY),
+                12,
+                Paint()
+                  ..color = lineStyle.color
+                  ..shader = ui.Gradient.linear(
+                    const Offset(0, 0),
+                    Offset(0, size.height),
+                    <Color>[
+                      lineStyle.color.withOpacity(0.6),
+                      lineStyle.color.withOpacity(0.08),
+                    ],
+                  )
+                  ..style = PaintingStyle.fill)
+            ..drawCircle(
+                Offset(startXCoord, startQuoteToY),
+                4,
+                Paint()
+                  ..color = lineStyle.color
+                  ..style = PaintingStyle.fill);
+        }
       }
     } else if (drawingPart == DrawingParts.line) {
       _vector = getLineVector(
