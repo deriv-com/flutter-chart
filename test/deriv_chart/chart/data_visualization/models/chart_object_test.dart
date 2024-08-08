@@ -10,11 +10,11 @@ void main() {
       const int rightEpoch = 50;
 
       // considering buffer distance as well which is half of the visible range
-      // Visible range: 30 - 50, Safe distance: 10
+      // Visible range: 30 - 50, buffer distance: 5
       //                          visible range
       //              buffer zone                buffer zone
       //                        |               |
-      //                |       |               |        |
+      //                    |   |               |    |
       //  0  5  10  15  20  25  30  35  40  45  50  55  60  65  70  75  80
 
       // Completely in range.
@@ -26,7 +26,7 @@ void main() {
       expect(object2.isOnEpochRange(leftEpoch, rightEpoch), true);
 
       // Right side of the object on left buffer zone.
-      const object3 = BarrierObject(leftEpoch: 15, rightEpoch: 25, quote: 10);
+      const object3 = BarrierObject(leftEpoch: 15, rightEpoch: 27, quote: 10);
       expect(object3.isOnEpochRange(leftEpoch, rightEpoch), true);
 
       // Outside of the buffer zone on the left.
@@ -34,7 +34,7 @@ void main() {
       expect(object4.isOnEpochRange(leftEpoch, rightEpoch), false);
 
       // Left side of the object on the right buffer zone.
-      const object5 = BarrierObject(leftEpoch: 55, rightEpoch: 65, quote: 10);
+      const object5 = BarrierObject(leftEpoch: 52, rightEpoch: 65, quote: 10);
       expect(object5.isOnEpochRange(leftEpoch, rightEpoch), true);
 
       // Outside of the buffer zone on the right.
@@ -65,7 +65,7 @@ void main() {
       expect(barrierObject.isOnEpochRange(5, 11), true);
 
       // In right buffer zone.
-      expect(barrierObject.isOnEpochRange(5, 9), true);
+      expect(barrierObject.isOnEpochRange(2, 9), true);
 
       // Inside left buffer zone.
       expect(barrierObject.isOnEpochRange(11, 16), true);
