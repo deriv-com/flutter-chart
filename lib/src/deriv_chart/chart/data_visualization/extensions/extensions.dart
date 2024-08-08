@@ -21,7 +21,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 ///   |               |      |
 ///   |               |      |  * -> edge point is considered as off screen.
 double getPointOffScreenBufferDistance(int leftEpoch, int rightEpoch) =>
-    (rightEpoch - leftEpoch) / 2;
+    (rightEpoch - leftEpoch) / 4;
 
 /// An extension on DraggableEdgePoint class that adds some helper methods.
 extension DraggableEdgePointExtension on DraggableEdgePoint {
