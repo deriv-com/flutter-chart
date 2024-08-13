@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/barrier.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
@@ -62,21 +61,6 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           drawingPart: DrawingParts.marker,
           startEdgePoint: edgePoints.first,
         ));
-        // _sampleBarriers.add(
-        //     HorizontalBarrier(
-        //       ticks.last.quote,
-        //       epoch: math.Random().nextBool()
-        //           ? ticks.last.epoch
-        //           : null,
-        //       id: 'HBarrier${_sampleBarriers.length}',
-        //       longLine: math.Random().nextBool(),
-        //       visibility: HorizontalBarrierVisibility.forceToStayOnRange,
-        //       style: HorizontalBarrierStyle(
-        //         color: Colors.redAccent,
-        //         isDashed: math.Random().nextBool(),
-        //       ),
-        //     ),
-        //   );
 
       } else if (!isDrawingFinished) {
         /// Draw final point and the whole line.
