@@ -256,6 +256,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       xAxis.scrollBy(pxShift);
     };
 
+    widget.controller?.toggleXScrollBlock = ({required bool isXScrollBlocked}) {
+      xAxis.isScrollBlocked = isXScrollBlocked;
+    };
+
     widget.controller?.toggleDataFitMode = ({required bool enableDataFit}) {
       if (enableDataFit) {
         xAxis.enableDataFit();
