@@ -1,5 +1,4 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/theme/chart_default_dark_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
