@@ -104,7 +104,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Asset _symbol = Asset(name: 'R_50');
 
   final ChartController _controller = ChartController();
-  PersistentBottomSheetController<dynamic>? _bottomSheetController;
+  PersistentBottomSheetController? _bottomSheetController;
 
   late PrefServiceCache _prefService;
 
@@ -393,11 +393,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: <Widget>[
-                  Expanded(
-                    child: _markets == null
-                        ? const SizedBox.shrink()
-                        : _buildMarketSelectorButton(),
-                  ),
+                  Expanded(child: _buildMarketSelectorButton()),
                   _buildChartTypeButton(),
                   _buildIntervalSelector(),
                 ],
@@ -660,7 +656,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   Widget _buildMarketSelectorButton() => MarketSelectorButton(
         asset: _symbol,
         onTap: () {
-          _bottomSheetController = showBottomSheet<void>(
+          _bottomSheetController = showBottomSheet(
             backgroundColor: Colors.transparent,
             context: context,
             builder: (BuildContext context) => MarketSelector(
