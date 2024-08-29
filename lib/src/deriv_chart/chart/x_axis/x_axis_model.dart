@@ -132,6 +132,8 @@ class XAxisModel extends ChangeNotifier {
   /// Canvas width, excluding the Y-axis labels area.
   double? graphAreaWidth;
 
+  /// Right padding that is applied on the x-axis, the space which is preserved
+  /// for y-axis labels
   double? get rightPadding =>
       width != null && graphAreaWidth != null ? width! - graphAreaWidth! : null;
 

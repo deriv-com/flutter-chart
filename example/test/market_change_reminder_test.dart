@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:example/utils/market_change_reminder.dart';
-import 'package:flutter_deriv_api/api/common/trading/trading_times.dart';
+import 'package:flutter_deriv_api/api/response/trading_times_response_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'trading_times_mock_data.dart';
