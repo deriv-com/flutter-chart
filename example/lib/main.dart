@@ -7,7 +7,6 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:example/generated/l10n.dart';
 import 'package:example/settings_page.dart';
 import 'package:example/utils/endpoints_helper.dart';
-import 'package:example/utils/market_change_reminder.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
@@ -17,7 +16,6 @@ import 'package:flutter_deriv_api/api/manually/tick_base.dart';
 import 'package:flutter_deriv_api/api/manually/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/api/response/active_symbols_response_result.dart';
 import 'package:flutter_deriv_api/api/response/ticks_history_response_result.dart';
-import 'package:flutter_deriv_api/api/response/trading_times_response_result.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
@@ -87,8 +85,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
   late connection_bloc.ConnectionCubit _connectionBloc;
 
   bool _waitingForHistory = false;
-
-  MarketChangeReminder? _marketsChangeReminder;
 
   // Is used to make sure we make only one request to the API at a time.
   // We will not make a new call until the prev call has completed.
@@ -178,43 +174,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             resume: true,
           );
         }
-
-        await _setupMarketChangeReminder();
       });
-  }
-
-  Future<void> _setupMarketChangeReminder() async {
-    _marketsChangeReminder?.reset();
-    _marketsChangeReminder = MarketChangeReminder(
-      () async => (await TradingTimesResponse.fetchTradingTimes(
-        const TradingTimesRequest(tradingTimes: 'today'),
-      ))
-          .tradingTimes!,
-      onMarketsStatusChange: (Map<String?, bool>? statusChanges) {
-        if (statusChanges == null) {
-          return;
-        }
-
-        for (int i = 0; i < _activeSymbols.length; i++) {
-          if (statusChanges[_activeSymbols[i].symbol] != null) {
-            _activeSymbols[i] = _activeSymbols[i].copyWith(
-              exchangeIsOpen: statusChanges[_activeSymbols[i].symbol],
-            );
-          }
-        }
-
-        _fillMarketSelectorList();
-
-        if (statusChanges[_symbol.name] != null) {
-          _symbol = _symbol.copyWith(isOpen: statusChanges[_symbol.name]);
-
-          // Request for tick stream if symbol is changing from closed to open.
-          if (statusChanges[_symbol.name]!) {
-            _onIntervalSelected(granularity);
-          }
-        }
-      },
-    );
   }
 
   Future<void> _getActiveSymbols() async {
