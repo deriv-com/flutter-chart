@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/src/add_ons/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -95,6 +96,11 @@ class DrawingTools {
     if (drawingToolsRepo!.items
         .where((DrawingToolConfig element) => element.configId == drawingId)
         .isEmpty) {
+      if (isDrawingFinished) {
+        selectedDrawingTool = selectedDrawingTool!.copyWith(
+          number: drawingToolsRepo!.getNumberForNewAddOn(selectedDrawingTool!),
+        );
+      }
       drawingToolsRepo!.add(selectedDrawingTool!);
     }
 

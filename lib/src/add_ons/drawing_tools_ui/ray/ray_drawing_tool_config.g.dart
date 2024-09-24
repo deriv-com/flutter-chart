@@ -22,11 +22,13 @@ RayDrawingToolConfig _$RayDrawingToolConfigFromJson(
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
       pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
           DrawingPatterns.solid,
+      number: (json['number'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$RayDrawingToolConfigToJson(
         RayDrawingToolConfig instance) =>
     <String, dynamic>{
+      'number': instance.number,
       'drawingData': instance.drawingData,
       'edgePoints': instance.edgePoints,
       'configId': instance.configId,

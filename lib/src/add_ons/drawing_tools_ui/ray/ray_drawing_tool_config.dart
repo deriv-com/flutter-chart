@@ -21,6 +21,7 @@ class RayDrawingToolConfig extends DrawingToolConfig {
     List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
+    super.number,
   }) : super(
           configId: configId,
           drawingData: drawingData,
@@ -65,6 +66,7 @@ class RayDrawingToolConfig extends DrawingToolConfig {
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
     bool? enableLabel,
+    int? number,
   }) =>
       RayDrawingToolConfig(
         configId: configId ?? this.configId,
@@ -72,5 +74,6 @@ class RayDrawingToolConfig extends DrawingToolConfig {
         lineStyle: lineStyle ?? this.lineStyle,
         pattern: pattern ?? this.pattern,
         edgePoints: edgePoints ?? this.edgePoints,
+        number: number ?? this.number,
       );
 }
