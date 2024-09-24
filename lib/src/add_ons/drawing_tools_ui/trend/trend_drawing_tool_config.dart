@@ -71,12 +71,11 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
     int? number,
   }) =>
       TrendDrawingToolConfig(
-        configId: configId ?? this.configId,
-        drawingData: drawingData ?? this.drawingData,
-        fillStyle: fillStyle ?? this.fillStyle,
-        lineStyle: lineStyle ?? this.lineStyle,
-        pattern: pattern ?? this.pattern,
-        edgePoints: edgePoints ?? this.edgePoints,
-        number: number ?? this.number
-      );
+          configId: configId ?? this.configId,
+          drawingData: drawingData ?? this.drawingData,
+          fillStyle: fillStyle ?? this.fillStyle,
+          lineStyle: lineStyle ?? this.lineStyle,
+          pattern: pattern ?? this.pattern,
+          edgePoints: edgePoints ?? this.edgePoints,
+          number: number ?? this.number);
 }
