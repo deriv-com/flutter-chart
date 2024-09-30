@@ -28,7 +28,7 @@ extension AddOnsRepositoryIndicatorConfigExtension
   }
 }
 
-/// Extension on Repository<IndicatorConfig>.
+/// Extension on Repository<DrawingToolsConfig>.
 extension AddOnsRepositoryDrawingToolConfigExtension
     on Repository<DrawingToolConfig> {
   /// Increase and Gets the next number for a new indicator.
@@ -46,5 +46,23 @@ extension AddOnsRepositoryDrawingToolConfigExtension
     }
 
     return 0;
+  }
+
+  /// Update numbers for renamed list of drawing tools.
+  void revampDrawingToolsNumbers(
+    DrawingToolConfig config,
+    int index,
+  ) {
+    removeAt(index);
+    for (int i = index; i < items.length; i++) {
+      DrawingToolConfig toolConfig = items[i];
+      if (toolConfig.number != 0 &&
+          toolConfig.runtimeType == config.runtimeType) {
+        toolConfig = toolConfig.copyWith(
+          number: toolConfig.number - 1,
+        );
+        updateAt(i, toolConfig);
+      }
+    }
   }
 }
