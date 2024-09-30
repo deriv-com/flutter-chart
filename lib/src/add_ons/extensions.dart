@@ -1,7 +1,6 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-
+import 'drawing_tools_ui/drawing_tool_config.dart';
 import 'indicators_ui/indicator_config.dart';
 import 'repository.dart';
 
@@ -53,7 +52,6 @@ extension AddOnsRepositoryDrawingToolConfigExtension
     DrawingToolConfig config,
     int index,
   ) {
-    removeAt(index);
     for (int i = index; i < items.length; i++) {
       DrawingToolConfig toolConfig = items[i];
       if (toolConfig.number != 0 &&
