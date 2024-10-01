@@ -98,7 +98,7 @@ class DrawingTools {
         .isEmpty) {
       if (isDrawingFinished) {
         selectedDrawingTool = selectedDrawingTool!.copyWith(
-          number: drawingToolsRepo!.getNextSequenceNumber(selectedDrawingTool!),
+          number: drawingToolsRepo!.getNumberForNewAddOn(selectedDrawingTool!),
         );
       }
       drawingToolsRepo!.add(selectedDrawingTool!);
