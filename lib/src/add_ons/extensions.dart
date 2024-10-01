@@ -30,8 +30,8 @@ extension AddOnsRepositoryIndicatorConfigExtension
 /// Extension on Repository<DrawingToolsConfig>.
 extension AddOnsRepositoryDrawingToolConfigExtension
     on Repository<DrawingToolConfig> {
-  /// Increase and Gets the next number for a new indicator.
-  int getNumberForNewAddOn(DrawingToolConfig addOn) {
+  /// Increase and Gets the next number for a new drawing tool.
+  int getNextSequenceNumber(DrawingToolConfig addOn) {
     final Iterable<DrawingToolConfig> drawingToolsOfSameType = items.where(
         (DrawingToolConfig item) => item.runtimeType == addOn.runtimeType);
 
@@ -48,7 +48,7 @@ extension AddOnsRepositoryDrawingToolConfigExtension
   }
 
   /// Update numbers for renamed list of drawing tools.
-  void revampDrawingToolsNumbers(
+  void updateSequenceNumbers(
     DrawingToolConfig config,
     int index,
   ) {
