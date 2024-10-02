@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 
-import 'drawing_tools_ui/drawing_tool_config.dart';
 import 'repository.dart';
 
 /// Extension on Repository<AddOnConfig>.
@@ -24,26 +23,5 @@ extension AddOnsRepositoryConfigExtension on Repository<AddOnConfig> {
     }
 
     return 0;
-  }
-}
-
-/// Extension on Repository<DrawingToolsConfig>.
-extension AddOnsRepositoryDrawingToolConfigExtension
-    on Repository<DrawingToolConfig> {
-  /// Update numbers for renamed list of drawing tools.
-  void updateSequenceNumbers(
-    DrawingToolConfig config,
-    int index,
-  ) {
-    for (int i = index; i < items.length; i++) {
-      DrawingToolConfig toolConfig = items[i];
-      if (toolConfig.number != 0 &&
-          toolConfig.runtimeType == config.runtimeType) {
-        toolConfig = toolConfig.copyWith(
-          number: toolConfig.number - 1,
-        );
-        updateAt(i, toolConfig);
-      }
-    }
   }
 }
