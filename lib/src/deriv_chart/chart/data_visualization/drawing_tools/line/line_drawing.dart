@@ -1,15 +1,21 @@
 import 'dart:math';
 
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -156,155 +162,6 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
         );
       }
     }
-
-    /// Draw the line barriers.
-    // if (drawingData.isDrawingFinished && drawingData.shouldHighlight) {
-    //   const double padding = 4;
-    //   const double rightMargin = 4;
-    //
-    //   final Paint _paint = Paint()
-    //     ..color = lineStyle.color
-    //     ..strokeWidth = 1;
-    //
-    //   final Paint _rectPaint = Paint()
-    //     ..style = PaintingStyle.fill
-    //     ..color = lineStyle.color.withOpacity(0.2);
-    //
-    //   final HorizontalBarrierStyle style =
-    //       series.style as HorizontalBarrierStyle? ??
-    //           theme.horizontalBarrierStyle;
-    //
-    //   /// ------------------------------------------------------------------------
-    //   /// Paint the quote labels and barrier on vertical axis
-    //   /// ------------------------------------------------------------------------
-    //
-    //   // Create the start quote's label.
-    //   final TextPainter startValuePainter = makeTextPainter(
-    //     edgePoints.first.quote.toStringAsFixed(4),
-    //     style.textStyle,
-    //   );
-    //
-    //   // Create the end quote's label.
-    //   final TextPainter endValuePainter = makeTextPainter(
-    //     edgePoints.last.quote.toStringAsFixed(4),
-    //     style.textStyle,
-    //   );
-    //
-    //   // Create the rectangle background for the start quote's label.
-    //   final Rect startLabelArea = Rect.fromCenter(
-    //     center: Offset(
-    //         size.width - rightMargin - padding - startValuePainter.width / 2,
-    //         startQuoteToY),
-    //     width: startValuePainter.width + padding * 2,
-    //     height: style.labelHeight,
-    //   );
-    //
-    //   // Create the rectangle background for the end quote's label.
-    //   final Rect endLabelArea = Rect.fromCenter(
-    //     center: Offset(
-    //         size.width - rightMargin - padding - endValuePainter.width / 2,
-    //         endQuoteToY),
-    //     width: endValuePainter.width + padding * 2,
-    //     height: style.labelHeight,
-    //   );
-    //
-    //   // Create the horizontal barrier rectangle.
-    //   final Rect horizontalBarrierRectangle = Rect.fromPoints(
-    //     Offset(size.width - startLabelArea.width - padding, startQuoteToY),
-    //     Offset(size.width, endQuoteToY),
-    //   );
-    //
-    //   // Draw horizontal barrier layer between the two quotes.
-    //   canvas.drawRect(horizontalBarrierRectangle, _rectPaint);
-    //
-    //   // Draw the start quote's label with background.
-    //   _paintLabelBackground(canvas, startLabelArea, _paint);
-    //   paintWithTextPainter(
-    //     canvas,
-    //     painter: startValuePainter,
-    //     anchor: startLabelArea.center,
-    //   );
-    //
-    //   // Draw the end quote's label with background.
-    //   _paintLabelBackground(canvas, endLabelArea, _paint);
-    //   paintWithTextPainter(
-    //     canvas,
-    //     painter: endValuePainter,
-    //     anchor: endLabelArea.center,
-    //   );
-    //
-    //   /// ------------------------------------------------------------------------
-    //
-    //   ///-------------------------------------------------------------------------
-    //   /// Paint the epoch labels and barrier on horizontal axis
-    //   /// ------------------------------------------------------------------------
-    //
-    //   // Date time formatted start epoch value.
-    //   final String startEpochLabel = DateTime.fromMillisecondsSinceEpoch(
-    //     edgePoints.first.epoch,
-    //   ).toLocal().toString();
-    //
-    //   // Date time formatted end epoch value.
-    //   final String endEpochLabel = DateTime.fromMillisecondsSinceEpoch(
-    //     edgePoints.last.epoch,
-    //   ).toLocal().toString();
-    //
-    //   // Create the start epoch label.
-    //   final TextPainter startEpochPainter = makeTextPainter(
-    //     startEpochLabel,
-    //     style.textStyle,
-    //   );
-    //
-    //   // Create the end epoch label.
-    //   final TextPainter endEpochPainter = makeTextPainter(
-    //     endEpochLabel,
-    //     style.textStyle,
-    //   );
-    //
-    //   // Create the rectangle background for the start epoch label.
-    //   final Rect startEpochLabelArea = Rect.fromCenter(
-    //     center: Offset(
-    //         startXCoord, size.height - startEpochPainter.height - padding),
-    //     width: startEpochPainter.width + padding * 2,
-    //     height: style.labelHeight,
-    //   );
-    //
-    //   // Create the rectangle background for the end epoch label.
-    //   final Rect endEpochLabelArea = Rect.fromCenter(
-    //     center:
-    //         Offset(endXCoord, size.height - endEpochPainter.height - padding),
-    //     width: endEpochPainter.width + padding * 2,
-    //     height: style.labelHeight,
-    //   );
-    //
-    //   // Create the vertical barrier rectangle.
-    //   final Rect verticalBarrierRectangle = Rect.fromPoints(
-    //     Offset(startEpochLabelArea.right,
-    //         size.height - startEpochLabelArea.height - padding - 2),
-    //     Offset(endEpochLabelArea.left, size.height - padding - 2),
-    //   );
-    //
-    //   // Draw the start epoch label with background.
-    //   _paintLabelBackground(canvas, startEpochLabelArea, _paint);
-    //   paintWithTextPainter(
-    //     canvas,
-    //     painter: startEpochPainter,
-    //     anchor: startEpochLabelArea.center,
-    //   );
-    //
-    //   // Draw the end epoch label with background.
-    //   _paintLabelBackground(canvas, endEpochLabelArea, _paint);
-    //   paintWithTextPainter(
-    //     canvas,
-    //     painter: endEpochPainter,
-    //     anchor: endEpochLabelArea.center,
-    //   );
-    //
-    //   // Draw vertical barrier layer between the two epochs.
-    //   canvas.drawRect(verticalBarrierRectangle, _rectPaint);
-    //
-    //   /// ------------------------------------------------------------------------
-    // }
   }
 
   /// Calculation for detemining whether a user's touch or click intersects
@@ -378,14 +235,5 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
         (_startPoint!.isClicked(position, markerRadius) ||
             _endPoint!.isClicked(position, markerRadius));
-  }
-
-  /// Paints a background for the label text.
-  void _paintLabelBackground(Canvas canvas, Rect rect, Paint paint,
-      {double radius = 4}) {
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, Radius.elliptical(radius, 4)),
-      paint,
-    );
   }
 }

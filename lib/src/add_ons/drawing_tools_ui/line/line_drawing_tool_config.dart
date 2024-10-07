@@ -1,13 +1,13 @@
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_item.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_overlay_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'line_drawing_tool_item.dart';
 
 part 'line_drawing_tool_config.g.dart';
 
@@ -73,4 +73,25 @@ class LineDrawingToolConfig extends DrawingToolConfig {
         pattern: pattern ?? this.pattern,
         edgePoints: edgePoints ?? this.edgePoints,
       );
+
+  @override
+  CustomPaint? getOverlayPainter(
+    DrawingToolConfig? config, {
+    required QuoteToY quoteToY,
+    required EpochToX epochToX,
+    required ChartConfig chartConfig,
+  }) {
+    if (config == null) {
+      return null;
+    }
+
+    return CustomPaint(
+      foregroundPainter: LineOverlayPainter(
+        this,
+        quoteToY: quoteToY,
+        epochToX: epochToX,
+        chartConfig: chartConfig,
+      ),
+    );
+  }
 }
