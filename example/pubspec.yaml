@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   deriv_chart:
     path: ../
-  vibration: ^1.7.6
   intl: ^0.19.0
   flutter_localizations:
     sdk: flutter
@@ -21,13 +20,8 @@ dependencies:
   flutter_deriv_api:
     git:
       url: git@github.com:deriv-com/flutter-deriv-api.git
-      ref: 164a3e514541568ebb67114829d48995dfbc5ed0
+      ref: 0b47e1a5fb987d7505c3369a6ace86018fcbe1fb
   flutter_bloc: ^8.1.6
-
-dependency_overrides:
-  intl: ^0.19.0
-  # Temp until we upgrade flutter-deriv-api
-  win32: ^4.1.4
 
 dev_dependencies:
   deriv_lint:
