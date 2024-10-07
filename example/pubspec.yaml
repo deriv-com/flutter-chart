@@ -21,7 +21,7 @@ dependencies:
   flutter_deriv_api:
     git:
       url: git@github.com:deriv-com/flutter-deriv-api.git
-      ref: v1.2.1
+      ref: 164a3e514541568ebb67114829d48995dfbc5ed0
   flutter_bloc: ^8.1.6
 
 dependency_overrides:
