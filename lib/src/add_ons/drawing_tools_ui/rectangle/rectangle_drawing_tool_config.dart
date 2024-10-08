@@ -23,6 +23,7 @@ class RectangleDrawingToolConfig extends DrawingToolConfig {
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
+    super.number,
   }) : super(
           configId: configId,
           drawingData: drawingData,
@@ -69,6 +70,7 @@ class RectangleDrawingToolConfig extends DrawingToolConfig {
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
     bool? enableLabel,
+    int? number,
   }) =>
       RectangleDrawingToolConfig(
         configId: configId ?? this.configId,
@@ -77,5 +79,6 @@ class RectangleDrawingToolConfig extends DrawingToolConfig {
         fillStyle: fillStyle ?? this.fillStyle,
         pattern: pattern ?? this.pattern,
         edgePoints: edgePoints ?? this.edgePoints,
+        number: number ?? this.number,
       );
 }

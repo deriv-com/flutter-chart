@@ -23,6 +23,7 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
     this.enableLabel = true,
+    super.number,
   }) : super(
           configId: configId,
           drawingData: drawingData,
@@ -69,6 +70,7 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
     bool? enableLabel,
+    int? number,
   }) =>
       VerticalDrawingToolConfig(
         configId: configId ?? this.configId,
@@ -77,5 +79,6 @@ class VerticalDrawingToolConfig extends DrawingToolConfig {
         lineStyle: lineStyle ?? this.lineStyle,
         pattern: pattern ?? this.pattern,
         enableLabel: enableLabel ?? this.enableLabel,
+        number: number ?? this.number,
       );
 }

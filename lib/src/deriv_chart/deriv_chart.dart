@@ -164,7 +164,7 @@ class DerivChart extends StatefulWidget {
   /// The configs of [indicatorsRepo] should be unique on the property
   /// [IndicatorConfig.title] and [IndicatorConfig.number] combined.
   ///
-  /// Method [AddOnsRepositoryIndicatorConfigExtension.getNumberForNewAddOn]
+  /// Method [AddOnsRepositoryConfigExtension.getNumberForNewAddOn]
   /// can be used to get a unique number for a new indicator.
   final Repository<IndicatorConfig>? indicatorsRepo;
 

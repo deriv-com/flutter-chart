@@ -1,21 +1,21 @@
 import 'dart:math';
 
-import 'indicators_ui/indicator_config.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+
 import 'repository.dart';
 
-/// Extension on Repository<IndicatorConfig>.
-extension AddOnsRepositoryIndicatorConfigExtension
-    on Repository<IndicatorConfig> {
+/// Extension on Repository<AddOnConfig>.
+extension AddOnsRepositoryConfigExtension on Repository<AddOnConfig> {
   // TODO(Ramin): Later will do this will be internally handled inside the
   // repository. When Web can update.
-  /// Gets the next number for a new indicator.
-  int getNumberForNewAddOn(IndicatorConfig addOn) {
-    final Iterable<IndicatorConfig> indicatorsOfSameType = items
-        .where((IndicatorConfig item) => item.runtimeType == addOn.runtimeType);
+  /// Gets the next number for a new indicator or drawing tool.
+  int getNumberForNewAddOn(AddOnConfig addOn) {
+    final Iterable<AddOnConfig> addOnOfSameType = items
+        .where((AddOnConfig item) => item.runtimeType == addOn.runtimeType);
 
-    if (indicatorsOfSameType.isNotEmpty) {
-      final int postFixNumber = indicatorsOfSameType
-              .map<int>((IndicatorConfig item) => item.number)
+    if (addOnOfSameType.isNotEmpty) {
+      final int postFixNumber = addOnOfSameType
+              .map<int>((AddOnConfig item) => item.number)
               .reduce(max) +
           1;
 

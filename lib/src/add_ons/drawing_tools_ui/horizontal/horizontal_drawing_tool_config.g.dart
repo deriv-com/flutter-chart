@@ -23,11 +23,13 @@ HorizontalDrawingToolConfig _$HorizontalDrawingToolConfigFromJson(
       pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
           DrawingPatterns.solid,
       enableLabel: json['enableLabel'] as bool? ?? true,
+      number: (json['number'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$HorizontalDrawingToolConfigToJson(
         HorizontalDrawingToolConfig instance) =>
     <String, dynamic>{
+      'number': instance.number,
       'drawingData': instance.drawingData,
       'edgePoints': instance.edgePoints,
       'configId': instance.configId,

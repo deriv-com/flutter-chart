@@ -16,6 +16,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
     // TODO(Bahar-Deriv): Move edgePoints to drawingData.
     required this.edgePoints,
     bool isOverlay = true,
+    super.number,
   }) : super(isOverlay: isOverlay);
 
   /// Creates a concrete drawing tool config from JSON.
@@ -75,6 +76,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
     bool? enableLabel,
+    int? number,
   });
 
   /// Creates drawing tool.

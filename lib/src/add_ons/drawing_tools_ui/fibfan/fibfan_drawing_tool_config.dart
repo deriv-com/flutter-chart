@@ -21,6 +21,7 @@ class FibfanDrawingToolConfig extends DrawingToolConfig {
     List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
+    super.number,
   }) : super(
           configId: configId,
           drawingData: drawingData,
@@ -64,6 +65,7 @@ class FibfanDrawingToolConfig extends DrawingToolConfig {
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
     bool? enableLabel,
+    int? number,
   }) =>
       FibfanDrawingToolConfig(
         configId: configId ?? this.configId,
@@ -71,5 +73,6 @@ class FibfanDrawingToolConfig extends DrawingToolConfig {
         lineStyle: lineStyle ?? this.lineStyle,
         fillStyle: fillStyle ?? this.fillStyle,
         edgePoints: edgePoints ?? this.edgePoints,
+        number: number ?? this.number,
       );
 }

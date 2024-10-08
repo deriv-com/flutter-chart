@@ -21,6 +21,7 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
     this.fillStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
     this.pattern = DrawingPatterns.solid,
+    super.number,
   }) : super(
           configId: configId,
           drawingData: drawingData,
@@ -67,13 +68,14 @@ class TrendDrawingToolConfig extends DrawingToolConfig {
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
     bool? enableLabel,
+    int? number,
   }) =>
       TrendDrawingToolConfig(
-        configId: configId ?? this.configId,
-        drawingData: drawingData ?? this.drawingData,
-        fillStyle: fillStyle ?? this.fillStyle,
-        lineStyle: lineStyle ?? this.lineStyle,
-        pattern: pattern ?? this.pattern,
-        edgePoints: edgePoints ?? this.edgePoints,
-      );
+          configId: configId ?? this.configId,
+          drawingData: drawingData ?? this.drawingData,
+          fillStyle: fillStyle ?? this.fillStyle,
+          lineStyle: lineStyle ?? this.lineStyle,
+          pattern: pattern ?? this.pattern,
+          edgePoints: edgePoints ?? this.edgePoints,
+          number: number ?? this.number);
 }

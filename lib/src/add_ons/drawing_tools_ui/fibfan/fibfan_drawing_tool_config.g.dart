@@ -23,11 +23,13 @@ FibfanDrawingToolConfig _$FibfanDrawingToolConfigFromJson(
       lineStyle: json['lineStyle'] == null
           ? const LineStyle(thickness: 0.9, color: Colors.white)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      number: (json['number'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$FibfanDrawingToolConfigToJson(
         FibfanDrawingToolConfig instance) =>
     <String, dynamic>{
+      'number': instance.number,
       'drawingData': instance.drawingData,
       'edgePoints': instance.edgePoints,
       'configId': instance.configId,
