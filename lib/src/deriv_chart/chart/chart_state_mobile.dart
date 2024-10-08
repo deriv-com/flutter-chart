@@ -225,17 +225,22 @@ class _ChartStateMobile extends _ChartState {
           continue;
         }
 
-        overlayIndicatorsLabels.add(IndicatorLabelMobile(
-          title:
-              '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
-              ' (${config.configSummary})',
-          showMoveUpIcon: false,
-          showMoveDownIcon: false,
-          isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,
-          onHideUnhideToggle: () {
-            _onIndicatorHideToggleTapped(widget.indicatorsRepo, i);
-          },
-        ));
+        overlayIndicatorsLabels.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: Dimens.margin04),
+            child: IndicatorLabelMobile(
+              title:
+                  '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
+                  ' (${config.configSummary})',
+              showMoveUpIcon: false,
+              showMoveDownIcon: false,
+              isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,
+              onHideUnhideToggle: () {
+                _onIndicatorHideToggleTapped(widget.indicatorsRepo, i);
+              },
+            ),
+          ),
+        );
       }
     }
 

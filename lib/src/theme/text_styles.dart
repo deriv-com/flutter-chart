@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 /// This include all text styles according to Deriv theme guideline.
