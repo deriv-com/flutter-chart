@@ -84,8 +84,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
   );
 
   /// Create overlay for the drawing tool.
-  CustomPaint? getOverlayPainter(
-    DrawingToolConfig? config, {
+  CustomPaint? getOverlayPainter({
     required QuoteToY quoteToY,
     required EpochToX epochToX,
     required ChartConfig chartConfig,

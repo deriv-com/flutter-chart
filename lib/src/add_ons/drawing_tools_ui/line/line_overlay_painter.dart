@@ -4,16 +4,16 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// LineOverlayPainter is a subclass of CustomPainter responsible for
-/// drawing barriers on a chart based on selected line points.
-class LineOverlayPainter extends CustomPainter {
-  /// Creates a LineBarrierPainter.
-  LineOverlayPainter(
-    this.config, {
-    required this.quoteToY,
-    required this.epochToX,
-    required this.chartConfig,
-  });
+/// BaseLineOverlayPainter is an abstract class that provides common methods
+/// for painting barriers on a chart based on selected line points.
+abstract class BaseLineOverlayPainter extends CustomPainter {
+  /// Creates a BaseLineOverlayPainter.
+  BaseLineOverlayPainter(
+    this.config,
+    this.quoteToY,
+    this.epochToX,
+    this.chartConfig,
+  );
 
   /// Line drawing tool configuration.
   final LineDrawingToolConfig config;
@@ -25,13 +25,72 @@ class LineOverlayPainter extends CustomPainter {
   final EpochToX epochToX;
 
   /// Padding between the labels and the barriers.
-  final double padding = 12;
-
-  /// Chart configuration.
   final ChartConfig chartConfig;
+
+  // Common methods can be declared here
+  void _drawLabelWithBackground(
+      Canvas canvas, Rect labelArea, Paint paint, TextPainter painter) {
+    _drawLabelBackground(canvas, labelArea, paint);
+    paintWithTextPainter(canvas, painter: painter, anchor: labelArea.center);
+  }
+
+  void _drawLabelBackground(Canvas canvas, Rect rect, Paint paint,
+      {double radius = 4}) {
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, Radius.elliptical(radius, 4)), paint);
+  }
+
+  String _formatEpochToDateTime(int epochMillis) {
+    final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epochMillis);
+    return '${DateFormat('yy-MM-dd HH:mm:ss').format(dateTime)} ${dateTime.timeZoneName}';
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 
   @override
   void paint(Canvas canvas, Size size) {
+    onPaint(
+      canvas: canvas,
+      size: size,
+      config: config,
+      epochToX: epochToX,
+      quoteToY: quoteToY,
+    );
+  }
+
+  /// Abstract method to be implemented by subclasses.
+  void onPaint({
+    required Canvas canvas,
+    required Size size,
+    required LineDrawingToolConfig config,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+  });
+}
+
+/// LineOverlayPainterMobile is a subclass of BaseLineOverlayPainter used for
+/// mobile platforms.
+class LineOverlayPainterMobile extends BaseLineOverlayPainter {
+  /// Creates an instance of LineOverlayPainterMobile.
+  LineOverlayPainterMobile(
+    super.config,
+    super.quoteToY,
+    super.epochToX,
+    super.chartConfig,
+  );
+
+  /// Padding between the labels and the barriers.
+  final double padding = 12;
+
+  @override
+  void onPaint({
+    required Canvas canvas,
+    required Size size,
+    required LineDrawingToolConfig config,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+  }) {
     final startPoint = config.edgePoints.first;
     final endPoint = config.edgePoints.last;
 
@@ -59,9 +118,6 @@ class LineOverlayPainter extends CustomPainter {
     _drawEpochLabelsAndBarriers(canvas, size, style, paint, barrierPaint,
         startEpochX, endEpochX, startPoint.epoch, endPoint.epoch);
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 
   void _drawQuoteLabelsAndBarriers(
     Canvas canvas,
@@ -149,39 +205,5 @@ class LineOverlayPainter extends CustomPainter {
     _drawLabelWithBackground(
         canvas, startEpochArea, labelPaint, startEpochPainter);
     _drawLabelWithBackground(canvas, endEpochArea, labelPaint, endEpochPainter);
-  }
-
-  void _drawLabelWithBackground(
-      Canvas canvas, Rect labelArea, Paint paint, TextPainter painter) {
-    _paintLabelBackground(canvas, labelArea, paint);
-
-    paintWithTextPainter(
-      canvas,
-      painter: painter,
-      anchor: labelArea.center,
-    );
-  }
-
-  /// Paints a background based on the given label area.
-  void _paintLabelBackground(Canvas canvas, Rect rect, Paint paint,
-      {double radius = 4}) {
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, Radius.elliptical(radius, 4)),
-      paint,
-    );
-  }
-
-  String _formatEpochToDateTime(int epochMillis) {
-    // Create a DateTime instance from milliseconds in local time
-    final DateTime dateTime =
-        DateTime.fromMillisecondsSinceEpoch(epochMillis, isUtc: false);
-
-    final String formattedDate =
-        DateFormat('yy-MM-dd HH:mm:ss').format(dateTime);
-
-    // Get the current timezone name
-    final String timeZoneName = DateTime.now().timeZoneName;
-
-    return '$formattedDate $timeZoneName';
   }
 }

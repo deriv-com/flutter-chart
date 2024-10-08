@@ -78,9 +78,8 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
             config.drawingData?.isSelected == true &&
             config.drawingData?.isDrawingFinished == true);
 
-    final CustomPaint? overlayPainter =
+    final CustomPaint? selectedDrawingOverlay =
         selectedDrawingConfig?.getOverlayPainter(
-      selectedDrawingConfig,
       quoteToY: widget.chartQuoteToCanvasY,
       epochToX: context.watch<XAxisModel>().xFromEpoch,
       chartConfig: context.watch<ChartConfig>(),
@@ -121,7 +120,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 removeUnfinishedDrawing: removeUnfinishedDrawing,
                 shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
               ),
-            if (overlayPainter != null) overlayPainter,
+            if (selectedDrawingOverlay != null) selectedDrawingOverlay,
           ],
         ),
       ),

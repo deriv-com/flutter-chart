@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_overlay_paint
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -75,23 +76,19 @@ class LineDrawingToolConfig extends DrawingToolConfig {
       );
 
   @override
-  CustomPaint? getOverlayPainter(
-    DrawingToolConfig? config, {
+  CustomPaint? getOverlayPainter({
     required QuoteToY quoteToY,
     required EpochToX epochToX,
     required ChartConfig chartConfig,
   }) {
-    if (config == null) {
+    if (kIsWeb) {
+      // Return null for web since it's not available for web.
       return null;
     }
 
     return CustomPaint(
-      foregroundPainter: LineOverlayPainter(
-        this,
-        quoteToY: quoteToY,
-        epochToX: epochToX,
-        chartConfig: chartConfig,
-      ),
+      foregroundPainter:
+          LineOverlayPainterMobile(this, quoteToY, epochToX, chartConfig),
     );
   }
 }
