@@ -1,77 +1,11 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_overlay_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-/// BaseLineOverlayPainter is an abstract class that provides common methods
-/// for painting barriers on a chart based on selected line points.
-abstract class BaseLineOverlayPainter extends CustomPainter {
-  /// Creates a BaseLineOverlayPainter.
-  BaseLineOverlayPainter(
-    this.config,
-    this.quoteToY,
-    this.epochToX,
-    this.chartConfig,
-  );
-
-  /// Line drawing tool configuration.
-  final LineDrawingToolConfig config;
-
-  /// Quote to Y conversion function.
-  final QuoteToY quoteToY;
-
-  /// Epoch to X conversion function.
-  final EpochToX epochToX;
-
-  /// Padding between the labels and the barriers.
-  final ChartConfig chartConfig;
-
-  // Common methods can be declared here
-  void _drawLabelWithBackground(
-      Canvas canvas, Rect labelArea, Paint paint, TextPainter painter) {
-    _drawLabelBackground(canvas, labelArea, paint);
-    paintWithTextPainter(canvas, painter: painter, anchor: labelArea.center);
-  }
-
-  void _drawLabelBackground(Canvas canvas, Rect rect, Paint paint,
-      {double radius = 4}) {
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, Radius.elliptical(radius, 4)), paint);
-  }
-
-  String _formatEpochToDateTime(int epochMillis) {
-    final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epochMillis);
-    return '${DateFormat('yy-MM-dd HH:mm:ss').format(dateTime)} ${dateTime.timeZoneName}';
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    onPaint(
-      canvas: canvas,
-      size: size,
-      config: config,
-      epochToX: epochToX,
-      quoteToY: quoteToY,
-    );
-  }
-
-  /// Abstract method to be implemented by subclasses.
-  void onPaint({
-    required Canvas canvas,
-    required Size size,
-    required LineDrawingToolConfig config,
-    required EpochToX epochToX,
-    required QuoteToY quoteToY,
-  });
-}
-
-/// LineOverlayPainterMobile is a subclass of BaseLineOverlayPainter used for
-/// mobile platforms.
-class LineOverlayPainterMobile extends BaseLineOverlayPainter {
+/// LineOverlayPainterMobile is a subclass of [DrawingToolOverlayPainter] used
+/// to draw the overlay attributes of the line drawing tool on mobile platforms.
+class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
   /// Creates an instance of LineOverlayPainterMobile.
   LineOverlayPainterMobile(
     super.config,
@@ -87,10 +21,13 @@ class LineOverlayPainterMobile extends BaseLineOverlayPainter {
   void onPaint({
     required Canvas canvas,
     required Size size,
-    required LineDrawingToolConfig config,
+    required DrawingToolConfig config,
     required EpochToX epochToX,
     required QuoteToY quoteToY,
   }) {
+    // Cast config as LineDrawingToolConfig
+    config as LineDrawingToolConfig;
+
     final startPoint = config.edgePoints.first;
     final endPoint = config.edgePoints.last;
 
@@ -156,9 +93,9 @@ class LineOverlayPainterMobile extends BaseLineOverlayPainter {
     canvas.drawRect(horizontalBarrierRect, barrierPaint);
 
     // Draw labels with backgrounds
-    _drawLabelWithBackground(
+    drawLabelWithBackground(
         canvas, startQuoteArea, labelPaint, startQuotePainter);
-    _drawLabelWithBackground(canvas, endQuoteArea, labelPaint, endQuotePainter);
+    drawLabelWithBackground(canvas, endQuoteArea, labelPaint, endQuotePainter);
   }
 
   void _drawEpochLabelsAndBarriers(
@@ -172,8 +109,8 @@ class LineOverlayPainterMobile extends BaseLineOverlayPainter {
     int startEpoch,
     int endEpoch,
   ) {
-    final String startEpochLabel = _formatEpochToDateTime(startEpoch);
-    final String endEpochLabel = _formatEpochToDateTime(endEpoch);
+    final String startEpochLabel = formatEpochToDateTime(startEpoch);
+    final String endEpochLabel = formatEpochToDateTime(endEpoch);
 
     final TextPainter startEpochPainter =
         makeTextPainter(startEpochLabel, style.textStyle);
@@ -202,8 +139,31 @@ class LineOverlayPainterMobile extends BaseLineOverlayPainter {
     canvas.drawRect(verticalBarrierRect, barrierPaint);
 
     // Draw labels with backgrounds
-    _drawLabelWithBackground(
+    drawLabelWithBackground(
         canvas, startEpochArea, labelPaint, startEpochPainter);
-    _drawLabelWithBackground(canvas, endEpochArea, labelPaint, endEpochPainter);
+    drawLabelWithBackground(canvas, endEpochArea, labelPaint, endEpochPainter);
+  }
+}
+
+/// LineOverlayPainterWeb is a subclass of [DrawingToolOverlayPainter] used
+/// to draw the overlay attributes of the line drawing tool on web.
+class LineOverlayPainterWeb extends DrawingToolOverlayPainter {
+  /// Creates an instance of LineOverlayPainterWeb.
+  LineOverlayPainterWeb(
+    super.config,
+    super.quoteToY,
+    super.epochToX,
+    super.chartConfig,
+  );
+
+  @override
+  void onPaint({
+    required Canvas canvas,
+    required Size size,
+    required DrawingToolConfig config,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+  }) {
+    // Not implemented for web.
   }
 }
