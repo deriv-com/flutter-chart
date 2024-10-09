@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'  # Optionally, adjust Java distribution (e.g., adopt, zulu, etc.)
+          distribution: 'temurin'
 
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
