@@ -16,12 +16,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   pref: ^2.7.1
-  win32: ^5.5.4
   flutter_deriv_api:
     git:
       url: git@github.com:deriv-com/flutter-deriv-api.git
       ref: v1.3.0
-  flutter_bloc: ^8.1.6
 
 dev_dependencies:
   deriv_lint:
