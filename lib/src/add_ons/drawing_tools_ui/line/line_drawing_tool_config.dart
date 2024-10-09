@@ -21,6 +21,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
     DrawingData? drawingData,
     List<EdgePoint> edgePoints = const <EdgePoint>[],
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
+    this.overlayStyle,
     this.pattern = DrawingPatterns.solid,
     super.number,
   }) : super(
@@ -43,6 +44,9 @@ class LineDrawingToolConfig extends DrawingToolConfig {
   /// Drawing tool line style
   final LineStyle lineStyle;
 
+  /// Drawing tool overlay style
+  final OverlayStyle? overlayStyle;
+
   /// Drawing tool line pattern: 'solid', 'dotted', 'dashed'
   // TODO(maryia-binary): implement 'dotted' and 'dashed' patterns
   final DrawingPatterns pattern;
@@ -64,6 +68,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
     DrawingData? drawingData,
     LineStyle? lineStyle,
     LineStyle? fillStyle,
+    OverlayStyle? overlayStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
     bool? enableLabel,
@@ -73,6 +78,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
         configId: configId ?? this.configId,
         drawingData: drawingData ?? this.drawingData,
         lineStyle: lineStyle ?? this.lineStyle,
+        overlayStyle: overlayStyle ?? this.overlayStyle,
         pattern: pattern ?? this.pattern,
         edgePoints: edgePoints ?? this.edgePoints,
         number: number ?? this.number,

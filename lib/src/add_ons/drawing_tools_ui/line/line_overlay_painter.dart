@@ -1,6 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_overlay_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 /// LineOverlayPainterMobile is a subclass of [DrawingToolOverlayPainter] used
@@ -36,8 +37,13 @@ class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
     final double startEpochX = epochToX(startPoint.epoch);
     final double endEpochX = epochToX(endPoint.epoch);
 
-    final HorizontalBarrierStyle style =
-        HorizontalBarrierStyle(color: config.lineStyle.color);
+    final OverlayStyle style = config.overlayStyle ??
+        OverlayStyle(
+          color: config.lineStyle.color,
+          textStyle: config.overlayStyle?.textStyle
+                  .copyWith(color: config.lineStyle.color) ??
+              TextStyles.caption2,
+        );
 
     final Paint paint = Paint()
       ..color = style.color
@@ -59,7 +65,7 @@ class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
   void _drawQuoteLabelsAndBarriers(
     Canvas canvas,
     Size size,
-    HorizontalBarrierStyle style,
+    OverlayStyle style,
     Paint labelPaint,
     Paint barrierPaint,
     double startQuoteY,
@@ -101,7 +107,7 @@ class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
   void _drawEpochLabelsAndBarriers(
     Canvas canvas,
     Size size,
-    HorizontalBarrierStyle style,
+    OverlayStyle style,
     Paint labelPaint,
     Paint barrierPaint,
     double startEpochX,
