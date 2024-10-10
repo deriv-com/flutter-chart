@@ -1,4 +1,4 @@
-## [0.2.1]
+## [0.3.0]
 
 * Fix overlay indicators' lable spacing
 * Add numbering logic to drawing tools
