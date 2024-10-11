@@ -1,9 +1,10 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
 import 'package:flutter/material.dart';
 
 /// Drawing tools config
@@ -85,11 +86,10 @@ abstract class DrawingToolConfig extends AddOnConfig {
     VoidCallback deleteDrawingTool,
   );
 
-  /// Create overlay for the drawing tool.
-  CustomPaint? getOverlayPainter({
-    required QuoteToY quoteToY,
-    required EpochToX epochToX,
-    required ChartConfig chartConfig,
+  /// Create label painter for the drawing tool.
+  DrawingToolLabelPainter? labelPainter({
+    required Point startPoint,
+    required Point endPoint,
   }) =>
       null;
 }

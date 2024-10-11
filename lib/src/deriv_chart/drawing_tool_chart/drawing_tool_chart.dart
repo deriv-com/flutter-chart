@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,18 +71,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
     final List<DrawingData?> drawings = configs
         .map<DrawingData?>((DrawingToolConfig config) => config.drawingData)
         .toList();
-
-    final DrawingToolConfig? selectedDrawingConfig = configs.firstWhereOrNull(
-        (DrawingToolConfig config) =>
-            config.drawingData?.isSelected == true &&
-            config.drawingData?.isDrawingFinished == true);
-
-    final CustomPaint? selectedDrawingOverlay =
-        selectedDrawingConfig?.getOverlayPainter(
-      quoteToY: widget.chartQuoteToCanvasY,
-      epochToX: context.watch<XAxisModel>().xFromEpoch,
-      chartConfig: context.watch<ChartConfig>(),
-    );
+    final ChartConfig chartConfig = context.watch<ChartConfig>();
 
     return ClipRect(
       child: RepaintBoundary(
@@ -106,6 +94,7 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                   setIsDrawingSelected: _setIsDrawingSelected,
                   selectedDrawingTool: widget.drawingTools.selectedDrawingTool,
                   series: widget.series,
+                  chartConfig: chartConfig,
                 ),
               ),
             if (widget.drawingTools.selectedDrawingTool != null)
@@ -113,14 +102,13 @@ class _DrawingToolChartState extends State<DrawingToolChart> {
                 onAddDrawing: widget.drawingTools.onAddDrawing,
                 selectedDrawingTool: widget.drawingTools.selectedDrawingTool!,
                 quoteFromCanvasY: widget.chartQuoteFromCanvasY,
-                chartConfig: context.watch<ChartConfig>(),
+                chartConfig: chartConfig,
                 clearDrawingToolSelection:
                     widget.drawingTools.clearDrawingToolSelection,
                 series: widget.series,
                 removeUnfinishedDrawing: removeUnfinishedDrawing,
                 shouldStopDrawing: widget.drawingTools.shouldStopDrawing,
               ),
-            if (selectedDrawingOverlay != null) selectedDrawingOverlay,
           ],
         ),
       ),

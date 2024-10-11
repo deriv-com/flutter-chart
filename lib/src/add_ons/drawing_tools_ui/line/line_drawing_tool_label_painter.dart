@@ -1,43 +1,19 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_overlay_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_label_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
-/// LineOverlayPainterMobile is a subclass of [DrawingToolOverlayPainter] used
-/// to draw the overlay attributes of the line drawing tool on mobile platforms.
-class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
-  /// Creates an instance of LineOverlayPainterMobile.
-  LineOverlayPainterMobile(
-    super.config,
-    super.quoteToY,
-    super.epochToX,
-    super.chartConfig,
-  );
-
-  /// Padding between the labels and the barriers.
-  final double padding = 12;
-
-  @override
-  void onPaint({
-    required Canvas canvas,
-    required Size size,
-    required DrawingToolConfig config,
-    required EpochToX epochToX,
-    required QuoteToY quoteToY,
-  }) {
-    // Cast config as LineDrawingToolConfig
-    config as LineDrawingToolConfig;
-
-    final startPoint = config.edgePoints.first;
-    final endPoint = config.edgePoints.last;
-
-    final double startQuoteY = quoteToY(startPoint.quote);
-    final double endQuoteY = quoteToY(endPoint.quote);
-    final double startEpochX = epochToX(startPoint.epoch);
-    final double endEpochX = epochToX(endPoint.epoch);
-
-    final OverlayStyle style = config.overlayStyle ??
+/// Line drawing tool label painter.
+class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
+  /// Creates a LineDrawingLabelPainter.
+  LineDrawingToolLabelPainter(
+    LineDrawingToolConfig config, {
+    required this.startPoint,
+    required this.endPoint,
+  }) : super(config) {
+    _style = config.overlayStyle ??
         OverlayStyle(
           color: config.lineStyle.color,
           textStyle: config.overlayStyle?.textStyle
@@ -45,38 +21,90 @@ class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
               TextStyles.caption2,
         );
 
-    final Paint paint = Paint()
-      ..color = style.color
+    _paint = Paint()
+      ..color = _style.color
       ..strokeWidth = 1.0;
 
-    final Paint barrierPaint = Paint()
-      ..color = style.color.withOpacity(0.2)
+    _barrierPaint = Paint()
+      ..color = _style.color.withOpacity(0.2)
       ..style = PaintingStyle.fill;
+  }
+
+  /// The start point of the line.
+  final Point startPoint;
+
+  /// The end point of the line.
+  final Point endPoint;
+
+  /// Padding between the labels and the barriers.
+  final double padding = 12;
+
+  /// The overlay style.
+  late final OverlayStyle _style;
+
+  /// The paint.
+  late final Paint _paint;
+
+  /// The barrier paint.
+  late final Paint _barrierPaint;
+
+  @override
+  void paintForMobile(
+    Canvas canvas,
+    Size size,
+    ChartConfig chartConfig,
+    DrawingToolConfig config,
+    int Function(double x) epochFromX,
+    double Function(double p1) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+  ) {
+    final double startQuoteY = startPoint.y;
+    final double endQuoteY = endPoint.y;
+    final double startEpochX = startPoint.x;
+    final double endEpochX = endPoint.x;
+
+    final double startQuote = quoteFromY(startPoint.y);
+    final double endQuote = quoteFromY(endPoint.y);
+    final int startEpoch = epochFromX(startPoint.x);
+    final int endEpoch = epochFromX(endPoint.x);
 
     // Draw quote labels and barriers on the vertical axis
-    _drawQuoteLabelsAndBarriers(canvas, size, style, paint, barrierPaint,
-        startQuoteY, endQuoteY, startPoint, endPoint);
+    _drawQuoteLabelsAndBarriers(canvas, size, chartConfig, _style, _paint,
+        _barrierPaint, startQuoteY, endQuoteY, startQuote, endQuote);
 
     // Draw epoch labels and barriers on the horizontal axis
-    _drawEpochLabelsAndBarriers(canvas, size, style, paint, barrierPaint,
-        startEpochX, endEpochX, startPoint.epoch, endPoint.epoch);
+    _drawEpochLabelsAndBarriers(canvas, size, chartConfig, _style, _paint,
+        _barrierPaint, startEpochX, endEpochX, startEpoch, endEpoch);
   }
+
+  @override
+  void paintForWeb(
+      Canvas canvas,
+      Size size,
+      ChartConfig chartConfig,
+      DrawingToolConfig config,
+      int Function(double x) epochFromX,
+      double Function(double p1) quoteFromY,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY) {}
 
   void _drawQuoteLabelsAndBarriers(
     Canvas canvas,
     Size size,
+    ChartConfig chartConfig,
     OverlayStyle style,
     Paint labelPaint,
     Paint barrierPaint,
     double startQuoteY,
     double endQuoteY,
-    EdgePoint startPoint,
-    EdgePoint endPoint,
+    double startQuote,
+    double endQuote,
   ) {
     final TextPainter startQuotePainter = makeTextPainter(
-        startPoint.quote.toStringAsFixed(chartConfig.pipSize), style.textStyle);
+        startQuote.toStringAsFixed(chartConfig.pipSize), style.textStyle);
     final TextPainter endQuotePainter = makeTextPainter(
-        endPoint.quote.toStringAsFixed(chartConfig.pipSize), style.textStyle);
+        endQuote.toStringAsFixed(chartConfig.pipSize), style.textStyle);
 
     final Rect startQuoteArea = Rect.fromCenter(
       center: Offset(
@@ -107,6 +135,7 @@ class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
   void _drawEpochLabelsAndBarriers(
     Canvas canvas,
     Size size,
+    ChartConfig chartConfig,
     OverlayStyle style,
     Paint labelPaint,
     Paint barrierPaint,
@@ -148,28 +177,5 @@ class LineOverlayPainterMobile extends DrawingToolOverlayPainter {
     drawLabelWithBackground(
         canvas, startEpochArea, labelPaint, startEpochPainter);
     drawLabelWithBackground(canvas, endEpochArea, labelPaint, endEpochPainter);
-  }
-}
-
-/// LineOverlayPainterWeb is a subclass of [DrawingToolOverlayPainter] used
-/// to draw the overlay attributes of the line drawing tool on web.
-class LineOverlayPainterWeb extends DrawingToolOverlayPainter {
-  /// Creates an instance of LineOverlayPainterWeb.
-  LineOverlayPainterWeb(
-    super.config,
-    super.quoteToY,
-    super.epochToX,
-    super.chartConfig,
-  );
-
-  @override
-  void onPaint({
-    required Canvas canvas,
-    required Size size,
-    required DrawingToolConfig config,
-    required EpochToX epochToX,
-    required QuoteToY quoteToY,
-  }) {
-    // Not implemented for web.
   }
 }

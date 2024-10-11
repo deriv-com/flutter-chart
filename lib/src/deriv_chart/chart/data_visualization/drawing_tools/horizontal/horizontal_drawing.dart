@@ -118,6 +118,7 @@ class HorizontalDrawing extends Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    ChartConfig chartConfig,
     int Function(double x) epochFromX,
     double Function(double) quoteFromY,
     double Function(int x) epochToX,
@@ -135,7 +136,7 @@ class HorizontalDrawing extends Drawing {
         startPoint!.y,
         'horizontal',
         theme,
-        chartConfig!,
+        this.chartConfig ?? chartConfig,
         quoteFromY: quoteFromY,
         color: lineStyle.color,
       );

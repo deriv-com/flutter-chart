@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/channel/channel_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
@@ -10,9 +11,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 
 import 'continuous/continuous_line_drawing.dart';
 import 'vertical/vertical_drawing.dart';
@@ -84,6 +85,7 @@ abstract class Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    ChartConfig chartConfig,
     int Function(double x) epochFromX,
     double Function(double) quoteFromY,
     double Function(int x) epochToX,

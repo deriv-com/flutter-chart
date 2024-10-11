@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/misc/debounce.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
@@ -29,6 +30,7 @@ class DrawingPainter extends StatefulWidget {
     required this.onMouseEnter,
     required this.onMouseExit,
     required this.series,
+    required this.chartConfig,
     Key? key,
   }) : super(key: key);
 
@@ -65,6 +67,9 @@ class DrawingPainter extends StatefulWidget {
 
   /// Series of tick
   final DataSeries<Tick> series;
+
+  /// Chart's configuration.
+  final ChartConfig chartConfig;
 }
 
 class _DrawingPainterState extends State<DrawingPainter> {
@@ -303,6 +308,7 @@ class _DrawingPainterState extends State<DrawingPainter> {
                             config.configId == widget.drawingData!.id)
                         .first,
                     theme: context.watch<ChartTheme>(),
+                    chartConfig: widget.chartConfig,
                     epochFromX: xAxis.epochFromX,
                     epochToX: xAxis.xFromEpoch,
                     quoteToY: widget.quoteToCanvasY,
@@ -347,6 +353,7 @@ class _DrawingPainter extends CustomPainter {
     required this.series,
     required this.config,
     required this.theme,
+    required this.chartConfig,
     required this.epochFromX,
     required this.epochToX,
     required this.quoteToY,
@@ -368,6 +375,7 @@ class _DrawingPainter extends CustomPainter {
   final DataSeries<Tick> series;
   final DrawingToolConfig config;
   final ChartTheme theme;
+  final ChartConfig chartConfig;
   final bool isDrawingToolSelected;
   final bool isTouchHeld;
   final int Function(double x) epochFromX;
@@ -418,6 +426,7 @@ class _DrawingPainter extends CustomPainter {
         canvas,
         size,
         theme,
+        chartConfig,
         epochFromX,
         quoteFromY,
         epochToX,

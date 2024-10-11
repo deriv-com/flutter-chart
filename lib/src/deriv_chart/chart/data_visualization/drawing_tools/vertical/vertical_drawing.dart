@@ -70,6 +70,7 @@ class VerticalDrawing extends Drawing {
     Canvas canvas,
     Size size,
     ChartTheme theme,
+    ChartConfig chartConfig,
     int Function(double x) epochFromX,
     double Function(double) quoteFromY,
     double Function(int x) epochToX,
@@ -86,7 +87,7 @@ class VerticalDrawing extends Drawing {
         startPoint!.x,
         'vertical',
         theme,
-        chartConfig!,
+        this.chartConfig ?? chartConfig,
         epochFromX: epochFromX,
         color: config.lineStyle.color,
       );
@@ -141,7 +142,7 @@ class VerticalDrawing extends Drawing {
     }
   }
 
-  /// Calculation for detemining whether a user's touch or click intersects
+  /// Calculation for determining whether a user's touch or click intersects
   /// with any of the painted areas on the screen
   @override
   bool hitTest(

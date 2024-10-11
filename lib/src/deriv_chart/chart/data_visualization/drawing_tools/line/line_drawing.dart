@@ -1,21 +1,17 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
-import 'package:deriv_chart/src/models/tick.dart';
-import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -235,5 +231,36 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
         (_startPoint!.isClicked(position, markerRadius) ||
             _endPoint!.isClicked(position, markerRadius));
+  }
+
+  @override
+  void onLabelPaint(
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    ChartConfig chartConfig,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DrawingData drawingData,
+    DataSeries<Tick> series,
+  ) {
+    super.onLabelPaint(canvas, size, theme, chartConfig, epochFromX, quoteFromY,
+        epochToX, quoteToY, config, drawingData, series);
+
+    if (_startPoint == null || _endPoint == null) {
+      return;
+    }
+
+    final DrawingToolLabelPainter? labelPainter =
+        config.labelPainter(startPoint: _startPoint!, endPoint: _endPoint!);
+    if (labelPainter != null &&
+        drawingData.isSelected &&
+        drawingData.isDrawingFinished) {
+      labelPainter.paint(canvas, size, chartConfig, epochFromX, quoteFromY,
+          epochToX, quoteToY);
+    }
   }
 }
