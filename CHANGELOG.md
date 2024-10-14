@@ -1,3 +1,9 @@
+## [0.3.0]
+
+* Fix overlay indicators' lable spacing
+* Add numbering logic to drawing tools
+* Upgrade Flutter version to 3.24.x
+
 ## [0.2.1]
 
 * New look for mobile chart with chart and bottom indicators dividers.

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:developer' as dev;
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:deriv_chart/deriv_chart.dart';
@@ -23,12 +24,21 @@ import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibration/vibration.dart';
 
 import 'utils/misc.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -179,7 +189,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<void> _getActiveSymbols() async {
     _activeSymbols = (await ActiveSymbolsResponse.fetchActiveSymbols(
-      const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic'),
+      const ActiveSymbolsRequest(
+        activeSymbols: 'brief',
+        productType: 'basic',
+        landingCompany: null,
+      ),
     ))
         .activeSymbols!;
 
@@ -402,8 +416,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           (_connectionBloc.state
                               is connection_bloc.ConnectionConnectedState),
                       opacity: _symbol.isOpen ? 1.0 : 0.5,
-                      onCrosshairAppeared: () =>
-                          Vibration.vibrate(duration: 50),
                       onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
                         if (!_waitingForHistory &&
                             ticks.isNotEmpty &&
@@ -676,7 +688,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
           color: Colors.white,
         ),
         onPressed: () {
-          Vibration.vibrate(duration: 50);
           setState(() {
             switch (style) {
               case ChartStyle.ohlc:
