@@ -17,40 +17,7 @@ abstract class DrawingToolLabelPainter {
     Size size,
     ChartConfig chartConfig,
     int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY, {
-    bool isWeb = false,
-  }) {
-    if (isWeb) {
-      paintForWeb(canvas, size, chartConfig, config, epochFromX, quoteFromY,
-          epochToX, quoteToY);
-    } else {
-      paintForMobile(canvas, size, chartConfig, config, epochFromX, quoteFromY,
-          epochToX, quoteToY);
-    }
-  }
-
-  /// Paints the label layer for mobile.
-  void paintForMobile(
-    Canvas canvas,
-    Size size,
-    ChartConfig chartConfig,
-    DrawingToolConfig config,
-    int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-  );
-
-  /// Paints the label layer for web.
-  void paintForWeb(
-    Canvas canvas,
-    Size size,
-    ChartConfig chartConfig,
-    DrawingToolConfig config,
-    int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
+    double Function(double y) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
   );

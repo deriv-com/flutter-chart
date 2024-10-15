@@ -87,7 +87,7 @@ abstract class DrawingToolConfig extends AddOnConfig {
   );
 
   /// Create label painter for the drawing tool.
-  DrawingToolLabelPainter? labelPainter({
+  DrawingToolLabelPainter? getLabelPainter({
     required Point startPoint,
     required Point endPoint,
   }) =>

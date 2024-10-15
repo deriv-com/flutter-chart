@@ -1,12 +1,12 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -85,13 +85,18 @@ class LineDrawingToolConfig extends DrawingToolConfig {
       );
 
   @override
-  DrawingToolLabelPainter? labelPainter({
+  LineDrawingToolLabelPainter? getLabelPainter({
     required Point startPoint,
     required Point endPoint,
-  }) =>
-      LineDrawingToolLabelPainter(
+  }) {
+    if (kIsWeb) {
+      return null;
+    } else {
+      return MobileLineDrawingToolLabelPainter(
         this,
         startPoint: startPoint,
         endPoint: endPoint,
       );
+    }
+  }
 }

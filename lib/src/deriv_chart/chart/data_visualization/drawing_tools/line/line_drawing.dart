@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_label_painter.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/draggable_edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
@@ -63,6 +63,10 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
 
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
+
+  /// Cached painter to avoid creating a new instance every time the label is
+  /// painted.
+  LineDrawingToolLabelPainter? _lineDrawingToolLabelPainter;
 
 // This condition will always return true since a LineDrawing,
 // when created horizontally or near horizontal, will
@@ -250,17 +254,26 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     super.onLabelPaint(canvas, size, theme, chartConfig, epochFromX, quoteFromY,
         epochToX, quoteToY, config, drawingData, series);
 
+    final LineDrawingToolConfig lineConfig = config as LineDrawingToolConfig;
+
     if (_startPoint == null || _endPoint == null) {
       return;
     }
 
-    final DrawingToolLabelPainter? labelPainter =
-        config.labelPainter(startPoint: _startPoint!, endPoint: _endPoint!);
-    if (labelPainter != null &&
-        drawingData.isSelected &&
-        drawingData.isDrawingFinished) {
-      labelPainter.paint(canvas, size, chartConfig, epochFromX, quoteFromY,
-          epochToX, quoteToY);
+    if (drawingData.isSelected && drawingData.isDrawingFinished) {
+      if (_lineDrawingToolLabelPainter == null ||
+          _lineDrawingToolLabelPainter?.startPoint != _startPoint ||
+          _lineDrawingToolLabelPainter?.endPoint != _endPoint) {
+        _lineDrawingToolLabelPainter = lineConfig.getLabelPainter(
+          startPoint: _startPoint!,
+          endPoint: _endPoint!,
+        );
+      }
+
+      _lineDrawingToolLabelPainter?.paint(canvas, size, chartConfig, epochFromX,
+          quoteFromY, epochToX, quoteToY);
+    } else {
+      _lineDrawingToolLabelPainter = null;
     }
   }
 }

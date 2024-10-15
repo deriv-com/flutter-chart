@@ -1,23 +1,42 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 /// Line drawing tool label painter.
-class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
-  /// Creates a LineDrawingLabelPainter.
+abstract class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
+  /// Creates a LineDrawingToolLabelPainter.
   LineDrawingToolLabelPainter(
-    LineDrawingToolConfig config, {
+    this.lineDrawingToolConfig, {
     required this.startPoint,
     required this.endPoint,
-  }) : super(config) {
-    _style = config.overlayStyle ??
+  }) : super(lineDrawingToolConfig);
+
+  /// Line drawing tool config.
+  final LineDrawingToolConfig lineDrawingToolConfig;
+
+  /// Start point.
+  final Point startPoint;
+
+  /// End point.
+  final Point endPoint;
+}
+
+/// Line drawing tool label painter for mobile platforms.
+class MobileLineDrawingToolLabelPainter extends LineDrawingToolLabelPainter {
+  /// Creates a MobileLineDrawingToolLabelPainter.
+  MobileLineDrawingToolLabelPainter(
+    super.lineDrawingToolConfig, {
+    required super.startPoint,
+    required super.endPoint,
+  }) {
+    _style = lineDrawingToolConfig.overlayStyle ??
         OverlayStyle(
-          color: config.lineStyle.color,
-          textStyle: config.overlayStyle?.textStyle
-                  .copyWith(color: config.lineStyle.color) ??
+          color: lineDrawingToolConfig.lineStyle.color,
+          textStyle: lineDrawingToolConfig.overlayStyle?.textStyle
+                  .copyWith(color: lineDrawingToolConfig.lineStyle.color) ??
               TextStyles.caption2,
         );
 
@@ -29,12 +48,6 @@ class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
       ..color = _style.color.withOpacity(0.2)
       ..style = PaintingStyle.fill;
   }
-
-  /// The start point of the line.
-  final Point startPoint;
-
-  /// The end point of the line.
-  final Point endPoint;
 
   /// Padding between the labels and the barriers.
   final double padding = 12;
@@ -49,13 +62,12 @@ class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
   late final Paint _barrierPaint;
 
   @override
-  void paintForMobile(
+  void paint(
     Canvas canvas,
     Size size,
     ChartConfig chartConfig,
-    DrawingToolConfig config,
     int Function(double x) epochFromX,
-    double Function(double p1) quoteFromY,
+    double Function(double y) quoteFromY,
     double Function(int x) epochToX,
     double Function(double y) quoteToY,
   ) {
@@ -77,17 +89,6 @@ class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
     _drawEpochLabelsAndBarriers(canvas, size, chartConfig, _style, _paint,
         _barrierPaint, startEpochX, endEpochX, startEpoch, endEpoch);
   }
-
-  @override
-  void paintForWeb(
-      Canvas canvas,
-      Size size,
-      ChartConfig chartConfig,
-      DrawingToolConfig config,
-      int Function(double x) epochFromX,
-      double Function(double p1) quoteFromY,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY) {}
 
   void _drawQuoteLabelsAndBarriers(
     Canvas canvas,
@@ -178,4 +179,25 @@ class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
         canvas, startEpochArea, labelPaint, startEpochPainter);
     drawLabelWithBackground(canvas, endEpochArea, labelPaint, endEpochPainter);
   }
+}
+
+/// Line drawing tool label painter for web platforms.
+class WebLineDrawingToolLabelPainter extends LineDrawingToolLabelPainter {
+  /// Creates a WebLineDrawingToolLabelPainter.
+  WebLineDrawingToolLabelPainter(
+    super.lineDrawingToolConfig, {
+    required super.startPoint,
+    required super.endPoint,
+  });
+
+  @override
+  void paint(
+    Canvas canvas,
+    Size size,
+    ChartConfig chartConfig,
+    int Function(double x) epochFromX,
+    double Function(double y) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+  ) {}
 }

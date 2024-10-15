@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'point.g.dart';
@@ -8,7 +9,7 @@ part 'point.g.dart';
 /// A class that holds point data
 /// This class is equivalent to Offest but with customized methods
 @JsonSerializable()
-class Point {
+class Point extends Equatable {
   /// Initializes
   const Point({
     required this.x,
@@ -40,4 +41,7 @@ class Point {
   /// less than the [affectedArea], indicating that the point has been "clicked"
   bool isClicked(Offset position, double affectedArea) =>
       pow(x - position.dx, 2) + pow(y - position.dy, 2) < pow(affectedArea, 2);
+
+  @override
+  List<Object?> get props => [x, y];
 }
