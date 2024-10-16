@@ -64,10 +64,6 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
-  /// Cached painter to avoid creating a new instance every time the label is
-  /// painted.
-  LineDrawingToolLabelPainter? _lineDrawingToolLabelPainter;
-
 // This condition will always return true since a LineDrawing,
 // when created horizontally or near horizontal, will
 // be positioned outside the chart's viewport.
@@ -261,19 +257,14 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     }
 
     if (drawingData.isSelected && drawingData.isDrawingFinished) {
-      if (_lineDrawingToolLabelPainter == null ||
-          _lineDrawingToolLabelPainter?.startPoint != _startPoint ||
-          _lineDrawingToolLabelPainter?.endPoint != _endPoint) {
-        _lineDrawingToolLabelPainter = lineConfig.getLabelPainter(
-          startPoint: _startPoint!,
-          endPoint: _endPoint!,
-        );
-      }
+      final LineDrawingToolLabelPainter? _lineDrawingToolLabelPainter =
+          lineConfig.getLabelPainter(
+        startPoint: _startPoint!,
+        endPoint: _endPoint!,
+      );
 
       _lineDrawingToolLabelPainter?.paint(canvas, size, chartConfig, epochFromX,
           quoteFromY, epochToX, quoteToY);
-    } else {
-      _lineDrawingToolLabelPainter = null;
     }
   }
 }
