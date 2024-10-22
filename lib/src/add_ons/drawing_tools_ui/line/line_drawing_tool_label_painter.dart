@@ -145,8 +145,8 @@ class MobileLineDrawingToolLabelPainter extends LineDrawingToolLabelPainter {
     int startEpoch,
     int endEpoch,
   ) {
-    final String startEpochLabel = formatEpochToDateTime(startEpoch);
-    final String endEpochLabel = formatEpochToDateTime(endEpoch);
+    final String startEpochLabel = formatEpochToGMTDateTime(startEpoch);
+    final String endEpochLabel = formatEpochToGMTDateTime(endEpoch);
 
     final TextPainter startEpochPainter =
         makeTextPainter(startEpochLabel, style.textStyle);

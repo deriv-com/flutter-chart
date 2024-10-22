@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
-import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// Returns a safe minimum with considering each value other than `double.nan`.
 double safeMin(double a, double b) {
@@ -97,4 +97,22 @@ class MinMaxIndices {
 
   /// Max index.
   final int maxIndex;
+}
+
+/// Converts an epoch timestamp in milliseconds to a formatted GMT date-time
+/// string.
+///
+/// This method takes an epoch timestamp (number of milliseconds since the
+/// Unix epoch) and converts it to a GMT (UTC) date-time string in the
+/// format 'yy-MM-dd HH:mm:ss'.
+///
+/// Example:
+/// ```dart
+/// String gmtDateTime = formatEpochToGMTDateTime(1633072800000);
+/// print(gmtDateTime); // Output: "21-10-01 00:00:00 GMT"
+/// ```
+String formatEpochToGMTDateTime(int epochMillis) {
+  final dateTime =
+      DateTime.fromMillisecondsSinceEpoch(epochMillis, isUtc: true);
+  return '${DateFormat('yy-MM-dd HH:mm:ss').format(dateTime)} GMT';
 }
