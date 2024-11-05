@@ -44,6 +44,10 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/line_series/line_s
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/candle/candle_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/hollow_candle/hollow_candle_series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_candle/ohlc_candle_series.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_type_series.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_painter.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_painting.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/data_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
