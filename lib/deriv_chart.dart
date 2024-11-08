@@ -101,6 +101,7 @@ export 'src/add_ons/indicators_ui/indicator_config.dart';
 export 'src/add_ons/repository.dart';
 export 'src/theme/chart_default_dark_theme.dart';
 export 'src/theme/chart_default_light_theme.dart';
+export 'src/theme/chart_default_theme.dart';
 export 'src/theme/chart_theme.dart';
 export 'src/theme/painting_styles/barrier_style.dart';
 export 'src/theme/painting_styles/candle_style.dart';
