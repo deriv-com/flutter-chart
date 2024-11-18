@@ -23,9 +23,6 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
 
   late Paint _paint;
 
-  /// Padding between lines.
-  static const double padding = 4;
-
   /// Right margin.
   static const double rightMargin = 4;
 
@@ -126,8 +123,12 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     );
     final Rect labelArea = Rect.fromCenter(
       center: Offset(
-          size.width - rightMargin - padding - valuePainter.width / 2, y),
-      width: valuePainter.width + padding * 2,
+          size.width -
+              rightMargin -
+              style.labelPadding -
+              valuePainter.width / 2,
+          y),
+      width: valuePainter.width + style.labelPadding * 2,
       height: style.labelHeight,
     );
 
