@@ -11,6 +11,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -55,9 +56,6 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
 
   /// If the line pass the end point.
   final bool exceedEnd;
-
-  /// Marker radius.
-  final double markerRadius = 10;
 
   Vector _vector = const Vector.zero();
 
@@ -123,20 +121,26 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     if (drawingPart == DrawingParts.marker) {
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw first point
-        canvas.drawCircle(
-            Offset(endXCoord, endQuoteToY),
-            markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
+        paintDot(
+          canvas,
+          Offset(endXCoord, endQuoteToY),
+          paint: paint.glowyCirclePaintStyle(lineStyle.color),
+          dotRadius: lineStyle.markerRadius,
+          hasGlow: true,
+          glowRadius: lineStyle.markerRadius * 3,
+          visible: drawingData.shouldHighlight,
+        );
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
         /// Draw second point
-        canvas.drawCircle(
-            Offset(startXCoord, startQuoteToY),
-            markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
+        paintDot(
+          canvas,
+          Offset(startXCoord, startQuoteToY),
+          paint: paint.glowyCirclePaintStyle(lineStyle.color),
+          dotRadius: lineStyle.markerRadius,
+          hasGlow: true,
+          glowRadius: lineStyle.markerRadius * 3,
+          visible: drawingData.shouldHighlight,
+        );
       }
     } else if (drawingPart == DrawingParts.line) {
       _vector = getLineVector(
@@ -188,14 +192,14 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     double endQuoteToY = _endPoint!.y;
 
     /// Check if start point clicked
-    if (_startPoint!.isClicked(position, markerRadius)) {
+    if (_startPoint!.isClicked(position, lineStyle.markerRadius)) {
       setIsOverStartPoint(isOverPoint: true);
     } else {
       setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if end point clicked
-    if (_endPoint!.isClicked(position, markerRadius)) {
+    if (_endPoint!.isClicked(position, lineStyle.markerRadius)) {
       setIsOverEndPoint!(isOverPoint: true);
     } else {
       setIsOverEndPoint!(isOverPoint: false);
@@ -229,8 +233,8 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (_startPoint!.isClicked(position, markerRadius) ||
-            _endPoint!.isClicked(position, markerRadius));
+        (_startPoint!.isClicked(position, lineStyle.markerRadius) ||
+            _endPoint!.isClicked(position, lineStyle.markerRadius));
   }
 
   @override
