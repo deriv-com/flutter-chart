@@ -13,6 +13,7 @@ part 'draggable_edge_point.g.dart';
 /// For example with dots are draggable edge points for the line
 /// ⎯⎯⚪️⎯⎯⎯⚪️⎯⎯
 @JsonSerializable()
+// ignore: must_be_immutable
 class DraggableEdgePoint extends EdgePoint {
   /// Initializes
   DraggableEdgePoint({

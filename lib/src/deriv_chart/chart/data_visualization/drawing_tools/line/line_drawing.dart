@@ -66,6 +66,10 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Marker full size
   double markerFullSize = 10;
 
+  /// Determines if markers should have a glowing effect.
+  /// Glow is enabled on mobile platforms and disabled on web platforms.
+  final bool shouldEnableMarkerGlow = !kIsWeb;
+
 // This condition will always return true since a LineDrawing,
 // when created horizontally or near horizontal, will
 // be positioned outside the chart's viewport.
@@ -123,15 +127,11 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final double endQuoteToY = _endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
-      double? glowRadius;
-      const bool hasGlow = !kIsWeb;
+      final double glowRadius =
+          shouldEnableMarkerGlow ? lineStyle.markerRadius * 3 : 0;
 
-      if (hasGlow) {
-        glowRadius = lineStyle.markerRadius * 3;
-        markerFullSize = glowRadius * 2;
-      } else {
-        markerFullSize = lineStyle.markerRadius * 2;
-      }
+      markerFullSize =
+          shouldEnableMarkerGlow ? glowRadius * 2 : lineStyle.markerRadius * 2;
 
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw first point
@@ -140,7 +140,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
           Offset(endXCoord, endQuoteToY),
           paint: paint.glowyCirclePaintStyle(lineStyle.color),
           dotRadius: lineStyle.markerRadius,
-          hasGlow: hasGlow,
+          hasGlow: shouldEnableMarkerGlow,
           glowRadius: glowRadius,
           visible: drawingData.shouldHighlight,
         );
@@ -151,7 +151,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
           Offset(startXCoord, startQuoteToY),
           paint: paint.glowyCirclePaintStyle(lineStyle.color),
           dotRadius: lineStyle.markerRadius,
-          hasGlow: hasGlow,
+          hasGlow: shouldEnableMarkerGlow,
           glowRadius: glowRadius,
           visible: drawingData.shouldHighlight,
         );
