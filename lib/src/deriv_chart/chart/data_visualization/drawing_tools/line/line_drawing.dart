@@ -63,6 +63,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
 
+  /// Marker full size
+  double markerFullSize = 10;
+
 // This condition will always return true since a LineDrawing,
 // when created horizontally or near horizontal, will
 // be positioned outside the chart's viewport.
@@ -120,6 +123,16 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final double endQuoteToY = _endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
+      double? glowRadius;
+      const bool hasGlow = !kIsWeb;
+
+      if (hasGlow) {
+        glowRadius = lineStyle.markerRadius * 3;
+        markerFullSize = glowRadius * 2;
+      } else {
+        markerFullSize = lineStyle.markerRadius * 2;
+      }
+
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw first point
         paintDot(
@@ -127,8 +140,8 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
           Offset(endXCoord, endQuoteToY),
           paint: paint.glowyCirclePaintStyle(lineStyle.color),
           dotRadius: lineStyle.markerRadius,
-          hasGlow: !kIsWeb,
-          glowRadius: lineStyle.markerRadius * 3,
+          hasGlow: hasGlow,
+          glowRadius: glowRadius,
           visible: drawingData.shouldHighlight,
         );
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
@@ -138,8 +151,8 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
           Offset(startXCoord, startQuoteToY),
           paint: paint.glowyCirclePaintStyle(lineStyle.color),
           dotRadius: lineStyle.markerRadius,
-          hasGlow: !kIsWeb,
-          glowRadius: lineStyle.markerRadius * 3,
+          hasGlow: hasGlow,
+          glowRadius: glowRadius,
           visible: drawingData.shouldHighlight,
         );
       }
@@ -193,14 +206,14 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     double endQuoteToY = _endPoint!.y;
 
     /// Check if start point clicked
-    if (_startPoint!.isClicked(position, lineStyle.markerRadius)) {
+    if (_startPoint!.isClicked(position, markerFullSize)) {
       setIsOverStartPoint(isOverPoint: true);
     } else {
       setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if end point clicked
-    if (_endPoint!.isClicked(position, lineStyle.markerRadius)) {
+    if (_endPoint!.isClicked(position, markerFullSize)) {
       setIsOverEndPoint!(isOverPoint: true);
     } else {
       setIsOverEndPoint!(isOverPoint: false);
@@ -234,8 +247,8 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (_startPoint!.isClicked(position, lineStyle.markerRadius) ||
-            _endPoint!.isClicked(position, lineStyle.markerRadius));
+        (_startPoint!.isClicked(position, markerFullSize) ||
+            _endPoint!.isClicked(position, markerFullSize));
   }
 
   @override
