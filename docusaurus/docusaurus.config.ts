@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Flutter Chart',
-  tagline: 'Dinosaurs are cool',
+  tagline: 'A financial chart library for Flutter mobile apps',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
