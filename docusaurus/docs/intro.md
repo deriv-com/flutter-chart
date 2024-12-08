@@ -2,46 +2,92 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+[![Coverage Status](https://coveralls.io/repos/github/regentmarkets/flutter-chart/badge.svg?branch=pull/7&t=AA56dN)](https://coveralls.io/github/regentmarkets/flutter-chart?branch=pull/7)
 
-Let's discover **Docusaurus in less than 5 minutes**.
+# flutter-chart
+A financial chart library for Flutter mobile apps.
 
 ## Getting Started
 
-Get started by **creating a new site**.
+Add this to your project's pubspec.yaml file:
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-### What you'll need
-
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
+```yaml
+deriv_chart:
+  git:
+    url: https://github.com/regentmarkets/flutter-chart.git
+    ref: main # branch name
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+## Features
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+- Candlestick chart
+- Line chart
+- Area chart
+- Barriers (horizontal lines)
+- Markers (vertical lines)
+- Zoom in/out
+- Scroll
+- Crosshair
+- Custom indicators
 
-## Start your site
+## Usage
 
-Run the development server:
+```dart
+import 'package:deriv_chart/deriv_chart.dart';
 
-```bash
-cd my-website
-npm run start
+// ...
+
+ChartWidget(
+  symbol: 'R_100', // The symbol to show its chart
+  chartType: ChartType.candlestick,
+  enableZoom: true,
+  enableScroll: true,
+  enableCrosshair: true,
+  onCrosshairChange: (CrosshairState state) {
+    // Handle crosshair state changes
+  },
+)
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+## Chart Types
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+### Candlestick Chart
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+A candlestick chart is a style of financial chart used to describe price movements of a security, derivative, or currency.
+
+### Line Chart
+
+A line chart is a type of chart which displays information as a series of data points called 'markers' connected by straight line segments.
+
+### Area Chart
+
+An area chart is a line chart with the area below the line filled with a color or gradient.
+
+## Features Details
+
+### Barriers
+
+A `HorizontalBarrier` can have three different behaviors when it has a value that is not in the chart's Y-Axis value range.
+  - `normal`: Won't force the chart to keep the barrier in its Y-Axis range, if the barrier was out of range it will go off the screen.
+  - `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond the Y-Axis range.
+  - `forceToStayOnRange`: Will force the chart to keep this barrier in its Y-Axis range by widening its range to cover its value.
+
+### Markers
+
+A `VerticalMarker` is a vertical line that can be added to the chart to mark a specific time.
+
+### Zoom
+
+The chart can be zoomed in/out using pinch gestures or buttons.
+
+### Scroll
+
+The chart can be scrolled horizontally to view different time periods.
+
+### Crosshair
+
+A crosshair can be enabled to show the exact values at a specific point on the chart.
+
+### Custom Indicators
+
+You can add custom indicators to the chart by implementing the `Indicator` interface.
