@@ -15,7 +15,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
     this.color = const Color(0xFF85ACB0),
     this.thickness = 1,
     this.hasArea = false,
-    this.markerRadius = 10,
+    this.markerRadius = 4,
   });
 
   /// Initializes from JSON.
