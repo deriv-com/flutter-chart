@@ -34,7 +34,11 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Features',
       items: [
+        'chart-types',
+        'indicators',
+        'interactions',
         'drawing_tools',
+        'customization',
       ],
     },
     {
