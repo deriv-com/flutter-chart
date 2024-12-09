@@ -55,8 +55,9 @@ const config: Config = {
     navbar: {
       title: 'Flutter Chart',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Flutter Chart Logo',
         src: 'img/logo.svg',
+        style: { display: 'none' }
       },
       items: [
         {
