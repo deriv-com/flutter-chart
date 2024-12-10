@@ -9,7 +9,7 @@ part 'draggable_edge_point.g.dart';
 
 /// A class that holds draggable edge point data.
 /// Draggable edge points are part of the drawings which added by user clicks
-/// And we want to hanle difftent types of drag events on them.
+/// And we want to handle different types of drag events on them.
 /// For example with dots are draggable edge points for the line
 /// ⎯⎯⚪️⎯⎯⎯⚪️⎯⎯
 @JsonSerializable()
