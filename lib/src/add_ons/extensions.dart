@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:deriv_chart/deriv_chart.dart';
 
-import 'repository.dart';
 
 /// Extension on Repository<AddOnConfig>.
 extension AddOnsRepositoryConfigExtension on Repository<AddOnConfig> {
