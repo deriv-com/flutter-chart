@@ -14,18 +14,21 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeUnfinishedDrawing,
+    required this.createLineDrawing,
     Key? key,
   }) : super(
-          key: key,
-          onAddDrawing: onAddDrawing,
-          quoteFromCanvasY: quoteFromCanvasY,
-        );
+    key: key,
+    onAddDrawing: onAddDrawing,
+    quoteFromCanvasY: quoteFromCanvasY,
+  );
 
   /// Callback to clean drawing tool selection.
   final VoidCallback clearDrawingToolSelection;
 
   /// Callback to remove unfinished drawing from the list of drawings.
   final VoidCallback removeUnfinishedDrawing;
+
+  final LineDrawing Function() createLineDrawing;
 
   @override
   DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
@@ -55,11 +58,7 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
         _isPenDown = true;
-
-        drawingParts.add(LineDrawing(
-          drawingPart: DrawingParts.marker,
-          startEdgePoint: edgePoints.first,
-        ));
+        drawingParts.add(_widget.createLineDrawing());
       } else if (!isDrawingFinished) {
         /// Draw final point and the whole line.
         _isPenDown = false;
@@ -83,11 +82,11 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole line.
           drawingParts.addAll(<LineDrawing>[
-            LineDrawing(
+            (widget as LineDrawingCreator).createLineDrawing(
               drawingPart: DrawingParts.marker,
               endEdgePoint: edgePoints[currentTap],
             ),
-            LineDrawing(
+            (widget as LineDrawingCreator).createLineDrawing(
               drawingPart: DrawingParts.line,
               startEdgePoint: edgePoints[previousTap],
               endEdgePoint: edgePoints[currentTap],

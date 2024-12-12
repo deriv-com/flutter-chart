@@ -197,6 +197,6 @@ class AccumulatorsClosedIndicatorPainter
         painter: lowBarrierLabelPainter, anchor: lowBarrierLabelAnchor);
 
     // Draw exit tick position.
-    paintDot(canvas, exitTickPosition, color: color);
+    paintDotWithGlow(canvas, exitTickPosition, color: color);
   }
 }

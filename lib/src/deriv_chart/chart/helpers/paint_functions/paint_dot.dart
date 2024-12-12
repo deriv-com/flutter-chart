@@ -16,9 +16,24 @@ void paintBlinkingGlow(
       Paint()..color = color.withAlpha(alpha),
     );
 
+/// Paints a dot on [center].
+void paintDot(
+    Canvas canvas,
+    Offset center,
+    Color color,
+    ) =>
+    canvas.drawCircle(
+      center,
+      3,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 1,
+    );
+
 /// Paints a dot at [center]. If [hasGlow] is true, a semi-transparent glow is
 /// drawn around the dot. [dotRadius] and [glowRadius] control their sizes.
-void paintDot(
+void paintDotWithGlow(
   Canvas canvas,
   Offset center, {
   Paint? paint,
@@ -67,7 +82,7 @@ void paintBlinkingDot(
   AnimationInfo animationInfo,
   Color color,
 ) {
-  paintDot(canvas, Offset(dotX, y), color: color);
+  paintDotWithGlow(canvas, Offset(dotX, y), color: color);
 
   paintBlinkingGlow(
     canvas,

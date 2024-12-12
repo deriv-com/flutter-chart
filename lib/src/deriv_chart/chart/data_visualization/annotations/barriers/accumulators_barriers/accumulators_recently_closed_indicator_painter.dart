@@ -149,7 +149,7 @@ class AccumulatorsRecentlyClosedIndicatorPainter
       ..drawPath(lowerTrianglePath, _linePaintFill);
 
     // Draw exit tick position.
-    paintDot(canvas, exitTickPosition, color: color);
+    paintDotWithGlow(canvas, exitTickPosition, color: color);
 
     // draw dialog
     const double dotPadding = 5;

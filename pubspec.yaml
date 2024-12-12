@@ -33,9 +33,10 @@ dev_dependencies:
       path: packages/deriv_lint
       ref: dev
 
-  build_runner: ^2.3.3
+  build_runner: ^2.4.6
   intl_utils: ^2.8.2
-  json_serializable: ^6.6.1
+  json_serializable: ^6.7.1
+  dart_style: ^2.3.3
 
 flutter:
   assets:

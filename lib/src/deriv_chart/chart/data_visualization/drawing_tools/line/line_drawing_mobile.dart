@@ -11,18 +11,22 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/vector.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line_vector_drawing_mixin.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'line_drawing.g.dart';
+import 'line_drawing.dart';
+
+part 'line_drawing_mobile.g.dart';
 
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
 @JsonSerializable()
-class LineDrawing extends Drawing with LineVectorDrawingMixin {
+class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements LineDrawing {
   /// Initializes
-  LineDrawing({
+  LineDrawingMobile({
     required this.drawingPart,
     this.startEdgePoint = const EdgePoint(),
     this.endEdgePoint = const EdgePoint(),
@@ -31,11 +35,11 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   });
 
   /// Initializes from JSON.
-  factory LineDrawing.fromJson(Map<String, dynamic> json) =>
-      _$LineDrawingFromJson(json);
+  factory LineDrawingMobile.fromJson(Map<String, dynamic> json) =>
+      _$LineDrawingMobileFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$LineDrawingToJson(this)
+  Map<String, dynamic> toJson() => _$LineDrawingMobileToJson(this)
     ..putIfAbsent(Drawing.classNameKey, () => nameKey);
 
   /// Key of drawing tool name property in JSON.
@@ -56,48 +60,52 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// If the line pass the end point.
   final bool exceedEnd;
 
-  /// Marker radius.
-  final double markerRadius = 10;
-
   Vector _vector = const Vector.zero();
 
   /// Keeps the latest position of the start and end point of drawing
   Point? _startPoint, _endPoint;
+
+  /// Marker full size
+  double markerFullSize = 10;
+
+  /// Determines if markers should have a glowing effect.
+  /// Glow is enabled on mobile platforms and disabled on web platforms.
+  final bool shouldEnableMarkerGlow = !kIsWeb;
 
 // This condition will always return true since a LineDrawing,
 // when created horizontally or near horizontal, will
 // be positioned outside the chart's viewport.
   @override
   bool needsRepaint(
-    int leftEpoch,
-    int rightEpoch,
-    DraggableEdgePoint draggableStartPoint, {
-    DraggableEdgePoint? draggableMiddlePoint,
-    DraggableEdgePoint? draggableEndPoint,
-  }) =>
+      int leftEpoch,
+      int rightEpoch,
+      DraggableEdgePoint draggableStartPoint, {
+        DraggableEdgePoint? draggableMiddlePoint,
+        DraggableEdgePoint? draggableEndPoint,
+      }) =>
       true;
 
   /// Paint the line
   @override
   void onPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingToolConfig config,
-    DrawingData drawingData,
-    DataSeries<Tick> series,
-    Point Function(
-      EdgePoint edgePoint,
-      DraggableEdgePoint draggableEdgePoint,
-    ) updatePositionCallback,
-    DraggableEdgePoint draggableStartPoint, {
-    DraggableEdgePoint? draggableMiddlePoint,
-    DraggableEdgePoint? draggableEndPoint,
-  }) {
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      int Function(double x) epochFromX,
+      double Function(double) quoteFromY,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config,
+      DrawingData drawingData,
+      DataSeries<Tick> series,
+      Point Function(
+          EdgePoint edgePoint,
+          DraggableEdgePoint draggableEdgePoint,
+          ) updatePositionCallback,
+      DraggableEdgePoint draggableStartPoint, {
+        DraggableEdgePoint? draggableMiddlePoint,
+        DraggableEdgePoint? draggableEndPoint,
+      }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
@@ -121,22 +129,34 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     final double endQuoteToY = _endPoint!.y;
 
     if (drawingPart == DrawingParts.marker) {
+      final double glowRadius =
+      shouldEnableMarkerGlow ? lineStyle.markerRadius * 3 : 0;
+
+      markerFullSize =
+      shouldEnableMarkerGlow ? glowRadius * 2 : lineStyle.markerRadius * 2;
+
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw first point
-        canvas.drawCircle(
-            Offset(endXCoord, endQuoteToY),
-            markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
+        paintDotWithGlow(
+          canvas,
+          Offset(endXCoord, endQuoteToY),
+          paint: paint.glowyCirclePaintStyle(lineStyle.color),
+          dotRadius: lineStyle.markerRadius,
+          hasGlow: shouldEnableMarkerGlow,
+          glowRadius: glowRadius,
+          visible: drawingData.shouldHighlight,
+        );
       } else if (startEdgePoint.epoch != 0 && startQuoteToY != 0) {
         /// Draw second point
-        canvas.drawCircle(
-            Offset(startXCoord, startQuoteToY),
-            markerRadius,
-            drawingData.shouldHighlight
-                ? paint.glowyCirclePaintStyle(lineStyle.color)
-                : paint.transparentCirclePaintStyle());
+        paintDotWithGlow(
+          canvas,
+          Offset(startXCoord, startQuoteToY),
+          paint: paint.glowyCirclePaintStyle(lineStyle.color),
+          dotRadius: lineStyle.markerRadius,
+          hasGlow: shouldEnableMarkerGlow,
+          glowRadius: glowRadius,
+          visible: drawingData.shouldHighlight,
+        );
       }
     } else if (drawingPart == DrawingParts.line) {
       _vector = getLineVector(
@@ -166,17 +186,17 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
   /// point is clicked
   @override
   bool hitTest(
-    Offset position,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingToolConfig config,
-    DraggableEdgePoint draggableStartPoint,
-    void Function({required bool isOverPoint}) setIsOverStartPoint, {
-    DraggableEdgePoint? draggableMiddlePoint,
-    DraggableEdgePoint? draggableEndPoint,
-    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
-    void Function({required bool isOverPoint})? setIsOverEndPoint,
-  }) {
+      Offset position,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config,
+      DraggableEdgePoint draggableStartPoint,
+      void Function({required bool isOverPoint}) setIsOverStartPoint, {
+        DraggableEdgePoint? draggableMiddlePoint,
+        DraggableEdgePoint? draggableEndPoint,
+        void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+        void Function({required bool isOverPoint})? setIsOverEndPoint,
+      }) {
     config as LineDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
@@ -188,14 +208,14 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     double endQuoteToY = _endPoint!.y;
 
     /// Check if start point clicked
-    if (_startPoint!.isClicked(position, markerRadius)) {
+    if (_startPoint!.isClicked(position, markerFullSize)) {
       setIsOverStartPoint(isOverPoint: true);
     } else {
       setIsOverStartPoint(isOverPoint: false);
     }
 
     /// Check if end point clicked
-    if (_endPoint!.isClicked(position, markerRadius)) {
+    if (_endPoint!.isClicked(position, markerFullSize)) {
       setIsOverEndPoint!(isOverPoint: true);
     } else {
       setIsOverEndPoint!(isOverPoint: false);
@@ -212,9 +232,9 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
     /// Computes the distance between a point and a line which should be less
     /// than the line thickness + 6 to make sure the user can easily click on
     final double distance = ((endQuoteToY - startQuoteToY) * position.dx -
-            (endXCoord - startXCoord) * position.dy +
-            endXCoord * startQuoteToY -
-            endQuoteToY * startXCoord) /
+        (endXCoord - startXCoord) * position.dy +
+        endXCoord * startQuoteToY -
+        endQuoteToY * startXCoord) /
         sqrt(pow(endQuoteToY - startQuoteToY, 2) +
             pow(endXCoord - startXCoord, 2));
 
@@ -223,30 +243,30 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
 
     /// Limit the detection to start and end point of the line
     final double dotProduct = (xDistToStart * (endXCoord - startXCoord) +
-            yDistToStart * (endQuoteToY - startQuoteToY)) /
+        yDistToStart * (endQuoteToY - startQuoteToY)) /
         lineLength;
 
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
     return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (_startPoint!.isClicked(position, markerRadius) ||
-            _endPoint!.isClicked(position, markerRadius));
+        (_startPoint!.isClicked(position, markerFullSize) ||
+            _endPoint!.isClicked(position, markerFullSize));
   }
 
   @override
   void onLabelPaint(
-    Canvas canvas,
-    Size size,
-    ChartTheme theme,
-    ChartConfig chartConfig,
-    int Function(double x) epochFromX,
-    double Function(double) quoteFromY,
-    double Function(int x) epochToX,
-    double Function(double y) quoteToY,
-    DrawingToolConfig config,
-    DrawingData drawingData,
-    DataSeries<Tick> series,
-  ) {
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      ChartConfig chartConfig,
+      int Function(double x) epochFromX,
+      double Function(double) quoteFromY,
+      double Function(int x) epochToX,
+      double Function(double y) quoteToY,
+      DrawingToolConfig config,
+      DrawingData drawingData,
+      DataSeries<Tick> series,
+      ) {
     super.onLabelPaint(canvas, size, theme, chartConfig, epochFromX, quoteFromY,
         epochToX, quoteToY, config, drawingData, series);
 
@@ -258,7 +278,7 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
 
     if (drawingData.isSelected && drawingData.isDrawingFinished) {
       final LineDrawingToolLabelPainter? _lineDrawingToolLabelPainter =
-          lineConfig.getLabelPainter(
+      lineConfig.getLabelPainter(
         startPoint: _startPoint!,
         endPoint: _endPoint!,
       );
@@ -267,4 +287,8 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
           quoteFromY, epochToX, quoteToY);
     }
   }
+
+  @override
+  // TODO: implement markerRadius
+  double get markerRadius => throw UnimplementedError();
 }
