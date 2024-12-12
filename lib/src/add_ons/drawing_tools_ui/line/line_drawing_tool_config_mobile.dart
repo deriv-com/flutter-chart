@@ -35,7 +35,7 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig implements LineDrawi
       _$LineDrawingToolConfigMobileFromJson(json);
 
   /// Drawing tool name
-  static const String name = 'dt_line';
+  static const String name = 'dt_line_mobile';
 
   @override
   Map<String, dynamic> toJson() => _$LineDrawingToolConfigMobileToJson(this)
