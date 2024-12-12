@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
@@ -31,7 +32,7 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
   final LineDrawing Function() createLineDrawing;
 
   @override
-  DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
+  DrawingCreatorState<Drawing> createState() => _LineDrawingCreatorState();
 }
 
 class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
@@ -58,7 +59,8 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           quote: widget.quoteFromCanvasY(position!.dy),
         ));
         _isPenDown = true;
-        drawingParts.add(_widget.createLineDrawing());
+
+        drawingParts.add((widget as LineDrawingCreator).createLineDrawing());
       } else if (!isDrawingFinished) {
         /// Draw final point and the whole line.
         _isPenDown = false;
@@ -82,17 +84,8 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole line.
           drawingParts.addAll(<LineDrawing>[
-            (widget as LineDrawingCreator).createLineDrawing(
-              drawingPart: DrawingParts.marker,
-              endEdgePoint: edgePoints[currentTap],
-            ),
-            (widget as LineDrawingCreator).createLineDrawing(
-              drawingPart: DrawingParts.line,
-              startEdgePoint: edgePoints[previousTap],
-              endEdgePoint: edgePoints[currentTap],
-              exceedStart: true,
-              exceedEnd: true,
-            )
+            (widget as LineDrawingCreator).createLineDrawing(),
+            (widget as LineDrawingCreator).createLineDrawing()
           ]);
         }
       }
