@@ -23,7 +23,9 @@ part 'line_drawing_mobile.g.dart';
 /// Line drawing tool. A line is a vector defined by two points that is
 /// infinite in both directions.
 @JsonSerializable()
-class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements LineDrawing{
+class LineDrawingMobile extends Drawing
+    with LineVectorDrawingMixin
+    implements LineDrawing {
   /// Initializes
   LineDrawingMobile({
     required this.drawingPart,
@@ -76,39 +78,39 @@ class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements L
 // be positioned outside the chart's viewport.
   @override
   bool needsRepaint(
-      int leftEpoch,
-      int rightEpoch,
-      DraggableEdgePoint draggableStartPoint, {
-        DraggableEdgePoint? draggableMiddlePoint,
-        DraggableEdgePoint? draggableEndPoint,
-      }) =>
+    int leftEpoch,
+    int rightEpoch,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  }) =>
       true;
 
   /// Paint the line
   @override
   void onPaint(
-      Canvas canvas,
-      Size size,
-      ChartTheme theme,
-      int Function(double x) epochFromX,
-      double Function(double) quoteFromY,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      DrawingData drawingData,
-      DataSeries<Tick> series,
-      Point Function(
-          EdgePoint edgePoint,
-          DraggableEdgePoint draggableEdgePoint,
-          ) updatePositionCallback,
-      DraggableEdgePoint draggableStartPoint, {
-        DraggableEdgePoint? draggableMiddlePoint,
-        DraggableEdgePoint? draggableEndPoint,
-      }) {
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DrawingData drawingData,
+    DataSeries<Tick> series,
+    Point Function(
+      EdgePoint edgePoint,
+      DraggableEdgePoint draggableEdgePoint,
+    ) updatePositionCallback,
+    DraggableEdgePoint draggableStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+  }) {
     final DrawingPaintStyle paint = DrawingPaintStyle();
 
     /// Get the latest config of any drawing tool which is used to draw the line
-    config as LineDrawingToolConfig;
+    config as LineDrawingToolConfigMobile;
 
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPatterns pattern = config.pattern;
@@ -129,10 +131,10 @@ class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements L
 
     if (drawingPart == DrawingParts.marker) {
       final double glowRadius =
-      shouldEnableMarkerGlow ? lineStyle.markerRadius * 3 : 0;
+          shouldEnableMarkerGlow ? lineStyle.markerRadius * 3 : 0;
 
       markerFullSize =
-      shouldEnableMarkerGlow ? glowRadius * 2 : lineStyle.markerRadius * 2;
+          shouldEnableMarkerGlow ? glowRadius * 2 : lineStyle.markerRadius * 2;
 
       if (endEdgePoint.epoch != 0 && endQuoteToY != 0) {
         /// Draw first point
@@ -185,17 +187,17 @@ class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements L
   /// point is clicked
   @override
   bool hitTest(
-      Offset position,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      DraggableEdgePoint draggableStartPoint,
-      void Function({required bool isOverPoint}) setIsOverStartPoint, {
-        DraggableEdgePoint? draggableMiddlePoint,
-        DraggableEdgePoint? draggableEndPoint,
-        void Function({required bool isOverPoint})? setIsOverMiddlePoint,
-        void Function({required bool isOverPoint})? setIsOverEndPoint,
-      }) {
+    Offset position,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DraggableEdgePoint draggableStartPoint,
+    void Function({required bool isOverPoint}) setIsOverStartPoint, {
+    DraggableEdgePoint? draggableMiddlePoint,
+    DraggableEdgePoint? draggableEndPoint,
+    void Function({required bool isOverPoint})? setIsOverMiddlePoint,
+    void Function({required bool isOverPoint})? setIsOverEndPoint,
+  }) {
     config as LineDrawingToolConfig;
 
     final LineStyle lineStyle = config.lineStyle;
@@ -231,9 +233,9 @@ class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements L
     /// Computes the distance between a point and a line which should be less
     /// than the line thickness + 6 to make sure the user can easily click on
     final double distance = ((endQuoteToY - startQuoteToY) * position.dx -
-        (endXCoord - startXCoord) * position.dy +
-        endXCoord * startQuoteToY -
-        endQuoteToY * startXCoord) /
+            (endXCoord - startXCoord) * position.dy +
+            endXCoord * startQuoteToY -
+            endQuoteToY * startXCoord) /
         sqrt(pow(endQuoteToY - startQuoteToY, 2) +
             pow(endXCoord - startXCoord, 2));
 
@@ -242,7 +244,7 @@ class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements L
 
     /// Limit the detection to start and end point of the line
     final double dotProduct = (xDistToStart * (endXCoord - startXCoord) +
-        yDistToStart * (endQuoteToY - startQuoteToY)) /
+            yDistToStart * (endQuoteToY - startQuoteToY)) /
         lineLength;
 
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
@@ -254,18 +256,18 @@ class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements L
 
   @override
   void onLabelPaint(
-      Canvas canvas,
-      Size size,
-      ChartTheme theme,
-      ChartConfig chartConfig,
-      int Function(double x) epochFromX,
-      double Function(double) quoteFromY,
-      double Function(int x) epochToX,
-      double Function(double y) quoteToY,
-      DrawingToolConfig config,
-      DrawingData drawingData,
-      DataSeries<Tick> series,
-      ) {
+    Canvas canvas,
+    Size size,
+    ChartTheme theme,
+    ChartConfig chartConfig,
+    int Function(double x) epochFromX,
+    double Function(double) quoteFromY,
+    double Function(int x) epochToX,
+    double Function(double y) quoteToY,
+    DrawingToolConfig config,
+    DrawingData drawingData,
+    DataSeries<Tick> series,
+  ) {
     super.onLabelPaint(canvas, size, theme, chartConfig, epochFromX, quoteFromY,
         epochToX, quoteToY, config, drawingData, series);
 
@@ -277,7 +279,7 @@ class LineDrawingMobile extends Drawing with LineVectorDrawingMixin implements L
 
     if (drawingData.isSelected && drawingData.isDrawingFinished) {
       final LineDrawingToolLabelPainter? _lineDrawingToolLabelPainter =
-      lineConfig.getLabelPainter(
+          lineConfig.getLabelPainter(
         startPoint: _startPoint!,
         endPoint: _endPoint!,
       );

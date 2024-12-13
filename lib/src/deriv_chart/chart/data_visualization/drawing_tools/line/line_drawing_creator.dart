@@ -18,10 +18,10 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
     required this.createLineDrawing,
     Key? key,
   }) : super(
-    key: key,
-    onAddDrawing: onAddDrawing,
-    quoteFromCanvasY: quoteFromCanvasY,
-  );
+          key: key,
+          onAddDrawing: onAddDrawing,
+          quoteFromCanvasY: quoteFromCanvasY,
+        );
 
   /// Callback to clean drawing tool selection.
   final VoidCallback clearDrawingToolSelection;
@@ -29,10 +29,18 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
   /// Callback to remove unfinished drawing from the list of drawings.
   final VoidCallback removeUnfinishedDrawing;
 
-  final LineDrawing Function() createLineDrawing;
+  /// Callback which creates a [LineDrawing] or [LineDrawingMobile]
+  /// with the specified parameters.
+  final LineDrawing Function({
+    required DrawingParts drawingPart,
+    EdgePoint startEdgePoint,
+    EdgePoint endEdgePoint,
+    bool exceedStart,
+    bool exceedEnd,
+  }) createLineDrawing;
 
   @override
-  DrawingCreatorState<Drawing> createState() => _LineDrawingCreatorState();
+  DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
 }
 
 class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
@@ -60,7 +68,10 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
         ));
         _isPenDown = true;
 
-        drawingParts.add((widget as LineDrawingCreator).createLineDrawing());
+        drawingParts.add((widget as LineDrawingCreator).createLineDrawing(
+          drawingPart: DrawingParts.marker,
+          startEdgePoint: edgePoints.first,
+        ));
       } else if (!isDrawingFinished) {
         /// Draw final point and the whole line.
         _isPenDown = false;
@@ -84,8 +95,17 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole line.
           drawingParts.addAll(<LineDrawing>[
-            (widget as LineDrawingCreator).createLineDrawing(),
-            (widget as LineDrawingCreator).createLineDrawing()
+            (widget as LineDrawingCreator).createLineDrawing(
+              drawingPart: DrawingParts.marker,
+              endEdgePoint: edgePoints[currentTap],
+            ),
+            (widget as LineDrawingCreator).createLineDrawing(
+              drawingPart: DrawingParts.line,
+              startEdgePoint: edgePoints[previousTap],
+              endEdgePoint: edgePoints[currentTap],
+              exceedStart: true,
+              exceedEnd: true,
+            )
           ]);
         }
       }

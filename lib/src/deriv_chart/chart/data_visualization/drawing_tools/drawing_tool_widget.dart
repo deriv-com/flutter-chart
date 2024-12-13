@@ -109,7 +109,19 @@ class DrawingToolWidget extends StatelessWidget {
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
           removeUnfinishedDrawing: removeUnfinishedDrawing,
-          createLineDrawing: () => LineDrawing(drawingPart: DrawingParts.marker),
+          createLineDrawing: ({
+            required DrawingParts drawingPart,
+            EdgePoint startEdgePoint = const EdgePoint(),
+            EdgePoint endEdgePoint = const EdgePoint(),
+            bool exceedStart = false,
+            bool exceedEnd = false,
+          }) =>
+              LineDrawing(
+                  drawingPart: drawingPart,
+                  startEdgePoint: startEdgePoint,
+                  endEdgePoint: endEdgePoint,
+                  exceedStart: exceedStart,
+                  exceedEnd: exceedEnd),
         );
       case 'dt_line_mobile':
         return LineDrawingCreator(
@@ -117,8 +129,19 @@ class DrawingToolWidget extends StatelessWidget {
           quoteFromCanvasY: quoteFromCanvasY,
           clearDrawingToolSelection: clearDrawingToolSelection,
           removeUnfinishedDrawing: removeUnfinishedDrawing,
-          createLineDrawing: () =>
-              LineDrawingMobile(drawingPart: DrawingParts.marker),
+          createLineDrawing: ({
+            required DrawingParts drawingPart,
+            EdgePoint startEdgePoint = const EdgePoint(),
+            EdgePoint endEdgePoint = const EdgePoint(),
+            bool exceedStart = false,
+            bool exceedEnd = false,
+          }) =>
+              LineDrawingMobile(
+                  drawingPart: drawingPart,
+                  startEdgePoint: startEdgePoint,
+                  endEdgePoint: endEdgePoint,
+                  exceedStart: exceedStart,
+                  exceedEnd: exceedEnd),
         );
       case 'dt_ray':
         return RayDrawingCreator(

@@ -2,10 +2,12 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_item.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_item_mobile.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_label_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -14,21 +16,25 @@ part 'line_drawing_tool_config_mobile.g.dart';
 
 /// Line drawing tool config
 @JsonSerializable()
-class LineDrawingToolConfigMobile extends DrawingToolConfig implements LineDrawingToolConfig{
+class LineDrawingToolConfigMobile extends DrawingToolConfig {
   /// Initializes
   const LineDrawingToolConfigMobile({
     String? configId,
     DrawingData? drawingData,
     List<EdgePoint> edgePoints = const <EdgePoint>[],
-    this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
+    this.lineStyle = const LineStyle(
+      thickness: 0.9,
+      color: BrandColors.coral,
+      markerRadius: 4,
+    ),
     this.overlayStyle,
     this.pattern = DrawingPatterns.solid,
     super.number,
   }) : super(
-    configId: configId,
-    drawingData: drawingData,
-    edgePoints: edgePoints,
-  );
+          configId: configId,
+          drawingData: drawingData,
+          edgePoints: edgePoints,
+        );
 
   /// Initializes from JSON.
   factory LineDrawingToolConfigMobile.fromJson(Map<String, dynamic> json) =>
@@ -57,10 +63,10 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig implements LineDrawi
 
   @override
   DrawingToolItem getItem(
-      UpdateDrawingTool updateDrawingTool,
-      VoidCallback deleteDrawingTool,
-      ) =>
-      LineDrawingToolItem(
+    UpdateDrawingTool updateDrawingTool,
+    VoidCallback deleteDrawingTool,
+  ) =>
+      LineDrawingToolItemMobile(
         config: const LineDrawingToolConfigMobile(),
         updateDrawingTool: updateDrawingTool,
         deleteDrawingTool: deleteDrawingTool,
@@ -97,7 +103,7 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig implements LineDrawi
       return null;
     } else {
       return MobileLineDrawingToolLabelPainter(
-        const LineDrawingToolConfigMobile(),
+        const LineDrawingToolConfig(),
         startPoint: startPoint,
         endPoint: endPoint,
       );
