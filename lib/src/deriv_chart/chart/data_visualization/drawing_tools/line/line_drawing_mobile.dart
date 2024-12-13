@@ -44,7 +44,7 @@ class LineDrawingMobile extends Drawing
     ..putIfAbsent(Drawing.classNameKey, () => nameKey);
 
   /// Key of drawing tool name property in JSON.
-  static const String nameKey = 'LineDrawing';
+  static const String nameKey = 'LineDrawingMobile';
 
   /// Part of a drawing: 'marker' or 'line'
   final DrawingParts drawingPart;
@@ -198,7 +198,7 @@ class LineDrawingMobile extends Drawing
     void Function({required bool isOverPoint})? setIsOverMiddlePoint,
     void Function({required bool isOverPoint})? setIsOverEndPoint,
   }) {
-    config as LineDrawingToolConfig;
+    config as LineDrawingToolConfigMobile;
 
     final LineStyle lineStyle = config.lineStyle;
 
@@ -271,7 +271,7 @@ class LineDrawingMobile extends Drawing
     super.onLabelPaint(canvas, size, theme, chartConfig, epochFromX, quoteFromY,
         epochToX, quoteToY, config, drawingData, series);
 
-    final LineDrawingToolConfig lineConfig = config as LineDrawingToolConfig;
+    final LineDrawingToolConfigMobile lineConfig = config as LineDrawingToolConfigMobile;
 
     if (_startPoint == null || _endPoint == null) {
       return;
