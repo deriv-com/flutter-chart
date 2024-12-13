@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_parts.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
@@ -7,10 +8,10 @@ import 'package:flutter/material.dart';
 /// Creates a Line drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a line drawing tool and
 /// until drawing is finished
-class LineDrawingCreator extends DrawingCreator<LineDrawing> {
+class LineDrawingCreator extends DrawingCreator<Drawing> {
   /// Initializes the line drawing creator.
   const LineDrawingCreator({
-    required OnAddDrawing<LineDrawing> onAddDrawing,
+    required OnAddDrawing<Drawing> onAddDrawing,
     required double Function(double) quoteFromCanvasY,
     required this.clearDrawingToolSelection,
     required this.removeUnfinishedDrawing,
@@ -30,7 +31,7 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
 
   /// Callback which creates a [LineDrawing] or [LineDrawingMobile]
   /// with the specified parameters.
-  final LineDrawing Function({
+  final Drawing Function({
     required DrawingParts drawingPart,
     EdgePoint startEdgePoint,
     EdgePoint endEdgePoint,
@@ -39,10 +40,10 @@ class LineDrawingCreator extends DrawingCreator<LineDrawing> {
   }) createLineDrawing;
 
   @override
-  DrawingCreatorState<LineDrawing> createState() => _LineDrawingCreatorState();
+  DrawingCreatorState<Drawing> createState() => _LineDrawingCreatorState();
 }
 
-class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
+class _LineDrawingCreatorState extends DrawingCreatorState<Drawing> {
   /// If drawing has been started.
   bool _isPenDown = false;
 
@@ -93,7 +94,7 @@ class _LineDrawingCreatorState extends DrawingCreatorState<LineDrawing> {
         } else {
           /// If the initial point and the final point are not the same,
           /// draw the final point and the whole line.
-          drawingParts.addAll(<LineDrawing>[
+          drawingParts.addAll(<Drawing>[
             (widget as LineDrawingCreator).createLineDrawing(
               drawingPart: DrawingParts.marker,
               endEdgePoint: edgePoints[currentTap],
