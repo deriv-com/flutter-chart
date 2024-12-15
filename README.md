@@ -251,7 +251,7 @@ ChartLocalization.load(locale);
 ### DerivChart
 
 A wrapper around the `chart` widget provides the functionality to add/remove/update indicators and to manage saving/restoring selected ones on storage.
-To learn more about how we can customize the indicators feature using `DerivChart` check [this documentation](/docs/deriv_chart_widget_usage.md).
+To learn more about how we can customize the indicators feature using `DerivChart` check [this documentation](/doc/deriv_chart_widget_usage.md).
 
 #### Usage:
 
