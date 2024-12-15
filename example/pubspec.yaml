@@ -20,6 +20,7 @@ dependencies:
     git:
       url: git@github.com:deriv-com/flutter-deriv-api.git
       ref: v1.3.0
+  win32: ^5.9.0
 
 dev_dependencies:
   deriv_lint:
