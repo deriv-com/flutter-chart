@@ -18,10 +18,10 @@ void paintBlinkingGlow(
 
 /// Paints a dot on [center].
 void paintDot(
-    Canvas canvas,
-    Offset center,
-    Color color,
-    ) =>
+  Canvas canvas,
+  Offset center,
+  Color color,
+) =>
     canvas.drawCircle(
       center,
       3,

@@ -36,7 +36,8 @@ class LineDrawingToolItemMobileState
   DrawingPatterns? _pattern;
 
   @override
-  LineDrawingToolConfigMobile createDrawingToolConfig() => LineDrawingToolConfigMobile(
+  LineDrawingToolConfigMobile createDrawingToolConfig() =>
+      LineDrawingToolConfigMobile(
         lineStyle: _currentLineStyle,
         pattern: _currentPattern,
       );
