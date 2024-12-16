@@ -18,7 +18,7 @@ LineDrawingToolConfigMobile _$LineDrawingToolConfigMobileFromJson(
               .toList() ??
           const <EdgePoint>[],
       lineStyle: json['lineStyle'] == null
-          ? const LineStyle(thickness: 0.9, color: Colors.white)
+          ? const LineStyle(thickness: 0.9, color: BrandColors.coral)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
       overlayStyle: LineDrawingToolConfigMobile._overlayStyleFromJson(
           json['overlayStyle'] as Map<String, dynamic>?),
