@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/widgets/color_selector.dar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'line_drawing_tool_config.dart';
 import '../callbacks.dart';
 
 /// Line drawing tool item in the list of drawing tools
@@ -69,8 +68,8 @@ class LineDrawingToolItemMobileState
       );
 
   LineStyle get _currentLineStyle =>
-      _lineStyle ?? (widget.config as LineDrawingToolConfig).lineStyle;
+      _lineStyle ?? (widget.config as LineDrawingToolConfigMobile).lineStyle;
 
   DrawingPatterns get _currentPattern =>
-      _pattern ?? (widget.config as LineDrawingToolConfig).pattern;
+      _pattern ?? (widget.config as LineDrawingToolConfigMobile).pattern;
 }

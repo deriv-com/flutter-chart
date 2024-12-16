@@ -24,7 +24,6 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig {
     this.lineStyle = const LineStyle(
       thickness: 0.9,
       color: BrandColors.coral,
-      markerRadius: 4,
     ),
     this.overlayStyle,
     this.pattern = DrawingPatterns.solid,
@@ -72,7 +71,7 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig {
       );
 
   @override
-  LineDrawingToolConfig copyWith({
+  LineDrawingToolConfigMobile copyWith({
     String? configId,
     DrawingData? drawingData,
     LineStyle? lineStyle,
@@ -83,7 +82,7 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig {
     bool? enableLabel,
     int? number,
   }) =>
-      LineDrawingToolConfig(
+      LineDrawingToolConfigMobile(
         configId: configId ?? this.configId,
         drawingData: drawingData ?? this.drawingData,
         lineStyle: lineStyle ?? this.lineStyle,
@@ -102,7 +101,7 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig {
       return null;
     } else {
       return MobileLineDrawingToolLabelPainter(
-        const LineDrawingToolConfig(),
+        const LineDrawingToolConfigMobile(),
         startPoint: startPoint,
         endPoint: endPoint,
       );
