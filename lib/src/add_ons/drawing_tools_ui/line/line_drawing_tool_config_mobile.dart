@@ -65,7 +65,6 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig {
     VoidCallback deleteDrawingTool,
   ) =>
       LineDrawingToolItemMobile(
-        config: const LineDrawingToolConfigMobile(),
         updateDrawingTool: updateDrawingTool,
         deleteDrawingTool: deleteDrawingTool,
       );
@@ -109,14 +108,18 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig {
   }
 
   static OverlayStyle? _overlayStyleFromJson(Map<String, dynamic>? json) {
-    if (json == null) return null;
+    if (json == null) {
+      return null;
+    }
     return OverlayStyle(
       color: Color(json['color'] as int),
     );
   }
 
   static Map<String, dynamic>? _overlayStyleToJson(OverlayStyle? instance) {
-    if (instance == null) return null;
+    if (instance == null) {
+      return null;
+    }
     return {
       'color': instance.color.value,
     };
