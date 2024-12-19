@@ -1,6 +1,6 @@
 ## [0.3.4]
 
-* Separate implementation of LineDrawing for mobile and web 
+* Add LineDrawingMobile, a LineDrawing more suitable for mobile
 
 ## [0.3.2]
 
