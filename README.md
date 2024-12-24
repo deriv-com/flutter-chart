@@ -53,7 +53,7 @@ Chart(
 ```
 
 // Add image from /doc/images/simple_candle_series.png
-<img src="https://github.com/deriv-com/flutter-chart/raw/ramin/prepare_for_publish/doc/images/live_update.gif" alt="live_update" width="300" height="400"> 
+<img src="https://github.com/deriv-com/flutter-chart/blob/ramin/prepare_for_publish/doc/images/simple_candle_series.png" alt="live_update" width="300" height="400"> 
 
 
 Supply different `Series` for `mainSeries` parameter to switch between chart types (candle / line).
