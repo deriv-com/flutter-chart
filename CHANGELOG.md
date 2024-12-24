@@ -1,3 +1,7 @@
+## [0.3.4]
+
+* Update technical analysis dependency to the published one 
+
 ## [0.3.2]
 
 * Add horizontal and vertical barriers for selected line drawing tool on the mobile version

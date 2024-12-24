@@ -8,10 +8,7 @@ A financial chart library for Flutter mobile apps.
 Add this to your project's pubspec.yaml file:
 
 ```yaml
-deriv_chart:
-    git:
-      url: git@github.com:regentmarkets/flutter-chart.git
-      ref: dev
+deriv_chart: ^0.3.4
 ```
 
 ## Usage
