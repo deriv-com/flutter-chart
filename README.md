@@ -1,9 +1,13 @@
-[![Coverage Status](https://coveralls.io/repos/github/regentmarkets/flutter-chart/badge.svg?branch=pull/7&t=AA56dN)](https://coveralls.io/github/regentmarkets/flutter-chart?branch=pull/7)
-
 # flutter-chart
+
 A financial chart library for Flutter mobile apps.
 
-## Getting Started
+## Requirements
+
+- Dart SDK: >=3.0.0 <4.0.0
+- Flutter: >=3.10.1
+
+## Installation
 
 Add this to your project's pubspec.yaml file:
 
@@ -18,6 +22,8 @@ Import the library with:
 ```dart
 import 'package:deriv_chart/deriv_chart.dart';
 ```
+
+### Basic Chart
 
 Simplest usage:
 
@@ -41,7 +47,6 @@ Chart(
   mainSeries: CandleSeries([candle1, candle2]),
   pipSize: 4, // digits after decimal point
   granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
-  // TODO: add isLive
 );
 ```
 
@@ -54,9 +59,9 @@ Chart(
 );
 ```
 
-#### Styling Line/CandleSeries
+### Styling Line/CandleSeries
 
-You can change the appearance of Line/CandleSeries by giving `style`to them.
+You can change the appearance of Line/CandleSeries by giving `style` to them.
 
 ```dart
 Chart(
@@ -187,7 +192,7 @@ Chart(
 );
 ```
 
-#### Styling
+#### Styling Barriers
 
 The appearance of `Barriers` can also be changed by passing custom styles.
 
@@ -204,7 +209,7 @@ HorizontalBarrier(
 
 #### Horizontal Barrier's Visibility
 
-A `HorizontalBarrier` can have three different behaviors when it has a value that is not in the chart's Y-Axis value range.
+A `HorizontalBarrier` can have three different behaviors when it has a value that is not in the chart's Y-Axis value range:
   - `normal`: Won't force the chart to keep the barrier in its Y-Axis range, if the barrier was out of range it will go off the screen.
   - `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond the Y-Axis range.
   - `forceToStayOnRange`: Will force the chart to keep this barrier in its Y-Axis range by widening its range to cover its value.
@@ -212,7 +217,7 @@ A `HorizontalBarrier` can have three different behaviors when it has a value tha
 ### Theme
 
 Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
-You can supply your theme, but then you would have to handle switching yourself. To do so create you own theme class which either implements `ChartTheme` or extends `ChartDefaultDarkTheme`/`ChartDefaultLightTheme` and override only those properties that you need to be different and then pass it to the `Chart` widget. See [ChartTheme](https://github.com/regentmarkets/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
+You can supply your theme, but then you would have to handle switching yourself. To do so create you own theme class which either implements `ChartTheme` or extends `ChartDefaultDarkTheme`/`ChartDefaultLightTheme` and override only those properties that you need to be different and then pass it to the `Chart` widget. See [ChartTheme](https://github.com/deriv-com/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
 
 ```dart
 class CustomTheme extends ChartDefaultDarkTheme {
@@ -239,7 +244,7 @@ Chart(
 ### Localization
 
 To use the ChartLocalization, you should add the `ChartLocalization.delegate` to your `localizationsDelegates` inside the `MaterialApp` that you added the chart in.
-When you want to change the locale of the chart,use this code:
+When you want to change the locale of the chart, use this code:
 
 ```dart
 ChartLocalization.load(locale);
@@ -257,15 +262,15 @@ All of the properties from the `Chart` widget are available here as well, except
 ```Dart
 DerivChart(
    mainSeries: ...,
-   annotations .
+   annotations: ...,
    ...
 )
 ```
 
-## ChartController
+### ChartController
 
 Can be provided and passed to the chart to control some behaviors of the chart.
-For now, there is only one method `scrollToLastTick` whichs makes the chart's scroll position to point to the most recent data.
+For now, there is only one method `scrollToLastTick` which makes the chart's scroll position point to the most recent data.
 
 ```dart
 final ChartController _controller = ChartController();
@@ -278,3 +283,24 @@ Chart(
 ```
 
 and whenever you want to do that, `_controller.scrollToLastTick()` can be called.
+
+## Additional Documentation
+
+For more detailed information, check out these documentation files:
+
+- [How Chart Library Works](/doc/how_chart_lib_works.md)
+- [Data Series](/doc/data_series.png)
+- [Data Painters](/doc/data_painters.png)
+- [Drawing Tools](/doc/drawing_tools.md)
+- [DerivChart Widget Usage](/doc/deriv_chart_widget_usage.md)
+- [Contributing](/doc/contribution.md)
+
+## Dependencies
+
+Key dependencies include:
+- deriv_technical_analysis: ^1.1.1
+- provider: ^6.0.5
+- shared_preferences: ^2.1.0
+- intl: ^0.19.0
+
+For a complete list of dependencies, see the [pubspec.yaml](pubspec.yaml) file.
