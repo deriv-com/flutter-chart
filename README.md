@@ -153,7 +153,7 @@ You can add indicators by passing `overlayConfigs` and `bottomConfigs` to the `C
 
 ```dart
 Chart(
-  mainSeries: CandleSeries([...candles...]),
+  mainSeries: CandleSeries(candles),
   overlayConfigs: [
     // Bollinger Bands
     BollingerBandsIndicatorConfig(
