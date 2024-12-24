@@ -78,27 +78,46 @@ Chart(
 
 ### Indicators
 
-To add more series, like indicators with the same y-scale supply them as an array to the `overlaySeries` parameter.
+Here's a comprehensive example showing how to use multiple indicators with different configurations:
+
+
+#### Using overlayConfigs
+
+You can add indicators by passing `overlayConfigs` and `bottomConfigs` to the `Chart` widget.
+`overlayConfigs` are indicators that share the same y-axis as the main series and are drawn on top of it.
+`bottomConfigs` are indicators that have a separate y-axis and are drawn below the main series.:
 
 ```dart
 Chart(
-  mainSeries: LineSeries([candle1, candle2]),
-  overlaySeries: [
-    MASeries(IndicatorInput(candles, granularity)),
+  mainSeries: CandleSeries([candle1, candle2]),
+  overlayConfigs: [
+    // Moving Average (SMA)
+    SMAIndicatorConfig(
+      period: 20,
+      field: 'close',
+      style: IndicatorStyle(
+        color: Colors.blue,
+        strokeWidth: 2,
+        dashArray: [2, 2], // Creates a dashed line
+      ),
+    ),
+  ],
+  // Bottom indicators with separate scale
+  bottomConfigs: [
+    // MACD
+    MACDIndicatorConfig(
+      fastPeriod: 12,
+      slowPeriod: 26,
+      signalPeriod: 9,
+      style: IndicatorStyle(
+        color: Colors.blue,
+        strokeWidth: 1,
+        secondaryColor: Colors.red, // For signal line
+      ),
+    ),
   ],
   pipSize: 4,
-);
-```
-
-Bottom indicators which have a different Y-scale than the main chart can be passed as the `bottomSeries` parameter to the Chart.
-
-```dart
-Chart(
-  mainSeries: LineSeries([candle1, candle2]),
-  bottomSeries: [
-    RSISeries(IndicatorInput(candles, granularity)),
-  ],
-  pipSize: 4,
+  granularity: 60, // 1 minute candles
 );
 ```
 
@@ -259,11 +278,12 @@ To learn more about how we can customize the indicators feature using `DerivChar
 
 All of the properties from the `Chart` widget are available here as well, except `overlaySeries`, `bottomSeries` that are managed internally.
 
-```Dart
+```dart
 DerivChart(
-   mainSeries: ...,
-   annotations: ...,
-   ...
+   mainSeries: CandleSeries(candles),
+   granularity: 60, // 60 seconds
+   activeSymbol: 'default',
+   pipSize: 4,
 )
 ```
 
