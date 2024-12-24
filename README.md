@@ -42,13 +42,19 @@ final candle2 = Candle(
   open: 100,
   close: 500,
 );
+// Or provide your own data from a data source.
+...
 
 Chart(
-  mainSeries: CandleSeries([candle1, candle2]),
+  mainSeries: CandleSeries([candle1, candle2, ...]),
   pipSize: 4, // digits after decimal point
   granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
 );
 ```
+
+// Add image from /doc/images/simple_candle_series.png
+<img src="https://github.com/deriv-com/flutter-chart/raw/master/doc/images/live_update.gif" alt="live_update" width="300" height="400">  | <img src="https://github.com/ramin-vakili/flutter-financial-chart/raw/master/screen_shots/tooltip_crosshair.gif" alt="tooltip_crosshair" width="300" height="400">
+
 
 Supply different `Series` for `mainSeries` parameter to switch between chart types (candle / line).
 
@@ -73,6 +79,57 @@ Chart(
     ),
   ),
   ...
+);
+```
+
+### Annotations
+
+To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
+
+```dart
+Chart(
+  mainSeries: LineSeries(candles),
+  pipSize: 4,
+  annotations: <ChartAnnotation> [
+    HorizontalBarrier(866.416),
+    VerticalBarrier(candles[100].epoch, title: 'V Barrier'),
+  ],
+);
+```
+
+#### Styling Annotations
+
+The appearance of `Annotations` can also be changed by passing custom styles.
+
+```dart
+HorizontalBarrier(
+      ...
+      style: HorizontalBarrierStyle(
+        color: const Color(0xFF00A79E),
+        isDashed: false,
+      ),
+      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
+    )
+```
+
+#### Horizontal Barrier's Visibility
+
+A `HorizontalBarrier` can have three different behaviors when it has a value that is not in the chart's Y-Axis value range:
+- `normal`: Won't force the chart to keep the barrier in its Y-Axis range, if the barrier was out of range it will go off the screen.
+- `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond the Y-Axis range.
+- `forceToStayOnRange`: Will force the chart to keep this barrier in its Y-Axis range by widening its range to cover its value.
+
+#### TickIndicator
+
+For example there is a special annotation called `TickIndicator` which is used to show a tick on the chart.
+
+```dart
+Chart(
+  mainSeries: LineSeries(candles),
+  pipSize: 4,
+  annotations: <ChartAnnotation> [
+    TickIndicator(candles.last),
+  ],
 );
 ```
 
@@ -211,42 +268,6 @@ Chart(
   ),
 ```
 
-### Barriers
-
-To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
-
-```dart
-Chart(
-  mainSeries: LineSeries(candles),
-  pipSize: 4,
-  annotations: <ChartAnnotation> [
-    HorizontalBarrier(866.416),
-    VerticalBarrier(candles[100].epoch, title: 'V Barrier'),
-  ],
-);
-```
-
-#### Styling Barriers
-
-The appearance of `Barriers` can also be changed by passing custom styles.
-
-```dart
-HorizontalBarrier(
-      ...
-      style: HorizontalBarrierStyle(
-        color: const Color(0xFF00A79E),
-        isDashed: false,
-      ),
-      visibility: HorizontalBarrierVisibility.forceToStayOnRange,
-    )
-```
-
-#### Horizontal Barrier's Visibility
-
-A `HorizontalBarrier` can have three different behaviors when it has a value that is not in the chart's Y-Axis value range:
-  - `normal`: Won't force the chart to keep the barrier in its Y-Axis range, if the barrier was out of range it will go off the screen.
-  - `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond the Y-Axis range.
-  - `forceToStayOnRange`: Will force the chart to keep this barrier in its Y-Axis range by widening its range to cover its value.
 
 ### Theme
 
