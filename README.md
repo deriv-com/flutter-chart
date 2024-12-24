@@ -29,14 +29,14 @@ Simplest usage:
 
 ```dart
 final candle1 = Candle(
-  epoch: DateTime.now().millisecondsSinceEpoch - 1000,
+  epoch: DateTime(...),
   high: 400,
   low: 50,
   open: 200,
   close: 100,
 );
 final candle2 = Candle(
-  epoch: DateTime.now().millisecondsSinceEpoch,
+  epoch: DateTime(...),
   high: 500,
   low: 100,
   open: 100,
@@ -49,7 +49,7 @@ final candles = [candle1, candle2, ...]
 
 Chart(
   mainSeries: CandleSeries(candles),
-  pipSize: 4, // digits after decimal point
+  pipSize: 4, // Number of decimal places when showing values on y-axis
   granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
 );
 ```
@@ -140,7 +140,7 @@ Chart(
 
 <img src="https://github.com/deriv-com/flutter-chart/blob/ramin/prepare_for_publish/doc/images/sample_tick_indicator.png" alt="sample_tick_indicator" width="200" height="300"> 
 
-### Indicators
+### Technical Indicators
 
 Here's a comprehensive example showing how to use multiple indicators with different configurations:
 
@@ -194,6 +194,63 @@ Chart(
 );
 ```
 <img src="https://github.com/deriv-com/flutter-chart/blob/ramin/prepare_for_publish/doc/images/bb_and_smi_indicators.png" alt="bb_and_smi_indicators" width="200" height="300"> 
+
+## Available Indicators
+
+The package includes the following technical indicators:
+
+### Moving Averages
+
+- Simple Moving Average (SMA)
+- Exponential Moving Average (EMA)
+- Double Exponential Moving Average (DEMA)
+- Triple Exponential Moving Average (TEMA)
+- Triangular Moving Average (TRIMA)
+- Weighted Moving Average (WMA)
+- Modified Moving Average (MMA)
+- Least Squares Moving Average (LSMA)
+- Hull Moving Average (HMA)
+- Variable Moving Average (VMA)
+- Welles Wilder Smoothing Moving Average (WWSMA)
+- Zero-Lag Exponential Moving Average (ZELMA)
+
+### Oscillators
+
+- Relative Strength Index (RSI)
+- Stochastic Momentum Index (SMI)
+- Moving Average Convergence Divergence (MACD)
+- Awesome Oscillator
+- Williams %R
+- Rate of Change (ROC)
+- Chande Momentum Oscillator (CMO)
+- Gator Oscillator
+
+### Trend Indicators
+
+- Average Directional Index (ADX)
+- Parabolic SAR
+- Ichimoku Cloud
+
+### Volatility Indicators
+
+- Bollinger Bands
+- Average True Range (ATR)
+- Standard Deviation
+- Variance
+
+### Channel Indicators
+
+- Donchian Channel
+- Moving Average Envelope
+
+### Other Indicators
+
+- Aroon
+- Commodity Channel Index (CCI)
+- Detrended Price Oscillator (DPO)
+- ZigZag
+- Fixed Channel Bands (FCB)
+- Bullish/Bearish Pattern Recognition
 
 ### Drawing Tools
 
