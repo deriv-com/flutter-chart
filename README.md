@@ -42,11 +42,13 @@ final candle2 = Candle(
   open: 100,
   close: 500,
 );
+
+final candles = [candle1, candle2, ...]
 // Or provide your own data from a data source.
 ...
 
 Chart(
-  mainSeries: CandleSeries([candle1, candle2, ...]),
+  mainSeries: CandleSeries(candles),
   pipSize: 4, // digits after decimal point
   granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
 );
@@ -59,7 +61,7 @@ Supply different `Series` for `mainSeries` parameter to switch between chart typ
 
 ```dart
 Chart(
-  mainSeries: LineSeries([candle1, candle2]),
+  mainSeries: LineSeries(candles),
   pipSize: 4,
 );
 ```
@@ -74,7 +76,7 @@ You can change the appearance of Line/CandleSeries by giving `style` to them.
 ```dart
 Chart(
   mainSeries: CandleSeries(
-    [candle1, candle2], 
+    candles, 
     style: CandleStyle(
         positiveColor: Colors.green, 
         negativColor: Colors.red
