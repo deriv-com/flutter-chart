@@ -1,8 +1,8 @@
 name: deriv_chart
 description: Chart for multiplier flutter app.
 version: 0.3.4
-homepage: https://github.com/regentmarkets/flutter-chart.git
-repository: https://github.com/regentmarkets/flutter-chart.git
+homepage: https://github.com/deriv-com/flutter-chart
+repository: https://github.com/deriv-com/flutter-chart
 publish_to: none
 
 environment:
