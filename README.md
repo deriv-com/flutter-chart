@@ -1,6 +1,6 @@
 # flutter-chart
 
-A financial chart library for Flutter mobile apps.
+A financial chart library for Flutter apps.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ A financial chart library for Flutter mobile apps.
 Add this to your project's pubspec.yaml file:
 
 ```yaml
-deriv_chart: ^0.3.5
+deriv_chart: ^0.3.6
 ```
 
 ## Usage

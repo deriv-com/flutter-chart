@@ -1,6 +1,6 @@
 name: deriv_chart
-description: Chart for multiplier flutter app.
-version: 0.3.5
+description: A financial chart library for Flutter apps.
+version: 0.3.6
 homepage: https://github.com/deriv-com/flutter-chart
 repository: https://github.com/deriv-com/flutter-chart
 

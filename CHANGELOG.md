@@ -1,3 +1,7 @@
+## [0.3.6]
+
+* Update package description 
+
 ## [0.3.5]
 
 * Update documentations
