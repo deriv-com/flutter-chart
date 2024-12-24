@@ -89,32 +89,29 @@ You can add indicators by passing `overlayConfigs` and `bottomConfigs` to the `C
 
 ```dart
 Chart(
-  mainSeries: CandleSeries([candle1, candle2]),
+  mainSeries: CandleSeries([...candles...]),
   overlayConfigs: [
     // Stochastic Momentum Index (SMI)
     SMIIndicatorConfig(
       period: 20,
-      smoothK: 5,
-      smoothD: 3,
+      smoothingPeriod: 5,
       lineStyle: LineStyle(
         color: Colors.blue,
-        strokeWidth: 2,
+        thickness: 2,
       ),
       signalLineStyle: LineStyle(
         color: Colors.red,
-        strokeWidth: 1,
-        dashArray: [2, 2], // Creates a dashed line
+        thickness: 1,
       ),
     ),
     // Bollinger Bands
     BollingerBandsIndicatorConfig(
       period: 20,
       standardDeviation: 2,
+      movingAverageType: MovingAverageType.exponential,
       upperLineStyle: LineStyle(color: Colors.purple),
       middleLineStyle: LineStyle(color: Colors.purple.withOpacity(0.7)),
       lowerLineStyle: LineStyle(color: Colors.purple),
-      fillColor: Colors.purple.withOpacity(0.1),
-      showChannelFill: true,
     ),
   ],
   // Bottom indicators with separate scale
@@ -124,7 +121,7 @@ Chart(
       period: 14,
       lineStyle: LineStyle(
         color: Colors.green,
-        strokeWidth: 1,
+        thickness: 1,
       ),
       oscillatorLinesConfig: OscillatorLinesConfig(
         overboughtValue: 70,
