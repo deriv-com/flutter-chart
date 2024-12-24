@@ -3,7 +3,6 @@ description: Chart for multiplier flutter app.
 version: 0.3.4
 homepage: https://github.com/deriv-com/flutter-chart
 repository: https://github.com/deriv-com/flutter-chart
-publish_to: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

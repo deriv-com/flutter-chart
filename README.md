@@ -54,7 +54,7 @@ Chart(
 );
 ```
 
-<img src="https://github.com/deriv-com/flutter-chart/blob/master/doc/images/simple_candle_series.png" alt="candle_series" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/simple_candle_series.png" alt="candle_series" width="200" height="300"> 
 
 
 Supply different `Series` for `mainSeries` parameter to switch between chart types (candle / line).
@@ -66,7 +66,7 @@ Chart(
 );
 ```
 
-<img src="https://github.com/deriv-com/flutter-chart/blob/master/doc/images/simple_line_series.png" alt="line_series" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/simple_line_series.png" alt="line_series" width="200" height="300"> 
 
 
 ### Styling Line/CandleSeries
@@ -100,7 +100,7 @@ Chart(
   ],
 );
 ```
-<img src="https://github.com/deriv-com/flutter-chart/blob/master/doc/images/h_and_v_barriers.png" alt="h_and_v_barriers" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/h_and_v_barriers.png" alt="h_and_v_barriers" width="200" height="300"> 
 
 #### Styling Annotations
 
@@ -138,7 +138,7 @@ Chart(
 );
 ```
 
-<img src="https://github.com/deriv-com/flutter-chart/blob/master/doc/images/sample_tick_indicator.png" alt="sample_tick_indicator" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/sample_tick_indicator.png" alt="sample_tick_indicator" width="200" height="300"> 
 
 ### Technical Indicators
 
@@ -193,7 +193,7 @@ Chart(
   granularity: 60, // 1 minute candles
 );
 ```
-<img src="https://github.com/deriv-com/flutter-chart/blob/master/doc/images/bb_and_smi_indicators.png" alt="bb_and_smi_indicators" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/bb_and_smi_indicators.png" alt="bb_and_smi_indicators" width="200" height="300"> 
 
 ## Available Indicators
 
