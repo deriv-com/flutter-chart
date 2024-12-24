@@ -97,8 +97,8 @@ Chart(
       standardDeviation: 2,
       movingAverageType: MovingAverageType.exponential,
       upperLineStyle: LineStyle(color: Colors.purple),
-      middleLineStyle: LineStyle(color: Colors.purple.withOpacity(0.7)),
-      lowerLineStyle: LineStyle(color: Colors.purple),
+      middleLineStyle: LineStyle(color: Colors.black),
+      lowerLineStyle: LineStyle(color: Colors.blue),
     ),
   ],
   // Bottom indicators with separate scale
@@ -220,8 +220,8 @@ Chart(
   mainSeries: LineSeries(candles),
   pipSize: 4,
   annotations: <ChartAnnotation> [
-    HorizontalBarrier(60, title: 'Take profit'),
-    VerticalBarrier(candles.last.epoch, title: 'Buy time'),
+    HorizontalBarrier(866.416),
+    VerticalBarrier(candles[100].epoch, title: 'V Barrier'),
   ],
 );
 ```
