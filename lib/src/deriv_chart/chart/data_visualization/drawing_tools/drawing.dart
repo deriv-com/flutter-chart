@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/fibfan/fibfan_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/horizontal/horizontal_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/line/line_drawing_mobile.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/rectangle/rectangle_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/trend/trend_drawing.dart';
@@ -41,6 +42,8 @@ abstract class Drawing {
         return HorizontalDrawing.fromJson(json);
       case LineDrawing.nameKey:
         return LineDrawing.fromJson(json);
+      case LineDrawingMobile.nameKey:
+        return LineDrawingMobile.fromJson(json);
       case RayLineDrawing.nameKey:
         return RayLineDrawing.fromJson(json);
       case RectangleDrawing.nameKey:

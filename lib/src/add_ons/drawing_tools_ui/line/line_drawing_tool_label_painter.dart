@@ -15,7 +15,7 @@ abstract class LineDrawingToolLabelPainter extends DrawingToolLabelPainter {
   }) : super(lineDrawingToolConfig);
 
   /// Line drawing tool config.
-  final LineDrawingToolConfig lineDrawingToolConfig;
+  late final dynamic lineDrawingToolConfig;
 
   /// Start point.
   final Point startPoint;
