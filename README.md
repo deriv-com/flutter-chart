@@ -12,7 +12,7 @@ A financial chart library for Flutter mobile apps.
 Add this to your project's pubspec.yaml file:
 
 ```yaml
-deriv_chart: ^0.3.4
+deriv_chart: ^0.3.5
 ```
 
 ## Usage
