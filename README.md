@@ -81,7 +81,7 @@ Chart(
 Here's a comprehensive example showing how to use multiple indicators with different configurations:
 
 
-#### Using overlayConfigs
+#### Using overlayConfigs and bottomConfigs
 
 You can add indicators by passing `overlayConfigs` and `bottomConfigs` to the `Chart` widget.
 `overlayConfigs` are indicators that share the same y-axis as the main series and are drawn on top of it.
@@ -91,29 +91,48 @@ You can add indicators by passing `overlayConfigs` and `bottomConfigs` to the `C
 Chart(
   mainSeries: CandleSeries([candle1, candle2]),
   overlayConfigs: [
-    // Moving Average (SMA)
-    SMAIndicatorConfig(
+    // Stochastic Momentum Index (SMI)
+    SMIIndicatorConfig(
       period: 20,
-      field: 'close',
-      style: IndicatorStyle(
+      smoothK: 5,
+      smoothD: 3,
+      lineStyle: LineStyle(
         color: Colors.blue,
         strokeWidth: 2,
+      ),
+      signalLineStyle: LineStyle(
+        color: Colors.red,
+        strokeWidth: 1,
         dashArray: [2, 2], // Creates a dashed line
       ),
+    ),
+    // Bollinger Bands
+    BollingerBandsIndicatorConfig(
+      period: 20,
+      standardDeviation: 2,
+      upperLineStyle: LineStyle(color: Colors.purple),
+      middleLineStyle: LineStyle(color: Colors.purple.withOpacity(0.7)),
+      lowerLineStyle: LineStyle(color: Colors.purple),
+      fillColor: Colors.purple.withOpacity(0.1),
+      showChannelFill: true,
     ),
   ],
   // Bottom indicators with separate scale
   bottomConfigs: [
-    // MACD
-    MACDIndicatorConfig(
-      fastPeriod: 12,
-      slowPeriod: 26,
-      signalPeriod: 9,
-      style: IndicatorStyle(
-        color: Colors.blue,
+    // Relative Strength Index (RSI)
+    RSIIndicatorConfig(
+      period: 14,
+      lineStyle: LineStyle(
+        color: Colors.green,
         strokeWidth: 1,
-        secondaryColor: Colors.red, // For signal line
       ),
+      oscillatorLinesConfig: OscillatorLinesConfig(
+        overboughtValue: 70,
+        oversoldValue: 30,
+        overboughtStyle: LineStyle(color: Colors.red),
+        oversoldStyle: LineStyle(color: Colors.green),
+      ),
+      showZones: true,
     ),
   ],
   pipSize: 4,
