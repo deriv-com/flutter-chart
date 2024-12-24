@@ -64,6 +64,9 @@ Chart(
 );
 ```
 
+<img src="https://github.com/deriv-com/flutter-chart/blob/ramin/prepare_for_publish/doc/images/simple_line_series.png" alt="live_update" width="300" height="400"> 
+
+
 ### Styling Line/CandleSeries
 
 You can change the appearance of Line/CandleSeries by giving `style` to them.
