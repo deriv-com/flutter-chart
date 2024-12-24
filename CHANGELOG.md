@@ -1,5 +1,6 @@
 ## [0.3.4]
 
+* Update documentations
 * Update technical analysis dependency to the published one 
 * Add LineDrawingMobile, a LineDrawing more suitable for mobile
 
