@@ -52,7 +52,6 @@ Chart(
 );
 ```
 
-// Add image from /doc/images/simple_candle_series.png
 <img src="https://github.com/deriv-com/flutter-chart/blob/ramin/prepare_for_publish/doc/images/simple_candle_series.png" alt="live_update" width="300" height="400"> 
 
 
