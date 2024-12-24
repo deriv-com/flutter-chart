@@ -340,7 +340,9 @@ final ChartController _controller = ChartController();
 ....
 
 Chart(
-    controller: _controller
+    ...
+    controller: _controller,
+    ...
 )
 ```
 
