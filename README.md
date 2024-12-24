@@ -91,19 +91,6 @@ You can add indicators by passing `overlayConfigs` and `bottomConfigs` to the `C
 Chart(
   mainSeries: CandleSeries([...candles...]),
   overlayConfigs: [
-    // Stochastic Momentum Index (SMI)
-    SMIIndicatorConfig(
-      period: 20,
-      smoothingPeriod: 5,
-      lineStyle: LineStyle(
-        color: Colors.blue,
-        thickness: 2,
-      ),
-      signalLineStyle: LineStyle(
-        color: Colors.red,
-        thickness: 1,
-      ),
-    ),
     // Bollinger Bands
     BollingerBandsIndicatorConfig(
       period: 20,
@@ -116,6 +103,12 @@ Chart(
   ],
   // Bottom indicators with separate scale
   bottomConfigs: [
+    SMIIndicatorConfig(
+      period: 14,
+      signalPeriod: 9,
+      lineStyle: LineStyle(color: Colors.blue, thickness: 2),
+      signalLineStyle: LineStyle(color: Colors.red),
+    ),
     // Relative Strength Index (RSI)
     RSIIndicatorConfig(
       period: 14,
