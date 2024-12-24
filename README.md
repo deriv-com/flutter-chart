@@ -137,6 +137,12 @@ Chart(
 );
 ```
 
+### Drawing Tools
+
+This section will be updated with comprehensive documentation about how to add and configure drawing tools.
+
+For now, you can refer to the [Drawing Tools documentation](/doc/drawing_tools.md) for more details.
+
 ### Callbacks
 
 Use `onVisibleAreaChanged` for listening to chart's scrolling and zooming.
