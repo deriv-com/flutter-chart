@@ -6,9 +6,9 @@ A financial charting library for Flutter applications, offering a comprehensive 
 
 <img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/intro.gif" alt="intro" width="300" height="400">
 
-|------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | <img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/chart_type_switch.gif" alt="Scaling animation" width="300" height="400"> | <img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/screen_shots/cross_hair.gif" alt="Crosshair" width="300" height="400"> |
 
+<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/zoom_scroll.gif" alt="zoom_scroll" width="300" height="400">
 
 ## Requirements
 
