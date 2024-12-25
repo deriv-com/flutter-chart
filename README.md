@@ -38,7 +38,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 
 ### Basic Chart
 
-Simplest usage, adding a CandleStick chart:
+Simplest usage, adding a candlestick chart:
 
 ```dart
 final candle1 = Candle(
@@ -63,15 +63,15 @@ final candles = [candle1, candle2, ...]
 Chart(
   mainSeries: CandleSeries(candles),
   pipSize: 4, // Number of decimal places when showing values on y-axis
-  granularity: granularity, // duration of 1 candle in ms (for ticks: average ms difference between ticks)
+  granularity: granularity, // Duration in milliseconds: for candles, this is the candle period; for ticks, this is the average time between ticks
 );
 ```
 
 <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/simple_candle_series.png" alt="candle_series" width="450" height="250"> 
 
 
-Supply different `Series` for `mainSeries` parameter to switch between chart types (candle, line, etc).
-For example to show a line chart we pass a `LineSeries`:
+Supply different `Series` for `mainSeries` parameter to switch between chart types (candle, line, etc.).
+For example, to show a line chart we pass a `LineSeries`:
 
 ```dart
 Chart(
@@ -93,7 +93,7 @@ Chart(
     candles, 
     style: CandleStyle(
         positiveColor: Colors.green, 
-        negativColor: Colors.red
+        negativeColor: Colors.red
     ),
   ),
   ...
@@ -131,13 +131,13 @@ HorizontalBarrier(
     )
 ```
 
-You can also create custom Barriers by creating subclasses of `ChartAnnotation` and draw the annotation differetly.
-(example will be provided).
+You can also create custom Barriers by creating subclasses of `ChartAnnotation` and draw the annotation differently.
+(An example will be provided).
 
 
 #### TickIndicator
 
-For example there is a special annotation called `TickIndicator` which is used to show a tick on the chart.
+For example, there is a special annotation called `TickIndicator` which is used to show a tick on the chart.
 
 ```dart
 Chart(
@@ -160,7 +160,7 @@ Here's a comprehensive example showing how to use multiple indicators with diffe
 
 You can add indicators by passing `overlayConfigs` and `bottomConfigs` to the `Chart` widget.
 `overlayConfigs` are indicators that share the same y-axis as the main series and are drawn on top of it.
-`bottomConfigs` are indicators that have a separate y-axis and are drawn below the main series.:
+`bottomConfigs` are indicators that have a separate y-axis and are drawn below the main series.
 
 ```dart
 Chart(
@@ -268,7 +268,7 @@ The package includes the following technical indicators:
 
 This section will be updated with comprehensive documentation about how to add and configure drawing tools.
 
-For now, you can refer to the [Drawing Tools documentation](/doc/drawing_tools.md) for more details.
+For now, you can refer to the [Drawing Tools documentation](doc/drawing_tools.md) for more details.
 
 ### Callbacks
 
@@ -282,12 +282,12 @@ Chart(
   mainSeries: LineSeries(candles),
   pipSize: 4,
   onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-    // do something (e.g. load more data)
+    // do something (e.g., load more data)
   },
 );
 ```
 
-Use `onCrosshairAppeared` for listening to chart's cross-hair.
+Use `onCrosshairAppeared` for listening to the chart's crosshair.
 
 ```dart
 Chart(
@@ -311,8 +311,8 @@ Chart(
 );
 ```
 
-Supply `activeMarker` to show active marker on the chart.
-See `/example` for a complete implementation.
+Supply `activeMarker` to show an active marker on the chart.
+See [example](example) for a complete implementation.
 
 ```dart
 Chart(
@@ -348,8 +348,8 @@ Chart(
 
 ### Theme
 
-Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
-You can supply your theme, but then you would have to handle switching yourself. To do so create you own theme class which either implements `ChartTheme` or extends `ChartDefaultDarkTheme`/`ChartDefaultLightTheme` and override only those properties that you need to be different and then pass it to the `Chart` widget. See [ChartTheme](https://github.com/deriv-com/flutter-chart/blob/dev/lib/src/theme/chart_theme.dart) for more info.
+The Chart has its own default dark and light themes that switch depending on `Theme.of(context).brightness` value.
+You can supply your own theme, but then you would have to handle switching yourself. To do so, create your own theme class that either implements the `ChartTheme` interface or extends `ChartDefaultDarkTheme`/`ChartDefaultLightTheme`. Override only those properties that you need to be different and then pass it to the `Chart` widget. See [ChartTheme](lib/src/theme/chart_theme.dart) for more info.
 
 ```dart
 class CustomTheme extends ChartDefaultDarkTheme {
@@ -375,7 +375,7 @@ Chart(
 
 ### Localization
 
-To use the ChartLocalization, you should add the `ChartLocalization.delegate` to your `localizationsDelegates` inside the `MaterialApp` that you added the chart in.
+To use ChartLocalization, add the `ChartLocalization.delegate` to your `localizationsDelegates` inside the `MaterialApp` where you added the chart.
 When you want to change the locale of the chart, use this code:
 
 ```dart
@@ -384,12 +384,12 @@ ChartLocalization.load(locale);
 
 ### DerivChart
 
-A wrapper around the `chart` widget provides the functionality to add/remove/update indicators and to manage saving/restoring selected ones on storage.
-To learn more about how we can customize the indicators feature using `DerivChart` check [this documentation](/doc/deriv_chart_widget_usage.md).
+A wrapper around the `Chart` widget that provides functionality to add, remove, and update indicators, as well as manage saving and restoring selected ones in storage.
+To learn more about how to customize the indicators feature using `DerivChart`, check [this documentation](doc/deriv_chart_widget_usage.md).
 
 #### Usage:
 
-All of the properties from the `Chart` widget are available here as well, except `overlaySeries`, `bottomSeries` that are managed internally.
+All properties from the `Chart` widget are available here as well, except `overlaySeries` and `bottomSeries` which are managed internally.
 
 ```dart
 DerivChart(
@@ -402,7 +402,7 @@ DerivChart(
 
 ### ChartController
 
-Can be provided and passed to the chart and control the scrolling programmatically.
+A controller that can be provided to the chart to programmatically control scrolling and scaling behavior.
 
 ```dart
 final ChartController _controller = ChartController();
@@ -424,12 +424,12 @@ _controller.scale(100);
 
 For more detailed information, check out these documentation files:
 
-- [How Chart Library Works](/doc/how_chart_lib_works.md)
-- [Data Series](/doc/data_series.png)
-- [Data Painters](/doc/data_painters.png)
-- [Drawing Tools](/doc/drawing_tools.md)
-- [DerivChart Widget Usage](/doc/deriv_chart_widget_usage.md)
-- [Contributing](/doc/contribution.md)
+- [How Chart Library Works](doc/how_chart_lib_works.md)
+- [Data Series](doc/data_series.png)
+- [Data Painters](doc/data_painters.png)
+- [Drawing Tools](doc/drawing_tools.md)
+- [DerivChart Widget Usage](doc/deriv_chart_widget_usage.md)
+- [Contributing](doc/contribution.md)
 
 ## Dependencies
 
