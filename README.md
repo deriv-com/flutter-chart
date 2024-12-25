@@ -3,9 +3,17 @@
 A financial charting library for Flutter applications, offering a comprehensive suite of features for technical analysis and trading visualization. It supports multiple chart types (candlestick, line, etc.), a wide range of technical indicators (RSI, MACD, Bollinger Bands, etc.), and interactive drawing tools. The library comes with customizable themes to match your application's visual style. Built specifically for financial applications, it includes essential features like price markers, barriers, and crosshairs, making it ideal for trading platforms, financial analysis tools, and market data visualization.
 
 
-<img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/intro.gif" alt="intro" width="300" height="400">
+|<img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/intro.gif" alt="intro" width="627" height="330">|
+| ------------------ |
 
-| <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/chart_type_switch.gif" alt="Scaling animation" width="300" height="400"> | <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/cross_hair.gif" alt="Crosshair" width="300" height="400"> |
+
+| Different Chart Types | Annotations |
+| ------------------ | ------------------ |
+| <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/different_chart_types.gif" alt="Scaling animation" width="300" height="400">  | <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/annotations_and_crosshair.gif" alt="Scaling animation" width="300" height="400"> |
+
+| Technical Indicators | Interactive tools |
+| ------------------ | ------------------ |
+| <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/indicators.gif" alt="Scaling animation" width="300" height="400">  | <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/interactive_tools.gif" alt="Scaling animation" width="300" height="400"> |
 
 ## Requirements
 
@@ -59,7 +67,7 @@ Chart(
 );
 ```
 
-<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/simple_candle_series.png" alt="candle_series" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/simple_candle_series.png" alt="candle_series" width="450" height="250"> 
 
 
 Supply different `Series` for `mainSeries` parameter to switch between chart types (candle / line).
@@ -71,7 +79,7 @@ Chart(
 );
 ```
 
-<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/simple_line_series.png" alt="line_series" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/simple_line_series.png" alt="line_series" width="450" height="250"> 
 
 
 ### Styling Line/CandleSeries
@@ -105,7 +113,7 @@ Chart(
   ],
 );
 ```
-<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/h_and_v_barriers.png" alt="h_and_v_barriers" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/h_and_v_barriers.png" alt="h_and_v_barriers" width="450" height="250"> 
 
 #### Styling Annotations
 
@@ -143,7 +151,7 @@ Chart(
 );
 ```
 
-<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/sample_tick_indicator.png" alt="sample_tick_indicator" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/sample_tick_indicator.png" alt="sample_tick_indicator" width="450" height="250"> 
 
 ### Technical Indicators
 
@@ -198,7 +206,7 @@ Chart(
   granularity: 60, // 1 minute candles
 );
 ```
-<img src="https://raw.githubusercontent.com/deriv-com/flutter-chart/master/doc/images/bb_and_smi_indicators.png" alt="bb_and_smi_indicators" width="200" height="300"> 
+<img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/bb_smi_rsi.png" alt="bb_and_smi_indicators" width="450" height="250"> 
 
 ## Available Indicators
 
