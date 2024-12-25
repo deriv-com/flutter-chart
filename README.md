@@ -38,7 +38,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 
 ### Basic Chart
 
-Simplest usage:
+Simplest usage, adding a CandleStick chart:
 
 ```dart
 final candle1 = Candle(
@@ -70,7 +70,8 @@ Chart(
 <img src="https://raw.githubusercontent.com/ramin-deriv/flutter-chart-public/ramin/update_docs/doc/images/simple_candle_series.png" alt="candle_series" width="450" height="250"> 
 
 
-Supply different `Series` for `mainSeries` parameter to switch between chart types (candle / line).
+Supply different `Series` for `mainSeries` parameter to switch between chart types (candle, line, etc).
+For example to show a line chart we pass a `LineSeries`:
 
 ```dart
 Chart(
@@ -84,7 +85,7 @@ Chart(
 
 ### Styling Line/CandleSeries
 
-You can change the appearance of Line/CandleSeries by giving `style` to them.
+You can change the appearance of Series by giving `style` to them.
 
 ```dart
 Chart(
@@ -101,7 +102,7 @@ Chart(
 
 ### Annotations
 
-To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart.
+To add horizontal/vertical barriers, specify them in the `annotations` parameter of the chart:
 
 ```dart
 Chart(
@@ -130,12 +131,9 @@ HorizontalBarrier(
     )
 ```
 
-#### Horizontal Barrier's Visibility
+You can also create custom Barriers by creating subclasses of `ChartAnnotation` and draw the annotation differetly.
+(example will be provided).
 
-A `HorizontalBarrier` can have three different behaviors when it has a value that is not in the chart's Y-Axis value range:
-- `normal`: Won't force the chart to keep the barrier in its Y-Axis range, if the barrier was out of range it will go off the screen.
-- `keepBarrierLabelVisible`: Won't force the chart to keep the barrier in its Y-Axis range, if it was out of range, will show it on top/bottom edge with an arrow which indicates its value is beyond the Y-Axis range.
-- `forceToStayOnRange`: Will force the chart to keep this barrier in its Y-Axis range by widening its range to cover its value.
 
 #### TickIndicator
 
@@ -201,6 +199,7 @@ Chart(
       ),
       showZones: true,
     ),
+    SMIIndicatorConfig(period: 10, lineStyle: LineStyle(color: Colors.green))
   ],
   pipSize: 4,
   granularity: 60, // 1 minute candles
@@ -403,8 +402,7 @@ DerivChart(
 
 ### ChartController
 
-Can be provided and passed to the chart to control some behaviors of the chart.
-For now, there is only one method `scrollToLastTick` which makes the chart's scroll position point to the most recent data.
+Can be provided and passed to the chart and control the scrolling programmatically.
 
 ```dart
 final ChartController _controller = ChartController();
@@ -416,9 +414,11 @@ Chart(
     controller: _controller,
     ...
 )
-```
 
-and whenever you want to do that, `_controller.scrollToLastTick()` can be called.
+
+_controller.scrollToLastTick();
+_controller.scale(100);
+```
 
 ## Additional Documentation
 
