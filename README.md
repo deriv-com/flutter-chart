@@ -62,7 +62,7 @@ final candles = [candle1, candle2, ...]
 
 Chart(
   mainSeries: CandleSeries(candles),
-  pipSize: 4, // Number of decimal places when showing values on y-axis
+  pipSize: 3, // Number of decimal places when showing values on y-axis
   granularity: granularity, // Duration in milliseconds: for candles, this is the candle period; for ticks, this is the average time between ticks
 );
 ```
@@ -76,7 +76,7 @@ For example, to show a line chart we pass a `LineSeries`:
 ```dart
 Chart(
   mainSeries: LineSeries(candles),
-  pipSize: 4,
+  pipSize: 3,
 );
 ```
 
@@ -107,10 +107,10 @@ To add horizontal/vertical barriers, specify them in the `annotations` parameter
 ```dart
 Chart(
   mainSeries: LineSeries(candles),
-  pipSize: 4,
+  pipSize: 3,
   annotations: <ChartAnnotation> [
-    HorizontalBarrier(866.416),
-    VerticalBarrier(candles[100].epoch, title: 'V Barrier'),
+    HorizontalBarrier(98161.950),
+    VerticalBarrier(candles.last.epoch, title: 'V Barrier'),
   ],
 );
 ```
@@ -142,7 +142,7 @@ For example, there is a special annotation called `TickIndicator` which is used 
 ```dart
 Chart(
   mainSeries: LineSeries(candles),
-  pipSize: 4,
+  pipSize: 3,
   annotations: <ChartAnnotation> [
     TickIndicator(candles.last),
   ],
@@ -201,7 +201,7 @@ Chart(
     ),
     SMIIndicatorConfig(period: 10, lineStyle: LineStyle(color: Colors.green))
   ],
-  pipSize: 4,
+  pipSize: 3,
   granularity: 60, // 1 minute candles
 );
 ```
