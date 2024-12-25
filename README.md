@@ -25,7 +25,7 @@ A financial charting library for Flutter applications, offering a comprehensive 
 Add this to your project's pubspec.yaml file:
 
 ```yaml
-deriv_chart: ^0.3.6
+deriv_chart: ^0.3.7
 ```
 
 ## Usage
