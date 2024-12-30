@@ -45,7 +45,7 @@ class MobileLineDrawingToolLabelPainter extends LineDrawingToolLabelPainter {
       ..strokeWidth = 1.0;
 
     _barrierPaint = Paint()
-      ..color = _style.color.withOpacity(0.2)
+      ..color = _style.color.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
   }
 

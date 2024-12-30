@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -21,5 +22,5 @@ class ColorConverter implements JsonConverter<Color, int> {
   Color fromJson(int value) => Color(value);
 
   @override
-  int toJson(Color color) => color.value;
+  int toJson(Color color) => color.toInt32;
 }

@@ -64,7 +64,7 @@ class _AnimatedHighlightState extends State<AnimatedHighlight>
   Widget build(BuildContext context) => AnimatedBuilder(
         animation: _animation,
         builder: (BuildContext context, Widget? child) => Ink(
-          color: Colors.grey.withOpacity(_animation.value),
+          color: Colors.grey.withValues(alpha: _animation.value),
           child: child,
         ),
         child: widget.child,

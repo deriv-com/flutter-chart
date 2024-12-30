@@ -264,6 +264,6 @@ int _searchUpperIndex(List<Tick> entries, double rightIndex) {
       : (closest + 1 > entries.length ? closest : closest + 1);
 }
 
-extension _isGraterThanZero on Size {
+extension _IsGreaterThanZero on Size {
   bool get isGraterThanZero => width > 0 && height > 0;
 }

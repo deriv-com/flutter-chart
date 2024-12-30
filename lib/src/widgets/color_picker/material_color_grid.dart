@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:flutter/material.dart';
 
 /// Grid of material color options.
@@ -44,7 +45,7 @@ class MaterialColorGrid extends StatelessWidget {
             for (final int shade in colorShades)
               _ColorOptionButton(
                 color: swatch[shade]!,
-                selected: swatch[shade]!.value == selectedColor.value,
+                selected: swatch[shade]!.toInt32 == selectedColor.toInt32,
                 onTap: () {
                   onChanged.call(swatch[shade]!);
                 },
