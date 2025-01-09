@@ -94,3 +94,7 @@ Performance: Immutability can offer performance benefits, especially in the cont
 Concurrency: Immutable data is inherently thread-safe, making it easier to work with concurrent programming and avoid data race conditions.
 
 
+## PR format:
+Please follow the conventional commit format for the PR title. For more information, please check [conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)
+
+
