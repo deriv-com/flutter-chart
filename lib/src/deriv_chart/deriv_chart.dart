@@ -1,4 +1,6 @@
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
+import 'package:deriv_chart/src/widgets/localization_provider.dart';
 import 'package:deriv_chart/src/add_ons/add_ons_repository.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
@@ -60,8 +62,13 @@ class DerivChart extends StatefulWidget {
     this.showDataFitButton,
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
+    this.localizations,
     Key? key,
   }) : super(key: key);
+
+  /// Chart's localizations. If not provided, will use default English
+  /// localizations.
+  final ChartLocalization? localizations;
 
   /// Chart's main data series
   final DataSeries<Tick> mainSeries;
@@ -185,10 +192,13 @@ class _DerivChartState extends State<DerivChart> {
 
   final DrawingTools _drawingTools = DrawingTools();
 
+  late ChartLocalization _chartLocalization;
+
   @override
   void initState() {
     super.initState();
 
+    _setLocalization();
     _initRepos();
   }
 
@@ -196,11 +206,15 @@ class _DerivChartState extends State<DerivChart> {
   void didUpdateWidget(covariant DerivChart oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    _setLocalization();
     if (widget.drawingToolsRepo == null &&
         widget.activeSymbol != oldWidget.activeSymbol) {
       loadSavedIndicatorsAndDrawingTools();
     }
   }
+
+  void _setLocalization() =>
+      _chartLocalization = widget.localizations ?? ChartLocalization();
 
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
@@ -254,7 +268,10 @@ class _DerivChartState extends State<DerivChart> {
       ) =>
           ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
         value: _indicatorsRepo,
-        child: IndicatorsDialog(),
+        child: LocalizationProvider(
+          localization: _chartLocalization,
+          child: IndicatorsDialog(),
+        ),
       ),
     );
   }
@@ -272,8 +289,11 @@ class _DerivChartState extends State<DerivChart> {
       ) =>
           ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
         value: _drawingToolsRepo,
-        child: DrawingToolsDialog(
-          drawingTools: _drawingTools,
+        child: LocalizationProvider(
+          localization: _chartLocalization,
+          child: DrawingToolsDialog(
+            drawingTools: _drawingTools,
+          ),
         ),
       ),
     );
@@ -296,7 +316,10 @@ class _DerivChartState extends State<DerivChart> {
       );
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
+  Widget build(BuildContext context) {
+    return LocalizationProvider(
+      localization: _chartLocalization,
+      child: MultiProvider(
         providers: <ChangeNotifierProvider<Repository<AddOnConfig>>>[
           ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
               value: widget.indicatorsRepo ?? _indicatorsRepo),
@@ -359,5 +382,7 @@ class _DerivChartState extends State<DerivChart> {
             ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }

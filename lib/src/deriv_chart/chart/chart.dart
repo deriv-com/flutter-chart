@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/generated/l10n.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
+import 'package:deriv_chart/src/widgets/localization_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_wrapper.dart';
@@ -42,6 +44,7 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
+    this.localizations,
     this.drawingTools,
     this.pipSize = 4,
     this.controller,
@@ -75,6 +78,10 @@ class Chart extends StatefulWidget {
     this.loadingAnimationColor,
     Key? key,
   }) : super(key: key);
+
+  /// Chart's localizations. If not provided, will use default English
+  /// localizations.
+  final ChartLocalization? localizations;
 
   /// Chart's main data series.
   final DataSeries<Tick> mainSeries;
@@ -197,10 +204,12 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   late ChartTheme _chartTheme;
   late List<Series>? bottomSeries;
   int? expandedIndex;
+  late ChartLocalization _chartLocalization;
 
   @override
   void initState() {
     super.initState();
+    _setLocalization();
     WidgetsFlutterBinding.ensureInitialized().addObserver(this);
     _initChartController();
   }
@@ -290,28 +299,31 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     final Duration currentTickAnimationDuration =
         widget.currentTickAnimationDuration ?? _defaultDuration;
 
-    return MultiProvider(
-      providers: <SingleChildWidget>[
-        Provider<ChartTheme>.value(value: _chartTheme),
-        Provider<ChartConfig>.value(value: chartConfig),
-      ],
-      child: Ink(
-        color: _chartTheme.base08Color,
-        child: GestureManager(
-          child: XAxisWrapper(
-            maxEpoch: chartDataList.getMaxEpoch(),
-            minEpoch: chartDataList.getMinEpoch(),
-            entries: widget.mainSeries.input,
-            pipSize: widget.pipSize,
-            onVisibleAreaChanged: _onVisibleAreaChanged,
-            isLive: widget.isLive,
-            startWithDataFitMode: widget.dataFitEnabled,
-            msPerPx: widget.msPerPx,
-            minIntervalWidth: widget.minIntervalWidth,
-            maxIntervalWidth: widget.maxIntervalWidth,
-            dataFitPadding: widget.dataFitPadding,
-            scrollAnimationDuration: currentTickAnimationDuration,
-            child: buildChartsLayout(context, overlaySeries, bottomSeries),
+    return LocalizationProvider(
+      localization: _chartLocalization,
+      child: MultiProvider(
+        providers: <SingleChildWidget>[
+          Provider<ChartTheme>.value(value: _chartTheme),
+          Provider<ChartConfig>.value(value: chartConfig),
+        ],
+        child: Ink(
+          color: _chartTheme.base08Color,
+          child: GestureManager(
+            child: XAxisWrapper(
+              maxEpoch: chartDataList.getMaxEpoch(),
+              minEpoch: chartDataList.getMinEpoch(),
+              entries: widget.mainSeries.input,
+              pipSize: widget.pipSize,
+              onVisibleAreaChanged: _onVisibleAreaChanged,
+              isLive: widget.isLive,
+              startWithDataFitMode: widget.dataFitEnabled,
+              msPerPx: widget.msPerPx,
+              minIntervalWidth: widget.minIntervalWidth,
+              maxIntervalWidth: widget.maxIntervalWidth,
+              dataFitPadding: widget.dataFitPadding,
+              scrollAnimationDuration: currentTickAnimationDuration,
+              child: buildChartsLayout(context, overlaySeries, bottomSeries),
+            ),
           ),
         ),
       ),
@@ -386,6 +398,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   void didUpdateWidget(covariant Chart oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    _setLocalization();
     // if controller is set
     if (widget.controller != oldWidget.controller) {
       _initChartController();
@@ -415,4 +428,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       }
     }
   }
+
+  void _setLocalization() =>
+      _chartLocalization = widget.localizations ?? ChartLocalization();
 }

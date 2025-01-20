@@ -32,6 +32,7 @@ dev_dependencies:
   json_serializable: ^6.7.1
 
 flutter:
+  generate: true  # Enable code generation
   assets:
     - assets/icons/
     - assets/icons/symbols/

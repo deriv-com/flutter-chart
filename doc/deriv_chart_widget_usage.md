@@ -1,6 +1,34 @@
 ### How to use DerivChart chart component
 
 `DerivChart` is a wrapper around the `chart` widget that provides the ability to add/remove indicators and manage saving/restoring added ones in storage.
+
+Basic usage:
+
+```Dart
+DerivChart(
+  mainSeries: CandleSeries(candles),
+  granularity: 60, // 60 seconds
+  activeSymbol: 'default',
+  pipSize: 4,
+)
+```
+
+With localization (optional - defaults to English if not provided):
+
+```Dart
+final localization = await ChartLocalization.load(const Locale('es'));
+
+...
+
+DerivChart(
+  localization: localization,
+  mainSeries: CandleSeries(candles),
+  granularity: 60,
+  activeSymbol: 'default',
+  pipSize: 4,
+)
+```
+
 By default, this widget shows two buttons at the top left to add/remove indicators and drawing tools. This can be used when you don't need to customize the look and functionalities of the menus and dialogs for adding/removing indicators and changing their settings and want to use the chart's default menu interfaces.
 
 We can also implement our own interface to do all the above and integrate it with the `DerivChart` component.

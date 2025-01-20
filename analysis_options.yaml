@@ -1,7 +1,6 @@
 analyzer:
   exclude:
     - test/**
-    - example/**
     - lib/generated/**
 
   language:

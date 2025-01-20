@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           ChartLocalization.delegate,
           ExampleLocalization.delegate,
         ],
-        supportedLocales: ExampleLocalization.delegate.supportedLocales,
+        supportedLocales: ChartLocalization.delegate.supportedLocales,
         theme: ThemeData.dark(),
         debugShowCheckedModeBanner: false,
         home: const SafeArea(
