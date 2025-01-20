@@ -180,9 +180,10 @@ class RectangleDrawing extends Drawing {
               _rect,
               drawingData.shouldHighlight
                   ? paint.glowyLinePaintStyle(
-                      fillStyle.color.withOpacity(0.3), lineStyle.thickness)
-                  : paint.fillPaintStyle(
-                      fillStyle.color.withOpacity(0.3), lineStyle.thickness))
+                      fillStyle.color.withValues(alpha: 0.3),
+                      lineStyle.thickness)
+                  : paint.fillPaintStyle(fillStyle.color.withValues(alpha: 0.3),
+                      lineStyle.thickness))
           ..drawRect(
               _rect, paint.strokeStyle(lineStyle.color, lineStyle.thickness));
       }

@@ -55,7 +55,7 @@ class _AnimatedPopupDialogState extends State<AnimatedPopupDialog>
                     borderRadius: BorderRadius.all(Radius.circular(5))),
               ),
               child: Material(
-                color: const Color(0xFF0E0E0E).withOpacity(0.5),
+                color: const Color(0xFF0E0E0E).withValues(alpha: 0.5),
                 child: Padding(
                   padding: const EdgeInsets.all(2),
                   child: widget.child,

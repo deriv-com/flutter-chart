@@ -15,12 +15,12 @@ class DrawingPaintStyle {
 
   /// Returns the paint style of the the faded line
   Paint fadedLinePaintStyle(Color color, double thickness) => Paint()
-    ..color = color.withOpacity(0.7)
+    ..color = color.withValues(alpha: 0.7)
     ..strokeWidth = thickness;
 
   /// Returns the paint style of the inner filling of container
   Paint fillPaintStyle(Color color, double thickness) => Paint()
-    ..color = color.withOpacity(0.2)
+    ..color = color.withValues(alpha: 0.2)
     ..style = PaintingStyle.fill
     ..strokeWidth = thickness;
 

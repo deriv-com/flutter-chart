@@ -66,7 +66,7 @@ void paintDotWithGlow(
 
     // // Create a semi-transparent glow paint
     final Paint glowPaint = Paint()
-      ..color = paint.color.withOpacity(0.5)
+      ..color = paint.color.withValues(alpha: 0.5)
       ..style = PaintingStyle.fill;
 
     // Draw the glow

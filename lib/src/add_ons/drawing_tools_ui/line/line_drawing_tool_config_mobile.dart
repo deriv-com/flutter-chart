@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/misc/extensions.dart';
 import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -121,7 +122,7 @@ class LineDrawingToolConfigMobile extends DrawingToolConfig {
       return null;
     }
     return {
-      'color': instance.color.value,
+      'color': instance.color.toInt32,
     };
   }
 }

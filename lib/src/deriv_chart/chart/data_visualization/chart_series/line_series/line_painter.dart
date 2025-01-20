@@ -42,8 +42,8 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
           const Offset(0, 0),
           Offset(0, size.height),
           <Color>[
-            style.color.withOpacity(0.2),
-            style.color.withOpacity(0.01),
+            style.color.withValues(alpha: 0.2),
+            style.color.withValues(alpha: 0.01),
           ],
         );
 

@@ -41,7 +41,7 @@ abstract class MarkerIconPainter {
       ..drawCircle(
         center,
         style.radius - 2,
-        Paint()..color = Colors.black.withOpacity(0.32),
+        Paint()..color = Colors.black.withValues(alpha: 0.32),
       );
   }
 

@@ -193,8 +193,8 @@ class WormChartPainter extends CustomPainter {
         const Offset(0, 0),
         Offset(0, size.height),
         <Color>[
-          style.color.withOpacity(0.2),
-          style.color.withOpacity(0.001),
+          style.color.withValues(alpha: 0.2),
+          style.color.withValues(alpha: 0.001),
         ],
       );
 
