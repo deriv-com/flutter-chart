@@ -1,0 +1,124 @@
+name: Test Workflow with Flashlight
+
+on:
+  pull_request:
+    branches:
+      - "*" # Trigger on commits to any branch involved in a PR
+
+jobs:
+  test-workflow:
+    name: Build, Test, and Flashlight for Example App
+    runs-on: ubuntu-latest
+
+    steps:
+      # Set Up Java
+      - name: ☕ Set Up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Verify Java Installation (Optional Debug Step)
+      - name: Verify Java Installation
+        run: |
+          java -version
+          echo $JAVA_HOME
+
+      # Set Up Flutter
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+        with:
+          flutter-version: "3.24.1"
+          channel: stable
+          cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
+
+      # Checkout and Build Master Branch
+      - name: Checkout master branch
+        uses: actions/checkout@v3
+        with:
+          ref: master
+          path: master
+
+      - name: List files in /master/example
+        run: ls -la ./master/example
+
+      - name: Build example app for master branch
+        working-directory: ./master/example
+        run: |
+          flutter pub get
+          flutter build apk --target-platform android-arm,android-arm64,android-x64
+
+      - name: Upload Master APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: master-example-apk
+          path: master/example/build/app/outputs/flutter-apk/app-release.apk
+
+      # Checkout and Build PR Branch
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          path: pr
+
+      - name: Build example app for PR branch
+        working-directory: ./pr/example
+        run: |
+          flutter pub get
+          flutter build apk --target-platform android-arm,android-arm64,android-x64
+
+      - name: Upload PR APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: pr-example-apk
+          path: pr/example/build/app/outputs/flutter-apk/app-release.apk
+
+      # Set Up Android Emulator
+      - name: Set up Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: Nexus_5X
+          emulator-options: -no-window
+
+      # Download APKs
+      - name: Download Master APK
+        uses: actions/download-artifact@v3
+        with:
+          name: master-example-apk
+          path: master/
+
+      - name: Download PR APK
+        uses: actions/download-artifact@v3
+        with:
+          name: pr-example-apk
+          path: pr/
+
+      # Install Flashlight
+      - name: Install Flashlight
+        run: |
+          curl -sSL https://get.flashlight.dev | bash
+
+      # Install and Test Master APK
+      - name: Install and Test Master APK
+        run: |
+          adb install master/app-release.apk
+          flashlight test --bundleId com.example.master --testCommand "adb shell monkey -p com.example.master -c android.intent.category.LAUNCHER 1" --duration 10000 --resultsFilePath master_results.json
+
+      # Install and Test PR APK
+      - name: Install and Test PR APK
+        run: |
+          adb install pr/app-release.apk
+          flashlight test --bundleId com.example.pr --testCommand "adb shell monkey -p com.example.pr -c android.intent.category.LAUNCHER 1" --duration 10000 --resultsFilePath pr_results.json
+
+      # Upload Flashlight Reports
+      - name: Upload Flashlight Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: Flashlight Reports
+          path: |
+            master_results.json
+            pr_results.json
