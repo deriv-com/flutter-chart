@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/awesome_oscillator/awesome_oscillator_indicator_config.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/bop/bop_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/dpo_indicator/dpo_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/roc/roc_indicator_config.dart';
 import 'package:deriv_chart/src/add_ons/indicators_ui/smi/smi_indicator_config.dart';
@@ -92,6 +93,8 @@ abstract class IndicatorConfig extends AddOnConfig {
         return GatorIndicatorConfig.fromJson(json);
       case ROCIndicatorConfig.name:
         return ROCIndicatorConfig.fromJson(json);
+      case BOPIndicatorConfig.name:
+        return BOPIndicatorConfig.fromJson(json);
       // Add new indicators here.
       default:
         throw ArgumentError.value(json, 'json', 'Unidentified indicator name.');

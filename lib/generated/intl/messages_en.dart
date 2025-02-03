@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelJawPeriod": MessageLookupByLibrary.simpleMessage("Jaw Period"),
         "labelLaggingSpanOffset":
             MessageLookupByLibrary.simpleMessage("Lagging Span Offset"),
+        "labelLineStyle": MessageLookupByLibrary.simpleMessage("Line Style"),
         "labelLipsOffset": MessageLookupByLibrary.simpleMessage("Lips Offset"),
         "labelLipsPeriod": MessageLookupByLibrary.simpleMessage("Lips Period"),
         "labelLowPeriod": MessageLookupByLibrary.simpleMessage("Low Period"),
@@ -58,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "labelOverSoldPrice":
             MessageLookupByLibrary.simpleMessage("Over Sold Price"),
         "labelPeriod": MessageLookupByLibrary.simpleMessage("Period"),
+        "labelPinLabels": MessageLookupByLibrary.simpleMessage("Pin Labels"),
         "labelSearchAssets":
             MessageLookupByLibrary.simpleMessage("Search assets"),
         "labelSeries": MessageLookupByLibrary.simpleMessage("Series"),

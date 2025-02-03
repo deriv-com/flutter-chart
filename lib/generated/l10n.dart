@@ -509,6 +509,26 @@ class ChartLocalization {
       args: [],
     );
   }
+
+  /// `Line Style`
+  String get labelLineStyle {
+    return Intl.message(
+      'Line Style',
+      name: 'labelLineStyle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pin Labels`
+  String get labelPinLabels {
+    return Intl.message(
+      'Pin Labels',
+      name: 'labelPinLabels',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<ChartLocalization> {
