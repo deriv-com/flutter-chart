@@ -83,12 +83,14 @@ abstract class DrawingCreatorState<T extends Drawing>
   void initState() {
     super.initState();
     _gestureManager = context.read<GestureManagerState>()
-      ..registerCallback(onTap);
+      ..registerCallback(onTap)
+      ..registerCallback(onPanUpdate);
   }
 
   @override
   void dispose() {
     _gestureManager.removeCallback(onTap);
+    _gestureManager.removeCallback(onPanUpdate);
     super.dispose();
   }
 
@@ -102,6 +104,10 @@ abstract class DrawingCreatorState<T extends Drawing>
     // TODO(bahar-deriv): We need to apply some refactors here once all the
     // drawing tools merged. Duplicated codes should be moved here.
     generateDrawingId(runtimeType.toString());
+  }
+
+  void onPanUpdate(DragUpdateDetails details) {
+    // To be implemented by the subclass.
   }
 
   @override
