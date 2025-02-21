@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
 /// Creates a Ray drawing piece by piece collected on every gesture
 /// exists in a widget tree starting from selecting a line drawing tool and
@@ -35,6 +36,66 @@ class RayDrawingCreator extends DrawingCreator<RayLineDrawing> {
 class _RayDrawingCreatorState extends DrawingCreatorState<RayLineDrawing> {
   /// If drawing has been started.
   bool _isPenDown = false;
+
+  Widget build(BuildContext context) {
+    return Center(
+      child: MouseRegion(
+        cursor: SystemMouseCursors.move,
+        onHover: onHover,
+        opaque: false,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  void onHover(PointerHoverEvent event) {
+    this.onPanUpdate(DragUpdateDetails(
+          globalPosition: event.position,
+          localPosition: event.localPosition,
+          delta: event.delta,
+        ));
+  }
+
+  @override
+  void onPanUpdate(DragUpdateDetails details) {
+// Only update if we already placed the beginning edge point
+    if (_isPenDown && !isDrawingFinished) {
+      setState(() {
+// Update the current pointer position.
+        position = details.localPosition;
+// Create a temporary edge point from the current pointer location.
+        EdgePoint tempEndPoint = EdgePoint(
+          epoch: epochFromX!(position!.dx),
+          quote: widget.quoteFromCanvasY(position!.dy),
+        );
+
+        // Remove any previously added preview line drawing,
+        // so that we only have one dynamic line shown.
+        drawingParts
+            .removeWhere((part) => part.drawingPart == DrawingParts.line);
+
+        // Add a new temporary RayLineDrawing from the first edge point to the current pointer.
+        drawingParts.add(RayLineDrawing(
+          drawingPart: DrawingParts.line,
+          startEdgePoint: edgePoints.first,
+          endEdgePoint: tempEndPoint,
+          exceedEnd: true,
+        ));
+
+        // Optionally, pass updated edge points.
+        // Here we combine the stored first point with the temporary point.
+        widget.onAddDrawing(
+          drawingId,
+          drawingParts,
+          isDrawingFinished: isDrawingFinished,
+          edgePoints: <EdgePoint>[edgePoints.first, tempEndPoint],
+        );
+      });
+    }
+  }
 
   @override
   void onTap(TapUpDetails details) {
