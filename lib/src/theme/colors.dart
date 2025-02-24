@@ -350,44 +350,33 @@ class ChartColors {
   }
 
   //--------------------------------------------------------------------------
-  // Getters for deriv current spot colors.
+  // Getter for current spot colors based on variant and mode.
   //--------------------------------------------------------------------------
-  static Color getCurrentSpotDerivContainerColor() {
-    return currentSpotDerivContainer;
-  }
-
-  static Color getCurrentSpotDerivLabelColor() {
-    return currentSpotDerivLabel;
-  }
-
-  //--------------------------------------------------------------------------
-  // Getters for champion current spot colors.
-  //--------------------------------------------------------------------------
-  static Color getCurrentSpotChampionContainerColor() {
-    return currentSpotChampionContainer;
-  }
-
-  static Color getCurrentSpotChampionLabelColor() {
-    return currentSpotChampionLabel;
-  }
-
-  //--------------------------------------------------------------------------
-  // Getters for current spot colors based on mode.
-  //--------------------------------------------------------------------------
-  static Color getCurrentSpotDefaultContainerColor({
+  static ({Color container, Color label}) getCurrentSpotColors({
+    ChartVariant variant = ChartVariant.defaultTheme,
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark
-        ? currentSpotDefaultContainerDark
-        : currentSpotDefaultContainerLight;
-  }
-
-  static Color getCurrentSpotDefaultLabelColor({
-    ChartMode mode = ChartMode.light,
-  }) {
-    return mode == ChartMode.dark
-        ? currentSpotDefaultLabelDark
-        : currentSpotDefaultLabelLight;
+    switch (variant) {
+      case ChartVariant.defaultTheme:
+        return (
+          container: mode == ChartMode.dark
+              ? currentSpotDefaultContainerDark
+              : currentSpotDefaultContainerLight,
+          label: mode == ChartMode.dark
+              ? currentSpotDefaultLabelDark
+              : currentSpotDefaultLabelLight,
+        );
+      case ChartVariant.deriv:
+        return (
+          container: currentSpotDerivContainer,
+          label: currentSpotDerivLabel,
+        );
+      case ChartVariant.champion:
+        return (
+          container: currentSpotChampionContainer,
+          label: currentSpotChampionLabel,
+        );
+    }
   }
 
   //--------------------------------------------------------------------------
