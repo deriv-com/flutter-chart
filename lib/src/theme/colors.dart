@@ -380,17 +380,14 @@ class ChartColors {
   }
 
   //--------------------------------------------------------------------------
-  // Getters for crosshair colors based on mode.
+  // Getter for crosshair colors based on mode.
   //--------------------------------------------------------------------------
-  static Color getCrosshairGridColor({
+  static ({Color grid, Color text}) getCrosshairColors({
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark ? crosshairGridDark : crosshairGridLight;
-  }
-
-  static Color getCrosshairTextColor({
-    ChartMode mode = ChartMode.light,
-  }) {
-    return mode == ChartMode.dark ? crosshairTextDark : crosshairTextLight;
+    return (
+      grid: mode == ChartMode.dark ? crosshairGridDark : crosshairGridLight,
+      text: mode == ChartMode.dark ? crosshairTextDark : crosshairTextLight,
+    );
   }
 }
