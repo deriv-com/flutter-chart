@@ -233,15 +233,6 @@ class ChartColors {
   }
 
   //--------------------------------------------------------------------------
-  // Utility – Apply an opacity value to a given color.
-  //
-  // Value for opacity should be between 0.0 (transparent) and 1.0 (opaque).
-  //--------------------------------------------------------------------------
-  static Color withOpacity(Color color, double opacity) {
-    return color.withOpacity(opacity);
-  }
-
-  //--------------------------------------------------------------------------
   // Getter for area colors based on variant and mode.
   //--------------------------------------------------------------------------
   static ({Color line, Color gradientStart, Color gradientEnd}) getAreaColors({
