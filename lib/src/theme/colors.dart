@@ -262,38 +262,35 @@ class ChartColors {
   // }
 
   //--------------------------------------------------------------------------
-  // Getters for candle colors based on accessibility mode.
+  // Getter for bullish candle colors based on accessibility.
   //--------------------------------------------------------------------------
-  static Color getCandleBullishBodyColor({
+  static ({Color body, Color wick}) getBullishCandleColors({
     ChartAccessibility accessibility = ChartAccessibility.normal,
   }) {
-    return accessibility == ChartAccessibility.colorblind
-        ? candleBullishBodyColorBlind
-        : candleBullishBodyDefault;
+    return (
+      body: accessibility == ChartAccessibility.colorblind
+          ? candleBullishBodyColorBlind
+          : candleBullishBodyDefault,
+      wick: accessibility == ChartAccessibility.colorblind
+          ? candleBullishWickColorBlind
+          : candleBullishWickDefault,
+    );
   }
 
-  static Color getCandleBullishWickColor({
+  //--------------------------------------------------------------------------
+  // Getter for bearish candle colors based on accessibility.
+  //--------------------------------------------------------------------------
+  static ({Color body, Color wick}) getBearishCandleColors({
     ChartAccessibility accessibility = ChartAccessibility.normal,
   }) {
-    return accessibility == ChartAccessibility.colorblind
-        ? candleBullishWickColorBlind
-        : candleBullishWickDefault;
-  }
-
-  static Color getCandleBearishBodyColor({
-    ChartAccessibility accessibility = ChartAccessibility.normal,
-  }) {
-    return accessibility == ChartAccessibility.colorblind
-        ? candleBearishBodyColorBlind
-        : candleBearishBodyDefault;
-  }
-
-  static Color getCandleBearishWickColor({
-    ChartAccessibility accessibility = ChartAccessibility.normal,
-  }) {
-    return accessibility == ChartAccessibility.colorblind
-        ? candleBearishWickColorBlind
-        : candleBearishWickDefault;
+    return (
+      body: accessibility == ChartAccessibility.colorblind
+          ? candleBearishBodyColorBlind
+          : candleBearishBodyDefault,
+      wick: accessibility == ChartAccessibility.colorblind
+          ? candleBearishWickColorBlind
+          : candleBearishWickDefault,
+    );
   }
 
   //--------------------------------------------------------------------------
@@ -306,7 +303,7 @@ class ChartColors {
   }
 
   //--------------------------------------------------------------------------
-  // Utility – Apply an opacity value to a given colour.
+  // Utility – Apply an opacity value to a given color.
   //
   // Value for opacity should be between 0.0 (transparent) and 1.0 (opaque).
   //--------------------------------------------------------------------------
