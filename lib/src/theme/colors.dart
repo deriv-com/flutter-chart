@@ -169,7 +169,6 @@ class ChartColors {
   static const Color currentSpotChampionLabel =
       Color(0xFF00375C); // Hex: #00375C
 
-
   //--------------------------------------------------------------------------
   // Crosshair colors for light and dark mode.
   //--------------------------------------------------------------------------
@@ -316,35 +315,38 @@ class ChartColors {
   }
 
   //--------------------------------------------------------------------------
-  // Getters for area colors based on mode.
+  // Getter for area colors based on variant and mode.
   //--------------------------------------------------------------------------
-  static Color getAreaLineColor({
+  static ({Color line, Color gradientStart, Color gradientEnd}) getAreaColors({
+    ChartVariant variant = ChartVariant.defaultTheme,
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark ? areaDefaultLineDark : areaDefaultLineLight;
-  }
-
-  static Color getAreaGradientStartColor({
-    ChartMode mode = ChartMode.light,
-  }) {
-    return mode == ChartMode.dark
-        ? areaDefaultGradientStartDark
-        : areaDefaultGradientStartLight;
-  }
-
-  static Color getAreaGradientEndColor({
-    ChartMode mode = ChartMode.light,
-  }) {
-    return mode == ChartMode.dark
-        ? areaDefaultGradientEndDark
-        : areaDefaultGradientEndLight;
-  }
-
-  //--------------------------------------------------------------------------
-  // Getters for deriv area colors.
-  //--------------------------------------------------------------------------
-  static Color getAreaDerivLineColor() {
-    return areaDerivLine;
+    switch (variant) {
+      case ChartVariant.defaultTheme:
+        return (
+          line: mode == ChartMode.dark
+              ? areaDefaultLineDark
+              : areaDefaultLineLight,
+          gradientStart: mode == ChartMode.dark
+              ? areaDefaultGradientStartDark
+              : areaDefaultGradientStartLight,
+          gradientEnd: mode == ChartMode.dark
+              ? areaDefaultGradientEndDark
+              : areaDefaultGradientEndLight,
+        );
+      case ChartVariant.deriv:
+        return (
+          line: areaDerivLine,
+          gradientStart: areaDerivGradientStart,
+          gradientEnd: areaDerivGradientEnd,
+        );
+      case ChartVariant.champion:
+        return (
+          line: areaChampionLine,
+          gradientStart: areaChampionGradientStart,
+          gradientEnd: areaChampionGradientEnd,
+        );
+    }
   }
 
   //--------------------------------------------------------------------------
@@ -358,21 +360,6 @@ class ChartColors {
     return currentSpotDerivLabel;
   }
 
-  static Color getAreaDerivGradientStartColor() {
-    return areaDerivGradientStart;
-  }
-
-  static Color getAreaDerivGradientEndColor() {
-    return areaDerivGradientEnd;
-  }
-
-  //--------------------------------------------------------------------------
-  // Getters for champion area colors.
-  //--------------------------------------------------------------------------
-  static Color getAreaChampionLineColor() {
-    return areaChampionLine;
-  }
-
   //--------------------------------------------------------------------------
   // Getters for champion current spot colors.
   //--------------------------------------------------------------------------
@@ -382,14 +369,6 @@ class ChartColors {
 
   static Color getCurrentSpotChampionLabelColor() {
     return currentSpotChampionLabel;
-  }
-
-  static Color getAreaChampionGradientStartColor() {
-    return areaChampionGradientStart;
-  }
-
-  static Color getAreaChampionGradientEndColor() {
-    return areaChampionGradientEnd;
   }
 
   //--------------------------------------------------------------------------
