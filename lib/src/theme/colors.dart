@@ -68,135 +68,120 @@ enum ChartAccessibility {
 /// and any special cases for accessibility. You can further extend these definitions
 /// with additional tokens as needed.
 class ChartColors {
+  //--------------------------------------------------------------------------
   // Background colors for light and dark modes.
+  //--------------------------------------------------------------------------
   static const Color backgroundDynamicLight = Color(0xFFFFFFFF); // Hex: #FFFFFF
   static const Color backgroundDynamicDark = Color(0xFF181C25); // Hex: #181C25
 
   //--------------------------------------------------------------------------
-  // Default theme colors for light and dark mode.
-  //--------------------------------------------------------------------------
-  static const Color defaultLine = Color(0xFF181C25); // Hex: #181C25
-  static const Color defaultText = Color(0xFF181C25); // Hex: #181C25
-
-  //--------------------------------------------------------------------------
-  // Current spot default colors for light and dark mode.
-  //--------------------------------------------------------------------------
-  static const Color currentSpotContainerDefaultLight = Color(0xFF181C25); // Hex: #181C25
-  static const Color currentSpotContainerDefaultDark = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color currentSpotLabelDefaultLight = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color currentSpotLabelDefaultDark = Color(0xFF181C25); // Hex: #181C25
-
-  //--------------------------------------------------------------------------
-  // Crosshair colors for light and dark mode.
-  //--------------------------------------------------------------------------
-  static const Color crosshairGridLight = Color(0x3D181C25); // Hex: #181C25 with 24% opacity
-  static const Color crosshairGridDark = Color(0x3DFFFFFF); // Hex: #FFFFFF with 24% opacity
-  static const Color crosshairTextLight = Color(0xFF181C25); // Hex: #181C25
-  static const Color crosshairTextDark = Color(0xFFFFFFFF); // Hex: #FFFFFF
-
-  //--------------------------------------------------------------------------
   // Default axis theme colors for light and dark mode.
   //--------------------------------------------------------------------------
-  static const Color axisTextDefaultLight =
-      Color(0x3D181C25); // Hex: #181C25 with 24% opacity
-  static const Color axisTextDefaultDark =
-      Color(0x3DFFFFFF); // Hex: #FFFFFF with 24% opacity
   static const Color axisGridDefaultLight =
       Color(0x0A181C25); // Hex: #181C25 with 4% opacity
   static const Color axisGridDefaultDark =
       Color(0x0AFFFFFF); // Hex: #FFFFFF with 4% opacity
+  static const Color axisTextDefaultLight =
+      Color(0x3D181C25); // Hex: #181C25 with 24% opacity
+  static const Color axisTextDefaultDark =
+      Color(0x3DFFFFFF); // Hex: #FFFFFF with 24% opacity
 
   //--------------------------------------------------------------------------
   // Area default theme colors for light and dark mode.
   //--------------------------------------------------------------------------
-  static const Color areaLineLight = Color(0xFF181C25); // Hex: #181C25
-  static const Color areaLineDark = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color areaGradientStartLight =
+  static const Color areaDefaultLineLight = Color(0xFF181C25); // Hex: #181C25
+  static const Color areaDefaultLineDark = Color(0xFFFFFFFF); // Hex: #FFFFFF
+  static const Color areaDefaultGradientStartLight =
       Color(0x29181C25); // Hex: #181C25 with 16% opacity
-  static const Color areaGradientStartDark =
+  static const Color areaDefaultGradientStartDark =
       Color(0x29FFFFFF); // Hex: #FFFFFF with 16% opacity
-  static const Color areaGradientEndLight =
+  static const Color areaDefaultGradientEndLight =
       Color(0x00181C25); // Hex: #181C25 with 0% opacity
-  static const Color areaGradientEndDark =
+  static const Color areaDefaultGradientEndDark =
       Color(0x00FFFFFF); // Hex: #FFFFFF with 0% opacity
 
-//--------------------------------------------------------------------------
-// Deriv colors
-//--------------------------------------------------------------------------
-  // Area colors
-  static const Color derivAreaLine = Color(0xFFFF444F); // Hex: #FF444F
-  
-  // Current spot colors
-  static const Color currentSpotContainerDeriv = Color(0xFFFF444F); // Hex: #FF444F
-  static const Color currentSpotLabelDeriv = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color derivAreaGradientStart =
+  //--------------------------------------------------------------------------
+  // Area Deriv theme colors for light and dark mode.
+  //--------------------------------------------------------------------------
+  static const Color areaDerivLine = Color(0xFFFF444F); // Hex: #FF444F
+  static const Color areaDerivGradientStart =
       Color(0x29FF444F); // Hex: #FF444F with 16% opacity
-  static const Color derivAreaGradientEnd =
+  static const Color areaDerivGradientEnd =
       Color(0x00FF444F); // Hex: #FF444F with 0% opacity
 
-//--------------------------------------------------------------------------
-// Champion colors
-//--------------------------------------------------------------------------
-  // Area colors
-  static const Color championAreaLine = Color(0xFF00D0FF); // Hex: #00D0FF
-
-  // Current spot colors
-  static const Color currentSpotContainerChampion = Color(0xFF00D0FF); // Hex: #00D0FF
-  static const Color currentSpotLabelChampion = Color(0xFF00375C); // Hex: #00375C
-  static const Color championAreaGradientStart =
+  //--------------------------------------------------------------------------
+  // Area Champion theme colors for light and dark mode.
+  //--------------------------------------------------------------------------
+  static const Color areaChampionLine = Color(0xFF00D0FF); // Hex: #00D0FF
+  static const Color areaChampionGradientStart =
       Color(0x2900D0FF); // Hex: #00D0FF with 16% opacity
-  static const Color championAreaGradientEnd =
+  static const Color areaChampionGradientEnd =
       Color(0x0000D0FF); // Hex: #00D0FF with 0% opacity
 
-  // Alternative colors for colorblind mode for default theme.
-  // You might need to adjust these to ensure adequate contrast and separation.
-  static const Color defaultLineColorBlind = Color(0xFF2C3E50); // Hex: #2C3E50
-  static const Color defaultTextColorBlind = Color(0xFF2C3E50); // Hex: #2C3E50
-  static const Color defaultGridColorBlind = Color(0xFF2C3E50); // Hex: #2C3E50
+  //--------------------------------------------------------------------------
+  // Candle Bullish theme colors for light and dark mode.
+  //--------------------------------------------------------------------------
+  static const Color candleBullishBodyDefault =
+      Color(0xFF00C390); // Hex: #00C390
+  static const Color candleBullishBodyColorBlind =
+      Color(0xFF2C9AFF); // Hex: #2C9AFF
+  static const Color candleBullishWickDefault =
+      Color(0xFF00AE7A); // Hex: #00AE7A
+  static const Color candleBullishWickColorBlind =
+      Color(0xFF0777C4); // Hex: #0777C4
 
   //--------------------------------------------------------------------------
-  // Deriv theme colors. to be deleted
+  // Candle Bearish theme colors for light and dark mode.
   //--------------------------------------------------------------------------
-  // Base colors
-  static const Color derivLine = Color(0xFFFF444F); // Hex: #FF444F
-  static const Color derivText = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color derivGrid = Color(0xFFFF444F); // Hex: #FF444F
-
-  // Alternative colors for colorblind mode for deriv theme.
-  static const Color derivLineColorBlind = Color(0xFFE74C3C); // Hex: #E74C3C
-  static const Color derivTextColorBlind = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color derivGridColorBlind = Color(0xFFE74C3C); // Hex: #E74C3C
-
-  //--------------------------------------------------------------------------
-  // Champion theme colors. to be deleted
-  //--------------------------------------------------------------------------
-  // Base colors
-  static const Color championLine = Color(0xFF00D0FF); // Hex: #00D0FF
-  static const Color championText = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color championGrid = Color(0xFF00D0FF); // Hex: #00D0FF
-
-  // Alternative colors for colorblind mode for champion theme.
-  static const Color championLineColorBlind = Color(0xFF3498DB); // Hex: #3498DB
-  static const Color championTextColorBlind = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color championGridColorBlind = Color(0xFF3498DB); // Hex: #3498DB
+  static const Color candleBearishBodyDefault =
+      Color(0xFFDE0040); // Hex: #DE0040
+  static const Color candleBearishBodyColorBlind =
+      Color(0xFFF7C60B); // Hex: #F7C60B
+  static const Color candleBearishWickDefault =
+      Color(0xFFC40025); // Hex: #C40025
+  static const Color candleBearishWickColorBlind =
+      Color(0xFFBD9808); // Hex: #BD9808
 
   //--------------------------------------------------------------------------
-  // Candle colors (commonly used on chart candlesticks).
+  // Current spot default colors for light and dark mode.
   //--------------------------------------------------------------------------
-  // Standard candle colors.
-  static const Color candleBullishBodyDefault = Color(0xFF00C390); // Hex: #00C390
-  static const Color candleBullishWickDefault = Color(0xFF00AE7A); // Hex: #00AE7A
-  static const Color candleBearishBodyDefault = Color(0xFFDE0040); // Hex: #DE0040
-  static const Color candleBearishWickDefault = Color(0xFFC40025); // Hex: #C40025
-
-  // Alternative candle colors for colorblind mode.
-  static const Color candleBullishBodyColorBlind = Color(0xFF2C9AFF); // Hex: #2C9AFF
-  static const Color candleBullishWickColorBlind = Color(0xFF0777C4); // Hex: #0777C4
-  static const Color candleBearishBodyColorBlind = Color(0xFFF7C60B); // Hex: #F7C60B
-  static const Color candleBearishWickColorBlind = Color(0xFFBD9808); // Hex: #BD9808
+  static const Color currentSpotDefaultContainerLight =
+      Color(0xFF181C25); // Hex: #181C25
+  static const Color currentSpotDefaultContainerDark =
+      Color(0xFFFFFFFF); // Hex: #FFFFFF
+  static const Color currentSpotDefaultLabelLight =
+      Color(0xFFFFFFFF); // Hex: #FFFFFF
+  static const Color currentSpotDefaultLabelDark =
+      Color(0xFF181C25); // Hex: #181C25
 
   //--------------------------------------------------------------------------
-  // Getters for background colour based on our mode setting.
+  // Current spot Deriv colors for light and dark mode.
+  //--------------------------------------------------------------------------
+  static const Color currentSpotDerivContainer =
+      Color(0xFFFF444F); // Hex: #FF444F
+  static const Color currentSpotDerivLabel = Color(0xFFFFFFFF); // Hex: #FFFFFF
+
+  //--------------------------------------------------------------------------
+  // Current spot Champion colors for light and dark mode.
+  //--------------------------------------------------------------------------
+  static const Color currentSpotChampionContainer =
+      Color(0xFF00D0FF); // Hex: #00D0FF
+  static const Color currentSpotChampionLabel =
+      Color(0xFF00375C); // Hex: #00375C
+
+
+  //--------------------------------------------------------------------------
+  // Crosshair colors for light and dark mode.
+  //--------------------------------------------------------------------------
+  static const Color crosshairGridLight =
+      Color(0x3D181C25); // Hex: #181C25 with 24% opacity
+  static const Color crosshairGridDark =
+      Color(0x3DFFFFFF); // Hex: #FFFFFF with 24% opacity
+  static const Color crosshairTextLight = Color(0xFF181C25); // Hex: #181C25
+  static const Color crosshairTextDark = Color(0xFFFFFFFF); // Hex: #FFFFFF
+
+  //--------------------------------------------------------------------------
+  // Getters for background color based on mode setting.
   //--------------------------------------------------------------------------
   static Color getBackgroundColor(ChartMode mode) {
     return mode == ChartMode.dark
@@ -205,77 +190,77 @@ class ChartColors {
   }
 
   //--------------------------------------------------------------------------
-  // Getters for line colour properties based on variant and accessibility.
+  // Getters for line color properties based on variant and accessibility.
   //--------------------------------------------------------------------------
-  static Color getLineColor(
-    ChartVariant variant, {
-    ChartAccessibility accessibility = ChartAccessibility.normal,
-  }) {
-    switch (variant) {
-      case ChartVariant.defaultTheme:
-        return accessibility == ChartAccessibility.colorblind
-            ? defaultLineColorBlind
-            : defaultLine;
-      case ChartVariant.deriv:
-        return accessibility == ChartAccessibility.colorblind
-            ? derivLineColorBlind
-            : derivLine;
-      case ChartVariant.champion:
-        return accessibility == ChartAccessibility.colorblind
-            ? championLineColorBlind
-            : championLine;
-    }
-  }
+  // static Color getLineColor(
+  //   ChartVariant variant, {
+  //   ChartAccessibility accessibility = ChartAccessibility.normal,
+  // }) {
+  //   switch (variant) {
+  //     case ChartVariant.defaultTheme:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? defaultLineColorBlind
+  //           : defaultLine;
+  //     case ChartVariant.deriv:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? derivLineColorBlind
+  //           : derivLine;
+  //     case ChartVariant.champion:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? championLineColorBlind
+  //           : championLine;
+  //   }
+  // }
 
   //--------------------------------------------------------------------------
   // Getters for text colour based on variant and accessibility.
   //--------------------------------------------------------------------------
-  static Color getTextColor(
-    ChartVariant variant, {
-    ChartAccessibility accessibility = ChartAccessibility.normal,
-  }) {
-    switch (variant) {
-      case ChartVariant.defaultTheme:
-        return accessibility == ChartAccessibility.colorblind
-            ? defaultTextColorBlind
-            : defaultText;
-      case ChartVariant.deriv:
-        return accessibility == ChartAccessibility.colorblind
-            ? derivTextColorBlind
-            : derivText;
-      case ChartVariant.champion:
-        return accessibility == ChartAccessibility.colorblind
-            ? championTextColorBlind
-            : championText;
-    }
-  }
+  // static Color getTextColor(
+  //   ChartVariant variant, {
+  //   ChartAccessibility accessibility = ChartAccessibility.normal,
+  // }) {
+  //   switch (variant) {
+  //     case ChartVariant.defaultTheme:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? defaultTextColorBlind
+  //           : defaultText;
+  //     case ChartVariant.deriv:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? derivTextColorBlind
+  //           : derivText;
+  //     case ChartVariant.champion:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? championTextColorBlind
+  //           : championText;
+  //   }
+  // }
 
   //--------------------------------------------------------------------------
   // Getters for grid colour based on variant and accessibility.
   //--------------------------------------------------------------------------
-  static Color getGridColor(
-    ChartVariant variant, {
-    ChartAccessibility accessibility = ChartAccessibility.normal,
-    ChartMode mode = ChartMode.light,
-  }) {
-    switch (variant) {
-      case ChartVariant.defaultTheme:
-        if (accessibility == ChartAccessibility.colorblind) {
-          return defaultGridColorBlind;
-        }
-        return mode == ChartMode.dark
-            ? axisGridDefaultDark
-            : axisGridDefaultLight;
-      case ChartVariant.deriv:
-        return accessibility == ChartAccessibility.colorblind
-            ? derivGridColorBlind
-            : derivGrid;
-      case ChartVariant.champion:
-        return accessibility == ChartAccessibility.colorblind
-            ? championGridColorBlind
-            : championGrid;
-    }
-  }
+  // static Color getGridColor(
+  //   ChartVariant variant, {
+  //   ChartAccessibility accessibility = ChartAccessibility.normal,
+  //   ChartMode mode = ChartMode.light,
+  // }) {
+  //   switch (variant) {
+  //     case ChartVariant.defaultTheme:
+  //       if (accessibility == ChartAccessibility.colorblind) {
+  //         return defaultGridColorBlind;
+  //       }
+  //       return mode == ChartMode.dark
+  //           ? axisGridDefaultDark
+  //           : axisGridDefaultLight;
+  //     case ChartVariant.deriv:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? derivGridColorBlind
+  //           : derivGrid;
+  //     case ChartVariant.champion:
+  //       return accessibility == ChartAccessibility.colorblind
+  //           ? championGridColorBlind
+  //           : championGrid;
+  //   }
+  // }
 
   //--------------------------------------------------------------------------
   // Getters for candle colors based on accessibility mode.
@@ -336,88 +321,94 @@ class ChartColors {
   static Color getAreaLineColor({
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark ? areaLineDark : areaLineLight;
+    return mode == ChartMode.dark ? areaDefaultLineDark : areaDefaultLineLight;
   }
 
   static Color getAreaGradientStartColor({
     ChartMode mode = ChartMode.light,
   }) {
     return mode == ChartMode.dark
-        ? areaGradientStartDark
-        : areaGradientStartLight;
+        ? areaDefaultGradientStartDark
+        : areaDefaultGradientStartLight;
   }
 
   static Color getAreaGradientEndColor({
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark ? areaGradientEndDark : areaGradientEndLight;
+    return mode == ChartMode.dark
+        ? areaDefaultGradientEndDark
+        : areaDefaultGradientEndLight;
   }
 
   //--------------------------------------------------------------------------
   // Getters for deriv area colors.
   //--------------------------------------------------------------------------
-  static Color getDerivAreaLineColor() {
-    return derivAreaLine;
+  static Color getAreaDerivLineColor() {
+    return areaDerivLine;
   }
 
   //--------------------------------------------------------------------------
   // Getters for deriv current spot colors.
   //--------------------------------------------------------------------------
-  static Color getCurrentSpotContainerDerivColor() {
-    return currentSpotContainerDeriv;
+  static Color getCurrentSpotDerivContainerColor() {
+    return currentSpotDerivContainer;
   }
 
-  static Color getCurrentSpotLabelDerivColor() {
-    return currentSpotLabelDeriv;
+  static Color getCurrentSpotDerivLabelColor() {
+    return currentSpotDerivLabel;
   }
 
-  static Color getDerivAreaGradientStartColor() {
-    return derivAreaGradientStart;
+  static Color getAreaDerivGradientStartColor() {
+    return areaDerivGradientStart;
   }
 
-  static Color getDerivAreaGradientEndColor() {
-    return derivAreaGradientEnd;
+  static Color getAreaDerivGradientEndColor() {
+    return areaDerivGradientEnd;
   }
 
   //--------------------------------------------------------------------------
   // Getters for champion area colors.
   //--------------------------------------------------------------------------
-  static Color getChampionAreaLineColor() {
-    return championAreaLine;
+  static Color getAreaChampionLineColor() {
+    return areaChampionLine;
   }
 
   //--------------------------------------------------------------------------
   // Getters for champion current spot colors.
   //--------------------------------------------------------------------------
-  static Color getCurrentSpotContainerChampionColor() {
-    return currentSpotContainerChampion;
+  static Color getCurrentSpotChampionContainerColor() {
+    return currentSpotChampionContainer;
   }
 
-  static Color getCurrentSpotLabelChampionColor() {
-    return currentSpotLabelChampion;
+  static Color getCurrentSpotChampionLabelColor() {
+    return currentSpotChampionLabel;
   }
 
-  static Color getChampionAreaGradientStartColor() {
-    return championAreaGradientStart;
+  static Color getAreaChampionGradientStartColor() {
+    return areaChampionGradientStart;
   }
 
-  static Color getChampionAreaGradientEndColor() {
-    return championAreaGradientEnd;
+  static Color getAreaChampionGradientEndColor() {
+    return areaChampionGradientEnd;
   }
 
   //--------------------------------------------------------------------------
   // Getters for current spot colors based on mode.
   //--------------------------------------------------------------------------
-  static Color getCurrentSpotContainerDefaultColor({
+  static Color getCurrentSpotDefaultContainerColor({
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark ? currentSpotContainerDefaultDark : currentSpotContainerDefaultLight;
+    return mode == ChartMode.dark
+        ? currentSpotDefaultContainerDark
+        : currentSpotDefaultContainerLight;
   }
 
-  static Color getCurrentSpotLabelDefaultColor({
+  static Color getCurrentSpotDefaultLabelColor({
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark ? currentSpotLabelDefaultDark : currentSpotLabelDefaultLight;
+    return mode == ChartMode.dark
+        ? currentSpotDefaultLabelDark
+        : currentSpotDefaultLabelLight;
   }
 
   //--------------------------------------------------------------------------
