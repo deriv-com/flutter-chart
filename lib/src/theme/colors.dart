@@ -294,12 +294,15 @@ class ChartColors {
   }
 
   //--------------------------------------------------------------------------
-  // Getter for axis text color based on mode.
+  // Getter for axis colors based on mode.
   //--------------------------------------------------------------------------
-  static Color getAxisTextColor({
+  static ({Color grid, Color text}) getAxisColors({
     ChartMode mode = ChartMode.light,
   }) {
-    return mode == ChartMode.dark ? axisTextDefaultDark : axisTextDefaultLight;
+    return (
+      grid: mode == ChartMode.dark ? axisGridDefaultDark : axisGridDefaultLight,
+      text: mode == ChartMode.dark ? axisTextDefaultDark : axisTextDefaultLight,
+    );
   }
 
   //--------------------------------------------------------------------------
