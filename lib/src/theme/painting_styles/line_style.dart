@@ -1,10 +1,12 @@
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/color_converter.dart';
+import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'line_style.g.dart';
+
 
 /// Defines the style of painting line data.
 @JsonSerializable()
@@ -16,6 +18,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
     this.thickness = 1,
     this.hasArea = false,
     this.markerRadius = 4,
+    this.areaGradientColors = const (start: Colors.transparent, end: Colors.transparent),
   });
 
   /// Initializes from JSON.
@@ -27,6 +30,10 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
 
   /// Line color.
   final Color color;
+
+  /// Area gradient colors.
+  /// If not provided, the area will not be painted.
+  final ({Color start, Color end}) areaGradientColors;
 
   /// Line thickness.
   final double thickness;
@@ -43,17 +50,19 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
     double? thickness,
     bool? hasArea,
     double? markerRadius,
+    ({Color start, Color end})? areaGradientColors,
   }) =>
       LineStyle(
         color: color ?? this.color,
         thickness: thickness ?? this.thickness,
         hasArea: hasArea ?? this.hasArea,
         markerRadius: markerRadius ?? this.markerRadius,
+        areaGradientColors: areaGradientColors ?? this.areaGradientColors,
       );
 
   @override
   String toString() =>
-      '${super.toString()}$color, $thickness, $hasArea, $markerRadius';
+      '${super.toString()}$color, $thickness, $hasArea, $markerRadius ${areaGradientColors.start} ${areaGradientColors.end}';
 
   @override
   List<Object> get props => <Object>[
@@ -61,5 +70,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
         thickness,
         hasArea,
         markerRadius,
+        areaGradientColors.start,
+        areaGradientColors.end,
       ];
 }

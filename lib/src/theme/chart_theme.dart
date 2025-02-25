@@ -10,6 +10,17 @@ import 'package:flutter/material.dart';
 /// Any app which wants to define the chart's theme should pass an
 /// implementation of this interface.
 abstract class ChartTheme {
+
+  Color get backgroundDynamic;
+
+  GridStyle get axisGridDefaultStyle;
+
+  LineStyle get areaDefaultLineStyle;
+
+  LineStyle get areaDerivLineStyle;
+
+  LineStyle get areaChampionLineStyle;
+
   String get fontFamily;
 
   Color get brandCoralColor;
