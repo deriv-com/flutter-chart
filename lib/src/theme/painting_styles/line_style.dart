@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/color_converter.dart';
-import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/painting_styles/data_series_style.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
