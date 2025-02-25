@@ -71,7 +71,8 @@ class ChartColors {
   //--------------------------------------------------------------------------
   // Background colors for light and dark modes.
   //--------------------------------------------------------------------------
-  static const Color _backgroundDynamicLight = Color(0xFFFFFFFF); // Hex: #FFFFFF
+  static const Color _backgroundDynamicLight =
+      Color(0xFFFFFFFF); // Hex: #FFFFFF
   static const Color _backgroundDynamicDark = Color(0xFF181C25); // Hex: #181C25
 
   //--------------------------------------------------------------------------
@@ -178,8 +179,10 @@ class ChartColors {
       Color(0x3DFFFFFF); // Hex: #FFFFFF with 24% opacity
   static const Color _crosshairTextLight = Color(0xFF181C25); // Hex: #181C25
   static const Color _crosshairTextDark = Color(0xFFFFFFFF); // Hex: #FFFFFF
-  static const Color _crosshairContainerLight = Color(0xFFF6F7F8); // Hex: #F6F7F8
-  static const Color _crosshairContainerDark = Color(0xFF20242F); // Hex: #20242F
+  static const Color _crosshairContainerLight =
+      Color(0xFFF6F7F8); // Hex: #F6F7F8
+  static const Color _crosshairContainerDark =
+      Color(0xFF20242F); // Hex: #20242F
 
   //--------------------------------------------------------------------------
   // Getters for background color based on mode setting.
@@ -229,8 +232,10 @@ class ChartColors {
     ChartMode mode = ChartMode.light,
   }) {
     return (
-      grid: mode == ChartMode.dark ? _axisGridDefaultDark : _axisGridDefaultLight,
-      text: mode == ChartMode.dark ? _axisTextDefaultDark : _axisTextDefaultLight,
+      grid:
+          mode == ChartMode.dark ? _axisGridDefaultDark : _axisGridDefaultLight,
+      text:
+          mode == ChartMode.dark ? _axisTextDefaultDark : _axisTextDefaultLight,
     );
   }
 

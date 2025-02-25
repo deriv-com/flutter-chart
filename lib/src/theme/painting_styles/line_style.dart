@@ -7,7 +7,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'line_style.g.dart';
 
-
 /// Defines the style of painting line data.
 @JsonSerializable()
 @ColorConverter()
@@ -18,7 +17,10 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
     this.thickness = 1,
     this.hasArea = false,
     this.markerRadius = 4,
-    this.areaGradientColors = const (start: Colors.transparent, end: Colors.transparent),
+    this.areaGradientColors = const (
+      start: Colors.transparent,
+      end: Colors.transparent
+    ),
   });
 
   /// Initializes from JSON.
