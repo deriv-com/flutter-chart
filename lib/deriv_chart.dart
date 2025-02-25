@@ -129,3 +129,8 @@ export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_type_series.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_painter.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_painting.dart';
+export 'src/deriv_chart/chart/data_visualization/chart_series/data_painter.dart';
+export 'src/theme/chart_default_theme.dart';
