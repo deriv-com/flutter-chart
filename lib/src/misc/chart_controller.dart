@@ -1,7 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'types.dart';
 
 /// ScrollToLastTick callback.
-
 typedef OnScrollToLastTick = Function({required bool animate});
 
 /// Scale callback;
@@ -9,18 +9,6 @@ typedef OnScale = double? Function(double);
 
 /// Scroll callback;
 typedef OnScroll = Function(double);
-
-/// To get X position
-typedef GetXFromEpoch = double? Function(int);
-
-/// To get Y position
-typedef GetYFromQuote = double? Function(double);
-
-/// To get epoch
-typedef GetEpochFromX = int? Function(double);
-
-/// To get quote
-typedef GetQuoteFromY = double? Function(double);
 
 /// To get overlay/bottom series
 typedef GetSeriesList = List<Series>? Function();
