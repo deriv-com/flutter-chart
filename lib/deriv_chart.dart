@@ -117,7 +117,6 @@ export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/pa
 export 'src/deriv_chart/chart/data_visualization/markers/web_marker.dart';
 export 'src/deriv_chart/chart/helpers/functions/convert_range.dart';
 export 'src/misc/crosshair_controller.dart';
-export 'src/misc/wrapped_controller.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_axis_config.dart';
 export 'src/models/chart_style.dart';

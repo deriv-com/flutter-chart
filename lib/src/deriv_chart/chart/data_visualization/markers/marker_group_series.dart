@@ -4,7 +4,6 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
-import 'package:deriv_chart/src/misc/wrapped_controller.dart';
 
 /// Marker Group series
 class MarkerGroupSeries extends MarkerSeries {
@@ -26,7 +25,7 @@ class MarkerGroupSeries extends MarkerSeries {
   final List<MarkerGroup>? markerGroupList;
 
   /// WrappedController
-  final WrappedController controller;
+  final ChartController controller;
 
   /// The width of y-axis
   final double yAxisWidth;

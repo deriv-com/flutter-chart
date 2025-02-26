@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/convert_range.dart';
-import 'package:deriv_chart/src/misc/wrapped_controller.dart';
 
 /// A [SeriesPainter] for painting [MarkerGroupPainter] data.
 class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
@@ -23,8 +22,8 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
   /// Marker painter which is based on trade type
   final MarkerGroupIconPainter markerGroupIconPainter;
 
-  /// WrappedController
-  final WrappedController controller;
+  /// ChartController.
+  final ChartController controller;
 
   /// yAxisWidth
   final double yAxisWidth;
@@ -43,7 +42,7 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
   }) {
-    final double? msPerPx = controller.getMsPerPx();
+    final double? msPerPx = controller.getMsPerPx!();
 
     final double zoom = msPerPx != null
         ? convertRange(msPerPx / granularity, 0, 1, 0.8, 1.2)
