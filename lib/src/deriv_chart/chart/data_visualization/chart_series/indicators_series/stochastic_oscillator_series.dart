@@ -171,12 +171,12 @@ class StochasticOscillatorSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     fastPercentStochasticIndicatorSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     slowStochasticIndicatorSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
   }
 
   @override

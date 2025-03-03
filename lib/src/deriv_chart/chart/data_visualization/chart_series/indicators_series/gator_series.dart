@@ -134,12 +134,12 @@ class GatorSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     gatorBottomSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     gatorTopSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
   }
 
   @override

@@ -68,10 +68,10 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
 
     // Prevent re-animating annotation that haven't changed.
     if (animationInfo.currentTickPercent == 1) {

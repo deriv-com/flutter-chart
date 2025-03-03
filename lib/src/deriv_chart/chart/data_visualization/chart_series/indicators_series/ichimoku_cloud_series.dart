@@ -230,20 +230,20 @@ class IchimokuCloudSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     conversionLineSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     baseLineSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     laggingSpanSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     spanASeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     spanBSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
 
     if (animationInfo.currentTickPercent == 1) {
       spanASeries.resetLastEntryAnimation();

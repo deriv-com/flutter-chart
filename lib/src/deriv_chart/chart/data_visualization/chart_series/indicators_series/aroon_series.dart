@@ -112,12 +112,12 @@ class AroonSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     aroonDownSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     aroonUpSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
   }
 
   @override

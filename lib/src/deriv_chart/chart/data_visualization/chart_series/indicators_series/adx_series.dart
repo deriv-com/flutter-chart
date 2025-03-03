@@ -199,24 +199,24 @@ class ADXSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     if (config.showSeries) {
       positiveDISeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
       negativeDISeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
       adxSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     }
     if (config.showHistogram) {
       adxHistogramSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     }
 
     if (config.showShading) {
       super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     }
   }
 

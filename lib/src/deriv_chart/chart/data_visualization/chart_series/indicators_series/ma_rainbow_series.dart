@@ -173,7 +173,7 @@ class RainbowSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     for (final SingleIndicatorSeries series in rainbowSeries) {
       series.paint(
@@ -184,7 +184,7 @@ class RainbowSeries extends Series {
         animationInfo,
         chartConfig,
         theme,
-        controller,
+        chartController,
       );
     }
   }

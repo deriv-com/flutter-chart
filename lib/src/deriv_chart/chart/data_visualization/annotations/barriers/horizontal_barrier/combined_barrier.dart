@@ -77,12 +77,12 @@ class CombinedBarrier extends HorizontalBarrier {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
-        theme, controller);
+        theme, chartController);
 
     verticalBarrier.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, controller);
+        chartConfig, theme, chartController);
   }
 }

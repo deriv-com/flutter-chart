@@ -315,15 +315,15 @@ abstract class DataSeries<T extends Tick> extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     });
 
     _lastTickIndicator?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
 
     // Prevent re-animating indicators that haven't changed.
     if (animationInfo.currentTickPercent == 1) {

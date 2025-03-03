@@ -177,20 +177,20 @@ class BollingerBandSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
     lowerSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     middleSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     upperSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
 
     if (bbOptions.showChannelFill &&
         upperSeries.visibleEntries.isNotEmpty &&
         lowerSeries.visibleEntries.isNotEmpty) {
       super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
     }
   }
 
