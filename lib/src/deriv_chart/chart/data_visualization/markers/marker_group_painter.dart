@@ -28,9 +28,9 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
-    final double? msPerPx = controller.getMsPerPx!();
+    final double? msPerPx = chartController.getMsPerPx!();
 
     final int granularity = chartConfig.granularity;
 

@@ -25,7 +25,7 @@ class ChartDataPainter extends BaseChartDataPainter {
     required int leftBoundEpoch,
     required double topY,
     required double bottomY,
-    required ChartController controller,
+    required ChartController chartController,
     List<Series> secondarySeries = const <Series>[],
     AnimationInfo animationInfo = const AnimationInfo(),
   }) : super(
@@ -39,7 +39,7 @@ class ChartDataPainter extends BaseChartDataPainter {
           leftBoundEpoch: leftBoundEpoch,
           topY: topY,
           bottomY: bottomY,
-          controller: controller,
+          chartController: chartController,
         );
 
   /// Chart's main data series.
@@ -55,7 +55,7 @@ class ChartDataPainter extends BaseChartDataPainter {
       animationInfo,
       chartConfig,
       theme,
-      controller,
+      chartController,
     );
 
     super.paint(canvas, size);
@@ -94,7 +94,7 @@ class BaseChartDataPainter extends CustomPainter {
     required this.bottomY,
     this.series = const <Series>[],
     this.animationInfo = const AnimationInfo(),
-    required this.controller,
+    required this.chartController,
   });
 
   /// Chart config.
@@ -128,7 +128,7 @@ class BaseChartDataPainter extends CustomPainter {
   final double bottomY;
 
   /// Chart's controller.
-  final ChartController controller;
+  final ChartController chartController;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -141,7 +141,7 @@ class BaseChartDataPainter extends CustomPainter {
         animationInfo,
         chartConfig,
         theme,
-        controller,
+        chartController,
       );
     }
   }

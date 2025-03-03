@@ -29,7 +29,7 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     final DataSeries<Tick> series = this.series;
 

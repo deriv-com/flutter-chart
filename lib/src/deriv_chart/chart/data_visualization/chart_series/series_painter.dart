@@ -25,7 +25,7 @@ abstract class SeriesPainter<S extends Series> {
 
   /// Chart's controller.
   @protected
-  late ChartController controller;
+  late ChartController chartController;
 
   /// Sets some variables and paints this [SeriesPainter]'s data.
   void paint({
@@ -36,11 +36,11 @@ abstract class SeriesPainter<S extends Series> {
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
     required ChartTheme theme,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     this.chartConfig = chartConfig;
     this.theme = theme;
-    this.controller = controller;
+    this.chartController = chartController;
 
     onPaint(
       canvas: canvas,
@@ -49,7 +49,7 @@ abstract class SeriesPainter<S extends Series> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
       chartConfig: chartConfig,
-      controller: controller,
+      chartController: chartController,
     );
   }
 
@@ -61,6 +61,6 @@ abstract class SeriesPainter<S extends Series> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   });
 }

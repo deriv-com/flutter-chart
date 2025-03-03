@@ -29,7 +29,7 @@ class AccumulatorsEntrySpotBarrierPainter<
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     if (!series.isOnRange) {
       return;

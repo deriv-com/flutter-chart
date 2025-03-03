@@ -38,7 +38,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     if (!series.isOnRange) {
       return;
@@ -60,7 +60,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
       chartConfig: chartConfig,
-      controller: controller,
+      chartController: chartController,
     );
   }
 

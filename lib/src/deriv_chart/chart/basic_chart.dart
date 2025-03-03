@@ -465,7 +465,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
                 leftBoundEpoch: xAxis.leftBoundEpoch,
                 topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
                 bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
-                controller: context.watch<ChartController>(),
+                chartController: context.watch<ChartController>(),
               ),
             ),
           ),

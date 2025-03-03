@@ -53,7 +53,7 @@ class _EntryTickAnnotationPainter extends SeriesPainter<EntryTickAnnotation> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     final Offset center = Offset(
       epochToX(series.tick.epoch),

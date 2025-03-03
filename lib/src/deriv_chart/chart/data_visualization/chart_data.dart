@@ -95,7 +95,7 @@ abstract class ChartData {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   );
 }
 

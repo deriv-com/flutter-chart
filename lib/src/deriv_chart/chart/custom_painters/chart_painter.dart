@@ -14,7 +14,7 @@ class ChartPainter extends CustomPainter {
     required this.chartData,
     required this.epochToCanvasX,
     required this.quoteToCanvasY,
-    required this.controller,
+    required this.chartController,
     this.animationInfo = const AnimationInfo(),
   });
 
@@ -37,7 +37,7 @@ class ChartPainter extends CustomPainter {
   final ChartData chartData;
 
   /// The controller of the chart.
-  final ChartController controller;
+  final ChartController chartController;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -49,7 +49,7 @@ class ChartPainter extends CustomPainter {
       animationInfo,
       chartConfig,
       theme,
-      controller,
+      chartController,
     );
   }
 

@@ -75,7 +75,7 @@ abstract class Series implements ChartData {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) =>
       seriesPainter?.paint(
         canvas: canvas,
@@ -85,6 +85,6 @@ abstract class Series implements ChartData {
         animationInfo: animationInfo,
         chartConfig: chartConfig,
         theme: theme,
-        controller: controller,
+        chartController: chartController,
       );
 }

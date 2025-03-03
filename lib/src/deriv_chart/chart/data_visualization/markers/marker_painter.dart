@@ -27,7 +27,7 @@ class MarkerPainter extends SeriesPainter<MarkerSeries> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     final MarkerStyle style = series.style as MarkerStyle? ?? theme.markerStyle;
 

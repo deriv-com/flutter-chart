@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class SampleMultiPainter extends SeriesPainter<SampleMultiSeries> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
+    required ChartController chartController,
   }) {
     // Painting red lines in-between two lines of series showing an area.
     for (int i = 0;

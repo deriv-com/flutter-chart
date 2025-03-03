@@ -42,7 +42,7 @@ class AccumulatorsClosedIndicatorPainter
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     final HorizontalBarrierStyle style =
         series.style as HorizontalBarrierStyle? ?? theme.horizontalBarrierStyle;

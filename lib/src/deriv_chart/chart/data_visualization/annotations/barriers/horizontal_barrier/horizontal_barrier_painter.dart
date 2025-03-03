@@ -50,7 +50,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     if (!series.isOnRange) {
       return;
@@ -345,7 +345,7 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     super.onPaint(
       canvas: canvas,
@@ -354,7 +354,7 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
       chartConfig: chartConfig,
-      controller: controller,
+      chartController: chartController,
     );
 
     if (_barrierPosition != null) {

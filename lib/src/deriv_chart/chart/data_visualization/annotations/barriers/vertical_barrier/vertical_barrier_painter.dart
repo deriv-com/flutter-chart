@@ -25,7 +25,7 @@ class VerticalBarrierPainter extends SeriesPainter<VerticalBarrier> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController controller,
+    required ChartController chartController,
   }) {
     if (series.isOnRange) {
       final VerticalBarrierStyle style =
