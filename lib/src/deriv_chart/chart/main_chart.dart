@@ -496,7 +496,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               leftBoundEpoch: xAxis.leftBoundEpoch,
               topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
               bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
-                        chartController: context.watch<ChartController>(),
+              chartController: context.watch<ChartController>(),
             ),
           ),
         ),

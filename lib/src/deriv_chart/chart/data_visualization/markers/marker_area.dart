@@ -88,7 +88,7 @@ class _MarkerAreaState extends State<MarkerArea> {
                 quoteToY: widget.quoteToCanvasY,
                 theme: context.watch<ChartTheme>(),
                 chartConfig: context.watch<ChartConfig>(),
-                controller: context.watch<ChartController>(),
+                chartController: context.watch<ChartController>(),
               ),
             ),
           ),
@@ -109,7 +109,7 @@ class _MarkerPainter extends CustomPainter {
     required this.quoteToY,
     required this.theme,
     required this.chartConfig,
-    required this.controller,
+    required this.chartController,
   });
 
   final MarkerSeries series;
@@ -117,7 +117,7 @@ class _MarkerPainter extends CustomPainter {
   final QuoteToY quoteToY;
   final ChartTheme theme;
   final ChartConfig chartConfig;
-  final ChartController controller;
+  final ChartController chartController;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -129,7 +129,7 @@ class _MarkerPainter extends CustomPainter {
       const AnimationInfo(),
       chartConfig,
       theme,
-      controller,
+      chartController,
     );
   }
 
