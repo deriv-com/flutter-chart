@@ -142,3 +142,12 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_p
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_painting.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/data_painter.dart';
 export 'src/theme/chart_default_theme.dart';
+export 'package:deriv_chart/src/models/chart_config.dart';
+export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/accumulator_marker_icon_painter.dart';
+export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/digit_marker_icon_painter.dart';
+export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/tick_marker_icon_painter.dart';
+export 'src/deriv_chart/chart/helpers/chart.dart';
+export 'src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
+export 'src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
+export 'src/deriv_chart/chart/helpers/paint_functions/paint_start_marker.dart';
+export 'src/deriv_chart/chart/helpers/paint_functions/paint_vertical_line.dart';
