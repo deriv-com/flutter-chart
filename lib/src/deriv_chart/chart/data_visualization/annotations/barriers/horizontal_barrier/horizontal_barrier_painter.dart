@@ -9,6 +9,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -22,9 +24,6 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   HorizontalBarrierPainter(T series) : super(series);
 
   late Paint _paint;
-
-  /// Padding between lines.
-  static const double padding = 4;
 
   /// Right margin.
   static const double rightMargin = 4;
@@ -50,6 +49,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
+    required ChartConfig chartConfig,
+    required ChartController chartController,
   }) {
     if (!series.isOnRange) {
       return;
@@ -126,8 +127,12 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     );
     final Rect labelArea = Rect.fromCenter(
       center: Offset(
-          size.width - rightMargin - padding - valuePainter.width / 2, y),
-      width: valuePainter.width + padding * 2,
+          size.width -
+              rightMargin -
+              style.labelPadding -
+              valuePainter.width / 2,
+          y),
+      width: valuePainter.width + style.labelPadding * 2,
       height: style.labelHeight,
     );
 
@@ -339,6 +344,8 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
+    required ChartConfig chartConfig,
+    required ChartController chartController,
   }) {
     super.onPaint(
       canvas: canvas,
@@ -346,6 +353,8 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
       epochToX: epochToX,
       quoteToY: quoteToY,
       animationInfo: animationInfo,
+      chartConfig: chartConfig,
+      chartController: chartController,
     );
 
     if (_barrierPosition != null) {

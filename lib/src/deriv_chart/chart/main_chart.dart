@@ -256,6 +256,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       xAxis.scrollBy(pxShift);
     };
 
+    widget.controller?.toggleXScrollBlock = ({required bool isXScrollBlocked}) {
+      xAxis.isScrollBlocked = isXScrollBlocked;
+    };
+
     widget.controller?.toggleDataFitMode = ({required bool enableDataFit}) {
       if (enableDataFit) {
         xAxis.enableDataFit();
@@ -420,6 +424,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                         theme: context.watch<ChartTheme>(),
                         epochToCanvasX: xAxis.xFromEpoch,
                         quoteToCanvasY: chartQuoteToCanvasY,
+                        chartController: context.watch<ChartController>(),
                       ),
                     ),
                   ),
@@ -491,6 +496,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               leftBoundEpoch: xAxis.leftBoundEpoch,
               topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
               bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
+              chartController: context.watch<ChartController>(),
             ),
           ),
         ),

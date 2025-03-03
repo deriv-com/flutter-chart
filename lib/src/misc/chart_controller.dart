@@ -1,7 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
+import 'types.dart';
 
 /// ScrollToLastTick callback.
-
 typedef OnScrollToLastTick = Function({required bool animate});
 
 /// Scale callback;
@@ -10,23 +10,14 @@ typedef OnScale = double? Function(double);
 /// Scroll callback;
 typedef OnScroll = Function(double);
 
-/// To get X position
-typedef GetXFromEpoch = double? Function(int);
-
-/// To get Y position
-typedef GetYFromQuote = double? Function(double);
-
-/// To get epoch
-typedef GetEpochFromX = int? Function(double);
-
-/// To get quote
-typedef GetQuoteFromY = double? Function(double);
-
 /// To get overlay/bottom series
 typedef GetSeriesList = List<Series>? Function();
 
 /// To get overlay/bottom configs
 typedef GetConfigsList = List<AddOnConfig>? Function();
+
+/// Toggles a horizontal scroll block
+typedef ToggleXScrollBlock = Function({required bool isXScrollBlocked});
 
 /// Toggles data fit mode
 typedef ToggleDataFitMode = Function({required bool enableDataFit});
@@ -44,6 +35,9 @@ class ChartController {
 
   /// Called to scroll the chart
   OnScroll? onScroll;
+
+  /// Called to toggle a horizontal scroll block
+  ToggleXScrollBlock? toggleXScrollBlock;
 
   /// Called to toggle data fit mode
   ToggleDataFitMode? toggleDataFitMode;
