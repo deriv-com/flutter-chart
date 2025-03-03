@@ -1,3 +1,7 @@
+## [0.3.8]
+
+* Make XAxis smooth auto-scrolling customizable through ChartAxisConfig
+
 ## [0.3.7]
 
 * Update documentations 

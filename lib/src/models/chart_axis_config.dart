@@ -22,6 +22,7 @@ class ChartAxisConfig {
     this.showQuoteGrid = true,
     this.showEpochGrid = true,
     this.showFrame = false,
+    this.smoothScrolling = true,
   });
 
   /// Top quote bound target for animated transition.
@@ -49,6 +50,15 @@ class ChartAxisConfig {
   ///
   /// Default to this interval width on granularity change.
   final double defaultIntervalWidth;
+
+  /// Whether the chart should scroll smoothly.
+  /// If `true`, the chart will smoothly adjust the scroll position
+  /// (if the last tick is visible) to the right to continuously show new ticks.
+  /// If `false`, the chart will only auto-scroll to keep the new tick visible
+  /// after receiving a new tick.
+  ///
+  /// Default is `true`.
+  final bool smoothScrolling;
 
   /// Creates a copy of this ChartAxisConfig but with the given fields replaced.
   ChartAxisConfig copyWith({

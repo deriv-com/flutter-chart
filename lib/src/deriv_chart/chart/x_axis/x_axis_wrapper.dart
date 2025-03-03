@@ -1,7 +1,6 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_mobile.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_web.dart';
-import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +17,7 @@ class XAxisWrapper extends StatelessWidget {
     required this.isLive,
     required this.startWithDataFitMode,
     required this.pipSize,
+    required this.chartAxisConfig,
     this.onVisibleAreaChanged,
     this.minEpoch,
     this.maxEpoch,
@@ -70,9 +70,12 @@ class XAxisWrapper extends StatelessWidget {
   /// Duration of the scroll animation.
   final Duration scrollAnimationDuration;
 
+  /// Chart axis configuration.
+  final ChartAxisConfig chartAxisConfig;
+
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
+    if (!chartAxisConfig.smoothScrolling) {
       return XAxisWeb(
         child: child,
         entries: entries,

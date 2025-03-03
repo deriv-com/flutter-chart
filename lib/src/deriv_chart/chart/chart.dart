@@ -302,6 +302,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
           child: XAxisWrapper(
             maxEpoch: chartDataList.getMaxEpoch(),
             minEpoch: chartDataList.getMinEpoch(),
+            chartAxisConfig: widget.chartAxisConfig,
             entries: widget.mainSeries.input,
             pipSize: widget.pipSize,
             onVisibleAreaChanged: _onVisibleAreaChanged,
