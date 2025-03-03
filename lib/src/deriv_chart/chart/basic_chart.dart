@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter_we
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -464,6 +465,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
                 leftBoundEpoch: xAxis.leftBoundEpoch,
                 topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
                 bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
+                controller: context.watch<ChartController>(),
               ),
             ),
           ),

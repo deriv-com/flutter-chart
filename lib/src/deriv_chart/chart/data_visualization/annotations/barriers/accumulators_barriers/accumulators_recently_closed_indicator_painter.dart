@@ -4,6 +4,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -39,6 +41,8 @@ class AccumulatorsRecentlyClosedIndicatorPainter
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
+    required ChartConfig chartConfig,
+    required ChartController controller,
   }) {
     final HorizontalBarrierStyle style =
         series.style as HorizontalBarrierStyle? ?? theme.horizontalBarrierStyle;

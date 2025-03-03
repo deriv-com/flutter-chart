@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,10 @@ abstract class SeriesPainter<S extends Series> {
   @protected
   late ChartTheme theme;
 
+  /// Chart's controller.
+  @protected
+  late ChartController controller;
+
   /// Sets some variables and paints this [SeriesPainter]'s data.
   void paint({
     required Canvas canvas,
@@ -31,9 +36,11 @@ abstract class SeriesPainter<S extends Series> {
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
     required ChartTheme theme,
+    required ChartController controller,
   }) {
     this.chartConfig = chartConfig;
     this.theme = theme;
+    this.controller = controller;
 
     onPaint(
       canvas: canvas,
@@ -41,6 +48,8 @@ abstract class SeriesPainter<S extends Series> {
       epochToX: epochToX,
       quoteToY: quoteToY,
       animationInfo: animationInfo,
+      chartConfig: chartConfig,
+      controller: controller,
     );
   }
 
@@ -51,5 +60,7 @@ abstract class SeriesPainter<S extends Series> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
+    required ChartConfig chartConfig,
+    required ChartController controller,
   });
 }

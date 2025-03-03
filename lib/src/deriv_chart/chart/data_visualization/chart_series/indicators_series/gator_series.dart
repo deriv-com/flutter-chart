@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/gator/gator_indicator_conf
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_painters/bar_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/models/alligator_options.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -133,11 +134,12 @@ class GatorSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartController controller,
   ) {
     gatorBottomSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     gatorTopSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
   }
 
   @override

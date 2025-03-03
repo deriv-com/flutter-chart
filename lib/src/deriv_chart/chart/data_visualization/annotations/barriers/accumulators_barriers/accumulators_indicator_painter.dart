@@ -4,6 +4,7 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 
 /// Accumulator barriers painter.
@@ -41,6 +42,8 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
+    required ChartConfig chartConfig,
+    required ChartController controller,
   }) {
     final HorizontalBarrierStyle style =
         series.style as HorizontalBarrierStyle? ?? theme.horizontalBarrierStyle;

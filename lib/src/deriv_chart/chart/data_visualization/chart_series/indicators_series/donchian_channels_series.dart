@@ -160,19 +160,20 @@ class DonchianChannelsSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartController controller,
   ) {
     upperChannelSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     middleChannelSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     lowerChannelSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
 
     if (config.showChannelFill &&
         upperChannelSeries.visibleEntries.isNotEmpty &&
         lowerChannelSeries.visibleEntries.isNotEmpty) {
       super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     }
   }
 

@@ -2,6 +2,7 @@
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class ChartDataPainter extends BaseChartDataPainter {
     required int leftBoundEpoch,
     required double topY,
     required double bottomY,
+    required ChartController controller,
     List<Series> secondarySeries = const <Series>[],
     AnimationInfo animationInfo = const AnimationInfo(),
   }) : super(
@@ -37,6 +39,7 @@ class ChartDataPainter extends BaseChartDataPainter {
           leftBoundEpoch: leftBoundEpoch,
           topY: topY,
           bottomY: bottomY,
+          controller: controller,
         );
 
   /// Chart's main data series.
@@ -52,6 +55,7 @@ class ChartDataPainter extends BaseChartDataPainter {
       animationInfo,
       chartConfig,
       theme,
+      controller,
     );
 
     super.paint(canvas, size);
@@ -90,6 +94,7 @@ class BaseChartDataPainter extends CustomPainter {
     required this.bottomY,
     this.series = const <Series>[],
     this.animationInfo = const AnimationInfo(),
+    required this.controller,
   });
 
   /// Chart config.
@@ -122,6 +127,9 @@ class BaseChartDataPainter extends CustomPainter {
   /// Bottom part of the chart in the y axis.
   final double bottomY;
 
+  /// Chart's controller.
+  final ChartController controller;
+
   @override
   void paint(Canvas canvas, Size size) {
     for (final Series series in series) {
@@ -133,6 +141,7 @@ class BaseChartDataPainter extends CustomPainter {
         animationInfo,
         chartConfig,
         theme,
+        controller,
       );
     }
   }

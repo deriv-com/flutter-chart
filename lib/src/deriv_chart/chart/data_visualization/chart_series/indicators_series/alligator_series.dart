@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -198,17 +199,18 @@ class AlligatorSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartController controller,
   ) {
     jawSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     teethSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     lipsSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     bearishSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
     bullishSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
   }
 
   @override

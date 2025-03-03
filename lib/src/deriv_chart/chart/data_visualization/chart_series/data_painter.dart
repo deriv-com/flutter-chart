@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +28,8 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
+    required chartConfig,
+    required ChartController controller,
   }) {
     final DataSeries<Tick> series = this.series;
 
@@ -33,7 +37,7 @@ abstract class DataPainter<S extends DataSeries<Tick>>
       return;
     }
 
-    onPaintData(canvas, size, epochToX, quoteToY, animationInfo);
+    onPaintData(canvas, size, epochToX, quoteToY, animationInfo, chartConfig);
   }
 
   /// Gets the real epoch value for the given [tick].
@@ -48,5 +52,6 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
   );
 }

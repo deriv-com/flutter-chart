@@ -1,9 +1,11 @@
 import 'dart:collection';
 
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 
 /// Marker Group series
 class MarkerGroupSeries extends MarkerSeries {
@@ -11,10 +13,6 @@ class MarkerGroupSeries extends MarkerSeries {
   MarkerGroupSeries(
     SplayTreeSet<Marker> entries, {
     required this.markerGroupIconPainter,
-    required this.controller,
-    required this.yAxisWidth,
-    required this.isMobile,
-    required this.granularity,
     this.markerGroupList,
   }) : super(entries, markerIconPainter: markerGroupIconPainter);
 
@@ -24,30 +22,16 @@ class MarkerGroupSeries extends MarkerSeries {
   /// List of related grouped markers.
   final List<MarkerGroup>? markerGroupList;
 
-  /// WrappedController
-  final ChartController controller;
-
-  /// The width of y-axis
-  final double yAxisWidth;
-
-  /// Whether it is in mobile mode or not.
-  final bool isMobile;
-
-  /// Granulatiry of the chart.
-  final int granularity;
-
   /// Visible marker entries.
   List<MarkerGroup> visibleMarkerGroupList = <MarkerGroup>[];
 
   @override
-  SeriesPainter<MarkerGroupSeries> createPainter() => MarkerGroupPainter(
-        this,
-        markerGroupIconPainter,
-        controller: controller,
-        yAxisWidth: yAxisWidth,
-        isMobile: isMobile,
-        granularity: granularity,
-      );
+  SeriesPainter<MarkerGroupSeries> createPainter() {
+    return MarkerGroupPainter(
+      this,
+      markerGroupIconPainter,
+    );
+  }
 
   @override
   void onUpdate(int leftEpoch, int rightEpoch) {

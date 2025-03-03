@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,8 @@ class _MarkerAreaState extends State<MarkerArea> {
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
                 theme: context.watch<ChartTheme>(),
+                chartConfig: context.watch<ChartConfig>(),
+                controller: context.watch<ChartController>(),
               ),
             ),
           ),
@@ -105,12 +108,16 @@ class _MarkerPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.theme,
+    required this.chartConfig,
+    required this.controller,
   });
 
   final MarkerSeries series;
   final EpochToX epochToX;
   final QuoteToY quoteToY;
   final ChartTheme theme;
+  final ChartConfig chartConfig;
+  final ChartController controller;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -120,8 +127,9 @@ class _MarkerPainter extends CustomPainter {
       epochToX,
       quoteToY,
       const AnimationInfo(),
-      const ChartConfig(granularity: 1000),
+      chartConfig,
       theme,
+      controller,
     );
   }
 

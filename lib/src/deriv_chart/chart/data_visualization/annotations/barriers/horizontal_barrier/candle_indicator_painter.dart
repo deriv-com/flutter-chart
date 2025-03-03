@@ -6,6 +6,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/anim
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +37,8 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
+    required ChartConfig chartConfig,
+    required ChartController controller,
   }) {
     if (!series.isOnRange) {
       return;
@@ -55,6 +59,8 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
       epochToX: epochToX,
       quoteToY: quoteToY,
       animationInfo: animationInfo,
+      chartConfig: chartConfig,
+      controller: controller,
     );
   }
 
