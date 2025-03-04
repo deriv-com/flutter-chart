@@ -12,10 +12,11 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: 📚 Download APK Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: apk-build
           path: apk
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: 📋 List Downloaded Files
@@ -30,4 +31,4 @@ jobs:
         env:
           FLASHLIGHT_API_KEY: ${{ secrets.FLASHLIGHT_API_KEY }}
         run: |
-          flashlight cloud --app apk/app-arm64-v8a-release.apk --test .maestro/launch_app.yaml --apiKey $FLASHLIGHT_API_KEY 
+          flashlight cloud --app apk/app-release.apk --test .maestro/launch_app.yaml --apiKey $FLASHLIGHT_API_KEY 
