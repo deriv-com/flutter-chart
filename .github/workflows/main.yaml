@@ -51,7 +51,7 @@ jobs:
         run: flutter build apk --target-platform android-arm,android-arm64,android-x64
         
       - name: 📦 Upload APK Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: apk-build
           path: example/build/app/outputs/flutter-apk/app-*-release.apk
