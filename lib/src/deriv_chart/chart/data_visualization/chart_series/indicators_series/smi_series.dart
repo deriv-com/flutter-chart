@@ -147,11 +147,11 @@ class SMISeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController controller,
+    ChartController chartController,
   ) {
-    smiSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
-    smiSignalSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, controller);
+    smiSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    smiSignalSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
   }
 }

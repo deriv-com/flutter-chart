@@ -114,16 +114,16 @@ class FractalChaosBandSeries extends Series {
     ChartTheme theme,
     ChartController chartController,
   ) {
-    fcbLowSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    fcbHighSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+    fcbLowSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    fcbHighSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
 
     if (config.showChannelFill &&
         fcbHighSeries.visibleEntries.isNotEmpty &&
         fcbLowSeries.visibleEntries.isNotEmpty) {
-      super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+      super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+          theme, chartController);
     }
   }
 

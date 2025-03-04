@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 
 /// Type of the marker.
 enum MarkerType {

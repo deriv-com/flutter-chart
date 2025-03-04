@@ -178,19 +178,19 @@ class MAEnvSeries extends Series {
     ChartTheme theme,
     ChartController chartController,
   ) {
-    lowerSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    middleSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    upperSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+    lowerSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    middleSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    upperSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
 
     if (maEnvOptions != null &&
         maEnvOptions!.showChannelFill &&
         upperSeries.visibleEntries.isNotEmpty &&
         lowerSeries.visibleEntries.isNotEmpty) {
-      super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+      super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+          theme, chartController);
     }
   }
 

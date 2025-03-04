@@ -110,8 +110,8 @@ class DPOSeries extends Series {
     ChartTheme theme,
     ChartController chartController,
   ) {
-    dpoSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+    dpoSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
   }
 
   @override

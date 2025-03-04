@@ -1,7 +1,7 @@
 import 'dart:js';
 
-import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/web_marker.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
 /// Chart open position marker.

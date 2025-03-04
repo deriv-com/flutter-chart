@@ -92,9 +92,9 @@ class BaseChartDataPainter extends CustomPainter {
     required this.leftBoundEpoch,
     required this.topY,
     required this.bottomY,
+    required this.chartController,
     this.series = const <Series>[],
     this.animationInfo = const AnimationInfo(),
-    required this.chartController,
   });
 
   /// Chart config.

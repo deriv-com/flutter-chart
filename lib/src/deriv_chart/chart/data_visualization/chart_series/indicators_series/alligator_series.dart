@@ -201,16 +201,16 @@ class AlligatorSeries extends Series {
     ChartTheme theme,
     ChartController chartController,
   ) {
-    jawSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    teethSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    lipsSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    bearishSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    bullishSeries?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+    jawSeries?.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    teethSeries?.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    lipsSeries?.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    bearishSeries?.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    bullishSeries?.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
   }
 
   @override

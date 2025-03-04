@@ -73,13 +73,13 @@ class SampleMultiSeries extends Series {
     ChartTheme theme,
     ChartController chartController,
   ) {
-    super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+    super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+        theme, chartController);
 
-    series1.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-    series2.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+    series1.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+        theme, chartController);
+    series2.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+        theme, chartController);
   }
 
   @override

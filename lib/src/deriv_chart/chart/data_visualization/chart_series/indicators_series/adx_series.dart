@@ -202,21 +202,21 @@ class ADXSeries extends Series {
     ChartController chartController,
   ) {
     if (config.showSeries) {
-      positiveDISeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-      negativeDISeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
-      adxSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+      positiveDISeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartController);
+      negativeDISeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartController);
+      adxSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartController);
     }
     if (config.showHistogram) {
-      adxHistogramSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+      adxHistogramSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartController);
     }
 
     if (config.showShading) {
-      super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme, chartController);
+      super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+          theme, chartController);
     }
   }
 
