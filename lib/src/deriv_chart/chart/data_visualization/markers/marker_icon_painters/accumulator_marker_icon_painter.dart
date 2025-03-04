@@ -1,5 +1,3 @@
-import 'dart:js';
-import 'dart:js_util';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
@@ -87,15 +85,8 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     }
   }
 
-  bool _hasPersistentBorders(JsObject? props) {
-    if (props == null) {
-      return false;
-    }
-
-    final bool? hasPersistentBorders =
-        getProperty(props, 'hasPersistentBorders');
-
-    return hasPersistentBorders ?? false;
+  bool _hasPersistentBorders(MarkerGroup markerGroup) {
+    return markerGroup.props.hasPersistentBorders;
   }
 
   void _drawShadedBarriers({
@@ -113,7 +104,7 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
   }) {
     final double endTop = size.height;
 
-    final bool hasPersistentBorders = _hasPersistentBorders(markerGroup.props);
+    final bool hasPersistentBorders = _hasPersistentBorders(markerGroup);
 
     final bool isTopVisible =
         top < endTop && (top >= 0 || !hasPersistentBorders);
@@ -140,7 +131,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
 
     final TextStyle textStyle = TextStyle(
       color: barrierColor,
-      // fontSize: isMobile ? 10 : 14,
       fontSize: fontSize,
     );
 

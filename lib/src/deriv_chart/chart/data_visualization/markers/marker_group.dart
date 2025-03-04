@@ -1,5 +1,4 @@
-import 'dart:js';
-
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/web_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
     this.markers, {
     required this.type,
     this.id,
-    this.props,
+    Map<String, dynamic>? props,
     this.style = const MarkerStyle(
       activeMarkerText: TextStyle(
         color: Colors.black,
@@ -19,7 +18,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
         height: 1.4,
       ),
     ),
-  });
+  }) : props = MarkerProps.fromMap(props);
 
   /// Marker entries.
   final List<WebMarker> markers;
@@ -33,8 +32,8 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   /// Marker group type.
   final String type;
 
-  /// Extra props
-  final JsObject? props;
+  /// Extra props for the marker group
+  final MarkerProps props;
 
   @override
   int compareTo(covariant MarkerGroup other) {
