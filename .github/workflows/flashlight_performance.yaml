@@ -1,0 +1,33 @@
+name: Flashlight Performance Testing
+
+on:
+  workflow_run:
+    workflows: ["Flutter Analyze, Test & Build"]
+    types:
+      - completed
+
+jobs:
+  flashlight-test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: 📚 Download APK Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: apk-build
+          path: apk
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: 📋 List Downloaded Files
+        run: ls -la apk/
+
+      - name: 🔧 Install Flashlight CLI
+        run: |
+          curl https://get.flashlight.dev/ | bash
+          export PATH="$HOME/.flashlight/bin:$PATH"
+
+      - name: 🚀 Upload to Flashlight
+        env:
+          FLASHLIGHT_API_KEY: ${{ secrets.FLASHLIGHT_API_KEY }}
+        run: |
+          flashlight cloud --app apk/app-arm64-v8a-release.apk --test .maestro/launch_app.yaml --apiKey $FLASHLIGHT_API_KEY 

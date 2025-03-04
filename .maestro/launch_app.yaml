@@ -1,0 +1,4 @@
+appId: com.example.chart_attempt
+---
+- launchApp
+- assertVisible: Connecting
