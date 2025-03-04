@@ -56,3 +56,30 @@ jobs:
           name: apk-build
           path: example/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 1
+
+  flashlight-test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+
+      - name: 📚 Download APK Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: apk-build
+          path: apk
+
+      - name: 📋 List Downloaded Files
+        run: ls -la apk/
+
+      - name: 🔧 Install Flashlight CLI
+        run: |
+          curl https://get.flashlight.dev/ | bash
+          export PATH="$HOME/.flashlight/bin:$PATH"
+
+      - name: 🚀 Upload to Flashlight
+        env:
+          FLASHLIGHT_API_KEY: ${{ secrets.FLASHLIGHT_API_KEY }}
+        run: |
+          flashlight cloud --app apk/app-release.apk --test .maestro/launch_app.yaml --apiKey $FLASHLIGHT_API_KEY
