@@ -5,6 +5,8 @@ on:
     workflows: ["Flutter Analyze, Test & Build"]
     types:
       - completed
+    branches:
+      - "*"
 
 jobs:
   flashlight-test:
