@@ -76,7 +76,7 @@ jobs:
       - name: 🔧 Install Flashlight CLI
         run: |
           curl https://get.flashlight.dev/ | bash
-          export PATH="$HOME/.flashlight/bin:$PATH"
+          echo "$HOME/.flashlight/bin" >> $GITHUB_PATH
 
       - name: 🚀 Upload to Flashlight
         env:
