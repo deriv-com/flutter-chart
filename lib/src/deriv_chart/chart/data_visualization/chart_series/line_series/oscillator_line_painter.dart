@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/helpers/com
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
@@ -66,6 +67,7 @@ class OscillatorLinePainter extends LinePainter {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
   ) {
     final DataLinePathInfo linePath =
         createPath(epochToX, quoteToY, animationInfo);

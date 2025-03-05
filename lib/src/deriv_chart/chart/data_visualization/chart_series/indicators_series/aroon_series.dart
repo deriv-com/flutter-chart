@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
+import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -111,11 +112,12 @@ class AroonSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartController chartController,
   ) {
-    aroonDownSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    aroonUpSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    aroonDownSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
+    aroonUpSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartController);
   }
 
   @override

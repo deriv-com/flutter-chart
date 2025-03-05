@@ -294,6 +294,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
+        Provider<ChartController>.value(value: _controller),
       ],
       child: Ink(
         color: _chartTheme.base08Color,
