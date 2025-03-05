@@ -208,4 +208,28 @@ CustomDraggableSheet is a wrapper widget to be used combined with a bottom sheet
 
 ## Drawing Tool Chart
 
-For brief explanation of how drawing tools work, please refer to [Drawing Tools](drawing_tools.md) section.
+### Drawing Tools
+
+For a brief explanation of how drawing tools work, please refer to [Drawing Tools](drawing_tools.md) section.
+
+### Interactive Layer (New Implementation)
+
+The chart implements a new Interactive Layer that manages user interactions with drawing tools. This new implementation will replace the previous drawing tools handling mechanism, which will be deprecated and removed in future versions.
+
+The Interactive Layer:
+
+- Handles user gestures (taps, drags, hovers) on the chart
+- Manages the lifecycle of drawing tools from creation to manipulation
+- Implements a state pattern to handle different interaction modes
+- Controls the visual appearance of drawing tools based on their state
+- Provides a more maintainable and extensible architecture for drawing tools
+
+The Interactive Layer uses different states to manage interactions:
+
+1. **Normal State**: Default state when no tools are selected
+2. **Selected Tool State**: Active when a drawing tool is selected
+3. **Adding Tool State**: Active when a new drawing tool is being created
+
+Each drawing tool also has its own state (normal, selected, hovered, adding, dragging) that determines how it's rendered and how it responds to user interactions.
+
+For a detailed explanation of the Interactive Layer architecture and state management, see [Interactive Layer](interactive_layer.md).

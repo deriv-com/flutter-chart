@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/repository.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
@@ -25,7 +27,6 @@ import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import '../../misc/callbacks.dart';
 import '../../theme/chart_theme.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// The main chart to display in the chart widget.
@@ -137,7 +138,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   late Animation<double> _currentTickBlinkAnimation;
 
   // TODO(Rustem): remove crosshair related state
-  bool _isCrosshairMode = false;
+  final bool _isCrosshairMode = false;
 
   bool get _isScrollToLastTickAvailable =>
       (widget._mainSeries.entries?.isNotEmpty ?? false) &&
@@ -349,11 +350,23 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   _buildSeries(widget.overlaySeries!),
                 _buildAnnotations(),
                 if (widget.markerSeries != null) _buildMarkerArea(),
+                // if (widget.drawingTools != null)
+                //   _buildDrawingToolChart(widget.drawingTools!),
                 if (widget.drawingTools != null)
-                  _buildDrawingToolChart(widget.drawingTools!),
+                  InteractiveLayer(
+                    drawingTools: widget.drawingTools!,
+                    series: widget.mainSeries as DataSeries<Tick>,
+                    drawingToolsRepo:
+                        context.watch<Repository<DrawingToolConfig>>(),
+                    chartConfig: context.watch<ChartConfig>(),
+                    quoteToCanvasY: chartQuoteToCanvasY,
+                    epochToCanvasX: xAxis.xFromEpoch,
+                    quoteFromCanvasY: chartQuoteFromCanvasY,
+                    epochFromCanvasX: xAxis.epochFromX,
+                  ),
                 if (kIsWeb) _buildCrosshairAreaWeb(),
-                if (!kIsWeb && !(widget.drawingTools?.isDrawingMoving ?? false))
-                  _buildCrosshairArea(),
+                // if (!kIsWeb && !(widget.drawingTools?.isDrawingMoving ?? false))
+                //   _buildCrosshairArea(),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
                   Positioned(
@@ -374,19 +387,19 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         },
       );
 
-  Widget _buildDrawingToolChart(DrawingTools drawingTools) =>
-      MultipleAnimatedBuilder(
-        animations: <Listenable>[
-          topBoundQuoteAnimationController,
-          bottomBoundQuoteAnimationController,
-        ],
-        builder: (_, Widget? child) => DrawingToolChart(
-          series: widget.mainSeries as DataSeries<Tick>,
-          chartQuoteToCanvasY: chartQuoteToCanvasY,
-          chartQuoteFromCanvasY: chartQuoteFromCanvasY,
-          drawingTools: drawingTools,
-        ),
-      );
+  // Widget _buildDrawingToolChart(DrawingTools drawingTools) =>
+  //     MultipleAnimatedBuilder(
+  //       animations: <Listenable>[
+  //         topBoundQuoteAnimationController,
+  //         bottomBoundQuoteAnimationController,
+  //       ],
+  //       builder: (_, Widget? child) => DrawingToolChart(
+  //         series: widget.mainSeries as DataSeries<Tick>,
+  //         chartQuoteToCanvasY: chartQuoteToCanvasY,
+  //         chartQuoteFromCanvasY: chartQuoteFromCanvasY,
+  //         drawingTools: drawingTools,
+  //       ),
+  //     );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
         loadingRightBoundX: widget._mainSeries.input.isEmpty
@@ -428,23 +441,23 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         ]),
       );
 
-  Widget _buildCrosshairArea() => AnimatedBuilder(
-        animation: crosshairZoomOutAnimation,
-        builder: (BuildContext context, _) => CrosshairArea(
-          mainSeries: widget.mainSeries as DataSeries<Tick>,
-          pipSize: widget.pipSize,
-          quoteToCanvasY: chartQuoteToCanvasY,
-          onCrosshairAppeared: () {
-            _isCrosshairMode = true;
-            widget.onCrosshairAppeared?.call();
-            crosshairZoomOutAnimationController.forward();
-          },
-          onCrosshairDisappeared: () {
-            _isCrosshairMode = false;
-            crosshairZoomOutAnimationController.reverse();
-          },
-        ),
-      );
+  // Widget _buildCrosshairArea() => AnimatedBuilder(
+  //       animation: crosshairZoomOutAnimation,
+  //       builder: (BuildContext context, _) => CrosshairArea(
+  //         mainSeries: widget.mainSeries as DataSeries<Tick>,
+  //         pipSize: widget.pipSize,
+  //         quoteToCanvasY: chartQuoteToCanvasY,
+  //         onCrosshairAppeared: () {
+  //           _isCrosshairMode = true;
+  //           widget.onCrosshairAppeared?.call();
+  //           crosshairZoomOutAnimationController.forward();
+  //         },
+  //         onCrosshairDisappeared: () {
+  //           _isCrosshairMode = false;
+  //           crosshairZoomOutAnimationController.reverse();
+  //         },
+  //       ),
+  //     );
 
   Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
         mainSeries: widget.mainSeries as DataSeries<Tick>,

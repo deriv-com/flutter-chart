@@ -6,6 +6,8 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/line_interactable_drawing.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -99,4 +101,12 @@ class LineDrawingToolConfig extends DrawingToolConfig {
       );
     }
   }
+
+  @override
+  InteractableDrawing getInteractableDrawing() => LineInteractableDrawing(
+        config: this,
+        // TODO(NA): improve the logic.
+        startPoint: edgePoints.isNotEmpty ? edgePoints.first : null,
+        endPoint: edgePoints.isNotEmpty ? edgePoints.last : null,
+      );
 }

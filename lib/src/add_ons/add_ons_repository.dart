@@ -73,6 +73,8 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       items.add(addOnConfig);
       _hiddenStatus.add(false);
     }
+
+    notifyListeners();
   }
 
   /// Adds a new indicator or drawing tool and updates storage.

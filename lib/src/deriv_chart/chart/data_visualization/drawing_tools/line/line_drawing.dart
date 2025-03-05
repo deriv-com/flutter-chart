@@ -226,8 +226,11 @@ class LineDrawing extends Drawing with LineVectorDrawingMixin {
 
     final bool isWithinRange = dotProduct > 0 && dotProduct < lineLength;
 
-    return isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
-        (_startPoint!.isClicked(position, markerRadius) ||
-            _endPoint!.isClicked(position, markerRadius));
+    final returnValue =
+        isWithinRange && distance.abs() <= lineStyle.thickness + 6 ||
+            (_startPoint!.isClicked(position, markerRadius) ||
+                _endPoint!.isClicked(position, markerRadius));
+
+    return returnValue;
   }
 }
