@@ -21,7 +21,6 @@ typedef GetEpochFromX = int? Function(double);
 /// To get quote
 typedef GetQuoteFromY = double? Function(double);
 
-
 /// To get overlay/bottom series
 typedef GetSeriesList = List<Series>? Function();
 
