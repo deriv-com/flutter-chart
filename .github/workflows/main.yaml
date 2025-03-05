@@ -84,4 +84,4 @@ jobs:
         env:
           FLASHLIGHT_API_KEY: ${{ secrets.FLASHLIGHT_API_KEY }}
         run: |
-          flashlight cloud --app apk/app-release.apk --test .maestro/launch_app.yaml --apiKey $FLASHLIGHT_API_KEY
+          flashlight cloud --app apk/app-release.apk --test .maestro/launch_app.yaml --duration 10000 --apiKey $FLASHLIGHT_API_KEY
