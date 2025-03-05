@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - "*"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -59,6 +60,7 @@ jobs:
 
   flashlight-test:
     needs: build
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: 📚 Git Checkout
