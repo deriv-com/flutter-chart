@@ -9,14 +9,41 @@ import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
-/// Accumulator contract painter
+/// AccumulatorMarkerIconPainter is a specialized painter for rendering accumulator contract markers on charts.
+///
+/// This class extends TickMarkerIconPainter and provides additional functionality specific to
+/// accumulator contracts, particularly focusing on rendering high and low barriers with shaded areas
+/// between them. It visualizes the price range within which the accumulator contract operates.
+///
+/// The painter handles various visual elements including:
+/// - Shaded areas between high and low barriers
+/// - Horizontal barrier lines with arrow indicators
+/// - Text labels showing barrier values
+/// - Previous tick indicators with connecting lines
+///
+/// It supports persistent borders, which allow barriers to remain visible even when they extend
+/// beyond the visible chart area, providing context for off-screen price levels.
+///
+/// This painter is used by MarkerGroupSeries when rendering marker groups of type "accumulator"
+/// and works in conjunction with the chart's coordinate conversion functions to properly position
+/// visual elements on the canvas.
 class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
-  /// Constructor
+  /// Creates an AccumulatorMarkerIconPainter with optional font size configuration.
+  ///
+  /// The [fontSize] parameter allows customizing text size for barrier labels,
+  /// particularly useful for responsive layouts or different display densities.
   AccumulatorMarkerIconPainter({this.fontSize});
 
-  /// font size for web desktop / responsive
+  /// Font size for barrier labels, used primarily in web/desktop environments.
+  /// When null, the default text size from the theme will be used.
   final double? fontSize;
 
+  /// Converts a ChartMarker's epoch and quote values to canvas coordinates.
+  ///
+  /// @param marker The ChartMarker to convert
+  /// @param epochToX Function to convert epoch (timestamp) to X coordinate
+  /// @param quoteToY Function to convert quote (price) to Y coordinate
+  /// @return Offset The position on the canvas where the marker should be drawn
   Offset _getOffset(
     ChartMarker marker,
     EpochToX epochToX,
@@ -27,6 +54,19 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
         quoteToY(marker.quote),
       );
 
+  /// Paints the marker group on the canvas, extending the base implementation with
+  /// accumulator-specific barrier rendering.
+  ///
+  /// First calls the parent class implementation to draw standard markers, then
+  /// adds specialized barrier visualization for accumulator contracts.
+  ///
+  /// @param canvas The canvas to draw on
+  /// @param size The size of the drawing area
+  /// @param theme The chart theme providing colors and styles
+  /// @param markerGroup The group of markers to render
+  /// @param epochToX Function to convert epoch (timestamp) to X coordinate
+  /// @param quoteToY Function to convert quote (price) to Y coordinate
+  /// @param painterProps Additional properties affecting rendering
   @override
   void paintMarkerGroup(
     Canvas canvas,
@@ -85,10 +125,40 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     }
   }
 
+  /// Determines if the marker group has persistent borders configured.
+  ///
+  /// Persistent borders remain visible even when they extend beyond the
+  /// visible chart area, providing context for off-screen price levels.
+  ///
+  /// @param markerGroup The marker group to check
+  /// @return bool True if the marker group has persistent borders
   bool _hasPersistentBorders(MarkerGroup markerGroup) {
     return markerGroup.props.hasPersistentBorders;
   }
 
+  /// Draws shaded barriers between high and low price levels.
+  ///
+  /// This is the core visualization method for accumulator contracts, rendering:
+  /// - Horizontal lines at high and low barrier levels
+  /// - Arrow indicators at the start of each barrier line
+  /// - Text labels showing barrier values
+  /// - A shaded area between the barriers
+  /// - Optional previous tick indicator with connecting line
+  ///
+  /// The method handles various edge cases such as barriers extending beyond
+  /// the visible chart area and ensures proper clipping to the chart boundaries.
+  ///
+  /// @param canvas The canvas to draw on
+  /// @param size The size of the drawing area
+  /// @param painterProps Additional properties affecting rendering
+  /// @param lowMarker The marker representing the low barrier
+  /// @param highMarker The marker representing the high barrier
+  /// @param endLeft The x-coordinate where the barriers end (usually contract end or chart edge)
+  /// @param startLeft The x-coordinate where the barriers start
+  /// @param top The y-coordinate of the high barrier
+  /// @param markerGroup The marker group containing these barriers
+  /// @param bottom The y-coordinate of the low barrier
+  /// @param previousTickMarker Optional marker for the previous tick
   void _drawShadedBarriers({
     required Canvas canvas,
     required Size size,
@@ -224,6 +294,18 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     });
   }
 
+  /// Draws a horizontal dashed line with a circle indicator for the previous tick.
+  ///
+  /// This visualizes the previous price level before the current tick, providing
+  /// context for price movement within the accumulator contract.
+  ///
+  /// @param size The size of the drawing area
+  /// @param canvas The canvas to draw on
+  /// @param startX The x-coordinate where the line starts
+  /// @param endX The x-coordinate where the line ends
+  /// @param y The y-coordinate (price level) of the line
+  /// @param circleColor The color for the circle indicator
+  /// @param barrierColor The color for the dashed line
   void _drawPreviousTickBarrier(
     Size size,
     Canvas canvas,
