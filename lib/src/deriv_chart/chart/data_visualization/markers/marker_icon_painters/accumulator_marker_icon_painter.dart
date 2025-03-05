@@ -2,7 +2,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/tick_marker_icon_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/web_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
@@ -18,7 +18,7 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
   final double? fontSize;
 
   Offset _getOffset(
-    WebMarker marker,
+    ChartMarker marker,
     EpochToX epochToX,
     QuoteToY quoteToY,
   ) =>
@@ -47,19 +47,19 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
       painterProps,
     );
 
-    final Map<MarkerType, WebMarker> markers = <MarkerType, WebMarker>{};
+    final Map<MarkerType, ChartMarker> markers = <MarkerType, ChartMarker>{};
 
-    for (final WebMarker marker in markerGroup.markers) {
+    for (final ChartMarker marker in markerGroup.markers) {
       if (marker.markerType != null) {
         markers[marker.markerType!] = marker;
       }
     }
 
-    final WebMarker? lowMarker = markers[MarkerType.lowBarrier];
-    final WebMarker? highMarker = markers[MarkerType.highBarrier];
-    final WebMarker? endMarker = markers[MarkerType.end];
+    final ChartMarker? lowMarker = markers[MarkerType.lowBarrier];
+    final ChartMarker? highMarker = markers[MarkerType.highBarrier];
+    final ChartMarker? endMarker = markers[MarkerType.end];
 
-    final WebMarker? previousTickMarker = markers[MarkerType.previousTick];
+    final ChartMarker? previousTickMarker = markers[MarkerType.previousTick];
 
     if (lowMarker != null && highMarker != null) {
       final Offset lowOffset = _getOffset(lowMarker, epochToX, quoteToY);
@@ -93,14 +93,14 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     required Canvas canvas,
     required Size size,
     required PainterProps painterProps,
-    required WebMarker lowMarker,
-    required WebMarker highMarker,
+    required ChartMarker lowMarker,
+    required ChartMarker highMarker,
     required double endLeft,
     required double startLeft,
     required double top,
     required MarkerGroup markerGroup,
     required double bottom,
-    WebMarker? previousTickMarker,
+    ChartMarker? previousTickMarker,
   }) {
     final double endTop = size.height;
 

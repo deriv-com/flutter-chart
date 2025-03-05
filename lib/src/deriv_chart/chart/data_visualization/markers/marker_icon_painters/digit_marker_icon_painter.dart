@@ -3,7 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/web_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
@@ -34,7 +34,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
   ) {
     final Map<MarkerType, Offset> points = <MarkerType, Offset>{};
 
-    for (final WebMarker marker in markerGroup.markers) {
+    for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = Offset(
         epochToX(marker.epoch),
         quoteToY(marker.quote),
@@ -55,7 +55,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
       opacity = calculateOpacity(startPoint.dx, exitPoint?.dx);
     }
 
-    for (final WebMarker marker in markerGroup.markers) {
+    for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = points[marker.markerType!]!;
       YAxisConfig.instance.yAxisClipping(canvas, size, () {
         _drawMarker(canvas, size, theme, marker, center, markerGroup.style,
@@ -64,8 +64,15 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
     }
   }
 
-  void _drawMarker(Canvas canvas, Size size, ChartTheme theme, WebMarker marker,
-      Offset anchor, MarkerStyle style, double zoom, double opacity) {
+  void _drawMarker(
+      Canvas canvas,
+      Size size,
+      ChartTheme theme,
+      ChartMarker marker,
+      Offset anchor,
+      MarkerStyle style,
+      double zoom,
+      double opacity) {
     switch (marker.markerType) {
       case MarkerType.activeStart:
         paintStartLine(canvas, size, marker, anchor, style, zoom);
@@ -138,7 +145,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
       Canvas canvas,
       Size size,
       ChartTheme theme,
-      WebMarker marker,
+      ChartMarker marker,
       Offset anchor,
       MarkerStyle style,
       double zoom,

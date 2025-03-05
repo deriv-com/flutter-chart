@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/web_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   }) : props = MarkerProps.fromMap(props);
 
   /// Marker entries.
-  final List<WebMarker> markers;
+  final List<ChartMarker> markers;
 
   /// Marker group id.
   final String? id;

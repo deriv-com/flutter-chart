@@ -42,9 +42,9 @@ enum MarkerType {
 
 /// Chart open position marker.
 // ignore: must_be_immutable
-class WebMarker extends Marker {
+class ChartMarker extends Marker {
   /// Initializes.
-  WebMarker({
+  ChartMarker({
     required int epoch,
     required double quote,
     required MarkerDirection direction,

@@ -1,8 +1,11 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
 /// Paints start time line
-void paintStartLine(Canvas canvas, Size size, WebMarker marker, Offset anchor,
+void paintStartLine(Canvas canvas, Size size, ChartMarker marker, Offset anchor,
     MarkerStyle style, double zoom) {
   paintVerticalDashedLine(
     canvas,
