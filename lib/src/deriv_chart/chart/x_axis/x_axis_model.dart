@@ -459,6 +459,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
+    // TODO(Jim): find simpler way to implement this
     if (!_isScrollBlocked) {
       scrollBy(-details.delta.dx);
     }
