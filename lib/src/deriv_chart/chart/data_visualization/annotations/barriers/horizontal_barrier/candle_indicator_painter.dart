@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController chartController,
+    required ChartScaleModel chartScaleModel,
   }) {
     if (!series.isOnRange) {
       return;
@@ -60,7 +60,7 @@ class CandleIndicatorPainter extends HorizontalBarrierPainter<CandleIndicator> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
       chartConfig: chartConfig,
-      chartController: chartController,
+      chartScaleModel: chartScaleModel,
     );
   }
 

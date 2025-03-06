@@ -1,9 +1,9 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +88,7 @@ class _MarkerAreaState extends State<MarkerArea> {
                 quoteToY: widget.quoteToCanvasY,
                 theme: context.watch<ChartTheme>(),
                 chartConfig: context.watch<ChartConfig>(),
-                chartController: context.watch<ChartController>(),
+                chartScaleModel: context.watch<ChartScaleModel>(),
               ),
             ),
           ),
@@ -109,7 +109,7 @@ class _MarkerPainter extends CustomPainter {
     required this.quoteToY,
     required this.theme,
     required this.chartConfig,
-    required this.chartController,
+    required this.chartScaleModel,
   });
 
   final MarkerSeries series;
@@ -117,7 +117,7 @@ class _MarkerPainter extends CustomPainter {
   final QuoteToY quoteToY;
   final ChartTheme theme;
   final ChartConfig chartConfig;
-  final ChartController chartController;
+  final ChartScaleModel chartScaleModel;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -129,7 +129,7 @@ class _MarkerPainter extends CustomPainter {
       const AnimationInfo(),
       chartConfig,
       theme,
-      chartController,
+      chartScaleModel,
     );
   }
 

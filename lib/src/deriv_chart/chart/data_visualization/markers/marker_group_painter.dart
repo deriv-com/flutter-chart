@@ -5,10 +5,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/convert_range.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 
 /// A [SeriesPainter] for painting [MarkerGroupPainter] data.
@@ -28,21 +26,10 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartController chartController,
+    required ChartScaleModel chartScaleModel,
   }) {
-    final double? msPerPx = chartController.getMsPerPx!();
-
-    final int granularity = chartConfig.granularity;
-
-    final double zoom = msPerPx != null
-        ? convertRange(msPerPx / granularity, 0, 1, 0.8, 1.2)
-        : 1;
-
-    final PainterProps props = PainterProps(
-      zoom: zoom,
-      granularity: granularity,
-      msPerPx: msPerPx,
-    );
+    // Get PainterProps directly from the model
+    final props = chartScaleModel.toPainterProps();
 
     for (final MarkerGroup markerGroup in series.visibleMarkerGroupList) {
       markerGroupIconPainter.paintMarkerGroup(

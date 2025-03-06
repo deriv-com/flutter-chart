@@ -150,3 +150,4 @@ export 'src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_start_marker.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_vertical_line.dart';
+export 'src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';

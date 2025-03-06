@@ -1,11 +1,11 @@
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_label_painter_web.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_grid_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -465,7 +465,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
                 leftBoundEpoch: xAxis.leftBoundEpoch,
                 topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
                 bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
-                chartController: context.watch<ChartController>(),
+                chartScaleModel: context.watch<ChartScaleModel>(),
               ),
             ),
           ),

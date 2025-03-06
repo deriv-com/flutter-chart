@@ -4,12 +4,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController chartController,
+    required ChartScaleModel chartScaleModel,
   }) {
     if (!series.isOnRange) {
       return;
@@ -345,7 +345,7 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController chartController,
+    required ChartScaleModel chartScaleModel,
   }) {
     super.onPaint(
       canvas: canvas,
@@ -354,7 +354,7 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
       chartConfig: chartConfig,
-      chartController: chartController,
+      chartScaleModel: chartScaleModel,
     );
 
     if (_barrierPosition != null) {

@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +23,9 @@ abstract class SeriesPainter<S extends Series> {
   @protected
   late ChartTheme theme;
 
-  /// Chart's controller.
+  /// Chart's scale model.
   @protected
-  late ChartController chartController;
+  late ChartScaleModel chartScaleModel;
 
   /// Sets some variables and paints this [SeriesPainter]'s data.
   void paint({
@@ -36,11 +36,11 @@ abstract class SeriesPainter<S extends Series> {
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
     required ChartTheme theme,
-    required ChartController chartController,
+    required ChartScaleModel chartScaleModel,
   }) {
     this.chartConfig = chartConfig;
     this.theme = theme;
-    this.chartController = chartController;
+    this.chartScaleModel = chartScaleModel;
 
     onPaint(
       canvas: canvas,
@@ -49,7 +49,7 @@ abstract class SeriesPainter<S extends Series> {
       quoteToY: quoteToY,
       animationInfo: animationInfo,
       chartConfig: chartConfig,
-      chartController: chartController,
+      chartScaleModel: chartScaleModel,
     );
   }
 
@@ -61,6 +61,6 @@ abstract class SeriesPainter<S extends Series> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
-    required ChartController chartController,
+    required ChartScaleModel chartScaleModel,
   });
 }

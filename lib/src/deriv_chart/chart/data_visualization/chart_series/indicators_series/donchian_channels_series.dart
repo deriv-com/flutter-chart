@@ -1,8 +1,18 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/indicators_ui/donchian_channel/donchian_channel_indicator_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/indicators_series/single_indicator_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/models/indicator_input.dart';
+import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_technical_analysis/deriv_technical_analysis.dart';
 import 'package:flutter/material.dart';
 
@@ -160,20 +170,20 @@ class DonchianChannelsSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController chartController,
+    ChartScaleModel chartScaleModel,
   ) {
     upperChannelSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
     middleChannelSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
     lowerChannelSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
 
     if (config.showChannelFill &&
         upperChannelSeries.visibleEntries.isNotEmpty &&
         lowerChannelSeries.visibleEntries.isNotEmpty) {
       super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
-          theme, chartController);
+          theme, chartScaleModel);
     }
   }
 

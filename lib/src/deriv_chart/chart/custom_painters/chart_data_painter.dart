@@ -2,7 +2,7 @@
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class ChartDataPainter extends BaseChartDataPainter {
     required int leftBoundEpoch,
     required double topY,
     required double bottomY,
-    required ChartController chartController,
+    required ChartScaleModel chartScaleModel,
     List<Series> secondarySeries = const <Series>[],
     AnimationInfo animationInfo = const AnimationInfo(),
   }) : super(
@@ -39,7 +39,7 @@ class ChartDataPainter extends BaseChartDataPainter {
           leftBoundEpoch: leftBoundEpoch,
           topY: topY,
           bottomY: bottomY,
-          chartController: chartController,
+          chartScaleModel: chartScaleModel,
         );
 
   /// Chart's main data series.
@@ -55,7 +55,7 @@ class ChartDataPainter extends BaseChartDataPainter {
       animationInfo,
       chartConfig,
       theme,
-      chartController,
+      chartScaleModel,
     );
 
     super.paint(canvas, size);
@@ -92,7 +92,7 @@ class BaseChartDataPainter extends CustomPainter {
     required this.leftBoundEpoch,
     required this.topY,
     required this.bottomY,
-    required this.chartController,
+    required this.chartScaleModel,
     this.series = const <Series>[],
     this.animationInfo = const AnimationInfo(),
   });
@@ -128,7 +128,7 @@ class BaseChartDataPainter extends CustomPainter {
   final double bottomY;
 
   /// Chart's controller.
-  final ChartController chartController;
+  final ChartScaleModel chartScaleModel;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -141,7 +141,7 @@ class BaseChartDataPainter extends CustomPainter {
         animationInfo,
         chartConfig,
         theme,
-        chartController,
+        chartScaleModel,
       );
     }
   }

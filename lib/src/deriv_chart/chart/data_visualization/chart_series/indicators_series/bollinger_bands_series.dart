@@ -6,9 +6,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -177,20 +177,20 @@ class BollingerBandSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController chartController,
+    ChartScaleModel chartScaleModel,
   ) {
     lowerSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
     middleSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
     upperSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
 
     if (bbOptions.showChannelFill &&
         upperSeries.visibleEntries.isNotEmpty &&
         lowerSeries.visibleEntries.isNotEmpty) {
       super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
-          theme, chartController);
+          theme, chartScaleModel);
     }
   }
 

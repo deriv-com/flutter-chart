@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'models/animation_info.dart';
+import 'models/chart_scale_model.dart';
 
 /// Conversion function to convert epoch value to canvas X.
 typedef EpochToX = double Function(int);
@@ -95,7 +95,7 @@ abstract class ChartData {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController chartController,
+    ChartScaleModel chartScaleModel,
   );
 }
 

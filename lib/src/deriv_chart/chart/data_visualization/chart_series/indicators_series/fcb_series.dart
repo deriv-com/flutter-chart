@@ -2,7 +2,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/fcb_indicator/fcb_indicato
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/channel_fill_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -112,18 +112,18 @@ class FractalChaosBandSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
-    ChartController chartController,
+    ChartScaleModel chartScaleModel,
   ) {
     fcbLowSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
     fcbHighSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, theme, chartController);
+        chartConfig, theme, chartScaleModel);
 
     if (config.showChannelFill &&
         fcbHighSeries.visibleEntries.isNotEmpty &&
         fcbLowSeries.visibleEntries.isNotEmpty) {
       super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
-          theme, chartController);
+          theme, chartScaleModel);
     }
   }
 

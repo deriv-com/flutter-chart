@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/misc/chart_controller.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class ChartPainter extends CustomPainter {
     required this.chartData,
     required this.epochToCanvasX,
     required this.quoteToCanvasY,
-    required this.chartController,
+    required this.chartScaleModel,
     this.animationInfo = const AnimationInfo(),
   });
 
@@ -37,7 +37,7 @@ class ChartPainter extends CustomPainter {
   final ChartData chartData;
 
   /// The controller of the chart.
-  final ChartController chartController;
+  final ChartScaleModel chartScaleModel;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -49,7 +49,7 @@ class ChartPainter extends CustomPainter {
       animationInfo,
       chartConfig,
       theme,
-      chartController,
+      chartScaleModel,
     );
   }
 

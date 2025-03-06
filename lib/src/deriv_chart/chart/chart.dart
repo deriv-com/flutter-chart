@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
@@ -263,6 +264,8 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       granularity: widget.granularity,
       chartAxisConfig: widget.chartAxisConfig,
     );
+    final ChartScaleModel _chartScaleModel = ChartScaleModel(
+        granularity: widget.granularity, msPerPx: widget.msPerPx);
 
     final List<Series>? overlaySeries =
         _getIndicatorSeries(widget.overlayConfigs);
@@ -294,7 +297,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
-        Provider<ChartController>.value(value: _controller),
+        Provider<ChartScaleModel>.value(value: _chartScaleModel),
       ],
       child: Ink(
         color: _chartTheme.base08Color,
