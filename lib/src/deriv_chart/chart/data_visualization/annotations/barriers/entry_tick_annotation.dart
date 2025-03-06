@@ -7,7 +7,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/anim
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_entry_exit_marker.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/entry_exit_marker_style.dart';
 
@@ -52,7 +51,6 @@ class _EntryTickAnnotationPainter extends SeriesPainter<EntryTickAnnotation> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartConfig chartConfig,
     required ChartScaleModel chartScaleModel,
   }) {
     final Offset center = Offset(

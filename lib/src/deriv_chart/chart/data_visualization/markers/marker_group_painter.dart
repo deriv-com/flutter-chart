@@ -7,7 +7,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 
 /// A [SeriesPainter] for painting [MarkerGroupPainter] data.
 class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
@@ -20,7 +19,6 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
 
   @override
   void onPaint({
-    required ChartConfig chartConfig,
     required Canvas canvas,
     required Size size,
     required EpochToX epochToX,

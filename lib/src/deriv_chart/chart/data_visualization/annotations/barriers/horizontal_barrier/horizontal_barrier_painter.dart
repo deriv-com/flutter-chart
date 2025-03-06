@@ -10,7 +10,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +48,6 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartConfig chartConfig,
     required ChartScaleModel chartScaleModel,
   }) {
     if (!series.isOnRange) {
@@ -344,7 +342,6 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartConfig chartConfig,
     required ChartScaleModel chartScaleModel,
   }) {
     super.onPaint(
@@ -353,7 +350,6 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
       epochToX: epochToX,
       quoteToY: quoteToY,
       animationInfo: animationInfo,
-      chartConfig: chartConfig,
       chartScaleModel: chartScaleModel,
     );
 

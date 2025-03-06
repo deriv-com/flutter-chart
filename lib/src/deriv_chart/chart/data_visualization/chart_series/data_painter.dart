@@ -28,7 +28,6 @@ abstract class DataPainter<S extends DataSeries<Tick>>
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required chartConfig,
     required ChartScaleModel chartScaleModel,
   }) {
     final DataSeries<Tick> series = this.series;
