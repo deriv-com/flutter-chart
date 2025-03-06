@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/helpers/combine_paths.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/foundation.dart';
@@ -49,7 +48,6 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    ChartConfig chartConfig,
   ) {
     final LineStyle firstLineStyle =
         firstSeries.style as LineStyle? ?? theme.lineStyle;

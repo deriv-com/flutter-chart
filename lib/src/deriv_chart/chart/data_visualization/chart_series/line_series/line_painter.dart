@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,6 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    ChartConfig chartConfig,
   ) {
     final LineStyle style = series.style as LineStyle? ?? theme.lineStyle;
 

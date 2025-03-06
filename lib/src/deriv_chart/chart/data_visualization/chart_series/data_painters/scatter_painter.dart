@@ -1,5 +1,4 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/scatter_style.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,6 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    ChartConfig chartConfig,
   ) {
     if (series.entries == null) {
       return;

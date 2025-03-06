@@ -87,7 +87,6 @@ class _MarkerAreaState extends State<MarkerArea> {
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
                 theme: context.watch<ChartTheme>(),
-                chartConfig: context.watch<ChartConfig>(),
                 chartScaleModel: context.watch<ChartScaleModel>(),
               ),
             ),
@@ -108,7 +107,6 @@ class _MarkerPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.theme,
-    required this.chartConfig,
     required this.chartScaleModel,
   });
 
@@ -116,7 +114,6 @@ class _MarkerPainter extends CustomPainter {
   final EpochToX epochToX;
   final QuoteToY quoteToY;
   final ChartTheme theme;
-  final ChartConfig chartConfig;
   final ChartScaleModel chartScaleModel;
 
   @override
@@ -127,7 +124,7 @@ class _MarkerPainter extends CustomPainter {
       epochToX,
       quoteToY,
       const AnimationInfo(),
-      chartConfig,
+      const ChartConfig(granularity: 1000),
       theme,
       chartScaleModel,
     );

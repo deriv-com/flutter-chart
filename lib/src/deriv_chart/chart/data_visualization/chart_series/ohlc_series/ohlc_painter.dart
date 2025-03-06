@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/models/candle.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../chart_data.dart';
@@ -24,7 +23,6 @@ abstract class OhlcPainter extends DataPainter<DataSeries<Candle>> {
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    ChartConfig chartConfig,
   ) {
     if (series.entries == null || series.visibleEntries.length < 2) {
       return;
