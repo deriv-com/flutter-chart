@@ -1,4 +1,5 @@
 appId: com.example.chart_attempt
 ---
+- clearState
 - launchApp
 - assertVisible: Up
