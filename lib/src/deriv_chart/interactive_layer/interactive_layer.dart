@@ -68,16 +68,6 @@ class InteractiveLayer extends StatefulWidget {
 }
 
 class _InteractiveLayerState extends State<InteractiveLayer> {
-  /// 1. Keep the state of the selected tool here, the tool that the focus is on
-  /// it right now
-  /// 2. provide callback to outside to let them what is the current selected tool
-  /// 3. This widget will handle adding a tool, can delegate adding to inner components
-  ///    but anyway it will happen here. either directly or indirectly through inner components
-  /// 4. This widget knows the current selected tool, will update its position when its interacted
-  /// 5. the decision to make which tool is selected based on the user click and it's coordinate will happen here
-  /// 6.
-  ///
-
   final List<InteractableDrawing> _interactableDrawings = [];
 
   /// Timer for debouncing repository updates
