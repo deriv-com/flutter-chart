@@ -253,21 +253,20 @@ class _InteractiveLayerGestureHandlerState
     bool waitForAnimation = false,
   }) async {
     if (waitForAnimation) {
-      if (direction == StateChangeAnimationDirection.forward) {
-        _stateChangeController.reset();
-        await _stateChangeController.forward();
-      } else {
-        await _stateChangeController.reverse(from: 1);
-      }
+      await _runAnimation(direction);
       setState(() => _interactiveState = state);
     } else {
-      if (direction == StateChangeAnimationDirection.forward) {
-        _stateChangeController.reset();
-        unawaited(_stateChangeController.forward());
-      } else {
-        unawaited(_stateChangeController.reverse(from: 1));
-      }
-      _interactiveState = state;
+      unawaited(_runAnimation(direction));
+      setState(() => _interactiveState = state);
+    }
+  }
+
+  Future<void> _runAnimation(StateChangeAnimationDirection direction) async {
+    if (direction == StateChangeAnimationDirection.forward) {
+      _stateChangeController.reset();
+      await _stateChangeController.forward();
+    } else {
+      await _stateChangeController.reverse(from: 1);
     }
   }
 
