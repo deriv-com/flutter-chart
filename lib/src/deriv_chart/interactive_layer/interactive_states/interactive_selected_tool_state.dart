@@ -122,7 +122,7 @@ class InteractiveSelectedToolState extends InteractiveState
       interactiveLayer.updateStateTo(
         InteractiveNormalState(interactiveLayer: interactiveLayer),
         StateChangeAnimationDirection.backward,
-        blocking: true,
+        waitForAnimation: true,
       );
     }
   }

@@ -250,9 +250,9 @@ class _InteractiveLayerGestureHandlerState
   Future<void> updateStateTo(
     InteractiveState state,
     StateChangeAnimationDirection direction, {
-    bool blocking = false,
+    bool waitForAnimation = false,
   }) async {
-    if (blocking) {
+    if (waitForAnimation) {
       if (direction == StateChangeAnimationDirection.forward) {
         _stateChangeController.reset();
         await _stateChangeController.forward();
