@@ -394,7 +394,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           bottomBoundQuoteAnimationController,
         ],
         builder: (_, Widget? child) => DrawingToolChart(
-          // key: const ValueKey<String>('drawing_tool_chart'),
           series: widget.mainSeries as DataSeries<Tick>,
           chartQuoteToCanvasY: chartQuoteToCanvasY,
           chartQuoteFromCanvasY: chartQuoteFromCanvasY,
