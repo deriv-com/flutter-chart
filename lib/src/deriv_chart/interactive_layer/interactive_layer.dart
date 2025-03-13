@@ -73,8 +73,8 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
   /// Timer for debouncing repository updates
   Timer? _debounceTimer;
 
-  /// Duration for debouncing repository updates (300ms is a good balance)
-  static const Duration _debounceDuration = Duration(milliseconds: 300);
+  /// Duration for debouncing repository updates (2sec is a good balance)
+  static const Duration _debounceDuration = Duration(seconds: 1);
 
   @override
   void initState() {

@@ -434,13 +434,6 @@ class LineInteractableDrawing
         quote: newEndQuote,
       );
     }
-
-    // Note: The actual config update should be handled by the InteractiveLayer
-    // which has access to the Repository. This method only updates the local
-    // startPoint and endPoint properties, which will be reflected in the drawing.
-    //
-    // The InteractiveLayer should periodically check if the selected drawing's
-    // points have changed and update the config in the repository accordingly.
   }
 
   @override
