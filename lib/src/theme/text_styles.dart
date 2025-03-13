@@ -2,9 +2,15 @@
 
 import 'package:flutter/material.dart';
 
+class FontSize {
+  /// fontSize: 12
+  static const double s75 = 12;
+}
+
 /// This include all text styles according to Deriv theme guideline.
 class TextStyles {
   static const String appFontFamily = 'IBMPlexSans';
+  static const String fontFamilyDeriv = 'Inter';
 
   static const TextStyle display1 = TextStyle(
     fontFamily: appFontFamily,
@@ -97,5 +103,12 @@ class TextStyles {
     height: 1.4,
     fontWeight: FontWeight.w400,
     fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
+  );
+
+  static const TextStyle bodyXsRegular = TextStyle(
+    fontFamily: fontFamilyDeriv,
+    fontSize: FontSize.s75,
+    height: 1.67,
+    fontWeight: FontWeight.w400,
   );
 }
