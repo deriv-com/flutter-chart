@@ -4,7 +4,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barrier_objects.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
@@ -48,7 +47,6 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartScaleModel chartScaleModel,
   }) {
     if (!series.isOnRange) {
       return;
@@ -342,7 +340,6 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartScaleModel chartScaleModel,
   }) {
     super.onPaint(
       canvas: canvas,
@@ -350,7 +347,6 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
       epochToX: epochToX,
       quoteToY: quoteToY,
       animationInfo: animationInfo,
-      chartScaleModel: chartScaleModel,
     );
 
     if (_barrierPosition != null) {

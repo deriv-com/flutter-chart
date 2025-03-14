@@ -57,4 +57,9 @@ class PainterProps {
   /// This property may be null in certain contexts where the horizontal scale
   /// is determined by other means.
   final double? msPerPx;
+
+  @override
+  String toString() {
+    return 'PainterProps{zoom: $zoom, granularity: $granularity, msPerPx: $msPerPx}';
+  }
 }

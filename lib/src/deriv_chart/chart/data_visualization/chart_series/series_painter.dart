@@ -48,7 +48,6 @@ abstract class SeriesPainter<S extends Series> {
       epochToX: epochToX,
       quoteToY: quoteToY,
       animationInfo: animationInfo,
-      chartScaleModel: chartScaleModel,
     );
   }
 
@@ -59,6 +58,5 @@ abstract class SeriesPainter<S extends Series> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartScaleModel chartScaleModel,
   });
 }

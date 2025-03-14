@@ -1,12 +1,10 @@
-import 'dart:ui';
-
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
+import 'package:flutter/material.dart';
 
 /// A specialized painter class responsible for rendering marker groups on a financial chart.
 ///
@@ -72,7 +70,6 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
     required EpochToX epochToX,
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
-    required ChartScaleModel chartScaleModel,
   }) {
     // Get PainterProps directly from the model
     final props = chartScaleModel.toPainterProps();

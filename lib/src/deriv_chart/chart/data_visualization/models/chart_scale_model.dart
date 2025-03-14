@@ -107,4 +107,9 @@ class ChartScaleModel {
       granularity: granularity ?? this.granularity,
     );
   }
+
+  @override
+  String toString() {
+    return 'ChartScaleModel(msPerPx: $msPerPx, granularity: $granularity)';
+  }
 }
