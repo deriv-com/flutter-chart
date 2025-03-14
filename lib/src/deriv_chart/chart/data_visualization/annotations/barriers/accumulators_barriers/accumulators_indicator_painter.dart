@@ -1,9 +1,16 @@
 import 'dart:ui' as ui;
 
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/horizontal_barrier/horizontal_barrier.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/accumulator_object.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/create_shape_path.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
 /// Accumulator barriers painter.

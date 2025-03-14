@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -86,6 +87,7 @@ class _MarkerAreaState extends State<MarkerArea> {
                 epochToX: xAxis.xFromEpoch,
                 quoteToY: widget.quoteToCanvasY,
                 theme: context.watch<ChartTheme>(),
+                chartScaleModel: context.watch<ChartScaleModel>(),
               ),
             ),
           ),
@@ -105,12 +107,14 @@ class _MarkerPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.theme,
+    required this.chartScaleModel,
   });
 
   final MarkerSeries series;
   final EpochToX epochToX;
   final QuoteToY quoteToY;
   final ChartTheme theme;
+  final ChartScaleModel chartScaleModel;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -122,6 +126,7 @@ class _MarkerPainter extends CustomPainter {
       const AnimationInfo(),
       const ChartConfig(granularity: 1000),
       theme,
+      chartScaleModel,
     );
   }
 
