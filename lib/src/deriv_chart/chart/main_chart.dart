@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
@@ -14,7 +13,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../drawing_tool_chart/drawing_tool_chart.dart';
 import 'basic_chart.dart';
+import 'crosshair/crosshair_area.dart';
 import 'multiple_animated_builder.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
@@ -26,7 +27,6 @@ import 'data_visualization/models/chart_object.dart';
 import 'helpers/functions/helper_functions.dart';
 import '../../misc/callbacks.dart';
 import '../../theme/chart_theme.dart';
-import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tool_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 
 /// The main chart to display in the chart widget.
@@ -356,6 +356,19 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 if (widget.markerSeries != null) _buildMarkerArea(),
                 if (widget.drawingTools != null)
                   _buildDrawingToolChart(widget.drawingTools!),
+                // if (widget.drawingTools != null)
+                //   InteractiveLayer(
+                //     drawingTools: widget.drawingTools!,
+                //     series: widget.mainSeries as DataSeries<Tick>,
+                //     drawingToolsRepo:
+                //         context.watch<Repository<DrawingToolConfig>>(),
+                //     chartConfig: context.watch<ChartConfig>(),
+                //     quoteToCanvasY: chartQuoteToCanvasY,
+                //     epochToCanvasX: xAxis.xFromEpoch,
+                //     quoteFromCanvasY: chartQuoteFromCanvasY,
+                //     epochFromCanvasX: xAxis.epochFromX,
+                //   ),
+                // TODO(Ramin): move and handle cross-hair inside the InteractiveLayer
                 if (kIsWeb) _buildCrosshairAreaWeb(),
                 if (!kIsWeb && !(widget.drawingTools?.isDrawingMoving ?? false))
                   _buildCrosshairArea(),

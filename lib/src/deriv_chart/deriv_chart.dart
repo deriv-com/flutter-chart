@@ -264,6 +264,7 @@ class _DerivChartState extends State<DerivChart> {
       _drawingTools
         ..init()
         ..drawingToolsRepo = _drawingToolsRepo;
+      // _drawingTools.drawingToolsRepo = _drawingToolsRepo;
     });
     showDialog<void>(
       context: context,

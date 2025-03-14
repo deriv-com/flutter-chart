@@ -29,6 +29,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// List containing addOns
   final List<T> _addOns;
+
   // TODO(Ramin): once we handle setting [AddOnConfig.number] inside this class
   // we can use [runtimeType + number] as the id for config objects and can
   // change this to Map<String, bool> to store hidden status.
@@ -73,6 +74,8 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       items.add(addOnConfig);
       _hiddenStatus.add(false);
     }
+
+    notifyListeners();
   }
 
   /// Adds a new indicator or drawing tool and updates storage.
@@ -151,4 +154,9 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   @override
   bool getHiddenStatus(int index) => _hiddenStatus[index];
+
+  @override
+  void update() {
+    notifyListeners();
+  }
 }

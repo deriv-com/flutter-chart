@@ -1,3 +1,135 @@
+# Widget Structure
+
+The chart library follows a nested widget structure to handle different responsibilities:
+
+```
+┌─────────────────────────┐
+│      XAxisWrapper       │
+│  ┌───────────────────┐  │
+│  │  GestureManager   │  │
+│  │  ┌─────────────┐  │  │
+│  │  │    Chart    │  │  │
+│  │  │             │  │  │
+│  │  └─────────────┘  │  │
+│  └───────────────────┘  │
+└─────────────────────────┘
+```
+
+1. **XAxisWrapper**: The outermost widget that:
+   - Provides platform-specific X-axis implementations (web/mobile)
+   - Manages chart data entries and live data state
+   - Handles data fit mode and zoom level (msPerPx)
+   - Controls scroll animation and visible area changes
+
+2. **GestureManager**: Wrapped inside XAxisWrapper to:
+   - Handle user interactions (pan, zoom, tap)
+   - Manage gesture states and animations
+   - Control chart navigation and interaction behavior
+
+3. **Chart**: The core widget containing:
+   - MainChart: Primary chart area for price data visualization
+   - BottomCharts: Optional secondary charts for indicators
+   - Shared X-axis coordination between main and bottom charts
+   - Y-axis management for each chart section
+
+This layered structure ensures separation of concerns:
+- XAxisWrapper handles platform specifics and data management
+- GestureManager focuses on user interaction
+- Chart concentrates on data visualization and coordination
+
+# Chart Structure
+
+The Chart widget has two implementations based on the platform (web/mobile):
+
+```
+┌─────────────────────────┐
+│         Chart           │
+│                         │
+│  ┌───────────────────┐  │
+│  │    MainChart      │  │
+│  │   (Main Data)     │  │
+│  └───────────────────┘  │
+│                         │
+│  ┌───────────────────┐  │
+│  │   BottomCharts    │  │
+│  │(Bottom Indicators)│  │
+│  └───────────────────┘  │
+│          ...            │
+│          ...            │
+│          ...            │
+└─────────────────────────┘
+```
+
+1. **MainChart**: The primary chart area that displays:
+   - Market data visualization (Line, Candlestick charts)
+   - Overlay indicators (like Moving Average)
+   - Drawing tools for technical analysis
+   - Crosshair for price/time inspection
+   - Other visual elements like barriers and markers
+
+2. **BottomCharts**: Additional chart areas below the MainChart that:
+   - Display separate indicator charts (like RSI, MACD)
+   - Have their own Y-axis scale independent of MainChart
+   - Share the same X-axis viewport with MainChart
+   - Can be added/removed dynamically
+
+Both MainChart and BottomCharts:
+- Share the same X-axis viewport through XAxisWrapper
+- Manage their own Y-axis range and scaling
+- Update and repaint when the viewport changes
+- Support user interactions like zooming and scrolling
+
+# Chart Widgets Hierarchy
+
+The chart library implements a hierarchical structure of chart widgets, each building upon the capabilities of its parent:
+
+```
+┌─────────────────────┐
+│     BasicChart      │
+│   (Base Features)   │
+└─────────┬─────────┬─┘
+          │         │
+          ▼         ▼
+    ┌─────────┐  ┌─────────┐
+    │MainChart│  │BottomChart
+    └─────────┘  └─────────┘
+```
+
+## BasicChart
+
+BasicChart serves as the foundation for all chart widgets, providing essential chart functionality:
+- Takes a single MainSeries for data visualization
+- Manages Y-axis range through topBoundEpoch and bottomBoundEpoch
+- Provides coordinate conversion functions:
+  - Uses its Y-axis management to convert values (quotes) to y-positions
+  - Works with XAxisWrapper's XAxisModel to convert time (epoch) to x-positions
+  - Together these enable plotting any (epoch, quote) point on the canvas
+- Handles Y-axis scaling and animations
+- Manages grid lines and labels
+- Supports user interactions for Y-axis scaling
+
+## MainChart
+
+MainChart extends BasicChart to create the primary chart area by adding:
+- Support for multiple ChartData types (mainSeries, overlaySeries, markerSeries)
+- Crosshair functionality for price/time inspection
+- Drawing tools for technical analysis
+- Overlay indicators that share the same Y-axis scale
+
+## BottomChart
+
+BottomChart extends BasicChart to create secondary chart areas that:
+- Display technical indicators requiring independent Y-axis scaling below the MainChart
+- Maintain separate Y-axis ranges while sharing X-axis viewport
+- Support dynamic addition/removal of indicators
+- Sync zooming and scrolling with MainChart
+
+This hierarchical structure allows for:
+- Code reuse through inheritance
+- Clear separation of responsibilities
+- Flexible composition of chart features
+- Independent Y-axis management with shared X-axis coordination
+
 # Market data
 
 The market data(input data of chart) is a list of _Ticks_ or _OHLC_.
@@ -59,7 +191,7 @@ the number from `intervals` list is selected as an interval that using it with t
 # X-Axis scrolling
 
 Scrolling in the chart happens by updating **rightBoundEpoch** of the chart's X-Axis.
-changing the **rightBoundEpoch** amount will change the chart’s scroll position. **rightBoundEpoch** be on the last tick when we first load the chart.
+changing the **rightBoundEpoch** amount will change the chart's scroll position. **rightBoundEpoch** be on the last tick when we first load the chart.
 
 # Zooming
 
@@ -168,15 +300,35 @@ Chart has its own default dark and light themes that switch depending on Theme.o
 
 # BasicChart
 
-**BasicChart** is a simple chart widget that takes only one `Series` class to paint. It handles common functionalities of handling Y-axis range, scaling and its animation, top/bottom padding.
+**BasicChart** is a simple chart widget that serves as the foundation for all chart widgets. It:
+- Takes a single Series class to paint (see [Data Visualization](#data-visualisation) for Series hierarchy)
+- Uses CustomPaint in its build method to paint the Series data (which extends from ChartData)
+- Manages Y-axis range through topBoundEpoch and bottomBoundEpoch
+- Provides coordinate conversion between data points and canvas positions
+- Handles Y-axis scaling, animations, and padding
+- Manages grid lines and labels
+- In its build method, uses both:
+  - XAxisModel's xFromEpoch function to convert time (epoch) to x-positions
+  - Its own yFromQuote function to convert values (quotes) to y-positions
+  Together these enable plotting any data point from MainSeries or other Series (ChartData) on the canvas
 
 # MainChart
 
-**MainChart** is a subclass of **BasicChart** and a customized widget that can show multiple `ChartData` (like `overlaySeries and `markerSeries`) and adds crosshair feature and some other minor features.
+**MainChart** is a subclass of **BasicChart** that serves as the primary chart area. It is responsible for:
+- Displaying the main market data through various chart types (LineSeries, CandleSeries, etc. as described in [Data Visualization](#data-visualisation))
+- Showing overlay indicators that share the same Y-axis scale (like Moving Average)
+- Supporting drawing tools for technical analysis
+- Managing crosshair interactions for price/time inspection
+- Handling visual elements like barriers and markers
+- Coordinating with the shared X-axis viewport
 
 # BottomChart
 
-Sometimes we need to show two charts on the screen, for example for showing bottom indicators. In that case, we use **BottomChart** that extends from **BasicChart** to show the other chart widgets.
+**BottomChart** extends from **BasicChart** to provide separate chart areas for indicators that require their own Y-axis scale. Key features:
+- Displays technical indicators (RSISeries, MACDSeries, etc. as described in [Data Visualization](#data-visualisation)) that need independent scaling
+- Maintains its own Y-axis range and scaling while sharing the X-axis viewport
+- Can be dynamically added, removed, or reordered
+- Supports user interactions like zooming and scrolling in sync with MainChart
 ![plot](basic-chart.png)
 
 # Chart
@@ -208,4 +360,28 @@ CustomDraggableSheet is a wrapper widget to be used combined with a bottom sheet
 
 ## Drawing Tool Chart
 
-For brief explanation of how drawing tools work, please refer to [Drawing Tools](drawing_tools.md) section.
+### Drawing Tools
+
+For a brief explanation of how drawing tools work, please refer to [Drawing Tools](drawing_tools.md) section.
+
+### Interactive Layer (New Implementation)
+
+The chart implements a new Interactive Layer that manages user interactions with drawing tools. This new implementation will replace the previous drawing tools handling mechanism, which will be deprecated and removed in future versions.
+
+The Interactive Layer:
+
+- Handles user gestures (taps, drags, hovers) on the chart
+- Manages the lifecycle of drawing tools from creation to manipulation
+- Implements a state pattern to handle different interaction modes
+- Controls the visual appearance of drawing tools based on their state
+- Provides a more maintainable and extensible architecture for drawing tools
+
+The Interactive Layer uses different states to manage interactions:
+
+1. **Normal State**: Default state when no tools are selected
+2. **Selected Tool State**: Active when a drawing tool is selected
+3. **Adding Tool State**: Active when a new drawing tool is being created
+
+Each drawing tool also has its own state (normal, selected, hovered, adding, dragging) that determines how it's rendered and how it responds to user interactions.
+
+For a detailed explanation of the Interactive Layer architecture and state management, see [Interactive Layer](interactive_layer.md).
