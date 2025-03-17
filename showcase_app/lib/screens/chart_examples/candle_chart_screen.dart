@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:showcase_app/screens/chart_examples/base_chart_screen.dart';
+import 'base_chart_screen.dart';
 
 /// Screen that displays a candle chart example.
 class CandleChartScreen extends BaseChartScreen {
@@ -18,6 +18,12 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
   @override
   String getTitle() => 'Candle Chart';
 
+  // Create an empty indicators repository to ensure no indicators are shown
+  final Repository<IndicatorConfig> _emptyIndicatorsRepo = AddOnsRepository<IndicatorConfig>(
+    createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
+    sharedPrefKey: 'candle_chart_indicators',
+  );
+
   @override
   Widget buildChart() {
     return DerivChart(
@@ -33,6 +39,8 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
       pipSize: 2,
       granularity: 3600000, // 1 hour
       activeSymbol: 'CANDLE_CHART',
+      // Explicitly set an empty indicators repository to remove any default indicators
+      indicatorsRepo: _emptyIndicatorsRepo,
     );
   }
 
