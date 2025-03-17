@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:showcase_app/screens/chart_examples/base_chart_screen.dart';
-import 'package:showcase_app/utils/chart_data_provider.dart';
+import 'base_chart_screen.dart';
 
 /// Screen that displays a chart with barriers.
 class BarriersScreen extends BaseChartScreen {
@@ -43,13 +42,13 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   
   void _initializeBarriers() {
     if (ticks.isEmpty) {
-      print('Ticks list is empty, cannot initialize barriers');
+      debugPrint('Ticks list is empty, cannot initialize barriers');
       return;
     }
     
     try {
-      final midPoint = ticks.length ~/ 2;
-      final midTick = ticks[midPoint];
+      // final midPoint = ticks.length ~/ 2;
+      // final midTick = ticks[midPoint];
       final lastTick = ticks.last;
       
       // Calculate a price level in the middle of the range
@@ -66,10 +65,12 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
           isDashed: _isDashed,
         ),
         visibility: HorizontalBarrierVisibility.normal,
+        longLine: true
       );
       
       _verticalBarrier = VerticalBarrier.onTick(
-        midTick,
+        // midTick,
+        lastTick,
         title: 'Time Point',
         longLine: true,
         style: VerticalBarrierStyle(
@@ -80,7 +81,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       
       _tickIndicator = TickIndicator(
         lastTick,
-        style: HorizontalBarrierStyle(
+        style: const HorizontalBarrierStyle(
           color: Colors.orange,
           labelShape: LabelShape.pentagon,
           hasBlinkingDot: true,
@@ -92,7 +93,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       // Force a rebuild to show the barriers
       if (mounted) setState(() {});
     } catch (e) {
-      print('Error initializing barriers: $e');
+      debugPrint('Error initializing barriers: $e');
     }
   }
   
@@ -139,7 +140,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       try {
         annotations.add(_horizontalBarrier);
       } catch (e) {
-        print('Error adding horizontal barrier: $e');
+        debugPrint('Error adding horizontal barrier: $e');
       }
     }
     
@@ -147,7 +148,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       try {
         annotations.add(_verticalBarrier);
       } catch (e) {
-        print('Error adding vertical barrier: $e');
+        debugPrint('Error adding vertical barrier: $e');
       }
     }
     
@@ -155,7 +156,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       try {
         annotations.add(_tickIndicator);
       } catch (e) {
-        print('Error adding tick indicator: $e');
+        debugPrint('Error adding tick indicator: $e');
       }
     }
     
