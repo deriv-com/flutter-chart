@@ -47,8 +47,6 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
     }
     
     try {
-      // final midPoint = ticks.length ~/ 2;
-      // final midTick = ticks[midPoint];
       final lastTick = ticks.last;
       
       // Calculate a price level in the middle of the range
@@ -69,7 +67,6 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       );
       
       _verticalBarrier = VerticalBarrier.onTick(
-        // midTick,
         lastTick,
         title: 'Time Point',
         longLine: true,
