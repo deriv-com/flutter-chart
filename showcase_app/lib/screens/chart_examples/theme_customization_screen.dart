@@ -3,8 +3,55 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'package:showcase_app/screens/chart_examples/base_chart_screen.dart';
 
 /// A custom theme that extends the default dark theme.
-class CustomChartTheme extends ChartDefaultDarkTheme {
-  CustomChartTheme({
+class CustomDarkTheme extends ChartDefaultDarkTheme {
+  CustomDarkTheme({
+    required this.customGridColor,
+    required this.customPositiveColor,
+    required this.customNegativeColor,
+    required this.customBackgroundColor,
+  });
+
+  final Color customGridColor;
+  final Color customPositiveColor;
+  final Color customNegativeColor;
+  final Color customBackgroundColor;
+
+  @override
+  Color get base07Color => customGridColor;
+
+  @override
+  Color get base08Color => customBackgroundColor;
+
+  @override
+  Color get accentGreenColor => customPositiveColor;
+
+  @override
+  Color get accentRedColor => customNegativeColor;
+
+  @override
+  GridStyle get gridStyle => GridStyle(
+        gridLineColor: customGridColor,
+        xLabelStyle: textStyle(
+          textStyle: caption2,
+          color: base03Color,
+        ),
+        yLabelStyle: textStyle(
+          textStyle: caption2,
+          color: base03Color,
+        ),
+      );
+
+  @override
+  CandleStyle get candleStyle => CandleStyle(
+        positiveColor: customPositiveColor,
+        negativeColor: customNegativeColor,
+        neutralColor: base04Color,
+      );
+}
+
+/// A custom theme that extends the default light theme.
+class CustomLightTheme extends ChartDefaultLightTheme {
+  CustomLightTheme({
     required this.customGridColor,
     required this.customPositiveColor,
     required this.customNegativeColor,
@@ -55,37 +102,49 @@ class ThemeCustomizationScreen extends BaseChartScreen {
   const ThemeCustomizationScreen({Key? key}) : super(key: key);
 
   @override
-  State<ThemeCustomizationScreen> createState() => _ThemeCustomizationScreenState();
+  State<ThemeCustomizationScreen> createState() =>
+      _ThemeCustomizationScreenState();
 }
 
-class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomizationScreen> {
+class _ThemeCustomizationScreenState
+    extends BaseChartScreenState<ThemeCustomizationScreen> {
   bool _useDarkTheme = true;
   bool _useCustomTheme = false;
-  
+
   // Custom theme colors
   Color _gridColor = const Color(0xFF323738);
   Color _positiveColor = Colors.green;
   Color _negativeColor = Colors.red;
   Color _backgroundColor = const Color(0xFF151717);
-  
+
   @override
   String getTitle() => 'Theme Customization';
 
   @override
   Widget buildChart() {
     ChartTheme theme;
-    
+
     if (_useCustomTheme) {
-      theme = CustomChartTheme(
-        customGridColor: _gridColor,
-        customPositiveColor: _positiveColor,
-        customNegativeColor: _negativeColor,
-        customBackgroundColor: _backgroundColor,
-      );
+      if (_useDarkTheme) {
+        theme = CustomDarkTheme(
+          customGridColor: _gridColor,
+          customPositiveColor: _positiveColor,
+          customNegativeColor: _negativeColor,
+          customBackgroundColor: _backgroundColor,
+        );
+      } else {
+        theme = CustomLightTheme(
+          customGridColor: _gridColor,
+          customPositiveColor: _positiveColor,
+          customNegativeColor: _negativeColor,
+          customBackgroundColor: _backgroundColor,
+        );
+      }
     } else {
-      theme = _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme();
+      theme =
+          _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme();
     }
-    
+
     return DerivChart(
       key: const Key('theme_customization_chart'),
       mainSeries: CandleSeries(candles),
@@ -97,7 +156,8 @@ class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomiza
     );
   }
 
-  Widget _buildColorPicker(String label, Color currentColor, Function(Color) onColorChanged) {
+  Widget _buildColorPicker(
+      String label, Color currentColor, Function(Color) onColorChanged) {
     return Row(
       children: [
         SizedBox(
@@ -120,7 +180,8 @@ class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomiza
     );
   }
 
-  Widget _buildColorButton(Color color, Color currentColor, Function(Color) onColorChanged) {
+  Widget _buildColorButton(
+      Color color, Color currentColor, Function(Color) onColorChanged) {
     return InkWell(
       onTap: () => onColorChanged(color),
       child: Container(
@@ -159,9 +220,22 @@ class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomiza
                   const Text('Light'),
                   Switch(
                     value: _useDarkTheme,
-                    onChanged: _useCustomTheme ? null : (value) {
+                    onChanged: (value) {
                       setState(() {
                         _useDarkTheme = value;
+
+                        // Update default colors based on theme
+                        if (_useCustomTheme) {
+                          if (value) {
+                            // Dark theme
+                            _gridColor = const Color(0xFF323738);
+                            _backgroundColor = const Color(0xFF151717);
+                          } else {
+                            // Light theme
+                            _gridColor = const Color(0xFFE0E0E0);
+                            _backgroundColor = const Color(0xFFF5F5F5);
+                          }
+                        }
                       });
                     },
                   ),
@@ -178,6 +252,17 @@ class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomiza
                     onChanged: (value) {
                       setState(() {
                         _useCustomTheme = value;
+
+                        // Set default colors based on current theme
+                        if (value) {
+                          if (_useDarkTheme) {
+                            _gridColor = const Color(0xFF323738);
+                            _backgroundColor = const Color(0xFF151717);
+                          } else {
+                            _gridColor = const Color(0xFFE0E0E0);
+                            _backgroundColor = const Color(0xFFF5F5F5);
+                          }
+                        }
                       });
                     },
                   ),
@@ -185,9 +270,9 @@ class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomiza
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Custom theme controls
           if (_useCustomTheme) ...[
             const Text(
@@ -195,7 +280,7 @@ class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomiza
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            
+
             // Color pickers
             _buildColorPicker('Positive Color:', _positiveColor, (color) {
               setState(() {
@@ -203,21 +288,21 @@ class _ThemeCustomizationScreenState extends BaseChartScreenState<ThemeCustomiza
               });
             }),
             const SizedBox(height: 8),
-            
+
             _buildColorPicker('Negative Color:', _negativeColor, (color) {
               setState(() {
                 _negativeColor = color;
               });
             }),
             const SizedBox(height: 8),
-            
+
             _buildColorPicker('Grid Color:', _gridColor, (color) {
               setState(() {
                 _gridColor = color;
               });
             }),
             const SizedBox(height: 8),
-            
+
             _buildColorPicker('Background:', _backgroundColor, (color) {
               setState(() {
                 _backgroundColor = color;
