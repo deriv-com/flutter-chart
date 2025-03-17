@@ -106,31 +106,42 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10.0,
+            runSpacing: 10.0,
             children: [
-              ElevatedButton.icon(
-                icon: const Icon(Icons.arrow_upward),
-                label: const Text('Add Up'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
+              SizedBox(
+                height: 40,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.arrow_upward),
+                  label: const Text('Add Up'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => _addMarker(MarkerDirection.up),
                 ),
-                onPressed: () => _addMarker(MarkerDirection.up),
               ),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.arrow_downward),
-                label: const Text('Add Down'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+              SizedBox(
+                height: 40,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.arrow_downward),
+                  label: const Text('Add Down'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => _addMarker(MarkerDirection.down),
                 ),
-                onPressed: () => _addMarker(MarkerDirection.down),
               ),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.clear),
-                label: const Text('Clear All'),
-                onPressed: _clearMarkers,
+              SizedBox(
+                height: 40,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Clear'),
+                  onPressed: _clearMarkers,
+                ),
               ),
             ],
           ),

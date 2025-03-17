@@ -124,48 +124,33 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // First row: BB and RSI toggles
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          // Use Wrap for flexible layout of indicator toggles
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 20.0,
+            runSpacing: 12.0,
             children: [
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 16),
-                  child: _buildIndicatorToggle('Bollinger Bands:', _showBollingerBands, (value) {
-                    setState(() {
-                      _showBollingerBands = value;
-                      _updateIndicators();
-                    });
-                  }),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 16),
-                  child: _buildIndicatorToggle('RSI:', _showRSI, (value) {
-                    setState(() {
-                      _showRSI = value;
-                      _updateIndicators();
-                    });
-                  }),
-                ),
-              ),
+              _buildIndicatorToggle('Bollinger Bands:', _showBollingerBands, (value) {
+                setState(() {
+                  _showBollingerBands = value;
+                  _updateIndicators();
+                });
+              }),
+              _buildIndicatorToggle('RSI:', _showRSI, (value) {
+                setState(() {
+                  _showRSI = value;
+                  _updateIndicators();
+                });
+              }),
+              _buildIndicatorToggle('MACD:', _showMACD, (value) {
+                setState(() {
+                  _showMACD = value;
+                  _updateIndicators();
+                });
+              }),
             ],
           ),
-          
-          // Second row: MACD toggle centered
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: _buildIndicatorToggle('MACD:', _showMACD, (value) {
-              setState(() {
-                _showMACD = value;
-                _updateIndicators();
-              });
-            }),
-          ),
+          const SizedBox(height: 8),
           if (_showBollingerBands) ...[
             const SizedBox(height: 16),
             Padding(

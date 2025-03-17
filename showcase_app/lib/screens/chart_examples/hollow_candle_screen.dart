@@ -40,28 +40,41 @@ class _HollowCandleScreenState extends BaseChartScreenState<HollowCandleScreen> 
   Widget buildControls() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              const Text('Positive Color:'),
-              const SizedBox(width: 8),
-              _buildColorButton(Colors.green, isPositive: true),
-              _buildColorButton(Colors.blue, isPositive: true),
-              _buildColorButton(Colors.purple, isPositive: true),
-              _buildColorButton(Colors.teal, isPositive: true),
-              const SizedBox(width: 16),
-              const Text('Negative Color:'),
-              const SizedBox(width: 8),
-              _buildColorButton(Colors.red, isPositive: false),
-              _buildColorButton(Colors.orange, isPositive: false),
-              _buildColorButton(Colors.pink, isPositive: false),
-              _buildColorButton(Colors.brown, isPositive: false),
-            ],
-          ),
-        ],
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildColorRow(
+              label: 'Positive Color:',
+              colors: [Colors.green, Colors.blue, Colors.purple, Colors.teal],
+              isPositive: true,
+            ),
+            const SizedBox(height: 12),
+            _buildColorRow(
+              label: 'Negative Color:',
+              colors: [Colors.red, Colors.orange, Colors.pink, Colors.brown],
+              isPositive: false,
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildColorRow({
+    required String label,
+    required List<Color> colors,
+    required bool isPositive,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 120, // Fixed width for labels to ensure alignment
+          child: Text(label),
+        ),
+        ...colors.map((color) => _buildColorButton(color, isPositive: isPositive)),
+      ],
     );
   }
 
