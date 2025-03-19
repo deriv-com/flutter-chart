@@ -4,6 +4,9 @@ import 'package:deriv_chart/deriv_chart.dart';
 import 'screens/home_screen.dart';
 
 void main() {
+  // Initialize Flutter binding
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const ShowcaseApp());
 }
 
@@ -16,6 +19,7 @@ class ShowcaseApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Deriv Chart Showcase App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF85ACB0),
@@ -29,7 +33,6 @@ class ShowcaseApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         ChartLocalization.delegate,
         GlobalMaterialLocalizations.delegate,
