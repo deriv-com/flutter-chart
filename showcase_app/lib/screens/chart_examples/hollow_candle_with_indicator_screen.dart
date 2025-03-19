@@ -8,17 +8,19 @@ class HollowCandleWithIndicatorScreen extends BaseChartScreen {
   const HollowCandleWithIndicatorScreen({Key? key}) : super(key: key);
 
   @override
-  State<HollowCandleWithIndicatorScreen> createState() => _HollowCandleWithIndicatorScreenState();
+  State<HollowCandleWithIndicatorScreen> createState() =>
+      _HollowCandleWithIndicatorScreenState();
 }
 
-class _HollowCandleWithIndicatorScreenState extends BaseChartScreenState<HollowCandleWithIndicatorScreen> {
+class _HollowCandleWithIndicatorScreenState
+    extends BaseChartScreenState<HollowCandleWithIndicatorScreen> {
   Color _positiveColor = Colors.green;
   Color _negativeColor = Colors.red;
   bool _showMACD = true;
-  
+
   // Create an indicators repository to manage indicators
   late final Repository<IndicatorConfig> _indicatorsRepo;
-  
+
   @override
   void initState() {
     super.initState();
@@ -26,15 +28,15 @@ class _HollowCandleWithIndicatorScreenState extends BaseChartScreenState<HollowC
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       sharedPrefKey: 'hollow_candle_with_indicator',
     );
-    
+
     // Add initial indicators
     _updateIndicators();
   }
-  
+
   void _updateIndicators() {
     // Clear existing indicators
     _indicatorsRepo.clear();
-    
+
     // Add MACD if enabled
     if (_showMACD) {
       _indicatorsRepo.add(

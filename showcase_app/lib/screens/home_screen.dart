@@ -42,7 +42,8 @@ class HomeScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        key: Key('feature_card_${item.title.toLowerCase().replaceAll(' ', '_')}'),
+        key: Key(
+            'feature_card_${item.title.toLowerCase().replaceAll(' ', '_')}'),
         onTap: () {
           Navigator.push(
             context,
@@ -57,34 +58,34 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Container(
-              height: 120,
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: Center(
-                child: Icon(
-                  item.icon,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+              Container(
+                height: 120,
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: Center(
+                  child: Icon(
+                    item.icon,
+                    size: 48,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    item.description,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.title,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      item.description,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
               ),
-            ),
             ],
           ),
         ),
@@ -102,7 +103,8 @@ class HomeScreen extends StatelessWidget {
     ),
     const FeatureItem(
       title: 'Line Chart with Top Indicator',
-      description: 'Line chart with a Simple Moving Average indicator at the top.',
+      description:
+          'Line chart with a Simple Moving Average indicator at the top.',
       icon: Icons.show_chart,
       screen: LineChartWithIndicatorScreen(),
     ),

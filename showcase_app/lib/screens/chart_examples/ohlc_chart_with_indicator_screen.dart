@@ -8,20 +8,22 @@ class OHLCChartWithIndicatorScreen extends BaseChartScreen {
   const OHLCChartWithIndicatorScreen({Key? key}) : super(key: key);
 
   @override
-  State<OHLCChartWithIndicatorScreen> createState() => _OHLCChartWithIndicatorScreenState();
+  State<OHLCChartWithIndicatorScreen> createState() =>
+      _OHLCChartWithIndicatorScreenState();
 }
 
-class _OHLCChartWithIndicatorScreenState extends BaseChartScreenState<OHLCChartWithIndicatorScreen> {
+class _OHLCChartWithIndicatorScreenState
+    extends BaseChartScreenState<OHLCChartWithIndicatorScreen> {
   Color _positiveColor = Colors.green;
   Color _negativeColor = Colors.red;
   bool _showBollingerBands = true;
   int _bollingerPeriod = 20;
   double _bollingerDeviation = 2;
   final MovingAverageType _bollingerMAType = MovingAverageType.simple;
-  
+
   // Create an indicators repository to manage indicators
   late final Repository<IndicatorConfig> _indicatorsRepo;
-  
+
   @override
   void initState() {
     super.initState();
@@ -29,15 +31,15 @@ class _OHLCChartWithIndicatorScreenState extends BaseChartScreenState<OHLCChartW
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       sharedPrefKey: 'ohlc_chart_with_indicator',
     );
-    
+
     // Add initial indicators
     _updateIndicators();
   }
-  
+
   void _updateIndicators() {
     // Clear existing indicators
     _indicatorsRepo.clear();
-    
+
     // Add Bollinger Bands if enabled
     if (_showBollingerBands) {
       _indicatorsRepo.add(

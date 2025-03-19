@@ -8,19 +8,23 @@ class LineChartWithIndicatorScreen extends BaseChartScreen {
   const LineChartWithIndicatorScreen({Key? key}) : super(key: key);
 
   @override
-  State<LineChartWithIndicatorScreen> createState() => _LineChartWithIndicatorScreenState();
+  State<LineChartWithIndicatorScreen> createState() =>
+      _LineChartWithIndicatorScreenState();
 }
 
-class _LineChartWithIndicatorScreenState extends BaseChartScreenState<LineChartWithIndicatorScreen> {
+class _LineChartWithIndicatorScreenState
+    extends BaseChartScreenState<LineChartWithIndicatorScreen> {
   bool _hasArea = true;
   double _thickness = 2;
   Color _lineColor = Colors.blue;
   bool _showSMA = true;
   int _smaPeriod = 14;
-  
+  bool _showTickIndicator = true;
+  late TickIndicator _tickIndicator;
+
   // Create an indicators repository to manage indicators
   late final Repository<IndicatorConfig> _indicatorsRepo;
-  
+
   @override
   void initState() {
     super.initState();
@@ -28,15 +32,52 @@ class _LineChartWithIndicatorScreenState extends BaseChartScreenState<LineChartW
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       sharedPrefKey: 'line_chart_with_indicator',
     );
-    
+
     // Add initial indicators
     _updateIndicators();
+
+    // Initialize tick indicator after the frame is rendered to ensure ticks are loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeTickIndicator();
+    });
   }
-  
+
+  @override
+  void didUpdateWidget(LineChartWithIndicatorScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reinitialize tick indicator when the widget updates
+    _initializeTickIndicator();
+  }
+
+  void _initializeTickIndicator() {
+    if (ticks.isEmpty) {
+      debugPrint('Ticks list is empty, cannot initialize tick indicator');
+      return;
+    }
+
+    final lastTick = ticks.last;
+
+    _tickIndicator = TickIndicator(
+      lastTick,
+      style: HorizontalBarrierStyle(
+        color: _lineColor, // Match the line color
+        labelShape: LabelShape.pentagon,
+        hasBlinkingDot: true,
+        hasArrow: false,
+      ),
+      visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
+    );
+
+    // Force a rebuild to show the tick indicator
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   void _updateIndicators() {
     // Clear existing indicators
     _indicatorsRepo.clear();
-    
+
     // Add SMA if enabled
     if (_showSMA) {
       _indicatorsRepo.add(
@@ -57,6 +98,12 @@ class _LineChartWithIndicatorScreenState extends BaseChartScreenState<LineChartW
 
   @override
   Widget buildChart() {
+    final List<ChartAnnotation<ChartObject>> annotations = [];
+
+    if (_showTickIndicator && ticks.isNotEmpty) {
+      annotations.add(_tickIndicator);
+    }
+
     return DerivChart(
       key: const Key('line_chart_with_indicator'),
       mainSeries: LineSeries(
@@ -67,6 +114,7 @@ class _LineChartWithIndicatorScreenState extends BaseChartScreenState<LineChartW
           color: _lineColor,
         ),
       ),
+      annotations: annotations,
       controller: controller,
       pipSize: 2,
       granularity: 60000, // 1 minute
@@ -82,6 +130,22 @@ class _LineChartWithIndicatorScreenState extends BaseChartScreenState<LineChartW
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Tick indicator toggle
+          Row(
+            children: [
+              const Text('Tick Indicator:'),
+              const SizedBox(width: 8),
+              Switch(
+                value: _showTickIndicator,
+                onChanged: (value) {
+                  setState(() {
+                    _showTickIndicator = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
           // SMA Indicator controls
           Row(
             children: [
@@ -176,6 +240,8 @@ class _LineChartWithIndicatorScreenState extends BaseChartScreenState<LineChartW
         onTap: () {
           setState(() {
             _lineColor = color;
+            // Update tick indicator color when line color changes
+            _initializeTickIndicator();
           });
         },
         child: Container(

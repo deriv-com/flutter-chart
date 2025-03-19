@@ -8,18 +8,20 @@ class CandleChartWithIndicatorScreen extends BaseChartScreen {
   const CandleChartWithIndicatorScreen({Key? key}) : super(key: key);
 
   @override
-  State<CandleChartWithIndicatorScreen> createState() => _CandleChartWithIndicatorScreenState();
+  State<CandleChartWithIndicatorScreen> createState() =>
+      _CandleChartWithIndicatorScreenState();
 }
 
-class _CandleChartWithIndicatorScreenState extends BaseChartScreenState<CandleChartWithIndicatorScreen> {
+class _CandleChartWithIndicatorScreenState
+    extends BaseChartScreenState<CandleChartWithIndicatorScreen> {
   Color _positiveColor = Colors.green;
   Color _negativeColor = Colors.red;
   bool _showRSI = true;
   int _rsiPeriod = 14;
-  
+
   // Create an indicators repository to manage indicators
   late final Repository<IndicatorConfig> _indicatorsRepo;
-  
+
   @override
   void initState() {
     super.initState();
@@ -27,15 +29,15 @@ class _CandleChartWithIndicatorScreenState extends BaseChartScreenState<CandleCh
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       sharedPrefKey: 'candle_chart_with_indicator',
     );
-    
+
     // Add initial indicators
     _updateIndicators();
   }
-  
+
   void _updateIndicators() {
     // Clear existing indicators
     _indicatorsRepo.clear();
-    
+
     // Add RSI if enabled
     if (_showRSI) {
       _indicatorsRepo.add(

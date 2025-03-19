@@ -15,12 +15,61 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
   bool _hasArea = true;
   double _thickness = 2;
   Color _lineColor = Colors.blue;
+  bool _showTickIndicator = true;
+  late TickIndicator _tickIndicator;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize tick indicator after the frame is rendered to ensure ticks are loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeTickIndicator();
+    });
+  }
+
+  @override
+  void didUpdateWidget(LineChartScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reinitialize tick indicator when the widget updates
+    _initializeTickIndicator();
+  }
+
+  void _initializeTickIndicator() {
+    if (ticks.isEmpty) {
+      debugPrint('Ticks list is empty, cannot initialize tick indicator');
+      return;
+    }
+
+    final lastTick = ticks.last;
+
+    _tickIndicator = TickIndicator(
+      lastTick,
+      style: HorizontalBarrierStyle(
+        color: _lineColor, // Match the line color
+        labelShape: LabelShape.pentagon,
+        hasBlinkingDot: true,
+        hasArrow: false,
+      ),
+      visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
+    );
+
+    // Force a rebuild to show the tick indicator
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   String getTitle() => 'Line Chart';
 
   @override
   Widget buildChart() {
+    final List<ChartAnnotation<ChartObject>> annotations = [];
+
+    if (_showTickIndicator && ticks.isNotEmpty) {
+      annotations.add(_tickIndicator);
+    }
+
     return DerivChart(
       key: const Key('line_chart'),
       mainSeries: LineSeries(
@@ -31,6 +80,7 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
           color: _lineColor,
         ),
       ),
+      annotations: annotations,
       controller: controller,
       pipSize: 2,
       granularity: 60000, // 1 minute
@@ -45,6 +95,22 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Tick indicator toggle
+          Row(
+            children: [
+              const Text('Tick Indicator:'),
+              const SizedBox(width: 8),
+              Switch(
+                value: _showTickIndicator,
+                onChanged: (value) {
+                  setState(() {
+                    _showTickIndicator = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
           Row(
             children: [
               const Text('Area Fill:'),
@@ -99,6 +165,8 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
         onTap: () {
           setState(() {
             _lineColor = color;
+            // Update tick indicator color when line color changes
+            _initializeTickIndicator();
           });
         },
         child: Container(
